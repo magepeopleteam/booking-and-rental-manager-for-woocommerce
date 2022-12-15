@@ -1,0 +1,138 @@
+.rbfw-ph-item {
+    background-color: transparent;
+    direction: ltr;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    overflow: hidden;
+    padding: 10px 0px 10px;
+    position: relative
+}
+
+.rbfw-ph-item, .rbfw-ph-item *, .rbfw-ph-item :after, .rbfw-ph-item :before {
+    box-sizing: border-box
+}
+
+.rbfw-ph-item:before {
+    -webkit-animation: rbfw-ph-animation .8s linear infinite;
+    animation: rbfw-ph-animation .8s linear infinite;
+    background: linear-gradient(90deg, hsla(0, 0%, 100%, 0) 46%, hsla(0, 0%, 100%, .35) 50%, hsla(0, 0%, 100%, 0) 54%) 50% 50%;
+    bottom: 0;
+    content: " ";
+    left: 50%;
+    margin-left: -250%;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 500%;
+    z-index: 1
+}
+
+.rbfw-ph-item>* {
+    display: flex;
+    flex: 1 1 auto;
+    flex-flow: column;
+    margin-bottom: 15px;
+    padding-left: 15px;
+    padding-right: 15px
+}
+
+.rbfw-ph-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: -7.5px
+}
+
+.rbfw-ph-row div {
+    background-color: #ced4da;
+    height: 10px;
+    margin-top: 7.5px
+}
+
+.rbfw-ph-row .big, .rbfw-ph-row.big div {
+    height: 20px
+}
+
+.rbfw-ph-row .empty {
+    background-color: hsla(0, 0%, 100%, 0)
+}
+
+.rbfw-ph-col-2 {
+    flex: 0 0 16.6666666667%
+}
+
+.rbfw-ph-col-4 {
+    flex: 0 0 33.3333333333%
+}
+
+.rbfw-ph-col-6 {
+    flex: 0 0 50%
+}
+
+.rbfw-ph-col-8 {
+    flex: 0 0 66.6666666667%
+}
+
+.rbfw-ph-col-10 {
+    flex: 0 0 83.3333333333%
+}
+
+.rbfw-ph-col-12 {
+    flex: 0 0 100%;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+[class*=rbfw-ph-col] {
+    direction: ltr
+}
+
+[class*=rbfw-ph-col]>*+.rbfw-ph-row {
+    margin-top: 0
+}
+
+[class*=rbfw-ph-col]>*+* {
+    margin-top: 7.5px
+}
+
+.rbfw-ph-avatar {
+    background-color: #ced4da;
+    border-radius: 50%;
+    min-width: 60px;
+    overflow: hidden;
+    position: relative;
+    width: 100%
+}
+
+.rbfw-ph-avatar:before {
+    content: " ";
+    display: block;
+    padding-top: 100%
+}
+
+.rbfw-ph-picture {
+    background-color: #ced4da;
+    height: 120px;
+    width: 100%
+}
+
+@-webkit-keyframes rbfw-ph-animation {
+    0% {
+        transform: translate3d(-30%, 0, 0)
+    }
+
+    to {
+        transform: translate3d(30%, 0, 0)
+    }
+}
+
+@keyframes rbfw-ph-animation {
+    0% {
+        transform: translate3d(-30%, 0, 0)
+    }
+
+    to {
+        transform: translate3d(30%, 0, 0)
+    }
+}
