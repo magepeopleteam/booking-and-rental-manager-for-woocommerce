@@ -217,7 +217,16 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 /* End Tax Calculations */
 
                 /* Start Discount Calculations */
-                $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_price);
+                
+
+                if(function_exists('rbfw_get_discount_array')){
+
+                    $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_price);
+            
+                } else {
+            
+                    $discount_arr = [];
+                }
 
                 if(!empty($discount_arr)){
                     $total_price = $discount_arr['total_amount'];
@@ -717,7 +726,14 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                                     /* Start Discount Calculations */
 
-                                    $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_price);
+                                    if(function_exists('rbfw_get_discount_array')){
+
+                                        $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_price);
+                                
+                                    } else {
+                                
+                                        $discount_arr = [];
+                                    }
 
                                     if(!empty($discount_arr)){
                                         

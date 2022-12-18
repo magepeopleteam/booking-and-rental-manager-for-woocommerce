@@ -284,7 +284,14 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
 
                 $ticket_total_price = $duration_cost + $service_cost;
 
-                $discount_arr = rbfw_get_discount_array($rbfw_id, $start_date, $end_date, $ticket_total_price);
+                if(function_exists('rbfw_get_discount_array')){
+
+                    $discount_arr = rbfw_get_discount_array($rbfw_id, $start_date, $end_date, $ticket_total_price);
+            
+                } else {
+            
+                    $discount_arr = [];
+                }                
 
                 if(!empty($discount_arr)){
                     $ticket_total_price = $discount_arr['total_amount'];
@@ -308,7 +315,16 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 $percent = $resortClass->rbfw_resort_price_calculation($rbfw_id,$start_date,$end_date,$package,$type_info_merged_array,$service_info_merged_array,'rbfw_tax_price');
                 $ticket_info = $resortClass->rbfw_resort_ticket_info($rbfw_id,$start_date,$end_date,$package,$type_info_merged_array,$service_info_merged_array);
                 
-                $discount_arr = rbfw_get_discount_array($rbfw_id, $start_date, $end_date, $ticket_total_price);
+
+
+                if(function_exists('rbfw_get_discount_array')){
+
+                    $discount_arr = rbfw_get_discount_array($rbfw_id, $start_date, $end_date, $ticket_total_price);
+            
+                } else {
+            
+                    $discount_arr = [];
+                }                
 
                 if(!empty($discount_arr)){
                     $ticket_total_price = $discount_arr['total_amount'];
@@ -750,7 +766,14 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
 
                 /* Start Discount Calculations */
 
-                $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_amount);
+                if(function_exists('rbfw_get_discount_array')){
+
+                    $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_amount);
+            
+                } else {
+            
+                    $discount_arr = [];
+                }                
 
                 if(!empty($discount_arr)){
                     $total_amount = $discount_arr['total_amount'];
@@ -876,7 +899,15 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 }
                 
                 /* Start Discount Calculations */
-                $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_cost);
+
+                if(function_exists('rbfw_get_discount_array')){
+
+                    $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_cost);
+            
+                } else {
+            
+                    $discount_arr = [];
+                }                 
 
                 if(!empty($discount_arr)){
                     $total_cost = $discount_arr['total_amount'];

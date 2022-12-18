@@ -171,11 +171,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $hours   += $diff->h;
                 $minutes = $diff->i;
                 if ( $days > 0 ) {
-                    $price    += $days * (float)$daily_rate;
+                    $price    += (int)$days * (float)$daily_rate;
                     $duration .= $days > 1 ? sprintf( "%d Days ", $days ) : sprintf( "%d Day ", $days );
                 }
                 if ( $hours > 0 ) {
-                    $price    += $hours * (float)$hourly_rate;
+                    $price    += (int)$hours * (float)$hourly_rate;
                     $duration .= $hours > 1 ? sprintf( "%d hours", $hours ) : sprintf( "%d hour", $hours );
                 }
             }
@@ -184,7 +184,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             if(!empty($service_price_arr)){
                 foreach ($service_price_arr as $data_name => $values) {
-                    $service_cost += (float)$values['data_qty'] * (float)$values['data_price'];
+                    $service_cost += (int)$values['data_qty'] * (float)$values['data_price'];
                 }
             }
 
@@ -230,7 +230,16 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                         /* Start Discount Calculations */
 
-                        $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_price);
+                        
+
+                        if(function_exists('rbfw_get_discount_array')){
+
+                            $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_price);
+                    
+                        } else {
+                    
+                            $discount_arr = [];
+                        }
 
                         if(!empty($discount_arr)){
                             

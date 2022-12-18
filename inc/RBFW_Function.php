@@ -47,15 +47,14 @@
 
 			//***********Template********************//
 			public static function all_details_template() {
-				$template_path = get_stylesheet_directory() . '/rbfw_templates/themes/';
-				$default_path  = RBFW_PLUGIN_DIR . '/templates/themes/';
-				$dir           = is_dir( $template_path ) ? glob( $template_path . "*" ) : glob( $default_path . "*" );
+				
+				$default_path  = RBFW_PLUGIN_DIR . '/templates/';
+				$dir           = glob( $default_path . "*" );
 				$names         = array();
 				foreach ( $dir as $filename ) {
 					if ( is_file( $filename ) ) {
-						$file           = basename( $filename );
-						$name           = str_replace( "?>", "", strip_tags( file_get_contents( $filename, false, null, 24, 16 ) ) );
-						$names[ $file ] = $name;
+						$file           = basename($filename,'.php');
+						$names[ $file ] = $file.' template';
 					}
 				}
 				$name = [];
@@ -66,51 +65,33 @@
 				return apply_filters( 'rbfw_template_list_arr', $name );
 			}
 
-			public static function details_template_path(): string {
-				$rent_id       	= get_the_id();
-				$rent_type 		= get_post_meta( $rent_id, 'rbfw_item_type', true );
+			public static function get_template($post_id) {
 
-				if($rent_type == 'bike_car_sd'){
-					$template_name = self::get_post_info( $rent_id, 'rbfw_theme_file', 'bike-car-sd.php' );
-				}
-				elseif($rent_type == 'bike_car_md'){
-					$template_name = self::get_post_info( $rent_id, 'rbfw_theme_file', 'bike.php' );
-				}
-				elseif($rent_type == 'equipment'){
-					$template_name = self::get_post_info( $rent_id, 'rbfw_theme_file', 'bike.php' );
-				}
-				elseif($rent_type == 'dress'){
-					$template_name = self::get_post_info( $rent_id, 'rbfw_theme_file', 'bike.php' );
-				}
-				elseif($rent_type == 'resort'){
-					$template_name = self::get_post_info( $rent_id, 'rbfw_theme_file', 'resort.php' );
-				}
-				elseif($rent_type == 'appointment'){
-					$template_name = self::get_post_info( $rent_id, 'rbfw_theme_file', 'bike-car-sd.php' );
-				}
-				elseif($rent_type == 'others'){
-					$template_name = self::get_post_info( $rent_id, 'rbfw_theme_file', 'bike.php' );
-				}												
-				else{
-					$template_name = self::get_post_info( $rent_id, 'rbfw_theme_file', 'bike.php' );
-				}
+				$template = !empty(get_post_meta($post_id, 'rbfw_single_template', true)) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default';
 				
-				$file_name     = 'themes/' . $template_name;
-				$dir           = RBFW_PLUGIN_DIR . '/templates/' . $file_name;
-				if ( ! file_exists( $dir ) ) {
-					$file_name = 'No Template Found!';
-				}
+				$template_name = $template.'.php';
 
-				return self::template_path( $file_name );
+				$main_template_dir = RBFW_PLUGIN_DIR . '/templates/' . $template_name;
+				
+				if ( ! file_exists( $main_template_dir ) ) {
+
+					echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
+
+				} else {
+
+					include( RBFW_Function::template_path($template_name) );
+					
+				}
+								
 			}
 
 			public static function template_path( $file_name ): string {
-				$template_path = get_stylesheet_directory() . '/rbfw_templates/';
+		
 				$default_dir   = RBFW_PLUGIN_DIR . '/templates/';
-				$dir           = is_dir( $template_path ) ? $template_path : $default_dir;
+				$dir           = $default_dir;
 				$file_path     = $dir . $file_name;
 
-				return locate_template( array( 'rbfw_templates/' . $file_name ) ) ? $file_path : $default_dir . $file_name;
+				return $default_dir . $file_name;
 			}
 
 			//*******************************//

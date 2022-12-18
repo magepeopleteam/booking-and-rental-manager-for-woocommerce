@@ -1695,8 +1695,8 @@ function rbfw_add_variations_tab_content($rbfw_id){
 						
 						array(
 							'id'          => 'rbfw_releted_rbfw',
-							'title'       => __( 'Related ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce' ),
-							'details'     => __( 'Please add related ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce' ),
+							'title'       => __( 'Related Items', 'booking-and-rental-manager-for-woocommerce' ),
+							'details'     => __( 'Please add related items', 'booking-and-rental-manager-for-woocommerce' ),
 							//'collapsible' => true,
 							'type'        => 'select2',
 							'multiple'	  => true,	
@@ -1716,6 +1716,13 @@ function rbfw_add_variations_tab_content($rbfw_id){
 							),
 							'default' => 'off',
 						),
+						array(
+							'id'          => 'rbfw_single_template',
+							'title'       => __( 'Template', 'booking-and-rental-manager-for-woocommerce' ),
+							'details'     => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+							'type'        => 'select',
+							'args' => RBFW_Function::all_details_template(),
+						),						
 					)
 				),
 			
