@@ -647,13 +647,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                         <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
                                     </div>
                                 </div>';
-                    /*
-                    $content  .= '<div class="item">
-                                    <button type="submit" name="add-to-cart" value="'.$rbfw_product_id.'" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn '.$rbfw_payment_system.'" disabled>
-                                        '.$rbfw->get_option('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce')).'
-                                    </button>
-                                </div>';
-                    */            
+          
 
 
                 $content .= '</div>';
@@ -961,7 +955,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                                     jQuery('.rbfw_bikecarsd_time_table_wrap').addClass('rbfw_loader_in');
                                     jQuery('.rbfw_bikecarsd_time_table_wrap').append('<i class="fas fa-spinner fa-spin"></i>');
-
+                                    
                                     if( rent_type == 'appointment' ){
                                         
                                         jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
@@ -1080,6 +1074,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                         function rbfw_mps_book_now_btn_action(){
                             jQuery('button.rbfw_bikecarsd_book_now_btn.mps_enabled').click(function (e) { 
                             e.preventDefault();
+                            e.stopImmediatePropagation();
                             let selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
                             let selected_time = jQuery('#rbfw_bikecarsd_selected_time').val();
                             let rbfw_rent_type = jQuery('#rbfw_rent_type').val();
@@ -1120,10 +1115,11 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                     jQuery('.rbfw_bikecarsd_book_now_btn_wrap').hide();
                                     jQuery('.rbfw_bikecarsd_pricing_table_container').hide();
                                     jQuery('.rbfw-bikecarsd-result-loader').show();
+                                    jQuery('.rbfw-bikecarsd-result-order-details').empty();
                                 },		
                                 success: function (response) {
-                                    jQuery('.rbfw-bikecarsd-result-loader').hide();
-                                    jQuery('.rbfw-bikecarsd-result').append(response);
+                                    jQuery('.rbfw-bikecarsd-result-loader').hide();  
+                                    jQuery('.rbfw-bikecarsd-result-order-details').append(response);
                                     rbfw_on_submit_user_form_action(post_id,rbfw_rent_type,selected_date,selected_time,type_array,service_array);
                                     rbfw_mps_checkout_header_link();
                                 },

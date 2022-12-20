@@ -247,7 +247,7 @@
 
 		<postmeta>
 		<meta_key>rbfw_extra_service_data</meta_key>
-		<meta_value>a:3:{i:0;a:5:{s:11:"service_img";s:3:"826";s:12:"service_name";s:34:"Would you like to add a Baby Seat?";s:13:"service_price";s:2:"10";s:12:"service_desc";s:115:"State Law: Children under age one cannot be carried on a bicycle. Attachments need to be booked with an adult bike.";s:11:"service_qty";s:3:"100";}i:1;a:5:{s:11:"service_img";s:3:"827";s:12:"service_name";s:56:"Would you like to add a “Tag-a-long” bike extension?";s:13:"service_price";s:2:"11";s:12:"service_desc";s:49:"Attachments need to be booked with an adult bike.";s:11:"service_qty";s:3:"100";}i:2;a:5:{s:11:"service_img";s:3:"828";s:12:"service_name";s:52:"Would you like to add a Double Kid’s Bike Trailer?";s:13:"service_price";s:2:"12";s:12:"service_desc";s:49:"Attachments need to be booked with an adult bike.";s:11:"service_qty";s:3:"100";}}</meta_value>
+		<meta_value>a:3:{i:0;a:5:{s:11:"service_img";s:3:"826";s:12:"service_name";s:34:"Would you like to add a Baby Seat?";s:13:"service_price";s:2:"10";s:12:"service_desc";s:115:"State Law: Children under age one cannot be carried on a bicycle. Attachments need to be booked with an adult bike.";s:11:"service_qty";s:3:"100";}i:1;a:5:{s:11:"service_img";s:3:"827";s:12:"service_name";s:56:"Would you like to add a “Tag-a-long” bike extension?";s:13:"service_price";s:2:"11";s:12:"service_desc";s:49:"Attachments need to be booked with an adult bike.";s:11:"service_qty";s:3:"100";}i:2;a:5:{s:11:"service_img";s:3:"828";s:12:"service_name";s:52:"Would you like to add a Double Kids Bike Trailer?";s:13:"service_price";s:2:"12";s:12:"service_desc";s:49:"Attachments need to be booked with an adult bike.";s:11:"service_qty";s:3:"100";}}</meta_value>
 		</postmeta>
 
 		<postmeta>
@@ -277,7 +277,7 @@
 
 		<postmeta>
 		<meta_key>rbfw_bike_car_sd_data</meta_key>
-		<meta_value>a:7:{i:0;a:4:{s:9:"rent_type";s:16:"One Hour Rentals";s:10:"short_desc";s:13:"Up to 1 hours";s:5:"price";s:4:"7.99";s:3:"qty";s:0:"";}i:1;a:4:{s:9:"rent_type";s:16:"Two Hour Rentals";s:10:"short_desc";s:13:"Up to 2 hours";s:5:"price";s:5:"15.98";s:3:"qty";s:0:"";}i:2;a:4:{s:9:"rent_type";s:18:"Three Hour Rentals";s:10:"short_desc";s:13:"Up to 3 hours";s:5:"price";s:5:"19.97";s:3:"qty";s:0:"";}i:3;a:4:{s:9:"rent_type";s:17:"Four Hour Rentals";s:10:"short_desc";s:13:"Up to 4 hours";s:5:"price";s:5:"24.76";s:3:"qty";s:0:"";}i:4;a:4:{s:9:"rent_type";s:17:"Five Hour Rentals";s:10:"short_desc";s:13:"Up to 5 hours";s:5:"price";s:5:"28.75";s:3:"qty";s:0:"";}i:5;a:4:{s:9:"rent_type";s:15:"Half Day Rental";s:10:"short_desc";s:13:"Up to 6 hours";s:5:"price";s:5:"29.99";s:3:"qty";s:0:"";}i:6;a:4:{s:9:"rent_type";s:15:"All Day Rentals";s:10:"short_desc";s:14:"Up to 10 Hours";s:5:"price";s:5:"38.99";s:3:"qty";s:0:"";}}</meta_value>
+		<meta_value>a:7:{i:0;a:4:{s:9:"rent_type";s:16:"One Hour Rentals";s:10:"short_desc";s:13:"Up to 1 hours";s:5:"price";s:4:"7.99";s:3:"qty";s:3:"100";}i:1;a:4:{s:9:"rent_type";s:16:"Two Hour Rentals";s:10:"short_desc";s:13:"Up to 2 hours";s:5:"price";s:5:"15.98";s:3:"qty";s:3:"100";}i:2;a:4:{s:9:"rent_type";s:18:"Three Hour Rentals";s:10:"short_desc";s:13:"Up to 3 hours";s:5:"price";s:5:"19.97";s:3:"qty";s:3:"100";}i:3;a:4:{s:9:"rent_type";s:17:"Four Hour Rentals";s:10:"short_desc";s:13:"Up to 4 hours";s:5:"price";s:5:"24.76";s:3:"qty";s:3:"100";}i:4;a:4:{s:9:"rent_type";s:17:"Five Hour Rentals";s:10:"short_desc";s:13:"Up to 5 hours";s:5:"price";s:5:"28.75";s:3:"qty";s:3:"100";}i:5;a:4:{s:9:"rent_type";s:15:"Half Day Rental";s:10:"short_desc";s:13:"Up to 6 hours";s:5:"price";s:5:"29.99";s:3:"qty";s:3:"100";}i:6;a:4:{s:9:"rent_type";s:15:"All Day Rentals";s:10:"short_desc";s:14:"Up to 10 Hours";s:5:"price";s:5:"38.99";s:3:"qty";s:3:"100";}}</meta_value>
 		</postmeta>
 
 		<postmeta>
@@ -438,8 +438,87 @@
 		<postmeta>
 		<meta_key>rbfw_theme_file</meta_key>
 		<meta_value></meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_available_qty_info_switch</meta_key>
+		<meta_value>off</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_single_template</meta_key>
+		<meta_value>Default</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_time_slot_switch</meta_key>
+		<meta_value>on</meta_value>
+		</postmeta>								
+
+		<postmeta>
+		<meta_key>rbfw_enable_extra_service_qty</meta_key>
+		<meta_value>no</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_enable_variations</meta_key>
+		<meta_value>no</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_enable_md_type_item_qty</meta_key>
+		<meta_value>no</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_item_stock_quantity</meta_key>
+		<meta_value>0</meta_value>
 		</postmeta>	
 
+		<postmeta>
+		<meta_key>rbfw_enable_resort_daylong_price</meta_key>
+		<meta_value>no</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_variations_data</meta_key>
+		<meta_value>a:1:{i:0;a:3:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}}}</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_sd_appointment_ondays</meta_key>
+		<meta_value>a:0:{}</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
+		<meta_value></meta_value>
+		</postmeta>	
+
+		<postmeta>
+		<meta_key>rbfw_enable_discount</meta_key>
+		<meta_value>no</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_discount_over_days</meta_key>
+		<meta_value>a:0:{}</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_discount_type</meta_key>
+		<meta_value>a:0:{}</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_discount_number</meta_key>
+		<meta_value>a:0:{}</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_discount_array</meta_key>
+		<meta_value>a:0:{}</meta_value>
+		</postmeta>																						
     </item>
 
 	<item>
@@ -498,7 +577,7 @@
 
 		<postmeta>
 		<meta_key>rbfw_bike_car_sd_data</meta_key>
-		<meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:9:"30 Minute";s:10:"short_desc";s:22:"Consult for 30 Minutes";s:5:"price";s:2:"50";s:3:"qty";s:2:"100";}}</meta_value>
+		<meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:9:"30 Minute";s:10:"short_desc";s:22:"Consult for 30 minutes";s:5:"price";s:3:"100";s:3:"qty";s:2:"50";}}</meta_value>
 		</postmeta>
 
 		<postmeta>
@@ -508,7 +587,7 @@
 
 		<postmeta>
 		<meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
-		<meta_value>20</meta_value>
+		<meta_value>10</meta_value>
 		</postmeta>
 
 		<postmeta>
@@ -664,8 +743,77 @@
 		<postmeta>
 		<meta_key>rbfw_theme_file</meta_key>
 		<meta_value></meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_available_qty_info_switch</meta_key>
+		<meta_value>off</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_single_template</meta_key>
+		<meta_value>Default</meta_value>
+		</postmeta>					
+
+		<postmeta>
+		<meta_key>rbfw_time_slot_switch</meta_key>
+		<meta_value>on</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_enable_extra_service_qty</meta_key>
+		<meta_value>no</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_enable_variations</meta_key>
+		<meta_value>no</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_enable_md_type_item_qty</meta_key>
+		<meta_value>no</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_item_stock_quantity</meta_key>
+		<meta_value>0</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_enable_resort_daylong_price</meta_key>
+		<meta_value>no</meta_value>
 		</postmeta>	
 
+		<postmeta>
+		<meta_key>rbfw_variations_data</meta_key>
+		<meta_value>a:1:{i:0;a:4:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}s:14:"selected_value";s:0:"";}}</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_enable_discount</meta_key>
+		<meta_value>no</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_discount_over_days</meta_key>
+		<meta_value>a:0:{}</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_discount_type</meta_key>
+		<meta_value>a:0:{}</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_discount_number</meta_key>
+		<meta_value>a:0:{}</meta_value>
+		</postmeta>
+
+		<postmeta>
+		<meta_key>rbfw_discount_array</meta_key>
+		<meta_value>a:0:{}</meta_value>
+		</postmeta>																							
     </item>
 
 	<item>

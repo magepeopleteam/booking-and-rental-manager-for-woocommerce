@@ -47,6 +47,7 @@
 				<div class="rbfw-bikecarsd-result-wrap">
 					<div class="rbfw-bikecarsd-result-loader"></div>
 					<div class="rbfw-bikecarsd-result"></div>
+					<div class="rbfw-bikecarsd-result-order-details"></div>
 				</div>
 
 				<!-- Button -->

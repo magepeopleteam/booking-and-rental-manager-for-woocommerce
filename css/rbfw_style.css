@@ -541,9 +541,9 @@ div.mp_details_page {
 
 div.mp_left_section,
 div.mp_right_section {
-    border: 1px solid #d3d3d3;
+    border: 1px solid #f5f5f5;
     padding: 10px;
-    border-radius: 10px;
+    border-radius: 0;
     background: #fff;
 }
 
