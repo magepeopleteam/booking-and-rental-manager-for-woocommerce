@@ -190,3 +190,9 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 = 1.1.3 =
 * Appointment type added.
 * Time slot page added.
+
+= 1.1.4 =
+* Bug Fixed.
+
+= 1.1.5 =
+* Donut template added.
