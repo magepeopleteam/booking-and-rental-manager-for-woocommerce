@@ -118,18 +118,33 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 			),
 
 			array(
-				'name'    => 'rbfw_text_related_products',
-				'label'   => __( 'Related Products', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'Enter the translated text of <strong>Related Products.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'name'    => 'rbfw_text_related_items',
+				'label'   => __( 'Related Items', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Related Items.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
-				'default' => 'Related Products'
+				'default' => 'Related Items'
 			),
+
+			array(
+				'name'    => 'rbfw_text_you_may_also_like',
+				'label'   => __( 'You May Also Like', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>You May Also Like.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'You May Also Like'
+			),			
 			array(
 				'name'    => 'rbfw_text_read_more',
 				'label'   => __( 'Read More', 'booking-and-rental-manager-for-woocommerce' ),
 				'desc'    => __( 'Enter the translated text of <strong>Read More.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Read More'
+			),
+			array(
+				'name'    => 'rbfw_text_book_it',
+				'label'   => __( 'Book It', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Book It.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Book It'
 			),
 			array(
 				'name'    => 'rbfw_text_pricing_info',
@@ -470,10 +485,10 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 
 			array(
 				'name'    => 'rbfw_text_select_booking_type',
-				'label'   => __( 'Select Booking Type', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => __( 'Choose Booking Type', 'booking-and-rental-manager-for-woocommerce' ),
 				'desc'    => __( 'Enter the translated text of <strong>Select Booking Type.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
-				'default' => 'Select Booking Type'
+				'default' => 'CHOOSE BOOKING TYPE'
 			),
 			array(
 				'name'    => 'rbfw_text_prices_start_at',
@@ -1188,7 +1203,14 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => __( 'Enter the translated text of <strong>Maximum number of days can book is</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Maximum number of days can book is'
-			),																																					
+			),
+			array(
+				'name'    => 'rbfw_text_booking_detail',
+				'label'   => __( 'Booking Detail', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Booking Detail</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Booking Detail'
+			),																																								
 		),
 		'rbfw_basic_style_settings' => array(
 			array(

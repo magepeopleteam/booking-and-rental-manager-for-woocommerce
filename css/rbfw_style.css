@@ -920,7 +920,7 @@ div.superSlider .iconIndicator:hover {
     background: #2d5fd5;
     text-align: center;
     display: block;
-    color: #fff !important;
+    color: #fff;
     font-size: 16px;
     width: 100%;
     padding: 10px;
@@ -1376,6 +1376,7 @@ table.rbfw_room_cart_table th span {
     font-size: 14px;
     float: right;
     padding: 5px;
+    text-decoration: none;
 }
 
 .rbfw-review-section .rbfw-review-reply-btn a:hover {
@@ -1394,6 +1395,10 @@ table.rbfw_room_cart_table th span {
 .rbfw-review-section .rbfw-review-time {
     color: rgba(0, 0, 0, 0.6);
     font-weight: normal;
+}
+
+.rbfw-review-section ul.rbfw-review-list {
+    margin: 0;
 }
 
 .rbfw-review-section ul.rbfw-review-list ul {
@@ -2218,7 +2223,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 .rbfw_mps_user_order_header {
     background: #d3d3d3;
-    padding: 5px;
+    padding: 10px;
     margin-bottom: 5px;
 }
 
@@ -2655,7 +2660,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_bikecarmd_es_table tr {
-    background-color: #fff !important;
+    background-color: #fff;
 }
 
 .rbfw_bikecarmd_es_table tr td {
@@ -2765,6 +2770,10 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin-bottom: 20px;
 }
 
+.rbfw_text_center {
+    text-align: center;
+}
+
 
 /* Slider Mobile View css */
 
@@ -2784,6 +2793,672 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
         height: 100px !important;
     }
     .mpStyle.style_1 .dFlex {
+        display: block;
+    }
+}
+
+
+/* Donut Template CSS */
+
+:root {
+    --rbfw_dt_color1: #ffcd00;
+    --rbfw_dt_color2: #fff;
+    --rbfw_dt_color3: #f8f8f8;
+    --rbfw_dt_color4: #666666;
+    --rbfw_dt_color5: #d3d3d3;
+    --rbfw_dt_color6: #dddddd;
+    --rbfw_dt_color7: #074836;
+    --rbfw_dt_color8: #000;
+    --rbfw_dt_color9: #6F1E51;
+    --rbfw_dt_paragraph_font_size: 14px;
+}
+
+.rbfw_donut_template {
+    width: 100%;
+    margin: 30px 0;
+    max-width: var(--container-max-width);
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 30px;
+    background-color: var(--rbfw_dt_color2);
+}
+
+.rbfw_dt_row_header {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.rbfw_dt_pricing_card {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    background: var(--rbfw_dt_color1);
+    min-width: 260px;
+}
+
+.rbfw_dt_pricing_card_col1,
+.rbfw_dt_pricing_card_col2 {
+    padding: 5px 20px;
+    color: #fff;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.rbfw_dt_pricing_card_price {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 28px;
+}
+
+.rbfw_dt_pricing_card_price span {
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.rbfw_dt_pricing_card_price:nth-child(2) {
+    border-top: 1px dashed;
+}
+
+.rbfw_dt_pricing_card_col1 {
+    line-height: 70px;
+    width: 25%;
+    text-align: center;
+    background: var(--rbfw_dt_color7);
+}
+
+.rbfw_dt_pricing_card_col2 {
+    width: 75%;
+}
+
+.rbfw_dt_title h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 35px;
+    padding: 0;
+}
+
+.rbfw_dt_rating .rbfw-review-rating-wrapper .rbfw-star-rating span.dashicons {
+    color: var(--rbfw_dt_color1);
+}
+
+.rbfw_dt_row_content {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    background-color: var(--rbfw_dt_color3);
+    margin-bottom: 20px;
+}
+
+.rbfw_dt_content_col2 {
+    padding: 20px;
+}
+
+.rbfw_dt_post_content {
+    margin-bottom: 10px;
+    color: var(--rbfw_dt_color4);
+    font-size: var(--rbfw_dt_paragraph_font_size);
+    line-height: 22px;
+}
+
+.rbfw_dt_post_content h1,
+.rbfw_dt_post_content h2,
+.rbfw_dt_post_content h3,
+.rbfw_dt_post_content h4,
+.rbfw_dt_post_content h5,
+.rbfw_dt_post_content h6 {
+    margin: 0;
+}
+
+.rbfw_dt_highlighted_features ul li i {
+    margin-right: 10px;
+    color: var(--rbfw_dt_color2);
+    background: var(--rbfw_dt_color7);
+    padding: 5px;
+    width: 30px;
+    text-align: center;
+}
+
+.rbfw_dt_highlighted_features ul {
+    border: 1px solid var(--rbfw_dt_color3);
+    background: var(--rbfw_dt_color2);
+    margin: 0;
+}
+
+.rbfw_dt_highlighted_features ul li {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--rbfw_dt_color3);
+    width: 50%;
+    display: inline-block;
+    border-left: 1px solid var(--rbfw_dt_color3);
+    color: var(--rbfw_dt_color4);
+    font-size: var(--rbfw_dt_paragraph_font_size);
+    margin: 0;
+}
+
+.rbfw_dt_row_registration,
+.rbfw_dt_row_faq,
+.rbfw_dt_row_related_item,
+.rbfw_dt_row_reviews {
+    padding-top: 20px;
+}
+
+.rbfw_dt_row_faq {
+    margin-bottom: 20px;
+}
+
+.rbfw_dt_heading {
+    font-weight: 700;
+    font-size: 22px;
+    border-bottom: 2px solid var(--rbfw_dt_color5);
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
+.rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header {
+    border-radius: 0;
+}
+
+.rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header-feature i {
+    color: var(--rbfw_dt_color1);
+}
+
+.rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header-feature {
+    font-weight: normal;
+}
+
+.rbfw_dt_row_registration .pricing-content,
+.rbfw_dt_row_registration .rbfw-p-relative,
+.rbfw_dt_row_registration .rbfw-quantity,
+.rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header,
+.rbfw_dt_row_registration .rbfw_bikecarmd_es_table tr,
+.rbfw_dt_row_registration .rbfw-duration .item-content,
+.rbfw_dt_row_registration .rbfw-costing,
+.rbfw_dt_row_registration .rbfw_mps_user_order_summary,
+.rbfw_dt_row_registration .rbfw_mps_user_form_wrap,
+.rbfw_dt_row_registration #checkin_date,
+.rbfw_dt_row_registration #checkout_date {
+    border-left: 5px solid var(--rbfw_dt_color1);
+}
+
+.rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header-title,
+.rbfw_dt_row_registration .rbfw-single-right-heading {
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.rbfw_dt_row_registration .rbfw-datetime .date .calendar,
+.rbfw_dt_row_registration .rbfw-datetime .time .clock {
+    color: var(--rbfw_dt_color1);
+}
+
+.rbfw_dt_row_registration .rbfw-datetime input,
+.rbfw_dt_row_registration .rbfw-datetime select,
+.rbfw_dt_row_registration .rbfw-quantity select,
+.rbfw_dt_row_registration .rbfw_variation_field,
+.rbfw_dt_row_registration .pricing-content,
+.rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header,
+.rbfw_dt_row_registration .rbfw-duration .item-content,
+.rbfw_dt_row_registration .rbfw-costing,
+.rbfw_dt_row_registration .rbfw_mps_user_order_summary,
+.rbfw_dt_row_registration .rbfw_mps_user_form_wrap {
+    background-color: var(--rbfw_dt_color3);
+}
+
+.rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header::after {
+    border-color: var(--rbfw_dt_color3) transparent transparent transparent;
+}
+
+.rbfw_dt_row_registration .rbfw-datetime select,
+.rbfw_dt_row_registration #pickup_time,
+.rbfw_dt_row_registration #dropoff_time,
+.rbfw_dt_row_registration .rbfw-datetime input,
+.rbfw_dt_row_registration .rbfw-quantity select,
+.rbfw_dt_row_registration .rbfw_variation_field,
+.rbfw_dt_row_registration #pickup_date::placeholder,
+.rbfw_dt_row_registration #dropoff_date::placeholder,
+.rbfw_dt_row_registration .pricing-content,
+.rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header,
+.rbfw_dt_row_registration .rbfw-duration .item-content,
+.rbfw_dt_row_registration .rbfw-costing,
+.rbfw_dt_row_registration .rbfw_mps_user_order_summary,
+.rbfw_dt_row_registration .rbfw_mps_user_form_wrap {
+    color: var(--rbfw_dt_color7);
+    font-weight: 500;
+    font-size: var(--rbfw_dt_paragraph_font_size);
+}
+
+.rbfw_dt_row_registration .rbfw_bikecarmd_es_table tr,
+.rbfw_dt_row_registration .rbfw_bikecarmd_es_table {
+    background-color: var(--rbfw_dt_color3);
+    color: var(--rbfw_dt_color7);
+    font-weight: 500;
+    font-size: var(--rbfw_dt_paragraph_font_size);
+}
+
+.rbfw_dt_row_registration .rbfw-book-now-btn {
+    background: var(--rbfw_dt_color1);
+    color: var(--rbfw_dt_color7);
+    font-weight: 600;
+    width: max-content;
+    padding: 10px;
+    text-transform: capitalize;
+    text-decoration: none;
+}
+
+.rbfw_dt_row_registration .rbfw_mps_form_header,
+.rbfw_dt_row_registration .rbfw_mps_user_order_header {
+    background-color: var(--rbfw_dt_color1);
+    font-weight: 900;
+    text-align: center;
+}
+
+.rbfw_dt_row_registration .rbfw_mps_radio_group label {
+    color: #000;
+}
+
+.rbfw_dt_row_registration .rbfw_mps_checkout_form_wrap,
+.rbfw_dt_row_registration .rbfw_stripe_form_wrap {
+    border-radius: 0;
+    border: 0;
+}
+
+.rbfw_dt_row_registration .rbfw_stripe_form_wrap {
+    border-left: 5px solid var(--rbfw_dt_color1);
+    background-color: var(--rbfw_dt_color3);
+}
+
+.rbfw_dt_row_registration #rbfw_stripe_form {
+    border-radius: 0;
+    border: 0;
+    background-color: var(--rbfw_dt_color3);
+    color: var(--rbfw_dt_color7);
+}
+
+.rbfw_dt_row_registration .rbfw-single-container {
+    max-width: 100%;
+}
+
+.rbfw_dt_row_registration .rbfw_bikecarmd_es_table tr td {
+    padding: 10px;
+}
+
+.rbfw_dt_row_registration .rbfw-bikecarsd-calendar-footer {
+    border-left: 5px solid var(--rbfw_dt_color1);
+    border-radius: 0;
+}
+
+.rbfw_dt_row_registration .rbfw-bikecarsd-calendar-footer i {
+    color: var(--rbfw_dt_color1);
+}
+
+.rbfw_dt_row_registration #rbfw-bikecarsd-calendar {
+    background-color: var(--rbfw_dt_color3);
+    padding: 20px;
+    margin-bottom: 10px;
+    border-left: 5px solid var(--rbfw_dt_color1);
+}
+
+.rbfw_dt_row_registration .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time span.rbfw_bikecarsd_time_span {
+    border-radius: 0;
+}
+
+.rbfw_dt_row_registration .rbfw_step_selected_date {
+    border-radius: 0;
+}
+
+.rbfw_dt_row_registration .calendar-box .week .day span:not(.week .day[disabled="disabled"] span) {
+    background: var(--rbfw_dt_color7);
+    border-color: var(--rbfw_dt_color7);
+}
+
+.rbfw_dt_row_registration .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
+    background: var(--rbfw_dt_color7);
+}
+
+.rbfw_dt_row_registration .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.selected:not(a.rbfw_bikecarsd_time.selected.disabled) span.rbfw_bikecarsd_time_span {
+    background: var(--rbfw_dt_color7);
+}
+
+.rbfw_dt_row_registration .rbfw_chk_availability_btn {
+    background: var(--rbfw_dt_color1);
+    color: var(--rbfw_dt_color7);
+    font-weight: 600;
+    width: max-content;
+}
+
+#rbfw_faq_accordion_style_two .rbfw_faq_heading {
+    margin: 0;
+}
+
+#rbfw_faq_accordion_style_two .rbfw_faq_heading_wrapper::before {
+    content: "";
+    width: 40px;
+    height: 100%;
+    background: var(--rbfw_dt_color9);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#rbfw_faq_accordion_style_two .rbfw_faq_heading_wrapper {
+    position: relative;
+}
+
+#rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper .rbfw_faq_heading_collapsed::before {
+    content: "\f067";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 15px;
+    color: #fff;
+    width: 40px;
+    height: 55px;
+    line-height: 45px;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    display: block;
+    text-align: center;
+    z-index: 2;
+    transition: .3s linear;
+}
+
+#rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper.active .rbfw_faq_heading_collapsed::before {
+    content: "\f068";
+}
+
+#rbfw_faq_accordion_style_two .rbfw_faq_heading_collapsed {
+    cursor: pointer;
+    display: block;
+    padding: 10px 30px 10px 60px;
+    background: #e9e9e9;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #000;
+    overflow: hidden;
+    position: relative;
+}
+
+#rbfw_faq_accordion_style_two .rbfw_faq_content::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.05);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper .rbfw_faq_content {
+    padding: 0px 30px 10px 60px;
+    background: #f5f5f5;
+    border-top: none;
+    font-size: 15px;
+    color: #6f6f6f;
+    letter-spacing: 1px;
+    line-height: 28px;
+    position: relative;
+    visibility: hidden;
+    opacity: 0;
+    transition: .4s;
+    overflow: hidden;
+    border-radius: 0;
+    border: none;
+    max-height: 0;
+}
+
+#rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper.active .rbfw_faq_content {
+    visibility: visible;
+    opacity: 1;
+    padding: 10px 30px 10px 60px;
+    max-height: inherit;
+}
+
+#rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper {
+    margin-bottom: 10px;
+    position: relative;
+}
+
+#rbfw_faq_accordion_style_two .rbfw_faq_img img {
+    width: auto;
+}
+
+.rbfw_dt_row_related_item {
+    position: relative;
+}
+
+.rbfw_dt_row_related_item .rbfw-related-product-thumb-wrap {
+    border-radius: 0;
+}
+
+.rbfw_dt_row_related_item .rbfw-related-product-bottom-card {
+    border: 1px solid var(--rbfw_dt_color3);
+    padding: 20px;
+    width: 100%;
+}
+
+.rbfw_dt_row_related_item .rbfw-related-product-bottom-card-pricing-box {
+    border: 1px dashed #c2c2c2;
+    border-radius: 4px;
+    width: max-content;
+    padding: 11px 32px;
+    margin: auto;
+    margin-top: auto;
+    margin-top: -45px;
+    position: relative;
+    background-color: var(--rbfw_dt_color9);
+}
+
+.rbfw_dt_row_related_item .rbfw-related-product-price-wrap {
+    margin-bottom: 0px;
+    color: var(--rbfw_dt_color2);
+    font-weight: 600;
+}
+
+.rbfw_dt_row_related_item .rbfw-related-product-title-wrap {
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+.rbfw_dt_row_related_item .rbfw_dt_rating {
+    text-align: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.rbfw_dt_row_related_item .rbfw-related-product-features ul li i {
+    margin-right: 0px;
+    padding: 5px;
+    font-size: 20px;
+}
+
+.rbfw_dt_row_related_item .rbfw-related-product-features ul {
+    background: var(--rbfw_dt_color2);
+    margin: 0;
+    text-align: center;
+}
+
+.rbfw_dt_row_related_item .rbfw-related-product-features ul li {
+    padding: 5px;
+    width: 45px;
+    display: inline-block;
+    color: var(--rbfw_dt_color7);
+    font-size: var(--rbfw_dt_paragraph_font_size);
+    margin: 5px;
+    border: 1px solid var(--rbfw_dt_color3);
+    cursor: pointer;
+}
+
+.rbfw_dt_row_related_item .rbfw-related-product-features ul li:hover {
+    border-color: var(--rbfw_dt_color1);
+}
+
+.rbfw_dt_row_related_item .rbfw-review-rating-wrapper .rbfw-review-rating-info {
+    font-size: var(--rbfw_dt_paragraph_font_size);
+    color: var(--rbfw_dt_color8);
+}
+
+.rbfw_dt_row_related_item a.rbfw-related-product-btn {
+    border-radius: 0;
+    background-color: var(--rbfw_dt_color1);
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--rbfw_dt_color7);
+}
+
+.rbfw_dt_row_reviews ul li {
+    list-style-type: none;
+}
+
+.rbfw_dt_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span {
+    color: var(--rbfw_dt_color1);
+}
+
+.rbfw_dt_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span.dashicons-star-empty {
+    background: #ccc;
+}
+
+.rbfw_dt_row_reviews .rbfw-review-section .rbfw-review-reply-btn a {
+    border-radius: 0;
+}
+
+.rbfw_dt_row_reviews .rbfw-review-section .rbfw-single-review-row .rbfw-single-review-col-2 {
+    border-radius: 0;
+    background: var(--rbfw_dt_color3);
+    border: none;
+}
+
+.rbfw_dt_row_reviews .rbfw-review-section input,
+.rbfw_dt_row_reviews .rbfw-review-section textarea {
+    border-radius: 0;
+    border-left: 5px solid var(--rbfw_dt_color1);
+}
+
+.rbfw_dt_row_reviews .rbfw_review_submit_btn {
+    background: var(--rbfw_dt_color1);
+    border-radius: 0;
+    border: 0;
+    color: var(--rbfw_dt_color7);
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: capitalize;
+    cursor: pointer;
+}
+
+.rbfw_dt_row_reviews .rbfw-review-rating-container>input:checked~label::before,
+.rbfw_dt_row_reviews .rbfw-review-rating-container>input+label:hover~label::before,
+.rbfw_dt_row_reviews .rbfw-review-rating-container>input+label:hover::before,
+.rbfw_dt_row_reviews .rbfw-review-section .comment-respond p.comment-notes a,
+.rbfw_dt_row_reviews .rbfw-review-section .comment-respond p.logged-in-as a,
+.rbfw_dt_row_reviews .rbfw-review-section #cancel-comment-reply-link {
+    color: var(--rbfw_dt_color1);
+}
+
+.rbfw_dt_row_reviews .rbfw-review-section .rbfw-review-reply-btn a:hover {
+    background: var(--rbfw_dt_color1);
+}
+
+.rbfw_dt_row_reviews .rbfw-review-section .rbfw-mt-50 {
+    margin-top: 20px;
+}
+
+.rbfw_dt_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span {
+    color: var(--rbfw_dt_color2);
+    background: var(--rbfw_dt_color7);
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.rbfw_dt_row_reviews .comment-respond {
+    display: none;
+}
+
+.rbfw_dt_row_reviews .rbfw-review-list li {
+    display: none;
+    margin: 0;
+}
+
+.rbfw_dt_row_reviews .rbfw-review-list li:first-child {
+    display: block;
+}
+
+.rbfw_dt_row_reviews .rbfw_dt_review_load_more_btn_wrapper {
+    display: none;
+}
+
+.rbfw_dt_row_reviews .rbfw_dt_review_load_more_btn {
+    margin: auto;
+    display: block;
+    border: 0;
+    padding: 10px;
+    cursor: pointer;
+    background: var(--rbfw_dt_color1);
+    color: var(--rbfw_dt_color7);
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: capitalize;
+    text-decoration: none;
+}
+
+.rbfw_dt_row_reviews .rbfw_dt_review_write_btn {
+    border: 0;
+    padding: 10px;
+    cursor: pointer;
+    background: var(--rbfw_dt_color1);
+    color: var(--rbfw_dt_color7);
+    font-weight: 600;
+    font-size: 16px;
+    text-transform: capitalize;
+    text-decoration: none;
+}
+
+.rbfw_dt_row_reviews .rbfw_dt_review_write_btn_wrapper {
+    text-align: right;
+}
+
+.rbfw_dt_row_related_item .rbfw-related-product-thumb {
+    width: 100%;
+    height: 300px;
+    background-size: 100% 100%;
+}
+
+@media only screen and (min-width: 792px) {
+    .rbfw_dt_header_col1,
+    .rbfw_dt_header_col2 {
+        width: 50%;
+    }
+    .rbfw_dt_content_col1,
+    .rbfw_dt_content_col2 {
+        width: 50%;
+    }
+    .rbfw_dt_pricing {
+        width: max-content;
+        float: right;
+    }
+}
+
+@media only screen and (max-width: 792px) {
+    .rbfw_dt_row_header {
+        display: block;
+    }
+    .rbfw_dt_header_col1,
+    .rbfw_dt_header_col2 {
+        margin-bottom: 10px;
+    }
+    .rbfw_dt_row_content {
         display: block;
     }
 }

@@ -603,6 +603,11 @@
 *************************/
 add_action('rbfw_the_faq_only','rbfw_get_faq_func');
 function rbfw_get_faq_func($post_id){
+
+	if(empty($post_id)){
+		return;
+	}
+
 	$rbfw_faq_arr 		= get_post_meta( $post_id, 'mep_event_faq', true );
 
 	if(! empty($rbfw_faq_arr)){
@@ -640,11 +645,11 @@ function rbfw_get_faq_func($post_id){
 	<?php } ?>  
 	</div>
 	<script>
-	jQuery( function() {
+	jQuery(document).ready(function(){
 		jQuery( "#rbfw_faq_accordion" ).accordion({
 			heightStyle: "content"
 		});
-	} );
+	});	
 	</script>
 <?php
 	}
@@ -690,6 +695,11 @@ function rbfw_post_share_meta($post_id){
 // Related products function
 add_action('rbfw_related_products','rbfw_related_products');
 function rbfw_related_products($post_id){
+
+	if(empty($post_id)){
+		return;
+	}
+
 	global $rbfw;
 	$rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize(get_post_meta( $post_id, 'rbfw_releted_rbfw', true )) : array();
 	$hourly_rate_label = $rbfw->get_option('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
@@ -697,7 +707,7 @@ function rbfw_related_products($post_id){
 
 	if(isset($rbfw_related_post_arr) && ! empty($rbfw_related_post_arr)){
 	?>
-		<div class="rbfw-related-product-heading"><?php rbfw_string('rbfw_text_related_products',__('Related products','booking-and-rental-manager-for-woocommerce')); ?></div>
+		<div class="rbfw-related-product-heading"><?php rbfw_string('rbfw_text_related_items',__('Related Items','booking-and-rental-manager-for-woocommerce')); ?></div>
 		<hr>
 		<div class="owl-carousel rbfw-related-product">
 			<?php foreach ($rbfw_related_post_arr as $rbfw_related_post_id) {
@@ -705,6 +715,7 @@ function rbfw_related_products($post_id){
 			$title = get_the_title($rbfw_related_post_id);
 
 			$price = get_post_meta($rbfw_related_post_id, 'rbfw_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_hourly_rate', true) : 0;
+			$price = (float)$price;
 
 			// sunday rate
 			$price_sun = get_post_meta($rbfw_related_post_id, 'rbfw_sun_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_sun_hourly_rate', true) : 0;
@@ -737,21 +748,21 @@ function rbfw_related_products($post_id){
 			$current_day = date('D');
 
 			if($current_day == 'Sun' && $enabled_sun == 'yes'){
-				$price = $price_sun;
+				$price = (float)$price_sun;
 			}elseif($current_day == 'Mon' && $enabled_mon == 'yes'){
-				$price = $price_mon;
+				$price = (float)$price_mon;
 			}elseif($current_day == 'Tue' && $enabled_tue == 'yes'){
-				$price = $price_tue;
+				$price = (float)$price_tue;
 			}elseif($current_day == 'Wed' && $enabled_wed == 'yes'){
-				$price = $price_wed;
+				$price = (float)$price_wed;
 			}elseif($current_day == 'Thu' && $enabled_thu == 'yes'){
-				$price = $price_thu;
+				$price = (float)$price_thu;
 			}elseif($current_day == 'Fri' && $enabled_fri == 'yes'){
-				$price = $price_fri;
+				$price = (float)$price_fri;
 			}elseif($current_day == 'Sat' && $enabled_sat == 'yes'){
-				$price = $price_sat;
+				$price = (float)$price_sat;
 			}else{
-				$price = $price;	
+				$price = (float)$price;	
 			}
 
 			$current_date = date('Y-m-d');
@@ -772,7 +783,7 @@ function rbfw_related_products($post_id){
 
 				foreach ($sp_array as $sp_arr) {
 					if (in_array($current_date,$sp_arr['sp_dates'])){
-						$price = $sp_arr['sp_hourly_rate'];
+						$price = (float)$sp_arr['sp_hourly_rate'];
 					}
 				}
 			}
@@ -788,14 +799,14 @@ function rbfw_related_products($post_id){
 				$rbfw_daynight_rate[] = $value['rbfw_room_daynight_rate'];
 			}
 			$merged_arr = array_merge($rbfw_daylong_rate,$rbfw_daynight_rate);
-			$smallest_price = min($merged_arr);
+			$smallest_price = (float)min($merged_arr);
 			endif;
 			?>
 
 			<div class="item">
 				<div class="rbfw-related-product-thumb-wrap"><a href="<?php echo esc_url($permalink); ?>"><div class="rbfw-related-product-thumb"><img src="<?php echo esc_url($thumb_url); ?>" alt="<?php esc_attr_e('Featured Image','booking-and-rental-manager-for-woocommerce'); ?>"></div></a></div>
 				<div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
-				<?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_item_type != 'appointment'): ?>
+				<?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
 				<div class="rbfw-related-product-price-wrap"><?php echo esc_html($hourly_rate_label); ?>: <?php echo rbfw_mps_price($price); ?></div>
 				<?php endif; ?>
 				<?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
@@ -2094,5 +2105,430 @@ function rbfw_check_min_max_booking_day_active(){
 	}
 	else{
 		return false;
+	}
+}
+
+/****************************************************
+ * Get hourly/daily price for Bike/Car Multiple Day
+ ****************************************************/
+function rbfw_get_bike_car_md_hourly_daily_price($rbfw_id, $price_type){
+	if(empty($rbfw_id) || empty($price_type)){
+		return;
+	}
+	$daily_rate = get_post_meta($rbfw_id, 'rbfw_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_daily_rate', true) : 0;
+	$hourly_rate = get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) : 0;
+
+	// sunday rate
+	$hourly_rate_sun = get_post_meta($rbfw_id, 'rbfw_sun_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_sun_hourly_rate', true) : 0;
+	$daily_rate_sun = get_post_meta($rbfw_id, 'rbfw_sun_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_sun_daily_rate', true) : 0;
+	$enabled_sun = get_post_meta($rbfw_id, 'rbfw_enable_sun_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_sun_day', true) : 'yes';
+
+	// monday rate
+	$hourly_rate_mon = get_post_meta($rbfw_id, 'rbfw_mon_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_mon_hourly_rate', true) : 0;
+	$daily_rate_mon = get_post_meta($rbfw_id, 'rbfw_mon_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_mon_daily_rate', true) : 0;
+	$enabled_mon = get_post_meta($rbfw_id, 'rbfw_enable_mon_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_mon_day', true) : 'yes';
+
+	// tuesday rate
+	$hourly_rate_tue = get_post_meta($rbfw_id, 'rbfw_tue_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_tue_hourly_rate', true) : 0;
+	$daily_rate_tue = get_post_meta($rbfw_id, 'rbfw_tue_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_tue_daily_rate', true) : 0;
+	$enabled_tue = get_post_meta($rbfw_id, 'rbfw_enable_tue_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_tue_day', true) : 'yes';
+
+	// wednesday rate
+	$hourly_rate_wed = get_post_meta($rbfw_id, 'rbfw_wed_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_wed_hourly_rate', true) : 0;
+	$daily_rate_wed = get_post_meta($rbfw_id, 'rbfw_wed_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_wed_daily_rate', true) : 0;
+	$enabled_wed = get_post_meta($rbfw_id, 'rbfw_enable_wed_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_wed_day', true) : 'yes';
+
+	// thursday rate
+	$hourly_rate_thu = get_post_meta($rbfw_id, 'rbfw_thu_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_thu_hourly_rate', true) : 0;
+	$daily_rate_thu = get_post_meta($rbfw_id, 'rbfw_thu_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_thu_daily_rate', true) : 0;
+	$enabled_thu = get_post_meta($rbfw_id, 'rbfw_enable_thu_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_thu_day', true) : 'yes';
+	
+	// friday rate
+	$hourly_rate_fri = get_post_meta($rbfw_id, 'rbfw_fri_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_fri_hourly_rate', true) : 0;
+	$daily_rate_fri = get_post_meta($rbfw_id, 'rbfw_fri_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_fri_daily_rate', true) : 0;
+	$enabled_fri = get_post_meta($rbfw_id, 'rbfw_enable_fri_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_fri_day', true) : 'yes';	
+	
+	// saturday rate
+	$hourly_rate_sat = get_post_meta($rbfw_id, 'rbfw_sat_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_sat_hourly_rate', true) : 0;
+	$daily_rate_sat = get_post_meta($rbfw_id, 'rbfw_sat_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_sat_daily_rate', true) : 0;
+	$enabled_sat = get_post_meta($rbfw_id, 'rbfw_enable_sat_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_sat_day', true) : 'yes';
+	
+	$current_day = date('D');
+
+	if($current_day == 'Sun' && $enabled_sun == 'yes'){
+		$hourly_rate = $hourly_rate_sun;
+		$daily_rate = $daily_rate_sun;
+	}elseif($current_day == 'Mon' && $enabled_mon == 'yes'){
+		$hourly_rate = $hourly_rate_mon;
+		$daily_rate = $daily_rate_mon;
+	}elseif($current_day == 'Tue' && $enabled_tue == 'yes'){
+		$hourly_rate = $hourly_rate_tue;
+		$daily_rate = $daily_rate_tue;
+	}elseif($current_day == 'Wed' && $enabled_wed == 'yes'){
+		$hourly_rate = $hourly_rate_wed;
+		$daily_rate = $daily_rate_wed;
+	}elseif($current_day == 'Thu' && $enabled_thu == 'yes'){
+		$hourly_rate = $hourly_rate_thu;
+		$daily_rate = $daily_rate_thu;
+	}elseif($current_day == 'Fri' && $enabled_fri == 'yes'){
+		$hourly_rate = $hourly_rate_fri;
+		$daily_rate = $daily_rate_fri;
+	}elseif($current_day == 'Sat' && $enabled_sat == 'yes'){
+		$hourly_rate = $hourly_rate_sat;
+		$daily_rate = $daily_rate_sat;
+	}else{
+		$hourly_rate = $hourly_rate;
+		$daily_rate = $daily_rate;		
+	}
+
+	$current_date = date('Y-m-d');
+	$rbfw_sp_prices = get_post_meta( $rbfw_id, 'rbfw_seasonal_prices', true );
+	if(!empty($rbfw_sp_prices)){
+		$sp_array = [];
+		$i = 0;
+		foreach ($rbfw_sp_prices as $value) {
+			$rbfw_sp_start_date = $value['rbfw_sp_start_date'];
+			$rbfw_sp_end_date 	= $value['rbfw_sp_end_date'];
+			$rbfw_sp_price_h 	= $value['rbfw_sp_price_h'];
+			$rbfw_sp_price_d 	= $value['rbfw_sp_price_d'];
+			$sp_array[$i]['sp_dates'] = rbfw_getBetweenDates($rbfw_sp_start_date, $rbfw_sp_end_date);
+			$sp_array[$i]['sp_hourly_rate'] = $rbfw_sp_price_h;
+			$sp_array[$i]['sp_daily_rate']  = $rbfw_sp_price_d;
+			$i++;
+		}
+
+		foreach ($sp_array as $sp_arr) {
+			if (in_array($current_date,$sp_arr['sp_dates'])){
+				$hourly_rate = $sp_arr['sp_hourly_rate'];
+				$daily_rate  = $sp_arr['sp_daily_rate'];
+			}
+		}
+	}
+
+	if($price_type == 'hourly'){
+
+		return $hourly_rate;
+	}
+
+	if($price_type == 'daily'){
+		
+		return $daily_rate;
+	}	
+}
+
+// Related products function
+add_action('rbfw_related_products_style_two','rbfw_related_products_style_two');
+function rbfw_related_products_style_two($post_id){
+
+	if(empty($post_id)){
+		return;
+	}
+
+	global $rbfw;
+	$rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize(get_post_meta( $post_id, 'rbfw_releted_rbfw', true )) : array();
+	$hourly_rate_label = $rbfw->get_option('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
+	$prices_start_at = $rbfw->get_option('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
+
+	if(!empty($rbfw_related_post_arr)){
+
+		echo '<div class="owl-carousel owl-theme t_carousel">';
+
+		foreach ($rbfw_related_post_arr as $rbfw_related_post_id) {
+
+			$rbfw_rent_type = get_post_meta( $rbfw_related_post_id, 'rbfw_item_type', true );
+
+			$thumb_url  = !empty(get_the_post_thumbnail_url( $rbfw_related_post_id, 'full' )) ? get_the_post_thumbnail_url( $rbfw_related_post_id, 'full' ) : RBFW_PLUGIN_URL. '/assets/images/no_image.png';	
+			$title = get_the_title($rbfw_related_post_id);
+
+			$price = get_post_meta($rbfw_related_post_id, 'rbfw_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_hourly_rate', true) : 0;
+			$price = (float)$price;
+			// sunday rate
+			$price_sun = get_post_meta($rbfw_related_post_id, 'rbfw_sun_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_sun_hourly_rate', true) : 0;
+			$enabled_sun = get_post_meta($rbfw_related_post_id, 'rbfw_enable_sun_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_sun_day', true) : 'yes';
+
+			// monday rate
+			$price_mon = get_post_meta($rbfw_related_post_id, 'rbfw_mon_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_mon_hourly_rate', true) : 0;
+			$enabled_mon = get_post_meta($rbfw_related_post_id, 'rbfw_enable_mon_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_mon_day', true) : 'yes';
+
+			// tuesday rate
+			$price_tue = get_post_meta($rbfw_related_post_id, 'rbfw_tue_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_tue_hourly_rate', true) : 0;
+			$enabled_tue = get_post_meta($rbfw_related_post_id, 'rbfw_enable_tue_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_tue_day', true) : 'yes';
+
+			// wednesday rate
+			$price_wed = get_post_meta($rbfw_related_post_id, 'rbfw_wed_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_wed_hourly_rate', true) : 0;
+			$enabled_wed = get_post_meta($rbfw_related_post_id, 'rbfw_enable_wed_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_wed_day', true) : 'yes';
+
+			// thursday rate
+			$price_thu = get_post_meta($rbfw_related_post_id, 'rbfw_thu_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_thu_hourly_rate', true) : 0;
+			$enabled_thu = get_post_meta($rbfw_related_post_id, 'rbfw_enable_thu_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_thu_day', true) : 'yes';
+
+			// friday rate
+			$price_fri = get_post_meta($rbfw_related_post_id, 'rbfw_fri_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_fri_hourly_rate', true) : 0;
+			$enabled_fri = get_post_meta($rbfw_related_post_id, 'rbfw_enable_fri_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_fri_day', true) : 'yes';	
+
+			// saturday rate
+			$price_sat = get_post_meta($rbfw_related_post_id, 'rbfw_sat_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_sat_hourly_rate', true) : 0;
+			$enabled_sat = get_post_meta($rbfw_related_post_id, 'rbfw_enable_sat_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_sat_day', true) : 'yes';
+
+			$current_day = date('D');
+
+			if($current_day == 'Sun' && $enabled_sun == 'yes'){
+				$price = (float)$price_sun;
+			}elseif($current_day == 'Mon' && $enabled_mon == 'yes'){
+				$price = (float)$price_mon;
+			}elseif($current_day == 'Tue' && $enabled_tue == 'yes'){
+				$price = (float)$price_tue;
+			}elseif($current_day == 'Wed' && $enabled_wed == 'yes'){
+				$price = (float)$price_wed;
+			}elseif($current_day == 'Thu' && $enabled_thu == 'yes'){
+				$price = (float)$price_thu;
+			}elseif($current_day == 'Fri' && $enabled_fri == 'yes'){
+				$price = (float)$price_fri;
+			}elseif($current_day == 'Sat' && $enabled_sat == 'yes'){
+				$price = (float)$price_sat;
+			}else{
+				$price = (float)$price;	
+			}
+
+			$current_date = date('Y-m-d');
+			$rbfw_sp_prices = get_post_meta( $rbfw_related_post_id, 'rbfw_seasonal_prices', true );
+			if(!empty($rbfw_sp_prices)){
+				$sp_array = [];
+				$i = 0;
+				foreach ($rbfw_sp_prices as $value) {
+					$rbfw_sp_start_date = $value['rbfw_sp_start_date'];
+					$rbfw_sp_end_date 	= $value['rbfw_sp_end_date'];
+					$rbfw_sp_price_h 	= $value['rbfw_sp_price_h'];
+					$rbfw_sp_price_d 	= $value['rbfw_sp_price_d'];
+					$sp_array[$i]['sp_dates'] = rbfw_getBetweenDates($rbfw_sp_start_date, $rbfw_sp_end_date);
+					$sp_array[$i]['sp_hourly_rate'] = $rbfw_sp_price_h;
+					$sp_array[$i]['sp_daily_rate']  = $rbfw_sp_price_d;
+					$i++;
+				}
+
+				foreach ($sp_array as $sp_arr) {
+					if (in_array($current_date,$sp_arr['sp_dates'])){
+						$price = (float)$sp_arr['sp_hourly_rate'];
+					}
+				}
+			}
+			$permalink = get_the_permalink($rbfw_related_post_id);
+			
+
+			/* Resort Type */
+			$rbfw_room_data = get_post_meta( $rbfw_related_post_id, 'rbfw_resort_room_data', true );
+			if(!empty($rbfw_room_data) && $rbfw_rent_type == 'resort'):
+				$rbfw_daylong_rate = [];
+				$rbfw_daynight_rate = [];
+				foreach ($rbfw_room_data as $key => $value) {
+
+					if(!empty($value['rbfw_room_daylong_rate'])){
+						$rbfw_daylong_rate[] =  $value['rbfw_room_daylong_rate'];
+					}
+					
+					if(!empty($value['rbfw_room_daynight_rate'])){
+						$rbfw_daynight_rate[] = $value['rbfw_room_daynight_rate'];
+					}
+					
+				}
+				$merged_arr = array_merge($rbfw_daylong_rate,$rbfw_daynight_rate);
+
+				if(!empty($merged_arr)){
+					$smallest_price = min($merged_arr);
+					$smallest_price = (float)$smallest_price;
+				} else {
+					$smallest_price = 0;
+				}
+				$price = $smallest_price;
+			endif;
+
+			/* Single Day/Appointment Type */
+			$rbfw_bike_car_sd_data = get_post_meta( $rbfw_related_post_id, 'rbfw_bike_car_sd_data', true );
+			if(!empty($rbfw_bike_car_sd_data) && ($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment')):
+				$rbfw_price_arr = [];
+
+				foreach ($rbfw_bike_car_sd_data as $key => $value) {
+
+					if(!empty($value['price'])){
+						$rbfw_price_arr[] =  $value['price'];
+					}
+					
+				}
+
+				if(!empty($rbfw_price_arr)){
+					$smallest_price = min($rbfw_price_arr);
+					$smallest_price = (float)$smallest_price;
+				} else {
+					$smallest_price = 0;
+				}
+				$price = $smallest_price;
+			endif;
+
+			$post_review_rating = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating($rbfw_related_post_id) : '';
+			$highlited_features = get_post_meta($rbfw_related_post_id, 'rbfw_highlights_texts', true) ? maybe_unserialize(get_post_meta($rbfw_related_post_id, 'rbfw_highlights_texts', true)) : [];
+			?>
+			<div class="item">
+				<div class="rbfw-related-product-thumb-wrap"><a href="<?php echo esc_url($permalink); ?>"><div class="rbfw-related-product-thumb" style="background-image:url(<?php echo esc_url($thumb_url); ?>)"></div></a></div>
+
+				<div class="rbfw-related-product-bottom-card">
+					<div class="rbfw-related-product-bottom-card-pricing-box">
+						<?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
+							<div class="rbfw-related-product-price-wrap"><?php echo esc_html($hourly_rate_label); ?>: <?php echo rbfw_mps_price($price); ?></div>
+						<?php endif; ?>
+
+						<?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
+							<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
+						<?php endif; ?>
+						
+						<?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
+							<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
+						<?php endif; ?>
+					</div>
+
+					<div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
+
+					<?php if(!empty($highlited_features)): ?>
+						<div class="rbfw-related-product-features">
+						<?php if ( $highlited_features ) : ?>
+							<ul>
+								<?php 
+								$i = 1;
+								foreach ( $highlited_features as $feature ) :
+
+								if($i <= 4){	
+									if($feature['icon']):
+										$icon = $feature['icon'];
+									else:
+										$icon = 'fas fa-arrow-right';
+									endif;
+
+									if($feature['title']):
+										$rand_number = rand();
+										echo '<li class="title'.$rand_number.'"><i class="'.mep_esc_html($icon).'"></i></li>';
+										?>
+										<script>
+										jQuery(document).ready(function(){
+											let content<?php echo $rand_number; ?> = '<?php echo $feature['title']; ?>';
+											tippy('.title'+<?php echo $rand_number; ?>, {content: content<?php echo $rand_number; ?>,theme: 'blue',placement: 'top'});
+										});
+										</script>
+										<?php
+									endif;
+								}
+								$i++;	
+								endforeach; 
+								?>
+							</ul>
+							<?php endif; ?>
+						</div>
+					<?php endif; ?>
+				</div>
+
+				<div class="rbfw-related-product-btn-wrap"><a href="<?php echo esc_url($permalink); ?>" class="rbfw-related-product-btn"><?php rbfw_string('rbfw_text_book_it',__('Book It','booking-and-rental-manager-for-woocommerce')); ?></a></div>
+			</div>
+			<?php
+		}
+
+		echo '</div>';
+	}
+	?>
+		<script>
+			
+			jQuery(document).ready(function(){
+				jQuery(".owl-carousel.t_carousel").owlCarousel({
+					loop:true,
+					margin:15,
+					responsiveClass:true,
+					dots: true,
+					responsive:{
+						0:{
+							items:1,
+							//nav:false,
+							dots: true
+						},
+						600:{
+							items:2,
+							//nav:false,
+							dots: true
+						},
+						1000:{
+							items:4,
+							//nav:false,
+							loop:true,
+							dots: true
+						}
+					}
+				});
+			});	
+			
+		</script>
+	<?php
+}
+
+/************************
+* GET RENT FAQ's Content
+*************************/
+add_action('rbfw_the_faq_style_two','rbfw_the_faq_style_two_func');
+function rbfw_the_faq_style_two_func($post_id){
+
+	if(empty($post_id)){
+		return;
+	}
+
+	$rbfw_faq_arr 		= get_post_meta( $post_id, 'mep_event_faq', true );
+
+	if(! empty($rbfw_faq_arr)){
+
+	$rbfw_faq_title 	= array_column($rbfw_faq_arr, 'rbfw_faq_title');
+	$rbfw_faq_img 		= array_column($rbfw_faq_arr, 'rbfw_faq_img');
+	$rbfw_faq_content 	= array_column($rbfw_faq_arr, 'rbfw_faq_content');
+	$count_faq_arr 		= count($rbfw_faq_arr);
+?>
+	<div id="rbfw_faq_accordion_style_two">
+	
+		<?php for ($x = 0; $x < $count_faq_arr; $x++) { ?>
+			<div class="rbfw_faq_accordion_wrapper">
+				<?php if(! empty($rbfw_faq_title[$x])): ?>
+				<div class="rbfw_faq_heading_wrapper">
+					<h3 class="rbfw_faq_heading">
+						<span class="rbfw_faq_heading_collapsed"><?php echo esc_html($rbfw_faq_title[$x]); ?></span>
+					</h3>
+				</div>
+				<?php endif; ?>
+				<div class="rbfw_faq_content_wrapper">
+					<div class="rbfw_faq_content">
+					<div class="rbfw_faq_img"> 
+						<?php
+						if(! empty($rbfw_faq_img[$x])):
+							$rbfw_img_id_arr = explode (",", $rbfw_faq_img[$x]);
+							foreach ($rbfw_img_id_arr as $attachment_id) {
+								$url = wp_get_attachment_url( $attachment_id );
+								echo '<img src="'.esc_url($url).'"/>';
+							}
+						endif;
+						?>
+						</div>
+						<p class="rbfw_faq_desc">
+	
+						<?php
+						if(! empty($rbfw_faq_content[$x])):
+							echo esc_html($rbfw_faq_content[$x]); 
+						endif;
+						?>
+						</p>
+					</div>
+				</div>
+			</div>
+		<?php } ?>  
+	</div>
+	<script>
+	jQuery(document).ready(function(){
+		jQuery('#rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper').click(function (e) {
+			jQuery(this).toggleClass("active");
+			
+		});
+	});	
+	</script>
+<?php
 	}
 }

@@ -2221,3 +2221,7 @@ input.rbfw_time_slot_edit_slot_label {
     background-color: #e3e3e3;
     font-size: 14px;
 }
+
+.mp_tab_item[data-tab-item="#travel_pricing"] hr {
+    border: none;
+}
