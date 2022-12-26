@@ -5944,6 +5944,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             $value 			= isset( $option['value'] ) ? $option['value'] : "";
             $value          = !empty($value) ? $value : $default;
             $field_id       = $id;
+
             if(!empty($conditions)):
 
                 $depends = '';
@@ -5962,7 +5963,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
                 $depends .= "{'[name=".$field."]':";
                 $depends .= '{';
-
+                
                 if(!empty($type)):
                     $depends .= "'type':";
                     $depends .= "'".$type."'";

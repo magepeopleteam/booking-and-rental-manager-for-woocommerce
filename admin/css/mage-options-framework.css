@@ -1080,7 +1080,8 @@ div>.ppof-metabox {
 
 .field-switch-wrapper label.checked[for="rbfw_multiple_quantity_switch-off"],
 .field-switch-wrapper label.checked[for="rbfw_time_slot_switch-off"],
-.field-switch-wrapper label.checked[for="rbfw_available_qty_info_switch-off"] {
+.field-switch-wrapper label.checked[for="rbfw_available_qty_info_switch-off"],
+.field-switch-wrapper label.checked[for="rbfw_dt_sidebar_switch-off"] {
     background-color: #646464;
     background-image: -khtml-gradient(linear, left top, left bottom, from(#929292), to(#646464));
     background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #929292), color-stop(100%, #646464));

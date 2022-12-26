@@ -21,6 +21,8 @@ $enable_daily_rate = get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) ? g
 $enable_hourly_rate = get_post_meta($rbfw_id, 'rbfw_enable_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_hourly_rate', true) : 'no';
 $rbfw_enable_daywise_price = get_post_meta($rbfw_id, 'rbfw_enable_daywise_price', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daywise_price', true) : 'no';
 $rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize(get_post_meta( $post_id, 'rbfw_releted_rbfw', true )) : [];
+$rbfw_dt_sidebar_switch  = get_post_meta( $post_id, 'rbfw_dt_sidebar_switch', true ) ? get_post_meta( $post_id, 'rbfw_dt_sidebar_switch', true ) : 'off';
+$rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', true );
 ?>
 <div class="rbfw_donut_template">
 	<div class="rbfw_dt_row_header">
@@ -87,9 +89,17 @@ $rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? 
 			</div>
 		</div>
 	</div>
-	<div class="rbfw_dt_row_registration">
-		<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_booking_detail', 'rbfw_basic_translation_settings', __('Booking Detail','booking-and-rental-manager-for-woocommerce'))); ?></div>
-		<?php include( RBFW_Function::template_path( 'forms/bike-registration.php' ) ); ?>
+
+	<div class="rbfw_dt_row_registration <?php if($rbfw_dt_sidebar_switch == 'on'){ echo 'rbfw_dt_sidebar_enabled'; } ?>">
+		<?php if($rbfw_dt_sidebar_switch == 'on'): ?>
+		<div class="rbfw_dt_registration_col1">
+			<?php echo html_entity_decode($rbfw_dt_sidebar_content); ?>
+		</div>
+		<?php endif; ?>
+		<div class="rbfw_dt_registration_col2">
+			<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_booking_detail', 'rbfw_basic_translation_settings', __('Booking Detail','booking-and-rental-manager-for-woocommerce'))); ?></div>
+			<?php include( RBFW_Function::template_path( 'forms/bike-registration.php' ) ); ?>
+		</div>
 	</div>
 
 	<?php if(!empty($rbfw_enable_faq_content) && $rbfw_enable_faq_content == 'yes'): ?>

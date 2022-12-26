@@ -53,6 +53,9 @@ if(!empty($rbfw_room_data) && $rbfw_rent_type == 'resort'):
 	}	
 	
 endif;
+
+$rbfw_dt_sidebar_switch  = get_post_meta( $post_id, 'rbfw_dt_sidebar_switch', true ) ? get_post_meta( $post_id, 'rbfw_dt_sidebar_switch', true ) : 'off';
+$rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', true );
 ?>
 <div class="rbfw_donut_template">
 	<div class="rbfw_dt_row_header">
@@ -119,9 +122,17 @@ endif;
 			</div>
 		</div>
 	</div>
-	<div class="rbfw_dt_row_registration">
-		<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_booking_detail', 'rbfw_basic_translation_settings', __('Booking Detail','booking-and-rental-manager-for-woocommerce'))); ?></div>
-		<?php include( RBFW_Function::template_path( 'forms/resort-registration.php' ) ); ?>
+
+	<div class="rbfw_dt_row_registration <?php if($rbfw_dt_sidebar_switch == 'on'){ echo 'rbfw_dt_sidebar_enabled'; } ?>">
+		<?php if($rbfw_dt_sidebar_switch == 'on'): ?>
+		<div class="rbfw_dt_registration_col1">
+			<?php echo html_entity_decode($rbfw_dt_sidebar_content); ?>
+		</div>
+		<?php endif; ?>
+		<div class="rbfw_dt_registration_col2">
+			<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_booking_detail', 'rbfw_basic_translation_settings', __('Booking Detail','booking-and-rental-manager-for-woocommerce'))); ?></div>
+			<?php include( RBFW_Function::template_path( 'forms/resort-registration.php' ) ); ?>
+		</div>
 	</div>
 
 	<?php if(!empty($rbfw_enable_faq_content) && $rbfw_enable_faq_content == 'yes'): ?>

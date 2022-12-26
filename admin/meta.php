@@ -1730,7 +1730,24 @@ function rbfw_add_variations_tab_content($rbfw_id){
 							'details'     => __( '', 'booking-and-rental-manager-for-woocommerce' ),
 							'type'        => 'select',
 							'args' => RBFW_Function::all_details_template(),
-						),						
+						),
+						array(
+							'id'      => 'rbfw_dt_sidebar_switch',
+							'title'   => __( 'On/Off Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ),
+							'details' => __( 'It displays a sidebar beside the registration form.', 'booking-and-rental-manager-for-woocommerce' ),
+							'type'    => 'switch',
+							'args' => array(
+								'on' => 'On', 
+								'off' => 'Off',
+							),
+							'default' => 'off',
+						),
+						array(
+							'id'          => 'rbfw_dt_sidebar_content',
+							'title'       => __( 'Donut Template Sidebar Content', 'booking-and-rental-manager-for-woocommerce' ),
+							'details'     => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+							'type'        => 'wp_editor',
+						),												
 					)
 				),
 			

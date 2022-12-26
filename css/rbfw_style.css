@@ -2801,6 +2801,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 /* Donut Template CSS */
 
 :root {
+    --template-max-width: 1270px;
     --rbfw_dt_color1: #ffcd00;
     --rbfw_dt_color2: #fff;
     --rbfw_dt_color3: #f8f8f8;
@@ -2816,7 +2817,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_donut_template {
     width: 100%;
     margin: 30px 0;
-    max-width: var(--container-max-width);
+    max-width: var(--template-max-width);
     margin: auto;
     margin-top: 30px;
     margin-bottom: 30px;
@@ -2960,6 +2961,28 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     border-bottom: 2px solid var(--rbfw_dt_color5);
     margin-bottom: 20px;
     padding-bottom: 20px;
+}
+
+.rbfw_dt_row_registration.rbfw_dt_sidebar_enabled {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.rbfw_dt_row_registration.rbfw_dt_sidebar_enabled .rbfw_dt_registration_col1 {
+    width: 25%;
+}
+
+.rbfw_dt_row_registration.rbfw_dt_sidebar_enabled .rbfw_dt_registration_col2 {
+    width: 75%;
+    padding-left: 20px;
+}
+
+.rbfw_dt_row_registration.rbfw_dt_sidebar_enabled .rbfw_dt_registration_col1 img {
+    max-width: 100%;
+    margin: 0;
+    margin-bottom: 20px;
 }
 
 .rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header {
@@ -3431,8 +3454,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 .rbfw_dt_row_related_item .rbfw-related-product-thumb {
     width: 100%;
-    height: 300px;
-    background-size: 100% 100%;
+    height: 210px;
 }
 
 @media only screen and (min-width: 792px) {
@@ -3460,5 +3482,15 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     }
     .rbfw_dt_row_content {
         display: block;
+    }
+    .rbfw_dt_row_registration.rbfw_dt_sidebar_enabled {
+        display: block;
+    }
+    .rbfw_dt_row_registration.rbfw_dt_sidebar_enabled .rbfw_dt_registration_col1 {
+        width: 100%;
+    }
+    .rbfw_dt_row_registration.rbfw_dt_sidebar_enabled .rbfw_dt_registration_col2 {
+        width: 100%;
+        padding-left: 0px;
     }
 }
