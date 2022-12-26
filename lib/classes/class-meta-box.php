@@ -182,7 +182,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 											<table class="form-table">
 												<tbody>
 													<?php foreach ($section['options'] as $option) : ?>
-														<tr>
+														<tr data-row="<?php echo $option['id']; ?>">
 															<th scope="row"><?php echo esc_html($option['title']); ?></th>
 															<td>
 																<?php

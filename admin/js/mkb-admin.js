@@ -459,5 +459,40 @@
             target.attr('value', updated_value);
         });
 
+        /* Template Options On Load Document */
+        var this_value = jQuery('select#rbfw_single_template').val();
+        if (this_value == 'Default') {
+
+            jQuery('tr[data-row="rbfw_dt_sidebar_switch"]').hide();
+            jQuery('tr[data-row="rbfw_dt_sidebar_testimonials"]').hide();
+            jQuery('tr[data-row="rbfw_dt_sidebar_content"]').hide();
+
+        } else if (this_value == 'Donut') {
+
+            jQuery('tr[data-row="rbfw_dt_sidebar_switch"]').show();
+            jQuery('tr[data-row="rbfw_dt_sidebar_testimonials"]').show();
+            jQuery('tr[data-row="rbfw_dt_sidebar_content"]').show();
+        }
+
+        jQuery('select#rbfw_single_template').on('change', function() {
+
+            var this_value = jQuery(this).val();
+
+            if (this_value == 'Default') {
+
+                jQuery('tr[data-row="rbfw_dt_sidebar_switch"]').hide();
+                jQuery('tr[data-row="rbfw_dt_sidebar_testimonials"]').hide();
+                jQuery('tr[data-row="rbfw_dt_sidebar_content"]').hide();
+
+            } else if (this_value == 'Donut') {
+
+                jQuery('tr[data-row="rbfw_dt_sidebar_switch"]').show();
+                jQuery('tr[data-row="rbfw_dt_sidebar_testimonials"]').show();
+                jQuery('tr[data-row="rbfw_dt_sidebar_content"]').show();
+            }
+
+            return false;
+        });
+        /* End: Template Options On Load Document */
     });
 }(jQuery));

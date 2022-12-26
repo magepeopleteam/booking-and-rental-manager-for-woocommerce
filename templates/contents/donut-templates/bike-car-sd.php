@@ -109,6 +109,7 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 	<div class="rbfw_dt_row_registration <?php if($rbfw_dt_sidebar_switch == 'on'){ echo 'rbfw_dt_sidebar_enabled'; } ?>">
 		<?php if($rbfw_dt_sidebar_switch == 'on'): ?>
 		<div class="rbfw_dt_registration_col1">
+			<?php echo do_action('rbfw_dt_testimonial', $post_id); ?>
 			<?php echo html_entity_decode($rbfw_dt_sidebar_content); ?>
 		</div>
 		<?php endif; ?>

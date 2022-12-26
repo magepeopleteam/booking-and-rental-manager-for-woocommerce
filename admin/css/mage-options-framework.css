@@ -450,8 +450,17 @@ div>.ppof-metabox {
 }
 
 .ppof-settings .collapsible .header {
-    background: #fff;
+    background: #ddd5d5;
     padding: 8px 10px;
+    margin-bottom: 5px;
+    text-align: right;
+}
+
+.item-wrap .header {
+    background: #ddd5d5;
+    padding: 8px 10px;
+    margin-bottom: 5px;
+    text-align: right;
 }
 
 .ppof-settings .collapsible .header span {

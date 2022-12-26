@@ -8376,7 +8376,9 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                         now = jQuery.now();
                         fields_arr = <?php echo json_encode($fields); ?>;
                         html = '<div class="item-wrap collapsible"><div class="header">';
+                        <?php if($collapsible === true): ?>
                         html += '<span  class="title-text button"><i class="fa-solid fa-angles-down"></i> Expand</span>';
+                        <?php endif; ?>
                         <?php if($sortable):?>
                         html += '<span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
                         <?php endif; ?>
@@ -8414,7 +8416,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             }else if(type == 'email'){
                                 html+='<input type="email" name="<?php echo esc_attr($field_name); ?>['+now+']['+element.item_id+']"/>';
                             }else if(type == 'textarea'){
-                                html+='<textarea name="<?php echo esc_attr($field_name); ?>['+now+']['+element.item_id+']"></textarea>';
+                                html+='<textarea name="<?php echo esc_attr($field_name); ?>['+now+']['+element.item_id+']">'+default_val+'</textarea>';
                             }else if(type == 'select'){
                                 args = element.args;
                                 html+='<select name="<?php echo esc_attr($field_name); ?>['+now+']['+element.item_id+']">';
@@ -8478,18 +8480,20 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             $title_field_val = !empty($title_field) ? $this->get_form_title($title_field,$val) : '==> Click to Expand';
                             ?>
                             <div class="item-wrap <?php if($collapsible) echo 'collapsible'; ?>">
-                                <?php if($collapsible):?>
+                               
                                 <div class="header">
-                                    <?php endif; ?>
-                                    <span class="title-text button"><i class="fa-solid fa-angles-down"></i> Expand</span>                                  
+                                   
+                                    <?php if($collapsible === true): ?>
+                                    <span class="title-text button"><i class="fa-solid fa-angles-down"></i> Expand</span> 
+                                    <?php endif; ?>                                 
                                     <?php if($sortable):?>
                                         <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
                                     <?php endif; ?>
                                     
                                     <span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo mep_esc_html($remove_text); ?></span>
-                                    <?php if($collapsible):?>
+                                    
                                 </div>
-                            <?php endif; ?>
+                                   
                                 <?php foreach ($fields as $field_index => $field):
                                     $type               = $field['type'];
                                     $item_id            = $field['item_id'];

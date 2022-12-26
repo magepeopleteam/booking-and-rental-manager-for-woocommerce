@@ -2970,6 +2970,27 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     display: flex;
 }
 
+.rbfw_dt_row_registration .rbfw_dt_testimonial {
+    background: var(--rbfw_dt_color1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.rbfw_dt_row_registration .rbfw_dt_testimonial h4 {
+    margin: 0;
+    margin-bottom: 0px;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.rbfw_dt_row_registration .rbfw_dt_testimonial .item {
+    font-size: 14px;
+}
+
+.rbfw_dt_row_registration .rbfw_dt_testimonial .owl-theme .owl-dots {
+    text-align: left;
+}
+
 .rbfw_dt_row_registration.rbfw_dt_sidebar_enabled .rbfw_dt_registration_col1 {
     width: 25%;
 }

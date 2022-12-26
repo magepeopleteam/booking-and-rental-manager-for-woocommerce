@@ -1742,11 +1742,32 @@ function rbfw_add_variations_tab_content($rbfw_id){
 							),
 							'default' => 'off',
 						),
+
+						array(
+							'id'          => 'rbfw_dt_sidebar_testimonials',
+							'title'       => __( 'Donut Template Sidebar Testimonials', 'booking-and-rental-manager-for-woocommerce' ),
+							'details'     => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+							'collapsible' => false,
+							'type'        => 'repeatable',
+							'title_field' => 'rbfw_dt_sidebar_testimonial_title',
+							'btn_text'    => 'Add New Testimonial',
+							'fields'      => array(
+								array(
+									'type'    => 'textarea',
+									'default' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+									'args'    => '',
+									'item_id' => 'rbfw_dt_sidebar_testimonial_text',
+									'name'    => 'Text',
+								)
+							),
+						),
+
 						array(
 							'id'          => 'rbfw_dt_sidebar_content',
 							'title'       => __( 'Donut Template Sidebar Content', 'booking-and-rental-manager-for-woocommerce' ),
 							'details'     => __( '', 'booking-and-rental-manager-for-woocommerce' ),
 							'type'        => 'wp_editor',
+							'default' => '<img src="'.esc_url('https://booking.mage-people.com/wp-content/uploads/2022/08/sidebar-img.png').'"/>',
 						),												
 					)
 				),

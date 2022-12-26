@@ -2532,3 +2532,48 @@ function rbfw_the_faq_style_two_func($post_id){
 <?php
 	}
 }
+
+/************************
+* GET Donut Testimonial Content
+*************************/
+add_action('rbfw_dt_testimonial', 'rbfw_dt_testimonial_func');
+
+function rbfw_dt_testimonial_func($post_id){
+
+	if(empty($post_id)){
+		return;
+	}
+
+	$testimonials = get_post_meta($post_id, 'rbfw_dt_sidebar_testimonials', true);
+
+	if(empty($testimonials)){
+		return;
+	}
+
+	$testimonials = array_column($testimonials, 'rbfw_dt_sidebar_testimonial_text');
+	?>
+	<div class="rbfw_dt_testimonial">
+		<h4><?php rbfw_string('rbfw_text_testimonials',__('Testimonials','booking-and-rental-manager-for-woocommerce')); ?></h4>
+		<div class="owl-carousel owl-theme">
+			<?php 
+			foreach ($testimonials as $value) {
+				echo '<div class="item">'.esc_html($value).'</div>';
+			}
+			?>
+		</div>
+	</div>
+	<script>
+	jQuery(document).ready(function(){
+		jQuery(".rbfw_dt_testimonial .owl-carousel").owlCarousel({
+			loop:true,
+			margin:10,
+			responsiveClass:true,
+			dots: true,
+			autoplay: true,
+			autoplaySpeed: 1000,
+			items:1,
+		});
+	});		
+	</script>
+	<?php
+}

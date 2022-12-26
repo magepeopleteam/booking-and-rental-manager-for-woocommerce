@@ -1210,6 +1210,13 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => __( 'Enter the translated text of <strong>Booking Detail</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Booking Detail'
+			),
+			array(
+				'name'    => 'rbfw_text_testimonials',
+				'label'   => __( 'Testimonials', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Testimonials</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Testimonials'
 			),																																								
 		),
 		'rbfw_basic_style_settings' => array(
