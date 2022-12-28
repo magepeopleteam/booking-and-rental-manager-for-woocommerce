@@ -266,7 +266,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $item_quantity_box = '';
 
-            //if($reload_es == 1){
+            
 
             $item_quantity_box .= '<select class="rbfw-select" name="rbfw_item_quantity" id="rbfw_item_quantity">
                                     <option value="0">'.rbfw_string_return('rbfw_text_choose_number_of_qty',__('Choose number of quantity','booking-and-rental-manager-for-woocommerce')).'</option>';
@@ -291,7 +291,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $item_quantity_box .= '<div class="rbfw_available_qty_notice">'.$max_available_qty.' '.rbfw_string_return('rbfw_text_left_qty',__('Left','booking-and-rental-manager-for-woocommerce')).'</div>';
             }
 
-            //}
+            
 
             $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
             $rbfw_variations_data = get_post_meta( $post_id, 'rbfw_variations_data', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];

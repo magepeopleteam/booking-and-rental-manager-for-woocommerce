@@ -450,6 +450,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 
                 foreach ($available_times as $value) {
+                    $converted_time =  date("H:i", strtotime($value)); 
                     $ts_time = $this->rbfw_get_time_slot_by_label($value);
                    
                     $is_booked = $this->rbfw_get_time_booking_status($id, $selected_date, $ts_time);
@@ -533,9 +534,19 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     if($value['qty'] > 0){
 
                         $content .= '<tr>';
-                        $content .= '<td class="w_50_pc"><span class="rbfw_bikecarsd_type_title">'.$value['rent_type'].'</span><small class="rbfw_bikecarsd_type_desc">'.$value['short_desc'].'</small></td>';
+                        $content .= '<td class="w_50_pc">';
+                        $content .= '<span class="rbfw_bikecarsd_type_title">'.$value['rent_type'].'</span><small class="rbfw_bikecarsd_type_desc">'.$value['short_desc'].'</small>';
+
+                        if($available_qty_info_switch == 'on'){
+                            $content .= '<small class="rbfw_available_qty_notice">('.rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce')).$max_available_qty.')</small>';
+                        }
+
+                        
+
                         $content .= '<input type="hidden" name="rbfw_bikecarsd_info['.$i.'][rent_type]" value="'.$value['rent_type'].'"/>';
                         $content .= '<input type="hidden" name="rbfw_bikecarsd_info['.$i.'][short_desc]" value="'.$value['short_desc'].'"/>';
+                        $content .= '</td>';
+
                         $content .= '<td class="w_30_pc"><span class="rbfw_bikecarsd_type_price">'.rbfw_mps_price($value['price']).'</span></td>';
                         $content .= '<input type="hidden" name="rbfw_bikecarsd_info['.$i.'][price]" value="'.$value['price'].'"/>';
                         $content .= '<td class="w_20_pc">';
@@ -546,9 +557,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                         $content .= '<a class="rbfw_qty_plus rbfw_bikecarsd_qty_plus"><i class="fa-solid fa-plus"></i></a>';
                         $content .= '</div>';
 
-                        if($available_qty_info_switch == 'on'){
-                            $content .= '<div class="rbfw_available_qty_notice">'.$max_available_qty.' '.rbfw_string_return('rbfw_text_left_qty',__('Left','booking-and-rental-manager-for-woocommerce')).'</div>';
-                        }
+
                         $content .= '</div>';
                         $content .= '</td>';
                         $content .= '</tr>';
@@ -600,6 +609,11 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     if(!empty($value['service_desc'])){
                         $content   .= '<small class="rbfw_bikecarsd_type_desc">'.$value['service_desc'].'</small>';
                     }
+
+                    if($available_qty_info_switch == 'on'){
+
+                        $content .= '<small class="rbfw_available_qty_notice">('.rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce')).$max_es_available_qty.')</small>';
+                    }
                     
                     $content   .= '<input type="hidden" name="rbfw_service_info['.$c.'][service_name]" value="'.$value['service_name'].'"/>';
                     $content   .= '</div>';           
@@ -616,9 +630,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     $content   .= '<a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>';
                     $content   .= '</div>';
                     
-                    if($available_qty_info_switch == 'on'){
-                        $content .= '<div class="rbfw_available_qty_notice">'.$max_es_available_qty.' '.rbfw_string_return('rbfw_text_left_qty',__('Left','booking-and-rental-manager-for-woocommerce')).'</div>';
-                    }
+
                     $content   .= '</div>';
                     $content   .= '</td>';              
                     $content   .= '</tr>';

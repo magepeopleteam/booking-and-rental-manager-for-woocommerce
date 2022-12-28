@@ -214,7 +214,7 @@
 }
 
 .calendar-box .week .day.selected span {
-    background: #099c09 !important;
+    background: var(--rbfw_dt_color7) !important;
     color: white;
 }
 
@@ -239,9 +239,9 @@
 
 .calendar-box .months-wrapper .month span:hover {
     color: #fff;
-    background-color: #0ec40e;
+    background-color: var(--rbfw_single_page_base_color4);
     outline: 0;
-    border: 1px solid #0ec40e;
+    border: 1px solid var(--rbfw_single_page_base_color4);
     border-radius: 5px;
 }
 
@@ -260,12 +260,12 @@
 }
 
 .calendar-box .week .day span:not(.week .day[disabled="disabled"] span) {
-    background: #0ec40e;
+    background: var(--rbfw_single_page_base_color4);
     color: white;
 }
 
 .calendar-box .week .day span:not(.week .day[disabled="disabled"] span):hover {
-    background: #099c09;
+    background: var(--rbfw_dt_color7);
     color: white;
 }
 

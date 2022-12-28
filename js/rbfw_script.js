@@ -103,5 +103,45 @@
             $(".rbfw-tab[data-id='" + $(this).attr('data-id') + "']").addClass("rbfw-tab-active");
             $(this).parent().find(".tab-a").addClass('active-a');
         });
+
+        //Donut Template FAQ/Review Tab
+        jQuery('.rbfw_dt_heading_tab').click(function(e) {
+            jQuery('.rbfw_dt_heading_tab').removeClass('active');
+            jQuery('.rbfw_dt_faq_tab_content').removeClass('active');
+            let this_tab = jQuery(this).attr('data-tab');
+            jQuery(this).addClass('active');
+            jQuery('.rbfw_dt_faq_tab_content[data-content="' + this_tab + '"]').addClass('active');
+        });
+
+        //Grid List Auto Height Function
+        rbfw_grid_list_auto_height_func();
+
+        function rbfw_grid_list_auto_height_func(extra_height = null) {
+            let rbfw_rent_list_height_arr = [];
+            let elemlength = jQuery(".rbfw_rent_list_style_grid .rbfw_rent_list_col").length;
+
+            for (let index = 1; index <= elemlength; index++) {
+                rbfw_rent_list_height_arr.push(jQuery(".rbfw_rent_list_style_grid .rbfw_grid_list_col_" + index).height());
+            }
+
+            let max_value = parseInt(Math.max.apply(Math, rbfw_rent_list_height_arr));
+
+            if (extra_height != '') {
+                max_value = max_value + extra_height;
+            }
+
+            jQuery(".rbfw_rent_list_style_grid .rbfw_rent_list_col .rbfw_rent_list_inner_wrapper").css({ "min-height": max_value });
+            jQuery('.rbfw_rent_list_style_grid .rbfw_rent_list_button_wrap').css({ "position": "absolute", "bottom": "20px" });
+        }
+
+
+        jQuery('.rbfw_grid_view_more_features_btn').click(function(e) {
+            jQuery(this).siblings('.rbfw_absolute_list').find('ul').slideToggle().show();
+            jQuery(this).text(function(i, text) {
+                return text === rbfw_ajaxurl.view_more_feature_btn_text ? rbfw_ajaxurl.hide_more_feature_btn_text : rbfw_ajaxurl.view_more_feature_btn_text;
+            })
+        });
+
+        //End: Grid List Auto Height Function
     });
 })(jQuery)

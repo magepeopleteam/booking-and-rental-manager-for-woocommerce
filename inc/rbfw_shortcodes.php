@@ -46,7 +46,8 @@ function rbfw_rent_list_shortcode_func($atts) {
     ob_start();
     ?>
     <div class="rbfw_rent_list_wrapper rbfw_rent_list_style_<?php echo esc_attr($style); ?>">
-    <?php    
+    <?php
+    $d = 1;    
     if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
 
     if($style == 'grid'):
@@ -63,6 +64,7 @@ function rbfw_rent_list_shortcode_func($atts) {
 
     endif;
 
+    $d++;
     endwhile; endif;
     wp_reset_query(); 
     ?>

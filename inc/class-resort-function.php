@@ -531,12 +531,17 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                     $content   .= '<tr>';
                     $content   .= '<td>';
-                    $content   .= esc_html($value['room_type']);
+                    $content   .= '<span class="room_type_title">'.esc_html($value['room_type']).'</span>';
                     $content   .= '<input type="hidden" name="rbfw_room_info['.$i.'][room_type]" value="'.$value['room_type'].'"/>';
                     if($value['rbfw_room_desc']):
                     $content .= '<small class="rbfw_room_desc">';
                     $content .= $value['rbfw_room_desc'];
                     $content .= '</small>';
+
+                    if($available_qty_info_switch == 'on'){
+                        $content .= '<small class="rbfw_available_qty_notice">('.rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce')).$max_available_qty.')</small>';
+                    }
+
                     $content .= '<input type="hidden" name="rbfw_room_info['.$i.'][room_desc]" value="'.$value['rbfw_room_desc'].'"/>';
                     endif;                
                     $content   .= '</td>';
@@ -552,10 +557,6 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     $content   .= '<input type="number" min="0" max="'.esc_attr($max_available_qty).'" value="0" name="rbfw_room_info['.$i.'][room_qty]" class="rbfw_room_qty" data-price="'.$price.'" data-type="'.$value['room_type'].'" data-cat="room"/>';
                     $content   .= '<a class="rbfw_qty_plus rbfw_room_qty_plus"><i class="fa-solid fa-plus"></i></a>';
                     $content   .= '</div>';
-
-                    if($available_qty_info_switch == 'on'){
-                        $content .= '<div class="rbfw_available_qty_notice">'.$max_available_qty.' '.rbfw_string_return('rbfw_text_left_qty',__('Left','booking-and-rental-manager-for-woocommerce')).'</div>';
-                    }
                     $content   .= '</div>';
                     $content   .= '</td>';
                     $content   .= '</tr>';
@@ -587,7 +588,12 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                         $content   .= '<tr>';
                         $content   .= '<td>';
                         $content   .= $value['service_name'];
-                        $content   .= '<input type="hidden" name="rbfw_service_info['.$c.'][service_name]" value="'.$value['service_name'].'"/>';            
+                        $content   .= '<input type="hidden" name="rbfw_service_info['.$c.'][service_name]" value="'.$value['service_name'].'"/>';
+
+                        if($available_qty_info_switch == 'on'){
+                            $content .= '<small class="rbfw_available_qty_notice">('.rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce')).$max_es_available_qty.')</small>';
+                        }        
+
                         $content   .= '</td>'; 
                         $content   .= '<td>';
                         $content   .= rbfw_mps_price($value['service_price']);
@@ -601,9 +607,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                         $content   .= '<a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>';
                         $content   .= '</div>';
                         
-                        if($available_qty_info_switch == 'on'){
-                            $content .= '<div class="rbfw_available_qty_notice">'.$max_es_available_qty.' '.rbfw_string_return('rbfw_text_left_qty',__('Left','booking-and-rental-manager-for-woocommerce')).'</div>';
-                        }
+
                         $content   .= '</div>';
                         $content   .= '</td>';              
                         $content   .= '</tr>';

@@ -103,15 +103,26 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 		</div>
 	</div>
 
-	<?php if(!empty($rbfw_enable_faq_content) && $rbfw_enable_faq_content == 'yes'): ?>
+	<?php if($rbfw_enable_faq_content == 'yes'): ?>
 	<div class="rbfw_dt_row_faq">
-		<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Freequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?></div>
-		<?php do_action( 'rbfw_the_faq_style_two', $post_id ); ?>
+		<div class="rbfw_dt_heading">
+			<div class="rbfw_dt_heading_tab active" data-tab="tab1">
+				<?php echo esc_html($rbfw->get_option('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Freequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?>
+			</div>
+			<div class="rbfw_dt_heading_tab" data-tab="tab2">
+				<?php do_action( 'rbfw_dt_review_tab', $post_id ); ?>
+			</div>
+		</div>
+		<div class="rbfw_dt_faq_tab_contents">
+			<div class="rbfw_dt_faq_tab_content active" data-content="tab1">
+				<?php do_action( 'rbfw_the_faq_style_two', $post_id ); ?>
+			</div>
+			<div class="rbfw_dt_faq_tab_content" data-content="tab2">
+				<?php do_action( 'rbfw_dt_review_content', $post_id ); ?>
+			</div>
+		</div>
 	</div>
 	<?php endif; ?>
-	
-	<?php do_action( 'rbfw_content_before_related_items', $post_id ); ?>
-
 
 	<?php if(!empty($rbfw_related_post_arr)): ?>
 	<div class="rbfw_dt_row_related_item">
