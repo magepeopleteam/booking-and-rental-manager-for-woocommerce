@@ -214,7 +214,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         <div class="rbfw_thankyou_page_wrap">
                         <div class="mps_alert_login_success"><?php rbfw_string('rbfw_text_thankyou_ur_order_received',__('Thank you. Your order has been received.','booking-and-rental-manager-for-woocommerce')); ?></div>
                         <?php do_action('rbfw_before_thankyou_page_info',$order_id); ?>
-                        <table class="wp-list-table widefat fixed striped table-view-list">
+                        <table>
                             <thead>
                                 <tr>
                                     <th colspan="2"><?php rbfw_string('rbfw_text_order_received',__('Order Information','booking-and-rental-manager-for-woocommerce')); ?></th>
@@ -247,7 +247,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                 </tr>                                             
                             </tbody>
                         </table>
-                        <table class="wp-list-table widefat fixed striped table-view-list">
+                        <table>
                             <thead>
                                 <tr>
                                     <th colspan="2"><?php rbfw_string('rbfw_text_item_information',__('Item Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></th>
@@ -269,7 +269,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                 <tr>
                                     <td><strong><?php rbfw_string('rbfw_text_rent_information',__('Rent Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                                     <td>
-                                        <table class="wp-list-table widefat fixed striped table-view-list">                     
+                                        <table>
                                         <?php 
                                             if(!empty($rent_info)){
                                                 foreach ($rent_info as $key => $value) {
@@ -290,7 +290,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                 <tr>
                                     <td><strong><?php rbfw_string('rbfw_text_room_information',__('Room Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                                     <td>
-                                        <table class="wp-list-table widefat fixed striped table-view-list">                     
+                                        <table>
                                         <?php 
                                             if(!empty($rent_info)){
                                                 foreach ($rent_info as $key => $value) {
@@ -310,7 +310,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                 <tr>
                                     <td><strong><?php rbfw_string('rbfw_text_extra_service_information',__('Extra Service Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                                     <td>
-                                        <table class="wp-list-table widefat fixed striped table-view-list">                     
+                                        <table>
                                         <?php 
                                         if($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
                                             if(!empty($service_info)){
@@ -503,7 +503,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                 <div class="rbfw_thankyou_page_wrap">
                 <div class="mps_alert_login_success"><?php rbfw_string('rbfw_text_thankyou_ur_order_received',__('Thank you. Your order has been received.','booking-and-rental-manager-for-woocommerce')); ?></div>
                 <?php do_action('rbfw_before_thankyou_page_info',$order_id); ?>
-                <table class="wp-list-table widefat fixed striped table-view-list">
+                <table>
                     <thead>
                         <tr>
                             <th colspan="2"><?php rbfw_string('rbfw_text_order_received',__('Order Information','booking-and-rental-manager-for-woocommerce')); ?></th>
@@ -532,7 +532,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         </tr>                                           
                     </tbody>
                 </table>
-                <table class="wp-list-table widefat fixed striped table-view-list">
+                <table >
                     <thead>
                         <tr>
                             <th colspan="2"><?php rbfw_string('rbfw_text_item_information',__('Item Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></th>
@@ -554,7 +554,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_rent_information',__('Rent Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td>
-                                <table class="wp-list-table widefat fixed striped table-view-list">                     
+                                <table >
                                 <?php 
                                     if(!empty($rent_info)){
                                         foreach ($rent_info as $key => $value) {
@@ -575,7 +575,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_room_information',__('Room Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td>
-                                <table class="wp-list-table widefat fixed striped table-view-list">                     
+                                <table >
                                 <?php 
                                     if(!empty($rent_info)){
                                         foreach ($rent_info as $key => $value) {
@@ -595,7 +595,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_extra_service_information',__('Extra Service Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td>
-                                <table class="wp-list-table widefat fixed striped table-view-list">                     
+                                <table >
                                 <?php 
                                 if($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
                                     if(!empty($service_info)){

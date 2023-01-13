@@ -171,7 +171,8 @@ function rbfw_order_meta_box_callback(){
                 $duration_cost = rbfw_mps_price($ticket_info['duration_cost']);
                 $service_cost = rbfw_mps_price($ticket_info['service_cost']);
                 $total_cost = rbfw_mps_price($ticket_info['ticket_price']);
-                $discount_amount = rbfw_mps_price($ticket_info['discount_amount']);
+                $discount_amount = (float)$ticket_info['discount_amount'];
+                $discount_amount = rbfw_mps_price($discount_amount);
                 $discount_type = $ticket_info['discount_type'];
                 /* End  loop*/
             ?>

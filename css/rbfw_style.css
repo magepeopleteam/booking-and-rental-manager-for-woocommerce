@@ -132,6 +132,7 @@ input:checked+.slider:before {
 
 .slider.round {
     border-radius: 34px;
+    position: absolute;
 }
 
 .slider.round:before {
@@ -321,6 +322,8 @@ CSS for Single Page Template
 #pickup_date,
 #dropoff_date {
     cursor: pointer;
+    padding: 0 0 0 45px;
+    height: 50px;
 }
 
 .rbfw-datetime .date {
@@ -650,6 +653,7 @@ div.mp_right_section {
     background: #fff;
     border-radius: 50%;
     transition: 0.2s;
+    min-height: inherit;
 }
 
 .rbfw-related-products-wrapper .owl-carousel .owl-nav button:hover {
@@ -1136,6 +1140,7 @@ table.rbfw_room_price_table tbody td img {
     text-align: center;
     width: 30px;
     border-radius: 0;
+    margin: 0;
 }
 
 .rbfw_selected_room_dates {
@@ -2355,6 +2360,14 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin-left: 5px;
 }
 
+.rbfw_mps_pay_now_button i {
+    top: 35%;
+}
+
+#rbfw_mps_pay_now_button {
+    margin: 0;
+}
+
 .rbfw_mps_form_wrap,
 .rbfw_mps_checkout_form_wrap {
     margin-bottom: 10px;
@@ -2513,6 +2526,10 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     display: -ms-flexbox;
     display: flex;
     align-items: center;
+}
+
+.rbfw_mps_radio_group label input {
+    margin: 0 10px 0 0;
 }
 
 .rbfw_mps_radio_group label:not(.rbfw_mps_radio_group label:last-child) {
