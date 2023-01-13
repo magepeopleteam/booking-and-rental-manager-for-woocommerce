@@ -3833,6 +3833,12 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     text-align: right;
 }
 
+#checkin_date,
+#checkout_date {
+    padding: 0 0 0 45px;
+    height: 50px;
+}
+
 .mp_default_theme .rbfw-location,
 .mp_default_theme #pickup_date,
 .mp_default_theme #dropoff_date,
