@@ -1258,6 +1258,17 @@ function rbfw_payment_settings_fields($settings_fields){
 				'default' => 'offline',
 				'options' => rbfw_get_payment_gateways()
 			),
+			array(
+				'name' => 'rbfw_wps_add_to_cart_redirect',
+				'label' => __( 'Added to cart redirect to', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+				'type' => 'select',
+				'default' => 'checkout',
+				'options' => array(
+					'checkout' => 'Checkout',
+					'cart'  => 'Cart',
+				),
+			),
 	);
 
 	return apply_filters('rbfw_payment_settings_fields', $settings_fields);
@@ -2622,4 +2633,23 @@ function rbfw_dt_testimonial_func($post_id){
 	});		
 	</script>
 	<?php
+}
+
+/*************************************************
+* Check Plugin Folder Exists
+**************************************************/
+
+if(! function_exists('rbfw_chk_plugin_folder_exist')){
+
+	function rbfw_chk_plugin_folder_exist($slug){
+
+		$plugin_dir = ABSPATH . 'wp-content/plugins/'.$slug;
+
+		if(is_dir($plugin_dir)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 }

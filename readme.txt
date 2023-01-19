@@ -4,7 +4,7 @@ Plugin link: https://mage-people.com/
 Tags: Woocommerce, Rent, Booking, Reservation, Hotel, Resort, Appointment, Event, Woocommerce Booking, Reservation Booking, booking calender , booking plugin , booking system , Woocommerce Reservation Booking, Day Booking, Night Booking, Rental Booking, Woocommerce Rental Booking, WC.
 Requires at least: 5.3
 Stable tag: 1.1.0
-Version: 1.0.6
+Version: 1.1.5
 Tested up to: 6.0
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -196,3 +196,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 = 1.1.5 =
 * Donut template added.
+
+= 1.1.6 =
+* WooCommerce integration.
+* Fixed bug with flatsome theme
