@@ -4,7 +4,7 @@ Plugin link: https://mage-people.com/
 Tags: Woocommerce, Rent, Booking, Reservation, Hotel, Resort, Appointment, Event, Woocommerce Booking, Reservation Booking, booking calender , booking plugin , booking system , Woocommerce Reservation Booking, Day Booking, Night Booking, Rental Booking, Woocommerce Rental Booking, WC.
 Requires at least: 5.3
 Stable tag: 1.1.0
-Version: 1.1.5
+Version: 1.1.6
 Tested up to: 6.0
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -68,12 +68,13 @@ Our plugin can be used for a wide variety of booking and rental services, such a
 ✅ Responsive and SEO friendly.
 ✅ Multilingual translation support.
 ✅ Works with Any Standards Compliant WordPress Theme.
+✅ WooCommerce integration.
+✅ Supports all WooCommerce payment methods.
 
 ###  Pro Version Plugin Features:
 
 ✅ Paypal integration.
 ✅ Stripe integration.
-✅ WooCommerce integration.
 ✅ Booking calender with order details.
 ✅ Reports with order details.
 ✅ Export reports in CSV.
