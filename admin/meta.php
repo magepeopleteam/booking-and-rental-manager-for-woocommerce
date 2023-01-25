@@ -230,12 +230,6 @@
 
 		$rbfw_sd_appointment_ondays_data = get_post_meta( $post_id, 'rbfw_sd_appointment_ondays', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_ondays', true ) : [];
 		$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) : '';
-		
-		$rbfw_enable_discount = get_post_meta( $post_id, 'rbfw_enable_discount', true ) ? get_post_meta( $post_id, 'rbfw_enable_discount', true ) : 'no';
-		$rbfw_discount_over_days = get_post_meta( $post_id, 'rbfw_discount_over_days', true ) ? get_post_meta( $post_id, 'rbfw_discount_over_days', true ) : '';
-		$rbfw_discount_type = get_post_meta( $post_id, 'rbfw_discount_type', true ) ? get_post_meta( $post_id, 'rbfw_discount_type', true ) : 'percentage';
-		$rbfw_discount_number = get_post_meta( $post_id, 'rbfw_discount_number', true ) ? get_post_meta( $post_id, 'rbfw_discount_number', true ) : '';
-		$rbfw_discount_array = get_post_meta( $post_id, 'rbfw_discount_array', true ) ? get_post_meta( $post_id, 'rbfw_discount_array', true ) : [];
 		?>
 		<div class='rbfw-item-type mp_tab_item_sub_sec'>
 			<h3><?php echo esc_html_e( 'Rent Item Type :', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -789,117 +783,10 @@
 		</div>
 		</div>
 
-		<div class="rbfw_discount_price_config_wrapper mp_tab_item_sub_sec" <?php if($rbfw_item_type == 'appointment' || $rbfw_item_type == 'bike_car_sd'){ echo 'style="display:none"'; } ?>>		
-	
-		<h3><?php echo esc_html_e( 'Discount Price Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?>
-			<div class="rbfw_tooltip"><i class="fa-solid fa-circle-info"></i>
-			<span class="rbfw_tooltiptext"><?php echo esc_html_e( 'Discount over x days configuration. It works for Bike/Car for Multiple day and Resort item type.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-			</div>	
-		</h3>
-		<table class="form-table">
-			<tr>
-				<td colspan="2">
-				<div class="rbfw_switch_wrapper rbfw_switch_discount">
-					<div class="rbfw_switch_label"><?php esc_html_e( 'On/Off Discount', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-					<div class="rbfw_switch">
-						<label for="rbfw_enable_discount_on" class="<?php if ( $rbfw_enable_discount == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_discount" class="rbfw_enable_discount" value="yes" id="rbfw_enable_discount_on" <?php if ( $rbfw_enable_discount == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_discount_off" class="<?php if ( $rbfw_enable_discount != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_discount" class="rbfw_enable_discount" value="no" id="rbfw_enable_discount_off" <?php if ( $rbfw_enable_discount != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-					</div>
-				</div>
-				</td>
-			</tr>						
-		</table>
-
-		<table class="form-table rbfw_discount_table">
-			<thead>
-				<tr>
-					<th><div class="rbfw_td_title"><?php echo esc_html_e( 'Discount over days', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
-					<th><div class="rbfw_td_title"><?php echo esc_html_e( 'Discount Type', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
-					<th><div class="rbfw_td_title"><?php echo esc_html_e( 'Number of percentage/fixed amount', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
-					<th><div class="rbfw_td_title"><?php echo esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
-				</tr>
-			</thead>
-			<tbody class="mp_event_type_sortable">
-				<?php 
-				if(!empty($rbfw_discount_array)){
-
-					foreach ($rbfw_discount_array as $value) {
-				?>
-				<tr>
-					<td><input type="number" name="rbfw_discount_over_days[]" value="<?php echo esc_attr($value['rbfw_discount_over_days']); ?>"/></td>
-					<td>
-						<select class="rbfw_discount_type" name="rbfw_discount_type[]">
-							<option value="percentage" <?php if($value['rbfw_discount_type'] == 'percentage'){ echo 'selected'; } ?>><?php echo esc_html_e( 'Percentage', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-							<option value="fixed_amount" <?php if($value['rbfw_discount_type'] == 'fixed_amount'){ echo 'selected'; } ?>><?php echo esc_html_e( 'Fixed Amount', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-						</select>
-					</td>
-					<td><input type="number" name="rbfw_discount_number[]" value="<?php echo esc_attr($value['rbfw_discount_number']); ?>"/></td>
-					<td>
-						<div class="mp_event_remove_move">
-							<button class="button remove-row"><span class="dashicons dashicons-trash"></span></button>
-							<div class="button mp_event_type_sortable_button"><span class="dashicons dashicons-move"></span></div>
-						</div>						
-					</td>
-				</tr>
-				<?php
-					}
-				} 
-				?>
-			</tbody>
-		</table>
-		
-		<table>
-		<!-- Empty Discount Row -->
-		<tr class="rbfw_discount_empty_row screen-reader-text">
-			<td><input type="number" class="rbfw_discount_over_days" value=""/></td>
-			<td>
-				<select class="rbfw_discount_type">
-					<option value="percentage"><?php echo esc_html_e( 'Percentage', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-					<option value="fixed_amount"><?php echo esc_html_e( 'Fixed Amount', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-				</select>
-			</td>
-			<td><input type="number" class="rbfw_discount_number" value=""/></td>
-			<td>
-				<div class="mp_event_remove_move">
-					<button class="button remove-row"><span class="dashicons dashicons-trash"></span></button>
-					<div class="button mp_event_type_sortable_button"><span class="dashicons dashicons-move"></span></div>
-				</div>						
-			</td>
-		</tr>
-		<!-- End Empty Discount Row -->
-		</table>
-
-		<p><button id="add_new_discount_row" class="ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e('Add New Discount','booking-and-rental-manager-for-woocommerce'); ?></button></p>
-		</div>
+		<?php do_action('rbfw_after_extra_service_table'); ?>
 
 		<script>
 			jQuery(document).ready(function(){
-
-					/* New Discount Row Script */
-					jQuery('#add_new_discount_row').click(function (e) { 
-						e.preventDefault();
-						e.stopImmediatePropagation();
-						jQuery('.rbfw_discount_empty_row').clone().appendTo('.rbfw_discount_table tbody');
-						jQuery('.rbfw_discount_table tbody tr').removeClass('rbfw_discount_empty_row screen-reader-text');
-						jQuery('.rbfw_discount_table tbody tr .rbfw_discount_over_days').attr('name','rbfw_discount_over_days[]');
-						jQuery('.rbfw_discount_table tbody tr .rbfw_discount_type').attr('name','rbfw_discount_type[]');
-						jQuery('.rbfw_discount_table tbody tr .rbfw_discount_number').attr('name','rbfw_discount_number[]');
-
-						jQuery('.remove-row').on('click', function(e) {
-							e.stopImmediatePropagation();
-							if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
-								jQuery(this).parents('tr').remove();
-							} else {
-								return false;
-							}
-						});
-
-						jQuery('.rbfw_discount_table').sortable({ items: 'tbody tr', handle: '.mp_event_type_sortable_button' });
-
-					});
-
-					jQuery('.rbfw_discount_table').sortable({ items: 'tbody tr', handle: '.mp_event_type_sortable_button' });
-					
-					/* End: New Discount Row Script */
 
 					// extra service add image button and remove image button function
 					function rbfw_service_image_addup(){				
@@ -1484,33 +1371,6 @@ function rbfw_add_variations_tab_content($rbfw_id){
 			
 			// End getting appointment days
 
-			// Discount meta
-			$rbfw_discount_array = [];
-			$rbfw_enable_discount  = isset( $_POST['rbfw_enable_discount'] ) ? rbfw_array_strip( $_POST['rbfw_enable_discount'] ) : 'no';
-			
-			$rbfw_discount_over_days = isset( $_POST['rbfw_discount_over_days'] ) ?  $_POST['rbfw_discount_over_days'] : [];
-			$rbfw_discount_type = isset( $_POST['rbfw_discount_type'] ) ?  $_POST['rbfw_discount_type'] : [];
-			$rbfw_discount_number = isset( $_POST['rbfw_discount_number'] ) ?  $_POST['rbfw_discount_number'] : [];
-
-			$i = 0;
-			foreach ($rbfw_discount_over_days as $value) {
-				$rbfw_discount_array[$i]['rbfw_discount_over_days'] = $value;
-				$i++;
-			}
-
-			$c = 0;
-			foreach ($rbfw_discount_type as $value) {
-				$rbfw_discount_array[$c]['rbfw_discount_type'] = $value;
-				$c++;
-			}
-			
-			$d = 0;
-			foreach ($rbfw_discount_number as $value) {
-				$rbfw_discount_array[$d]['rbfw_discount_number'] = $value;
-				$d++;
-			}			
-			// Discount meta end
-
 			update_post_meta( $post_id, 'rbfw_enable_hourly_rate', $rbfw_enable_hourly_rate );
 			update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
 			update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
@@ -1578,15 +1438,6 @@ function rbfw_add_variations_tab_content($rbfw_id){
 			update_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', $rbfw_sd_appointment_max_qty_per_session );
 			
 			// end Appointment ondays
-
-			// Discount meta update
-			update_post_meta( $post_id, 'rbfw_enable_discount', $rbfw_enable_discount );
-			update_post_meta( $post_id, 'rbfw_discount_over_days', $rbfw_discount_over_days );
-			update_post_meta( $post_id, 'rbfw_discount_type', $rbfw_discount_type );
-			update_post_meta( $post_id, 'rbfw_discount_number', $rbfw_discount_number );
-			update_post_meta( $post_id, 'rbfw_discount_array', $rbfw_discount_array );
-			
-			// Discount meta End
 
 			$old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 			$new_extra_service = array();

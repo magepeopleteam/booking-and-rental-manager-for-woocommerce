@@ -62,12 +62,17 @@
 				}
 
 				$default_timezone = wp_timezone_string();
+				$default_language = get_locale();
+				if ( strlen( $default_language ) > 0 ) {
+					$default_language = explode( '_', $default_language )[0];
+				}
 				wp_enqueue_style( 'rbfw_calendar', RBFW_PLUGIN_URL . '/css/calendar.css', array(), '1.0.1' );
 
 				wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
 				wp_localize_script( 'rbfw_calendar', 'rbfw_calendar_object',
 					array( 
 						'default_timezone' => $default_timezone,
+						'default_language' => $default_language,
 						'appointment_days' => $appointment_days,
 						'rent_type' => $rent_type,
 					)
@@ -85,9 +90,9 @@
 			public function rbfw_add_admin_scripts($hook)
 			{
 
-			  /**
-			   * Enquue Admin Styles
-			   */
+			   /**************************
+			   * Enqueue Admin Styles
+			   **************************/
 			  
 				wp_enqueue_style('rbfw-options-framework', plugin_dir_url(__DIR__) . 'admin/css/mage-options-framework.css', array(),'1.0.6');
 				wp_enqueue_style('jquery-ui', plugin_dir_url(__DIR__) . 'admin/css/jquery-ui.css');
@@ -95,10 +100,12 @@
 				wp_enqueue_style('rbfw-admin-style', plugin_dir_url(__DIR__) . 'admin/css/admin_style.css', array(),time());
 				wp_enqueue_style('rbfw-placeholder-loading', plugin_dir_url(__DIR__) . 'css/placeholder-loading.css');
 				wp_enqueue_style('sweetalert2', plugins_url('admin/css/sweetalert2.min.css', __DIR__));
-				
-				/**
-				 * Enquue Admin Scripts
-				 */
+				wp_enqueue_style('smart_wizard_all', plugin_dir_url(__DIR__) . 'admin/css/smart_wizard_all.min.css');
+
+
+				/**************************
+				* Enqueue Admin Scripts
+				*************************/
 
 				wp_enqueue_script('rbfw-options-framework', plugins_url('admin/js/mage-options-framework.js', __DIR__), array('jquery','wp-color-picker'));
 				wp_enqueue_script('jquery-ui-core');
@@ -112,6 +119,7 @@
 				wp_enqueue_script('rbfw-script', plugins_url('admin/js/mkb-admin.js', __DIR__), array('jquery'), time(), false);
 				wp_localize_script('jquery', 'rbfw_ajax', array( 'rbfw_ajaxurl' => admin_url( 'admin-ajax.php')));
 				wp_enqueue_script('sweetalert2', plugins_url('admin/js/sweetalert2.all.min.js', __DIR__), array('jquery'), '11.6.10', false);
+				wp_enqueue_script('smartWizard', plugins_url('admin/js/jquery.smartWizard.min.js', __DIR__), array('jquery'), '6.0.6', false);
 				do_action('rbfw_admin_enqueue_scripts');	
 			  
 			}

@@ -296,8 +296,14 @@ if ( ! class_exists( 'Mage_Rating' ) ) {
                 display: -webkit-flex;
                 display: -ms-flexbox;
                 display: flex;
+                border-left-color: #f99f1b;
             }
-            
+            #booking-and-rental-manager-for-woocommerce_btn_deserved{
+                background: #f99f1b;
+                border-color: #f99f1b;
+                color: #09482d;
+                font-weight: bold;
+            }
             .mage-rating-notice-button {
                 text-decoration: none;
                 display: inline-block;

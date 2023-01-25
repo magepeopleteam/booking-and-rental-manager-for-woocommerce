@@ -228,9 +228,9 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                             $content.= '<li class="tax">'.$rbfw->get_option('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')).'<span class="price-figure" data-price="'.$percent.'">'.rbfw_mps_price($percent).'</span></li>';
                         }
 
-                        /* Start Discount Calculations */
+                    /* Start Discount Calculations */
 
-                        
+                    if(rbfw_check_discount_over_days_plugin_active() === true){
 
                         if(function_exists('rbfw_get_discount_array')){
 
@@ -254,6 +254,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                             $content .= '</li>';                    
                         }
                         /* End Discount Calculations */
+
+                    }
 
                         $content.='<li class="total"><strong>'.$rbfw->get_option('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce')).'</strong> <span class="price-figure" data-price="'.$total_price.'">'.rbfw_mps_price($total_price).' '.$tax_status.'</span></li>
                     </ul>

@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if (!class_exists('Rbfw_Wc_Notice')) {
     class Rbfw_Wc_Notice{
         public function __construct(){
-            if(rbfw_chk_plugin_folder_exist('woocommerce') == false || !is_plugin_active( 'woocommerce/woocommerce.php')){
+            if(function_exists('rbfw_free_chk_plugin_folder_exist') && rbfw_free_chk_plugin_folder_exist('woocommerce') == false || !is_plugin_active( 'woocommerce/woocommerce.php')){
                 add_action('admin_notices', array($this, 'rbfw_admin_notices'));
             }
         }

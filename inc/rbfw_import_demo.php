@@ -13,7 +13,7 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
     class RbfwImportDemo {
         public function __construct(){
             
-            add_action('rbfw_import_demo', array($this, 'rbfw_import_demo_function'));
+            add_action('rbfw_after_register_activation', array($this, 'rbfw_import_demo_function'));
         }
 
         public function rbfw_import_demo_function(){

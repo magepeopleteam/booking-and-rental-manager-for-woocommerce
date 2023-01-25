@@ -31,7 +31,7 @@
 			<form action="" method='post' class="mp_rbfw_ticket_form">
 
 				<!-- Header -->
-				<?php rbfw_discount_ad($rbfw_id); ?>
+				<?php do_action('rbfw_discount_ad', $rbfw_id); ?>
 				<!-- End Header -->
 
 				<!--    ITEM        -->

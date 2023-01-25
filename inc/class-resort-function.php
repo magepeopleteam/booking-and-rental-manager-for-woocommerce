@@ -222,12 +222,12 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 if(function_exists('rbfw_get_discount_array')){
 
                     $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_price);
-            
+
                 } else {
-            
+
                     $discount_arr = [];
                 }
-
+                $discount_amount = 0;
                 if(!empty($discount_arr)){
                     $total_price = $discount_arr['total_amount'];
                     $discount_type = $discount_arr['discount_type'];
@@ -732,27 +732,31 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                                     /* Start Discount Calculations */
 
-                                    if(function_exists('rbfw_get_discount_array')){
+                                    if(rbfw_check_discount_over_days_plugin_active() === true){
 
-                                        $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_price);
-                                
-                                    } else {
-                                
-                                        $discount_arr = [];
+                                        if(function_exists('rbfw_get_discount_array')){
+
+                                            $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_price);
+
+                                        } else {
+
+                                            $discount_arr = [];
+                                        }
+
+                                        if(!empty($discount_arr)){
+
+                                            $total_price = $discount_arr['total_amount'];
+                                            $discount_type = $discount_arr['discount_type'];
+                                            $discount_amount = $discount_arr['discount_amount'];
+                                            $discount_desc = $discount_arr['discount_desc'];
+
+                                            $content .= '<li class="discount">';
+                                            $content .= $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce'));
+                                            $content .= '<span>'.$discount_desc.'</span>';
+                                            $content .= '</li>';
+                                        }
                                     }
 
-                                    if(!empty($discount_arr)){
-                                        
-                                        $total_price = $discount_arr['total_amount'];
-                                        $discount_type = $discount_arr['discount_type'];
-                                        $discount_amount = $discount_arr['discount_amount'];
-                                        $discount_desc = $discount_arr['discount_desc'];
-
-                                        $content .= '<li class="discount">';
-                                        $content .= $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce'));
-                                        $content .= '<span>'.$discount_desc.'</span>';                
-                                        $content .= '</li>';                    
-                                    }
                                     /* End Discount Calculations */
 
                                     $content.='<li class="total"><strong>'.$rbfw->get_option('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce')).'</strong> <span class="price-figure" data-price="'.$total_price.'">'.rbfw_mps_price($total_price).' '.$tax_status.'</span></li>

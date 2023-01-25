@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Booking and Rental Manager for Bike | Car | Resort | Dress and all Kinds of Equipment
+ * Plugin Name: Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress and all Kinds of Equipment
  * Plugin URI: https://mage-people.com
  * Description: A complete booking & rental solution for WordPress.
- * Version: 1.1.5
+ * Version: 1.1.6
  * Author: MagePeople Team
  * Author URI: https://www.mage-people.com/
  * Text Domain: booking-and-rental-manager-for-woocommerce 
@@ -102,17 +102,21 @@ register_deactivation_hook( __FILE__, 'rbfw_register_deactivation_func' );
 add_action( 'activated_plugin', 'rbfw_activation_redirect' );
 
 function rbfw_activation_redirect( $plugin ) {
-	if( $plugin == plugin_basename( __FILE__ ) ) {
+
+	if(get_option('rbfw_sz_form_submit') === false){
+
+		if( $plugin == plugin_basename( __FILE__ ) ) {
 		
-		exit( wp_redirect( admin_url( 'edit.php?post_type=rbfw_item' ) ) );
-		
+			exit( wp_redirect( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup' ) ) );
+
+		}
 	}
 }
 
 function rbfw_register_activation_func() {
 	flush_rewrite_rules();
 	rbfw_update_settings();
-	do_action('rbfw_import_demo');
+	do_action('rbfw_after_register_activation');
 }
 
 function rbfw_register_deactivation_func() {

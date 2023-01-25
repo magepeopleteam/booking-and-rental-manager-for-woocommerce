@@ -1193,7 +1193,7 @@ function rbfw_payment_settings_fields($settings_fields){
 				'desc' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
 				'class' => 'rbfw_payment_system',
 				'type' => 'select',
-				'default' => 'mps',
+				'default' => 'wps',
 				'options' => rbfw_payment_systems(),
 			),
 			array(
@@ -1276,7 +1276,7 @@ function rbfw_payment_settings_fields($settings_fields){
 
 // Update Settings On Register the Plugin
 function rbfw_update_settings(){
-	$payment_settings = maybe_unserialize('a:6:{s:19:"rbfw_payment_system";s:3:"mps";s:17:"rbfw_mps_currency";s:3:"USD";s:26:"rbfw_mps_currency_position";s:4:"left";s:32:"rbfw_mps_currency_decimal_number";s:1:"2";s:25:"rbfw_mps_checkout_account";s:2:"on";s:24:"rbfw_mps_payment_gateway";a:1:{s:7:"offline";s:7:"offline";}}');
+	$payment_settings = maybe_unserialize('a:6:{s:19:"rbfw_payment_system";s:3:"wps";s:17:"rbfw_mps_currency";s:3:"USD";s:26:"rbfw_mps_currency_position";s:4:"left";s:32:"rbfw_mps_currency_decimal_number";s:1:"2";s:25:"rbfw_mps_checkout_account";s:2:"on";s:24:"rbfw_mps_payment_gateway";a:1:{s:7:"offline";s:7:"offline";}}');
 
 	if (get_option('rbfw_basic_payment_settings') === false) {
  
@@ -1631,7 +1631,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 			
 		} else {
 
-			$type_stock += get_post_meta($post_id, 'rbfw_item_stock_quantity', true);
+			$type_stock += (int)get_post_meta($post_id, 'rbfw_item_stock_quantity', true);
 		}
 		
 
@@ -2013,151 +2013,22 @@ function rbfw_import_dummy_time_slots(){
 }
 
 /****************************************************
- * Multiple Dates/Resort Rent: 
- * Discount function
- ****************************************************/
-function rbfw_get_discount_array($post_id, $start_date, $end_date, $total_amount){
-
-	if(empty($post_id) || empty($start_date) || empty($end_date) || empty($total_amount)){
-		return;
-	}
-	
-	/* Start Discount Calculations */
-	$discount_switch = !empty(get_post_meta($post_id, 'rbfw_enable_discount', true)) ? get_post_meta($post_id, 'rbfw_enable_discount', true) : 'no';
-	$rbfw_discount_array = !empty(get_post_meta($post_id, 'rbfw_discount_array', true)) ? get_post_meta($post_id, 'rbfw_discount_array', true) : [];
-
-	if(!empty($rbfw_discount_array)){
-		$arr1 = [];
-		foreach ($rbfw_discount_array as $value) {
-			$arr1[] = $value['rbfw_discount_over_days'];
-		}
-	}
-	
-	if(!empty($arr1)){
-		asort( $arr1 );
-	}
-	/* End Discount Calculations */
-
-	$array = [];
-
-	/* get Date difference */
-	$start_date  = date( 'Y-m-d', strtotime( $start_date ) );
-	$end_date = date( 'Y-m-d', strtotime( $end_date ) );
-	$start_date  = new DateTime( $start_date );
-	$end_date = new DateTime( $end_date );
-	$diff = date_diff( $start_date, $end_date );
-	$days = 0;
-
-	if ( $diff ) {
-		$days = $diff->days;
-	}
-	/* End Date difference */
-
-	$t_amount = $total_amount;
-	
-	if(!empty($arr1) && $discount_switch == 'yes'){
-
-		foreach ($arr1 as $value) {
-		
-			if($days >= $value){
-	
-				foreach ($rbfw_discount_array as $discount_array) {
-	
-					if($value == $discount_array['rbfw_discount_over_days']){
-	
-						$discount_type = $discount_array['rbfw_discount_type'];
-						$discount_number = $discount_array['rbfw_discount_number'];
-	
-					}
-	
-				}
-	
-				if($discount_type == 'percentage'){
-	
-					$discount_amount = ($t_amount * (float)$discount_number) / 100;
-					$new_t_amount = $t_amount - $discount_amount;
-					$discount_desc =  $discount_number.'%';
-		
-				} elseif($discount_type == 'fixed_amount') {
-					$discount_amount = $discount_number;
-					$new_t_amount = $t_amount - (float)$discount_amount;   
-					$discount_desc = rbfw_mps_price($discount_number);          
-				} 
-				
-				$array['discount_type'] = $discount_type;
-				$array['discount_amount'] = $discount_amount;
-				$array['total_amount'] = $new_t_amount;
-				$array['discount_desc'] = $discount_desc;
-			}
-		}
-	}
-
-	
-	return $array;
-}
-
-/****************************************************
- * Multiple Dates/Resort Rent: 
- * Discount Notice/Ad
- ****************************************************/
-
-function rbfw_discount_ad($post_id){
-
-	if(empty($post_id)){
-		return;
-	}
-
-	$discount_switch = !empty(get_post_meta($post_id, 'rbfw_enable_discount', true)) ? get_post_meta($post_id, 'rbfw_enable_discount', true) : 'no';
-	$rbfw_discount_array = !empty(get_post_meta($post_id, 'rbfw_discount_array', true)) ? get_post_meta($post_id, 'rbfw_discount_array', true) : [];
-
-	if($discount_switch == 'yes'){
-	?>
-	<div class="rbfw-bikecarsd-calendar-header">
-		<div class="rbfw-bikecarsd-calendar-header-title"><?php rbfw_string('rbfw_text_discount',__('Discount','booking-and-rental-manager-for-woocommerce')); ?></div>
-		<?php 
-		foreach ($rbfw_discount_array as $discount_array) {
-			
-			$rbfw_discount_over_days = $discount_array['rbfw_discount_over_days'];
-			$rbfw_discount_type = $discount_array['rbfw_discount_type'];
-			$rbfw_discount_number = $discount_array['rbfw_discount_number'];
-
-			if($rbfw_discount_over_days == 1){
-
-				$rbfw_discount_over_days = $rbfw_discount_over_days.' '.rbfw_string_return('rbfw_text_day',__('day','booking-and-rental-manager-for-woocommerce'));
-
-			} elseif($rbfw_discount_over_days > 1) {
-
-				$rbfw_discount_over_days = $rbfw_discount_over_days.' '.rbfw_string_return('rbfw_text_days',__('days','booking-and-rental-manager-for-woocommerce'));
-			}
-
-			if($rbfw_discount_type == 'percentage'){
-
-				$rbfw_discount_desc = $rbfw_discount_number.'%';
-
-			} else if($rbfw_discount_type == 'fixed_amount'){
-
-				$rbfw_discount_desc = rbfw_mps_price($rbfw_discount_number);
-			}
-
-			if(!empty($rbfw_discount_over_days) && !empty($rbfw_discount_type) && !empty($rbfw_discount_number)){
-
-			?>
-			<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fa-solid fa-circle-info"></i> <?php rbfw_string('rbfw_text_book_over',__('Book over','booking-and-rental-manager-for-woocommerce')); ?> <?php echo $rbfw_discount_over_days; ?> <?php rbfw_string('rbfw_text_and',__('and','booking-and-rental-manager-for-woocommerce')); ?> <strong><?php rbfw_string('rbfw_text_save',__('save','booking-and-rental-manager-for-woocommerce')); ?> <?php echo $rbfw_discount_desc; ?></strong> </div>
-			<?php
-			}
-		} 
-		?>
-	</div>
-	<?php
-	}
-}
-
-
-/****************************************************
  * Check Min-Max Booking Day Plugin Active
  ****************************************************/
 function rbfw_check_min_max_booking_day_active(){
 	if (is_plugin_active( 'booking-and-rental-manager-min-max-booking-day/rent-min-max-booking-day.php' ) ) {
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+/****************************************************
+ * Check Discount Over Days Plugin Active
+ ****************************************************/
+function rbfw_check_discount_over_days_plugin_active(){
+	if (is_plugin_active( 'booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php' ) ) {
 		return true;
 	}
 	else{
@@ -2639,9 +2510,9 @@ function rbfw_dt_testimonial_func($post_id){
 * Check Plugin Folder Exists
 **************************************************/
 
-if(! function_exists('rbfw_chk_plugin_folder_exist')){
+if(! function_exists('rbfw_free_chk_plugin_folder_exist')){
 
-	function rbfw_chk_plugin_folder_exist($slug){
+	function rbfw_free_chk_plugin_folder_exist($slug){
 
 		$plugin_dir = ABSPATH . 'wp-content/plugins/'.$slug;
 

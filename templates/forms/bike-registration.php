@@ -142,9 +142,7 @@
 			<form action="" method='post' class="mp_rbfw_ticket_form">
 				<!--    ITEM        -->
 
-				<!-- Header -->
-				<?php rbfw_discount_ad($rbfw_id); ?>
-				<!-- End Header -->
+				<?php do_action('rbfw_discount_ad', $rbfw_id); ?>
 
 				<div class="rbfw_bike_car_md_item_wrapper">
 				<div class="item">

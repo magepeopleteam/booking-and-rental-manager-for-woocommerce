@@ -863,7 +863,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             });
 
                         }
-
+                        <?php global $wp_locale; ?>
                         var defaultConfig = {
                             weekDayLength: 1,
                             date:  rbfw_today_date(),
@@ -879,20 +879,37 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                 return date <  rbfw_today_date();
                             },
                             monthMap:{
-                                1: "<?php esc_attr_e('january','booking-and-rental-manager-for-woocommerce'); ?>",
-                                2: "<?php esc_attr_e('february','booking-and-rental-manager-for-woocommerce'); ?>",
-                                3: "<?php esc_attr_e('march','booking-and-rental-manager-for-woocommerce'); ?>",
-                                4: "<?php esc_attr_e('april','booking-and-rental-manager-for-woocommerce'); ?>",
-                                5: "<?php esc_attr_e('may','booking-and-rental-manager-for-woocommerce'); ?>",
-                                6: "<?php esc_attr_e('june','booking-and-rental-manager-for-woocommerce'); ?>",
-                                7: "<?php esc_attr_e('july','booking-and-rental-manager-for-woocommerce'); ?>",
-                                8: "<?php esc_attr_e('august','booking-and-rental-manager-for-woocommerce'); ?>",
-                                9: "<?php esc_attr_e('september','booking-and-rental-manager-for-woocommerce'); ?>",
-                                10: "<?php esc_attr_e('october','booking-and-rental-manager-for-woocommerce'); ?>",
-                                11: "<?php esc_attr_e('november','booking-and-rental-manager-for-woocommerce'); ?>",
-                                12: "<?php esc_attr_e('december','booking-and-rental-manager-for-woocommerce'); ?>",
+                                1: "<?php echo $wp_locale->get_month('01'); ?>",
+                                2: "<?php echo $wp_locale->get_month('02'); ?>",
+                                3: "<?php echo $wp_locale->get_month('03'); ?>",
+                                4: "<?php echo $wp_locale->get_month('04'); ?>",
+                                5: "<?php echo $wp_locale->get_month('05'); ?>",
+                                6: "<?php echo $wp_locale->get_month('06'); ?>",
+                                7: "<?php echo $wp_locale->get_month('07'); ?>",
+                                8: "<?php echo $wp_locale->get_month('08'); ?>",
+                                9: "<?php echo $wp_locale->get_month('09'); ?>",
+                                10: "<?php echo $wp_locale->get_month('10'); ?>",
+                                11: "<?php echo $wp_locale->get_month('11'); ?>",
+                                12: "<?php echo $wp_locale->get_month('12'); ?>",
                             },
-                            
+                            dayMap:{
+                                0: "<?php echo date_i18n('l', strtotime('sunday')); ?>",
+                                1: "<?php echo date_i18n('l', strtotime('monday')); ?>",
+                                2: "<?php echo date_i18n('l', strtotime('tuesday')); ?>",
+                                3: "<?php echo date_i18n('l', strtotime('wednesday')); ?>",
+                                4: "<?php echo date_i18n('l', strtotime('thursday')); ?>",
+                                5: "<?php echo date_i18n('l', strtotime('friday')); ?>",
+                                6: "<?php echo date_i18n('l', strtotime('saturday')); ?>",
+                            },
+                            alternateDayMap:{
+                                1: "<?php echo date_i18n('l', strtotime('monday')); ?>",
+                                2: "<?php echo date_i18n('l', strtotime('tuesday')); ?>",
+                                3: "<?php echo date_i18n('l', strtotime('wednesday')); ?>",
+                                4: "<?php echo date_i18n('l', strtotime('thursday')); ?>",
+                                5: "<?php echo date_i18n('l', strtotime('friday')); ?>",
+                                6: "<?php echo date_i18n('l', strtotime('saturday')); ?>",
+                                7: "<?php echo date_i18n('l', strtotime('sunday')); ?>",
+                            },
                             customDateProps: (date) => ({
                                 classes: 'rbfw-date-element',
                                 data: {

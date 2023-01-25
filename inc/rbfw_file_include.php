@@ -30,7 +30,7 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-rating-notice.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-inventory-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-time-slots-page.php';
 require_once RBFW_PLUGIN_DIR . '/support/elementor/elementor-support.php';
-
+require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
 
 /*************************************************
 * if Woocommerce Payment System is Enabled
@@ -44,36 +44,42 @@ function rbfw_free_woocommerce_integrate(){
     if(!empty($rbfw_payment_system)){
 
         $rbfw_payment_system = $rbfw_payment_system['rbfw_payment_system'];
-        $pro_version =  function_exists('rbfw_pro_get_plugin_data') ? rbfw_pro_get_plugin_data('Version') : '';
 
-        if($pro_version != false && $pro_version <= '1.0.6'){
-            return;
-        }
+        $wc_folder_exist = rbfw_free_chk_plugin_folder_exist('booking-and-rental-manager-for-woocommerce-pro/inc/woocommerce');
 
-        if($rbfw_payment_system == 'wps'){
+        if(rbfw_check_pro_active() === true && $wc_folder_exist === true){
 
-            require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_wc_notice.php");
-            require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_functions.php");
-            require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-status.php");
-            require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-meta.php");
-            require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_cart_price_function.php");
-            require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_add_cart_function.php");
-            require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_show_cart_function.php");
-            require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_after_checkout_function.php");
-            require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_order_meta_function.php");
+            // do nothing
 
-        }
+        } else {
 
-        add_filter('rbfw_payment_systems','rbfw_payment_systems_free', 9);
+            if($rbfw_payment_system == 'wps'){
 
-        function rbfw_payment_systems_free(){
+                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_wc_notice.php");
+                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_functions.php");
+                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-status.php");
+                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-meta.php");
+                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_cart_price_function.php");
+                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_add_cart_function.php");
+                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_show_cart_function.php");
+                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_after_checkout_function.php");
+                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_order_meta_function.php");
 
-            $ps = array(
-                'mps' => 'Mage Payment System',
-                'wps' => 'WC Payment System'
-            );
-
-            return $ps;
+            }
         }
     }
+
+    add_filter('rbfw_payment_systems','rbfw_payment_systems_free', 9);
+
+    function rbfw_payment_systems_free(){
+
+        $ps = array(
+            'wps' => 'WC Payment System',
+            'mps' => 'Mage Payment System',
+        );
+
+        return $ps;
+    }
 }
+
+
