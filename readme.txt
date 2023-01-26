@@ -1,5 +1,5 @@
 === Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress and all Kinds of Equipment ===
-Contributors: magepeopleteam, aamahin, arifulislamnayem
+Contributors: magepeopleteam, aamahin
 Plugin link: https://mage-people.com/
 Tags: Woocommerce, Rent, Booking, Reservation, Hotel, Resort, Appointment, Event, Woocommerce Booking, Reservation Booking, booking calender , booking plugin , booking system , Woocommerce Reservation Booking, Day Booking, Night Booking, Rental Booking, Woocommerce Rental Booking, WC.
 Requires at least: 5.3
