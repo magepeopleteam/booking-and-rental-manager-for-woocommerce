@@ -971,9 +971,13 @@ if (!class_exists('MageRBFWClass')) {
             $table_name = $wpdb->prefix . 'wc_tax_rate_classes';
             $result = $wpdb->get_results("SELECT * FROM $table_name");
             $tax_list = [];
-            foreach ($result as $tax) {
-                $tax_list[$tax->slug] = $tax->name;
+
+            if(!empty($result)){
+                foreach ($result as $tax) {
+                    $tax_list[$tax->slug] = $tax->name;
+                }
             }
+
             return $tax_list;
         }
 

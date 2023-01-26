@@ -1743,26 +1743,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
 							'default'  => '',
 							'args'     => rbfw_get_available_time_slots()
 						),
-						/*
-						array(
-							'id'          => 'rbfw_off_dates',
-							'title'       => __( 'Off Dates List', 'booking-and-rental-manager-for-woocommerce' ),
-							'details'     => __( 'If you want to off selling on partucular dates please select them', 'booking-and-rental-manager-for-woocommerce' ),
-							'collapsible' => true,
-							'type'        => 'repeatable',
-							'title_field' => 'rbfw_ticket_off_date',
-							'btn_text'    => 'Add New Off Date',
-							'fields'      => array(
-								array(
-									'type'    => 'date',
-									'default' => 'option_1',
-									'args'    => '',
-									'item_id' => 'rbfw_ticket_off_date',
-									'name'    => 'OffDate',
-								)
-							),
-						),
-						*/
+
 					)
 				),
 			
@@ -1822,7 +1803,8 @@ function rbfw_add_variations_tab_content($rbfw_id){
 		);
 		$current_payment_system = rbfw_get_option( 'rbfw_payment_system', 'rbfw_basic_payment_settings');
 		$mps_tax_switch = rbfw_get_option( 'rbfw_mps_tax_switch', 'rbfw_basic_payment_settings');
-		if ('mps' == $current_payment_system && $mps_tax_switch == 'on') {
+
+		if ('mps' == $current_payment_system) {
 			new RMFWAddMetaBox( $rbfw_mps_tax_meta_boxs_args );
 		}
 		
