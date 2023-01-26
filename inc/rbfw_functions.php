@@ -1375,7 +1375,7 @@ function rbfw_create_inventory_meta($ticket_info, $i){
 	$rbfw_service_info = !empty($ticket_info[$i]['rbfw_service_info']) ? $ticket_info[$i]['rbfw_service_info'] : [];
 	$date_range = [];
 
-	if($rbfw_item_type == 'bike_car_md'){
+	if( ($rbfw_item_type == 'bike_car_md') || ($rbfw_item_type == 'dress') || ($rbfw_item_type == 'equipment') || ($rbfw_item_type == 'others') ){
 
 		// Start: Date Time Calculation
 		$start_datetime  = date( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
@@ -1394,7 +1394,7 @@ function rbfw_create_inventory_meta($ticket_info, $i){
 			$days    = $diff->days;
 			$hours   += $diff->h;
 			
-			if ( $hours > 0 ) {
+			if ( ($hours > 0)  || ($start_time == '00:00:00' && $end_time == '24:00:00') ) {
 				
 				for ($currentDate = $start_date; $currentDate <= $end_date; 
 
@@ -1408,15 +1408,16 @@ function rbfw_create_inventory_meta($ticket_info, $i){
 
 			} else {
 
-				for ($currentDate = $start_date; $currentDate < $end_date; 
+				for ($currentDate = $start_date; $currentDate < $end_date;
 
 					$currentDate += (86400)) {
-													
+
 					$date = date('d-m-Y', $currentDate);
-			
+
 					$date_range[] = $date;
-			
+
 				}
+
 			}
 
 		}
