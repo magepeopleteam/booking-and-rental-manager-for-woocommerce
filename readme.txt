@@ -129,6 +129,12 @@ Our plugin can be used for a wide variety of booking and rental services, such a
 [rent-list order='ASC']
 `
 
+### Shortcode to show single item add-to-cart:
+
+`
+[rent-add-to-cart id='1']
+`
+
 = PAYMENT GATEWAYS =
 Our Plugin Works with WooCommerce and without WooCommerce. So all payment methods of WooCommerce will work with this plugin, and this is a very good advantage of this plugin. And without wooCommerce, we have our own PayPal and stripe payment method integration.
 
