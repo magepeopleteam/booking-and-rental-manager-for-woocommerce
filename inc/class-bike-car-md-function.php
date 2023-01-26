@@ -51,7 +51,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $item_quantity = $_POST['item_quantity'];
             $service_price_arr = !empty($_POST['service_price_arr']) ? $_POST['service_price_arr'] : [];
             $reload_es = $_POST['reload_es'];
-            
+
 
             if(empty($pickup_time) && empty($dropoff_time)){
                 $pickup_datetime  = date( 'Y-m-d', strtotime( $pickup_date.' '.'00:00:00' ) );
@@ -64,6 +64,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $pickup_datetime  = new DateTime( $pickup_datetime );
             $dropoff_datetime = new DateTime( $dropoff_datetime );
+
             $daily_rate  = get_post_meta( $post_id, 'rbfw_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_daily_rate', true ) : 0;
             $hourly_rate = get_post_meta( $post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_hourly_rate', true ) : 0;
             
@@ -265,10 +266,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
 
             $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $pickup_date, $dropoff_date);
-
             $item_quantity_box = '';
-
-            
 
             $item_quantity_box .= '<select class="rbfw-select" name="rbfw_item_quantity" id="rbfw_item_quantity">
                                     <option value="0">'.rbfw_string_return('rbfw_text_choose_number_of_qty',__('Choose number of quantity','booking-and-rental-manager-for-woocommerce')).'</option>';
@@ -442,8 +440,9 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             if(!empty($min_max_day_notice) && rbfw_check_min_max_booking_day_active() === true){
 
                 echo json_encode( array(
-                    'duration'   => $min_max_day_notice,
-                    'reload_es'    => 0
+                    'duration' => $min_max_day_notice,
+                    'reload_es' => 0,
+                    'max_available_qty' => $max_available_qty
                 ) );    
 
             } else {
@@ -454,7 +453,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     'item_quantity_box'    => $item_quantity_box,
                     'variation_content'    => $variation_content,
                     'extra_service_content'    => $extra_service_content,
-                    'reload_es'    => $reload_es
+                    'reload_es'    => $reload_es,
+                    'max_available_qty' => $max_available_qty
                 ) );
             }
             
@@ -722,10 +722,16 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                             jQuery('.rbfw_rp_loader').hide();
                             jQuery('.rbfw_bikecarmd_price_result').html(response.content);
                             let get_total_price = jQuery('.rbfw_bikecarmd_price_summary .duration-costing .price-figure').attr('data-price');
+
                             if(get_total_price > 0){
                                 jQuery(' button.rbfw_bikecarmd_book_now_btn').removeAttr('disabled');
                             }
                             else{
+                                jQuery(' button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
+                            }
+
+                            if((response.max_available_qty == 0)) {
+                                jQuery('<div class="mps_alert_warning">No Items Available!</div>').insertBefore(' button.rbfw_bikecarmd_book_now_btn');
                                 jQuery(' button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
                             }
                                 
