@@ -54,8 +54,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             
 
             if(empty($pickup_time) && empty($dropoff_time)){
-                $pickup_datetime  = date( 'Y-m-d', strtotime( $pickup_date ) );
-                $dropoff_datetime = date( 'Y-m-d', strtotime( $dropoff_date ) );
+                $pickup_datetime  = date( 'Y-m-d', strtotime( $pickup_date.' '.'00:00:00' ) );
+                $dropoff_datetime = date( 'Y-m-d', strtotime( $dropoff_date.' '.'24:00:00' ) );
             } else {
                 $pickup_datetime  = date( 'Y-m-d H:i', strtotime( $pickup_date . ' ' . $pickup_time ) );
                 $dropoff_datetime = date( 'Y-m-d H:i', strtotime( $dropoff_date . ' ' . $dropoff_time ) );

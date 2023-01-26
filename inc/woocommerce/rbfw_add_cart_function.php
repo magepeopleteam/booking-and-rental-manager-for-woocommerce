@@ -109,9 +109,9 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     $rbfw_pickup_point      = isset( $_POST['rbfw_pickup_point'] ) ? $_POST['rbfw_pickup_point'] : '';
     $rbfw_dropoff_point     = isset( $_POST['rbfw_dropoff_point'] ) ? $_POST['rbfw_dropoff_point'] : '';
     $rbfw_pickup_start_date = isset( $_POST['rbfw_pickup_start_date'] ) ? $_POST['rbfw_pickup_start_date'] : '';
-    $rbfw_pickup_start_time = isset( $_POST['rbfw_pickup_start_time'] ) ? $_POST['rbfw_pickup_start_time'] : '';
+    $rbfw_pickup_start_time = isset( $_POST['rbfw_pickup_start_time'] ) ? $_POST['rbfw_pickup_start_time'] : '00:00:00';
     $rbfw_pickup_end_date   = isset( $_POST['rbfw_pickup_end_date'] ) ? $_POST['rbfw_pickup_end_date'] : '';
-    $rbfw_pickup_end_time   = isset( $_POST['rbfw_pickup_end_time'] ) ? $_POST['rbfw_pickup_end_time'] : '';
+    $rbfw_pickup_end_time   = isset( $_POST['rbfw_pickup_end_time'] ) ? $_POST['rbfw_pickup_end_time'] : '24:00:00';
     $rbfw_item_quantity     = isset( $_POST['rbfw_item_quantity'] ) ? $_POST['rbfw_item_quantity'] : 1;
 
     
