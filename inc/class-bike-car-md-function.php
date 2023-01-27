@@ -731,7 +731,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                             }
 
                             if((response.max_available_qty == 0)) {
-                                jQuery('<div class="mps_alert_warning">No Items Available!</div>').insertBefore(' button.rbfw_bikecarmd_book_now_btn');
+                                jQuery('.rbfw_nia_notice').remove();
+                                jQuery('<div class="rbfw_nia_notice mps_alert_warning">No Items Available!</div>').insertBefore(' button.rbfw_bikecarmd_book_now_btn');
                                 jQuery(' button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
                             }
                                 
