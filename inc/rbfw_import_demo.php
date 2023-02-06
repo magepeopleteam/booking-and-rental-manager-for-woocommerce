@@ -31,11 +31,12 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
                 return;
             }
 
-            $xml_array = $xml_array['item'];
-            $counter = count($xml_array);
-
+            $xml_array = !empty($xml_array['item']) ? $xml_array['item'] : [];
 
 	        if($xml !== FALSE && !empty($xml_array)){
+
+                $counter = count($xml_array);
+
                 $i = 1;
 
                 foreach($xml_array as $item){
