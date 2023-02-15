@@ -324,6 +324,7 @@ CSS for Single Page Template
     cursor: pointer;
     padding: 0 0 0 45px;
     height: 50px;
+    margin-bottom: 0;
 }
 
 .rbfw-datetime .date {
@@ -3592,6 +3593,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin-top: -45px;
     position: relative;
     background-color: var(--rbfw_dt_color9);
+    max-width: fit-content;
 }
 
 .rbfw_dt_row_related_item .rbfw-related-product-price-wrap {

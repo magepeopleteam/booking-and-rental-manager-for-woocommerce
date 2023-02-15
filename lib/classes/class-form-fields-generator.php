@@ -3158,26 +3158,31 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             <?php
                         endif;
                         ?>
-                            // Features Icon Popup
-                            jQuery('.rbfw_feature_icon_btn').click(function (e) { 
-                            let remove_exist_data_key = jQuery("#rbfw_features_icon_list_wrapper").removeAttr('data-key');
-                            let remove_active_label = jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-                            let data_key = jQuery(this).attr('data-key');
+
+
+
+                        // Features Icon Popup
+                        jQuery('.rbfw_feature_icon_btn').click(function (e) {
+
+                            let remove_exist_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").removeAttr('data-key');
+                            let remove_active_label 	= jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
+                            let data_key 				= jQuery(this).attr('data-key');
                             jQuery('#rbfw_features_search_icon').val('');
-						    jQuery('.rbfw_features_icon_list_body label').show();
+                            jQuery('.rbfw_features_icon_list_body label').show();
                             jQuery("#rbfw_features_icon_list_wrapper").attr('data-key', data_key);
                             jQuery("#rbfw_features_icon_list_wrapper").mage_modal({
                                 escapeClose: false,
                                 clickClose: false,
                                 showClose: false
-                            });	
+                            });
 
                             // Selected Feature Icon Action
                             jQuery('#rbfw_features_icon_list_wrapper label').click(function (e) {
                                 e.stopImmediatePropagation();
-                                let selected_label = jQuery(this);
-                                let selected_val = jQuery('input', this).val();
-                                let selected_data_key = jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
+                                let selected_label 		= jQuery(this);
+                                let selected_val 		= jQuery('input', this).val();
+                                let selected_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
+
                                 jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
                                 jQuery('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').empty();
                                 jQuery(selected_label).addClass('selected');
@@ -3185,18 +3190,18 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                 jQuery('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').append('<i class="'+selected_val+'"></i>');
                             });
 
-                            // Icon Filter 
-                            jQuery('#rbfw_features_search_icon').keyup(function (e) { 
+                            // Icon Filter
+                            jQuery('#rbfw_features_search_icon').keyup(function (e) {
                                 let value = jQuery(this).val().toLowerCase();
                                 jQuery(".rbfw_features_icon_list_body label[data-id]").show().filter(function() {
                                     jQuery(this).toggle(jQuery(this).attr('data-id').toLowerCase().indexOf(value) > -1)
                                 }).hide();
                             });
-                            // End Icon Filter 
-
-                            });
+                            // End Icon Filter
+                        });
                         // End Features Icon Popup
-                    });
+
+                        });
 
                 });
                 </script>

@@ -83,15 +83,15 @@ Our plugin can be used for a wide variety of booking and rental services, such a
 
 ➡  [Buy Pro](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
 
-➡  [View All Demo](https://booking.mage-people.com/)
-➡  [Bike/Car Rent Service for Single Day Demo](https://booking.mage-people.com/rent/bike-car-for-single-day/)
-➡  [Bike/Car Rent for Multiple Day Demo](https://booking.mage-people.com/rent/bike-car-for-multiple-day/)
-➡  [Doctor Appointment Demo](https://booking.mage-people.com/rent/doctor-appointment/)
-➡  [Dress Rent System Demo](https://booking.mage-people.com/rent/dress/)
-➡  [Equipment Rent Service Demo](https://booking.mage-people.com/rent/equipement/)
-➡  [Resort Rent or Resort Booking Demo](https://booking.mage-people.com/rent/resort/)
-➡  [Rental Items List Demo](https://booking.mage-people.com/rents-list-style/)
-➡  [Rental Items Grid Style List Demo](https://booking.mage-people.com/rents-grid-style/)
+➡  [View All PRO Version Demo](https://booking.mage-people.com/)
+➡  [Bike/Car Rent Service for Single Day PRO Version Demo](https://booking.mage-people.com/rent/bike-car-for-single-day/)
+➡  [Bike/Car Rent for Multiple Day PRO Version Demo](https://booking.mage-people.com/rent/bike-car-for-multiple-day/)
+➡  [Doctor Appointment PRO Version Demo](https://booking.mage-people.com/rent/doctor-appointment/)
+➡  [Dress Rent System PRO Version Demo](https://booking.mage-people.com/rent/dress/)
+➡  [Equipment Rent Service PRO Version Demo](https://booking.mage-people.com/rent/equipement/)
+➡  [Resort Rent or Resort Booking PRO Version Demo](https://booking.mage-people.com/rent/resort/)
+➡  [Rental Items List PRO Version Demo](https://booking.mage-people.com/rents-list-style/)
+➡  [Rental Items Grid Style List PRO Version Demo](https://booking.mage-people.com/rents-grid-style/)
 
 
 ### Shortcodes included with Booking and Rental Manager:
@@ -207,3 +207,9 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 = 1.1.6 =
 * WooCommerce integration.
 * Fixed bug with flatsome theme
+
+= 1.1.7 =
+* Bug Fixed.
+
+= 1.1.8 =
+* Icon library loading time issue fixed.

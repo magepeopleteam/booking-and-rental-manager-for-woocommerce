@@ -11,9 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'rbfw_icon_library' ) ) {
     class rbfw_icon_library {
+
+
         public function rbfw_fontawesome_icons() {
 
-            return array (
+            $arr = array (
                 'fab fa-500px' => __( '500px', 'booking-and-rental-manager-for-woocommerce' ),
                 'fab fa-accessible-icon' => __( 'accessible-icon', 'booking-and-rental-manager-for-woocommerce' ),
                 'fab fa-accusoft' => __( 'accusoft', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1190,8 +1192,10 @@ if ( ! class_exists( 'rbfw_icon_library' ) ) {
                 'flaticon-group-2' => __( 'group-2', 'booking-and-rental-manager-for-woocommerce' ),
                 'flaticon-movie-tickets' => __( 'movie-tickets', 'booking-and-rental-manager-for-woocommerce' ),
                 'flaticon-lecture' => __( 'lecture', 'booking-and-rental-manager-for-woocommerce' ),
-                'flaticon-employee-1' => __( 'employee-1', 'booking-and-rental-manager-for-woocommerce' ),                
+                'flaticon-employee-1' => __( 'employee-1', 'booking-and-rental-manager-for-woocommerce' )
             );
+
+            return $arr;
         }
         
     }

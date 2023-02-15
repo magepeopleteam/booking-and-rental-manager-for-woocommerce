@@ -2225,3 +2225,10 @@ input.rbfw_time_slot_edit_slot_label {
 .mp_tab_item[data-tab-item="#travel_pricing"] hr {
     border: none;
 }
+
+.rbfw_load_more_icons,
+.rbfw_load_more_icons:hover {
+    cursor: pointer;
+    color: #fff;
+    margin-top: 10px;
+}

@@ -926,7 +926,7 @@ function rbfw_footer_scripts(){
 
 add_action('admin_footer','rbfw_footer_admin_scripts');
 function rbfw_footer_admin_scripts(){
-    
+
 	$icon_library = new rbfw_icon_library();
 	$icon_library_list = $icon_library->rbfw_fontawesome_icons();
 	?>
@@ -934,7 +934,8 @@ function rbfw_footer_admin_scripts(){
 		jQuery(document).ready(function(){
 
 					// Features Icon Popup
-					jQuery('.rbfw_feature_icon_btn').click(function (e) { 
+					jQuery('.rbfw_feature_icon_btn').click(function (e) {
+
 						let remove_exist_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").removeAttr('data-key');
 						let remove_active_label 	= jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
 						let data_key 				= jQuery(this).attr('data-key');
@@ -953,56 +954,128 @@ function rbfw_footer_admin_scripts(){
 							let selected_label 		= jQuery(this);
 							let selected_val 		= jQuery('input', this).val();
 							let selected_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
-							
+
 							jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
 							jQuery('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').empty();
 							jQuery(selected_label).addClass('selected');
 							jQuery('.rbfw_feature_icon[data-key="'+selected_data_key+'"]').val(selected_val);
 							jQuery('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').append('<i class="'+selected_val+'"></i>');
-						});				
+						});
+
 					});
 					// End Features Icon Popup
 
-					// Icon Filter 
-					jQuery('#rbfw_features_search_icon').keyup(function (e) { 
+					// Icon Filter
+					jQuery('#rbfw_features_search_icon').keyup(function (e) {
 						let value = jQuery(this).val().toLowerCase();
 						jQuery(".rbfw_features_icon_list_body label[data-id]").show().filter(function() {
 							jQuery(this).toggle(jQuery(this).attr('data-id').toLowerCase().indexOf(value) > -1)
 						}).hide();
 					});
 					// End Icon Filter
+
+					jQuery('.rbfw_load_more_icons').click(function (e) {
+						e.preventDefault();
+						let data_loaded = parseInt(jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded'));
+						var data = {
+							'action': 'rbfw_load_more_icons',
+							'data_loaded': data_loaded
+						};
+
+						jQuery.ajax({
+							type: 'POST',
+							url: ajaxurl,
+							data: {
+							'action': 'rbfw_load_more_icons',
+							'data_loaded': data_loaded
+						},
+							beforeSend: function() {
+								jQuery('.rbfw_load_more_icons').append('<span class="rbfw_load_more_icons_loader"><i class="fas fa-spinner fa-spin"></i></span>');
+							},
+							success: function (response) {
+								jQuery('.rbfw_load_more_icons_loader').remove();
+								jQuery('.rbfw_features_icon_list_body').append(response);
+								data_loaded = data_loaded + 100;
+								jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded', data_loaded);
+
+								if(response == ''){
+									jQuery('.rbfw_load_more_icons').hide();
+								}
+							},
+							error: function(response){
+								console.log(response);
+							}
+						});
+					});
 		});	
 	</script>
-	<div id="rbfw_features_icon_list_wrapper" class="mage_modal">
-	<div class="rbfw_features_icon_list_header">
-		<div class="rbfw_features_icon_list_header_group">
-			<a href="#rbfw_features_icon_list_wrapper" rel="mage_modal:close" class="rbfw_feature_icon_list_close_button"><?php esc_html_e('Close','booking-and-rental-manager-for-woocommerce'); ?></a>
-		</div>    
-		<div class="rbfw_features_icon_list_header_group">
-			<input type="text" id="rbfw_features_search_icon" placeholder="<?php esc_attr_e('Search Icon...','booking-and-rental-manager-for-woocommerce'); ?>"> 
+	<div id="rbfw_features_icon_list_wrapper" class="mage_modal" data-loaded="100">
+		<div class="rbfw_features_icon_list_header">
+			<div class="rbfw_features_icon_list_header_group">
+				<a href="#rbfw_features_icon_list_wrapper" rel="mage_modal:close" class="rbfw_feature_icon_list_close_button"><?php esc_html_e('Close','booking-and-rental-manager-for-woocommerce'); ?></a>
+			</div>
+			<div class="rbfw_features_icon_list_header_group">
+				<input type="text" id="rbfw_features_search_icon" placeholder="<?php esc_attr_e('Search Icon...','booking-and-rental-manager-for-woocommerce'); ?>">
+			</div>
 		</div>
-	</div>
-	<hr>
-	<div class="rbfw_features_icon_list_body">	
-		<?php 
-		foreach ($icon_library_list as $key => $value) {
-			$input_id = str_replace(' ', '', $key);
-			?>
-			<label for="<?php echo $input_id; ?>" data-id="<?php echo $value; ?>">
-			<input type="radio" name="rbfw_icon" id="<?php echo $input_id; ?>" value="<?php echo $key; ?>">
-			<i class="<?php echo $key; ?>"></i>
-			</label> 
+		<hr>
+		<div class="rbfw_features_icon_list_body">
 			<?php
-		}
-		?>
-	</div>	
+			$i = 1;
+			foreach ($icon_library_list as $key => $value) {
+				if($i < 100){
+					$input_id = str_replace(' ', '', $key);
+					?>
+					<label for="<?php echo $input_id; ?>" data-id="<?php echo $value; ?>">
+						<input type="radio" name="rbfw_icon" id="<?php echo $input_id; ?>" value="<?php echo $key; ?>">
+						<i class="<?php echo $key; ?>"></i>
+					</label>
+					<?php
+				}
+				$i++;
+			}
+			?>
+		</div>
+		<a class="ppof-button rbfw_load_more_icons"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e('Load More Icon','booking-and-rental-manager-for-woocommerce'); ?></a>
 	</div>
 	<style>
 		#rbfw_features_icon_list_wrapper.mage_modal{
 			display: none;
 		}
+		.rbfw_load_more_icons_loader{
+			margin-left: 5px;
+		}
 	</style>
 	<?php
+}
+
+add_action( 'wp_ajax_rbfw_load_more_icons', 'rbfw_load_more_icons_func' );
+
+function rbfw_load_more_icons_func() {
+	$data_loaded = $_POST['data_loaded'];
+	$icon_library = new rbfw_icon_library();
+	$icon_library_list = $icon_library->rbfw_fontawesome_icons();
+
+	ob_start();
+	$i = 1;
+	$target = $data_loaded + 100;
+	foreach ($icon_library_list as $key => $value) {
+		if(($i >= $data_loaded) && ($i <= $target)){
+			$input_id = str_replace(' ', '', $key);
+			?>
+			<label for="<?php echo $input_id; ?>" data-id="<?php echo $value; ?>">
+			<input type="radio" name="rbfw_icon" id="<?php echo $input_id; ?>" value="<?php echo $key; ?>">
+			<i class="<?php echo $key; ?>"></i>
+			</label>
+			<?php
+		}
+		$i++;
+	}
+
+    $content = ob_get_clean();
+    echo $content;
+
+	wp_die();
 }
 
 /*******************************************

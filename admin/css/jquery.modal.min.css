@@ -27,6 +27,10 @@
     background-color: transparent
 }
 
+#rbfw_features_icon_list_wrapper.mage_modal {
+    vertical-align: top;
+}
+
 .mage_modal {
     display: none;
     vertical-align: middle;
