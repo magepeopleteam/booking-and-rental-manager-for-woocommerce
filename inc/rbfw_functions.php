@@ -998,6 +998,20 @@ function rbfw_footer_admin_scripts(){
 								data_loaded = data_loaded + 100;
 								jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded', data_loaded);
 
+								// Selected Feature Icon Action
+								jQuery('#rbfw_features_icon_list_wrapper label').click(function (e) {
+									e.stopImmediatePropagation();
+									let selected_label 		= jQuery(this);
+									let selected_val 		= jQuery('input', this).val();
+									let selected_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
+
+									jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
+									jQuery('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').empty();
+									jQuery(selected_label).addClass('selected');
+									jQuery('.rbfw_feature_icon[data-key="'+selected_data_key+'"]').val(selected_val);
+									jQuery('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').append('<i class="'+selected_val+'"></i>');
+								});
+
 								if(response == ''){
 									jQuery('.rbfw_load_more_icons').hide();
 								}
