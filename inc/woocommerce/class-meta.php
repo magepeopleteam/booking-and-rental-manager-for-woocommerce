@@ -20,6 +20,45 @@ if ( ! class_exists( 'RBFW_WC_Meta' ) ) {
             $MageRBFWClass = new MageRBFWClass();
             $rbfw_rent_label = get_option("rbfw_basic_gen_settings");
             $cpt_label = !empty($rbfw_rent_label['rbfw_rent_label']) ? $rbfw_rent_label['rbfw_rent_label'] : 'Rent';
+
+            if(get_option( 'woocommerce_calc_taxes' ) == 'yes'){
+                $the_array = array(
+                            
+                    array(
+                        'id'      => '_tax_status',
+                        'title'   => __( ' Tax Status', 'booking-and-rental-manager-for-woocommerce-pro' ),
+                        'details' => __( 'Please Select Tax Status', 'booking-and-rental-manager-for-woocommerce-pro' ),
+                        'type'    => 'select',
+                        'class'   => 'omg',
+                        'default' => 'taxable',
+                        'args'    => array(
+                            'taxable'  => __( 'Taxable', 'booking-and-rental-manager-for-woocommerce-pro' ),
+                            'shipping' => __( 'Shipping only', 'booking-and-rental-manager-for-woocommerce-pro' ),
+                            'none'     => __( 'None', 'booking-and-rental-manager-for-woocommerce-pro' )
+                        )
+                    ),
+                    array(
+                        'id'      => '_tax_class',
+                        'title'   => __( ' Tax Class', 'booking-and-rental-manager-for-woocommerce-pro' ),
+                        'details' => __( 'Please Select Tax Class', 'booking-and-rental-manager-for-woocommerce-pro' ),
+                        'type'    => 'select',
+                        'class'   => 'omg',
+                        'default' => 'none',
+                        'args'    => $MageRBFWClass->all_tax_list()
+                    ),
+                );
+            } else {
+                $the_array = array(
+                    array(
+                        'id'      => 'tax_notice',
+                        'title'   => __( '', 'booking-and-rental-manager-for-woocommerce-pro' ),
+                        'details' => __( 'To enable automated tax calculation, first ensure that “enable taxes and tax calculations” is checked on WooCommerce > Settings > General. <a href="https://woocommerce.com/document/woocommerce-shipping-and-tax/woocommerce-tax/">View Documentation</a>', 'booking-and-rental-manager-for-woocommerce-pro' ),
+                        'type'    => 'notice',
+                    ),
+                );
+            }
+
+
             $rbfw_tax_meta_boxs = array(
                 'page_nav' => __( 'Tax', 'booking-and-rental-manager-for-woocommerce-pro' ),
                 'priority' => 10,
@@ -27,31 +66,7 @@ if ( ! class_exists( 'RBFW_WC_Meta' ) ) {
                     'section_2' => array(
                         'title'       => __( 'Tax Configuration', 'booking-and-rental-manager-for-woocommerce-pro' ),
                         'description' => __( '', 'booking-and-rental-manager-for-woocommerce-pro' ),
-                        'options'     => array(
-                            
-                            array(
-                                'id'      => '_tax_status',
-                                'title'   => __( ' Tax Status', 'booking-and-rental-manager-for-woocommerce-pro' ),
-                                'details' => __( 'Please Select Tax Status', 'booking-and-rental-manager-for-woocommerce-pro' ),
-                                'type'    => 'select',
-                                'class'   => 'omg',
-                                'default' => 'taxable',
-                                'args'    => array(
-                                    'taxable'  => __( 'Taxable', 'booking-and-rental-manager-for-woocommerce-pro' ),
-                                    'shipping' => __( 'Shipping only', 'booking-and-rental-manager-for-woocommerce-pro' ),
-                                    'none'     => __( 'None', 'booking-and-rental-manager-for-woocommerce-pro' )
-                                )
-                            ),
-                            array(
-                                'id'      => '_tax_class',
-                                'title'   => __( ' Tax Class', 'booking-and-rental-manager-for-woocommerce-pro' ),
-                                'details' => __( 'Please Select Tax Class', 'booking-and-rental-manager-for-woocommerce-pro' ),
-                                'type'    => 'select',
-                                'class'   => 'omg',
-                                'default' => 'none',
-                                'args'    => $MageRBFWClass->all_tax_list()
-                            ),
-                        )
+                        'options'     => $the_array
                     ),
                 
                 ),
@@ -72,9 +87,7 @@ if ( ! class_exists( 'RBFW_WC_Meta' ) ) {
                 ),
             );
             
-            if ( get_option( 'woocommerce_calc_taxes' ) == 'yes' ) {
-                new RMFWAddMetaBox( $rbfw_tax_meta_boxs_args );
-            }            
+            new RMFWAddMetaBox( $rbfw_tax_meta_boxs_args );
         }
     }
     new RBFW_WC_Meta();

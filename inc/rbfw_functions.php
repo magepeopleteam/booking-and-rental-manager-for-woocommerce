@@ -998,6 +998,10 @@ function rbfw_footer_admin_scripts(){
 								data_loaded = data_loaded + 100;
 								jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded', data_loaded);
 
+								if(response == ''){
+									jQuery('.rbfw_load_more_icons').hide();
+								}
+
 								// Selected Feature Icon Action
 								jQuery('#rbfw_features_icon_list_wrapper label').click(function (e) {
 									e.stopImmediatePropagation();
@@ -1011,10 +1015,6 @@ function rbfw_footer_admin_scripts(){
 									jQuery('.rbfw_feature_icon[data-key="'+selected_data_key+'"]').val(selected_val);
 									jQuery('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').append('<i class="'+selected_val+'"></i>');
 								});
-
-								if(response == ''){
-									jQuery('.rbfw_load_more_icons').hide();
-								}
 							},
 							error: function(response){
 								console.log(response);
@@ -1037,7 +1037,7 @@ function rbfw_footer_admin_scripts(){
 			<?php
 			$i = 1;
 			foreach ($icon_library_list as $key => $value) {
-				if($i < 100){
+				if($i <= 100){
 					$input_id = str_replace(' ', '', $key);
 					?>
 					<label for="<?php echo $input_id; ?>" data-id="<?php echo $value; ?>">
@@ -1071,10 +1071,10 @@ function rbfw_load_more_icons_func() {
 	$icon_library_list = $icon_library->rbfw_fontawesome_icons();
 
 	ob_start();
-	$i = 1;
+	$i = 0;
 	$target = $data_loaded + 100;
 	foreach ($icon_library_list as $key => $value) {
-		if(($i >= $data_loaded) && ($i <= $target)){
+		if(($i > $data_loaded) && ($i <= $target)){
 			$input_id = str_replace(' ', '', $key);
 			?>
 			<label for="<?php echo $input_id; ?>" data-id="<?php echo $value; ?>">
@@ -1195,6 +1195,26 @@ function rbfw_post_type_css(){
 		echo '<style>#minor-publishing{display:none;}</style>';
 		echo '<script>jQuery(document).ready(function(){ jQuery("#minor-publishing").remove(); });</script>';
 	}
+}
+
+add_action( 'admin_footer', 'rbfw_meta_admin_script_func');
+function rbfw_meta_admin_script_func(){
+	global $post;
+	$post_id = !empty($post->ID) ? $post->ID : '';
+
+	if(empty($post_id)){
+		return;
+	}
+
+	$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : '';
+	$rbfw_time_slot_switch = get_post_meta( $post_id, 'rbfw_time_slot_switch', true ) ? get_post_meta( $post_id, 'rbfw_time_slot_switch', true ) : 'off';
+
+	if( ($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment') && $rbfw_time_slot_switch == 'off' ){
+		echo '<script>jQuery(document).ready(function(){ jQuery("tr[data-row=rdfw_available_time]").hide(); });</script>';
+	} else {
+		echo '<script>jQuery(document).ready(function(){ jQuery("tr[data-row=rdfw_available_time]").show(); });</script>';
+	}
+
 }
 
 // Get rent type label by slug

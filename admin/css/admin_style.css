@@ -2232,3 +2232,11 @@ input.rbfw_time_slot_edit_slot_label {
     color: #fff;
     margin-top: 10px;
 }
+
+.rbfw-mt-min-15px {
+    margin-top: -15px;
+}
+
+.rbfw-bt-none {
+    border-top: 0;
+}

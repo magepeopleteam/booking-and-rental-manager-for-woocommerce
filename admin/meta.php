@@ -223,8 +223,7 @@
 		$rbfw_bike_car_sd_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) : [];
 		$rbfw_enable_resort_daylong_price  = get_post_meta( get_the_id(), 'rbfw_enable_resort_daylong_price', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_resort_daylong_price', true ) : 'no';
 
-		$rbfw_enable_extra_service_qty = get_post_meta( get_the_id(), 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_extra_service_qty', true ) : 'no';
-		$rbfw_enable_md_type_item_qty = get_post_meta( get_the_id(), 'rbfw_enable_md_type_item_qty', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_md_type_item_qty', true ) : 'no';
+
 		$rbfw_item_stock_quantity = !empty(get_post_meta( get_the_id(), 'rbfw_item_stock_quantity', true )) ? get_post_meta( get_the_id(), 'rbfw_item_stock_quantity', true ) : 0;
 		$rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
 
@@ -275,46 +274,7 @@
 					</select>
 					</td>
 				</tr>
-				<tr class="rbfw_switch_md_type_item_qty" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort' ) { echo 'style="display:none"'; } ?>>
-					<td>
-						<div class="rbfw_switch_wrapper rbfw_m_0">
-							<div class="rbfw_switch_label"><?php esc_html_e( 'On/Off Multiple Item Quantity Box', 'booking-and-rental-manager-for-woocommerce' ); ?>
-							</div>
-							<div class="rbfw_switch">
-								<label for="rbfw_enable_md_type_item_qty_on" class="<?php if ( $rbfw_enable_md_type_item_qty == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_md_type_item_qty" class="rbfw_enable_md_type_item_qty" value="yes" id="rbfw_enable_md_type_item_qty_on" <?php if ( $rbfw_enable_md_type_item_qty == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_md_type_item_qty_off" class="<?php if ( $rbfw_enable_md_type_item_qty != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_md_type_item_qty" class="rbfw_enable_md_type_item_qty" value="no" id="rbfw_enable_md_type_item_qty_off" <?php if ( $rbfw_enable_md_type_item_qty != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-							</div>
-						</div>
-						<hr>
-						<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-					</td>
-				</tr>
 
-				<tr class="rbfw_switch_md_type_item_qty" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ||  $rbfw_item_type == 'resort' ) { echo 'style="display:none"'; } ?>>
-					<td>
-						<div class="rbfw_switch_wrapper rbfw_switch_extra_service_qty" <?php if ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display: none"'; } ?>>
-							<div class="rbfw_switch_label"><?php esc_html_e( 'On/Off Multiple Extra Service Quantity Box', 'booking-and-rental-manager-for-woocommerce' ); ?><br>
-							</div>
-							<div class="rbfw_switch">
-								<label for="rbfw_enable_extra_service_qty_on" class="<?php if ( $rbfw_enable_extra_service_qty == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_extra_service_qty" class="rbfw_enable_extra_service_qty" value="yes" id="rbfw_enable_extra_service_qty_on" <?php if ( $rbfw_enable_extra_service_qty == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_extra_service_qty_off" class="<?php if ( $rbfw_enable_extra_service_qty != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_extra_service_qty" class="rbfw_enable_extra_service_qty" value="no" id="rbfw_enable_extra_service_qty_off" <?php if ( $rbfw_enable_extra_service_qty != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-							</div>
-						</div>
-						<hr>
-						<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'Enable/Disable multiple service quantity selection. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-					</td>
-				</tr>
-				<tr class="rbfw_switch_md_type_item_qty rbfw_switch_md_type_variation_switch_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort' ) { echo 'style="display:none"'; } ?>>
-					<td>
-					<div class="rbfw_switch_wrapper rbfw_enable_variations_switch">
-					<div class="rbfw_switch_label"><?php esc_html_e( 'On/Off Item Variations', 'booking-and-rental-manager-for-woocommerce' ); ?>
-					</div>
-					<div class="rbfw_switch rbfw_switch_variations">
-						<label for="rbfw_enable_variations_on" class="<?php if ( $rbfw_enable_variations == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_variations" class="rbfw_enable_variations" value="yes" id="rbfw_enable_variations_on" <?php if ( $rbfw_enable_variations == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_variations_off" class="<?php if ( $rbfw_enable_variations != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_variations" class="rbfw_enable_variations" value="no" id="rbfw_enable_variations_off" <?php if ( $rbfw_enable_variations != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-					</div>
-					</div>
-					<hr>
-					<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-					</td>
-				</tr>
 				<tr class="rbfw_switch_md_type_item_qty rbfw_item_stock_quantity_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort' || $rbfw_enable_variations == 'yes') { echo 'style="display:none"'; } ?>>
 					<td>
 						<label for="rbfw_item_stock_quantity"><strong><?php esc_html_e( 'Stock Quantity:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></label>
@@ -588,6 +548,21 @@
 			<tr>
 				<th scope="row">
 				<div class="rbfw_switch_wrapper">
+					<div class="rbfw_switch_label"><?php esc_html_e( 'On/Off Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
+
+					</div>
+					<div class="rbfw_switch rbfw_switch_daily_rate">
+						<label for="rbfw_enable_daily_rate_on" class="<?php if ( $rbfw_enable_daily_rate == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_daily_rate" class="rbfw_enable_daily_rate" value="yes" id="rbfw_enable_daily_rate_on" <?php if ( $rbfw_enable_daily_rate == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_daily_rate_off" class="<?php if ( $rbfw_enable_daily_rate != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_daily_rate" class="rbfw_enable_daily_rate" value="no" id="rbfw_enable_daily_rate_off" <?php if ( $rbfw_enable_daily_rate != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
+					</div>
+				</div>
+				<hr>
+				<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'Enable/Disable daily price functionality.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+				</th>
+				<td><input type="number" name='rbfw_daily_rate' value="<?php echo esc_html( $daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', '' ); ?>" class="<?php if ( $rbfw_enable_daily_rate == 'no' ) { echo 'rbfw_d_none'; } ?> rbfw_daily_rate_input"></td>
+			</tr>
+			<tr>
+				<th scope="row">
+				<div class="rbfw_switch_wrapper">
 					<div class="rbfw_switch_label"><?php esc_html_e( 'On/Off Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
 					</div>
 					<div class="rbfw_switch rbfw_switch_hourly_rate">
@@ -601,32 +576,21 @@
 			</tr>
 			<tr>
 				<th scope="row">
-				<div class="rbfw_switch_wrapper">
-					<div class="rbfw_switch_label"><?php esc_html_e( 'On/Off Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
-					
+					<div class="rbfw_switch_wrapper rbfw_switch_daywise_price">
+						<div class="rbfw_switch_label"><?php esc_html_e( 'On/Off Day-wise Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+						<div class="rbfw_switch">
+							<label for="rbfw_enable_daywise_price_on" class="<?php if ( $rbfw_enable_daywise_price == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_daywise_price" class="rbfw_enable_daywise_price" value="yes" id="rbfw_enable_daywise_price_on" <?php if ( $rbfw_enable_daywise_price == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_daywise_price_off" class="<?php if ( $rbfw_enable_daywise_price != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_daywise_price" class="rbfw_enable_daywise_price" value="no" id="rbfw_enable_daywise_price_off" <?php if ( $rbfw_enable_daywise_price != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
+						</div>
 					</div>
-					<div class="rbfw_switch rbfw_switch_daily_rate">
-						<label for="rbfw_enable_daily_rate_on" class="<?php if ( $rbfw_enable_daily_rate == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_daily_rate" class="rbfw_enable_daily_rate" value="yes" id="rbfw_enable_daily_rate_on" <?php if ( $rbfw_enable_daily_rate == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_daily_rate_off" class="<?php if ( $rbfw_enable_daily_rate != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_daily_rate" class="rbfw_enable_daily_rate" value="no" id="rbfw_enable_daily_rate_off" <?php if ( $rbfw_enable_daily_rate != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-					</div>
-				</div>
-				<hr>
-				<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'Enable/Disable daily price functionality.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
 				</th>
-				<td><input type="number" name='rbfw_daily_rate' value="<?php echo esc_html( $daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', '' ); ?>" class="<?php if ( $rbfw_enable_daily_rate == 'no' ) { echo 'rbfw_d_none'; } ?> rbfw_daily_rate_input"></td>
+				<hr>
 			</tr>
 			<?php do_action( 'rbfw_after_general_price_table_row' ); ?>
 		</table>
 		</div>
 		<?php do_action( 'rbfw_after_general_price_table' ); ?>
 
-		<div class="mp_tab_item_sub_sec">
-
-		<div class="rbfw_switch_wrapper rbfw_switch_daywise_price">
-			<div class="rbfw_switch_label"><?php esc_html_e( 'On/Off Day-wise Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-			<div class="rbfw_switch">
-				<label for="rbfw_enable_daywise_price_on" class="<?php if ( $rbfw_enable_daywise_price == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_daywise_price" class="rbfw_enable_daywise_price" value="yes" id="rbfw_enable_daywise_price_on" <?php if ( $rbfw_enable_daywise_price == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_daywise_price_off" class="<?php if ( $rbfw_enable_daywise_price != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_daywise_price" class="rbfw_enable_daywise_price" value="no" id="rbfw_enable_daywise_price_off" <?php if ( $rbfw_enable_daywise_price != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-			</div>
-		</div>
+		<div class="mp_tab_item_sub_sec rbfw-mt-min-15px rbfw-bt-none">
 		<script>
 			jQuery(document).ready(function(){
 
@@ -908,8 +872,22 @@ function rbfw_add_variations_tab_content($rbfw_id){
 	
 	<div class="mp_tab_item mp_tab_item_sub_sec" data-tab-item="#rbfw_variations" <?php if($rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
 		<h3><?php esc_html_e( 'Variations Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+		<table class="form-table">
+			<tr class="rbfw_switch_md_type_item_qty rbfw_switch_md_type_variation_switch_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort' ) { echo 'style="display:none"'; } ?>>
+				<td>
+				<div class="rbfw_switch_wrapper rbfw_enable_variations_switch">
+				<div class="rbfw_switch_label"><?php esc_html_e( 'On/Off Item Variations', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</div>
+				<div class="rbfw_switch rbfw_switch_variations">
+					<label for="rbfw_enable_variations_on" class="<?php if ( $rbfw_enable_variations == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_variations" class="rbfw_enable_variations" value="yes" id="rbfw_enable_variations_on" <?php if ( $rbfw_enable_variations == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_variations_off" class="<?php if ( $rbfw_enable_variations != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_variations" class="rbfw_enable_variations" value="no" id="rbfw_enable_variations_off" <?php if ( $rbfw_enable_variations != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
+				</div>
+				</div>
+				<hr>
+				<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+				</td>
+			</tr>
+		</table>
 
-		<div class="rbfw_alert_info rbfw_variation_tab_notice" <?php if($rbfw_enable_variations == 'yes'){ echo 'style="display:none"'; }?>><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'Please enable the variation switch from the pricing tab.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
 
 		<div class="rbfw_variations_table_wrap" <?php if($rbfw_enable_variations == 'no'){ echo 'style="display:none"'; }?>>
 			<table class="form-table rbfw_variations_table">
@@ -1160,6 +1138,88 @@ function rbfw_add_variations_tab_content($rbfw_id){
  * End: Variations Tab 
  * ******************************/
 
+ /*********************************
+ * Start: Front-end Display Tab
+ * ******************************/
+add_action( 'rbfw_meta_box_tab_name', 'rbfw_frontend_display_tab_name' , 11);
+
+function rbfw_frontend_display_tab_name($rbfw_id){
+
+	?>
+	<li data-target-tabs="#rbfw_frontend_display"><i class="fa-solid fa-display"></i><?php esc_html_e( ' Front-end Display', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+	<?php
+
+}
+
+add_action( 'rbfw_meta_box_tab_content', 'rbfw_frontend_display_tab_content' , 11);
+
+function rbfw_frontend_display_tab_content($rbfw_id){
+	$rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : '';
+	$rbfw_available_qty_info_switch = get_post_meta( $rbfw_id, 'rbfw_available_qty_info_switch', true ) ? get_post_meta( $rbfw_id, 'rbfw_available_qty_info_switch', true ) : 'no';
+	$rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
+	$rbfw_enable_md_type_item_qty = get_post_meta( $rbfw_id, 'rbfw_enable_md_type_item_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_md_type_item_qty', true ) : 'no';
+	?>
+	<div class="mp_tab_item mp_tab_item_sub_sec" data-tab-item="#rbfw_frontend_display">
+		<h3><?php esc_html_e( 'Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+		<table class="form-table">
+		<tr>
+			<td>
+				<div class="rbfw_switch_wrapper rbfw_m_0">
+					<div class="rbfw_switch_label"><?php esc_html_e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</div>
+					<div class="rbfw_switch">
+						<label for="rbfw_available_qty_info_switch_on" class="<?php if ( $rbfw_available_qty_info_switch == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_available_qty_info_switch" class="rbfw_available_qty_info_switch" value="yes" id="rbfw_available_qty_info_switch_on" <?php if ( $rbfw_available_qty_info_switch == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_available_qty_info_switch_off" class="<?php if ( $rbfw_available_qty_info_switch != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_available_qty_info_switch" class="rbfw_available_qty_info_switch" value="no" id="rbfw_available_qty_info_switch_off" <?php if ( $rbfw_available_qty_info_switch != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
+					</div>
+				</div>
+				<hr>
+				<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+			</td>
+		</tr>
+		<tr class="rbfw_switch_md_type_item_qty" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort' ) { echo 'style="display:none"'; } ?>>
+			<td>
+				<div class="rbfw_switch_wrapper rbfw_m_0">
+					<div class="rbfw_switch_label"><?php esc_html_e( 'Enable Multiple Item Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</div>
+					<div class="rbfw_switch">
+						<label for="rbfw_enable_md_type_item_qty_on" class="<?php if ( $rbfw_enable_md_type_item_qty == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_md_type_item_qty" class="rbfw_enable_md_type_item_qty" value="yes" id="rbfw_enable_md_type_item_qty_on" <?php if ( $rbfw_enable_md_type_item_qty == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_md_type_item_qty_off" class="<?php if ( $rbfw_enable_md_type_item_qty != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_md_type_item_qty" class="rbfw_enable_md_type_item_qty" value="no" id="rbfw_enable_md_type_item_qty_off" <?php if ( $rbfw_enable_md_type_item_qty != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
+					</div>
+				</div>
+				<hr>
+				<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+			</td>
+		</tr>
+
+		<tr class="rbfw_switch_md_type_item_qty" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ||  $rbfw_item_type == 'resort' ) { echo 'style="display:none"'; } ?>>
+			<td>
+				<div class="rbfw_switch_wrapper rbfw_switch_extra_service_qty" <?php if ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display: none"'; } ?>>
+					<div class="rbfw_switch_label"><?php esc_html_e( 'Enable Multiple Extra Service Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?><br>
+					</div>
+					<div class="rbfw_switch">
+						<label for="rbfw_enable_extra_service_qty_on" class="<?php if ( $rbfw_enable_extra_service_qty == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_extra_service_qty" class="rbfw_enable_extra_service_qty" value="yes" id="rbfw_enable_extra_service_qty_on" <?php if ( $rbfw_enable_extra_service_qty == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_extra_service_qty_off" class="<?php if ( $rbfw_enable_extra_service_qty != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_extra_service_qty" class="rbfw_enable_extra_service_qty" value="no" id="rbfw_enable_extra_service_qty_off" <?php if ( $rbfw_enable_extra_service_qty != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
+					</div>
+				</div>
+				<hr>
+				<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'Enable/Disable multiple service quantity selection. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+			</td>
+		</tr>
+
+		</table>
+	</div>
+	<?php
+}
+
+/*********************************
+ * End: Front-end Display Tab
+ * ******************************/
+
+/*********************************
+ * Start: Tax Tab
+ * ******************************/
+
+/*********************************
+ * End: Tax Tab
+ * ******************************/
+
 	function rbfw_repeated_item( $id, $meta_key, $data = array() ) {
 	ob_start();
 	$array = get_rbfw_repeated_setting_array( $meta_key );
@@ -1340,6 +1400,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
 			$rbfw_enable_pick_point  = isset( $_POST['rbfw_enable_pick_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_pick_point'] ) : 'no';
 			$rbfw_enable_dropoff_point  = isset( $_POST['rbfw_enable_dropoff_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_dropoff_point'] ) : 'no';
 			$rbfw_enable_daywise_price  = isset( $_POST['rbfw_enable_daywise_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_daywise_price'] ) : 'no';
+			$rbfw_available_qty_info_switch = isset( $_POST['rbfw_available_qty_info_switch'] ) ? $_POST['rbfw_available_qty_info_switch']  : 'no';
 			$rbfw_enable_extra_service_qty  = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? $_POST['rbfw_enable_extra_service_qty']  : 'no';
 			$rbfw_enable_daily_rate  = isset( $_POST['rbfw_enable_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_enable_daily_rate'] ) : 'no';
 			$rbfw_enable_hourly_rate = isset( $_POST['rbfw_enable_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_enable_hourly_rate'] ) : 'no';
@@ -1376,6 +1437,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
 			update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
 			update_post_meta( $post_id, 'rbfw_enable_dropoff_point', $rbfw_enable_dropoff_point );
 			update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
+			update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
 			update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
 			update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
 			update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );
@@ -1565,17 +1627,6 @@ function rbfw_add_variations_tab_content($rbfw_id){
 						),
 
 						array(
-							'id'      => 'rbfw_available_qty_info_switch',
-							'title'   => __( 'On/Off Available Quantity Infomation', 'booking-and-rental-manager-for-woocommerce' ),
-							'details' => __( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ),
-							'type'    => 'switch',
-							'args' => array(
-								'on' => 'On', 
-								'off' => 'Off',
-							),
-							'default' => 'off',
-						),
-						array(
 							'id'          => 'rbfw_single_template',
 							'title'       => __( 'Template', 'booking-and-rental-manager-for-woocommerce' ),
 							'details'     => __( '', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1726,7 +1777,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
 						array(
 							'id'      => 'rbfw_time_slot_switch',
 							'title'   => __( 'On/Off Time Slot', 'booking-and-rental-manager-for-woocommerce' ),
-							'details' => __( 'It enables/disables the time slot for Bike/Car Single Day rent type.', 'booking-and-rental-manager-for-woocommerce' ),
+							'details' => __( 'It enables/disables the time slot for Bike/Car Single Day and Appointment rent type.', 'booking-and-rental-manager-for-woocommerce' ),
 							'type'    => 'switch',
 							'args' => array(
 								'on' => 'On', 
@@ -1807,5 +1858,4 @@ function rbfw_add_variations_tab_content($rbfw_id){
 		if ('mps' == $current_payment_system) {
 			new RMFWAddMetaBox( $rbfw_mps_tax_meta_boxs_args );
 		}
-		
 	}

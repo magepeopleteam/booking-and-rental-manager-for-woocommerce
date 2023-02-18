@@ -207,9 +207,3 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 = 1.1.6 =
 * WooCommerce integration.
 * Fixed bug with flatsome theme
-
-= 1.1.7 =
-* Bug Fixed.
-
-= 1.1.8 =
-* Icon library loading time issue fixed.
