@@ -546,7 +546,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                     $BikeCarMdClass = new RBFW_BikeCarMd_Function();
                     $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                     $service_info = $BikeCarMdClass->rbfw_get_bikecarmd_service_info($item_id, $service_info);
-                    $dress_size = !empty($ticket_info['rbfw_dress_size']) ? $ticket_info['rbfw_dress_size'] : '';
+
                     $item_quantity = !empty($ticket_info['rbfw_item_quantity']) ? $ticket_info['rbfw_item_quantity'] : 1;
                     $pickup_point = !empty($ticket_info['rbfw_pickup_point']) ? $ticket_info['rbfw_pickup_point'] : '';
                     $dropoff_point = !empty($ticket_info['rbfw_dropoff_point']) ? $ticket_info['rbfw_dropoff_point'] : '';
@@ -696,12 +696,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                         <td><strong><?php esc_html_e( 'End Date and Time:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
                         <td><?php echo esc_html($rbfw_end_datetime); ?></td>
                     </tr>
-                    <?php if(!empty($dress_size)){ ?>
-                    <tr>
-                        <td><strong><?php esc_html_e( 'Dress Size:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                        <td><?php echo esc_html($dress_size); ?></td>
-                    </tr>
-                    <?php } ?>
+
                     <tr>
                         <td><strong><?php esc_html_e( 'Duration Cost:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
                         <td><?php echo $duration_cost; ?></td>

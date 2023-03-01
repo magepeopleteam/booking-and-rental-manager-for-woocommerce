@@ -84,7 +84,7 @@ function rbfw_show_cart_item_func( $cart_item, $rbfw_id ) {
         $end_time           = $cart_item['rbfw_end_time'] ? $cart_item['rbfw_end_time'] : '';
         $rbfw_pickup_point  = $cart_item['rbfw_pickup_point'] ? $cart_item['rbfw_pickup_point'] : '';
         $rbfw_dropoff_point = $cart_item['rbfw_dropoff_point'] ? $cart_item['rbfw_dropoff_point'] : '';
-        $rbfw_dress_size 	= $cart_item['rbfw_dress_size'] ? $cart_item['rbfw_dress_size'] : '';
+
         $rbfw_item_quantity = $cart_item['rbfw_item_quantity'] ? $cart_item['rbfw_item_quantity'] : 1;
         $rbfw_duration_price = $cart_item['rbfw_duration_price'] ? $cart_item['rbfw_duration_price'] : '';
         $rbfw_service_price = $cart_item['rbfw_service_price'] ? $cart_item['rbfw_service_price'] : '';
@@ -271,7 +271,6 @@ function rbfw_show_cart_item_func( $cart_item, $rbfw_id ) {
             <td><?php echo wc_price($rbfw_bikecarsd_service_price); ?></td>
         </tr>
         <?php endif; ?>
-
         </table>
     <?php } ?>	
     <?php /* End Type: Bikecarsd */ ?>
@@ -360,8 +359,7 @@ function rbfw_show_cart_item_func( $cart_item, $rbfw_id ) {
 
     </ul>
     <?php } ?>
-    
-    <?php do_action( 'rbfw_after_cart_item_display', $cart_item, $rbfw_id ); ?>
+    <?php do_action( 'rbfw_after_cart_item_display', $cart_item ); ?>
     <?php
 
 }

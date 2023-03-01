@@ -74,7 +74,7 @@ if ( ! class_exists( 'RBFW_WC_Meta' ) ) {
             
             $rbfw_tax_meta_boxs_args = array(
                 'meta_box_id'    => 'rbfw_tax_meta_boxes',
-                'meta_box_title' => '<span class="dashicons dashicons-text-page"></span> '. __( 'Tax', 'booking-and-rental-manager-for-woocommerce-pro' ),
+                'meta_box_title' => '<i class="fa-solid fa-file-lines"></i>'. __( 'Tax', 'booking-and-rental-manager-for-woocommerce-pro' ),
                 'screen'         => array( 'rbfw_item' ),
                 'context'        => 'normal',
                 'priority'       => 'low',

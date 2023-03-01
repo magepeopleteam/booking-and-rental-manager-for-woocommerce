@@ -209,20 +209,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'type'    => 'text',
 				'default' => 'Choose drop-off location'
 			),
-			array(
-				'name'    => 'rbfw_text_dress_size',
-				'label'   => __( 'Dress Size', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'Enter the translated text of <strong>Dress Size.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'text',
-				'default' => 'Dress Size'
-			),
-			array(
-				'name'    => 'rbfw_text_choose_dress_size',
-				'label'   => __( 'Choose dress size', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'Enter the translated text of <strong>Choose dress size.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'text',
-				'default' => 'Choose dress size'
-			),			
+
 			array(
 				'name'    => 'rbfw_text_pickup_date_time',
 				'label'   => __( 'Pickup Date & Time', 'booking-and-rental-manager-for-woocommerce' ),
@@ -967,11 +954,11 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'default' => 'PIN'
 			),	
 			array(
-				'name'    => 'rbfw_text_customer_information',
-				'label'   => __( 'Customer Information', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'Enter the translated text of <strong>Customer Information</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'name'    => 'rbfw_text_billing_information',
+				'label'   => __( 'Billing Information', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Billing Information</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
-				'default' => 'Customer Information'
+				'default' => 'Billing Information'
 			),
 			array(
 				'name'    => 'rbfw_text_phone',
@@ -1238,7 +1225,42 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => __( 'Enter the translated text of <strong>Hide More Features</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Hide More Features'
-			),																																											
+			),
+			array(
+				'name'    => 'rbfw_text_pls_choose_option',
+				'label'   => __( 'Please choose the option', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Please choose the option</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Please choose the option'
+			),
+			array(
+				'name'    => 'rbfw_text_customer_information',
+				'label'   => __( 'Customer Information', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Customer Information</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Customer Information'
+			),
+			array(
+				'name'    => 'rbfw_text_male',
+				'label'   => __( 'Male', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Male</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Male'
+			),
+			array(
+				'name'    => 'rbfw_text_female',
+				'label'   => __( 'Female', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Female</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Female'
+			),
+			array(
+				'name'    => 'rbfw_text_other',
+				'label'   => __( 'Other', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Other</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Other'
+			),
 		),
 		'rbfw_basic_style_settings' => array(
 			array(

@@ -28,6 +28,15 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     $discount_amount = '';
     /* End Discount Calculations */
 
+    /* Start: Get Registration Form Info */
+    $rbfw_regf_info = [];
+
+    if(class_exists('Rbfw_Reg_Form')){
+        $ClassRegForm = new Rbfw_Reg_Form();
+        $rbfw_regf_info = $ClassRegForm->rbfw_regf_value_array_function($rbfw_id);
+    }
+    /* End: Get Registration Form Info */
+
     /* Type: Resort */
     $rbfw_resort 				= new RBFW_Resort_Function();
     $rbfw_checkin_datetime        	= isset( $_POST['rbfw_start_datetime'] ) ? strip_tags( $_POST['rbfw_start_datetime'] ) : '';
@@ -71,7 +80,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
         $discount_amount = $discount_arr['discount_amount'];
     }
 
-    $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info($rbfw_id,$rbfw_checkin_datetime,$rbfw_checkout_datetime,$rbfw_room_price_category,$rbfw_room_info,$rbfw_service_info);
+    $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info($rbfw_id,$rbfw_checkin_datetime,$rbfw_checkout_datetime,$rbfw_room_price_category,$rbfw_room_info,$rbfw_service_info, $rbfw_regf_info);
     /* End Type: Resort */
 
     /* Type: Bikecarsd */
@@ -89,12 +98,15 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     
     $a = 0;
     foreach ($rbfw_type_info_all as $key => $value) {
-        $rent_type = $_POST['rbfw_bikecarsd_info'][$a]['rent_type'];
-        $rent_qty  = $_POST['rbfw_bikecarsd_info'][$a]['qty'];
-        
-        if(!empty($rent_qty) && $rent_qty > 0):
-        $rbfw_type_info[$rent_type] = $rent_qty;
-        endif;
+
+        if(!empty($_POST['rbfw_bikecarsd_info'][$a]['rent_type'])){
+            $rent_type = $_POST['rbfw_bikecarsd_info'][$a]['rent_type'];
+            $rent_qty  = $_POST['rbfw_bikecarsd_info'][$a]['qty'];
+
+            if(!empty($rent_qty) && $rent_qty > 0):
+            $rbfw_type_info[$rent_type] = $rent_qty;
+            endif;
+        }
 
         $a++;
     }
@@ -102,10 +114,10 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     $rbfw_bikecarsd_duration_price = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation($rbfw_id, $rbfw_type_info,$rbfw_service_info,'rbfw_bikecarsd_duration_price');
     $rbfw_bikecarsd_service_price = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation($rbfw_id, $rbfw_type_info,$rbfw_service_info,'rbfw_bikecarsd_service_price');
     $rbfw_bikecarsd_total_price  = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation($rbfw_id, $rbfw_type_info,$rbfw_service_info,'rbfw_bikecarsd_total_price');
-    $rbfw_bikecarsd_ticket_info = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info($rbfw_id, $rbfw_start_datetime,$rbfw_end_datetime, $rbfw_type_info,$rbfw_service_info,$rbfw_bikecarsd_selected_time);
+    $rbfw_bikecarsd_ticket_info = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info($rbfw_id, $rbfw_start_datetime,$rbfw_end_datetime, $rbfw_type_info,$rbfw_service_info,$rbfw_bikecarsd_selected_time, $rbfw_regf_info);
     /* End Type: Bikecarsd */
 
-    $rbfw_dress_size        = isset( $_POST['rbfw_dress_size'] ) ? $_POST['rbfw_dress_size'] : '';
+
     $rbfw_pickup_point      = isset( $_POST['rbfw_pickup_point'] ) ? $_POST['rbfw_pickup_point'] : '';
     $rbfw_dropoff_point     = isset( $_POST['rbfw_dropoff_point'] ) ? $_POST['rbfw_dropoff_point'] : '';
     $rbfw_pickup_start_date = isset( $_POST['rbfw_pickup_start_date'] ) ? $_POST['rbfw_pickup_start_date'] : '';
@@ -122,7 +134,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
 
     elseif($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment'):
         $base_price     = $rbfw_bikecarsd_total_price;
-        $total_price    = apply_filters( 'rbfw_cart_base_price', $base_price );			
+        $total_price    = apply_filters( 'rbfw_cart_base_price', $base_price );
     else:
         $start_date = $rbfw_pickup_start_date;
         $start_time = $rbfw_pickup_start_time;
@@ -199,7 +211,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
             $discount_amount = $discount_arr['discount_amount'];
         }
 
-        $rbfw_ticket_info = rbfw_cart_ticket_info($rbfw_id, $rbfw_pickup_start_date, $rbfw_pickup_start_time, $rbfw_pickup_end_date, $rbfw_pickup_end_time, $rbfw_pickup_point, $rbfw_dropoff_point, $rbfw_dress_size, $rbfw_item_quantity, $rbfw_duration_price, $rbfw_service_price, $total_price, $rbfw_service_info,$variation_info, $discount_type, $discount_amount);
+        $rbfw_ticket_info = rbfw_cart_ticket_info($rbfw_id, $rbfw_pickup_start_date, $rbfw_pickup_start_time, $rbfw_pickup_end_date, $rbfw_pickup_end_time, $rbfw_pickup_point, $rbfw_dropoff_point, $rbfw_item_quantity, $rbfw_duration_price, $rbfw_service_price, $total_price, $rbfw_service_info,$variation_info, $discount_type, $discount_amount, $rbfw_regf_info);
     endif;	
     
     $cart_item_data['rbfw_id'] = $rbfw_id;
@@ -221,6 +233,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
         $cart_item_data['discount_type']  = $discount_type;
         $cart_item_data['discount_amount']  = $discount_amount;
 
+
+
     elseif($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment'):
         $cart_item_data['rbfw_start_datetime'] = $rbfw_start_datetime;
         $cart_item_data['rbfw_end_datetime'] = $rbfw_end_datetime;
@@ -235,7 +249,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
         $cart_item_data['rbfw_ticket_info']  			= $rbfw_bikecarsd_ticket_info;
 
     else:
-        $cart_item_data['rbfw_dress_size']         = $rbfw_dress_size;
+
         $cart_item_data['rbfw_pickup_point']       = $rbfw_pickup_point;
         $cart_item_data['rbfw_dropoff_point']      = $rbfw_dropoff_point;
         $cart_item_data['rbfw_start_date']         = $start_date;
@@ -259,5 +273,5 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     $cart_item_data['line_total']              = $total_price;
     $cart_item_data['line_subtotal']           = $total_price;
 
-    return $cart_item_data;
+    return apply_filters('rbfw_add_cart_function_after', $cart_item_data, $rbfw_id);
 }

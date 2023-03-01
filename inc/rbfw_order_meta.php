@@ -108,6 +108,7 @@ function rbfw_order_meta_box_callback(){
                     </tr>
                 </tbody>
             </table>
+
             <?php 
                 /* Loop Ticket Info */
                 $ticket_infos = !empty(get_post_meta($order_id,'rbfw_ticket_info',true)) ? get_post_meta($order_id,'rbfw_ticket_info',true) : [];
@@ -171,9 +172,11 @@ function rbfw_order_meta_box_callback(){
                 $duration_cost = rbfw_mps_price($ticket_info['duration_cost']);
                 $service_cost = rbfw_mps_price($ticket_info['service_cost']);
                 $total_cost = rbfw_mps_price($ticket_info['ticket_price']);
-                $discount_amount = (float)$ticket_info['discount_amount'];
+                $discount_amount = !empty($ticket_info['discount_amount']) ? (float)$ticket_info['discount_amount'] : 0;
                 $discount_amount = rbfw_mps_price($discount_amount);
-                $discount_type = $ticket_info['discount_type'];
+                $discount_type = !empty($ticket_info['discount_type']) ? $ticket_info['discount_type'] : '';
+                $rbfw_regf_info = !empty($ticket_info['rbfw_regf_info']) ? $ticket_info['rbfw_regf_info'] : [];
+
                 /* End  loop*/
             ?>
             <table class="wp-list-table widefat fixed striped table-view-list">
@@ -302,6 +305,33 @@ function rbfw_order_meta_box_callback(){
                             </table>
                         </td>
                     </tr>
+                    <?php if(!empty($rbfw_regf_info)){ ?>
+                    <tr>
+                        <td><strong><?php rbfw_string('rbfw_text_customer_information',__('Customer Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                        <td>
+                            <table class="wp-list-table widefat fixed striped table-view-list">
+                            <?php
+                            foreach ($rbfw_regf_info as $info) {
+
+                                $label = $info['label'];
+                                $value = $info['value'];
+
+                                if(filter_var($value, FILTER_VALIDATE_URL)){
+
+                                    $value = '<a href="'.esc_url($value).'" target="_blank" style="text-decoration:underline">'.esc_html__('View File','booking-and-rental-manager-for-woocommerce').'</a>';
+                                }
+                                ?>
+                                <tr>
+                                    <td><strong><?php echo $label; ?></strong></td>
+                                    <td><?php echo $value; ?></td>
+                                </tr>
+                                <?php
+                            }
+                            ?>
+                            </table>
+                        </td>
+                    </tr>
+                    <?php } ?>
                     <tr>
                         <td><strong><?php rbfw_string('rbfw_text_start_date_and_time',__('Start Date and Time','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                         <td><?php echo esc_html($rbfw_start_datetime); ?></td>

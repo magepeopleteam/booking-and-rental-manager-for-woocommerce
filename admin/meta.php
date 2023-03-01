@@ -1212,14 +1212,6 @@ function rbfw_frontend_display_tab_content($rbfw_id){
  * End: Front-end Display Tab
  * ******************************/
 
-/*********************************
- * Start: Tax Tab
- * ******************************/
-
-/*********************************
- * End: Tax Tab
- * ******************************/
-
 	function rbfw_repeated_item( $id, $meta_key, $data = array() ) {
 	ob_start();
 	$array = get_rbfw_repeated_setting_array( $meta_key );

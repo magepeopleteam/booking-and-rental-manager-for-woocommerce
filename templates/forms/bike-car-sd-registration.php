@@ -52,7 +52,7 @@
 
 				<!-- Button -->
 				
-				<div class="item rbfw_bikecarsd_book_now_btn_wrap" <?php  if($rbfw_payment_system == 'mps_enabled' && $rbfw_rent_type == 'appointment'){ echo 'style="display:none"'; }?>>
+				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
 					<button type="submit" name="add-to-cart" value="<?php echo $rbfw_product_id; ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn <?php echo $rbfw_payment_system; ?>" disabled>
 					<?php
 						echo $rbfw->get_option('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));

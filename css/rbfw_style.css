@@ -284,6 +284,7 @@ CSS for Single Page Template
 
 .pricing-content .price-type p {
     padding: 5px;
+    font-size: 14px;
 }
 
 .pricing-content .price-type p:first-child {
@@ -2472,6 +2473,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     background: #d3d3d3;
     padding: 10px;
     margin-bottom: 5px;
+    text-align: center;
 }
 
 .rbfw_mps_user_order_row {
@@ -3892,4 +3894,94 @@ span.rbfw_item_absolute:hover {
     padding: 0 0 10px 0;
     color: #707;
     z-index: 1
+}
+
+
+/*Custom Registration Form Css*/
+
+.rbfw_regf_wrap {
+    font-size: 14px;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.rbfw_regf_group {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.rbfw_regf_group input[type="text"],
+.rbfw_regf_group input[type="email"],
+.rbfw_regf_group input[type="date"],
+.rbfw_regf_group input[type="file"],
+.rbfw_regf_group select,
+.rbfw_regf_group textarea {
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    transition: #86b7fe .15s ease-in-out, rgba(13, 110, 253, .25) .15s ease-in-out;
+}
+
+.rbfw_regf_form_header {
+    text-align: center;
+    padding: 10px;
+    background-color: #f5f5f5;
+    margin-bottom: 10px;
+}
+
+.rbfw_regf_group input[type="radio"],
+.rbfw_regf_group input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.woocommerce-cart-form table.rbfw_regf_cart_table th,
+table.rbfw_regf_cart_table th {
+    border-right: 1px solid #f5f5f5;
+}
+
+.woocommerce-cart-form table.rbfw_regf_cart_table,
+table.rbfw_regf_cart_table {
+    border: 1px solid #f5f5f5;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.rbfw_regf_heading {
+    background: #f6f6f6;
+    font-weight: bold;
+}
+
+.rbfw_regf_file_loader {
+    position: absolute;
+    right: 1px;
+    top: 0;
+    background: #f7dd79;
+    min-width: 30px;
+    height: 32px;
+    line-height: 32px;
+    text-align: center;
+    border-radius: 0 3px 3px 0;
+}
+
+.rbfw_regf_file_loader.up_success {
+    background: #0caa6e;
+    color: #fff;
+}
+
+.rbfw_regf_group input[type=file] {
+    padding: 4px !important;
+}
+
+.rbfw_regf_file_wrap {
+    position: relative;
 }

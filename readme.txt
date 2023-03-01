@@ -207,3 +207,12 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 = 1.1.6 =
 * WooCommerce integration.
 * Fixed bug with flatsome theme
+
+= 1.1.7 =
+* Fixed bug
+
+= 1.1.8 =
+* Fixed bug
+
+= 1.1.9 =
+* Fixed bug

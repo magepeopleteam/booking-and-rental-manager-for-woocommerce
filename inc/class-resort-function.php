@@ -129,7 +129,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             return $main_array;
         }
 
-        public function rbfw_resort_ticket_info($product_id, $checkin_date, $checkout_date, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info = null){
+        public function rbfw_resort_ticket_info($product_id, $checkin_date, $checkout_date, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info = null, $rbfw_regf_info = array()){
             global $rbfw;
             if( !empty($product_id) && !empty($checkin_date) && !empty($checkout_date) && !empty($rbfw_room_info) ):
                 $post_id = $product_id;
@@ -227,6 +227,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                     $discount_arr = [];
                 }
+                $discount_type = '';
                 $discount_amount = 0;
                 if(!empty($discount_arr)){
                     $total_price = $discount_arr['total_amount'];
@@ -280,6 +281,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 $main_array[0]['service_cost'] = $total_service_price;
                 $main_array[0]['discount_type'] = $discount_type;
                 $main_array[0]['discount_amount'] = $discount_amount;
+                $main_array[0]['rbfw_regf_info'] = $rbfw_regf_info;
 
                 return $main_array;
 
@@ -629,6 +631,15 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                     <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
                                 </div>
                             </div>';
+
+                /* Include Custom Registration Form */
+                if(class_exists('Rbfw_Reg_Form')){
+                    $reg_form = new Rbfw_Reg_Form();
+                    $reg_fields = $reg_form->rbfw_generate_regf_fields($post_id);
+                    $content.= $reg_fields;
+                }
+                /* End: Include Custom Registration Form */
+
                 $content  .= '<div class="item">
                                 <button type="submit" name="add-to-cart" value="'.$rbfw_product_id.'" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_resort_book_now_btn '.$rbfw_payment_system.'" disabled>
                                     '.$rbfw->get_option('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce')).'
@@ -763,7 +774,8 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                 </ul>
                                 <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
                             </div>
-                        </div>';          
+                        </div>';
+
             echo $content;
 
             else:
@@ -1146,6 +1158,18 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 }
                 // end display extra services box onclick and onchange                
              
+                <?php
+                /* Start: Get Registration Form Info */
+                $rbfw_regf_info = [];
+
+                if(class_exists('Rbfw_Reg_Form')){
+                    $ClassRegForm = new Rbfw_Reg_Form();
+                    $rbfw_regf_info = $ClassRegForm->rbfw_get_regf_all_fields_name($post_id);
+                    $rbfw_regf_info = json_encode($rbfw_regf_info);
+                }
+                /* End: Get Registration Form Info */
+                ?>
+
                 function rbfw_mps_book_now_btn_action(){
                     jQuery('button.rbfw_resort_book_now_btn.mps_enabled').click(function (e) { 
                         e.preventDefault();
@@ -1172,7 +1196,52 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                 service_array[data_type] = qty;
                             }
                         }
-                  
+
+                        <?php if(!empty($rbfw_regf_info)){ ?>
+                            let rbfw_regf_fields = <?php echo $rbfw_regf_info; ?>;
+                        <?php } else { ?>
+                            let rbfw_regf_fields = {};
+                        <?php } ?>
+
+                        var rbfw_regf_info = {};
+                        var rbfw_regf_checkboxes = {};
+                        var rbfw_regf_radio = {};
+                        var this_checkbox_arr = [];
+                        var this_radio_arr = [];
+
+                        if(rbfw_regf_fields.length > 0){
+                            rbfw_regf_fields.forEach((field_name, index) => {
+
+                                let this_field_type = jQuery('[name="'+field_name+'"]').attr('type');
+                                let this_value = jQuery('[name="'+field_name+'"]').val();
+
+                                if (typeof this_field_type === 'undefined') {
+
+                                    this_field_type = jQuery('[name="'+field_name+'[]"]').attr('type');
+
+                                    if(this_field_type == 'checkbox'){
+
+                                        jQuery('.'+field_name+':checked').each(function(i){
+                                            this_checkbox_arr.push(jQuery(this).val());
+                                        });
+
+                                        rbfw_regf_checkboxes[field_name] = this_checkbox_arr;
+                                    }
+
+                                    if(this_field_type == 'radio'){
+
+                                        jQuery('.'+field_name+':checked').each(function(d){
+                                            this_radio_arr.push(jQuery(this).val());
+                                        });
+
+                                        rbfw_regf_radio[field_name] = this_radio_arr;
+                                    }
+                                }
+
+                                rbfw_regf_info[field_name] = this_value;
+                            });
+                        }
+
                         jQuery.ajax({
                             type: 'POST',
                             url: rbfw_ajax.rbfw_ajaxurl,
@@ -1184,17 +1253,35 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                 'end_date': end_date,
                                 'package': package,
                                 'type_info[]': type_array,
-                                'service_info[]': service_array
+                                'service_info[]': service_array,
+                                'rbfw_regf_info[]' : rbfw_regf_info,
+                                'rbfw_regf_checkboxes' : rbfw_regf_checkboxes,
+                                'rbfw_regf_radio': rbfw_regf_radio
 
                             },
                             beforeSend: function() {
-                                jQuery('.rbfw_resort_item_wrapper').hide();
-                                jQuery('.rbfw-resort-result-loader').html('<i class="fas fa-spinner fa-spin"></i>');
+
+                                jQuery('.rbfw_resort_book_now_btn.mps_enabled').append('<i class="fas fa-spinner fa-spin"></i>');
                             },		
                             success: function (response) {
-                                jQuery('.rbfw-resort-result-loader').hide();
-                                jQuery('.rbfw-resort-result').append(response);
-                                rbfw_on_submit_user_form_action(post_id,rent_type,start_date,end_date,package,type_array,service_array);
+
+                                jQuery('.rbfw_resort_book_now_btn.mps_enabled i').remove();
+
+                                var returnedData = JSON.parse(response);
+
+                                if(returnedData.hasOwnProperty('rbfw_regf_warning') && returnedData.rbfw_regf_warning != ''){
+                                    jQuery('.rbfw_resort_item_wrapper').show();
+                                    jQuery('.rbfw_regf_warning_wrap').remove();
+                                    jQuery('.rbfw-resort-result').append(returnedData.rbfw_regf_warning);
+                                }
+
+                                if(returnedData.hasOwnProperty('rbfw_content') && returnedData.rbfw_content != ''){
+                                    jQuery('.rbfw_resort_item_wrapper').hide();
+                                    jQuery('.rbfw_regf_warning_wrap').remove();
+                                    jQuery('.rbfw-resort-result').append(returnedData.rbfw_content);
+                                }
+
+                                rbfw_on_submit_user_form_action(post_id,rent_type,start_date,end_date,package,type_array,service_array,rbfw_regf_info,rbfw_regf_checkboxes,rbfw_regf_radio);
                                 rbfw_mps_checkout_header_link();
                             }
                         });
@@ -1202,7 +1289,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     });
                 }
 
-                function rbfw_on_submit_user_form_action(post_id,rent_type,start_date,end_date,package,type_array,service_array){
+                function rbfw_on_submit_user_form_action(post_id,rent_type,start_date,end_date,package,type_array,service_array,rbfw_regf_info,rbfw_regf_checkboxes,rbfw_regf_radio){
                     jQuery( ".rbfw_mps_form_wrap form" ).on( "submit", function( e ) {
                         e.preventDefault();
                         let this_form = jQuery(this);
@@ -1265,7 +1352,10 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                 'last_name' : last_name,
                                 'email' : email,
                                 'payment_method' : payment_method,
-                                'submit_request' : submit_request
+                                'submit_request' : submit_request,
+                                'rbfw_regf_info[]' : rbfw_regf_info,
+                                'rbfw_regf_checkboxes' : rbfw_regf_checkboxes,
+                                'rbfw_regf_radio': rbfw_regf_radio
                             },
                             beforeSend: function(response) {
                                 target.find('.rbfw_mps_payment_form_wrap').empty();
@@ -1317,8 +1407,10 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                 'last_name' : last_name,
                                 'email' : email,
                                 'payment_method' : payment_method,
-                                'submit_request' : submit_request
-
+                                'submit_request' : submit_request,
+                                'rbfw_regf_info[]' : rbfw_regf_info,
+                                'rbfw_regf_checkboxes' : rbfw_regf_checkboxes,
+                                'rbfw_regf_radio': rbfw_regf_radio
                             },
                             beforeSend: function() {
                                 target.find('.rbfw_mps_user_form_result').empty();

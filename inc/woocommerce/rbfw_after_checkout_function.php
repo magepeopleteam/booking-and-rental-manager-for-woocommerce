@@ -2,41 +2,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-
-add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management', 10 );
-
-function rbfw_booking_management( $order_id ) {
-    global $rbfw;
-
-    if ( ! $order_id ) {
-        return;
-    }
-
-    $order = wc_get_order( $order_id );
-    $order_status = $order->get_status();
-
-    if ( $order_status != 'failed' ) {
-
-        foreach ( $order->get_items() as $item_id => $item_values ) {
-
-            $item_id = $item_id;
-            $rbfw_id = rbfw_get_order_item_meta( $item_id, '_rbfw_id', true );
-                    
-            if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
-
-                $ticket_info  = rbfw_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ) : [];
-                $user_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ) : [];
-                $type_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ) : [];
-                $service_info = rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ) : [];
-                $rbfw_duration_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) : '';
-                $rbfw_service_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) : '';
-
-                rbfw_prepar_and_add_user_data( $ticket_info, $user_info, $rbfw_id, $order_id, $service_info, $rbfw_duration_cost, $rbfw_service_cost, $type_info);
-            }
-        }
-    }
-}
-
+/**********************
+WooCommerce Item Meta
+***********************/
 add_action( 'rbfw_validate_add_order_item', 'rbfw_validate_add_order_item_func', 10, 3 );
 
 function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
@@ -297,7 +265,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
 
         $pickup_location  = $values['rbfw_pickup_point'] ? $values['rbfw_pickup_point'] : '';
         $dropoff_location = $values['rbfw_dropoff_point'] ? $values['rbfw_dropoff_point'] : '';
-        $dress_size = $values['rbfw_dress_size'] ? $values['rbfw_dress_size'] : '';
+
         $rbfw_item_quantity = $values['rbfw_item_quantity'] ? $values['rbfw_item_quantity'] : 1;
         $rbfw_duration_price = $values['rbfw_duration_price'] ? $values['rbfw_duration_price'] : '';
         $rbfw_service_price	= $values['rbfw_service_price'] ? $values['rbfw_service_price'] : '';
@@ -387,4 +355,85 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
     endif;
 
         $item->add_meta_data( '_rbfw_id', $rbfw_id );
+
+        $rbfw_regf_info = $values['rbfw_regf_info'] ? $values['rbfw_regf_info'] : [];
+
+        if ( ! empty( $rbfw_regf_info ) ):
+            $rbfw_regf_info_content  = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
+            foreach ($rbfw_regf_info as $key => $value):
+
+                $the_label = $value['label'];
+                $the_value = $value['value'];
+
+                if(is_array($the_value) && !empty($the_value)){
+                    $new_value = '';
+                    $i = 1;
+                    $count_value = count($the_value);
+
+                    foreach ($the_value as $val) {
+
+                        if($i < $count_value){
+                            $new_value .= $val.', ';
+                        } else {
+                            $new_value .= $val;
+                        }
+                        $i++;
+                    }
+                    $the_value = $new_value;
+                }
+
+                if(!empty($the_value)){
+                    $rbfw_regf_info_content .= '<tr>';
+                    $rbfw_regf_info_content .= '<td style="border:1px solid #f5f5f5;">';
+                    $rbfw_regf_info_content .= '<strong>'.$the_label.'</strong>';
+                    $rbfw_regf_info_content .= '</td>';
+                    $rbfw_regf_info_content .= '<td style="border:1px solid #f5f5f5;">';
+                    $rbfw_regf_info_content .= $the_value;
+                    $rbfw_regf_info_content .= '</td>';
+                    $rbfw_regf_info_content .= '</tr>';
+                }
+
+            endforeach;
+            $rbfw_regf_info_content .= '</table>';
+            $item->add_meta_data(rbfw_string_return('rbfw_text_customer_information',__('Customer Information','rbfw-pro')), $rbfw_regf_info_content );
+            $item->add_meta_data( '_rbfw_regf_info', $rbfw_regf_info );
+        endif;
+}
+
+
+/******************************************************************
+WooCommerce After Checkout the Order, Add Data to Custom Post Type
+********************************************************************/
+add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management', 10 );
+
+function rbfw_booking_management( $order_id ) {
+    global $rbfw;
+
+    if ( ! $order_id ) {
+        return;
+    }
+
+    $order = wc_get_order( $order_id );
+    $order_status = $order->get_status();
+
+    if ( $order_status != 'failed' ) {
+
+        foreach ( $order->get_items() as $item_id => $item_values ) {
+
+            $item_id = $item_id;
+            $rbfw_id = rbfw_get_order_item_meta( $item_id, '_rbfw_id', true );
+
+            if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
+
+                $ticket_info  = rbfw_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ) : [];
+                $user_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ) : [];
+                $type_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ) : [];
+                $service_info = rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ) : [];
+                $rbfw_duration_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) : '';
+                $rbfw_service_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) : '';
+
+                rbfw_prepar_and_add_user_data( $ticket_info, $user_info, $rbfw_id, $order_id, $service_info, $rbfw_duration_cost, $rbfw_service_cost, $type_info);
+            }
+        }
+    }
 }
