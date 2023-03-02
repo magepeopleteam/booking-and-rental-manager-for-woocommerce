@@ -12,7 +12,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
     $rbfw_rent_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
     
     /* Type: Resort */
-    if($rbfw_rent_type == 'resort'):
+    if($rbfw_rent_type == 'resort'){
         $rbfw_start_datetime = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
         $rbfw_end_datetime = $values['rbfw_end_datetime'] ? $values['rbfw_end_datetime'] : '';
         $rbfw_room_price_category = $values['rbfw_room_price_category'] ? $values['rbfw_room_price_category'] : '';	
@@ -130,7 +130,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
     /* End Type: Resort */
 
     /* Type: Bikecarsd */
-    elseif($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment'):
+    } elseif($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') {
     
     $rbfw_start_datetime = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
     $rbfw_end_datetime = $values['rbfw_end_datetime'] ? $values['rbfw_end_datetime'] : '';
@@ -241,7 +241,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
     $item->add_meta_data( '_rbfw_service_cost', $rbfw_bikecarsd_service_price );		
     /* End Type: Bikecarsd */
 
-    else:
+    } else {
         
         $rbfw_extra_service_data 	= get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
         
@@ -352,13 +352,13 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $item->add_meta_data( '_rbfw_service_cost', $rbfw_service_price );
         $item->add_meta_data( '_rbfw_discount_type', $discount_type );
         $item->add_meta_data( '_rbfw_discount_amount', $discount_amount );
-    endif;
+    }
 
         $item->add_meta_data( '_rbfw_id', $rbfw_id );
 
         $rbfw_regf_info = $values['rbfw_regf_info'] ? $values['rbfw_regf_info'] : [];
 
-        if ( ! empty( $rbfw_regf_info ) ):
+        if ( ! empty( $rbfw_regf_info ) ){
             $rbfw_regf_info_content  = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
             foreach ($rbfw_regf_info as $key => $value):
 
@@ -382,7 +382,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
                     $the_value = $new_value;
                 }
 
-                if(!empty($the_value)){
+                if(!empty($the_label) && !empty($the_value)){
                     $rbfw_regf_info_content .= '<tr>';
                     $rbfw_regf_info_content .= '<td style="border:1px solid #f5f5f5;">';
                     $rbfw_regf_info_content .= '<strong>'.$the_label.'</strong>';
@@ -395,9 +395,10 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
 
             endforeach;
             $rbfw_regf_info_content .= '</table>';
-            $item->add_meta_data(rbfw_string_return('rbfw_text_customer_information',__('Customer Information','rbfw-pro')), $rbfw_regf_info_content );
-            $item->add_meta_data( '_rbfw_regf_info', $rbfw_regf_info );
-        endif;
+            $item->add_meta_data(rbfw_string_return('rbfw_text_customer_information',__('Customer Information','booking-and-rental-manager-for-woocommerce')), $rbfw_regf_info_content );
+
+        }
+
 }
 
 

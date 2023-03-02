@@ -3985,3 +3985,7 @@ table.rbfw_regf_cart_table {
 .rbfw_regf_file_wrap {
     position: relative;
 }
+
+.rbfw_regf_group label {
+    display: block;
+}
