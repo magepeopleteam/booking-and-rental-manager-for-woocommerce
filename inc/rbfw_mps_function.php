@@ -1127,7 +1127,10 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
 
                     $content .= '<div class="rbfw_mps_user_form_result"></div>';
 
-                    $content .= wp_nonce_field( 'rbfw_mps_user_submit_request', 'rbfw_mps_user_submit_request_nonce' );
+                    ob_start();
+                    wp_nonce_field( 'rbfw_mps_user_submit_request', 'rbfw_mps_user_submit_request_nonce' );
+                    $content .= ob_get_clean();
+
                     $content .= '<input type="hidden" name="action" value="rbfw_mps_user_signin_signup_form_submit"/>';
                     $content .= '<input type="hidden" name="rbfw_mps_user_submit_request" value="signin"/>';
                     $content .= '</form>';
