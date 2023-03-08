@@ -255,27 +255,12 @@ if (!class_exists('RBFW_Timeslots_Page')) {
 
                                     jQuery('.rbfw_time_slot_label').val('');
                                     jQuery('.rbfw_time_slot_time').val('');
-
-                                    Swal.fire({
-                                        title: 'Good job!',
-                                        text: "Time slot added!",
-                                        confirmButtonText: 'Okay',
-                                        icon: 'success',
-                                    }).then((result) => {
-                                        
-                                        if (result.isConfirmed) {
-                                            window.location.reload();
-                                        }
-                                    });
+                                    alert('Good job! Time slot added!');
+                                    window.location.reload();
 
                                 }
                                 else if(response.status == 'exist'){
-    
-                                    Swal.fire(
-                                    'Sorry!',
-                                    'Time slot label exist!',
-                                    'error'
-                                    )
+                                    alert('Sorry! Time slot label exist!');
                                 }
                                 
                             }
@@ -302,53 +287,31 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                         let ts_time = jQuery(this).attr('data-time');
                         let ts_label = jQuery(this).attr('data-label');
                         let this_btn = jQuery(this);
+                        if (confirm('Are you sure? You won\'t be able to revert this!')) {
+                            jQuery.ajax({
+                                type: 'POST',
+                                url: rbfw_ajax_url,
+                                data: {
+                                    'action' : 'rbfw_delete_time_slot',
+                                    'ts_time' : ts_time,
+                                    'ts_label' : ts_label
+                                },
+                                beforeSend: function() {
+                                    this_btn.append('<i class="fas fa-spinner fa-spin"></i>');
+                                },
+                                success: function (response) {
 
-                        Swal.fire({
-                            title: 'Are you sure?',
-                            text: "You won't be able to revert this!",
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Yes, delete it!'
-                            }).then((result) => {
-                            if (result.isConfirmed) {
-                                jQuery.ajax({
-                                    type: 'POST',
-                                    url: rbfw_ajax_url,
-                                    data: {
-                                        'action' : 'rbfw_delete_time_slot',
-                                        'ts_time' : ts_time,
-                                        'ts_label' : ts_label
-                                    },
-                                    beforeSend: function() {
-                                        this_btn.append('<i class="fas fa-spinner fa-spin"></i>');
-                                    },		
-                                    success: function (response) {
+                                    jQuery('.rbfw_time_slot_remove_btn i.fa-spinner').remove();
 
-                                        jQuery('.rbfw_time_slot_remove_btn i.fa-spinner').remove();
+                                    var response = JSON.parse(response);
 
-                                        var response = JSON.parse(response); 
-
-                                        if(response.status == 'deleted'){
-
-                                            Swal.fire({
-                                                title: 'Done!',
-                                                text: "Time slot deleted!",
-                                                confirmButtonText: 'Okay',
-                                                icon: 'success',
-                                            }).then((result) => {
-                                                
-                                                if (result.isConfirmed) {
-                                                    window.location.reload();
-                                                }
-                                            });
-
-                                        }      
+                                    if(response.status == 'deleted'){
+                                        alert('Done! Time slot deleted!');
+                                        window.location.reload();
                                     }
-                                });
-                            }
-                        });
+                                }
+                            });
+                        }
                     });
 
                     jQuery('.rbfw_time_slot_edit_btn').click(function (e) { 
