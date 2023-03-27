@@ -1599,18 +1599,17 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 						),
 
 						array(
-							'id'          => 'rbfw_highlights_texts',
-							'title'       => __( 'Highlight Features', 'booking-and-rental-manager-for-woocommerce' ),
+							'id'          => 'rbfw_feature_category',
+							'title'       => __( 'Features Category', 'booking-and-rental-manager-for-woocommerce' ),
 							'details'     => __( '', 'booking-and-rental-manager-for-woocommerce' ),
-							'type'        => 'text_multi',
-							'placeholder' => __( 'Feature Name', 'booking-and-rental-manager-for-woocommerce' ),
+							'type'        => 'feature_category',
+							'placeholder' => __( 'Features Name', 'booking-and-rental-manager-for-woocommerce' ),
 						),
-						
 						array(
 							'id'          => 'rbfw_releted_rbfw',
 							'title'       => __( 'Related Items', 'booking-and-rental-manager-for-woocommerce' ),
 							'details'     => __( 'Please add related items', 'booking-and-rental-manager-for-woocommerce' ),
-							//'collapsible' => true,
+
 							'type'        => 'select2',
 							'multiple'	  => true,	
 							'title_field' => 'rbfw_releted_rbfw_id',
@@ -1703,8 +1702,14 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 							'details'     => __( 'Please upload images for gallery', 'booking-and-rental-manager-for-woocommerce' ),
 							'placeholder' => 'https://via.placeholder.com/1000x500',
 							'type'        => 'media_multi',
-						)
-					
+						),
+						array(
+							'id'          => 'rbfw_gallery_images_additional',
+							'title'       => __( 'Additional Gallery Images ', 'booking-and-rental-manager-for-woocommerce' ),
+							'details'     => __( 'Please upload images for gallery', 'booking-and-rental-manager-for-woocommerce' ),
+							'placeholder' => 'https://via.placeholder.com/1000x500',
+							'type'        => 'media_multi',
+						),
 					
 					)
 				),

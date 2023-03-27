@@ -6,7 +6,7 @@
 * Version	:	1.0.0
 */
 if (!defined('ABSPATH'))
-    exit;  // if direct access 
+    exit;  // if direct access
 
 if (!class_exists('MageRBFWClass')) {
     class MageRBFWClass{
@@ -14,7 +14,7 @@ if (!class_exists('MageRBFWClass')) {
         private $settings_api;
 
         public function __construct() {
-            $this->settings_api = new MAGE_Setting_API;
+            $this->settings_api = new RBFW_Setting_API;
             add_action('add_meta_boxes', array($this, 'add_meta_box_func'));
             add_action('admin_init', array($this, 'admin_init'));
             add_action('admin_menu', array($this, 'admin_menu'));
@@ -26,7 +26,7 @@ if (!class_exists('MageRBFWClass')) {
             /* End WooCommerce Action and Filter */
         }
 
-        function admin_init() {          
+        function admin_init() {
             $this->settings_api->set_sections($this->get_settings_sections());
             $this->settings_api->set_fields($this->get_settings_fields());
             $this->settings_api->admin_init();
@@ -111,20 +111,20 @@ if (!class_exists('MageRBFWClass')) {
         function plugin_page() {
             echo '<div class="wrap">';
             settings_errors();
-            echo '</div>';                  
+            echo '</div>';
             echo '<div class="rbfw_settings_wrapper">';
             echo '<div class="rbfw_settings_inner_wrapper">';
             echo '<div class="rbfw_settings_panel_header">';
             echo rbfw_get_plugin_data('Name');
             echo '<small>'.rbfw_get_plugin_data('Version').'</small>';
-            echo '</div>';            
+            echo '</div>';
             echo '<div class="mage_settings_panel_wrap rbfw_settings_panel">';
             $this->settings_api->show_navigation();
             $this->settings_api->show_forms();
             echo '</div>';
             echo '</div>';
             echo '</div>';
-            
+
         }
 
         function array_strip($array_or_string) {
@@ -380,6 +380,8 @@ if (!class_exists('MageRBFWClass')) {
                 echo mep_esc_html($FormFieldsGenerator->field_time_slot($option));
             }elseif (isset($option['type']) && $option['type'] === 'add_to_cart_shortcode') {
                 echo mep_esc_html($FormFieldsGenerator->field_add_to_cart_shortcode($option));
+            } else{
+                echo '';
             }
             if (!empty($details)) {
                 echo "<p class='description'>".mep_esc_html($details)."</p>";
@@ -459,7 +461,7 @@ if (!class_exists('MageRBFWClass')) {
 
 
         function rbfw_add_order_data($meta_data = array(), $ticket_info = array()) {
-            
+
             global $rbfw;
             $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
             $title = $meta_data['rbfw_billing_name'];
@@ -479,26 +481,26 @@ if (!class_exists('MageRBFWClass')) {
                     'post_status' => 'publish',
                     'post_type' => $cpt_name
                 );
-            
+
                 $meta_query = array(
                     'meta_query' => array(
                         'meta_value' => array(
                                 'key' => 'rbfw_order_id',
                                 'value' => $wc_order_id,
-                                'compare' => '==', 
+                                'compare' => '==',
                         )
                     )
                 );
-    
+
                 $args = array_merge($args,$meta_query);
-                
+
                 $query = new WP_Query($args);
 
                 /* If Order already created, update the order */
 
                 if($query->have_posts()){
 
-                    while ($query->have_posts()){ 
+                    while ($query->have_posts()){
                         $query->the_post();
                         global $post;
                         $post_id = $post->ID;
@@ -536,18 +538,18 @@ if (!class_exists('MageRBFWClass')) {
                         'post_status' => 'publish',
                         'post_type' => $cpt_name
                     );
-        
+
                     $post_id = wp_insert_post($args);
-        
+
                     if (sizeof($meta_data) > 0) {
                         foreach ($meta_data as $key => $value) {
                             update_post_meta($post_id, $key, $value);
                         }
                         wp_update_post(array('ID' => $post_id, 'post_title' => '#'.$wc_order_id.' '.$title));
                     }
-        
+
                     $rbfw_pin = $meta_data['rbfw_user_id'] . $meta_data['rbfw_order_id'] . $post_id;
-                    update_post_meta($post_id, 'rbfw_pin', $rbfw_pin); 
+                    update_post_meta($post_id, 'rbfw_pin', $rbfw_pin);
 
                     update_post_meta($wc_order_id, '_rbfw_link_order_id', $post_id);
                     if(!empty($order_tax)){ update_post_meta($post_id, 'rbfw_order_tax', $order_tax); }
@@ -555,19 +557,19 @@ if (!class_exists('MageRBFWClass')) {
                     $total_price = $total_price + $order_tax;
                     update_post_meta($post_id, 'rbfw_ticket_total_price', $total_price);
                     update_post_meta($post_id, 'rbfw_link_order_id', $wc_order_id);
-                    
+
                 }
 
                 wp_reset_query();
 
             }
-            
+
 
             return $post_id;
         }
 
         function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) {
-            
+
             global $rbfw;
             $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
             $title = $meta_data['rbfw_billing_name'];
@@ -599,9 +601,9 @@ if (!class_exists('MageRBFWClass')) {
                         if($key != 'rbfw_ticket_info'){
                             update_post_meta($post_id, $key, $value);
                         }
-                        
+
                     }
-                    
+
                     if(!empty($ticket_info)){
                         $i = 0;
                         foreach ($ticket_info[$i] as $key => $value) {
@@ -610,38 +612,38 @@ if (!class_exists('MageRBFWClass')) {
 
                                 $value = date('Y-m-d', strtotime($value));
                             }
-                            
+
                             if($key == 'rbfw_start_datetime' || $key == 'rbfw_end_datetime'){
 
                                 $value = date('Y-m-d h:i A', strtotime($value));
-  
+
                             }
-                            
+
                             update_post_meta($post_id, $key, $value);
 
                             /* Start: Create Inventory info */
-                            rbfw_create_inventory_meta($ticket_info, $i);
+                            rbfw_create_inventory_meta($ticket_info, $i, $post_id);
                             /* End: Create Inventory info */
 
                             $i++;
                         }
-                        
+
                     }
                     wp_update_post(array('ID' => $post_id, 'post_title' => '#'.$wc_order_id.' '.$title));
                 }
-               
+
                 update_post_meta($post_id, 'rbfw_pin', $rbfw_pin);
-                
+
                 if(!empty($order_tax)){ update_post_meta($post_id, 'rbfw_order_tax', $order_tax); }
-                
+
                 update_post_meta($post_id, 'rbfw_ticket_total_price', $total_cost);
                 update_post_meta($post_id, 'rbfw_link_order_id', $wc_order_id);
                 /* End */
 
             }
-            
+
             return $post_id;
-        }        
+        }
 
         function get_qyery_loop($post_type) {
             $args = array(
@@ -660,7 +662,7 @@ if (!class_exists('MageRBFWClass')) {
             return $output;
         }
 
-        /************************************** 
+        /**************************************
         * WooCommerce Functions Start from here
         ***************************************/
 
@@ -690,7 +692,7 @@ if (!class_exists('MageRBFWClass')) {
             $val = isset($value) ? $value : '';
             return $val;
         }
-        
+
         public function rbfw_wc_status_update($order_id, $from_status, $to_status, $order) {
             $order = wc_get_order($order_id);
             $order_meta = get_post_meta($order_id);
@@ -725,7 +727,7 @@ if (!class_exists('MageRBFWClass')) {
                 }
             }
         }
-        
+
         function create_hidden_wc_product($post_id, $title) {
             $new_post = array(
                 'post_title' => $title,
@@ -981,7 +983,7 @@ if (!class_exists('MageRBFWClass')) {
             return $tax_list;
         }
 
-        /************************************** 
+        /**************************************
         * End WooCommerce Functions here
         ***************************************/
     }

@@ -575,7 +575,9 @@
 				return $FormFieldsGenerator->field_time_slot( $option );
 			}elseif (  $type === 'add_to_cart_shortcode' ) {
 				return $FormFieldsGenerator->field_add_to_cart_shortcode( $option );
-			} else {
+			}elseif ( $type === 'feature_category' ) {
+                return $FormFieldsGenerator->field_feature_category( $option );
+            } else {
 				return '';
 			}
 		}
@@ -924,6 +926,44 @@ function rbfw_footer_scripts(){
 	}
 }
 
+/***************************************************
+ * Transfer Highlighed features to feature category
+***************************************************/
+add_action('wp_loaded','rbfw_highlighted_features_func');
+
+function rbfw_highlighted_features_func(){
+
+	$args = array(
+        'post_type' => 'rbfw_item',
+        'posts_per_page' => -1
+    );
+
+    $the_query = new WP_Query($args);
+	if(!empty($the_query)){
+		foreach ($the_query->posts as $result) {
+			$post_id = $result->ID;
+			$highlights_features = get_post_meta($post_id,'rbfw_highlights_texts',true);
+			$rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true);
+
+			if(!empty($highlights_features)){
+				$the_array = [];
+				$label = rbfw_string_return( 'rbfw_text_hightlighted_features', 'Highlighted Features' );
+				$the_array[0]['cat_title'] = $label;
+				$c = 0;
+				foreach ($highlights_features as $features) {
+					$icon = $features['icon'];
+					$title = $features['title'];
+					$the_array[0]['cat_features'][$c]['icon'] = $icon;
+					$the_array[0]['cat_features'][$c]['title'] = $title;
+					$c++;
+				}
+				update_post_meta($post_id,'rbfw_feature_category',$the_array);
+				delete_post_meta($post_id,'rbfw_highlights_texts');
+			}
+		}
+	}
+}
+
 add_action('admin_footer','rbfw_footer_admin_scripts');
 function rbfw_footer_admin_scripts(){
 
@@ -932,47 +972,6 @@ function rbfw_footer_admin_scripts(){
 	?>
 	<script>
 		jQuery(document).ready(function(){
-
-					// Features Icon Popup
-					jQuery('.rbfw_feature_icon_btn').click(function (e) {
-
-						let remove_exist_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").removeAttr('data-key');
-						let remove_active_label 	= jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-						let data_key 				= jQuery(this).attr('data-key');
-						jQuery('#rbfw_features_search_icon').val('');
-						jQuery('.rbfw_features_icon_list_body label').show();
-						jQuery("#rbfw_features_icon_list_wrapper").attr('data-key', data_key);
-						jQuery("#rbfw_features_icon_list_wrapper").mage_modal({
-							escapeClose: false,
-							clickClose: false,
-							showClose: false
-						});
-
-						// Selected Feature Icon Action
-						jQuery('#rbfw_features_icon_list_wrapper label').click(function (e) {
-							e.stopImmediatePropagation();
-							let selected_label 		= jQuery(this);
-							let selected_val 		= jQuery('input', this).val();
-							let selected_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
-
-							jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-							jQuery('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').empty();
-							jQuery(selected_label).addClass('selected');
-							jQuery('.rbfw_feature_icon[data-key="'+selected_data_key+'"]').val(selected_val);
-							jQuery('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').append('<i class="'+selected_val+'"></i>');
-						});
-
-					});
-					// End Features Icon Popup
-
-					// Icon Filter
-					jQuery('#rbfw_features_search_icon').keyup(function (e) {
-						let value = jQuery(this).val().toLowerCase();
-						jQuery(".rbfw_features_icon_list_body label[data-id]").show().filter(function() {
-							jQuery(this).toggle(jQuery(this).attr('data-id').toLowerCase().indexOf(value) > -1)
-						}).hide();
-					});
-					// End Icon Filter
 
 					jQuery('.rbfw_load_more_icons').click(function (e) {
 						e.preventDefault();
@@ -1003,17 +1002,19 @@ function rbfw_footer_admin_scripts(){
 								}
 
 								// Selected Feature Icon Action
-								jQuery('#rbfw_features_icon_list_wrapper label').click(function (e) {
+								jQuery(document).on('click', '#rbfw_features_icon_list_wrapper label',function(e){
 									e.stopImmediatePropagation();
 									let selected_label 		= jQuery(this);
 									let selected_val 		= jQuery('input', this).val();
 									let selected_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
+									let selected_data_cat 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
 
 									jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-									jQuery('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').empty();
+
+									jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').empty();
 									jQuery(selected_label).addClass('selected');
-									jQuery('.rbfw_feature_icon[data-key="'+selected_data_key+'"]').val(selected_val);
-									jQuery('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').append('<i class="'+selected_val+'"></i>');
+									jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon[data-key="'+selected_data_key+'"]').val(selected_val);
+									jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').append('<i class="'+selected_val+'"></i>');
 								});
 							},
 							error: function(response){
@@ -1462,7 +1463,7 @@ function rbfw_search_query_exlude_hidden_wc_fix( $query ) {
 /*****************************
  * Create Inventory Meta
  *****************************/
-function rbfw_create_inventory_meta($ticket_info, $i){
+function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
 	$rbfw_id = !empty($ticket_info[$i]['rbfw_id']) ? $ticket_info[$i]['rbfw_id'] : '';
 
 	if(empty($rbfw_id)){
@@ -1555,12 +1556,38 @@ function rbfw_create_inventory_meta($ticket_info, $i){
 	$order_array['rbfw_service_info'] = $rbfw_service_info;
 	$order_array['rbfw_item_quantity'] = $rbfw_item_quantity;
 
-	$rbfw_inventory_info[] = $order_array;
+	$rbfw_inventory_info[$order_id] = $order_array;
 	
 	update_post_meta($rbfw_id, 'rbfw_inventory', $rbfw_inventory_info);
 
 	return true;
 }
+
+/******************************************
+ * Inventory Remove: WP Trash Post
+ *****************************************/
+add_action( 'wp_trash_post', 'rbfw_trash_order' );
+function rbfw_trash_order( $post_id = '' ) {
+    // Verify if is trashing multiple posts
+    if ( isset( $_GET['post'] ) && is_array( $_GET['post'] ) ) {
+        foreach ( $_GET['post'] as $post_id ) {
+            rbfw_update_inventory( $post_id );
+        }
+    } else {
+        rbfw_update_inventory( $post_id );
+    }
+}
+
+function rbfw_update_inventory($post_id){
+	$rbfw_id = get_post_meta($post_id, 'rbfw_id', true);
+	$inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
+	if (!empty($inventory) && array_key_exists($post_id, $inventory)){
+		unset($inventory[$post_id]);
+		update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
+	}
+
+}
+
 
 /******************************************
  * Single Day Type: Get Available Quantity
@@ -2513,6 +2540,264 @@ function rbfw_related_products_style_two($post_id){
 	<?php
 }
 
+// Related products function
+add_action('rbfw_related_products_style_three','rbfw_related_products_style_three');
+function rbfw_related_products_style_three($post_id){
+
+	if(empty($post_id)){
+		return;
+	}
+
+	global $rbfw;
+	$rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize(get_post_meta( $post_id, 'rbfw_releted_rbfw', true )) : array();
+	$hourly_rate_label = $rbfw->get_option('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
+	$prices_start_at = $rbfw->get_option('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
+	$reviews_label = $rbfw->get_option('rbfw_text_reviews', 'rbfw_basic_translation_settings', __('Reviews','booking-and-rental-manager-for-woocommerce'));
+
+	if(!empty($rbfw_related_post_arr)){
+
+		echo '<div class="owl-carousel owl-theme t_carousel">';
+
+		foreach ($rbfw_related_post_arr as $rbfw_related_post_id) {
+
+			$rbfw_rent_type = get_post_meta( $rbfw_related_post_id, 'rbfw_item_type', true );
+
+			$thumb_url  = !empty(get_the_post_thumbnail_url( $rbfw_related_post_id, 'full' )) ? get_the_post_thumbnail_url( $rbfw_related_post_id, 'full' ) : RBFW_PLUGIN_URL. '/assets/images/no_image.png';
+			$title = get_the_title($rbfw_related_post_id);
+
+			$price = get_post_meta($rbfw_related_post_id, 'rbfw_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_hourly_rate', true) : 0;
+			$price = (float)$price;
+			// sunday rate
+			$price_sun = get_post_meta($rbfw_related_post_id, 'rbfw_sun_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_sun_hourly_rate', true) : 0;
+			$enabled_sun = get_post_meta($rbfw_related_post_id, 'rbfw_enable_sun_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_sun_day', true) : 'yes';
+
+			// monday rate
+			$price_mon = get_post_meta($rbfw_related_post_id, 'rbfw_mon_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_mon_hourly_rate', true) : 0;
+			$enabled_mon = get_post_meta($rbfw_related_post_id, 'rbfw_enable_mon_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_mon_day', true) : 'yes';
+
+			// tuesday rate
+			$price_tue = get_post_meta($rbfw_related_post_id, 'rbfw_tue_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_tue_hourly_rate', true) : 0;
+			$enabled_tue = get_post_meta($rbfw_related_post_id, 'rbfw_enable_tue_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_tue_day', true) : 'yes';
+
+			// wednesday rate
+			$price_wed = get_post_meta($rbfw_related_post_id, 'rbfw_wed_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_wed_hourly_rate', true) : 0;
+			$enabled_wed = get_post_meta($rbfw_related_post_id, 'rbfw_enable_wed_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_wed_day', true) : 'yes';
+
+			// thursday rate
+			$price_thu = get_post_meta($rbfw_related_post_id, 'rbfw_thu_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_thu_hourly_rate', true) : 0;
+			$enabled_thu = get_post_meta($rbfw_related_post_id, 'rbfw_enable_thu_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_thu_day', true) : 'yes';
+
+			// friday rate
+			$price_fri = get_post_meta($rbfw_related_post_id, 'rbfw_fri_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_fri_hourly_rate', true) : 0;
+			$enabled_fri = get_post_meta($rbfw_related_post_id, 'rbfw_enable_fri_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_fri_day', true) : 'yes';
+
+			// saturday rate
+			$price_sat = get_post_meta($rbfw_related_post_id, 'rbfw_sat_hourly_rate', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_sat_hourly_rate', true) : 0;
+			$enabled_sat = get_post_meta($rbfw_related_post_id, 'rbfw_enable_sat_day', true) ? get_post_meta($rbfw_related_post_id, 'rbfw_enable_sat_day', true) : 'yes';
+
+			$current_day = date('D');
+
+			if($current_day == 'Sun' && $enabled_sun == 'yes'){
+				$price = (float)$price_sun;
+			}elseif($current_day == 'Mon' && $enabled_mon == 'yes'){
+				$price = (float)$price_mon;
+			}elseif($current_day == 'Tue' && $enabled_tue == 'yes'){
+				$price = (float)$price_tue;
+			}elseif($current_day == 'Wed' && $enabled_wed == 'yes'){
+				$price = (float)$price_wed;
+			}elseif($current_day == 'Thu' && $enabled_thu == 'yes'){
+				$price = (float)$price_thu;
+			}elseif($current_day == 'Fri' && $enabled_fri == 'yes'){
+				$price = (float)$price_fri;
+			}elseif($current_day == 'Sat' && $enabled_sat == 'yes'){
+				$price = (float)$price_sat;
+			}else{
+				$price = (float)$price;
+			}
+
+			$current_date = date('Y-m-d');
+			$rbfw_sp_prices = get_post_meta( $rbfw_related_post_id, 'rbfw_seasonal_prices', true );
+			if(!empty($rbfw_sp_prices)){
+				$sp_array = [];
+				$i = 0;
+				foreach ($rbfw_sp_prices as $value) {
+					$rbfw_sp_start_date = $value['rbfw_sp_start_date'];
+					$rbfw_sp_end_date 	= $value['rbfw_sp_end_date'];
+					$rbfw_sp_price_h 	= $value['rbfw_sp_price_h'];
+					$rbfw_sp_price_d 	= $value['rbfw_sp_price_d'];
+					$sp_array[$i]['sp_dates'] = rbfw_getBetweenDates($rbfw_sp_start_date, $rbfw_sp_end_date);
+					$sp_array[$i]['sp_hourly_rate'] = $rbfw_sp_price_h;
+					$sp_array[$i]['sp_daily_rate']  = $rbfw_sp_price_d;
+					$i++;
+				}
+
+				foreach ($sp_array as $sp_arr) {
+					if (in_array($current_date,$sp_arr['sp_dates'])){
+						$price = (float)$sp_arr['sp_hourly_rate'];
+					}
+				}
+			}
+			$permalink = get_the_permalink($rbfw_related_post_id);
+
+
+			/* Resort Type */
+			$rbfw_room_data = get_post_meta( $rbfw_related_post_id, 'rbfw_resort_room_data', true );
+			if(!empty($rbfw_room_data) && $rbfw_rent_type == 'resort'):
+				$rbfw_daylong_rate = [];
+				$rbfw_daynight_rate = [];
+				foreach ($rbfw_room_data as $key => $value) {
+
+					if(!empty($value['rbfw_room_daylong_rate'])){
+						$rbfw_daylong_rate[] =  $value['rbfw_room_daylong_rate'];
+					}
+
+					if(!empty($value['rbfw_room_daynight_rate'])){
+						$rbfw_daynight_rate[] = $value['rbfw_room_daynight_rate'];
+					}
+
+				}
+				$merged_arr = array_merge($rbfw_daylong_rate,$rbfw_daynight_rate);
+
+				if(!empty($merged_arr)){
+					$smallest_price = min($merged_arr);
+					$smallest_price = (float)$smallest_price;
+				} else {
+					$smallest_price = 0;
+				}
+				$price = $smallest_price;
+			endif;
+
+			/* Single Day/Appointment Type */
+			$rbfw_bike_car_sd_data = get_post_meta( $rbfw_related_post_id, 'rbfw_bike_car_sd_data', true );
+			if(!empty($rbfw_bike_car_sd_data) && ($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment')):
+				$rbfw_price_arr = [];
+
+				foreach ($rbfw_bike_car_sd_data as $key => $value) {
+
+					if(!empty($value['price'])){
+						$rbfw_price_arr[] =  $value['price'];
+					}
+
+				}
+
+				if(!empty($rbfw_price_arr)){
+					$smallest_price = min($rbfw_price_arr);
+					$smallest_price = (float)$smallest_price;
+				} else {
+					$smallest_price = 0;
+				}
+				$price = $smallest_price;
+			endif;
+
+			$post_review_rating = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating($rbfw_related_post_id) : '';
+			$highlited_features = get_post_meta($rbfw_related_post_id, 'rbfw_highlights_texts', true) ? maybe_unserialize(get_post_meta($rbfw_related_post_id, 'rbfw_highlights_texts', true)) : [];
+			$review_count = function_exists('rbfw_review_count_comments_by_id') ? rbfw_review_count_comments_by_id($rbfw_related_post_id) : '';
+			$average_review = function_exists('rbfw_review_get_average_by_id') ? rbfw_review_get_average_by_id($rbfw_related_post_id) : '';
+
+			?>
+			<div class="item">
+				<div class="rbfw-related-product-inner-item-wrap">
+					<div class="rbfw-related-product-thumb-wrap"><a href="<?php echo esc_url($permalink); ?>"><div class="rbfw-related-product-thumb" style="background-image:url(<?php echo esc_url($thumb_url); ?>)"></div></a></div>
+					<?php if($review_count > 0){ ?>
+					<div class="rbfw-related-product-review-badge-wrap">
+						<div class="rbfw-related-product-review-badge-1"><?php echo $review_count.' '.$reviews_label; ?></div>
+						<div class="rbfw-related-product-review-badge-2"><?php echo $average_review; ?></div>
+					</div>
+					<?php } ?>
+					<div class="rbfw-related-product-inner-content-wrap">
+						<div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
+						<div class="rbfw-related-product-bottom-card">
+							<div class="rbfw-related-product-bottom-card-pricing-box">
+								<?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
+									<div class="rbfw-related-product-price-wrap"><?php echo esc_html($hourly_rate_label); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price($price); ?></span></div>
+								<?php endif; ?>
+
+								<?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
+									<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price($price); ?></span></div>
+								<?php endif; ?>
+
+								<?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
+									<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price($price); ?></span></div>
+								<?php endif; ?>
+							</div>
+							<?php if(!empty($highlited_features)): ?>
+								<div class="rbfw-related-product-features">
+								<?php if ( $highlited_features ) : ?>
+									<ul>
+										<?php
+										$i = 1;
+										foreach ( $highlited_features as $feature ) :
+
+										if($i <= 4){
+											if($feature['icon']):
+												$icon = $feature['icon'];
+											else:
+												$icon = 'fas fa-arrow-right';
+											endif;
+
+											if($feature['title']):
+												$rand_number = rand();
+												echo '<li class="title'.$rand_number.'"><i class="'.mep_esc_html($icon).'"></i></li>';
+												?>
+												<script>
+												jQuery(document).ready(function(){
+													let content<?php echo $rand_number; ?> = '<?php echo $feature['title']; ?>';
+													tippy('.title'+<?php echo $rand_number; ?>, {content: content<?php echo $rand_number; ?>,theme: 'blue',placement: 'top'});
+												});
+												</script>
+												<?php
+											endif;
+										}
+										$i++;
+										endforeach;
+										?>
+									</ul>
+									<?php endif; ?>
+								</div>
+							<?php endif; ?>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
+
+		echo '</div>';
+	}
+	?>
+		<script>
+
+			jQuery(document).ready(function(){
+				jQuery(".owl-carousel.t_carousel").owlCarousel({
+					loop:true,
+					margin:15,
+					responsiveClass:true,
+					dots: true,
+					responsive:{
+						0:{
+							items:1,
+							//nav:false,
+							dots: true
+						},
+						600:{
+							items:2,
+							//nav:false,
+							dots: true
+						},
+						1000:{
+							items:3,
+							//nav:false,
+							loop:true,
+							dots: true
+						}
+					}
+				});
+			});
+
+		</script>
+	<?php
+}
+
 /************************
 * GET RENT FAQ's Content
 *************************/
@@ -2535,7 +2820,7 @@ function rbfw_the_faq_style_two_func($post_id){
 	<div id="rbfw_faq_accordion_style_two">
 	
 		<?php for ($x = 0; $x < $count_faq_arr; $x++) { ?>
-			<div class="rbfw_faq_accordion_wrapper">
+			<div class="rbfw_faq_accordion_wrapper <?php if($x == 0){ echo 'active'; }?>">
 				<?php if(! empty($rbfw_faq_title[$x])): ?>
 				<div class="rbfw_faq_heading_wrapper">
 					<h3 class="rbfw_faq_heading">
@@ -2643,4 +2928,243 @@ if(! function_exists('rbfw_free_chk_plugin_folder_exist')){
 			return false;
 		}
 	}
+}
+
+/*************************************************
+* Check Registration Form Exists
+**************************************************/
+function rbfw_chk_regf_fields_exist($post_id){
+
+	if(empty($post_id)){
+		return;
+	}
+
+	if(class_exists('Rbfw_Reg_Form')){
+		$reg_form = new Rbfw_Reg_Form();
+		$reg_fields = $reg_form->rbfw_generate_regf_fields($post_id);
+
+		if(!empty($reg_fields)){
+
+			return true;
+
+		} else {
+
+			return false;
+		}
+
+	} else {
+
+		return false;
+	}
+}
+
+/*************************************************
+* Get Gallary Images
+**************************************************/
+function rbfw_get_additional_gallary_images($post_id, $show = 4, $style = ''){
+
+	if(empty($post_id)){
+		return;
+	}
+
+	$gallery_images_ids = get_post_meta($post_id, 'rbfw_gallery_images_additional', true) ? get_post_meta($post_id, 'rbfw_gallery_images_additional', true) : '';
+
+	if(empty($gallery_images_ids)){
+		return;
+	}
+
+	ob_start();
+
+	if(!empty($gallery_images_ids)){
+		if($style == 'style2'){
+			?>
+			<div class="rbfw_additional_image_gallary_wrap" data-style="style2">
+				<div class="rbfw_additional_image_gallary_inner_col">
+				<?php
+				$i = 1;
+				foreach ($gallery_images_ids as $img_id) {
+					$image_url = wp_get_attachment_url($img_id);
+					if($i == 1){
+						?>
+						<div class="rbfw_additional_image_gallary_col" <?php if($i > $show){ echo 'style="display:none;"'; } ?>>
+							<div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url($image_url); ?>)"></div>
+							<?php if($i == $show){ ?>
+								<a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e('View More', 'booking-and-rental-manager-for-woocommerce'); ?></a>
+								<?php } ?>
+						</div>
+						<?php
+					}
+					$i++;
+				}
+				?>
+				</div>
+				<div class="rbfw_additional_image_gallary_inner_col">
+				<?php
+				$d = 1;
+				foreach ($gallery_images_ids as $img_id) {
+					$image_url = wp_get_attachment_url($img_id);
+					if($d > 1){
+						?>
+						<div class="rbfw_additional_image_gallary_col" <?php if($d > $show){ echo 'style="display:none;"'; } ?>>
+							<div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $d; ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url($image_url); ?>)"></div>
+							<?php if($d == $show){ ?>
+								<a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $d; ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e('View More', 'booking-and-rental-manager-for-woocommerce'); ?></a>
+								<?php } ?>
+						</div>
+						<?php
+					}
+					$d++;
+				}
+				?>
+				</div>
+			</div>
+
+			<!-- The Modal/Lightbox -->
+			<div id="rbfw_aig_Modal" class="rbfw_aig_modal"> <span class="rbfw_aig_close cursor" onclick="rbfw_aig_closeModal()">&times;</span>
+				<div class="rbfw_aig_modal-content">
+					<?php
+					$c = 1;
+					$count_images = count($gallery_images_ids);
+					foreach ($gallery_images_ids as $img_id) {
+						$image_url = wp_get_attachment_url($img_id);
+						?>
+						<div class="rbfw_aig_slides">
+							<div class="rbfw_aig_numbertext"><?php echo $c; ?> / <?php echo $count_images; ?></div>
+							<img src="<?php echo esc_url($image_url); ?>">
+						</div>
+						<?php
+						$c++;
+					}
+					?>
+
+					<!-- Next/rbfw_aig_previous controls --><a class="rbfw_aig_prev" onclick="rbfw_aig_plusSlides(-1)">&#10094;</a> <a class="rbfw_aig_next" onclick="rbfw_aig_plusSlides(1)">&#10095;</a>
+					<!-- Caption text -->
+					<div class="rbfw_aig_caption-container">
+						<p id="rbfw_aig_caption-caption"></p>
+					</div>
+					<!-- Thumbnail image controls -->
+					<div class="rbfw_aig_column_wrap">
+					<?php
+					$d = 1;
+					foreach ($gallery_images_ids as $img_id) {
+						$image_url = wp_get_attachment_url($img_id);
+					?>
+					<div class="rbfw_aig_column"> <img class="rbfw_aig_img_thumb" src="<?php echo esc_url($image_url); ?>" onclick="rbfw_aig_currentSlide(<?php echo $d; ?>)" alt="<?php echo $d; ?>"> </div>
+					<?php
+						$d++;
+					}
+					?>
+					</div>
+				</div>
+			</div>
+			<?php
+		} else {
+			?>
+			<div class="rbfw_additional_image_gallary_wrap">
+				<?php
+				$i = 1;
+				foreach ($gallery_images_ids as $img_id) {
+					$image_url = wp_get_attachment_url($img_id);
+						?>
+						<div class="rbfw_additional_image_gallary_col" <?php if($i > $show){ echo 'style="display:none;"'; } ?>>
+							<div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url($image_url); ?>)"></div>
+							<?php if($i == $show){ ?>
+								<a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e('View More', 'booking-and-rental-manager-for-woocommerce'); ?></a>
+								<?php } ?>
+						</div>
+						<?php
+					$i++;
+				}
+				?>
+				<!-- The Modal/Lightbox -->
+				<div id="rbfw_aig_Modal" class="rbfw_aig_modal"> <span class="rbfw_aig_close cursor" onclick="rbfw_aig_closeModal()">&times;</span>
+					<div class="rbfw_aig_modal-content">
+						<?php
+						$c = 1;
+						$count_images = count($gallery_images_ids);
+						foreach ($gallery_images_ids as $img_id) {
+							$image_url = wp_get_attachment_url($img_id);
+							?>
+							<div class="rbfw_aig_slides">
+								<div class="rbfw_aig_numbertext"><?php echo $c; ?> / <?php echo $count_images; ?></div>
+								<img src="<?php echo esc_url($image_url); ?>">
+							</div>
+							<?php
+							$c++;
+						}
+						?>
+
+						<!-- Next/rbfw_aig_previous controls --><a class="rbfw_aig_prev" onclick="rbfw_aig_plusSlides(-1)">&#10094;</a> <a class="rbfw_aig_next" onclick="rbfw_aig_plusSlides(1)">&#10095;</a>
+						<!-- Caption text -->
+						<div class="rbfw_aig_caption-container">
+							<p id="rbfw_aig_caption-caption"></p>
+						</div>
+						<!-- Thumbnail image controls -->
+						<div class="rbfw_aig_column_wrap">
+						<?php
+						$d = 1;
+						foreach ($gallery_images_ids as $img_id) {
+							$image_url = wp_get_attachment_url($img_id);
+						?>
+						<div class="rbfw_aig_column"> <img class="rbfw_aig_img_thumb" src="<?php echo esc_url($image_url); ?>" onclick="rbfw_aig_currentSlide(<?php echo $d; ?>)" alt="<?php echo $d; ?>"> </div>
+						<?php
+							$d++;
+						}
+						?>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
+		?>
+
+		<?php
+
+	}
+
+    $content = ob_get_clean();
+    return $content;
+}
+
+//* Function to convert Hex colors to RGBA
+function rbfw_hex2rgba( $color, $opacity = false ) {
+
+    $defaultColor = 'rgb(0,0,0)';
+
+    // Return default color if no color provided
+    if ( empty( $color ) ) {
+        return $defaultColor;
+    }
+
+    // Ignore "#" if provided
+    if ( $color[0] == '#' ) {
+        $color = substr( $color, 1 );
+    }
+
+    // Check if color has 6 or 3 characters, get values
+    if ( strlen($color) == 6 ) {
+        $hex = array( $color[0] . $color[1], $color[2] . $color[3], $color[4] . $color[5] );
+    } elseif ( strlen( $color ) == 3 ) {
+        $hex = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
+    } else {
+        return $default;
+    }
+
+    // Convert hex values to rgb values
+    $rgb =  array_map( 'hexdec', $hex );
+
+    // Check if opacity is set(rgba or rgb)
+    if ( $opacity ) {
+        if( abs( $opacity ) > 1 ) {
+            $opacity = 1.0;
+        }
+        $output = 'rgba(' . implode( ",", $rgb ) . ',' . $opacity . ')';
+    } else {
+        $output = 'rgb(' . implode( ",", $rgb ) . ')';
+    }
+
+    // Return rgb(a) color string
+    return $output;
+
 }

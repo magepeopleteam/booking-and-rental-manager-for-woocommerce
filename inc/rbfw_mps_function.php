@@ -181,7 +181,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                         // Else Create order without account
                         $order = $this->rbfw_mps_create_order($post_id, $rent_type, $start_date, $start_time, $end_date, $end_time, $pickup_point, $dropoff_point, $type_info, $service_info, $payment_method, $first_name, $last_name, $email, $package, '', '', '', '', $item_quantity,$variation_info,$rbfw_regf_info);
         
-                        $msg = '<p class="mps_alert_login_success"><i class="fa-solid fa-circle-check"></i> '._return('rbfw_text_order_succesful_msg',__('Order successful, redirecting...','booking-and-rental-manager-for-woocommerce')).'</p>';
+                        $msg = '<p class="mps_alert_login_success"><i class="fa-solid fa-circle-check"></i> '.rbfw_string_return('rbfw_text_order_succesful_msg',__('Order successful, redirecting...','booking-and-rental-manager-for-woocommerce')).'</p>';
                         echo $msg;
                         
                         $rbfw_thankyou_class->rbfw_redirect_to_thankyou_page($order);
@@ -456,14 +456,15 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                             if($key == 'rbfw_start_datetime' || $key == 'rbfw_end_datetime'){
 
                                 //$value = date('Y-m-d H:i:s', strtotime($value));
-                                $value = $value;
+                                //$value = $value;
+                                $value = date('Y-m-d h:i a', strtotime($value));
   
                             }
 
                             update_post_meta($order_meta_id, $key, $value);
 
                             /* Start: Create Inventory info */
-                            rbfw_create_inventory_meta($ticket_info, $i);
+                            rbfw_create_inventory_meta($ticket_info, $i, $post_id);
                             /* End: Create Inventory info */
 
                             $i++;
@@ -666,7 +667,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 }
     
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'including_tax'){
-                    $tax_status = '('.__('Includes','booking-and-rental-manager-for-woocommerce').' '.rbfw_mps_price($percent).' '.__('Tax','booking-and-rental-manager-for-woocommerce').')';
+                    $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($percent).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';
                 }
                 /* End Tax Calculations */
 
@@ -793,7 +794,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 }
     
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'including_tax'){
-                    $tax_status = '('.__('Includes','booking-and-rental-manager-for-woocommerce').' '.rbfw_mps_price($percent).' '.__('Tax','booking-and-rental-manager-for-woocommerce').')';
+                    $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($percent).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';
                 }
                 /* End Tax Calculations */
 
@@ -878,7 +879,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 
                 /* Start Tax Calculations */
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'including_tax'){
-                    $tax_status = '('.__('Includes','booking-and-rental-manager-for-woocommerce').' '.rbfw_mps_price($percent).' '.__('Tax','booking-and-rental-manager-for-woocommerce').')';
+                    $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($percent).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';
                 }
                 /* End Tax Calculations */
 

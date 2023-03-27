@@ -532,7 +532,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                 $mps_tax_percentage = !empty(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $tax_status = '';
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && $mps_tax_format == 'including_tax'){
-                    $tax_status = '('.__('Includes','booking-and-rental-manager-for-woocommerce').' '.rbfw_mps_price($tax).' '.__('Tax','booking-and-rental-manager-for-woocommerce').')';
+                    $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($tax).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';
                 }
 
                 if($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){

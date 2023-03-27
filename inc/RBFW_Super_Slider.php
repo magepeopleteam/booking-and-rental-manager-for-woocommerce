@@ -151,6 +151,7 @@
 					$showcase_position = RBFW_Function::get_settings( 'super_slider_showcase_position', 'super_slider_settings', 'right' );
 					$column_class      = $showcase_position == 'top' || $showcase_position == 'bottom' ? 'area_column' : '';
 					$slider_style      = RBFW_Function::get_settings( 'super_slider_style', 'super_slider_settings', 'style_1' );
+
 					?>
 					<div class="superSlider placeholder_area fdColumn">
 						<div class="dFlex  <?php echo esc_attr( $column_class ); ?>">

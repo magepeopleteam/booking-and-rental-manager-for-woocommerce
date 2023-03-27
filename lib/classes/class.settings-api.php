@@ -6,8 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * MagePeople Settings API wrapper class
  */
-if ( !class_exists( 'MAGE_Setting_API' ) ):
-class MAGE_Setting_API {
+if ( !class_exists( 'RBFW_Setting_API' ) ):
+class RBFW_Setting_API {
 
     /**
      * settings sections array
@@ -231,7 +231,7 @@ class MAGE_Setting_API {
         $html  .= sprintf( '%1$s</label>', $args['desc'] );
         $html  .= '</fieldset>';
 
-        echo mep_esc_html($html);        
+        echo mep_esc_html($html);
     }
 
         /**
@@ -242,7 +242,7 @@ class MAGE_Setting_API {
     function callback_heading( $args ) {
 
         $html  = '';
-        echo $html;        
+        echo $html;
     }
 
     /**
@@ -253,7 +253,7 @@ class MAGE_Setting_API {
     function callback_notice( $args ) {
 
         $html  = $args['desc'];
-        echo $html;        
+        echo $html;
     }
 
     /**
@@ -270,10 +270,10 @@ class MAGE_Setting_API {
 		$media_type	= get_post_mime_type( $value );
 		$media_title= get_the_title( $value );
 		wp_enqueue_media();
-		
+
 		echo "<div class='media_preview'>";
-		
-		if( "audio/mpeg" == $media_type ){			
+
+		if( "audio/mpeg" == $media_type ){
 			esc_html_e('Audio/Video format not supported.','rbfw-pro');
 		}
 		else {
@@ -284,7 +284,7 @@ class MAGE_Setting_API {
         echo sprintf( '<input type="hidden" id="media_input_%1$s" name="%2$s[%1$s]" value="%3$s"/>', $id, $args['section'], $value);
 		echo "<div class='rbfw_green_btn' id='media_upload_$id' style='margin-right:5px'>".__('Upload','rbfw-pro')."</div>";
 		echo "<div class='rbfw_red_btn' id='media_remove_$id'>".__('Remove','rbfw-pro')."</div>";
-		
+
 		echo "<script>jQuery(document).ready(function($){
 		jQuery('#media_upload_$id').click(function() {
 			var send_attachment_bkp = wp.media.editor.send.attachment;
@@ -299,7 +299,7 @@ class MAGE_Setting_API {
         jQuery('#media_remove_$id').click(function() {
             jQuery('#media_preview_$id').attr('src','');
             jQuery('#media_input_$id').val('');
-        });	
+        });
 		});	</script>";
 	}
 
@@ -490,7 +490,7 @@ class MAGE_Setting_API {
         $html  .= $this->get_field_description( $args );
 
         echo $html;
-    
+
     }
 
 
@@ -587,14 +587,14 @@ class MAGE_Setting_API {
      * Shows all the settings section labels as tab
      */
     function show_navigation() {
-        $html = '<div class="nav-tab-wrapper">';
+        $html = '<div class="rbfw-nav-tab-wrapper">';
         $count = count( $this->settings_sections );
         // don't show the navigation if only one section exists
         if ( $count === 1 ) {
             return;
         }
         foreach ( $this->settings_sections as $tab ) {
-            $html .= sprintf( '<a href="#%1$s" class="nav-tab" id="%1$s-tab">%2$s</a>', $tab['id'], $tab['title'] );
+            $html .= sprintf( '<a href="#%1$s" class="rbfw-nav-tab" id="%1$s-tab">%2$s</a>', $tab['id'], $tab['title'] );
         }
         $html .= '</div>';
 
@@ -617,7 +617,7 @@ class MAGE_Setting_API {
                         settings_fields( $form['id'] );
                         do_settings_sections( $form['id'] );
                         do_action( 'wsa_form_bottom_' . $form['id'], $form );
-                        if ( isset( $this->settings_fields[ $form['id'] ] ) ): 
+                        if ( isset( $this->settings_fields[ $form['id'] ] ) ):
                         ?>
                         <div style="padding-left: 10px">
                             <?php submit_button(); ?>
@@ -675,14 +675,14 @@ class MAGE_Setting_API {
                 });
 
                 if (activetab != '' && jQuery(activetab + '-tab').length ) {
-                    jQuery(activetab + '-tab').addClass('nav-tab-active');
+                    jQuery(activetab + '-tab').addClass('rbfw-nav-tab-active');
                 }
                 else {
-                    jQuery('.nav-tab-wrapper a:first').addClass('nav-tab-active');
+                    jQuery('.rbfw-nav-tab-wrapper a:first').addClass('rbfw-nav-tab-active');
                 }
-                jQuery('.nav-tab-wrapper a').click(function(evt) {
-                    jQuery('.nav-tab-wrapper a').removeClass('nav-tab-active');
-                    jQuery(this).addClass('nav-tab-active').blur();
+                jQuery('.rbfw-nav-tab-wrapper a').click(function(evt) {
+                    jQuery('.rbfw-nav-tab-wrapper a').removeClass('rbfw-nav-tab-active');
+                    jQuery(this).addClass('rbfw-nav-tab-active').blur();
                     var clicked_group = jQuery(this).attr('href');
                     if (typeof(localStorage) != 'undefined' ) {
                         localStorage.setItem("activetab", jQuery(this).attr('href'));

@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php
 global $rbfw;
 $post_id = get_the_id();
-$highlited_features = get_post_meta($post_id, 'rbfw_highlights_texts', true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_highlights_texts', true)) : [];
+$rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
 $tab_style = $rbfw->get_option('rbfw_single_rent_tab_style', 'rbfw_basic_single_rent_page_settings','vertical');
 $rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
 $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','');
@@ -45,25 +45,38 @@ $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','
 								</div><!--end of tab-menu-->
 								<div class="rbfw-tab rbfw-tab-active" data-id="features">
 									<div class="rbfw-single-left-information-item">
-										<?php if ( $highlited_features ) : ?>
-										    <div class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_hightlighted_features', 'rbfw_basic_translation_settings', __('Highlighted Features','booking-and-rental-manager-for-woocommerce'))); ?></div>
-										    <ul class="rbfw-ul">
-											<?php foreach ( $highlited_features as $feature ) :
+									<?php if ( $rbfw_feature_category ) :
+											foreach ( $rbfw_feature_category as $value ) :
+												$cat_title = $value['cat_title'];
+												$cat_features = $value['cat_features'] ? $value['cat_features'] : [];
+										?>
+										<div class="rbfw-sub-heading"><?php echo esc_html($cat_title); ?></div>
+										<ul>
+											<?php
+											if(!empty($cat_features)){
+												$i = 1;
+												foreach ($cat_features as $features) {
+													$icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+													$title = $features['title'];
 
-											if($feature['icon']):
-												$icon = $feature['icon'];
-											else:
-												$icon = 'fas fa-arrow-right';
-											endif;
+													if($title):
+														if($i == 5){
+														echo '<li style="width:100%"><a class="rbfw_muff_lmf_btn">'.$rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('View More Features','booking-and-rental-manager-for-woocommerce')).'</a></li>';
+														}
 
-											if($feature['title']):
-												echo '<li><i class="'.mep_esc_html($icon).'"></i><span>' . $feature['title'] . '</span></li>';
-											endif;
+														echo '<li '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i><span>' . $title . '</span></li>';
 
-											endforeach; 
+													endif;
+
+													$i++;
+												}
+											}
 											?>
-										    </ul>
-										<?php endif; ?>
+										</ul>
+										<?php
+											endforeach;
+										endif;
+										?>
 									</div>
 								</div><!--end of tab one-->
 								<div class="rbfw-tab " data-id="description">

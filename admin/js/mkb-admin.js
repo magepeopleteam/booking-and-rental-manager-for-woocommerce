@@ -484,7 +484,7 @@
 
         /* Template Options On Load Document */
         var this_value = jQuery('select#rbfw_single_template').val();
-        if (this_value == 'Default') {
+        if (this_value == 'Default' || this_value == 'Muffin') {
 
             jQuery('tr[data-row="rbfw_dt_sidebar_switch"]').hide();
             jQuery('tr[data-row="rbfw_dt_sidebar_testimonials"]').hide();
@@ -501,7 +501,7 @@
 
             var this_value = jQuery(this).val();
 
-            if (this_value == 'Default') {
+            if (this_value == 'Default' || this_value == 'Muffin') {
 
                 jQuery('tr[data-row="rbfw_dt_sidebar_switch"]').hide();
                 jQuery('tr[data-row="rbfw_dt_sidebar_testimonials"]').hide();

@@ -431,6 +431,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
             if(isset($_POST['post_id'])){
                 $id = $_POST['post_id'];
                 $selected_date = $_POST['selected_date'];
+                $is_muffin_template = $_POST['is_muffin_template'];
                 $available_times = get_post_meta($id, 'rdfw_available_time', true);
 
                 $default_timezone = wp_timezone_string();
@@ -446,7 +447,16 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $content .= '<div class="rbfw_bikecarsd_time_table_container rbfw-bikecarsd-step" data-step="2">';
                 $content .= '<a class="rbfw_back_step_btn" back-step="1" data-step="2"><i class="fa-solid fa-circle-left"></i> '.rbfw_string_return('rbfw_text_back_to_previous_step',__('Back to Previous Step','booking-and-rental-manager-for-woocommerce')).'</a>';
 
-                $content .= '<div class="rbfw_step_selected_date"><i class="fa-solid fa-calendar-check"></i> '.rbfw_string_return('rbfw_text_you_selected',__('You selected','booking-and-rental-manager-for-woocommerce')).': '.$result.'</div>';                
+                if($is_muffin_template == 0){
+                    $content .= '<div class="rbfw_step_selected_date"><i class="fa-solid fa-calendar-check"></i> '.rbfw_string_return('rbfw_text_you_selected',__('You selected','booking-and-rental-manager-for-woocommerce')).': '.$result.'</div>';
+                }
+
+                if($is_muffin_template == 1){
+                    $content .= '<div class="rbfw_step_selected_date rbfw_muff_selected_date">';
+                    $content .= '<div class="rbfw_muff_selected_date_col"><label><img src="'. RBFW_PLUGIN_URL . '/assets/images/muff_calendar_icon2.png"/>'.rbfw_string_return('rbfw_text_date',__('Date','booking-and-rental-manager-for-woocommerce')).'</label><span class="rbfw_muff_selected_date_value">'.$result.'</span></div>';
+                    $content .= '</div>';
+                }
+
                 $content .= '<div class="rbfw_bikecarsd_time_table_wrap">';
 
                 
@@ -485,6 +495,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
             if(isset($_POST['post_id'])){
                 $id = $_POST['post_id'];
                 $selected_time = !empty($_POST['selected_time']) ? $_POST['selected_time'] : '';
+                $is_muffin_template = $_POST['is_muffin_template'];
                 $rbfw_bike_car_sd_data = get_post_meta($id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($id, 'rbfw_bike_car_sd_data', true) : [];
                 $rbfw_extra_service_data = get_post_meta( $id, 'rbfw_extra_service_data', true ) ? get_post_meta( $id, 'rbfw_extra_service_data', true ) : [];
                 $rbfw_product_id = get_post_meta( $id, "link_wc_product", true ) ? get_post_meta( $id, "link_wc_product", true ) : $id;
@@ -508,7 +519,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 }
 
                 
-                $available_qty_info_switch = get_post_meta($id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($id, 'rbfw_available_qty_info_switch', true) : 'off';
+                $available_qty_info_switch = get_post_meta($id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($id, 'rbfw_available_qty_info_switch', true) : 'no';
 
 
                 ob_start();
@@ -516,7 +527,17 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $content .= '<div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step" data-step="3">';
                 $content .= '<a class="rbfw_back_step_btn" back-step="2" data-step="3"><i class="fa-solid fa-circle-left"></i> '.rbfw_string_return('rbfw_text_back_to_previous_step',__('Back to Previous Step','booking-and-rental-manager-for-woocommerce')).'</a>';
 
-                $content .= '<div class="rbfw_step_selected_date" data-time="'.$selected_time.'"><i class="fa-solid fa-calendar-check"></i> '.rbfw_string_return('rbfw_text_you_selected',__('You selected','booking-and-rental-manager-for-woocommerce')).': '.$result.' '.$selected_time.'</div>';                
+                if($is_muffin_template == 0){
+                    $content .= '<div class="rbfw_step_selected_date" data-time="'.$selected_time.'"><i class="fa-solid fa-calendar-check"></i> '.rbfw_string_return('rbfw_text_you_selected',__('You selected','booking-and-rental-manager-for-woocommerce')).': '.$result.' '.$selected_time.'</div>';
+                }
+
+                if($is_muffin_template == 1){
+                    $content .= '<div class="rbfw_step_selected_date rbfw_muff_selected_date" step="3">';
+                    $content .= '<div class="rbfw_muff_selected_date_col"><label><img src="'. RBFW_PLUGIN_URL . '/assets/images/muff_calendar_icon2.png"/>'.rbfw_string_return('rbfw_text_date',__('Date','booking-and-rental-manager-for-woocommerce')).'</label><span class="rbfw_muff_selected_date_value">'.$result.'</span></div>';
+                    $content .= '<div class="rbfw_muff_selected_date_col"><label><img src="'. RBFW_PLUGIN_URL . '/assets/images/muff_clock_icon2.png"/>'.rbfw_string_return('rbfw_text_time',__('Time','booking-and-rental-manager-for-woocommerce')).'</label><span class="rbfw_muff_selected_date_value">'.$selected_time.'</span></div>';
+                    $content .= '</div>';
+                }
+
                 $content .= '<div class="rbfw_bikecarsd_pricing_table_wrap">';
                 $content .= '<table class="rbfw_bikecarsd_price_table rbfw_bikecarsd_rt_price_table">';
                 $content .= '<thead>';
@@ -538,7 +559,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                         $content .= '<td class="w_50_pc">';
                         $content .= '<span class="rbfw_bikecarsd_type_title">'.$value['rent_type'].'</span><small class="rbfw_bikecarsd_type_desc">'.$value['short_desc'].'</small>';
 
-                        if($available_qty_info_switch == 'on'){
+                        if($available_qty_info_switch == 'yes'){
                             $content .= '<small class="rbfw_available_qty_notice">('.rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce')).$max_available_qty.')</small>';
                         }
 
@@ -611,7 +632,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                         $content   .= '<small class="rbfw_bikecarsd_type_desc">'.$value['service_desc'].'</small>';
                     }
 
-                    if($available_qty_info_switch == 'on'){
+                    if($available_qty_info_switch == 'yes'){
 
                         $content .= '<small class="rbfw_available_qty_notice">('.rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce')).$max_es_available_qty.')</small>';
                     }
@@ -734,7 +755,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 }
 
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'including_tax'){
-                    $tax_status = '('.__('Includes','booking-and-rental-manager-for-woocommerce').' '.rbfw_mps_price($percent).' '.__('Tax','booking-and-rental-manager-for-woocommerce').')';
+
+                    $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($percent).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';
                 }
 
                 /* End Tax Calculations */
@@ -802,14 +824,22 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             let s_Date = ye+'-'+mo+'-'+da;
                             jQuery('#rbfw_bikecarsd_selected_date').val(s_Date);
                             let post_id = jQuery('#rbfw_post_id').val();
-                            
+                            let is_muffin_template = jQuery('.rbfw_muffin_template').length;
+
+                            if(is_muffin_template > 0){
+                                is_muffin_template = '1';
+                            } else {
+                                is_muffin_template = '0';
+                            }
+
                             jQuery.ajax({
                                 type: 'POST',
                                 url: rbfw_ajax.rbfw_ajaxurl,
                                 data: {
                                     'action' : 'rbfw_bikecarsd_time_table',
                                     'post_id': post_id,
-                                    'selected_date': s_Date
+                                    'selected_date': s_Date,
+                                    'is_muffin_template': is_muffin_template
                                 },
                                 beforeSend: function() {
                                     
@@ -979,6 +1009,13 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                 let selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
                                 let post_id = jQuery('#rbfw_post_id').val();
                                 let rent_type = jQuery('#rbfw_rent_type').val();
+                                let is_muffin_template = jQuery('.rbfw_muffin_template').length;
+
+                                if(is_muffin_template > 0){
+                                    is_muffin_template = '1';
+                                } else {
+                                    is_muffin_template = '0';
+                                }
 
                                 jQuery.ajax({
                                 type: 'POST',
@@ -987,7 +1024,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                     'action' : 'rbfw_bikecarsd_type_list',
                                     'post_id': post_id,
                                     'selected_time': gTime,
-                                    'selected_date': selected_date
+                                    'selected_date': selected_date,
+                                    'is_muffin_template': is_muffin_template
                                 },
                                 beforeSend: function() {
 
@@ -1030,6 +1068,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                     
                                     rbfw_mps_book_now_btn_action();
                                     rbfw_mps_direct_checkout();
+
+                                    jQuery('.rbfw_muff_registration_wrapper .rbfw_regf_wrap').show();
                                 },
                                 complete:function(response) {
                                     jQuery('html, body').animate({

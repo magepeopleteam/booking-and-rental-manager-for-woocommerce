@@ -406,6 +406,8 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             $errors .= '<p class="rbfw_alert_warning"><i class="fa-solid fa-circle-info"></i> '.__('Check-Out date is required!','booking-and-rental-manager-for-woocommerce').'</p>';
             endif;
         
+            $is_muffin_template = $_POST['is_muffin_template'];
+
             if(empty($errors)){
                 global $rbfw;
                 $post_id 				= strip_tags($_POST['post_id']);
@@ -447,9 +449,13 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     $daynight_counter += (float)$value['rbfw_room_daynight_rate'];
                 }
                 
+                if($is_muffin_template == 1){
+                    $content .= do_action('rbfw_discount_ad', $post_id, 'muffin');
+                }
+
                 $content .= '<div class="rbfw_room_price_category_tabs_title mb-08">'.$rbfw->get_option('rbfw_text_select_booking_type', 'rbfw_basic_translation_settings', __('CHOOSE BOOKING TYPE','booking-and-rental-manager-for-woocommerce')).'</div>';
 
-                $content .= '<div class="rbfw_room_price_category_tabs_label">';
+                $content .= '<div class="rbfw_room_price_category_tabs_label" data-days="'.$days.'">';
 
                 if($daylong_counter > 0 && $daynight_counter > 0):
                     $content .= '<label for="rbfw_room_daylong_price" class="rbfw_room_price_label"><input type="radio" name="rbfw_room_price_category" value="daylong" class="rbfw_room_price_category" id="rbfw_room_daylong_price">'.$rbfw->get_option('rbfw_text_daylong', 'rbfw_basic_translation_settings', __('Daylong','booking-and-rental-manager-for-woocommerce')).'<small>'.$rbfw->get_option('rbfw_text_daylong_subtitle', 'rbfw_basic_translation_settings', __('9 AM to 6 PM','booking-and-rental-manager-for-woocommerce')).'</small></label>';
@@ -495,7 +501,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     $rbfw_payment_system = 'wps_enabled'; 
                 }
 
-                $available_qty_info_switch = get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) : 'off';
+                $available_qty_info_switch = get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) : 'no';
 
                 $content    = '';
 
@@ -540,7 +546,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     $content .= $value['rbfw_room_desc'];
                     $content .= '</small>';
 
-                    if($available_qty_info_switch == 'on'){
+                    if($available_qty_info_switch == 'yes'){
                         $content .= '<small class="rbfw_available_qty_notice">('.rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce')).$max_available_qty.')</small>';
                     }
 
@@ -573,6 +579,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 $content   .= '<thead>';
                 $content   .= '<tr>';
                 $content   .= '<th>'.$rbfw->get_option('rbfw_text_room_service_name', 'rbfw_basic_translation_settings', __('Service Name','booking-and-rental-manager-for-woocommerce')).'</th>';
+                $content   .= '<th>'.$rbfw->get_option('rbfw_text_room_image', 'rbfw_basic_translation_settings', __('Image','booking-and-rental-manager-for-woocommerce')).'</th>';
                 $content   .= '<th>'.$rbfw->get_option('rbfw_text_room_service_price', 'rbfw_basic_translation_settings', __('Price','booking-and-rental-manager-for-woocommerce')).'</th>';
                 $content   .= '<th class="w_30_pc">'.$rbfw->get_option('rbfw_text_room_service_qty', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce')).'</th>';                
                 $content   .= '</tr>';             
@@ -585,6 +592,15 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                     $max_es_available_qty = rbfw_get_multiple_date_es_available_qty($post_id, $checkin_date, $checkout_date, $value['service_name']);
 
+                    $img_url    = wp_get_attachment_url($value['service_img']);
+                    $uniq_id    = rand();
+                    if($img_url):
+                        $img    = '<a href="#rbfw_room_img_'.$uniq_id.'" rel="mage_modal:open"><img src="'.esc_url($img_url).'"/></a>';
+                        $img   .= '<div id="rbfw_room_img_'.$uniq_id.'" class="mage_modal"><img src="'.esc_url($img_url).'"/></div>';
+                    else:
+                        $img    = '';
+                    endif;
+
                     if($value['service_qty'] > 0){
                    
                         $content   .= '<tr>';
@@ -592,17 +608,26 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                         $content   .= $value['service_name'];
                         $content   .= '<input type="hidden" name="rbfw_service_info['.$c.'][service_name]" value="'.$value['service_name'].'"/>';
 
-                        if($available_qty_info_switch == 'on'){
-                            $content .= '<small class="rbfw_available_qty_notice">('.rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce')).$max_es_available_qty.')</small>';
-                        }        
+                        if($value['service_desc']):
+                        $content .= '<small class="rbfw_room_desc">';
+                        $content .= $value['service_desc'];
+                        $content .= '</small>';
 
-                        $content   .= '</td>'; 
+                        if($available_qty_info_switch == 'yes'){
+                            $content .= '<small class="rbfw_available_qty_notice">('.rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce')).$max_es_available_qty.')</small>';
+                        }
+
+                        $content .= '<input type="hidden" name="rbfw_service_info['.$c.'][service_desc]" value="'.$value['service_desc'].'"/>';
+                        endif;
+
+                        $content   .= '</td>';
+                        $content   .= '<td>'.$img.'</td>';
                         $content   .= '<td>';
                         $content   .= rbfw_mps_price($value['service_price']);
                         $content   .= '<input type="hidden" name="rbfw_service_info['.$c.'][service_price]" value="'.$value['service_price'].'"/>';            
                         $content   .= '</td>';
                         $content   .= '<td>';
-                        $content .= '<div class="rbfw_service_price_wrap">';
+                        $content   .= '<div class="rbfw_service_price_wrap">';
                         $content   .= '<div class="rbfw_qty_input">';
                         $content   .= '<a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>';
                         $content   .= '<input type="number" min="0" max="'.esc_attr($max_es_available_qty).'" value="0" name="rbfw_service_info['.$c.'][service_qty]" class="rbfw_service_qty" data-price="'.$value['service_price'].'" data-type="'.$value['service_name'].'" data-cat="service"/>';
@@ -724,7 +749,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             }
 
             if($rbfw_payment_system == 'mps' &&  $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'including_tax'){
-                $tax_status = '('.__('Includes','booking-and-rental-manager-for-woocommerce').' '.rbfw_mps_price($percent).' '.__('Tax','booking-and-rental-manager-for-woocommerce').')';
+                $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($percent).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';
             }
 
             /* End Tax Calculations */
@@ -851,7 +876,16 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                             tippy('#checkout_date', {content: checkout_date_notice,theme: 'blue',placement: 'top',trigger: 'click'});
                             jQuery('#checkout_date').trigger('click');
                             return false;
-                        }				
+                        }
+
+                        let is_muffin_template = jQuery('.rbfw_muffin_template').length;
+
+                        if(is_muffin_template > 0){
+                            is_muffin_template = '1';
+                        } else {
+                            is_muffin_template = '0';
+                        }
+
                         jQuery.ajax({
                             type: 'POST',
                             url: rbfw_ajax.rbfw_ajaxurl,
@@ -859,7 +893,8 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                 'action' 		: 'rbfw_check_resort_availibility',
                                 'post_id' 		: post_id,
                                 'checkin_date' 	: checkin_date,
-                                'checkout_date' : checkout_date
+                                'checkout_date' : checkout_date,
+                                'is_muffin_template': is_muffin_template
                             },
                             beforeSend: function() {
                                 jQuery('.rbfw_room_price_category_tabs').empty();
@@ -875,10 +910,14 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                 } else{
 
                                     jQuery('.rbfw_room_price_category_tabs').html(response);
+
                                 }
 
                                 rbfw_room_price_label_func();
-
+                                let data_days = jQuery('.rbfw_room_price_category_tabs_label').attr('data-days');
+                                if(data_days == 0){
+                                    jQuery('.rbfw_room_price_category_tabs_label .rbfw_room_price_label[for=rbfw_room_daylong_price]').trigger('click');
+                                }
                             }
                         });
                         
@@ -905,6 +944,8 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                             jQuery('.rbfw_room_price_category_tabs .rbfw_room_price_label').removeClass('active');
                             jQuery('.rbfw_room_price_category_tabs .rbfw_room_price_label .rbfw_room_price_category').prop('checked',false);
                             jQuery(this).addClass('active');
+                            jQuery('.rbfw_room_price_category_tabs .rbfw_room_price_label i').remove();
+                            jQuery(this).append('<i class="fa-solid fa-check"></i>');
                             jQuery(this).find('.rbfw_room_price_category').prop('checked',true);
                             jQuery('.rbfw_room_price_category_tabs').attr('data-active',target_value);
                             rbfw_resort_get_price_table();
@@ -946,7 +987,8 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                 rbfw_update_input_value_onchange_onclick();
                                 rbfw_room_price_calculation();
                                 rbfw_mps_book_now_btn_action();
-                                rbfw_display_resort_es_box_onchange_onclick()
+                                rbfw_display_resort_es_box_onchange_onclick();
+                                jQuery('.rbfw_muff_registration_wrapper .rbfw_regf_wrap').show();
                             }
                     });                    
                }

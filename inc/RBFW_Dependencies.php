@@ -25,8 +25,8 @@
 				wp_enqueue_style('flaticon', RBFW_PLUGIN_URL . '/assets/fonts/flaticon/flaticon.css');
 			
 				//mp style
-				wp_enqueue_style( 'ttbm_mp_style', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
-				wp_enqueue_script( 'ttbm_mp_script', RBFW_PLUGIN_URL . '/assets/mp_style/mp_script.js', array(), time(), true );
+				wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
+				wp_enqueue_script( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_script.js', array(), time(), true );
 
 				//loading owl carousel css
 				wp_enqueue_style('owl.carousel.min', RBFW_PLUGIN_URL . '/css/owl.carousel.min.css');
@@ -94,7 +94,7 @@
 			   * Enqueue Admin Styles
 			   **************************/
 			  
-				wp_enqueue_style('rbfw-options-framework', plugin_dir_url(__DIR__) . 'admin/css/mage-options-framework.css', array(),'1.0.6');
+				wp_enqueue_style('rbfw-options-framework', plugin_dir_url(__DIR__) . 'admin/css/mage-options-framework.css', array(),'1.0.8');
 				wp_enqueue_style('jquery-ui', plugin_dir_url(__DIR__) . 'admin/css/jquery-ui.css');
 				wp_enqueue_style('select2.min', plugin_dir_url(__DIR__) . 'admin/css/select2.min.css');
 				wp_enqueue_style('rbfw-admin-style', plugin_dir_url(__DIR__) . 'admin/css/admin_style.css', array(),time());
@@ -127,6 +127,8 @@
 				global $rbfw;
 				$view_more_feature_btn_text = $rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('View More Features','booking-and-rental-manager-for-woocommerce'));
 				$hide_more_feature_btn_text = $rbfw->get_option('rbfw_text_hide_more_features', 'rbfw_basic_translation_settings', __('Hide More Features','booking-and-rental-manager-for-woocommerce'));
+				$view_more_offers_btn_text = $rbfw->get_option('rbfw_text_view_more_offers', 'rbfw_basic_translation_settings', __('View More Offers','booking-and-rental-manager-for-woocommerce'));
+				$hide_more_offers_btn_text = $rbfw->get_option('rbfw_text_hide_more_offers', 'rbfw_basic_translation_settings', __('Hide More Offers','booking-and-rental-manager-for-woocommerce'));
 
 				$version = time(); // Time() function will prevent cache
 				wp_enqueue_script('jquery');
@@ -138,7 +140,7 @@
 			
 				wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array(), $version);
 				wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), $version, true);
-				wp_localize_script( 'rbfw_custom_script', 'rbfw_ajaxurl', array('rbfw_ajaxurl' => admin_url('admin-ajax.php'), 'view_more_feature_btn_text' => $view_more_feature_btn_text, 'hide_more_feature_btn_text' => $hide_more_feature_btn_text));
+				wp_localize_script( 'rbfw_custom_script', 'rbfw_ajaxurl', array('rbfw_ajaxurl' => admin_url('admin-ajax.php'), 'view_more_feature_btn_text' => $view_more_feature_btn_text, 'hide_more_feature_btn_text' => $hide_more_feature_btn_text, 'view_more_offers_btn_text' => $view_more_offers_btn_text, 'hide_more_offers_btn_text' => $hide_more_offers_btn_text));
 			
 				wp_localize_script('jquery', 'rbfw_ajax', array('rbfw_ajaxurl' => admin_url('admin-ajax.php')));
 			

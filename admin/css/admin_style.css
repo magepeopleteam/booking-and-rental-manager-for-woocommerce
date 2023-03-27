@@ -282,7 +282,7 @@ div#mage-primary-button {
     padding: 20px;
 }
 
-.mage_settings_panel_wrap .nav-tab {
+.mage_settings_panel_wrap .rbfw-nav-tab {
     float: none;
     margin-left: 0;
     padding: 10px;
@@ -304,17 +304,17 @@ div#mage-primary-button {
     border-bottom: 1px solid #7d7d7d;
 }
 
-.mage_settings_panel_wrap .nav-tab.nav-tab-active {
+.mage_settings_panel_wrap .rbfw-nav-tab.rbfw-nav-tab-active {
     background: #0ec40e;
     border-color: #0ec40e;
 }
 
-.mage_settings_panel_wrap .nav-tab:hover {
+.mage_settings_panel_wrap .rbfw-nav-tab:hover {
     background: #0ec40e;
     transition: 0.1s;
 }
 
-.mage_settings_panel_wrap .nav-tab:focus {
+.mage_settings_panel_wrap .rbfw-nav-tab:focus {
     border-top: none;
     border-bottom: none;
     outline: none;
@@ -436,13 +436,13 @@ div#mep_event_list_thumbnail_meta_boxes table td input#enable_global_qty {
     background: #161b37;
 }
 
-.mage_settings_panel_wrap .nav-tab-wrapper {
+.mage_settings_panel_wrap .rbfw-nav-tab-wrapper {
     width: 20%;
     padding-top: 0;
     border-bottom: none;
 }
 
-.mage_settings_panel_wrap .nav-tab-wrapper i,
+.mage_settings_panel_wrap .rbfw-nav-tab-wrapper i,
 .mage_settings_panel_wrap .metabox-holder h2 i {
     line-height: inherit;
     margin-right: 5px;

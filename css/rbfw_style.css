@@ -34,6 +34,8 @@ RBFW TAB
 
 .rbfw-review-comment-list-item {
     list-style-type: none;
+    margin-left: 0;
+    margin-bottom: 20px;
 }
 
 .rbfw-tab-menu ul li a.active-a {
@@ -263,6 +265,10 @@ CSS for Single Page Template
 .rbfw-single-right-container .item:first-child .rbfw-single-right-heading {
     margin-bottom: 0px;
     width: 100%;
+}
+
+.rbfw-variations-content-wrapper .rbfw-single-right-heading {
+    margin-bottom: 8px;
 }
 
 .pricing-content {
@@ -995,6 +1001,14 @@ p.rbfw_alert_warning {
     background-color: #2d5fd5;
     cursor: pointer;
     transition: 0.2s;
+    position: relative;
+}
+
+.rbfw_room_price_category_tabs .rbfw_room_price_label i {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    font-size: 22px;
 }
 
 .rbfw_room_price_label.active {
@@ -1033,6 +1047,7 @@ table.rbfw_room_price_table thead th {
     font-weight: 500;
     border: 0;
     padding: 8px;
+    text-align: left;
 }
 
 table.rbfw_room_price_table thead th.w_30_pc {
@@ -1364,24 +1379,14 @@ table.rbfw_room_cart_table th span {
     align-items: center;
 }
 
-.rbfw-review-section .rbfw-single-review-info-header div:first-child {
-    width: 80%;
-    font-size: 13px;
-}
-
-@media only screen and (min-width: 600px) {
-    .rbfw-review-section .rbfw-single-review-info-header div:first-child {
-        display: -webkit-box;
-        display: -webkit-flex;
-        display: -ms-flexbox;
-        display: flex;
-        align-items: center;
-    }
-}
-
 .rbfw-review-section .rbfw-single-review-info-header div:last-child {
-    width: 20%;
+    width: 100%;
     font-size: 13px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
 }
 
 .rbfw-review-section .rbfw-review-author {
@@ -1420,12 +1425,14 @@ table.rbfw_room_cart_table th span {
 
 .rbfw-review-section ul.rbfw-review-list {
     margin: 0;
+    margin-bottom: 20px;
 }
 
 .rbfw-review-section ul.rbfw-review-list ul {
     margin-left: 60px;
 }
 
+.rbfw-review-section .rbfw-review-text,
 .rbfw-review-section .rbfw-review-text p {
     font-size: 14px;
 }
@@ -1506,27 +1513,27 @@ table.rbfw_room_cart_table th span {
     color: var(--rbfw_single_page_base_color4);
 }
 
-.comment-respond .rbfw-review-rating-container>.rbfw-star-clear+label,
-.comment-respond .rbfw-review-rating-container>input+label:before {
+.rbfw-review-rating-container>.rbfw-star-clear+label,
+.rbfw-review-rating-container>input+label:before {
     text-indent: 9999px;
 }
 
-.comment-respond .rbfw-review-rating-container>input+label {
+.rbfw-review-rating-container>input+label {
     text-indent: -9999px;
 }
 
-.rbfw-review-section .rbfw-review-content .rbfw-review-stars span {
+.rbfw-review-stars span {
     margin-right: 0;
     font-size: 14px;
     display: inline;
     color: var(--rbfw_single_page_base_color4);
 }
 
-.rbfw-review-section .rbfw-review-content .rbfw-review-stars span.dashicons-star-empty {
+.rbfw-review-stars span.dashicons-star-empty {
     color: #d3d3d3;
 }
 
-.rbfw-review-section .rbfw-review-stars {
+.rbfw-review-stars {
     display: block;
     margin-top: 10px;
 }
@@ -1557,8 +1564,16 @@ table.rbfw_room_cart_table th span {
 }
 
 @media only screen and (min-width: 600px) {
+    .rbfw-review-col-12 {
+        width: 100%;
+        display: block;
+    }
     .rbfw-review-col-6 {
         width: 49%;
+        display: inline-block;
+    }
+    .rbfw-review-col-4 {
+        width: 33%;
         display: inline-block;
     }
     .rbfw-review-row .rbfw-review-col-6:first-child {
@@ -1754,6 +1769,10 @@ table.rbfw_room_cart_table th span {
     text-decoration: none;
     margin-top: 10px;
     font-weight: 600;
+}
+
+.rbfw_pricing_info_heading {
+    width: 100%;
 }
 
 .rbfw_rent_list_button_wrap a.rbfw_rent_list_btn:hover {
@@ -2110,6 +2129,7 @@ table.rbfw_bikecarsd_price_table thead th {
     font-size: 16px;
     font-weight: 500;
     border: 0;
+    text-align: left;
 }
 
 table.rbfw_bikecarsd_price_table tbody td {
@@ -2154,6 +2174,8 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 .rbfw_bikecarsd_price_table img {
     width: 50px;
+    height: 50px;
+    border-radius: 5px;
 }
 
 .rbfw_bikecarsd_es_price_table {
@@ -2503,6 +2525,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_mps_user_order_data {
     text-align: right;
     font-size: 14px;
+    word-break: break-word;
 }
 
 .rbfw_mps_user_payment_method {
@@ -3053,6 +3076,1513 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 
+/* Muffin Template CSS */
+
+:root {
+    --rbfw_muff_color1: #fbfdff;
+    --rbfw_muff_color2: #FFB800;
+    --rbfw_muff_color3: #FA4236;
+    --rbfw_muff_color4: #727272;
+    --rbfw_muff_color5: #ffffff;
+    --rbfw_muff_color6: #F5F6F8;
+    --rbfw_muff_color7: #1ABC9C;
+    --rbfw_muff_paragraph_font_size: 16px;
+}
+
+.rbfw_muffin_template {
+    width: 100%;
+    margin: 30px 0;
+    max-width: var(--template-max-width);
+    margin: auto;
+    margin-top: 30px;
+    background-color: var(--rbfw_muff_color1);
+}
+
+.rbfw_muff_row_header {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 50px;
+}
+
+.rbfw_muff_pricing_card {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+    min-width: 260px;
+}
+
+.rbfw_muff_pricing_card_col1,
+.rbfw_muff_pricing_card_col2 {
+    padding: 5px 20px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.rbfw_muff_pricing_card_price {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 28px;
+    display: inline-block;
+}
+
+.rbfw_muff_pricing_card_price span.rbfw_muff_pricing_card_price_badge {
+    background: var(--rbfw_muff_color3);
+    font-size: 24px;
+    font-weight: 700;
+    display: inline-block;
+    padding: 5px 10px 5px 10px;
+    border-radius: 5px;
+}
+
+.rbfw_muff_pricing_card_col2 .rbfw_muff_pricing_card_price {
+    color: var(--rbfw_muff_color5);
+}
+
+.rbfw_muff_pricing_card_col2 .rbfw_muff_pricing_card_price span:nth-child(2) {
+    color: var(--rbfw_muff_color4);
+    text-transform: capitalize;
+}
+
+.rbfw_muff_pricing_card_price span:nth-child(2) {
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+.rbfw_muff_pricing_card_col2 {
+    width: 100%;
+}
+
+.rbfw_muff_title h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 35px;
+    padding: 0;
+}
+
+.rbfw_muff_rating .rbfw-review-rating-wrapper .rbfw-star-rating span.dashicons {
+    color: var(--rbfw_muff_color2);
+}
+
+.rbfw_muff_rating .rbfw-review-rating-wrapper .rbfw-star-rating,
+.rbfw_muff_rating .rbfw-review-rating-wrapper .rbfw-review-rating-info {
+    display: inline-block;
+}
+
+.rbfw_muff_row_content {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.rbfw_muffin_template [data-bg-image],
+.rbfw_muffin_template [data-bg-image]:hover {
+    border-radius: 10px;
+}
+
+.rbfw_muffin_template div.superSlider .sliderAllItem {
+    border-radius: 10px;
+}
+
+.rbfw_muffin_template div.superSlider .sliderShowcaseItem {
+    border-radius: 10px;
+}
+
+.rbfw_muffin_template div.superSlider {
+    background-color: var(--rbfw_muff_color1);
+}
+
+.rbfw_muff_registration_wrapper {
+    border: 1.05px solid #E5E5E5;
+    padding: 50px;
+    border-radius: 10px;
+}
+
+.rbfw_muff_row_slider {
+    margin-bottom: 50px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_muff_heading {
+    font-size: 24px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.rbfw_muff_content_wrapper {
+    padding: 0 50px 0 50px;
+}
+
+.rbfw_muff_post_content {
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.rbfw_muff_highlighted_features ul {
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+.rbfw_muff_highlighted_features ul li {
+    list-style: none;
+    margin: 0;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.rbfw_muff_highlighted_features ul li i {
+    margin-right: 10px;
+    width: 30px;
+    height: auto;
+    color: var(--rbfw_muff_color3);
+    font-size: 25px;
+}
+
+.rbfw_muff_post_content_headline {
+    font-size: 22px;
+    margin: 0;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-bikecarsd-calendar-header-feature i {
+    color: var(--rbfw_muff_color3);
+}
+
+.rbfw_muff_registration_wrapper .rbfw-datetime .date .calendar,
+.rbfw_muff_registration_wrapper .rbfw-datetime .time .clock {
+    background-color: var(--rbfw_muff_color3);
+    color: var(--rbfw_muff_color5);
+    border-radius: 5px;
+    padding: 6px 10px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-datetime .date .calendar img,
+.rbfw_muff_registration_wrapper .rbfw-datetime .time .clock img {
+    height: 25px;
+    margin: auto;
+}
+
+.rbfw_muff_registration_wrapper #pickup_date,
+.rbfw_muff_registration_wrapper #dropoff_date,
+.rbfw_muff_registration_wrapper .rbfw-datetime input,
+.rbfw_muff_registration_wrapper .rbfw-datetime select {
+    padding-left: 60px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-bikecarsd-calendar-header,
+.rbfw_muff_registration_wrapper .pricing-content,
+.rbfw_muff_registration_wrapper .rbfw-datetime input,
+.rbfw_muff_registration_wrapper .rbfw-datetime select,
+.rbfw_muff_registration_wrapper .rbfw-quantity select,
+.rbfw_muff_registration_wrapper .rbfw-select,
+.rbfw_muff_registration_wrapper .rbfw-duration .item-content,
+.rbfw_muff_registration_wrapper .rbfw_regf_form_header,
+.rbfw_muff_registration_wrapper .rbfw_mps_form_header {
+    background-color: var(--rbfw_muff_color6);
+    border-radius: 5px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-costing {
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 50px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-costing li.total .price-figure {
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-costing li.discount span {
+    color: var(--rbfw_muff_color3);
+}
+
+.rbfw_muff_registration_wrapper .rbfw_bikecarmd_es_table tr {
+    background-color: transparent;
+}
+
+.rbfw_muff_registration_wrapper .slider {
+    background-color: #000;
+}
+
+.rbfw_muff_registration_wrapper input:checked+.slider {
+    background-color: var(--rbfw_muff_color3);
+}
+
+.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_minus {
+    background-color: var(--rbfw_muff_color3);
+    color: #fff;
+    border-radius: 5px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_plus {
+    background-color: var(--rbfw_muff_color7);
+    color: #fff;
+    border-radius: 5px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_qty_input a,
+.rbfw_muff_registration_wrapper .rbfw_qty_input input[type="number"] {
+    width: 40px;
+    height: 40px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_qty_input,
+.rbfw_muff_registration_wrapper .rbfw_qty_input input[type="number"] {
+    border: none;
+    background-color: var(--rbfw_muff_color6);
+}
+
+.rbfw_muff_registration_wrapper .rbfw-book-now-btn,
+.rbfw_muff_registration_wrapper .rbfw_mps_pay_now_button:not(.rbfw_mps_pay_now_button[disabled]),
+.rbfw_muff_registration_wrapper .rbfw_stripe_form_wrap button,
+.rbfw_muff_registration_wrapper .rbfw_next_btn,
+.rbfw_muff_registration_wrapper .rbfw_prev_btn,
+.rbfw_muff_registration_wrapper .rbfw_bikecarmd_backstep1_btn {
+    background-color: var(--rbfw_muff_color3);
+    box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
+    padding: 9px 43px;
+    width: 100%;
+    margin-bottom: 0px;
+    text-decoration: none;
+    cursor: pointer;
+    color: #ffffff;
+    display: block;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-book-now-btn {
+    background-color: var(--rbfw_muff_color7);
+    box-shadow: 0px 8.40727px 15.7636px rgba(54, 250, 177, 0.3);
+}
+
+.rbfw_muff_registration_wrapper[data-type=resort] .rbfw-book-now-btn {
+    width: max-content;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_prev_btn,
+.rbfw_muff_registration_wrapper .rbfw_bikecarmd_backstep1_btn {
+    width: max-content;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_regf_form_header {
+    background-color: transparent;
+    padding: 0;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_bike_car_md_item_wrapper {
+    position: relative;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_prev_btn.rbfw_d_block {
+    display: block;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_prev_btn img,
+.rbfw_muff_registration_wrapper .rbfw_bikecarmd_backstep1_btn img {
+    display: inline-block;
+    width: 14px;
+}
+
+.rbfw_donut_template .rbfw_bikecarmd_backstep1_btn,
+.rbfw_default_template .rbfw_bikecarmd_backstep1_btn {
+    display: none !important;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_next_btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_regf_wrap {
+    padding: 0;
+    border: none;
+    display: none;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_regf_form_header {
+    background-color: var(--rbfw_muff_color6);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_regf_form_header,
+.rbfw_muff_registration_wrapper .rbfw_mps_user_order_header,
+.rbfw_muff_registration_wrapper .rbfw_mps_form_header {
+    text-align: left;
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_mps_form_header_top {
+    text-align: left;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_mps_input_group label {
+    font-weight: 600;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_mps_signin_form_wrap,
+.rbfw_muff_registration_wrapper .rbfw_mps_signup_form_wrap,
+.rbfw_muff_registration_wrapper .rbfw_mps_checkout_form_wrap {
+    border: none;
+    padding: 0;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_mps_user_order_header {
+    background-color: var(--rbfw_muff_color6);
+    border-radius: 5px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_regf_group label {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_mps_user_order_summary {
+    background-color: transparent;
+    padding: 0;
+    margin-bottom: 30px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_mps_radio_group {
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_mps_radio_group label {
+    border: 1px solid #d3d3d3;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    border-radius: 5px;
+    padding: 10px;
+    width: 33%;
+    display: inline-block;
+    margin: 2px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_mps_radio_group label:nth-child(1),
+.rbfw_muff_registration_wrapper .rbfw_mps_radio_group label:nth-child(2) {
+    margin-bottom: 0 !important;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_stripe_form_wrap {
+    border: none;
+    padding: 0;
+}
+
+.rbfw_muff_registration_wrapper #rbfw_stripe_form {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_prev_btn {
+    display: none;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_mps_book_now_btn_regf {
+    display: none;
+    margin-top: 20px;
+}
+
+.rbfw_muff_row_review_summary {
+    margin-bottom: 20px;
+}
+
+.rbfw_muff_row_review_summary .rbfw_muff_heading {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.rbfw_muff_review_rating_number {
+    color: #545454;
+}
+
+.rbfw_muff_review_average_rating_number {
+    font-size: 30px;
+}
+
+.rbfw_muff_review_progress_bar {
+    color: #000 !important;
+    background-color: #f1f1f1 !important;
+}
+
+.rbfw_muff_review_progress_bar-green {
+    color: #fff !important;
+    background-color: #4CAF50 !important;
+    height: 5px;
+    width: 25%;
+}
+
+.rbfw_muff_review_progress_inner_wrap {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+}
+
+.rbfw_muff_review_progress_inner_wrap div:first-child {
+    width: 80%;
+}
+
+.rbfw_muff_review_progress_inner_wrap div:last-child {
+    width: 20%;
+}
+
+.rbfw_muff_review_progress_bar {
+    height: 5px
+}
+
+.rbfw_muff_review_progress_bar_avg {
+    margin-left: 10px;
+}
+
+.rbfw_muff_review_progress_item_wrapper {
+    padding: 10px;
+}
+
+.rbfw_muff_review_progress_item {
+    margin-bottom: 5px;
+}
+
+.rbfw_muff_review_rating_wrap {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    padding-top: 30px;
+}
+
+.rbfw_muff_review_rating_wrap .rbfw-review-rating-wrapper .rbfw-star-rating span.dashicons {
+    color: var(--rbfw_muff_color2);
+}
+
+.rbfw_muff_review_rating_wrap .rbfw-review-rating-wrapper .rbfw-star-rating {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.rbfw_muff_row_registration,
+.rbfw_muff_row_faq,
+.rbfw_muff_row_related_item,
+.rbfw_muff_row_reviews {
+    padding-top: 20px;
+}
+
+.rbfw_muff_row_faq {
+    margin-bottom: 20px;
+    padding: 70px;
+    width: 100%;
+    margin: 30px 0;
+    max-width: var(--template-max-width);
+    margin: auto;
+    margin-top: 0;
+    background-color: #F9F9F9;
+}
+
+.rbfw_muff_row_reviews .rbfw_muff_heading_tab {
+    display: inline-block;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 22px;
+    padding-bottom: 5px;
+}
+
+.rbfw_muff_row_reviews .rbfw_muff_heading_tab.active {
+    border-bottom: 2px solid var(--rbfw_muff_color3);
+    padding-bottom: 20px;
+    margin-bottom: -2px;
+}
+
+.rbfw_muff_row_reviews .rbfw_muff_heading_tab:not(.rbfw_muff_heading_tab.active) {
+    color: #979797;
+}
+
+.rbfw_muff_row_reviews .rbfw_muff_heading_tab[data-tab="tab2"] {
+    margin-left: 20px;
+}
+
+.rbfw_muff_row_faq .rbfw_muff_faq_tab_content:not(.rbfw_muff_faq_tab_content.active) {
+    display: none;
+}
+
+.rbfw_muff_row_reviews .rbfw_muff_heading {
+    padding-bottom: 0;
+    border-bottom: 2px solid #d3d3d3;
+    margin-bottom: 20px;
+}
+
+.rbfw_muff_row_faq .rbfw_muff_heading {
+    margin-bottom: 20px;
+    font-weight: 700;
+    font-size: 22px;
+    text-align: center;
+}
+
+.rbfw_muff_row_faq .rbfw_muff_faq_heading {
+    padding-bottom: 20px;
+}
+
+.rbfw_muff_row_reviews .rbfw-review-section .rbfw-review-content {
+    margin-left: 60px;
+}
+
+.rbfw_muff_row_reviews ul li {
+    list-style-type: none;
+}
+
+.rbfw_muff_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span {
+    color: var(--rbfw_muff_color1);
+}
+
+.rbfw_muff_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span.dashicons-star-empty {
+    background: transparent;
+}
+
+.rbfw_muff_row_reviews .rbfw-review-section .rbfw-review-reply-btn a {
+    border-radius: 0;
+}
+
+.rbfw_muff_row_reviews .rbfw-review-section .rbfw-single-review-row .rbfw-single-review-col-2 {
+    border-radius: 5px;
+    background: #ffffff;
+    border: none;
+}
+
+.rbfw_muff_row_reviews .rbfw-review-section input,
+.rbfw_muff_row_reviews .rbfw-review-section textarea {
+    border-radius: 5px;
+    border: 1px solid #d3d3d3;
+}
+
+.rbfw_muff_row_reviews .rbfw_review_submit_btn {
+    background: var(--rbfw_muff_color3);
+    border: 0;
+    color: #fff;
+    font-weight: 400;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 9px 43px;
+    border-radius: 5px;
+    font-size: 16px;
+    text-transform: capitalize;
+    box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
+}
+
+.rbfw_muff_row_reviews .rbfw-review-section .rbfw-review-reply-btn a:hover {
+    background: var(--rbfw_muff_color1);
+}
+
+.rbfw_muff_row_reviews .rbfw-review-section .rbfw-mt-50 {
+    margin-top: 20px;
+}
+
+.rbfw_muff_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span {
+    color: var(--rbfw_muff_color2);
+    margin-right: 2px;
+}
+
+.rbfw_muff_row_faq #rbfw_faq_accordion_style_two .rbfw_faq_heading_wrapper::before {
+    background-color: transparent;
+}
+
+.rbfw_muff_row_reviews .rbfw-review-list li {
+    display: none;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+.rbfw_muff_row_reviews .rbfw-review-list li:first-child {
+    display: block;
+}
+
+.rbfw_muff_row_reviews .rbfw_muff_review_load_more_btn_wrapper {
+    display: none;
+}
+
+.rbfw_muff_row_reviews .rbfw_muff_review_load_more_btn {
+    margin: auto;
+    margin-top: auto;
+    display: block;
+    border: 0;
+    padding: 9px 43px;
+    cursor: pointer;
+    background: var(--rbfw_muff_color3);
+    color: #fff;
+    font-weight: 400;
+    font-size: 16px;
+    text-transform: capitalize;
+    text-decoration: none;
+    margin-top: 20px;
+    box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
+    border-radius: 5px;
+}
+
+.rbfw_muff_row_reviews .rbfw_muff_review_write_btn {
+    background-color: var(--rbfw_muff_color3);
+    box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
+    padding: 9px 43px;
+    margin-bottom: 0px;
+    text-decoration: none;
+    cursor: pointer;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 16px;
+    text-transform: capitalize;
+}
+
+.rbfw_muff_row_reviews .rbfw_review_form_wrapper {
+    display: none;
+}
+
+.rbfw_muff_row_reviews .rbfw_muff_review_write_btn_wrapper {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.rbfw_muff_row_reviews .rbfw-review-section .rbfw-review-text,
+.rbfw_muff_row_reviews .rbfw-review-section .rbfw-review-text p {
+    color: #797F94;
+}
+
+.rbfw_muff_row_slider .rbfw_muff_heading {
+    font-size: 22px;
+    margin: 0;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.rbfw_muff_row_related_item .rbfw_muff_heading {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.rbfw_muff_row_related_item .rbfw-related-product-thumb {
+    height: 250px;
+}
+
+.rbfw_muff_row_related_item .rbfw-related-product-inner-item-wrap {
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.08);
+    margin: 10px;
+    position: relative;
+}
+
+.rbfw_muff_row_related_item .rbfw-related-product-thumb-wrap {
+    border-radius: 5px 5px 0 0;
+}
+
+.rbfw_muff_row_related_item .rbfw-related-product-inner-content-wrap {
+    padding: 10px;
+}
+
+.rbfw_muff_row_related_item .rbfw-related-product-price-badge {
+    color: var(--rbfw_muff_color3);
+    font-weight: bold;
+}
+
+.rbfw_muff_row_related_item .rbfw-related-product-review-badge-wrap {
+    text-align: right;
+    margin-top: -13px;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+}
+
+.rbfw_muff_row_related_item .rbfw-related-product-review-badge-1 {
+    display: inline-block;
+    background-color: var(--rbfw_muff_color3);
+    padding: 5px 20px;
+    border-radius: 15px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.rbfw_muff_row_related_item .rbfw-related-product-review-badge-2 {
+    display: inline-block;
+    background-color: #7E7E7E;
+    color: #fff;
+    padding: 5px 20px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: -10px;
+}
+
+.rbfw_muff_row_faq .rbfw_muff_desc {
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.rbfw_muff_row_faq #rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper.active .rbfw_faq_heading_collapsed::before {
+    content: "\f077";
+    color: var(--rbfw_muff_color3);
+}
+
+.rbfw_muff_row_faq #rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper .rbfw_faq_heading_collapsed::before {
+    content: "\f078";
+    color: var(--rbfw_muff_color3);
+}
+
+.rbfw_muff_row_faq #rbfw_faq_accordion_style_two .rbfw_faq_heading_collapsed {
+    background-color: transparent;
+}
+
+.rbfw_muff_row_faq #rbfw_faq_accordion_style_two .rbfw_faq_content::before {
+    background-color: transparent;
+}
+
+.rbfw_muff_row_faq #rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper .rbfw_faq_content {
+    background-color: transparent;
+    color: #797F94;
+    font-weight: 500;
+}
+
+.rbfw_muff_row_faq #rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper {
+    border-bottom: 2px dashed #d3d3d3;
+}
+
+.rbfw_muff_row_slider .rbfw_additional_image_gallary_col {
+    width: 49%;
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+}
+
+.rbfw_muffin_template #rbfw-bikecarsd-calendar {
+    background-color: #F5F6F8;
+    padding: 30px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+}
+
+.rbfw_muffin_template .rbfw-bikecarmd-result {
+    position: relative;
+}
+
+.rbfw_muffin_template .rbfw_bikecarmd_backstep1_btn {
+    display: none;
+}
+
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+    background: inherit;
+    background-color: var(--rbfw_muff_color7);
+    color: #fff;
+    text-align: center;
+    border: none;
+}
+
+.ui-state-default:hover,
+.ui-widget-content .ui-state-default:hover,
+.ui-widget-header .ui-state-default:hover {
+    background-color: #0E977C;
+}
+
+.ui-state-highlight,
+.ui-widget-content .ui-state-highlight,
+.ui-widget-header .ui-state-highlight {
+    background: inherit;
+    background-color: var(--rbfw_muff_color7);
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active {
+    font-weight: 600;
+    color: #fff;
+    background-color: var(--rbfw_muff_color7);
+}
+
+.ui-widget-header {
+    background: none;
+    background-color: var(--rbfw_muff_color7);
+}
+
+.rbfw_aig_img_wrap {
+    height: 150px;
+    background-size: cover;
+    margin: 10px;
+    border-radius: 10px;
+    background-position: center;
+}
+
+.rbfw_aig_view_more_btn {
+    position: absolute;
+    right: 20px;
+    bottom: 25px;
+    background-color: #fff;
+    padding: 5px;
+    font-size: 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    color: #000;
+}
+
+.rbfw_aig_column {
+    width: 100px;
+    display: inline-block;
+}
+
+.rbfw_aig_column_wrap {
+    text-align: center;
+}
+
+
+/* The Modal (background) */
+
+.rbfw_aig_modal {
+    display: none;
+    position: fixed;
+    z-index: 99999;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: black;
+}
+
+
+/* Modal Content */
+
+.rbfw_aig_modal-content {
+    position: relative;
+    margin: auto;
+    padding: 0;
+    width: 90%;
+    max-width: 1200px;
+}
+
+
+/* The Close Button */
+
+.rbfw_aig_close {
+    color: white;
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.rbfw_aig_close:hover,
+.rbfw_aig_close:focus {
+    color: #999;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+/* Hide the slides by default */
+
+.rbfw_aig_slides {
+    display: none;
+    text-align: center;
+}
+
+.rbfw_aig_slides img {
+    width: auto;
+    margin: auto;
+    max-width: 500px;
+    max-height: 300px;
+}
+
+
+/* Next & rbfw_aig_previous buttons */
+
+.rbfw_aig_prev,
+.rbfw_aig_next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    padding: 16px;
+    margin-top: -50px;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    -webkit-user-select: none;
+    background: #2be2af;
+    border-radius: 50%;
+    height: 50px;
+    text-decoration: none;
+    text-align: center;
+}
+
+
+/* Position the "rbfw_aig_next button" to the right */
+
+.rbfw_aig_next {
+    right: 0;
+}
+
+
+/* On hover, add a black background color with a little bit see-through */
+
+.rbfw_aig_prev:hover,
+.rbfw_aig_next:hover {
+    background-color: var(--rbfw_muff_color3);
+}
+
+
+/* Number text (1/3 etc) */
+
+.rbfw_aig_numbertext {
+    color: #f2f2f2;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+}
+
+
+/* Caption text */
+
+.rbfw_aig_caption-container {
+    text-align: center;
+    background-color: black;
+    padding: 2px 16px;
+    color: white;
+}
+
+img.rbfw_aig_img_thumb {
+    opacity: 0.6;
+    width: 100px;
+    height: 100px;
+}
+
+.rbfw_additional_image_gallary_wrap .active,
+.rbfw_aig_img_thumb:hover {
+    opacity: 1;
+}
+
+.rbfw_additional_image_gallary_wrap[data-style="style2"] {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.rbfw_additional_image_gallary_wrap[data-style="style2"] .rbfw_additional_image_gallary_inner_col {
+    width: 50%;
+}
+
+.rbfw_muff_row_slider .rbfw_additional_image_gallary_wrap[data-style="style2"] .rbfw_additional_image_gallary_inner_col:first-child .rbfw_additional_image_gallary_col {
+    width: 100%;
+}
+
+.rbfw_additional_image_gallary_wrap[data-style="style2"] .rbfw_additional_image_gallary_inner_col:first-child .rbfw_aig_img_wrap {
+    height: 325px;
+}
+
+img.rbfw_aig_hover-shadow {
+    transition: 0.3s;
+}
+
+.rbfw_aig_hover-shadow:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.rbfw_muffin_template .calendar-box .week .day span:not(.week .day[disabled="disabled"] span) {
+    background-color: var(--rbfw_muff_color7);
+}
+
+.rbfw_muffin_template .calendar-box .week.start-on-monday .day {
+    color: var(--rbfw_muff_color7);
+}
+
+.rbfw_muffin_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time span.rbfw_bikecarsd_time_span {
+    border: 1px solid #EFEFEF;
+    background-color: #EFEFEF;
+    color: #838180;
+}
+
+.rbfw_muffin_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
+    background: var(--rbfw_muff_color7);
+    border-color: var(--rbfw_muff_color7);
+}
+
+.rbfw_muffin_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.selected:not(a.rbfw_bikecarsd_time.selected.disabled) span.rbfw_bikecarsd_time_span {
+    background: var(--rbfw_muff_color7);
+    border-color: var(--rbfw_muff_color7);
+}
+
+.rbfw_muff_selected_date {
+    text-align: center;
+    padding: 20px;
+    background: var(--rbfw_muff_color7);
+}
+
+.rbfw_muff_selected_date[data-type="bike_car_md"] {
+    padding-top: 50px;
+}
+
+.rbfw_muff_selected_date[data-type="bike_car_md"] .rbfw_muff_selected_date_value {
+    margin-bottom: 20px;
+    display: block;
+}
+
+.rbfw_muff_selected_date label img {
+    width: 14px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.rbfw_muff_selected_date_value {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.rbfw_muff_selected_date[step='3'] {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.rbfw_muff_selected_date[step='3'] .rbfw_muff_selected_date_col {
+    width: 50%;
+}
+
+.rbfw_muff_selected_date[step='3'] .rbfw_muff_selected_date_col:nth-child(1) {
+    border-right: 1px solid #F1EBF2;
+}
+
+.rbfw_muffin_template table.rbfw_bikecarsd_price_table thead {
+    background-color: #152C5B;
+    color: #fff;
+}
+
+.rbfw_muffin_template table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n+1) {
+    background-color: #F8F8F8;
+}
+
+.rbfw_muffin_template table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n) {
+    background-color: #ffffff;
+}
+
+.rbfw_muff_pricing_card_price[data-type='resort'] {
+    display: inline-block;
+    margin: 5px;
+}
+
+.rbfw_muff_row_hf {
+    margin-bottom: 20px;
+}
+
+.rbfw_muff_highlighted_features {
+    display: block;
+}
+
+.rbfw_muff_highlighted_features[data-type=resort] {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.rbfw_muff_hf_inner_wrap {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 50%;
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+    position: relative;
+    width: 100%;
+}
+
+.rbfw_muff_row_hf .rbfw_muff_hf_inner_wrap:nth-child(even) {
+    padding-left: 20px;
+}
+
+.rbfw_muff_lmf_btn {
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--rbfw_muff_color3);
+}
+
+.rbfw_muff_hf_inner_wrap ul li {
+    display: inline-block;
+    width: 50%;
+}
+
+.rbfw_muff_registration_wrapper[data-type="resort"] {
+    border: none;
+    padding: 0;
+    border-radius: 0;
+}
+
+.rbfw_muff_registration_wrapper[data-type="resort"] .rbfw_muff_heading {
+    text-align: left;
+    text-transform: capitalize;
+}
+
+.rbfw_muffin_template #checkin_date,
+.rbfw_muffin_template #checkout_date {
+    padding-left: 60px;
+}
+
+.rbfw_muffin_template .rbfw-datetime {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: end;
+}
+
+.rbfw_muffin_template .rbfw-datetime .rbfw-datetime-part {
+    width: 33.33%;
+}
+
+.rbfw_muffin_template .rbfw-datetime .left {
+    width: 90%;
+}
+
+.rbfw_muffin_template .rbfw-datetime .right {
+    width: 90%;
+}
+
+.rbfw_muffin_template .rbfw_chk_availability_btn {
+    background-color: var(--rbfw_muff_color3);
+    box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
+    padding: 14px 43px;
+    margin-bottom: 0px;
+    text-decoration: none;
+    cursor: pointer;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 16px;
+    text-transform: capitalize;
+}
+
+.rbfw_muffin_template .rbfw_room_price_label {
+    border-radius: 5px;
+}
+
+.rbfw_muffin_template .rbfw_room_price_label.active {
+    background-color: var(--rbfw_muff_color3);
+    box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
+}
+
+.rbfw_muffin_template .rbfw_room_price_table thead {
+    background-color: #152C5B;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.rbfw_muffin_template table.rbfw_room_price_table tbody tr:nth-child(odd) {
+    background-color: #F8F8F8;
+}
+
+.rbfw_muffin_template table.rbfw_room_price_table tbody tr:nth-child(even) {
+    background-color: #ffffff;
+}
+
+.rbfw_muffin_template .rbfw_room_price_summary ul.rbfw-ul {
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid #E1E1E1;
+    border-radius: 5px;
+}
+
+.rbfw_muffin_template table.rbfw_room_price_table tbody td img {
+    width: 120px;
+    max-width: inherit;
+    height: 80px;
+    border-radius: 5px;
+}
+
+.rbfw_muffin_template table.rbfw_room_price_table tbody small.rbfw_room_desc {
+    margin-left: 0;
+    display: block;
+}
+
+.rbfw_muffin_template .rbfw_room_price_table thead tr th:first-child {
+    width: 20%;
+}
+
+.rbfw_muffin_template .rbfw_room_price_table thead tr th:nth-child(3) {
+    width: 20%;
+}
+
+.rbfw_muffin_template .rbfw-resort-result {
+    margin-top: -20px;
+    margin-bottom: 20px;
+}
+
+.rbfw_muff_discount_title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.rbfw_muff_discount_feature {
+    width: 25%;
+}
+
+.rbfw_muff_discount_feature_inner {
+    background-color: #F5F6F8;
+    border-radius: 5px;
+    padding: 25px;
+    margin: 5px;
+}
+
+.rbfw_muff_discount_feature_inner:first-child {
+    margin-left: 0;
+}
+
+.rbfw_muff_discount_feature_title {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.rbfw_muff_discount_feature_wrap {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.rbfw_muff_discount_feature_wrap .rbfw_view_more_offers {
+    width: 100%;
+    display: block;
+    color: var(--rbfw_muff_color3);
+    cursor: pointer;
+}
+
+.rbfw_muff_discount_feature_title span:first-child {
+    width: 80%;
+    color: #8C8C8C;
+    text-transform: uppercase;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.rbfw_muff_discount_feature_title span:last-child {
+    width: 20%;
+}
+
+.rbfw_muff_discount_feature_title span:last-child img {
+    height: 20px;
+    width: auto;
+    float: right;
+}
+
+.rbfw_muff_discount_feature_desc div:first-child {
+    color: #1E1E1E;
+    display: block;
+    text-transform: uppercase;
+    font-size: 25px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.rbfw_muff_discount_feature_desc div:last-child {
+    color: #8C8C8C;
+    display: block;
+    font-size: 14px;
+}
+
+.rbfw_muffin_template .rbfw_service_price {
+    width: 100%;
+}
+
+.rbfw_muff_selected_date_col label {
+    display: block;
+}
+
+@media only screen and (min-width: 792px) {
+    .rbfw_muffin_template {
+        padding: 70px;
+    }
+    .rbfw_muff_header_col1,
+    .rbfw_muff_header_col2 {
+        width: 50%;
+    }
+    .rbfw_muff_content_col1,
+    .rbfw_muff_content_col2 {
+        width: 50%;
+    }
+    .rbfw_muff_pricing {
+        width: max-content;
+        float: right;
+    }
+    .rbfw_muff_row_review_inner {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+    }
+    .rbfw_muff_review_summ_col:nth-child(1) {
+        width: 20%;
+    }
+    .rbfw_muff_review_summ_col:nth-child(2) {
+        width: 40%;
+    }
+    .rbfw_muff_review_summ_col:nth-child(3) {
+        width: 40%;
+    }
+    .rbfw_muff_row_slider_content {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+    }
+    .rbfw_muff_row_slider_content .rbfw_muff_content_col1,
+    .rbfw_muff_row_slider_content .rbfw_muff_content_col2 {
+        width: 50%;
+    }
+    .rbfw_muff_row_slider_content .rbfw_muff_highlighted_features {
+        padding: 0 50px 0 50px;
+    }
+}
+
+@media only screen and (max-width: 792px) {
+    .rbfw_muffin_template {
+        padding: 30px;
+    }
+    .rbfw_muff_row_header {
+        display: block;
+    }
+    .rbfw_muff_pricing_card_col2 {
+        padding-left: 0;
+    }
+    .rbfw_muff_row_content {
+        display: block;
+    }
+    .rbfw_muff_registration_wrapper {
+        padding: 20px;
+    }
+    .rbfw_muff_content_wrapper {
+        padding: 20px;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .rbfw_muff_review_rating_wrap {
+        padding-top: 0;
+    }
+    .rbfw_muff_row_slider_content {
+        display: block;
+    }
+    .rbfw_muff_row_slider_content .rbfw_muff_content_col1,
+    .rbfw_muff_row_slider_content .rbfw_muff_content_col2 {
+        width: 100%;
+    }
+    .rbfw_muff_row_slider_content .rbfw_muff_highlighted_features {
+        padding: 20px;
+    }
+    .rbfw_muff_row_faq {
+        padding: 40px;
+    }
+    .rbfw_aig_img_wrap {
+        margin: 5px;
+    }
+    .rbfw_muff_hf_inner_wrap {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+    .rbfw_muff_row_hf .rbfw_muff_hf_inner_wrap:nth-child(2n) {
+        padding-left: 0;
+    }
+    .rbfw_muff_hf_inner_wrap ul li {
+        width: 100%;
+    }
+    .rbfw_muffin_template .rbfw-datetime {
+        flex-direction: column;
+    }
+    .rbfw_muffin_template .rbfw-datetime .rbfw-datetime-part {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .rbfw_muffin_template .rbfw-datetime .left,
+    .rbfw_muffin_template .rbfw-datetime .right {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .rbfw_muff_discount_feature {
+        width: 100%;
+    }
+    .rbfw_muff_discount_feature_wrap {
+        flex-direction: column;
+    }
+    .rbfw_muffin_template table.rbfw_room_price_table tbody td img {
+        width: 50px;
+        height: 50px;
+    }
+    .rbfw_additional_image_gallary_wrap[data-style="style2"] {
+        flex-direction: column;
+    }
+    .rbfw_additional_image_gallary_wrap[data-style="style2"] .rbfw_additional_image_gallary_inner_col {
+        width: 100%;
+    }
+    .rbfw_muffin_template #rbfw-bikecarsd-calendar {
+        padding: 5px;
+    }
+    .rbfw_muff_row_slider {
+        margin-bottom: 20px;
+    }
+    .rbfw-review-form-label {
+        font-weight: 400;
+    }
+    .rbfw_muffin_template .calendar-box .day span {
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 50%;
+        vertical-align: middle;
+        font-size: 12px;
+    }
+    .rbfw_muff_selected_date_value {
+        font-size: 14px;
+    }
+}
+
+
 /* Donut Template CSS */
 
 :root {
@@ -3171,6 +4701,11 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_dt_post_content h5,
 .rbfw_dt_post_content h6 {
     margin: 0;
+}
+
+.rbfw_dt_highlighted_features .rbfw-sub-heading {
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .rbfw_dt_highlighted_features ul li i {
@@ -3513,7 +5048,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     border-top: none;
     font-size: 15px;
     color: #6f6f6f;
-    letter-spacing: 1px;
     line-height: 28px;
     position: relative;
     visibility: hidden;
@@ -3728,6 +5262,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_dt_row_reviews .rbfw-review-list li {
     display: none;
     margin: 0;
+    margin-bottom: 20px;
 }
 
 .rbfw_dt_row_reviews .rbfw-review-list li:first-child {
@@ -3750,6 +5285,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     font-size: 16px;
     text-transform: capitalize;
     text-decoration: none;
+    margin-top: 20px;
 }
 
 .rbfw_dt_row_reviews .rbfw_dt_review_write_btn {
@@ -3764,8 +5300,13 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     text-decoration: none;
 }
 
+.rbfw_dt_row_reviews .rbfw_review_form_wrapper {
+    display: none;
+}
+
 .rbfw_dt_row_reviews .rbfw_dt_review_write_btn_wrapper {
     text-align: right;
+    margin-bottom: 20px;
 }
 
 .rbfw_dt_row_related_item .rbfw-related-product-thumb {
@@ -3858,6 +5399,31 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .mp_default_theme .rbfw-datetime .date .calendar,
 .mp_default_theme .rbfw-datetime .time .clock {
     color: var(--rbfw_single_page_base_color4) !important;
+}
+
+.mp_default_theme .rbfw_bikecarmd_backstep1_btn {
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    width: max-content;
+    padding: 5px;
+    margin-bottom: 10px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+}
+
+.mp_default_theme .rbfw_bikecarmd_backstep1_btn img {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
+
+.mp_default_theme .rbfw-bikecarmd-result {
+    position: relative;
 }
 
 
@@ -3987,5 +5553,42 @@ table.rbfw_regf_cart_table {
 }
 
 .rbfw_regf_group label {
+    display: block;
+}
+
+.rbfw-review-input-group label.rbfw_review_input_label {
+    display: inline-block;
+    padding: 5px;
+    border: 1px solid #e8e8e8;
+    margin: 2px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #7d7d7d;
+}
+
+.rbfw-review-input-group input[type=radio] {
+    display: inline-block;
+    width: auto;
+}
+
+.rbfw-review-input-group {
+    background-color: #fdfdfd;
+    border-radius: 5px;
+    padding: 5px;
+    border-bottom: 1px solid #d3d3d3;
+}
+
+.rbfw-review-form-label {
+    font-weight: bold;
+}
+
+.rbfw_write_review_heading {
+    margin: 0;
+    margin-bottom: 20px;
+    display: block;
+    font-size: 20px;
+}
+
+body.single-rbfw_item div.ast-container {
     display: block;
 }

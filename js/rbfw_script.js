@@ -113,6 +113,15 @@
             jQuery('.rbfw_dt_faq_tab_content[data-content="' + this_tab + '"]').addClass('active');
         });
 
+        //Muffin Template FAQ/Review Tab
+        jQuery('.rbfw_muff_heading_tab').click(function(e) {
+            jQuery('.rbfw_muff_heading_tab').removeClass('active');
+            jQuery('.rbfw_muff_faq_tab_content').removeClass('active');
+            let this_tab = jQuery(this).attr('data-tab');
+            jQuery(this).addClass('active');
+            jQuery('.rbfw_muff_faq_tab_content[data-content="' + this_tab + '"]').addClass('active');
+        });
+
         //Grid List Auto Height Function
         rbfw_grid_list_auto_height_func();
 
@@ -143,5 +152,76 @@
         });
 
         //End: Grid List Auto Height Function
+
+
+
+        jQuery('.rbfw_muff_lmf_btn').click(function(e) {
+            let this_parent = jQuery(this).closest('ul');
+            let this_target = this_parent.find('li[data-status="extra"]');
+            this_target.slideToggle();
+
+            jQuery(this).text(function(i, text) {
+                return text === rbfw_ajaxurl.view_more_feature_btn_text ? rbfw_ajaxurl.hide_more_feature_btn_text : rbfw_ajaxurl.view_more_feature_btn_text;
+            })
+        });
+
+
+        jQuery(document).on('click', '.rbfw_view_more_offers', function(e) {
+            let this_parent = jQuery(this).closest('.rbfw_muff_discount_feature_wrap');
+            let this_target = this_parent.find('.rbfw_muff_discount_feature[data-status="extra"]');
+            this_target.slideToggle();
+
+            jQuery(this).text(function(i, text) {
+                return text === rbfw_ajaxurl.view_more_offers_btn_text ? rbfw_ajaxurl.hide_more_offers_btn_text : rbfw_ajaxurl.view_more_offers_btn_text;
+            })
+        });
     });
 })(jQuery)
+
+/* Additional Gallary Images */
+// Open the Modal
+function rbfw_aig_openModal() {
+    document.getElementById("rbfw_aig_Modal").style.display = "block";
+}
+
+// Close the Modal
+function rbfw_aig_closeModal() {
+    document.getElementById("rbfw_aig_Modal").style.display = "none";
+}
+
+var slideIndex = 1;
+rbfw_aig_showSlides(slideIndex);
+
+// Next/rbfw_aig_previous controls
+function rbfw_aig_plusSlides(n) {
+    rbfw_aig_showSlides(slideIndex += n);
+}
+
+// Thumbnail image controls
+function rbfw_aig_currentSlide(n) {
+    rbfw_aig_showSlides(slideIndex = n);
+}
+
+function rbfw_aig_showSlides(n) {
+    var i;
+    var slides = document.getElementsByClassName("rbfw_aig_slides");
+
+    if (slides.length == 0) {
+        return;
+    }
+
+    var dots = document.getElementsByClassName("rbfw_aig_img_thumb");
+    var captionText = document.getElementById("rbfw_aig_caption-caption");
+    if (n > slides.length) { slideIndex = 1 }
+    if (n < 1) { slideIndex = slides.length }
+    for (i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";
+    }
+    for (i = 0; i < dots.length; i++) {
+        dots[i].className = dots[i].className.replace(" active", "");
+    }
+    slides[slideIndex - 1].style.display = "block";
+    dots[slideIndex - 1].className += " active";
+    captionText.innerHTML = dots[slideIndex - 1].alt;
+}
+/* End: Additional Gallary Images */

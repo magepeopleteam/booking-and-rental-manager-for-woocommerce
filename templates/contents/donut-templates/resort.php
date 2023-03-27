@@ -10,7 +10,7 @@ $post_id = get_the_id();
 $rbfw_id = $post_id;
 $post_title = get_the_title();
 $post_content  = get_the_content();
-$highlited_features = get_post_meta($post_id, 'rbfw_highlights_texts', true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_highlights_texts', true)) : [];
+$rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
 $rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
 $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','');
 $post_review_rating = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating() : '';
@@ -101,24 +101,38 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 				<?php echo $post_content; ?>
 			</div>
 			<div class="rbfw_dt_highlighted_features">
-			<?php if ( $highlited_features ) : ?>
-			<ul>
-			<?php foreach ( $highlited_features as $feature ) :
-
-			if($feature['icon']):
-				$icon = $feature['icon'];
-			else:
-				$icon = 'fas fa-arrow-right';
-			endif;
-
-			if($feature['title']):
-				echo '<li><i class="'.mep_esc_html($icon).'"></i><span>' . $feature['title'] . '</span></li>';
-			endif;
-
-			endforeach; 
+			<?php if ( $rbfw_feature_category ) :
+				foreach ( $rbfw_feature_category as $value ) :
+					$cat_title = $value['cat_title'];
+					$cat_features = $value['cat_features'] ? $value['cat_features'] : [];
 			?>
+			<div class="rbfw-sub-heading"><?php echo esc_html($cat_title); ?></div>
+			<ul>
+				<?php
+				if(!empty($cat_features)){
+					$i = 1;
+					foreach ($cat_features as $features) {
+						$icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+						$title = $features['title'];
+
+						if($title):
+							if($i == 5){
+							echo '<li style="width:100%"><a class="rbfw_muff_lmf_btn">'.$rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('View More Features','booking-and-rental-manager-for-woocommerce')).'</a></li>';
+							}
+
+							echo '<li '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i><span>' . $title . '</span></li>';
+
+						endif;
+
+						$i++;
+					}
+				}
+				?>
 			</ul>
-			<?php endif; ?>
+			<?php
+				endforeach;
+			endif;
+			?>
 			</div>
 		</div>
 	</div>
