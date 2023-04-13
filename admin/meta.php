@@ -237,7 +237,7 @@
 				</div>		
 			</h3>
 			
-			<table class="form-table">
+			<table class="form-table rbfw_item_type_table">
 				<tr>
 					<td>
 					<label for="rbfw_item_type"><strong><?php echo esc_html_e( 'Select Rent Type:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></label>
@@ -285,7 +285,7 @@
 				<tr class="rbfw_switch_sd_appointment_row rbfw_appointment_ondays_row" <?php if ( $rbfw_item_type != 'appointment') { echo 'style="display:none"'; } ?>>
 					<td>
 						<label class="rbfw_appointment_ondays_label">
-							<?php esc_html_e( 'Appointment Ondays', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<?php esc_html_e( 'Appointment Ondays:', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</label>
 						<div class="rbfw_appointment_ondays_value">
 							<input type="checkbox" name="rbfw_sd_appointment_ondays[]" value="Sunday" <?php if(!empty($rbfw_sd_appointment_ondays_data) && in_array('Sunday',$rbfw_sd_appointment_ondays_data)){ echo 'checked'; }?>>

@@ -1123,6 +1123,10 @@ div.mpStyle [class*="_bgColor_1"] i {
     width: max-content;
 }
 
+#rbfw_add_meta_box table.form-table.rbfw_item_type_table tr td {
+    padding: 0;
+}
+
 #rbfw_add_meta_box table.form-table {
     border: 1px solid #f5f5f5;
     margin-bottom: 0px;
@@ -1180,6 +1184,28 @@ div.mpStyle [class*="_bgColor_1"] i {
     background-color: rgba(237, 239, 251, 0.41);
     font-weight: normal;
     height: 30px;
+}
+
+.rbfw_item_type_table tr td label {
+    min-width: 30%;
+    max-width: 30%;
+    display: inline-block;
+    background-color: rgba(237, 239, 251, 0.41);
+    height: 40px;
+    margin-right: 30px;
+    padding-left: 8px;
+}
+
+.rbfw_item_type_table tr td label.rbfw_appointment_ondays_label {
+    display: block;
+}
+
+.rbfw_item_type_table tr td input[type=checkbox] {
+    height: 16px !important;
+}
+
+#rbfw_add_meta_box table.form-table tbody tr td:first-child .rbfw_appointment_ondays_value span {
+    font-weight: normal;
 }
 
 .rbfw_seasonal_price_config_wrapper button.ppof-button {
