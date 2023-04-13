@@ -9,7 +9,8 @@ $post_featured_img  = !empty(get_the_post_thumbnail_url( $post_id, 'full' )) ? g
 $post_link          = get_the_permalink();
 $book_now_label     = $rbfw->get_option('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));
 $post_review_rating = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating() : '';
-$post_content       = strip_tags(get_the_content());
+
+$post_content       = $the_content;
 $post_content       = strlen($post_content) >= 40 ? substr($post_content, 0, 100) . '...' : $post_content;
 
 $hourly_rate_label = $rbfw->get_option('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
@@ -139,7 +140,7 @@ if(!empty($rbfw_bike_car_sd_data) && ($rbfw_rent_type == 'bike_car_sd' || $rbfw_
     $price = $smallest_price;
 endif;
 
-$highlited_features = get_post_meta($post_id, 'rbfw_highlights_texts', true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_highlights_texts', true)) : [];
+$rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
 ?>
 <div class="rbfw_rent_list_col">
     <div class="rbfw_rent_list_inner_wrapper">
@@ -180,39 +181,50 @@ $highlited_features = get_post_meta($post_id, 'rbfw_highlights_texts', true) ? m
             </div>                
             <?php endif; ?>
 
-            <?php if(!empty($highlited_features)): ?>
-                <div class="rbfw_rent_list_highlighted_features">
-                    <ul>
-                        <?php 
-                        $i = 1;
-                        foreach ( $highlited_features as $feature ) :
+            <div class="rbfw_muff_highlighted_features rbfw_rent_list_highlighted_features">
+                <?php if ( $rbfw_feature_category ) :
+                $n = 1;
+                foreach ( $rbfw_feature_category as $value ) :
 
-                        
-                            if($feature['icon']):
-                                $icon = $feature['icon'];
-                            else:
-                                $icon = 'fas fa-arrow-right';
+                $cat_title = $value['cat_title'];
+                $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
+
+                if($n == 1){
+                ?>
+                <ul>
+                <?php
+                if(!empty($cat_features)){
+                    $i = 1;
+                    foreach ($cat_features as $features) {
+
+                            $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+                            $title = $features['title'];
+                            $rand_number = rand();
+                            if($title):
+
+                                echo '<li class="title'.$rand_number.'" '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i></li>';
+                            ?>
+                            <script>
+                            jQuery(document).ready(function(){
+                                let content<?php echo $rand_number; ?> = '<?php echo $title; ?>';
+                                tippy('<?php echo '.title'.$rand_number; ?>', {content: content<?php echo $rand_number; ?>,theme: 'blue',placement: 'top'});
+                            });
+                            </script>
+                            <?php
                             endif;
-                            //if($i <= 4){	
-                                if($feature['title']):
-                                    $rand_number = rand();
-                                    echo '<li class="title'.$rand_number.'"><i class="'.mep_esc_html($icon).'"></i></li>';
-                                    ?>
-                                    <script>
-                                    jQuery(document).ready(function(){
-                                        let content<?php echo $rand_number; ?> = '<?php echo $feature['title']; ?>';
-                                        tippy('.title'+<?php echo $rand_number; ?>, {content: content<?php echo $rand_number; ?>,theme: 'blue',placement: 'top'});
-                                    });
-                                    </script>
-                                    <?php
-                                endif;
-                            //}
-                        $i++;	
-                        endforeach; 
-                        ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
+
+                        $i++;
+                    }
+                }
+                ?>
+                </ul>
+                <?php
+                }
+                $n++;
+                endforeach;
+                endif;
+                ?>
+            </div>
 
             <div class="rbfw_rent_list_button_wrap">
                 <a href="<?php echo esc_url($post_link); ?>" class="rbfw_rent_list_btn"><?php echo esc_html($book_now_label); ?></a>

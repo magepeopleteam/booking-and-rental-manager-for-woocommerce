@@ -168,7 +168,7 @@ div>.ppof-metabox {
 }
 
 .ppof-settings .form-section {
-    padding: 0 15px;
+    padding: 0 0px;
 }
 
 .ppof-settings .navigation {
@@ -1989,7 +1989,7 @@ div>.ppof-metabox {
 .form-table th,
 .form-table td,
 #postbox-container-2 p.description {
-    padding: 5px;
+    padding: 0px;
     line-height: 18px;
 }
 

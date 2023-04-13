@@ -49,7 +49,7 @@ function rbfw_rent_list_shortcode_func($atts) {
     <?php
     $d = 1;    
     if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
-
+    $the_content = get_the_content();
     if($style == 'grid'):
 
         include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) ); 

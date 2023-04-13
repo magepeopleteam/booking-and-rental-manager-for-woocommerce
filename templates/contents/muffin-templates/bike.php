@@ -31,6 +31,13 @@ $post_review_average_staff = function_exists('rbfw_review_get_average_by_id') ? 
 $post_review_average_facilities = function_exists('rbfw_review_get_average_by_id') ? rbfw_review_get_average_by_id($post_id, 'facilities') : '';
 $post_review_average_comfort = function_exists('rbfw_review_get_average_by_id') ? rbfw_review_get_average_by_id($post_id, 'comfort') : '';
 
+$post_review_value_round_hygenic = function_exists('rbfw_review_value_round') ? rbfw_review_value_round($post_review_average_hygenic) : '';
+$post_review_value_round_quality = function_exists('rbfw_review_value_round') ? rbfw_review_value_round($post_review_average_quality) : '';
+$post_review_value_round_cost_value = function_exists('rbfw_review_value_round') ? rbfw_review_value_round($post_review_average_cost_value) : '';
+$post_review_value_round_staff = function_exists('rbfw_review_value_round') ? rbfw_review_value_round($post_review_average_staff) : '';
+$post_review_value_round_facilities = function_exists('rbfw_review_value_round') ? rbfw_review_value_round($post_review_average_facilities) : '';
+$post_review_value_round_comfort = function_exists('rbfw_review_value_round') ? rbfw_review_value_round($post_review_average_comfort) : '';
+
 $post_hygenic_progress_width = function_exists('rbfw_review_get_progress_bar_width') ? rbfw_review_get_progress_bar_width($post_review_average_hygenic) : '';
 $post_quality_progress_width = function_exists('rbfw_review_get_progress_bar_width') ? rbfw_review_get_progress_bar_width($post_review_average_quality) : '';
 $post_cost_value_progress_width = function_exists('rbfw_review_get_progress_bar_width') ? rbfw_review_get_progress_bar_width($post_review_average_cost_value) : '';
@@ -39,7 +46,7 @@ $post_facilities_progress_width = function_exists('rbfw_review_get_progress_bar_
 $post_comfort_progress_width = function_exists('rbfw_review_get_progress_bar_width') ? rbfw_review_get_progress_bar_width($post_review_average_comfort) : '';
 
 $gallery_images_additional = rbfw_get_additional_gallary_images($post_id);
-
+$review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settings', 'on');
 ?>
 <div class="rbfw_muffin_template">
 	<div class="rbfw_muff_row_header">
@@ -138,7 +145,7 @@ $gallery_images_additional = rbfw_get_additional_gallary_images($post_id);
 		</div>
     </div>
 
-	<?php if(rbfw_check_pro_active() === true){ ?>
+	<?php if(rbfw_check_pro_active() === true && $review_system == 'on'){ ?>
 	<div class="rbfw_muff_row_review_summary">
 		<div class="rbfw_muff_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_ratings', 'rbfw_basic_translation_settings', __('Ratings','booking-and-rental-manager-for-woocommerce'))); ?></div>
 		<div class="rbfw_muff_row_review_inner">
@@ -156,7 +163,7 @@ $gallery_images_additional = rbfw_get_additional_gallary_images($post_id);
 							<div class="rbfw_muff_review_progress_bar">
 								<div class="rbfw_muff_review_progress_bar-green" <?php echo $post_hygenic_progress_width; ?>></div>
 							</div>
-							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_average_hygenic; ?>/5</div>
+							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_value_round_hygenic; ?>/5</div>
 						</div>
 					</div>
 					<div class="rbfw_muff_review_progress_item">
@@ -165,16 +172,16 @@ $gallery_images_additional = rbfw_get_additional_gallary_images($post_id);
 							<div class="rbfw_muff_review_progress_bar">
 								<div class="rbfw_muff_review_progress_bar-green" <?php echo $post_quality_progress_width; ?>></div>
 							</div>
-							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_average_quality; ?>/5</div>
+							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_value_round_quality; ?>/5</div>
 						</div>
 					</div>
 					<div class="rbfw_muff_review_progress_item">
-						<label><?php rbfw_string('rbfw_text_quality',__('Cost Value','rbfw-pro')); ?></label>
+						<label><?php rbfw_string('rbfw_text_cost_value',__('Cost Value','rbfw-pro')); ?></label>
 						<div class="rbfw_muff_review_progress_inner_wrap">
 							<div class="rbfw_muff_review_progress_bar">
 								<div class="rbfw_muff_review_progress_bar-green" <?php echo $post_cost_value_progress_width; ?>></div>
 							</div>
-							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_average_cost_value; ?>/5</div>
+							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_value_round_cost_value; ?>/5</div>
 						</div>
 					</div>
 				</div>
@@ -187,7 +194,7 @@ $gallery_images_additional = rbfw_get_additional_gallary_images($post_id);
 							<div class="rbfw_muff_review_progress_bar">
 								<div class="rbfw_muff_review_progress_bar-green" <?php echo $post_staff_progress_width; ?>></div>
 							</div>
-							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_average_staff; ?>/5</div>
+							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_value_round_staff; ?>/5</div>
 						</div>
 					</div>
 					<div class="rbfw_muff_review_progress_item">
@@ -196,7 +203,7 @@ $gallery_images_additional = rbfw_get_additional_gallary_images($post_id);
 							<div class="rbfw_muff_review_progress_bar">
 								<div class="rbfw_muff_review_progress_bar-green" <?php echo $post_facilities_progress_width; ?>></div>
 							</div>
-							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_average_facilities; ?>/5</div>
+							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_value_round_facilities; ?>/5</div>
 						</div>
 					</div>
 					<div class="rbfw_muff_review_progress_item">
@@ -205,7 +212,7 @@ $gallery_images_additional = rbfw_get_additional_gallary_images($post_id);
 							<div class="rbfw_muff_review_progress_bar">
 								<div class="rbfw_muff_review_progress_bar-green" <?php echo $post_comfort_progress_width; ?>></div>
 							</div>
-							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_average_comfort; ?>/5</div>
+							<div class="rbfw_muff_review_progress_bar_avg"><?php echo $post_review_value_round_comfort; ?>/5</div>
 						</div>
 					</div>
 				</div>
@@ -214,7 +221,7 @@ $gallery_images_additional = rbfw_get_additional_gallary_images($post_id);
 	</div>
 	<?php } ?>
 
-	<?php if(rbfw_check_pro_active() === true): ?>
+	<?php if(rbfw_check_pro_active() === true && $review_system == 'on'): ?>
 	<div class="rbfw_muff_row_reviews">
 		<div class="rbfw_muff_heading">
 			<div class="rbfw_muff_heading_tab active" data-tab="tab1">

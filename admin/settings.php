@@ -180,6 +180,13 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => __( 'Enter the translated text of <strong>Hour.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Hour'
+			),
+			array(
+				'name'    => 'rbfw_text_hours',
+				'label'   => __( 'Hours', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Hours.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Hours'
 			),			
 			array(
 				'name'    => 'rbfw_text_pickup_location',
@@ -1428,6 +1435,48 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => __( 'Enter the translated text of <strong>Hide More Offers</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Hide More Offers'
+			),
+			array(
+				'name'    => 'rbfw_text_terrible',
+				'label'   => __( 'Terrible', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Terrible</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Terrible'
+			),
+			array(
+				'name'    => 'rbfw_text_poor',
+				'label'   => __( 'Poor', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Poor</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Poor'
+			),
+			array(
+				'name'    => 'rbfw_text_average',
+				'label'   => __( 'Average', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Average</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Average'
+			),
+			array(
+				'name'    => 'rbfw_text_very_good',
+				'label'   => __( 'Very Good', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Very Good</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Very Good'
+			),
+			array(
+				'name'    => 'rbfw_text_excellent',
+				'label'   => __( 'Excellent', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Excellent</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Excellent'
+			),
+			array(
+				'name'    => 'rbfw_text_or',
+				'label'   => __( 'Or', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Or</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Or'
 			),
 		),
 		'rbfw_basic_style_settings' => array(

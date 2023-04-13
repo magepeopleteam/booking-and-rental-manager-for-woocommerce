@@ -1274,7 +1274,7 @@ function rbfw_payment_systems_css(){
 	$mps_tax_switch = rbfw_get_option( 'rbfw_mps_tax_switch', 'rbfw_basic_payment_settings');
 
 	if ('wps' == $current_payment_system ) {
-		echo '<style>tr.rbfw_mps_currency,tr.rbfw_mps_currency_position,tr.rbfw_mps_currency_decimal_number,tr.rbfw_mps_checkout_account,tr.rbfw_mps_payment_gateway,tr.rbfw_mps_payment_gateway_environment,tr.rbfw_mps_paypal_heading,tr.rbfw_mps_paypal_account_email,tr.rbfw_mps_paypal_api_username,tr.rbfw_mps_paypal_api_password,tr.rbfw_mps_paypal_api_signature,tr.rbfw_mps_paypal_ipn_handler,tr.rbfw_mps_stripe_heading,tr.rbfw_mps_stripe_publishable_key,tr.rbfw_mps_stripe_secret_key,tr.rbfw_mps_stripe_webhook,tr.rbfw_mps_paypal_client_id,tr.rbfw_mps_paypal_secret_key,tr.rbfw_mps_stripe_postal_field,tr.rbfw_mps_tax_switch,tr.rbfw_mps_tax_format{display:none;}</style>';
+		echo '<style>tr.rbfw_mps_currency,tr.rbfw_mps_currency_position,tr.rbfw_mps_currency_decimal_seperator,tr.rbfw_mps_currency_thousand_seperator,tr.rbfw_mps_currency_decimal_number,tr.rbfw_mps_checkout_account,tr.rbfw_mps_payment_gateway,tr.rbfw_mps_payment_gateway_environment,tr.rbfw_mps_paypal_heading,tr.rbfw_mps_paypal_account_email,tr.rbfw_mps_paypal_api_username,tr.rbfw_mps_paypal_api_password,tr.rbfw_mps_paypal_api_signature,tr.rbfw_mps_paypal_ipn_handler,tr.rbfw_mps_stripe_heading,tr.rbfw_mps_stripe_publishable_key,tr.rbfw_mps_stripe_secret_key,tr.rbfw_mps_stripe_webhook,tr.rbfw_mps_paypal_client_id,tr.rbfw_mps_paypal_secret_key,tr.rbfw_mps_stripe_postal_field,tr.rbfw_mps_tax_switch,tr.rbfw_mps_tax_format{display:none;}</style>';
 	} else {
 		echo '<style>tr.rbfw_wps_add_to_cart_redirect{display:none;}</style>';
 	}
@@ -1336,6 +1336,24 @@ function rbfw_payment_settings_fields($settings_fields){
 					'left_space'  => 'Left with space',
 					'right_space'  => 'Right with space'
 				),
+			),
+			array(
+				'name'    => 'rbfw_mps_currency_thousand_seperator',
+				'label'   => __( 'Thousand separator', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'This sets the thousand seperator of displayed prices.', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => ',',
+				'maxlength' => '1',
+				'size' => '1',
+			),
+			array(
+				'name'    => 'rbfw_mps_currency_decimal_seperator',
+				'label'   => __( 'Decimal separator', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'This sets the decimal seperator of displayed prices.', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => '.',
+				'maxlength' => '1',
+				'size' => '1',
 			),
 			array(
 				'name'    => 'rbfw_mps_currency_decimal_number',
@@ -3167,4 +3185,15 @@ function rbfw_hex2rgba( $color, $opacity = false ) {
     // Return rgb(a) color string
     return $output;
 
+}
+
+function rbfw_exist_page_by_title( $title ) {
+    global $wpdb;
+    $return = $wpdb->get_row( "SELECT ID FROM wp_posts WHERE post_title = '" . $title . "' && post_status = 'publish' && post_type = 'page' ", 'ARRAY_N' );
+
+	if( empty( $return ) ) {
+        return false;
+    } else {
+        return true;
+    }
 }

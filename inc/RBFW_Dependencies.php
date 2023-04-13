@@ -94,7 +94,7 @@
 			   * Enqueue Admin Styles
 			   **************************/
 			  
-				wp_enqueue_style('rbfw-options-framework', plugin_dir_url(__DIR__) . 'admin/css/mage-options-framework.css', array(),'1.0.8');
+				wp_enqueue_style('rbfw-options-framework', plugin_dir_url(__DIR__) . 'admin/css/mage-options-framework.css', array(),time());
 				wp_enqueue_style('jquery-ui', plugin_dir_url(__DIR__) . 'admin/css/jquery-ui.css');
 				wp_enqueue_style('select2.min', plugin_dir_url(__DIR__) . 'admin/css/select2.min.css');
 				wp_enqueue_style('rbfw-admin-style', plugin_dir_url(__DIR__) . 'admin/css/admin_style.css', array(),time());

@@ -35,8 +35,11 @@ if (!class_exists('Rbfw_Account_Page')) {
                 wp_update_post($args);
 
             }else{
-                $page_obj = get_page_by_title('Booking Account', OBJECT, 'page');
-                if($page_obj == null){
+
+                $page_obj = rbfw_exist_page_by_title('Booking Account');
+
+                if($page_obj === false){
+
                     $args = array(
                         'post_title'    => 'Booking Account',
                         'post_content'  => '[rbfw_account]',

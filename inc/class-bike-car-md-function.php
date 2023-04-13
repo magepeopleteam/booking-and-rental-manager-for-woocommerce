@@ -163,6 +163,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 }
             }
 
+            $rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
+
             $diff = date_diff( $pickup_datetime, $dropoff_datetime );
             $days     = 0;
             $hours    = 0;
@@ -177,11 +179,13 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $minutes = $diff->i;
                 if ( $days > 0 ) {
                     $price    += (int)$days * (float)$daily_rate;
-                    $duration .= $days > 1 ? sprintf( "%d Days ", $days ) : sprintf( "%d Day ", $days );
+
+                    $duration .= $days > 1 ? $days.' '.rbfw_string_return('rbfw_text_days',__('Days','booking-and-rental-manager-for-woocommerce')).' ' : $days.' '.rbfw_string_return('rbfw_text_day',__('Day','booking-and-rental-manager-for-woocommerce')).' ';
                 }
                 if ( $hours > 0 ) {
                     $price    += (int)$hours * (float)$hourly_rate;
-                    $duration .= $hours > 1 ? sprintf( "%d hours", $hours ) : sprintf( "%d hour", $hours );
+
+                    $duration .= $hours > 1 ? $hours.' '.rbfw_string_return('rbfw_text_hours',__('Hours','booking-and-rental-manager-for-woocommerce')) : $hours.' '.rbfw_string_return('rbfw_text_hour',__('Hour','booking-and-rental-manager-for-woocommerce'));
                 }
             }
 
@@ -189,7 +193,12 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             if(!empty($service_price_arr)){
                 foreach ($service_price_arr as $data_name => $values) {
-                    $service_cost += (int)$values['data_qty'] * (float)$values['data_price'];
+                    if($item_quantity > 1 && (int)$values['data_qty'] == 1 && $rbfw_enable_extra_service_qty != 'yes'){
+                        $service_cost += $item_quantity * (float)$values['data_price'];
+                    } else {
+                        $service_cost += (int)$values['data_qty'] * (float)$values['data_price'];
+                    }
+
                 }
             }
 
@@ -358,7 +367,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
         }
             
             $extra_service_list = get_post_meta($post_id, 'rbfw_extra_service_data', true) ? get_post_meta($post_id, 'rbfw_extra_service_data', true) : [];
-            $rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
             $extra_service_content = '';
 
@@ -431,10 +439,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                                         
                                         $extra_service_content .= '</tbody>	
                                     </table>';
-
                                     $extra_service_content .= '<script>rbfw_bikecarmd_es_update_input_value_onchange_onclick(); rbfw_bikecarmd_es_price_multiple_qty_onchange();</script>';
             }
-
             
             $rbfw_minimum_booking_day = get_post_meta( $post_id, 'rbfw_minimum_booking_day', true );
             $rbfw_maximum_booking_day = get_post_meta( $post_id, 'rbfw_maximum_booking_day', true );
@@ -621,10 +627,14 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                         service_price_arr = {};
                     });
 
-                    jQuery('.rbfw_bikecarmd_es_qty,#rbfw_item_quantity').change(function (e) {
+                    jQuery('.rbfw_bikecarmd_es_qty').change(function (e) {
                         let that = jQuery(this);
                         rbfw_bikecarmd_ajax_price_calculation(that, 0);
+                    });
 
+                    jQuery(document).on('change', '#rbfw_item_quantity', function(e) {
+                        let that = jQuery(this);
+                        rbfw_bikecarmd_ajax_price_calculation(that, 0);
                     });
                 }
 
@@ -654,8 +664,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                         item_quantity = 1;
                     }
 
-                    
-
                     if((pickup_date == dropoff_date) && (typeof pickup_time === "undefined" || pickup_time == '')){
                         
                         pickup_time = '00:00';
@@ -683,6 +691,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                             service_price_arr[data_name]  = {'data_qty' : data_qty, 'data_price' : data_price};
                         }
                     }  
+
+
 
                     jQuery.ajax({
                         type: 'POST',
@@ -720,6 +730,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                             
                             if(Object.keys(response.reload_es).length !== 0){
                                 jQuery('.rbfw-quantity').slideDown('fast').html(response.item_quantity_box);
+                                jQuery('#rbfw_item_quantity option[value="'+item_quantity+'"]').attr('selected','selected');
                             }
 
                             if (response.variation_content && Object.keys(response.variation_content).length !== 0) {
@@ -1125,7 +1136,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     } else {
                         step = 3;
                     }
-
+                    jQuery('.rbfw_muff_selected_date').remove();
                     let the_html = '';
                     the_html += '<div class="rbfw_step_selected_date rbfw_muff_selected_date" step="'+step+'" data-type="bike_car_md">';
 
@@ -1186,7 +1197,9 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 else:
                     $extra_services = array();
                 endif;
-                
+
+                $rbfw_enable_extra_service_qty = get_post_meta( $product_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $product_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
+
                 /* Start Tax Calculations */
                 $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
                 $mps_tax_switch = $rbfw->get_option('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
@@ -1225,6 +1238,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     foreach ($rbfw_service_info as $key => $value):
                         $service_name = $key; //Service name
                         if(array_key_exists($service_name, $extra_services)){ // if Service name exist in array
+
+                            if($item_quantity > 1 && $value == 1 && $rbfw_enable_extra_service_qty != 'yes'){
+                                $value = $item_quantity;
+                            }
+
                             $main_array[0]['rbfw_service_info'][$service_name] = $value; // name = quantity
                         }
                     endforeach;

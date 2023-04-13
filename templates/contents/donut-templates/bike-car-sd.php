@@ -44,6 +44,7 @@ endif;
 
 $rbfw_dt_sidebar_switch  = get_post_meta( $post_id, 'rbfw_dt_sidebar_switch', true ) ? get_post_meta( $post_id, 'rbfw_dt_sidebar_switch', true ) : 'off';
 $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', true );
+
 ?>
 <div class="rbfw_donut_template">
 	<div class="rbfw_dt_row_header">

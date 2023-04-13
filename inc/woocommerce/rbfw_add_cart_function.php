@@ -10,12 +10,18 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     $rbfw_service_info_all  = isset( $_POST['rbfw_service_info'] ) ? rbfw_array_strip( $_POST['rbfw_service_info'] ) : [];
     $rbfw_service_info = array();
     $variation_info = [];
+    $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
+    $rbfw_item_quantity     = isset( $_POST['rbfw_item_quantity'] ) ? $_POST['rbfw_item_quantity'] : 1;
 
     $c = 0;
     foreach ($rbfw_service_info_all as $key => $value) {
         $service_name = $_POST['rbfw_service_info'][$c]['service_name'];
         $service_qty  = $_POST['rbfw_service_info'][$c]['service_qty'];
         
+        if($rbfw_item_quantity > 1 && $service_qty == 1 && $rbfw_enable_extra_service_qty != 'yes'){
+            $service_qty = $rbfw_item_quantity;
+        }
+
         if(!empty($service_qty)):
         $rbfw_service_info[$service_name] = $service_qty;
         endif;
@@ -124,7 +130,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     $rbfw_pickup_start_time = isset( $_POST['rbfw_pickup_start_time'] ) ? $_POST['rbfw_pickup_start_time'] : '00:00:00';
     $rbfw_pickup_end_date   = isset( $_POST['rbfw_pickup_end_date'] ) ? $_POST['rbfw_pickup_end_date'] : '';
     $rbfw_pickup_end_time   = isset( $_POST['rbfw_pickup_end_time'] ) ? $_POST['rbfw_pickup_end_time'] : '24:00:00';
-    $rbfw_item_quantity     = isset( $_POST['rbfw_item_quantity'] ) ? $_POST['rbfw_item_quantity'] : 1;
+
 
     
 
@@ -164,7 +170,14 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
         foreach ($rbfw_service_info as $key => $value):
             $service_name = $key; //Service1
             if(array_key_exists($service_name, $extra_services)){ // if Service1 exist in array
-                $rbfw_service_price += (float)$extra_services[$service_name] * (float)$value; // quantity * price
+
+                if($rbfw_item_quantity > 1 && (int)$extra_services[$service_name] == 1 && $rbfw_enable_extra_service_qty != 'yes'){
+                    $rbfw_service_price += (int)$rbfw_item_quantity * (float)$value; // quantity * price
+                } else {
+                    $rbfw_service_price += (int)$extra_services[$service_name] * (float)$value; // quantity * price
+                }
+
+
             }
         endforeach;
 

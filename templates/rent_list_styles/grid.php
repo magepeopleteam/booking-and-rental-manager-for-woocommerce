@@ -157,7 +157,7 @@ if(!empty($rbfw_bike_car_sd_data) && ($rbfw_rent_type == 'bike_car_sd' || $rbfw_
     $price = $smallest_price;
 endif;
 
-$highlited_features = get_post_meta($post_id, 'rbfw_highlights_texts', true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_highlights_texts', true)) : [];
+$rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
 ?>
 <div class="rbfw_rent_list_col  rbfw_grid_list_col_<?php echo $d; ?>">
     <div class="rbfw_rent_list_inner_wrapper">
@@ -188,57 +188,46 @@ $highlited_features = get_post_meta($post_id, 'rbfw_highlights_texts', true) ? m
                 <a href="<?php echo esc_url($post_link); ?>"><?php echo esc_html($post_title); ?></a>
             </div>
 
-            <?php if(!empty($highlited_features)): ?>
-                <div class="rbfw_rent_list_highlighted_features">
-                    <ul>
-                        <?php 
-                        $i = 1;
-                        foreach ( $highlited_features as $feature ) :
+            <div class="rbfw_muff_highlighted_features rbfw_rent_list_highlighted_features">
+                <?php if ( $rbfw_feature_category ) :
+                $n = 1;
+                foreach ( $rbfw_feature_category as $value ) :
 
-                        
-                            if($feature['icon']):
-                                $icon = $feature['icon'];
-                            else:
-                                $icon = 'fas fa-arrow-right';
-                            endif;
-                            if($i <= 4){	
-                                if($feature['title']):
-                                    echo '<li><i class="'.mep_esc_html($icon).'"></i><span class="rbfw_item_absolute"> '.$feature['title'].'</li></span>';
-                                endif;
-                            }
-                        $i++;	
-                        endforeach; 
-                        ?>
-                    </ul>
-                    <div class="rbfw_absolute_list">
-                        <ul>
-                        <?php 
-                        $x = 1;
-                        foreach ( $highlited_features as $feature ) :
+                $cat_title = $value['cat_title'];
+                $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
 
-                        
-                            if($feature['icon']):
-                                $icon = $feature['icon'];
-                            else:
-                                $icon = 'fas fa-arrow-right';
+                if($n == 1){
+                ?>
+                <ul>
+                <?php
+                if(!empty($cat_features)){
+                    $i = 1;
+                    foreach ($cat_features as $features) {
+
+                            $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+                            $title = $features['title'];
+
+                            if($title):
+                                if($i == 5){
+                                echo '<li style="width:100%"><a class="rbfw_muff_lmf_btn">'.$rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('View More Features','booking-and-rental-manager-for-woocommerce')).'</a></li>';
+                                }
+
+                                echo '<li '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i><span><abbr title="'.$title.'">' . substr($title, 0, 30) . '</abbr></span></li>';
+
                             endif;
-                            if($x >4){	
-                                if($feature['title']):
-                                    echo '<li><i class="'.mep_esc_html($icon).'"></i><span class="rbfw_item_absolute"> '.$feature['title'].'</li></span>';
-                                endif;
-                            }
-                        $x++;	
-                        endforeach; 
-                        ?>
-                    </ul>
-                    </div>
-                    <?php 
-                    if($i > 5){ 
-                        echo '<a class="rbfw_grid_view_more_features_btn">'.$rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('View More Features','booking-and-rental-manager-for-woocommerce')).'</a>'; 
-                    } 
-                    ?>
-                </div>
-            <?php endif; ?>
+
+                        $i++;
+                    }
+                }
+                ?>
+                </ul>
+                <?php
+                }
+                $n++;
+                endforeach;
+                endif;
+                ?>
+            </div>
 
         </div>
         <div class="rbfw_rent_list_footer">

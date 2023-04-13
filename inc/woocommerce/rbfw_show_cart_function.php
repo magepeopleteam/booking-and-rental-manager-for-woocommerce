@@ -102,6 +102,8 @@ function rbfw_show_cart_item_func( $cart_item, $rbfw_id ) {
         $discount_type 	= $cart_item['discount_type'] ? $cart_item['discount_type'] : '';
         $discount_amount 	= $cart_item['discount_amount'] ? $cart_item['discount_amount'] : '';
 
+        $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
+
     endif;
 
     
@@ -334,7 +336,12 @@ function rbfw_show_cart_item_func( $cart_item, $rbfw_id ) {
             if(array_key_exists($service_name, $extra_services)){ // if service name exist in array
                 $service_price = $extra_services[$service_name]; // get type price from array
                 $service_qty = $value;
-                $total_service_price = (float)$service_price * (float)$service_qty;
+
+                if($rbfw_item_quantity > 1 && $service_qty == 1 && $rbfw_enable_extra_service_qty != 'yes'){
+                    $service_qty = $rbfw_item_quantity;
+                }
+
+                $total_service_price = (float)$service_price * (int)$service_qty;
                 ?>
                 <tr>
                     <th>

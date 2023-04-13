@@ -62,6 +62,15 @@
 					$name[ $key ] = $value;
 				}
 
+
+				$the_array = array(
+					'Muffin' => 'Muffin template',
+					'Donut' => 'Donut template',
+					'Default' => 'Classic template',
+				);
+
+				$name = $the_array;
+
 				return apply_filters( 'rbfw_template_list_arr', $name );
 			}
 

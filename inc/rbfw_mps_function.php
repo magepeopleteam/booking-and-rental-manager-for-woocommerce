@@ -282,13 +282,19 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 $start_datetime = $start_date.' '.$start_time;
                 $end_datetime = $end_date.' '.$end_time;
                 $duration_cost = rbfw_price_calculation( $rbfw_id, $start_datetime, $end_datetime, $start_date ) * (float)$item_quantity;
+                $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
                 if(!empty($service_info)){
                     foreach ($service_info as $service_arr) {
                         foreach ($service_arr as $service_name => $service_qty) {
+
+                            if($item_quantity > 1 && $service_qty == 1 && $rbfw_enable_extra_service_qty != 'yes'){
+                                $service_qty = $item_quantity;
+                            }
+
                             foreach ($g_services as $g_service_name => $g_service_price) {
                                 if($service_name == $g_service_name){
-                                    $price = (float)$g_service_price * (float)$service_qty;
+                                    $price = (float)$g_service_price * (int)$service_qty;
                                     $service_cost += $price;
                                 }
                             }
@@ -707,7 +713,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 $service_cost = 0;
                 $total_amount += $duration_cost + $service_cost;
 
-
+                $rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
                 $content .= '<div class="rbfw_mps_user_order_header">'.rbfw_string_return('rbfw_text_order_summary',__('Order Summary','rbfw-pro')).'</div>';
 
@@ -768,9 +774,14 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 if(!empty($service_info)){
                     foreach ($service_info as $service_arr) {
                         foreach ($service_arr as $service_name => $service_qty) {
+
+                            if($item_quantity > 1 && $service_qty == 1 && $rbfw_enable_extra_service_qty != 'yes'){
+                                $service_qty = $item_quantity;
+                            }
+
                             foreach ($g_services as $g_service_name => $g_service_price) {
                                if($service_name == $g_service_name){
-                                    $price = (float)$g_service_price * (float)$service_qty;
+                                    $price = (float)$g_service_price * (int)$service_qty;
                                     $total_amount += $price;
                                     $service_cost += $price;
                                }
@@ -1148,7 +1159,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                     $content .= rbfw_string_return('rbfw_text_already_have_account_with_us',__('Do you already have an account with us?','booking-and-rental-manager-for-woocommerce'));
                     $content .= '<a class="rbfw_mps_header_action_link" data-id="login">'.rbfw_string_return('rbfw_text_sign_in',__('Sign-In','booking-and-rental-manager-for-woocommerce')).'</a>';
                     if($checkout_account != 'on'):
-                    $content .= esc_html__('Or','booking-and-rental-manager-for-woocommerce');
+                    $content .= rbfw_string_return('rbfw_text_or',__('Or','booking-and-rental-manager-for-woocommerce'));
                     $content .= '<a class="rbfw_mps_header_action_link" data-id="signup">'.rbfw_string_return('rbfw_text_sign_up',__('Sign-Up','booking-and-rental-manager-for-woocommerce')).'</a>';
                     endif;
 

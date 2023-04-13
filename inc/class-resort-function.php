@@ -918,6 +918,9 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                 if(data_days == 0){
                                     jQuery('.rbfw_room_price_category_tabs_label .rbfw_room_price_label[for=rbfw_room_daylong_price]').trigger('click');
                                 }
+                                if(data_days > 0){
+                                    jQuery('.rbfw_room_price_category_tabs_label .rbfw_room_price_label[for=rbfw_room_daynight_price]').trigger('click');
+                                }
                             }
                         });
                         

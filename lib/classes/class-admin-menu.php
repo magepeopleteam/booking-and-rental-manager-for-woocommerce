@@ -239,6 +239,7 @@ if (!class_exists('MageRBFWClass')) {
             ?>
             <div class="mp_event_all_meta_in_tab mp_event_tab_area">
                 <div class="mp_tab_menu">
+                    <div class="mp_tab_menu_heading"><?php echo $cpt_label.' Settings';?></div>
                     <ul>
                         <?php do_action('rbfw_meta_box_tab_name', $post_id); ?>
                     </ul>
