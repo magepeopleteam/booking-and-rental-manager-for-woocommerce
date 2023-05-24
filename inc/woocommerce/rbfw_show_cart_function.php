@@ -280,7 +280,9 @@ function rbfw_show_cart_item_func( $cart_item, $rbfw_id ) {
     
     <?php /* Type: Bikecarmd */ ?>
 
-    <?php if($rbfw_rent_type == 'bike_car_md' || $rbfw_rent_type == 'dress' || $rbfw_rent_type == 'equipment' || $rbfw_rent_type == 'others'){ ?>
+    <?php if($rbfw_rent_type == 'bike_car_md' || $rbfw_rent_type == 'dress' || $rbfw_rent_type == 'equipment' || $rbfw_rent_type == 'others'){
+    $rbfw_enable_return_date  = get_post_meta( $rbfw_id, 'rbfw_enable_return_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_return_date', true ) : 'yes';
+    ?>
 
     <ul>
 
@@ -300,11 +302,13 @@ function rbfw_show_cart_item_func( $cart_item, $rbfw_id ) {
         <li><?php echo $rbfw->get_option('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Date & Time','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $start_datetime, 'date-text' ); ?></li>        
     <?php endif; ?>
 
+    <?php if($rbfw_enable_return_date == 'yes'){ ?>
     <?php if (!empty($end_datetime) && !empty($end_time)): ?>
         <li><?php echo $rbfw->get_option('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time','booking-and-rental-manager-for-woocommerce'));  echo ': ' . rbfw_get_datetime( $end_datetime, 'date-time-text' ); ?></li>
     <?php else: ?>
         <li><?php echo $rbfw->get_option('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $end_datetime, 'date-text' ); ?></li>        
     <?php endif; ?>
+    <?php } ?>
 
     <?php if(!empty($variation_info)){ 
         foreach ($variation_info as $key => $value) { 

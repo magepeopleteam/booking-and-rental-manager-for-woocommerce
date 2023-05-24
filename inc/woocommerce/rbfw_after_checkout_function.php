@@ -271,9 +271,13 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $rbfw_service_price	= $values['rbfw_service_price'] ? $values['rbfw_service_price'] : '';
         $discount_type 	= $values['discount_type'] ? $values['discount_type'] : '';
         $discount_amount = $values['discount_amount'] ? $values['discount_amount'] : '';
-        
+        $rbfw_enable_return_date  = get_post_meta( $rbfw_id, 'rbfw_enable_return_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_return_date', true ) : 'yes';
+
         $item->add_meta_data( rbfw_string_return('rbfw_text_start_date_and_time',__('Start Date and Time','rbfw-pro')), $start_datetime );
-        $item->add_meta_data( rbfw_string_return('rbfw_text_end_date_and_time',__('End Date and Time','rbfw-pro')), $end_datetime );
+
+        if($rbfw_enable_return_date == 'yes'){
+            $item->add_meta_data( rbfw_string_return('rbfw_text_end_date_and_time',__('End Date and Time','rbfw-pro')), $end_datetime );
+        }
 
         if ( ! empty( $pickup_location ) ) {
 

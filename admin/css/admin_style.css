@@ -2339,3 +2339,15 @@ input.rbfw_time_slot_edit_slot_label {
 .rbfw-bt-none {
     border-top: 0;
 }
+
+.rbfw_switch.rbfw_switch_return_date label {
+    margin: 0;
+    height: auto;
+    min-width: inherit;
+    max-width: inherit;
+    padding: 0;
+}
+
+.rbfw_switch_wrapper_return_date {
+    margin: 0;
+}

@@ -177,6 +177,7 @@ CSS for Single Page Template
 
 .rbfw-p-relative {
     position: relative;
+    display: flex;
 }
 
 .rbfw-input:focus,
