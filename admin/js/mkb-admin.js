@@ -517,5 +517,34 @@
             return false;
         });
         /* End: Template Options On Load Document */
+        jQuery('#rbfw_event_start_date').datepicker({
+            dateFormat: 'yy-mm-dd',
+            minDate: 0
+        });
+
+        jQuery('#rbfw_event_start_date').change(function(e) {
+
+            let selected_date = jQuery(this).val();
+            const [gYear, gMonth, gDay] = selected_date.split('-');
+            jQuery("#rbfw_event_end_date").datepicker("destroy");
+            jQuery("#rbfw_event_end_date").val('');
+            jQuery('#rbfw_event_end_date').datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: new Date(gYear, gMonth - 1, gDay)
+            });
+        });
+
+        jQuery('#rbfw_event_end_date').click(function(e) {
+            let event_start_date = jQuery('#rbfw_event_start_date').val();
+            if (event_start_date == '') {
+                alert('Please select the event start date!');
+            }
+
+        });
+
+        jQuery('#rbfw_event_end_date').datepicker({
+            dateFormat: 'yy-mm-dd',
+            minDate: 0
+        });
     });
 }(jQuery));

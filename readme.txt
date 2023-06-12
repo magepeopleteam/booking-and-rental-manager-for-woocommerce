@@ -3,9 +3,9 @@ Contributors: magepeopleteam, aamahin
 Plugin link: https://mage-people.com/
 Tags: Woocommerce, Rent, Booking, Reservation, Hotel, Resort, Appointment, Event, Woocommerce Booking, Reservation Booking, booking calender , booking plugin , booking system , Woocommerce Reservation Booking, Day Booking, Night Booking, Rental Booking, Woocommerce Rental Booking, WC.
 Requires at least: 5.3
-Stable tag: 1.2.1
+Stable tag: 1.1.0
 Version: 1.1.6
-Tested up to: 6.2
+Tested up to: 6.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -185,26 +185,8 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
-
-= 1.2.1 =
-* Bug fixed
-
-= 1.1.9 =
-* Bug fixed
-
-= 1.1.6 =
-* WooCommerce integration.
-* Fixed bug with flatsome theme
-
-= 1.1.5 =
-* Donut template added.
-
-= 1.1.4 =
-* Bug Fixed.
-
-= 1.1.3 =
-* Appointment type added.
-* Time slot page added.
+= 1.0.0 =
+*Initial Release*
 
 = 1.0.4 =
 * New rent types added.
@@ -212,5 +194,25 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 * Back-end Order list added.
 * Front-end user booking dashboard added.
 
-= 1.0.0 =
-*Initial Release*
+= 1.1.3 =
+* Appointment type added.
+* Time slot page added.
+
+= 1.1.4 =
+* Bug Fixed.
+
+= 1.1.5 =
+* Donut template added.
+
+= 1.1.6 =
+* WooCommerce integration.
+* Fixed bug with flatsome theme
+
+= 1.1.7 =
+* Fixed bug
+
+= 1.1.8 =
+* Fixed bug
+
+= 1.1.9 =
+* Fixed bug

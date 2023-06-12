@@ -658,11 +658,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                         return false;
                     }
-
-                    if(pickup_date != '' || dropoff_date == ''){
-
-                        dropoff_date = pickup_date;
-                    }
                     
                     if (typeof item_quantity === "undefined" || item_quantity == '') {
 

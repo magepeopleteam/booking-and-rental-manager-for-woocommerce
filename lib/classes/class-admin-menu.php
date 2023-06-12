@@ -155,8 +155,8 @@ if (!class_exists('MageRBFWClass')) {
 
         function get_option($option, $section, $default = '') {
             $options = get_option($section);
-            if (isset($options[$option])) {
-                return $options[$option];
+            if (!empty($options[$option])) {
+                return esc_html($options[$option]);
             }
             return $default;
         }

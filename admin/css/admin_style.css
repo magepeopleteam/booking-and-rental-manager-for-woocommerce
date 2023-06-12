@@ -1007,6 +1007,7 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
     background-color: #fafafa;
     padding: 0px;
     overflow: hidden;
+    padding: 10px;
 }
 
 .mp_tab_details .form-table input[type="number"] {
@@ -1134,7 +1135,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box table.form-table tbody tr th {
-    background-color: #E2E2FF;
+    background-color: #fff;
     /* border-radius: 0 10px 10px 0;*/
     color: #474747;
 }
@@ -1190,7 +1191,6 @@ div.mpStyle [class*="_bgColor_1"] i {
     min-width: 30%;
     max-width: 30%;
     display: inline-block;
-    background-color: rgba(237, 239, 251, 0.41);
     height: 40px;
     margin-right: 30px;
     padding-left: 8px;
@@ -1694,11 +1694,11 @@ input#rbfw_features_search_icon {
 
 .mp_tab_item_sub_sec {
     border: 1px solid #ddd;
-    padding: 0px;
     background: #FAFAFA;
     overflow-x: scroll;
     overflow-y: hidden;
-    margin: 0px 0px 15px 0px;
+    margin: 10px;
+    padding: 10px;
 }
 
 .tab-content-rbfw_date_meta_boxs div.section,

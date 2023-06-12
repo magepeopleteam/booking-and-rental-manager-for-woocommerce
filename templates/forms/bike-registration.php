@@ -131,8 +131,6 @@
 		$item_stock_quantity = !empty(get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true)) ? get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true) : 0;
 	}
 
-	$rbfw_enable_return_date  = get_post_meta( $rbfw_id, 'rbfw_enable_return_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_return_date', true ) : 'yes';
-
 ?>
 	<!--    Main Layout-->
 	<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
@@ -236,7 +234,6 @@
 				</div>
 				<!-- ITEM END -->
 
-				<?php if($rbfw_enable_return_date == 'yes'){ ?>
 				<!--ITEM-->
 				<div class="item">
 
@@ -265,7 +262,6 @@
 					</div>
 				</div>
 				<!--ITEM END-->
-				<?php } ?>
 
 				<!--    ITEM        -->
 				<div class="item rbfw-duration">
