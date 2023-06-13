@@ -280,7 +280,59 @@
 					</select>
 					</td>
 				</tr>
+				<tr class="rbfw_enable_start_end_date_switch_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment') { echo 'style="display:none"'; } ?>>
+					<td>
+						<div class="rbfw_switch_wrapper rbfw_switch_wrapper_return_date">
+						<label for=""><div class="rbfw_switch_label"><?php esc_html_e( 'Start & End Date/Time:', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							</div>
+						</label>
+							<div class="rbfw_switch rbfw_switch_return_date">
+								<label for="rbfw_enable_start_end_date_on" class="<?php if ( $rbfw_enable_start_end_date == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_start_end_date" class="rbfw_enable_start_end_date" value="yes" id="rbfw_enable_start_end_date_on" <?php if ( $rbfw_enable_start_end_date == 'yes' ) { echo 'Checked'; } ?>> <span>Datepicker</span></label><label for="rbfw_enable_start_end_date_off" class="<?php if ( $rbfw_enable_start_end_date != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_start_end_date" class="rbfw_enable_start_end_date" value="no" id="rbfw_enable_start_end_date_off" <?php if ( $rbfw_enable_start_end_date != 'yes' ) { echo 'Checked'; } ?>> <span>Custom</span></label>
+							</div>
+						</div>
+						<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'Enable/Disable start date-time-picker and end date-time-picker on front-end. The custom settings is for the specific date booking functionality. So, the datepicker and timepicker will be hidden.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+					</td>
+				</tr>
+				<tr class="rbfw_enable_start_end_date_field_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_enable_start_end_date == 'yes') { echo 'style="display:none"'; } ?>>
+					<td>
+						<div>
+							<label class="">
+								<strong>
+									<?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								</strong>
 
+							</label>
+							<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_start_date" id="rbfw_event_start_date" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" readonly>
+						</div>
+						<div>
+							<label class="">
+								<strong>
+									<?php esc_html_e( 'Start Time:', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								</strong>
+
+							</label>
+							<input type="time" name="rbfw_event_start_time" id="rbfw_event_start_time" value="<?php echo esc_attr( $rbfw_event_start_time ); ?>">
+						</div>
+						<div>
+							<label class="">
+								<strong>
+									<?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								</strong>
+
+							</label>
+							<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_end_date" id="rbfw_event_end_date" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
+						</div>
+						<div>
+							<label class="">
+								<strong>
+									<?php esc_html_e( 'End Time:', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								</strong>
+
+							</label>
+							<input type="time" name="rbfw_event_end_time" id="rbfw_event_end_time" value="<?php echo esc_attr( $rbfw_event_end_time ); ?>">
+						</div>
+					</td>
+				</tr>
 				<tr class="rbfw_switch_md_type_item_qty rbfw_item_stock_quantity_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort' || $rbfw_enable_variations == 'yes') { echo 'style="display:none"'; } ?>>
 					<td>
 						<label for="rbfw_item_stock_quantity"><strong><?php esc_html_e( 'Stock Quantity:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></label>

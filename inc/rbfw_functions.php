@@ -298,10 +298,25 @@
 			}
 		}
 
+		$rbfw_enable_start_end_date  = get_post_meta( $item_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $item_id, 'rbfw_enable_start_end_date', true ) : 'yes';
+
 		$diff        = mep_get_date_diff( $start_datetime, $end_datetime );
+
 		$days        = $diff[0];
 		$hour        = $diff[1];
 		$minute      = $diff[2];
+
+		if($rbfw_enable_start_end_date == 'no'){
+			if($days == 0){
+				$days = 1;
+				$hour = 0;
+			}
+			if($days >= 1){
+				$days = $diff[0] + 1;
+				$hour = 0;
+			}
+		}
+
 		$day_price  = $days * $daily_rate;
 		$hour_price = $hour * $hourly_rate;
 		$total_price = $day_price + $hour_price;

@@ -12,7 +12,7 @@
 
 	$availabe_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
 	$off_dates_list = get_post_meta($rbfw_id, 'rbfw_off_dates', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_off_dates', true)) : [];
-	
+
 	$location_switch = !empty(get_post_meta($rbfw_id, 'rbfw_enable_pick_point', true)) ? get_post_meta($rbfw_id, 'rbfw_enable_pick_point', true) : '';
 	$pickup_location = get_post_meta($rbfw_id, 'rbfw_pickup_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_pickup_data', true)) : [];
 	$dropoff_location = get_post_meta($rbfw_id, 'rbfw_dropoff_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_dropoff_data', true)) : [];
@@ -43,17 +43,17 @@
 	$hourly_rate_thu = get_post_meta($rbfw_id, 'rbfw_thu_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_thu_hourly_rate', true) : 0;
 	$daily_rate_thu = get_post_meta($rbfw_id, 'rbfw_thu_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_thu_daily_rate', true) : 0;
 	$enabled_thu = get_post_meta($rbfw_id, 'rbfw_enable_thu_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_thu_day', true) : 'yes';
-	
+
 	// friday rate
 	$hourly_rate_fri = get_post_meta($rbfw_id, 'rbfw_fri_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_fri_hourly_rate', true) : 0;
 	$daily_rate_fri = get_post_meta($rbfw_id, 'rbfw_fri_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_fri_daily_rate', true) : 0;
-	$enabled_fri = get_post_meta($rbfw_id, 'rbfw_enable_fri_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_fri_day', true) : 'yes';	
-	
+	$enabled_fri = get_post_meta($rbfw_id, 'rbfw_enable_fri_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_fri_day', true) : 'yes';
+
 	// saturday rate
 	$hourly_rate_sat = get_post_meta($rbfw_id, 'rbfw_sat_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_sat_hourly_rate', true) : 0;
 	$daily_rate_sat = get_post_meta($rbfw_id, 'rbfw_sat_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_sat_daily_rate', true) : 0;
 	$enabled_sat = get_post_meta($rbfw_id, 'rbfw_enable_sat_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_sat_day', true) : 'yes';
-	
+
 	$current_day = date('D');
 
 	if($current_day == 'Sun' && $enabled_sun == 'yes'){
@@ -79,7 +79,7 @@
 		$daily_rate = $daily_rate_sat;
 	}else{
 		$hourly_rate = $hourly_rate;
-		$daily_rate = $daily_rate;		
+		$daily_rate = $daily_rate;
 	}
 
 	$current_date = date('Y-m-d');
@@ -112,7 +112,7 @@
 	if($rbfw_payment_system == 'mps'){
 		$rbfw_payment_system = 'mps_enabled';
 	}else{
-		$rbfw_payment_system = 'wps_enabled'; 
+		$rbfw_payment_system = 'wps_enabled';
 	}
 
 	$rbfw_enable_md_type_item_qty = get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) ? get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) : 'no';
@@ -125,12 +125,19 @@
 	if($rbfw_enable_variations == 'yes'){
 
 		$item_stock_quantity = rbfw_get_variations_stock($rbfw_id);
-		
+
 	} else {
 
 		$item_stock_quantity = !empty(get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true)) ? get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true) : 0;
 	}
 
+	$rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) : 'yes';
+	$rbfw_event_start_date  = get_post_meta( $rbfw_id, 'rbfw_event_start_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_start_date', true ) : '';
+	$rbfw_event_start_time  = get_post_meta( $rbfw_id, 'rbfw_event_start_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_start_time', true ) : '';
+	$rbfw_event_start_time  = date('h:i a', strtotime($rbfw_event_start_time));
+	$rbfw_event_end_date  = get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) : '';
+	$rbfw_event_end_time  = get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) : '';
+	$rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
 ?>
 	<!--    Main Layout-->
 	<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
@@ -202,6 +209,7 @@
 				<?php endif; ?>
 				<!--    ITEM END        -->
 
+				<?php if($rbfw_enable_start_end_date == 'yes'){ ?>
 				<!-- ITEM -->
 				<div class="item">
 
@@ -212,16 +220,16 @@
 							<div class="rbfw-p-relative">
 								<span class="calendar"><i class="fas fa-calendar-alt"></i></span>
 								<input class="rbfw-input rbfw-time-price" type="text" name="rbfw_pickup_start_date" id="pickup_date" placeholder="<?php echo esc_html($rbfw->get_option('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
-							</div>		
+							</div>
 						</div>
 						<?php if($enable_hourly_rate == 'yes' && !empty($availabe_time)){ ?>
 						<div class="right time">
 							<div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Time','booking-and-rental-manager-for-woocommerce'))); ?></div>
-							
+
 							<div class="rbfw-p-relative">
 								<span class="clock"><i class="fas fa-clock"></i></span>
 								<select class="rbfw-select rbfw-time-price" name="rbfw_pickup_start_time" id="pickup_time" required>
-								<option value="" disabled selected><?php echo esc_html($rbfw->get_option('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup time','booking-and-rental-manager-for-woocommerce'))); ?></option>	
+								<option value="" disabled selected><?php echo esc_html($rbfw->get_option('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup time','booking-and-rental-manager-for-woocommerce'))); ?></option>
 									<?php foreach ($availabe_time as $time) : ?>
 										<option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html($time); ?></option>
 									<?php endforeach; ?>
@@ -233,6 +241,7 @@
 					</div>
 				</div>
 				<!-- ITEM END -->
+
 
 				<!--ITEM-->
 				<div class="item">
@@ -263,14 +272,22 @@
 				</div>
 				<!--ITEM END-->
 
+				<?php } else { ?>
+
+					<input type="hidden"  name="rbfw_pickup_start_date" id="pickup_date" value="<?php echo $rbfw_event_start_date; ?>"/>
+					<input type="hidden"  name="rbfw_pickup_start_time" id="pickup_time" value="<?php echo $rbfw_event_start_time; ?>"/>
+					<input type="hidden"  name="rbfw_pickup_end_date" id="dropoff_date" value="<?php echo $rbfw_event_end_date; ?>"/>
+					<input type="hidden"  name="rbfw_pickup_end_time" id="dropoff_time" value="<?php echo $rbfw_event_end_time; ?>"/>
+
+				<?php } ?>
+				<!--ITEM-->
+
 				<!--    ITEM        -->
 				<div class="item rbfw-duration">
 					<div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?></div>
 					<div class="item-content"></div>
 				</div>
 				<!--    ITEM END        -->
-
-				<!--ITEM-->
 
 				<?php if ($rbfw_enable_md_type_item_qty == 'yes' && $item_stock_quantity > 0) : ?>
 				<div class="item">
@@ -279,8 +296,8 @@
 
 						<select class="rbfw-select" name="rbfw_item_quantity" id="rbfw_item_quantity">
 							<option value="0"><?php rbfw_string('rbfw_text_choose_number_of_qty',__('Choose number of quantity','booking-and-rental-manager-for-woocommerce')); ?></option>
-								<?php 
-								for ($qty = 1; $qty <= $item_stock_quantity; $qty++) { 
+								<?php
+								for ($qty = 1; $qty <= $item_stock_quantity; $qty++) {
 									?>
 									<option value="<?php echo mep_esc_html($qty); ?>" <?php if($qty == 1){ echo 'selected'; } ?>><?php echo mep_esc_html($qty); ?></option>
 									<?php
@@ -289,7 +306,7 @@
 						</select>
 					</div>
 				</div>
-				<?php 
+				<?php
 				endif;
 				?>
 				<!--ITEM END-->
@@ -299,7 +316,7 @@
 
 				<div class="rbfw-variations-content-wrapper">
 
-				<?php foreach ($rbfw_variations_data as $data_arr_one) { 
+				<?php foreach ($rbfw_variations_data as $data_arr_one) {
 				$selected_value = !empty($data_arr_one['selected_value']) ? $data_arr_one['selected_value'] : '';
 				?>
 				
@@ -363,11 +380,11 @@
 									<?php } ?>
 								</tr>
 								<?php } ?>
-								<?php 
+								<?php
 								$c++;
-								endforeach; 
+								endforeach;
 								?>
-								</tbody>	
+								</tbody>
 							</table>
 					</div>
 				</div>

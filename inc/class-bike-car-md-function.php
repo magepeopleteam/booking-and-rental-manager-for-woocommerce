@@ -140,6 +140,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             
             $current_date = date_i18n('Y-m-d');
             $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true );
+
             if(!empty($rbfw_sp_prices)){
      
                 $sp_array = [];
@@ -499,9 +500,20 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             if(($rent_type != 'bike_car_md') && ($rent_type != 'dress') && ($rent_type != 'equipment') && ($rent_type != 'others') && ( is_a( $post, 'WP_Post' ) && ! has_shortcode( $post->post_content, 'rent-add-to-cart') ) ):
                 return;
             endif;
+
+            $rbfw_enable_start_end_date  = get_post_meta( $post_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $post_id, 'rbfw_enable_start_end_date', true ) : 'yes';
+
+
             ?>
             <script>
             jQuery(document).ready(function() {
+
+                <?php if($rbfw_enable_start_end_date == 'no'){ ?>
+
+                    jQuery('#pickup_date').trigger('change');
+
+                <?php } ?>
+
                 jQuery('#pickup_date').change(function(e) {
 
                     let selected_date = jQuery(this).val();

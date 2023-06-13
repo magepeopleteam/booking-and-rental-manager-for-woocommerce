@@ -131,6 +131,14 @@
 		$item_stock_quantity = !empty(get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true)) ? get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true) : 0;
 	}
 
+
+	$rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) : 'yes';
+	$rbfw_event_start_date  = get_post_meta( $rbfw_id, 'rbfw_event_start_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_start_date', true ) : '';
+	$rbfw_event_start_time  = get_post_meta( $rbfw_id, 'rbfw_event_start_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_start_time', true ) : '';
+	$rbfw_event_start_time  = date('h:i a', strtotime($rbfw_event_start_time));
+	$rbfw_event_end_date  = get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) : '';
+	$rbfw_event_end_time  = get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) : '';
+	$rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
 ?>
 	<!--    Main Layout-->
 	<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
@@ -204,6 +212,7 @@
 				<?php endif; ?>
 				<!--    ITEM END        -->
 
+				<?php if($rbfw_enable_start_end_date == 'yes'){ ?>
 				<!-- ITEM -->
 				<div class="item">
 
@@ -264,6 +273,15 @@
 					</div>
 				</div>
 				<!--ITEM END-->
+
+				<?php } else { ?>
+
+				<input type="hidden"  name="rbfw_pickup_start_date" id="pickup_date" value="<?php echo $rbfw_event_start_date; ?>"/>
+				<input type="hidden"  name="rbfw_pickup_start_time" id="pickup_time" value="<?php echo $rbfw_event_start_time; ?>"/>
+				<input type="hidden"  name="rbfw_pickup_end_date" id="dropoff_date" value="<?php echo $rbfw_event_end_date; ?>"/>
+				<input type="hidden"  name="rbfw_pickup_end_time" id="dropoff_time" value="<?php echo $rbfw_event_end_time; ?>"/>
+
+				<?php } ?>
 
 				<!--    ITEM        -->
 				<div class="item rbfw-duration">

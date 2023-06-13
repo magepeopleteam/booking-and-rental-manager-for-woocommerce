@@ -106,7 +106,7 @@ function rbfw_show_cart_item_func( $cart_item, $rbfw_id ) {
 
     endif;
 
-    
+    $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) : 'yes';
     ?>
     <?php do_action( 'rbfw_before_cart_item_display', $cart_item, $rbfw_id ); ?>
 
@@ -322,7 +322,13 @@ function rbfw_show_cart_item_func( $cart_item, $rbfw_id ) {
             <th>
                 <?php echo $rbfw->get_option('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost:','booking-and-rental-manager-for-woocommerce')); ?>
                 <br>
-                <span><?php echo rbfw_day_diff_status( $start_datetime, $end_datetime );?></span>
+                <span>
+                <?php
+                if($rbfw_enable_start_end_date != 'no'){
+                    echo rbfw_day_diff_status( $start_datetime, $end_datetime );
+                }
+                ?>
+                </span>
             </th>
             <td>
                 <?php echo '('.wc_price(rbfw_price_calculation( $rbfw_id, $start_datetime, $end_datetime, $start_date )) .' x '.$rbfw_item_quantity.')'. ' = '.wc_price(rbfw_price_calculation( $rbfw_id, $start_datetime, $end_datetime, $start_date ) * $rbfw_item_quantity);?>
