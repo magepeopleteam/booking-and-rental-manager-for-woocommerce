@@ -272,6 +272,13 @@
 				</div>
 				<!--ITEM END-->
 
+				<!--    ITEM        -->
+				<div class="item rbfw-duration">
+					<div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?></div>
+					<div class="item-content"></div>
+				</div>
+				<!--    ITEM END        -->
+
 				<?php } else { ?>
 
 					<input type="hidden"  name="rbfw_pickup_start_date" id="pickup_date" value="<?php echo $rbfw_event_start_date; ?>"/>
@@ -282,12 +289,7 @@
 				<?php } ?>
 				<!--ITEM-->
 
-				<!--    ITEM        -->
-				<div class="item rbfw-duration">
-					<div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?></div>
-					<div class="item-content"></div>
-				</div>
-				<!--    ITEM END        -->
+
 
 				<?php if ($rbfw_enable_md_type_item_qty == 'yes' && $item_stock_quantity > 0) : ?>
 				<div class="item">

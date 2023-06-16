@@ -428,6 +428,9 @@ function save_rbfw_order_meta_box( $post_id ) {
 
         $status = 'Status changed to <strong>'.$_POST['rbfw_order_status'].'</strong> by '.$username.' on '.$modified_date;
         $current_status_update = get_post_meta( $post_id, 'rbfw_order_status_revision', true );
+
+        $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_link_order_id', true );
+        $current_status = get_post_meta( $post_id, 'rbfw_order_status', true );
         
         if(empty($current_status_update)){
             $all_status_update = array();  
@@ -438,7 +441,31 @@ function save_rbfw_order_meta_box( $post_id ) {
         }
 
         update_post_meta( $post_id, 'rbfw_order_status_revision', $all_status_update );
+        rbfw_update_reports_status($rbfw_link_order_id, $current_status);
     }
 
 }
 
+function rbfw_update_reports_status($id,$status){
+
+    if(empty($id) || empty($status)){
+        return;
+    }
+
+	$args = array(
+        'post_type' => 'rbfw_order_meta',
+        'posts_per_page' => -1,
+        'meta_key' => 'rbfw_link_order_id',
+        'meta_value' => $id,
+        'meta_compare' => '=='
+    );
+
+    $the_query = new WP_Query($args);
+
+    if(!empty($the_query)){
+		foreach ($the_query->posts as $result) {
+			$post_id = $result->ID;
+            update_post_meta($post_id,'rbfw_order_status',$status);
+		}
+	}
+}
