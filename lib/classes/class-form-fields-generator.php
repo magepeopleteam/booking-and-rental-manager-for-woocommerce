@@ -6370,10 +6370,10 @@ endif;
                 endif;
                 foreach( $args as $key => $name ):
 
-                    if( $multiple ) $selected = in_array( $key, $value ) ? "selected" : "";
-                    else $selected = $value == $key ? "selected" : "";
+                    if( $multiple ) $selected = in_array( $name, $value ) ? "selected" : "";
+                    else $selected = $value == $name ? "selected" : "";
                     ?>
-                    <option <?php echo esc_attr($selected); ?> value='<?php echo esc_attr($key); ?>'><?php echo esc_attr($key); ?></option>
+                    <option <?php echo esc_attr($selected); ?> value='<?php echo esc_attr($name); ?>'><?php echo esc_attr($key); ?></option>
                     <?php
                 endforeach;
                 ?>

@@ -432,7 +432,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $id = $_POST['post_id'];
                 $selected_date = $_POST['selected_date'];
                 $is_muffin_template = $_POST['is_muffin_template'];
-                $available_times = get_post_meta($id, 'rdfw_available_time', true);
+                $available_times = rbfw_get_available_times($id);
 
                 $default_timezone = wp_timezone_string();
                 $date = new DateTime("now", new DateTimeZone($default_timezone) );
@@ -501,7 +501,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $rbfw_product_id = get_post_meta( $id, "link_wc_product", true ) ? get_post_meta( $id, "link_wc_product", true ) : $id;
 
                 $selected_date = $_POST['selected_date'];
-                $available_times = get_post_meta($id, 'rdfw_available_time', true);
+                $available_times = rbfw_get_available_times($id);
                 $default_timezone = wp_timezone_string();
                 $date = new DateTime("now", new DateTimeZone($default_timezone) );
                 $nowTime  = $date->format('H:i');
@@ -1172,7 +1172,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             let type_array = {};
                             let service_array = {};
                             let post_id = jQuery('#rbfw_post_id').val();
-                            for (let index = 0; index < type_length; index++) {
+                            for (let index = 1; index <= type_length; index++) {
 
                                 let qty = jQuery('input[name="rbfw_bikecarsd_info['+index+'][qty]"]').val();
                                 let data_type = jQuery('input[name="rbfw_bikecarsd_info['+index+'][qty]"]').attr('data-type');
@@ -1651,8 +1651,9 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                             jQuery('.rbfw_bikecarsd_qty').change(function (e) {
                                 let count = jQuery('.rbfw_bikecarsd_rt_price_table tbody tr').length;
+
                                 let total_qty = 0;
-                                for (let index = 0; index < count; index++) {
+                                for (let index = 1; index <= count; index++) {
                                     let qty = jQuery('input[name="rbfw_bikecarsd_info['+index+'][qty]"]').val();
                                     total_qty += parseInt(qty); 
                                 }

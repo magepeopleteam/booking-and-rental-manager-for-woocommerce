@@ -102,7 +102,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     $date_to_string = new DateTime($rbfw_bikecarsd_selected_date);
     $rbfw_bikecarsd_selected_date = $date_to_string->format('F j, Y');
     
-    $a = 0;
+    $a = 1;
     foreach ($rbfw_type_info_all as $key => $value) {
 
         if(!empty($_POST['rbfw_bikecarsd_info'][$a]['rent_type'])){
@@ -146,6 +146,9 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
         $start_time = $rbfw_pickup_start_time;
         $end_date = $rbfw_pickup_end_date;
         $end_time = $rbfw_pickup_end_time;
+
+
+
         $start_datetime = date( 'Y-m-d H:i', strtotime( $rbfw_pickup_start_date . ' ' . $rbfw_pickup_start_time ) );
         $end_datetime   = date( 'Y-m-d H:i', strtotime( $rbfw_pickup_end_date . ' ' . $rbfw_pickup_end_time ) );
         $base_price     = rbfw_price_calculation( $rbfw_id, $start_datetime, $end_datetime, $start_date );

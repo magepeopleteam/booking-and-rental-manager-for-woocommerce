@@ -157,6 +157,7 @@
 
 	if ( ! function_exists( 'mep_get_date_diff' ) ) {
 		function mep_get_date_diff( $start_datetime, $end_datetime ) {
+
 			$current   = date( 'Y-m-d H:i', strtotime( $start_datetime ) );
 			$newformat = date( 'Y-m-d H:i', strtotime( $end_datetime ) );
 			$datetime1 = new DateTime( $newformat );
@@ -300,6 +301,21 @@
 
 		$rbfw_enable_start_end_date  = get_post_meta( $item_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $item_id, 'rbfw_enable_start_end_date', true ) : 'yes';
 
+		if($rbfw_enable_start_end_date == 'no'){
+
+			$resed_start_date = date( 'Y-m-d', strtotime( $start_datetime ) );
+			$resed_end_date = date( 'Y-m-d', strtotime( $end_datetime ) );
+			$resed_start_time = date( 'H:i', strtotime( $start_datetime ) );
+			$resed_end_time = date( 'H:i', strtotime( $end_datetime ) );
+
+			if($resed_start_time != $resed_end_time){
+				$resed_start_time = '00:00:00';
+				$resed_end_time = '24:00:00';
+				$start_datetime = date( 'Y-m-d H:i', strtotime( $resed_start_date.' '.$resed_start_time ) );
+				$end_datetime = date( 'Y-m-d H:i', strtotime( $resed_end_date.' '.$resed_end_time ) );
+			}
+		}
+
 		$diff        = mep_get_date_diff( $start_datetime, $end_datetime );
 
 		$days        = $diff[0];
@@ -312,7 +328,7 @@
 				$hour = 0;
 			}
 			if($days >= 1){
-				$days = $diff[0] + 1;
+				$days = $diff[0];
 				$hour = 0;
 			}
 		}
@@ -3211,4 +3227,20 @@ function rbfw_exist_page_by_title( $title ) {
     } else {
         return true;
     }
+}
+
+function rbfw_get_available_times($rbfw_id){
+	$rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+	$rdfw_available_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
+	$the_array = [];
+
+	foreach ($rbfw_time_slots as $rts_key => $rts_value) {
+		foreach ($rdfw_available_time as $rat_key => $rat_value) {
+			if($rts_value == $rat_value){
+				$the_array[$rts_value] = $rts_key;
+			}
+		}
+
+	}
+	return $the_array;
 }
