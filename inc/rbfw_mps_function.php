@@ -418,6 +418,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 update_post_meta($post_id, 'discount_type', $discount_type);
                 update_post_meta($post_id, 'discount_amount', $discount_amount);
 
+
                 $order_meta_args = array(
                     'post_title'    => $first_name.' '.$last_name,
                     'post_status'   => 'publish',
@@ -447,8 +448,11 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                     update_post_meta($order_meta_id, 'rbfw_payer_id', $payer_id);
                     update_post_meta($order_meta_id, 'rbfw_reference', $reference);
                     update_post_meta($order_meta_id, 'rbfw_link_order_id', $post_id);
+                    update_post_meta($order_meta_id, 'rbfw_status_id', $post_id);
                     update_post_meta($order_meta_id, 'discount_type', $discount_type);
                     update_post_meta($order_meta_id, 'discount_amount', $discount_amount);
+                    update_post_meta($post_id, 'rbfw_link_order_id', $order_meta_id);
+                    update_post_meta($post_id, 'rbfw_status_id', $post_id);
 
                     if(!empty($ticket_info)){
                         $i = 0;

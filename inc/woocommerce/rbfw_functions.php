@@ -154,6 +154,7 @@ function rbfw_change_user_order_status_on_order_status_change( $order_status, $r
     foreach ( $loop->posts as $rbfw_post ) {
         $rbfw_post_id = $rbfw_post->ID;
         update_post_meta( $rbfw_post_id, 'rbfw_order_status', $order_status );
+        rbfw_update_inventory($rbfw_post_id, $order_status);
     }
 
     // Update meta on rbfw_order post type
@@ -177,5 +178,6 @@ function rbfw_change_user_order_status_on_order_status_change( $order_status, $r
     foreach ( $loop->posts as $rbfw_post ) {
         $rbfw_post_id = $rbfw_post->ID;
         update_post_meta( $rbfw_post_id, 'rbfw_order_status', $order_status );
+        rbfw_update_inventory($rbfw_post_id, $order_status);
     }
 }

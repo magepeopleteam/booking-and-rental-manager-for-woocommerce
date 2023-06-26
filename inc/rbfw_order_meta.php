@@ -72,8 +72,6 @@ function rbfw_order_meta_box_callback(){
                                 <option value="completed" <?php if($status == 'completed'){ echo 'selected'; } ?>><?php esc_html_e( 'Completed', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
                                 <option value="cancelled" <?php if($status == 'cancelled'){ echo 'selected'; } ?>><?php esc_html_e( 'Cancelled', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
                                 <option value="refunded" <?php if($status == 'refunded'){ echo 'selected'; } ?>><?php esc_html_e( 'Refunded', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                <option value="failed" <?php if($status == 'failed'){ echo 'selected'; } ?>><?php esc_html_e( 'Failed', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                <option value="checkout-draft" <?php if($status == 'checkout-draft'){ echo 'selected'; } ?>><?php esc_html_e( 'Draft', 'booking-and-rental-manager-for-woocommerce' ); ?></option>							
                             </select>
                         </td>
                     </tr>
@@ -429,9 +427,18 @@ function save_rbfw_order_meta_box( $post_id ) {
         $status = 'Status changed to <strong>'.$_POST['rbfw_order_status'].'</strong> by '.$username.' on '.$modified_date;
         $current_status_update = get_post_meta( $post_id, 'rbfw_order_status_revision', true );
 
-        $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_link_order_id', true );
+
         $current_status = get_post_meta( $post_id, 'rbfw_order_status', true );
         
+        global $rbfw;
+        $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+
+        if($rbfw_payment_system == 'wps'){
+            $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_link_order_id', true );
+        }else {
+            $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_status_id', true );
+        }
+
         if(empty($current_status_update)){
             $all_status_update = array();  
             $all_status_update[] = $status;
@@ -442,6 +449,7 @@ function save_rbfw_order_meta_box( $post_id ) {
 
         update_post_meta( $post_id, 'rbfw_order_status_revision', $all_status_update );
         rbfw_update_reports_status($rbfw_link_order_id, $current_status);
+        rbfw_update_inventory($rbfw_link_order_id, $current_status);
     }
 
 }
@@ -452,13 +460,24 @@ function rbfw_update_reports_status($id,$status){
         return;
     }
 
-	$args = array(
+    $args = array(
         'post_type' => 'rbfw_order_meta',
         'posts_per_page' => -1,
-        'meta_key' => 'rbfw_link_order_id',
-        'meta_value' => $id,
-        'meta_compare' => '=='
+        'meta_query' => array(
+                'relation' => 'OR',
+                array(
+                    'key'     => 'rbfw_link_order_id',
+                    'value'   => $id,
+                    'compare' => '='
+                ),
+                array(
+                    'key'     => 'rbfw_status_id',
+                    'value'   => $id,
+                    'compare' => '='
+                ),
+            )
     );
+
 
     $the_query = new WP_Query($args);
 

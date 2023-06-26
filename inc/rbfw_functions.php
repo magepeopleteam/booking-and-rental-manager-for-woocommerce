@@ -1521,6 +1521,7 @@ function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
 	
 	$rbfw_item_type = !empty(get_post_meta($rbfw_id, 'rbfw_item_type', true)) ? get_post_meta($rbfw_id, 'rbfw_item_type', true) : '';
 	$rbfw_inventory_info = !empty(get_post_meta($rbfw_id, 'rbfw_inventory', true)) ? get_post_meta($rbfw_id, 'rbfw_inventory', true) : [];
+	$rbfw_order_status = !empty(get_post_meta($order_id, 'rbfw_order_status', true)) ? get_post_meta($order_id, 'rbfw_order_status', true) : '';
 
 	$start_date = !empty($ticket_info[$i]['rbfw_start_date']) ? $ticket_info[$i]['rbfw_start_date'] : '';
 	$end_date = !empty($ticket_info[$i]['rbfw_end_date']) ? $ticket_info[$i]['rbfw_end_date'] : '';
@@ -1604,6 +1605,7 @@ function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
 	$order_array['rbfw_variation_info'] = $rbfw_variation_info;
 	$order_array['rbfw_service_info'] = $rbfw_service_info;
 	$order_array['rbfw_item_quantity'] = $rbfw_item_quantity;
+	$order_array['rbfw_order_status'] = $rbfw_order_status;
 
 	$rbfw_inventory_info[$order_id] = $order_array;
 	
@@ -1620,18 +1622,22 @@ function rbfw_trash_order( $post_id = '' ) {
     // Verify if is trashing multiple posts
     if ( isset( $_GET['post'] ) && is_array( $_GET['post'] ) ) {
         foreach ( $_GET['post'] as $post_id ) {
-            rbfw_update_inventory( $post_id );
+            rbfw_update_inventory( $post_id, 'cancelled' );
         }
     } else {
-        rbfw_update_inventory( $post_id );
+        rbfw_update_inventory( $post_id, 'cancelled' );
     }
 }
 
-function rbfw_update_inventory($post_id){
+function rbfw_update_inventory($post_id, $current_status = null){
+
 	$rbfw_id = get_post_meta($post_id, 'rbfw_id', true);
 	$inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
+
 	if (!empty($inventory) && array_key_exists($post_id, $inventory)){
-		unset($inventory[$post_id]);
+
+		$inventory[$post_id]['rbfw_order_status'] = $current_status;
+
 		update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
 	}
 
@@ -1849,7 +1855,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 				$rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : [];
 				
 
-				if ( in_array($range_date, $booked_dates) ) {
+				if ( in_array($range_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ) {
 
 					if ($rent_type == 'resort') {
 
@@ -1948,7 +1954,7 @@ function rbfw_get_multiple_date_es_available_qty($post_id, $start_date, $end_dat
 				$booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
 				$rbfw_service_info = !empty($inventory['rbfw_service_info']) ? $inventory['rbfw_service_info'] : [];
 
-				if ( in_array($range_date, $booked_dates) ) {
+				if ( in_array($range_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ) {
 				
 					foreach ($rbfw_service_info as $service_name => $service_qty) {
 						
@@ -2037,7 +2043,7 @@ function rbfw_get_multiple_date_variations_available_qty($post_id, $start_date, 
 				$booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
 				$rbfw_variation_info = !empty($inventory['rbfw_variation_info']) ? $inventory['rbfw_variation_info'] : [];
 
-				if ( in_array($range_date, $booked_dates) ) {
+				if ( in_array($range_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ) {
 				
 					foreach ($rbfw_variation_info as $field_key => $field_value) {
 						

@@ -146,7 +146,7 @@ if (!class_exists('RBFWInventoryPage')) {
                         if(!empty($rbfw_inventory)){
                             
                             foreach ($rbfw_inventory as $key => $inventory) {
-                                if ( in_array($current_date, $inventory['booked_dates']) ){
+                                if ( in_array($current_date, $inventory['booked_dates']) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ){
 
                                     $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
                                     $rbfw_variation_info = !empty($inventory['rbfw_variation_info']) ? $inventory['rbfw_variation_info'] : [];
@@ -286,7 +286,7 @@ if (!class_exists('RBFWInventoryPage')) {
                     
                     foreach ($rbfw_inventory as $key => $inventory) {
 
-                        if ( in_array($data_date, $inventory['booked_dates']) ){
+                        if ( in_array($data_date, $inventory['booked_dates']) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ){
 
                             $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
                             $rbfw_variation_info = !empty($inventory['rbfw_variation_info']) ? $inventory['rbfw_variation_info'] : [];
