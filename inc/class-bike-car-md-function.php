@@ -797,6 +797,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 function rbfw_mps_book_now_btn_action(){
                     jQuery('button.rbfw_bikecarmd_book_now_btn.mps_enabled').click(function (e) {
                         e.preventDefault();
+
                         let pickup_date = jQuery('#pickup_date').val();
                         let pickup_time = jQuery('#pickup_time').val();
                         let dropoff_date = jQuery('#dropoff_date').val();

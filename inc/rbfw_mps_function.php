@@ -540,13 +540,13 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
             global $rbfw;
      
             $post_id = strip_tags($_POST['post_id']);
+
             $checkout_account = $rbfw->get_option('rbfw_mps_checkout_account', 'rbfw_basic_payment_settings','on');
             $payment_gateway = $rbfw->get_option('rbfw_mps_payment_gateway', 'rbfw_basic_payment_settings','offline');
             $payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
             $content = '';
             $rent_type = strip_tags($_POST['rent_type']);
-
 
             /* Start Tax Calculations */
             $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
