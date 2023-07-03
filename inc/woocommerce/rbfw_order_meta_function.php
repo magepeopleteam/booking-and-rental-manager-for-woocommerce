@@ -32,14 +32,15 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
                 $zdata[ $key ]['rbfw_billing_email']      = $order_meta['_billing_email'][0];
                 $zdata[ $key ]['rbfw_billing_phone']      = $order_meta['_billing_phone'][0];
                 $zdata[ $key ]['rbfw_billing_address']    = $order_meta['_billing_address_1'][0] . ' ' . $order_meta['_billing_address_2'][0];
+                $zdata[ $key ]['rbfw_id']                 = $rbfw_id;
 
                 $meta_data = array_merge($zdata[ $key ], $ticket_info, $user_info);
                 $order_id = $rbfw->rbfw_add_order_data($meta_data, $ticket_info );
                 $order_meta_id = $rbfw->rbfw_add_order_meta_data($meta_data, $ticket_info);
                 
                 if($order_id && $order_meta_id){
-                    update_post_meta($order_id, 'rbfw_order_status', 'processing');
-                    update_post_meta($order_meta_id, 'rbfw_order_status', 'processing');
+                    update_post_meta($order_id, 'rbfw_order_status', $order_status);
+                    update_post_meta($order_meta_id, 'rbfw_order_status', $order_status);
                 }
                 
         }

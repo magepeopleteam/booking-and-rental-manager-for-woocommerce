@@ -511,7 +511,7 @@ iframe#gmap_canvas {
 }
 
 .mp_tab_item .section-title i {
-    color: #808080;
+    color: #fff;
     margin-right: 10px;
     margin-left: 10px;
 }
@@ -983,14 +983,14 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 }
 
 #rbfw_add_meta_box .mp_tab_menu ul li:hover {
-    background: #5C58A5;
-    border-color: #5C58A5;
+    background: #2F809F;
+    border-color: #2F809F;
     color: #fff;
 }
 
 #rbfw_add_meta_box .mp_tab_menu ul li.active {
-    background: #5C58A5;
-    border-color: #5C58A5;
+    background: #2F809F;
+    border-color: #2F809F;
     color: #fff;
 }
 
@@ -1152,9 +1152,11 @@ div.mpStyle [class*="_bgColor_1"] i {
 #rbfw_add_meta_box .mp_tab_item h3 {
     font-size: 16px;
     padding: 10px;
-    background: #E2E2FF;
+    background: #2F809F;
     margin-top: 0px;
     margin-bottom: 10px;
+    border-left: 5px solid #007480;
+    color: #fff;
 }
 
 .rbfw-item-type {
@@ -1698,19 +1700,22 @@ input#rbfw_features_search_icon {
     overflow-x: scroll;
     overflow-y: hidden;
     margin: 10px;
+    margin-left: 0px;
+    margin-top: 0px;
+    margin-right: 0px;
     padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border-left: 3px solid #aaa;
 }
 
 .tab-content-rbfw_date_meta_boxs div.section,
 .tab-content-rbfw_basic_meta_boxs div.section,
 .tab-content-rbfw_gallery_meta_boxs div.section,
 .tab-content-rbfw_quantity_meta_boxs div.section {
-    border: 1px solid #ddd;
     padding: 0px;
     margin-bottom: 15px;
     overflow-y: hidden;
     overflow-x: scroll;
-    background: #FAFAFA;
 }
 
 .tab-content-rbfw_basic_meta_boxs div.section {
@@ -2350,4 +2355,13 @@ input.rbfw_time_slot_edit_slot_label {
 
 .rbfw_switch_wrapper_return_date {
     margin: 0;
+}
+
+#media_preview_rbfw_gallery_images,
+#media_preview_rbfw_gallery_images_additional {
+    height: 100px;
+}
+
+.rbfw_enable_start_end_date_switch_row .rbfw_alert_info {
+    margin: 8px;
 }

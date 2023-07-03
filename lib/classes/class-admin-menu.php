@@ -476,6 +476,7 @@ if (!class_exists('MageRBFWClass')) {
 
             if($rbfw_payment_system == 'wps'){
 
+                $rbfw_id = $meta_data['rbfw_id'];
                 $wc_order_id = $meta_data['rbfw_order_id'];
                 $ticket_info = $meta_data['rbfw_ticket_info'];
                 $duration_cost = $meta_data['rbfw_duration_cost'];
@@ -559,6 +560,7 @@ if (!class_exists('MageRBFWClass')) {
                     update_post_meta($post_id, 'rbfw_pin', $rbfw_pin);
 
                     update_post_meta($wc_order_id, '_rbfw_link_order_id', $post_id);
+
                     if(!empty($order_tax)){ update_post_meta($post_id, 'rbfw_order_tax', $order_tax); }
                     $total_price = $meta_data['rbfw_ticket_total_price'];
                     $total_price = $total_price + $order_tax;
@@ -629,8 +631,9 @@ if (!class_exists('MageRBFWClass')) {
                             update_post_meta($post_id, $key, $value);
 
                             /* Start: Create Inventory info */
-                            rbfw_create_inventory_meta($ticket_info, $i, $post_id);
+                            rbfw_create_inventory_meta($ticket_info, $i, $wc_order_id);
                             /* End: Create Inventory info */
+
 
                             $i++;
                         }
@@ -647,6 +650,7 @@ if (!class_exists('MageRBFWClass')) {
                 update_post_meta($post_id, 'rbfw_link_order_id', $wc_order_id);
                 /* End */
 
+                rbfw_update_inventory( $wc_order_id, 'processing');
             }
 
             return $post_id;

@@ -8116,7 +8116,7 @@ endif;
                                 <span class="remove" onclick="jQuery(this).parent().remove()"><?php echo mep_esc_html($remove_text); ?></span>
                                 <span class="sort" ><i class="fa-solid fa-grip"></i></span>
                                 <img id='media_preview_<?php echo esc_attr($id); ?>' src='<?php echo esc_attr($media_url); ?>' style='width:100%'/>
-                                <div class="item-title"><?php echo esc_html($media_title); ?></div>
+                                <div class="item-title"><?php // echo esc_html($media_title); ?></div>
                                 <input type='hidden' name='<?php echo esc_attr($field_name); ?>[]' value='<?php echo esc_attr($value); ?>' />
                             </div>
                         <?php

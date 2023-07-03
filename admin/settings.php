@@ -25,10 +25,7 @@ function rbfw_admin_settings_sec_reg_basic( $default_sec ) {
 			'id'    => 'rbfw_basic_style_settings',
 			'title' => '<i class="fa-solid fa-palette"></i>'.__( 'Style Settings', 'booking-and-rental-manager-for-woocommerce' )
 		),
-		array(
-			'id'    => 'rbfw_basic_single_rent_page_settings',
-			'title' => '<i class="fa-solid fa-gears"></i>'.__( 'Single Rent Page Settings', 'booking-and-rental-manager-for-woocommerce' )
-		),
+
 		array(
 			'id'    => 'rbfw_basic_payment_settings',
 			'title' => '<i class="fa-solid fa-money-check-dollar"></i>'.__( 'Payment Settings', 'booking-and-rental-manager-for-woocommerce' )
@@ -1478,6 +1475,20 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'type'    => 'text',
 				'default' => 'Or'
 			),
+			array(
+				'name'    => 'rbfw_text_no_items_available',
+				'label'   => __( 'No Items Available!', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>No Items Available!</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'No Items Available!'
+			),
+			array(
+				'name'    => 'rbfw_text_booking_expired',
+				'label'   => __( 'Booking Time Expired!', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Booking Time Expired!</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Booking Time Expired!'
+			),
 		),
 		'rbfw_basic_style_settings' => array(
 			array(
@@ -1530,19 +1541,6 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'default' => '#1ABC9C'
 			),
 
-		),
-		'rbfw_basic_single_rent_page_settings' => array(
-			array(
-				'name' => 'rbfw_single_rent_tab_style',
-				'label' => __( 'Choose Single Rent Tab Style', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc' => __( 'Tab style for single rent page.', 'booking-and-rental-manager-for-woocommerce' ),
-				'type' => 'select',
-				'default' => 'vertical',
-				'options' => array(
-					'vertical' => 'Vertical',
-					'horizontal'  => 'Horizontal'
-				),
-			),
 		),
 
 	);

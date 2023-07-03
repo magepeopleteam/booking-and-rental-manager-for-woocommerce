@@ -3299,6 +3299,55 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     align-items: center;
 }
 
+.theme-twentytwentythree .rbfw_muff_registration_wrapper .rbfw-datetime .date .calendar,
+.theme-twentytwentythree .rbfw_muff_registration_wrapper .rbfw-datetime .time .clock {
+    padding: 0;
+}
+
+.theme-twentytwentythree .rbfw_muff_registration_wrapper .rbfw_next_btn {
+    max-width: 100%;
+    width: auto;
+}
+
+.theme-twentytwentythree .rbfw-datetime .date .calendar,
+.theme-twentytwentythree .rbfw-datetime .time .clock {
+    padding: 14px 15px;
+}
+
+.theme-twentytwentythree .rbfw_chk_availability_btn {
+    max-width: 100%;
+    width: auto;
+}
+
+.theme-twentytwentythree .rbfw_muffin_template #rbfw_mps_pay_now_button:not(.rbfw-bikecarsd-result-wrap #rbfw_mps_pay_now_button) {
+    width: auto;
+}
+
+.theme-twentytwentythree .rbfw_muffin_template {
+    max-width: 100%;
+    width: auto;
+}
+
+.theme-twentytwentythree .price-item-container-table {
+    width: 100%;
+    text-align: left;
+}
+
+.theme-twentytwentythree .price-item-container-table th,
+.theme-twentytwentythree .price-item-container-table td {
+    padding: 5px;
+    border: 1px solid #ececec;
+}
+
+.theme-twentytwentythree .mage_modal img {
+    max-width: 100%;
+}
+
+.theme-twentytwentythree .rbfw_mps_radio_group {
+    max-width: 100%;
+    width: auto;
+}
+
 .rbfw_muff_registration_wrapper .rbfw-datetime .date .calendar img,
 .rbfw_muff_registration_wrapper .rbfw-datetime .time .clock img {
     height: 25px;

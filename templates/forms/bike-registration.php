@@ -54,7 +54,7 @@
 	$daily_rate_sat = get_post_meta($rbfw_id, 'rbfw_sat_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_sat_daily_rate', true) : 0;
 	$enabled_sat = get_post_meta($rbfw_id, 'rbfw_enable_sat_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_sat_day', true) : 'yes';
 
-	$current_day = date('D');
+	$current_day = date_i18n('D');
 
 	if($current_day == 'Sun' && $enabled_sun == 'yes'){
 		$hourly_rate = $hourly_rate_sun;
@@ -82,7 +82,7 @@
 		$daily_rate = $daily_rate;
 	}
 
-	$current_date = date('Y-m-d');
+	$current_date = date_i18n('Y-m-d');
 	$rbfw_sp_prices = get_post_meta( $rbfw_id, 'rbfw_seasonal_prices', true );
 	if(!empty($rbfw_sp_prices)){
 		$sp_array = [];
@@ -138,6 +138,9 @@
 	$rbfw_event_end_date  = get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) : '';
 	$rbfw_event_end_time  = get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) : '';
 	$rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
+	$rbfw_event_last_date = strtotime(date_i18n('Y-m-d h:i a', strtotime($rbfw_event_end_date.' '.$rbfw_event_end_time)));
+    $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
+
 ?>
 	<!--    Main Layout-->
 	<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
@@ -401,13 +404,18 @@
 					<!--ITEM END-->
 
 					<!-- ITEM -->
+
 					<div class="item">
 						<?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>
 
-						<button type="submit" name="add-to-cart" value="<?php echo mep_esc_html($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn <?php echo esc_attr($rbfw_payment_system); ?>" disabled>
+						<button type="submit" name="add-to-cart" value="<?php echo mep_esc_html($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn <?php echo esc_attr($rbfw_payment_system); ?>" disabled <?php if( $rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date ) { echo 'style="display:none"'; }?>>
 							<?php rbfw_string('rbfw_text_book_now',__('Book Now','booking-and-rental-manager-for-woocommerce')); ?>
 						</button>
 					</div>
+
+					<?php if($rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date) {
+						echo '<div class="mps_alert_warning">'.rbfw_string_return('rbfw_text_booking_expired',__('Booking Time Expired!','booking-and-rental-manager-for-woocommerce')).'</div>';
+					} ?>
 					<!-- ITEM END -->
 					</div>
 

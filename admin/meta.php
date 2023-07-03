@@ -237,7 +237,7 @@
 		$rbfw_event_end_time  = get_post_meta( $post_id, 'rbfw_event_end_time', true ) ? get_post_meta( $post_id, 'rbfw_event_end_time', true ) : '';
 		?>
 		<div class='rbfw-item-type mp_tab_item_sub_sec'>
-			<h3 class="section-title"><?php echo '<i class="fa-solid fa-arrow-left"></i> '.esc_html__( 'Rent Item Type :', 'booking-and-rental-manager-for-woocommerce' ); ?>
+			<h3 class="section-title"><?php echo ''.esc_html__( 'Rent Item Type :', 'booking-and-rental-manager-for-woocommerce' ); ?>
 				<div class="rbfw_tooltip"><i class="fa-solid fa-circle-info"></i>
 					<span class="rbfw_tooltiptext"><?php echo esc_html_e( 'Please select the rent type of the item.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 				</div>		
@@ -502,11 +502,11 @@
 		} else {
 			echo esc_attr( 'none' );
 		} ?>;">
-		<h3 class="section-title"><?php echo '<i class="fa-solid fa-arrow-left"></i> '. esc_html__( 'Resort Price Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+		<h3 class="section-title"><?php echo ''. esc_html__( 'Resort Price Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 
 		<div class="rbfw_switch_wrapper rbfw_switch_resort_daylong_price">
 			<div class="rbfw_switch_label"><?php esc_html_e( 'On/Off Day-long Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-			<div class="rbfw_switch">
+			<div class="rbfw_switch rbfw_resort_daylong_price_switch">
 				<label for="rbfw_enable_resort_daylong_price_on" class="<?php if ( $rbfw_enable_resort_daylong_price == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_resort_daylong_price" class="rbfw_enable_resort_daylong_price" value="yes" id="rbfw_enable_resort_daylong_price_on" <?php if ( $rbfw_enable_resort_daylong_price == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_resort_daylong_price_off" class="<?php if ( $rbfw_enable_resort_daylong_price != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_resort_daylong_price" class="rbfw_enable_resort_daylong_price" value="no" id="rbfw_enable_resort_daylong_price_off" <?php if ( $rbfw_enable_resort_daylong_price != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
 			</div>
 		</div>
@@ -707,7 +707,7 @@
 
 		<div class="rbfw_es_price_config_wrapper mp_tab_item_sub_sec" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>		
 	
-		<h3 class="section-title"><?php echo '<i class="fa-solid fa-arrow-left"></i> '. esc_html__( 'Extra Service Price Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?>
+		<h3 class="section-title"><?php echo ''. esc_html__( 'Extra Service Price Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?>
 			<div class="rbfw_tooltip"><i class="fa-solid fa-circle-info"></i>
 			<span class="rbfw_tooltiptext"><?php echo esc_html_e( 'Please add the extra services for the item.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 			</div>	
@@ -843,6 +843,8 @@
 
 		</script>
 		<?php
+		$resort_function = new RBFW_Resort_Function();
+		$resort_function->rbfw_resort_admin_scripts(get_the_ID());
 	}
 	
 	add_action( 'rbfw_meta_box_tab_name', 'rbfw_add_meta_box_tab_faq', 20 );
@@ -858,7 +860,7 @@
 		$rbfw_enable_faq_content  = get_post_meta( $rbfw_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_faq_content', true ) : 'no';
 		?>
 		<div class="mpStyle mp_tab_item mp_tab_item_sub_sec" data-tab-item="#rbfw_faq">
-			<h3 class="section-title"><?php echo '<i class="fa-solid fa-arrow-left"></i> '.esc_html__( 'FAQ Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+			<h3 class="section-title"><?php echo ''.esc_html__( 'FAQ Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 
 
 		<div class="rbfw_switch_wrapper rbfw_switch_faq">
@@ -1219,7 +1221,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 	$rbfw_enable_md_type_item_qty = get_post_meta( $rbfw_id, 'rbfw_enable_md_type_item_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_md_type_item_qty', true ) : 'no';
 	?>
 	<div class="mp_tab_item mp_tab_item_sub_sec" data-tab-item="#rbfw_frontend_display">
-		<h3 class="section-title"><?php echo '<i class="fa-solid fa-arrow-left"></i> '. esc_html__( 'Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+		<h3 class="section-title"><?php echo esc_html__( 'Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 		<table class="form-table">
 		<tr>
 			<td>

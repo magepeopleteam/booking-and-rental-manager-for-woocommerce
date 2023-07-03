@@ -306,8 +306,9 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $item->add_meta_data( rbfw_string_return('rbfw_text_item_quantity',__('Item Quantity','rbfw-pro')), $rbfw_item_quantity );
 
 
+        $bikecarmd_service_arr = [];
         if ( ! empty( $rbfw_service_info ) ): 
-            $bikecarmd_service_arr = [];
+
             foreach ($rbfw_service_info as $key => $value):
                 $service_name = $key; //service name
                 if(array_key_exists($service_name, $extra_services)){ // if service name exist in array

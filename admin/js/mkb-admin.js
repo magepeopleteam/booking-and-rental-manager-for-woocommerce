@@ -441,11 +441,12 @@
             }
         });
 
+
         jQuery('.rbfw_switch_resort_daylong_price label').on('click', function() {
 
-            var item_type = jQuery(this).find('input').val();
+            var daylong_price_label_val = jQuery(this).find('input').val();
 
-            if (item_type == 'yes') {
+            if (daylong_price_label_val == 'yes') {
                 jQuery('.resort_day_long_price').show();
             } else {
                 jQuery('.resort_day_long_price').hide();

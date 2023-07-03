@@ -177,7 +177,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 								<div class="tab-content <?php if ($current_page == 1) { echo 'active'; } ?>  tab-content-<?php echo esc_attr($panelsIndex); ?>">
 									<?php foreach ($panel['sections'] as $sectionIndex => $section) : ?>
 										<div class="section">
-											<h3 id="<?php echo esc_attr($sectionIndex); ?>" class="section-title"><?php echo '<i class="fa-solid fa-arrow-left"></i> '.esc_html($section['title']); ?></h3>
+											<h3 id="<?php echo esc_attr($sectionIndex); ?>" class="section-title"><?php echo esc_html($section['title']); ?></h3>
 											<p class="description"><?php echo esc_html($section['description']); ?></p>
 											<table class="form-table">
 												<tbody>

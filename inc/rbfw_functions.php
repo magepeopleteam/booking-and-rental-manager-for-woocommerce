@@ -1513,15 +1513,27 @@ function rbfw_search_query_exlude_hidden_wc_fix( $query ) {
  * Create Inventory Meta
  *****************************/
 function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
+
 	$rbfw_id = !empty($ticket_info[$i]['rbfw_id']) ? $ticket_info[$i]['rbfw_id'] : '';
 
 	if(empty($rbfw_id)){
 		return;
 	}
-	
+
+	global $rbfw;
+	$rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 	$rbfw_item_type = !empty(get_post_meta($rbfw_id, 'rbfw_item_type', true)) ? get_post_meta($rbfw_id, 'rbfw_item_type', true) : '';
 	$rbfw_inventory_info = !empty(get_post_meta($rbfw_id, 'rbfw_inventory', true)) ? get_post_meta($rbfw_id, 'rbfw_inventory', true) : [];
-	$rbfw_order_status = !empty(get_post_meta($order_id, 'rbfw_order_status', true)) ? get_post_meta($order_id, 'rbfw_order_status', true) : '';
+
+	if($rbfw_payment_system == 'wps'){
+
+		$order = wc_get_order( $order_id );
+		$rbfw_order_status = $order->get_status();
+
+	} else {
+
+		$rbfw_order_status = !empty(get_post_meta($order_id, 'rbfw_order_status', true)) ? get_post_meta($order_id, 'rbfw_order_status', true) : '';
+	}
 
 	$start_date = !empty($ticket_info[$i]['rbfw_start_date']) ? $ticket_info[$i]['rbfw_start_date'] : '';
 	$end_date = !empty($ticket_info[$i]['rbfw_end_date']) ? $ticket_info[$i]['rbfw_end_date'] : '';
@@ -1629,18 +1641,47 @@ function rbfw_trash_order( $post_id = '' ) {
     }
 }
 
-function rbfw_update_inventory($post_id, $current_status = null){
+function rbfw_update_inventory($order_id, $current_status = null){
+	global $rbfw;
+	$rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
-	$rbfw_id = get_post_meta($post_id, 'rbfw_id', true);
-	$inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
+	/* get order meta data from wp_postmeta table */
+	global $wpdb;
+	$order = $wpdb->get_results('SELECT * FROM `wp_woocommerce_order_items` WHERE order_id = '.$order_id.' ');
 
-	if (!empty($inventory) && array_key_exists($post_id, $inventory)){
+	if($rbfw_payment_system == 'wps'){
 
-		$inventory[$post_id]['rbfw_order_status'] = $current_status;
+		foreach( $order as $item ) {
 
-		update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
+			$item_id = $item->order_item_id;
+			$item_meta_data = $wpdb->get_results('SELECT * FROM `wp_woocommerce_order_itemmeta` WHERE order_item_id = '.$item_id.' AND meta_key = "_rbfw_id" ');
+
+			foreach ($item_meta_data as $meta_data) {
+				$rbfw_id = $meta_data->meta_value;
+				$inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
+
+				if (!empty($inventory) && array_key_exists($order_id, $inventory)){
+
+					$inventory[$order_id]['rbfw_order_status'] = $current_status;
+
+					update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
+				}
+			}
+
+		}
+
+	} else {
+
+		$rbfw_id = get_post_meta($order_id, 'rbfw_id', true);
+		$inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
+
+		if (!empty($inventory) && array_key_exists($order_id, $inventory)){
+
+			$inventory[$order_id]['rbfw_order_status'] = $current_status;
+
+			update_post_meta($order_id, 'rbfw_inventory', $inventory);
+		}
 	}
-
 }
 
 

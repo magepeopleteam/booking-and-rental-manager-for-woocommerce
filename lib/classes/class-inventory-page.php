@@ -438,7 +438,7 @@ if (!class_exists('RBFWInventoryPage')) {
             <table class="rbfw_inventory_page_inner_table">
                 <thead>
                     <tr>
-                        <td class="rbfw_inventory_vf_label"><?php esc_html_e('Item Stock:','booking-and-rental-manager-for-woocommerce'); ?></td>
+                        <td class="rbfw_inventory_vf_label"><?php esc_html_e('Available Quantity:','booking-and-rental-manager-for-woocommerce'); ?></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -454,7 +454,7 @@ if (!class_exists('RBFWInventoryPage')) {
                     <thead>
                         <tr>
                             <th class="rbfw_inventory_vf_label"><?php esc_html_e('Room Type','booking-and-rental-manager-for-woocommerce'); ?></th>
-                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Quantity','booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -474,7 +474,7 @@ if (!class_exists('RBFWInventoryPage')) {
                     <thead>
                         <tr>
                             <th class="rbfw_inventory_vf_label"><?php esc_html_e('Rent Type','booking-and-rental-manager-for-woocommerce'); ?></th>
-                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Quantity','booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -513,7 +513,7 @@ if (!class_exists('RBFWInventoryPage')) {
                                                                     esc_html_e('Name','booking-and-rental-manager-for-woocommerce');
                                                                 echo '</th>';
                                                                 echo '<th class="rbfw_inventory_vf_label">';
-                                                                    esc_html_e('Quantity','booking-and-rental-manager-for-woocommerce');
+                                                                    esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce');
                                                                 echo '</th>';
                                                             echo '</tr>';
                                                         echo '</thead>';
@@ -548,7 +548,7 @@ if (!class_exists('RBFWInventoryPage')) {
                     <thead>
                         <tr>
                             <th class="rbfw_inventory_vf_label"><?php esc_html_e('Service Name','booking-and-rental-manager-for-woocommerce'); ?></th>
-                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Quantity','booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce'); ?></th>
                         </tr>
                     </thead>
                     <tbody>

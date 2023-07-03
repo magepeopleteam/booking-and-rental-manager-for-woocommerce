@@ -434,7 +434,11 @@ function save_rbfw_order_meta_box( $post_id ) {
         $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
         if($rbfw_payment_system == 'wps'){
+
             $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_link_order_id', true );
+            $orderDetail = new WC_Order( $rbfw_link_order_id );
+            $orderDetail->update_status("wc-".$current_status, $current_status, TRUE);
+
         }else {
             $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_status_id', true );
         }

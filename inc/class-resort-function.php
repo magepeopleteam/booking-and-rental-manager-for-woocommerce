@@ -13,7 +13,6 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
     class RBFW_Resort_Function {
         public function __construct(){
             add_action('wp_footer', array($this, 'rbfw_resort_frontend_scripts'));
-            add_action('admin_footer', array($this, 'rbfw_resort_admin_scripts'));
             add_action('wp_ajax_rbfw_check_resort_availibility', array($this, 'rbfw_check_resort_availibility'));
             add_action('wp_ajax_nopriv_rbfw_check_resort_availibility', array($this,'rbfw_check_resort_availibility'));
             add_action('wp_ajax_rbfw_get_active_price_table', array($this, 'rbfw_get_active_price_table'));
@@ -1517,9 +1516,9 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             <?php
         }
 
-        public function rbfw_resort_admin_scripts(){
-            $rbfw_item_type  = get_post_meta( get_the_id(), 'rbfw_item_type', true ) ? get_post_meta( get_the_id(), 'rbfw_item_type', true ) : '';
-            $rbfw_enable_resort_daylong_price  = get_post_meta( get_the_id(), 'rbfw_enable_resort_daylong_price', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_resort_daylong_price', true ) : 'no';
+        public function rbfw_resort_admin_scripts($post_id){
+            $rbfw_item_type  = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : '';
+            $rbfw_enable_resort_daylong_price  = get_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', true ) : 'no';
             ?>
             <script>
             jQuery(document).ready(function(){    
@@ -1565,9 +1564,10 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 				jQuery( ".rbfw_resort_price_table_body" ).sortable();
 				
 				// onclick add-resort-type-btn action
-					jQuery('#add-resort-type-row').click(function (e) { 
+					jQuery('#add-resort-type-row').click(function (e) {
 						e.preventDefault();
 						let current_time = jQuery.now();
+
 						if(jQuery('.rbfw_resort_price_table .rbfw_resort_price_table_row').length){						
 							let resort_last_row = jQuery('.rbfw_resort_price_table .rbfw_resort_price_table_row:last-child()');
 							let resort_type_last_data_key = parseInt(resort_last_row.attr('data-key'));
@@ -1577,7 +1577,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 						}
 						else{
 							let resort_type_new_data_key = 0;
-							let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="'+resort_type_new_data_key+'"><td><input type="text" name="rbfw_resort_room_data['+resort_type_new_data_key+'][room_type]" value="" placeholder="<?php esc_html_e( "Room type", "rent-manager-for-woocommerce" ); ?>"></td><td><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( "Add Image", "rent-manager-for-woocommerce" ); ?></a><a class="rbfw_remove_room_type_image_btn"><i class="fa-solid fa-circle-minus"></i></a><input type="hidden" name="rbfw_resort_room_data['+resort_type_new_data_key+'][rbfw_room_image]" value="" class="rbfw_room_image"></td><td><input type="number" name="rbfw_resort_room_data['+resort_type_new_data_key+'][rbfw_room_daylong_rate]" value="" placeholder="<?php esc_html_e( "Day-long Rate", "rent-manager-for-woocommerce" ); ?>"></td><td><input type="number" name="rbfw_resort_room_data['+resort_type_new_data_key+'][rbfw_room_daynight_rate]" value="" placeholder="<?php esc_html_e( "Day-night Rate", "rent-manager-for-woocommerce" ); ?>"></td><td><input type="text" name="rbfw_resort_room_data['+resort_type_new_data_key+'][rbfw_room_desc]" value="" placeholder="<?php esc_html_e( "Short Description", "rent-manager-for-woocommerce" ); ?>"></td><td><input type="number" name="rbfw_resort_room_data['+resort_type_new_data_key+'][rbfw_room_available_qty]" value="" placeholder="<?php esc_html_e( "Available Qty", "rent-manager-for-woocommerce" ); ?>"></td><td><div class="mp_event_remove_move"><button class="button remove-row '+current_time+'"><span class="dashicons dashicons-trash"></span></button><div class="button mp_event_type_sortable_button"><span class="dashicons dashicons-move"></span></div></div></td></tr>';
+							let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="'+resort_type_new_data_key+'"><td><input type="text" name="rbfw_resort_room_data['+resort_type_new_data_key+'][room_type]" value="" placeholder="<?php esc_html_e( "Room type", "rent-manager-for-woocommerce" ); ?>"></td><td><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( "Add Image", "rent-manager-for-woocommerce" ); ?></a><a class="rbfw_remove_room_type_image_btn"><i class="fa-solid fa-circle-minus"></i></a><input type="hidden" name="rbfw_resort_room_data['+resort_type_new_data_key+'][rbfw_room_image]" value="" class="rbfw_room_image"></td><td class="resort_day_long_price" style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;"><input type="number" name="rbfw_resort_room_data['+resort_type_new_data_key+'][rbfw_room_daylong_rate]" value="" placeholder="<?php esc_html_e( "Day-long Rate", "rent-manager-for-woocommerce" ); ?>"></td><td><input type="number" name="rbfw_resort_room_data['+resort_type_new_data_key+'][rbfw_room_daynight_rate]" value="" placeholder="<?php esc_html_e( "Day-night Rate", "rent-manager-for-woocommerce" ); ?>"></td><td><input type="text" name="rbfw_resort_room_data['+resort_type_new_data_key+'][rbfw_room_desc]" value="" placeholder="<?php esc_html_e( "Short Description", "rent-manager-for-woocommerce" ); ?>"></td><td><input type="number" name="rbfw_resort_room_data['+resort_type_new_data_key+'][rbfw_room_available_qty]" value="" placeholder="<?php esc_html_e( "Available Qty", "rent-manager-for-woocommerce" ); ?>"></td><td><div class="mp_event_remove_move"><button class="button remove-row '+current_time+'"><span class="dashicons dashicons-trash"></span></button><div class="button mp_event_type_sortable_button"><span class="dashicons dashicons-move"></span></div></div></td></tr>';
 							let resort_type_add_new_row = jQuery('.rbfw_resort_price_table').append(resort_type_row);					
 						}
 						jQuery('.remove-row.'+current_time+'').on('click', function () {
@@ -1590,7 +1590,15 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 							}
 						});
 						jQuery( ".rbfw_resort_price_table_body" ).sortable();	
-						rbfw_room_type_image_addup();														
+						rbfw_room_type_image_addup();
+
+                        var daylong_price_label_val = jQuery('.rbfw_resort_daylong_price_switch label.active').find('input').val();
+
+if (daylong_price_label_val == 'yes') {
+    jQuery('.resort_day_long_price').show();
+} else {
+    jQuery('.resort_day_long_price').hide();
+}
 					});
 				// end add-resort-type-btn action
 

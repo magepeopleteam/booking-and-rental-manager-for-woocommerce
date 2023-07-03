@@ -1266,6 +1266,11 @@
 		</postmeta>
 
 		<postmeta>
+		<meta_key>rbfw_enable_start_end_date</meta_key>
+		<meta_value>yes</meta_value>
+		</postmeta>
+
+		<postmeta>
 		<meta_key>rbfw_extra_service_data</meta_key>
 		<meta_value>a:4:{i:0;a:3:{s:12:"service_name";s:10:"Extra Tire";s:13:"service_price";s:1:"5";s:11:"service_qty";s:2:"10";}i:1;a:3:{s:12:"service_name";s:6:"Helmet";s:13:"service_price";s:1:"5";s:11:"service_qty";s:2:"10";}i:2;a:3:{s:12:"service_name";s:16:"Extra engine Oil";s:13:"service_price";s:1:"2";s:11:"service_qty";s:2:"10";}i:3;a:3:{s:12:"service_name";s:8:"Tool Box";s:13:"service_price";s:1:"2";s:11:"service_qty";s:2:"10";}}</meta_value>
 		</postmeta>

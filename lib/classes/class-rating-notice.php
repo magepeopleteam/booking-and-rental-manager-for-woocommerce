@@ -183,8 +183,8 @@ if ( ! class_exists( 'Mage_Rating' ) ) {
                 $message .= "<img src='".esc_url($this->plugin_logo)."'/>";
                 $message .= '<div>';
                 $message .= "<p>Hello! Seems like you have used <strong>".esc_html($this->plugin_name)."</strong> to this website — Thanks a lot! <br>
-                Could you please do us a <b>big favor</b> and give it a <b>5-star</b> rating on WordPress? 
-                This would boost our motivation and help other users make a comfortable decision while choosing the ".esc_html($this->plugin_name).".</p>";
+                As you are happy with this plugin's services, Could you please give it a <b>5 Star</b> review on wordpress.org?
+                This would boost our motivation and help other users make a comfortable decision while choosing the <strong>".esc_html($this->plugin_name)."</strong>.</p>";
                 $message .='<div class="mage-rating-button-container">
                             <a id="'.esc_attr($this->text_domain).'_btn_deserved" href="'.esc_url($this->rating_url).'" class="mage-rating-notice-button button-primary" target="_blank">
                                 '.esc_html__('Ok, you deserved it',$this->text_domain).'

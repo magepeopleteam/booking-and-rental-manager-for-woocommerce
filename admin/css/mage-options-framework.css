@@ -95,6 +95,14 @@ div>.ppof-metabox {
     display: block;
 }
 
+.ppof-metabox .form-wrapper.full-width .tab-content {
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #FAFAFA;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border-left: 3px solid #aaa;
+}
+
 @media screen and (max-width: 1100px) {
     .ppof-metabox .navigation.right {
         float: none;
@@ -1862,14 +1870,14 @@ div>.ppof-metabox {
 }
 
 .field-media-multi-wrapper .media-list .item {
-    width: 150px;
+    width: 80px;
     display: inline-block;
     margin: 5px;
     background: #eee;
     padding: 5px;
     position: relative;
     vertical-align: top;
-    min-height: 80px;
+    height: 80px;
     overflow: hidden;
 }
 
@@ -2029,4 +2037,8 @@ div>.ppof-metabox {
 
 .add-feature-category {
     margin-top: 10px;
+}
+
+.field-media-multi-wrapper .media-list .item span.sort {
+    cursor: move;
 }
