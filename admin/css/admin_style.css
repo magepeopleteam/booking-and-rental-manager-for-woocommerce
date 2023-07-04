@@ -1122,6 +1122,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 #rbfw_add_meta_box table.form-table tr th {
     padding: 8px;
     width: max-content;
+    margin: 0;
 }
 
 #rbfw_add_meta_box table.form-table.rbfw_item_type_table tr td {
@@ -1388,8 +1389,9 @@ div.mpStyle [class*="_bgColor_1"] i {
 
 .rbfw_room_type_image_preview img,
 .rbfw_service_image_preview img {
-    width: 50px;
-    border: 5px inset #7ca2fb;
+    width: 25px;
+    height: 25px;
+    border: 1px inset #7ca2fb;
 }
 
 
