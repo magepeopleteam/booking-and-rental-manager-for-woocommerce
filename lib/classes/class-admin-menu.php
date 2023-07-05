@@ -440,33 +440,6 @@ if (!class_exists('MageRBFWClass')) {
             return $file_path = $this->template_file_path('themes/' . $template_name);
         }
 
-        function get_template_list() {
-            $names = $this->get_templates_name();
-            $name = [];
-            foreach ($names as $key => $value) {
-                $name[$key] = $value;
-            }
-            return $name;
-        }
-
-        function get_templates_name() {
-
-            $template_name = 'index.php';
-            $template_path = get_stylesheet_directory() . '/rbfw_templates/themes/';
-            $default_path = plugin_dir_path(__DIR__) . '../templates/themes/';
-            $thedir = is_dir($template_path) ? glob($template_path . "*") : glob($default_path . "*");
-            $theme = array();
-            foreach ($thedir as $filename) {
-                if (is_file($filename)) {
-                    $file = basename($filename);
-                    $name = str_replace("?>", "", strip_tags(file_get_contents($filename, false, null, 24, 14)));
-                }
-                $theme[$file] = $name;
-            }
-            return $theme;
-        }
-
-
         function rbfw_add_order_data($meta_data = array(), $ticket_info = array()) {
 
             global $rbfw;

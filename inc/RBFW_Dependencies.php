@@ -5,7 +5,9 @@
 	
 	if ( ! class_exists( 'RBFW_Dependencies' ) ) {
 		class RBFW_Dependencies {
+
 			protected $version;
+
 			public function __construct() {
 				add_action('wp_enqueue_scripts', array( $this, 'common_enqueue' ), 90 );
 				add_action('admin_enqueue_scripts', array( $this, 'common_enqueue' ), 90 );
@@ -36,8 +38,9 @@
 				wp_enqueue_script( 'owl.carousel.min', RBFW_PLUGIN_URL . '/js/owl.carousel.min.js', array('jquery'), '2.3.4', true );
 				
 				//loading tooltip js
-				wp_enqueue_script( 'popper.min', RBFW_PLUGIN_URL . '/js/popper.min.js', array('jquery'), '2.11.4', true );
-				wp_enqueue_script( 'tippy-bundle.umd.min', RBFW_PLUGIN_URL . '/js/tippy-bundle.umd.min.js', array('jquery'), '2.11.4', true );
+				wp_enqueue_script( 'popper.min', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js', array('jquery'), '2.9.2', true );
+				wp_enqueue_script( 'tippy-bundle.umd.min', 'https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy-bundle.umd.min.js
+				', array('jquery'), '6.3.7', true );
 
 				// loading popup css
 				wp_enqueue_style('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/css/jquery.modal.min.css');
@@ -46,6 +49,7 @@
 				wp_enqueue_script('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/js/jquery.modal.min.js', array('jquery'), '0.9.1', false);	
 				
 			}
+
 			public function frontend_script(){
 				global $post;
 				$post_id = !empty($post->ID) ? $post->ID : '';
@@ -151,5 +155,6 @@
 				
 			}			
 		}
+
 		new RBFW_Dependencies();
 	}

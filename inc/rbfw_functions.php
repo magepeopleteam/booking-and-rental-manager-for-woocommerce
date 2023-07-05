@@ -62,12 +62,7 @@
 	function rbfw_string_return( $option_name, $default_string ) {
 		return rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string );
 	}
-	function rbfw_get_template_list() {
-		global $rbfw;
-		$options = $rbfw->get_template_list();
 
-		return apply_filters( 'rbfw_template_list_arr', $options );
-	}
 
 	function rbfw_get_datetime( $date, $type = 'date-time-text' ) {
 		global $rbfw;
