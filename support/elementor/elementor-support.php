@@ -29,6 +29,7 @@ class RBFWElementor {
 	
 	private function include_widgets_files() {
 		require_once( __DIR__ . '/widget/rbfw-rent-add-to-cart.php' );	
+		require_once( __DIR__ . '/widget/rbfw-search.php' );
 	}
 	
 	public function register_widgets() {
@@ -38,6 +39,7 @@ class RBFWElementor {
 		
 		// Register Widgets		
 		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\RBFWAddToCartWidget() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\RBFWSearchWidget() );
 	}
 	
 	public function __construct() {

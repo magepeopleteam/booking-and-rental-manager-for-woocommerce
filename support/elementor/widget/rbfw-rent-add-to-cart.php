@@ -19,7 +19,7 @@ class RBFWAddToCartWidget extends Widget_Base {
 	}
 
 	public function get_title() {
-		return __( 'Rent Add To Cart', 'vaincode-elementor-kits' );
+		return __( 'Rent Add To Cart', 'booking-and-rental-manager-for-woocommerce' );
 	}
 
 	public function get_icon() {
@@ -56,14 +56,14 @@ class RBFWAddToCartWidget extends Widget_Base {
 		$this->start_controls_section(
 			'rbfw_rent_add_to_cart_settings',
 			[
-				'label' => __( 'Settings', 'vaincode-elementor-kits' ),
+				'label' => __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ),
 				'tab' => Controls_Manager::TAB_CONTENT,
 			]
 		);
 		$this->add_control(
 			'rbfw_rent_add_to_cart_item_id',
 			[
-				'label' => __( 'Item','vaincode-elementor-kits' ),
+				'label' => __( 'Item','booking-and-rental-manager-for-woocommerce' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => '',
 				'options' => $this->get_rbfw_item_list(),

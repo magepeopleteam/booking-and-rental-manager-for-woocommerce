@@ -5699,3 +5699,137 @@ table.rbfw_regf_cart_table {
 body.single-rbfw_item div.ast-container {
     display: block;
 }
+
+.rbfw_search_form_wrap {
+    margin-bottom: 30px;
+}
+
+.rbfw_search_form {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: max-content;
+    border: 1px solid #d3d3d3;
+    padding: 20px;
+    border-radius: 3px;
+    background-color: #fff;
+    margin: auto;
+}
+
+.rbfw_search_form button,
+.rbfw_search_form select {
+    line-height: 25px;
+    border-radius: 3px;
+    font-size: 16px;
+    text-decoration: none;
+    text-transform: capitalize;
+    border: none;
+}
+
+.rbfw_search_form button {
+    background: var(--rbfw_rent_list_color1);
+    color: #fff;
+    padding: 7px 25px;
+}
+
+.rbfw_search_form select {
+    padding: 10px 8px;
+}
+
+.rbfw_search_form_col {
+    padding: 5px 8px;
+}
+
+.rbfw_search_form label {
+    height: 20px;
+    font-size: 18px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #444;
+}
+
+.rbfw-lsn-new-message-box {
+    margin: 15px 0;
+    padding-left: 20px;
+    margin-bottom: 25px!important;
+}
+
+.rbfw-lsn-notice-new-message-box p {
+    font-size: 1.15em;
+    font-weight: 600;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.rbfw-lsn-info-tab {
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    position: relative;
+    top: 8px;
+}
+
+.rbfw-lsn-info-tab {
+    float: left;
+    margin-left: -23px;
+}
+
+.rbfw-lsn-info-tab i::before {
+    width: 24px;
+    height: 24px;
+    box-shadow: inset 12px 0 13px rgba(0, 0, 0, 0.5);
+}
+
+.rbfw-lsn-info-tab i::after {
+    width: 0;
+    height: 0;
+    border: 12px solid transparent;
+    border-bottom-color: #fff;
+    border-left-color: #fff;
+    bottom: -18px;
+}
+
+.rbfw-lsn-info-tab i::before,
+.rbfw-lsn-info-tab i::after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    bottom: -17px;
+    transform: rotateX(60deg);
+}
+
+.rbfw-lsn-tip-box-info {
+    padding: 12px 8px 3px 26px;
+}
+
+.rbfw-lsn-new-message-box-info {
+    background: #eeeeee;
+    padding: 3px;
+    margin: 10px 0;
+}
+
+.rbfw-lsn-tip-box-info {
+    color: #01579B;
+    background: #B3E5FC;
+    font-size: 18px;
+}
+
+.rbfw-lsn-tip-icon-info {
+    background: #03A9F4;
+}
+
+.rbfw-lsn-tip-icon-info::before {
+    font-size: 18px;
+    content: "";
+    top: 5px;
+    left: 16px;
+    font-family: FontAwesome;
+    position: absolute;
+    color: white;
+}
+
+.rbfw-lsn-tip-icon-info i::before {
+    background: #03A9F4;
+}

@@ -7,25 +7,27 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Rent List Shortcode
  ******************************/
 add_shortcode('rent-list', 'rbfw_rent_list_shortcode_func');
-function rbfw_rent_list_shortcode_func($atts) {
+function rbfw_rent_list_shortcode_func($atts = null) {
     $attributes = shortcode_atts( array(
         'style' => 'grid',
         'show'  => -1,
         'order' => 'DESC',
-        'type'  => ''
+        'type'  => '',
+        'location' => ''
         ), $atts );
 
     $style  = $attributes['style'];      
     $show   = $attributes['show'];
     $order  = $attributes['order'];
     $type   = $attributes['type'];
+    $location   = $attributes['location'];
 
     $args = array(
         'post_type' => 'rbfw_item',
         'posts_per_page' => $show,
         'post_status' => 'publish',
         'orderby'=> 'post_date', 
-        'order' => $order
+        'order' => $order,
     );
 
     if(!empty($type)):
@@ -41,6 +43,19 @@ function rbfw_rent_list_shortcode_func($atts) {
     $args = array_merge($args,$meta_query);    
     endif;
     
+    if(!empty($location)):
+        $location_query = array(
+            'meta_query' => array(
+                    array(
+                        'key' => 'rbfw_pickup_data',
+                        'value' => $location,
+                        'compare' => 'LIKE',
+                    )
+                )
+        );
+        $args = array_merge($args,$location_query);
+    endif;
+
     $query = new WP_Query($args);
 
     ob_start();
@@ -65,7 +80,22 @@ function rbfw_rent_list_shortcode_func($atts) {
     endif;
 
     $d++;
-    endwhile; endif;
+    endwhile;
+
+    else:
+
+        ?>
+        <div class="rbfw-lsn-new-message-box">
+            <div class="rbfw-lsn-new-message-box-info">
+                <div class="rbfw-lsn-info-tab rbfw-lsn-tip-icon-info" title="error"><i></i></div>
+                <div class="rbfw-lsn-tip-box-info">
+                    <p><?php rbfw_string('rbfw_text_nodatafound',__('Sorry, no data found!','booking-and-rental-manager-for-woocommerce')); ?></p>
+                </div>
+            </div>
+        </div>
+        <?php
+    endif;
+
     wp_reset_query(); 
     ?>
     </div>
@@ -122,4 +152,34 @@ function rbfw_add_to_cart_shortcode_func($atts){
     $content = ob_get_clean();
 
     return $content;
+}
+
+/******************************
+ * Rent Filter Form Shortcode
+ ******************************/
+add_shortcode('rbfw-search', 'rbfw_rent_search_shortcode_func');
+function rbfw_rent_search_shortcode_func() {
+
+    $search_page_id = rbfw_get_option('rbfw_search_page','rbfw_basic_gen_settings');
+    $search_page_link = get_page_link($search_page_id);
+    $location_arr = rbfw_get_location_arr();
+    $location = !empty($_GET['rbfw_search_location']) ? strip_tags($_GET['rbfw_search_location']) : '';
+    ?>
+    <div class="rbfw_search_form_wrap">
+        <form class="rbfw_search_form" action="<?php echo esc_url($search_page_link); ?>" method="GET">
+            <div class="rbfw_search_form_col">
+                <label><?php rbfw_string('rbfw_text_pickup_location',__('Pickup Location','booking-and-rental-manager-for-woocommerce')); ?></label>
+                <select name="rbfw_search_location">
+                    <?php foreach ( $location_arr as $key => $value ) { ?>
+                        <option value="<?php echo esc_attr($key); ?>" <?php if($location == $key){ echo 'selected'; }?>><?php echo esc_html($value); ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+            <div class="rbfw_search_form_col">
+                <label></label>
+                <button type="submit" name="rbfw_search_submit" class="rbfw_search_submit"><?php rbfw_string('rbfw_text_search',__('Search','booking-and-rental-manager-for-woocommerce')); ?></button>
+            </div>
+        </form>
+    </div>
+    <?php
 }

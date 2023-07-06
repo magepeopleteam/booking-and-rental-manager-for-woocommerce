@@ -89,7 +89,15 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'type'    => 'generatepage',
 				'default' => '',
 				'options' => rbfw_get_pages_arr()
-			),					
+			),
+			array(
+				'name'    => 'rbfw_search_page',
+				'label'   => __( 'Search Page', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'The filter form result will display on search result page.', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'generatepage',
+				'default' => '',
+				'options' => rbfw_get_pages_arr()
+			),
 		),
 		'rbfw_basic_translation_settings' => array(
 			array(
@@ -1488,6 +1496,20 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => __( 'Enter the translated text of <strong>Booking Time Expired!</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Booking Time Expired!'
+			),
+			array(
+				'name'    => 'rbfw_text_search',
+				'label'   => __( 'Search', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Search</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Search'
+			),
+			array(
+				'name'    => 'rbfw_text_nodatafound',
+				'label'   => __( 'Sorry, no data found!', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Sorry, no data found!</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Sorry, no data found!'
 			),
 		),
 		'rbfw_basic_style_settings' => array(
