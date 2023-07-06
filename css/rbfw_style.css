@@ -5747,6 +5747,7 @@ body.single-rbfw_item div.ast-container {
     margin-bottom: 10px;
     font-weight: 600;
     color: #444;
+    display: block;
 }
 
 .rbfw-lsn-new-message-box {
