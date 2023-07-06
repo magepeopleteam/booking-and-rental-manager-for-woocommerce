@@ -48,17 +48,19 @@
 								if(! empty($rbfw_resort_room_data)) :
 								$i = 0;
 								foreach ($rbfw_resort_room_data as $key => $value):
-								?>
-								<tr>
-									<td><?php echo esc_attr($value['room_type']); ?></td>
+									if(!empty($value['room_type'])){
+									?>
+									<tr>
+										<td><?php echo esc_attr($value['room_type']); ?></td>
 
-									<?php if(!empty($value['rbfw_room_daylong_rate'])){ ?>
-										<td style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;"><?php echo rbfw_mps_price( $value['rbfw_room_daylong_rate'] ); ?></td>
-									<?php } ?>
+										<?php if(!empty($value['rbfw_room_daylong_rate'])){ ?>
+											<td style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;"><?php echo rbfw_mps_price( $value['rbfw_room_daylong_rate'] ); ?></td>
+										<?php } ?>
 
-									<td><?php echo rbfw_mps_price( $value['rbfw_room_daynight_rate'] ); ?></td>
-								</tr>
-								<?php
+										<td><?php echo rbfw_mps_price( $value['rbfw_room_daynight_rate'] ); ?></td>
+									</tr>
+									<?php
+									}
 								endforeach;
 								endif;
 								?>

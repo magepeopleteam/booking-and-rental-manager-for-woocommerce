@@ -3348,6 +3348,12 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     width: auto;
 }
 
+.theme-twentytwentythree .rbfw_muffin_template #checkin_date,
+.theme-twentytwentythree .rbfw_muffin_template #checkout_date {
+    max-width: 100%;
+    width: auto;
+}
+
 .rbfw_muff_registration_wrapper .rbfw-datetime .date .calendar img,
 .rbfw_muff_registration_wrapper .rbfw-datetime .time .clock img {
     height: 25px;
