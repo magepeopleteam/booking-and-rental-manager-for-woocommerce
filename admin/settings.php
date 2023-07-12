@@ -1511,6 +1511,13 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'type'    => 'text',
 				'default' => 'Sorry, no data found!'
 			),
+			array(
+				'name'    => 'rbfw_text_pls_select_location',
+				'label'   => __( 'Please Select a Location', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Please Select a Location</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Please Select a Location'
+			),
 		),
 		'rbfw_basic_style_settings' => array(
 			array(

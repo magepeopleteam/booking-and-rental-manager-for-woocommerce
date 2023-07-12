@@ -30,7 +30,7 @@
 			'hide_empty' => false,
 		) );
 		$arr   = array(
-			'' => __( 'Please Select a Location', 'booking-and-rental-manager-for-woocommerce' )
+			'' => rbfw_string_return('rbfw_text_pls_select_location',__('Please Select a Location','booking-and-rental-manager-for-woocommerce'))
 		);
 		foreach ( $terms as $_terms ) {
 			$arr[ $_terms->name ] = $_terms->name;
