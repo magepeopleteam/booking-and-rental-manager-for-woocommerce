@@ -23,12 +23,22 @@ if (!class_exists('Rbfw_Search_Page')) {
             $search_page_id = rbfw_get_option('rbfw_search_page','rbfw_basic_gen_settings');
 
             if($search_page_id){
-                $args = array(
-                    'ID'           => $search_page_id,
-                    'post_content' => '[rbfw_search]',
-                    'post_status'   => 'publish'
-                );
-                wp_update_post($args);
+
+                if(empty(get_post_meta( $search_page_id, 'rbfw_search_page', true))){
+
+                    $args = array(
+                        'ID'           => $search_page_id,
+                        'post_content' => '[rbfw_search]'
+                    );
+
+                    wp_update_post($args);
+
+                    update_post_meta( $search_page_id, 'rbfw_search_page', 'generated' );
+
+                } else {
+
+                    return; //do nothing
+                }
 
             }else{
 
@@ -48,7 +58,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                         $gen_settings = !empty(get_option('rbfw_basic_gen_settings')) ? get_option('rbfw_basic_gen_settings') : [];
                         $new_gen_settings = array_merge($gen_settings, ['rbfw_search_page' => $post_id]);
                         update_option('rbfw_basic_gen_settings', $new_gen_settings);
-    
+                        update_post_meta( $post_id, 'rbfw_search_page', 'generated' );
                     }
                 }
             }

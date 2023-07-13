@@ -26,13 +26,24 @@ if (!class_exists('Rbfw_Account_Page')) {
         public function rbfw_account_page(){
             
             $ac_page_id = rbfw_get_option('rbfw_account_page','rbfw_basic_gen_settings');
+
             if($ac_page_id){
-                $args = array(
-                    'ID'           => $ac_page_id,
-                    'post_content' => '[rbfw_account]',
-                    'post_status'   => 'publish'
-                );
-                wp_update_post($args);
+
+                if(empty(get_post_meta( $ac_page_id, 'rbfw_account_page', true))){
+
+                    $args = array(
+                        'ID'           => $ac_page_id,
+                        'post_content' => '[rbfw_account]'
+                    );
+
+                    wp_update_post($args);
+
+                    update_post_meta( $ac_page_id, 'rbfw_account_page', 'generated' );
+
+                } else {
+
+                    return; //do nothing
+                }
 
             }else{
 
@@ -52,7 +63,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                         $gen_settings = !empty(get_option('rbfw_basic_gen_settings')) ? get_option('rbfw_basic_gen_settings') : [];
                         $new_gen_settings = array_merge($gen_settings, ['rbfw_account_page' => $post_id]);
                         update_option('rbfw_basic_gen_settings', $new_gen_settings);
-    
+                        update_post_meta( $post_id, 'rbfw_account_page', 'generated' );
                     }
                 }
             }

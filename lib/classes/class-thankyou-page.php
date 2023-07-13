@@ -22,14 +22,23 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
         public function rbfw_thankyou_page(){
              
             $t_page_id = rbfw_get_option('rbfw_thankyou_page','rbfw_basic_gen_settings');
-            $t_page_url = '';
+
             if($t_page_id){
-                $t_page_url = get_page_link($t_page_id);
-                $args = array(
-                    'ID'           => $t_page_id,
-                    'post_content' => '[rbfw_thankyou]',
-                );
-                wp_update_post($args);
+
+                if(empty(get_post_meta( $t_page_id, 'rbfw_thankyou_page', true))){
+
+                    $args = array(
+                        'ID'           => $t_page_id,
+                        'post_content' => '[rbfw_thankyou]',
+                    );
+                    wp_update_post($args);
+
+                    update_post_meta( $t_page_id, 'rbfw_thankyou_page', 'generated' );
+
+                } else {
+
+                    return; //do nothing
+                }
 
             }else{
 
@@ -49,7 +58,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         $gen_settings = !empty(get_option('rbfw_basic_gen_settings')) ? get_option('rbfw_basic_gen_settings') : [];
                         $new_gen_settings = array_merge($gen_settings, ['rbfw_thankyou_page' => $post_id]);
                         update_option('rbfw_basic_gen_settings', $new_gen_settings);
-    
+                        update_post_meta( $post_id, 'rbfw_thankyou_page', 'generated' );
                     }
                 }
             }
