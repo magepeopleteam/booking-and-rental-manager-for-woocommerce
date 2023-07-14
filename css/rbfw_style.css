@@ -2061,6 +2061,10 @@ body.theme-twentytwentythree .rbfw_muffin_template button {
     border: none;
 }
 
+body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
+    max-width: 49%;
+}
+
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn {
     border: none;
 }

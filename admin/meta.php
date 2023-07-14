@@ -280,7 +280,7 @@
 					</select>
 					</td>
 				</tr>
-				<tr class="rbfw_enable_start_end_date_switch_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment') { echo 'style="display:none"'; } ?>>
+				<tr class="rbfw_enable_start_end_date_switch_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort') { echo 'style="display:none"'; } ?>>
 					<td>
 						<div class="rbfw_switch_wrapper rbfw_switch_wrapper_return_date">
 						<label for=""><div class="rbfw_switch_label"><?php esc_html_e( 'Start & End Date/Time:', 'booking-and-rental-manager-for-woocommerce' ); ?>
