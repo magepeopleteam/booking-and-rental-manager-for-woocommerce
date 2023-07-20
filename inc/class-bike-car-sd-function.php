@@ -1055,7 +1055,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                                         jQuery('.rbfw-bikecarsd-step[data-step="3"] .rbfw_back_step_btn').hide();
                                         jQuery('.rbfw-bikecarsd-step[data-step="3"] .rbfw_step_selected_date').hide();
-                                        let selected_time = jQuery('.rbfw-bikecarsd-step[data-step="3"] .rbfw_step_selected_date').attr('data-time');
+                                        let selected_time = jQuery('#rbfw_bikecarsd_selected_time').val();
                                         jQuery('.rbfw-bikecarsd-step[data-step="2"] .rbfw_step_selected_date span.rbfw_selected_time').remove();
                                         jQuery('.rbfw-bikecarsd-step[data-step="2"] .rbfw_step_selected_date').append('<span class="rbfw_selected_time"> '+selected_time+'</span>');
                                     }
