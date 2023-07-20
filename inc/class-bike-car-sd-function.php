@@ -1172,7 +1172,16 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             let type_array = {};
                             let service_array = {};
                             let post_id = jQuery('#rbfw_post_id').val();
-                            for (let index = 1; index <= type_length; index++) {
+
+                            let index_start = 1;
+
+                            if(rbfw_rent_type == 'appointment'){
+
+                                index_start = 0;
+
+                            }
+
+                            for (let index = index_start; index <= type_length; index++) {
 
                                 let qty = jQuery('input[name="rbfw_bikecarsd_info['+index+'][qty]"]').val();
                                 let data_type = jQuery('input[name="rbfw_bikecarsd_info['+index+'][qty]"]').attr('data-type');

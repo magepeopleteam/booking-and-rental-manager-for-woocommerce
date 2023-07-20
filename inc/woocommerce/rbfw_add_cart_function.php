@@ -103,6 +103,11 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     $rbfw_bikecarsd_selected_date = $date_to_string->format('F j, Y');
     
     $a = 1;
+
+    if($rbfw_rent_type == 'appointment'){
+        $a = 0;
+    }
+
     foreach ($rbfw_type_info_all as $key => $value) {
 
         if(!empty($_POST['rbfw_bikecarsd_info'][$a]['rent_type'])){
