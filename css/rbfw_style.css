@@ -2061,6 +2061,10 @@ body.theme-twentytwentythree .rbfw_muffin_template button {
     border: none;
 }
 
+body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
+    max-width: 49%;
+}
+
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn {
     border: none;
 }
@@ -2078,7 +2082,7 @@ body.theme-twentytwentythree .rbfw_muffin_template button {
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time span.rbfw_bikecarsd_time_span {
-    display: inline-block;
+    display: block;
     padding: 10px;
     text-transform: capitalize;
     border: 1px solid #d3d3d3;
@@ -2087,6 +2091,8 @@ body.theme-twentytwentythree .rbfw_muffin_template button {
     color: #017b01;
     font-size: 16px;
     background-color: #fff;
+    max-width: 100%;
+    width: auto;
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.disabled span.rbfw_bikecarsd_time_span {
@@ -5660,6 +5666,7 @@ table.rbfw_regf_cart_table {
 
 .rbfw_regf_group label {
     display: block;
+    margin-bottom: 10px;
 }
 
 .rbfw-review-input-group label.rbfw_review_input_label {

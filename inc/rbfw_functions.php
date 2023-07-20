@@ -303,12 +303,10 @@
 			$resed_start_time = date( 'H:i', strtotime( $start_datetime ) );
 			$resed_end_time = date( 'H:i', strtotime( $end_datetime ) );
 
-			if($resed_start_time != $resed_end_time){
-				$resed_start_time = '00:00:00';
-				$resed_end_time = '24:00:00';
-				$start_datetime = date( 'Y-m-d H:i', strtotime( $resed_start_date.' '.$resed_start_time ) );
-				$end_datetime = date( 'Y-m-d H:i', strtotime( $resed_end_date.' '.$resed_end_time ) );
-			}
+			$resed_start_time = '00:00:00';
+			$resed_end_time = '24:00:00';
+			$start_datetime = date( 'Y-m-d H:i', strtotime( $resed_start_date.' '.$resed_start_time ) );
+			$end_datetime = date( 'Y-m-d H:i', strtotime( $resed_end_date.' '.$resed_end_time ) );
 		}
 
 		$diff        = mep_get_date_diff( $start_datetime, $end_datetime );
