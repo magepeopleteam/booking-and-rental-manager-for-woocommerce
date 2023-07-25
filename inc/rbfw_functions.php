@@ -3284,3 +3284,78 @@ function rbfw_get_available_times($rbfw_id){
 	}
 	return $the_array;
 }
+
+/* UPDATE: Inventory order status */
+add_action('wp_loaded', 'rbfw_update_inventory_order_status');
+
+function rbfw_update_inventory_order_status(){
+
+	$check_update = get_option( 'rbfw_old_inventory_updated', true );
+
+	if($check_update === 'yes'){
+		return;
+	}
+
+	$args = array(
+		'post_type' => 'rbfw_item',
+		'posts_per_page' => -1,
+	);
+
+	$the_query = new WP_Query($args);
+
+	if ( $the_query->have_posts() ) {
+
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			$id = get_the_ID();
+			$inventory = get_post_meta($id,'rbfw_inventory',true);
+
+			if(!empty($inventory)){
+				foreach ($inventory as $key => $value) {
+					$order_id = $key;
+					$order_status = rbfw_get_order_status_by_id($order_id);
+					$inventory[$order_id]['rbfw_order_status'] = $order_status;
+				}
+			}
+
+			update_post_meta($id, 'rbfw_inventory', $inventory);
+		}
+		update_option( 'rbfw_old_inventory_updated', 'yes' );
+	}
+}
+
+function rbfw_get_order_status_by_id($order_id){
+
+	$args = array(
+		'post_type' => 'rbfw_order',
+		'posts_per_page' => -1,
+		'meta_query' => array(
+			'relation' => 'OR',
+			array(
+				'key' => 'rbfw_order_id',
+				'value' => $order_id,
+			),
+			array(
+				'key' => 'rbfw_status_id',
+				'value' => $order_id,
+			)
+		)
+	);
+
+	$the_query = new WP_Query($args);
+
+	if ( $the_query->have_posts() ) {
+
+		while ( $the_query->have_posts() ) {
+			$the_query->the_post();
+			$id = get_the_ID();
+			$order_status = get_post_meta($id,'rbfw_order_status',true);
+
+			return $order_status;
+		}
+
+	} else {
+		return false;
+	}
+
+}
