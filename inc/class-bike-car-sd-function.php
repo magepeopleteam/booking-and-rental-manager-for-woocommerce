@@ -548,7 +548,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $content .= '</tr>';
                 $content .= '</thead>';
                 $content .= '<tbody>';
-                $i = 0;
+                $i = 1;
                 foreach ($rbfw_bike_car_sd_data as $value) {
 
                    $max_available_qty = rbfw_get_bike_car_sd_available_qty($id, $selected_date, $value['rent_type'], $selected_time);
@@ -583,9 +583,10 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                         $content .= '</div>';
                         $content .= '</td>';
                         $content .= '</tr>';
+                        $i++;
                     }
 
-                    $i++;
+
                 }
 
                 $content .= '</tbody>';
@@ -1177,7 +1178,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                             if(rbfw_rent_type == 'appointment'){
 
-                                index_start = 0;
+                                index_start = 1;
 
                             }
 
@@ -1640,7 +1641,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                 
                                 let count = jQuery('.rbfw_bikecarsd_rt_price_table tbody tr').length;
                                 let total_qty = 0;
-                                for (let index = 0; index < count; index++) {
+                                for (let index = 1; index <= count; index++) {
                                     let qty = jQuery('input[name="rbfw_bikecarsd_info['+index+'][qty]"]').val();
                                     total_qty += parseInt(qty); 
                                 }
