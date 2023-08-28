@@ -3359,3 +3359,26 @@ function rbfw_get_order_status_by_id($order_id){
 	}
 
 }
+
+add_action('woocommerce_thankyou','rbfw_update_order_status');
+
+function rbfw_update_order_status($order_id){
+
+	$order = wc_get_order( $order_id );
+	$current_status = $order->get_status();
+	$items = $order->get_items();
+
+		foreach( $items as $item_id => $item ) {
+
+			$rbfw_id = wc_get_order_item_meta( $item_id, '_rbfw_id', true );
+			$inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
+
+			if (!empty($inventory) && array_key_exists($order_id, $inventory)){
+
+				$inventory[$order_id]['rbfw_order_status'] = $current_status;
+
+				update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
+			}
+
+		}
+}
