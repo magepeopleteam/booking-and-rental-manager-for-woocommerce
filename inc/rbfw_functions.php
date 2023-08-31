@@ -1640,14 +1640,15 @@ function rbfw_update_inventory($order_id, $current_status = null){
 
 	/* get order meta data from wp_postmeta table */
 	global $wpdb;
-	$order = $wpdb->get_results('SELECT * FROM `wp_woocommerce_order_items` WHERE order_id = '.$order_id.' ');
+	$order_items_table = $wpdb->prefix . 'woocommerce_order_items';
+	$order = $wpdb->get_results("SELECT * FROM `$order_items_table` WHERE order_id = ".$order_id."");
 
 	if($rbfw_payment_system == 'wps'){
 
 		foreach( $order as $item ) {
-
+			$order_itemmeta_table = $wpdb->prefix . 'woocommerce_order_itemmeta';
 			$item_id = $item->order_item_id;
-			$item_meta_data = $wpdb->get_results('SELECT * FROM `wp_woocommerce_order_itemmeta` WHERE order_item_id = '.$item_id.' AND meta_key = "_rbfw_id" ');
+			$item_meta_data = $wpdb->get_results("SELECT * FROM `$order_itemmeta_table` WHERE order_item_id = ".$item_id." AND meta_key = '_rbfw_id' ");
 
 			foreach ($item_meta_data as $meta_data) {
 				$rbfw_id = $meta_data->meta_value;
@@ -1706,7 +1707,7 @@ function rbfw_get_bike_car_sd_available_qty($post_id, $selected_date, $type, $se
 
 			if($rbfw_rent_type == 'appointment'){
 
-				if ( in_array($selected_date, $booked_dates) && ($selected_time == $rbfw_start_time) ) {
+				if ( in_array($selected_date, $booked_dates) && ($selected_time == $rbfw_start_time) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ) {
 					
 					foreach ($rbfw_type_info as $type_name => $type_qty) {
 						
@@ -1718,7 +1719,7 @@ function rbfw_get_bike_car_sd_available_qty($post_id, $selected_date, $type, $se
 
 			} else {
 
-				if ( in_array($selected_date, $booked_dates) ) {
+				if ( in_array($selected_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing')) {
 					
 					foreach ($rbfw_type_info as $type_name => $type_qty) {
 						
