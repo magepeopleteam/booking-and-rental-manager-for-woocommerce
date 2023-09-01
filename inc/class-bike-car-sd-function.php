@@ -522,7 +522,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $available_qty_info_switch = get_post_meta($id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($id, 'rbfw_available_qty_info_switch', true) : 'no';
 
 
-                ob_start();
+
                 $content  = '';
                 $content .= '<div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step" data-step="3">';
                 $content .= '<a class="rbfw_back_step_btn" back-step="2" data-step="3"><i class="fa-solid fa-circle-left"></i> '.rbfw_string_return('rbfw_text_back_to_previous_step',__('Back to Previous Step','booking-and-rental-manager-for-woocommerce')).'</a>';
@@ -695,8 +695,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $content .= '</div>';
 
                 echo $content;
-                $output = ob_get_clean();
-                echo $output;
+
             }
             wp_die();
         }
