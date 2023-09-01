@@ -1673,7 +1673,7 @@ function rbfw_update_inventory($order_id, $current_status = null){
 
 			$inventory[$order_id]['rbfw_order_status'] = $current_status;
 
-			update_post_meta($order_id, 'rbfw_inventory', $inventory);
+			update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
 		}
 	}
 }
