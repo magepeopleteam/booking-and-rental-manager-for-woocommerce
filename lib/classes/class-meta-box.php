@@ -178,7 +178,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 									<?php foreach ($panel['sections'] as $sectionIndex => $section) : ?>
 										<div class="section">
 											<h3 id="<?php echo esc_attr($sectionIndex); ?>" class="section-title"><?php echo esc_html($section['title']); ?></h3>
-											<p class="description"><?php echo esc_html($section['description']); ?></p>
+											<div class="rbfw-form-table-wrap" data-title="<?php echo esc_html($section['title']); ?>">
 											<table class="form-table">
 												<tbody>
 													<?php foreach ($section['options'] as $option) : ?>
@@ -198,6 +198,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 													<?php endforeach; ?>
 												</tbody>
 											</table>
+															</div>
 										</div>
 									<?php endforeach; ?>
 								</div>

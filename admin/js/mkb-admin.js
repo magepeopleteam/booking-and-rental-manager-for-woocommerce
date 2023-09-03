@@ -311,6 +311,7 @@
                 jQuery('.rbfw_min_max_booking_day_row').hide();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').show();
                 jQuery('tr.rbfw_enable_start_end_date_switch_row').hide();
+                jQuery('tr.rbfw_enable_start_end_date_field_row').hide();
 
             } else if (item_type == 'appointment') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
@@ -330,6 +331,7 @@
                 jQuery('.rbfw_min_max_booking_day_row').hide();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').show();
                 jQuery('tr.rbfw_enable_start_end_date_switch_row').hide();
+                jQuery('tr.rbfw_enable_start_end_date_field_row').hide();
                 let this_table_row_length = jQuery('.rbfw_bike_car_sd_price_table_row').length;
 
                 for (let index = 0; index < this_table_row_length; index++) {
@@ -360,6 +362,7 @@
                 jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
                 jQuery('tr[data-row=rdfw_available_time]').show();
                 jQuery('tr.rbfw_enable_start_end_date_switch_row').hide();
+                jQuery('tr.rbfw_enable_start_end_date_field_row').hide();
             } else {
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
@@ -380,6 +383,7 @@
                 jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
                 jQuery('tr[data-row=rdfw_available_time]').show();
                 jQuery('tr.rbfw_enable_start_end_date_switch_row').show();
+                jQuery('tr.rbfw_enable_start_end_date_field_row').show();
             }
 
             return false;
@@ -552,8 +556,14 @@
         });
 
         jQuery('.rbfw_switch_return_date label').click(function(e) {
+            let data_value = jQuery(this).attr('data-value');
 
-            jQuery('tr.rbfw_enable_start_end_date_field_row').toggle();
+            if (data_value == 'on') {
+                jQuery('tr.rbfw_enable_start_end_date_field_row').hide();
+            }
+            if (data_value == 'off') {
+                jQuery('tr.rbfw_enable_start_end_date_field_row').show();
+            }
 
         });
     });

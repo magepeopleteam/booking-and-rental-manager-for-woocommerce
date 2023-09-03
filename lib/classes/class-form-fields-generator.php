@@ -1,5 +1,5 @@
 <?php
-if ( ! defined('ABSPATH')) exit;  // if direct access 
+if ( ! defined('ABSPATH')) exit;  // if direct access
 
 
 /*Input fields
@@ -2953,7 +2953,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
             $conditions 	= isset( $option['conditions'] ) ? $option['conditions'] : array();
             $placeholder 	= isset( $option['placeholder'] ) ? $option['placeholder'] : "";
-            $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fas fa-times"></i>';
+            $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fa-solid fa-trash-can"></i>';
             $sortable 	    = isset( $option['sortable'] ) ? $option['sortable'] : true;
             $default 	    = isset( $option['default'] ) ? $option['default'] : array();
 
@@ -2984,7 +2984,7 @@ foreach ($values as $value):
                     <div class="field-list <?php echo esc_attr($field_id); ?>">
 
                         <div class="feature_category_inner_wrap">
-                            <div class="feature_category_title"><input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_feature_category[<?php echo $i; ?>][cat_title]" data-key="<?php echo $i; ?>" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/></div>
+                            <div class="feature_category_title"><label><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_feature_category[<?php echo $i; ?>][cat_title]" data-key="<?php echo $i; ?>" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/></div>
                             <div class="feature_category_inner_item_wrap sortable">
                                 <?php
                                 if(!empty($value['cat_features'])){
@@ -3035,7 +3035,7 @@ else:
 
             <div class="field-list <?php echo esc_attr($field_id); ?>">
                 <div class="feature_category_inner_wrap">
-                    <div class="feature_category_title"><input type="text" name="rbfw_feature_category[0][cat_title]" data-key="0" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/></div>
+                    <div class="feature_category_title"><label><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" name="rbfw_feature_category[0][cat_title]" data-key="0" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/></div>
                     <div class="feature_category_inner_item_wrap sortable">
                         <div class="item">
                             <div class="rbfw_feature_icon_preview" data-key="0"></div>
@@ -3075,7 +3075,7 @@ endif;
                         e.stopImmediatePropagation();
                         let dataCat = jQuery('.rbfw_feature_category_table tbody tr:last-child').attr('data-cat');
                         let nextCat = parseInt(dataCat) + 1;
-                        let html = '<tr data-cat="'+nextCat+'"><td><div class="features_category_wrapper"><div class="field-list rbfw_feature_category"><div class="feature_category_inner_wrap"><div class="feature_category_title"><input type="text" class="rbfw_feature_category_title" name="rbfw_feature_category['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></div><div class="feature_category_inner_item_wrap sortable"><div class="item"><div class="rbfw_feature_icon_preview" data-key="0"></div><a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Icon Library','booking-and-rental-manager-for-woocommerce'); ?></a><input type="hidden" name="rbfw_feature_category['+nextCat+'][cat_features][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_feature_icon"> <input type="text" name="rbfw_feature_category['+nextCat+'][cat_features][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0"> <?php if($sortable):?> <span class="button sort"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span></div></div></div></div><span class="ppof-button add-new-feature"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo ($remove_text); ?></span></td></tr>';
+                        let html = '<tr data-cat="'+nextCat+'"><td><div class="features_category_wrapper"><div class="field-list rbfw_feature_category"><div class="feature_category_inner_wrap"><div class="feature_category_title"><label><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_feature_category_title" name="rbfw_feature_category['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></div><div class="feature_category_inner_item_wrap sortable"><div class="item"><div class="rbfw_feature_icon_preview" data-key="0"></div><a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Icon Library','booking-and-rental-manager-for-woocommerce'); ?></a><input type="hidden" name="rbfw_feature_category['+nextCat+'][cat_features][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_feature_icon"> <input type="text" name="rbfw_feature_category['+nextCat+'][cat_features][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0"> <?php if($sortable):?> <span class="button sort"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span></div></div></div></div><span class="ppof-button add-new-feature"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo ($remove_text); ?></span></td></tr>';
                         jQuery('.rbfw_feature_category_table tbody').append(html);
                         jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
                         jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
@@ -3171,7 +3171,7 @@ endif;
             $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
             $conditions 	= isset( $option['conditions'] ) ? $option['conditions'] : array();
             $placeholder 	= isset( $option['placeholder'] ) ? $option['placeholder'] : "";
-            $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fas fa-times"></i>';
+            $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fa-solid fa-trash-can"></i>';
             $sortable 	    = isset( $option['sortable'] ) ? $option['sortable'] : true;
             $default 	    = isset( $option['default'] ) ? $option['default'] : array();
 
@@ -3289,7 +3289,7 @@ endif;
             $value 	        = isset( $option['value'] ) ? $option['value'] : "";
             $_value         = !empty($value) ? $value : $default;
             $__value        = str_replace('<br />', PHP_EOL, html_entity_decode($_value));
-                  
+
             $field_id       = $id;
             $field_name     = !empty( $field_name ) ? $field_name : $id;
 
@@ -3631,7 +3631,7 @@ endif;
                     }else{
                         $checked =  $key == $value  ? "checked" : "";
                     }
-                
+
                     ?>
                     <label for='<?php echo esc_attr($field_id); ?>'><input class="<?php echo esc_attr($field_id); ?>" name='<?php echo esc_attr($field_name); ?>' type='checkbox' id='<?php echo esc_attr($field_id); ?>' value='<?php echo esc_attr($key); ?>' <?php echo esc_attr($checked); ?>><?php echo esc_html($argName); ?></label><br>
                 <?php
@@ -4314,7 +4314,7 @@ endif;
                 foreach( $args as $key => $argName ):
                     $checked = ( $key == $value ) ? "checked" : "";
                     ?><label class="<?php echo esc_attr($checked); ?>" for='<?php echo esc_attr($id); ?>-<?php echo esc_attr($key); ?>'><input name='<?php echo esc_attr($field_name); ?>' type='radio' id='<?php echo esc_attr($id); ?>-<?php echo esc_attr($key); ?>' value='<?php echo esc_attr($key); ?>' <?php echo esc_attr($checked); ?>><span class="sw-button"><?php echo esc_html($argName); ?></span></label><?php
-                    
+
                 endforeach;
                 ?>
                 <div class="error-mgs"></div>
@@ -6030,7 +6030,7 @@ endif;
 
                 $depends .= "{'[name=".$field."]':";
                 $depends .= '{';
-                
+
                 if(!empty($type)):
                     $depends .= "'type':";
                     $depends .= "'".$type."'";
@@ -6493,6 +6493,7 @@ endif;
                         <?php
                         if(!empty($options)):
                             ?>
+                            <div class="rbfw-form-table-wrap">
                             <table class="form-table">
                                 <tbody>
 
@@ -6512,7 +6513,7 @@ endif;
                                     <tr>
                                         <th scope="row"><?php echo esc_html($option_title); ?></th>
                                         <td>
-                                            <?php                                           
+                                            <?php
                                             if (sizeof($option) > 0 && isset($option['type'])) {
                                                 echo mep_field_generator($option['type'], $option);
                                                 do_action("wp_theme_settings_field_$type", $option);
@@ -6532,6 +6533,7 @@ endif;
 
                                 </tbody>
                             </table>
+                            </div>
                         <?php
 
                         endif;
@@ -6689,6 +6691,7 @@ endif;
                                 <?php
                                 if(!empty($options)):
                                     ?>
+                                    <div class="rbfw-form-table-wrap">
                                     <table class="form-table">
                                         <tbody>
 
@@ -6727,6 +6730,7 @@ endif;
 
                                         </tbody>
                                     </table>
+                                    </div>
                                 <?php
 
                                 endif;
@@ -6891,6 +6895,7 @@ endif;
                                 <?php
                                 if(!empty($options)):
                                     ?>
+                                    <div class="rbfw-form-table-wrap">
                                     <table class="form-table">
                                         <tbody>
                                         <?php
@@ -6914,6 +6919,7 @@ endif;
                                         ?>
                                         </tbody>
                                     </table>
+                                        </div>
                                     <?php
 
                                 endif;
@@ -8287,7 +8293,7 @@ endif;
             $btntext		= isset( $option['btn_text'] ) ? $option['btn_text'] : 'Add';
             $fields 		= isset( $option['fields'] ) ? $option['fields'] : array();
             $title_field 	= isset( $option['title_field'] ) ? $option['title_field'] : '';
-            $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fas fa-times"></i>';
+            $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fa-solid fa-trash-can"></i>';
             $limit 	        = isset( $option['limit'] ) ? $option['limit'] : '';
             $args 	        = isset( $option['args'] ) ? $option['args'] : '';
             $args			= is_array( $args ) ? $args : $this->args_from_string( $args );
@@ -8297,8 +8303,8 @@ endif;
 
 
             $new_title      =  explode('/',$title_field);
-            $title_field    = $new_title;            
-            foreach ($fields as $key => $value) {            
+            $title_field    = $new_title;
+            foreach ($fields as $key => $value) {
                 # code...
                 $new[$key]['type']      = $fields[$key]['type'];
                 $new[$key]['default']   = $fields[$key]['default'];
@@ -8307,10 +8313,10 @@ endif;
                 if(array_key_exists('args',$value)){
                  $new[$key]['args']      = !is_array($fields[$key]['args']) ? $this->args_from_string($fields[$key]['args']) : $fields[$key]['args'];
                 }
-                 
+
             }
             $fields = $new;
-           
+
 
             if(!empty($conditions)):
 
@@ -8487,7 +8493,7 @@ endif;
                             }else if(type == 'select'){
                                 args = element.args;
                                 html+='<select name="<?php echo esc_attr($field_name); ?>['+now+']['+element.item_id+']">';
-                                for(argKey in args){                                                                       
+                                for(argKey in args){
                                     html+='<option value="'+argKey+'">'+args[argKey]+'</option>';
                                 }
                                 html+='</select>';
@@ -8538,7 +8544,7 @@ endif;
             </script>
             <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-repeatable-wrapper
             field-repeatable-wrapper-<?php echo esc_attr($id); ?>">
-                
+
                 <div class="field-list <?php if($sortable){ echo 'sortable'; }?>" id="<?php echo esc_attr($id); ?>">
                     <?php
                     if(!empty($values)):
@@ -8547,20 +8553,20 @@ endif;
                             $title_field_val = !empty($title_field) ? $this->get_form_title($title_field,$val) : '==> Click to Expand';
                             ?>
                             <div class="item-wrap <?php if($collapsible) echo 'collapsible'; ?>">
-                               
+
                                 <div class="header">
-                                   
+
                                     <?php if($collapsible === true): ?>
-                                    <span class="title-text button"><i class="fa-solid fa-angles-down"></i> Expand</span> 
-                                    <?php endif; ?>                                 
+                                    <span class="title-text button"><i class="fa-solid fa-angles-down"></i> Expand</span>
+                                    <?php endif; ?>
                                     <?php if($sortable):?>
                                         <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
                                     <?php endif; ?>
-                                    
+
                                     <span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo mep_esc_html($remove_text); ?></span>
-                                    
+
                                 </div>
-                                   
+
                                 <?php foreach ($fields as $field_index => $field):
                                     $type               = $field['type'];
                                     $item_id            = $field['item_id'];
@@ -8633,13 +8639,13 @@ endif;
                                                 $default = isset($field['default']) ? $field['default'] : '';
                                                 $value = !empty($val[$item_id]) ? $val[$item_id] : $default;
 
-                                               
+
                                                 ?>
                                                 <select class="" name="<?php echo esc_attr($field_name); ?>[<?php echo esc_attr($index); ?>][<?php echo esc_attr($item_id); ?>]">
-                                                <?php                                                    
-                                                   if(!is_array($args)){                                                   
+                                                <?php
+                                                   if(!is_array($args)){
                                                    $this->args_from_string($args);
-                                                   }else{                                                    
+                                                   }else{
                                                         foreach ($args as $argIndex => $argName):
                                                         $selected = ($argIndex == $value) ? 'selected' : '';
                                                         ?>
@@ -8651,13 +8657,13 @@ endif;
                                                 $default = isset($field['default']) ? $field['default'] : '';
                                                 $value = !empty($val[$item_id]) ? $val[$item_id] : $default;
                                                 ?>
-                                                <?php 
-                                                if(!is_array($args)){                                                   
+                                                <?php
+                                                if(!is_array($args)){
                                                     $this->args_from_string($args);
-                                                }else{                                                  
+                                                }else{
                                                 foreach ($args as $argIndex => $argName):
                                                 $checked = ($argIndex == $value) ? 'checked' : '';
-                                                
+
                                                 ?>
                                                 <label class="" >
                                                     <input  type="radio" name="<?php echo esc_attr($field_name); ?>[<?php echo esc_attr($index); ?>][<?php echo esc_attr($item_id); ?>]" <?php echo esc_attr($checked); ?>  value="<?php echo esc_attr($argIndex); ?>"><?php echo esc_html($argName); ?></input>
@@ -8668,8 +8674,8 @@ endif;
                                                 $default = isset($field['default']) ? $field['default'] : '';
                                                 $value = !empty($val[$item_id]) ? $val[$item_id] : $default;
                                                 ?>
-                                                <?php 
-                                                
+                                                <?php
+
                                                 foreach ($args as $argIndex => $argName):
                                                 $value = is_array($value) ? $value : array();
                                                 // print_r($value);
@@ -8691,7 +8697,7 @@ endif;
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            
+
                             <?php
                             //endforeach;
                             $count++;
@@ -8703,7 +8709,7 @@ endif;
                         ?>
                     <?php
                     endif;
-                    ?>                    
+                    ?>
                 </div>
                 <div class="error-mgs"></div>
                 <div class="ppof-button add-item"><i class="fas fa-plus-square"></i> <?php echo esc_html($btntext); ?></div>
