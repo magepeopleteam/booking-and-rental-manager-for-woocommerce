@@ -1103,7 +1103,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box table.form-table thead tr {
-    background-color: #E2E2FF;
+    background-color: #f7f094;
 }
 
 #rbfw_add_meta_box table.form-table tr {
@@ -1207,6 +1207,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     margin-bottom: 0;
     padding-top: 8px;
     padding-bottom: 8px;
+    margin-right: 8px;
 }
 
 .rbfw_item_type_table tr td label.rbfw_appointment_ondays_label {
@@ -2462,5 +2463,38 @@ input.rbfw_time_slot_edit_slot_label {
 
 .rbfw-form-table-wrap[data-title="Template Settings"],
 .rbfw-form-table-wrap[data-title="Image Gallery"] {
+    overflow-x: hidden;
+}
+
+.rbfw-form-table {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.rbfw-form-table th {
+    min-width: 120px;
+    background-color: #f7f094;
+    font-size: 14px;
+    line-height: 18px;
+    color: #1D2327;
+    padding: 8px;
+}
+
+.rbfw-form-table td {
+    background-color: #f7f09440;
+    padding: 8px;
+    width: 100%;
+}
+
+#add_new_discount_row {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.rbfw_form_group[data-table="rbfw_item_type_table"],
+.rbfw-item-type.mp_tab_item_sub_sec,
+.rbfw_seasonal_price_config_wrapper.mp_tab_item_sub_sec,
+.rbfw_es_price_config_wrapper.mp_tab_item_sub_sec,
+.rbfw_discount_price_config_wrapper.mp_tab_item_sub_sec {
     overflow-x: hidden;
 }

@@ -18,7 +18,7 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
         $qty = 1;
         for ( $key = 0; $key < $qty; $key ++ ) {
 
-                $zdata[ $key ]['rbfw_ticket_total_price'] = ((float)$_ticket['ticket_price'] * (float)$_ticket['ticket_qty']);
+                $zdata[ $key ]['rbfw_ticket_total_price'] = ((float)$_ticket['ticket_price'] * (int)$_ticket['ticket_qty']);
                 $zdata[ $key ]['rbfw_ticket_qty']         = $_ticket['ticket_qty'];
                 $zdata[ $key ]['rbfw_ticket_info']        = $ticket_info;
                 $zdata[ $key ]['rbfw_duration_cost']      = $rbfw_duration_cost;

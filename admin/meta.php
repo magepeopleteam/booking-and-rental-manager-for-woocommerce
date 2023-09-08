@@ -233,7 +233,7 @@
 		<div class='rbfw-item-type mp_tab_item_sub_sec'>
 			<h3 class="section-title"><?php echo ''.esc_html__( 'Rent Item Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
 			</h3>
-			<div class="rbfw_form_group">
+			<div class="rbfw_form_group" data-table="rbfw_item_type_table">
 			<table class="form-table rbfw_item_type_table">
 				<tr>
 					<td>
@@ -698,7 +698,7 @@
 
 		<div class="rbfw_es_price_config_wrapper mp_tab_item_sub_sec" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
 
-		<h3 class="section-title"><?php echo ''. esc_html__( 'Extra Service Price Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?>
+		<h3 class="section-title"><?php echo ''. esc_html__( 'Extra Service Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?>
 		</h3>
 
 		<div class="rbfw_form_group">
@@ -788,10 +788,10 @@
 			</tr>
 			</tbody>
 		</table>
+		</div>
 		<p class="es-add-row-btn">
 			<button id="add-row" class="ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Extra Service', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 		</p>
-		</div>
 		</div>
 
 		<?php do_action('rbfw_after_extra_service_table'); ?>

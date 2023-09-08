@@ -495,7 +495,8 @@ if (!class_exists('MageRBFWClass')) {
                         $current_service_cost = get_post_meta($post_id, 'rbfw_service_cost', true);
                         $merged_service_cost = (float)$current_service_cost + (float)$service_cost;
 
-                        $total_price = $merged_duration_cost + $merged_service_cost + $order_tax;
+                        //$total_price = $merged_duration_cost + $merged_service_cost + $order_tax;
+                        $total_price = $merged_duration_cost + $merged_service_cost;
 
                         if (sizeof($meta_data) > 0) {
                             foreach ($meta_data as $key => $value) {
@@ -536,7 +537,8 @@ if (!class_exists('MageRBFWClass')) {
 
                     if(!empty($order_tax)){ update_post_meta($post_id, 'rbfw_order_tax', $order_tax); }
                     $total_price = $meta_data['rbfw_ticket_total_price'];
-                    $total_price = $total_price + $order_tax;
+                    //$total_price = $total_price + $order_tax;
+                    $total_price = $total_price;
                     update_post_meta($post_id, 'rbfw_ticket_total_price', $total_price);
                     update_post_meta($post_id, 'rbfw_link_order_id', $wc_order_id);
 

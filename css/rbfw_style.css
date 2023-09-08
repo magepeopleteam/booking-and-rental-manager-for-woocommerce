@@ -5841,3 +5841,13 @@ body.single-rbfw_item div.ast-container {
 .rbfw-lsn-tip-icon-info i::before {
     background: #03A9F4;
 }
+
+.mp_default_theme {
+    box-sizing: border-box;
+}
+
+.mp_default_theme *,
+.mp_default_theme::before,
+.mp_default_theme::after {
+    box-sizing: border-box;
+}
