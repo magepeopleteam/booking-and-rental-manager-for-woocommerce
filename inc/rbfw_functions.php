@@ -243,6 +243,7 @@
 		$enabled_sat = get_post_meta($item_id, 'rbfw_enable_sat_day', true) ? get_post_meta($item_id, 'rbfw_enable_sat_day', true) : 'yes';
 
 		$current_day = date('D', strtotime($start_date));
+		$start_date = date('Y-m-d', strtotime($start_date));
 
 		if($current_day == 'Sun' && $enabled_sun == 'yes'){
 			$hourly_rate = $hourly_rate_sun;
@@ -287,7 +288,7 @@
 			}
 	
 			foreach ($sp_array as $sp_arr) {
-				if (in_array($current_date,$sp_arr['sp_dates'])){
+				if (in_array($start_date,$sp_arr['sp_dates'])){
 					$hourly_rate = $sp_arr['sp_hourly_rate'];
 					$daily_rate  = $sp_arr['sp_daily_rate'];
 				}
@@ -326,9 +327,9 @@
 			}
 		}
 
-		$day_price  = $days * $daily_rate;
-		$hour_price = $hour * $hourly_rate;
-		$total_price = $day_price + $hour_price;
+		$day_price  = $days * (float)$daily_rate;
+		$hour_price = $hour * (float)$hourly_rate;
+		$total_price = (float)$day_price + (float)$hour_price;
 
 		return $total_price;
 	}
