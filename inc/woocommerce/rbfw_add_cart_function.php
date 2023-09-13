@@ -14,20 +14,23 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     $rbfw_item_quantity     = isset( $_POST['rbfw_item_quantity'] ) ? $_POST['rbfw_item_quantity'] : 1;
 
     $c = 0;
-    foreach ($rbfw_service_info_all as $key => $value) {
-        $service_name = $_POST['rbfw_service_info'][$c]['service_name'];
-        $service_qty  = $_POST['rbfw_service_info'][$c]['service_qty'];
-        
-        if($rbfw_item_quantity > 1 && $service_qty == 1 && $rbfw_enable_extra_service_qty != 'yes'){
-            $service_qty = $rbfw_item_quantity;
+    if(empty($rbfw_service_info_all)){
+        foreach ($rbfw_service_info_all as $key => $value) {
+            $service_name = $_POST['rbfw_service_info'][$c]['service_name'];
+            $service_qty  = $_POST['rbfw_service_info'][$c]['service_qty'];
+
+            if($rbfw_item_quantity > 1 && $service_qty == 1 && $rbfw_enable_extra_service_qty != 'yes'){
+                $service_qty = $rbfw_item_quantity;
+            }
+
+            if(!empty($service_qty)):
+            $rbfw_service_info[$service_name] = $service_qty;
+            endif;
+
+            $c++;
         }
-
-        if(!empty($service_qty)):
-        $rbfw_service_info[$service_name] = $service_qty;
-        endif;
-
-        $c++;
     }
+
 
     /* Start Discount Calculations */
     $discount_type = '';
