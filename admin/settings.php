@@ -1518,6 +1518,13 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'type'    => 'text',
 				'default' => 'Please Select a Location'
 			),
+			array(
+				'name'    => 'rbfw_text_summary',
+				'label'   => __( 'Summary', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Enter the translated text of <strong>Summary.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'text',
+				'default' => 'Summary'
+			),
 		),
 		'rbfw_basic_style_settings' => array(
 			array(
