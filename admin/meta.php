@@ -54,16 +54,24 @@
 		<div class="rbfw_form_group rbfw_location_switch" >
 
 		<div class='rbfw-location-attributes-section location-section'>
-			<div class="mp_tab_item_sub_sec">
+		<div class="mp_tab_item_sub_sec_location">
 
-		<div class="rbfw_switch_wrapper rbfw_switch_pickup_location">
-			<div class="rbfw_switch_label"><?php esc_html_e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-			<div class="rbfw_switch">
-				<label for="rbfw_enable_pick_point_on" class="<?php if ( $rbfw_enable_pick_point == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_pick_point" class="rbfw_enable_pick_point" value="yes" id="rbfw_enable_pick_point_on" <?php if ( $rbfw_enable_pick_point == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_pick_point_off" class="<?php if ( $rbfw_enable_pick_point != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_pick_point" class="rbfw_enable_pick_point" value="no" id="rbfw_enable_pick_point_off" <?php if ( $rbfw_enable_pick_point != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-			</div>
-		</div>
+		<table class="form-table">
+			<tbody>
+				<tr>
+					<th><div class="rbfw_switch_label"><?php esc_html_e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
+					<td>
+						<div class="rbfw_switch_wrapper rbfw_switch_pickup_location">
+							<div class="rbfw_switch">
+								<label for="rbfw_enable_pick_point_on" class="<?php if ( $rbfw_enable_pick_point == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_pick_point" class="rbfw_enable_pick_point" value="yes" id="rbfw_enable_pick_point_on" <?php if ( $rbfw_enable_pick_point == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_pick_point_off" class="<?php if ( $rbfw_enable_pick_point != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_pick_point" class="rbfw_enable_pick_point" value="no" id="rbfw_enable_pick_point_off" <?php if ( $rbfw_enable_pick_point != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 
-			<div class='rbfw-pickup-location-section' style="display: <?php if ( $rbfw_item_type != 'resort' && $rbfw_enable_pick_point == 'yes' ) {
+		<div class='rbfw-pickup-location-section' style="display: <?php if ( $rbfw_item_type != 'resort' && $rbfw_enable_pick_point == 'yes' ) {
 			echo esc_attr( 'block' );
 		} else {
 			echo esc_attr( 'none' );
@@ -74,8 +82,7 @@
 				<table id="repeatable-fieldset-one-pickup" class='form-table rbfw_pricing_table'>
 					<thead>
 					<tr>
-						<th><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-						<th></th>
+						<th colspan="2"><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 					</tr>
 					</thead>
 					<tbody class="mp_event_type_sortable">
@@ -90,7 +97,7 @@
 									</td>
 									<td>
 										<div class="mp_event_remove_move">
-											<button class="button remove-row-size" type="button"><span class="dashicons dashicons-trash" ></span></button>
+											<button class="button remove-row-size" type="button"><i class="fa-solid fa-trash-can"></i></button>
 											<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
 										</div>
 									</td>
@@ -111,21 +118,30 @@
 					</tr>
 					</tbody>
 				</table>
-				<p>
+				<div class="add-row-pickup-btn">
 					<button id="add-row-pickup" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-				</p>
+				</div>
 			</div>
 			</div>
-			<div class="mp_tab_item_sub_sec">
 
-		<div class="rbfw_switch_wrapper rbfw_switch_dropoff_location">
-			<div class="rbfw_switch_label"><?php esc_html_e( 'Drop-off Location', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-			<div class="rbfw_switch">
-				<label for="rbfw_enable_dropoff_point_on" class="<?php if ( $rbfw_enable_dropoff_point == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_dropoff_point" class="rbfw_enable_dropoff_point" value="yes" id="rbfw_enable_dropoff_point_on" <?php if ( $rbfw_enable_dropoff_point == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_dropoff_point_off" class="<?php if ( $rbfw_enable_dropoff_point != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_dropoff_point" class="rbfw_enable_dropoff_point" value="no" id="rbfw_enable_dropoff_point_off" <?php if ( $rbfw_enable_dropoff_point != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-			</div>
-		</div>
+		<div class="mp_tab_item_sub_sec_location">
 
-				<div class='rbfw-dropoff-location-section' style="display: <?php if ( $rbfw_item_type != 'resort' && $rbfw_enable_dropoff_point == 'yes' ) {
+		<table class="form-table">
+			<tbody>
+				<tr>
+					<th><div class="rbfw_switch_label"><?php esc_html_e( 'Drop-off Location', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
+					<td>
+						<div class="rbfw_switch_wrapper rbfw_switch_dropoff_location">
+							<div class="rbfw_switch">
+								<label for="rbfw_enable_dropoff_point_on" class="<?php if ( $rbfw_enable_dropoff_point == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_dropoff_point" class="rbfw_enable_dropoff_point" value="yes" id="rbfw_enable_dropoff_point_on" <?php if ( $rbfw_enable_dropoff_point == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_dropoff_point_off" class="<?php if ( $rbfw_enable_dropoff_point != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_dropoff_point" class="rbfw_enable_dropoff_point" value="no" id="rbfw_enable_dropoff_point_off" <?php if ( $rbfw_enable_dropoff_point != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<div class='rbfw-dropoff-location-section' style="display: <?php if ( $rbfw_item_type != 'resort' && $rbfw_enable_dropoff_point == 'yes' ) {
 				echo esc_attr( 'block' );
 			} else {
 				echo esc_attr( 'none' );
@@ -136,8 +152,7 @@
 				<table id="repeatable-fieldset-one-dropoff" class='form-table rbfw_pricing_table'>
 					<thead>
 					<tr>
-						<th><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-						<th></th>
+						<th colspan="2"><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 					</tr>
 					</thead>
 					<tbody class="mp_event_type_sortable">
@@ -150,7 +165,7 @@
 									<td><?php rbfw_get_location_dropdown( 'loc_dropoff_name[]', $location_name ); ?></td>
 									<td>
 										<div class="mp_event_remove_move">
-											<button class="button remove-row-size" type="button"><span class="dashicons dashicons-trash" ></span></button>
+											<button class="button remove-row-size" type="button"><i class="fa-solid fa-trash-can"></i></button>
 											<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
 										</div>
 									</td>
@@ -171,9 +186,9 @@
 					</tr>
 					</tbody>
 				</table>
-				<p>
+				<div class="add-row-dropoff-btn">
 					<button id="add-row-dropoff" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Drop-off Location', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-				</p>
+				</div>
 				</div>
 
 				</div>
@@ -850,13 +865,19 @@
 		<div class="mpStyle mp_tab_item mp_tab_item_sub_sec" data-tab-item="#rbfw_faq">
 			<h3 class="section-title"><?php echo ''.esc_html__( 'FAQ Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 
+		<table class="form-table">
+			<tr>
+				<th><div class="rbfw_switch_label"><?php esc_html_e( 'FAQ Content', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
+				<td>
+					<div class="rbfw_switch_wrapper rbfw_switch_faq">
+						<div class="rbfw_switch">
+							<label for="rbfw_enable_faq_content_on" class="<?php if ( $rbfw_enable_faq_content == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_faq_content" class="rbfw_enable_faq_content" value="yes" id="rbfw_enable_faq_content_on" <?php if ( $rbfw_enable_faq_content == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_faq_content_off" class="<?php if ( $rbfw_enable_faq_content != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_faq_content" class="rbfw_enable_faq_content" value="no" id="rbfw_enable_faq_content_off" <?php if ( $rbfw_enable_faq_content != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</table>
 
-		<div class="rbfw_switch_wrapper rbfw_switch_faq">
-			<div class="rbfw_switch_label"><?php esc_html_e( 'FAQ Content', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-			<div class="rbfw_switch">
-				<label for="rbfw_enable_faq_content_on" class="<?php if ( $rbfw_enable_faq_content == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_faq_content" class="rbfw_enable_faq_content" value="yes" id="rbfw_enable_faq_content_on" <?php if ( $rbfw_enable_faq_content == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_faq_content_off" class="<?php if ( $rbfw_enable_faq_content != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_faq_content" class="rbfw_enable_faq_content" value="no" id="rbfw_enable_faq_content_off" <?php if ( $rbfw_enable_faq_content != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-			</div>
-		</div>
 
 			<div class="rbfw_faq_content_wrapper" style="display: <?php if ($rbfw_enable_faq_content == 'yes' ) {
 				echo esc_attr( 'block' );
@@ -872,10 +893,11 @@
 					}
 				}
 			?>
-			<button type="button" class=" rbfw_add_faq_content ppof-button">
-				<i class="fa-solid fa-circle-plus"></i>
-				<?php esc_html_e( 'Add New FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?>
-			</button>
+				<button type="button" class=" rbfw_add_faq_content ppof-button">
+					<i class="fa-solid fa-circle-plus"></i>
+					<?php esc_html_e( 'Add New FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</button>
+
 			</div>
 		</div>
 		<script>
@@ -1213,42 +1235,45 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 		<h3 class="section-title"><?php echo esc_html__( 'Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 		<table class="form-table">
 		<tr>
+			<th>
+				<div class="rbfw_switch_label"><?php esc_html_e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</div>
+			</th>
 			<td>
 				<div class="rbfw_switch_wrapper rbfw_m_0">
-					<div class="rbfw_switch_label"><?php esc_html_e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?>
-					</div>
 					<div class="rbfw_switch">
 						<label for="rbfw_available_qty_info_switch_on" class="<?php if ( $rbfw_available_qty_info_switch == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_available_qty_info_switch" class="rbfw_available_qty_info_switch" value="yes" id="rbfw_available_qty_info_switch_on" <?php if ( $rbfw_available_qty_info_switch == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_available_qty_info_switch_off" class="<?php if ( $rbfw_available_qty_info_switch != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_available_qty_info_switch" class="rbfw_available_qty_info_switch" value="no" id="rbfw_available_qty_info_switch_off" <?php if ( $rbfw_available_qty_info_switch != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
 					</div>
 				</div>
-				<hr>
 				<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
 			</td>
 		</tr>
 		<tr class="rbfw_switch_md_type_item_qty" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort' ) { echo 'style="display:none"'; } ?>>
+			<th>
+				<div class="rbfw_switch_label"><?php esc_html_e( 'Enable Multiple Item Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</div>
+			</th>
 			<td>
 				<div class="rbfw_switch_wrapper rbfw_m_0">
-					<div class="rbfw_switch_label"><?php esc_html_e( 'Enable Multiple Item Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?>
-					</div>
 					<div class="rbfw_switch">
 						<label for="rbfw_enable_md_type_item_qty_on" class="<?php if ( $rbfw_enable_md_type_item_qty == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_md_type_item_qty" class="rbfw_enable_md_type_item_qty" value="yes" id="rbfw_enable_md_type_item_qty_on" <?php if ( $rbfw_enable_md_type_item_qty == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_md_type_item_qty_off" class="<?php if ( $rbfw_enable_md_type_item_qty != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_md_type_item_qty" class="rbfw_enable_md_type_item_qty" value="no" id="rbfw_enable_md_type_item_qty_off" <?php if ( $rbfw_enable_md_type_item_qty != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
 					</div>
 				</div>
-				<hr>
 				<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
 			</td>
 		</tr>
 
 		<tr class="rbfw_switch_md_type_item_qty" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ||  $rbfw_item_type == 'resort' ) { echo 'style="display:none"'; } ?>>
+			<th>
+				<div class="rbfw_switch_label"><?php esc_html_e( 'Enable Multiple Extra Service Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?><br>
+				</div>
+			</th>
 			<td>
 				<div class="rbfw_switch_wrapper rbfw_switch_extra_service_qty" <?php if ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display: none"'; } ?>>
-					<div class="rbfw_switch_label"><?php esc_html_e( 'Enable Multiple Extra Service Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?><br>
-					</div>
 					<div class="rbfw_switch">
 						<label for="rbfw_enable_extra_service_qty_on" class="<?php if ( $rbfw_enable_extra_service_qty == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_extra_service_qty" class="rbfw_enable_extra_service_qty" value="yes" id="rbfw_enable_extra_service_qty_on" <?php if ( $rbfw_enable_extra_service_qty == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_extra_service_qty_off" class="<?php if ( $rbfw_enable_extra_service_qty != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_extra_service_qty" class="rbfw_enable_extra_service_qty" value="no" id="rbfw_enable_extra_service_qty_off" <?php if ( $rbfw_enable_extra_service_qty != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
 					</div>
 				</div>
-				<hr>
 				<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'Enable/Disable multiple service quantity selection. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
 			</td>
 		</tr>
@@ -1280,54 +1305,62 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 
 	?>
 	<div class='dLayout rbfw_remove_area'>
-		<label>
-			<span class="min_200"><?php echo esc_html( $title ); ?></span>
-			<input type="text" class="formControl" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
-		</label>
-		<div class="dFlex">
-			<span class="min_200"><?php echo esc_html( $image_title ); ?></span>
-			<div class="rbfw_multi_image_area">
-				<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
-				<div class="rbfw_multi_image">
+		<table class="form-table">
+			<tr>
+				<td>
+					<div class="mb-05"><?php echo esc_html( $title ); ?></div>
+					<input type="text" class="formControl" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div><?php echo esc_html( $image_title ); ?></div>
+					<div class="rbfw_multi_image_area">
+						<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
+						<div class="rbfw_multi_image">
+							<?php
+								$all_images = explode( ',', $images );
+								if ( $images && sizeof( $all_images ) > 0 ) {
+									foreach ( $all_images as $image ) {
+										?>
+										<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
+											<span class="dashicons dashicons-no-alt circleIcon_xs rbfw_close_multi_image_item"></span>
+											<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
+										</div>
+										<?php
+									}
+								}
+							?>
+						</div>
+						<button type="button" class=" add_multi_image ppof-button">
+							<i class="fa-solid fa-circle-plus"></i>
+							<?php esc_html_e( 'Add Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</button>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="min_200"><?php echo esc_html( $content_title ); ?></div>
 					<?php
-						$all_images = explode( ',', $images );
-						if ( $images && sizeof( $all_images ) > 0 ) {
-							foreach ( $all_images as $image ) {
-								?>
-								<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
-									<span class="dashicons dashicons-no-alt circleIcon_xs rbfw_close_multi_image_item"></span>
-									<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
-								</div>
-								<?php
-							}
-						}
+						$settings = array(
+							'wpautop'       => false,
+							'media_buttons' => false,
+							'textarea_name' => $content_name . '[]',
+							'tabindex'      => '323',
+							'editor_height' => 200,
+							'editor_css'    => '',
+							'editor_class'  => '',
+							'teeny'         => false,
+							'dfw'           => false,
+							'tinymce'       => true,
+							'quicktags'     => true
+						);
+						wp_editor( $content, $id, $settings );
 					?>
-				</div>
-				<button type="button" class=" add_multi_image ppof-button">
-					<i class="fa-solid fa-circle-plus"></i>
-					<?php esc_html_e( 'Add Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
-				</button>
-			</div>
-		</div>
-		<label>
-			<span class="min_200"><?php echo esc_html( $content_title ); ?></span>
-			<?php
-				$settings = array(
-					'wpautop'       => false,
-					'media_buttons' => false,
-					'textarea_name' => $content_name . '[]',
-					'tabindex'      => '323',
-					'editor_height' => 200,
-					'editor_css'    => '',
-					'editor_class'  => '',
-					'teeny'         => false,
-					'dfw'           => false,
-					'tinymce'       => true,
-					'quicktags'     => true
-				);
-				wp_editor( $content, $id, $settings );
-			?>
-		</label>
+				</td>
+			</tr>
+		</table>
 		<span class="dashicons dashicons-no-alt circleIcon_xs rbfw_item_remove"></span>
 	</div>
 	<?php
@@ -1943,8 +1976,10 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 				'rbfw_tax_meta_boxs' => $rbfw_tax_meta_boxs
 			),
 		);
+
 		$current_payment_system = rbfw_get_option( 'rbfw_payment_system', 'rbfw_basic_payment_settings');
-		$mps_tax_switch = rbfw_get_option( 'rbfw_mps_tax_switch', 'rbfw_basic_payment_settings');
+		global $rbfw;
+		$mps_tax_switch = $rbfw->get_option('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
 
 		if ('mps' == $current_payment_system) {
 			new RMFWAddMetaBox( $rbfw_mps_tax_meta_boxs_args );

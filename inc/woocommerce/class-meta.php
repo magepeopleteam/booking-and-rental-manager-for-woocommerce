@@ -51,7 +51,7 @@ if ( ! class_exists( 'RBFW_WC_Meta' ) ) {
                 $the_array = array(
                     array(
                         'id'      => 'tax_notice',
-                        'title'   => __( '', 'booking-and-rental-manager-for-woocommerce-pro' ),
+                        'title'   => __( 'Tax', 'booking-and-rental-manager-for-woocommerce-pro' ),
                         'details' => __( 'To enable automated tax calculation, first ensure that “enable taxes and tax calculations” is checked on WooCommerce > Settings > General. <a href="https://woocommerce.com/document/woocommerce-shipping-and-tax/woocommerce-tax/">View Documentation</a>', 'booking-and-rental-manager-for-woocommerce-pro' ),
                         'type'    => 'notice',
                     ),
