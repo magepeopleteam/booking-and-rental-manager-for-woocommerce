@@ -52,7 +52,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $service_price_arr = !empty($_POST['service_price_arr']) ? $_POST['service_price_arr'] : [];
             $reload_es = $_POST['reload_es'];
 
-
             if(empty($pickup_time) && empty($dropoff_time)){
                 $pickup_datetime  = date( 'Y-m-d', strtotime( $pickup_date.' '.'00:00:00' ) );
                 $dropoff_datetime = date( 'Y-m-d', strtotime( $dropoff_date.' '.'24:00:00' ) );
@@ -157,7 +156,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 }
         
                 foreach ($sp_array as $sp_arr) {
-                    if (in_array($current_date,$sp_arr['sp_dates'])){
+                    if (in_array($pickup_date,$sp_arr['sp_dates'])){
                         $hourly_rate = $sp_arr['sp_hourly_rate'];
                         $daily_rate  = $sp_arr['sp_daily_rate'];
                     }

@@ -455,6 +455,7 @@ if (!class_exists('MageRBFWClass')) {
                 $duration_cost = $meta_data['rbfw_duration_cost'];
                 $service_cost = $meta_data['rbfw_service_cost'];
                 $order_tax = !empty(get_post_meta($wc_order_id, '_order_tax', true)) ? get_post_meta($wc_order_id, '_order_tax', true) : 0;
+                $is_tax_inclusive = get_option('woocommerce_prices_include_tax', true);
 
                 $args = array(
                     'post_title' => $title,
@@ -495,7 +496,13 @@ if (!class_exists('MageRBFWClass')) {
                         $current_service_cost = get_post_meta($post_id, 'rbfw_service_cost', true);
                         $merged_service_cost = (float)$current_service_cost + (float)$service_cost;
 
-                        $total_price = $merged_duration_cost + $merged_service_cost + $order_tax;
+                        //$total_price = $merged_duration_cost + $merged_service_cost + $order_tax;
+
+                        if($is_tax_inclusive == 'yes'){
+                            $total_price = $merged_duration_cost + $merged_service_cost;
+                        } else{
+                            $total_price = $merged_duration_cost + $merged_service_cost + $order_tax;
+                        }
 
                         if (sizeof($meta_data) > 0) {
                             foreach ($meta_data as $key => $value) {
@@ -536,7 +543,14 @@ if (!class_exists('MageRBFWClass')) {
 
                     if(!empty($order_tax)){ update_post_meta($post_id, 'rbfw_order_tax', $order_tax); }
                     $total_price = $meta_data['rbfw_ticket_total_price'];
-                    $total_price = $total_price + $order_tax;
+                    //$total_price = $total_price + $order_tax;
+
+                    if($is_tax_inclusive == 'yes'){
+                        $total_price = $total_price;
+                    } else{
+                        $total_price = $total_price + $order_tax;
+                    }
+
                     update_post_meta($post_id, 'rbfw_ticket_total_price', $total_price);
                     update_post_meta($post_id, 'rbfw_link_order_id', $wc_order_id);
 

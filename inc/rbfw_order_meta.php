@@ -49,6 +49,9 @@ function rbfw_order_meta_box_callback(){
     }
     $mps_tax_switch = $rbfw->get_option('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
     $mps_tax_format = $rbfw->get_option('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
+
+    $grand_total = !empty(get_post_meta($order_id,'rbfw_ticket_total_price',true)) ? rbfw_mps_price(get_post_meta($order_id,'rbfw_ticket_total_price',true)) : '';
+    $rbfw_order_tax = !empty(get_post_meta($order_id,'rbfw_order_tax',true)) ? rbfw_mps_price(get_post_meta($order_id,'rbfw_order_tax',true)) : '';
     ?>
     <div class="rbfw_order_meta_box_wrap">
         <div class="rbfw_order_meta_box_head">
@@ -110,7 +113,9 @@ function rbfw_order_meta_box_callback(){
             <?php 
                 /* Loop Ticket Info */
                 $ticket_infos = !empty(get_post_meta($order_id,'rbfw_ticket_info',true)) ? get_post_meta($order_id,'rbfw_ticket_info',true) : [];
-                 foreach ($ticket_infos as $ticket_info) {
+                $subtotal = 0;
+
+                foreach ($ticket_infos as $ticket_info) {
                 
             
                 $item_name = !empty($ticket_info['ticket_name']) ? $ticket_info['ticket_name'] : '';
@@ -169,6 +174,7 @@ function rbfw_order_meta_box_callback(){
 
                 $duration_cost = rbfw_mps_price($ticket_info['duration_cost']);
                 $service_cost = rbfw_mps_price($ticket_info['service_cost']);
+                $subtotal += $ticket_info['ticket_price'];
                 $total_cost = rbfw_mps_price($ticket_info['ticket_price']);
                 $discount_amount = !empty($ticket_info['discount_amount']) ? (float)$ticket_info['discount_amount'] : 0;
                 $discount_amount = rbfw_mps_price($discount_amount);
@@ -377,6 +383,38 @@ function rbfw_order_meta_box_callback(){
                 </tbody>
             </table>
             <?php } ?>
+            <?php
+            $is_tax_inclusive = get_option('woocommerce_prices_include_tax', true);
+
+            if($is_tax_inclusive == 'yes'){
+                $wps_order_tax = !empty(get_post_meta($order_id,'rbfw_order_tax',true)) ? get_post_meta($order_id,'rbfw_order_tax',true) : '';
+                $subtotal = (float)$subtotal - (float)$wps_order_tax;
+                $subtotal = rbfw_mps_price($subtotal).'(ex. tax)';
+            } else{
+                $subtotal = rbfw_mps_price($subtotal);
+            }
+            ?>
+            <table class="wp-list-table widefat fixed striped table-view-list">
+                <thead>
+                    <tr>
+                        <th colspan="2"><?php rbfw_string('rbfw_text_total',__('Summary','booking-and-rental-manager-for-woocommerce')); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong><?php rbfw_string('rbfw_text_summary',__('Subtotal','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                        <td><?php echo $subtotal; ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong><?php rbfw_string('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                        <td><?php echo $rbfw_order_tax; ?></td>
+                    </tr>
+                    <tr>
+                        <td><strong><?php rbfw_string('rbfw_text_total_cost',__('Total Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                        <td><?php echo $grand_total; ?></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <script>

@@ -1476,13 +1476,58 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             });
                         }
 
+                        // update input value onclick and onchange
+                        function rbfw_update_input_value_onchange_onclick(){
+                            jQuery('.rbfw_bikecarsd_qty_plus,.rbfw_service_qty_plus').click(function (e) {
+                                let target_input = jQuery(this).siblings("input[type=number]");
+                                let current_value = parseInt(jQuery(this).siblings("input[type=number]").val());
+                                let max_value = parseInt(jQuery(this).siblings("input[type=number]").attr('max'));
+                                let update_value = current_value + 1;
+
+                                if(update_value <= max_value){
+                                    jQuery(target_input).val(update_value);
+                                    jQuery(target_input).attr('value',update_value);
+                                }else{
+                                    let notice = "<?php rbfw_string('rbfw_text_available_qty_is',__('Available Quantity is: ','booking-and-rental-manager-for-woocommerce')); ?>";
+                                    tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top',trigger: 'click'});
+                                }
+                            });
+                            jQuery('.rbfw_bikecarsd_qty_minus,.rbfw_service_qty_minus').click(function (e) {
+                                let target_input = jQuery(this).siblings("input[type=number]");
+                                let current_value = parseInt(jQuery(this).siblings("input[type=number]").val());
+                                let update_value = current_value - 1;
+                                if(current_value > 0){
+                                    jQuery(target_input).val(update_value);
+                                    jQuery(target_input).attr('value',update_value);
+                                }
+                            });
+                            jQuery('.rbfw_bikecarsd_qty,.rbfw_service_qty').change(function (e) {
+                                let get_value = jQuery(this).val();
+                                let max_value = parseInt(jQuery(this).attr('max'));
+
+                                if(get_value <= max_value){
+                                    jQuery(this).val(get_value);
+                                    jQuery(this).attr('value',get_value);
+                                }else{
+                                    jQuery(this).val(max_value);
+                                    jQuery(this).attr('value',max_value);
+                                    let notice = "<?php rbfw_string('rbfw_text_available_qty_is',__('Available Quantity is: ','booking-and-rental-manager-for-woocommerce')); ?>";
+                                    tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top'});
+                                }
+                            });
+                        }
+                        // end update input value onclick and onchange
+
                         // On change quantity value calculate price
                         function rbfw_bikecarsd_ajax_price_calculation(){
                             let bikecarsd_price_arr = {};
                             let service_price_arr = {};
+
                             jQuery('.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus,.rbfw_service_qty_minus,.rbfw_service_qty_plus').click(function (e) {
 
-                                let data_cat         = jQuery(this).siblings('input[type=number]').attr('data-cat');
+
+
+                                let data_cat = jQuery(this).siblings('input[type=number]').attr('data-cat');
                                 if(data_cat == 'bikecarsd'){
                                     let data_qty         = jQuery(this).siblings('input[type=number]').attr('value');
                                     let data_price       = jQuery(this).siblings('input[type=number]').attr('data-price');
@@ -1506,7 +1551,9 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                     }
                                 }
                                 let post_id = jQuery('#rbfw_post_id').val();
-                                jQuery.ajax({
+                                var currentRequest = null;
+                                setTimeout(function() {
+                                    currentRequest = jQuery.ajax({
                                         type: 'POST',
                                         url: rbfw_ajax.rbfw_ajaxurl,
                                         data: {
@@ -1516,12 +1563,14 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                             'service_price_arr': service_price_arr
                                         },
                                         beforeSend: function() {
-                                            
+                                            if(currentRequest != null) {
+                                                currentRequest.abort();
+                                            }
                                             jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
                                             jQuery('.rbfw_bikecarsd_price_summary.old').addClass('rbfw_loader_in');
                                             jQuery('.rbfw_bikecarsd_price_summary.old').append('<i class="fas fa-spinner fa-spin"></i>');
-                                            
-                                        },		
+                                            jQuery(' button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
+                                        },
                                         success: function (response) {
 
                                             jQuery(response).insertAfter('.rbfw_bikecarsd_price_summary.old');
@@ -1534,7 +1583,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                                 jQuery(' button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
                                             }
                                         }
-                                });
+                                    });
+                                }, 5000);
                                 
                             });
                             jQuery('.rbfw_bikecarsd_qty,.rbfw_service_qty').change(function (e) {
@@ -1590,48 +1640,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                         
                         }
                         // On change quantity value calculate price
-                        
-                        // update input value onclick and onchange
-                        function rbfw_update_input_value_onchange_onclick(){
-                            jQuery('.rbfw_bikecarsd_qty_plus,.rbfw_service_qty_plus').click(function (e) {
-                                let target_input = jQuery(this).siblings("input[type=number]");
-                                let current_value = parseInt(jQuery(this).siblings("input[type=number]").val());
-                                let max_value = parseInt(jQuery(this).siblings("input[type=number]").attr('max'));
-                                let update_value = current_value + 1;
 
-                                if(update_value <= max_value){
-                                    jQuery(target_input).val(update_value);
-                                    jQuery(target_input).attr('value',update_value);
-                                }else{
-                                    let notice = "<?php rbfw_string('rbfw_text_available_qty_is',__('Available Quantity is: ','booking-and-rental-manager-for-woocommerce')); ?>";
-                                    tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top',trigger: 'click'});
-                                }                       
-                            });
-                            jQuery('.rbfw_bikecarsd_qty_minus,.rbfw_service_qty_minus').click(function (e) { 
-                                let target_input = jQuery(this).siblings("input[type=number]");
-                                let current_value = parseInt(jQuery(this).siblings("input[type=number]").val());
-                                let update_value = current_value - 1;
-                                if(current_value > 0){
-                                    jQuery(target_input).val(update_value);
-                                    jQuery(target_input).attr('value',update_value);
-                                }
-                            });
-                            jQuery('.rbfw_bikecarsd_qty,.rbfw_service_qty').change(function (e) { 
-                                let get_value = jQuery(this).val();
-                                let max_value = parseInt(jQuery(this).attr('max'));
-
-                                if(get_value <= max_value){
-                                    jQuery(this).val(get_value);
-                                    jQuery(this).attr('value',get_value);
-                                }else{
-                                    jQuery(this).val(max_value);
-                                    jQuery(this).attr('value',max_value);
-                                    let notice = "<?php rbfw_string('rbfw_text_available_qty_is',__('Available Quantity is: ','booking-and-rental-manager-for-woocommerce')); ?>";
-                                    tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top'});
-                                }
-                            });
-                        }
-                        // end update input value onclick and onchange
 
                         // display extra services box onclick and onchange
                         function rbfw_display_es_box_onchange_onclick(){
