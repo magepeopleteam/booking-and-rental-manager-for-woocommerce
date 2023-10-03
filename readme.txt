@@ -1,10 +1,10 @@
-=== Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress and all Kinds of Equipment ===
+=== Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Resort | Equipment - WpRently ===
 Contributors: magepeopleteam, aamahin
 Plugin link: https://mage-people.com/
-Tags: Woocommerce, Rent, Booking, Reservation, Hotel, Resort, Appointment, Event, Woocommerce Booking, Reservation Booking, booking calender , booking plugin , booking system , Woocommerce Reservation Booking, Day Booking, Night Booking, Rental Booking, Woocommerce Rental Booking, WC.
+Tags: Woocommerce, Rent, Booking, Reservation, Hotel, Resort, Appointment, Event, Woocommerce Booking, Reservation Booking, booking calendar, booking plugin, booking system, Woocommerce Reservation Booking, Day Booking, Night Booking, Rental Booking, Woocommerce Rental Booking, WC.
 Requires at least: 5.3
 Stable tag: 1.1.0
-Version: 1.1.6
+Version: 1.1.7
 Tested up to: 6.0
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -12,7 +12,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 
 == Description ==
-Booking & Rental Manager is a complete solution for all types of booking, rental and reservation services. It will help to create your own booking management website with advanced capabilities that can be used to manage and offer bookings on the dates selected by customers.
+Booking & Rental Manager - WpRently is a complete solution for all types of booking, rental, and reservation services. It will help to create your own booking management website with advanced capabilities that can be used to manage and offer bookings on the dates selected by customers.
 
 
 
@@ -37,8 +37,8 @@ Our plugin can be used for a wide variety of booking and rental services, such a
 
 ###  Free Version Plugin Features:
 
-✅ Bike/Car rent for Single Day.
-✅ Bike/Car rent for Multiple Day.
+✅ Bike/Car rental for Single Day.
+✅ Bike/Car rental for Multiple Day.
 ✅ Dress rent for Single/Multiple Day.
 ✅ Doctor/Lawyer Appointment.
 ✅ Resort booking.
