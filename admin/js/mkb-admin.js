@@ -383,7 +383,7 @@
                 jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
                 jQuery('tr[data-row=rdfw_available_time]').show();
                 jQuery('tr.rbfw_enable_start_end_date_switch_row').show();
-                jQuery('tr.rbfw_enable_start_end_date_field_row').show();
+                //jQuery('tr.rbfw_enable_start_end_date_field_row').show();
             }
 
             return false;
