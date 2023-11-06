@@ -3,8 +3,8 @@ Contributors: magepeopleteam, aamahin
 Plugin link: https://mage-people.com/
 Tags: Woocommerce, Rent, Booking, Reservation, Hotel, Resort, Appointment, Event, Woocommerce Booking, Reservation Booking, booking calendar, booking plugin, booking system, Woocommerce Reservation Booking, Day Booking, Night Booking, Rental Booking, Woocommerce Rental Booking, WC.
 Requires at least: 5.3
-Stable tag: 1.3.2
-Version: 1.3.2
+Stable tag: 1.3.4
+Version: 1.3.4
 Tested up to: 6.3
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -185,7 +185,8 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
-
+= 1.3.1 =
+* cart date time missing fixed for single rent
 = 1.3.1 =
 * Bug fixed
 
