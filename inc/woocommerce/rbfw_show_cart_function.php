@@ -208,10 +208,10 @@ function rbfw_show_cart_item_func( $cart_item, $rbfw_id ) {
     <?php /* Type: Bikecarsd */ ?>
     <?php if($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment'){ ?>
         <table class="rbfw_bikecarsd_cart_table rbfw_room_cart_table">
-        <?php if ( ! empty( $start_datetime ) && !empty($start_time)): ?>	
+        <?php if ( ! empty( $start_datetime )): ?>
         <tr>
             <th><?php echo $rbfw->get_option('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', __('Start Date and Time','booking-and-rental-manager-for-woocommerce'));?>:</th>
-            <td><?php echo rbfw_date_format($start_datetime).' @'.$start_time; ?></td>
+            <td><?php echo rbfw_date_format($start_datetime); if(!empty($start_time)){ echo ' @'.$start_time; } ?></td>
         </tr>
         <?php endif; ?>
 
