@@ -134,3 +134,14 @@ function rbfw_flush_rules_on_save_posts( $post_id ) {
 	flush_rewrite_rules();
 
 }
+
+add_filter('post_row_actions', 'rbfw_duplicate_post_link', 10, 2);
+
+function rbfw_duplicate_post_link($actions, $post)
+{
+    if ($post->post_type=='rbfw_item')
+    {
+        $actions['rbfw_duplicate'] = '<a href="'.esc_url(admin_url()).'edit.php?post_type=rbfw_item&rbfw_duplicate='.$post->ID.'" title="" rel="permalink">'.esc_html__('Duplicate','booking-and-rental-manager-for-woocommerce').'</a>';
+    }
+    return $actions;
+}
