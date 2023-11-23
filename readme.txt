@@ -1,18 +1,18 @@
-=== Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress and all Kinds of Equipment ===
+=== Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Equipment - WpRently ===
 Contributors: magepeopleteam, aamahin
 Plugin link: https://mage-people.com/
-Tags: Woocommerce, Rent, Booking, Reservation, Hotel, Resort, Appointment, Event, Woocommerce Booking, Reservation Booking, booking calender , booking plugin , booking system , Woocommerce Reservation Booking, Day Booking, Night Booking, Rental Booking, Woocommerce Rental Booking, WC.
+Tags: Woocommerce, Rent, Booking, Reservation, Hotel, Resort, Appointment, Event, Woocommerce Booking, Reservation Booking, booking calendar, booking plugin, booking system, Woocommerce Reservation Booking, Day Booking, Night Booking, Rental Booking, Woocommerce Rental Booking, WC.
 Requires at least: 5.3
-Stable tag: 1.1.0
-Version: 1.1.6
-Tested up to: 6.0
+Stable tag: 1.3.4
+Version: 1.3.4
+Tested up to: 6.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 
 == Description ==
-Booking & Rental Manager is a complete solution for all types of booking, rental and reservation services. It will help to create your own booking management website with advanced capabilities that can be used to manage and offer bookings on the dates selected by customers.
+Booking & Rental Manager - WpRently is a complete solution for all types of booking, rental, and reservation services. It will help to create your own booking management website with advanced capabilities that can be used to manage and offer bookings on the dates selected by customers.
 
 
 
@@ -134,11 +134,6 @@ Our plugin can be used for a wide variety of booking and rental services, such a
 `
 [rent-add-to-cart id='1']
 `
-### Shortcode to show rent search/filter form:
-
-`
-[rbfw-search]
-`
 
 = PAYMENT GATEWAYS =
 Our Plugin Works with WooCommerce and without WooCommerce. So all payment methods of WooCommerce will work with this plugin, and this is a very good advantage of this plugin. And without wooCommerce, we have our own PayPal and stripe payment method integration.
@@ -190,8 +185,46 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
-= 1.0.0 =
-*Initial Release*
+= 1.3.1 =
+* cart date time missing fixed for single rent
+= 1.3.1 =
+* Bug fixed
+
+= 1.2.8 =
+* Bug fixed
+
+= 1.2.6 =
+* Yoast Plugin Issue fixed.
+* Security Issue Fixed
+* Bug fixed
+
+= 1.2.5 =
+* Security Issue Fixed
+* Bug fixed
+
+= 1.2.2 =
+* Security Issue Fixed
+* Bug fixed
+
+= 1.2.1 =
+* Bug fixed
+
+= 1.1.9 =
+* Bug fixed
+
+= 1.1.6 =
+* WooCommerce integration.
+* Fixed bug with flatsome theme
+
+= 1.1.5 =
+* Donut template added.
+
+= 1.1.4 =
+* Bug Fixed.
+
+= 1.1.3 =
+* Appointment type added.
+* Time slot page added.
 
 = 1.0.4 =
 * New rent types added.
@@ -199,25 +232,5 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 * Back-end Order list added.
 * Front-end user booking dashboard added.
 
-= 1.1.3 =
-* Appointment type added.
-* Time slot page added.
-
-= 1.1.4 =
-* Bug Fixed.
-
-= 1.1.5 =
-* Donut template added.
-
-= 1.1.6 =
-* WooCommerce integration.
-* Fixed bug with flatsome theme
-
-= 1.1.7 =
-* Fixed bug
-
-= 1.1.8 =
-* Fixed bug
-
-= 1.1.9 =
-* Fixed bug
+= 1.0.0 =
+*Initial Release*
