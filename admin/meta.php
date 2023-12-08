@@ -853,7 +853,7 @@
 	add_action( 'rbfw_meta_box_tab_name', 'rbfw_add_meta_box_tab_faq', 20 );
 	function rbfw_add_meta_box_tab_faq( $rbfw_id ) {
 		?>
-		<li data-target-tabs="#rbfw_faq"><i class="fa-solid fa-circle-question"></i><?php esc_html_e( ' FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+		<li class="nav-item" data-target-tabs="#rbfw_faq"><i class="fa-solid fa-circle-question"></i><?php esc_html_e( ' FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
 		<?php
 
 	}
@@ -927,7 +927,7 @@ function rbfw_add_variations_tab_name($rbfw_id){
 	$rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : '';
 	$rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
 	?>
-	<li data-target-tabs="#rbfw_variations" <?php if($rbfw_enable_variations == 'no' || $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; }?>><i class="fa-solid fa-table-cells-large"></i><?php esc_html_e( ' Variations', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+	<li class="nav-item" data-target-tabs="#rbfw_variations" <?php if($rbfw_enable_variations == 'no' || $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; }?>><i class="fa-solid fa-table-cells-large"></i><?php esc_html_e( ' Variations', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
 	<?php
 
 }
@@ -1218,7 +1218,7 @@ add_action( 'rbfw_meta_box_tab_name', 'rbfw_frontend_display_tab_name' , 11);
 function rbfw_frontend_display_tab_name($rbfw_id){
 
 	?>
-	<li data-target-tabs="#rbfw_frontend_display"><i class="fa-solid fa-display"></i><?php esc_html_e( ' Front-end Display', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+	<li class="nav-item" data-target-tabs="#rbfw_frontend_display"><i class="fa-solid fa-display"></i><?php esc_html_e( ' Front-end Display', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
 	<?php
 
 }
@@ -1760,7 +1760,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 
 		$rbfw_gen_info_boxs_args = array(
 			'meta_box_id'    => 'rbfw_travel_basic_info_meta_boxes',
-			'meta_box_title' => '<i class="fa-solid fa-circle-info"></i>' . __( 'General Info', 'booking-and-rental-manager-for-woocommerce' ),
+			'meta_box_title' => '<i class="fas fa-tools"></i>' . __( 'General Info', 'booking-and-rental-manager-for-woocommerce' ),
 			'screen'         => array( 'rbfw_item' ),
 			'context'        => 'normal',
 			'priority'       => 'high',
