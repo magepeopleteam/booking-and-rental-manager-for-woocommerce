@@ -1,0 +1,49 @@
+$main-selector:'#rbfw_add_meta_box';
+$prefix:'mpl';
+:root{
+    --#{$prefix}-primary:#03A9F4;
+    --#{$prefix}-sky:#7AD6FF;
+    --#{$prefix}-sky-light:#EFFAFF;
+    --#{$prefix}-secondary:#2B363F;
+    --#{$prefix}-dark:#a4a4a4;
+    --#{$prefix}-gray:#e0e0e0;
+    --#{$prefix}-light:#f7f7f7;
+    --#{$prefix}-white:#ffffff;
+    --#{$prefix}-black:#000000;
+    --#{$prefix}-yellow:#ffcb00;
+    --#{$prefix}-red:#d91e1e;
+    --#{$prefix}-red-light:#f6dada;
+    // ==========spacing =======
+    --flow-space: 1.5rem;
+}
+// ------------color--------
+$color-primary:var(--#{$prefix}-primary);
+$color-secondary:var(--#{$prefix}-secondary);
+$color-sky:var(--#{$prefix}-sky);
+$color-sky-light:var(--#{$prefix}-sky-light);
+$color-dark:var(--#{$prefix}-dark);
+$color-gray:var(--#{$prefix}-gray);
+$color-light:var(--#{$prefix}-light);
+$color-white:var(--#{$prefix}-white);
+$color-black:var(--#{$prefix}-black);
+$color-black:var(--#{$prefix}-black);
+$color-yellow:var(--#{$prefix}-yellow);
+$color-red:var(--#{$prefix}-red);
+$color-red-light:var(--#{$prefix}-red-light);
+
+// ==========fonts=============
+$font-text:ubuntu;
+$font-heading:ubuntu;
+$font-bold:ubuntuBold;
+$font-size:1rem;
+$font-weight-normal:300;
+$font-weight-bold:600;
+
+//===========utility===========
+$border-radius: .25rem;
+$spacing:.5em;
+$time: .5s;
+
+//============form============
+$input-width:16em;
+$input-height:2.5em;

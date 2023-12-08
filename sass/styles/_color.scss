@@ -1,0 +1,55 @@
+#{$main-selector}{
+//===============background-color===========
+  .bg-primary{
+    background-color: $color-primary;
+  }
+  .bg-secondary{
+    background-color: $color-secondary;
+  }
+  .bg-sky{
+    background-color: $color-sky;
+  }
+  .bg-sky-light{
+    background-color: $color-sky-light;
+  }
+  .bg-dark{
+    background-color: $color-dark;
+  }
+  .bg-gray{
+    background-color: $color-gray;
+  }
+  .bg-light{
+    background-color: $color-light;
+  }
+  .bg-white{
+    background-color: $color-white;
+  }
+  .bg-black{
+    background-color: $color-black;
+  }
+  //=================text color=============
+  .text-primary{
+    color: $color-primary;
+  }
+  .text-secondary{
+    color: $color-secondary;
+  }
+  .text-sky{
+    color: $color-sky;
+  }
+  .text-dark{
+    color: $color-dark;
+  }
+  .text-gray{
+    color: $color-gray;
+  }
+  .text-light{
+    color: $color-light;
+  }
+  .text-white{
+    color: $color-white;
+  }
+  .text-black{
+    color: $color-black;
+  }
+}

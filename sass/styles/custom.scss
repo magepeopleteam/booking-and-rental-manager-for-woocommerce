@@ -1,0 +1,16 @@
+#{$main-selector}{
+    .postbox-header{
+        background-color: $color-secondary;
+        h2{
+          color: $color-white;
+          font-size:calc($font-size + 0.2rem);
+        }
+        .handle-actions{
+            margin-top: 0;
+            .handle-order-higher, .handle-order-lower, .toggle-indicator{
+                color: $color-white;
+            }
+            
+        }
+    }
+}
