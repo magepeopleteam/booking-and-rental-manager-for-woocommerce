@@ -154,61 +154,42 @@ if (!class_exists('RMFWAddMetaBox')) {
 							do_action('nav_footer_bottom');
 							?>
 						</div>
+					</div>
 
+					<?php
+					$current_page = 1;
+					foreach ($this->get_panels() as $panelsIndex => $panel) :
+					?>
+					<div class="tab-content <?php if ($current_page == 1) { echo 'active'; } ?>  tab-content-<?php echo esc_attr($panelsIndex); ?>">
+						<?php foreach ($panel['sections'] as $sectionIndex => $section) : ?>
+							<h2 id="<?php echo esc_attr($sectionIndex); ?>" class="h4 text-primary p-0 my-1"><?php echo esc_html($section['title']); ?></h2>
+							<div class="rbfw-form-table-wrap" data-title="<?php echo esc_html($section['title']); ?>">
+								<table class="form-table">
+									<tbody>
+										<?php foreach ($section['options'] as $option) : ?>
+											<tr data-row="<?php echo $option['id']; ?>">
+												<th scope="row"><?php echo esc_html($option['title']); ?></th>
+												<td>
+													<?php
+													$option_value = get_post_meta($this->get_post_id(), $option['id'], true);
+													if (is_serialized($option_value)) {
+														$option_value = unserialize($option_value);
+													}
+													$option['value'] = $option_value;
+													$this->field_generator($option)
+													?>
+												</td>
+											</tr>
+										<?php endforeach; ?>
+									</tbody>
+								</table>
+							</div>
+						<?php endforeach; ?>
 					</div>
 					<?php
-					if ($get_nav_position == 'right') {
-						$form_wrapper_position = 'left';
-					} elseif ($get_nav_position == 'left') {
-						$form_wrapper_position = 'right';
-					} elseif ($get_nav_position == 'top') {
-						$form_wrapper_position = 'full-width-top';
-					} else {
-						$form_wrapper_position = 'full-width';
-					}
+						$current_page++;
+						endforeach;
 					?>
-
-					<div class="form-wrapper <?php echo esc_attr($form_wrapper_position); ?>">
-						<div class="form-section">
-							<?php
-							$current_page = 1;
-							foreach ($this->get_panels() as $panelsIndex => $panel) :
-							?>
-								<div class="tab-content <?php if ($current_page == 1) { echo 'active'; } ?>  tab-content-<?php echo esc_attr($panelsIndex); ?>">
-									<?php foreach ($panel['sections'] as $sectionIndex => $section) : ?>
-										<div class="section">
-											<h3 id="<?php echo esc_attr($sectionIndex); ?>" class="section-title"><?php echo esc_html($section['title']); ?></h3>
-											<div class="rbfw-form-table-wrap" data-title="<?php echo esc_html($section['title']); ?>">
-											<table class="form-table">
-												<tbody>
-													<?php foreach ($section['options'] as $option) : ?>
-														<tr data-row="<?php echo $option['id']; ?>">
-															<th scope="row"><?php echo esc_html($option['title']); ?></th>
-															<td>
-																<?php
-																$option_value = get_post_meta($this->get_post_id(), $option['id'], true);
-																if (is_serialized($option_value)) {
-																	$option_value = unserialize($option_value);
-																}
-																$option['value'] = $option_value;
-																$this->field_generator($option)
-																?>
-															</td>
-														</tr>
-													<?php endforeach; ?>
-												</tbody>
-											</table>
-															</div>
-										</div>
-									<?php endforeach; ?>
-								</div>
-							<?php
-								$current_page++;
-								endforeach;
-							?>
-
-						</div>
-					</div>
 				</div>
 				<?php
 				if ($this->get_meta_box_screen()[0] == 'rbfw_item' && $this->get_meta_box_context() == 'normal'  && !isset($this->data['seat_plan'])) {

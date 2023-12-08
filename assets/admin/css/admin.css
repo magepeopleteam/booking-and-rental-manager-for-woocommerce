@@ -7020,6 +7020,10 @@ readers do not read off random characters that represent icons */
   border: 1px solid var(--mpl-gray);
 }
 
+#rbfw_add_meta_box .inside {
+  margin: 0;
+  padding: 0;
+}
 #rbfw_add_meta_box .postbox-header {
   background-color: var(--mpl-secondary);
 }

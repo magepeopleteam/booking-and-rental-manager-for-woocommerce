@@ -935,19 +935,7 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
     padding: 20px;
 }
 
-#poststuff #rbfw_add_meta_box .inside {
-    margin: 0;
-    padding: 0;
-}
 
-#rbfw_add_meta_box .mp_tab_details {
-    width: 80%;
-    max-width: 80%;
-    background-color: #fafafa;
-    padding: 0px;
-    overflow: hidden;
-    padding: 10px;
-}
 
 .mp_tab_details .form-table input[type="number"] {
     width: 125px;

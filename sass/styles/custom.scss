@@ -1,4 +1,8 @@
 #{$main-selector}{
+    .inside{
+        margin: 0;
+        padding: 0;
+    }
     .postbox-header{
         background-color: $color-secondary;
         h2{
