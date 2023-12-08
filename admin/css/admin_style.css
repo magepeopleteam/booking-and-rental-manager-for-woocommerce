@@ -740,11 +740,6 @@ label.mp_event_virtual_type_des textarea {
     width: 100%;
 }
 
-#mp_event_all_info_in_tab button,
-.mp_tab_menu ul li {
-    -webkit-transition: all .25s ease-in-out;
-    transition: all .25s ease-in-out;
-}
 
 .mp_event_remove_move {
     display: -webkit-box;
@@ -943,61 +938,6 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 #poststuff #rbfw_add_meta_box .inside {
     margin: 0;
     padding: 0;
-}
-
-#rbfw_add_meta_box .mp_event_all_meta_in_tab {
-    display: -webkit-flex;
-    display: flex;
-    min-height: 300px;
-    flex-direction: unset;
-    margin: 5px;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-#rbfw_add_meta_box .mp_tab_menu {
-    width: 25%;
-    min-width: 20%;
-    overflow: hidden;
-    background: #081D33;
-}
-
-#rbfw_add_meta_box .mp_tab_menu ul {
-    display: block;
-    margin-top: 0;
-}
-
-#rbfw_add_meta_box .mp_tab_menu ul li {
-    padding: 10px;
-    margin: 8px;
-    cursor: pointer;
-    color: #fff;
-    position: relative;
-    justify-content: left;
-    -webkit-justify-content: left;
-    background-color: #081D33;
-    font-size: 14px;
-    font-weight: normal;
-    border-radius: 25px;
-}
-
-#rbfw_add_meta_box .mp_tab_menu ul li:hover {
-    background: #2F809F;
-    border-color: #2F809F;
-    color: #fff;
-}
-
-#rbfw_add_meta_box .mp_tab_menu ul li.active {
-    background: #2F809F;
-    border-color: #2F809F;
-    color: #fff;
-}
-
-#rbfw_add_meta_box .mp_tab_menu ul li i {
-    margin-right: 5px;
-    width: 15px;
-    display: inline-block;
-    font-size: 14px;
 }
 
 #rbfw_add_meta_box .mp_tab_details {
@@ -1698,13 +1638,7 @@ input#rbfw_features_search_icon {
     color: #CA6C18;
 }
 
-#rbfw_add_meta_box .mp_tab_menu ul li span {
-    margin-right: 5px;
-    width: 15px;
-    display: inline-block;
-    font-size: 18px;
-    vertical-align: middle;
-}
+
 
 .mp_tab_item_sub_sec {
     background: #FAFAFA;
