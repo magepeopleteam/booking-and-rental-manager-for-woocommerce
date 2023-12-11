@@ -163,26 +163,22 @@ if (!class_exists('RMFWAddMetaBox')) {
 					<div class="tab-content <?php if ($current_page == 1) { echo 'active'; } ?>  tab-content-<?php echo esc_attr($panelsIndex); ?>">
 						<?php foreach ($panel['sections'] as $sectionIndex => $section) : ?>
 							<h2 id="<?php echo esc_attr($sectionIndex); ?>" class="h4 text-primary p-0 my-1"><?php echo esc_html($section['title']); ?></h2>
-							<div class="rbfw-form-table-wrap" data-title="<?php echo esc_html($section['title']); ?>">
-								<table class="form-table">
-									<tbody>
-										<?php foreach ($section['options'] as $option) : ?>
-											<tr data-row="<?php echo $option['id']; ?>">
-												<th scope="row"><?php echo esc_html($option['title']); ?></th>
-												<td>
-													<?php
-													$option_value = get_post_meta($this->get_post_id(), $option['id'], true);
-													if (is_serialized($option_value)) {
-														$option_value = unserialize($option_value);
-													}
-													$option['value'] = $option_value;
-													$this->field_generator($option)
-													?>
-												</td>
-											</tr>
-										<?php endforeach; ?>
-									</tbody>
-								</table>
+							<div data-title="<?php echo esc_html($section['title']); ?>">
+								<?php foreach ($section['options'] as $option) : ?>
+									<section class="component d-flex justify-content-between align-items-center mb-2" data-row="<?php echo $option['id']; ?>">
+										<label scope="row" class="w-50"><?php echo esc_html($option['title']); ?><i class="fas fa-question-circle tool-tips"><span>Tool tips hover text</span></i></label>
+										<div class="d-flex flex-column w-50">
+											<?php
+											$option_value = get_post_meta($this->get_post_id(), $option['id'], true);
+											if (is_serialized($option_value)) {
+												$option_value = unserialize($option_value);
+											}
+											$option['value'] = $option_value;
+												$this->field_generator($option)
+											?>
+										</div>
+									</section>
+								<?php endforeach; ?>
 							</div>
 						<?php endforeach; ?>
 					</div>
@@ -232,7 +228,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 				endif;
 
 				if (sizeof($option) > 0 && isset($option['type'])) {
-					echo rbfw_field_generator($option['type'], $option);
+					// echo rbfw_field_generator($option['type'], $option);
 					do_action("wp_theme_settings_field_$type", $option);
 				}
 
