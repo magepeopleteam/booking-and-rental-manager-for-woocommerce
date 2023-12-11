@@ -166,7 +166,16 @@ if (!class_exists('RMFWAddMetaBox')) {
 							<div data-title="<?php echo esc_html($section['title']); ?>">
 								<?php foreach ($section['options'] as $option) : ?>
 									<section class="component d-flex justify-content-between align-items-center mb-2" data-row="<?php echo $option['id']; ?>">
-										<label scope="row" class="w-50"><?php echo esc_html($option['title']); ?><i class="fas fa-question-circle tool-tips"><span>Tool tips hover text</span></i></label>
+										<label scope="row" class="w-50">
+											<?php 
+												echo esc_html($option['title']); 
+												$details = isset($option['details']) ? $option['details'] : "";
+												if (!empty($details)) {
+													echo  '<i class="fas fa-question-circle tool-tips"><span>'.mep_esc_html($details).'</span></i>';
+												}
+											?>
+										</label>
+										
 										<div class="d-flex flex-column w-50">
 											<?php
 											$option_value = get_post_meta($this->get_post_id(), $option['id'], true);
@@ -230,10 +239,6 @@ if (!class_exists('RMFWAddMetaBox')) {
 				if (sizeof($option) > 0 && isset($option['type'])) {
 					// echo rbfw_field_generator($option['type'], $option);
 					do_action("wp_theme_settings_field_$type", $option);
-				}
-
-				if (!empty($details)) {
-					echo "<p class='description'>" . mep_esc_html($details) . "</p>";
 				}
 			}
 
