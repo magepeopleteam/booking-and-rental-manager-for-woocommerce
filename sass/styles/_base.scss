@@ -62,13 +62,7 @@
     font-family: $font-bold;
     font-weight:500;
   }
-  a{
-    text-decoration: none;
-    color: $color-primary; 
-  }
-  a:link,a:visited{
-    color: $color-primary;  
-  }
+  
 // ================container===============
 .container{
   width: 1200px;

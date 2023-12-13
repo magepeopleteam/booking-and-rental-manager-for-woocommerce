@@ -6997,13 +6997,6 @@ readers do not read off random characters that represent icons */
   font-family: ubuntuBold;
   font-weight: 500;
 }
-#rbfw_add_meta_box a {
-  text-decoration: none;
-  color: var(--mpl-primary);
-}
-#rbfw_add_meta_box a:link, #rbfw_add_meta_box a:visited {
-  color: var(--mpl-primary);
-}
 #rbfw_add_meta_box .container {
   width: 1200px;
   margin: 0 auto;

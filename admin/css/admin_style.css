@@ -1119,8 +1119,6 @@ div.mpStyle [class*="_bgColor_1"] i {
 #rbfw_add_meta_box .form-table select,
 #rbfw_add_meta_box .form-table td input,
 #rbfw_add_meta_box div.mpStyle .formControl {
-    border-color: #5C58A5;
-    color: #5C58A5;
     background-color: rgba(237, 239, 251, 0.41);
     font-weight: normal;
     height: 30px;
@@ -1200,11 +1198,6 @@ div.mpStyle [class*="_bgColor_1"] i {
     vertical-align: top;
     display: inline-block;
     text-decoration: none;
-    font-size: 13px;
-    line-height: 26px;
-    height: 28px;
-    margin: 1px;
-    padding: 0 10px 1px;
     cursor: pointer;
     border-width: 1px;
     border-style: solid;
@@ -1971,13 +1964,13 @@ input#rbfw_features_search_icon {
 
 .mp_tab_item .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
     background-color: #bf1010;
-    padding: 0px 4px 0px 5px;
+    padding: 0px 5px 0px 5px;
     color: #fff;
-    margin-right: 10px;
+    margin:0 5px;
 }
 
 .mp_tab_item .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    padding: 5px 8px 5px 20px;
+    padding: 5px 8px 5px 5px;
 }
 
 a.menu-icon-rbfw_item.wp-menu-open {

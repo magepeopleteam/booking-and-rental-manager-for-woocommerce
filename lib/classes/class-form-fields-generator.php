@@ -225,10 +225,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             ob_start();
             ?>
             <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $post_id; ?>']</code>
-            <div class="rbfw_alert_info">
-                <i class="fa-solid fa-circle-info"></i>
-                <?php esc_html_e('If you want to display this item add-to-cart form on any post or page of your website, copy the shortcode and paste it where desired.','booking-and-rental-manager-for-woocommerce'); ?>
-            </div>
+            
             <?php
             return ob_get_clean();
         }
@@ -2978,7 +2975,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                     <div class="features_category_wrapper">
                                         <div class="field-list <?php echo esc_attr($field_id); ?>">
                                             <div class="feature_category_inner_wrap">
-                                                <div class="feature_category_title"><label><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_feature_category[<?php echo $i; ?>][cat_title]" data-key="<?php echo $i; ?>" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/></div>
+                                                <div class="feature_category_title"><label class=" mb-1"><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_feature_category[<?php echo $i; ?>][cat_title]" data-key="<?php echo $i; ?>" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/></div>
                                                 <div class="feature_category_inner_item_wrap sortable">
                                                     <?php
                                                     if(!empty($value['cat_features'])){
@@ -2988,7 +2985,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                             $title = $feature['title'];
                                                     ?>
                                                     <div class="item">
-                                                        <a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn" data-key="<?php echo $c; ?>"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>
+                                                        <a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="<?php echo $c; ?>"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>
                                                         <div class="rbfw_feature_icon_preview p-1" data-key="<?php echo $c; ?>"><?php if($icon){ echo '<i class="'.$icon.'"></i>'; } ?></div>
                                                         
                                                         <input type='hidden' name='rbfw_feature_category[<?php echo $i; ?>][cat_features][<?php echo $c; ?>][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php echo esc_attr($icon); ?>' data-key="<?php echo $c; ?>" class="rbfw_feature_icon"/>
