@@ -204,7 +204,6 @@ if (!class_exists('RMFWAddMetaBox')) {
 				}
 			}
 
-
 			public function field_generator($option)
 			{
 
@@ -236,7 +235,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 				endif;
 
 				if (sizeof($option) > 0 && isset($option['type'])) {
-					//echo rbfw_field_generator($option['type'], $option);
+					echo rbfw_field_generator($option['type'], $option);
 					do_action("wp_theme_settings_field_$type", $option);
 				}
 			}
