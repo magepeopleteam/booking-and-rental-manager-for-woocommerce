@@ -148,11 +148,10 @@ div>.ppof-metabox {
     vertical-align: top;
     display: inline-block;
     text-decoration: none;
-    font-size: 13px;
-    line-height: 26px;
-    height: 28px;
+    font-size: 1rem;
+    line-height: 1rem;
     margin: 0;
-    padding: 0 10px 1px;
+    padding: .5em;
     cursor: pointer;
     border-width: 1px;
     border-style: solid;

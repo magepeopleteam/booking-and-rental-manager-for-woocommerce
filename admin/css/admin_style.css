@@ -959,7 +959,6 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
     text-align: center;
     transition: 0.2s;
     margin-left: 0px;
-    font-size: 13px !important;
     font-weight: 400 !important;
 }
 
@@ -973,33 +972,16 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 .rbfw_remove_room_type_image_btn,
 .rbfw_remove_service_image_btn {
     color: #fff;
-    border-color: #dd3434;
-    background: #dd3434;
-    vertical-align: top;
-    margin: 1px;
-    transition: 0.2s;
-    box-shadow: 0 1px 0 #ccc;
-    vertical-align: top;
-    display: inline-block;
-    text-decoration: none;
-    font-size: 13px;
-    line-height: 26px;
-    height: 28px;
-    padding: 0 10px 1px;
+    margin:.1em;
+    padding:0 .5em;
     cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    -webkit-appearance: none;
-    border-radius: 3px;
-    white-space: nowrap;
-    box-sizing: border-box;
 }
 
 .wp-core-ui #rbfw_add_meta_box .button:hover,
 .rbfw_remove_room_type_image_btn:hover {
     color: #fff;
-    border-color: #a11818;
-    background: #a11818;
+    border-color: #8c8c8c;
+    background: #8c8c8c;
 }
 
 div.mpStyle [class*="_bgBlue"],
@@ -1114,6 +1096,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     width: auto;
     display: inline-block;
     font-weight: normal;
+    margin-right: 0.35em;
 }
 
 #rbfw_add_meta_box .form-table select,
@@ -1153,9 +1136,8 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box .select2-container--default .select2-selection--multiple {
-    border-color: #5C58A5;
-    color: #5C58A5;
-    background-color: rgba(237, 239, 251, 0.41);
+    border-color: #ddd;
+    background-color: #fefefe;
 }
 
 #rbfw_add_meta_box .item-title {
@@ -1169,10 +1151,9 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box .field-text-multi-wrapper .field-list .item {
-    padding-top: 0px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #f2f2f2;
-    margin-bottom: 10px;
+    padding:0 .5em;
+    background-color:#f2f2f2;
+    margin-bottom: 5px;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1284,7 +1265,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     text-align: center;
     display: grid;
     align-items: center;
-    background: #fbf6d2;
+    background: #ddd;
     font-size: 25px;
     margin-top: 0;
     padding: 2px;

@@ -17,4 +17,13 @@
             
         }
     }
+    .select2-selection__rendered{
+        padding: .25em;
+        .select2-selection__choice{
+            margin: .2em;
+            .select2-selection__choice__remove{
+                margin-right:.25em;
+            }
+        }
+    }
 }
