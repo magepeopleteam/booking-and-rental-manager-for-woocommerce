@@ -8096,11 +8096,13 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             ?>
             <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper
             field-media-multi-wrapper-<?php echo esc_attr($id); ?>">
-                <div class='ppof-button upload' id='media_upload_<?php echo esc_attr($id); ?>'><?php echo __('Upload','pickplugins-options-framework');?></div><div class='ppof-button clear'
-                                                                                          id='media_clear_<?php echo
-                                                                                          $id;
-                                                                                          ?>'><?php echo __('Clear','pickplugins-options-framework');?></div>
-                <div class="media-list media-list-<?php echo esc_attr($id); ?> sortable">
+                <div class='button upload' id='media_upload_<?php echo esc_attr($id); ?>'>
+                    <?php echo __('Upload','pickplugins-options-framework');?>
+                </div>
+                <div class='button clear' id='media_clear_<?php echo $id; ?>'>
+                    <?php echo __('Clear','pickplugins-options-framework');?>
+                </div>
+                <div class="media-list my-1 media-list-<?php echo esc_attr($id); ?> sortable">
                     <?php
                     if(!empty($values) && is_array($values)):
                         foreach ($values as $value ):
@@ -8108,7 +8110,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             $media_type	= get_post_mime_type( $value );
                             $media_title= get_the_title( $value );
                             ?>
-                            <div class="item">
+                            <div class="item m-1">
                                 <span class="remove" onclick="jQuery(this).parent().remove()"><?php echo mep_esc_html($remove_text); ?></span>
                                 <span class="sort" ><i class="fa-solid fa-grip"></i></span>
                                 <img id='media_preview_<?php echo esc_attr($id); ?>' src='<?php echo esc_attr($media_url); ?>' style='width:100%'/>

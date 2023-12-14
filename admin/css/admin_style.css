@@ -1338,12 +1338,6 @@ input#rbfw_features_search_icon {
     border-color: #d3d3d3;
 }
 
-.tab-content-rbfw_gallery_meta_boxs .field-media-multi-wrapper .media-list .item .remove {
-    background-color: #000;
-    color: #fff;
-    border-radius: 3px;
-}
-
 
 /* Tooltip container */
 
@@ -1912,7 +1906,6 @@ input#rbfw_features_search_icon {
 }
 
 .tab-content-rbfw_tax_meta_boxs {
-    border: 1px solid #ddd;
     padding: 0px;
     margin-bottom: 15px;
     background: #f0f4ff57;

@@ -1868,15 +1868,16 @@ div>.ppof-metabox {
 }
 
 .field-media-multi-wrapper .media-list .item {
-    width: 80px;
+    width: 150px;
+    height: 118px;
     display: inline-block;
     margin: 5px;
-    background: #eee;
+    border:1px solid #eee;
     padding: 5px;
     position: relative;
     vertical-align: top;
-    height: 80px;
     overflow: hidden;
+    padding-top: 0;
 }
 
 .field-media-multi-wrapper .media-list .item.empty .item-title {
@@ -1889,11 +1890,17 @@ div>.ppof-metabox {
 }
 
 .field-media-multi-wrapper .media-list .item .remove {
+    background-color: #000;
+    color: #fff;
+    border-radius: 50%;
     position: absolute;
     top: 0;
     right: 0;
-    padding: 3px 10px;
+    width:20px;
+    height:20px;
     cursor: pointer;
+    text-align: center;
+  line-height: 1.6em;
 }
 
 .field-media-multi-wrapper .upload {}
