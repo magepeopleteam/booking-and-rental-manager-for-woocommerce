@@ -1016,8 +1016,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box table.form-table tr {
-    background-color: #f7f09440;
-    border-top: 2px solid #fff;
+
 }
 
 #rbfw_add_meta_box table.form-table.rbfw_item_type_table tr {
@@ -1111,7 +1110,6 @@ div.mpStyle [class*="_bgColor_1"] i {
     display: inline-block;
     padding: 5px;
     width: 120px;
-    background-color: #f7f094;
     margin-bottom: 0;
     padding-top: 8px;
     padding-bottom: 8px;
