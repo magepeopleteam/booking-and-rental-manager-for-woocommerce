@@ -613,7 +613,7 @@
 			echo esc_attr( 'none' );
 		} ?>;">
 
-<?php do_action( 'rbfw_before_general_price_table' ); ?>
+		<?php do_action( 'rbfw_before_general_price_table' ); ?>
 		
 		<div class="">
 			
@@ -722,59 +722,7 @@
 
 		<?php do_action( 'rbfw_after_general_price_table' ); ?>
 
-		<div class="mp_tab_item_sub_sec  rbfw-bt-none">
-		<script>
-			jQuery(document).ready(function(){
-
-				jQuery('.rbfw_switch label').click(function(e) {
-					e.stopImmediatePropagation();
-					e.preventDefault();
-					let $this = jQuery(this);
-					let target = jQuery(this).parents('.rbfw_switch').find('label');
-					target.removeClass('active');
-					target.find('input').prop('checked', false);
-					target.find('input').removeAttr('checked');
-					$this.addClass('active');
-					$this.find('input').prop('checked', true);
-
-				});
-
-			});
-		</script>
-		<div class="rbfw_week_table" style="display: <?php if (($rbfw_item_type != 'resort' && $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment') && $rbfw_enable_daywise_price == 'yes') {
-			echo esc_attr( 'block' );
-		} else {
-			echo esc_attr( 'none' );
-		} ?>;">
-
-		<h3><?php echo esc_html_e( 'Day-wise Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?>
-		</h3>
-
-		<table class='form-table'>
-			<?php do_action( 'rbfw_before_week_price_table_row' ); ?>
-			<thead>
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Day Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-					<th scope="row"><?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-					<th scope="row"><?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-					<th scope="row"><?php esc_html_e( 'Enable/Disable', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-				</tr>
-			</thead>
-			<tbody>
-			<?php
-				rbfw_day_row( __( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun' );
-				rbfw_day_row( __( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon' );
-				rbfw_day_row( __( 'Tuesday:', 'booking-and-rental-manager-for-woocommerce' ), 'tue' );
-				rbfw_day_row( __( 'Wednesday:', 'booking-and-rental-manager-for-woocommerce' ), 'wed' );
-				rbfw_day_row( __( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu' );
-				rbfw_day_row( __( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri' );
-				rbfw_day_row( __( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat' );
-				do_action( 'rbfw_after_week_price_table_row' );
-			?>
-			</tbody>
-		</table>
-		</div>
-		</div>
+		
 		</div>
 
 		<?php do_action( 'rbfw_after_week_price_table',$post_id ); ?>
