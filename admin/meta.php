@@ -884,37 +884,37 @@
 	function rbfw_add_meta_box_tab_faq_content( $rbfw_id ) {
 		$rbfw_enable_faq_content  = get_post_meta( $rbfw_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_faq_content', true ) : 'no';
 		?>
-		<div class="mpStyle mp_tab_item mp_tab_item_sub_sec" data-tab-item="#rbfw_faq">
-			<h3 class="section-title"><?php echo ''.esc_html__( 'FAQ Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
-
-		<table class="form-table">
-			<tr>
-				<th><div class="rbfw_switch_label"><?php esc_html_e( 'FAQ Content', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
-				<td>
+		<div class="mpStyle mp_tab_item " data-tab-item="#rbfw_faq">
+			
+			<h2 class="h4 text-primary p-0 my-1"><?php echo ''.esc_html__( 'FAQ Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+			
+			<section class="component d-flex justify-content-between align-items-center mb-2">
+				<div class="w-50 d-flex justify-content-between align-items-center">
+					<p class=""><?php esc_html_e( 'FAQ Content', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span>It displays available quantity information in item details page.</span></i></p>
+				</div>
+				<div class="w-50 d-flex justify-content-between align-items-center">
 					<div class="rbfw_switch_wrapper rbfw_switch_faq">
 						<div class="rbfw_switch">
 							<label for="rbfw_enable_faq_content_on" class="<?php if ( $rbfw_enable_faq_content == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_faq_content" class="rbfw_enable_faq_content" value="yes" id="rbfw_enable_faq_content_on" <?php if ( $rbfw_enable_faq_content == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_faq_content_off" class="<?php if ( $rbfw_enable_faq_content != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_faq_content" class="rbfw_enable_faq_content" value="no" id="rbfw_enable_faq_content_off" <?php if ( $rbfw_enable_faq_content != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
 						</div>
 					</div>
-				</td>
-			</tr>
-		</table>
-
+				</div>
+			</section>
 
 			<div class="rbfw_faq_content_wrapper" style="display: <?php if ($rbfw_enable_faq_content == 'yes' ) {
-				echo esc_attr( 'block' );
-			} else {
-				echo esc_attr( 'none' );
-			} ?>;">
-			<?php
-				$faqs = RBFW_Function::get_post_info( $rbfw_id, 'mep_event_faq', array() );
-				if ( sizeof( $faqs ) > 0 ) {
-					foreach ( $faqs as $faq ) {
-						$id = 'rbfw_faq_content_' . uniqid();
-						echo rbfw_repeated_item( $id, 'mep_event_faq', $faq );
+					echo esc_attr( 'block' );
+				} else {
+					echo esc_attr( 'none' );
+				} ?>;">
+				<?php
+					$faqs = RBFW_Function::get_post_info( $rbfw_id, 'mep_event_faq', array() );
+					if ( sizeof( $faqs ) > 0 ) {
+						foreach ( $faqs as $faq ) {
+							$id = 'rbfw_faq_content_' . uniqid();
+							echo rbfw_repeated_item( $id, 'mep_event_faq', $faq );
+						}
 					}
-				}
-			?>
+				?>
 				<button type="button" class=" rbfw_add_faq_content ppof-button">
 					<i class="fa-solid fa-circle-plus"></i>
 					<?php esc_html_e( 'Add New FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -1320,63 +1320,68 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 	$content       = array_key_exists( $content_name, $data ) ? html_entity_decode( $data[ $content_name ] ) : '';
 
 	?>
-	<div class='dLayout rbfw_remove_area'>
-		<table class="form-table">
-			<tr>
-				<td>
-					<div class="mb-05"><?php echo esc_html( $title ); ?></div>
-					<input type="text" class="formControl" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<div><?php echo esc_html( $image_title ); ?></div>
-					<div class="rbfw_multi_image_area">
-						<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
-						<div class="rbfw_multi_image">
-							<?php
-								$all_images = explode( ',', $images );
-								if ( $images && sizeof( $all_images ) > 0 ) {
-									foreach ( $all_images as $image ) {
-										?>
-										<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
-											<span class="dashicons dashicons-no-alt circleIcon_xs rbfw_close_multi_image_item"></span>
-											<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
-										</div>
-										<?php
-									}
+	<div class='rbfw_remove_area component mb-2'>
+		<section class="component d-flex justify-content-between align-items-center mb-2">
+			<div class="w-50 d-flex justify-content-between align-items-center">
+				<p class=""><?php echo esc_html( $title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
+			</div>
+			<div class="w-50 d-flex justify-content-between align-items-center">
+				<input type="text" class="formControl" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
+				
+			</div>
+		</section>
+		<section class="component d-flex justify-content-between align-items-center mb-2">
+			<div class="w-50 d-flex justify-content-between align-items-center">
+				<p class=""><?php echo esc_html( $image_title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
+			</div>
+			<div class="w-50 d-flex justify-content-between align-items-center">
+				<div class="rbfw_multi_image_area">
+					<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
+					<div class="rbfw_multi_image">
+						<?php
+							$all_images = explode( ',', $images );
+							if ( $images && sizeof( $all_images ) > 0 ) {
+								foreach ( $all_images as $image ) {
+									?>
+									<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
+										<span class="dashicons dashicons-no-alt circleIcon_xs rbfw_close_multi_image_item"></span>
+										<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
+									</div>
+									<?php
 								}
-							?>
-						</div>
-						<button type="button" class=" add_multi_image ppof-button">
-							<i class="fa-solid fa-circle-plus"></i>
-							<?php esc_html_e( 'Add Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
-						</button>
+							}
+						?>
 					</div>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<div class="min_200"><?php echo esc_html( $content_title ); ?></div>
-					<?php
-						$settings = array(
-							'wpautop'       => false,
-							'media_buttons' => false,
-							'textarea_name' => $content_name . '[]',
-							'tabindex'      => '323',
-							'editor_height' => 200,
-							'editor_css'    => '',
-							'editor_class'  => '',
-							'teeny'         => false,
-							'dfw'           => false,
-							'tinymce'       => true,
-							'quicktags'     => true
-						);
-						wp_editor( $content, $id, $settings );
-					?>
-				</td>
-			</tr>
-		</table>
+					<button type="button" class=" add_multi_image ppof-button">
+						<i class="fa-solid fa-circle-plus"></i>
+						<?php esc_html_e( 'Add Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</button>
+				</div>
+			</div>
+		</section>
+		<section class="component d-flex justify-content-between align-items-center mb-2">
+			<div class="w-50 d-flex justify-content-between align-items-center">
+				<p class=""><?php echo esc_html( $content_title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
+			</div>
+			<div class="w-50 d-flex justify-content-between align-items-center">
+				<?php
+					$settings = array(
+						'wpautop'       => false,
+						'media_buttons' => false,
+						'textarea_name' => $content_name . '[]',
+						'tabindex'      => '323',
+						'editor_height' => 200,
+						'editor_css'    => '',
+						'editor_class'  => '',
+						'teeny'         => false,
+						'dfw'           => false,
+						'tinymce'       => true,
+						'quicktags'     => true
+					);
+					wp_editor( $content, $id, $settings );
+				?>
+			</div>
+		</section>
 		<span class="dashicons dashicons-no-alt circleIcon_xs rbfw_item_remove"></span>
 	</div>
 	<?php
