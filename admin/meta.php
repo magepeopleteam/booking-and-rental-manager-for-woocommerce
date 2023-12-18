@@ -963,27 +963,19 @@ function rbfw_add_variations_tab_content($rbfw_id){
 	$rbfw_variations_data = get_post_meta( $rbfw_id, 'rbfw_variations_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_variations_data', true ) : [];
 	?>
 
-	<div class="mp_tab_item mp_tab_item_sub_sec" data-tab-item="#rbfw_variations" <?php if($rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
-		<h3><?php esc_html_e( 'Variations Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
-
-		<table class="form-table">
-			<tr class="rbfw_switch_md_type_item_qty rbfw_switch_md_type_variation_switch_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort' ) { echo 'style="display:none"'; } ?>>
-				<td>
-				<div class="rbfw_switch_wrapper rbfw_enable_variations_switch">
-				<div class="rbfw_switch_label"><?php esc_html_e( 'Item Variations', 'booking-and-rental-manager-for-woocommerce' ); ?>
-				</div>
+	<div class="mp_tab_item " data-tab-item="#rbfw_variations" <?php if($rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
+		<h2 id="section_2" class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Variations Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+		<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_time_slot_switch">
+			<label scope="row" class="w-50"><?php esc_html_e( 'Item Variations', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span><?php esc_html_e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></i>										</label>
+										
+			<div class="d-flex flex-column w-50">
 				<div class="rbfw_switch rbfw_switch_variations">
 					<label for="rbfw_enable_variations_on" class="<?php if ( $rbfw_enable_variations == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_variations" class="rbfw_enable_variations" value="yes" id="rbfw_enable_variations_on" <?php if ( $rbfw_enable_variations == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_variations_off" class="<?php if ( $rbfw_enable_variations != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_variations" class="rbfw_enable_variations" value="no" id="rbfw_enable_variations_off" <?php if ( $rbfw_enable_variations != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
 				</div>
-				</div>
-				<hr>
-				<div class="rbfw_alert_info"><i class="fa-solid fa-circle-info"></i> <?php esc_html_e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-				</td>
-			</tr>
-		</table>
+			</div>
+		</section>
 
-
-		<div class="rbfw_variations_table_wrap" <?php if($rbfw_enable_variations == 'no'){ echo 'style="display:none"'; }?>>
+		<div class="rbfw_variations_table_wrap component mb-2" <?php if($rbfw_enable_variations == 'no'){ echo 'style="display:none"'; }?>>
 			<table class="form-table rbfw_variations_table">
 				<thead>
 					<tr>
