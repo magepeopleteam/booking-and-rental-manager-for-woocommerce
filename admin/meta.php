@@ -54,31 +54,30 @@
 		<div class="rbfw_form_group rbfw_location_switch" >
 
 		<div class='rbfw-location-attributes-section location-section'>
+		<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Pick-up Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</h2>
 		<div class="mp_tab_item_sub_sec_location">
-
-		<table class="form-table">
-			<tbody>
-				<tr>
-					<th><div class="rbfw_switch_label"><?php esc_html_e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
-					<td>
-						<div class="rbfw_switch_wrapper rbfw_switch_pickup_location">
+			<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+				<label scope="row" class="w-50"><?php esc_html_e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+				<div class="d-flex flex-column w-50">
+					<div class="rbfw_switch_wrapper rbfw_switch_pickup_location">
 							<div class="rbfw_switch">
 								<label for="rbfw_enable_pick_point_on" class="<?php if ( $rbfw_enable_pick_point == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_pick_point" class="rbfw_enable_pick_point" value="yes" id="rbfw_enable_pick_point_on" <?php if ( $rbfw_enable_pick_point == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_pick_point_off" class="<?php if ( $rbfw_enable_pick_point != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_pick_point" class="rbfw_enable_pick_point" value="no" id="rbfw_enable_pick_point_off" <?php if ( $rbfw_enable_pick_point != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
 							</div>
 						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+					</td>			
+				</div>
+			</section>
+		
 
 		<div class='rbfw-pickup-location-section' style="display: <?php if ( $rbfw_item_type != 'resort' && $rbfw_enable_pick_point == 'yes' ) {
 			echo esc_attr( 'block' );
 		} else {
 			echo esc_attr( 'none' );
 		} ?>;">
-				<h3><?php esc_html_e( 'Pick-up Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?>
-				</h3>
-
+				
+		<section class="component mb-2" data-row="rbfw_add_to_cart_shortcode">
+			
 				<table id="repeatable-fieldset-one-pickup" class='form-table rbfw_pricing_table'>
 					<thead>
 					<tr>
@@ -107,6 +106,7 @@
 						else :
 						endif;
 					?>
+					
 					<tr class="empty-row screen-reader-text-pickup" id='pickup-hidden-row'>
 						<td><?php rbfw_get_location_dropdown( 'loc_pickup_name[]' ); ?></td>
 						<td>
@@ -121,33 +121,32 @@
 				<div class="add-row-pickup-btn">
 					<button id="add-row-pickup" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 				</div>
+		</section>
+				
 			</div>
 			</div>
 
 		<div class="mp_tab_item_sub_sec_location">
-
-		<table class="form-table">
-			<tbody>
-				<tr>
-					<th><div class="rbfw_switch_label"><?php esc_html_e( 'Drop-off Location', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
-					<td>
-						<div class="rbfw_switch_wrapper rbfw_switch_dropoff_location">
-							<div class="rbfw_switch">
-								<label for="rbfw_enable_dropoff_point_on" class="<?php if ( $rbfw_enable_dropoff_point == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_dropoff_point" class="rbfw_enable_dropoff_point" value="yes" id="rbfw_enable_dropoff_point_on" <?php if ( $rbfw_enable_dropoff_point == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_dropoff_point_off" class="<?php if ( $rbfw_enable_dropoff_point != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_dropoff_point" class="rbfw_enable_dropoff_point" value="no" id="rbfw_enable_dropoff_point_off" <?php if ( $rbfw_enable_dropoff_point != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-							</div>
+			<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Drop-off Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+			<section class="component d-flex justify-content-between align-items-center mb-2">
+				<div class="w-50 d-flex justify-content-between align-items-center">
+					<label class=""><?php esc_html_e( 'Drop-off Location', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+				</div>
+				<div class="w-50 d-flex justify-content-between align-items-center">
+					<div class="rbfw_switch_wrapper rbfw_switch_dropoff_location">
+						<div class="rbfw_switch">
+							<label for="rbfw_enable_dropoff_point_on" class="<?php if ( $rbfw_enable_dropoff_point == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_dropoff_point" class="rbfw_enable_dropoff_point" value="yes" id="rbfw_enable_dropoff_point_on" <?php if ( $rbfw_enable_dropoff_point == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_dropoff_point_off" class="<?php if ( $rbfw_enable_dropoff_point != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_dropoff_point" class="rbfw_enable_dropoff_point" value="no" id="rbfw_enable_dropoff_point_off" <?php if ( $rbfw_enable_dropoff_point != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
 						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+					</div>
+				</div>
+			</section>
 
-		<div class='rbfw-dropoff-location-section' style="display: <?php if ( $rbfw_item_type != 'resort' && $rbfw_enable_dropoff_point == 'yes' ) {
+		<div class='rbfw-dropoff-location-section component mb-2' style="display: <?php if ( $rbfw_item_type != 'resort' && $rbfw_enable_dropoff_point == 'yes' ) {
 				echo esc_attr( 'block' );
 			} else {
 				echo esc_attr( 'none' );
 			} ?>;">
-				<h3><?php esc_html_e( 'Drop-off Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?>
-				</h3>
+				
 
 				<table id="repeatable-fieldset-one-dropoff" class='form-table rbfw_pricing_table'>
 					<thead>
