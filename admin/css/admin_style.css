@@ -1012,7 +1012,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box table.form-table thead tr {
-    background-color: #f7f094;
+    background-color: #d3d3d3;
 }
 
 #rbfw_add_meta_box table.form-table tr {
@@ -1050,6 +1050,18 @@ div.mpStyle [class*="_bgColor_1"] i {
     border-collapse: unset;
 }
 
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(even){
+    background-color: #f2f2f2;
+}
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(odd){
+    background-color: #fff;
+}
+#rbfw_add_meta_box .mp_event_type_row:nth-child(even){
+    background-color: #f2f2f2;
+}
+#rbfw_add_meta_box .mp_event_type_row:nth-child(odd){
+    background-color: #fff;
+}
 #rbfw_add_meta_box table.form-table tbody tr th {
     color: #474747;
     background-color: #f7f094;
