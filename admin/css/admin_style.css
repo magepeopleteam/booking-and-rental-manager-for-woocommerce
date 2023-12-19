@@ -2350,8 +2350,8 @@ input.rbfw_time_slot_edit_slot_label {
 }
 
 .rbfw_seasonal_price_config_wrapper .mp_item_insert {
-    overflow-x: scroll;
-    overflow-y: hidden;
+    /* overflow-x: scroll;
+    overflow-y: hidden; */
 }
 
 .rbfw-form-table-wrap {
