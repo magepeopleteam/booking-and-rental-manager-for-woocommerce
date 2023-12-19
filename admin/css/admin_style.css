@@ -1115,9 +1115,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 #rbfw_add_meta_box .form-table select,
 #rbfw_add_meta_box .form-table td input,
 #rbfw_add_meta_box div.mpStyle .formControl {
-    background-color: rgba(237, 239, 251, 0.41);
-    font-weight: normal;
-    height: 30px;
+
 }
 
 .rbfw_item_type_table tr td label:not(.rbfw_switch.rbfw_switch_return_date label) {

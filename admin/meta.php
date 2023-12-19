@@ -246,7 +246,7 @@
 				<?php echo esc_html_e( 'Select Rent Type:', 'booking-and-rental-manager-for-woocommerce' ); ?><i class="fas fa-question-circle tool-tips"><span></span></i>
 			</label>
 			
-			<div class="d-flex flex-column w-50">
+			<div class="d-flex justify-content-end w-50">
 				<select name="rbfw_item_type" id="rbfw_item_type" class='rbfw_item_type'>
 					<option value="bike_car_sd" <?php if ( $rbfw_item_type == 'bike_car_sd' ) {
 						echo esc_attr( 'Selected' );
@@ -288,7 +288,7 @@
 								<label class="w-50">
 									<?php esc_html_e( 'Start & End Date/Time:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
 								</label>
-								<div class="d-flex flex-column w-50 ">
+								<div class="d-flex justify-content-end w-50 ">
 									<div class="rbfw_switch rbfw_switch_return_date">
 										<label for="rbfw_enable_start_end_date_on" data-value="on" class="rbfw_enable_start_end_date_label <?php if ( $rbfw_enable_start_end_date == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_start_end_date" class="rbfw_enable_start_end_date" value="yes" id="rbfw_enable_start_end_date_on" <?php if ( $rbfw_enable_start_end_date == 'yes' ) { echo 'Checked'; } ?>> <span>Regular Date</span></label><label data-value="off" for="rbfw_enable_start_end_date_off" class="rbfw_enable_start_end_date_label <?php if ( $rbfw_enable_start_end_date != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_start_end_date" class="rbfw_enable_start_end_date" value="no" id="rbfw_enable_start_end_date_off" <?php if ( $rbfw_enable_start_end_date != 'yes' ) { echo 'Checked'; } ?>> <span>Fixed Date</span></label>
 									</div>
@@ -338,7 +338,7 @@
 								<label class="w-50">
 									<?php esc_html_e( 'Stock Quantity:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
 								</label>
-								<div class="d-flex flex-column w-50 ">
+								<div class="d-flex justify-content-end w-50 ">
 									<input type="number" name="rbfw_item_stock_quantity" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity); ?>">
 								</div>
 							</section>
@@ -627,12 +627,12 @@
 				<div class="w-50 d-flex justify-content-between align-items-center">
 					<label for=""><?php esc_html_e( 'Daily Price:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
 				</div>
-				<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
-					<div class=" d-flex justify-content-between align-items-center">
-						<div class="rbfw_switch rbfw_switch_daily_rate">
-							<label for="rbfw_enable_daily_rate_on" class="<?php if ( $rbfw_enable_daily_rate == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_daily_rate" class="rbfw_enable_daily_rate" value="yes" id="rbfw_enable_daily_rate_on" <?php if ( $rbfw_enable_daily_rate == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_daily_rate_off" class="<?php if ( $rbfw_enable_daily_rate != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_daily_rate" class="rbfw_enable_daily_rate" value="no" id="rbfw_enable_daily_rate_off" <?php if ( $rbfw_enable_daily_rate != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-						</div>
-						<input type="number" name='rbfw_daily_rate' value="<?php echo esc_html( $daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', '' ); ?>" class="<?php if ( $rbfw_enable_daily_rate == 'no' ) { echo 'rbfw_d_none'; } ?> rbfw_daily_rate_input">
+				<div class="w-50 d-flex justify-content-end align-items-center">
+					<div class="rbfw_switch rbfw_switch_daily_rate">
+						<label for="rbfw_enable_daily_rate_on" class="<?php if ( $rbfw_enable_daily_rate == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_daily_rate" class="rbfw_enable_daily_rate" value="yes" id="rbfw_enable_daily_rate_on" <?php if ( $rbfw_enable_daily_rate == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_daily_rate_off" class="<?php if ( $rbfw_enable_daily_rate != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_daily_rate" class="rbfw_enable_daily_rate" value="no" id="rbfw_enable_daily_rate_off" <?php if ( $rbfw_enable_daily_rate != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
+					</div>
+					<div class="rbfw_daily_rate_input ms-2 <?php if ( $rbfw_enable_daily_rate == 'no' ) { echo 'rbfw_d_none'; } ?>">
+						<input type="number" name='rbfw_daily_rate' value="<?php echo esc_html( $daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', '' ); ?>" class=" ">
 					</div>
 				</div>
 			</section>
@@ -641,11 +641,11 @@
 				<div class="w-50 d-flex justify-content-between align-items-center">
 					<label for=""><?php esc_html_e( 'Hourly Price:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span><?php _e( 'Enable/Disable the time slot functionality.To add time slot, go to <a class="rbfw_open_date_time_tab">Date & Time Tab</a>', 'booking-and-rental-manager-for-woocommerce' ); ?></span></i></label>
 				</div>
-				<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
-					<div class=" d-flex justify-content-between align-items-center">
-						<div class="rbfw_switch rbfw_switch_hourly_rate">
-							<label for="rbfw_enable_hourly_rate_on" class="<?php if ( $rbfw_enable_hourly_rate == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_hourly_rate" class="rbfw_enable_hourly_rate" value="yes" id="rbfw_enable_hourly_rate_on" <?php if ( $rbfw_enable_hourly_rate == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_hourly_rate_off" class="<?php if ( $rbfw_enable_hourly_rate != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_hourly_rate" class="rbfw_enable_hourly_rate" value="no" id="rbfw_enable_hourly_rate_off" <?php if ( $rbfw_enable_hourly_rate != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-						</div>
+				<div class="w-50 ms-5 d-flex justify-content-end align-items-center">
+					<div class="rbfw_switch rbfw_switch_hourly_rate">
+						<label for="rbfw_enable_hourly_rate_on" class="<?php if ( $rbfw_enable_hourly_rate == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_hourly_rate" class="rbfw_enable_hourly_rate" value="yes" id="rbfw_enable_hourly_rate_on" <?php if ( $rbfw_enable_hourly_rate == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_hourly_rate_off" class="<?php if ( $rbfw_enable_hourly_rate != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_hourly_rate" class="rbfw_enable_hourly_rate" value="no" id="rbfw_enable_hourly_rate_off" <?php if ( $rbfw_enable_hourly_rate != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
+					</div>
+					<div  class="ms-2 <?php if ( $rbfw_enable_hourly_rate == 'no' ) { echo 'rbfw_d_none'; } ?> rbfw_hourly_rate_input">
 						<input type="number" name='rbfw_hourly_rate' value="<?php echo esc_html( $hourly_rate ); ?>" placeholder="<?php esc_html_e( 'Hourly Price', '' ); ?>" class="<?php if ( $rbfw_enable_hourly_rate == 'no' ) { echo 'rbfw_d_none'; } ?> rbfw_hourly_rate_input">
 					</div>
 				</div>
@@ -655,12 +655,10 @@
 				<div class="w-50 d-flex justify-content-between align-items-center">
 					<label for=""><?php esc_html_e( 'Day-wise Price Configuration:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
 				</div>
-				<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
-					<div class="d-flex justify-content-between align-items-center">
-						<div class="rbfw_switch_wrapper rbfw_switch_daywise_price">
-							<div class="rbfw_switch">
-								<label for="rbfw_enable_daywise_price_on" class="<?php if ( $rbfw_enable_daywise_price == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_daywise_price" class="rbfw_enable_daywise_price" value="yes" id="rbfw_enable_daywise_price_on" <?php if ( $rbfw_enable_daywise_price == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_daywise_price_off" class="<?php if ( $rbfw_enable_daywise_price != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_daywise_price" class="rbfw_enable_daywise_price" value="no" id="rbfw_enable_daywise_price_off" <?php if ( $rbfw_enable_daywise_price != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-							</div>
+				<div class="w-50 ms-5 d-flex justify-content-end align-items-center">
+					<div class="rbfw_switch_wrapper rbfw_switch_daywise_price">
+						<div class="rbfw_switch">
+							<label for="rbfw_enable_daywise_price_on" class="<?php if ( $rbfw_enable_daywise_price == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_daywise_price" class="rbfw_enable_daywise_price" value="yes" id="rbfw_enable_daywise_price_on" <?php if ( $rbfw_enable_daywise_price == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_daywise_price_off" class="<?php if ( $rbfw_enable_daywise_price != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_daywise_price" class="rbfw_enable_daywise_price" value="no" id="rbfw_enable_daywise_price_off" <?php if ( $rbfw_enable_daywise_price != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
 						</div>
 					</div>
 				</div>
@@ -785,7 +783,7 @@
 
 									<td><input type="text"  class="mp_formControl" name="service_desc[]" placeholder="Service Description" value="<?php echo esc_html( $service_desc ); ?>"/></td>
 
-									<td><input type="number" class="mp_formControl" name="service_qty[]" placeholder="Ex: 100" value="<?php echo esc_html( $service_qty ); ?>"/></td>
+									<td><input type="number" class="small" name="service_qty[]" placeholder="Ex: 100" value="<?php echo esc_html( $service_qty ); ?>"/></td>
 									<td>
 										<div class="mp_event_remove_move">
 											<button class="button remove-row" type="button"><i class="fa-solid fa-trash-can"></i></button>
@@ -808,7 +806,7 @@
 						<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap"/></td>
 						<td><input type="number" class="mp_formControl" step="0.01" name="service_price[]" placeholder="Ex: 10" value=""/></td>
 						<td><input type="text"  class="mp_formControl" name="service_desc[]" placeholder="Service Description" value=""/></td>
-						<td><input type="number" class="mp_formControl" name="service_qty[]" placeholder="Ex: 100" value=""/></td>
+						<td><input type="number" class="small" name="service_qty[]" placeholder="Ex: 100" value=""/></td>
 						<td>
 								<div class="mp_event_remove_move">
 									<button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
