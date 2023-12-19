@@ -54,8 +54,7 @@
 		<div class="rbfw_form_group rbfw_location_switch" >
 
 		<div class='rbfw-location-attributes-section location-section'>
-		<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Pick-up Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?>
-				</h2>
+		<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Pick-up Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		<div class="mp_tab_item_sub_sec_location">
 			<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
 				<label scope="row" class="w-50"><?php esc_html_e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
@@ -68,8 +67,6 @@
 					</td>			
 				</div>
 			</section>
-		
-
 		<div class='rbfw-pickup-location-section' style="display: <?php if ( $rbfw_item_type != 'resort' && $rbfw_enable_pick_point == 'yes' ) {
 			echo esc_attr( 'block' );
 		} else {
@@ -77,20 +74,19 @@
 		} ?>;">
 				
 		<section class="component mb-2" data-row="rbfw_add_to_cart_shortcode">
-			
-				<table id="repeatable-fieldset-one-pickup" class='form-table rbfw_pricing_table'>
-					<thead>
-					<tr>
-						<th colspan="2"><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-					</tr>
-					</thead>
-					<tbody class="mp_event_type_sortable">
+			<table id="repeatable-fieldset-one-pickup" class='form-table rbfw_pricing_table'>
+				<thead>
+				<tr>
+					<th colspan="2"><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+				</tr>
+				</thead>
+				<tbody class="mp_event_type_sortable">
 					<?php
 						if ( sizeof( $rbfw_pickup_data ) > 0 ) :
 							foreach ( $rbfw_pickup_data as $field ) {
 								$location_name = array_key_exists( 'loc_pickup_name', $field ) ? esc_attr( $field['loc_pickup_name'] ) : '';
 								?>
-								<tr>
+								<tr class="location-pick-up-row">
 									<td>
 										<?php rbfw_get_location_dropdown( 'loc_pickup_name[]', $location_name ); ?>
 									</td>
@@ -106,25 +102,24 @@
 						else :
 						endif;
 					?>
-					
-					<tr class="empty-row screen-reader-text-pickup" id='pickup-hidden-row'>
-						<td><?php rbfw_get_location_dropdown( 'loc_pickup_name[]' ); ?></td>
-						<td>
+				<tr class="empty-row screen-reader-text-pickup location-pick-up-row" id='pickup-hidden-row'>
+					<td><?php rbfw_get_location_dropdown( 'loc_pickup_name[]' ); ?></td>
+					<td>
 						<div class="mp_event_remove_move">
 							<button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
 							<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
 						</div>
-						</td>
-					</tr>
-					</tbody>
-				</table>
-				<div class="add-row-pickup-btn">
-					<button id="add-row-pickup" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-				</div>
+					</td>
+				</tr>
+				</tbody>
+			</table>
+			<div class="add-row-pickup-btn">
+				<button id="add-row-pickup" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+			</div>
 		</section>
 				
 			</div>
-			</div>
+		</div>
 
 		<div class="mp_tab_item_sub_sec_location">
 			<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Drop-off Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
@@ -160,7 +155,7 @@
 							foreach ( $rbfw_dropoff_data as $field ) {
 								$location_name = array_key_exists( 'loc_dropoff_name', $field ) ? esc_attr( $field['loc_dropoff_name'] ) : '';
 								?>
-								<tr>
+								<tr class="location-drop-off-row">
 									<td><?php rbfw_get_location_dropdown( 'loc_dropoff_name[]', $location_name ); ?></td>
 									<td>
 										<div class="mp_event_remove_move">
@@ -174,7 +169,7 @@
 						else :
 						endif;
 					?>
-					<tr class="empty-row screen-reader-text-dropoff" id='dropoff-hidden-row'>
+					<tr class="empty-row screen-reader-text-dropoff location-drop-off-row" id='dropoff-hidden-row'>
 						<td><?php rbfw_get_location_dropdown( 'loc_dropoff_name[]' ); ?></td>
 						<td>
 						<div class="mp_event_remove_move">

@@ -87,7 +87,12 @@ table.atendee-info {
     width: 70%;
 }
 
-
+.rbfw-pickup-location-section table tr.location-pick-up-row:nth-child(odd){
+    background-color: #f2f2f2;
+}
+.rbfw-dropoff-location-section table tr.location-drop-off-row:nth-child(odd){
+    background-color: #f2f2f2;
+}
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
 
@@ -788,7 +793,7 @@ table.rbfw_pricing_table td {
 
 table.rbfw_pricing_table input,
 table.rbfw_pricing_table select {
-    max-width: 125px;
+   
     width: auto;
 }
 
