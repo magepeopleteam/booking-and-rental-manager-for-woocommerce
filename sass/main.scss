@@ -1,0 +1,25 @@
+// Author: Shahadat Hossain
+// Email: raselsha@gmail.com 
+// Version: 1.0.0
+// Descriptoin: this file is main sass file that will compile one main css into /assets/admin/mp_main_settings.css
+@charset "UTF-8";
+//font awsome import
+@import
+  'fontawesome5/scss/fontawesome',
+  'fontawesome5/scss/brands',
+  'fontawesome5/scss/regular',
+  'fontawesome5/scss/solid';
+// base style include
+
+@import
+  'styles/variables',
+  'styles/reset',
+  'styles/fonts',
+  'styles/spacing',
+  'styles/color',
+  'styles/nav',
+  'styles/utility',
+  'styles/form',
+  'styles/button',
+  'styles/base',
+  'styles/custom';

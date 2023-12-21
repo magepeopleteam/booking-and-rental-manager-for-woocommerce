@@ -1,0 +1,29 @@
+#{$main-selector}{
+    .inside{
+        margin: 0;
+        padding: 0;
+    }
+    .postbox-header{
+        background-color: $color-secondary;
+        h2{
+          color: $color-white;
+          font-size:calc($font-size + 0.2rem);
+        }
+        .handle-actions{
+            margin-top: 0;
+            .handle-order-higher, .handle-order-lower, .toggle-indicator{
+                color: $color-white;
+            }
+            
+        }
+    }
+    .select2-selection__rendered{
+        padding: .25em;
+        .select2-selection__choice{
+            margin: .2em;
+            .select2-selection__choice__remove{
+                margin-right:.25em;
+            }
+        }
+    }
+}
