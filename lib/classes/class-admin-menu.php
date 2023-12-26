@@ -82,7 +82,7 @@ if (!class_exists('MageRBFWClass')) {
         }
 
         public function get_icon() {
-            return $this->get_option('rbfw_rent_icon', 'rbfw_basic_gen_settings', 'dashicons-list-view');;
+            return $this->get_option('rbfw_rent_icon', 'rbfw_basic_gen_settings', 'dashicons-clipboard');;
         }
 
         public function get_cat_name() {
