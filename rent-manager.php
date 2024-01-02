@@ -28,7 +28,7 @@ require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php' ;
 function appsero_init_tracker_booking_and_rental_manager_for_woocommerce() {
 
     if ( ! class_exists( 'Appsero\Client' ) ) {
-      require_once __DIR__ . '/lib/appsero/src/Client.php';
+        require_once __DIR__ . '/lib/appsero/src/Client.php';
     }
 
     $client = new Appsero\Client( 'ee4b230e-9589-4bac-a5e0-d61ad547c855', 'Booking and Rental Manager', __FILE__ );

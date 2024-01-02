@@ -529,6 +529,10 @@ if (!class_exists('MageRBFWClass')) {
 
                     $post_id = wp_insert_post($args);
 
+
+
+
+
                     if (sizeof($meta_data) > 0) {
                         foreach ($meta_data as $key => $value) {
                             update_post_meta($post_id, $key, $value);
