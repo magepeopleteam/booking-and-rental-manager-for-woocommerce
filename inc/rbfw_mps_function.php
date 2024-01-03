@@ -377,8 +377,12 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 'post_status'   => 'publish',
                 'post_type'     => 'rbfw_order'
             );
+
+
             
             $post_id = wp_insert_post( $args );
+
+
 
             if(!empty($post_id)){
 
