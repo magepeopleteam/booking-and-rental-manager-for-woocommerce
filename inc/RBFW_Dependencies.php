@@ -11,6 +11,7 @@
 			public function __construct() {
 				add_action('wp_enqueue_scripts', array( $this, 'common_enqueue' ), 90 );
 				add_action('admin_enqueue_scripts', array( $this, 'common_enqueue' ), 90 );
+
 				add_action('wp_enqueue_scripts', array( $this, 'frontend_script' ), 90 );
 				add_action('admin_head', array( $this, 'rbfw_ajax_url' ), 5 );
 				add_action('wp_head', array( $this, 'rbfw_ajax_url' ), 5 );
@@ -39,14 +40,15 @@
 				
 				//loading tooltip js
 				wp_enqueue_script( 'popper.min', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js', array('jquery'), '2.9.2', true );
-				wp_enqueue_script( 'tippy-bundle.umd.min', 'https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy-bundle.umd.min.js
-				', array('jquery'), '6.3.7', true );
-
+				wp_enqueue_script( 'tippy-bundle.umd.min', 'https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy-bundle.umd.min.js', array('jquery'), '6.3.7', true );
 				// loading popup css
 				wp_enqueue_style('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/css/jquery.modal.min.css');
-
 				// loading popup js 
-				wp_enqueue_script('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/js/jquery.modal.min.js', array('jquery'), '0.9.1', false);	
+				wp_enqueue_script('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/js/jquery.modal.min.js', array('jquery'), '0.9.1', false);
+
+                wp_enqueue_script( 'rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true );
+
+
 				
 			}
 
