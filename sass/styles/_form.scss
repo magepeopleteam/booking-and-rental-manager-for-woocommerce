@@ -1,0 +1,140 @@
+#{$main-selector}{
+  label {
+    font-size: $font-size;   
+    font-weight: $font-weight-normal; 
+  }
+  textarea, select, input[type="text"], input[type="email"], input[type="search"], input[type="tel"], input[type="url"], input[type="password"],  input[type="file"], input[type="color"], input[type="number"], input[type="range"], input[type="date"], input[type="month"], input[type="week"], input[type="time"], input[type="datetime"], input[type="datetime-local"] {
+
+      width:$input-width;
+      height: $input-height;
+      border: 0px solid $color-dark;
+      border: 1px solid $color-dark;
+      color: $color-secondary;
+      padding: $spacing;
+      &.small{
+        width:calc($input-width/3);
+      }
+      &.medium{
+        width:calc($input-width/2);
+      }
+      &:disabled {
+        background: $color-gray;
+      }
+  }
+  textarea{
+    width:100%;
+    height:calc( $input-height * 2 );
+  }
+  input[type="search"]{
+    border: 0px solid $color-dark;
+  }
+
+// =====================tool tips============================
+
+  .tool-tips{
+    color: $color-gray;
+    position: relative;
+    padding-left: calc($spacing/2);
+    span{
+      position: absolute;
+      z-index: 1;
+      bottom: 130%;
+      left: 50%;
+      transform: translate(-50%);
+      visibility: hidden;
+
+      font-family: $font-text;
+      font-size:calc( $font-size - .1rem );
+      text-align: center;
+
+      background-color: $color-black;
+      color: $color-white;
+      
+      border-radius: $border-radius;
+      padding:$spacing calc($spacing*1.5);
+      width: max-content;
+      
+      
+      &:after{
+        content: " ";
+        position: absolute;
+        top: 100%; /* At the bottom of the tooltip */
+        left: 50%;
+        transform: translate(-50%);
+        border: 5px solid $color-black;
+        border-color: $color-black transparent transparent transparent;
+        margin-left:.18em;
+      }
+    }
+    &:hover{
+      color: $color-primary;
+      span{
+        visibility: visible;
+      }
+    }
+  }
+  
+// ===========toggle switch button==========
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+
+      input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+        border: 1px solid $color-primary;
+        background-color: $color-gray;
+      }
+    }
+    
+
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius:50px;
+      border: 1px solid $color-dark;
+      background-color: $color-gray;
+      transition: $time;
+      &:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 1px;
+        bottom: 1px;
+        border-radius: 50%;
+        border: 1px solid $color-light;
+        background-color: $color-white;
+        transition: .4s;
+        box-shadow: 0 0 1px $color-dark
+      }
+    }
+    
+    input:checked {
+      + .slider {
+        background-color: $color-sky;
+        border: 1px solid $color-primary;
+        &:before{
+          transform: translateX(26px);
+        }
+      }
+    }
+    
+    input:focus {
+      + .slider {
+        box-shadow:inset 0 0 1px  $color-dark;
+      }
+    }
+}
+// ==================
+
+
+  

@@ -3384,3 +3384,29 @@ function rbfw_update_order_status($order_id){
 
 		}
 }
+/************************
+ * Duplicate Rental Item
+*************************/
+add_action('admin_init', 'rbfw_duplicate_post');
+function rbfw_duplicate_post() {
+
+	if(isset($_GET['rbfw_duplicate'])){
+		$post_id = $_GET['rbfw_duplicate'];
+		$title   = get_the_title($post_id);
+		$oldpost = get_post($post_id);
+		$post    = array(
+		  'post_title' => $title,
+		  'post_status' => 'draft',
+		  'post_type' => $oldpost->post_type,
+		);
+		$new_post_id = wp_insert_post($post);
+
+		// Copy meta fields.
+		$post_meta = get_post_custom( $post_id );
+		if( $post_meta ) {
+			foreach ( $post_meta as $meta_key => $meta_values ) {
+				update_post_meta( $new_post_id, $meta_key,  maybe_unserialize($meta_values[0]) );
+			}
+		}
+	}
+}

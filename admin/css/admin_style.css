@@ -78,8 +78,6 @@ table.atendee-info {
     width: auto;
     padding: 0;
     margin: 2PX;
-    border: 1px solid #ddd;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
 .rbfw-pickup-location-section table tr td:first-child,
@@ -89,7 +87,12 @@ table.atendee-info {
     width: 70%;
 }
 
-
+.rbfw-pickup-location-section table tr.location-pick-up-row:nth-child(odd){
+    background-color: #f2f2f2;
+}
+.rbfw-dropoff-location-section table tr.location-drop-off-row:nth-child(odd){
+    background-color: #f2f2f2;
+}
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
 
@@ -740,11 +743,6 @@ label.mp_event_virtual_type_des textarea {
     width: 100%;
 }
 
-#mp_event_all_info_in_tab button,
-.mp_tab_menu ul li {
-    -webkit-transition: all .25s ease-in-out;
-    transition: all .25s ease-in-out;
-}
 
 .mp_event_remove_move {
     display: -webkit-box;
@@ -795,7 +793,7 @@ table.rbfw_pricing_table td {
 
 table.rbfw_pricing_table input,
 table.rbfw_pricing_table select {
-    max-width: 125px;
+   
     width: auto;
 }
 
@@ -940,74 +938,7 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
     padding: 20px;
 }
 
-#poststuff #rbfw_add_meta_box .inside {
-    margin: 0;
-    padding: 0;
-}
 
-#rbfw_add_meta_box .mp_event_all_meta_in_tab {
-    display: -webkit-flex;
-    display: flex;
-    min-height: 300px;
-    flex-direction: unset;
-    margin: 5px;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-#rbfw_add_meta_box .mp_tab_menu {
-    width: 25%;
-    min-width: 20%;
-    overflow: hidden;
-    background: #081D33;
-}
-
-#rbfw_add_meta_box .mp_tab_menu ul {
-    display: block;
-    margin-top: 0;
-}
-
-#rbfw_add_meta_box .mp_tab_menu ul li {
-    padding: 10px;
-    margin: 8px;
-    cursor: pointer;
-    color: #fff;
-    position: relative;
-    justify-content: left;
-    -webkit-justify-content: left;
-    background-color: #081D33;
-    font-size: 14px;
-    font-weight: normal;
-    border-radius: 25px;
-}
-
-#rbfw_add_meta_box .mp_tab_menu ul li:hover {
-    background: #2F809F;
-    border-color: #2F809F;
-    color: #fff;
-}
-
-#rbfw_add_meta_box .mp_tab_menu ul li.active {
-    background: #2F809F;
-    border-color: #2F809F;
-    color: #fff;
-}
-
-#rbfw_add_meta_box .mp_tab_menu ul li i {
-    margin-right: 5px;
-    width: 15px;
-    display: inline-block;
-    font-size: 14px;
-}
-
-#rbfw_add_meta_box .mp_tab_details {
-    width: 80%;
-    max-width: 80%;
-    background-color: #fafafa;
-    padding: 0px;
-    overflow: hidden;
-    padding: 10px;
-}
 
 .mp_tab_details .form-table input[type="number"] {
     width: 125px;
@@ -1031,7 +962,6 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
     text-align: center;
     transition: 0.2s;
     margin-left: 0px;
-    font-size: 13px !important;
     font-weight: 400 !important;
 }
 
@@ -1045,33 +975,16 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 .rbfw_remove_room_type_image_btn,
 .rbfw_remove_service_image_btn {
     color: #fff;
-    border-color: #dd3434;
-    background: #dd3434;
-    vertical-align: top;
-    margin: 1px;
-    transition: 0.2s;
-    box-shadow: 0 1px 0 #ccc;
-    vertical-align: top;
-    display: inline-block;
-    text-decoration: none;
-    font-size: 13px;
-    line-height: 26px;
-    height: 28px;
-    padding: 0 10px 1px;
+    margin:.1em;
+    padding:0 .5em;
     cursor: pointer;
-    border-width: 1px;
-    border-style: solid;
-    -webkit-appearance: none;
-    border-radius: 3px;
-    white-space: nowrap;
-    box-sizing: border-box;
 }
 
 .wp-core-ui #rbfw_add_meta_box .button:hover,
 .rbfw_remove_room_type_image_btn:hover {
     color: #fff;
-    border-color: #a11818;
-    background: #a11818;
+    border-color: #8c8c8c;
+    background: #8c8c8c;
 }
 
 div.mpStyle [class*="_bgBlue"],
@@ -1102,12 +1015,11 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box table.form-table thead tr {
-    background-color: #f7f094;
+    background-color: #d3d3d3;
 }
 
 #rbfw_add_meta_box table.form-table tr {
-    background-color: #f7f09440;
-    border-top: 2px solid #fff;
+
 }
 
 #rbfw_add_meta_box table.form-table.rbfw_item_type_table tr {
@@ -1141,9 +1053,20 @@ div.mpStyle [class*="_bgColor_1"] i {
     border-collapse: unset;
 }
 
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(even){
+    background-color: #f2f2f2;
+}
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(odd){
+    background-color: #fff;
+}
+#rbfw_add_meta_box .mp_event_type_row:nth-child(even){
+    background-color: #f2f2f2;
+}
+#rbfw_add_meta_box .mp_event_type_row:nth-child(odd){
+    background-color: #fff;
+}
 #rbfw_add_meta_box table.form-table tbody tr th {
     color: #474747;
-    background-color: #f7f094;
     width: 120px;
     max-width: 120px;
     min-width: 120px;
@@ -1186,23 +1109,19 @@ div.mpStyle [class*="_bgColor_1"] i {
     width: auto;
     display: inline-block;
     font-weight: normal;
+    margin-right: 0.35em;
 }
 
 #rbfw_add_meta_box .form-table select,
 #rbfw_add_meta_box .form-table td input,
 #rbfw_add_meta_box div.mpStyle .formControl {
-    border-color: #5C58A5;
-    color: #5C58A5;
-    background-color: rgba(237, 239, 251, 0.41);
-    font-weight: normal;
-    height: 30px;
+
 }
 
 .rbfw_item_type_table tr td label:not(.rbfw_switch.rbfw_switch_return_date label) {
     display: inline-block;
     padding: 5px;
     width: 120px;
-    background-color: #f7f094;
     margin-bottom: 0;
     padding-top: 8px;
     padding-bottom: 8px;
@@ -1227,9 +1146,8 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box .select2-container--default .select2-selection--multiple {
-    border-color: #5C58A5;
-    color: #5C58A5;
-    background-color: rgba(237, 239, 251, 0.41);
+    border-color: #ddd;
+    background-color: #fefefe;
 }
 
 #rbfw_add_meta_box .item-title {
@@ -1243,10 +1161,9 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box .field-text-multi-wrapper .field-list .item {
-    padding-top: 0px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #f2f2f2;
-    margin-bottom: 10px;
+    padding:0 .5em;
+    background-color:#f2f2f2;
+    margin-bottom: 5px;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1272,11 +1189,6 @@ div.mpStyle [class*="_bgColor_1"] i {
     vertical-align: top;
     display: inline-block;
     text-decoration: none;
-    font-size: 13px;
-    line-height: 26px;
-    height: 28px;
-    margin: 1px;
-    padding: 0 10px 1px;
     cursor: pointer;
     border-width: 1px;
     border-style: solid;
@@ -1363,7 +1275,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     text-align: center;
     display: grid;
     align-items: center;
-    background: #fbf6d2;
+    background: #ddd;
     font-size: 25px;
     margin-top: 0;
     padding: 2px;
@@ -1434,12 +1346,6 @@ div.mpStyle [class*="_bgColor_1"] i {
 input#rbfw_features_search_icon {
     padding: 3px 12px;
     border-color: #d3d3d3;
-}
-
-.tab-content-rbfw_gallery_meta_boxs .field-media-multi-wrapper .media-list .item .remove {
-    background-color: #000;
-    color: #fff;
-    border-radius: 3px;
 }
 
 
@@ -1698,13 +1604,7 @@ input#rbfw_features_search_icon {
     color: #CA6C18;
 }
 
-#rbfw_add_meta_box .mp_tab_menu ul li span {
-    margin-right: 5px;
-    width: 15px;
-    display: inline-block;
-    font-size: 18px;
-    vertical-align: middle;
-}
+
 
 .mp_tab_item_sub_sec {
     background: #FAFAFA;
@@ -2016,7 +1916,6 @@ input#rbfw_features_search_icon {
 }
 
 .tab-content-rbfw_tax_meta_boxs {
-    border: 1px solid #ddd;
     padding: 0px;
     margin-bottom: 15px;
     background: #f0f4ff57;
@@ -2049,13 +1948,13 @@ input#rbfw_features_search_icon {
 
 .mp_tab_item .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
     background-color: #bf1010;
-    padding: 0px 4px 0px 5px;
+    padding: 0px 5px 0px 5px;
     color: #fff;
-    margin-right: 10px;
+    margin:0 5px;
 }
 
 .mp_tab_item .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    padding: 5px 8px 5px 20px;
+    padding: 5px 8px 5px 5px;
 }
 
 a.menu-icon-rbfw_item.wp-menu-open {
@@ -2451,8 +2350,8 @@ input.rbfw_time_slot_edit_slot_label {
 }
 
 .rbfw_seasonal_price_config_wrapper .mp_item_insert {
-    overflow-x: scroll;
-    overflow-y: hidden;
+    /* overflow-x: scroll;
+    overflow-y: hidden; */
 }
 
 .rbfw-form-table-wrap {

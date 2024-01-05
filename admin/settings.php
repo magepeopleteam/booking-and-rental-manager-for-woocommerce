@@ -71,7 +71,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'label'   => __( 'CPT Icon', 'booking-and-rental-manager-for-woocommerce' ),
 				'desc'    => __( 'Please enter the icon class name for rent custom post type. Example: dashicons-list-view.', 'booking-and-rental-manager-for-woocommerce' ).' Find Icons: <a href="https://developer.wordpress.org/resource/dashicons/">Dashicons</a>',
 				'type'    => 'text',
-				'default' => 'dashicons-list-view'
+				'default' => 'dashicons-clipboard'
 			),
 
 			array(
