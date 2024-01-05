@@ -1888,7 +1888,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 				$booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
 				$rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
 
-				$rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : [];
+				$rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
 				
 
 				if ( in_array($range_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ) {
