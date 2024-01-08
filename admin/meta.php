@@ -56,7 +56,7 @@
 		<div class='rbfw-location-attributes-section location-section'>
 		<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Pick-up Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		<div class="mp_tab_item_sub_sec_location">
-			<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+			<section class="component d-flex justify-content-between align-items-center mb-2"  >
 				<label scope="row" class="w-50"><?php esc_html_e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
 				<div class="d-flex flex-column w-50">
 					<div class="rbfw_switch_wrapper rbfw_switch_pickup_location">
@@ -73,7 +73,7 @@
 			echo esc_attr( 'none' );
 		} ?>;">
 				
-		<section class="component mb-2" data-row="rbfw_add_to_cart_shortcode">
+		<section class="component mb-2" >
 			<table id="repeatable-fieldset-one-pickup" class='form-table rbfw_pricing_table'>
 				<thead>
 				<tr>
@@ -241,7 +241,7 @@
 		?>
 		<h2 class="h4 text-primary p-0 my-1"><?php echo ''.esc_html__( 'Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		
-		<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+		<section class="component d-flex justify-content-between align-items-center mb-2"  >
 			<label scope="row" class="w-50">
 				<?php echo esc_html_e( 'Select Rent Type:', 'booking-and-rental-manager-for-woocommerce' ); ?><i class="fas fa-question-circle tool-tips"><span></span></i>
 			</label>
@@ -284,7 +284,7 @@
 				<table class="form-table rbfw_item_type_table">
 					<tr class="rbfw_enable_start_end_date_switch_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort') { echo 'style="display:none"'; } ?>>
 						<td>
-							<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+							<section class="component d-flex justify-content-between align-items-center mb-2" >
 								<label class="w-50">
 									<?php esc_html_e( 'Start & End Date/Time:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
 								</label>
@@ -334,7 +334,7 @@
 					</tr>
 					<tr class="rbfw_switch_md_type_item_qty rbfw_item_stock_quantity_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort' || $rbfw_enable_variations == 'yes') { echo 'style="display:none"'; } ?>>
 						<td>
-							<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+							<section class="component d-flex justify-content-between align-items-center mb-2" >
 								<label class="w-50">
 									<?php esc_html_e( 'Stock Quantity:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
 								</label>
@@ -346,7 +346,7 @@
 					</tr>
 					<tr class="rbfw_switch_sd_appointment_row " <?php if ( $rbfw_item_type != 'appointment') { echo 'style="display:none"'; } ?>>
 						<td>
-							<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+							<section class="component d-flex justify-content-between align-items-center mb-2" >
 								<label class="w-50">
 									<?php esc_html_e( 'Appointment Ondays:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
 								</label>
@@ -387,7 +387,7 @@
 					</tr>
 					<tr class="rbfw_switch_sd_appointment_row" <?php if ( $rbfw_item_type != 'appointment') { echo 'style="display:none"'; } ?>>
 						<td>
-							<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+							<section class="component d-flex justify-content-between align-items-center mb-2" >
 								<label class="w-50">
 									<?php esc_html_e( 'Maximum Allowed Quantity Per Session/Time Slot:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
 								</label>
@@ -956,7 +956,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
 	?>
 
 	<div class="mp_tab_item " data-tab-item="#rbfw_variations" <?php if($rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
-		<h2 id="section_2" class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Variations Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+		<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Variations Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_time_slot_switch">
 			<label scope="row" class="w-50"><?php esc_html_e( 'Item Variations', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span><?php esc_html_e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></i>										</label>
 										
@@ -1239,7 +1239,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 	?>
 
 	<div class="mp_tab_item " data-tab-item="#rbfw_frontend_display">
-		<h2 id="section_2" class="h4 text-primary p-0 my-1"><?php echo esc_html__( 'Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+		<h2  class="h4 text-primary p-0 my-1"><?php echo esc_html__( 'Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		<section class="component d-flex justify-content-between align-items-center mb-2">
 			<div class="w-50 d-flex justify-content-between align-items-center">
 				<label class=""><?php esc_html_e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span><?php esc_html_e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></i></label>

@@ -165,8 +165,8 @@ if (!class_exists('RMFWAddMetaBox')) {
 							<h2 id="<?php echo esc_attr($sectionIndex); ?>" class="h4 text-primary p-0 my-1"><?php echo esc_html($section['title']); ?></h2>
 							<div data-title="<?php echo esc_html($section['title']); ?>">
 								<?php foreach ($section['options'] as $option) : ?>
-									<section class="component d-flex justify-content-between align-items-center mb-2" data-row="<?php echo $option['id']; ?>">
-										<label scope="row" class="w-50">
+									<section class="component d-flex  justify-content-between align-items-start mb-2" data-row="<?php echo $option['id']; ?>">
+										<label scope="row" class="h6 w-30">
 											<?php 
 												echo esc_html($option['title']); 
 												$details = isset($option['details']) ? $option['details'] : "";
@@ -176,7 +176,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 											?>
 										</label>
 										
-										<div class="d-flex flex-column w-50">
+										<div class="d-flex flex-column w-70">
 											<?php
 											$option_value = get_post_meta($this->get_post_id(), $option['id'], true);
 											if (is_serialized($option_value)) {
