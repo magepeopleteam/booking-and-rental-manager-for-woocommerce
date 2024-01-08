@@ -1197,14 +1197,15 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                 if(qty > 0){
                                     service_array[data_type] = qty;
                                 }
-                            }                            
+                            }
 
-                            <?php if(!empty($rbfw_regf_info)){ ?>
+                                <?php if(!empty($rbfw_regf_info)){ ?>
                                 let rbfw_regf_fields = <?php echo $rbfw_regf_info; ?>;
-                            <?php } else { ?>
+                                <?php } else { ?>
                                 let rbfw_regf_fields = {};
-                            <?php } ?>
-                            var rbfw_regf_info = {};
+                                <?php } ?>
+                                var rbfw_regf_info = {};
+
                             var rbfw_regf_checkboxes = {};
                             var rbfw_regf_radio = {};
                             var this_checkbox_arr = [];
