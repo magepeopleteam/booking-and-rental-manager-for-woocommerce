@@ -183,7 +183,10 @@ if (!class_exists('RMFWAddMetaBox')) {
 												$option_value = unserialize($option_value);
 											}
 											$option['value'] = $option_value;
-												$this->field_generator($option)
+											$this->field_generator($option);
+											if ($option['id']=='tax_notice') {
+												printf('<p>'.mep_esc_html($details).'<p>');
+											}
 											?>
 										</div>
 									</section>
@@ -209,6 +212,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 
 				$id      = isset($option['id']) ? $option['id'] : "";
 				$type    = isset($option['type']) ? $option['type'] : "";
+				$details = isset($option['details']) ? $option['details'] : "";
 
 				$post_id = $this->get_post_id();
 
@@ -238,6 +242,10 @@ if (!class_exists('RMFWAddMetaBox')) {
 					echo rbfw_field_generator($option['type'], $option);
 					do_action("wp_theme_settings_field_$type", $option);
 				}
+
+				// if (!empty($details)) {
+				// 	echo "<p class='description'>" . mep_esc_html($details) . "</p>";
+				// }
 			}
 
 			private function get_meta_box_id()
