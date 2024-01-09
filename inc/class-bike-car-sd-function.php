@@ -808,11 +808,15 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
             $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';    
             ?>
-                <script>
+
+
+            <script>
                     jQuery(function(){
 
                         /* Start Calendar Script */
                         function onclick_cal_date(date) {
+
+
                             
                             jQuery('#rbfw-bikecarsd-calendar').updateCalendarOptions({
                                 date: date
@@ -902,7 +906,10 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             });
 
                         }
+
+
                         <?php global $wp_locale; ?>
+
                         var defaultConfig = {
                             weekDayLength: 1,
                             date:  rbfw_today_date(),
@@ -957,6 +964,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                 }
                             })
                         };
+
+
 
                         var calendar = jQuery('#rbfw-bikecarsd-calendar').calendar(defaultConfig);
                         let rent_type = jQuery('#rbfw_rent_type').val();
@@ -1200,10 +1209,17 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             }
 
                                 <?php if(!empty($rbfw_regf_info)){ ?>
+
                                 let rbfw_regf_fields = <?php echo $rbfw_regf_info; ?>;
+
                                 <?php } else { ?>
+
                                 let rbfw_regf_fields = {};
+
                                 <?php } ?>
+
+
+
                                 var rbfw_regf_info = {};
 
                             var rbfw_regf_checkboxes = {};
