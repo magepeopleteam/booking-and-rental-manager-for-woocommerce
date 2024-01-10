@@ -35,7 +35,8 @@ function onclick_cal_date(date) {
             jQuery('.rbfw-bikecarsd-step[data-step="1"]').addClass('rbfw_loader_in');
             jQuery('.rbfw-bikecarsd-step[data-step="1"]').append('<i class="fas fa-spinner fa-spin"></i>');
 
-            var rent_type = '';
+            var rent_type = jQuery('#rbfw_rent_type').val();
+
 
             // Start: Calendar script
            if(rent_type == 'appointment'){

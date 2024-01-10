@@ -904,18 +904,6 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
 
 
-                        <?php
-                        /* Start: Get Registration Form Info */
-                        $rbfw_regf_info = [];
-
-                        if(class_exists('Rbfw_Reg_Form')){
-                            $ClassRegForm = new Rbfw_Reg_Form();
-                            $rbfw_regf_info = $ClassRegForm->rbfw_get_regf_all_fields_name($post_id);
-                            $rbfw_regf_info = json_encode($rbfw_regf_info);
-                        }
-                        /* End: Get Registration Form Info */
-                        ?>
-
 
                         function rbfw_on_submit_user_form_action(post_id,rent_type,selected_date,selected_time,type_array,service_array,rbfw_regf_info,rbfw_regf_checkboxes,rbfw_regf_radio){
                             jQuery( ".rbfw_mps_form_wrap form" ).on( "submit", function( e ) {
