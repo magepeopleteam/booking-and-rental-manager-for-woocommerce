@@ -38,9 +38,11 @@
 
 				<!-- ITEM -->
 				<div class="item rbfw-bikecarsd-step" data-step="1">
-
 					<div id="rbfw-bikecarsd-calendar"></div>
-					<div class="rbfw-bikecarsd-calendar-footer"><i class="fa-solid fa-circle-info"></i> <?php rbfw_string('rbfw_text_click_date_to_browse_availability',__('Click a date to browse availability','booking-and-rental-manager-for-woocommerce')); ?></div>
+					<div class="rbfw-bikecarsd-calendar-footer">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <?php rbfw_string('rbfw_text_click_date_to_browse_availability',__('Click a date to browse availability','booking-and-rental-manager-for-woocommerce')); ?>
+                    </div>
 				</div>
 				<!-- ITEM END -->
 
@@ -54,9 +56,9 @@
 				
 				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
 					<button type="submit" name="add-to-cart" value="<?php echo $rbfw_product_id; ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn <?php echo $rbfw_payment_system; ?>" disabled>
-					<?php
-						echo $rbfw->get_option('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));
-					?>	
+                        <?php
+                        echo $rbfw->get_option('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));
+                        ?>
 					</button>
 				</div>
 				
