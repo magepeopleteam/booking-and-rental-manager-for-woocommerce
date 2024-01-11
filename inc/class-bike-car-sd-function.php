@@ -808,293 +808,90 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
             $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';    
             ?>
-                <script>
-                    jQuery(function(){
 
+            <script>
 
+                jQuery(function(){
 
-                        <?php global $wp_locale; ?>
-                        var defaultConfig = {
-                            weekDayLength: 1,
-                            date:  rbfw_today_date(),
-                            onClickDate: onclick_cal_date,
-                            showYearDropdown: true,
-                            startOnMonday: true,
-                            showTodayButton: false,
-							highlightSelectedWeekday: false,
-  							highlightSelectedWeek: false,
-                            prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
-                            nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
-                            disable: function (date) {
-                                return date <  rbfw_today_date();
-                            },
-                            monthMap:{
-                                1: "<?php echo $wp_locale->get_month('01'); ?>",
-                                2: "<?php echo $wp_locale->get_month('02'); ?>",
-                                3: "<?php echo $wp_locale->get_month('03'); ?>",
-                                4: "<?php echo $wp_locale->get_month('04'); ?>",
-                                5: "<?php echo $wp_locale->get_month('05'); ?>",
-                                6: "<?php echo $wp_locale->get_month('06'); ?>",
-                                7: "<?php echo $wp_locale->get_month('07'); ?>",
-                                8: "<?php echo $wp_locale->get_month('08'); ?>",
-                                9: "<?php echo $wp_locale->get_month('09'); ?>",
-                                10: "<?php echo $wp_locale->get_month('10'); ?>",
-                                11: "<?php echo $wp_locale->get_month('11'); ?>",
-                                12: "<?php echo $wp_locale->get_month('12'); ?>",
-                            },
-                            dayMap:{
-                                0: "<?php echo date_i18n('l', strtotime('sunday')); ?>",
-                                1: "<?php echo date_i18n('l', strtotime('monday')); ?>",
-                                2: "<?php echo date_i18n('l', strtotime('tuesday')); ?>",
-                                3: "<?php echo date_i18n('l', strtotime('wednesday')); ?>",
-                                4: "<?php echo date_i18n('l', strtotime('thursday')); ?>",
-                                5: "<?php echo date_i18n('l', strtotime('friday')); ?>",
-                                6: "<?php echo date_i18n('l', strtotime('saturday')); ?>",
-                            },
-                            alternateDayMap:{
-                                1: "<?php echo date_i18n('l', strtotime('monday')); ?>",
-                                2: "<?php echo date_i18n('l', strtotime('tuesday')); ?>",
-                                3: "<?php echo date_i18n('l', strtotime('wednesday')); ?>",
-                                4: "<?php echo date_i18n('l', strtotime('thursday')); ?>",
-                                5: "<?php echo date_i18n('l', strtotime('friday')); ?>",
-                                6: "<?php echo date_i18n('l', strtotime('saturday')); ?>",
-                                7: "<?php echo date_i18n('l', strtotime('sunday')); ?>",
-                            },
-                            customDateProps: (date) => ({
-                                classes: 'rbfw-date-element',
-                                data: {
-                                    type: 'date',
-                                    form: 'date-object'
-                                }
-                            })
-                        };
+                    <?php global $wp_locale; ?>
+                    var defaultConfig = {
+                        weekDayLength: 1,
+                        date:  rbfw_today_date(),
+                        onClickDate: onclick_cal_date,
+                        showYearDropdown: true,
+                        startOnMonday: true,
+                        showTodayButton: false,
+                        highlightSelectedWeekday: false,
+                        highlightSelectedWeek: false,
+                        prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
+                        nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
+                        disable: function (date) {
+                            return date <  rbfw_today_date();
+                        },
 
-                        var calendar = jQuery('#rbfw-bikecarsd-calendar').calendar(defaultConfig);
-                        let rent_type = jQuery('#rbfw_rent_type').val();
+                        monthMap:{
+                            1: "<?php echo $wp_locale->get_month('01'); ?>",
+                            2: "<?php echo $wp_locale->get_month('02'); ?>",
+                            3: "<?php echo $wp_locale->get_month('03'); ?>",
+                            4: "<?php echo $wp_locale->get_month('04'); ?>",
+                            5: "<?php echo $wp_locale->get_month('05'); ?>",
+                            6: "<?php echo $wp_locale->get_month('06'); ?>",
+                            7: "<?php echo $wp_locale->get_month('07'); ?>",
+                            8: "<?php echo $wp_locale->get_month('08'); ?>",
+                            9: "<?php echo $wp_locale->get_month('09'); ?>",
+                            10: "<?php echo $wp_locale->get_month('10'); ?>",
+                            11: "<?php echo $wp_locale->get_month('11'); ?>",
+                            12: "<?php echo $wp_locale->get_month('12'); ?>",
+                        },
 
+                        dayMap:{
+                            0: "<?php echo date_i18n('l', strtotime('sunday')); ?>",
+                            1: "<?php echo date_i18n('l', strtotime('monday')); ?>",
+                            2: "<?php echo date_i18n('l', strtotime('tuesday')); ?>",
+                            3: "<?php echo date_i18n('l', strtotime('wednesday')); ?>",
+                            4: "<?php echo date_i18n('l', strtotime('thursday')); ?>",
+                            5: "<?php echo date_i18n('l', strtotime('friday')); ?>",
+                            6: "<?php echo date_i18n('l', strtotime('saturday')); ?>",
+                        },
+                        alternateDayMap:{
+                            1: "<?php echo date_i18n('l', strtotime('monday')); ?>",
+                            2: "<?php echo date_i18n('l', strtotime('tuesday')); ?>",
+                            3: "<?php echo date_i18n('l', strtotime('wednesday')); ?>",
+                            4: "<?php echo date_i18n('l', strtotime('thursday')); ?>",
+                            5: "<?php echo date_i18n('l', strtotime('friday')); ?>",
+                            6: "<?php echo date_i18n('l', strtotime('saturday')); ?>",
+                            7: "<?php echo date_i18n('l', strtotime('sunday')); ?>",
+                        },
+                        customDateProps: (date) => ({
+                            classes: 'rbfw-date-element',
+                            data: {
+                                type: 'date',
+                                form: 'date-object'
+                            }
+                        })
+                    };
 
-                        // Start: Calendar script
-                        <?php if($rent_type == 'appointment'){ ?>
+                    var calendar = jQuery('#rbfw-bikecarsd-calendar').calendar(defaultConfig);
 
-                            let rbfw_date_element_arr = [];
-                            let rbfw_date_element = jQuery('.rbfw-date-element');
-                            let rbfw_calendar_weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-
-                            let appointment_days = <?php echo json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true)); ?>;
-
-
-                            jQuery(rbfw_date_element).each(function($i){
-
-                                let this_data = jQuery(this);
-                                let this_date_data = jQuery(this).attr('data-date');
-                                let this_calendar_date = new Date(this_date_data);
-                                let this_calendar_day_name = rbfw_calendar_weekday[this_calendar_date.getDay()];
-
-                                if (appointment_days.indexOf(this_calendar_day_name) < 0) {
-                                    this_data.attr('disabled', true);
-
-                                }
-
-                            });
-
-                        <?php } ?>
-                        /* End Calendar Script */
-
-
-
-
-
-
-                        function rbfw_on_submit_user_form_action(post_id,rent_type,selected_date,selected_time,type_array,service_array,rbfw_regf_info,rbfw_regf_checkboxes,rbfw_regf_radio){
-                            jQuery( ".rbfw_mps_form_wrap form" ).on( "submit", function( e ) {
-                                e.preventDefault();
-                                let this_form = jQuery(this);
-                                let form_data = jQuery(this).serialize();
-
-                                jQuery.ajax({
-                                type: 'POST',
-                                url: rbfw_ajax.rbfw_ajaxurl,
-                                data: form_data,
-                                beforeSend: function() {
-                                    jQuery('.rbfw_mps_user_form_result').empty();
-                                    jQuery('.rbfw_mps_user_button i').addClass('fa-spinner');
-                                },
-                                success: function (response) {
-                                    jQuery('.rbfw_mps_user_button i').removeClass('fa-spinner');
-
-                                    this_form.find('.rbfw_mps_user_form_result').html(response);
-                                    if (response.indexOf('mps_alert_login_success') >= 0){
-                                        jQuery('.rbfw_mps_user_order_summary').remove();
-                                        jQuery('.rbfw_mps_user_form_wrap').remove();
-                                        jQuery('button.rbfw_bikecarsd_book_now_btn.mps_enabled').trigger('click');
-                                    }
-                                }
-                                });
-                            });
-
-                            jQuery('.rbfw_mps_user_payment_method').click(function (e) {
-                                let this_value = jQuery(this).val();
-                                let item_number = jQuery('#rbfw_post_id').val();
-                                jQuery(this).prop("checked", true);
-                                jQuery('.rbfw_mps_pay_now_button').removeAttr('disabled');
-                                jQuery('input[name="rbfw_mps_payment_method"]').val(this_value);
-                                jQuery('.rbfw_mps_user_form_result').empty();
-                                jQuery('.rbfw_mps_payment_form_notice').empty();
-
-                                if(this_value == 'stripe'){
-                                    let target = jQuery('.mp_rbfw_ticket_form');
-                                    let first_name = target.find('input[name="rbfw_mps_user_fname"]').val();
-                                    let last_name = target.find('input[name="rbfw_mps_user_lname"]').val();
-                                    let email = target.find('input[name="rbfw_mps_user_email"]').val();
-                                    let submit_request = target.find('input[name="rbfw_mps_user_submit_request"]').val();
-                                    let security = target.find('input[name="rbfw_mps_order_place_nonce"]').val();
-                                    let payment_method = target.find('input[name="rbfw_mps_payment_method"]').val();
-
-                                    jQuery.ajax({
-                                        type: 'POST',
-                                        url: rbfw_ajax.rbfw_ajaxurl,
-                                        data: {
-                                            'action' : 'rbfw_mps_stripe_form',
-                                            'post_id': post_id,
-                                            'rent_type': rent_type,
-                                            'start_date': selected_date,
-                                            'start_time': selected_time,
-                                            'end_date': selected_date,
-                                            'end_time': '',
-                                            'type_info[]': type_array,
-                                            'service_info[]': service_array,
-                                            'security' : security,
-                                            'first_name' : first_name,
-                                            'last_name' : last_name,
-                                            'email' : email,
-                                            'payment_method' : payment_method,
-                                            'submit_request' : submit_request,
-                                            'rbfw_regf_info[]' : rbfw_regf_info,
-                                            'rbfw_regf_checkboxes' : rbfw_regf_checkboxes,
-                                            'rbfw_regf_radio': rbfw_regf_radio
-                                        },
-                                        beforeSend: function(response) {
-                                            target.find('.rbfw_mps_payment_form_wrap').empty();
-                                            target.find('.rbfw_mps_payment_form_wrap').html('<i class="fas fa-spin fa-spinner"></i>');
-                                            jQuery('.rbfw_mps_pay_now_button').hide();
-                                        },
-                                        success: function (response) {
-                                            target.find('.rbfw_mps_payment_form_wrap').empty();
-                                            target.find('.rbfw_mps_payment_form_wrap').html(response);
-                                        }
-                                        });
-
-                                    }else{
-                                        jQuery('.rbfw_mps_payment_form_wrap').empty();
-                                        jQuery('.rbfw_mps_pay_now_button').show();
-                                    }
-                            });
-
-                            jQuery('.mp_rbfw_ticket_form').on( "submit", function( e ) {
-                                let target = jQuery(this);
-                                let payment_method = target.find('input[name="rbfw_mps_payment_method"]').val();
-
-                                if(payment_method == 'offline'){
-                                    e.preventDefault();
-
-                                    let first_name = target.find('input[name="rbfw_mps_user_fname"]').val();
-                                    let last_name = target.find('input[name="rbfw_mps_user_lname"]').val();
-
-                                    let submit_request = target.find('input[name="rbfw_mps_user_submit_request"]').val();
-                                    let email = target.find('input[name="rbfw_mps_user_email"]').val();
-
-                                    let security = target.find('input[name="rbfw_mps_order_place_nonce"]').val();
-
-                                    jQuery.ajax({
-                                        type: 'POST',
-                                        url: rbfw_ajax.rbfw_ajaxurl,
-                                        data: {
-                                            'action' : 'rbfw_mps_place_order_form_submit',
-                                            'post_id': post_id,
-                                            'rent_type': rent_type,
-                                            'start_date': selected_date,
-                                            'start_time': selected_time,
-                                            'end_date': selected_date,
-                                            'end_time': '',
-                                            'type_info[]': type_array,
-                                            'service_info[]': service_array,
-                                            'security' : security,
-                                            'first_name' : first_name,
-                                            'last_name' : last_name,
-                                            'email' : email,
-                                            'payment_method' : payment_method,
-                                            'submit_request' : submit_request,
-                                            'rbfw_regf_info[]' : rbfw_regf_info,
-                                            'rbfw_regf_checkboxes' : rbfw_regf_checkboxes,
-                                            'rbfw_regf_radio': rbfw_regf_radio
-
-                                        },
-                                        beforeSend: function() {
-                                            target.find('.rbfw_mps_user_form_result').empty();
-                                            jQuery('.rbfw_mps_pay_now_button i').addClass('fa-spinner');
-                                        },
-                                        success: function (response) {
-                                            jQuery('.rbfw_mps_pay_now_button i').removeClass('fa-spinner');
-                                            target.find('.rbfw_mps_user_form_result').html(response);
-
-                                        }
-                                    });
-
-                                }
-
-                                if(payment_method == 'paypal'){
-
-                                    let first_name = target.find('input[name="rbfw_mps_user_fname"]').val();
-                                    let last_name = target.find('input[name="rbfw_mps_user_lname"]').val();
-                                    let email = target.find('input[name="rbfw_mps_user_email"]').val();
-
-                                    if(first_name == '' || last_name == '' || email == ''){
-                                        e.preventDefault();
-                                    }
-
-                                    jQuery.ajax({
-                                        type: 'POST',
-                                        url: rbfw_ajax.rbfw_ajaxurl,
-                                        data: {
-                                            'action' : 'rbfw_mps_paypal_form_validation',
-                                            'first_name' : first_name,
-                                            'last_name' : last_name,
-                                            'email' : email
-                                        },
-                                        beforeSend: function() {
-                                            target.find('.rbfw_mps_user_form_result').empty();
-                                            jQuery('.rbfw_mps_pay_now_button i').addClass('fa-spinner');
-                                        },
-                                        success: function (response) {
-                                            jQuery('.rbfw_mps_pay_now_button i').removeClass('fa-spinner');
-                                            target.find('.rbfw_mps_user_form_result').html(response);
-                                        }
-                                    });
-                                }
-                            });
-                        }
-
-                        function rbfw_mps_checkout_header_link(){
-                            jQuery('.rbfw_mps_header_action_link').click(function (e) {
-                                e.preventDefault();
-                                jQuery('.rbfw_mps_user_form_result').empty();
-                                jQuery('.rbfw_mps_form_wrap').hide();
-                                let this_data_id = jQuery(this).attr('data-id');
-                                jQuery('.rbfw_mps_form_wrap[data-id="'+this_data_id+'"]').show();
-                            });
-                        }
-
-
-                        // end update input value onclick and onchange
-
-
-                        // On change quantity value calculate price
-
-
-
-                        // end display extra services box onclick and onchange
-
-                    });
+                    let rent_type = jQuery('#rbfw_rent_type').val();
+                    // Start: Calendar script
+                    if(rent_type == 'appointment'){
+                        let rbfw_date_element_arr = [];
+                        let rbfw_date_element = jQuery('.rbfw-date-element');
+                        let rbfw_calendar_weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+                        let appointment_days = <?php echo json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true)); ?>;
+                        jQuery(rbfw_date_element).each(function($i){
+                            let this_data = jQuery(this);
+                            let this_date_data = jQuery(this).attr('data-date');
+                            let this_calendar_date = new Date(this_date_data);
+                            let this_calendar_day_name = rbfw_calendar_weekday[this_calendar_date.getDay()];
+                            if (appointment_days.indexOf(this_calendar_day_name) < 0) {
+                                this_data.attr('disabled', true);
+                            }
+                        });
+                    }
+                    /* End Calendar Script */
+                });
                 </script>
             <?php
         }
