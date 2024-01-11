@@ -74,13 +74,14 @@ function onclick_cal_date(date) {
             rbfw_step_func();
 
 
-           /* var time_slot_switch = jQuery('#time_slot_switch').val();
-
-            console.log('kkjjjjjj',time_slot_switch)*/
+         var time_slot_switch = jQuery('#time_slot_switch').val();
 
 
+         /* console.log('kkjjjjjj',time_slot_switch) */
 
-            var time_slot_switch = 'off';
+
+
+
 
             if(time_slot_switch == 'on'){
                 rbfw_bikecarsd_time_click_func();
@@ -115,20 +116,16 @@ function rbfw_bikecarsd_time_click_func(){
         jQuery('.rbfw_bikecarsd_time').removeClass('selected');
         jQuery(this).addClass('selected');
         let gTime = jQuery(this).attr('data-time');
-
         jQuery('#rbfw_bikecarsd_selected_time').val(gTime);
-
         let selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
         let post_id = jQuery('#rbfw_post_id').val();
         let rent_type = jQuery('#rbfw_rent_type').val();
         let is_muffin_template = jQuery('.rbfw_muffin_template').length;
-
         if(is_muffin_template > 0){
             is_muffin_template = '1';
         } else {
             is_muffin_template = '0';
         }
-
         jQuery.ajax({
             type: 'POST',
             url: rbfw_ajax.rbfw_ajaxurl,
@@ -224,6 +221,8 @@ function rbfw_bikecarsd_without_time_func(){
 
 
             jQuery('.rbfw_back_step_btn').attr('back-step','1');
+
+            jQuery('.rbfw_muff_registration_wrapper .rbfw_regf_wrap').show();
 
         },
         complete:function(response) {

@@ -806,7 +806,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 return;
             endif; 
 
-            $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';    
+            $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
             ?>
 
             <script>
@@ -893,6 +893,9 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     /* End Calendar Script */
                 });
                 </script>
+
+
+
             <?php
         }
     }
