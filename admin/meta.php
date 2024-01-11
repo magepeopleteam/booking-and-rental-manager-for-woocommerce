@@ -881,10 +881,10 @@
 			<h2 class="h4 text-primary p-0 my-1"><?php echo ''.esc_html__( 'FAQ Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 			
 			<section class="component d-flex justify-content-between align-items-center mb-2">
-				<div class="w-50 d-flex justify-content-between align-items-center">
+				<div class="w-30 d-flex justify-content-between align-items-center">
 					<p class=""><?php esc_html_e( 'FAQ Content', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span>It displays available quantity information in item details page.</span></i></p>
 				</div>
-				<div class="w-50 d-flex justify-content-between align-items-center">
+				<div class="w-70 d-flex justify-content-between align-items-center">
 					<div class="rbfw_switch_wrapper rbfw_switch_faq">
 						<div class="rbfw_switch">
 							<label for="rbfw_enable_faq_content_on" class="<?php if ( $rbfw_enable_faq_content == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_faq_content" class="rbfw_enable_faq_content" value="yes" id="rbfw_enable_faq_content_on" <?php if ( $rbfw_enable_faq_content == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_faq_content_off" class="<?php if ( $rbfw_enable_faq_content != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_faq_content" class="rbfw_enable_faq_content" value="no" id="rbfw_enable_faq_content_off" <?php if ( $rbfw_enable_faq_content != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
@@ -1306,19 +1306,19 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 	?>
 	<div class='rbfw_remove_area component mb-2'>
 		<section class="component d-flex justify-content-between align-items-center mb-2">
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-30 d-flex justify-content-between align-items-center">
 				<p class=""><?php echo esc_html( $title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
 			</div>
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-70 d-flex justify-content-between align-items-center">
 				<input type="text" class="formControl" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
 				
 			</div>
 		</section>
 		<section class="component d-flex justify-content-between align-items-center mb-2">
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-30 d-flex justify-content-between align-items-center">
 				<p class=""><?php echo esc_html( $image_title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
 			</div>
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-70 d-flex justify-content-between align-items-center">
 				<div class="rbfw_multi_image_area">
 					<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
 					<div class="rbfw_multi_image">
@@ -1344,10 +1344,10 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			</div>
 		</section>
 		<section class="component d-flex justify-content-between align-items-center mb-2">
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-30 d-flex justify-content-between align-items-center">
 				<p class=""><?php echo esc_html( $content_title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
 			</div>
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-70 d-flex justify-content-between align-items-center">
 				<?php
 					$settings = array(
 						'wpautop'       => false,
