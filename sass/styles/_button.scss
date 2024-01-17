@@ -1,0 +1,13 @@
+#{$main-selector}{
+    .btn,.button{
+        border: 0px solid;
+        box-shadow: none;
+        background-color: $color-primary;
+        border-radius: $border-radius;
+        padding: $spacing $spacing;
+        color: $color-white;
+        font-size: $font-size;
+        transition: all $time ease-in-out;
+        max-width: 200px;
+    }
+}

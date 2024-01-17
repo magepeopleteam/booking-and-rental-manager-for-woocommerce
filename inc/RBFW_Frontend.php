@@ -10,6 +10,7 @@
 
 			public function load_single_template( $template ): string {
 				global $post;
+
 				if ( $post->post_type && $post->post_type == RBFW_Function::get_cpt_name() ) {
 					$template = RBFW_Function::template_path( 'single_page/single-rbfw.php' );
 				}
