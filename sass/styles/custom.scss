@@ -3,6 +3,9 @@
         margin: 0;
         padding: 0;
     }
+    .notice-error,.notice{
+        display: none;
+    }
     .postbox-header{
         background-color: $color-secondary;
         h2{
