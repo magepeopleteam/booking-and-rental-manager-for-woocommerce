@@ -11,7 +11,7 @@ add_filter('woocommerce_get_item_data', 'rbfw_show_cart_items', 90, 2);
 /*after place order*/
 add_action('woocommerce_after_checkout_validation', 'rbfw_validation_before_checkout');
 add_action('woocommerce_checkout_create_order_line_item', 'rbfw_add_order_item_data', 90, 4);
-add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management', 10 );
+add_action( 'woocommerce_before_thankyou', 'rbfw_booking_management', 10 );
 function rbfw_add_info_to_cart_item($cart_item_data, $product_id, $variation_id)
 {
     global $rbfw;
@@ -155,7 +155,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     $rbfw_pickup_start_date = isset( $_POST['rbfw_pickup_start_date'] ) ? $_POST['rbfw_pickup_start_date'] : '';
     $rbfw_pickup_start_time = isset( $_POST['rbfw_pickup_start_time'] ) ? $_POST['rbfw_pickup_start_time'] : '00:00:00';
     $rbfw_pickup_end_date   = isset( $_POST['rbfw_pickup_end_date'] ) ? $_POST['rbfw_pickup_end_date'] : '';
-    $rbfw_pickup_end_time   = isset( $_POST['rbfw_pickup_end_time'] ) ? $_POST['rbfw_pickup_end_time'] : '24:00:00';
+    $rbfw_pickup_end_time   = isset( $_POST['rbfw_pickup_end_time'] ) ? $_POST['rbfw_pickup_end_time'] : rbfw_end_time();
 
 
 
@@ -1035,7 +1035,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $discount_type 	= $values['discount_type'] ? $values['discount_type'] : '';
         $discount_amount = $values['discount_amount'] ? $values['discount_amount'] : '';
 
-        $item->add_meta_data( rbfw_string_return('rbfw_text_start_date_and_time',__('Start Date and Time jj','rbfw-pro')), $start_datetime );
+        $item->add_meta_data( rbfw_string_return('rbfw_text_start_date_and_time',__('Start Date and Time','rbfw-pro')), $start_datetime );
         $item->add_meta_data( rbfw_string_return('rbfw_text_end_date_and_time',__('End Date and Time','rbfw-pro')), $end_datetime );
 
         if ( ! empty( $pickup_location ) ) {
@@ -1218,7 +1218,10 @@ add_action( 'rbfw_wc_order_status_change', 'rbfw_change_user_order_status_on_ord
 function rbfw_change_user_order_status_on_order_status_change( $order_status, $rbfw_id, $order_id ) {
 
   // Update meta on rbfw_order_meta post type
-  
+
+
+    rbfw_update_inventory_extra( $rbfw_id, $order_id,$order_status);
+
     $args = array(
         'post_type'      => 'rbfw_order_meta',
         'posts_per_page' => - 1,
@@ -1240,6 +1243,8 @@ function rbfw_change_user_order_status_on_order_status_change( $order_status, $r
     );
 
     $loop = new WP_Query( $args );
+
+
     foreach ( $loop->posts as $rbfw_post ) {
         $rbfw_post_id = $rbfw_post->ID;
         update_post_meta( $rbfw_post_id, 'rbfw_order_status', $order_status );
@@ -1269,6 +1274,8 @@ function rbfw_change_user_order_status_on_order_status_change( $order_status, $r
         update_post_meta( $rbfw_post_id, 'rbfw_order_status', $order_status );
         rbfw_update_inventory($rbfw_post_id, $order_status);
     }
+
+
 }
 
 function rbfw_booking_management( $order_id ) {

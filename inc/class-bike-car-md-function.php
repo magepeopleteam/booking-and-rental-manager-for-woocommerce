@@ -54,9 +54,9 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             if(empty($pickup_time) && empty($dropoff_time)){
                 $pickup_datetime  = date( 'Y-m-d', strtotime( $pickup_date.' '.'00:00:00' ) );
-                $dropoff_datetime = date( 'Y-m-d', strtotime( $dropoff_date.' '.'24:00:00' ) );
+                $dropoff_datetime = date( 'Y-m-d', strtotime( $dropoff_date.' '.rbfw_end_time() ) );
                 $start_datetime_raw = $pickup_date.' '.'00:00:00';
-                $end_datetime_raw = $dropoff_date.' '.'24:00:00';
+                $end_datetime_raw = $dropoff_date.' '.rbfw_end_time();
             } else {
                 $pickup_datetime  = date( 'Y-m-d H:i', strtotime( $pickup_date . ' ' . $pickup_time ) );
                 $dropoff_datetime = date( 'Y-m-d H:i', strtotime( $dropoff_date . ' ' . $dropoff_time ) );
@@ -682,7 +682,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                     if((pickup_date == dropoff_date) && (typeof dropoff_time === "undefined" || dropoff_time == '')){
                         
-                        dropoff_time = '24:00';
+                        dropoff_time = rbfw_end_time();
                     } 
 
                     let data_cat = that.attr('data-cat');
@@ -831,7 +831,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                         if((pickup_date == dropoff_date) && (typeof dropoff_time === "undefined" || dropoff_time == '')){
                             
-                            dropoff_time = '24:00';
+                            dropoff_time = rbfw_end_time();
                         } 
 
                         let rent_type = jQuery('#rbfw_rent_type').val();

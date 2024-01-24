@@ -98,6 +98,17 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'default' => '',
 				'options' => rbfw_get_pages_arr()
 			),
+            array(
+                'name' => 'rbfw_count_extra_day_enable',
+                'label' => __( 'Count Extra Day Enable', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => __( 'Enable/Disable extra day.', 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'on',
+                'options' => array(
+                    'on' => 'On',
+                    'off'  => 'Off'
+                )
+            ),
 		),
 		'rbfw_basic_translation_settings' => array(
 			array(
