@@ -825,12 +825,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                         }
 
                         if((pickup_date == dropoff_date) && (typeof pickup_time === "undefined" || pickup_time == '')){
-                        
                             pickup_time = '00:00';
                         }
 
                         if((pickup_date == dropoff_date) && (typeof dropoff_time === "undefined" || dropoff_time == '')){
-                            
                             dropoff_time = rbfw_end_time();
                         } 
 
