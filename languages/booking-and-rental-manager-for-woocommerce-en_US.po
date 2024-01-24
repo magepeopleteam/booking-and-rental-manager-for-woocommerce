@@ -267,7 +267,7 @@ msgstr ""
 
 #: lib/classes/class-pro-page.php:30
 msgid "Booking Calender."
-msgstr "ggggggg"
+msgstr ""
 
 #: admin/settings.php:1222
 #: templates/contents/donut-templates/bike-car-sd.php:132
