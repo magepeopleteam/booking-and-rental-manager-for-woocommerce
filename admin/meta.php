@@ -56,7 +56,7 @@
 		<div class='rbfw-location-attributes-section location-section'>
 		<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Pick-up Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		<div class="mp_tab_item_sub_sec_location">
-			<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+			<section class="component d-flex justify-content-between align-items-center mb-2"  >
 				<label scope="row" class="w-50"><?php esc_html_e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
 				<div class="d-flex flex-column w-50">
 					<div class="rbfw_switch_wrapper rbfw_switch_pickup_location">
@@ -73,7 +73,7 @@
 			echo esc_attr( 'none' );
 		} ?>;">
 				
-		<section class="component mb-2" data-row="rbfw_add_to_cart_shortcode">
+		<section class="component mb-2" >
 			<table id="repeatable-fieldset-one-pickup" class='form-table rbfw_pricing_table'>
 				<thead>
 				<tr>
@@ -241,7 +241,7 @@
 		?>
 		<h2 class="h4 text-primary p-0 my-1"><?php echo ''.esc_html__( 'Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		
-		<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+		<section class="component d-flex justify-content-between align-items-center mb-2"  >
 			<label scope="row" class="w-50">
 				<?php echo esc_html_e( 'Select Rent Type:', 'booking-and-rental-manager-for-woocommerce' ); ?><i class="fas fa-question-circle tool-tips"><span></span></i>
 			</label>
@@ -284,7 +284,7 @@
 				<table class="form-table rbfw_item_type_table">
 					<tr class="rbfw_enable_start_end_date_switch_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort') { echo 'style="display:none"'; } ?>>
 						<td>
-							<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+							<section class="component d-flex justify-content-between align-items-center mb-2" >
 								<label class="w-50">
 									<?php esc_html_e( 'Start & End Date/Time:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
 								</label>
@@ -334,7 +334,7 @@
 					</tr>
 					<tr class="rbfw_switch_md_type_item_qty rbfw_item_stock_quantity_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort' || $rbfw_enable_variations == 'yes') { echo 'style="display:none"'; } ?>>
 						<td>
-							<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+							<section class="component d-flex justify-content-between align-items-center mb-2" >
 								<label class="w-50">
 									<?php esc_html_e( 'Stock Quantity:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
 								</label>
@@ -346,7 +346,7 @@
 					</tr>
 					<tr class="rbfw_switch_sd_appointment_row " <?php if ( $rbfw_item_type != 'appointment') { echo 'style="display:none"'; } ?>>
 						<td>
-							<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+							<section class="component d-flex justify-content-between align-items-center mb-2" >
 								<label class="w-50">
 									<?php esc_html_e( 'Appointment Ondays:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
 								</label>
@@ -387,7 +387,7 @@
 					</tr>
 					<tr class="rbfw_switch_sd_appointment_row" <?php if ( $rbfw_item_type != 'appointment') { echo 'style="display:none"'; } ?>>
 						<td>
-							<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_add_to_cart_shortcode">
+							<section class="component d-flex justify-content-between align-items-center mb-2" >
 								<label class="w-50">
 									<?php esc_html_e( 'Maximum Allowed Quantity Per Session/Time Slot:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
 								</label>
@@ -864,7 +864,7 @@
 		$resort_function->rbfw_resort_admin_scripts(get_the_ID());
 	}
 
-	add_action( 'rbfw_meta_box_tab_name', 'rbfw_add_meta_box_tab_faq', 20 );
+	add_action( 'rbfw_meta_box_tab_name', 'rbfw_add_meta_box_tab_faq', 100 );
 	function rbfw_add_meta_box_tab_faq( $rbfw_id ) {
 		?>
 		<li class="nav-item" data-target-tabs="#rbfw_faq"><i class="fa-solid fa-circle-question"></i><?php esc_html_e( ' FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
@@ -872,7 +872,7 @@
 
 	}
 
-	add_action( 'rbfw_meta_box_tab_content', 'rbfw_add_meta_box_tab_faq_content', 10 );
+	add_action( 'rbfw_meta_box_tab_content', 'rbfw_add_meta_box_tab_faq_content', 100 );
 	function rbfw_add_meta_box_tab_faq_content( $rbfw_id ) {
 		$rbfw_enable_faq_content  = get_post_meta( $rbfw_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_faq_content', true ) : 'no';
 		?>
@@ -881,10 +881,10 @@
 			<h2 class="h4 text-primary p-0 my-1"><?php echo ''.esc_html__( 'FAQ Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 			
 			<section class="component d-flex justify-content-between align-items-center mb-2">
-				<div class="w-50 d-flex justify-content-between align-items-center">
+				<div class="w-30 d-flex justify-content-between align-items-center">
 					<p class=""><?php esc_html_e( 'FAQ Content', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span>It displays available quantity information in item details page.</span></i></p>
 				</div>
-				<div class="w-50 d-flex justify-content-between align-items-center">
+				<div class="w-70 d-flex justify-content-between align-items-center">
 					<div class="rbfw_switch_wrapper rbfw_switch_faq">
 						<div class="rbfw_switch">
 							<label for="rbfw_enable_faq_content_on" class="<?php if ( $rbfw_enable_faq_content == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_faq_content" class="rbfw_enable_faq_content" value="yes" id="rbfw_enable_faq_content_on" <?php if ( $rbfw_enable_faq_content == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_faq_content_off" class="<?php if ( $rbfw_enable_faq_content != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_faq_content" class="rbfw_enable_faq_content" value="no" id="rbfw_enable_faq_content_off" <?php if ( $rbfw_enable_faq_content != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
@@ -935,7 +935,7 @@
 /*********************************
  * Start: Variations Tab
  * ******************************/
-add_action( 'rbfw_meta_box_tab_name', 'rbfw_add_variations_tab_name' , 11);
+add_action( 'rbfw_meta_box_tab_name', 'rbfw_add_variations_tab_name' , 80);
 
 function rbfw_add_variations_tab_name($rbfw_id){
 	$rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : '';
@@ -946,7 +946,7 @@ function rbfw_add_variations_tab_name($rbfw_id){
 
 }
 
-add_action( 'rbfw_meta_box_tab_content', 'rbfw_add_variations_tab_content' , 11);
+add_action( 'rbfw_meta_box_tab_content', 'rbfw_add_variations_tab_content' , 80);
 
 function rbfw_add_variations_tab_content($rbfw_id){
 	$rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : '';
@@ -956,7 +956,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
 	?>
 
 	<div class="mp_tab_item " data-tab-item="#rbfw_variations" <?php if($rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
-		<h2 id="section_2" class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Variations Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+		<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Variations Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_time_slot_switch">
 			<label scope="row" class="w-50"><?php esc_html_e( 'Item Variations', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span><?php esc_html_e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></i>										</label>
 										
@@ -1219,7 +1219,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
  /*********************************
  * Start: Front-end Display Tab
  * ******************************/
-add_action( 'rbfw_meta_box_tab_name', 'rbfw_frontend_display_tab_name' , 11);
+add_action( 'rbfw_meta_box_tab_name', 'rbfw_frontend_display_tab_name' , 90);
 
 function rbfw_frontend_display_tab_name($rbfw_id){
 
@@ -1229,7 +1229,7 @@ function rbfw_frontend_display_tab_name($rbfw_id){
 
 }
 
-add_action( 'rbfw_meta_box_tab_content', 'rbfw_frontend_display_tab_content' , 11);
+add_action( 'rbfw_meta_box_tab_content', 'rbfw_frontend_display_tab_content' , 90);
 
 function rbfw_frontend_display_tab_content($rbfw_id){
 	$rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : '';
@@ -1239,7 +1239,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 	?>
 
 	<div class="mp_tab_item " data-tab-item="#rbfw_frontend_display">
-		<h2 id="section_2" class="h4 text-primary p-0 my-1"><?php echo esc_html__( 'Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+		<h2  class="h4 text-primary p-0 my-1"><?php echo esc_html__( 'Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		<section class="component d-flex justify-content-between align-items-center mb-2">
 			<div class="w-50 d-flex justify-content-between align-items-center">
 				<label class=""><?php esc_html_e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span><?php esc_html_e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></i></label>
@@ -1306,19 +1306,19 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 	?>
 	<div class='rbfw_remove_area component mb-2'>
 		<section class="component d-flex justify-content-between align-items-center mb-2">
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-30 d-flex justify-content-between align-items-center">
 				<p class=""><?php echo esc_html( $title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
 			</div>
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-70 d-flex justify-content-between align-items-center">
 				<input type="text" class="formControl" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
 				
 			</div>
 		</section>
 		<section class="component d-flex justify-content-between align-items-center mb-2">
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-30 d-flex justify-content-between align-items-center">
 				<p class=""><?php echo esc_html( $image_title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
 			</div>
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-70 d-flex justify-content-between align-items-center">
 				<div class="rbfw_multi_image_area">
 					<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
 					<div class="rbfw_multi_image">
@@ -1344,10 +1344,10 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			</div>
 		</section>
 		<section class="component d-flex justify-content-between align-items-center mb-2">
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-30 d-flex justify-content-between align-items-center">
 				<p class=""><?php echo esc_html( $content_title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
 			</div>
-			<div class="w-50 d-flex justify-content-between align-items-center">
+			<div class="w-70 d-flex justify-content-between align-items-center">
 				<?php
 					$settings = array(
 						'wpautop'       => false,
@@ -1779,95 +1779,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 		);
 		new RMFWAddMetaBox( $rbfw_gen_info_boxs_args );
 
-
-		$rbfw_template_info_boxs = array(
-			'page_nav' => __( 'Template', 'booking-and-rental-manager-for-woocommerce' ),
-			'priority' => 10,
-			'sections' => array(
-				'section_2' => array(
-					'title'       => __( 'Template Settings', 'booking-and-rental-manager-for-woocommerce' ),
-					'description' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
-					'options'     => array(
-
-						array(
-							'id'          => 'rbfw_single_template',
-							'title'       => __( 'Template:', 'booking-and-rental-manager-for-woocommerce' ),
-							'details'     => __( '', 'booking-and-rental-manager-for-woocommerce' ),
-							'type'        => 'select',
-							'args' => RBFW_Function::all_details_template(),
-						),
-
-					)
-				),
-
-			),
-		);
-
-		$rbfw_template_info_boxs_args = array(
-			'meta_box_id'    => 'rbfw_template_settings_meta_boxes',
-			'meta_box_title' => '<i class="fa-solid fa-pager"></i>' . __( 'Template', 'booking-and-rental-manager-for-woocommerce' ),
-			'screen'         => array( 'rbfw_item' ),
-			'context'        => 'normal',
-			'priority'       => 'high',
-			'callback_args'  => array(),
-			'nav_position'   => 'none',
-			'item_name'      => "MagePeople",
-			'item_version'   => "2.0",
-			'panels'         => array(
-				'rbfw_basic_meta_boxs' => $rbfw_template_info_boxs
-			)
-		);
-		new RMFWAddMetaBox( $rbfw_template_info_boxs_args );
-
-		$rbfw_gallery_meta_boxs = array(
-			'page_nav' => __( 'Gallery', 'booking-and-rental-manager-for-woocommerce' ),
-			'priority' => 10,
-			'sections' => array(
-				'section_2' => array(
-					'title'       => __( 'Image Gallery', 'booking-and-rental-manager-for-woocommerce' ),
-					'description' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
-					'options'     => array(
-
-						array(
-							'id'          => 'rbfw_gallery_images',
-							'title'       => __( 'Gallery Images:', 'booking-and-rental-manager-for-woocommerce' ),
-							'details'     => __( 'Please upload images for gallery', 'booking-and-rental-manager-for-woocommerce' ),
-							'placeholder' => 'https://via.placeholder.com/1000x500',
-							'type'        => 'media_multi',
-						),
-						array(
-							'id'          => 'rbfw_gallery_images_additional',
-							'title'       => __( 'Additional Gallery Images:', 'booking-and-rental-manager-for-woocommerce' ),
-							'details'     => __( 'Please upload images for gallery', 'booking-and-rental-manager-for-woocommerce' ),
-							'placeholder' => 'https://via.placeholder.com/1000x500',
-							'type'        => 'media_multi',
-						),
-
-					)
-				),
-
-			),
-		);
-
-		$rbfw_gallery_meta_boxs_args = array(
-			'meta_box_id'    => 'rbfw_gallery_images_meta_boxes',
-			'meta_box_title' => '<i class="fa-solid fa-images"></i>' .__( 'Gallery', 'booking-and-rental-manager-for-woocommerce' ),
-			'screen'         => array( 'rbfw_item' ),
-			'context'        => 'normal',
-			'priority'       => 'low',
-			'callback_args'  => array(),
-			'nav_position'   => 'none', // right, top, left, none
-			'item_name'      => "MagePeople",
-			'item_version'   => "2.0",
-			'panels'         => array(
-				'rbfw_gallery_meta_boxs' => $rbfw_gallery_meta_boxs
-			),
-		);
-		new RMFWAddMetaBox( $rbfw_gallery_meta_boxs_args );
-
-		do_action('rbfw_tax_meta_boxs');
-
-		$rbfw_pricing_meta_boxs_args = array(
+				$rbfw_pricing_meta_boxs_args = array(
 			'meta_box_id'    => 'travel_pricing',
 			'meta_box_title' => '<i class="fa-solid fa-dollar-sign"></i>' .__( 'Pricing', 'booking-and-rental-manager-for-woocommerce' ),
 			'screen'         => array( 'rbfw_item' ),
@@ -1880,10 +1792,33 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 
 		);
 		new RMFWAddMetaBox( $rbfw_pricing_meta_boxs_args );
+		
+		do_action('rbfw_tax_meta_boxs');
 
-		$rbfw_location_meta_boxs_args = array(
-			'meta_box_id'    => 'rbfw_location_config',
-			'meta_box_title' => '<i class="fa-solid fa-location-dot"></i>' .__( 'Location', 'booking-and-rental-manager-for-woocommerce' ),
+		$rbfw_tax_meta_boxs = array(
+			'page_nav' => __( 'Tax', 'booking-and-rental-manager-for-woocommerce' ),
+			'priority' => 10,
+			'sections' => array(
+				'section_2' => array(
+					'title'       => __( 'Tax Configuration for Mage Payment System', 'booking-and-rental-manager-for-woocommerce' ),
+					'description' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+					'options'     => array(
+						array(
+							'id'      => 'rbfw_mps_tax_percentage',
+							'title'   => __( 'Tax percentage', 'booking-and-rental-manager-for-woocommerce' ),
+							'details' => __( 'Please enter the number of tax percentage. Example: 10', 'booking-and-rental-manager-for-woocommerce' ),
+							'type'    => 'text',
+							'default' => '',
+						),
+					)
+				),
+
+			),
+		);
+
+		$rbfw_mps_tax_meta_boxs_args = array(
+			'meta_box_id'    => 'rbfw_tax_settings_meta_boxes',
+			'meta_box_title' => '<i class="fa-solid fa-percent"></i>' .__( 'Tax', 'booking-and-rental-manager-for-woocommerce' ),
 			'screen'         => array( 'rbfw_item' ),
 			'context'        => 'normal',
 			'priority'       => 'low',
@@ -1891,9 +1826,10 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			'nav_position'   => 'none',
 			'item_name'      => "MagePeople",
 			'item_version'   => "2.0",
-
+			'panels'         => array(
+				'rbfw_tax_meta_boxs' => $rbfw_tax_meta_boxs
+			),
 		);
-		new RMFWAddMetaBox( $rbfw_location_meta_boxs_args );
 
 		$rbfw_date_time_meta_boxs = array(
 			'page_nav' => __( 'Date & Time', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1946,30 +1882,9 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 		);
 		new RMFWAddMetaBox( $rbfw_date_time_meta_boxs_args );
 
-		$rbfw_tax_meta_boxs = array(
-			'page_nav' => __( 'Tax', 'booking-and-rental-manager-for-woocommerce' ),
-			'priority' => 10,
-			'sections' => array(
-				'section_2' => array(
-					'title'       => __( 'Tax Configuration for Mage Payment System', 'booking-and-rental-manager-for-woocommerce' ),
-					'description' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
-					'options'     => array(
-						array(
-							'id'      => 'rbfw_mps_tax_percentage',
-							'title'   => __( 'Tax percentage', 'booking-and-rental-manager-for-woocommerce' ),
-							'details' => __( 'Please enter the number of tax percentage. Example: 10', 'booking-and-rental-manager-for-woocommerce' ),
-							'type'    => 'text',
-							'default' => '',
-						),
-					)
-				),
-
-			),
-		);
-
-		$rbfw_mps_tax_meta_boxs_args = array(
-			'meta_box_id'    => 'rbfw_tax_settings_meta_boxes',
-			'meta_box_title' => '<i class="fa-solid fa-percent"></i>' .__( 'Tax', 'booking-and-rental-manager-for-woocommerce' ),
+		$rbfw_location_meta_boxs_args = array(
+			'meta_box_id'    => 'rbfw_location_config',
+			'meta_box_title' => '<i class="fa-solid fa-location-dot"></i>' .__( 'Location', 'booking-and-rental-manager-for-woocommerce' ),
 			'screen'         => array( 'rbfw_item' ),
 			'context'        => 'normal',
 			'priority'       => 'low',
@@ -1977,10 +1892,98 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			'nav_position'   => 'none',
 			'item_name'      => "MagePeople",
 			'item_version'   => "2.0",
-			'panels'         => array(
-				'rbfw_tax_meta_boxs' => $rbfw_tax_meta_boxs
+
+		);
+		new RMFWAddMetaBox( $rbfw_location_meta_boxs_args );
+
+		$rbfw_template_info_boxs = array(
+			'page_nav' => __( 'Template', 'booking-and-rental-manager-for-woocommerce' ),
+			'priority' => 10,
+			'sections' => array(
+				'section_2' => array(
+					'title'       => __( 'Template Settings', 'booking-and-rental-manager-for-woocommerce' ),
+					'description' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+					'options'     => array(
+
+						array(
+							'id'          => 'rbfw_single_template',
+							'title'       => __( 'Template:', 'booking-and-rental-manager-for-woocommerce' ),
+							'details'     => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+							'type'        => 'select',
+							'args' => RBFW_Function::all_details_template(),
+						),
+
+					)
+				),
+
 			),
 		);
+
+		$rbfw_gallery_meta_boxs = array(
+			'page_nav' => __( 'Gallery', 'booking-and-rental-manager-for-woocommerce' ),
+			'priority' => 10,
+			'sections' => array(
+				'section_2' => array(
+					'title'       => __( 'Image Gallery', 'booking-and-rental-manager-for-woocommerce' ),
+					'description' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+					'options'     => array(
+
+						array(
+							'id'          => 'rbfw_gallery_images',
+							'title'       => __( 'Gallery Images:', 'booking-and-rental-manager-for-woocommerce' ),
+							'details'     => __( 'Please upload images for gallery', 'booking-and-rental-manager-for-woocommerce' ),
+							'placeholder' => 'https://via.placeholder.com/1000x500',
+							'type'        => 'media_multi',
+						),
+						array(
+							'id'          => 'rbfw_gallery_images_additional',
+							'title'       => __( 'Additional Gallery Images:', 'booking-and-rental-manager-for-woocommerce' ),
+							'details'     => __( 'Please upload images for gallery', 'booking-and-rental-manager-for-woocommerce' ),
+							'placeholder' => 'https://via.placeholder.com/1000x500',
+							'type'        => 'media_multi',
+						),
+
+					)
+				),
+
+			),
+		);
+
+		$rbfw_template_info_boxs_args = array(
+			'meta_box_id'    => 'rbfw_template_settings_meta_boxes',
+			'meta_box_title' => '<i class="fa-solid fa-pager"></i>' . __( 'Template', 'booking-and-rental-manager-for-woocommerce' ),
+			'screen'         => array( 'rbfw_item' ),
+			'context'        => 'normal',
+			'priority'       => 'high',
+			'callback_args'  => array(),
+			'nav_position'   => 'none',
+			'item_name'      => "MagePeople",
+			'item_version'   => "2.0",
+			'panels'         => array(
+				'rbfw_basic_meta_boxs' => $rbfw_template_info_boxs
+			)
+		);
+		new RMFWAddMetaBox( $rbfw_template_info_boxs_args );
+
+		$rbfw_gallery_meta_boxs_args = array(
+			'meta_box_id'    => 'rbfw_gallery_images_meta_boxes',
+			'meta_box_title' => '<i class="fa-solid fa-images"></i>' .__( 'Gallery', 'booking-and-rental-manager-for-woocommerce' ),
+			'screen'         => array( 'rbfw_item' ),
+			'context'        => 'normal',
+			'priority'       => 'low',
+			'callback_args'  => array(),
+			'nav_position'   => 'none', // right, top, left, none
+			'item_name'      => "MagePeople",
+			'item_version'   => "2.0",
+			'panels'         => array(
+				'rbfw_gallery_meta_boxs' => $rbfw_gallery_meta_boxs
+			),
+		);
+		new RMFWAddMetaBox( $rbfw_gallery_meta_boxs_args );
+
+				
+
+		
 
 		$current_payment_system = rbfw_get_option( 'rbfw_payment_system', 'rbfw_basic_payment_settings');
 		global $rbfw;

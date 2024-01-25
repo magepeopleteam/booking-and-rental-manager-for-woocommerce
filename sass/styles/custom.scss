@@ -3,6 +3,9 @@
         margin: 0;
         padding: 0;
     }
+    .notice-error,.notice{
+        display: none;
+    }
     .postbox-header{
         background-color: $color-secondary;
         h2{
@@ -26,4 +29,10 @@
             }
         }
     }
+    .ppof-settings .collapsible .header {
+        background: #fff;
+        padding: 8px 10px;
+        margin-bottom: 5px;
+        text-align: right;
+        }
 }

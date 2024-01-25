@@ -7017,6 +7017,9 @@ readers do not read off random characters that represent icons */
   margin: 0;
   padding: 0;
 }
+#rbfw_add_meta_box .notice-error, #rbfw_add_meta_box .notice {
+  display: none;
+}
 #rbfw_add_meta_box .postbox-header {
   background-color: var(--mpl-secondary);
 }
@@ -7038,6 +7041,12 @@ readers do not read off random characters that represent icons */
 }
 #rbfw_add_meta_box .select2-selection__rendered .select2-selection__choice .select2-selection__choice__remove {
   margin-right: 0.25em;
+}
+#rbfw_add_meta_box .ppof-settings .collapsible .header {
+  background: #fff;
+  padding: 8px 10px;
+  margin-bottom: 5px;
+  text-align: right;
 }
 
 /*# sourceMappingURL=admin.css.map */

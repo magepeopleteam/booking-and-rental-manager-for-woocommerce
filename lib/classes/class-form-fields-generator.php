@@ -8440,14 +8440,14 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                     jQuery(document).on('click', '.field-repeatable-wrapper-<?php echo esc_attr($id); ?> .add-item', function() {
                         now = jQuery.now();
                         fields_arr = <?php echo json_encode($fields); ?>;
-                        html = '<div class="item-wrap collapsible"><div class="header">';
+                        html = '<div class="item-wrap collapsible component"><div class="header">';
                         <?php if($collapsible === true): ?>
                         html += '<span  class="title-text button"><i class="fa-solid fa-angles-down"></i> Expand</span>';
                         <?php endif; ?>
                         <?php if($sortable):?>
                         html += '<span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
                         <?php endif; ?>
-						html += '<span class="button remove" ' +
+						html += '<span class="button remove " ' +
                             'onclick="jQuery(this).parent().parent().remove()"><?php echo mep_esc_html($remove_text); ?></span>';
                         html += '</div>';
                         // html += ' <span  class="title-text">#'+now+'</span></div>';
@@ -8512,7 +8512,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             html+='</div>';
                         });
                         html+='</div>';
-
+                        
                         <?php
                         if(!empty($limit)):
                             ?>

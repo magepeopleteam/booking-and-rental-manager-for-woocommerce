@@ -809,6 +809,11 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
             $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
             ?>
 
+
+
+          
+
+
             <script>
 
                 jQuery(function(){
@@ -868,6 +873,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                 type: 'date',
                                 form: 'date-object'
                             }
+
                         })
                     };
 
@@ -887,6 +893,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             let this_calendar_day_name = rbfw_calendar_weekday[this_calendar_date.getDay()];
                             if (appointment_days.indexOf(this_calendar_day_name) < 0) {
                                 this_data.attr('disabled', true);
+
                             }
                         });
                     }
