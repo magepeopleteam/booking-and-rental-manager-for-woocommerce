@@ -846,7 +846,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                             if(qty > 0){
                                 service_array[data_type] = qty;
                             }
-                        }
+                        }debit payment
 
                         <?php if(!empty($rbfw_regf_info)){ ?>
                         let rbfw_regf_fields = <?php echo $rbfw_regf_info; ?>;
