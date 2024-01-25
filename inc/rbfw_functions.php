@@ -1723,8 +1723,10 @@ function rbfw_update_inventory_extra($rbfw_id, $order_id,$order_status){
 
     if($rbfw_payment_system == 'wps'){
         $inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
-        $inventory[$order_id]['rbfw_order_status'] = $order_status;
-        update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
+        if (!empty($inventory) && array_key_exists($order_id, $inventory)) {
+            $inventory[$order_id]['rbfw_order_status'] = $order_status;
+            update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
+        }
     } else {
         $inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
         if (!empty($inventory) && array_key_exists($order_id, $inventory)){

@@ -1343,7 +1343,7 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
             $zdata[ $key ]['rbfw_ticket_info']        = $ticket_info;
             $zdata[ $key ]['rbfw_duration_cost']      = $rbfw_duration_cost;
             $zdata[ $key ]['rbfw_service_cost']       = $rbfw_service_cost;
-            $zdata[ $key ]['discount_amount']         = $_ticket['discount_amount'];
+            $zdata[ $key ]['discount_amount']         = isset($_ticket['discount_amount'])?$_ticket['discount_amount']:0;
             $zdata[ $key ]['rbfw_order_id']           = $order_id;
             $zdata[ $key ]['rbfw_order_status']       = $order_status;
             $zdata[ $key ]['rbfw_payment_method']     = $payment_method;

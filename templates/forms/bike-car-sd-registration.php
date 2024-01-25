@@ -65,10 +65,26 @@
 				
 				<!-- Button End -->
 
-			<input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
-			<input type="hidden" name="rbfw_bikecarsd_selected_time" id="rbfw_bikecarsd_selected_time">
-			<input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
-			<input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
+                <?php
+
+                $rbfw_regf_info = [];
+
+                if(class_exists('Rbfw_Reg_Form')){
+                    $ClassRegForm = new Rbfw_Reg_Form();
+                    $rbfw_regf_info = $ClassRegForm->rbfw_get_regf_all_fields_name($post_id);
+                    $rbfw_regf_info = json_encode($rbfw_regf_info);
+                }
+                $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
+
+                ?>
+
+
+                <input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
+                <input type="hidden" name="rbfw_bikecarsd_selected_time" id="rbfw_bikecarsd_selected_time">
+                <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
+                <input type="hidden" name="rbfw_regf_info" id="rbfw_regf_info"  value='<?php echo $rbfw_regf_info; ?>'>
+                <input type="hidden" name="time_slot_switch" id="time_slot_switch"  value='<?php echo $time_slot_switch; ?>'>
+                <input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
 			</form>
 		</div>
 		<!--    Right Side END-->

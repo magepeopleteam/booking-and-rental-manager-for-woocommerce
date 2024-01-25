@@ -77,7 +77,7 @@ function onclick_cal_date(date) {
          var time_slot_switch = jQuery('#time_slot_switch').val();
 
 
-         /* console.log('kkjjjjjj',time_slot_switch) */
+          console.log('kkjjjjjj',time_slot_switch)
 
 
 
