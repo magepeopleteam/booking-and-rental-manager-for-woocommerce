@@ -53,6 +53,18 @@
 
 		return $rbfw->get_option( $option, $section, $default );
 	}
+
+    function rbfw_end_time(){
+        global $rbfw;
+        $rbfw_count_extra_day_enable = $rbfw->get_option('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+        if($rbfw_count_extra_day_enable=='on'){
+            return '24:00:00';
+        }else{
+            return '00:00:00';
+        }
+    }
+
+
 	function rbfw_get_string( $option_name, $default_string ) {
 		return rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string );
 	}
@@ -305,7 +317,7 @@
 			$resed_end_time = date( 'H:i', strtotime( $end_datetime ) );
 
 			$resed_start_time = '00:00:00';
-			$resed_end_time = '24:00:00';
+			$resed_end_time = rbfw_end_time();
 			$start_datetime = date( 'Y-m-d H:i', strtotime( $resed_start_date.' '.$resed_start_time ) );
 			$end_datetime = date( 'Y-m-d H:i', strtotime( $resed_end_date.' '.$resed_end_time ) );
 		}
@@ -1558,7 +1570,7 @@ function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
 			$days    = $diff->days;
 			$hours   += $diff->h;
 			
-			if ( ($hours > 0)  || ($start_time == '00:00:00' && $end_time == '24:00:00') ) {
+			if ( ($hours > 0)  || ($start_time == '00:00:00' && $end_time == rbfw_end_time()) ) {
 				
 				for ($currentDate = $start_date; $currentDate <= $end_date; 
 
@@ -1624,14 +1636,35 @@ function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
  * Inventory Remove: WP Trash Post
  *****************************************/
 add_action( 'wp_trash_post', 'rbfw_trash_order' );
-function rbfw_trash_order( $post_id = '' ) {
+add_action( 'untrashed_post', 'wp_kama_untrashed_post_action', 10, 2 );
+
+function rbfw_trash_order( $order_id = '' ) {
+
+    $order = wc_get_order( $order_id );
+    $order_status = $order->get_status();
+
+    foreach ( $order->get_items() as $item_id => $item_values ) {
+        $rbfw_id =  wc_get_order_item_meta( $item_id, '_rbfw_id', true );
+        rbfw_update_inventory_extra( $rbfw_id, $order_id,'cancelled');
+    }
+
+
     // Verify if is trashing multiple posts
     if ( isset( $_GET['post'] ) && is_array( $_GET['post'] ) ) {
         foreach ( $_GET['post'] as $post_id ) {
             rbfw_update_inventory( $post_id, 'cancelled' );
         }
     } else {
-        rbfw_update_inventory( $post_id, 'cancelled' );
+        rbfw_update_inventory( $order_id, 'cancelled' );
+    }
+}
+
+function wp_kama_untrashed_post_action( $order_id ,$previous_status ) {
+    $order = wc_get_order( $order_id );
+    $order_status = str_replace("wc-","",$previous_status);
+    foreach ( $order->get_items() as $item_id => $item_values ) {
+        $rbfw_id =  wc_get_order_item_meta( $item_id, '_rbfw_id', true );
+        rbfw_update_inventory_extra( $rbfw_id, $order_id,$order_status);
     }
 }
 
@@ -1643,6 +1676,8 @@ function rbfw_update_inventory($order_id, $current_status = null){
 	global $wpdb;
 	$order_items_table = $wpdb->prefix . 'woocommerce_order_items';
 	$order = $wpdb->get_results("SELECT * FROM `$order_items_table` WHERE order_id = ".$order_id."");
+
+
 
 	if($rbfw_payment_system == 'wps'){
 
@@ -1658,6 +1693,7 @@ function rbfw_update_inventory($order_id, $current_status = null){
 				if (!empty($inventory) && array_key_exists($order_id, $inventory)){
 
 					$inventory[$order_id]['rbfw_order_status'] = $current_status;
+
 
 					update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
 				}
@@ -1677,6 +1713,27 @@ function rbfw_update_inventory($order_id, $current_status = null){
 			update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
 		}
 	}
+}
+
+
+
+function rbfw_update_inventory_extra($rbfw_id, $order_id,$order_status){
+    global $rbfw;
+    $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+
+    if($rbfw_payment_system == 'wps'){
+        $inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
+        if (!empty($inventory) && array_key_exists($order_id, $inventory)) {
+            $inventory[$order_id]['rbfw_order_status'] = $order_status;
+            update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
+        }
+    } else {
+        $inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
+        if (!empty($inventory) && array_key_exists($order_id, $inventory)){
+            $inventory[$order_id]['rbfw_order_status'] = $order_status;
+            update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
+        }
+    }
 }
 
 

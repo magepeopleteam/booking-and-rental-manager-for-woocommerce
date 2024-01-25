@@ -9,35 +9,31 @@
 	$rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
 	if($rbfw_payment_system == 'mps'){
-
-		$rbfw_payment_system = 'mps_enabled';
-
-	}else{
-
-		$rbfw_payment_system = 'wps_enabled'; 
+        $rbfw_payment_system = 'mps_enabled';
+    }else{
+        $rbfw_payment_system = 'wps_enabled';
 	}
 ?>
 
 	<!--    Main Layout-->
 	<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
-
-		<!--    Right Side-->
+        <!--    Right Side-->
 		<div class="rbfw-single-right-container">
 			<form action="" method='post' class="mp_rbfw_ticket_form">
-
-				<!-- Header -->
+                <!-- Header -->
 				<div class="rbfw-bikecarsd-calendar-header">
 					<div class="rbfw-bikecarsd-calendar-header-title"><?php rbfw_string('rbfw_text_book_online',__('Book online','booking-and-rental-manager-for-woocommerce')); ?></div>
 					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fa-solid fa-clock"></i> <?php rbfw_string('rbfw_text_real_time_availability',__('Real-time availability','booking-and-rental-manager-for-woocommerce')); ?></div>
 					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fa-solid fa-bolt"></i> <?php rbfw_string('rbfw_text_instant_confirmation',__('Instant confirmation','booking-and-rental-manager-for-woocommerce')); ?></div>
 				</div>
 				<!-- End Header -->
-
 				<!-- ITEM -->
 				<div class="item rbfw-bikecarsd-step" data-step="1">
-
 					<div id="rbfw-bikecarsd-calendar"></div>
-					<div class="rbfw-bikecarsd-calendar-footer"><i class="fa-solid fa-circle-info"></i> <?php rbfw_string('rbfw_text_click_date_to_browse_availability',__('Click a date to browse availability','booking-and-rental-manager-for-woocommerce')); ?></div>
+					<div class="rbfw-bikecarsd-calendar-footer">
+                        <i class="fa-solid fa-circle-info"></i>
+                        <?php rbfw_string('rbfw_text_click_date_to_browse_availability',__('Click a date to browse availability','booking-and-rental-manager-for-woocommerce')); ?>
+                    </div>
 				</div>
 				<!-- ITEM END -->
 
@@ -56,12 +52,28 @@
 					?>	
 					</button>
 				</div>
+
+
+                <?php
+
+                $rbfw_regf_info = [];
+
+                if(class_exists('Rbfw_Reg_Form')){
+                    $ClassRegForm = new Rbfw_Reg_Form();
+                    $rbfw_regf_info = $ClassRegForm->rbfw_get_regf_all_fields_name($post_id);
+                    $rbfw_regf_info = json_encode($rbfw_regf_info);
+                }
+                $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
+
+                ?>
 				
-				<!-- Button End -->
+
 
 			<input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
 			<input type="hidden" name="rbfw_bikecarsd_selected_time" id="rbfw_bikecarsd_selected_time">
 			<input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
+			<input type="hidden" name="rbfw_regf_info" id="rbfw_regf_info"  value='<?php echo $rbfw_regf_info; ?>'>
+			<input type="hidden" name="time_slot_switch" id="time_slot_switch"  value='<?php echo $time_slot_switch; ?>'>
 			<input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
 			</form>
 		</div>

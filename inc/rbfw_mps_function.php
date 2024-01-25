@@ -278,7 +278,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
             elseif(($rent_type == 'bike_car_md') || ($rent_type == 'dress') || ($rent_type == 'equipment') || ($rent_type == 'others')){
                 $BikeCarMdClass = new RBFW_BikeCarMd_Function();
                 $start_time = !empty($start_time) ? $start_time : '00:00:00';
-                $end_time = !empty($end_time) ? $end_time : '24:00:00';
+                $end_time = !empty($end_time) ? $end_time : rbfw_end_time();
                 $start_datetime = $start_date.' '.$start_time;
                 $end_datetime = $end_date.' '.$end_time;
                 $duration_cost = rbfw_price_calculation( $rbfw_id, $start_datetime, $end_datetime, $start_date ) * (float)$item_quantity;
@@ -704,7 +704,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 $start_date = isset($_POST['start_date']) ? strip_tags(rbfw_date_format($_POST['start_date'])) : '';
                 $start_time = isset($_POST['start_time']) ? strip_tags($_POST['start_time']) : '00:00:00';
                 $end_date = isset($_POST['end_date']) ? strip_tags(rbfw_date_format($_POST['end_date'])) : '';
-                $end_time = isset($_POST['end_time']) ? strip_tags($_POST['end_time']) : '24:00:00';
+                $end_time = isset($_POST['end_time']) ? strip_tags($_POST['end_time']) : rbfw_end_time();
                 $pickup_point = isset($_POST['pickup_point']) ? $_POST['pickup_point'] : '';
                 $dropoff_point = isset($_POST['dropoff_point']) ? $_POST['dropoff_point'] : '';
                 $item_quantity = isset($_POST['item_quantity']) ? $_POST['item_quantity'] : 1;

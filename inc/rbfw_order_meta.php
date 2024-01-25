@@ -481,6 +481,8 @@ function save_rbfw_order_meta_box( $post_id ) {
             $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_status_id', true );
         }
 
+
+
         if(empty($current_status_update)){
             $all_status_update = array();  
             $all_status_update[] = $status;

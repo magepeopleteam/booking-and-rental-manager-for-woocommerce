@@ -80,7 +80,12 @@
 				
 				$template_name = $template.'.php';
 
+
+
+
 				$main_template_dir = RBFW_PLUGIN_DIR . '/templates/' . $template_name;
+
+
 				
 				if ( ! file_exists( $main_template_dir ) ) {
 
@@ -99,6 +104,7 @@
 				$default_dir   = RBFW_PLUGIN_DIR . '/templates/';
 				$dir           = $default_dir;
 				$file_path     = $dir . $file_name;
+
 
 				return $default_dir . $file_name;
 			}

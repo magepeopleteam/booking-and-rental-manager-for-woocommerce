@@ -57,18 +57,34 @@
 				
 				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
 					<button type="submit" name="add-to-cart" value="<?php echo $rbfw_product_id; ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn <?php echo $rbfw_payment_system; ?>" disabled>
-					<?php
-						echo $rbfw->get_option('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));
-					?>	
+                        <?php
+                        echo $rbfw->get_option('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));
+                        ?>
 					</button>
 				</div>
 				
 				<!-- Button End -->
 
-			<input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
-			<input type="hidden" name="rbfw_bikecarsd_selected_time" id="rbfw_bikecarsd_selected_time">
-			<input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
-			<input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
+                <?php
+
+                $rbfw_regf_info = [];
+
+                if(class_exists('Rbfw_Reg_Form')){
+                    $ClassRegForm = new Rbfw_Reg_Form();
+                    $rbfw_regf_info = $ClassRegForm->rbfw_get_regf_all_fields_name($post_id);
+                    $rbfw_regf_info = json_encode($rbfw_regf_info);
+                }
+                $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
+
+                ?>
+
+
+                <input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
+                <input type="hidden" name="rbfw_bikecarsd_selected_time" id="rbfw_bikecarsd_selected_time">
+                <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
+                <input type="hidden" name="rbfw_regf_info" id="rbfw_regf_info"  value='<?php echo $rbfw_regf_info; ?>'>
+                <input type="hidden" name="time_slot_switch" id="time_slot_switch"  value='<?php echo $time_slot_switch; ?>'>
+                <input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
 			</form>
 		</div>
 		<!--    Right Side END-->

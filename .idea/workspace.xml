@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="053c3b1d-9127-41b4-bf1f-b2528c576cfc" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/mp_script/rbfw_script.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/mp_script/rbfw_script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/RBFW_Function.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/RBFW_Function.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/class-bike-car-md-function.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/class-bike-car-md-function.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/rbfw_functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/rbfw_functions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/woocommerce/rbfw_functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/woocommerce/rbfw_functions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/forms/bike-car-sd-registration.php" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/bike-car-sd-registration.php" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
+  <component name="ProjectId" id="2bQp4mdaK1bveo0lbuOhVCgz49S" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="053c3b1d-9127-41b4-bf1f-b2528c576cfc" name="Changes" comment="" />
+      <created>1706156967571</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1706156967571</updated>
+      <workItem from="1706156968570" duration="7185000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
