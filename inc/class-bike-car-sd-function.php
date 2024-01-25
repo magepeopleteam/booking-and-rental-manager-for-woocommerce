@@ -816,8 +816,6 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                         /* Start Calendar Script */
                         function onclick_cal_date(date) {
 
-
-                            
                             jQuery('#rbfw-bikecarsd-calendar').updateCalendarOptions({
                                 date: date
                             });
@@ -878,7 +876,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                         
                                     <?php } ?>
                                     /* End Calendar Script */
-                                },		
+                                },
+
                                 success: function (response) {
                                     jQuery('.rbfw-bikecarsd-step[data-step="1"]').hide();
                                     jQuery('.rbfw-bikecarsd-step[data-step="1"]').removeClass('rbfw_loader_in');
@@ -908,7 +907,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                         }
 
 
-                        <?php global $wp_locale; ?>
+
 
                         var defaultConfig = {
                             weekDayLength: 1,
@@ -923,63 +922,21 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
                             disable: function (date) { 
                                 return date <  rbfw_today_date();
-                            },
-                            monthMap:{
-                                1: "<?php echo $wp_locale->get_month('01'); ?>",
-                                2: "<?php echo $wp_locale->get_month('02'); ?>",
-                                3: "<?php echo $wp_locale->get_month('03'); ?>",
-                                4: "<?php echo $wp_locale->get_month('04'); ?>",
-                                5: "<?php echo $wp_locale->get_month('05'); ?>",
-                                6: "<?php echo $wp_locale->get_month('06'); ?>",
-                                7: "<?php echo $wp_locale->get_month('07'); ?>",
-                                8: "<?php echo $wp_locale->get_month('08'); ?>",
-                                9: "<?php echo $wp_locale->get_month('09'); ?>",
-                                10: "<?php echo $wp_locale->get_month('10'); ?>",
-                                11: "<?php echo $wp_locale->get_month('11'); ?>",
-                                12: "<?php echo $wp_locale->get_month('12'); ?>",
-                            },
-                            dayMap:{
-                                0: "<?php echo date_i18n('l', strtotime('sunday')); ?>",
-                                1: "<?php echo date_i18n('l', strtotime('monday')); ?>",
-                                2: "<?php echo date_i18n('l', strtotime('tuesday')); ?>",
-                                3: "<?php echo date_i18n('l', strtotime('wednesday')); ?>",
-                                4: "<?php echo date_i18n('l', strtotime('thursday')); ?>",
-                                5: "<?php echo date_i18n('l', strtotime('friday')); ?>",
-                                6: "<?php echo date_i18n('l', strtotime('saturday')); ?>",
-                            },
-                            alternateDayMap:{
-                                1: "<?php echo date_i18n('l', strtotime('monday')); ?>",
-                                2: "<?php echo date_i18n('l', strtotime('tuesday')); ?>",
-                                3: "<?php echo date_i18n('l', strtotime('wednesday')); ?>",
-                                4: "<?php echo date_i18n('l', strtotime('thursday')); ?>",
-                                5: "<?php echo date_i18n('l', strtotime('friday')); ?>",
-                                6: "<?php echo date_i18n('l', strtotime('saturday')); ?>",
-                                7: "<?php echo date_i18n('l', strtotime('sunday')); ?>",
-                            },
-                            customDateProps: (date) => ({
-                                classes: 'rbfw-date-element',
-                                data: {
-                                    type: 'date',
-                                    form: 'date-object'
-                                }
-                            })
+                            }
                         };
-
-
 
                         var calendar = jQuery('#rbfw-bikecarsd-calendar').calendar(defaultConfig);
                         let rent_type = jQuery('#rbfw_rent_type').val();
 
                         // Start: Calendar script 
-                        <?php if($rent_type == 'appointment'){ ?>
+
+                        if($rent_type == 'appointment'){
                             
                             let rbfw_date_element_arr = [];
                             let rbfw_date_element = jQuery('.rbfw-date-element');
                             let rbfw_calendar_weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-                            
                             let appointment_days = <?php echo json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true)); ?>;
-                            
-                            
+
                             jQuery(rbfw_date_element).each(function($i){
 
                                 let this_data = jQuery(this);
@@ -994,7 +951,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                 
                             });
                             
-                        <?php } ?>
+                       }
                         /* End Calendar Script */
 
                         function rbfw_step_func(){
@@ -1169,6 +1126,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                         }
                         /* End: Get Registration Form Info */
                         ?>
+
                         function rbfw_mps_book_now_btn_action(){
                             jQuery('button.rbfw_bikecarsd_book_now_btn.mps_enabled').click(function (e) { 
                             e.preventDefault();
