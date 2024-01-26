@@ -1,4 +1,55 @@
 /* Start Calendar Script */
+
+jQuery(function(){
+
+    var defaultConfig = {
+        weekDayLength: 1,
+        date:  rbfw_today_date(),
+        onClickDate: onclick_cal_date,
+        showYearDropdown: true,
+        startOnMonday: true,
+        showTodayButton: false,
+        highlightSelectedWeekday: false,
+        highlightSelectedWeek: false,
+        prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
+        nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
+        disable: function (date) {
+            return date <  rbfw_today_date();
+        },
+        customDateProps: (date) => ({
+            classes: 'rbfw-date-element',
+            data: {
+                type: 'date',
+                form: 'date-object'
+            }
+        })
+    };
+
+    var calendar = jQuery('#rbfw-bikecarsd-calendar').calendar(defaultConfig);
+
+    let rent_type = jQuery('#rbfw_rent_type').val();
+    // Start: Calendar script
+    if(rent_type == 'appointment'){
+        let rbfw_date_element_arr = [];
+        let rbfw_date_element = jQuery('.rbfw-date-element');
+        let rbfw_calendar_weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        let appointment_days = jQuery('#appointment_days').val();
+
+
+        jQuery(rbfw_date_element).each(function($i){
+            let this_data = jQuery(this);
+            let this_date_data = jQuery(this).attr('data-date');
+            let this_calendar_date = new Date(this_date_data);
+            let this_calendar_day_name = rbfw_calendar_weekday[this_calendar_date.getDay()];
+            if (appointment_days.indexOf(this_calendar_day_name) < 0) {
+                this_data.attr('disabled', true);
+
+            }
+        });
+    }
+    /* End Calendar Script */
+});
+
 function onclick_cal_date(date) {
 
     jQuery('#rbfw-bikecarsd-calendar').updateCalendarOptions({
@@ -37,32 +88,22 @@ function onclick_cal_date(date) {
 
             var rent_type = jQuery('#rbfw_rent_type').val();
 
-
             // Start: Calendar script
            if(rent_type == 'appointment'){
-
                 let rbfw_date_element_arr = [];
                 let rbfw_date_element = jQuery('.rbfw-date-element');
                 let rbfw_calendar_weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-
-                let appointment_days = ''; /*<?php echo json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true)); ?>;*/
-
-
+                let appointment_days = jQuery('#appointment_days').val();
                 jQuery(rbfw_date_element).each(function($i){
-
                     let this_data = jQuery(this);
                     let this_date_data = jQuery(this).attr('data-date');
                     let this_calendar_date = new Date(this_date_data);
                     let this_calendar_day_name = rbfw_calendar_weekday[this_calendar_date.getDay()];
-
                     if (appointment_days.indexOf(this_calendar_day_name) < 0) {
                         this_data.attr('disabled', true);
-
                     }
-
                 });
-
-                }
+           }
             /* End Calendar Script */
         },
         success: function (response) {
@@ -71,17 +112,10 @@ function onclick_cal_date(date) {
             jQuery('.rbfw-bikecarsd-step[data-step="1"] i.fa-spinner').remove();
 
             jQuery('.rbfw-bikecarsd-result').append(response);
+
             rbfw_step_func();
 
-
-         var time_slot_switch = jQuery('#time_slot_switch').val();
-
-
-          console.log('kkjjjjjj',time_slot_switch)
-
-
-
-
+            var time_slot_switch = jQuery('#time_slot_switch').val();
 
             if(time_slot_switch == 'on'){
                 rbfw_bikecarsd_time_click_func();
@@ -309,7 +343,7 @@ function rbfw_bikecarsd_ajax_price_calculation(){
         }
         let post_id = jQuery('#rbfw_post_id').val();
         var currentRequest = null;
-        setTimeout(function() {
+ 
             currentRequest = jQuery.ajax({
                 type: 'POST',
                 url: rbfw_ajax.rbfw_ajaxurl,
@@ -341,7 +375,7 @@ function rbfw_bikecarsd_ajax_price_calculation(){
                     }
                 }
             });
-        }, 5000);
+
 
     });
     jQuery('.rbfw_bikecarsd_qty,.rbfw_service_qty').change(function (e) {

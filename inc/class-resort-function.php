@@ -1001,7 +1001,8 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     let room_price_arr = {};
                     let service_price_arr = {};
                     let post_id = jQuery('#rbfw_post_id').val();
-                    jQuery('.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_service_qty_minus,.rbfw_service_qty_plus').click(function (e) {
+                    jQuery('.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_service_qty_minus,.rbfw_service_qty_plus').click(function (e) { alert(1);
+                        e.preventDefault();
                         let checkin_date     = jQuery('#checkin_date').val();
                         let checkout_date    = jQuery('#checkout_date').val();
                         let data_cat         = jQuery(this).siblings('input[type=number]').attr('data-cat');
@@ -1117,6 +1118,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 // update input value onclick and onchange
                 function rbfw_update_input_value_onchange_onclick(){
                     jQuery('.rbfw_room_qty_plus,.rbfw_service_qty_plus').click(function (e) {
+                        e.preventDefault();
                         let target_input = jQuery(this).siblings("input[type=number]");
                         let current_value = parseInt(jQuery(this).siblings("input[type=number]").val());
                         let max_value = parseInt(jQuery(this).siblings("input[type=number]").attr('max'));
@@ -1159,8 +1161,8 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 // display extra services box onclick and onchange
                 function rbfw_display_resort_es_box_onchange_onclick(){
 
-                    jQuery('.rbfw_room_qty_plus,.rbfw_room_qty_minus').click(function (e) {
-
+                    jQuery('.rbfw_room_qty_plus,.rbfw_room_qty_minus').click(function (e) { return; alert(3);
+                        e.preventDefault();
                         let count = jQuery('.rbfw_resort_rt_price_table tbody tr').length;
                         let total_qty = 0;
                         for (let index = 0; index < count; index++) {
