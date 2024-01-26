@@ -101,7 +101,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
             array(
                 'name' => 'rbfw_count_extra_day_enable',
                 'label' => __( 'Count Extra Day Enable', 'booking-and-rental-manager-for-woocommerce' ),
-                'desc' => __( 'Enable/Disable extra day.', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => __( "If you don't want the extra day to count as a return day, then off it.", 'booking-and-rental-manager-for-woocommerce' ),
                 'type' => 'select',
                 'default' => 'on',
                 'options' => array(
