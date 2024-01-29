@@ -1477,6 +1477,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			$daily_rate_sat          = isset( $_POST['rbfw_sat_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_daily_rate'] ) : '';
 			$enabled_sat             = isset( $_POST['rbfw_enable_sat_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sat_day'] ) : 'no';
 			$rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? rbfw_array_strip( $_POST['rbfw_item_type'] ) : 'others';
+            $shipping_enable          = isset( $_POST['shipping_enable'] ) ? rbfw_array_strip( $_POST['shipping_enable'] ) : '';
 			$rbfw_enable_pick_point  = isset( $_POST['rbfw_enable_pick_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_pick_point'] ) : 'no';
 			$rbfw_enable_dropoff_point  = isset( $_POST['rbfw_enable_dropoff_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_dropoff_point'] ) : 'no';
 			$rbfw_enable_daywise_price  = isset( $_POST['rbfw_enable_daywise_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_daywise_price'] ) : 'no';
@@ -1538,6 +1539,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 
 			update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
+			update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
 
 			update_post_meta( $post_id, 'rbfw_hourly_rate', $hourly_rate );
 			update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );
@@ -1729,6 +1731,18 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 							),
 							'default' => 'off',
 						),
+
+                        array(
+                            'id'      => 'shipping_enable',
+                            'title'   => __( 'Is Shipping Enable', 'booking-and-rental-manager-for-woocommerce' ),
+                            'details' => __( 'To enable shipping enable, then keep on', 'booking-and-rental-manager-for-woocommerce' ),
+                            'type'    => 'switch',
+                            'args' => array(
+                                'on' => 'On',
+                                'off' => 'Off',
+                            ),
+                            'default' => 'off',
+                        ),
 
 						array(
 							'id'          => 'rbfw_dt_sidebar_testimonials',
