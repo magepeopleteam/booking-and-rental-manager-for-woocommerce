@@ -744,6 +744,8 @@ if (!class_exists('MageRBFWClass')) {
             update_post_meta($pid, 'link_rbfw_id', $post_id);
             update_post_meta($pid, '_price', 0.01);
             update_post_meta($pid, '_sold_individually', 'yes');
+
+
             update_post_meta($pid, '_virtual', 'yes');
             $terms = array('exclude-from-catalog', 'exclude-from-search');
             wp_set_object_terms($pid, $terms, 'product_visibility');
@@ -763,12 +765,23 @@ if (!class_exists('MageRBFWClass')) {
                 );
 
                 $pid = wp_insert_post($new_post);
-                $product_type = 'yes';
+
+                if($post->shipping_enable == 'on'){
+                    $product_type = 'no';
+                }else{
+                    $product_type = 'yes';
+                }
+
+
+
                 update_post_meta($post_id, 'link_wc_product', $pid);
                 update_post_meta($pid, 'link_rbfw_id', $post_id);
                 update_post_meta($pid, '_price', 0.01);
                 update_post_meta($pid, '_sold_individually', 'yes');
-                update_post_meta($pid, '_virtual', $product_type);
+                update_post_meta($pid, '_virtual', 'yes');
+
+                update_post_meta($pid, 'shipping_enable', $post->shipping_enable);
+
                 $terms = array('exclude-from-catalog', 'exclude-from-search');
                 wp_set_object_terms($pid, $terms, 'product_visibility');
                 update_post_meta($post_id, 'check_if_run_once', true);
@@ -795,10 +808,7 @@ if (!class_exists('MageRBFWClass')) {
 
             if (get_post_type($post_id) == $this->get_cpt_name()) {
 
-                if (
-                    !isset($_POST['rbfw_ticket_type_nonce']) ||
-                    !wp_verify_nonce($_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce')
-                ) {
+                if (!isset($_POST['rbfw_ticket_type_nonce']) || !wp_verify_nonce($_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce')) {
                     return;
                 }
 
@@ -816,10 +826,19 @@ if (!class_exists('MageRBFWClass')) {
                 }
 
                 $product_id = get_post_meta($post_id, 'link_wc_product', true) ? get_post_meta($post_id, 'link_wc_product', true) : $post_id;
+
+                $shipping_enable = get_post_meta($post_id, 'shipping_enable', true) ? get_post_meta($post_id, 'shipping_enable', true) : 'off';
+
                 set_post_thumbnail($product_id, get_post_thumbnail_id($post_id));
                 wp_publish_post($product_id);
 
-                $product_type = 'yes';
+                if($shipping_enable=='on'){
+                    $product_type = 'no';
+                }else{
+                    $product_type = 'yes';
+                }
+
+
 
                 $_tax_status = isset($_POST['_tax_status']) ? rbfw_array_strip($_POST['_tax_status']) : 'none';
                 $_tax_class = isset($_POST['_tax_class']) ? rbfw_array_strip($_POST['_tax_class']) : '';

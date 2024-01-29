@@ -1,3 +1,5 @@
+/*start single day and appointment pricing booking*/
+
 /* Start Calendar Script */
 
 jQuery(function(){
@@ -819,3 +821,9 @@ function rbfw_mps_checkout_header_link(){
         jQuery('.rbfw_mps_form_wrap[data-id="'+this_data_id+'"]').show();
     });
 }
+
+
+/*start resort pricing booking*/
+
+
+/*start multiple day pricing booking*/
