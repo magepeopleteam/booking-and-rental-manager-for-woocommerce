@@ -766,7 +766,7 @@ if (!class_exists('MageRBFWClass')) {
 
                 $pid = wp_insert_post($new_post);
 
-                
+
                 update_post_meta($post_id, 'link_wc_product', $pid);
                 update_post_meta($pid, 'link_rbfw_id', $post_id);
                 update_post_meta($pid, '_price', 0.01);

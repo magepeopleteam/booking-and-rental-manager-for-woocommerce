@@ -1641,22 +1641,23 @@ add_action( 'untrashed_post', 'wp_kama_untrashed_post_action', 10, 2 );
 function rbfw_trash_order( $order_id = '' ) {
 
     $order = wc_get_order( $order_id );
-    $order_status = $order->get_status();
 
-    foreach ( $order->get_items() as $item_id => $item_values ) {
-        $rbfw_id =  wc_get_order_item_meta( $item_id, '_rbfw_id', true );
-        rbfw_update_inventory_extra( $rbfw_id, $order_id,'cancelled');
-    }
-
-
-    // Verify if is trashing multiple posts
-    if ( isset( $_GET['post'] ) && is_array( $_GET['post'] ) ) {
-        foreach ( $_GET['post'] as $post_id ) {
-            rbfw_update_inventory( $post_id, 'cancelled' );
+    if($order){
+        $order_status = $order->get_status();
+        foreach ( $order->get_items() as $item_id => $item_values ) {
+            $rbfw_id =  wc_get_order_item_meta( $item_id, '_rbfw_id', true );
+            rbfw_update_inventory_extra( $rbfw_id, $order_id,'cancelled');
         }
-    } else {
-        rbfw_update_inventory( $order_id, 'cancelled' );
+        // Verify if is trashing multiple posts
+        if ( isset( $_GET['post'] ) && is_array( $_GET['post'] ) ) {
+            foreach ( $_GET['post'] as $post_id ) {
+                rbfw_update_inventory( $post_id, 'cancelled' );
+            }
+        } else {
+            rbfw_update_inventory( $order_id, 'cancelled' );
+        }
     }
+
 }
 
 function wp_kama_untrashed_post_action( $order_id ,$previous_status ) {
