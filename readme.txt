@@ -26,30 +26,18 @@ WpRently provides you with the necessary features for free to start your rental 
 
 ## Our plugin supports a variety of applications, including:
 
-### 🚲 Bike Rentals: 
-Efficiently manage bookings for bike rentals.
-### 🚗 Car Rentals: 
-Simplify the car rental process with our versatile plugin.
-### 📅 Appointments: 
-Streamlines appointment scheduling for professionals.
-### 🏨 Hotel Bookings: 
-Provide a user-friendly platform for guests to book their stay.
-### 🛠️ Equipment Rentals: 
-From tools to machinery, our plugin handles All.
-### 👗 Dress Rentals: 
-Facilitates dress rentals with a smooth booking experience.
-### ⛵ Yacht/Boat Rentals: 
-Create a seamless process for water enthusiasts.
-###🏡 Vacation/Holiday Rentals:
-Equipped for vacation and holiday rentals.
-###🏑 Sport Kit Rentals: 
-Make sports equipment bookings a breeze with customers.
-###🏢 Office/Event Space Rentals: 
-Streamline the booking process for office and event spaces.
-###🌡️ Medical Equipment: 
-Ideal for healthcare providers & medical equipment.
-###🔌 Electronics Goods: 
-Manage rentals for electronics goods.
+**🚲 Bike Rentals:** Efficiently manage bookings for bike rentals.
+**🚗 Car Rentals:** Simplify the car rental process with our versatile plugin.
+**📅 Appointments:** Streamlines appointment scheduling for professionals.
+**🏨 Hotel Bookings:** Provide a user-friendly platform for guests to book their stay.
+**🛠️ Equipment Rentals:** From tools to machinery, our plugin handles All.
+**👗 Dress Rentals:** Facilitates dress rentals with a smooth booking experience.
+**⛵ Yacht/Boat Rentals:** Create a seamless process for water enthusiasts.
+**🏡 Vacation/Holiday Rentals:** Equipped for vacation and holiday rentals.
+**🏑 Sport Kit Rentals:** Make sports equipment bookings a breeze with customers.
+**🏢 Office/Event Space Rentals:** Streamline the booking process for office and event spaces.
+**🌡️ Medical Equipment:** Ideal for healthcare providers & medical equipment.
+**🔌 Electronics Goods:** Manage rentals for electronics goods.
 
 
 
@@ -57,72 +45,39 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 
 ## Free Version Of The Plugin Offers:
 
-### 🚲🚗 Bike/Car Rent (Single Day:
-Enable customers to effortlessly book bikes or cars for a single day with ease.
-### 🚲🚗Bike/Car Rent (Multiple Days:
-Provide flexibility with multi-day bike or car rentals for extended travel plans.
-### 👗 Dress Rent (Single/Multiple Day:
-Provide dress rentals, accommodating both single-day and extended-use bookings.
-### 📅 Doctor/Lawyer Appointment:
-Simplify scheduling appointments with healthcare professionals or legal advisors.
-### 🏨Resort Booking:
-Streamline resort bookings, offering guests a seamless platform to secure their stay.
-### 🛠️ Equipment Rent::
-Efficiently manage equipment rentals, providing a straightforward booking process.
-### 💲Daywise Price Configuration:
-Configure rental prices based on specific days, ensuring accurate pricing.
-### 💲 Hourly Price Configuration:
-Set hourly rental rates for precise billing and flexibility in booking.
-### 💲Daily Price Configuration:
-Provide daily rental pricing options for various rental durations.
-### 🖼️ Single Rent Gallery Configuration:
-Customize the display of single rental items with a gallery configuration.
-### 📍 Pickup/Dropoff Location Settings::
-Configure pickup and dropoff locations for a convenient rental experience.
-### 🔄Related Rents:
-Enhance user experience by showcasing related rental options for cross-selling.
-### 🌟 Highlight Features:
-Draw attention to key features, making your rentals stand out to customers.
-### 💲 Day-long Price Configuration:
-Configure specific prices for day-long rentals, catering to varying needs
-### 💲 Day-night Price Configuration:
-Set distinct prices for day and night rentals, offering flexible pricing options.
-### 👗 Dress Size Configuration:
-Provide a personalized experience with configurable dress size options.
-### ➕Extra Service Configuration:
-Allow customers to enhance their experience with configurable extra services.
-### 🔄 Available Shortcode for Showing the Rent List:
-Utilize shortcodes to seamlessly display your rental list on any page.
-### ⚙️Detailed Rent Settings and Date Configuration:
-Customize detailed rental settings and date configurations for precision.
-### 🔄 Different Rent List Styles:
-Enhance visual appeal by choosing from various styles for displaying rental lists.
-### 🎨 Style Settings:
-Customize the look and feel of your rental listings with style settings.
-### 🔄 Slider Settings:
-Utilize slider settings for a dynamic and interactive presentation of rental items.
-### 🖥️ Front-end Booking Dashboard:
-Provide customers with a user-friendly front-end booking dashboard.
-### 🙏Thank You Page Selection:
- Allow customization by letting users select their preferred thank-you page.
-### 📑 Order List with Details:
-Easily view and manage orders with comprehensive details.
-### 💰Tax Settings:
- Manage tax settings seamlessly for accurate financial transactions.
-### 📦Inventory Settings:
- Efficiently manage inventory settings for smooth rental operations.
-### 🌐 Cross-Browser Support:
-Ensure compatibility across various browsers for a seamless user experience.
-### 📱Responsive and SEO-friendly:
- Create a responsive and SEO-friendly rental platform for increased visibility.
-### 🌐🗣️Multilingual Translation Support:
- Cater to a diverse audience with multilingual translation support.
-### 🎨🔄Works with Any Standards-Compliant WordPress Theme:
- Seamlessly integrate with any WordPress theme following standard compliance.
-### 🔗💼WooCommerce Integration:
- Integrate smoothly with WooCommerce, expanding your e-commerce capabilities.
-### 💳🔄 Supports All WooCommerce Payment Methods:
-Ensure flexibility by supporting all WooCommerce payment methods.
+**🚲🚗 Bike/Car Rent (Single Day:** Enable customers to effortlessly book bikes or cars for a single day with ease.
+**🚲🚗Bike/Car Rent (Multiple Days:** Provide flexibility with multi-day bike or car rentals for extended travel plans.
+**👗 Dress Rent (Single/Multiple Day:** Provide dress rentals, accommodating both single-day and extended-use bookings.
+**📅 Doctor/Lawyer Appointment:** Simplify scheduling appointments with healthcare professionals or legal advisors.
+**🏨Resort Booking:** Streamline resort bookings, offering guests a seamless platform to secure their stay.
+**🛠️ Equipment Rent:** Efficiently manage equipment rentals, providing a straightforward booking process.
+**💲Daywise Price Configuration:** Configure rental prices based on specific days, ensuring accurate pricing.
+**💲 Hourly Price Configuration:** Set hourly rental rates for precise billing and flexibility in booking.
+**💲Daily Price Configuration:** Provide daily rental pricing options for various rental durations.
+**🖼️ Single Rent Gallery Configuration:** Customize the display of single rental items with a gallery configuration.
+**📍 Pickup/Dropoff Location Settings:** Configure pickup and dropoff locations for a convenient rental experience.
+**🔄Related Rents:** Enhance user experience by showcasing related rental options for cross-selling.
+**🌟 Highlight Features:** Draw attention to key features, making your rentals stand out to customers.
+**💲 Day-long Price Configuration:** Configure specific prices for day-long rentals, catering to varying needs
+**💲 Day-night Price Configuration:** Set distinct prices for day and night rentals, offering flexible pricing options.
+**👗 Dress Size Configuration:** Provide a personalized experience with configurable dress size options.
+**➕Extra Service Configuration:** Allow customers to enhance their experience with configurable extra services.
+**🔄 Available Shortcode for Showing the Rent List:** Utilize shortcodes to seamlessly display your rental list on any page.
+**⚙️Detailed Rent Settings and Date Configuration:** Customize detailed rental settings and date configurations for precision.
+**🔄 Different Rent List Styles:** Enhance visual appeal by choosing from various styles for displaying rental lists.
+**🎨 Style Settings:** Customize the look and feel of your rental listings with style settings.
+**🔄 Slider Settings:** Utilize slider settings for a dynamic and interactive presentation of rental items.
+**🖥️ Front-end Booking Dashboard:** Provide customers with a user-friendly front-end booking dashboard.
+**🙏Thank You Page Selection:** Allow customization by letting users select their preferred thank-you page.
+**📑 Order List with Details:** Easily view and manage orders with comprehensive details.
+**💰Tax Settings:** Manage tax settings seamlessly for accurate financial transactions.
+**📦Inventory Settings:** Efficiently manage inventory settings for smooth rental operations.
+**🌐 Cross-Browser Support:** Ensure compatibility across various browsers for a seamless user experience.
+**📱Responsive and SEO-friendly:** Create a responsive and SEO-friendly rental platform for increased visibility.
+**🌐🗣️Multilingual Translation Support:** Cater to a diverse audience with multilingual translation support.
+**🎨🔄Works with Any Standards-Compliant WordPress Theme:** Seamlessly integrate with any WordPress theme following standard compliance.
+**🔗💼WooCommerce Integration:** Integrate smoothly with WooCommerce, expanding your e-commerce capabilities.
+**💳🔄 Supports All WooCommerce Payment Methods:** Ensure flexibility by supporting all WooCommerce payment methods.
 
 ### Meet your higher business demand with the pro version of the plugin:
 ### Pro Version Offer:
