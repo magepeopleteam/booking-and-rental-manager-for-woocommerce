@@ -83,20 +83,13 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 ### Pro Version Offer:
 
 
-### 💳🔄 Paypal Integration:
-Expand payment options with seamless Paypal integration for secure transactions.
-### 💳🔄 Stripe Integration:
-Provide users with another secure payment option through integrated Stripe functionality.
-### 🗓️📑Booking Calendar with Order Details:
-Enhance booking management with an interactive calendar displaying comprehensive order details.
-### 📊📑 Reports with Order Details:
-Generate detailed reports, providing insights into your rental business's performance.
-### 📊🔄 Export Reports in CSV:
-Export reports in CSV format for easy sharing and external analysis.
-### 📄🔄 PDF Booking Receipt:
-Provide customers with professional and printable PDF booking receipts.
-### 📧🔄Email Functionality:
- Enhance communication with built-in email functionality for booking-related correspondence.
+**💳🔄 Paypal Integration:** Expand payment options with seamless Paypal integration for secure transactions.
+**💳🔄 Stripe Integration:** Provide users with another secure payment option through integrated Stripe functionality.
+**🗓️📑Booking Calendar with Order Details:** Enhance booking management with an interactive calendar displaying comprehensive order details.
+**📊📑 Reports with Order Details:** Generate detailed reports, providing insights into your rental business's performance.
+**📊🔄 Export Reports in CSV:** Export reports in CSV format for easy sharing and external analysis.
+**📄🔄 PDF Booking Receipt:** Provide customers with professional and printable PDF booking receipts.
+**📧🔄Email Functionality:** Enhance communication with built-in email functionality for booking-related correspondence.
 
 
 
