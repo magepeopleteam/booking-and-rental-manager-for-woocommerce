@@ -46,37 +46,37 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 ## Free Version Of The Plugin Offers:
 
 **🚲🚗 Bike/Car Rent (Single Day:** Enable customers to effortlessly book bikes or cars for a single day with ease.
-**🚲🚗Bike/Car Rent (Multiple Days:** Provide flexibility with multi-day bike or car rentals for extended travel plans.
+**🚲🚗 Bike/Car Rent (Multiple Days:** Provide flexibility with multi-day bike or car rentals for extended travel plans.
 **👗 Dress Rent (Single/Multiple Day:** Provide dress rentals, accommodating both single-day and extended-use bookings.
 **📅 Doctor/Lawyer Appointment:** Simplify scheduling appointments with healthcare professionals or legal advisors.
-**🏨Resort Booking:** Streamline resort bookings, offering guests a seamless platform to secure their stay.
+**🏨 Resort Booking:** Streamline resort bookings, offering guests a seamless platform to secure their stay.
 **🛠️ Equipment Rent:** Efficiently manage equipment rentals, providing a straightforward booking process.
-**💲Daywise Price Configuration:** Configure rental prices based on specific days, ensuring accurate pricing.
+**💲 Daywise Price Configuration:** Configure rental prices based on specific days, ensuring accurate pricing.
 **💲 Hourly Price Configuration:** Set hourly rental rates for precise billing and flexibility in booking.
-**💲Daily Price Configuration:** Provide daily rental pricing options for various rental durations.
+**💲 Daily Price Configuration:** Provide daily rental pricing options for various rental durations.
 **🖼️ Single Rent Gallery Configuration:** Customize the display of single rental items with a gallery configuration.
 **📍 Pickup/Dropoff Location Settings:** Configure pickup and dropoff locations for a convenient rental experience.
-**🔄Related Rents:** Enhance user experience by showcasing related rental options for cross-selling.
+**🔄 Related Rents:** Enhance user experience by showcasing related rental options for cross-selling.
 **🌟 Highlight Features:** Draw attention to key features, making your rentals stand out to customers.
 **💲 Day-long Price Configuration:** Configure specific prices for day-long rentals, catering to varying needs
 **💲 Day-night Price Configuration:** Set distinct prices for day and night rentals, offering flexible pricing options.
 **👗 Dress Size Configuration:** Provide a personalized experience with configurable dress size options.
-**➕Extra Service Configuration:** Allow customers to enhance their experience with configurable extra services.
+**➕ Extra Service Configuration:** Allow customers to enhance their experience with configurable extra services.
 **🔄 Available Shortcode for Showing the Rent List:** Utilize shortcodes to seamlessly display your rental list on any page.
-**⚙️Detailed Rent Settings and Date Configuration:** Customize detailed rental settings and date configurations for precision.
+**⚙️ Detailed Rent Settings and Date Configuration:** Customize detailed rental settings and date configurations for precision.
 **🔄 Different Rent List Styles:** Enhance visual appeal by choosing from various styles for displaying rental lists.
 **🎨 Style Settings:** Customize the look and feel of your rental listings with style settings.
 **🔄 Slider Settings:** Utilize slider settings for a dynamic and interactive presentation of rental items.
 **🖥️ Front-end Booking Dashboard:** Provide customers with a user-friendly front-end booking dashboard.
-**🙏Thank You Page Selection:** Allow customization by letting users select their preferred thank-you page.
+**🙏 Thank You Page Selection:** Allow customization by letting users select their preferred thank-you page.
 **📑 Order List with Details:** Easily view and manage orders with comprehensive details.
-**💰Tax Settings:** Manage tax settings seamlessly for accurate financial transactions.
-**📦Inventory Settings:** Efficiently manage inventory settings for smooth rental operations.
+**💰 Tax Settings:** Manage tax settings seamlessly for accurate financial transactions.
+**📦 Inventory Settings:** Efficiently manage inventory settings for smooth rental operations.
 **🌐 Cross-Browser Support:** Ensure compatibility across various browsers for a seamless user experience.
-**📱Responsive and SEO-friendly:** Create a responsive and SEO-friendly rental platform for increased visibility.
-**🌐🗣️Multilingual Translation Support:** Cater to a diverse audience with multilingual translation support.
-**🎨🔄Works with Any Standards-Compliant WordPress Theme:** Seamlessly integrate with any WordPress theme following standard compliance.
-**🔗💼WooCommerce Integration:** Integrate smoothly with WooCommerce, expanding your e-commerce capabilities.
+**📱 Responsive and SEO-friendly:** Create a responsive and SEO-friendly rental platform for increased visibility.
+**🌐🗣️ Multilingual Translation Support:** Cater to a diverse audience with multilingual translation support.
+**🎨🔄 Works with Any Standards-Compliant WordPress Theme:** Seamlessly integrate with any WordPress theme following standard compliance.
+**🔗💼 WooCommerce Integration:** Integrate smoothly with WooCommerce, expanding your e-commerce capabilities.
 **💳🔄 Supports All WooCommerce Payment Methods:** Ensure flexibility by supporting all WooCommerce payment methods.
 
 ### Meet your higher business demand with the pro version of the plugin:
@@ -85,11 +85,11 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 
 **💳🔄 Paypal Integration:** Expand payment options with seamless Paypal integration for secure transactions.
 **💳🔄 Stripe Integration:** Provide users with another secure payment option through integrated Stripe functionality.
-**🗓️📑Booking Calendar with Order Details:** Enhance booking management with an interactive calendar displaying comprehensive order details.
+**🗓️📑 Booking Calendar with Order Details:** Enhance booking management with an interactive calendar displaying comprehensive order details.
 **📊📑 Reports with Order Details:** Generate detailed reports, providing insights into your rental business's performance.
 **📊🔄 Export Reports in CSV:** Export reports in CSV format for easy sharing and external analysis.
 **📄🔄 PDF Booking Receipt:** Provide customers with professional and printable PDF booking receipts.
-**📧🔄Email Functionality:** Enhance communication with built-in email functionality for booking-related correspondence.
+**📧🔄 Email Functionality:** Enhance communication with built-in email functionality for booking-related correspondence.
 
 
 
@@ -112,13 +112,13 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 [rent-list type='' style='grid' show='' order='DESC']
 `
 
-### Shortcode to show only bike/car for single day type rent list:
+### Shortcode to show only bike/car for single-day type rent list:
 
 `
 [rent-list type='bike_car_sd']
 `
 
-### Shortcode to show grid style rent list:
+### Shortcode to show grid-style rent list:
 
 `
 [rent-list style='grid']
@@ -129,7 +129,7 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 [rent-list style='list']
 `
 
-### Shortcode to show only six items in rent list:
+### Shortcode to show only six items in the rent list:
 
 `
 [rent-list show='6']
@@ -148,14 +148,14 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 `
 
 = PAYMENT GATEWAYS =
-Our Plugin Works with WooCommerce and without WooCommerce. So all payment methods of WooCommerce will work with this plugin, and this is a very good advantage of this plugin. And without wooCommerce, we have our own PayPal and stripe payment method integration.
+Our Plugin Works with WooCommerce and without WooCommerce. So all payment methods of WooCommerce will work with this plugin, and this is a very good advantage of this plugin. And without wooCommerce, we have our own PayPal and Stripe payment method integration.
 
 
 = Support and Suggestions =
 If you need any further assistance or support, do contact us at this [support form](https://mage-people.com/submit-ticket/). We are very open to your suggestions. So do feel free to tell us if there is anything we can do to improve the plugin. 
 
 = Theme Compatibility =
-It will compatible with any standards compliant wordpress theme.
+It will be compatible with any standards-compliant wordpress theme.
 
 
 == Installation ==
@@ -226,7 +226,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 = 1.1.6 =
 * WooCommerce integration.
-* Fixed bug with flatsome theme
+* Fixed bug with flat some theme
 
 = 1.1.5 =
 * Donut template added.
