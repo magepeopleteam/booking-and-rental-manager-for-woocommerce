@@ -27,6 +27,15 @@
 			<?php do_action( 'rbfw_item_exs_pricing_after', $rbfw_id ); ?>
 		</div>
 
+        <div class="mp_tab_item active" data-tab-item="#travel_off_days">
+            <div class='rbfw_general_rbfw_sec <?php echo esc_attr( $gen_class ); ?>' id='rbfw_general_rbfw_sec'>
+                <?php do_action( 'rbfw_item_pricing_after', $rbfw_id ); ?>
+            </div>
+            <?php do_action( 'rbfw_item_exs_pricing_before', $rbfw_id ); ?>
+            <?php rbfw_off_days_config( $rbfw_id ); ?>
+            <?php do_action( 'rbfw_item_exs_pricing_after', $rbfw_id ); ?>
+        </div>
+
 		<?php
 		do_action( 'rbfw_location_config_before', $rbfw_id );
 		rbfw_location_config($rbfw_id);
@@ -207,6 +216,7 @@
 		</tr>
 		<?php
 	}
+
 
 	function rbfw_extra_service_config( $post_id ) {
 		$rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
@@ -863,6 +873,157 @@
 		$resort_function = new RBFW_Resort_Function();
 		$resort_function->rbfw_resort_admin_scripts(get_the_ID());
 	}
+
+
+
+function rbfw_off_days_config( $post_id ) {
+    $rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
+    $rbfw_size_data          = get_post_meta( $post_id, 'rbfw_size_data', true ) ? get_post_meta( $post_id, 'rbfw_size_data', true ) : [];
+    $rbfw_pickup_data        = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
+    $rbfw_dropoff_data       = get_post_meta( $post_id, 'rbfw_dropoff_data', true ) ? get_post_meta( $post_id, 'rbfw_dropoff_data', true ) : [];
+    wp_nonce_field( 'rbfw_ticket_type_nonce', 'rbfw_ticket_type_nonce' );
+    $hourly_rate             = get_post_meta( get_the_id(), 'rbfw_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_hourly_rate', true ) : '';
+    $daily_rate              = get_post_meta( get_the_id(), 'rbfw_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_daily_rate', true ) : '';
+    $rbfw_item_type          = get_post_meta( get_the_id(), 'rbfw_item_type', true ) ? get_post_meta( get_the_id(), 'rbfw_item_type', true ) : 'bike_car_sd';
+    $rbfw_enable_pick_point  = get_post_meta( get_the_id(), 'rbfw_enable_pick_point', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_pick_point', true ) : 'no';
+    $rbfw_enable_dropoff_point  = get_post_meta( get_the_id(), 'rbfw_enable_dropoff_point', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_dropoff_point', true ) : 'no';
+    $rbfw_enable_daywise_price  = get_post_meta( get_the_id(), 'rbfw_enable_daywise_price', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_daywise_price', true ) : 'no';
+    $rbfw_enable_hourly_rate = get_post_meta( get_the_id(), 'rbfw_enable_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_hourly_rate', true ) : 'no';
+    $rbfw_enable_daily_rate  = get_post_meta( get_the_id(), 'rbfw_enable_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_daily_rate', true ) : 'yes';
+    $rbfw_resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];
+    $rbfw_bike_car_sd_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) : [];
+    $rbfw_enable_resort_daylong_price  = get_post_meta( get_the_id(), 'rbfw_enable_resort_daylong_price', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_resort_daylong_price', true ) : 'no';
+
+
+    $rbfw_item_stock_quantity = !empty(get_post_meta( get_the_id(), 'rbfw_item_stock_quantity', true )) ? get_post_meta( get_the_id(), 'rbfw_item_stock_quantity', true ) : 0;
+    $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
+
+    $rbfw_sd_appointment_ondays_data = get_post_meta( $post_id, 'rbfw_sd_appointment_ondays', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_ondays', true ) : [];
+    $rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) : '';
+
+    $rbfw_enable_start_end_date  = get_post_meta( $post_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $post_id, 'rbfw_enable_start_end_date', true ) : 'yes';
+    $rbfw_event_start_date  = get_post_meta( $post_id, 'rbfw_event_start_date', true ) ? get_post_meta( $post_id, 'rbfw_event_start_date', true ) : '';
+    $rbfw_event_start_time  = get_post_meta( $post_id, 'rbfw_event_start_time', true ) ? get_post_meta( $post_id, 'rbfw_event_start_time', true ) : '';
+    $rbfw_event_end_date  = get_post_meta( $post_id, 'rbfw_event_end_date', true ) ? get_post_meta( $post_id, 'rbfw_event_end_date', true ) : '';
+    $rbfw_event_end_time  = get_post_meta( $post_id, 'rbfw_event_end_time', true ) ? get_post_meta( $post_id, 'rbfw_event_end_time', true ) : '';
+    ?>
+
+
+    <div class="dFlex">
+        <span class="_max_300_fs_label">Off Day</span>
+        <div class="groupCheckBox flexWrap">
+            <input type="hidden" name="wbtm_off_days" value="">
+            <label class="customCheckboxLabel min_200">
+                <input type="checkbox" data-checked="monday">
+                <span class="customCheckbox">Monday</span>
+            </label>
+            <label class="customCheckboxLabel min_200">
+                <input type="checkbox" data-checked="tuesday">
+                <span class="customCheckbox">Tuesday</span>
+            </label>
+            <label class="customCheckboxLabel min_200">
+                <input type="checkbox" data-checked="wednesday">
+                <span class="customCheckbox">Wednesday</span>
+            </label>
+            <label class="customCheckboxLabel min_200">
+                <input type="checkbox" data-checked="thursday">
+                <span class="customCheckbox">Thursday</span>
+            </label>
+            <label class="customCheckboxLabel min_200">
+                <input type="checkbox" data-checked="friday">
+                <span class="customCheckbox">Friday</span>
+            </label>
+            <label class="customCheckboxLabel min_200">
+                <input type="checkbox" data-checked="saturday">
+                <span class="customCheckbox">Saturday</span>
+            </label>
+            <label class="customCheckboxLabel min_200">
+                <input type="checkbox" data-checked="sunday">
+                <span class="customCheckbox">Sunday</span>
+            </label>
+        </div>
+    </div>
+
+
+
+    <h2 class="h4 text-primary p-0 my-1">
+        <?php echo ''.esc_html__( 'Off Day Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?>
+    </h2>
+
+
+    <div class='rbfw-item-type '>
+        <div class="rbfw_form_group" data-table="rbfw_item_type_table">
+
+            <div class="off_date_range_content" style="display: none">
+                <div class="off_date_range_child" style="display: flex">
+                    <section class="component d-flex justify-content-between mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+                            <div class=" d-flex justify-content-between align-items-center">
+                                <input type="text" placeholder="YYYY-MM-DD" name="off_days_start[]" class="rbfw_off_days_range" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" readonly>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="component d-flex justify-content-between mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+                            <div class=" d-flex justify-content-between align-items-center">
+                                <input type="text" placeholder="YYYY-MM-DD" name="off_days_end[]"  class="rbfw_off_days_range" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="mp_event_remove_move">
+                        <button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="form-table rbfw_item_type_table off_date_range">
+
+                <div class="off_date_range_child" style="display: flex">
+                    <section class="component d-flex justify-content-between mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+                            <div class=" d-flex justify-content-between align-items-center">
+                                <input type="text" placeholder="YYYY-MM-DD" name="off_days_start[]" class="rbfw_off_days_range" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" readonly>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="component d-flex justify-content-between mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+                            <div class=" d-flex justify-content-between align-items-center">
+                                <input type="text" placeholder="YYYY-MM-DD" name="off_days_end[]"  class="rbfw_off_days_range" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="rbfw_bike_car_sd_wrapper" style="display: <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;">
+        <section class="component d-flex flex-column justify-content-between align-items-start mb-2">
+            <p class="mt-2" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
+                <button id="add-date-range-row" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+            </p>
+        </section>
+    </div>
+
+
+
+
+
+    <?php
+}
+
+
+
+
+
 
 	add_action( 'rbfw_meta_box_tab_name', 'rbfw_add_meta_box_tab_faq', 100 );
 	function rbfw_add_meta_box_tab_faq( $rbfw_id ) {
@@ -1809,6 +1970,20 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 
 		);
 		new RMFWAddMetaBox( $rbfw_pricing_meta_boxs_args );
+
+        $rbfw_off_days_meta_boxs_args = array(
+            'meta_box_id'    => 'travel_off_days',
+            'meta_box_title' => '<i class="fa-regular fa-calendar-xmark"></i>' .__( 'Off Days', 'booking-and-rental-manager-for-woocommerce' ),
+            'screen'         => array( 'rbfw_item' ),
+            'context'        => 'normal',
+            'priority'       => 'low',
+            'callback_args'  => array(),
+            'nav_position'   => 'none',
+            'item_name'      => "MagePeople",
+            'item_version'   => "2.0",
+
+        );
+        new RMFWAddMetaBox( $rbfw_off_days_meta_boxs_args );
 		
 		do_action('rbfw_tax_meta_boxs');
 
@@ -1847,64 +2022,6 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 				'rbfw_tax_meta_boxs' => $rbfw_tax_meta_boxs
 			),
 		);
-
-
-        $rbfw_off_days_meta_boxs = array(
-            'page_nav' => __( 'Off Days', 'booking-and-rental-manager-for-woocommerce' ),
-            'priority' => 10,
-            'sections' => array(
-                'section_2' => array(
-                    'title'       => __( 'Date Range', 'booking-and-rental-manager-for-woocommerce' ),
-                    'description' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
-
-                    'options'     => array(
-
-                        array(
-                            'id'          => 'rbfw_dt_sidebar_testimonials',
-                            'title'       => __( 'Date Range:', 'booking-and-rental-manager-for-woocommerce' ),
-                            'details'     => __( '', 'booking-and-rental-manager-for-woocommerce' ),
-                            'collapsible' => false,
-                            'type'        => 'repeatable',
-                            'title_field' => 'rbfw_dt_sidebar_testimonial_title',
-                            'btn_text'    => 'Add Date Range',
-                            'fields'      => array(
-                                array(
-                                    'type'    => 'textarea',
-                                    'default' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                                    'args'    => '',
-                                    'item_id' => 'rbfw_dt_sidebar_testimonial_text',
-                                    'name'    => 'Text',
-                                )
-                            ),
-                        )
-                    )
-
-
-                ),
-
-            ),
-        );
-
-        $rbfw_off_days_meta_boxs_args = array(
-            'meta_box_id'    => 'rbfw_tax_settings_meta_boxes',
-            'meta_box_title' => '<i class="fa-solid fa-calendar-days"></i>' .__( 'Off Days', 'booking-and-rental-manager-for-woocommerce' ),
-            'screen'         => array( 'rbfw_item' ),
-            'context'        => 'normal',
-            'priority'       => 'low',
-            'callback_args'  => array(),
-            'nav_position'   => 'none',
-            'item_name'      => "MagePeople",
-            'item_version'   => "2.0",
-            'panels'         => array(
-                'rbfw_off_days_meta_boxs' => $rbfw_off_days_meta_boxs
-            ),
-        );
-
-
-        new RMFWAddMetaBox( $rbfw_off_days_meta_boxs_args );
-
-
-
 
 
 

@@ -827,3 +827,18 @@ function rbfw_mps_checkout_header_link(){
 
 
 /*start multiple day pricing booking*/
+
+
+jQuery(document).on('click', '.groupCheckBox .customCheckboxLabel', function () {
+    let parent = jQuery(this).closest('.groupCheckBox');
+    let value = '';
+    let separator = ',';
+    parent.find(' input[type="checkbox"]').each(function () {
+        if (jQuery(this).is(":checked")) {
+            let currentValue = jQuery(this).attr('data-checked');
+            value = value + (value ? separator : '') + currentValue;
+        }
+    }).promise().done(function () {
+        parent.find('input[type="hidden"]').val(value);
+    });
+});
