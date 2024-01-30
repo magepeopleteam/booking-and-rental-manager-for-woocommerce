@@ -8707,6 +8707,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                 <div class="ppof-button add-item"><i class="fas fa-plus-square"></i> <?php echo esc_html($btntext); ?></div>
             </div>
 
+
             <?php
             return ob_get_clean();
         }
