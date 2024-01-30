@@ -13,7 +13,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Woocommerce Rental and Booking Manager for Bike, Car, Resort, Appointment, Dress, and Equipment. Simplify your reservation system for a memorable journey!
 
 == Description ==
-Booking & Rental Manager – WpRently is a complete solution for all booking, rental, and reservation services including Cars, Bikes, Party Dress, Parking, Equipment, and resort. The plugin will help to create your booking management system within your WordPress website with advanced capabilities that can be used to manage and offer bookings on the dates selected by customers.
+[Booking & Rental Manager – WpRently](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/) is a complete solution for all booking, rental, and reservation services including Cars, Bikes, Party Dress, Parking, Equipment, and resort. The plugin will help to create your booking management system within your WordPress website with advanced capabilities that can be used to manage and offer bookings on the dates selected by customers.
 
 ## The #1 Dynamic WordPress Rental And Booking Plugin
 
