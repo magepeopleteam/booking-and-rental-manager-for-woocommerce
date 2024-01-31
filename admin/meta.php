@@ -1848,65 +1848,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			),
 		);
 
-
-        $rbfw_off_days_meta_boxs = array(
-            'page_nav' => __( 'Off Days', 'booking-and-rental-manager-for-woocommerce' ),
-            'priority' => 10,
-            'sections' => array(
-                'section_2' => array(
-                    'title'       => __( 'Date Range', 'booking-and-rental-manager-for-woocommerce' ),
-                    'description' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
-
-                    'options'     => array(
-
-                        array(
-                            'id'          => 'rbfw_dt_sidebar_testimonials',
-                            'title'       => __( 'Date Range:', 'booking-and-rental-manager-for-woocommerce' ),
-                            'details'     => __( '', 'booking-and-rental-manager-for-woocommerce' ),
-                            'collapsible' => false,
-                            'type'        => 'repeatable',
-                            'title_field' => 'rbfw_dt_sidebar_testimonial_title',
-                            'btn_text'    => 'Add Date Range',
-                            'fields'      => array(
-                                array(
-                                    'type'    => 'textarea',
-                                    'default' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                                    'args'    => '',
-                                    'item_id' => 'rbfw_dt_sidebar_testimonial_text',
-                                    'name'    => 'Text',
-                                )
-                            ),
-                        )
-                    )
-
-
-                ),
-
-            ),
-        );
-
-        $rbfw_off_days_meta_boxs_args = array(
-            'meta_box_id'    => 'rbfw_tax_settings_meta_boxes',
-            'meta_box_title' => '<i class="fa-solid fa-calendar-days"></i>' .__( 'Off Days', 'booking-and-rental-manager-for-woocommerce' ),
-            'screen'         => array( 'rbfw_item' ),
-            'context'        => 'normal',
-            'priority'       => 'low',
-            'callback_args'  => array(),
-            'nav_position'   => 'none',
-            'item_name'      => "MagePeople",
-            'item_version'   => "2.0",
-            'panels'         => array(
-                'rbfw_off_days_meta_boxs' => $rbfw_off_days_meta_boxs
-            ),
-        );
-
-
-        new RMFWAddMetaBox( $rbfw_off_days_meta_boxs_args );
-
-
-
-
-
+        
 
 		$rbfw_date_time_meta_boxs = array(
 			'page_nav' => __( 'Date & Time', 'booking-and-rental-manager-for-woocommerce' ),

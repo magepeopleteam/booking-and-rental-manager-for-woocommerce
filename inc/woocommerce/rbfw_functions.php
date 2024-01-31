@@ -1120,7 +1120,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
 
     $item->add_meta_data( '_rbfw_id', $rbfw_id );
 
-    $rbfw_regf_info = $values['rbfw_regf_info'] ? $values['rbfw_regf_info'] : [];
+    $rbfw_regf_info = isset($values['rbfw_regf_info']) ? $values['rbfw_regf_info'] : [];
 
     if ( ! empty( $rbfw_regf_info ) ){
         $rbfw_regf_info_content  = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
