@@ -78,6 +78,22 @@
 
                 $appointment_days = json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true));
 
+                $off_dates = [];
+
+                $all_days = get_post_meta($post_id, 'rbfw_off_days', true);
+
+                $all_days = explode(',',$all_days);
+
+                foreach ($all_days as $all_day){
+                    $off_dates[] = $all_day;
+                }
+                echo '<pre>';
+                print_r($all_days);
+                exit;
+
+
+
+
                 ?>
 
 

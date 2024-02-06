@@ -3104,27 +3104,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                     theTarget.append(html);
                 });
 
-                jQuery(document).on('click', '#add-date-range-row',function(e){
-                    e.stopImmediatePropagation();
-                    var off_date_range_content = jQuery('.off_date_range_content').html();
-                    console.log('hhhh',off_date_range_content)
-                    jQuery('.off_date_range').append(off_date_range_content);
-                });
 
-
-                jQuery(document).on('click', '.remove-row',function(e){
-                    if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
-                        jQuery(this).parents('.off_date_range_child').remove();
-                    } else {
-                        return false;
-                    }
-                });
-
-                jQuery(document).on("click", ".rbfw_off_days_range", function () {
-                    jQuery(this).datepicker({
-                        dateFormat: 'dd-mm-yy'
-                    }).datepicker( "show" );
-                });
 
 
 

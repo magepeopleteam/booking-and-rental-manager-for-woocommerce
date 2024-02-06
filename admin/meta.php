@@ -906,42 +906,38 @@ function rbfw_off_days_config( $post_id ) {
     $rbfw_event_start_time  = get_post_meta( $post_id, 'rbfw_event_start_time', true ) ? get_post_meta( $post_id, 'rbfw_event_start_time', true ) : '';
     $rbfw_event_end_date  = get_post_meta( $post_id, 'rbfw_event_end_date', true ) ? get_post_meta( $post_id, 'rbfw_event_end_date', true ) : '';
     $rbfw_event_end_time  = get_post_meta( $post_id, 'rbfw_event_end_time', true ) ? get_post_meta( $post_id, 'rbfw_event_end_time', true ) : '';
+
+    $rbfw_off_days  = get_post_meta( $post_id, 'rbfw_off_days', true ) ? get_post_meta( $post_id, 'rbfw_off_days', true ) : '';
+
+    $off_day_array = $rbfw_off_days?explode(',', $rbfw_off_days):[];
+
+    $days = array('monday','tuesday','wednesday','thursday','friday','saturday');
+
+
+    $rbfw_offday_range  = get_post_meta( $post_id, 'rbfw_offday_range', true ) ? get_post_meta( $post_id, 'rbfw_offday_range', true ) : '';
+
+
+    /*echo '<pre>';
+    print_r($rbfw_offday_range);
+    exit;*/
+
+
+
     ?>
 
 
+
     <div class="dFlex">
-        <span class="_max_300_fs_label">Off Day</span>
-        <div class="groupCheckBox flexWrap">
-            <input type="hidden" name="wbtm_off_days" value="">
+    <span class="_max_300_fs_label">Off Day</span>
+    <div class="groupCheckBox flexWrap">
+    <input type="hidden" name="rbfw_off_days" value="<?php echo $rbfw_off_days ?>">
+        <?php foreach ($days as $day){ ?>
             <label class="customCheckboxLabel min_200">
-                <input type="checkbox" data-checked="monday">
-                <span class="customCheckbox">Monday</span>
+                <input type="checkbox" <?php echo in_array($day,$off_day_array)?'checked':'' ?>  data-checked="<?php echo $day ?>">
+                <span class="customCheckbox"><?php echo ucfirst($day) ?></span>
             </label>
-            <label class="customCheckboxLabel min_200">
-                <input type="checkbox" data-checked="tuesday">
-                <span class="customCheckbox">Tuesday</span>
-            </label>
-            <label class="customCheckboxLabel min_200">
-                <input type="checkbox" data-checked="wednesday">
-                <span class="customCheckbox">Wednesday</span>
-            </label>
-            <label class="customCheckboxLabel min_200">
-                <input type="checkbox" data-checked="thursday">
-                <span class="customCheckbox">Thursday</span>
-            </label>
-            <label class="customCheckboxLabel min_200">
-                <input type="checkbox" data-checked="friday">
-                <span class="customCheckbox">Friday</span>
-            </label>
-            <label class="customCheckboxLabel min_200">
-                <input type="checkbox" data-checked="saturday">
-                <span class="customCheckbox">Saturday</span>
-            </label>
-            <label class="customCheckboxLabel min_200">
-                <input type="checkbox" data-checked="sunday">
-                <span class="customCheckbox">Sunday</span>
-            </label>
-        </div>
+        <?php } ?>
+    </div>
     </div>
 
 
@@ -983,6 +979,8 @@ function rbfw_off_days_config( $post_id ) {
 
             <div class="form-table rbfw_item_type_table off_date_range">
 
+                <?php if(empty($rbfw_offday_range)){ ?>
+
                 <div class="off_date_range_child" style="display: flex">
                     <section class="component d-flex justify-content-between mb-2">
                         <div class="d-flex justify-content-between align-items-center">
@@ -1002,18 +1000,43 @@ function rbfw_off_days_config( $post_id ) {
                     </section>
                 </div>
 
+                <?php } else {  ?>
+                    <?php foreach ($rbfw_offday_range as $single){ ?>
+                        <div class="off_date_range_child" style="display: flex">
+                            <section class="component d-flex justify-content-between mb-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+                                    <div class=" d-flex justify-content-between align-items-center">
+                                        <input type="text" placeholder="YYYY-MM-DD" name="off_days_start[]" class="rbfw_off_days_range" value="<?php echo esc_attr( $single['from_date'] ); ?>" readonly>
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="component d-flex justify-content-between mb-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+                                    <div class=" d-flex justify-content-between align-items-center">
+                                        <input type="text" placeholder="YYYY-MM-DD" name="off_days_end[]"  class="rbfw_off_days_range" value="<?php echo esc_attr( $single['to_date'] ); ?>" readonly>
+                                    </div>
+                                </div>
+                            </section>
+                            <div class="mp_event_remove_move">
+                                <button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
+                            </div>
+                        </div>
+                    <?php } ?>
+                <?php } ?>
+
             </div>
         </div>
     </div>
+
     <div class="rbfw_bike_car_sd_wrapper" style="display: <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;">
         <section class="component d-flex flex-column justify-content-between align-items-start mb-2">
             <p class="mt-2" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
-                <button id="add-date-range-row" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                <button id="add-date-range-row" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add Another Range', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
             </p>
         </section>
     </div>
-
-
 
 
 
@@ -1667,7 +1690,11 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			$rbfw_variations_data 	 = isset( $_POST['rbfw_variations_data'] ) ? rbfw_array_strip( $_POST['rbfw_variations_data'] ) : [];
 			// End getting resort value
 
+            $rbfw_off_days 	 = isset( $_POST['rbfw_off_days'] ) ? rbfw_array_strip( $_POST['rbfw_off_days'] ) : '';
 
+            $off_days_start	 = isset( $_POST['off_days_start'] ) ? rbfw_array_strip( $_POST['off_days_start'] ) : '';
+
+            $off_days_end 	 = isset( $_POST['off_days_end'] ) ? rbfw_array_strip( $_POST['off_days_end'] ) : '';
 
 			// getting appointment days
 			$rbfw_sd_appointment_ondays 	 = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? rbfw_array_strip( $_POST['rbfw_sd_appointment_ondays'] ) : [];
@@ -1746,6 +1773,27 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			// saving variations data
 			update_post_meta( $post_id, 'rbfw_variations_data', $rbfw_variations_data );
 			// end saving variations data
+
+            update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
+
+
+            $off_schedules = [];
+            $from_dates = $off_days_start;
+            $to_dates = $off_days_end;
+            if (sizeof($from_dates) > 0) {
+                foreach ($from_dates as $key => $from_date) {
+                    if ($from_date && $to_dates[$key]) {
+                        $off_schedules[] = [
+                            'from_date' => $from_date,
+                            'to_date' => $to_dates[$key],
+                        ];
+                    }
+                }
+            }
+            update_post_meta($post_id, 'rbfw_offday_range', $off_schedules);
+
+
+
 
 			// saving FAQ switch
 			update_post_meta( $post_id, 'rbfw_enable_faq_content', $rbfw_enable_faq_content );
