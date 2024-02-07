@@ -520,7 +520,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     jQuery("#dropoff_date").datepicker("destroy");
                     jQuery('#dropoff_date').datepicker({
                         dateFormat: 'yy-mm-dd',
-                        minDate: new Date(gYear, gMonth - 1, gDay)
+                        minDate: new Date(gYear, gMonth - 1, gDay),
+                        beforeShowDay: function(date)
+                        {
+                            return rbfw_off_day_dates(date,'md','yes');
+                        }
                     });
                 });
             });

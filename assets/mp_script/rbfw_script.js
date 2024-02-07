@@ -827,10 +827,12 @@ function rbfw_mps_checkout_header_link(){
 
 /*start multiple day pricing booking*/
 
-function rbfw_off_day_dates(date){
+function rbfw_off_day_dates(date,type='',drop_off=''){
     var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     var day_in = weekday[date.getDay()];
     var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
+
+
 
     var curr_date = ("0" + (date.getDate())).slice(-2);
     var curr_month = ("0" + (date.getMonth() + 1)).slice(-2);
@@ -838,15 +840,30 @@ function rbfw_off_day_dates(date){
     var date_in = curr_date+"-"+curr_month+"-"+curr_year;
     var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
 
+
     if(jQuery.inArray( day_in, rbfw_off_days )>= 0){
-        return true;
+        if(type=='md'){
+            return [false, "notav", 'Not Available'];
+        }else{
+            return true;
+        }
     }else{
         if(jQuery.inArray( date_in, rbfw_offday_range )>= 0){
-            return true;
+            if(type=='md'){
+                return [false, "notav", 'Not Available'];
+            }else{
+                return true;
+            }
         }else{
-            return false;
+            if(type=='md'){
+                return [true, "av", "available"];
+            }else{
+                return false;
+            }
         }
     }
+
+
 }
 
 

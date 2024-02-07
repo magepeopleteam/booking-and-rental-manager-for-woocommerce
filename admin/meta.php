@@ -968,7 +968,7 @@ function rbfw_off_days_config( $post_id ) {
                             </div>
                         </div>
                     </section>
-                    <div class="mp_event_remove_move">
+                    <div class="component mp_event_remove_move">
                         <button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
                     </div>
                 </div>
@@ -1019,7 +1019,7 @@ function rbfw_off_days_config( $post_id ) {
                                     </div>
                                 </div>
                             </section>
-                            <div class="mp_event_remove_move">
+                            <div class="component mp_event_remove_move">
                                 <button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
                             </div>
                         </div>
@@ -1030,7 +1030,7 @@ function rbfw_off_days_config( $post_id ) {
         </div>
     </div>
 
-    <div class="rbfw_bike_car_sd_wrapper" style="display: <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;">
+    <div class="rbfw_bike_car_sd_wrapper">
         <section class="component d-flex flex-column justify-content-between align-items-start mb-2">
             <p class="mt-2" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
                 <button id="add-date-range-row" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add Another Range', 'booking-and-rental-manager-for-woocommerce' ); ?></button>

@@ -2,9 +2,14 @@
     $(document).ready(function() {
         const service_id = $('.rbfw-single-container').attr('data-service-id');
         // DatePicker
-        var dates = $('#rbfw_offday_range').val();
-
-
+        $('#pickup_date').datepicker({
+            dateFormat: 'yy-mm-dd',
+            minDate: 0,
+            beforeShowDay: function(date)
+            {
+                return rbfw_off_day_dates(date,'md');
+            }
+        });
 
         $('#pickup_time').change(function(e) {
             let pickup_date = $('#pickup_date').val();
