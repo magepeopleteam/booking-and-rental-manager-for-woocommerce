@@ -68,31 +68,13 @@
                 <?php
 
                 $rbfw_regf_info = [];
-
                 if(class_exists('Rbfw_Reg_Form')){
                     $ClassRegForm = new Rbfw_Reg_Form();
                     $rbfw_regf_info = $ClassRegForm->rbfw_get_regf_all_fields_name($post_id);
                     $rbfw_regf_info = json_encode($rbfw_regf_info);
                 }
                 $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
-
                 $appointment_days = json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true));
-
-                $off_dates = [];
-
-                $all_days = get_post_meta($post_id, 'rbfw_off_days', true);
-
-                $all_days = explode(',',$all_days);
-
-                foreach ($all_days as $all_day){
-                    $off_dates[] = $all_day;
-                }
-                echo '<pre>';
-                print_r($all_days);
-                exit;
-
-
-
 
                 ?>
 
@@ -103,6 +85,8 @@
                 <input type="hidden" name="rbfw_regf_info" id="rbfw_regf_info"  value='<?php echo $rbfw_regf_info; ?>'>
                 <input type="hidden" name="time_slot_switch" id="time_slot_switch"  value='<?php echo $time_slot_switch; ?>'>
                 <input type="hidden" name="appointment_days" id="appointment_days"  value='<?php echo $appointment_days; ?>'>
+                <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
+                <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
                 <input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
 			</form>
 		</div>
