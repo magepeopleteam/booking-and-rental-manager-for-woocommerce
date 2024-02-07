@@ -61,10 +61,10 @@ function rbfw_free_woocommerce_integrate(){
                 require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-status.php");
                 require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-meta.php");
                 require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_cart_price_function.php");
-                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_add_cart_function.php");
-                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_show_cart_function.php");
-                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_after_checkout_function.php");
-                require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_order_meta_function.php");
+                //require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_add_cart_function.php");
+                //require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_show_cart_function.php");
+                //require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_after_checkout_function.php");
+                //require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_order_meta_function.php");
 
             }
         }
