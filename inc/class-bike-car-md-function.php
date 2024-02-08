@@ -520,7 +520,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     jQuery("#dropoff_date").datepicker("destroy");
                     jQuery('#dropoff_date').datepicker({
                         dateFormat: 'yy-mm-dd',
-                        minDate: new Date(gYear, gMonth - 1, gDay)
+                        minDate: new Date(gYear, gMonth - 1, gDay),
+                        beforeShowDay: function(date)
+                        {
+                            return rbfw_off_day_dates(date,'md','yes');
+                        }
                     });
                 });
             });
@@ -1153,7 +1157,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     let the_html = '';
                     the_html += '<div class="rbfw_step_selected_date rbfw_muff_selected_date" step="'+step+'" data-type="bike_car_md">';
 
-                    the_html += '<div class="rbfw_muff_selected_date_col"><label><img src="<?php echo RBFW_PLUGIN_URL ?>/assets/images/muff_calendar_icon2.png"/><?php echo rbfw_string_return('rbfw_text_pickup_date',__('Pickup date','booking-and-rental-manager-for-woocommerce')); ?></label><span class="rbfw_muff_selected_date_value">'+pickup_date+'</span> <label><img src="<?php echo RBFW_PLUGIN_URL ?>/assets/images/muff_calendar_icon2.png"/><?php echo rbfw_string_return('rbfw_text_dropoff_date',__('Drop-off date','booking-and-rental-manager-for-woocommerce')); ?></label><span class="rbfw_muff_selected_date_value">'+dropoff_date+'</span></div>';
 
                     if(typeof pickup_time !== 'undefined' && typeof dropoff_time !== 'undefined'){
 

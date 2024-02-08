@@ -3104,6 +3104,11 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                     theTarget.append(html);
                 });
 
+
+
+
+
+
                 // Features Icon Popup
                 jQuery(document).on('click', '.rbfw_feature_icon_btn',function(e){
                     e.stopImmediatePropagation();

@@ -773,8 +773,6 @@ if (!class_exists('MageRBFWClass')) {
                 update_post_meta($pid, '_sold_individually', 'yes');
                 update_post_meta($pid, '_virtual', 'yes');
 
-                update_post_meta($pid, 'shipping_enable', $post->shipping_enable);
-
                 $terms = array('exclude-from-catalog', 'exclude-from-search');
                 wp_set_object_terms($pid, $terms, 'product_visibility');
                 update_post_meta($post_id, 'check_if_run_once', true);

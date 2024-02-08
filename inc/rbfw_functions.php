@@ -3468,3 +3468,34 @@ function rbfw_duplicate_post() {
 		}
 	}
 }
+
+function rbfw_off_days($post_id){
+    $off_days = [];
+    $all_days = get_post_meta($post_id, 'rbfw_off_days', true);
+    $all_days = explode(',',$all_days);
+    if(!empty($all_days)){
+        foreach ($all_days as $all_day){
+            $off_days[] = $all_day;
+        }
+    }
+    return json_encode($off_days);
+}
+
+function rbfw_off_dates($post_id){
+    $off_dates = [];
+    $off_date_ranges = get_post_meta($post_id, 'rbfw_offday_range', true);
+
+    if(!empty($off_date_ranges)){
+        foreach ($off_date_ranges as $off_date_range){
+            $format = 'd-m-Y';
+            $current = strtotime($off_date_range['from_date']);
+            $date2 = strtotime($off_date_range['to_date']);
+            $stepVal = '+1 day';
+            while( $current <= $date2 ) {
+                $off_dates[] = date($format, $current);
+                $current = strtotime($stepVal, $current);
+            }
+        }
+    }
+    return json_encode($off_dates);
+}

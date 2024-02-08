@@ -313,6 +313,8 @@
                 jQuery('tr.rbfw_enable_start_end_date_switch_row').hide();
                 jQuery('tr.rbfw_enable_start_end_date_field_row').hide();
 
+                jQuery('.rbfw_off_days').show();
+
             } else if (item_type == 'appointment') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
                 jQuery('.rbfw_general_price_config_wrapper').addClass('rbfw-d-none');
@@ -332,10 +334,14 @@
                 jQuery('tr[data-row=rbfw_time_slot_switch]').show();
                 jQuery('tr.rbfw_enable_start_end_date_switch_row').hide();
                 jQuery('tr.rbfw_enable_start_end_date_field_row').hide();
+                jQuery('[name="rbfw_off_days"]').val('');
+                jQuery('.rbfw_off_days input').prop('checked', false);
+                jQuery('.rbfw_off_days').hide();
+
+
                 let this_table_row_length = jQuery('.rbfw_bike_car_sd_price_table_row').length;
 
                 for (let index = 0; index < this_table_row_length; index++) {
-
                     if (index > 0) {
                         jQuery('.rbfw_bike_car_sd_price_table_row[data-key="' + index + '"]').remove();
                     }
@@ -363,6 +369,7 @@
                 jQuery('tr[data-row=rdfw_available_time]').show();
                 jQuery('tr.rbfw_enable_start_end_date_switch_row').hide();
                 jQuery('tr.rbfw_enable_start_end_date_field_row').hide();
+                jQuery('.rbfw_off_days').show();
             } else {
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
@@ -384,6 +391,9 @@
                 jQuery('tr[data-row=rdfw_available_time]').show();
                 jQuery('tr.rbfw_enable_start_end_date_switch_row').show();
                 //jQuery('tr.rbfw_enable_start_end_date_field_row').show();
+                jQuery('.rbfw_off_days').show();
+
+
             }
 
             return false;

@@ -4,7 +4,11 @@
         // DatePicker
         $('#pickup_date').datepicker({
             dateFormat: 'yy-mm-dd',
-            minDate: 0
+            minDate: 0,
+            beforeShowDay: function(date)
+            {
+                return rbfw_off_day_dates(date,'md');
+            }
         });
 
         $('#pickup_time').change(function(e) {

@@ -1,12 +1,10 @@
 /*start single day and appointment pricing booking*/
 
 /* Start Calendar Script */
-
 jQuery(function(){
 
     var defaultConfig = {
         weekDayLength: 1,
-        date:  rbfw_today_date(),
         onClickDate: onclick_cal_date,
         showYearDropdown: true,
         startOnMonday: true,
@@ -16,7 +14,8 @@ jQuery(function(){
         prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
         nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
         disable: function (date) {
-            return date <  rbfw_today_date();
+            return rbfw_off_day_dates(date);
+
         },
         customDateProps: (date) => ({
             classes: 'rbfw-date-element',
@@ -28,6 +27,29 @@ jQuery(function(){
     };
 
     var calendar = jQuery('#rbfw-bikecarsd-calendar').calendar(defaultConfig);
+    var date = new Date();
+    var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+    var day_in = weekday[date.getDay()];
+    var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
+    var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
+
+
+    var curr_date = ("0" + (date.getDate())).slice(-2);
+    var curr_month = ("0" + (date.getMonth() + 1)).slice(-2);
+    var curr_year = date.getFullYear();
+    var date_in = curr_date+"-"+curr_month+"-"+curr_year;
+
+
+    if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 ){
+        jQuery('.today.rbfw-date-element').attr('disabled','disabled');
+    }
+
+
+
+
+
+
+
 
     let rent_type = jQuery('#rbfw_rent_type').val();
     // Start: Calendar script
@@ -827,3 +849,90 @@ function rbfw_mps_checkout_header_link(){
 
 
 /*start multiple day pricing booking*/
+
+function rbfw_off_day_dates(date,type='',drop_off=''){
+
+
+
+
+    var curr_date = ("0" + (date.getDate())).slice(-2);
+    var curr_month = ("0" + (date.getMonth() + 1)).slice(-2);
+    var curr_year = date.getFullYear();
+    var date_in = curr_date+"-"+curr_month+"-"+curr_year;
+
+    var date_iii = new Date();
+
+
+    var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+    var day_in = weekday[date.getDay()];
+    var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
+
+
+
+
+    var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
+
+
+    if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || date <  date_iii){
+        if(type=='md'){
+            return [false, "notav", 'Not Available'];
+        }else{
+            return true;
+        }
+    }else{
+
+        if(type=='md'){
+            return [true, "av", "available"];
+        }else{
+            return false;
+        }
+    }
+
+
+}
+
+function rbfw_today_date() {
+    var default_d = new Date();
+
+    var new_d = changeTimezone(default_d, rbfw_calendar_object.default_timezone);
+
+    return new_d;
+}
+
+
+jQuery(document).on('click', '#add-date-range-row',function(e){
+    e.preventDefault();
+    var off_date_range_content = jQuery('.off_date_range_content').html();
+    console.log('hhhh',off_date_range_content);
+    jQuery('.off_date_range').append(off_date_range_content);
+});
+
+
+jQuery(document).on('click', '.remove-row',function(e){
+    if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+        jQuery(this).parents('.off_date_range_child').remove();
+    } else {
+        return false;
+    }
+});
+
+jQuery(document).on("click", ".rbfw_off_days_range", function (e) {
+    jQuery(this).datepicker({
+        dateFormat: 'dd-mm-yy'
+    }).datepicker( "show" );
+});
+
+
+jQuery(document).on('click', '.groupCheckBox .customCheckboxLabel', function () {
+    let parent = jQuery(this).closest('.groupCheckBox');
+    let value = '';
+    let separator = ',';
+    parent.find(' input[type="checkbox"]').each(function () {
+        if (jQuery(this).is(":checked")) {
+            let currentValue = jQuery(this).attr('data-checked');
+            value = value + (value ? separator : '') + currentValue;
+        }
+    }).promise().done(function () {
+        parent.find('input[type="hidden"]').val(value);
+    });
+});
