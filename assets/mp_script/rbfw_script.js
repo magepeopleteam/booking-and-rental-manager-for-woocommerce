@@ -27,6 +27,29 @@ jQuery(function(){
     };
 
     var calendar = jQuery('#rbfw-bikecarsd-calendar').calendar(defaultConfig);
+    var date = new Date();
+    var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+    var day_in = weekday[date.getDay()];
+    var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
+    var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
+
+
+    var curr_date = ("0" + (date.getDate())).slice(-2);
+    var curr_month = ("0" + (date.getMonth() + 1)).slice(-2);
+    var curr_year = date.getFullYear();
+    var date_in = curr_date+"-"+curr_month+"-"+curr_year;
+
+
+    if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 ){
+        jQuery('.today.rbfw-date-element').attr('disabled','disabled');
+    }
+
+
+
+
+
+
+
 
     let rent_type = jQuery('#rbfw_rent_type').val();
     // Start: Calendar script
@@ -828,9 +851,7 @@ function rbfw_mps_checkout_header_link(){
 /*start multiple day pricing booking*/
 
 function rbfw_off_day_dates(date,type='',drop_off=''){
-    var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
-    var day_in = weekday[date.getDay()];
-    var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
+
 
 
 
@@ -838,32 +859,44 @@ function rbfw_off_day_dates(date,type='',drop_off=''){
     var curr_month = ("0" + (date.getMonth() + 1)).slice(-2);
     var curr_year = date.getFullYear();
     var date_in = curr_date+"-"+curr_month+"-"+curr_year;
+
+    var date_iii = new Date();
+
+
+    var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+    var day_in = weekday[date.getDay()];
+    var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
+
+
+
+
     var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
 
 
-    if(jQuery.inArray( day_in, rbfw_off_days )>= 0){
+    if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || date <  date_iii){
         if(type=='md'){
             return [false, "notav", 'Not Available'];
         }else{
             return true;
         }
     }else{
-        if(jQuery.inArray( date_in, rbfw_offday_range )>= 0){
-            if(type=='md'){
-                return [false, "notav", 'Not Available'];
-            }else{
-                return true;
-            }
+
+        if(type=='md'){
+            return [true, "av", "available"];
         }else{
-            if(type=='md'){
-                return [true, "av", "available"];
-            }else{
-                return false;
-            }
+            return false;
         }
     }
 
 
+}
+
+function rbfw_today_date() {
+    var default_d = new Date();
+
+    var new_d = changeTimezone(default_d, rbfw_calendar_object.default_timezone);
+
+    return new_d;
 }
 
 

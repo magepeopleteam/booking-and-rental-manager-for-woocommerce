@@ -835,7 +835,11 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                 jQuery('#checkin_date').datepicker({
                     dateFormat: 'yy-mm-dd',
-                    minDate: 0
+                    minDate: 0,
+                    beforeShowDay: function(date)
+                    {
+                        return rbfw_off_day_dates(date,'md');
+                    }
                 });
 
                 jQuery('#checkin_date').change(function(e) {
@@ -847,7 +851,11 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     jQuery("#checkout_date").attr('value', '');
                     jQuery('#checkout_date').datepicker({
                         dateFormat: 'yy-mm-dd',
-                        minDate: new Date(gYear, gMonth - 1, gDay)
+                        minDate: new Date(gYear, gMonth - 1, gDay),
+                        beforeShowDay: function(date)
+                        {
+                            return rbfw_off_day_dates(date,'md');
+                        }
                     });
 
                 });

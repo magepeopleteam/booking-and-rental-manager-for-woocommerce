@@ -911,33 +911,27 @@ function rbfw_off_days_config( $post_id ) {
 
     $off_day_array = $rbfw_off_days?explode(',', $rbfw_off_days):[];
 
-    $days = array('monday','tuesday','wednesday','thursday','friday','saturday');
+    $days = array('monday','tuesday','wednesday','thursday','friday','saturday','sunday');
 
 
     $rbfw_offday_range  = get_post_meta( $post_id, 'rbfw_offday_range', true ) ? get_post_meta( $post_id, 'rbfw_offday_range', true ) : '';
-
-
-    /*echo '<pre>';
-    print_r($rbfw_offday_range);
-    exit;*/
-
 
 
     ?>
 
 
 
-    <div class="dFlex">
-    <span class="_max_300_fs_label">Off Day</span>
-    <div class="groupCheckBox flexWrap">
-    <input type="hidden" name="rbfw_off_days" value="<?php echo $rbfw_off_days ?>">
-        <?php foreach ($days as $day){ ?>
-            <label class="customCheckboxLabel min_200">
-                <input type="checkbox" <?php echo in_array($day,$off_day_array)?'checked':'' ?>  data-checked="<?php echo $day ?>">
-                <span class="customCheckbox"><?php echo ucfirst($day) ?></span>
-            </label>
-        <?php } ?>
-    </div>
+    <div style="<?php echo ($rbfw_item_type == 'appointment')?'display:none':'' ?>" class="dFlex rbfw_off_days">
+        <span class="_max_300_fs_label">Off Day</span>
+        <div class="groupCheckBox flexWrap">
+            <input type="hidden" name="rbfw_off_days" value="<?php echo $rbfw_off_days ?>">
+            <?php foreach ($days as $day){ ?>
+                <label class="customCheckboxLabel min_200">
+                    <input type="checkbox" <?php echo in_array($day,$off_day_array)?'checked':'' ?>  data-checked="<?php echo $day ?>">
+                    <span class="customCheckbox"><?php echo ucfirst($day) ?></span>
+                </label>
+            <?php } ?>
+        </div>
     </div>
 
 
@@ -1032,7 +1026,7 @@ function rbfw_off_days_config( $post_id ) {
 
     <div class="rbfw_bike_car_sd_wrapper">
         <section class="component d-flex flex-column justify-content-between align-items-start mb-2">
-            <p class="mt-2" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
+            <p class="mt-2">
                 <button id="add-date-range-row" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add Another Range', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
             </p>
         </section>
@@ -2019,19 +2013,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 		);
 		new RMFWAddMetaBox( $rbfw_pricing_meta_boxs_args );
 
-        $rbfw_off_days_meta_boxs_args = array(
-            'meta_box_id'    => 'travel_off_days',
-            'meta_box_title' => '<i class="fa-regular fa-calendar-xmark"></i>' .__( 'Off Days', 'booking-and-rental-manager-for-woocommerce' ),
-            'screen'         => array( 'rbfw_item' ),
-            'context'        => 'normal',
-            'priority'       => 'low',
-            'callback_args'  => array(),
-            'nav_position'   => 'none',
-            'item_name'      => "MagePeople",
-            'item_version'   => "2.0",
 
-        );
-        new RMFWAddMetaBox( $rbfw_off_days_meta_boxs_args );
 		
 		do_action('rbfw_tax_meta_boxs');
 
@@ -2123,6 +2105,21 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			),
 		);
 		new RMFWAddMetaBox( $rbfw_date_time_meta_boxs_args );
+
+
+        $rbfw_off_days_meta_boxs_args = array(
+            'meta_box_id'    => 'travel_off_days',
+            'meta_box_title' => '<i class="fa-regular fa-calendar-xmark"></i>' .__( 'Off Days', 'booking-and-rental-manager-for-woocommerce' ),
+            'screen'         => array( 'rbfw_item' ),
+            'context'        => 'normal',
+            'priority'       => 'low',
+            'callback_args'  => array(),
+            'nav_position'   => 'none',
+            'item_name'      => "MagePeople",
+            'item_version'   => "2.0",
+
+        );
+        new RMFWAddMetaBox( $rbfw_off_days_meta_boxs_args );
 
 		$rbfw_location_meta_boxs_args = array(
 			'meta_box_id'    => 'rbfw_location_config',

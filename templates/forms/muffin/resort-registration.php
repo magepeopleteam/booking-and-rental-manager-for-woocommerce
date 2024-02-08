@@ -20,6 +20,7 @@
 	$rbfw_enable_resort_daylong_price  = get_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', true ) : 'no';
 	$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 ?>
+
 	<!--    Main Layout-->
 	<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
 		<!--    Left Side-->
@@ -70,6 +71,11 @@
 				</div>
 				<!-- ITEM END -->
 				<!-- ITEM -->
+
+                    <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
+                    <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
+
+
 				<div class="item">
 
 					<div class="item-content rbfw-datetime">
