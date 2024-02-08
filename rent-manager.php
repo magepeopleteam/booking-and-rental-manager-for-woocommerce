@@ -8,8 +8,6 @@
  * Author URI: https://www.mage-people.com/
  * Text Domain: booking-and-rental-manager-for-woocommerce 
  * Domain Path: /languages/
- * WC requires at least: 3.0.9
- * WC tested up to: 5.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) { die; } // Cannot access pages directly.

@@ -2054,7 +2054,6 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 		);
 
 
-
 		$rbfw_date_time_meta_boxs = array(
 			'page_nav' => __( 'Date & Time', 'booking-and-rental-manager-for-woocommerce' ),
 			'priority' => 10,
