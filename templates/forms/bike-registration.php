@@ -212,6 +212,9 @@
 				<?php endif; ?>
 				<!--    ITEM END        -->
 
+                    <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
+                    <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
+
 				<?php if($rbfw_enable_start_end_date == 'yes'){ ?>
 				<!-- ITEM -->
 				<div class="item">
