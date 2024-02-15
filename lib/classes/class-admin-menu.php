@@ -274,6 +274,9 @@ if (!class_exists('MageRBFWClass')) {
         }
 
         public function field_generator($option, $rbfw_id) {
+
+
+
             $id = isset($option['id']) ? $option['id'] : "";
             $type = isset($option['type']) ? $option['type'] : "";
             $details = isset($option['details']) ? $option['details'] : "";

@@ -197,7 +197,20 @@
 				</div>
 			</div>
 		</div>
+
+
+
+
+
+
 	</div>
+
+
+
+
+
+
+
 <?php
 	}
 
@@ -1034,6 +1047,10 @@ function rbfw_off_days_config( $post_id ) {
 
 
 
+
+
+
+
     <?php
 }
 
@@ -1701,6 +1718,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			$rbfw_event_start_time  = isset( $_POST['rbfw_event_start_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_time'] ) : '';
 			$rbfw_event_end_date  = isset( $_POST['rbfw_event_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_date'] ) : '';
 			$rbfw_event_end_time  = isset( $_POST['rbfw_event_end_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_time'] ) : '';
+            $rbfw_category_name        = isset( $_POST['rbfw_category_name'] ) ? rbfw_array_strip( $_POST['rbfw_category_name'] ) : '';
 
 			update_post_meta( $post_id, 'rbfw_enable_start_end_date', $rbfw_enable_start_end_date );
 			update_post_meta( $post_id, 'rbfw_event_start_date', $rbfw_event_start_date );
@@ -1711,7 +1729,9 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			update_post_meta( $post_id, 'rbfw_enable_hourly_rate', $rbfw_enable_hourly_rate );
 			update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
 			update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
+
 			update_post_meta( $post_id, 'rbfw_enable_dropoff_point', $rbfw_enable_dropoff_point );
+
 			update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
 			update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
 			update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
@@ -1769,6 +1789,8 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			// end saving variations data
 
             update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
+
+            update_post_meta( $post_id, 'rbfw_category_name', $rbfw_category_name );
 
 
             $off_schedules = [];
@@ -1904,6 +1926,14 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 							'type'        => 'add_to_cart_shortcode',
 							'placeholder' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
 						),
+
+                        array(
+                            'id'          => 'rbfw_add_category',
+                            'title'       => __( 'Cayegory Name:', 'booking-and-rental-manager-for-woocommerce' ),
+                            'details'     => __( 'If you want to display this item add-to-cart form on any post or page of your website, copy the shortcode and paste it where desired.', 'booking-and-rental-manager-for-woocommerce' ),
+                            'type'        => 'rbfw_add_category',
+                            'placeholder' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+                        ),
 
 						array(
 							'id'          => 'rbfw_feature_category',

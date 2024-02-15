@@ -38,6 +38,22 @@
 
 		return $arr;
 	}
+
+function rbfw_get_category_arr() {
+    $terms = get_terms( array(
+        'taxonomy'   => 'rbfw_item_caregory',
+        'hide_empty' => false,
+    ) );
+    $arr   = array(
+        '' => rbfw_string_return('rbfw_text_pls_select_category',__('Please Select a Category','booking-and-rental-manager-for-woocommerce'))
+    );
+    foreach ( $terms as $_terms ) {
+        $arr[ $_terms->term_id ] = $_terms->name;
+    }
+
+    return $arr;
+}
+
 	function rbfw_get_location_dropdown( $name, $saved_value = '', $class = '' ) {
 		$location_arr = rbfw_get_location_arr();
 		echo "<select name=$name class=$class>";
@@ -47,6 +63,17 @@
 		}
 		echo "</select>";
 	}
+
+
+function rbfw_get_category_dropdown( $name, $saved_value = '', $class = '' ) {
+    $category_arr = rbfw_get_category_arr();
+    echo "<select name=$name class=$class>";
+    foreach ( $category_arr as $key => $value ) {
+        $selected_text = ! empty( $saved_value ) && $saved_value == $key ? 'Selected' : '';
+        echo "<option value='$key' $selected_text>" . esc_html( $value ) . "</option>";
+    }
+    echo "</select>";
+}
 
 	function rbfw_get_option( $option, $section, $default = '' ) {
 		global $rbfw;
@@ -525,6 +552,9 @@
 	}
 	if ( ! function_exists( 'rbfw_field_generator' ) ) {
 		function rbfw_field_generator( $type, $option ) {
+
+
+
 			$FormFieldsGenerator = new RbfwFormFieldsGenerator();
 			if ( $type === 'text' ) {
 				return $FormFieldsGenerator->field_text( $option );
@@ -612,13 +642,19 @@
 				return $FormFieldsGenerator->field_time_slot( $option );
 			}elseif (  $type === 'add_to_cart_shortcode' ) {
 				return $FormFieldsGenerator->field_add_to_cart_shortcode( $option );
-			}elseif ( $type === 'feature_category' ) {
+			}elseif (  $type === 'rbfw_add_category' ) {
+                return $FormFieldsGenerator->field_rbfw_add_category( $option );
+            } elseif ( $type === 'feature_category' ) {
                 return $FormFieldsGenerator->field_feature_category( $option );
-            } else {
+            }elseif ( $type === 'time_slot' ) {
+				return $FormFieldsGenerator->field_time_slot( $option );
+			} else {
 				return '';
 			}
 		}
 	}
+
+
 	if ( ! function_exists( 'mage_array_strip' ) ) {
 		function mage_array_strip( $array_or_string ) {
 			if ( is_string( $array_or_string ) ) {

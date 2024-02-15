@@ -219,13 +219,34 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             return ob_get_clean();
         }
 
+
+
         public function field_add_to_cart_shortcode( $option ){
             global $post;
             $post_id = $post->ID;
             ob_start();
             ?>
             <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $post_id; ?>']</code>
-            
+
+            <?php
+            return ob_get_clean();
+        }
+
+        public function field_rbfw_add_category( $option ){
+            global $post;
+            $post_id = $post->ID;
+            ob_start();
+            ?>
+            <section class=" mb-2" >
+                <table id="repeatable-fieldset-one-pickup" class='form-table rbfw_pricing_table'>
+                    <tbody class="mp_event_type_sortable">
+                    <tr class="empty-row  location-pick-up-row">
+                        <td><?php rbfw_get_category_dropdown( 'rbfw_category_name',get_post_meta( $post_id, 'rbfw_category_name', true ) ? get_post_meta( $post_id, 'rbfw_category_name', true ) : '' ); ?></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </section>
+
             <?php
             return ob_get_clean();
         }
@@ -3887,6 +3908,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
         public function field_select( $option ){
 
+
             $id 	    = isset( $option['id'] ) ? $option['id'] : "";
             if(empty($id)) return;
             $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
@@ -6108,6 +6130,8 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
         public function field_select2( $option ){
 
+
+
             $id 	    = isset( $option['id'] ) ? $option['id'] : "";
             if(empty($id)) return;
             $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
@@ -6246,6 +6270,8 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
         }
 
         public function field_time_slot( $option ){
+
+
 
             $id 	    = isset( $option['id'] ) ? $option['id'] : "";
             if(empty($id)) return;

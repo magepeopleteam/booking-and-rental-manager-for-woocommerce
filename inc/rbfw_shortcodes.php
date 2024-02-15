@@ -8,12 +8,17 @@ if ( ! defined( 'ABSPATH' ) ) {
  ******************************/
 add_shortcode('rent-list', 'rbfw_rent_list_shortcode_func');
 function rbfw_rent_list_shortcode_func($atts = null) {
+
+
+
     $attributes = shortcode_atts( array(
         'style' => 'grid',
         'show'  => -1,
         'order' => 'DESC',
         'type'  => '',
-        'location' => ''
+        'location' => '',
+        'category' => '',
+        'columns' => '',
         ), $atts );
 
     $style  = $attributes['style'];      
@@ -21,6 +26,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $order  = $attributes['order'];
     $type   = $attributes['type'];
     $location   = $attributes['location'];
+    $category   = $attributes['category'];
+    $columns   = $attributes['columns'];
 
     $args = array(
         'post_type' => 'rbfw_item',
@@ -56,18 +63,41 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $args = array_merge($args,$location_query);
     endif;
 
+
+
+    if(!empty($category)):
+        $category = explode(',', $attributes['category']);
+        $category_query = array(
+            'meta_query' => array(
+                array(
+                    'key' => 'rbfw_category_name',
+                    'value' => $category,
+                    'compare' => 'IN',
+                )
+            )
+        );
+        $args = array_merge($args,$category_query);
+    endif;
+
     $query = new WP_Query($args);
 
     ob_start();
+
+    $grid_class = 'rbfw-w-33';
+
+    if($grid_class){
+        $grid_class = ($columns==1 || $columns==2)?'rbfw-w-50':(($columns==3)?'rbfw-w-33':(($columns==4)?'rbfw-w-25':(($columns==5)?'rbfw-w-20':'rbfw-w-20')));
+    }
+
     ?>
-    <div class="rbfw_rent_list_wrapper rbfw_rent_list_style_<?php echo esc_attr($style); ?>">
+    <div class="rbfw_rent_list_wrapper <?php echo $grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>">
     <?php
-    $d = 1;    
+    $d = 1;
     if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
     $the_content = get_the_content();
     if($style == 'grid'):
 
-        include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) ); 
+        include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) );
 
     elseif($style == 'list'):
 
@@ -96,7 +126,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         <?php
     endif;
 
-    wp_reset_query(); 
+    wp_reset_query();
     ?>
     </div>
     <?php

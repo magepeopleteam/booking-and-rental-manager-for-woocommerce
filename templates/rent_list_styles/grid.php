@@ -159,7 +159,7 @@ endif;
 
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
 ?>
-<div class="rbfw_rent_list_col  rbfw_grid_list_col_<?php echo $d; ?>">
+<div class="rbfw_rent_list_col   rbfw_grid_list_col_<?php echo $d; ?>">
     <div class="rbfw_rent_list_inner_wrapper">
         
         <div class="rbfw_rent_list_featured_img_wrap">
@@ -190,46 +190,43 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
 
             <div class="rbfw_muff_highlighted_features rbfw_rent_list_highlighted_features">
                 <?php if ( $rbfw_feature_category ) :
-                $n = 1;
+                    $n = 1;
                 foreach ( $rbfw_feature_category as $value ) :
-
-                $cat_title = $value['cat_title'];
+                    $cat_title = $value['cat_title'];
                 $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
 
                 if($n == 1){
-                ?>
-                <ul>
-                <?php
-                if(!empty($cat_features)){
-                    $i = 1;
-                    foreach ($cat_features as $features) {
-
-                            $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
-                            $title = $features['title'];
-
-                            if($title):
-                                if($i == 5){
-                                echo '<li style="width:100%"><a class="rbfw_muff_lmf_btn">'.$rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('View More Features','booking-and-rental-manager-for-woocommerce')).'</a></li>';
-                                }
-
-                                echo '<li '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i><span><abbr title="'.$title.'">' . substr($title, 0, 30) . '</abbr></span></li>';
-
-                            endif;
-
-                        $i++;
-                    }
-                }
-                ?>
-                </ul>
-                <?php
+                    ?>
+                    <ul>
+                        <?php
+                        if(!empty($cat_features)){
+                            $i = 1;
+                            foreach ($cat_features as $features) {
+                                $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+                                $title = $features['title'];
+                                if($title):
+                                    if($i == 5){
+                                        echo '<li style="width:100%"><a class="rbfw_muff_lmf_btn">'.$rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('View More Features','booking-and-rental-manager-for-woocommerce')).'</a></li>';
+                                    }
+                                    echo '<li ';
+                                    if($i > 4){
+                                        echo 'style="display:none"'; echo 'data-status="extra"';
+                                    } echo '><i class="'.mep_esc_html($icon).'"></i><span><abbr title="'.$title.'">' . substr($title, 0, 30) . '</abbr></span></li>';
+                                    endif;
+                                    $i++;
+                            }
+                        }
+                        ?>
+                    </ul>
+                    <?php
                 }
                 $n++;
                 endforeach;
                 endif;
                 ?>
             </div>
-
         </div>
+
         <div class="rbfw_rent_list_footer">
             <div class="rbfw_rent_list_button_wrap">
                 <a href="<?php echo esc_url($post_link); ?>" class="rbfw_rent_list_btn"><?php echo esc_html($book_now_label); ?></a>
