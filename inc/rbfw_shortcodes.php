@@ -85,7 +85,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
     $grid_class = 'rbfw-w-33';
 
-    if($grid_class){
+    if($columns){
         $grid_class = ($columns==1 || $columns==2)?'rbfw-w-50':(($columns==3)?'rbfw-w-33':(($columns==4)?'rbfw-w-25':(($columns==5)?'rbfw-w-20':'rbfw-w-20')));
     }
 
