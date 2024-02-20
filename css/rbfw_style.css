@@ -4151,6 +4151,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     height: 50px;
     text-decoration: none;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -4435,6 +4438,7 @@ img.rbfw_aig_hover-shadow {
     padding: 20px;
     border: 1px solid #E1E1E1;
     border-radius: 5px;
+    
 }
 
 .rbfw_muffin_template table.rbfw_room_price_table tbody td img {
