@@ -2414,3 +2414,7 @@ input.rbfw_time_slot_edit_slot_label {
 .mb-05 {
     margin-bottom: 05px;
 }
+
+.mp_tab_item div.updated{
+    display: none;
+}

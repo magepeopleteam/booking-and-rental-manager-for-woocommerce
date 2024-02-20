@@ -64,7 +64,7 @@ div.superSlider .slideIndicator {-webkit-flex-wrap: wrap;flex-wrap: wrap;margin:
 div.superSlider .slideIndicatorItem { border: 3px solid #DDD;margin: 5px;background-color: #DDD;width: 75px;overflow: hidden;position: relative;}
 div.superSlider .slideIndicatorItem.activeSlide { border-color: var(--active_color); background-color: var(--active_color);}
 /*******Icon indicator***************/
-div.superSlider .iconIndicator {position: absolute;z-index: 111;top: calc(50% - 15px);font-size: 30px;cursor: pointer;color: #222;}
+div.superSlider .iconIndicator {position: absolute;z-index: 111;top: calc(50% - 15px);font-size: 30px;cursor: pointer;color: #222;display: flex;justify-content: center;align-items: center;transform: translateY(-50%);}
 div.superSlider .iconIndicator:hover {color: #FFF;}
 div.superSlider .iconIndicator.prevItem {left: 20px;}
 div.superSlider .iconIndicator.nextItem {right: 20px;}
