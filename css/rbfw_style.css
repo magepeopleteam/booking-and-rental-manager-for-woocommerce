@@ -3307,9 +3307,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     background-color: var(--rbfw_muff_color3);
     color: var(--rbfw_muff_color5);
     border-radius: 5px;
-    padding: 6px 10px;
-    width: 50px;
-    height: 50px;
+    padding: 6px 13px;
+    width: 24px;
+    height: 35px;
     display: flex;
     align-items: center;
 }
@@ -3454,7 +3454,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_muff_registration_wrapper .rbfw_bikecarmd_backstep1_btn {
     background-color: var(--rbfw_muff_color3);
     box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
-    padding: 9px 43px;
+    padding: 15px ;
     width: 100%;
     margin-bottom: 0px;
     text-decoration: none;
@@ -3463,11 +3463,12 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     display: block;
     text-align: center;
     border-radius: 5px;
+    font-weight: bold;
 }
 
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn {
-    background-color: var(--rbfw_muff_color7);
-    box-shadow: 0px 8.40727px 15.7636px rgba(54, 250, 177, 0.3);
+    background-color: var(--rbfw_muff_color3);
+    box-shadow: 0px 8.40727px 15.7636px rgba(250, 54, 54, 0.3);
 }
 
 .rbfw_muff_registration_wrapper[data-type=resort] .rbfw-book-now-btn {
@@ -4343,6 +4344,12 @@ img.rbfw_aig_hover-shadow {
     cursor: pointer;
     text-decoration: none;
     color: var(--rbfw_single_page_base_color4);
+}
+
+.rbfw_muffin_template .rbfw_muff_lmf_btn {
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--rbfw_muff_color3);
 }
 
 .rbfw_muff_hf_inner_wrap ul li {
