@@ -623,7 +623,11 @@ div.mp_right_section {
 #rbfw_faq_accordion .rbfw_faq_content_wrapper {
     border-color: #f5f5f5;
 }
-
+.rbfw-post-sharing{
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+}
 .rbfw-post-sharing a {
     width: 30px;
     height: 30px;
@@ -635,6 +639,9 @@ div.mp_right_section {
     text-align: center;
     border-radius: 5px;
     line-height: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .rbfw-post-sharing a:hover {
