@@ -17,7 +17,7 @@
 
 .calendar-box .week .day:first-child,
 .calendar-box .week .day:last-child {
-  /*color: orange;*/
+  /*color: var(--rbfw_dt_color1);*/
 }
 
 /* sunday */
@@ -46,7 +46,7 @@
 }
 
 .calendar-box .day.selected span {
-  /*background: orange;*/
+  /*background: var(--rbfw_dt_color1);*/
 }
 
 .calendar-box .day.today span {
@@ -119,7 +119,7 @@
   background: transparent;
   border: none;
   padding: 10px;
-  color: #000;
+  color: var(--rbfw_single_page_base_color4);
   font-size: 2rem;
 }
 
@@ -160,32 +160,33 @@
   position: relative;
   display: inline-block;
   font-size: 110%;
+  background-color: var(--rbfw_dt_color1) !important;
 }
 
 /* weekend */
 
 .calendar-box .week:not(.start-on-monday) .day:first-child,
 .calendar-box .week:not(.start-on-monday) .day:last-child {
-  color: orange;
+  color: var(--rbfw_dt_color1);
 }
 
 /* sunday */
 
 .calendar-box .week:not(.start-on-monday) .day:first-child {
-  color: red;
+  color: var(--rbfw_single_page_base_color4);
 }
 
 /* start on monday - weekend */
 
 .calendar-box .week.start-on-monday .day:nth-child(6),
 .calendar-box .week.start-on-monday .day:last-child {
-  color: orange;
+  color: var(--rbfw_single_page_base_color4);
 }
 
 /* start on monday - sunday */
 
 .calendar-box .week.start-on-monday .day:last-child {
-  color: red;
+  color: var(--rbfw_single_page_base_color4);
 }
 
 .calendar-box .day.today span::after {
@@ -194,7 +195,7 @@
   bottom: 7px;
   left: 50%;
   transform: translateX(-50%);
-  border-bottom: 2px solid orange;
+  /* border-bottom: 2px solid var(--rbfw_dt_color1); */
   width: 10px;
   height: 1px;
 }
@@ -208,7 +209,7 @@
 }
 
 .calendar-box .week .day.selected span {
-  background: var(--rbfw_dt_color7) !important;
+  background: var(--rbfw_dt_color1) !important;
   color: white;
 }
 
@@ -259,7 +260,7 @@
 }
 
 .calendar-box .week .day span:not(.week .day[disabled="disabled"] span):hover {
-  background: var(--rbfw_dt_color7);
+  background: var(--rbfw_dt_color1);
   color: white;
 }
 

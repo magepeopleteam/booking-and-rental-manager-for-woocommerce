@@ -473,18 +473,19 @@ CSS for Single Page Template
     border: none;
     font-weight: normal;
     border-radius: 5px;
+    font-weight: bold;
 }
 
 .mp_right_section button.rbfw-book-now-btn[disabled] {
-    background: rgba(0, 0, 0, 0.6);
+    background: var(--rbfw_single_page_base_color4);
     color: #fff;
     cursor: not-allowed;
 }
 
 .mp_right_section button.rbfw-book-now-btn:hover,
 .mp_right_section button.rbfw-book-now-btn:focus {
-    background: var(--rbfw_single_page_base_color4);
-    color: #fff;
+    background: var(--rbfw_dt_color1);
+    color:#000;
 }
 
 .rbfw-duration {
@@ -2075,8 +2076,8 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
-    background: var(--rbfw_single_page_base_color4);
-    color: #fff;
+    background: #0ec40e2e;
+    color: var(--rbfw_single_page_base_color4);
     border-color: var(--rbfw_single_page_base_color4);
     opacity: 1;
 }
@@ -2085,11 +2086,11 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
     display: block;
     padding: 10px;
     text-transform: capitalize;
-    border: 1px solid #d3d3d3;
+    border: 1px solid #0ec40e2e;
     border-radius: 5px;
     width: 100%;
-    color: #017b01;
-    font-size: 16px;
+    color: #000;
+    font-size: 1rem;
     background-color: #fff;
     max-width: 100%;
     width: auto;
@@ -2140,13 +2141,14 @@ a.rbfw_back_step_btn {
 }
 
 .rbfw_step_selected_date {
-    background: #2d5fd5;
-    color: #fff;
-    padding: 5px;
+    background: var(--rbfw_dt_color1);
+    color: #000;
+    padding: 10px;
     border-radius: 5px;
     text-align: left;
     margin-bottom: 10px;
-    font-size: 14px;
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 table.rbfw_bikecarsd_price_table {
@@ -2268,7 +2270,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw-bikecarsd-calendar-footer i {
-    color: #0a6ece;
+    color: var(--rbfw_single_page_base_color4);
 }
 
 .rbfw_service_price {
