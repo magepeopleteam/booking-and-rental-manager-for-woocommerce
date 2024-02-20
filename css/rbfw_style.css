@@ -826,24 +826,24 @@ a.rbfw-related-product-btn:hover {
 }
 
 .tippy-box[data-theme~='blue'] {
-    background-color: blue;
+    background-color: var(--rbfw_single_page_base_color4);
     color: rgb(255, 255, 255);
 }
 
 .tippy-box[data-theme~='blue'][data-placement^='top']>.tippy-arrow::before {
-    border-top-color: blue;
+    border-top-color: var(--rbfw_single_page_base_color4);
 }
 
 .tippy-box[data-theme~='blue'][data-placement^='bottom']>.tippy-arrow::before {
-    border-bottom-color: blue;
+    border-bottom-color: var(--rbfw_single_page_base_color4);
 }
 
 .tippy-box[data-theme~='blue'][data-placement^='left']>.tippy-arrow::before {
-    border-left-color: blue;
+    border-left-color: var(--rbfw_single_page_base_color4);
 }
 
 .tippy-box[data-theme~='blue'][data-placement^='right']>.tippy-arrow::before {
-    border-right-color: blue;
+    border-right-color: var(--rbfw_single_page_base_color4);
 }
 
 div.superSlider .iconIndicator {
@@ -4342,7 +4342,7 @@ img.rbfw_aig_hover-shadow {
 .rbfw_muff_lmf_btn {
     cursor: pointer;
     text-decoration: none;
-    color: var(--rbfw_muff_color3);
+    color: var(--rbfw_single_page_base_color4);
 }
 
 .rbfw_muff_hf_inner_wrap ul li {
