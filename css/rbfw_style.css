@@ -5235,6 +5235,8 @@ img.rbfw_aig_hover-shadow {
     opacity: 1;
     padding: 10px 30px 10px 60px;
     max-height: inherit;
+    background-color: #fff;
+    border: 1px solid #eee;
 }
 
 #rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper {
