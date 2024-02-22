@@ -2418,3 +2418,6 @@ input.rbfw_time_slot_edit_slot_label {
 .mp_tab_item div.updated{
     display: none;
 }
+#rbfw_add_meta_box .select2.select2-container{
+    width: 80% !important;
+} 
