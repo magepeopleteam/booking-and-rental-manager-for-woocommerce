@@ -6590,6 +6590,7 @@ readers do not read off random characters that represent icons */
   padding: 0.7em 1em;
   cursor: pointer;
   transition: background-color 0.5s;
+  font-size: 16px;
 }
 #rbfw_add_meta_box .nav-item i {
   padding-right: 0.5rem;
