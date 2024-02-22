@@ -693,7 +693,8 @@ div.mp_right_section {
 
 .rbfw-related-product-thumb-wrap {
     overflow: hidden;
-    max-height: 210px;
+    height: 200px;
+    width: 100%;
 }
 
 .rbfw-related-product-thumb {
@@ -738,7 +739,7 @@ a.rbfw-related-product-btn {
     background: var(--rbfw_single_page_base_color4);
     color: #fff;
     padding: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     transition: 0.2s;
     font-size: 16px;
     line-height: 16px;
@@ -2972,11 +2973,25 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin: 15px;
     border-radius: 0px;
     text-align: center;
+    height:365px;
+}
+
+.owl-carousel .owl-item img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    width: 100%;
+    height: 200px;
 }
 
 .rbfw-related-product-inner {
     box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.1);
     padding: 5px;
+    display:flex; 
+    justify-content:space-between; 
+    flex-direction: column;
+    align-items: center; 
+    height: 100%;
 }
 
 .rbfw_bikecarmd_es_table {
