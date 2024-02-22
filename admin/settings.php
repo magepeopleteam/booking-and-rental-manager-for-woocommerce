@@ -46,7 +46,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'label' => __( 'On/Off Gutenburg', 'booking-and-rental-manager-for-woocommerce' ),
 				'desc' => __( 'Enable/Disable gutenburg editor.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type' => 'select',
-				'default' => 'on',
+				'default' => 'off',
 				'options' => array(
 					'on' => 'On',
 					'off'  => 'Off'
