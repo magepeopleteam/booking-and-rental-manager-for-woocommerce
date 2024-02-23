@@ -2055,7 +2055,7 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time {
-    width: 33.33%;
+    width: 31.33%;
     text-align: center;
     cursor: pointer;
     padding: 5px;
@@ -2092,10 +2092,14 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
-    background: #0ec40e2e;
-    color: var(--rbfw_single_page_base_color4);
+    background:#0ec40e2e;
+    color:  var(--rbfw_single_page_base_color4);
     border-color: var(--rbfw_single_page_base_color4);
     opacity: 1;
+}
+
+.rbfw_muffin_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span{
+    color:  var(--rbfw_dt_color2);
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time span.rbfw_bikecarsd_time_span {
@@ -2280,7 +2284,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw-bikecarsd-calendar-footer {
     font-size: 14px;
     text-align: left;
-    background: #f5f5f5;
+    background: var(--rbfw_dt_color2);
     padding: 10px;
     border-radius: 5px;
 }
@@ -2289,6 +2293,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     color: var(--rbfw_single_page_base_color4);
 }
 
+.rbfw_muffin_template .rbfw-bikecarsd-calendar-footer i {
+    color: var(--rbfw_muff_color3);
+}
 .rbfw_service_price {
     margin-bottom: 5px;
     width: 80px;
@@ -3447,14 +3454,14 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_minus {
-    background-color: var(--rbfw_muff_color3);
-    color: #fff;
+    background-color: var(--rbfw_dt_color5);
+    color: var(--rbfw_dt_color8);
     border-radius: 5px;
 }
 
 .rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_plus {
-    background-color: var(--rbfw_muff_color7);
-    color: #fff;
+    background-color: var(--rbfw_dt_color5);
+    color: var(--rbfw_dt_color8);
     border-radius: 5px;
 }
 
@@ -4017,7 +4024,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muffin_template #rbfw-bikecarsd-calendar {
-    background-color: #F5F6F8;
+    background-color:var(--rbfw_dt_color2);
     padding: 30px;
     margin-bottom: 20px;
     border-radius: 10px;
@@ -4273,19 +4280,19 @@ img.rbfw_aig_hover-shadow {
 }
 
 .rbfw_muffin_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time span.rbfw_bikecarsd_time_span {
-    border: 1px solid #EFEFEF;
-    background-color: #EFEFEF;
-    color: #838180;
+    border: 1px solid var(--rbfw_muff_color3);
+    background-color: var(--rbfw_muff_color1);
+    color: var(--rbfw_dt_color4);
 }
 
 .rbfw_muffin_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
-    background: var(--rbfw_muff_color7);
-    border-color: var(--rbfw_muff_color7);
+    background: var(--rbfw_muff_color3);
+    border-color: var(--rbfw_muff_color3);
 }
 
 .rbfw_muffin_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.selected:not(a.rbfw_bikecarsd_time.selected.disabled) span.rbfw_bikecarsd_time_span {
-    background: var(--rbfw_muff_color7);
-    border-color: var(--rbfw_muff_color7);
+    background: var(--rbfw_muff_color3);
+    border-color: var(--rbfw_muff_color3);
 }
 
 .rbfw_muff_selected_date {
@@ -4330,10 +4337,12 @@ img.rbfw_aig_hover-shadow {
 }
 
 .rbfw_muffin_template table.rbfw_bikecarsd_price_table thead {
-    background-color: #152C5B;
+    background-color: var(--rbfw_dt_color8);
     color: #fff;
 }
-
+.rbfw_muffin_template table.rbfw_bikecarsd_price_table thead th{
+    padding: 10px;
+}
 .rbfw_muffin_template table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n+1) {
     background-color: #F8F8F8;
 }
@@ -5524,8 +5533,31 @@ img.rbfw_aig_hover-shadow {
         padding-left: 0px;
     }
 }
+/* ------rbfw_muffin_template #rbfw-bikecarsd-calendar-----  */
+.rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .prev-button, .rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .next-button{
+    color: var(--rbfw_muff_color3);
+}
+.rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .week.start-on-monday .day {
+    color: var(--rbfw_muff_color3);
+}
+.rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .week .day span:not(.week .day[disabled="disabled"] span) {
+    background-color: var(--rbfw_muff_color3);
+}
 
+.rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .day.today span,.rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .week .day.selected span {
+    background-color: var(--rbfw_dt_color8) !important;;
+}
+.rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .week .day span:not(.week .day[disabled="disabled"] span):hover {
+    background: var(--rbfw_dt_color8) !important;
+}
 
+.rbfw_muffin_template .rbfw_back_step_btn:hover {
+    color: var(--rbfw_muff_color3);
+}
+.rbfw_muffin_template  .rbfw_muff_selected_date {
+    background: var(--rbfw_muff_color3);
+    color: var(--rbfw_muff_color1);
+}
 /* End Donut Template Css */
 
 .rbfw_donut_template .calendar-box .buttons-container {
