@@ -276,7 +276,7 @@ CSS for Single Page Template
     padding: 15px;
     background-image: url(images/arrow_down.png);
     background-repeat: no-repeat;
-    background-position: 95% 25px;
+    background-position: 98% 25px;
 }
 
 .pricing-content .price-type {
@@ -4374,10 +4374,10 @@ img.rbfw_aig_hover-shadow {
 
 .rbfw_muff_hf_inner_wrap {
     -webkit-box-flex: 0;
-    -webkit-flex: 0 0 50%;
-    -ms-flex: 0 0 50%;
-    flex: 0 0 50%;
-    max-width: 50%;
+    -webkit-flex: 0 0 48%;
+    -ms-flex: 0 0 48%;
+    flex: 0 0 48%;
+    max-width: 48%;
     position: relative;
     width: 100%;
 }
@@ -4405,7 +4405,7 @@ img.rbfw_aig_hover-shadow {
 
 .rbfw_muff_registration_wrapper[data-type="resort"] {
     border: none;
-    padding: 0;
+    padding: 20px;
     border-radius: 0;
 }
 
@@ -4428,7 +4428,7 @@ img.rbfw_aig_hover-shadow {
 }
 
 .rbfw_muffin_template .rbfw-datetime .rbfw-datetime-part {
-    width: 33.33%;
+    width: 30.9%;
 }
 
 .rbfw_muffin_template .rbfw-datetime .left {
@@ -4442,7 +4442,7 @@ img.rbfw_aig_hover-shadow {
 .rbfw_muffin_template .rbfw_chk_availability_btn {
     background-color: var(--rbfw_muff_color3);
     box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
-    padding: 14px 43px;
+    padding: 10px 43px;
     margin-bottom: 0px;
     text-decoration: none;
     cursor: pointer;
@@ -4451,6 +4451,7 @@ img.rbfw_aig_hover-shadow {
     border-radius: 5px;
     font-size: 16px;
     text-transform: capitalize;
+    font-weight: bold;
 }
 
 .rbfw_muffin_template .rbfw_room_price_label {
