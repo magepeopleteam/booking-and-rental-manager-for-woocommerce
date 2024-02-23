@@ -597,8 +597,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $content   .= '<table class="rbfw_bikecarsd_price_table rbfw_bikecarsd_es_price_table">';
                 $content   .= '<thead>';
                 $content   .= '<tr>';
-                $content   .= '<th class="w_80_pc">'.$rbfw->get_option('rbfw_text_service_name', 'rbfw_basic_translation_settings', __('Service Name','booking-and-rental-manager-for-woocommerce')).'</th>';
-    
+                $content   .= '<th class="w_50_pc">'.$rbfw->get_option('rbfw_text_service_name', 'rbfw_basic_translation_settings', __('Service Name','booking-and-rental-manager-for-woocommerce')).'</th>';
+                $content   .= '<th class="w_30_pc">'.$rbfw->get_option('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Price','booking-and-rental-manager-for-woocommerce')).'</th>';                
                 $content   .= '<th class="w_20_pc">'.$rbfw->get_option('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce')).'</th>';                
                 $content   .= '</tr>';             
                 $content   .= '</thead>';
@@ -622,7 +622,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 if($value['service_qty'] > 0){
 
                     $content   .= '<tr>';
-                    $content   .= '<td class="w_80_pc">';
+                    $content   .= '<td class="w_50_pc">';
                     $content   .= '<div>';
                     $content   .= $img;
                     $content   .= '</div>';
@@ -641,12 +641,12 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     $content   .= '<input type="hidden" name="rbfw_service_info['.$c.'][service_name]" value="'.$value['service_name'].'"/>';
                     $content   .= '</div>';           
                     $content   .= '</td>';                 
+                    $content   .= '<td class="w_30_pc">';
+                    $content   .= rbfw_mps_price($value['service_price']);
+                    $content   .= '</td>'; 
                     $content   .= '<td class="w_20_pc">';
                     $content   .= '<div class="rbfw_service_price_wrap">';
-                    $content   .= '<span class="rbfw_service_price">';
-                    $content   .= rbfw_mps_price($value['service_price']);
                     $content   .= '<input type="hidden" name="rbfw_service_info['.$c.'][service_price]" value="'.$value['service_price'].'"/>';
-                    $content   .= '</span>';
                     $content   .= '<div class="rbfw_qty_input">';
                     $content   .= '<a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>';
                     $content   .= '<input type="number" min="0" max="'.esc_attr($max_es_available_qty).'" value="0" name="rbfw_service_info['.$c.'][service_qty]" class="rbfw_service_qty" data-price="'.$value['service_price'].'" data-type="'.$value['service_name'].'" data-cat="service"/>';

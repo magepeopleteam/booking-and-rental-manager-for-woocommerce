@@ -63,7 +63,7 @@
 		<div class="rbfw_form_group rbfw_location_switch" >
 
 		<div class='rbfw-location-attributes-section location-section'>
-		<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Pick-up Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+		<h2 class="h5 text-white bg-primary mb-1 rounded-top"><?php esc_html_e( 'Pick-up Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		<div class="mp_tab_item_sub_sec_location">
 			<section class="component d-flex justify-content-between align-items-center mb-2"  >
 				<label scope="row" class="w-50"><?php esc_html_e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
@@ -131,7 +131,7 @@
 		</div>
 
 		<div class="mp_tab_item_sub_sec_location">
-			<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Drop-off Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+			<h2 class="h5 text-white bg-primary mb-1 rounded-top"><?php esc_html_e( 'Drop-off Location Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 			<section class="component d-flex justify-content-between align-items-center mb-2">
 				<div class="w-50 d-flex justify-content-between align-items-center">
 					<label class=""><?php esc_html_e( 'Drop-off Location', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
@@ -249,7 +249,7 @@
 		$rbfw_event_end_date  = get_post_meta( $post_id, 'rbfw_event_end_date', true ) ? get_post_meta( $post_id, 'rbfw_event_end_date', true ) : '';
 		$rbfw_event_end_time  = get_post_meta( $post_id, 'rbfw_event_end_time', true ) ? get_post_meta( $post_id, 'rbfw_event_end_time', true ) : '';
 		?>
-		<h2 class="h4 text-primary p-0 my-1"><?php echo ''.esc_html__( 'Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+		<h2 class="h5 text-white bg-primary mb-1 rounded-top"><?php echo ''.esc_html__( 'Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		
 		<section class="component d-flex justify-content-between align-items-center mb-2"  >
 			<label scope="row" class="w-50">
@@ -415,7 +415,7 @@
 		<!-- Bike and Car Single Date Configuration -->
 		<!-- Bike and Car Single Date Configuration -->
 		<div class="rbfw_bike_car_sd_wrapper" style="display: <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;">
-			<!-- <h2 class="h4 text-primary p-0 my-1"><?php echo esc_html_e( 'Price Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2> -->
+			<!-- <h2 class="h5 text-white bg-primary mb-1 rounded-top"><?php echo esc_html_e( 'Price Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2> -->
 			<section class="component d-flex flex-column justify-content-between align-items-start mb-2">
 				<table class='form-table rbfw_bike_car_sd_price_table'>
 					<thead>
@@ -527,7 +527,7 @@
 		} else {
 			echo esc_attr( 'none' );
 		} ?>;">
-		<h2 class="h4 text-primary p-0 my-1"><?php echo ''. esc_html__( 'Resort Price Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+		<h2 class="h5 text-white bg-primary mb-1 rounded-top"><?php echo ''. esc_html__( 'Resort Price Configuration :', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		<section class="component d-flex justify-content-between align-items-center mb-2">
 			<label scope="row" class="w-50">
 				<?php esc_html_e( 'Day-long Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?><i class="fas fa-question-circle tool-tips"><span></span></i>
@@ -629,7 +629,7 @@
 		
 		<div class="">
 			
-			<h2 class="h4 text-primary p-0 my-1"><?php echo esc_html_e( 'General Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+			<h2 class="h5 text-white bg-primary mb-1 rounded-top"><?php echo esc_html_e( 'General Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 			
 			<?php do_action( 'rbfw_before_general_price_table_row' ); ?>
 			
@@ -698,7 +698,7 @@
 				} else {
 					echo esc_attr( 'none' );
 				} ?>;">
-				<h2 class="h4 text-primary p-0 my-1"><?php echo esc_html_e( 'Day-wise Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+				<h2 class="h5 text-white bg-primary mb-1 rounded-top"><?php echo esc_html_e( 'Day-wise Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 				<section class="component d-flex justify-content-between align-items-center mb-2">
 					<table class='form-table'>
 						<?php do_action( 'rbfw_before_week_price_table_row' ); ?>
@@ -738,7 +738,7 @@
 		<?php do_action( 'rbfw_after_week_price_table',$post_id ); ?>
 
 		<div class="rbfw_es_price_config_wrapper " <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
-			<h2 class="h4 text-primary p-0 my-1"><?php echo ''. esc_html__( 'Extra Service Price Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+			<h2 class="h5 text-white bg-primary mb-1 rounded-top"><?php echo ''. esc_html__( 'Extra Service Price Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 			<section class="component d-flex flex-column justify-content-between align-items-start mb-2">
 				<table id="repeatable-fieldset-one" class='rbfw_pricing_table form-table'>
 					<thead>
@@ -920,44 +920,40 @@ function rbfw_off_days_config( $post_id ) {
     ?>
 
 
-
-    <div style="<?php echo ($rbfw_item_type == 'appointment')?'display:none':'' ?>" class="dFlex rbfw_off_days">
-        <span class="_max_300_fs_label">Off Day</span>
-        <div class="groupCheckBox flexWrap">
-            <input type="hidden" name="rbfw_off_days" value="<?php echo $rbfw_off_days ?>">
-            <?php foreach ($days as $day){ ?>
-                <label class="customCheckboxLabel min_200">
-                    <input type="checkbox" <?php echo in_array($day,$off_day_array)?'checked':'' ?>  data-checked="<?php echo $day ?>">
-                    <span class="customCheckbox"><?php echo ucfirst($day) ?></span>
-                </label>
-            <?php } ?>
-        </div>
-    </div>
-
-
-
-    <h2 class="h4 text-primary p-0 my-1">
+    <h2 class="h5 text-white bg-primary mb-1 rounded-top">
         <?php echo ''.esc_html__( 'Off Day Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?>
     </h2>
 
 
     <div class='rbfw-item-type '>
         <div class="rbfw_form_group" data-table="rbfw_item_type_table">
-
+			<div style=" <?php echo ($rbfw_item_type == 'appointment')?'display:none':'' ?>" class="component d-flex justify-content-start rbfw_off_days">
+				<label for=""><?php esc_html_e( 'Off Day', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+				<div class="groupCheckBox d-flex justify-content-between align-items-center ms-5">
+					<input type="hidden" name="rbfw_off_days" value="<?php echo $rbfw_off_days ?>">
+					<?php foreach ($days as $day){ ?>
+						<label class="customCheckboxLabel ">
+							<input style="margin-right:3px;" type="checkbox" <?php echo in_array($day,$off_day_array)?'checked':'' ?>  data-checked="<?php echo $day ?>">
+							<span class="customCheckbox pe-2"><?php echo ucfirst($day) ?></span>
+						</label>
+					<?php } ?>
+				</div>
+			</div>
+	
             <div class="off_date_range_content" style="display: none">
-                <div class="off_date_range_child" style="display: flex">
-                    <section class="component d-flex justify-content-between mb-2">
+                <div class="off_date_range_child component d-flex justify-content-between">
+                    <section class=" d-flex justify-content-between w-50">
                         <div class="d-flex justify-content-between align-items-center">
                             <label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
-                            <div class=" d-flex justify-content-between align-items-center">
+                            <div class="ms-5 d-flex justify-content-between align-items-center">
                                 <input type="text" placeholder="YYYY-MM-DD" name="off_days_start[]" class="rbfw_off_days_range" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" readonly>
                             </div>
                         </div>
                     </section>
-                    <section class="component d-flex justify-content-between mb-2">
-                        <div class="d-flex justify-content-between align-items-center">
+                    <section class="ms-5 d-flex justify-content-between w-50">
+                        <div class="ms-5 d-flex justify-content-between align-items-center">
                             <label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
-                            <div class=" d-flex justify-content-between align-items-center">
+                            <div class="ms-5 d-flex justify-content-between align-items-center">
                                 <input type="text" placeholder="YYYY-MM-DD" name="off_days_end[]"  class="rbfw_off_days_range" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
                             </div>
                         </div>
@@ -975,19 +971,19 @@ function rbfw_off_days_config( $post_id ) {
 
                 <?php if(empty($rbfw_offday_range)){ ?>
 
-                <div class="off_date_range_child" style="display: flex">
-                    <section class="component d-flex justify-content-between mb-2">
+                <div class="off_date_range_child component d-flex justify-content-between">
+                    <section class="d-flex justify-content-between w-50">
                         <div class="d-flex justify-content-between align-items-center">
                             <label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
-                            <div class=" d-flex justify-content-between align-items-center">
+                            <div class="ms-5 d-flex justify-content-between align-items-center">
                                 <input type="text" placeholder="YYYY-MM-DD" name="off_days_start[]" class="rbfw_off_days_range" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" readonly>
                             </div>
                         </div>
                     </section>
-                    <section class="component d-flex justify-content-between mb-2">
+                    <section class="ms-1 d-flex justify-content-between w-50">
                         <div class="d-flex justify-content-between align-items-center">
                             <label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
-                            <div class=" d-flex justify-content-between align-items-center">
+                            <div class="ms-5 d-flex justify-content-between align-items-center">
                                 <input type="text" placeholder="YYYY-MM-DD" name="off_days_end[]"  class="rbfw_off_days_range" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
                             </div>
                         </div>
@@ -996,8 +992,8 @@ function rbfw_off_days_config( $post_id ) {
 
                 <?php } else {  ?>
                     <?php foreach ($rbfw_offday_range as $single){ ?>
-                        <div class="off_date_range_child" style="display: flex">
-                            <section class="component d-flex justify-content-between mb-2">
+                        <div class="off_date_range_child  component d-flex justify-content-between" >
+                            <section class="component d-flex justify-content-between w-50">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
                                     <div class=" d-flex justify-content-between align-items-center">
@@ -1005,8 +1001,8 @@ function rbfw_off_days_config( $post_id ) {
                                     </div>
                                 </div>
                             </section>
-                            <section class="component d-flex justify-content-between mb-2">
-                                <div class="d-flex justify-content-between align-items-center">
+                            <section class="component d-flex justify-content-between w-50">
+                                <div class="ms-1 d-flex justify-content-between align-items-center">
                                     <label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
                                     <div class=" d-flex justify-content-between align-items-center">
                                         <input type="text" placeholder="YYYY-MM-DD" name="off_days_end[]"  class="rbfw_off_days_range" value="<?php echo esc_attr( $single['to_date'] ); ?>" readonly>
@@ -1056,7 +1052,7 @@ function rbfw_off_days_config( $post_id ) {
 		?>
 		<div class="mpStyle mp_tab_item " data-tab-item="#rbfw_faq">
 			
-			<h2 class="h4 text-primary p-0 my-1"><?php echo ''.esc_html__( 'FAQ Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+			<h2 class="h5 text-white bg-primary mb-1 rounded-top"><?php echo ''.esc_html__( 'FAQ Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 			
 			<section class="component d-flex justify-content-between align-items-center mb-2">
 				<div class="w-30 d-flex justify-content-between align-items-center">
@@ -1134,7 +1130,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
 	?>
 
 	<div class="mp_tab_item " data-tab-item="#rbfw_variations" <?php if($rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
-		<h2 class="h4 text-primary p-0 my-1"><?php esc_html_e( 'Variations Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+		<h2 class="h5 text-white bg-primary mb-1 rounded-top"><?php esc_html_e( 'Variations Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		<section class="component d-flex justify-content-between align-items-center mb-2" data-row="rbfw_time_slot_switch">
 			<label scope="row" class="w-50"><?php esc_html_e( 'Item Variations', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span><?php esc_html_e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></i>										</label>
 										
@@ -1417,7 +1413,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 	?>
 
 	<div class="mp_tab_item " data-tab-item="#rbfw_frontend_display">
-		<h2  class="h4 text-primary p-0 my-1"><?php echo esc_html__( 'Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+		<h2  class="h5 text-white bg-primary mb-1 rounded-top"><?php echo esc_html__( 'Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 		<section class="component d-flex justify-content-between align-items-center mb-2">
 			<div class="w-50 d-flex justify-content-between align-items-center">
 				<label class=""><?php esc_html_e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span><?php esc_html_e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></i></label>

@@ -53,25 +53,26 @@ $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','
 										<div class="rbfw-sub-heading"><?php echo esc_html($cat_title); ?></div>
 										<ul>
 											<?php
-											if(!empty($cat_features)){
+											if(!empty($cat_features)):
 												$i = 1;
-												foreach ($cat_features as $features) {
+												foreach ($cat_features as $features):
 													$icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
 													$title = $features['title'];
-
-													if($title):
-														if($i == 5){
-														echo '<li style="width:100%"><a class="rbfw_muff_lmf_btn">'.$rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('View More Features','booking-and-rental-manager-for-woocommerce')).'</a></li>';
-														}
-
-														echo '<li '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i><span>' . $title . '</span></li>';
-
+													if($title):?>
+														<li style="<?php echo ($i > 4)?'display:none':''?>" data-status="<?php echo ($i > 4)?'extra':''?>">
+															<i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_esc_html($title); ?></span>
+														</li>
+													<?php
 													endif;
-
 													$i++;
-												}
-											}
+												endforeach;
+											endif;
 											?>
+											<li style="width:100%">
+												<a class="rbfw_muff_lmf_btn">
+													<?php echo $rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
+												</a>
+											</li>
 										</ul>
 										<?php
 											endforeach;
