@@ -369,9 +369,9 @@ CSS for Single Page Template
 .rbfw-datetime .time .clock {
   position: absolute;
   top: 50%;
-  left:2px;
+  left: 2px;
   transform: translateY(-50%);
-  padding:15px;
+  padding: 15px;
 }
 
 .rbfw-datetime .time i.fa-angle-down {
@@ -2079,7 +2079,7 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
   opacity: 1;
   font-size: 14px;
   text-decoration: none;
-  margin:5px;
+  margin: 5px;
 }
 
 .rbfw_donut_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time {
@@ -3744,7 +3744,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_muff_row_faq {
   margin-bottom: 20px;
   padding: 70px;
-  width: 100%;
   margin: 30px 0;
   max-width: var(--template-max-width);
   margin: auto;
@@ -5653,7 +5652,10 @@ img.rbfw_aig_hover-shadow {
   cursor: pointer;
 }
 .rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .prev-button:hover,
-.rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .next-button:hover {
+.rbfw_muffin_template
+  #rbfw-bikecarsd-calendar
+  .calendar-box
+  .next-button:hover {
   color: var(--rbfw_muff_color8);
 }
 .rbfw_muffin_template
@@ -6083,7 +6085,7 @@ body.single-rbfw_item div.ast-container {
   box-sizing: border-box;
 }
 
-.rbfw_text_book_now{
+.rbfw_text_book_now {
   display: flex;
   justify-content: end;
 }
