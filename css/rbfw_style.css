@@ -2070,7 +2070,7 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time {
-  width: 27.33%;
+  width: 29.33%;
   text-align: center;
   cursor: pointer;
   padding: 5px;
@@ -2079,7 +2079,7 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
   opacity: 1;
   font-size: 14px;
   text-decoration: none;
-  margin:0 10px;
+  margin:5px;
 }
 
 .rbfw_donut_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time {
@@ -2147,11 +2147,9 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
   text-transform: capitalize;
   border: 1px solid #0ec40e2e;
   border-radius: 5px;
-  width: 100%;
   color: #000;
   font-size: 1rem;
   background-color: #fff;
-  max-width: 100%;
 }
 
 .rbfw_bikecarsd_time_table_wrap
