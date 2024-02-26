@@ -82,14 +82,14 @@
 						<div class="rbfw-datetime-part">
 							<div class="rbfw-single-right-heading mb-08"><?php echo esc_html($rbfw->get_option('rbfw_text_checkin_date', 'rbfw_basic_translation_settings', __('Check-In Date','booking-and-rental-manager-for-woocommerce'))); ?></div>
 							<div class="left date">
-								<span class="calendar"><img src="<?php echo RBFW_PLUGIN_URL . '/assets/images/muff_calendar_icon.png'; ?>"/></span>
+								<span class="calendar"><i class="fa-solid fa-calendar-days"></i></span>
 								<input class="rbfw-input rbfw-time-price" type="text" name="rbfw_start_datetime" id="checkin_date" placeholder="<?php echo esc_html($rbfw->get_option('rbfw_text_checkin_date', 'rbfw_basic_translation_settings', __('Check-In Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly>
 							</div>
 						</div>
 						<div class="rbfw-datetime-part">
 							<div class="rbfw-single-right-heading mb-08"><?php echo esc_html($rbfw->get_option('rbfw_text_checkout_date', 'rbfw_basic_translation_settings', __('Check-Out Date','booking-and-rental-manager-for-woocommerce'))); ?></div>
 							<div class="right date">
-								<span class="calendar"><img src="<?php echo RBFW_PLUGIN_URL . '/assets/images/muff_calendar_icon.png'; ?>"/></span>
+								<span class="calendar"><i class="fa-regular fa-clock"></i></span>
 								<input class="rbfw-input rbfw-time-price" type="text" name="rbfw_end_datetime" id="checkout_date" placeholder="<?php echo esc_html($rbfw->get_option('rbfw_text_checkout_date', 'rbfw_basic_translation_settings', __('Check-Out Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly>
 							</div>
 						</div>

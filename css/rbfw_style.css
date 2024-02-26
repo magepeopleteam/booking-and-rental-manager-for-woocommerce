@@ -199,7 +199,7 @@ CSS for Single Page Template
   color: var(--rbfw_dt_color7);
 }
 .rbfw-single-container {
-  max-width: 1240px;
+  max-width: 1440px;
   margin: 0 auto;
   display: flex;
 }
@@ -1019,11 +1019,11 @@ p.rbfw_alert_warning {
   float: none;
   width: 1%;
   color: #fff;
-  border-color: #2d5fd5;
+  border-color: #242424;
   font-size: 16px;
   padding: 4px;
   text-align: center;
-  background-color: #2d5fd5;
+  background-color: #242424;
   cursor: pointer;
   transition: 0.2s;
   position: relative;
@@ -1221,7 +1221,7 @@ table.rbfw_room_price_table tbody td img {
 }
 
 .rbfw_alert_warning i {
-  color: #5e60ea;
+  color: var(--rbfw_muff_color3);
 }
 
 .woocommerce-cart-form table.rbfw_room_cart_table,
@@ -1261,7 +1261,7 @@ table.rbfw_room_cart_table th span {
 }
 
 .rbfw_room_price_label:not(.disabled):hover {
-  background-color: #13388d;
+  background-color: var(--rbfw_muff_color3);
   transition: 0.2s;
 }
 
@@ -3404,8 +3404,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   background-color: var(--rbfw_muff_color3);
   color: var(--rbfw_muff_color5);
   border-radius: 5px;
-  padding: 6px 13px;
-  width: 24px;
+  width:18px;
   height: 32px;
   display: flex;
   align-items: center;
@@ -4592,7 +4591,7 @@ img.rbfw_aig_hover-shadow {
 }
 
 .rbfw_muffin_template .rbfw_room_price_table thead {
-  background-color: #152c5b;
+  background-color: #242424;
   color: #fff;
   text-transform: uppercase;
 }
@@ -6155,4 +6154,9 @@ body.single-rbfw_item div.ast-container {
 .mp_default_theme::before,
 .mp_default_theme::after {
   box-sizing: border-box;
+}
+
+.rbfw_text_book_now{
+  display: flex;
+  justify-content: end;
 }

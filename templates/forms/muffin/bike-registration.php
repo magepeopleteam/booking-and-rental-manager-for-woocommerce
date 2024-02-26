@@ -228,7 +228,7 @@
                                     <?php echo esc_html($rbfw->get_option('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Date','booking-and-rental-manager-for-woocommerce'))); ?>
                                 </div>
                                 <div class="rbfw-p-relative">
-                                    <span class="calendar"><img src="<?php echo RBFW_PLUGIN_URL . '/assets/images/muff_calendar_icon.png'; ?>"/></span>
+                                    <span class="calendar"><i class="fa-solid fa-calendar-days"></i></span>
                                     <input class="rbfw-input rbfw-time-price" type="text" name="rbfw_pickup_start_date" id="pickup_date" placeholder="<?php echo esc_html($rbfw->get_option('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
                                 </div>
                             </div>
@@ -239,7 +239,7 @@
                                     </div>
                                     <div class="rbfw-p-relative">
                                         <span class="clock">
-                                            <img src="<?php echo RBFW_PLUGIN_URL . '/assets/images/muff_clock_icon.png'; ?>"/>
+                                            <i class="fa-regular fa-clock"></i>
                                         </span>
                                         <select class="rbfw-select rbfw-time-price" name="rbfw_pickup_start_time" id="pickup_time" required>
                                             <option value="" disabled selected><?php echo esc_html($rbfw->get_option('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup time','booking-and-rental-manager-for-woocommerce'))); ?></option>
@@ -262,7 +262,7 @@
 						<div class="<?php if($enable_hourly_rate == 'yes' && !empty($availabe_time)){ echo 'left'; }?> date">
 							<div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_return_date', 'rbfw_basic_translation_settings', __('Return Date','booking-and-rental-manager-for-woocommerce'))); ?></div>
 							<div class="rbfw-p-relative">
-								<span class="calendar"><img src="<?php echo RBFW_PLUGIN_URL . '/assets/images/muff_calendar_icon.png'; ?>"/></span>
+								<span class="calendar"><i class="fa-solid fa-calendar-days"></i></span>
 								<input class="rbfw-input rbfw-time-price" type="text" name="rbfw_pickup_end_date" id="dropoff_date" placeholder="<?php echo esc_html($rbfw->get_option('rbfw_text_return_date', 'rbfw_basic_translation_settings', __('Return date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
 							</div>
 						</div>
@@ -270,7 +270,7 @@
 						<div class="right time">
 							<div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_return_time', 'rbfw_basic_translation_settings', __('Return Time','booking-and-rental-manager-for-woocommerce'))); ?></div>
 							<div class="rbfw-p-relative">
-								<span class="clock"><img src="<?php echo RBFW_PLUGIN_URL . '/assets/images/muff_clock_icon.png'; ?>"/></span>
+								<span class="clock"><i class="fa-regular fa-clock"></i></span>
 								<select class="rbfw-select rbfw-time-price" name="rbfw_pickup_end_time" id="dropoff_time" required>
 								<option value="" disabled selected><?php echo esc_html($rbfw->get_option('rbfw_text_return_time', 'rbfw_basic_translation_settings', __('Return time','booking-and-rental-manager-for-woocommerce'))); ?></option>
 									<?php foreach ($availabe_time as $key => $time) : ?>
