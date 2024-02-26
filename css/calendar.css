@@ -72,7 +72,7 @@
 }
 
 .calendar-box .months-wrapper .month.one-third {
-  width: 33.33%;
+  width:30.33%
 }
 
 .calendar-box .buttons-container {
@@ -229,7 +229,7 @@
 
 .calendar-box .months-wrapper .month span {
   display: inline-block;
-  padding: 10px;
+  padding: 10px 0;
   text-transform: capitalize;
   border: 1px solid #d3d3d3;
   border-radius: 5px;
@@ -239,9 +239,9 @@
 
 .calendar-box .months-wrapper .month span:hover {
   color: #fff;
-  background-color: var(--rbfw_single_page_base_color4);
+  background-color: var(--rbfw_muff_color3);
   outline: 0;
-  border: 1px solid var(--rbfw_single_page_base_color4);
+  border: 1px solid var(--rbfw_muff_color3);
   border-radius: 5px;
 }
 
@@ -260,7 +260,7 @@
 }
 
 .calendar-box .week .day span:not(.week .day[disabled="disabled"] span) {
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_muff_color3);
   color: white;
 }
 
