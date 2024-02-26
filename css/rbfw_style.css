@@ -2072,7 +2072,7 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time {
-  width: 31.33%;
+  width: 27.33%;
   text-align: center;
   cursor: pointer;
   padding: 5px;
@@ -2081,20 +2081,21 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
   opacity: 1;
   font-size: 14px;
   text-decoration: none;
+  margin:0 10px;
 }
 
 .rbfw_donut_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time {
   width: 32.33%;
 }
 
-body.theme-twentytwentythree
+/* body.theme-twentytwentythree
   .rbfw_bikecarsd_time_table_wrap
   a.rbfw_bikecarsd_time {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  width: 31.33%;
+  width: 27.33%;
 }
 
 body.theme-twentytwentythree .rbfw_muffin_template button {
@@ -2103,7 +2104,7 @@ body.theme-twentytwentythree .rbfw_muffin_template button {
 
 body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
   max-width: 49%;
-}
+} */
 
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn {
   border: none;
@@ -2153,7 +2154,6 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
   font-size: 1rem;
   background-color: #fff;
   max-width: 100%;
-  width: auto;
 }
 
 .rbfw_bikecarsd_time_table_wrap
@@ -3341,7 +3341,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 .rbfw_muff_registration_wrapper {
   border: 0 solid #e5e5e5;
-  padding: 50px;
+  padding: 30px;
   border-radius: 10px;
   background-color: #ffebeb;
 }
