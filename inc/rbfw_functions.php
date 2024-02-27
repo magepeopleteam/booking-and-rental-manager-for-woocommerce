@@ -1605,24 +1605,34 @@ function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
 		if ( $diff ) {
 			$days    = $diff->days;
 			$hours   += $diff->h;
+
+
 			
 			if ( ($hours > 0)  || ($start_time == '00:00:00' && $end_time == rbfw_end_time()) ) {
-				
-				for ($currentDate = $start_date; $currentDate <= $end_date; 
 
-					$currentDate += (86400)) {
-													
-					$date = date('d-m-Y', $currentDate);
-			
-					$date_range[] = $date;
-			
-				}
+
+                $rbfw_count_extra_day_enable = $rbfw->get_option('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+                if($rbfw_count_extra_day_enable=='on'){
+                    for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
+
+                        $date = date('d-m-Y', $currentDate);
+                        $date_range[] = $date;
+
+                    }
+                }else{
+                    for ($currentDate = $start_date; $currentDate < $end_date; $currentDate += (86400)) {
+
+                        $date = date('d-m-Y', $currentDate);
+                        $date_range[] = $date;
+
+                    }
+                }
+				
+
 
 			} else {
 
-				for ($currentDate = $start_date; $currentDate < $end_date;
-
-					$currentDate += (86400)) {
+				for ($currentDate = $start_date; $currentDate < $end_date; $currentDate += (86400)) {
 
 					$date = date('d-m-Y', $currentDate);
 
@@ -1650,6 +1660,9 @@ function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
 	
 		}
 	}
+
+
+
 
 	$order_array = [];
 	$order_array['booked_dates'] = $date_range;
