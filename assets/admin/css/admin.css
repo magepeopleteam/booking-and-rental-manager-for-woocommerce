@@ -6590,6 +6590,7 @@ readers do not read off random characters that represent icons */
   padding: 0.7em 1em;
   cursor: pointer;
   transition: background-color 0.5s;
+  font-size: 16px;
 }
 #rbfw_add_meta_box .nav-item i {
   padding-right: 0.5rem;
@@ -6985,7 +6986,7 @@ readers do not read off random characters that represent icons */
 }
 #rbfw_add_meta_box h5,
 #rbfw_add_meta_box .h5 {
-  font-size: 1.375rem;
+  font-size: 1.25rem;
   line-height: 1.5;
 }
 #rbfw_add_meta_box h6,
@@ -7007,10 +7008,12 @@ readers do not read off random characters that represent icons */
 }
 #rbfw_add_meta_box .component {
   background-color: var(--mpl-white);
-  border-radius: 0.25rem;
-  padding: 1.5em;
-  margin-bottom: 1.5em;
-  border: 1px solid var(--mpl-gray);
+  padding: 0.75em;
+  margin-bottom: 0em;
+  border-bottom: 1px solid var(--mpl-gray);
+}
+#rbfw_add_meta_box .component:last-child {
+  border-bottom: 0 solid var(--mpl-gray);
 }
 
 #rbfw_add_meta_box .inside {
@@ -7022,6 +7025,7 @@ readers do not read off random characters that represent icons */
 }
 #rbfw_add_meta_box .postbox-header {
   background-color: var(--mpl-secondary);
+  color: #fff;
 }
 #rbfw_add_meta_box .postbox-header h2 {
   color: var(--mpl-white);

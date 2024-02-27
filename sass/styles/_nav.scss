@@ -10,9 +10,11 @@
     padding:calc($spacing * 1.4) calc($spacing*2);
     cursor: pointer;
     transition: background-color $time;
+    font-size: 16px;
     i{
       padding-right: .5rem;
     }
+    
   }
   .nav-item:hover, .nav-item.active{
     background-color: $color-primary;
