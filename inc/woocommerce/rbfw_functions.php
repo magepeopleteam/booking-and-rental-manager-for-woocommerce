@@ -1326,6 +1326,7 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
 
     $order          = wc_get_order( $order_id );
     $order_meta     = get_post_meta( $order_id );
+  
     $order_status   = $order->get_status();
     $payment_method = isset( $order_meta['_payment_method_title'][0] ) ? $order_meta['_payment_method_title'][0] : '';
     $user_id        = isset( $order_meta['_customer_user'][0] ) ? $order_meta['_customer_user'][0] : '';
