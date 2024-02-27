@@ -1129,7 +1129,6 @@ table.rbfw_room_price_table tbody td img {
 }
 
 .rbfw_qty_input {
-  border: 1px solid #ddd;
   display: table;
   outline: none;
   width: max-content;
@@ -1171,9 +1170,7 @@ table.rbfw_room_price_table tbody td img {
 }
 
 .rbfw_qty_input input[type="number"] {
-  padding: 0.5rem;
-  border: solid #ddd;
-  border-width: 0 1px;
+  border: 1px solid #ddd;
   font-size: 16px;
   height: 30px;
   font-weight: normal;
@@ -2266,6 +2263,7 @@ table.rbfw_bikecarsd_price_table tbody td {
   font-size: 14px;
   font-weight: normal;
   border: 0;
+  padding-left: 10px;
 }
 
 table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n + 1) {
@@ -3366,7 +3364,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_content_wrapper {
-  padding: 0 50px 0 50px;
+  padding: 0 0 0 50px;
 }
 
 .rbfw_muff_post_content {
@@ -3514,7 +3512,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   font-size: 16px;
 }
 
-.rbfw_muff_registration_wrapper .rbfw-book-now-btn {
+.rbfw_muff_registration_wrapper .rbfw-book-now-btn, .mp_rbfw_book_now_submit {
   background-color: var(--rbfw_muff_color3);
   box-shadow: 0px 8.40727px 15.7636px rgba(250, 54, 54, 0.3);
 }
@@ -3754,7 +3752,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 .rbfw_muff_row_faq {
   margin-bottom: 20px;
-  padding: 70px;
   margin: 30px 0;
   max-width: var(--template-max-width);
   margin: auto;
