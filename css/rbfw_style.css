@@ -3413,6 +3413,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_muff_registration_wrapper .rbfw-datetime input,
 .rbfw_muff_registration_wrapper .rbfw-datetime select {
   padding-left: 60px;
+  box-sizing: border-box;
 }
 
 .rbfw_muff_registration_wrapper .rbfw-bikecarsd-calendar-header,
@@ -3489,7 +3490,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   background-color: var(--rbfw_muff_color3);
   box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
   padding: 15px;
-  width: 100%;
   margin-bottom: 0px;
   text-decoration: none;
   cursor: pointer;
@@ -3504,6 +3504,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn, .mp_rbfw_book_now_submit {
   background-color: var(--rbfw_muff_color3);
   box-shadow: 0px 8.40727px 15.7636px rgba(250, 54, 54, 0.3);
+  width: 100%;
 }
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn:hover {
   background-color: var(--rbfw_dt_color8);
@@ -3561,6 +3562,10 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   background-color: var(--rbfw_muff_color6);
   border-radius: 5px;
   padding: 10px;
+}
+
+.mp_rbfw_ticket_form .rbfw_regf_form_header{
+  background-color: #fff;
 }
 
 .rbfw_muff_registration_wrapper .rbfw_regf_form_header,
@@ -4467,6 +4472,7 @@ img.rbfw_aig_hover-shadow {
 .rbfw_muffin_template #checkin_date,
 .rbfw_muffin_template #checkout_date {
   padding-left: 60px;
+  box-sizing: border-box;
 }
 
 .rbfw_muffin_template .rbfw-datetime {
@@ -5836,7 +5842,8 @@ span.rbfw_item_absolute:hover {
   border: 1px solid #ced4da;
   border-radius: 5px;
   transition: #86b7fe 0.15s ease-in-out,
-    rgba(13, 110, 253, 0.25) 0.15s ease-in-out;
+  rgba(13, 110, 253, 0.25) 0.15s ease-in-out;
+  box-sizing: border-box;
 }
 
 .rbfw_regf_form_header {
