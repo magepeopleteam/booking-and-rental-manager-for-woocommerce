@@ -5808,15 +5808,15 @@ span.rbfw_item_absolute:hover {
 
 .rbfw_regf_wrap {
   font-size: 14px;
-  border: 1px solid #d3d3d3;
   border-radius: 5px;
-  padding: 10px;
+  border:1px solid #ddd;
   margin-bottom: 10px;
 }
 
 .rbfw_regf_group {
   margin-bottom: 15px;
   position: relative;
+  padding: 0 10px;
 }
 
 .rbfw_regf_group input[type="text"],
@@ -5840,10 +5840,10 @@ span.rbfw_item_absolute:hover {
 }
 
 .rbfw_regf_form_header {
-  text-align: center;
   padding: 10px;
   background-color: #f5f5f5;
   margin-bottom: 10px;
+  font-weight: bold;
 }
 
 .rbfw_regf_group input[type="radio"],
