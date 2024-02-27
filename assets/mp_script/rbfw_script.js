@@ -102,7 +102,8 @@ function onclick_cal_date(date) {
             'post_id': post_id,
             'selected_date': s_Date,
             'is_muffin_template': is_muffin_template
-        },
+        }
+        ,
         beforeSend: function() {
 
             jQuery('.rbfw-bikecarsd-result').empty();
@@ -170,7 +171,7 @@ function rbfw_step_func(){
 }
 
 function rbfw_bikecarsd_time_click_func(){
-    jQuery('.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disabled)').click(function (e) {
+    jQuery('.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disabled)').click(function (e) { 
         jQuery('.rbfw_bikecarsd_time').removeClass('selected');
         jQuery(this).addClass('selected');
         let gTime = jQuery(this).attr('data-time');
