@@ -1615,12 +1615,11 @@ table.rbfw_room_cart_table th span {
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_col {
-  display: inline-block;
-  padding: 5px;
-  text-align: center;
-  vertical-align: top;
-  margin-bottom: 20px;
-  padding: 20px 20px 30px 30px;
+
+    text-align: center;
+    vertical-align: top;
+    margin-bottom: 20px;
+
 }
 
 .rbfw_grid_view_more_features_btn i {
@@ -1960,24 +1959,36 @@ table.rbfw_room_cart_table th span {
 }
 
 @media only screen and (min-width: 792px) {
-  .rbfw_rent_list_style_grid .rbfw_rent_list_col {
-    min-width: 33.33%;
-    max-width: 33.33%;
-  }
-  .rbfw_rent_list_style_list
-    .rbfw_rent_list_inner_wrapper
-    .rbfw_rent_list_featured_img_wrap {
-    width: 30%;
-    max-width: 30%;
-    min-width: 30%;
-  }
-  .rbfw_rent_list_style_list
-    .rbfw_rent_list_inner_wrapper
-    .rbfw_rent_list_content {
-    width: 70;
-    max-width: 70%;
-    min-width: 70%;
-  }
+
+    .rbfw_rent_list_style_grid{
+        display: grid;
+        gap:10px;
+    }
+
+    .rbfw_rent_list_style_grid.rbfw-w-50 {
+        grid-template-columns: auto auto;
+    }
+    .rbfw_rent_list_style_grid.rbfw-w-33 {
+        grid-template-columns: auto auto auto;
+    }
+    .rbfw_rent_list_style_grid.rbfw-w-25 {
+        grid-template-columns: auto auto auto auto;
+    }
+    .rbfw_rent_list_style_grid.rbfw-w-20 {
+        grid-template-columns: auto auto auto auto auto;
+    }
+
+    .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper .rbfw_rent_list_featured_img_wrap {
+        width: 30%;
+        max-width: 30%;
+        min-width: 30%;
+    }
+    .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper .rbfw_rent_list_content {
+        width: 70;
+        max-width: 70%;
+        min-width: 70%;
+    }
+
 }
 
 @media only screen and (max-width: 792px) and (min-width: 600px) {
