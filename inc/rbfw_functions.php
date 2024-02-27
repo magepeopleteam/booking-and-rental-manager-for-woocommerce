@@ -917,22 +917,22 @@ function rbfw_related_products($post_id){
 
 			<div class="item">
 				<div class="rbfw-related-product-inner">
-				<div class="rbfw-related-product-thumb-wrap"><a href="<?php echo esc_url($permalink); ?>"><div class="rbfw-related-product-thumb"><img src="<?php echo esc_url($thumb_url); ?>" alt="<?php esc_attr_e('Featured Image','booking-and-rental-manager-for-woocommerce'); ?>"></div></a></div>
-				<div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
-				
-				<?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
-				<div class="rbfw-related-product-price-wrap"><?php echo esc_html($hourly_rate_label); ?>: <?php echo rbfw_mps_price($price); ?></div>
-				<?php endif; ?>
+					<div class="rbfw-related-product-thumb-wrap"><a href="<?php echo esc_url($permalink); ?>"><div class="rbfw-related-product-thumb"><img src="<?php echo esc_url($thumb_url); ?>" alt="<?php esc_attr_e('Featured Image','booking-and-rental-manager-for-woocommerce'); ?>"></div></a></div>
+					<div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
+					
+					<?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
+					<div class="rbfw-related-product-price-wrap"><?php echo esc_html($hourly_rate_label); ?>: <?php echo rbfw_mps_price($price); ?></div>
+					<?php endif; ?>
 
-				<?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
-				<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
-				<?php endif; ?>
-				
-				<?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
+					<?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
 					<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
-				<?php endif; ?>
+					<?php endif; ?>
+					
+					<?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
+						<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
+					<?php endif; ?>
 
-				<div class="rbfw-related-product-btn-wrap"><a href="<?php echo esc_url($permalink); ?>" class="rbfw-related-product-btn"><?php rbfw_string('rbfw_text_read_more',__('Read More','booking-and-rental-manager-for-woocommerce')); ?></a></div>
+					<div class="rbfw-related-product-btn-wrap"><a href="<?php echo esc_url($permalink); ?>" class="rbfw-related-product-btn"><?php rbfw_string('rbfw_text_read_more',__('Read More','booking-and-rental-manager-for-woocommerce')); ?></a></div>
 				</div>
 			</div>
 			<?php } ?>
@@ -2628,63 +2628,66 @@ function rbfw_related_products_style_two($post_id){
 			$highlited_features = get_post_meta($rbfw_related_post_id, 'rbfw_highlights_texts', true) ? maybe_unserialize(get_post_meta($rbfw_related_post_id, 'rbfw_highlights_texts', true)) : [];
 			?>
 			<div class="item">
-				<div class="rbfw-related-product-thumb-wrap"><a href="<?php echo esc_url($permalink); ?>"><div class="rbfw-related-product-thumb" style="background-image:url(<?php echo esc_url($thumb_url); ?>)"></div></a></div>
+				<div class="rbfw-related-product-inner">
+					
+					<div class="rbfw-related-product-thumb-wrap"><a href="<?php echo esc_url($permalink); ?>"><div class="rbfw-related-product-thumb" style="background-image:url(<?php echo esc_url($thumb_url); ?>)"></div></a></div>
 
-				<div class="rbfw-related-product-bottom-card">
-					<div class="rbfw-related-product-bottom-card-pricing-box">
-						<?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
-							<div class="rbfw-related-product-price-wrap"><?php echo esc_html($hourly_rate_label); ?>: <?php echo rbfw_mps_price($price); ?></div>
-						<?php endif; ?>
+					<div class="rbfw-related-product-bottom-card">
+						<div class="rbfw-related-product-bottom-card-pricing-box">
+							<?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
+								<div class="rbfw-related-product-price-wrap"><?php echo esc_html($hourly_rate_label); ?>: <?php echo rbfw_mps_price($price); ?></div>
+							<?php endif; ?>
 
-						<?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
-							<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
-						<?php endif; ?>
-						
-						<?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
-							<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
+							<?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
+								<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
+							<?php endif; ?>
+							
+							<?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
+								<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
+							<?php endif; ?>
+						</div>
+
+						<div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
+
+						<?php if(!empty($highlited_features)): ?>
+							<div class="rbfw-related-product-features">
+							<?php if ( $highlited_features ) : ?>
+								<ul>
+									<?php 
+									$i = 1;
+									foreach ( $highlited_features as $feature ) :
+
+									if($i <= 4){	
+										if($feature['icon']):
+											$icon = $feature['icon'];
+										else:
+											$icon = 'fas fa-arrow-right';
+										endif;
+
+										if($feature['title']):
+											$rand_number = rand();
+											echo '<li class="title'.$rand_number.'"><i class="'.mep_esc_html($icon).'"></i></li>';
+											?>
+											<script>
+											jQuery(document).ready(function(){
+												let content<?php echo $rand_number; ?> = '<?php echo $feature['title']; ?>';
+												tippy('.title'+<?php echo $rand_number; ?>, {content: content<?php echo $rand_number; ?>,theme: 'blue',placement: 'top'});
+											});
+											</script>
+											<?php
+										endif;
+									}
+									$i++;	
+									endforeach; 
+									?>
+								</ul>
+								<?php endif; ?>
+							</div>
 						<?php endif; ?>
 					</div>
 
-					<div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
-
-					<?php if(!empty($highlited_features)): ?>
-						<div class="rbfw-related-product-features">
-						<?php if ( $highlited_features ) : ?>
-							<ul>
-								<?php 
-								$i = 1;
-								foreach ( $highlited_features as $feature ) :
-
-								if($i <= 4){	
-									if($feature['icon']):
-										$icon = $feature['icon'];
-									else:
-										$icon = 'fas fa-arrow-right';
-									endif;
-
-									if($feature['title']):
-										$rand_number = rand();
-										echo '<li class="title'.$rand_number.'"><i class="'.mep_esc_html($icon).'"></i></li>';
-										?>
-										<script>
-										jQuery(document).ready(function(){
-											let content<?php echo $rand_number; ?> = '<?php echo $feature['title']; ?>';
-											tippy('.title'+<?php echo $rand_number; ?>, {content: content<?php echo $rand_number; ?>,theme: 'blue',placement: 'top'});
-										});
-										</script>
-										<?php
-									endif;
-								}
-								$i++;	
-								endforeach; 
-								?>
-							</ul>
-							<?php endif; ?>
-						</div>
-					<?php endif; ?>
+					<div class="rbfw-related-product-btn-wrap"><a href="<?php echo esc_url($permalink); ?>" class="rbfw-related-product-btn"><?php rbfw_string('rbfw_text_book_it',__('Book It','booking-and-rental-manager-for-woocommerce')); ?></a></div>
 				</div>
-
-				<div class="rbfw-related-product-btn-wrap"><a href="<?php echo esc_url($permalink); ?>" class="rbfw-related-product-btn"><?php rbfw_string('rbfw_text_book_it',__('Book It','booking-and-rental-manager-for-woocommerce')); ?></a></div>
 			</div>
 			<?php
 		}
