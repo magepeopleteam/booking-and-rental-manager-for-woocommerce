@@ -1160,7 +1160,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                     if(typeof pickup_time !== 'undefined' && typeof dropoff_time !== 'undefined'){
 
-                        the_html += '<div class="rbfw_muff_selected_date_col"><label><img src="<?php echo RBFW_PLUGIN_URL ?>/assets/images/muff_clock_icon2.png"/><?php echo rbfw_string_return('rbfw_text_pickup_time',__('Pickup time','booking-and-rental-manager-for-woocommerce')); ?></label><span class="rbfw_muff_selected_date_value">'+pickup_time+'</span> <label><img src="<?php echo RBFW_PLUGIN_URL ?>/assets/images/muff_clock_icon2.png"/><?php echo rbfw_string_return('rbfw_text_dropoff_time',__('Drop-off time','booking-and-rental-manager-for-woocommerce')); ?></label><span class="rbfw_muff_selected_date_value">'+dropoff_time+'</span></div>';
+                        the_html += '<div class="rbfw_muff_selected_date_col"><label><i class="fa-solid fa-clock"></i> <?php echo rbfw_string_return('rbfw_text_pickup_time',__('Pickup time','booking-and-rental-manager-for-woocommerce')); ?></label><span class="rbfw_muff_selected_date_value">'+pickup_time+'</span></div>'
+                        the_html +='<div class="rbfw_muff_selected_date_col"><label><i class="fa-solid fa-clock"></i> <?php echo rbfw_string_return('rbfw_text_dropoff_time',__('Drop-off time','booking-and-rental-manager-for-woocommerce')); ?></label><span class="rbfw_muff_selected_date_value">'+dropoff_time+'</span></div>';
 
                     }
 
