@@ -13,7 +13,7 @@
 		do_action( 'woocommerce_before_single_product' );
 		//include_once( RBFW_Function::get_template($post_id) );
 		RBFW_Function::get_template($post_id);
-
+		
 	}
 	do_action('rbfw_single_page_after_wrapper');
 	do_action('rbfw_single_page_footer',$post_id);

@@ -145,3 +145,20 @@ function rbfw_duplicate_post_link($actions, $post)
     return $actions;
 }
 
+
+add_filter('body_class', 'rbfw_add_body_class');
+/**
+ * rbfw_add_body_class (will add a css class in body tag based on template)
+ * 
+ * @author Shahadat <raselsha@gmail.com>
+ * @since 1.3.4
+ * 
+ */
+function rbfw_add_body_class($classes)
+{		
+		$post_id = get_the_ID();
+		$template = !empty(get_post_meta($post_id, 'rbfw_single_template', true)) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default';
+				
+		return array_merge( $classes, array( 'rbfw_single_'.strtolower($template).'_template' ) );
+	
+}
