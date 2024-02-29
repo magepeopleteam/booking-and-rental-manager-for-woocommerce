@@ -428,13 +428,14 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
         }
 
         public function rbfw_bikecarsd_time_table(){
-
-
             if(isset($_POST['post_id'])){
-                $id = $_POST['post_id'];
+                $post_id = $_POST['post_id'];
+                $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
+                global $rbfw;
+
                 $selected_date = $_POST['selected_date'];
                 $is_muffin_template = $_POST['is_muffin_template'];
-                $available_times = rbfw_get_available_times($id);
+                $available_times = rbfw_get_available_times($post_id);
                 $default_timezone = wp_timezone_string();
                 $date = new DateTime("now", new DateTimeZone($default_timezone) );
                 $nowTime  = $date->format('H:i');
@@ -442,10 +443,9 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 $date_to_string = new DateTime($selected_date);
                 $result = $date_to_string->format('F j, Y');
-                ob_start();
+
                 include(dirname(__FILE__).'/../templates/ajax/sd_time_table_type.php');
             }
-
             wp_die();
         }
 
@@ -462,7 +462,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $selected_date = $_POST['selected_date'];
                 $available_times = rbfw_get_available_times($id);
                 $default_timezone = wp_timezone_string();
-                $date = new DateTime("now", new DateTimeZone($default_timezone) );
+                $date = new DateTime("now", new DateTimeZone($default_timezone));
                 $nowTime  = $date->format('H:i');
                 $nowDate  = $date->format('Y-m-d');
 
