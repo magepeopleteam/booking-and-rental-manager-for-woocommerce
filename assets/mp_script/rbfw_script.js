@@ -937,3 +937,5 @@ jQuery(document).on('click', '.groupCheckBox .customCheckboxLabel', function () 
         parent.find('input[type="hidden"]').val(value);
     });
 });
+
+

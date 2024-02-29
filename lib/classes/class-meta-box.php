@@ -24,7 +24,8 @@ if (!class_exists('RMFWAddMetaBox')) {
 			add_action('save_post', array($this, 'save_post'), 12);
 		}
 
-		public function add_meta_boxes()
+		public function
+        add_meta_boxes()
 		{
 			add_meta_box(
 				$this->get_meta_box_id(),
@@ -71,8 +72,8 @@ if (!class_exists('RMFWAddMetaBox')) {
 
 		public function mp_event_all_in_tab_menu_list()
 		{
-?>
-			<li class="nav-item" data-target-tabs="#<?php echo esc_attr($this->get_meta_box_id()); ?>">
+            ?>
+            <li class="nav-item" data-target-tabs="#<?php echo esc_attr($this->get_meta_box_id()); ?>">
 				<?php echo mep_esc_html($this->get_meta_box_title()); ?>
 			</li>
 			<?php
