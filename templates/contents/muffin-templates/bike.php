@@ -247,10 +247,13 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 
 	<?php if(!empty($rbfw_related_post_arr)): ?>
 	<div class="rbfw_muff_row_related_item">
-		<div class="rbfw_muff_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings', __('You May Also Like','booking-and-rental-manager-for-woocommerce'))); ?></div>
+		<div class="rbfw_muff_heading">
+            <?php echo esc_html($rbfw->get_option('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings', __('You May Also Like','booking-and-rental-manager-for-woocommerce'))); ?>
+        </div>
 		<?php do_action( 'rbfw_related_products_style_three', $post_id ); ?>
 	</div>
 	<?php endif; ?>
+
 	<?php if($rbfw_enable_faq_content == 'yes') { ?>
 	<div class="rbfw_muff_row_faq">
 		<div class="rbfw_muff_heading rbfw_muff_faq_heading">

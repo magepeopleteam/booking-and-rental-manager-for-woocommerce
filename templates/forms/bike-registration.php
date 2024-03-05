@@ -116,7 +116,7 @@
 	}
 
 	$rbfw_enable_md_type_item_qty = get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) ? get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) : 'no';
-	
+
 	$rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
 	$rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
@@ -329,7 +329,7 @@
 				<?php foreach ($rbfw_variations_data as $data_arr_one) {
 				$selected_value = !empty($data_arr_one['selected_value']) ? $data_arr_one['selected_value'] : '';
 				?>
-				
+
 					<div class="item">
 						<div class="rbfw-single-right-heading"><?php echo esc_html($data_arr_one['field_label']); ?></div>
 						<div class="item-content rbfw-p-relative">
@@ -345,94 +345,82 @@
 							<?php } ?>
 						</div>
 					</div>
-				
+
 				<?php } ?>
-				
+
 				</div>
 
 				<?php } ?>
-				<!--Variation Items End-->
 
-				<?php if(!empty($extra_service_list)){ ?>
-				<!--    ITEM        -->
-				<div class="item">
-					<div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_resources', 'rbfw_basic_translation_settings', __('Resources','booking-and-rental-manager-for-woocommerce'))); ?></div>
-					<div class="item-content rbfw-resource">
-						
-							<table class="rbfw_bikecarmd_es_table">
-								<tbody>
-								<?php
-								$c = 0;
-								foreach ($extra_service_list as $extra) : ?>
-								<?php if($extra['service_qty'] > 0){ ?>
-								<tr>
-									<td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
-									<div class="label">
-										<input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_name]" value="<?php echo mep_esc_html($extra['service_name']); ?>">
-										<input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_qty]" class="rbfw-resource-qty" value="">
-										<input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_price]"  value="<?php echo $extra['service_price']; ?>">
-										<label class="switch">
-											<input type="checkbox"  class="rbfw-resource-price rbfw-resource-price-multiple-qty" data-status="0" value="1" data-cat="service" data-price="<?php echo $extra['service_price']; ?>" data-name="<?php echo mep_esc_html($extra['service_name']); ?>">
-											<span class="slider round"></span>
-										</label>
-									</div>
-									</td>
-									<td><?php echo mep_esc_html($extra['service_name']); ?></td>
-									<td class="w_20"><?php echo rbfw_mps_price($extra['service_price']); ?></td>
-									<?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>
-									<td class="rbfw_bikecarmd_es_input_box" style="display:none">
-										<div class="rbfw_qty_input">
-											<a class="rbfw_qty_minus rbfw_bikecarmd_es_qty_minus"><i class="fa-solid fa-minus"></i></a>
-											<input type="number" min="0" max="<?php echo esc_attr($extra['service_qty']); ?>" value="1" class="rbfw_bikecarmd_es_qty" data-cat="service" data-price="<?php echo $extra['service_price']; ?>" data-name="<?php echo mep_esc_html($extra['service_name']); ?>"/>
-											<a class="rbfw_qty_plus rbfw_bikecarmd_es_qty_plus"><i class="fa-solid fa-plus"></i></a>
-										</div>
-									</td>
-									<?php } ?>
-								</tr>
-								<?php } ?>
-								<?php
-								$c++;
-								endforeach;
-								?>
-								</tbody>
-							</table>
-					</div>
-				</div>
-				<!--    ITEM END        -->
-				<?php } ?>
+                    <?php if(!empty($extra_service_list)){ ?>
+                        <div class="item">
+                            <div class="rbfw-single-right-heading">
+                                <?php echo esc_html($rbfw->get_option('rbfw_text_resources', 'rbfw_basic_translation_settings', __('Resources','booking-and-rental-manager-for-woocommerce'))); ?>
+                            </div>
+                            <div class="item-content rbfw-resource">
+                                <table class="rbfw_bikecarmd_es_table">
+                                    <tbody>
+                                    <?php
+                                    $c = 0;
+                                    foreach ($extra_service_list as $extra) : ?>
+                                        <?php if($extra['service_qty'] > 0){ ?>
+                                            <tr>
+                                                <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
+                                                    <div class="label">
+                                                        <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_name]" value="<?php echo mep_esc_html($extra['service_name']); ?>">
+                                                        <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_qty]" class="rbfw-resource-qty" value="">
+                                                        <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_price]"  value="<?php echo $extra['service_price']; ?>">
+                                                        <label class="switch">
+                                                            <input type="checkbox"  class="rbfw-resource-price rbfw-resource-price-multiple-qty" data-status="0" value="1" data-cat="service" data-price="<?php echo $extra['service_price']; ?>" data-name="<?php echo mep_esc_html($extra['service_name']); ?>">
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td><?php echo mep_esc_html($extra['service_name']); ?></td>
+                                                <td class="w_20"><?php echo rbfw_mps_price($extra['service_price']); ?></td>
+                                                <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>
+                                                    <td class="rbfw_bikecarmd_es_input_box" style="display:none">
+                                                        <div class="rbfw_qty_input">
+                                                            <a class="rbfw_qty_minus rbfw_bikecarmd_es_qty_minus"><i class="fa-solid fa-minus"></i></a>
+                                                            <input type="number" min="0" max="<?php echo esc_attr($extra['service_qty']); ?>" value="1" class="rbfw_bikecarmd_es_qty" data-cat="service" data-price="<?php echo $extra['service_price']; ?>" data-name="<?php echo mep_esc_html($extra['service_name']); ?>"/>
+                                                            <a class="rbfw_qty_plus rbfw_bikecarmd_es_qty_plus"><i class="fa-solid fa-plus"></i></a>
+                                                        </div>
+                                                    </td>
+                                                <?php } ?>
+                                            </tr>
+                                        <?php } ?>
+                                        <?php
+                                        $c++;
+                                        endforeach;
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <?php } ?>
 
-
-					<!--ITEM-->
-					<div class="rbfw_bikecarmd_price_result"></div>
-					<!--ITEM END-->
-
-					<!-- ITEM -->
+                    <div class="rbfw_bikecarmd_price_result"></div>
 
 					<div class="item">
 						<?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>
-
 						<button type="submit" name="add-to-cart" value="<?php echo mep_esc_html($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn <?php echo esc_attr($rbfw_payment_system); ?>" disabled <?php if( $rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date ) { echo 'style="display:none"'; }?>>
 							<?php rbfw_string('rbfw_text_book_now',__('Book Now','booking-and-rental-manager-for-woocommerce')); ?>
 						</button>
 					</div>
 
-					<?php if($rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date) {
-						echo '<div class="mps_alert_warning">'.rbfw_string_return('rbfw_text_booking_expired',__('Booking Time Expired!','booking-and-rental-manager-for-woocommerce')).'</div>';
+                    <?php if($rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date) {
+                        echo '<div class="mps_alert_warning">'.rbfw_string_return('rbfw_text_booking_expired',__('Booking Time Expired!','booking-and-rental-manager-for-woocommerce')).'</div>';
 					} ?>
-					<!-- ITEM END -->
-					</div>
+                </div>
 
 
-
-				<div class="rbfw-bikecarmd-result-wrap">
+                <div class="rbfw-bikecarmd-result-wrap">
 					<div class="rbfw-bikecarmd-result-loader"></div>
 					<div class="rbfw-bikecarmd-result"></div>
 				</div>
 				<input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
 				<input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
-			</form>
+            </form>
+        </div>
+    </div>
 
-		</div>
-		<!--    Right Side END-->
-	</div>
-	<!--    Main Layout END-->

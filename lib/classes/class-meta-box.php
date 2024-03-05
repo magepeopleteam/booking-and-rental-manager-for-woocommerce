@@ -77,77 +77,68 @@ if (!class_exists('RMFWAddMetaBox')) {
 				<?php echo mep_esc_html($this->get_meta_box_title()); ?>
 			</li>
 			<?php
-		}
+        }
+        public function meta_box_callback($post_id = null)
 
+        {
 
-		public function meta_box_callback($post_id = null)
-		{
-			$get_nav_position = $this->get_nav_position();			
-			if ($this->get_meta_box_screen()[0] == 'rbfw_item' && $this->get_meta_box_context() == 'normal' && !isset($this->data['seat_plan'])) {
-			?>
-				<div class="mp_tab_item" data-tab-item="#<?php echo esc_html($this->get_meta_box_id()); ?>">
-				<?php
-			}
-				?>
+            $get_nav_position = $this->get_nav_position();
+            if ($this->get_meta_box_screen()[0] == 'rbfw_item' && $this->get_meta_box_context() == 'normal') { ?>
 
-				<div class='wrap ppof-settings ppof-metabox'>
-					<div class='navigation <?php echo esc_attr($get_nav_position); ?>'>
+                <div class="mp_tab_item" data-tab-item="#<?php echo esc_html($this->get_meta_box_id()); ?>">
 
-						<div class="nav-header">
+            <?php } ?>
+
+            <div class='wrap ppof-settings ppof-metabox'>
+                <div class='navigation <?php echo esc_attr($get_nav_position); ?>'>
+                    <div class="nav-header">
+                        <?php do_action('nav_header_top'); ?>
+                        <div class="themeName">
+                            <?php echo esc_html($this->get_item_name()); ?>
+                        </div>
+                        <div class="themeVersion">
+                            <?php echo sprintf(__('Version: %s', 'wp-theme-settings'), $this->get_item_version()); ?>
+                        </div>
+                        <?php do_action('nav_header_bottom'); ?>
+                    </div>
+
+                    <div class="nav-items">
+                        <?php
+                        do_action('nav_nav_items_top');
+                        $current_page = 1;
+                        foreach ($this->get_panels() as $page_id => $page) :
+                            $page_settings = !empty($page['sections']) ? $page['sections'] : array();
+                            $page_settings_count = count($page_settings);
+                            ?>
+
+                            <li class="nav-item-wrap <?php if (($page_settings_count > 1)) { echo 'has-child'; } ?> <?php if ($current_page == $page_id) { echo 'active';} ?>">
+                                <a dataid="<?php echo esc_attr($page_id); ?>" href='#<?php echo esc_attr($page_id); ?>' class='nav-item'><?php echo esc_html($page['page_nav']); ?>
+                                    <?php if (($page_settings_count > 1)) {
+                                        echo '<i class="child-nav-icon fas fa-angle-down"></i>';
+										}
+                                        ?>
+                                </a>
+                                <?php if (($page_settings_count > 1)) : ?>
+                                    <ul class="child-navs">
+                                        <?php
+                                        foreach ($page_settings as $section_id => $nav_sections) :
+                                            $nav_sections_title = !empty($nav_sections['nav_title']) ? $nav_sections['nav_title'] : $nav_sections['title'];
+                                        ?>
+                                            <li>
+                                                <a sectionId="<?php echo esc_attr($section_id); ?>" dataid="<?php echo esc_attr($page_id); ?>" href='#<?php echo esc_attr($section_id); ?>' class='nav-item <?php if ($current_page == $page_id) { echo 'active'; } ?>'>
+                                                    <?php echo esc_html($nav_sections_title); ?>
+                                                </a>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                <?php endif; ?>
+                            </li>
+
 							<?php
-							do_action('nav_header_top');
-							?>
-							<div class="themeName"><?php echo esc_html($this->get_item_name()); ?></div>
-							<div class="themeVersion"><?php echo sprintf(__('Version: %s', 'wp-theme-settings'), $this->get_item_version()); ?></div>
-							<?php
-							do_action('nav_header_bottom');
-							?>
-						</div>
-
-						<div class="nav-items">
-							<?php
-							do_action('nav_nav_items_top');
-							$current_page = 1;
-							foreach ($this->get_panels() as $page_id => $page) :
-								$page_settings = !empty($page['sections']) ? $page['sections'] : array();
-								$page_settings_count = count($page_settings);								
-							?>
-								<li class="nav-item-wrap <?php if (($page_settings_count > 1)) { echo 'has-child'; } ?> <?php if ($current_page == $page_id) {
-										echo 'active';
-									} ?>">
-									<a dataid="<?php echo esc_attr($page_id); ?>" href='#<?php echo esc_attr($page_id); ?>' class='nav-item'><?php echo esc_html($page['page_nav']); ?>
-										<?php if (($page_settings_count > 1)) {
-											echo '<i class="child-nav-icon fas fa-angle-down"></i>';
-										} ?>
-									</a>
-									<?php
-									if (($page_settings_count > 1)) :
-									?>
-										<ul class="child-navs">
-											<?php
-											foreach ($page_settings as $section_id => $nav_sections) :
-												$nav_sections_title = !empty($nav_sections['nav_title']) ? $nav_sections['nav_title'] : $nav_sections['title'];												
-											?>
-												<li>
-													<a sectionId="<?php echo esc_attr($section_id); ?>" dataid="<?php echo esc_attr($page_id); ?>" href='#<?php echo esc_attr($section_id); ?>' class='nav-item <?php if ($current_page == $page_id) { echo 'active'; } ?>'><?php echo esc_html($nav_sections_title); ?>
-													</a>
-												</li>
-											<?php
-
-											endforeach;
-											?>
-										</ul>
-									<?php
-									endif;
-									?>
-								</li>
-							<?php
-								$current_page++;
-							endforeach;
-							?>
-							<?php
-							do_action('nav_nav_items_bottom');
-							?>
+                            $current_page++;
+                            endforeach;
+                            ?>
+							<?php do_action('nav_nav_items_bottom'); ?>
 						</div>
 						<div class="nav-footer">
 							<?php
@@ -193,20 +184,22 @@ if (!class_exists('RMFWAddMetaBox')) {
 									</section>
 								<?php endforeach; ?>
 							</div>
-						<?php endforeach; ?>
-					</div>
-					<?php
+                        <?php endforeach; ?>
+                    </div>
+                        <?php
 						$current_page++;
 						endforeach;
-					?>
-				</div>
-				<?php
-				if ($this->get_meta_box_screen()[0] == 'rbfw_item' && $this->get_meta_box_context() == 'normal'  && !isset($this->data['seat_plan'])) {
-				?>
-				</div>
-				<?php
-				}
-			}
+                        ?>
+            </div>
+
+            <?php if ($this->get_meta_box_screen()[0] == 'rbfw_item' && $this->get_meta_box_context() == 'normal') { ?>
+
+            </div>
+
+        <?php } ?>
+            <?php
+
+        }
 
 			public function field_generator($option)
 			{
@@ -221,7 +214,9 @@ if (!class_exists('RMFWAddMetaBox')) {
 					return;
 				}
 
+
 				$prent_option_name   = $this->get_option_name();
+
 				$FormFieldsGenerator = new RbfwFormFieldsGenerator();
 
 				if (!empty($prent_option_name)) :

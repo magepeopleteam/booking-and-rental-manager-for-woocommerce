@@ -17,7 +17,6 @@
 
         <?php do_action( 'rbfw_item_datetime_config_after', $rbfw_id ); ?>
 
-
 		<div class="mp_tab_item active" data-tab-item="#travel_pricing">
 			<div class='rbfw_general_rbfw_sec <?php echo esc_attr( $gen_class ); ?>' id='rbfw_general_rbfw_sec'>
 				<?php do_action( 'rbfw_item_pricing_after', $rbfw_id ); ?>
@@ -433,7 +432,7 @@
 					<button id="add-bike-car-sd-type-row" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 				</p>
 			</section>
-			
+
 		</div>
 
         <!--this section end for bike_car_sd,appointment-->
@@ -797,7 +796,7 @@ function rbfw_off_days_config( $post_id ) {
 					<?php } ?>
 				</div>
 			</div>
-	
+
             <div class="off_date_range_content" style="display: none">
                 <div class="off_date_range_child component d-flex justify-content-between">
                     <section class=" d-flex justify-content-between w-50">
@@ -1475,6 +1474,9 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 
 		if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
+
+
+
 			$hourly_rate = isset( $_POST['rbfw_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_hourly_rate'] ) : 0;
 			$daily_rate  = isset( $_POST['rbfw_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_daily_rate'] ) : 0;
 
@@ -1555,6 +1557,10 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			$rbfw_event_end_time  = isset( $_POST['rbfw_event_end_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_time'] ) : '';
             $rbfw_category_name        = isset( $_POST['rbfw_category_name'] ) ? rbfw_array_strip( $_POST['rbfw_category_name'] ) : '';
 
+            $rbfw_service_category_price      = isset( $_POST['rbfw_service_category_price'] ) ? rbfw_array_strip( $_POST['rbfw_service_category_price'] ) : [];
+
+
+
 			update_post_meta( $post_id, 'rbfw_enable_start_end_date', $rbfw_enable_start_end_date );
 			update_post_meta( $post_id, 'rbfw_event_start_date', $rbfw_event_start_date );
 			update_post_meta( $post_id, 'rbfw_event_start_time', $rbfw_event_start_time );
@@ -1626,6 +1632,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
             update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
 
             update_post_meta( $post_id, 'rbfw_category_name', $rbfw_category_name );
+            update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
 
 
             $off_schedules = [];
@@ -1642,6 +1649,11 @@ function rbfw_frontend_display_tab_content($rbfw_id){
                 }
             }
             update_post_meta($post_id, 'rbfw_offday_range', $off_schedules);
+
+
+
+
+
 
 
 

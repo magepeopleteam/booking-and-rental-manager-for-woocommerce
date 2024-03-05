@@ -576,5 +576,23 @@
             }
 
         });
+
+        jQuery('.rbfw_switch label').click(function(e) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            let $this = jQuery(this);
+            let target = jQuery(this).parents('.rbfw_switch').find('label');
+            target.removeClass('active');
+            target.find('input').prop('checked', false);
+            target.find('input').removeAttr('checked');
+            $this.addClass('active');
+            $this.find('input').prop('checked', true);
+
+        });
+
+
+
+
+
     });
 }(jQuery));
