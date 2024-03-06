@@ -32,10 +32,6 @@ if ( wp_is_block_theme() ) {  ?>
 }
 
 
-
-
-
-
 $post_id = get_the_id();
 
 do_action('rbfw_single_page_before_wrapper');
@@ -62,4 +58,3 @@ if ( wp_is_block_theme() ) {
 } else {
     get_footer();
 }
-
