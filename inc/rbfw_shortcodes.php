@@ -13,7 +13,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
     $attributes = shortcode_atts( array(
         'style' => 'grid',
-        'show'  => -1,
+        'show'  => '1000',
         'order' => 'DESC',
         'type'  => '',
         'location' => '',
@@ -21,13 +21,19 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'columns' => '',
         ), $atts );
 
+
+
     $style  = $attributes['style'];      
-    $show   = $attributes['show'];
+    $show   = ($atts['show'])?$atts['show']:-1;
     $order  = $attributes['order'];
     $type   = $attributes['type'];
     $location   = $attributes['location'];
     $category   = $attributes['category'];
     $columns   = $attributes['columns'];
+
+    //echo $show;exit;
+
+
 
     $args = array(
         'post_type' => 'rbfw_item',

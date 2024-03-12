@@ -379,7 +379,7 @@
                                                 <td><?php echo mep_esc_html($extra['service_name']); ?></td>
                                                 <td class="w_20"><?php echo rbfw_mps_price($extra['service_price']); ?></td>
                                                 <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>
-                                                    <td class="rbfw_bikecarmd_es_input_box" style="display:none">
+                                                    <td class="rbfw_bikecarmd_es_input_box">
                                                         <div class="rbfw_qty_input">
                                                             <a class="rbfw_qty_minus rbfw_bikecarmd_es_qty_minus"><i class="fa-solid fa-minus"></i></a>
                                                             <input type="number" min="0" max="<?php echo esc_attr($extra['service_qty']); ?>" value="1" class="rbfw_bikecarmd_es_qty" data-cat="service" data-price="<?php echo $extra['service_price']; ?>" data-name="<?php echo mep_esc_html($extra['service_name']); ?>"/>
@@ -399,7 +399,7 @@
                         </div>
                     <?php } ?>
 
-                    <div class="rbfw_bikecarmd_price_result"></div>
+                    <div class="rbfw_bikecarmd_price_result">hhh</div>
 
 					<div class="item">
 						<?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>

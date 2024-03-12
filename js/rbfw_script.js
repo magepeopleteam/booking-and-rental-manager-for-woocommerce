@@ -11,6 +11,21 @@
             }
         });
 
+        jQuery('#pickup_date').change(function(e) {
+
+            let selected_date = jQuery(this).val();
+            const [gYear, gMonth, gDay] = selected_date.split('-');
+            jQuery("#dropoff_date").datepicker("destroy");
+            jQuery('#dropoff_date').datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: new Date(gYear, gMonth - 1, gDay),
+                beforeShowDay: function(date)
+                {
+                    return rbfw_off_day_dates(date,'md','yes');
+                }
+            });
+        });
+
         $('#pickup_time').change(function(e) {
             let pickup_date = $('#pickup_date').val();
             let dropoff_date = $('#dropoff_date').val();
