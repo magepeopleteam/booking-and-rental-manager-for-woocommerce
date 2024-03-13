@@ -70,8 +70,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     $discount_desc = $discount_arr['discount_desc'];
                 }
 
-                echo '<pre>';
-                print_r($discount_arr);exit;
+
 
             }
 

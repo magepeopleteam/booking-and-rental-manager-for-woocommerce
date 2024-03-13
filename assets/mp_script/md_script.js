@@ -100,7 +100,7 @@ jQuery('#pickup_date,#dropoff_date,#pickup_time,#dropoff_time').change(function 
     let pickup_date = jQuery('#pickup_date').val();
     let drop_off_date = jQuery('#dropoff_date').val();
     if(pickup_date && drop_off_date){
-        rbfw_bikecarmd_ajax_price_calculation();
+        rbfw_bikecarmd_ajax_price_calculation(pickup_date,drop_off_date);
     }
 });
 

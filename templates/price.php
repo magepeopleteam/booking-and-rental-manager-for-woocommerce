@@ -16,13 +16,11 @@
                     <?php echo wc_price($duration_price+$service_cost) ?>
                 </span>
             </li>
-            <li class="discount">Discount<span>15%</span></li>
+            <li class="discount">Discount<span><?php echo $discount_desc ?></span></li>
             <li class="total">
                 <strong>Total</strong>
-                <span class="price-figure" data-price="1190">
-                    <span class="woocommerce-Price-amount amount">
-                        <bdi><span class="woocommerce-Price-currencySymbol">$</span>1,190.00</bdi>
-                    </span>
+                <span class="price-figure" data-price="<?php echo $total_price ?>">
+                    <?php echo wc_price($total_price) ?>
                 </span>
             </li>
         </ul>

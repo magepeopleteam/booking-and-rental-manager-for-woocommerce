@@ -5,15 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7eaf549c-d0e5-4809-b231-e5e38b90c08c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/booking-and-rental-manager-for-woocommerce.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/mp_script/md_script.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/mp_script/md_script.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inc/class-bike-car-md-function.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/class-bike-car-md-function.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/rbfw_functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/rbfw_functions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/rbfw_shortcodes.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/rbfw_shortcodes.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/rbfw_script.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/rbfw_script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/forms/muffin/bike-registration.php" beforeDir="false" afterPath="$PROJECT_DIR$/templates/forms/muffin/bike-registration.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
