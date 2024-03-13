@@ -282,7 +282,9 @@
 
 				<!--    ITEM        -->
 				<div class="item rbfw-duration">
-					<div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?></div>
+					<div class="rbfw-single-right-heading">
+                        <?php echo esc_html($rbfw->get_option('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?>
+                    </div>
 					<div class="item-content"></div>
 				</div>
 				<!--    ITEM END        -->
@@ -399,7 +401,40 @@
                         </div>
                     <?php } ?>
 
-                    <div class="rbfw_bikecarmd_price_result">hhh</div>
+                    <div class="rbfw_bikecarmd_price_result">
+
+                        <div class="item rbfw_bikecarmd_price_summary">
+                            <div class="item-content rbfw-costing">
+                                <ul class="rbfw-ul">
+                                    <li class="duration-costing rbfw-cond">Duration Cost
+                                        <span class="price-figure" data-price="">
+                                        </span>
+                                    </li>
+                                    <li class="resource-costing rbfw-cond">Resource Cost
+                                        <span class="price-figure" data-price="">
+
+                                        </span>
+                                    </li>
+                                    <li class="subtotal">Subtotal
+                                        <span class="price-figure" data-price="">
+
+                                        </span>
+                                    </li>
+                                    <li class="discount">Discount
+
+                                    </li>
+                                    <li class="total">
+                                        <strong>Total</strong>
+                                        <span class="price-figure" data-price="">
+
+                                        </span>
+                                    </li>
+                                </ul>
+                                <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
+                            </div>
+                        </div>
+
+                    </div>
 
 					<div class="item">
 						<?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>

@@ -16,7 +16,9 @@
                     <?php echo wc_price($duration_price+$service_cost) ?>
                 </span>
             </li>
-            <li class="discount">Discount<span><?php echo $discount_desc ?></span></li>
+            <li class="discount">Discount
+                <span><?php echo $discount_desc ?></span>
+            </li>
             <li class="total">
                 <strong>Total</strong>
                 <span class="price-figure" data-price="<?php echo $total_price ?>">

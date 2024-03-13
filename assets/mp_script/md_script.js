@@ -487,7 +487,7 @@ jQuery(document).on('click', '.rbfw_next_btn:not(.rbfw_next_btn[disabled]), .rbf
     }
 
     the_html += '</div>';
-    console.log(the_html);
+    console.log('hhhh',the_html);
     jQuery('.rbfw_bikecarmd_price_result').prepend(the_html);
     jQuery(".rbfw_bike_car_md_item_wrapper_inner").slideToggle();
     jQuery(".rbfw_bikecarmd_price_summary").slideToggle();
@@ -578,7 +578,7 @@ function rbfw_bikecarmd_ajax_price_calculation(pickup_date,drop_off_date){
 
     jQuery.ajax({
         type: 'POST',
-        
+        dataType: "json",
         url: rbfw_ajax.rbfw_ajaxurl,
         data: {
             'action' : 'rbfw_bikecarmd_ajax_price_calculation',
@@ -592,7 +592,7 @@ function rbfw_bikecarmd_ajax_price_calculation(pickup_date,drop_off_date){
             'reload_es': reload_es
         },
         beforeSend: function() {
-            jQuery('.rbfw_bikecarmd_price_result').empty();
+           // jQuery('.rbfw_bikecarmd_price_result').empty();
             jQuery('.rbfw_bikecarmd_price_result').append('<span class="rbfw-loader rbfw_rp_loader"><i class="fas fa-spinner fa-spin"></i></span>');
         },
         success: function (response) {
@@ -600,7 +600,7 @@ function rbfw_bikecarmd_ajax_price_calculation(pickup_date,drop_off_date){
 
             jQuery('.regf_enable .rbfw_next_btn').removeAttr('disabled');
 
-            jQuery('.rbfw_bikecarmd_price_result').html(response);
+            jQuery('.rbfw_bikecarmd_price_result').show();
 
 
             if (response.duration) {
@@ -609,10 +609,10 @@ function rbfw_bikecarmd_ajax_price_calculation(pickup_date,drop_off_date){
                 jQuery('.rbfw-duration').slideUp('fast');
             }
 
-            if(Object.keys(response.reload_es).length !== 0){
+        /*    if(Object.keys(response.reload_es).length !== 0){
                 jQuery('.rbfw-quantity').slideDown('fast').html(response.item_quantity_box);
                 jQuery('#rbfw_item_quantity option[value="'+item_quantity+'"]').attr('selected','selected');
-            }
+            }*/
 
             if (response.variation_content && Object.keys(response.variation_content).length !== 0) {
                 jQuery('.rbfw-variations-content-wrapper').slideDown('fast').html(response.variation_content);
