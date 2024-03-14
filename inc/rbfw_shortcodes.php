@@ -71,7 +71,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
             foreach ($category as $cat) {
 
-        
+
                  $category_query = array(
                      'meta_query' => array(
                          array(

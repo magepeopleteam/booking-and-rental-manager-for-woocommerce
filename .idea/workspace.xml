@@ -5,12 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7eaf549c-d0e5-4809-b231-e5e38b90c08c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/admin/admin.php" beforeDir="false" afterPath="$PROJECT_DIR$/admin/admin.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/js/mkb-admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/admin/js/mkb-admin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/meta.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/class-bike-car-md-function.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/class-bike-car-md-function.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/rbfw_shortcodes.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/rbfw_shortcodes.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/classes/class-form-fields-generator.php" beforeDir="false" afterPath="$PROJECT_DIR$/lib/classes/class-form-fields-generator.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/admin/meta_box_content.php" beforeDir="false" afterPath="$PROJECT_DIR$/admin/meta_box_content.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +50,7 @@
       <updated>1710121985266</updated>
       <workItem from="1710121989577" duration="1866000" />
       <workItem from="1710209840845" duration="3731000" />
-      <workItem from="1710382659248" duration="10009000" />
+      <workItem from="1710382659248" duration="10473000" />
     </task>
     <servers />
   </component>
