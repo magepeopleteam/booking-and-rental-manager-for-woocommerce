@@ -10,7 +10,6 @@ add_shortcode('rent-list', 'rbfw_rent_list_shortcode_func');
 function rbfw_rent_list_shortcode_func($atts = null) {
 
 
-
     $attributes = shortcode_atts( array(
         'style' => 'grid',
         'show'  => -1,
@@ -67,20 +66,29 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
     if(!empty($category)):
         $category = explode(',', $attributes['category']);
-        $category_query = array(
-            'meta_query' => array(
-                array(
-                    'key' => 'rbfw_category_name',
-                    'value' => $category,
-                    'compare' => 'IN',
-                )
-            )
-        );
-        $args = array_merge($args,$category_query);
+
+
+
+            foreach ($category as $cat) {
+
+        
+                 $category_query = array(
+                     'meta_query' => array(
+                         array(
+                             'key' => 'rbfw_categories',
+                             'value' => isset(get_term( $cat )->name)?get_term( $cat )->name:'ggfferfuheere' ,
+                             'compare' => 'LIKE',
+                         )
+                     )
+                 );
+                 $args = array_merge($args, $category_query);
+
+
+            }
     endif;
 
     $query = new WP_Query($args);
-
+//echo '<pre>';print_r($query);echo '</pre>';
     ob_start();
 
     $grid_class = 'rbfw-w-33';
