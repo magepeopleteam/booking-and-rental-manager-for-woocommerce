@@ -36,43 +36,7 @@
             <?php do_action( 'rbfw_item_exs_pricing_after', $rbfw_id ); ?>
         </div>
 
-        <div class="mp_tab_item active" data-tab-item="#rbfw_categories">
-            <h2 class="h5 text-white bg-primary mb-1 rounded-top">Select Categories</h2>
-            <div class="rbfw-item-type ">
-                <div class="rbfw_form_group" data-table="rbfw_item_type_table">
-                    <div class="form-table rbfw_item_type_table off_date_range">
-                        <div class="off_date_range_child component d-flex justify-content-between">
-                            <section class="d-flex justify-content-between w-50">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <label for="">Category: <i class="fas fa-question-circle tool-tips"></i></label>
-                                        <div class="ms-5 d-flex justify-content-between align-items-center" style="width: 700px">
 
-
-                                            <?php
-                                            $rbfw_categories = get_post_meta($rbfw_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_categories', true)) : [];
-                                            ?>
-
-                                            <select name="rbfw_categories[]" multiple class="category2">
-                                                <?php
-                                                $terms = get_terms( array(
-                                                    'taxonomy'   => 'rbfw_item_caregory',
-                                                    'hide_empty' => false,
-                                                ) );
-                                                foreach ( $terms as $key => $value ) {
-                                                    ?>
-                                                    <option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </section>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-        </div>
 
 		<?php
 		do_action( 'rbfw_location_config_before', $rbfw_id );
