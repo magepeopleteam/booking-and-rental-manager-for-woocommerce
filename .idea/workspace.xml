@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7eaf549c-d0e5-4809-b231-e5e38b90c08c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin/meta_box_content.php" beforeDir="false" afterPath="$PROJECT_DIR$/admin/meta_box_content.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/rbfw_shortcodes.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/rbfw_shortcodes.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/rbfw_style.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/rbfw_style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +54,7 @@
       <workItem from="1710382659248" duration="10473000" />
       <workItem from="1710395671030" duration="11191000" />
       <workItem from="1710462329508" duration="3340000" />
+      <workItem from="1710480155664" duration="467000" />
     </task>
     <servers />
   </component>

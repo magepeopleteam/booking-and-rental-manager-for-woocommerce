@@ -1650,7 +1650,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 
                         array(
                             'id'          => 'rbfw_add_category',
-                            'title'       => __( 'Select Cayegories:', 'booking-and-rental-manager-for-woocommerce' ),
+                            'title'       => __( 'Select Categories:', 'booking-and-rental-manager-for-woocommerce' ),
                             'details'     => __( 'If you want to display this item add-to-cart form on any post or page of your website, copy the shortcode and paste it where desired.', 'booking-and-rental-manager-for-woocommerce' ),
                             'type'        => 'rbfw_add_category',
                             'placeholder' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
