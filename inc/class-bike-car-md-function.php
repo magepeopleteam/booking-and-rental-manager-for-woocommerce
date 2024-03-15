@@ -681,13 +681,15 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                     if((pickup_date == dropoff_date) && (typeof pickup_time === "undefined" || pickup_time == '')){
                         
-                        pickup_time = '00:00';
+                        //pickup_time = '00:00';
                     }
 
                     if((pickup_date == dropoff_date) && (typeof dropoff_time === "undefined" || dropoff_time == '')){
                         
-                        dropoff_time = rbfw_end_time();
-                    } 
+                        //dropoff_time = rbfw_end_time();
+                    }
+
+
 
                     let data_cat = that.attr('data-cat');
 
@@ -705,7 +707,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                             service_price_arr[data_name]  = {'data_qty' : data_qty, 'data_price' : data_price};
                         }
-                    }  
+                    }
+
+
+
 
 
 

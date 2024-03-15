@@ -576,5 +576,12 @@
             }
 
         });
+
+        $('.category2').select2({
+            placeholder: 'This is my placeholder',
+            allowClear: true
+        });
+
+
     });
 }(jQuery));
