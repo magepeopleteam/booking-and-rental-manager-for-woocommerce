@@ -392,12 +392,13 @@ function rbfw_bikecarsd_ajax_price_calculation(){
                     jQuery(response).insertAfter('.rbfw_bikecarsd_price_summary.old');
                     jQuery('.rbfw_bikecarsd_price_summary.old').remove();
                     let get_total_price = jQuery('.rbfw_bikecarsd_price_summary .duration-costing .price-figure').attr('data-price');
-                    if(get_total_price > 0){
+                    jQuery(' button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
+                    /*if(get_total_price > 0){
                         jQuery(' button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
                     }
                     else{
                         jQuery(' button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
-                    }
+                    }*/
                 }
             });
 
@@ -444,12 +445,14 @@ function rbfw_bikecarsd_ajax_price_calculation(){
                 jQuery(response).insertAfter('.rbfw_bikecarsd_price_summary.old');
                 jQuery('.rbfw_bikecarsd_price_summary.old').remove();
                 let get_total_price = jQuery('.rbfw_bikecarsd_price_summary .duration-costing .price-figure').attr('data-price');
-                if(get_total_price > 0){
+
+                jQuery(' button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
+                /*if(get_total_price > 0){
                     jQuery(' button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
                 }
                 else{
                     jQuery(' button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
-                }
+                }*/
             }
         });
     });
