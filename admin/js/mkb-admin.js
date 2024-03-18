@@ -577,6 +577,7 @@
 
         });
 
+<<<<<<< HEAD
         jQuery('.rbfw_switch label').click(function(e) {
             e.stopImmediatePropagation();
             e.preventDefault();
@@ -594,5 +595,13 @@
 
 
 
+=======
+        $('.category2').select2({
+            placeholder: 'This is my placeholder',
+            allowClear: true
+        });
+
+
+>>>>>>> 0006d906868da5bff3bfd425f9523c0c7d205909
     });
 }(jQuery));

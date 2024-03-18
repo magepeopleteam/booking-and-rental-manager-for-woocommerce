@@ -657,6 +657,95 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                 // On change quantity value calculate price
                 
+<<<<<<< HEAD
+=======
+                function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
+                    
+                    if (typeof reload_es === 'undefined' || reload_es === null) {
+                        reload_es = 1;
+                    }
+
+                    let post_id = jQuery('[data-service-id]').data('service-id');
+                    let pickup_date = jQuery('#pickup_date').val();
+                    let dropoff_date = jQuery('#dropoff_date').val();
+                    
+                    let pickup_time = jQuery('#pickup_time').find(':selected').val();
+                    let dropoff_time = jQuery('#dropoff_time').find(':selected').val();
+                    let item_quantity = jQuery('#rbfw_item_quantity').find(':selected').val();
+
+                    if(pickup_date == '' || dropoff_date == ''){
+
+                        return false;
+                    }
+                    
+                    if (typeof item_quantity === "undefined" || item_quantity == '') {
+
+                        item_quantity = 1;
+                    }
+
+                    if((pickup_date == dropoff_date) && (typeof pickup_time === "undefined" || pickup_time == '')){
+                        
+                        //pickup_time = '00:00';
+                    }
+
+                    if((pickup_date == dropoff_date) && (typeof dropoff_time === "undefined" || dropoff_time == '')){
+                        
+                        //dropoff_time = rbfw_end_time();
+                    }
+
+
+
+                    let data_cat = that.attr('data-cat');
+
+                    if(data_cat == 'service'){
+
+                        let data_qty         = that.attr('value');
+                        let data_price        = that.attr('data-price');
+                        let data_name        = that.attr('data-name');
+
+                        if(data_qty == 0){
+
+                            delete service_price_arr[data_name];
+                        }
+                        else{
+
+                            service_price_arr[data_name]  = {'data_qty' : data_qty, 'data_price' : data_price};
+                        }
+                    }
+
+
+
+
+
+
+                    jQuery.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: rbfw_ajax.rbfw_ajaxurl,
+                        data: {
+                            'action' : 'rbfw_bikecarmd_ajax_price_calculation',
+                            'post_id': post_id,
+                            'pickup_date': pickup_date,
+                            'pickup_time': pickup_time,
+                            'dropoff_date': dropoff_date,
+                            'dropoff_time': dropoff_time,
+                            'item_quantity': item_quantity,
+                            'service_price_arr': service_price_arr,
+                            'reload_es': reload_es
+                        },
+                        beforeSend: function() {
+                            jQuery('.rbfw_bikecarmd_price_result').empty();
+                            jQuery('.rbfw_bikecarmd_price_result').append('<span class="rbfw-loader rbfw_rp_loader"><i class="fas fa-spinner fa-spin"></i></span>');
+
+                            if(reload_es === 1){
+                                jQuery('.rbfw-resource').empty();
+                            }
+                            
+                            
+                        },		
+                        success: function (response) {
+
+>>>>>>> 0006d906868da5bff3bfd425f9523c0c7d205909
                 
 
                 /* End */
@@ -1035,7 +1124,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                     if(typeof pickup_time !== 'undefined' && typeof dropoff_time !== 'undefined'){
 
-                        the_html += '<div class="rbfw_muff_selected_date_col"><label><img src="<?php echo RBFW_PLUGIN_URL ?>/assets/images/muff_clock_icon2.png"/><?php echo rbfw_string_return('rbfw_text_pickup_time',__('Pickup time','booking-and-rental-manager-for-woocommerce')); ?></label><span class="rbfw_muff_selected_date_value">'+pickup_time+'</span> <label><img src="<?php echo RBFW_PLUGIN_URL ?>/assets/images/muff_clock_icon2.png"/><?php echo rbfw_string_return('rbfw_text_dropoff_time',__('Drop-off time','booking-and-rental-manager-for-woocommerce')); ?></label><span class="rbfw_muff_selected_date_value">'+dropoff_time+'</span></div>';
+                        the_html += '<div class="rbfw_muff_selected_date_col"><label><i class="fa-solid fa-clock"></i> <?php echo rbfw_string_return('rbfw_text_pickup_time',__('Pickup time','booking-and-rental-manager-for-woocommerce')); ?></label><span class="rbfw_muff_selected_date_value">'+pickup_time+'</span></div>'
+                        the_html +='<div class="rbfw_muff_selected_date_col"><label><i class="fa-solid fa-clock"></i> <?php echo rbfw_string_return('rbfw_text_dropoff_time',__('Drop-off time','booking-and-rental-manager-for-woocommerce')); ?></label><span class="rbfw_muff_selected_date_value">'+dropoff_time+'</span></div>';
 
                     }
 

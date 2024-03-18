@@ -237,14 +237,30 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             $post_id = $post->ID;
             ob_start();
             ?>
-            <section class=" mb-2" >
-                <table id="repeatable-fieldset-one-pickup" class='form-table rbfw_pricing_table'>
-                    <tbody class="mp_event_type_sortable">
-                    <tr class="empty-row  location-pick-up-row">
-                        <td><?php rbfw_get_category_dropdown( 'rbfw_category_name',get_post_meta( $post_id, 'rbfw_category_name', true ) ? get_post_meta( $post_id, 'rbfw_category_name', true ) : '' ); ?></td>
-                    </tr>
-                    </tbody>
-                </table>
+            <section class="d-flex justify-content-between w-50">
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div class="d-flex justify-content-between align-items-center" style="width: 700px">
+                        <?php
+                        $rbfw_categories = get_post_meta($post_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_categories', true)) : [];
+                        ?>
+
+                        <select name="rbfw_categories[]" multiple class="category2">
+                            <?php
+                            $terms = get_terms( array(
+                                'taxonomy'   => 'rbfw_item_caregory',
+                                'hide_empty' => false,
+                            ) );
+                            foreach ( $terms as $key => $value ) {
+                                ?>
+                                <option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
+                                <?php
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                </div>
             </section>
 
             <?php

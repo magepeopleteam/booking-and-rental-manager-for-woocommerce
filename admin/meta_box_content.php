@@ -35,6 +35,8 @@
             <?php do_action( 'rbfw_item_exs_pricing_after', $rbfw_id ); ?>
         </div>
 
+
+
 		<?php
 		do_action( 'rbfw_location_config_before', $rbfw_id );
 		rbfw_location_config($rbfw_id);
@@ -1457,13 +1459,8 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 	}
 
 
-	add_action( 'save_post', 'rbfw_save_meta_box_data', 99 );
-	function rbfw_save_meta_box_data( $post_id ) {
-		global $wpdb;
-		if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
-			return;
-		}
 
+<<<<<<< HEAD:admin/meta.php
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
@@ -1748,6 +1745,8 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			save_rbfw_repeated_setting( $post_id, 'mep_event_faq' );
 		}
 	}
+=======
+>>>>>>> 0006d906868da5bff3bfd425f9523c0c7d205909:admin/meta_box_content.php
 
 
 	add_action( 'admin_init', 'rbfw_fw_meta_boxs' );
@@ -1776,7 +1775,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 
                         array(
                             'id'          => 'rbfw_add_category',
-                            'title'       => __( 'Cayegory Name:', 'booking-and-rental-manager-for-woocommerce' ),
+                            'title'       => __( 'Select Categories:', 'booking-and-rental-manager-for-woocommerce' ),
                             'details'     => __( 'If you want to display this item add-to-cart form on any post or page of your website, copy the shortcode and paste it where desired.', 'booking-and-rental-manager-for-woocommerce' ),
                             'type'        => 'rbfw_add_category',
                             'placeholder' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1996,6 +1995,23 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 
         );
         new RMFWAddMetaBox( $rbfw_off_days_meta_boxs_args );
+
+
+      /*  $rbfw_category_meta_boxs_args = array(
+            'meta_box_id'    => 'rbfw_categories',
+            'meta_box_title' => '<i class="fa-regular fa-calendar-xmark"></i>' .__( 'Category', 'booking-and-rental-manager-for-woocommerce' ),
+            'screen'         => array( 'rbfw_item' ),
+            'context'        => 'normal',
+            'priority'       => 'low',
+            'callback_args'  => array(),
+            'nav_position'   => 'none',
+            'item_name'      => "MagePeople",
+            'item_version'   => "2.0",
+        );
+        new RMFWAddMetaBox( $rbfw_category_meta_boxs_args );*/
+
+
+
 
 		$rbfw_location_meta_boxs_args = array(
 			'meta_box_id'    => 'rbfw_location_config',

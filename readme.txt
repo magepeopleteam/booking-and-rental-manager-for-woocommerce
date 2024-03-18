@@ -1,7 +1,7 @@
 === Rental and Booking Manager for Bike, Car, Dress, Resort with WooCommerce Integration - WpRently | WordPress plugin ===
 Contributors: magepeopleteam, aamahin
 Plugin link: https://mage-people.com/
-Tags: Woocommerce, Rent, Booking, Reservation, Hotel, Resort, Appointment, Event, Woocommerce Booking, Reservation Booking, booking calendar, booking plugin, booking system, Woocommerce Reservation Booking, Day Booking, Night Booking, Rental Booking, Woocommerce Rental Booking, WC.
+Tags: booking calendar, Woocommerce Reservation Booking, Rental Booking, Woocommerce Rental Booking, Rental Plugin 
 Requires at least: 5.3
 Stable tag: 1.3.4
 Version: 1.3.4
@@ -10,7 +10,7 @@ Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Woocommerce Rental and Booking Manager for Bike, Car, Resort, Appointment, Dress, and Equipment. Simplify your reservation system for a memorable journey!
+Woocommerce Rental and Booking Manager for Bike, Car, Resort, Appointment and Equipment. Simplify your reservation system for a memorable journey!
 
 == Description ==
 [Booking & Rental Manager – WpRently](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/) is a complete solution for all booking, rental, and reservation services including Cars, Bikes, Party Dress, Parking, Equipment, and resort. The plugin will help to create your booking management system within your WordPress website with advanced capabilities that can be used to manage and offer bookings on the dates selected by customers.
@@ -109,7 +109,7 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 ### Shortcodes included with Booking and Rental Manager:
 
 `
-[rent-list type='' style='grid' show='' order='DESC']
+[rent-list type='' style='grid' show='' columns='' category='' order='DESC']
 `
 
 ### Shortcode to show only bike/car for single-day type rent list:
@@ -139,6 +139,17 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 
 `
 [rent-list order='ASC']
+`
+
+### Shortcode to show rent list by column here 4 I have given as example column:
+
+`
+[rent-list columns='4']
+`
+### Shortcode to show rent list by categories ID here I have give 2,3 as category id:
+
+`
+[rent-list category='2,3']
 `
 
 ### Shortcode to show single item add-to-cart:

@@ -533,8 +533,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 if($is_muffin_template == 1){
                     $content .= '<div class="rbfw_step_selected_date rbfw_muff_selected_date" step="3">';
-                    $content .= '<div class="rbfw_muff_selected_date_col"><label><img src="'. RBFW_PLUGIN_URL . '/assets/images/muff_calendar_icon2.png"/>'.rbfw_string_return('rbfw_text_date',__('Date','booking-and-rental-manager-for-woocommerce')).'</label><span class="rbfw_muff_selected_date_value">'.$result.'</span></div>';
-                    $content .= '<div class="rbfw_muff_selected_date_col"><label><img src="'. RBFW_PLUGIN_URL . '/assets/images/muff_clock_icon2.png"/>'.rbfw_string_return('rbfw_text_time',__('Time','booking-and-rental-manager-for-woocommerce')).'</label><span class="rbfw_muff_selected_date_value">'.$selected_time.'</span></div>';
+                    $content .= '<div class="rbfw_muff_selected_date_col"><label><i class="fa-regular fa-calendar-days"></i> '.rbfw_string_return('rbfw_text_date',__('Date','booking-and-rental-manager-for-woocommerce')).'</label><span class="rbfw_muff_selected_date_value">'.$result.'</span></div>';
+                    $content .= '<div class="rbfw_muff_selected_date_col"><label><i class="fa-regular fa-clock"></i> '.rbfw_string_return('rbfw_text_time',__('Time','booking-and-rental-manager-for-woocommerce')).'</label><span class="rbfw_muff_selected_date_value">'.$selected_time.'</span></div>';
                     $content .= '</div>';
                 }
 

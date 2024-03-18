@@ -2915,19 +2915,19 @@ function rbfw_related_products_style_three($post_id){
 					<div class="rbfw-related-product-inner-content-wrap">
 						<div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
 						<div class="rbfw-related-product-bottom-card">
-							<div class="rbfw-related-product-bottom-card-pricing-box">
-								<?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
-									<div class="rbfw-related-product-price-wrap"><?php echo esc_html($hourly_rate_label); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price($price); ?></span></div>
-								<?php endif; ?>
+                            <div class="rbfw-related-product-bottom-card-pricing-box">
+                                <?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment' && $price): ?>
+                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html($hourly_rate_label); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price($price); ?></span></div>
+                                <?php endif; ?>
 
-								<?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
-									<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price($price); ?></span></div>
-								<?php endif; ?>
+                                <?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data) && $price): ?>
+                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price($price); ?></span></div>
+                                <?php endif; ?>
 
-								<?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
-									<div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price($price); ?></span></div>
-								<?php endif; ?>
-							</div>
+                                <?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data) && $price): ?>
+                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price($price); ?></span></div>
+                                <?php endif; ?>
+                            </div>
 							<?php if(!empty($highlited_features)): ?>
 								<div class="rbfw-related-product-features">
 								<?php if ( $highlited_features ) : ?>
