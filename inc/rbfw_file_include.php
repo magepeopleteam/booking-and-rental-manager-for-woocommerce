@@ -33,10 +33,37 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-time-slots-page.php';
 require_once RBFW_PLUGIN_DIR . '/support/elementor/elementor-support.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
 
+
+add_action('init', 'rbfw_category_update');
+function rbfw_category_update(){
+    $rbfw_category_update = get_option('rbfw_category_update');
+
+    if($rbfw_category_update != 'yes'){
+
+        $args = array(
+            'post_type' => 'rbfw_item',
+            'posts_per_page' => -1,
+        );
+        $query = new WP_Query($args);
+
+        if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
+            $rbfw_category_name = get_post_meta(get_the_ID(),'rbfw_category_name',true);
+            $category_name=isset(get_term($rbfw_category_name)->name) ? get_term($rbfw_category_name)->name : '';
+            $rbfw_categories = array(0=>$category_name);
+            update_post_meta(get_the_ID(),'rbfw_categories',$rbfw_categories);
+        endwhile;
+        endif;
+        update_option( 'rbfw_category_update', 'yes' );
+    }
+}
+
 /*************************************************
 * if Woocommerce Payment System is Enabled
 **************************************************/
 add_action('wp_loaded', 'rbfw_free_woocommerce_integrate');
+
+
+
 
 function rbfw_free_woocommerce_integrate(){
 
