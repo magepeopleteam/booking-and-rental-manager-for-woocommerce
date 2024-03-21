@@ -23,8 +23,33 @@ if (!class_exists('MageRBFWClass')) {
             add_action('wp_insert_post', array($this, 'create_hidden_wc_product_on_publish'), 10, 3);
             add_action('save_post', array($this, 'run_link_product_on_save'), 99, 1);
             add_action('wp', array($this, 'hide_hidden_wc_product_from_frontend'));
+            add_action('parse_query', [$this, 'rbfw_hide_hidden_wc_products_in_list_page']);
             /* End WooCommerce Action and Filter */
         }
+
+    function rbfw_hide_hidden_wc_products_in_list_page($query) {
+        global $pagenow;
+        $taxonomy = 'product_visibility';
+        $q_vars = &$query->query_vars;
+        if ($pagenow == 'edit.php' && isset($q_vars['post_type']) && $q_vars['post_type'] == 'product') {
+            $tax_query = array(
+                [
+                    'taxonomy' => 'product_visibility',
+                    'field' => 'slug',
+                    'terms' => 'exclude-from-catalog',
+                    'operator' => 'NOT IN',
+                ],
+                [
+                    'taxonomy' => 'product_cat',
+                    'field' => 'slug',
+                    'terms' => 'uncategorized	',
+                    'operator' => 'NOT IN',
+                ]
+            );
+            $query->set('tax_query', $tax_query);
+        }
+
+    }
 
         function admin_init() {
             $this->settings_api->set_sections($this->get_settings_sections());
@@ -872,9 +897,10 @@ if (!class_exists('MageRBFWClass')) {
         function hide_hidden_wc_product_from_frontend() {
             global $post, $wp_query;
             if (class_exists( 'WooCommerce' ) && is_product()) {
+
                 $post_id = $post->ID;
-                $visibility = get_the_terms($post_id, 'product_visibility');
-                if (is_object($visibility)) {
+                $visibility = get_the_terms($post_id, 'product_visibility');                
+                if (is_object($visibility) || is_array($visibility)) {                    
                     if ($visibility[0]->name == 'exclude-from-catalog') {
                         $check_event_hidden = get_post_meta($post_id, 'link_rbfw_id', true) ? get_post_meta($post_id, 'link_rbfw_id', true) : 0;
                         if ($check_event_hidden > 0) {
@@ -1004,5 +1030,3 @@ if (!class_exists('MageRBFWClass')) {
 }
 
 $rbfw = new MageRBFWClass();
-
-
