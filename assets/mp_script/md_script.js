@@ -74,8 +74,6 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
             if(reload_es === 1){
                 jQuery('.rbfw-resource').empty();
             }
-
-
         },
         success: function (response) {
 
@@ -100,16 +98,11 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
             }
 
             jQuery('.rbfw_rp_loader').hide();
-            jQuery('.rbfw_bikecarmd_price_result').html(response.content);
-            let get_total_price = jQuery('.rbfw_bikecarmd_price_summary .duration-costing .price-figure').attr('data-price');
 
-            if(get_total_price > 0){
-                jQuery(' button.rbfw_bikecarmd_book_now_btn').removeAttr('disabled');
-                jQuery('.rbfw_next_btn').removeAttr('disabled');
-            }
-            else{
-                jQuery(' button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
-            }
+            jQuery('.rbfw_bikecarmd_price_result').html(response.content);
+
+            jQuery(' button.rbfw_bikecarmd_book_now_btn').removeAttr('disabled');
+
 
             if((response.max_available_qty == 0)) {
                 jQuery('.rbfw_nia_notice').remove();
