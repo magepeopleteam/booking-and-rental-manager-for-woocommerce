@@ -247,8 +247,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     if(rbfw_check_discount_over_days_plugin_active() === true){
 
                         if(function_exists('rbfw_get_discount_array')){
-
-                            $discount_arr = rbfw_get_discount_array($post_id, $start_datetime_raw, $end_datetime_raw, $total_price);
                             $discount_arr = rbfw_get_discount_array($post_id, $pickup_datetime, $dropoff_datetime, $total_price);
                     
                         } else {
