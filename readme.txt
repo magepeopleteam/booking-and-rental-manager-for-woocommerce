@@ -208,6 +208,9 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
+= 1.4.1 =
+* Bug fixed about discount
+
 = 1.3.1 =
 * cart date time missing fixed for single rent
 = 1.3.1 =
