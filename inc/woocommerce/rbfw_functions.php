@@ -71,23 +71,16 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     /* Type: Resort */
     $rbfw_resort 				= new RBFW_Resort_Function();
 
-/*    $rbfw_checkin_datetime        	= isset( $_POST['rbfw_start_datetime'] ) ? strip_tags( $_POST['rbfw_start_datetime'] ) : '';
+    $rbfw_checkin_datetime        	= isset( $_POST['rbfw_start_datetime'] ) ? strip_tags( $_POST['rbfw_start_datetime'] ) : '';
     $rbfw_checkout_datetime     	= isset( $_POST['rbfw_end_datetime'] ) ? strip_tags( $_POST['rbfw_end_datetime'] ) : '';
     $start_date = $rbfw_checkin_datetime;
-    $end_date = $rbfw_checkout_datetime;*/
-
-
-
+    $end_date = $rbfw_checkout_datetime;
 
 
     $pickup_date  = $_POST['rbfw_pickup_start_date'];
-    $start_date = $pickup_date;
     $pickup_time  = !empty($_POST['pickup_time']) ? $_POST['pickup_time'] : '';
     $dropoff_date = $_POST['rbfw_pickup_end_date'];
-    $end_date = $dropoff_date;
     $dropoff_time = !empty($_POST['dropoff_time']) ? $_POST['dropoff_time'] : '';
-
-
     if(empty($pickup_time) && empty($dropoff_time)){
         $pickup_datetime  = date( 'Y-m-d', strtotime( $pickup_date.' '.'00:00:00' ) );
         $dropoff_datetime = date( 'Y-m-d', strtotime( $dropoff_date.' '.rbfw_end_time() ) );
@@ -95,7 +88,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
         $pickup_datetime  = date( 'Y-m-d H:i', strtotime( $pickup_date . ' ' . $pickup_time ) );
         $dropoff_datetime = date( 'Y-m-d H:i', strtotime( $dropoff_date . ' ' . $dropoff_time ) );
     }
-
+    $pickup_datetime  = new DateTime( $pickup_datetime );
+    $dropoff_datetime = new DateTime( $dropoff_datetime );
 
 
 
@@ -261,7 +255,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
 
         if(function_exists('rbfw_get_discount_array')){
 
-            $discount_arr = rbfw_get_discount_array($rbfw_id, $start_date, $end_date, $total_price);
+            $discount_arr = rbfw_get_discount_array($rbfw_id, $pickup_datetime, $dropoff_datetime, $total_price);
 
         } else {
 
