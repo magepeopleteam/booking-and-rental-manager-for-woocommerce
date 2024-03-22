@@ -373,6 +373,19 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
 
                 <?php if(rbfw_chk_regf_fields_exist($rbfw_id) === true){ ?>
                     <div class="item">
+
+                        <div class="rbfw_reg_form_rb" style="display: none">
+
+                            <?php
+
+                            $reg_form = new Rbfw_Reg_Form();
+                            echo $reg_form->rbfw_generate_regf_fields($post_id);
+
+                            ?>
+
+                        </div>
+
+
                         <a class="rbfw_prev_btn">
                             <img src="<?php echo RBFW_PLUGIN_URL . '/assets/images/muff_edit_icon.png'; ?>"/> <?php rbfw_string('rbfw_text_change',__('Change','booking-and-rental-manager-for-woocommerce')); ?>
                         </a>
@@ -380,6 +393,8 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                             <?php rbfw_string('rbfw_text_next',__('Next','booking-and-rental-manager-for-woocommerce')); ?>
                         </a>
                         <?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>
+
+
                         <button type="submit" name="add-to-cart" value="<?php echo mep_esc_html($rbfw_product_id); ?>" class="rbfw_mps_book_now_btn_regf mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn <?php echo esc_attr($rbfw_payment_system); ?>" disabled <?php if( $rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date ) { echo 'style="display:none"'; }?>>
                             <?php rbfw_string('rbfw_text_book_now',__('Book Now','booking-and-rental-manager-for-woocommerce')); ?>
                         </button>

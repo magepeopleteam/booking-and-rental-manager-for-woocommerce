@@ -77,6 +77,10 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
         },
         success: function (response) {
 
+            jQuery(".rbfw_next_btn").slideToggle();
+            jQuery(".rbfw_prev_btn").toggleClass('rbfw_d_block');
+            jQuery(".rbfw_muff_registration_wrapper .rbfw_mps_book_now_btn_regf").slideToggle();
+            jQuery('.rbfw_reg_form_rb').show();
 
             if (response.duration) {
                 jQuery('.rbfw-duration').slideDown('fast').find('.item-content').text(response.duration);
@@ -102,6 +106,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
             jQuery('.rbfw_bikecarmd_price_result').html(response.content);
 
             jQuery(' button.rbfw_bikecarmd_book_now_btn').removeAttr('disabled');
+            jQuery('.rbfw_next_btn').removeAttr('disabled');
 
 
             if((response.max_available_qty == 0)) {

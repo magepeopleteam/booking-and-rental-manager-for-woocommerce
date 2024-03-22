@@ -35,7 +35,79 @@
             <?php do_action( 'rbfw_item_exs_pricing_after', $rbfw_id ); ?>
         </div>
 
+        <div class="mp_tab_item active" data-tab-item="#rbfw_tax">
 
+
+                <div class="tab-content active  tab-content-rbfw_tax_meta_boxs">
+                    <h2 id="section_2" class="h5 text-white bg-primary mb-1 rounded-top"><?php esc_html_e('Tax Configuration', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
+
+                    <div data-title="Tax Configuration">
+
+                        <?php if(get_option( 'woocommerce_calc_taxes' ) == 'yes'){ ?>
+
+                            <?php
+                            $tax_class  = get_post_meta($rbfw_id,'_tax_class',true);
+                            $tax_status  = get_post_meta($rbfw_id,'_tax_status',true);
+                            $tax_slugs = WC_Tax::get_tax_class_slugs();
+                            $tax_classes = WC_Tax::get_tax_classes();
+                            ?>
+
+                        <section class="component d-flex  justify-content-between align-items-start mb-2" data-row="_tax_status">
+                            <label scope="row" class="h6 w-30"><?php esc_html_e('Tax Status', 'booking-and-rental-manager-for-woocommerce'); ?><i class="fas fa-question-circle tool-tips"><span><?php esc_html_e('Please Select Tax Status', 'booking-and-rental-manager-for-woocommerce'); ?></span></i>										</label>
+
+                            <div class="d-flex flex-column w-70">
+                                <div id="field-wrapper-_tax_status" class=" field-wrapper field-select-wrapper field-select-wrapper-_tax_status">
+                                    <select class="formControl max_300" name="_tax_status">
+                                        <option><?php esc_html_e('Select Tax Status', 'booking-and-rental-manager-for-woocommerce'); ?></option>
+                                        <option value="taxable" <?php echo esc_attr($tax_status == 'taxable' ? 'selected' : ''); ?>>
+                                            <?php esc_html_e('Taxable', 'booking-and-rental-manager-for-woocommerce'); ?>
+                                        </option>
+                                        <option value="shipping" <?php echo esc_attr($tax_status == 'shipping' ? 'selected' : ''); ?>>
+                                            <?php esc_html_e('Shipping only', 'booking-and-rental-manager-for-woocommerce'); ?>
+                                        </option>
+                                        <option value="none" <?php echo esc_attr($tax_status == 'none' ? 'selected' : ''); ?>>
+                                            <?php esc_html_e('None', 'booking-and-rental-manager-for-woocommerce'); ?>
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="component d-flex  justify-content-between align-items-start mb-2" data-row="_tax_class">
+                            <label scope="row" class="h6 w-30">
+                                <?php esc_html_e('Tax Class', 'booking-and-rental-manager-for-woocommerce'); ?><i class="fas fa-question-circle tool-tips"><span><?php esc_html_e('Please Select Tax Class', 'booking-and-rental-manager-for-woocommerce'); ?></span></i>										</label>
+
+                            <div class="d-flex flex-column w-70">
+                                <div id="field-wrapper-_tax_class" class=" field-wrapper field-select-wrapper field-select-wrapper-_tax_class">
+                                    <select id="_tax_class" name="_tax_class">
+                                        <option><?php esc_html_e('Select Tax Class', 'booking-and-rental-manager-for-woocommerce'); ?></option>
+                                        <option value="standard" <?php echo esc_attr($tax_class == 'standard' ? 'selected' : ''); ?>>
+                                            <?php esc_html_e('Standard', 'booking-and-rental-manager-for-woocommerce'); ?>
+                                        </option>
+                                        <?php if (sizeof($tax_classes) > 0) { ?>
+                                            <?php foreach ($tax_classes as $key => $class) { ?>
+                                                <option value="<?php echo esc_attr($tax_slugs[$key]); ?>" <?php echo esc_attr($tax_class == $tax_slugs[$key] ? 'selected' : ''); ?>>
+                                                    <?php echo esc_html($class); ?>
+                                                </option>
+                                            <?php } ?>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </section>
+                        <?php }else{ ?>
+                        <section class="component d-flex  justify-content-between align-items-start mb-2" data-row="tax_notice">
+                            <label scope="row" class="h6 w-30">
+                                Tax<i class="fas fa-question-circle tool-tips"><span>To enable automated tax calculation, first ensure that “enable taxes and tax calculations” is checked on WooCommerce &gt; Settings &gt; General. <a href="https://woocommerce.com/document/woocommerce-shipping-and-tax/woocommerce-tax/">View Documentation</a></span></i>										</label>
+
+                            <div class="d-flex flex-column w-70">
+                                <p>To enable automated tax calculation, first ensure that “enable taxes and tax calculations” is checked on WooCommerce &gt; Settings &gt; General. <a href="https://woocommerce.com/document/woocommerce-shipping-and-tax/woocommerce-tax/">View Documentation</a></p><p>										</p></div>
+                        </section>
+                        <?php } ?>
+                    </div>
+                </div>
+
+        </div>
 
 		<?php
 		do_action( 'rbfw_location_config_before', $rbfw_id );
@@ -1708,9 +1780,9 @@ function rbfw_frontend_display_tab_content($rbfw_id){
         new RMFWAddMetaBox( $rbfw_off_days_meta_boxs_args );
 
 
-      /*  $rbfw_category_meta_boxs_args = array(
-            'meta_box_id'    => 'rbfw_categories',
-            'meta_box_title' => '<i class="fa-regular fa-calendar-xmark"></i>' .__( 'Category', 'booking-and-rental-manager-for-woocommerce' ),
+       $rbfw_tax_meta_boxs_args = array(
+            'meta_box_id'    => 'rbfw_tax',
+            'meta_box_title' => '<i class="fa-solid fa-dollar-sign"></i>' .__( 'Tax', 'booking-and-rental-manager-for-woocommerce' ),
             'screen'         => array( 'rbfw_item' ),
             'context'        => 'normal',
             'priority'       => 'low',
@@ -1719,7 +1791,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
             'item_name'      => "MagePeople",
             'item_version'   => "2.0",
         );
-        new RMFWAddMetaBox( $rbfw_category_meta_boxs_args );*/
+        new RMFWAddMetaBox( $rbfw_tax_meta_boxs_args );
 
 
 

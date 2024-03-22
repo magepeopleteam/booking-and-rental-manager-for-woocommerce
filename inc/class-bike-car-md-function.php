@@ -276,13 +276,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 </div>
             </div>';
 
-            /* Include Custom Registration Form */
-            if(class_exists('Rbfw_Reg_Form')){
-                $reg_form = new Rbfw_Reg_Form();
-                $reg_fields = $reg_form->rbfw_generate_regf_fields($post_id);
-                $content.= $reg_fields;
-            }
-            /* End: Include Custom Registration Form */
+
 
             $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $pickup_date, $dropoff_date);
             $item_quantity_box = '';
@@ -1043,7 +1037,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     jQuery('.rbfw_bikecarmd_price_result').prepend(the_html);
                     jQuery(".rbfw_bike_car_md_item_wrapper_inner").slideToggle();
                     jQuery(".rbfw_bikecarmd_price_summary").slideToggle();
-                    //jQuery(".rbfw_regf_wrap").slideToggle();
+                    jQuery(".rbfw_regf_wrap").slideToggle();
                     jQuery(".rbfw_next_btn").slideToggle();
                     jQuery(".rbfw_prev_btn").toggleClass('rbfw_d_block');
                     jQuery(".rbfw_muff_registration_wrapper .rbfw_mps_book_now_btn_regf").slideToggle();

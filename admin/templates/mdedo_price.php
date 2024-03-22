@@ -83,23 +83,16 @@
     <h2 class="h5 text-white bg-primary mb-1 rounded-top">
         <?php echo esc_html_e( 'Category service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
     </h2>
-
     <?php
-
     $options = array(
         'id'          => 'rbfw_service_category_price',
         'type'        => 'md_service_category_price',
         'placeholder'        => 'Service Name',
     );
-
-
     $option_value         = get_post_meta($post_id, $options['id'], true);
     $options['value']      = is_serialized($option_value) ? unserialize($option_value) : $option_value;
-
     echo rbfw_field_generator( 'md_service_category_price', $options );
-
     ?>
-
 </div>
 
 <br>
