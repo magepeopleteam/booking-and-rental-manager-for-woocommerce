@@ -555,6 +555,7 @@ function rbfw_get_category_dropdown( $name, $saved_value = '', $class = '' ) {
 
 
 
+
 			$FormFieldsGenerator = new RbfwFormFieldsGenerator();
 			if ( $type === 'text' ) {
 				return $FormFieldsGenerator->field_text( $option );
@@ -646,13 +647,18 @@ function rbfw_get_category_dropdown( $name, $saved_value = '', $class = '' ) {
                 return $FormFieldsGenerator->field_rbfw_add_category( $option );
             } elseif ( $type === 'feature_category' ) {
                 return $FormFieldsGenerator->field_feature_category( $option );
-            }elseif ( $type === 'time_slot' ) {
+            }elseif ( $type === 'md_service_category_price' ) {
+                return $FormFieldsGenerator->field_service_price( $option );
+            }
+            elseif ( $type === 'time_slot' ) {
 				return $FormFieldsGenerator->field_time_slot( $option );
 			} else {
 				return '';
 			}
 		}
 	}
+
+
 
 
 	if ( ! function_exists( 'mage_array_strip' ) ) {
@@ -1065,6 +1071,7 @@ function rbfw_footer_admin_scripts(){
 								jQuery('.rbfw_load_more_icons').append('<span class="rbfw_load_more_icons_loader"><i class="fas fa-spinner fa-spin"></i></span>');
 							},
 							success: function (response) {
+                                console.log('response',response);
 								jQuery('.rbfw_load_more_icons_loader').remove();
 								jQuery('.rbfw_features_icon_list_body').append(response);
 								data_loaded = data_loaded + 100;
@@ -1095,9 +1102,9 @@ function rbfw_footer_admin_scripts(){
 							}
 						});
 					});
-		});	
+		});
 	</script>
-	<div id="rbfw_features_icon_list_wrapper" class="mage_modal" data-loaded="100">
+	<div id="rbfw_features_icon_list_wrapper" class="mage_modal ggggg" data-loaded="100">
 		<div class="rbfw_features_icon_list_header">
 			<div class="rbfw_features_icon_list_header_group">
 				<a href="#rbfw_features_icon_list_wrapper" rel="mage_modal:close" class="rbfw_feature_icon_list_close_button"><?php esc_html_e('Close','booking-and-rental-manager-for-woocommerce'); ?></a>

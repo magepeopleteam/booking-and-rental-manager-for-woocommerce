@@ -105,6 +105,8 @@ function rbfw_save_meta_box_data( $post_id ) {
 
         $rbfw_categories 	 = isset( $_POST['rbfw_categories'] ) ? rbfw_array_strip( $_POST['rbfw_categories'] ) : [];
 
+        $_tax_class 	 = isset( $_POST['_tax_class'] ) ? rbfw_array_strip( $_POST['_tax_class'] ) : '';
+        $_tax_status 	 = isset( $_POST['_tax_status'] ) ? rbfw_array_strip( $_POST['_tax_status'] ) : '';
 
 
 
@@ -180,6 +182,8 @@ function rbfw_save_meta_box_data( $post_id ) {
 
         update_post_meta( $post_id, 'rbfw_category_name', $rbfw_category_name );
         update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
+        update_post_meta( $post_id, '_tax_class', $_tax_class );
+        update_post_meta( $post_id, '_tax_status', $_tax_status );
 
 
         $off_schedules = [];
