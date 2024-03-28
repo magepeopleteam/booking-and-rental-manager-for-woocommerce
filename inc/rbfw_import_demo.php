@@ -91,7 +91,7 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
                             }
                             update_post_meta( $rent_post_id, '_thumbnail_id', $thumb_id );
 
-                            $wc_product_args = array(
+                           /* $wc_product_args = array(
                                 'post_type' 	=> 'product',
                                 'post_title' 	=> $title,
                                 'post_name' => uniqid(),
@@ -110,7 +110,7 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
                                 $terms = array('exclude-from-catalog', 'exclude-from-search');
                                 wp_set_object_terms($wc_product_id, $terms, 'product_visibility');
                                 update_post_meta($rent_post_id, 'check_if_run_once', true);
-                            }
+                            }*/
                         }   
                     }
                     $i++;
