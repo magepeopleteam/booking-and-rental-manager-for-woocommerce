@@ -20,7 +20,7 @@ if (!class_exists('MageRBFWClass')) {
             add_action('admin_menu', array($this, 'admin_menu'));
             /* WooCommerce Action and Filter */
             add_filter('woocommerce_order_status_changed', array($this, 'rbfw_wc_status_update'), 10, 4);
-            add_action('wp_insert_post', array($this, 'create_hidden_wc_product_on_publish'), 10, 3);
+            //add_action('wp_insert_post', array($this, 'create_hidden_wc_product_on_publish'), 10, 3);
             add_action('save_post', array($this, 'run_link_product_on_save'), 99, 1);
             add_action('wp', array($this, 'hide_hidden_wc_product_from_frontend'));
             /* End WooCommerce Action and Filter */
@@ -815,9 +815,19 @@ if (!class_exists('MageRBFWClass')) {
                 }
                 $event_name = get_the_title($post_id);
 
-                if ($this->count_hidden_wc_product($post_id) == 0 || empty(get_post_meta($post_id, 'link_wc_product', true))) {
+                $hidden_product_id = get_post_meta($post_id, 'link_wc_product', true);
+
+                if($hidden_product_id){
+                    if($this->count_hidden_wc_product($post_id) == 0){
+                        $this->create_hidden_wc_product($post_id, $event_name);
+                    }
+                }else{
                     $this->create_hidden_wc_product($post_id, $event_name);
                 }
+
+                /*if ($this->count_hidden_wc_product($post_id) == 0 || empty(get_post_meta($post_id, 'link_wc_product', true))) {
+                    $this->create_hidden_wc_product($post_id, $event_name);
+                }*/
 
                 $product_id = get_post_meta($post_id, 'link_wc_product', true) ? get_post_meta($post_id, 'link_wc_product', true) : $post_id;
 
