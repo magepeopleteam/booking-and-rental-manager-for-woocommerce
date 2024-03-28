@@ -99,7 +99,8 @@ $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','
 					<div class="rbfw-related-products-wrapper"><?php do_action( 'rbfw_related_products', $post_id ); ?></div>
 				</div>
 				<div class="mp_right_section">
-					<?php include( RBFW_Function::template_path( 'forms/bike-registration.php' ) ); ?>
+					<?php //include( RBFW_Function::template_path( 'forms/bike-registration.php' ) ); ?>
+                    <?php include( RBFW_Function::template_path( 'forms/muffin/bike-registration.php' ) ); ?>
 				</div>
 			</div>
 		</div>

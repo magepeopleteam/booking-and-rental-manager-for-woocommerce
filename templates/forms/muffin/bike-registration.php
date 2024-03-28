@@ -149,7 +149,6 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
             <div class="rbfw_bike_car_md_item_wrapper">
                 <div class="rbfw_bike_car_md_item_wrapper_inner">
                     <?php do_action('rbfw_discount_ad', $rbfw_id); ?>
-
                     <div class="item">
                         <div class="item-content pricing-content">
                             <div class="section-header">
@@ -157,7 +156,6 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                                     <?php echo esc_html($rbfw->get_option('rbfw_text_pricing_info', 'rbfw_basic_translation_settings', __('Pricing Info','booking-and-rental-manager-for-woocommerce'))); ?>
                                 </div>
                             </div>
-
                             <div class="price-item-container">
                                 <?php if (($enable_daily_rate == 'yes' || $rbfw_enable_daywise_price == 'yes') && !empty($daily_rate)) : ?>
                                     <div class="price-type">
@@ -165,7 +163,6 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                                         <p><?php echo rbfw_mps_price($daily_rate); ?> / <?php echo esc_html($rbfw->get_option('rbfw_text_day', 'rbfw_basic_translation_settings', __('day','booking-and-rental-manager-for-woocommerce'))); ?></p>
                                     </div>
                                 <?php endif; ?>
-
                                 <?php if (($enable_hourly_rate == 'yes'  || $rbfw_enable_daywise_price == 'yes') && !empty($hourly_rate)) : ?>
                                     <div class="price-type">
                                         <p><?php echo esc_html($rbfw->get_option('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly Rate','booking-and-rental-manager-for-woocommerce'))); ?>:</p>
