@@ -142,31 +142,23 @@
     $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
 
 ?>
-	<!--    Main Layout-->
+
 	<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
-		<!--    Left Side-->
-
-		<!--    Left Side END-->
-
-		<!--    Right Side-->
-		<div class="rbfw-single-right-container">
-			<form action="" method='post' class="mp_rbfw_ticket_form">
-				<!--    ITEM        -->
-
+        <div class="rbfw-single-right-container">
+            <form action="" method='post' class="mp_rbfw_ticket_form">
 				<?php do_action('rbfw_discount_ad', $rbfw_id); ?>
-
-				<div class="rbfw_bike_car_md_item_wrapper">
-				<div class="item">
-					<div class="item-content pricing-content">
-						<div class="section-header">
-							<div class="rbfw-single-right-heading rbfw_pricing_info_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_pricing_info', 'rbfw_basic_translation_settings', __('Pricing Info','booking-and-rental-manager-for-woocommerce'))); ?></div>
-						</div>
-						<div class="price-item-container">
-							<?php if (($enable_daily_rate == 'yes' || $rbfw_enable_daywise_price == 'yes') && !empty($daily_rate)) : ?>
-								<div class="price-type">
-									<p><?php echo esc_html($rbfw->get_option('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily Rate','booking-and-rental-manager-for-woocommerce'))); ?>:</p>
-									<p><?php echo rbfw_mps_price($daily_rate); ?> / <?php echo esc_html($rbfw->get_option('rbfw_text_day', 'rbfw_basic_translation_settings', __('day','booking-and-rental-manager-for-woocommerce'))); ?></p>
-								</div>
+                <div class="rbfw_bike_car_md_item_wrapper">
+                    <div class="item">
+                        <div class="item-content pricing-content">
+                            <div class="section-header">
+                                <div class="rbfw-single-right-heading rbfw_pricing_info_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_pricing_info', 'rbfw_basic_translation_settings', __('Pricing Info','booking-and-rental-manager-for-woocommerce'))); ?></div>
+                            </div>
+                            <div class="price-item-container">
+                                <?php if (($enable_daily_rate == 'yes' || $rbfw_enable_daywise_price == 'yes') && !empty($daily_rate)) : ?>
+                                    <div class="price-type">
+                                        <p><?php echo esc_html($rbfw->get_option('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily Rate','booking-and-rental-manager-for-woocommerce'))); ?>:</p>
+                                        <p><?php echo rbfw_mps_price($daily_rate); ?> / <?php echo esc_html($rbfw->get_option('rbfw_text_day', 'rbfw_basic_translation_settings', __('day','booking-and-rental-manager-for-woocommerce'))); ?></p>
+                                    </div>
 							<?php endif; ?>
 
 							<?php if (($enable_hourly_rate == 'yes'  || $rbfw_enable_daywise_price == 'yes') && !empty($hourly_rate)) : ?>

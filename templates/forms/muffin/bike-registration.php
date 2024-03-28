@@ -369,33 +369,55 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                 </div>
 
 
-                <div class="rbfw_bikecarmd_price_result"></div>
+                <div class="rbfw_bikecarmd_price_result">
+                    <div class="item-content rbfw-costing">
+                        <ul class="rbfw-ul">
+                            <li class="duration-costing rbfw-cond">Duration Cost
+                                <span class="price-figure" data-price="">
+                                </span>
+                            </li>
+                            <li class="resource-costing rbfw-cond">Resource Cost
+                                <span class="price-figure" data-price="">
+                                </span>
+                            </li>
+                            <li class="subtotal">Subtotal
+                                <span class="price-figure" data-price="">
+                                </span>
+                            </li>
+                            <li class="discount">Discount
+                                <span></span>
+                            </li>
+                            <li class="total">
+                                <strong>Total</strong>
+                                <span class="price-figure" data-price="">
+                                </span>
+                            </li>
+                        </ul>
+                        <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
+                    </div>
+                </div>
 
                 <?php if(rbfw_chk_regf_fields_exist($rbfw_id) === true){ ?>
                     <div class="item">
 
                         <div class="rbfw_reg_form_rb" style="display: none">
-
                             <?php
-
                             $reg_form = new Rbfw_Reg_Form();
                             echo $reg_form->rbfw_generate_regf_fields($post_id);
-
                             ?>
-
                         </div>
 
-
-                        <a class="rbfw_prev_btn">
-                            <img src="<?php echo RBFW_PLUGIN_URL . '/assets/images/muff_edit_icon.png'; ?>"/> <?php rbfw_string('rbfw_text_change',__('Change','booking-and-rental-manager-for-woocommerce')); ?>
+                        <!--<a class="rbfw_prev_btn">
+                            <img src="<?php /*echo RBFW_PLUGIN_URL . '/assets/images/muff_edit_icon.png'; */?>"/> <?php /*rbfw_string('rbfw_text_change',__('Change','booking-and-rental-manager-for-woocommerce')); */?>
                         </a>
-                        <a class="rbfw_next_btn" disabled>
-                            <?php rbfw_string('rbfw_text_next',__('Next','booking-and-rental-manager-for-woocommerce')); ?>
-                        </a>
+                        <a class="rbfw_next_btn hhhh" disabled>
+                            <?php /*rbfw_string('rbfw_text_next',__('Next','booking-and-rental-manager-for-woocommerce')); */?>
+                        </a>-->
                         <?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>
 
+                        <?php /*if( $rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date ) { echo 'style="display:none"'; }*/?>
 
-                        <button type="submit" name="add-to-cart" value="<?php echo mep_esc_html($rbfw_product_id); ?>" class="rbfw_mps_book_now_btn_regf mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn <?php echo esc_attr($rbfw_payment_system); ?>" disabled <?php if( $rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date ) { echo 'style="display:none"'; }?>>
+                        <button type="submit" name="add-to-cart" value="<?php echo mep_esc_html($rbfw_product_id); ?>" class="rbfw_mps_book_now_btn_regf_____ mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn <?php echo esc_attr($rbfw_payment_system); ?>" disabled >
                             <?php rbfw_string('rbfw_text_book_now',__('Book Now','booking-and-rental-manager-for-woocommerce')); ?>
                         </button>
                     </div>

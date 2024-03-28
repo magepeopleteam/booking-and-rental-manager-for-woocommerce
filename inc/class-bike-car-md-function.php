@@ -13,8 +13,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
     class RBFW_BikeCarMd_Function {
         public function __construct(){
             add_action('wp_footer', array($this, 'rbfw_bike_car_md_frontend_scripts'));
-            add_action('wp_ajax_rbfw_bikecarmd_ajax_price_calculation', array($this, 'rbfw_bikecarmd_ajax_price_calculation'));
-            add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_price_calculation', array($this,'rbfw_bikecarmd_ajax_price_calculation'));
+            add_action('wp_ajax_rbfw_bikecarmd_ajax_price_calculation', array($this, 'rbfw_md_duration_price_calculation_ajax'));
+            add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_price_calculation', array($this,'rbfw_md_duration_price_calculation_ajax'));
         }
         
         public function rbfw_get_bikecarmd_service_array_reorder($product_id, $service_info){
@@ -37,6 +37,78 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             return $main_array;
             
+        }
+
+        function rbfw_md_duration_price_calculation_ajax(){
+
+
+            $service_cost = 0;
+
+
+            $post_id = $_POST['post_id'];
+            $start_date = $_POST['pickup_date'];
+            $end_date = $_POST['dropoff_date'];
+            $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'';
+            $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:'';
+            $item_quantity = $_POST['item_quantity'];
+            $service_price_arr = !empty($_POST['service_price_arr']) ? $_POST['service_price_arr'] : [];
+
+            $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date);
+            $duration_price = rbfw_md_duration_price_calculation($post_id,$start_date,$end_date,$star_time,$end_time)*$item_quantity;
+
+            $rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
+
+            if(!empty($service_price_arr)){
+                foreach ($service_price_arr as $data_name => $values) {
+                    if($item_quantity > 1 && (int)$values['data_qty'] == 1 && $rbfw_enable_extra_service_qty != 'yes'){
+                        $service_cost += $item_quantity * (float)$values['data_price'];
+                    } else {
+                        $service_cost += (int)$values['data_qty'] * (float)$values['data_price'];
+                    }
+                }
+            }
+
+            $sub_total_price = $duration_price + $service_cost;
+
+            if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
+
+                if(empty($star_time) && empty($end_time)){
+                    $pickup_datetime  = date( 'Y-m-d', strtotime( $start_date.' '.'00:00:00' ) );
+                    $dropoff_datetime = date( 'Y-m-d', strtotime( $end_date.' '.rbfw_end_time() ) );
+                } else {
+                    $pickup_datetime  = date( 'Y-m-d H:i', strtotime( $start_date . ' ' . $star_time ) );
+                    $dropoff_datetime = date( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
+                }
+                $pickup_datetime  = new DateTime( $pickup_datetime );
+                $dropoff_datetime = new DateTime( $dropoff_datetime );
+
+                if(function_exists('rbfw_get_discount_array')){
+                    $discount_arr = rbfw_get_discount_array($post_id, $pickup_datetime, $dropoff_datetime, $sub_total_price);
+                } else {
+                    $discount_arr = [];
+                }
+
+                if(!empty($discount_arr)){
+                    $total_price = $discount_arr['total_amount'];
+                    $discount_type = $discount_arr['discount_type'];
+                    $discount_amount = $discount_arr['discount_amount'];
+                    $discount_desc = $discount_arr['discount_desc'];
+                }
+            }
+
+            echo json_encode( array(
+                'duration_price' => $duration_price,
+                'duration_price_html' => wc_price($duration_price),
+                'service_cost' => $service_cost,
+                'service_cost_html' => wc_price($service_cost),
+                'sub_total_price_html' => wc_price($sub_total_price),
+                'discount' => $discount_desc,
+                'total_price' => $total_price,
+                'total_price_html' => wc_price($total_price),
+                'max_available_qty' => $max_available_qty
+            ));
+
+            wp_die();
         }
 
         public function rbfw_bikecarmd_ajax_price_calculation(){

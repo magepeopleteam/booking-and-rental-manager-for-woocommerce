@@ -2,7 +2,7 @@
 // Template Name: Bike Theme
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-} 
+}
 ?>
 <?php
 global $rbfw;
@@ -19,7 +19,7 @@ $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','
 					<div class="mpStyle <?php echo $slide_style; ?>">
 						<?php do_action( 'add_super_slider', $post_id ,'rbfw_gallery_images'); ?>
 					</div>
-					
+
 					<div class="rbfw-single-left-container">
 						<div class="rbfw-single-left-information">
 						<div class="rbfw-header-container">
@@ -39,7 +39,7 @@ $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','
 										<?php if(!empty($rbfw_enable_faq_content) && $rbfw_enable_faq_content == 'yes'): ?>
 										<li><a href="#" class="rbfw-faq rbfw-tab-a"
 											 data-id="faq"><i class="fa-solid fa-circle-question"></i></a></li>
-										<?php endif; ?>	 
+										<?php endif; ?>
 										<?php do_action( 'rbfw_tab_menu_list', $post_id ); ?>
 									</ul>
 								</div><!--end of tab-menu-->
@@ -81,7 +81,7 @@ $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','
 									</div>
 								</div><!--end of tab one-->
 								<div class="rbfw-tab " data-id="description">
-								<div class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?></div>	
+								<div class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?></div>
 									<?php the_content(); ?>
 								</div><!--end of tab two-->
 
@@ -91,7 +91,7 @@ $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','
 									<?php do_action( 'rbfw_the_faq_only', $post_id ); ?>
 								</div><!--end of tab three-->
 								<?php endif; ?>
-								
+
 								<?php do_action( 'rbfw_tab_content', $post_id ); ?>
 							</div><!--end of container-->
 						</div>

@@ -68,45 +68,36 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
             'reload_es': reload_es
         },
         beforeSend: function() {
-            jQuery('.rbfw_bikecarmd_price_result').empty();
+
             jQuery('.rbfw_bikecarmd_price_result').append('<span class="rbfw-loader rbfw_rp_loader"><i class="fas fa-spinner fa-spin"></i></span>');
 
-            if(reload_es === 1){
-                jQuery('.rbfw-resource').empty();
-            }
         },
         success: function (response) {
 
-            jQuery(".rbfw_next_btn").slideToggle();
+            jQuery('.duration-costing .price-figure').html(response.duration_price_html);
+            jQuery('.resource-costing .price-figure').html(response.service_cost_html);
+            jQuery('.subtotal .price-figure').html(response.sub_total_price_html);
+            jQuery('.discount span').html(response.discount);
+            jQuery('.total .price-figure').html(response.total_price_html);
+
+            /*jQuery(".rbfw_next_btn").slideToggle();
             jQuery(".rbfw_prev_btn").toggleClass('rbfw_d_block');
-            jQuery(".rbfw_muff_registration_wrapper .rbfw_mps_book_now_btn_regf").slideToggle();
+            jQuery(".rbfw_muff_registration_wrapper .rbfw_mps_book_now_btn_regf").slideToggle();*/
+
             jQuery('.rbfw_reg_form_rb').show();
 
-            if (response.duration) {
-                jQuery('.rbfw-duration').slideDown('fast').find('.item-content').text(response.duration);
-            } else {
-                jQuery('.rbfw-duration').slideUp('fast');
-            }
 
-            if(Object.keys(response.reload_es).length !== 0){
+          /*  if(Object.keys(response.reload_es).length !== 0){
                 jQuery('.rbfw-quantity').slideDown('fast').html(response.item_quantity_box);
                 jQuery('#rbfw_item_quantity option[value="'+item_quantity+'"]').attr('selected','selected');
-            }
-
-            if (response.variation_content && Object.keys(response.variation_content).length !== 0) {
-                jQuery('.rbfw-variations-content-wrapper').slideDown('fast').html(response.variation_content);
-            }
-
-            if (response.extra_service_content && Object.keys(response.extra_service_content).length !== 0) {
-                jQuery('.rbfw-resource').slideDown('fast').html(response.extra_service_content);
-            }
+            }*/
 
             jQuery('.rbfw_rp_loader').hide();
 
-            jQuery('.rbfw_bikecarmd_price_result').html(response.content);
+            //jQuery('.rbfw_bikecarmd_price_result').html('');
 
-            jQuery(' button.rbfw_bikecarmd_book_now_btn').removeAttr('disabled');
-            jQuery('.rbfw_next_btn').removeAttr('disabled');
+            //jQuery(' button.rbfw_bikecarmd_book_now_btn').removeAttr('disabled');
+           // jQuery('.rbfw_next_btn').removeAttr('disabled');
 
 
             if((response.max_available_qty == 0)) {
