@@ -1,3 +1,59 @@
+jQuery(document).on('click', '.rbfw_service_price_data',function(e){
+    e.preventDefault();
+    if(jQuery(this).attr('checked')=='checked'){
+        jQuery(this).attr('checked', false);
+        jQuery('.rbfw-service-qty').val(0);
+        jQuery("input + .slider").css("background-color", "#ccc");
+        var total_days = jQuery('[name="total_days"]').val();
+        if(total_days!=0){
+            rbfw_service_price_calculation(total_days);
+        }
+    }else{
+        jQuery(this).attr('checked', true);
+        jQuery('.rbfw-service-qty').val(1);
+        jQuery("input:checked + .slider").css("background-color", "#074836");
+
+        jQuery(this).addClass('active_service');
+        var total_days = jQuery('[name="total_days"]').val();
+        if(total_days!=0){
+            rbfw_service_price_calculation(total_days);
+        }
+    }
+});
+
+
+function rbfw_service_price_calculation(total_days){
+
+    var rbfw_item_quantity = jQuery('#rbfw_item_quantity').val();
+    var price = 0;
+
+    jQuery('.rbfw_service_price_data').each(function(index) {
+
+        if(jQuery(this).attr('checked')=='checked'){
+            var service_price_type =  jQuery(this).data('service_price_type');
+
+            if(service_price_type=='day_wise'){
+                price =  jQuery(this).data('price')*total_days + price;
+            }else{
+                price =  jQuery(this).data('price') + price;
+            }
+        }
+
+
+
+    });
+
+    console.log(total_days);
+    console.log(price);
+
+}
+
+
+
+
+
+
+
 function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
 
     if (typeof reload_es === 'undefined' || reload_es === null) {
@@ -85,6 +141,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
             jQuery(".rbfw_muff_registration_wrapper .rbfw_mps_book_now_btn_regf").slideToggle();*/
 
             jQuery('.rbfw_reg_form_rb').show();
+            jQuery('[name="total_days"]').val(response.total_days);
 
 
           /*  if(Object.keys(response.reload_es).length !== 0){

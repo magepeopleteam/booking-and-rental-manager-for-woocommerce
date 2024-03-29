@@ -318,6 +318,50 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                         </div>
                     <?php } ?>
 
+                    <?php
+
+
+                    $option_value         = get_post_meta($post_id, 'rbfw_service_category_price', true);
+                    $option_value     = is_serialized($option_value) ? unserialize($option_value) : $option_value;
+
+
+
+                    ?>
+
+
+                    <div class="multi-service-category-section">
+                        <h2>Category wise service price</h2>
+                        <input type="hidden" name="total_days" value="0">
+                        <?php foreach ($option_value as $cat=>$item){ ?>
+                        <div class="servise-item">
+                            <p><?php echo $item['cat_title'] ?></p>
+                            <div>
+                                <?php foreach ($item['cat_services'] as $serkey=>$service){ ?>
+                                <div style="display: flex;gap:20px">
+                                    <div>
+                                        <label class="switch">
+                                            <input type="checkbox" class="rbfw_service_price_data" data-service_price_type="<?php echo $service['service_price_type'] ?>" data-price="<?php echo $service['price'] ?>" data-name="ddd">
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][cat_name]" value="ddd">
+                                        <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][name]" value="ddd">
+                                        <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>]['quantity']" class="rbfw-service-qty" value="1">
+                                        <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][price]" value="20">
+                                    </div>
+                                    <div class="title"><?php echo $service['title'] ?></div>
+                                    <div class="title"><?php echo $service['service_price_type'] ?></div>
+                                    <div class="title"><?php echo $service['price'] ?></div>
+                                </div>
+                                <?php } ?>
+
+                            </div>
+                        </div>
+                        <?php } ?>
+                    </div>
+
+
+
+
                     <?php if(!empty($extra_service_list)){ ?>
 
                         <div class="item">

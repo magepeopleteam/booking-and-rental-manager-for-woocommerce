@@ -3559,23 +3559,14 @@ function rbfw_off_dates($post_id){
     return json_encode($off_dates);
 }
 
-function rbfw_md_duration_price_calculation($post_id=0,$start_date=0,$end_date=0,$star_time=0,$end_time=0)
+function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropoff_datetime=0)
 {
-    if (empty($star_time) && empty($end_time)) {
-        $pickup_datetime = date('Y-m-d', strtotime($start_date . ' ' . '00:00:00'));
-        $dropoff_datetime = date('Y-m-d', strtotime($end_date . ' ' . '24:00:00'));
-    } else {
-        $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
-        $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
-    }
 
     $Book_dates_array = getAllDates($pickup_datetime, $dropoff_datetime);
 
     if (is_plugin_active('booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php')){
         $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true );
     }
-
-
 
     $rbfw_hourly_rate = get_post_meta($post_id, 'rbfw_hourly_rate', true);
     $rbfw_daily_rate = get_post_meta($post_id, 'rbfw_daily_rate', true);
