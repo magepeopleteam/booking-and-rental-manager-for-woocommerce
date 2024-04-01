@@ -335,7 +335,7 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                         <?php foreach ($option_value as $cat=>$item){ ?>
                         <div class="servise-item">
                             <p><?php echo $item['cat_title'] ?></p>
-
+                            <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][cat_title]" value="<?php echo $item['cat_title'] ?>">
                                 <?php foreach ($item['cat_services'] as $serkey=>$service){ ?>
                                     <div style="display: flex;gap:20px">
                                         <div>
