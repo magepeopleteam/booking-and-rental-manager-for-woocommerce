@@ -26,6 +26,10 @@ function rbfw_service_price_calculation(total_days){
 
 
 
+
+
+
+
 function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
 
     if (typeof reload_es === 'undefined' || reload_es === null) {
@@ -107,6 +111,10 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
             jQuery('.subtotal .price-figure').html(response.sub_total_price_html);
             jQuery('.discount span').html(response.discount);
             jQuery('.total .price-figure').html(response.total_price_html);
+            jQuery('.rbfw-duration').show();
+            jQuery('.rbfw-duration .item-content').html(response.total_duration);
+
+
 
             /*jQuery(".rbfw_next_btn").slideToggle();
             jQuery(".rbfw_prev_btn").toggleClass('rbfw_d_block');

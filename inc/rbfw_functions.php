@@ -3559,7 +3559,7 @@ function rbfw_off_dates($post_id){
     return json_encode($off_dates);
 }
 
-function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropoff_datetime=0)
+function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropoff_datetime=0,$start_date,$star_time,$end_time)
 {
 
     $Book_dates_array = getAllDates($pickup_datetime, $dropoff_datetime);
@@ -3592,10 +3592,6 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                     continue;
                 }
             }
-
-
-
-
 
             $day = strtolower(date('D', strtotime("+$i day", strtotime($start_date))));
 
