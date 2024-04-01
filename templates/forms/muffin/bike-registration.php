@@ -330,31 +330,30 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
 
 
                     <div class="multi-service-category-section">
-                        <h2>Category wise service price</h2>
+                        <div class="rbfw-single-right-heading">Category wise service price</div>
                         <input type="hidden" name="total_days" value="0">
                         <?php foreach ($option_value as $cat=>$item){ ?>
                         <div class="servise-item">
                             <p><?php echo $item['cat_title'] ?></p>
-                            <div>
+
                                 <?php foreach ($item['cat_services'] as $serkey=>$service){ ?>
-                                <div style="display: flex;gap:20px">
-                                    <div>
-                                        <label class="switch">
-                                            <input type="checkbox" class="rbfw_service_price_data" data-service_price_type="<?php echo $service['service_price_type'] ?>" data-price="<?php echo $service['price'] ?>" data-name="ddd">
-                                            <span class="slider round"></span>
-                                        </label>
-                                        <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][cat_name]" value="ddd">
-                                        <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][name]" value="ddd">
-                                        <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>]['quantity']" class="rbfw-service-qty" value="1">
-                                        <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][price]" value="20">
+                                    <div style="display: flex;gap:20px">
+                                        <div>
+                                            <label class="switch">
+                                                <input type="checkbox" class="rbfw_service_price_data" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][main_cat_name]" data-service_price_type="<?php echo $service['service_price_type'] ?>" data-price="<?php echo $service['price'] ?>" data-name="ddd">
+                                                <span class="slider round"></span>
+                                            </label>
+                                            <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][cat_name]" value="ddd">
+                                            <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][name]" value="ddd">
+                                            <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>]['quantity']" class="rbfw-service-qty" value="1">
+                                            <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][price]" value="20">
+                                        </div>
+                                        <div class="title"><?php echo $service['title'] ?></div>
+                                        <div class="title"><?php echo $service['service_price_type'] ?></div>
+                                        <div class="title"><?php echo $service['price'] ?></div>
                                     </div>
-                                    <div class="title"><?php echo $service['title'] ?></div>
-                                    <div class="title"><?php echo $service['service_price_type'] ?></div>
-                                    <div class="title"><?php echo $service['price'] ?></div>
-                                </div>
                                 <?php } ?>
 
-                            </div>
                         </div>
                         <?php } ?>
                     </div>
@@ -374,7 +373,7 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                                     <tbody>
                                     <?php
                                     $c = 0;
-                                    foreach ($extra_service_list as $extra) { ?>
+                                    foreach ($extra_service_list as $key=>$extra) { ?>
                                         <?php if($extra['service_qty'] > 0){ ?>
                                             <tr>
                                                 <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
@@ -383,7 +382,7 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                                                         <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_qty]" class="rbfw-resource-qty" value="">
                                                         <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_price]"  value="<?php echo $extra['service_price']; ?>">
                                                         <label class="switch">
-                                                            <input type="checkbox"  class="rbfw-resource-price rbfw-resource-price-multiple-qty" data-status="0" value="1" data-cat="service" data-price="<?php echo $extra['service_price']; ?>" data-name="<?php echo mep_esc_html($extra['service_name']); ?>">
+                                                            <input type="checkbox"  class="rbfw-resource-price rbfw-resource-price-multiple-qty key_value_<?php echo $key+1 ?>" data-status="0" value="1" data-cat="service"  data-price="<?php echo $extra['service_price']; ?>" data-name="<?php echo mep_esc_html($extra['service_name']); ?>">
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
@@ -394,8 +393,8 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                                                     <td class="rbfw_bikecarmd_es_input_box" style="display:none">
                                                         <div class="rbfw_qty_input">
                                                             <a class="rbfw_qty_minus rbfw_bikecarmd_es_qty_minus"><i class="fa-solid fa-minus"></i></a>
-                                                            <input type="number" min="0" max="<?php echo esc_attr($extra['service_qty']); ?>" value="1" class="rbfw_bikecarmd_es_qty" data-cat="service" data-price="<?php echo $extra['service_price']; ?>" data-name="<?php echo mep_esc_html($extra['service_name']); ?>"/>
-                                                            <a class="rbfw_qty_plus rbfw_bikecarmd_es_qty_plus"><i class="fa-solid fa-plus"></i></a>
+                                                            <input type="number" min="0" max="<?php echo esc_attr($extra['service_qty']); ?>" value="1" class="rbfw_bikecarmd_es_qty"  data-cat="service" data-price="<?php echo $extra['service_price']; ?>" data-name="<?php echo mep_esc_html($extra['service_name']); ?>"/>
+                                                            <a class="rbfw_qty_plus rbfw_bikecarmd_es_qty_plus" data-key_value="<?php echo $key+1 ?>"><i class="fa-solid fa-plus"></i></a>
                                                         </div>
                                                     </td>
                                                 <?php } ?>
@@ -414,6 +413,10 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                     <div class="item-content rbfw-costing">
                         <ul class="rbfw-ul">
                             <li class="duration-costing rbfw-cond">Duration Cost
+                                <span class="price-figure" data-price="">
+                                </span>
+                            </li>
+                            <li class="rbfw-service-costing rbfw-cond">Service Cost
                                 <span class="price-figure" data-price="">
                                 </span>
                             </li>
@@ -483,6 +486,7 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                 <div class="rbfw-bikecarmd-result">
                 </div>
             </div>
+            <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="">
             <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
             <input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
         </form>
