@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="9c669fc2-9ffd-4747-bb4c-19ae7b341381" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/mp_script/rbfw_script.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/mp_script/rbfw_script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/rbfw_file_include.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/rbfw_file_include.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/inc/rbfw_functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/rbfw_functions.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,11 +19,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "node.js.selected.package.tslint": "(autodetect)"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
   }
-}]]></component>
+}</component>
   <component name="TaskManager">
     <servers />
   </component>
