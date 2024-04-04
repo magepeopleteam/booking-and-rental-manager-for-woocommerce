@@ -179,6 +179,9 @@ function rbfw_save_meta_box_data( $post_id ) {
         update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
 
         update_post_meta( $post_id, 'rbfw_category_name', $rbfw_category_name );
+
+        update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
+
         update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
 
 
