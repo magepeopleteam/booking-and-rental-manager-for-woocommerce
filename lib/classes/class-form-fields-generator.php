@@ -3250,6 +3250,11 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                 <input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_service_category_price[<?php echo $i; ?>][cat_title]" data-key="<?php echo $i; ?>" placeholder="<?php echo esc_attr__('Service Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
                                             </div>
                                             <div class="service_category_inner_item_wrap sortable">
+
+
+
+
+
                                                 <?php
                                                 if(!empty($value['cat_services'])){
                                                     $c = 0;
@@ -3257,6 +3262,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                         $icon = $service['icon'];
                                                         $title = $service['title'];
                                                         $price = $service['price'];
+                                                        $stock_quantity = $service['stock_quantity'];
                                                         $service_price_type = $service['service_price_type'];
                                                         ?>
                                                             <div class="item">
@@ -3266,9 +3272,9 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                                 <input type='hidden' name='rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php echo esc_attr($icon); ?>' data-key="<?php echo $c; ?>" class="rbfw_service_icon"/>
                                                                 <input type='text' name='rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][title]'  placeholder='<?php echo esc_attr($placeholder); ?>' value="<?php  echo esc_attr($title); ?>" data-key="<?php echo $c; ?>"/>
 
-
-
                                                                 <input type='text' name='rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][price]'  placeholder='<?php echo __('Price','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php  echo esc_attr($price); ?>'  data-key="0"/>
+
+                                                                <input type='text' name='rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][stock_quantity]'  placeholder='<?php echo __('Stock','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php  echo esc_attr($stock_quantity); ?>'  data-key="0"/>
 
                                                                 <label class="" for="rbfw_dt_sidebar_switch-on">
                                                                     <input name="rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][service_price_type]" type="radio" <?php echo ($service_price_type=='one_time')?'checked':''  ?> id="rbfw_dt_sidebar_switch-on" value="one_time">
@@ -3278,9 +3284,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                                     <input name="rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][service_price_type]" type="radio" <?php echo ($service_price_type=='day_wise')?'checked':''  ?> id="rbfw_dt_sidebar_switch-off" value="day_wise">
                                                                     <span class="sw-button"> Day Wise</span>
                                                                 </label>
-
-
-
 
                                                                 <?php if($sortable):?>
                                                                     <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
@@ -3338,6 +3341,8 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                     <input type='text' name='rbfw_service_category_price[0][cat_services][0][title]'  placeholder='<?php echo esc_attr($placeholder); ?>' value='' data-key="0"/>
 
                                                     <input type='text' name='rbfw_service_category_price[0][cat_services][0][price]'  placeholder='<?php echo __('Price','booking-and-rental-manager-for-woocommerce'); ?>' value='' data-key="0"/>
+
+                                                    <input type='text' name='rbfw_service_category_price[0][cat_services][0][stock_quantity]'  placeholder='<?php echo __('Stock','booking-and-rental-manager-for-woocommerce'); ?>' value=''  data-key="0"/>
 
                                                     <label class="" for="rbfw_dt_sidebar_switch-on">
                                                         <input name="rbfw_service_category_price[0][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time">

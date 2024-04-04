@@ -319,16 +319,11 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                     <?php } ?>
 
                     <?php
-
-
-                    $option_value         = get_post_meta($post_id, 'rbfw_service_category_price', true);
-                    $option_value     = is_serialized($option_value) ? unserialize($option_value) : $option_value;
-
-
-
+                    $option_value  = get_post_meta($post_id, 'rbfw_service_category_price', true);
+                    $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
                     ?>
 
-
+                    <?php if(!empty($option_value)){ ?>
                     <div class="multi-service-category-section">
                         <div class="rbfw-single-right-heading">Category wise service price</div>
                         <input type="hidden" name="total_days" value="0">
@@ -336,27 +331,33 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                         <div class="servise-item">
                             <p><?php echo $item['cat_title'] ?></p>
                             <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][cat_title]" value="<?php echo $item['cat_title'] ?>">
-                                <?php foreach ($item['cat_services'] as $serkey=>$service){ ?>
-                                    <div style="display: flex;gap:20px">
-                                        <div>
-                                            <label class="switch">
-                                                <input type="checkbox" class="rbfw_service_price_data" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][main_cat_name]" data-service_price_type="<?php echo $service['service_price_type'] ?>" data-price="<?php echo $service['price'] ?>" data-name="ddd">
-                                                <span class="slider round"></span>
-                                            </label>
-                                            <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][cat_name]" value="ddd">
-                                            <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][name]" value="ddd">
-                                            <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>]['quantity']" class="rbfw-service-qty" value="1">
-                                            <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][price]" value="20">
-                                        </div>
-                                        <div class="title"><?php echo $service['title'] ?></div>
-                                        <div class="title"><?php echo $service['service_price_type'] ?></div>
-                                        <div class="title"><?php echo $service['price'] ?></div>
+                            <?php foreach ($item['cat_services'] as $serkey=>$service){ ?>
+                                <div style="display: flex;gap:20px">
+                                    <div>
+                                        <label class="switch">
+                                            <input type="checkbox" class="rbfw_service_price_data item_<?php echo $cat.$serkey ?>" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][main_cat_name]" data-service_price_type="<?php echo $service['service_price_type'] ?>" data-price="<?php echo $service['price'] ?>" data-quantity="1">
+                                            <span class="slider round"></span>
+                                        </label>
+                                        <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][name]" value="<?php echo $service['title'] ?>">
+                                        <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][service_price_type]" value="<?php echo $service['service_price_type'] ?>">
+                                        <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][price]" value="<?php echo $service['price'] ?>">
                                     </div>
-                                <?php } ?>
+                                    <div class="title"><?php echo $service['title'] ?></div>
+                                    <div class="title"><?php echo $service['service_price_type'] ?></div>
 
+                                    <div class="rbfw_qty_input rbfw_service_quantity">
+                                        <a class="rbfw_service_quantity_minus" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-minus"></i></a>
+                                        <input type="number" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][quantity]" min="0" max="20" value="1" class="rbfw_service_qty" data-cat="service" data-price="20" data-name="ddd" autocomplete="off">
+                                        <a class="rbfw_service_quantity_plus" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-plus"></i></a>
+                                    </div>
+
+                                    <div class="title"><?php echo $service['price'] ?></div>
+                                </div>
+                            <?php } ?>
                         </div>
                         <?php } ?>
                     </div>
+                    <?php } ?>
 
 
 
@@ -451,15 +452,7 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                             ?>
                         </div>
 
-                        <!--<a class="rbfw_prev_btn">
-                            <img src="<?php /*echo RBFW_PLUGIN_URL . '/assets/images/muff_edit_icon.png'; */?>"/> <?php /*rbfw_string('rbfw_text_change',__('Change','booking-and-rental-manager-for-woocommerce')); */?>
-                        </a>
-                        <a class="rbfw_next_btn hhhh" disabled>
-                            <?php /*rbfw_string('rbfw_text_next',__('Next','booking-and-rental-manager-for-woocommerce')); */?>
-                        </a>-->
                         <?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>
-
-                        <?php /*if( $rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date ) { echo 'style="display:none"'; }*/?>
 
                         <button type="submit" name="add-to-cart" value="<?php echo mep_esc_html($rbfw_product_id); ?>" class="rbfw_mps_book_now_btn_regf_____ mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn <?php echo esc_attr($rbfw_payment_system); ?>" disabled >
                             <?php rbfw_string('rbfw_text_book_now',__('Book Now','booking-and-rental-manager-for-woocommerce')); ?>
@@ -486,7 +479,7 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                 <div class="rbfw-bikecarmd-result">
                 </div>
             </div>
-            <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="">
+            <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
             <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
             <input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
         </form>

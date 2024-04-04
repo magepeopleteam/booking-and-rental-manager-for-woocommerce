@@ -223,21 +223,21 @@ function rbfw_get_category_dropdown( $name, $saved_value = '', $class = '' ) {
 				$hours   = $interval->h;
 				$minutes = $interval->i;
 				if ( $days > 0 ) {
-					$dd = $days . " days ";
+                    global $rbfw;
+					$dd = $days .' '. esc_html__( 'Days', 'booking-and-rental-manager-for-woocommerce' );
 				} else {
 					$dd = "";
 				}
 				if ( $hours > 0 ) {
-					$hh = $hours . " hours ";
+					$hh = $hours .' '. esc_html__( 'hours', 'booking-and-rental-manager-for-woocommerce' );
 				} else {
 					$hh = "";
 				}
 				if ( $minutes > 0 ) {
-					$mm = $minutes . " minutes ";
+					$mm = $minutes .' '. esc_html__( 'minutes', 'booking-and-rental-manager-for-woocommerce' );
 				} else {
 					$mm = "";
 				}
-
 				return "<span class='active'>" . esc_html( $dd ) . " " . esc_html( $hh ) . " " . esc_html( $mm ) . "</span>";
 			}
 		}

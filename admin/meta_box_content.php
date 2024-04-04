@@ -1818,7 +1818,6 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 					'title'       => __( 'Template Settings', 'booking-and-rental-manager-for-woocommerce' ),
 					'description' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
 					'options'     => array(
-
 						array(
 							'id'          => 'rbfw_single_template',
 							'title'       => __( 'Template:', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1826,10 +1825,8 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 							'type'        => 'select',
 							'args' => RBFW_Function::all_details_template(),
 						),
-
 					)
 				),
-
 			),
 		);
 
