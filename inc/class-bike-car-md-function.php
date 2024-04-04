@@ -84,153 +84,15 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
 
-<<<<<<< HEAD
+
                 if(empty($star_time) && empty($end_time)){
                     $pickup_datetime  = date( 'Y-m-d', strtotime( $start_date.' '.'00:00:00' ) );
                     $dropoff_datetime = date( 'Y-m-d', strtotime( $end_date.' '.rbfw_end_time() ) );
                 } else {
                     $pickup_datetime  = date( 'Y-m-d H:i', strtotime( $start_date . ' ' . $star_time ) );
                     $dropoff_datetime = date( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
-=======
-            if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'including_tax'){
-                $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($percent).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';
-            }
 
-            /* End Tax Calculations */
 
-            $content = '';
-            $content.= '<div class="item rbfw_bikecarmd_price_summary">
-                <div class="item-content rbfw-costing">
-                    <ul class="rbfw-ul">
-                        <li class="duration-costing rbfw-cond">'.$rbfw->get_option('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')).' <span class="price-figure" data-price="'.$duration_cost.'">'.rbfw_mps_price($duration_cost).'</span></li>
-                        <li class="resource-costing rbfw-cond">'.$rbfw->get_option('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')).' <span class="price-figure" data-price="'.$service_cost.'">'.rbfw_mps_price($service_cost).'</span></li>
-                        <li class="subtotal">'.$rbfw->get_option('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce')).'<span class="price-figure" data-price="'.$subtotal_price.'">'.rbfw_mps_price($subtotal_price).'</span></li>';
-
-                        if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'excluding_tax'){
-
-                            $content.= '<li class="tax">'.$rbfw->get_option('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')).'<span class="price-figure" data-price="'.$percent.'">'.rbfw_mps_price($percent).'</span></li>';
-                        }
-
-                    /* Start Discount Calculations */
-
-                    if(rbfw_check_discount_over_days_plugin_active() === true){
-
-                        if(function_exists('rbfw_get_discount_array')){
-                            $discount_arr = rbfw_get_discount_array($post_id, $pickup_datetime, $dropoff_datetime, $total_price);
-                    
-                        } else {
-                    
-                            $discount_arr = [];
-                        }
-
-                        if(!empty($discount_arr)){
-                            
-                            $total_price = $discount_arr['total_amount'];
-                            $discount_type = $discount_arr['discount_type'];
-                            $discount_amount = $discount_arr['discount_amount'];
-                            $discount_desc = $discount_arr['discount_desc'];
-
-                            $content .= '<li class="discount">';
-                            $content .= $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce'));
-                            $content .= '<span>'.$discount_desc.'</span>';                
-                            $content .= '</li>';                    
-                        }
-                        /* End Discount Calculations */
-
-                    }
-
-                        $content.='<li class="total"><strong>'.$rbfw->get_option('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce')).'</strong> <span class="price-figure" data-price="'.$total_price.'">'.rbfw_mps_price($total_price).' '.$tax_status.'</span></li>
-                    </ul>
-                    <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
-                </div>
-            </div>';
-
-            /* Include Custom Registration Form */
-            if(class_exists('Rbfw_Reg_Form')){
-                $reg_form = new Rbfw_Reg_Form();
-                $reg_fields = $reg_form->rbfw_generate_regf_fields($post_id);
-                $content.= $reg_fields;
-            }
-            /* End: Include Custom Registration Form */
-
-            $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $pickup_date, $dropoff_date);
-            $item_quantity_box = '';
-
-            $item_quantity_box .= '<select class="rbfw-select" name="rbfw_item_quantity" id="rbfw_item_quantity">
-                                    <option value="0">'.rbfw_string_return('rbfw_text_choose_number_of_qty',__('Choose number of quantity','booking-and-rental-manager-for-woocommerce')).'</option>';
-                                        
-                                        for ($qty = 1; $qty <= $max_available_qty; $qty++) { 
-                                            
-                                            $item_quantity_box .= '<option value="'.mep_esc_html($qty).'"'; 
-                                            
-                                            if($qty == 1){ 
-                                                $item_quantity_box .= 'selected'; 
-                                            } 
-
-                                            $item_quantity_box .= '>'.mep_esc_html($qty).'</option>';   
-                                        }
-                                        
-            $item_quantity_box .= '</select>';
-
-            $available_qty_info_switch = get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) : 'no';
-            
-            if($available_qty_info_switch == 'yes'){
-
-                $item_quantity_box .= '<div class="rbfw_available_qty_notice">'.$max_available_qty.' '.rbfw_string_return('rbfw_text_left_qty',__('Left','booking-and-rental-manager-for-woocommerce')).'</div>';
-            }
-
-            
-
-            $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
-            $rbfw_variations_data = get_post_meta( $post_id, 'rbfw_variations_data', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];
-
-            $variation_content = '';
-
-        if($reload_es == 1){
-
-            if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data)){
-
-                foreach ($rbfw_variations_data as $data_arr_one) {
-
-                    $selected_value = !empty($data_arr_one['selected_value']) ? $data_arr_one['selected_value'] : '';
-
-                    $variation_content .= '<div class="item">
-                                            <div class="rbfw-single-right-heading">'.esc_html($data_arr_one['field_label']).'</div>
-                                            <div class="item-content rbfw-p-relative">';
-
-                                                if(!empty($data_arr_one['value'])){
-                                                    $variation_content .='<select class="rbfw-select rbfw_variation_field" name="'.esc_attr($data_arr_one['field_id']).'" id="'.esc_attr($data_arr_one['field_id']).'" data-field="'.esc_attr($data_arr_one['field_label']).'">';
-
-                                                    if(empty($selected_value)){
-                                                        $variation_content .= '<option value="">'.rbfw_string_return('rbfw_text_choose',__('Choose','booking-and-rental-manager-for-woocommerce')).' '.$data_arr_one['field_label'].'</option>';
-                                                    }
-
-                                                    foreach ($data_arr_one['value'] as $data_arr_two) {
-
-                                                        $variation_available_qty = rbfw_get_multiple_date_variations_available_qty($post_id, $pickup_date, $dropoff_date, $data_arr_two['name']);
-
-                                                        if($variation_available_qty == 0){
-                                                            
-                                                            $notice = '('.rbfw_string_return('rbfw_text_out_of_stock',__('Out of stock','booking-and-rental-manager-for-woocommerce')).')';
-                                                            $disabled_attr = 'disabled';
-
-                                                        } else {
-
-                                                            $notice = '';
-                                                            $disabled_attr = '';
-                                                        }
-
-                                                        $variation_content .= '<option value="'.esc_attr($data_arr_two['name']).'"'; 
-                                                        if($data_arr_two['name'] == $selected_value){ echo 'selected'; } 
-                                                        $variation_content .= $disabled_attr.'>'.esc_html($data_arr_two['name']).' '.$notice.'</option>';
-                                                    }
-
-                                                    $variation_content .= '</select>';
-                                                }
-
-                                                $variation_content .= '</div>
-                                        </div>';
->>>>>>> 54d8eea624fd9726148f9be38b0fe79076052ab9
                 }
                 $pickup_datetime  = new DateTime( $pickup_datetime );
                 $dropoff_datetime = new DateTime( $dropoff_datetime );

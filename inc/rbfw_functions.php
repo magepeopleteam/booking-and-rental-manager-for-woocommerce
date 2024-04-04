@@ -219,7 +219,7 @@ function rbfw_get_category_dropdown( $name, $saved_value = '', $class = '' ) {
 			if ( current_time( 'Y-m-d H:i' ) > $newformat ) {
 				return "<span class=err>Expired</span>";
 			} else {
-<<<<<<< HEAD
+
 				$days    = $interval->days;
 				$hours   = $interval->h;
 				$minutes = $interval->i;
@@ -240,27 +240,7 @@ function rbfw_get_category_dropdown( $name, $saved_value = '', $class = '' ) {
 					$mm = "";
 				}
 				return "<span class='active'>" . esc_html( $dd ) . " " . esc_html( $hh ) . " " . esc_html( $mm ) . "</span>";
-=======
-                $days    = $interval->days;
-                $hours   = $interval->h;
-                $minutes = $interval->i;
-                if ( $days > 0 ) {
-                    $dd = $days .' '. esc_html__( 'Days', 'booking-and-rental-manager-for-woocommerce' );
-                } else {
-                    $dd = "";
-                }
-                if ( $hours > 0 ) {
-                    $hh = $hours .' '. esc_html__( 'hours', 'booking-and-rental-manager-for-woocommerce' );
-                } else {
-                    $hh = "";
-                }
-                if ( $minutes > 0 ) {
-                    $mm = $minutes .' '. esc_html__( 'minutes', 'booking-and-rental-manager-for-woocommerce' );
-                } else {
-                    $mm = "";
-                }
-                return "<span class='active'>" . esc_html( $dd ) . " " . esc_html( $hh ) . " " . esc_html( $mm ) . "</span>";
->>>>>>> 54d8eea624fd9726148f9be38b0fe79076052ab9
+
 			}
 		}
 	}
