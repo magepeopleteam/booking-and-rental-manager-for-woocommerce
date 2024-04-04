@@ -141,8 +141,17 @@
 	$rbfw_event_last_date = strtotime(date_i18n('Y-m-d h:i a', strtotime($rbfw_event_end_date.' '.$rbfw_event_end_time)));
     $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
 
+    $expire = 'no';
+    if($rbfw_enable_start_end_date=='no'){
+        if($rbfw_event_last_date<$rbfw_todays_date){
+            $expire = 'yes';
+        }
+    }
+
 ?>
-	<!--    Main Layout-->
+
+<?php if($expire == 'no'){ ?>
+
 	<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
 		<!--    Left Side-->
 
@@ -436,3 +445,8 @@
 		<!--    Right Side END-->
 	</div>
 	<!--    Main Layout END-->
+<?php }else{ ?>
+
+    <h3>Deate Expored !</h3>
+
+<?php } ?>

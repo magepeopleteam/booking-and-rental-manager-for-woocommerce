@@ -77,19 +77,35 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $d = 1;
         if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
             $the_content = get_the_content();
-            if($style == 'grid'):
 
-                include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) );
+            $rbfw_id = get_the_id();
 
-            elseif($style == 'list'):
+            $expire = 'no';
+            $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) : 'yes';
 
-                include( RBFW_Function::template_path( 'rent_list_styles/list.php' ) );
+            if($rbfw_enable_start_end_date=='no'){
+                $rbfw_event_end_date  = get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) : '';
+                $rbfw_event_end_time  = get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) : '';
+                $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
+                $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
+                $rbfw_event_last_date = strtotime(date_i18n('Y-m-d h:i a', strtotime($rbfw_event_end_date.' '.$rbfw_event_end_time)));
+                $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
+                if($rbfw_event_last_date<$rbfw_todays_date){
+                    $expire = 'yes';
+                }
+            }
 
-            else:
+            if($expire == 'no'){
+                if($style == 'grid'):
+                    include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) );
+                elseif($style == 'list'):
+                    include( RBFW_Function::template_path( 'rent_list_styles/list.php' ) );
+                else:
+                    include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) );
+                endif;
+            }
 
-                include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) );
 
-            endif;
 
             $d++;
         endwhile;
