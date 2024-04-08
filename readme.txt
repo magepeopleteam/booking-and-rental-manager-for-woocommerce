@@ -208,6 +208,9 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
+= 1.4.5 =
+* Rental search problem soleved
+
 = 1.4.1 =
 * Bug fixed about discount
 

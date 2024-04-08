@@ -46,6 +46,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'meta_query' => array(
             'relation' => 'OR',
             $rent_type,
+            $location_query
         )
     );
 
