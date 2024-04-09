@@ -26,12 +26,21 @@ jQuery(function(){
         })
     };
 
-    var calendar = jQuery('#rbfw-bikecarsd-calendar').calendar(defaultConfig);
+    if ( jQuery('#rbfw-bikecarsd-calendar').length ) {
+        var calendar = jQuery('#rbfw-bikecarsd-calendar').calendar(defaultConfig);
+    }
+
     var date = new Date();
     var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     var day_in = weekday[date.getDay()];
-    var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
-    var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
+    var rbfw_off_days = [];
+    if ( jQuery('#rbfw_off_days').length ) {
+        var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
+    }
+    var rbfw_offday_range = [];
+    if ( jQuery('#rbfw_offday_range').length ) {
+        var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
+    }
 
 
     var curr_date = ("0" + (date.getDate())).slice(-2);
