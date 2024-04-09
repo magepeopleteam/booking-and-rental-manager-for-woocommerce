@@ -662,6 +662,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         endif;
 
         $variation_info = $values['rbfw_variation_info'] ? $values['rbfw_variation_info'] : [];
+        $rbfw_service_price_data_actual = $values['rbfw_service_price_data_actual'] ? $values['rbfw_service_price_data_actual'] : [];
         $rbfw_service_info = $values['rbfw_service_info'] ? $values['rbfw_service_info'] : [];
         $rbfw_ticket_info = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
         $start_datetime = $values['rbfw_start_datetime'] ? rbfw_get_datetime( $values['rbfw_start_datetime'], 'date-time-text' ) : '';
@@ -747,6 +748,10 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
             endforeach;
         endif;
 
+
+
+
+
         $item->add_meta_data($rbfw->get_option('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')), wc_price($rbfw_duration_price));
         $item->add_meta_data($rbfw->get_option('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')), wc_price($rbfw_service_price));
         $item->add_meta_data($rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')), wc_price($discount_amount));
@@ -763,6 +768,8 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $item->add_meta_data( '_rbfw_service_cost', $rbfw_service_price );
         $item->add_meta_data( '_rbfw_discount_type', $discount_type );
         $item->add_meta_data( '_rbfw_discount_amount', $discount_amount );
+
+        $item->add_meta_data( '_rbfw_service_price_data_actual', $rbfw_service_price_data_actual );
     }
 
     $item->add_meta_data( '_rbfw_id', $rbfw_id );
@@ -948,6 +955,9 @@ function rbfw_booking_management( $order_id ) {
 
             $start_date = wc_get_order_item_meta( $item_id, 'start_date', true );
             $end_date = wc_get_order_item_meta( $item_id, 'end_date', true );
+            $rbfw_service_price_data_actual = wc_get_order_item_meta( $item_id, '_rbfw_service_price_data_actual', true );
+
+
 
             $rbfw_id = rbfw_get_order_item_meta( $item_id, '_rbfw_id', true );
 
@@ -960,7 +970,7 @@ function rbfw_booking_management( $order_id ) {
                 $rbfw_duration_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) : '';
                 $rbfw_service_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) : '';
 
-                rbfw_prepar_and_add_user_data( $ticket_info, $user_info, $rbfw_id, $order_id, $service_info, $rbfw_duration_cost, $rbfw_service_cost, $type_info,$start_date,$end_date);
+                rbfw_prepar_and_add_user_data( $ticket_info, $user_info, $rbfw_id, $order_id, $service_info, $rbfw_duration_cost, $rbfw_service_cost, $type_info,$start_date,$end_date,$rbfw_service_price_data_actual);
             }
         }
     }
