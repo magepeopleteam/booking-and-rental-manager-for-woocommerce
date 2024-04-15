@@ -14,6 +14,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'style' => 'grid',
         'show'  => -1,
         'order' => 'DESC',
+        'orderby' => '',
+        'meta_key' => '',
         'type'  => '',
         'location' => '',
         'category' => '',
@@ -23,10 +25,14 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $style  = $attributes['style'];
     $show   = $attributes['show'];
     $order  = $attributes['order'];
+    $orderby  = $attributes['orderby'];
+    $meta_key  = $attributes['meta_key'];
     $type   = $attributes['type'];
     $location   = $attributes['location'];
     $category   = $attributes['category'];
     $columns   = $attributes['columns'];
+
+
 
     $rent_type = !empty($type) ? array(
         'key' => 'rbfw_item_type',
@@ -43,12 +49,18 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $args = array(
         'post_type' => 'rbfw_item',
         'posts_per_page' => -1,
+        'meta_key' => $meta_key,
+        'order' => $order,
+        'orderby' => $orderby,
         'meta_query' => array(
             'relation' => 'OR',
             $rent_type,
             $location_query
         )
     );
+
+
+
 
     if(!empty($category)):
         $category = explode(',', $attributes['category']);
