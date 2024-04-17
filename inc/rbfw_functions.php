@@ -1563,13 +1563,9 @@ function rbfw_search_query_exlude_hidden_wc_fix( $query ) {
 /*****************************
  * Create Inventory Meta
  *****************************/
-function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
+function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
-	$rbfw_id = !empty($ticket_info[$i]['rbfw_id']) ? $ticket_info[$i]['rbfw_id'] : '';
-
-	if(empty($rbfw_id)){
-		return;
-	}
+    echo $rbfw_id.'<br>';
 
 	global $rbfw;
 	$rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
@@ -1577,23 +1573,21 @@ function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
 	$rbfw_inventory_info = !empty(get_post_meta($rbfw_id, 'rbfw_inventory', true)) ? get_post_meta($rbfw_id, 'rbfw_inventory', true) : [];
 
 	if($rbfw_payment_system == 'wps'){
-
 		$order = wc_get_order( $order_id );
 		$rbfw_order_status = $order->get_status();
-
 	} else {
-
 		$rbfw_order_status = !empty(get_post_meta($order_id, 'rbfw_order_status', true)) ? get_post_meta($order_id, 'rbfw_order_status', true) : '';
 	}
 
-	$start_date = !empty($ticket_info[$i]['rbfw_start_date']) ? $ticket_info[$i]['rbfw_start_date'] : '';
-	$end_date = !empty($ticket_info[$i]['rbfw_end_date']) ? $ticket_info[$i]['rbfw_end_date'] : '';
-	$start_time = !empty($ticket_info[$i]['rbfw_start_time']) ? $ticket_info[$i]['rbfw_start_time'] : '';
-	$end_time = !empty($ticket_info[$i]['rbfw_end_time']) ? $ticket_info[$i]['rbfw_end_time'] : '';
-	$rbfw_item_quantity = !empty($ticket_info[$i]['rbfw_item_quantity']) ? $ticket_info[$i]['rbfw_item_quantity'] : 0;
-	$rbfw_type_info = !empty($ticket_info[$i]['rbfw_type_info']) ? $ticket_info[$i]['rbfw_type_info'] : [];
-	$rbfw_variation_info = !empty($ticket_info[$i]['rbfw_variation_info']) ? $ticket_info[$i]['rbfw_variation_info'] : [];
-	$rbfw_service_info = !empty($ticket_info[$i]['rbfw_service_info']) ? $ticket_info[$i]['rbfw_service_info'] : [];
+	$start_date = !empty($ticket_info['rbfw_start_date']) ? $ticket_info['rbfw_start_date'] : '';
+	$end_date = !empty($ticket_info['rbfw_end_date']) ? $ticket_info['rbfw_end_date'] : '';
+	$start_time = !empty($ticket_info['rbfw_start_time']) ? $ticket_info['rbfw_start_time'] : '';
+	$end_time = !empty($ticket_info['rbfw_end_time']) ? $ticket_info['rbfw_end_time'] : '';
+	$rbfw_item_quantity = !empty($ticket_info['rbfw_item_quantity']) ? $ticket_info['rbfw_item_quantity'] : 0;
+	$rbfw_type_info = !empty($ticket_info['rbfw_type_info']) ? $ticket_info['rbfw_type_info'] : [];
+	$rbfw_variation_info = !empty($ticket_info['rbfw_variation_info']) ? $ticket_info['rbfw_variation_info'] : [];
+	$rbfw_service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
+	$rbfw_service_infos = !empty($ticket_info['rbfw_service_infos']) ? $ticket_info['rbfw_service_infos'] : [];
 	$date_range = [];
 
 	if( ($rbfw_item_type == 'bike_car_md') || ($rbfw_item_type == 'dress') || ($rbfw_item_type == 'equipment') || ($rbfw_item_type == 'others') ){
@@ -1673,6 +1667,9 @@ function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
 
 
 
+
+
+
 	$order_array = [];
 	$order_array['booked_dates'] = $date_range;
 	$order_array['rbfw_start_time'] = $start_time;
@@ -1680,11 +1677,13 @@ function rbfw_create_inventory_meta($ticket_info, $i, $order_id){
 	$order_array['rbfw_type_info'] = $rbfw_type_info;
 	$order_array['rbfw_variation_info'] = $rbfw_variation_info;
 	$order_array['rbfw_service_info'] = $rbfw_service_info;
+	$order_array['rbfw_service_infos'] = $rbfw_service_infos;
 	$order_array['rbfw_item_quantity'] = $rbfw_item_quantity;
 	$order_array['rbfw_order_status'] = $rbfw_order_status;
 
 	$rbfw_inventory_info[$order_id] = $order_array;
-	
+
+    
 	update_post_meta($rbfw_id, 'rbfw_inventory', $rbfw_inventory_info);
 
 	return true;
@@ -1772,6 +1771,9 @@ function rbfw_update_inventory($order_id, $current_status = null){
 			update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
 		}
 	}
+
+ 
+
 }
 
 
