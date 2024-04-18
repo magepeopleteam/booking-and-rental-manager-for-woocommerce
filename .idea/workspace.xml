@@ -5,21 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c44cffc6-0db8-4257-ba58-c09d553ad4bf" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/booking-and-rental-manager-for-woocommerce.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin/meta_box_content.php" beforeDir="false" afterPath="$PROJECT_DIR$/admin/meta_box_content.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin/post_meta_save.php" beforeDir="false" afterPath="$PROJECT_DIR$/admin/post_meta_save.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/frontend/rbfw_style.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/frontend/rbfw_style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/mp_script/rbfw_script.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/mp_script/rbfw_script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/mp_style/super_slider.css" beforeDir="false" afterPath="$PROJECT_DIR$/assets/mp_style/super_slider.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/RBFW_Dependencies.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/RBFW_Dependencies.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/inc/rbfw_functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/rbfw_functions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/rbfw_shortcodes.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/rbfw_shortcodes.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inc/woocommerce/rbfw_functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/inc/woocommerce/rbfw_functions.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/classes/class-admin-menu.php" beforeDir="false" afterPath="$PROJECT_DIR$/lib/classes/class-admin-menu.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.txt" beforeDir="false" afterPath="$PROJECT_DIR$/readme.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/single_page/single-rbfw.php" beforeDir="false" afterPath="$PROJECT_DIR$/templates/single_page/single-rbfw.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +57,9 @@
       <workItem from="1712576487306" duration="1792000" />
       <workItem from="1712596813546" duration="1411000" />
       <workItem from="1713312641210" duration="774000" />
+      <workItem from="1713360923012" duration="1834000" />
+      <workItem from="1713400097621" duration="3216000" />
+      <workItem from="1713440642337" duration="1269000" />
     </task>
     <servers />
   </component>

@@ -1950,47 +1950,28 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 	$start_date = strtotime($start_date);
 	$end_date = strtotime($end_date);
 
-	for ($currentDate = $start_date; $currentDate <= $end_date; 
-
-		$currentDate += (86400)) {
-										
+	for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
 		$date = date('d-m-Y', $currentDate);
-
 		$date_range[] = $date;
-
 	}
 	// End: Get Date Range
 
 	if ($rent_type == 'resort') {
-		
-		// For Resort Type
 		$rbfw_resort_room_data = get_post_meta($post_id, 'rbfw_resort_room_data', true);
-
 		if (!empty($rbfw_resort_room_data)) {
-
 			foreach ($rbfw_resort_room_data as $key => $resort_room_data) {
-				
 				if($resort_room_data['room_type'] == $type){
-
 					$type_stock += !empty($resort_room_data['rbfw_room_available_qty']) ? $resort_room_data['rbfw_room_available_qty'] : 0;
 				}
 			}
 		}
-		// End Resort Type
-
 	} else {
-
 		// For Bike/car Multiple Day Type
 		if($rbfw_enable_variations == 'yes'){
-
 			$type_stock += $rbfw_variations_stock;
-			
 		} else {
-
 			$type_stock += (int)get_post_meta($post_id, 'rbfw_item_stock_quantity', true);
 		}
-		
-
 		// End Bike/car Multiple Day Type
 	}
 
@@ -1998,36 +1979,42 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
 		$total_qty = 0;
 		$qty_array = [];
+        $extra_service_quantity = [];
 
 		foreach ($date_range as $key => $range_date) {
+
+
 
 			foreach ($rbfw_inventory as $key => $inventory) {
 
 				$booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
 				$rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
-
+				$rbfw_service_infos = !empty($inventory['rbfw_service_infos']) ? $inventory['rbfw_service_infos'] : [];
+                $rbfw_service_info = !empty($inventory['rbfw_service_info']) ? $inventory['rbfw_service_info'] : [];
 				$rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
-				
+
 
 				if ( in_array($range_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ) {
-
 					if ($rent_type == 'resort') {
-
-						// For Resort Type
 						foreach ($rbfw_type_info as $type_name => $type_qty) {
-							
 							if ($type_name == $type) {
-
 								$total_qty += $type_qty;
 							}
 						}
-						// End Resort Type
-
 					} else {
-
-						// For Bike/car Multiple Day Type
+                        /*total booking quantity*/
 						$total_qty += $rbfw_item_quantity;
-						// End Bike/car Multiple Day Type
+
+
+                        foreach ($rbfw_service_info as $service_name => $service_qty) {
+                            $extra_service_quantity[$service_name] += $service_qty;
+                        }
+
+
+
+
+
+
 					}
 				}
 			}
@@ -2036,6 +2023,8 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 			$qty_array[] = $remaining_stock;
 			$total_qty = 0;
 		}
+
+
 
 		
 	}
@@ -2049,7 +2038,8 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 		$remaining_stock = min($qty_array);
 	}
 
-	return $remaining_stock;
+    return array($remaining_stock,$extra_service_quantity);
+
 }
 
 /****************************************************
@@ -2237,6 +2227,7 @@ function rbfw_get_variations_stock($post_id){
 
 		// Loop For Extra variations
 		$rbfw_variations_data = get_post_meta($post_id, 'rbfw_variations_data', true);
+        
 
 		$count = 1;
 
