@@ -291,7 +291,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $item_quantity_box .= '<select class="rbfw-select" name="rbfw_item_quantity" id="rbfw_item_quantity">
                                     <option value="0">'.rbfw_string_return('rbfw_text_choose_number_of_qty',__('Choose number of quantity','booking-and-rental-manager-for-woocommerce')).'</option>';
                                         
-                                        for ($qty = 1; $qty <= $max_available_qty; $qty++) { 
+                                        for ($qty = 1; $qty <= $max_available_qty; $qty++) {
                                             
                                             $item_quantity_box .= '<option value="'.mep_esc_html($qty).'"'; 
                                             
@@ -362,6 +362,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                                                 $variation_content .= '</div>
                                         </div>';
+                                                
                 }
             } 
         }
