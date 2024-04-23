@@ -73,7 +73,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 		public function mp_event_all_in_tab_menu_list()
 		{
             ?>
-            <li class="nav-item" data-target-tabs="#<?php echo esc_attr($this->get_meta_box_id()); ?>">
+            <li data-target-tabs="#<?php echo esc_attr($this->get_meta_box_id()); ?>">
 				<?php echo mep_esc_html($this->get_meta_box_title()); ?>
 			</li>
 			<?php
@@ -112,7 +112,7 @@ if (!class_exists('RMFWAddMetaBox')) {
                             ?>
 
                             <li class="nav-item-wrap <?php if (($page_settings_count > 1)) { echo 'has-child'; } ?> <?php if ($current_page == $page_id) { echo 'active';} ?>">
-                                <a dataid="<?php echo esc_attr($page_id); ?>" href='#<?php echo esc_attr($page_id); ?>' class='nav-item'><?php echo esc_html($page['page_nav']); ?>
+                                <a dataid="<?php echo esc_attr($page_id); ?>" href='#<?php echo esc_attr($page_id); ?>' ><?php echo esc_html($page['page_nav']); ?>
                                     <?php if (($page_settings_count > 1)) {
                                         echo '<i class="child-nav-icon fas fa-angle-down"></i>';
 										}
@@ -125,7 +125,7 @@ if (!class_exists('RMFWAddMetaBox')) {
                                             $nav_sections_title = !empty($nav_sections['nav_title']) ? $nav_sections['nav_title'] : $nav_sections['title'];
                                         ?>
                                             <li>
-                                                <a sectionId="<?php echo esc_attr($section_id); ?>" dataid="<?php echo esc_attr($page_id); ?>" href='#<?php echo esc_attr($section_id); ?>' class='nav-item <?php if ($current_page == $page_id) { echo 'active'; } ?>'>
+                                                <a sectionId="<?php echo esc_attr($section_id); ?>" dataid="<?php echo esc_attr($page_id); ?>" href='#<?php echo esc_attr($section_id); ?>' class=' <?php if ($current_page == $page_id) { echo 'active'; } ?>'>
                                                     <?php echo esc_html($nav_sections_title); ?>
                                                 </a>
                                             </li>

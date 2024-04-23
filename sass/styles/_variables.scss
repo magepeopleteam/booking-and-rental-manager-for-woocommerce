@@ -1,20 +1,14 @@
 $main-selector:'#rbfw_add_meta_box';
-$prefix:'mpl';
+$prefix:'mage';
 :root{
-    --#{$prefix}-primary:#03A9F4;
-    --#{$prefix}-sky:#7AD6FF;
-    --#{$prefix}-sky-light:#EFFAFF;
-    --#{$prefix}-secondary:#2B363F;
-    --#{$prefix}-dark:#a4a4a4;
-    --#{$prefix}-gray:#e0e0e0;
-    --#{$prefix}-light:#f7f7f7;
+    --#{$prefix}-primary:#F12971;
+    --#{$prefix}-dark:#2B363F;
+    --#{$prefix}-gray:#ddd;
+    --#{$prefix}-light:#F2F2F2;
     --#{$prefix}-white:#ffffff;
     --#{$prefix}-black:#000000;
     --#{$prefix}-yellow:#ffcb00;
     --#{$prefix}-red:#d91e1e;
-    --#{$prefix}-red-light:#f6dada;
-    // ==========spacing =======
-    --flow-space: 1.5rem;
 }
 // ------------color--------
 $color-primary:var(--#{$prefix}-primary);

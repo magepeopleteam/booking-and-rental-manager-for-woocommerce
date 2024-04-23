@@ -1,3 +1,10 @@
+/*  
+    Author: Shahadat Hossain
+    Email: raselsha@gmail.com 
+    Version: 1.0.0
+
+    Descriptoin: this file is main sass file that will compile one main css into /assets/admin/mp_main_settings.css
+*/
 /*!
  * Font Awesome Free 5.15.4 by @fontawesome - https://fontawesome.com
  * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
@@ -6113,123 +6120,14 @@ readers do not read off random characters that represent icons */
 }
 
 :root {
-  --mpl-primary:#03A9F4;
-  --mpl-sky:#7AD6FF;
-  --mpl-sky-light:#EFFAFF;
-  --mpl-secondary:#2B363F;
-  --mpl-dark:#a4a4a4;
-  --mpl-gray:#e0e0e0;
-  --mpl-light:#f7f7f7;
-  --mpl-white:#ffffff;
-  --mpl-black:#000000;
-  --mpl-yellow:#ffcb00;
-  --mpl-red:#d91e1e;
-  --mpl-red-light:#f6dada;
-  --flow-space: 1.5rem;
-}
-
-/* Reset all margins */
-#rbfw_add_meta_box {
-  /* Remove padding on lists */
-  /* Media elements defaults */
-  /* Reset font styling */
-  /* Prevent sub and sup elements from affecting the line height */
-  /* Normalize outline to ensure A11y */
-  /* Disable animations and transitions for users that prefer reduced motion */
-}
-#rbfw_add_meta_box * {
-  margin: 0;
-}
-#rbfw_add_meta_box html {
-  block-size: 100%;
-  box-sizing: border-box;
-  overflow-wrap: break-word;
-  text-size-adjust: none;
-  /*
-  * Add smooth scrolling behavior when focused within the html element
-  * https://css-tricks.com/fixing-smooth-scrolling-with-find-on-page/
-  */
-}
-#rbfw_add_meta_box html *,
-#rbfw_add_meta_box html *::before,
-#rbfw_add_meta_box html *::after {
-  box-sizing: inherit;
-}
-#rbfw_add_meta_box html:focus-within {
-  scroll-behavior: smooth;
-}
-#rbfw_add_meta_box html,
-#rbfw_add_meta_box body {
-  block-size: 100%;
-}
-#rbfw_add_meta_box body {
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  line-height: 1.5;
-  text-rendering: optimizeSpeed;
-}
-#rbfw_add_meta_box a:not([class]) {
-  text-decoration-skip-ink: auto;
-}
-#rbfw_add_meta_box ul,
-#rbfw_add_meta_box ol {
-  padding: 0;
-}
-#rbfw_add_meta_box img,
-#rbfw_add_meta_box picture,
-#rbfw_add_meta_box svg,
-#rbfw_add_meta_box video,
-#rbfw_add_meta_box canvas,
-#rbfw_add_meta_box audio,
-#rbfw_add_meta_box iframe,
-#rbfw_add_meta_box embed,
-#rbfw_add_meta_box object {
-  display: block;
-  max-inline-size: 100%;
-}
-#rbfw_add_meta_box input,
-#rbfw_add_meta_box button,
-#rbfw_add_meta_box textarea,
-#rbfw_add_meta_box select,
-#rbfw_add_meta_box table {
-  font: inherit;
-}
-#rbfw_add_meta_box sub,
-#rbfw_add_meta_box sup {
-  font-size: 0.75em;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline;
-}
-#rbfw_add_meta_box sub {
-  inset-block-end: -0.25em;
-}
-#rbfw_add_meta_box sup {
-  inset-block-start: -0.5em;
-}
-#rbfw_add_meta_box :focus-visible {
-  outline-color: Highlight;
-  outline-color: -webkit-focus-ring-color;
-  outline-offset: 2px;
-  outline-style: dotted;
-  outline-width: 2px;
-}
-@media (prefers-reduced-motion: reduce) {
-  #rbfw_add_meta_box {
-    /* Disable smooth scrolling for html element when focused within */
-    /* Disable animations and transitions for all elements, including pseudo-elements */
-  }
-  #rbfw_add_meta_box html:focus-within {
-    scroll-behavior: auto;
-  }
-  #rbfw_add_meta_box *,
-  #rbfw_add_meta_box *::before,
-  #rbfw_add_meta_box *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-  }
+  --mage-primary:#F12971;
+  --mage-dark:#2B363F;
+  --mage-gray:#ddd;
+  --mage-light:#F2F2F2;
+  --mage-white:#ffffff;
+  --mage-black:#000000;
+  --mage-yellow:#ffcb00;
+  --mage-red:#d91e1e;
 }
 
 @font-face {
@@ -6528,62 +6426,62 @@ readers do not read off random characters that represent icons */
 }
 
 #rbfw_add_meta_box .bg-primary {
-  background-color: var(--mpl-primary);
+  background-color: var(--mage-primary);
 }
 #rbfw_add_meta_box .bg-secondary {
-  background-color: var(--mpl-secondary);
+  background-color: var(--mage-secondary);
 }
 #rbfw_add_meta_box .bg-sky {
-  background-color: var(--mpl-sky);
+  background-color: var(--mage-sky);
 }
 #rbfw_add_meta_box .bg-sky-light {
-  background-color: var(--mpl-sky-light);
+  background-color: var(--mage-sky-light);
 }
 #rbfw_add_meta_box .bg-dark {
-  background-color: var(--mpl-dark);
+  background-color: var(--mage-dark);
 }
 #rbfw_add_meta_box .bg-gray {
-  background-color: var(--mpl-gray);
+  background-color: var(--mage-gray);
 }
 #rbfw_add_meta_box .bg-light {
-  background-color: var(--mpl-light);
+  background-color: var(--mage-light);
 }
 #rbfw_add_meta_box .bg-white {
-  background-color: var(--mpl-white);
+  background-color: var(--mage-white);
 }
 #rbfw_add_meta_box .bg-black {
-  background-color: var(--mpl-black);
+  background-color: var(--mage-black);
 }
 #rbfw_add_meta_box .text-primary {
-  color: var(--mpl-primary);
+  color: var(--mage-primary);
 }
 #rbfw_add_meta_box .text-secondary {
-  color: var(--mpl-secondary);
+  color: var(--mage-secondary);
 }
 #rbfw_add_meta_box .text-sky {
-  color: var(--mpl-sky);
+  color: var(--mage-sky);
 }
 #rbfw_add_meta_box .text-dark {
-  color: var(--mpl-dark);
+  color: var(--mage-dark);
 }
 #rbfw_add_meta_box .text-gray {
-  color: var(--mpl-gray);
+  color: var(--mage-gray);
 }
 #rbfw_add_meta_box .text-light {
-  color: var(--mpl-light);
+  color: var(--mage-light);
 }
 #rbfw_add_meta_box .text-white {
-  color: var(--mpl-white);
+  color: var(--mage-white);
 }
 #rbfw_add_meta_box .text-black {
-  color: var(--mpl-black);
+  color: var(--mage-black);
 }
 
 #rbfw_add_meta_box .nav {
   list-style: none;
 }
 #rbfw_add_meta_box .nav-item {
-  background-color: var(--mpl-white);
+  background-color: var(--mage-white);
   border-radius: 0.25rem;
   margin: 0;
   margin-bottom: 0.5em;
@@ -6596,14 +6494,14 @@ readers do not read off random characters that represent icons */
   padding-right: 0.5rem;
 }
 #rbfw_add_meta_box .nav-item:hover, #rbfw_add_meta_box .nav-item.active {
-  background-color: var(--mpl-primary);
-  color: var(--mpl-white);
+  background-color: var(--mage-primary);
+  color: var(--mage-white);
 }
 
 #rbfw_add_meta_box hr, #rbfw_add_meta_box .hr {
   margin: 0.5em 0;
   border: 0;
-  border-top: 1px solid var(--mpl-light);
+  border-top: 1px solid var(--mage-light);
 }
 #rbfw_add_meta_box .rounded {
   border-radius: 0.25rem;
@@ -6830,9 +6728,9 @@ readers do not read off random characters that represent icons */
 #rbfw_add_meta_box textarea, #rbfw_add_meta_box select, #rbfw_add_meta_box input[type=text], #rbfw_add_meta_box input[type=email], #rbfw_add_meta_box input[type=search], #rbfw_add_meta_box input[type=tel], #rbfw_add_meta_box input[type=url], #rbfw_add_meta_box input[type=password], #rbfw_add_meta_box input[type=file], #rbfw_add_meta_box input[type=color], #rbfw_add_meta_box input[type=number], #rbfw_add_meta_box input[type=range], #rbfw_add_meta_box input[type=date], #rbfw_add_meta_box input[type=month], #rbfw_add_meta_box input[type=week], #rbfw_add_meta_box input[type=time], #rbfw_add_meta_box input[type=datetime], #rbfw_add_meta_box input[type=datetime-local] {
   width: 16em;
   height: 2.5em;
-  border: 0px solid var(--mpl-dark);
-  border: 1px solid var(--mpl-dark);
-  color: var(--mpl-secondary);
+  border: 0px solid var(--mage-dark);
+  border: 1px solid var(--mage-dark);
+  color: var(--mage-secondary);
   padding: 0.5em;
 }
 #rbfw_add_meta_box textarea.small, #rbfw_add_meta_box select.small, #rbfw_add_meta_box input[type=text].small, #rbfw_add_meta_box input[type=email].small, #rbfw_add_meta_box input[type=search].small, #rbfw_add_meta_box input[type=tel].small, #rbfw_add_meta_box input[type=url].small, #rbfw_add_meta_box input[type=password].small, #rbfw_add_meta_box input[type=file].small, #rbfw_add_meta_box input[type=color].small, #rbfw_add_meta_box input[type=number].small, #rbfw_add_meta_box input[type=range].small, #rbfw_add_meta_box input[type=date].small, #rbfw_add_meta_box input[type=month].small, #rbfw_add_meta_box input[type=week].small, #rbfw_add_meta_box input[type=time].small, #rbfw_add_meta_box input[type=datetime].small, #rbfw_add_meta_box input[type=datetime-local].small {
@@ -6842,17 +6740,17 @@ readers do not read off random characters that represent icons */
   width: 8em;
 }
 #rbfw_add_meta_box textarea:disabled, #rbfw_add_meta_box select:disabled, #rbfw_add_meta_box input[type=text]:disabled, #rbfw_add_meta_box input[type=email]:disabled, #rbfw_add_meta_box input[type=search]:disabled, #rbfw_add_meta_box input[type=tel]:disabled, #rbfw_add_meta_box input[type=url]:disabled, #rbfw_add_meta_box input[type=password]:disabled, #rbfw_add_meta_box input[type=file]:disabled, #rbfw_add_meta_box input[type=color]:disabled, #rbfw_add_meta_box input[type=number]:disabled, #rbfw_add_meta_box input[type=range]:disabled, #rbfw_add_meta_box input[type=date]:disabled, #rbfw_add_meta_box input[type=month]:disabled, #rbfw_add_meta_box input[type=week]:disabled, #rbfw_add_meta_box input[type=time]:disabled, #rbfw_add_meta_box input[type=datetime]:disabled, #rbfw_add_meta_box input[type=datetime-local]:disabled {
-  background: var(--mpl-gray);
+  background: var(--mage-gray);
 }
 #rbfw_add_meta_box textarea {
   width: 100%;
   height: 5em;
 }
 #rbfw_add_meta_box input[type=search] {
-  border: 0px solid var(--mpl-dark);
+  border: 0px solid var(--mage-dark);
 }
 #rbfw_add_meta_box .tool-tips {
-  color: var(--mpl-gray);
+  color: var(--mage-gray);
   position: relative;
   padding-left: 0.25em;
 }
@@ -6866,8 +6764,8 @@ readers do not read off random characters that represent icons */
   font-family: ubuntu;
   font-size: 0.9rem;
   text-align: center;
-  background-color: var(--mpl-black);
-  color: var(--mpl-white);
+  background-color: var(--mage-black);
+  color: var(--mage-white);
   border-radius: 0.25rem;
   padding: 0.5em 0.75em;
   width: max-content;
@@ -6878,12 +6776,12 @@ readers do not read off random characters that represent icons */
   top: 100%; /* At the bottom of the tooltip */
   left: 50%;
   transform: translate(-50%);
-  border: 5px solid var(--mpl-black);
-  border-color: var(--mpl-black) transparent transparent transparent;
+  border: 5px solid var(--mage-black);
+  border-color: var(--mage-black) transparent transparent transparent;
   margin-left: 0.18em;
 }
 #rbfw_add_meta_box .tool-tips:hover {
-  color: var(--mpl-primary);
+  color: var(--mage-primary);
 }
 #rbfw_add_meta_box .tool-tips:hover span {
   visibility: visible;
@@ -6898,8 +6796,8 @@ readers do not read off random characters that represent icons */
   opacity: 0;
   width: 0;
   height: 0;
-  border: 1px solid var(--mpl-primary);
-  background-color: var(--mpl-gray);
+  border: 1px solid var(--mage-primary);
+  background-color: var(--mage-gray);
 }
 #rbfw_add_meta_box .slider {
   position: absolute;
@@ -6909,8 +6807,8 @@ readers do not read off random characters that represent icons */
   right: 0;
   bottom: 0;
   border-radius: 50px;
-  border: 1px solid var(--mpl-dark);
-  background-color: var(--mpl-gray);
+  border: 1px solid var(--mage-dark);
+  background-color: var(--mage-gray);
   transition: 0.5s;
 }
 #rbfw_add_meta_box .slider:before {
@@ -6921,99 +6819,32 @@ readers do not read off random characters that represent icons */
   left: 1px;
   bottom: 1px;
   border-radius: 50%;
-  border: 1px solid var(--mpl-light);
-  background-color: var(--mpl-white);
+  border: 1px solid var(--mage-light);
+  background-color: var(--mage-white);
   transition: 0.4s;
-  box-shadow: 0 0 1px var(--mpl-dark);
+  box-shadow: 0 0 1px var(--mage-dark);
 }
 #rbfw_add_meta_box input:checked + .slider {
-  background-color: var(--mpl-sky);
-  border: 1px solid var(--mpl-primary);
+  background-color: var(--mage-sky);
+  border: 1px solid var(--mage-primary);
 }
 #rbfw_add_meta_box input:checked + .slider:before {
   transform: translateX(26px);
 }
 #rbfw_add_meta_box input:focus + .slider {
-  box-shadow: inset 0 0 1px var(--mpl-dark);
+  box-shadow: inset 0 0 1px var(--mage-dark);
 }
 
 #rbfw_add_meta_box .btn, #rbfw_add_meta_box .button {
   border: 0px solid;
   box-shadow: none;
-  background-color: var(--mpl-primary);
+  background-color: var(--mage-primary);
   border-radius: 0.25rem;
   padding: 0.5em 0.5em;
-  color: var(--mpl-white);
+  color: var(--mage-white);
   font-size: 1rem;
   transition: all 0.5s ease-in-out;
   max-width: 200px;
-}
-
-#rbfw_add_meta_box :where(h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, p, .paragraph, ul, ol, pre, table, figure, blockquote, form, fieldset, dl, address, details, hr, aside, video) + * {
-  margin-block-start: 0;
-}
-#rbfw_add_meta_box body,
-#rbfw_add_meta_box p {
-  color: var(--mpl-secondary);
-  font-family: ubuntu;
-  font-size: 1rem;
-  font-weight: initial;
-  line-height: 1.5;
-}
-#rbfw_add_meta_box h1, #rbfw_add_meta_box h2, #rbfw_add_meta_box h3, #rbfw_add_meta_box h4, #rbfw_add_meta_box h5, #rbfw_add_meta_box h6,
-#rbfw_add_meta_box .h1, #rbfw_add_meta_box .h2, #rbfw_add_meta_box .h3, #rbfw_add_meta_box .h4, #rbfw_add_meta_box .h5, #rbfw_add_meta_box .h6 {
-  font-family: ubuntu;
-  line-height: 1.3;
-}
-#rbfw_add_meta_box h1,
-#rbfw_add_meta_box .h1 {
-  font-size: 2.375rem;
-}
-#rbfw_add_meta_box h2,
-#rbfw_add_meta_box .h2 {
-  font-size: 2.1875rem;
-  font-weight: 500;
-}
-#rbfw_add_meta_box h3,
-#rbfw_add_meta_box .h3 {
-  font-size: 1.9375rem;
-  line-height: 1.4;
-}
-#rbfw_add_meta_box h4,
-#rbfw_add_meta_box .h4 {
-  font-size: 1.625rem;
-  line-height: 1.4;
-}
-#rbfw_add_meta_box h5,
-#rbfw_add_meta_box .h5 {
-  font-size: 1.25rem;
-  line-height: 1.5;
-}
-#rbfw_add_meta_box h6,
-#rbfw_add_meta_box .h6 {
-  font-size: 1.0625rem;
-  line-height: 1.5;
-}
-#rbfw_add_meta_box .fw-bold {
-  font-family: ubuntuBold;
-  font-weight: 500;
-}
-#rbfw_add_meta_box .container {
-  width: 1200px;
-  margin: 0 auto;
-}
-#rbfw_add_meta_box .container-fulid {
-  width: 100%;
-  margin: 0 auto;
-}
-#rbfw_add_meta_box .component {
-  background-color: var(--mpl-white);
-  padding: 0.75em;
-  margin-bottom: 0em;
-  border-bottom: 1px solid var(--mpl-gray);
-}
-#rbfw_add_meta_box .component:last-child {
-  border-bottom: 0 solid var(--mpl-gray);
 }
 
 #rbfw_add_meta_box .inside {
@@ -7024,18 +6855,62 @@ readers do not read off random characters that represent icons */
   display: none;
 }
 #rbfw_add_meta_box .postbox-header {
-  background-color: var(--mpl-secondary);
+  background-color: var(--mage-primary);
   color: #fff;
 }
 #rbfw_add_meta_box .postbox-header h2 {
-  color: var(--mpl-white);
+  color: var(--mage-white);
   font-size: 1.2rem;
 }
 #rbfw_add_meta_box .postbox-header .handle-actions {
   margin-top: 0;
 }
 #rbfw_add_meta_box .postbox-header .handle-actions .handle-order-higher, #rbfw_add_meta_box .postbox-header .handle-actions .handle-order-lower, #rbfw_add_meta_box .postbox-header .handle-actions .toggle-indicator {
-  color: var(--mpl-white);
+  color: var(--mage-white);
+}
+#rbfw_add_meta_box .mp_event_tab_area {
+  display: flex;
+}
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu {
+  min-width: 250px;
+  max-width: 283px;
+  background-color: var(--mage-light);
+  padding: 25px 0 25px 25px;
+}
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 15px;
+  color: var(--mage-black);
+  border-left: 2px solid transparent;
+  font-size: 16px;
+  margin: 0;
+}
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li i {
+  margin: 0 10px 0 0;
+  color: var(--mage-primary);
+}
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li.active, #rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li:hover {
+  background-color: var(--mage-white);
+  color: var(--d_color);
+  border-left: 2px solid var(--mage-primary);
+}
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li.active::after, #rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li:hover::after {
+  width: 100%;
+}
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  border-bottom: 1px solid var(--mage-gray);
+  width: 90%;
+}
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_details {
+  width: 80%;
+  padding: 2% 5%;
 }
 #rbfw_add_meta_box .select2-selection__rendered {
   padding: 0.25em;

@@ -261,20 +261,20 @@ if (!class_exists('MageRBFWClass')) {
 
         public function add_meta_box_func() {
             $cpt_label = $this->get_option('rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent');
-            add_meta_box('rbfw_add_meta_box', __('<i class="fas fa-cogs pe-1"></i>' . $cpt_label . ' Settings : ', 'booking-and-rental-manager-for-woocommerce') . get_the_title(get_the_id()), array($this, 'mp_event_all_in_tab'), 'rbfw_item', 'normal', 'high');
+            add_meta_box('rbfw_add_meta_box', __( $cpt_label . ' Settings : ', 'booking-and-rental-manager-for-woocommerce') . get_the_title(get_the_id()), array($this, 'mp_event_all_in_tab'), 'rbfw_item', 'normal', 'high');
         }
 
         public function mp_event_all_in_tab() {
             $cpt_label = $this->get_option('rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent');
             $post_id = get_the_id();
             ?>
-            <div class=" mp_event_tab_area bg-sky-light p-1 d-flex justify-content-between">
-                <aside class="sidebar w-20 mp_tab_menu">
+            <div class="mp_event_tab_area">
+                <aside class="mp_tab_menu">
                     <ul>
                         <?php do_action('rbfw_meta_box_tab_name', $post_id); ?>
                     </ul>
                 </aside>
-                <section class="mp_tab_details bg-white m-0 ms-2 w-80">
+                <section class="mp_tab_details">
                     <?php do_action('rbfw_meta_box_tab_content', $post_id); ?>
                 </section>
             </div>

@@ -1,4 +1,6 @@
 #{$main-selector}{
+
+
     .inside{
         margin: 0;
         padding: 0;
@@ -7,7 +9,7 @@
         display: none;
     }
     .postbox-header{
-        background-color: $color-secondary;
+        background-color: $color-primary;
         color: #fff;
         h2{
           color: $color-white;
@@ -21,6 +23,54 @@
             
         }
     }
+
+    .mp_event_tab_area{
+        display: flex;
+        .mp_tab_menu{
+            min-width: 250px;
+            max-width: 283px;
+            background-color: $color-light;
+            padding: 25px 0 25px 25px;
+            ul{
+                li{
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    cursor: pointer;
+                    padding: 15px;
+                    color: $color-black;
+                    border-left: 2px solid transparent;
+                    font-size: 16px;
+                    margin: 0;
+                    i{
+                        margin: 0 10px 0 0;
+                        color: $color-primary
+                    }
+                    &.active,&:hover{
+                        background-color: $color-white;
+                        color: var(--d_color);
+                        border-left: 2px solid $color-primary;
+                        &::after{
+                            width: 100%;
+                        }
+                    }
+                    &::after{
+                        content: '';
+                        position: absolute;
+                        left: 0;
+                        bottom: 0;
+                        border-bottom: 1px solid $color-gray;
+                        width: 90%;
+                    }
+                }
+            }
+        }
+        .mp_tab_details{
+            width: 80%;
+            padding: 2% 5%;
+        }
+    }
+
     .select2-selection__rendered{
         padding: .25em;
         .select2-selection__choice{
