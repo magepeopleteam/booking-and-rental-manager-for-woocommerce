@@ -633,6 +633,7 @@ if (!class_exists('MageRBFWClass')) {
                     }
                     if(!empty($ticket_info)){
                         foreach ($ticket_info as $key =>$item) {
+
                             $rbfw_id = $item['rbfw_id'];
                             foreach ($item as $key => $value) {
                                 if ($key == 'rbfw_start_date' || $key == 'rbfw_end_date') {

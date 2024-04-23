@@ -1565,7 +1565,7 @@ function rbfw_search_query_exlude_hidden_wc_fix( $query ) {
  *****************************/
 function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
-    echo $rbfw_id.'<br>';
+
 
 	global $rbfw;
 	$rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
@@ -1589,6 +1589,8 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 	$rbfw_service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
 	$rbfw_service_infos = !empty($ticket_info['rbfw_service_infos']) ? $ticket_info['rbfw_service_infos'] : [];
 	$date_range = [];
+
+
 
 	if( ($rbfw_item_type == 'bike_car_md') || ($rbfw_item_type == 'dress') || ($rbfw_item_type == 'equipment') || ($rbfw_item_type == 'others') ){
 
@@ -1682,6 +1684,11 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 	$order_array['rbfw_order_status'] = $rbfw_order_status;
 
 	$rbfw_inventory_info[$order_id] = $order_array;
+
+
+
+
+ 
 
     
 	update_post_meta($rbfw_id, 'rbfw_inventory', $rbfw_inventory_info);
@@ -1975,25 +1982,21 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 		// End Bike/car Multiple Day Type
 	}
 
+/*    echo '<pre>';
+    print_r($rbfw_inventory);
+    echo '<pre>';exit;*/
+
 	if (!empty($rbfw_inventory)) {
 
 		$total_qty = 0;
 		$qty_array = [];
         $extra_service_quantity = [];
-
 		foreach ($date_range as $key => $range_date) {
-
-
-
 			foreach ($rbfw_inventory as $key => $inventory) {
-
 				$booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
 				$rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
-				$rbfw_service_infos = !empty($inventory['rbfw_service_infos']) ? $inventory['rbfw_service_infos'] : [];
-                $rbfw_service_info = !empty($inventory['rbfw_service_info']) ? $inventory['rbfw_service_info'] : [];
+
 				$rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
-
-
 				if ( in_array($range_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ) {
 					if ($rent_type == 'resort') {
 						foreach ($rbfw_type_info as $type_name => $type_qty) {
@@ -2004,17 +2007,6 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 					} else {
                         /*total booking quantity*/
 						$total_qty += $rbfw_item_quantity;
-
-
-                        foreach ($rbfw_service_info as $service_name => $service_qty) {
-                            $extra_service_quantity[$service_name] += $service_qty;
-                        }
-
-
-
-
-
-
 					}
 				}
 			}
@@ -2023,23 +2015,54 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 			$qty_array[] = $remaining_stock;
 			$total_qty = 0;
 		}
-
-
-
-		
 	}
 	
 	if (empty($qty_array)) {
-
 		$remaining_stock = $type_stock;
-
 	} else {
-
 		$remaining_stock = min($qty_array);
 	}
 
-    return array($remaining_stock,$extra_service_quantity);
 
+    $rbfw_service_infos = !empty($inventory['rbfw_service_infos']) ? $inventory['rbfw_service_infos'] : [];
+    $rbfw_extra_service_info = get_post_meta($post_id, 'rbfw_extra_service_data', true); //!empty($inventory['rbfw_service_info']) ? $inventory['rbfw_service_info'] : [];
+
+    $extra_service_instock = [];
+    $service_q = [];
+    foreach($rbfw_extra_service_info as $service=>$es){
+
+
+        foreach($date_range as $date){
+            $service_q[] = array('date'=>$date,$es['service_name']=>total_service_quantity($es['service_name'],$date,$rbfw_inventory));
+        }
+        $extra_service_instock[$service] = $es['service_qty'] - max(array_column($service_q, $es['service_name']));
+    }
+
+    return array('remaining_stock'=>$remaining_stock,'extra_service_instock'=>$extra_service_instock);
+
+}
+
+
+function total_service_quantity($service,$date,$inventory){
+       /* echo '<pre>';
+        print_r($inventory);
+        echo '<pre>';exit;*/
+    $total_single_service = 0;
+    foreach($inventory as $item){
+
+
+
+
+
+
+
+
+
+        if(in_array($date,$item['booked_dates']) && array_key_exists($service,$item['rbfw_service_info'])){
+            $total_single_service += $item['rbfw_service_info'][$service];
+        }
+    }
+    return $total_single_service;
 }
 
 /****************************************************

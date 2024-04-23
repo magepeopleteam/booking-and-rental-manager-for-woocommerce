@@ -172,6 +172,10 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
             jQuery('.rbfw_reg_form_rb').show();
             jQuery('[name="total_days"]').val(response.total_days);
 
+            jQuery(".rbfw_bikecarmd_es_qty").each(function(index, value) {
+                jQuery(this).attr('max',response.max_available_qty.extra_service_instock[index]);
+            });
+
             jQuery('.rbfw_rp_loader').hide();
 
             if((response.max_available_qty == 0)) {
@@ -182,10 +186,10 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
                 jQuery('.rbfw_nia_notice').remove();
                 jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',false);
             }
-
         },
         error : function(response){
             console.log(response);
         }
     });
 }
+
