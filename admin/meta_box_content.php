@@ -1573,9 +1573,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 				'section_2' => array(
 					'title'       => __( 'General Information', 'booking-and-rental-manager-for-woocommerce' ),
 					'description' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
-
                     'options'     => array(
-
 						array(
 							'id'          => 'rbfw_add_to_cart_shortcode',
 							'title'       => __( 'Add To Cart Form Shortcode:', 'booking-and-rental-manager-for-woocommerce' ),
