@@ -24,9 +24,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 			add_action('save_post', array($this, 'save_post'), 12);
 		}
 
-		public function
-        add_meta_boxes()
-		{
+		public function add_meta_boxes() {
 			add_meta_box(
 				$this->get_meta_box_id(),
 				$this->get_meta_box_title(),
@@ -86,10 +84,10 @@ if (!class_exists('RMFWAddMetaBox')) {
             <div class="mp_tab_item" data-tab-item="#<?php echo esc_html($this->get_meta_box_id()); ?>">
 				<div class='wrap ppof-settings ppof-metabox'>
 						<?php
-						$current_page = 1;
+						
 						foreach ($this->get_panels() as $panelsIndex => $panel) :
 						?>
-						<div class="tab-content <?php if ($current_page == 1) { echo 'active'; } ?>  tab-content-<?php echo esc_attr($panelsIndex); ?>">
+						<div class="tab-content tab-content-<?php echo esc_attr($panelsIndex); ?>">
 							<?php foreach ($panel['sections'] as $sectionIndex => $section) : ?>
 								
 								<h2 id="<?php echo esc_attr($sectionIndex); ?>" ><?php echo esc_html($section['title']); ?></h2>
@@ -125,10 +123,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 								</div>
 							<?php endforeach; ?>
 						</div>
-							<?php
-							$current_page++;
-							endforeach;
-							?>
+						<?php endforeach; ?>
 				</div>
             
             </div>

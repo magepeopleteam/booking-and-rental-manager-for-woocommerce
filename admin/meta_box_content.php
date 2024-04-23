@@ -270,20 +270,7 @@
 				</div>
 			</div>
 		</div>
-
-
-
-
-
-
 	</div>
-
-
-
-
-
-
-
 <?php
 	}
 
@@ -378,8 +365,6 @@
         <div class='rbfw-item-type '>
 			<div class="rbfw_form_group" data-table="rbfw_item_type_table">
 				<table class="form-table rbfw_item_type_table">
-
-
                     <!--this section start only for appontment-->
                     <tr class="rbfw_switch_sd_appointment_row " <?php if ( $rbfw_item_type != 'appointment') { echo 'style="display:none"'; } ?>>
 						<td>
@@ -870,35 +855,6 @@ function rbfw_off_days_config( $post_id ) {
 					<?php } ?>
 				</div>
 			</div>
-<<<<<<< HEAD
-
-            <div class="off_date_range_content" style="display: none">
-                <div class="off_date_range_child component d-flex justify-content-between">
-                    <section class=" d-flex justify-content-between w-50">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
-                            <div class="ms-5 d-flex justify-content-between align-items-center">
-                                <input type="text" placeholder="YYYY-MM-DD" name="off_days_start[]" class="rbfw_off_days_range" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" readonly>
-                            </div>
-                        </div>
-                    </section>
-                    <section class="ms-5 d-flex justify-content-between w-50">
-                        <div class="ms-5 d-flex justify-content-between align-items-center">
-                            <label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
-                            <div class="ms-5 d-flex justify-content-between align-items-center">
-                                <input type="text" placeholder="YYYY-MM-DD" name="off_days_end[]"  class="rbfw_off_days_range" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
-                            </div>
-                        </div>
-                    </section>
-                    <div class="component mp_event_remove_move">
-                        <button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
-                    </div>
-                </div>
-            </div>
-
-
-=======
->>>>>>> 71dc3a0726fae9ec4e50ac11f8bfe49248b1f75d
 
 
             <div class="form-table rbfw_item_type_table off_date_range">

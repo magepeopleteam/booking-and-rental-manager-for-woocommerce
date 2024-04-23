@@ -165,13 +165,7 @@ div>.ppof-metabox {
     text-align: right;
 }
 
-.ppof-settings .tab-content {
-    display: none;
-}
 
-.ppof-settings .tab-content.active {
-    display: block;
-}
 
 .ppof-settings .form-section {
     padding: 0 0px;
