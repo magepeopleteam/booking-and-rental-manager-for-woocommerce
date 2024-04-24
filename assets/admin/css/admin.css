@@ -6889,6 +6889,12 @@ readers do not read off random characters that represent icons */
 #rbfw_add_meta_box section label span {
   color: var(--mage-gray);
 }
+#rbfw_add_meta_box .select2.select2-container {
+  width: 100% !important;
+}
+#rbfw_add_meta_box .select2.select2-container .selection {
+  width: 100%;
+}
 #rbfw_add_meta_box .mp_event_tab_area {
   display: flex;
 }

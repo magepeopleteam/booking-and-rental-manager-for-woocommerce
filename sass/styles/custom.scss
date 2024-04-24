@@ -45,6 +45,13 @@
         }
     }
 
+    .select2.select2-container{
+        width: 100% !important;
+        .selection{
+            width: 100%;
+        }
+    }
+
     .mp_event_tab_area{
         display: flex;
         .mp_tab_menu{

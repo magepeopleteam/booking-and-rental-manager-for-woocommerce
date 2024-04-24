@@ -1672,6 +1672,34 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 					</div>
 					<code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $rbfw_id; ?>']</code>
 				</section>
+				<section>
+					<div>
+						<label>
+							<?php _e( 'Select Categories', 'booking-and-rental-manager-for-woocommerce' ) ?>
+						</label>
+						<span><?php _e( 'Add multiple categories', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
+					</div>
+					
+					 <?php
+                        $rbfw_categories = get_post_meta($rbfw_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_categories', true)) : [];
+                        ?>
+
+                        <div class="w-50">
+							<select name="rbfw_categories[]" multiple class="category2">
+								<?php
+								$terms = get_terms( array(
+									'taxonomy'   => 'rbfw_item_caregory',
+									'hide_empty' => false,
+								) );
+								foreach ( $terms as $key => $value ) {
+									?>
+									<option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
+									<?php
+								}
+								?>
+							</select>
+						</div>
+				</section>
 			</div>
 		<?php
 		}
