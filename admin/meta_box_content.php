@@ -1638,7 +1638,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			)
 		);
 
-		new RMFWAddMetaBox( $rbfw_gen_info_boxs_args );
+		$RMFWAddMetaBox = new RMFWAddMetaBox( $rbfw_gen_info_boxs_args );
 
 
 		add_action( 'rbfw_meta_box_tab_name', 'rbfw_add_meta_box_tab_gen_info', 10 );
@@ -1706,22 +1706,22 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 						<span><?php echo esc_html__('Add related items here', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 					</div>
 					<div class="w-50">
-						<?php
-						$rbfw_categories = get_post_meta($rbfw_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_categories', true)) : [];
-						?>
-						<select name="rbfw_categories[]" multiple class="category2">
-							<?php
-							$terms = get_terms( array(
-								'taxonomy'   => 'rbfw_item_caregory',
-								'hide_empty' => false,
-							) );
-							foreach ( $terms as $key => $value ) {
+						<div id="rbfw_releted_rbfw" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rbfw_releted_rbfw">
+							<select name="rbfw_releted_rbfw[]" id="rbfw_releted_rbfw" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
+								<?php 
+									
+									$post_id = get_post_meta($rbfw_id,'rbfw_releted_rbfw',true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_releted_rbfw', true)) : [];
+									
+									$the_query = new WP_Query( array(
+										'post_type' => 'rbfw_item',
+									) );
 								?>
-								<option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
-								<?php
-							}
-							?>
-						</select>
+								<?php while ( $the_query->have_posts() ) : $the_query->the_post();?>
+									<option <?php echo (in_array(get_the_ID(),$post_id))?'selected':'' ?> value="<?php the_ID(); ?>"> <?php the_title(); ?> </option>
+								<?php endwhile;  ?>
+								
+							</select>
+						</div>					
 					</div>
 				</section>
 				<section>
@@ -1764,7 +1764,11 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 						</label>
 						<span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 					</div>
-					wp editor
+					<div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($rbfw_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-wp_editor-wrapper
+						field-wp_editor-wrapper-<?php echo esc_attr($rbfw_id); ?>">
+							
+							<div class="error-mgs"></div>
+					</div>
 				</section>
 
 				<section class="bg-light mt-5">
