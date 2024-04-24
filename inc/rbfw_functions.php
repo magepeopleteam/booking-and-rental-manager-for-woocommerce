@@ -2025,13 +2025,13 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
 
     $rbfw_service_infos = !empty($inventory['rbfw_service_infos']) ? $inventory['rbfw_service_infos'] : [];
+
+
     $rbfw_extra_service_info = get_post_meta($post_id, 'rbfw_extra_service_data', true); //!empty($inventory['rbfw_service_info']) ? $inventory['rbfw_service_info'] : [];
 
     $extra_service_instock = [];
     $service_q = [];
     foreach($rbfw_extra_service_info as $service=>$es){
-
-
         foreach($date_range as $date){
             $service_q[] = array('date'=>$date,$es['service_name']=>total_service_quantity($es['service_name'],$date,$rbfw_inventory));
         }

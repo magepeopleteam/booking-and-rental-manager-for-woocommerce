@@ -331,13 +331,14 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $cart_item_data['rbfw_end_datetime'] = $end_datetime;
         $cart_item_data['rbfw_item_quantity'] = $rbfw_item_quantity;
         $cart_item_data['rbfw_service_info'] = $rbfw_service_info;
+        $cart_item_data['rbfw_service_infos'] = $rbfw_service_infos;
         $cart_item_data['rbfw_variation_info'] = $variation_info;
         $cart_item_data['rbfw_ticket_info'] = $rbfw_ticket_info;
         $cart_item_data['rbfw_duration_price'] = $rbfw_duration_price;
         $cart_item_data['rbfw_service_price'] = $rbfw_service_price;
         $cart_item_data['discount_type'] = $discount_type;
         $cart_item_data['discount_amount'] = $discount_amount;
-        $cart_item_data['rbfw_service_infos'] = $rbfw_service_infos_actual;
+
 
     }
 
