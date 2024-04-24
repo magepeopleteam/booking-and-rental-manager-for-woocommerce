@@ -1709,9 +1709,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 						<div id="rbfw_releted_rbfw" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rbfw_releted_rbfw">
 							<select name="rbfw_releted_rbfw[]" id="rbfw_releted_rbfw" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
 								<?php 
-									
 									$post_id = get_post_meta($rbfw_id,'rbfw_releted_rbfw',true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_releted_rbfw', true)) : [];
-									
 									$the_query = new WP_Query( array(
 										'post_type' => 'rbfw_item',
 									) );
