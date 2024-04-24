@@ -1,6 +1,5 @@
 #{$main-selector}{
 
-
     .inside{
         margin: 0;
         padding: 0;
@@ -21,6 +20,28 @@
                 color: $color-white;
             }
             
+        }
+    }
+
+    section{
+        padding: 20px;
+        border: 1px solid $color-light;
+        margin-top: -1px;
+        border-radius: 0;
+        display: flex;
+        justify-content: space-between;
+        label{
+            margin: 0;
+            font-size: 14px;
+            font-family: DejaVuSansBold, sans-serif;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            color: $color-secondary;
+            font-weight: 600;
+            span{
+                color: $color-gray;
+            }
         }
     }
 
@@ -68,6 +89,19 @@
         .mp_tab_details{
             width: 80%;
             padding: 2% 5%;
+            h2.mp_tab_item_title{
+                padding: 0;
+                color: $color-black;
+                margin: 30px 0 20px 0;
+                margin-bottom: 10px;
+                font-size: 22px;
+                line-height: 26px;
+                font-family: DejaVuSansBold, sans-serif;
+                font-weight: 700;
+            }
+            p.mp_tab_item_description{
+                margin-bottom: 20px;
+            }
         }
     }
 

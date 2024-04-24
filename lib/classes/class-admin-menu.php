@@ -273,7 +273,8 @@ if (!class_exists('MageRBFWClass')) {
                     <ul>
                         <?php do_action('rbfw_meta_box_tab_name', $post_id); ?>
                     </ul>
-                </aside>
+                </aside> 
+                
                 <section class="mp_tab_details">
                     <?php do_action('rbfw_meta_box_tab_content', $post_id); ?>
                 </section>

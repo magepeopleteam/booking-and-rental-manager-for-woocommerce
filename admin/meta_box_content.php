@@ -1621,6 +1621,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			),
 		);
 
+		// ===================Generel info box ===================
 
 		$rbfw_gen_info_boxs_args = array(
 			'meta_box_id'    => 'rbfw_travel_basic_info_meta_boxes',
@@ -1639,6 +1640,42 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 
 		new RMFWAddMetaBox( $rbfw_gen_info_boxs_args );
 
+
+		add_action( 'rbfw_meta_box_tab_name', 'rbfw_add_meta_box_tab_gen_info', 10 );
+		function rbfw_add_meta_box_tab_gen_info( $rbfw_id ) {
+		?>
+			<li data-target-tabs="#rbfw_gen_info"><i class="fas fa-tools"></i><?php esc_html_e('General Info', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+		<?php
+		}
+
+		add_action( 'rbfw_meta_box_tab_content', 'rbfw_add_meta_box_tab_gen_info_content', 10 );
+		function rbfw_add_meta_box_tab_gen_info_content( $rbfw_id ) {
+		?>
+			<div class="mpStyle mp_tab_item " data-tab-item="#rbfw_gen_info">
+				<h2 class="mp_tab_item_title"><?php echo esc_html__('General Info', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+				<p class="mp_tab_item_description"><?php echo esc_html__('Here you can configure basic information.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+
+				<section class="bg-light">
+					<div>
+						<label>
+							<?php echo esc_html__('Basic Settings', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</label>
+						<span><?php echo esc_html__('Here you can settings basic info.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+				</section>
+				<section>
+					<div>
+						<label>
+							<?php echo esc_html__('Basic Settings', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</label>
+						<span><?php echo esc_html__('Here you can settings basic info.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+				</section>
+			</div>
+		<?php
+		}
+
+		// ==================== end Generel info box ===================
 
         $rbfw_pricing_meta_boxs_args = array(
 			'meta_box_id'    => 'travel_pricing',

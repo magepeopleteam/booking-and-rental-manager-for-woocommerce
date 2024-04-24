@@ -6868,6 +6868,27 @@ readers do not read off random characters that represent icons */
 #rbfw_add_meta_box .postbox-header .handle-actions .handle-order-higher, #rbfw_add_meta_box .postbox-header .handle-actions .handle-order-lower, #rbfw_add_meta_box .postbox-header .handle-actions .toggle-indicator {
   color: var(--mage-white);
 }
+#rbfw_add_meta_box section {
+  padding: 20px;
+  border: 1px solid var(--mage-light);
+  margin-top: -1px;
+  border-radius: 0;
+  display: flex;
+  justify-content: space-between;
+}
+#rbfw_add_meta_box section label {
+  margin: 0;
+  font-size: 14px;
+  font-family: DejaVuSansBold, sans-serif;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 8px;
+  color: var(--mage-secondary);
+  font-weight: 600;
+}
+#rbfw_add_meta_box section label span {
+  color: var(--mage-gray);
+}
 #rbfw_add_meta_box .mp_event_tab_area {
   display: flex;
 }
@@ -6911,6 +6932,19 @@ readers do not read off random characters that represent icons */
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_details {
   width: 80%;
   padding: 2% 5%;
+}
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_details h2.mp_tab_item_title {
+  padding: 0;
+  color: var(--mage-black);
+  margin: 30px 0 20px 0;
+  margin-bottom: 10px;
+  font-size: 22px;
+  line-height: 26px;
+  font-family: DejaVuSansBold, sans-serif;
+  font-weight: 700;
+}
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_details p.mp_tab_item_description {
+  margin-bottom: 20px;
 }
 #rbfw_add_meta_box .select2-selection__rendered {
   padding: 0.25em;

@@ -946,6 +946,7 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 
 #rbfw_add_meta_box .mp_tab_item {
     display: none;
+    width: 100%;
 }
 
 .rbfw_add_faq_content.ppof-button {
