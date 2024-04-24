@@ -1729,10 +1729,27 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 						</label>
 						<span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 					</div>
+					
 					<label class="switch">
-						<input type="checkbox">
+						<?php $switch = get_post_meta($rbfw_id,'rbfw_dt_sidebar_switch',true);?>
+
+						<input type="checkbox" name="rbfw_dt_sidebar_switch" value="<?php echo esc_attr(($switch=='on')?$switch:'off'); ?>" <?php echo esc_attr(($switch=='on')?'checked':''); ?>>
 						<span class="slider round"></span>
 					</label>
+					<script>
+						jQuery('input[type=rbfw_dt_sidebar_switch]').click(function(){
+							
+							var status = jQuery(this).val();
+							if(status == 'on') {
+								jQuery(this).val('off') 
+							}  
+							if(status == 'off') {
+								jQuery(this).val('on');  
+							}
+						})
+						
+						
+					</script>
 				</section>
 				<section>
 					<div>
