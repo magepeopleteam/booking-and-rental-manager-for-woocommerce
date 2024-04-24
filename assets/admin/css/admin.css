@@ -6789,15 +6789,14 @@ readers do not read off random characters that represent icons */
 #rbfw_add_meta_box .switch {
   position: relative;
   display: inline-block;
-  width: 50px;
+  width: 60px;
   height: 24px;
 }
 #rbfw_add_meta_box .switch input {
   opacity: 0;
   width: 0;
   height: 0;
-  border: 1px solid var(--mage-primary);
-  background-color: var(--mage-gray);
+  background-color: #ccc;
 }
 #rbfw_add_meta_box .slider {
   position: absolute;
@@ -6807,7 +6806,6 @@ readers do not read off random characters that represent icons */
   right: 0;
   bottom: 0;
   border-radius: 50px;
-  border: 1px solid var(--mage-dark);
   background-color: var(--mage-gray);
   transition: 0.5s;
 }
@@ -6816,20 +6814,18 @@ readers do not read off random characters that represent icons */
   content: "";
   height: 20px;
   width: 20px;
-  left: 1px;
-  bottom: 1px;
+  left: 3px;
+  bottom: 2px;
   border-radius: 50%;
   border: 1px solid var(--mage-light);
   background-color: var(--mage-white);
   transition: 0.4s;
-  box-shadow: 0 0 1px var(--mage-dark);
 }
 #rbfw_add_meta_box input:checked + .slider {
-  background-color: var(--mage-sky);
-  border: 1px solid var(--mage-primary);
+  background-color: var(--mage-primary);
 }
 #rbfw_add_meta_box input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translateX(25px);
 }
 #rbfw_add_meta_box input:focus + .slider {
   box-shadow: inset 0 0 1px var(--mage-dark);
@@ -6875,6 +6871,7 @@ readers do not read off random characters that represent icons */
   border-radius: 0;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 #rbfw_add_meta_box section label {
   margin: 0;

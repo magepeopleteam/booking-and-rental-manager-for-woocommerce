@@ -1679,27 +1679,84 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 						</label>
 						<span><?php _e( 'Add multiple categories', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
 					</div>
-					
-					 <?php
-                        $rbfw_categories = get_post_meta($rbfw_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_categories', true)) : [];
-                        ?>
-
-                        <div class="w-50">
-							<select name="rbfw_categories[]" multiple class="category2">
-								<?php
-								$terms = get_terms( array(
-									'taxonomy'   => 'rbfw_item_caregory',
-									'hide_empty' => false,
-								) );
-								foreach ( $terms as $key => $value ) {
-									?>
-									<option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
-									<?php
-								}
+                    <div class="w-50">
+						<?php
+						$rbfw_categories = get_post_meta($rbfw_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_categories', true)) : [];
+						?>
+						<select name="rbfw_categories[]" multiple class="category2">
+							<?php
+							$terms = get_terms( array(
+								'taxonomy'   => 'rbfw_item_caregory',
+								'hide_empty' => false,
+							) );
+							foreach ( $terms as $key => $value ) {
 								?>
-							</select>
-						</div>
+								<option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
+								<?php
+							}
+							?>
+						</select>
+					</div>
 				</section>
+				<section>
+					<div>
+						<label>
+							<?php echo esc_html__( 'Related Items', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</label>
+						<span><?php echo esc_html__('Add related items here', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<div class="w-50">
+						<?php
+						$rbfw_categories = get_post_meta($rbfw_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_categories', true)) : [];
+						?>
+						<select name="rbfw_categories[]" multiple class="category2">
+							<?php
+							$terms = get_terms( array(
+								'taxonomy'   => 'rbfw_item_caregory',
+								'hide_empty' => false,
+							) );
+							foreach ( $terms as $key => $value ) {
+								?>
+								<option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
+								<?php
+							}
+							?>
+						</select>
+					</div>
+				</section>
+				<section>
+					<div>
+						<label>
+							<?php echo esc_html__( 'Related Items', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</label>
+						<span><?php echo esc_html__('Add related items here', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<label class="switch">
+						<input type="checkbox">
+						<span class="slider round"></span>
+					</label>
+				</section>
+
+				<section class="bg-light mt-5">
+					<div>
+						<label>
+							<?php echo esc_html__('Features Category Settings', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</label>
+						<span><?php echo esc_html__('Here you can configure features category.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+				</section>
+				<section >
+					<div>
+						<label>
+							<?php echo esc_html__('Feature Category Title', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</label>
+						<span><?php echo esc_html__('Set title for feature category.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<div>
+						field_feature_category() will use here. 
+					</div>
+				</section>
+
 			</div>
 		<?php
 		}
