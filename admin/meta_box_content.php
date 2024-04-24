@@ -1666,10 +1666,11 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 				<section>
 					<div>
 						<label>
-							<?php echo esc_html__('Basic Settings', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<?php echo esc_html__( 'Add To Cart Form Shortcode', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</label>
-						<span><?php echo esc_html__('Here you can settings basic info.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						<span><?php echo esc_html__('This short code you can put anywhere in your content.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 					</div>
+					<code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $rbfw_id; ?>']</code>
 				</section>
 			</div>
 		<?php
