@@ -1727,14 +1727,44 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 				<section>
 					<div>
 						<label>
-							<?php echo esc_html__( 'Related Items', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<?php echo esc_html__( 'Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</label>
-						<span><?php echo esc_html__('Add related items here', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						<span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 					</div>
 					<label class="switch">
 						<input type="checkbox">
 						<span class="slider round"></span>
 					</label>
+				</section>
+				<section>
+					<div>
+						<label>
+							<?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</label>
+						<span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<label class="switch">
+						<input type="checkbox">
+						<span class="slider round"></span>
+					</label>
+				</section>
+				<section>
+					<div>
+						<label>
+							<?php echo esc_html__( 'Donut Template Sidebar Testimonials', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</label>
+						<span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<div class="ppof-button add-item"><i class="fas fa-plus-square"></i> Add New Testimonial</div>
+				</section>
+				<section>
+					<div>
+						<label>
+							<?php echo esc_html__( 'Donut Template Sidebar Content', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</label>
+						<span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					wp editor
 				</section>
 
 				<section class="bg-light mt-5">
