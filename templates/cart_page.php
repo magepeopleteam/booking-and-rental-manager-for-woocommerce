@@ -264,6 +264,9 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
     $rbfw_service_infos 	= $cart_item['rbfw_service_infos'] ? $cart_item['rbfw_service_infos'] : [];
     $rbfw_ticket_info = $cart_item['rbfw_ticket_info'] ? $cart_item['rbfw_ticket_info'] : [];
     $variation_info = $cart_item['rbfw_variation_info'] ? $cart_item['rbfw_variation_info'] : [];
+    $total_days = $cart_item['total_days'];
+
+
     $rbfw_extra_service_data = get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
 
 
@@ -339,21 +342,32 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
 
 
 
-            <?php if ( ! empty( $rbfw_service_infos ) ): ?>
-                <?php foreach ($rbfw_service_infos as $key => $value): ?>
+            <?php if ( ! empty( $rbfw_service_infos ) ){ ?>
+                <?php foreach ($rbfw_service_infos as $key => $value){ ?>
                     <?php if(count($value)){ ?>
-                    <tr>
-                        <th rowspan="3" ><?php echo $key; ?> </th>
-                    </tr>
-                    <?php foreach ($value as $key1=>$item){ ?>
                         <tr>
-                            <td><?php echo $item['name'] ?></td>
-                            <td><?php echo $item['price'] ?></td>
+                            <th rowspan="3" ><?php echo $key; ?> </th>
                         </tr>
+                        <?php foreach ($value as $key1=>$item){ ?>
+                            <tr>
+                                <td><?php echo $item['name'] ?></td>
+                                <td>
+                                    <?php
+                                    if($item['service_price_type']=='day_wise'){
+                                        $rbfw_service_price =  $rbfw_service_price+$item['price']*$item['quantity']*$total_days;
+                                        echo '('.wc_price($item['price']). 'x'. $item['quantity'] . 'x' .$total_days .'='.wc_price($item['price']*$item['quantity']*$total_days).')';
+                                    }else{
+                                        echo '('.wc_price($item['price']). 'x'. $item['quantity'] .'='.wc_price($item['price']*$item['quantity']).')';
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
                         <?php } ?>
                     <?php } ?>
-                <?php endforeach; ?>
-            <?php endif; ?>
+                <?php } ?>
+            <?php } ?>
+
+
 
             <?php if ( ! empty( $rbfw_service_info ) ){ ?>
                 <?php
@@ -373,7 +387,9 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
                             <th>
                                 <?php echo $service_name; ?>:
                             </th>
-                            <td>(<?php echo wc_price($service_price); ?> x <?php echo $service_qty; ?>) = <?php echo wc_price($total_service_price); ?></td>
+                            <td>
+                                (<?php echo wc_price($service_price); ?> x <?php echo $service_qty; ?>) = <?php echo wc_price($total_service_price); ?>
+                            </td>
                         </tr>
                         <?php
                     }

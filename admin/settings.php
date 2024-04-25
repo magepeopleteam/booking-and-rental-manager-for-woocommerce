@@ -1109,6 +1109,13 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'type'    => 'text',
 				'default' => 'Item Quantity'
 			),
+            array(
+                'name'    => 'rbfw_text_service_info',
+                'label'   => __( 'Service Info', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc'    => __( 'Enter the translated text of <strong>Service Info.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+                'type'    => 'text',
+                'default' => 'Service Info'
+            ),
 			array(
 				'name'    => 'rbfw_text_check_availability',
 				'label'   => __( 'Check Availability', 'booking-and-rental-manager-for-woocommerce' ),
