@@ -138,6 +138,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'max_available_qty' => $max_available_qty,
                 'total_days' => $total_days,
                 'total_duration' => $duration,
+                'ticket_item_quantity' => $item_quantity
             ));
 
             wp_die();

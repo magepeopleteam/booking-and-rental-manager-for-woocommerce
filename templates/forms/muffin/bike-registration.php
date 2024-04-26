@@ -349,7 +349,7 @@ if($rbfw_enable_variations == 'yes'){
                                 <div style="display: flex;gap:20px">
                                     <div>
                                         <label class="switch">
-                                            <input type="checkbox" class="rbfw_service_price_data item_<?php echo $cat.$serkey ?>" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][main_cat_name]" data-service_price_type="<?php echo $service['service_price_type'] ?>" data-price="<?php echo $service['price'] ?>" data-quantity="1">
+                                            <input type="checkbox" class="rbfw_service_price_data item_<?php echo $cat.$serkey ?>" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][main_cat_name]" data-service_price_type="<?php echo $service['service_price_type'] ?>" data-price="<?php echo $service['price'] ?>" data-quantity="1" data-item="<?php echo $cat.$serkey ?>">
                                             <span class="slider round"></span>
                                         </label>
                                         <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][name]" value="<?php echo $service['title'] ?>">
@@ -359,7 +359,7 @@ if($rbfw_enable_variations == 'yes'){
                                     <div class="title"><?php echo $service['title'] ?></div>
                                     <div class="title"><?php echo $service['service_price_type'] ?></div>
 
-                                    <div class="rbfw_qty_input rbfw_service_quantity">
+                                    <div class="rbfw_qty_input rbfw_service_quantity item_<?php echo $cat.$serkey ?>" style="display: none">
                                         <a class="rbfw_service_quantity_minus" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-minus"></i></a>
                                         <input type="number" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][quantity]" min="0" max="20" value="1" class="rbfw_service_qty" data-cat="service" data-price="20" data-name="ddd" autocomplete="off">
                                         <a class="rbfw_service_quantity_plus" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-plus"></i></a>
