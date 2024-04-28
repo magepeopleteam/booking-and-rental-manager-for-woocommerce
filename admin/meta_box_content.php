@@ -1737,7 +1737,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 						<span class="slider round"></span>
 					</label>
 					<script>
-						jQuery('input[type=rbfw_dt_sidebar_switch]').click(function(){
+						jQuery('input[name=rbfw_dt_sidebar_switch]').click(function(){
 							
 							var status = jQuery(this).val();
 							if(status == 'on') {
