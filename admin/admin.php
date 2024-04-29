@@ -10,6 +10,8 @@ require_once(dirname(__DIR__) . '/admin/tax-settings.php');
 require_once(dirname(__DIR__) . '/admin/location-settings.php');
 require_once(dirname(__DIR__) . '/admin/template-settings.php');
 require_once(dirname(__DIR__) . '/admin/gallery-settings.php');
+require_once(dirname(__DIR__) . '/admin/front-end-display-settings.php');
+require_once(dirname(__DIR__) . '/admin/faq-settings.php');
 require_once(dirname(__DIR__) . '/admin/taxonomy.php');
 require_once(dirname(__DIR__) . '/admin/settings.php');
 require_once(dirname(__DIR__) . '/admin/post_meta_save.php');
