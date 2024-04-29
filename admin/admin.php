@@ -1,17 +1,17 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) { die; } // Cannot access pages directly.
-require_once(dirname(__DIR__) . '/admin/cpt.php');
-require_once(dirname(__DIR__) . '/admin/meta_box_content.php');
-require_once(dirname(__DIR__) . '/admin/general-info-settings.php');
-require_once(dirname(__DIR__) . '/admin/pricing-settings.php');
-require_once(dirname(__DIR__) . '/admin/date-time-settings.php');
-require_once(dirname(__DIR__) . '/admin/off-day-settings.php');
-require_once(dirname(__DIR__) . '/admin/tax-settings.php');
-require_once(dirname(__DIR__) . '/admin/location-settings.php');
-require_once(dirname(__DIR__) . '/admin/template-settings.php');
-require_once(dirname(__DIR__) . '/admin/gallery-settings.php');
-require_once(dirname(__DIR__) . '/admin/front-end-display-settings.php');
-require_once(dirname(__DIR__) . '/admin/faq-settings.php');
-require_once(dirname(__DIR__) . '/admin/taxonomy.php');
-require_once(dirname(__DIR__) . '/admin/settings.php');
-require_once(dirname(__DIR__) . '/admin/post_meta_save.php');
+require_once RBFW_PLUGIN_DIR . '/admin/cpt.php';
+require_once RBFW_PLUGIN_DIR . '/admin/meta_box_content.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_General_Info.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Pricing.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Date_Time.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Off_Day.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Tax.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Location.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Template.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Gallery.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Front_End_Display.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/RBFW_Faq.php';
+require_once RBFW_PLUGIN_DIR . '/admin/taxonomy.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings.php';
+require_once RBFW_PLUGIN_DIR . '/admin/post_meta_save.php';
