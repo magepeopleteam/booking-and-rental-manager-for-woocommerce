@@ -155,9 +155,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
             'reload_es': reload_es
         },
         beforeSend: function() {
-
             jQuery('.rbfw_bikecarmd_price_result').append('<span class="rbfw-loader rbfw_rp_loader"><i class="fas fa-spinner fa-spin"></i></span>');
-
         },
         success: function (response) {
 
@@ -191,6 +189,11 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
 
             jQuery('.rbfw_reg_form_rb').show();
             jQuery('[name="total_days"]').val(response.total_days);
+
+
+            jQuery(".rbfw_service_info_stock").each(function(index, value) {
+                jQuery(this).attr('max',response.max_available_qty.service_stock[index]);
+            });
 
             jQuery(".rbfw_bikecarmd_es_qty").each(function(index, value) {
                 jQuery(this).attr('max',response.max_available_qty.extra_service_instock[index]);
