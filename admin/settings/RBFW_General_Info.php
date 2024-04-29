@@ -9,8 +9,9 @@
 	if (!class_exists('RBFW_General_Info')) {
         class RBFW_General_Info{
             public function __construct() {
-                add_action( 'rbfw_meta_box_tab_name', [$this,'add_tab_menu']);
-                add_action( 'rbfw_meta_box_tab_content', [$this,'add_tabs_content']);
+                add_action( 'rbfw_meta_box_tab_name', [$this,'add_tab_menu'] );
+                add_action( 'rbfw_meta_box_tab_content', [$this,'add_tabs_content'] );
+                add_action('save_post', array($this, 'settings_save'), 99, 1);
 			}
 
             public function add_tab_menu() {
@@ -79,13 +80,13 @@
                                 <div id="rbfw_releted_rbfw" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rbfw_releted_rbfw">
                                     <select name="rbfw_releted_rbfw[]" id="rbfw_releted_rbfw" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
                                         <?php 
-                                            $post_id = get_post_meta($post_id,'rbfw_releted_rbfw',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_releted_rbfw', true)) : [];
+                                            $releted_post_id = get_post_meta($post_id,'rbfw_releted_rbfw',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_releted_rbfw', true)) : [];
                                             $the_query = new WP_Query( array(
                                                 'post_type' => 'rbfw_item',
                                             ) );
                                         ?>
                                         <?php while ( $the_query->have_posts() ) : $the_query->the_post();?>
-                                            <option <?php echo (in_array(get_the_ID(),$post_id))?'selected':'' ?> value="<?php the_ID(); ?>"> <?php the_title(); ?> </option>
+                                            <option <?php echo (in_array(get_the_ID(),$releted_post_id))?'selected':'' ?> value="<?php the_ID(); ?>"> <?php the_title(); ?> </option>
                                         <?php endwhile;  ?>
                                         
                                     </select>
@@ -99,11 +100,10 @@
                                 </label>
                                 <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
-                            
-                            <label class="switch">
-                                <?php $switch = get_post_meta($post_id,'rbfw_dt_sidebar_switch',true);?>
 
-                                <input type="checkbox" name="rbfw_dt_sidebar_switch" value="<?php echo esc_attr(($switch=='on')?$switch:'off'); ?>" <?php echo esc_attr(($switch=='on')?'checked':''); ?>>
+                            <?php $dt_sidebar_switch = get_post_meta($post_id,'rbfw_dt_sidebar_switch',true);?>
+                            <label class="switch">
+                                <input type="checkbox" name="rbfw_dt_sidebar_switch" value="<?php echo esc_attr(($dt_sidebar_switch=='on')?$dt_sidebar_switch:'off'); ?>" <?php echo esc_attr(($dt_sidebar_switch=='on')?'checked':''); ?>>
                                 <span class="slider round"></span>
                             </label>
                             <script>
@@ -117,8 +117,6 @@
                                         jQuery(this).val('on');  
                                     }
                                 })
-                                
-                                
                             </script>
                         </section>
                         <section>
@@ -126,12 +124,25 @@
                                 <label>
                                     <?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </label>
-                                <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <span><?php echo esc_html__('Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
+                            <?php $shipping_enable_switch = get_post_meta($post_id,'shipping_enable',true);?>
                             <label class="switch">
-                                <input type="checkbox">
+                                <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr(($shipping_enable_switch=='on')?$shipping_enable_switch:'off'); ?>" <?php echo esc_attr(($shipping_enable_switch=='on')?'checked':''); ?>>
                                 <span class="slider round"></span>
                             </label>
+                            <script>
+                                jQuery('input[name=shipping_enable]').click(function(){
+                                    
+                                    var status = jQuery(this).val();
+                                    if(status == 'on') {
+                                        jQuery(this).val('off') 
+                                    }  
+                                    if(status == 'off') {
+                                        jQuery(this).val('on');  
+                                    }
+                                })
+                            </script>
                         </section>
                         <section>
                             <div>
@@ -177,6 +188,37 @@
                         </section>
                     </div>
             <?php } 
+
+            public function settings_save($post_id) {
+                
+                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
+                    return;
+                }
+
+                if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+                    return;
+                }
+
+                if ( ! current_user_can( 'edit_post', $post_id ) ) {
+                    return;
+                }
+
+                if ( get_post_type( $post_id ) == 'rbfw_item' ) {
+                    $rbfw_categories 	 = isset( $_POST['rbfw_categories'] ) ? rbfw_array_strip( $_POST['rbfw_categories'] ) : [];
+                    $related_categories 	 = isset( $_POST['rbfw_releted_rbfw'] ) ? rbfw_array_strip( $_POST['rbfw_releted_rbfw'] ) : [];
+                    $dt_sidebar_switch 	 = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? sanitize_text_field($_POST['rbfw_dt_sidebar_switch']) : 'off';
+                       
+        
+                    update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
+                    update_post_meta( $post_id, 'rbfw_releted_rbfw', $related_categories );
+                    update_post_meta( $post_id, 'rbfw_dt_sidebar_switch', $dt_sidebar_switch );
+
+                   
+
+
+
+                }
+            }
         }
 
         new RBFW_General_Info();
