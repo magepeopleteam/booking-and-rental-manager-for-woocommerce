@@ -206,7 +206,7 @@
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
                     $rbfw_categories 	 = isset( $_POST['rbfw_categories'] ) ? rbfw_array_strip( $_POST['rbfw_categories'] ) : [];
                     $related_categories 	 = isset( $_POST['rbfw_releted_rbfw'] ) ? rbfw_array_strip( $_POST['rbfw_releted_rbfw'] ) : [];
-                    $dt_sidebar_switch 	 = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? sanitize_text_field($_POST['rbfw_dt_sidebar_switch']) : 'off';
+                    $dt_sidebar_switch 	 = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? rbfw_array_strip($_POST['rbfw_dt_sidebar_switch']) : [];
                        
         
                     update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
