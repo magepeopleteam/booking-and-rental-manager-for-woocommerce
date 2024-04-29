@@ -206,12 +206,14 @@
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
                     $rbfw_categories 	 = isset( $_POST['rbfw_categories'] ) ? rbfw_array_strip( $_POST['rbfw_categories'] ) : [];
                     $related_categories 	 = isset( $_POST['rbfw_releted_rbfw'] ) ? rbfw_array_strip( $_POST['rbfw_releted_rbfw'] ) : [];
-                    $dt_sidebar_switch 	 = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? rbfw_array_strip($_POST['rbfw_dt_sidebar_switch']) : [];
+                    $dt_sidebar_switch 	 = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? rbfw_array_strip($_POST['rbfw_dt_sidebar_switch']) : '';
+                    $shipping_enable 	 = isset( $_POST['shipping_enable'] ) ? rbfw_array_strip( $_POST['shipping_enable'] ) : '';
                        
         
                     update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
                     update_post_meta( $post_id, 'rbfw_releted_rbfw', $related_categories );
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_switch', $dt_sidebar_switch );
+                    update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
 
                    
 
