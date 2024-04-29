@@ -193,10 +193,13 @@
                                 </label>
                                 <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
-                            <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-wp_editor-wrapper
-                                field-wp_editor-wrapper-<?php echo esc_attr($post_id); ?>">
+                            <div class="w-50">
                                     
-                                    <div class="error-mgs"></div>
+                                <?php 
+                                
+                                    $args = '';
+                                    wp_editor( '', 'id', $args );
+                                ?>
                             </div>
                         </section>
 
