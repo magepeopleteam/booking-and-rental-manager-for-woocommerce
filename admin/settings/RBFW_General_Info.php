@@ -93,6 +93,17 @@
                                 </div>					
                             </div>
                         </section>
+
+                        <!-- ----------sidebar------- -->
+                        <section class="bg-light mt-5">
+                            <div>
+                                <label>
+                                    <?php echo esc_html__( 'Template Sidebar settigns', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                </label>
+                                <span><?php echo esc_html__('Template Sidebar settigns', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            </div>
+                        </section>
+
                         <section>
                             <div>
                                 <label>
@@ -144,15 +155,37 @@
                                 })
                             </script>
                         </section>
-                        <section>
+                        <section class="testimonials">
                             <div>
                                 <label>
                                     <?php echo esc_html__( 'Donut Template Sidebar Testimonials', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </label>
                                 <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
-                            <div class="ppof-button add-item"><i class="fas fa-plus-square"></i> Add New Testimonial</div>
+                            <div class="ppof-button add-item" onclick="createTestimonial()"><i class="fas fa-plus-square"></i> Add New Testimonial</div>
                         </section>
+                        <?php 
+                            $sidebar_testimonials = get_post_meta($post_id,'rbfw_dt_sidebar_testimonials',true);
+                            foreach($sidebar_testimonials as $key => $data): ?>
+                            <section class="testimonials">
+                                <h2><?php echo __('Title','booking-and-rental-manager-for-woocommerce') ?></h2>
+                                <textarea class="testimonial-field" name="rbfw_dt_sidebar_testimonials[<?php echo  $key; ?>]['rbfw_dt_sidebar_testimonial_text']" cols="30" rows="10"><?php echo esc_html(current($data)); ?></textarea>
+                            </section>
+                        <?php endforeach; ?>
+                        <section class="testimonial-clone">
+                                <h2><?php echo __('Title','booking-and-rental-manager-for-woocommerce') ?></h2>
+                                <textarea class="testimonial-field" name=""  cols="30" rows="10"></textarea>
+                        </section>
+
+                        <script>
+                            function createTestimonial(){
+                                now = jQuery.now();
+
+                                jQuery(".testimonial-clone").clone().insertAfter(".testimonials:last")
+                                .removeClass('testimonial-clone').addClass('testimonials')
+                                .children('.testimonial-field').attr('name','rbfw_dt_sidebar_testimonials['+now+'][rbfw_dt_sidebar_testimonial_text]');
+                            };
+                        </script>
                         <section>
                             <div>
                                 <label>
@@ -208,12 +241,14 @@
                     $related_categories 	 = isset( $_POST['rbfw_releted_rbfw'] ) ? rbfw_array_strip( $_POST['rbfw_releted_rbfw'] ) : [];
                     $dt_sidebar_switch 	 = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? rbfw_array_strip($_POST['rbfw_dt_sidebar_switch']) : '';
                     $shipping_enable 	 = isset( $_POST['shipping_enable'] ) ? rbfw_array_strip( $_POST['shipping_enable'] ) : '';
+                    $testimonials 	 = isset( $_POST['rbfw_dt_sidebar_testimonials'] ) ? rbfw_array_strip( $_POST['rbfw_dt_sidebar_testimonials'] ) : [];
                        
-        
+
                     update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
                     update_post_meta( $post_id, 'rbfw_releted_rbfw', $related_categories );
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_switch', $dt_sidebar_switch );
                     update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
+                    update_post_meta( $post_id, 'rbfw_dt_sidebar_testimonials', $testimonials );
 
                    
 
