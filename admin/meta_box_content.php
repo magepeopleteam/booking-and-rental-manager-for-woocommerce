@@ -1762,7 +1762,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
             'item_version'   => "2.0",
 
         );
-        new RMFWAddMetaBox( $rbfw_off_days_meta_boxs_args );
+       // new RMFWAddMetaBox( $rbfw_off_days_meta_boxs_args );
 
 
        $rbfw_tax_meta_boxs_args = array(
@@ -1776,7 +1776,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
             'item_name'      => "MagePeople",
             'item_version'   => "2.0",
         );
-        new RMFWAddMetaBox( $rbfw_tax_meta_boxs_args );
+       // new RMFWAddMetaBox( $rbfw_tax_meta_boxs_args );
 
 
 
@@ -1793,7 +1793,7 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			'item_version'   => "2.0",
 
 		);
-		new RMFWAddMetaBox( $rbfw_location_meta_boxs_args );
+		//new RMFWAddMetaBox( $rbfw_location_meta_boxs_args );
 
 		$rbfw_template_info_boxs = array(
 			'page_nav' => __( 'Template', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1814,6 +1814,23 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 				),
 			),
 		);
+
+
+		$rbfw_template_info_boxs_args = array(
+			'meta_box_id'    => 'rbfw_template_settings_meta_boxes',
+			'meta_box_title' => '<i class="fa-solid fa-pager"></i>' . __( 'Template', 'booking-and-rental-manager-for-woocommerce' ),
+			'screen'         => array( 'rbfw_item' ),
+			'context'        => 'normal',
+			'priority'       => 'high',
+			'callback_args'  => array(),
+			'nav_position'   => 'none',
+			'item_name'      => "MagePeople",
+			'item_version'   => "2.0",
+			'panels'         => array(
+				'rbfw_basic_meta_boxs' => $rbfw_template_info_boxs
+			)
+		);
+		//new RMFWAddMetaBox( $rbfw_template_info_boxs_args );
 
 		$rbfw_gallery_meta_boxs = array(
 			'page_nav' => __( 'Gallery', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1845,22 +1862,6 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 			),
 		);
 
-		$rbfw_template_info_boxs_args = array(
-			'meta_box_id'    => 'rbfw_template_settings_meta_boxes',
-			'meta_box_title' => '<i class="fa-solid fa-pager"></i>' . __( 'Template', 'booking-and-rental-manager-for-woocommerce' ),
-			'screen'         => array( 'rbfw_item' ),
-			'context'        => 'normal',
-			'priority'       => 'high',
-			'callback_args'  => array(),
-			'nav_position'   => 'none',
-			'item_name'      => "MagePeople",
-			'item_version'   => "2.0",
-			'panels'         => array(
-				'rbfw_basic_meta_boxs' => $rbfw_template_info_boxs
-			)
-		);
-		new RMFWAddMetaBox( $rbfw_template_info_boxs_args );
-
 		$rbfw_gallery_meta_boxs_args = array(
 			'meta_box_id'    => 'rbfw_gallery_images_meta_boxes',
 			'meta_box_title' => '<i class="fa-solid fa-images"></i>' .__( 'Gallery', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1875,11 +1876,8 @@ function rbfw_frontend_display_tab_content($rbfw_id){
 				'rbfw_gallery_meta_boxs' => $rbfw_gallery_meta_boxs
 			),
 		);
-		new RMFWAddMetaBox( $rbfw_gallery_meta_boxs_args );
+		//new RMFWAddMetaBox( $rbfw_gallery_meta_boxs_args );
 
-				
-
-		
 
 		$current_payment_system = rbfw_get_option( 'rbfw_payment_system', 'rbfw_basic_payment_settings');
 		global $rbfw;
