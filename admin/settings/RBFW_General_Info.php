@@ -196,9 +196,13 @@
                             <div class="w-50">
                                     
                                 <?php 
-                                
-                                    $args = '';
-                                    wp_editor( '', 'id', $args );
+                                    $sidebar_content = get_post_meta($post_id,'rbfw_dt_sidebar_content',true);
+                                    $settings = array(
+                                            'textarea_rows' => '10',
+                                            'media_buttons' => true,
+                                            'textarea_name' => 'rbfw_dt_sidebar_content',
+                                    );
+                                    wp_editor( $sidebar_content, 'rbfw_dt_sidebar_content', $settings );
                                 ?>
                             </div>
                         </section>
@@ -245,18 +249,15 @@
                     $dt_sidebar_switch 	 = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? rbfw_array_strip($_POST['rbfw_dt_sidebar_switch']) : '';
                     $shipping_enable 	 = isset( $_POST['shipping_enable'] ) ? rbfw_array_strip( $_POST['shipping_enable'] ) : '';
                     $testimonials 	 = isset( $_POST['rbfw_dt_sidebar_testimonials'] ) ? rbfw_array_strip( $_POST['rbfw_dt_sidebar_testimonials'] ) : [];
+                    $sidebar_content 	 = isset( $_POST['rbfw_dt_sidebar_content'] ) ? rbfw_array_strip( $_POST['rbfw_dt_sidebar_content'] ) : [];
                        
-
                     update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
                     update_post_meta( $post_id, 'rbfw_releted_rbfw', $related_categories );
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_switch', $dt_sidebar_switch );
                     update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_testimonials', $testimonials );
-
-                   
-
-
-
+                    update_post_meta( $post_id, 'rbfw_dt_sidebar_content', $sidebar_content );
+ 
                 }
             }
         }
