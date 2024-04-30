@@ -275,6 +275,7 @@
                     $shipping_enable 	 = isset( $_POST['shipping_enable'] ) ? rbfw_array_strip( $_POST['shipping_enable'] ) : '';
                     $testimonials 	 = isset( $_POST['rbfw_dt_sidebar_testimonials'] ) ? rbfw_array_strip( $_POST['rbfw_dt_sidebar_testimonials'] ) : [];
                     $sidebar_content 	 = isset( $_POST['rbfw_dt_sidebar_content'] ) ? rbfw_array_strip( $_POST['rbfw_dt_sidebar_content'] ) : [];
+                    $feature_category 	 = isset( $_POST['rbfw_feature_category'] ) ? rbfw_array_strip( $_POST['rbfw_feature_category'] ) : [];
                        
                     update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
                     update_post_meta( $post_id, 'rbfw_releted_rbfw', $related_categories );
@@ -282,6 +283,7 @@
                     update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_testimonials', $testimonials );
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_content', $sidebar_content );
+                    update_post_meta( $post_id, 'rbfw_feature_category', $feature_category );
  
                 }
             }
