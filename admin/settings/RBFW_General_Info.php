@@ -181,36 +181,37 @@
                         </section>
 
                         <section>
-                            <div>
-                                <label>
-                                    <?php echo esc_html__( 'Donut Template Sidebar Testimonials', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </label>
-                                <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                            </div>
-                            <div class="w-50">
+                            <div class="w-100">
+                                <div class="mb-3">
+                                    <label>
+                                        <?php echo esc_html__( 'Donut Template Sidebar Testimonials', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                    </label>
+                                    <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                </div>
                                 <?php $this->testimonial_block($post_id); ?>
                             </div>
                         </section>
 
 
                         <section>
-                            <div>
-                                <label>
-                                    <?php echo esc_html__( 'Donut Template Sidebar Content', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </label>
-                                <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                            </div>
-                            <div class="w-50">
-                                    
-                                <?php 
-                                    $sidebar_content = get_post_meta($post_id,'rbfw_dt_sidebar_content',true);
-                                    $settings = array(
-                                            'textarea_rows' => '10',
-                                            'media_buttons' => true,
-                                            'textarea_name' => 'rbfw_dt_sidebar_content',
-                                    );
-                                    wp_editor( $sidebar_content, 'rbfw_dt_sidebar_content', $settings );
-                                ?>
+                            <div class="w-100">
+                                <div class="mb-5">
+                                    <label>
+                                        <?php echo esc_html__( 'Donut Template Sidebar Content', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                    </label>
+                                    <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                </div>
+                                <div> 
+                                    <?php 
+                                        $sidebar_content = get_post_meta($post_id,'rbfw_dt_sidebar_content',true);
+                                        $settings = array(
+                                                'textarea_rows' => '10',
+                                                'media_buttons' => true,
+                                                'textarea_name' => 'rbfw_dt_sidebar_content',
+                                        );
+                                        wp_editor( $sidebar_content, 'rbfw_dt_sidebar_content', $settings );
+                                    ?>
+                                </div>
                             </div>
                         </section>
 

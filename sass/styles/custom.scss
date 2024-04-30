@@ -47,14 +47,13 @@
     }
      .testimonials{
         .testimonial{
-            background-color: $color-light;
             margin-bottom: 10px;
-            border-radius: 5px 5px 0 0;
-            padding: 5px;
             .header{
                 display: flex;
                 justify-content: space-between;
                 padding:5px;
+                border-radius: 5px 5px 0 0;
+                background-color: $color-light;
                 h2{
                     padding: 0;
                 }
@@ -68,8 +67,8 @@
                 
             }
             textarea{
-                
-                border:1px solid $color-gray;
+                border-radius: 0;
+                border:1px solid $color-light;
             }
         }
     }
