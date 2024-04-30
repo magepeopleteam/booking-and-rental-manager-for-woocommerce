@@ -20,20 +20,102 @@
             <?php
             }
 
+            public function section_header(){
+                ?>
+                    <h2 class="mp_tab_item_title"><?php echo esc_html__('General Info', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                    <p class="mp_tab_item_description"><?php echo esc_html__('Here you can configure basic information.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        
+                <?php
+            }
+
+            public function panel_header($title,$description){
+                ?>
+                    <section class="bg-light mt-5">
+                        <div>
+                            <label>
+                                <?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $title ); ?>
+                            </label>
+                            <span><?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $description ); ?></span>
+                        </div>
+                    </section>
+                <?php
+            }
+
+            public function multiple_category_select($post_id){
+                
+                $rbfw_categories = get_post_meta($post_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_categories', true)) : [];
+                ?>
+                <select name="rbfw_categories[]" multiple class="category2">
+                    <?php
+                    $terms = get_terms( array(
+                        'taxonomy'   => 'rbfw_item_caregory',
+                        'hide_empty' => false,
+                    ) );
+                    foreach ( $terms as $key => $value ) {
+                        ?>
+                        <option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
+                        <?php
+                    }
+                    ?>
+                </select>
+                <?php
+            }
+
+            public function related_post( $post_id ) {
+                ?>
+                <div id="rbfw_releted_rbfw" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rbfw_releted_rbfw">
+                    <select name="rbfw_releted_rbfw[]" id="rbfw_releted_rbfw" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
+                        <?php 
+                            $releted_post_id = get_post_meta($post_id,'rbfw_releted_rbfw',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_releted_rbfw', true)) : [];
+                            $the_query = new WP_Query( array(
+                                'post_type' => 'rbfw_item',
+                            ) );
+                        ?>
+                        <?php while ( $the_query->have_posts() ) : $the_query->the_post();?>
+                            <option <?php echo (in_array(get_the_ID(),$releted_post_id))?'selected':'' ?> value="<?php the_ID(); ?>"> <?php the_title(); ?> </option>
+                        <?php endwhile;  ?>
+                        
+                    </select>
+                </div>
+                <?php
+            }
+
+            public function testimonial_block($post_id){
+            ?>
+                <div class="testimonials">
+                    <?php 
+                        $sidebar_testimonials = get_post_meta($post_id,'rbfw_dt_sidebar_testimonials',true);
+                        foreach($sidebar_testimonials as $key => $data): ?>
+                        <div class="testimonial">
+                            <div class="header">
+                                <h2><?php echo __('Title','booking-and-rental-manager-for-woocommerce') ?></h2>
+                                <button onclick="jQuery(this).parent().remove()"> <i class="fas fa-trash"></i></button>
+                            </div>
+                            <textarea class="testimonial-field" name="rbfw_dt_sidebar_testimonials[<?php echo  $key; ?>]['rbfw_dt_sidebar_testimonial_text']" cols="30" rows="10"><?php echo esc_html(current($data)); ?></textarea>
+                        </div>
+                    <?php endforeach; ?>
+
+                    <div class="testimonial-clone">
+                        <div class="header">
+                            <h2><?php echo __('Title','booking-and-rental-manager-for-woocommerce') ?></h2>
+                            <button onclick="jQuery(this).parent().remove()"> <i class="fas fa-trash"></i> </button>
+                        </div>
+                        <textarea class="testimonial-field" name=""  cols="30" rows="10"></textarea>
+                    </div>
+                </div>
+                <div class="ppof-button add-item" onclick="createTestimonial()"><i class="fas fa-plus-square"></i><?php _e('Add New Testimonial','booking-and-rental-manager-for-woocommerce'); ?></div>
+            <?php
+            }
+
             public function add_tabs_content( $post_id ) {
                 ?>
                     <div class="mpStyle mp_tab_item " data-tab-item="#rbfw_gen_info">
-                        <h2 class="mp_tab_item_title"><?php echo esc_html__('General Info', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-                        <p class="mp_tab_item_description"><?php echo esc_html__('Here you can configure basic information.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-
-                        <section class="bg-light">
-                            <div>
-                                <label>
-                                    <?php echo esc_html__('Basic Settings', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </label>
-                                <span><?php echo esc_html__('Here you can settings basic info.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                            </div>
-                        </section>
+                        
+                        <?php $this->section_header(); ?>
+                        
+                        <?php $this->panel_header('Basic Settings','Here you can settings basic info.'); ?>
+                        
+                        
                         <section>
                             <div>
                                 <label>
@@ -43,6 +125,7 @@
                             </div>
                             <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $post_id; ?>']</code>
                         </section>
+
                         <section>
                             <div>
                                 <label>
@@ -51,22 +134,7 @@
                                 <span><?php _e( 'Add multiple categories', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
                             </div>
                             <div class="w-50">
-                                <?php
-                                $rbfw_categories = get_post_meta($post_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_categories', true)) : [];
-                                ?>
-                                <select name="rbfw_categories[]" multiple class="category2">
-                                    <?php
-                                    $terms = get_terms( array(
-                                        'taxonomy'   => 'rbfw_item_caregory',
-                                        'hide_empty' => false,
-                                    ) );
-                                    foreach ( $terms as $key => $value ) {
-                                        ?>
-                                        <option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
-                                        <?php
-                                    }
-                                    ?>
-                                </select>
+                                <?php $this->multiple_category_select($post_id); ?>
                             </div>
                         </section>
                         <section>
@@ -77,32 +145,12 @@
                                 <span><?php echo esc_html__('Add related items here', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
                             <div class="w-50">
-                                <div id="rbfw_releted_rbfw" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rbfw_releted_rbfw">
-                                    <select name="rbfw_releted_rbfw[]" id="rbfw_releted_rbfw" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
-                                        <?php 
-                                            $releted_post_id = get_post_meta($post_id,'rbfw_releted_rbfw',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_releted_rbfw', true)) : [];
-                                            $the_query = new WP_Query( array(
-                                                'post_type' => 'rbfw_item',
-                                            ) );
-                                        ?>
-                                        <?php while ( $the_query->have_posts() ) : $the_query->the_post();?>
-                                            <option <?php echo (in_array(get_the_ID(),$releted_post_id))?'selected':'' ?> value="<?php the_ID(); ?>"> <?php the_title(); ?> </option>
-                                        <?php endwhile;  ?>
-                                        
-                                    </select>
-                                </div>					
+                                <?php $this->related_post($post_id); ?>					
                             </div>
                         </section>
 
-                        <!-- ----------sidebar------- -->
-                        <section class="bg-light mt-5">
-                            <div>
-                                <label>
-                                    <?php echo esc_html__( 'Template Sidebar settigns', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </label>
-                                <span><?php echo esc_html__('Template Sidebar settigns', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                            </div>
-                        </section>
+                        
+                        <?php $this->panel_header('Template Sidebar settigns','Template Sidebar settigns'); ?>
 
                         <section>
                             <div>
@@ -111,25 +159,13 @@
                                 </label>
                                 <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
-
                             <?php $dt_sidebar_switch = get_post_meta($post_id,'rbfw_dt_sidebar_switch',true);?>
                             <label class="switch">
                                 <input type="checkbox" name="rbfw_dt_sidebar_switch" value="<?php echo esc_attr(($dt_sidebar_switch=='on')?$dt_sidebar_switch:'off'); ?>" <?php echo esc_attr(($dt_sidebar_switch=='on')?'checked':''); ?>>
                                 <span class="slider round"></span>
                             </label>
-                            <script>
-                                jQuery('input[name=rbfw_dt_sidebar_switch]').click(function(){
-                                    
-                                    var status = jQuery(this).val();
-                                    if(status == 'on') {
-                                        jQuery(this).val('off') 
-                                    }  
-                                    if(status == 'off') {
-                                        jQuery(this).val('on');  
-                                    }
-                                })
-                            </script>
                         </section>
+
                         <section>
                             <div>
                                 <label>
@@ -142,57 +178,21 @@
                                 <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr(($shipping_enable_switch=='on')?$shipping_enable_switch:'off'); ?>" <?php echo esc_attr(($shipping_enable_switch=='on')?'checked':''); ?>>
                                 <span class="slider round"></span>
                             </label>
-                            <script>
-                                jQuery('input[name=shipping_enable]').click(function(){
-                                    
-                                    var status = jQuery(this).val();
-                                    if(status == 'on') {
-                                        jQuery(this).val('off') 
-                                    }  
-                                    if(status == 'off') {
-                                        jQuery(this).val('on');  
-                                    }
-                                })
-                            </script>
                         </section>
-                        <section class="testimonials">
+
+                        <section>
                             <div>
                                 <label>
                                     <?php echo esc_html__( 'Donut Template Sidebar Testimonials', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </label>
                                 <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
-                            <div class="ppof-button add-item" onclick="createTestimonial()"><i class="fas fa-plus-square"></i> Add New Testimonial</div>
-                        </section>
-                        <?php 
-                            $sidebar_testimonials = get_post_meta($post_id,'rbfw_dt_sidebar_testimonials',true);
-                            foreach($sidebar_testimonials as $key => $data): ?>
-                            <section class="testimonials">
-                                <h2><?php echo __('Title','booking-and-rental-manager-for-woocommerce') ?></h2>
-                                <textarea class="testimonial-field" name="rbfw_dt_sidebar_testimonials[<?php echo  $key; ?>]['rbfw_dt_sidebar_testimonial_text']" cols="30" rows="10"><?php echo esc_html(current($data)); ?></textarea>
-                                <button onclick="jQuery(this).parent().remove()">x</button>
-                            </section>
-                        <?php endforeach; ?>
-                        <section class="testimonial-clone">
-                                <h2><?php echo __('Title','booking-and-rental-manager-for-woocommerce') ?></h2>
-                                <textarea class="testimonial-field" name=""  cols="30" rows="10"></textarea>
-                                <button onclick="jQuery(this).parent().remove()">x</button>
+                            <div class="w-50">
+                                <?php $this->testimonial_block($post_id); ?>
+                            </div>
                         </section>
 
-                        <script>
-                            function createTestimonial(){
-                                now = jQuery.now();
 
-                                jQuery(".testimonial-clone").clone().insertAfter(".testimonials:last")
-                                .removeClass('testimonial-clone').addClass('testimonials')
-                                .children('.testimonial-field').attr('name','rbfw_dt_sidebar_testimonials['+now+'][rbfw_dt_sidebar_testimonial_text]');
-                            };
-                            function removeItem(event){
-                                event.preventDefault();
-                                jQuery(this).parent().remove();
-                                console.log('removed');
-                            }
-                        </script>
                         <section>
                             <div>
                                 <label>
@@ -266,17 +266,53 @@
                             </div>
                             
                         </section>
-                        <script>
-                            function createFeatureCategory(){
-                                var items=jQuery(".feature-category").find('.feature-category-title').length;
-                                items=items++;
-                                jQuery(".feature-category-clone").clone().insertAfter(".feature-category:last").removeClass('feature-category-clone').addClass('feature-category').find('.feature-category-title').attr('name','rbfw_feature_category['+ items +'][cat_title]');
-                            }
-                            function createFeatureItem($this){
-                                $this.closest('.feature-list').find(".feature-item").clone().insertBefore($this.closest('section'));
-                            }
-                        </script>
+
                     </div>
+
+                    <script>
+                        jQuery('input[name=rbfw_dt_sidebar_switch]').click(function(){
+                            var status = jQuery(this).val();
+                            if(status == 'on') {
+                                jQuery(this).val('off') 
+                            }  
+                            if(status == 'off') {
+                                jQuery(this).val('on');  
+                            }
+                        });
+
+                        jQuery('input[name=shipping_enable]').click(function(){  
+                            var status = jQuery(this).val();
+                            if(status == 'on') {
+                                jQuery(this).val('off') 
+                            }  
+                            if(status == 'off') {
+                                jQuery(this).val('on');  
+                            }
+                        });
+
+                        function createTestimonial(){
+                            now = jQuery.now();
+
+                            jQuery(".testimonial-clone").clone().appendTo(".testimonials")
+                            .removeClass('testimonial-clone').addClass('testimonial')
+                            .children('.testimonial-field').attr('name','rbfw_dt_sidebar_testimonials['+now+'][rbfw_dt_sidebar_testimonial_text]');
+                        };
+
+                        function removeItem(event){
+                            event.preventDefault();
+                            jQuery(this).parent().remove();
+                        }
+
+                        function createFeatureCategory(){
+                            var items=jQuery(".feature-category").find('.feature-category-title').length;
+                            items=items++;
+                            jQuery(".feature-category-clone").clone().insertAfter(".feature-category:last").removeClass('feature-category-clone').addClass('feature-category').find('.feature-category-title').attr('name','rbfw_feature_category['+ items +'][cat_title]');
+                        }
+
+                        function createFeatureItem($this){
+                            $this.closest('.feature-list').find(".feature-item").clone().insertBefore($this.closest('section'));
+                        }
+                    </script>
             <?php } 
 
             public function settings_save($post_id) {

@@ -6886,6 +6886,30 @@ readers do not read off random characters that represent icons */
 #rbfw_add_meta_box section label span {
   color: var(--mage-gray);
 }
+#rbfw_add_meta_box .testimonials .testimonial {
+  background-color: var(--mage-light);
+  margin-bottom: 10px;
+  border-radius: 5px 5px 0 0;
+  padding: 5px;
+}
+#rbfw_add_meta_box .testimonials .testimonial .header {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px;
+}
+#rbfw_add_meta_box .testimonials .testimonial .header h2 {
+  padding: 0;
+}
+#rbfw_add_meta_box .testimonials .testimonial .header button {
+  padding: 0;
+  background-color: transparent;
+}
+#rbfw_add_meta_box .testimonials .testimonial .header button i {
+  color: var(--mage-primary);
+}
+#rbfw_add_meta_box .testimonials .testimonial textarea {
+  border: 1px solid var(--mage-gray);
+}
 #rbfw_add_meta_box .testimonial-clone {
   display: none;
 }
