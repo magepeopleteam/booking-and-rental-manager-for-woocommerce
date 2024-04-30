@@ -245,17 +245,21 @@
                                 <div class="mt-5 text-center">
                                     <div class="ppof-button add-item" onclick="createFeatureCategory()"><i class="fas fa-circle-plus"></i>Add New Feature Category</div>
                                 </div>
+                                <!-- clone item -->
                                 <div class="feature-category-clone">
                                     <section class="bg-light">
                                         <label for="">Feature category title</label>
                                         <input class="feature-category-title" type="text">
                                     </section>
                                     <section class="feature-list">
-                                        <section>
+                                        <section class="feature-item">
                                             <button>icon</button>
                                             <input type="text" >
                                             <button>remove</button>
                                         </section>
+                                        <div class="mt-5 text-center">
+                                            <div class="ppof-button add-item" onclick="createFeatureItem(jQuery(this))"><i class="fas fa-circle-plus"></i>Add New Feature</div>
+                                        </div>
                                     </section>
                                     <button onclick="jQuery(this).parent().remove()">x</button>
                                 </div>
@@ -267,7 +271,10 @@
                                 var items=jQuery(".feature-category").find('.feature-category-title').length;
                                 items=items++;
                                 jQuery(".feature-category-clone").clone().insertAfter(".feature-category:last").removeClass('feature-category-clone').addClass('feature-category').find('.feature-category-title').attr('name','rbfw_feature_category['+ items +'][cat_title]');
-                            };
+                            }
+                            function createFeatureItem($this){
+                                $this.closest('.feature-list').find(".feature-item").clone().insertBefore($this.closest('section'));
+                            }
                         </script>
                     </div>
             <?php } 
