@@ -870,7 +870,6 @@ function rbfw_off_days_config( $post_id ) {
 					<?php } ?>
 				</div>
 			</div>
-<<<<<<< HEAD
 
             <div class="off_date_range_content" style="display: none">
                 <div class="off_date_range_child component d-flex justify-content-between">
@@ -895,10 +894,6 @@ function rbfw_off_days_config( $post_id ) {
                     </div>
                 </div>
             </div>
-
-
-=======
->>>>>>> 71dc3a0726fae9ec4e50ac11f8bfe49248b1f75d
 
 
             <div class="form-table rbfw_item_type_table off_date_range">
