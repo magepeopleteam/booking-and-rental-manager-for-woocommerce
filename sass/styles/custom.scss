@@ -56,6 +56,9 @@
         justify-content: center;
         margin: auto;
         width: 80%;
+        .feature-category-clone{
+            display: none;
+        }
         .feature-category{
             margin-top:30px;
             .feature-list{

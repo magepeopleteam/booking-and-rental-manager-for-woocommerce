@@ -6896,6 +6896,9 @@ readers do not read off random characters that represent icons */
   margin: auto;
   width: 80%;
 }
+#rbfw_add_meta_box .feature-categories .feature-category-clone {
+  display: none;
+}
 #rbfw_add_meta_box .feature-categories .feature-category {
   margin-top: 30px;
 }

@@ -224,17 +224,13 @@
                         </section>
                         <section>
                             <div class="feature-categories">
-                                <div class="feature-category">
+                                <div class="feature-category"></div>
+                                <div class="feature-category-clone">
                                     <section class="bg-light">
                                         <label for="">Feature category title</label>
-                                        <input type="text">
+                                        <input class="feature-category-title" type="text">
                                     </section>
                                     <section class="feature-list">
-                                        <section>
-                                            <button>icon</button>
-                                            <input type="text">
-                                            <button>remove</button>
-                                        </section>
                                         <section>
                                             <button>icon</button>
                                             <input type="text">
@@ -250,10 +246,9 @@
                         </section>
                         <script>
                             function createFeatureCategory(){
-
-                                jQuery(".feature-category").clone().insertAfter(".feature-category:last")
-                                .removeClass('feature-category-clone').addClass('feature-category');
-                                //.children('.testimonial-field').attr('name','rbfw_dt_sidebar_testimonials['+now+'][rbfw_dt_sidebar_testimonial_text]');
+                                var items=jQuery('.feature-category-title').length;
+                                items=items++;
+                                jQuery(".feature-category-clone").clone().insertAfter(".feature-category:last").removeClass('feature-category-clone').addClass('feature-category').find('.feature-category-title').attr('name','rbfw_feature_category['+ items +'][cat_title]');
                             };
                         </script>
                     </div>
