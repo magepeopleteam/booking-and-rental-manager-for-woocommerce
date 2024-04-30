@@ -170,11 +170,13 @@
                             <section class="testimonials">
                                 <h2><?php echo __('Title','booking-and-rental-manager-for-woocommerce') ?></h2>
                                 <textarea class="testimonial-field" name="rbfw_dt_sidebar_testimonials[<?php echo  $key; ?>]['rbfw_dt_sidebar_testimonial_text']" cols="30" rows="10"><?php echo esc_html(current($data)); ?></textarea>
+                                <button onclick="jQuery(this).parent().remove()">x</button>
                             </section>
                         <?php endforeach; ?>
                         <section class="testimonial-clone">
                                 <h2><?php echo __('Title','booking-and-rental-manager-for-woocommerce') ?></h2>
                                 <textarea class="testimonial-field" name=""  cols="30" rows="10"></textarea>
+                                <button onclick="jQuery(this).parent().remove()">x</button>
                         </section>
 
                         <script>
@@ -185,6 +187,11 @@
                                 .removeClass('testimonial-clone').addClass('testimonials')
                                 .children('.testimonial-field').attr('name','rbfw_dt_sidebar_testimonials['+now+'][rbfw_dt_sidebar_testimonial_text]');
                             };
+                            function removeItem(event){
+                                event.preventDefault();
+                                jQuery(this).parent().remove();
+                                console.log('removed');
+                            }
                         </script>
                         <section>
                             <div>
