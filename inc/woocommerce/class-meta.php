@@ -72,7 +72,7 @@ if ( ! class_exists( 'RBFW_WC_Meta' ) ) {
                 ),
             );
             
-            $rbfw_tax_meta_boxs_args = array(
+            /*$rbfw_tax_meta_boxs_args = array(
                 'meta_box_id'    => 'rbfw_tax_meta_boxes',
                 'meta_box_title' => '<i class="fa-solid fa-file-lines"></i>'. __( 'Tax', 'booking-and-rental-manager-for-woocommerce-pro' ),
                 'screen'         => array( 'rbfw_item' ),
@@ -87,7 +87,7 @@ if ( ! class_exists( 'RBFW_WC_Meta' ) ) {
                 ),
             );
             
-            new RMFWAddMetaBox( $rbfw_tax_meta_boxs_args );
+            new RMFWAddMetaBox( $rbfw_tax_meta_boxs_args );*/
         }
     }
     new RBFW_WC_Meta();

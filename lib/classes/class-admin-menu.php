@@ -20,7 +20,7 @@ if (!class_exists('MageRBFWClass')) {
             add_action('admin_menu', array($this, 'admin_menu'));
             /* WooCommerce Action and Filter */
             add_filter('woocommerce_order_status_changed', array($this, 'rbfw_wc_status_update'), 10, 4);
-            add_action('wp_insert_post', array($this, 'create_hidden_wc_product_on_publish'), 10, 3);
+            //add_action('wp_insert_post', array($this, 'create_hidden_wc_product_on_publish'), 10, 3);
             add_action('save_post', array($this, 'run_link_product_on_save'), 99, 1);
             add_action('wp', array($this, 'hide_hidden_wc_product_from_frontend'));
             add_action('parse_query', [$this, 'rbfw_hide_hidden_wc_products_in_list_page']);
@@ -467,7 +467,7 @@ if (!class_exists('MageRBFWClass')) {
             return $file_path = $this->template_file_path('themes/' . $template_name);
         }
 
-        function rbfw_add_order_data($meta_data = array(), $ticket_info = array()) {
+        function rbfw_add_order_data($meta_data = array(), $ticket_info = array(),$rbfw_service_price_data_actual) {
 
             global $rbfw;
             $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
@@ -595,7 +595,11 @@ if (!class_exists('MageRBFWClass')) {
             return $post_id;
         }
 
+
+
         function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) {
+
+
 
             global $rbfw;
             $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
@@ -622,40 +626,26 @@ if (!class_exists('MageRBFWClass')) {
                 $post_id = wp_insert_post($args);
 
                 if (sizeof($meta_data) > 0) {
-
                     foreach ($meta_data as $key => $value) {
-
                         if($key != 'rbfw_ticket_info'){
                             update_post_meta($post_id, $key, $value);
                         }
-
                     }
-
                     if(!empty($ticket_info)){
-                        $i = 0;
-                        foreach ($ticket_info[$i] as $key => $value) {
+                        foreach ($ticket_info as $key =>$item) {
 
-                            if($key == 'rbfw_start_date' || $key == 'rbfw_end_date'){
-
-                                $value = date('Y-m-d', strtotime($value));
+                            $rbfw_id = $item['rbfw_id'];
+                            foreach ($item as $key => $value) {
+                                if ($key == 'rbfw_start_date' || $key == 'rbfw_end_date') {
+                                    $value = date('Y-m-d', strtotime($value));
+                                }
+                                if ($key == 'rbfw_start_datetime' || $key == 'rbfw_end_datetime') {
+                                    $value = date('Y-m-d h:i A', strtotime($value));
+                                }
+                                update_post_meta($post_id, $key, $value);
                             }
-
-                            if($key == 'rbfw_start_datetime' || $key == 'rbfw_end_datetime'){
-
-                                $value = date('Y-m-d h:i A', strtotime($value));
-
-                            }
-
-                            update_post_meta($post_id, $key, $value);
-
-                            /* Start: Create Inventory info */
-                            rbfw_create_inventory_meta($ticket_info, $i, $wc_order_id);
-                            /* End: Create Inventory info */
-
-
-                            $i++;
+                            rbfw_create_inventory_meta($item, $rbfw_id, $wc_order_id);
                         }
-
                     }
                     wp_update_post(array('ID' => $post_id, 'post_title' => '#'.$wc_order_id.' '.$title));
                 }
@@ -840,9 +830,19 @@ if (!class_exists('MageRBFWClass')) {
                 }
                 $event_name = get_the_title($post_id);
 
-                if ($this->count_hidden_wc_product($post_id) == 0 || empty(get_post_meta($post_id, 'link_wc_product', true))) {
+                $hidden_product_id = get_post_meta($post_id, 'link_wc_product', true);
+
+                if($hidden_product_id){
+                    if($this->count_hidden_wc_product($post_id) == 0){
+                        $this->create_hidden_wc_product($post_id, $event_name);
+                    }
+                }else{
                     $this->create_hidden_wc_product($post_id, $event_name);
                 }
+
+                /*if ($this->count_hidden_wc_product($post_id) == 0 || empty(get_post_meta($post_id, 'link_wc_product', true))) {
+                    $this->create_hidden_wc_product($post_id, $event_name);
+                }*/
 
                 $product_id = get_post_meta($post_id, 'link_wc_product', true) ? get_post_meta($post_id, 'link_wc_product', true) : $post_id;
 

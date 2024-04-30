@@ -103,9 +103,15 @@ function rbfw_save_meta_box_data( $post_id ) {
         $rbfw_event_start_time  = isset( $_POST['rbfw_event_start_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_time'] ) : '';
         $rbfw_event_end_date  = isset( $_POST['rbfw_event_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_date'] ) : '';
         $rbfw_event_end_time  = isset( $_POST['rbfw_event_end_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_time'] ) : '';
-        $rbfw_category_name        = isset( $_POST['rbfw_category_name'] ) ? rbfw_array_strip( $_POST['rbfw_category_name'] ) : '';
 
         $rbfw_categories 	 = isset( $_POST['rbfw_categories'] ) ? rbfw_array_strip( $_POST['rbfw_categories'] ) : [];
+
+        $_tax_class 	 = isset( $_POST['_tax_class'] ) ? rbfw_array_strip( $_POST['_tax_class'] ) : '';
+        $_tax_status 	 = isset( $_POST['_tax_status'] ) ? rbfw_array_strip( $_POST['_tax_status'] ) : '';
+
+        $rbfw_service_category_price      = isset( $_POST['rbfw_service_category_price'] ) ? rbfw_array_strip( $_POST['rbfw_service_category_price'] ) : [];
+
+        update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
 
 
 
@@ -185,6 +191,8 @@ function rbfw_save_meta_box_data( $post_id ) {
         update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
 
         update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
+        update_post_meta( $post_id, '_tax_class', $_tax_class );
+        update_post_meta( $post_id, '_tax_status', $_tax_status );
 
 
         $off_schedules = [];

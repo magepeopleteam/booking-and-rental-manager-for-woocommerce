@@ -55,9 +55,9 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     if($qty > 0){
                         $main_array[$i][$type] = $qty;
                     }
-                    
                     $i++;
-                endforeach;
+
+                    endforeach;
             }
 
             return $main_array;

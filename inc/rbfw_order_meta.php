@@ -116,12 +116,15 @@ function rbfw_order_meta_box_callback(){
                 $subtotal = 0;
 
                 foreach ($ticket_infos as $ticket_info) {
+
+
                 
             
                 $item_name = !empty($ticket_info['ticket_name']) ? $ticket_info['ticket_name'] : '';
                 $rbfw_id = $ticket_info['rbfw_id'];
                 $item_id = $rbfw_id;
                 $rent_type = $ticket_info['rbfw_rent_type'];
+                $total_days = $ticket_info['total_days'];
 
                 $rbfw_start_datetime = rbfw_get_datetime($ticket_info['rbfw_start_datetime'], 'date-time-text');
                 $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-time-text');
@@ -151,8 +154,13 @@ function rbfw_order_meta_box_callback(){
 
                 }elseif($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){
                     $BikeCarMdClass = new RBFW_BikeCarMd_Function();
+
                     $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                     $service_info = $BikeCarMdClass->rbfw_get_bikecarmd_service_info($item_id, $service_info);
+
+                    $service_infos = !empty($ticket_info['rbfw_service_infos']) ? $ticket_info['rbfw_service_infos'] : [];
+
+
                     $item_quantity = !empty($ticket_info['rbfw_item_quantity']) ? $ticket_info['rbfw_item_quantity'] : 1;
                     $pickup_point = !empty($ticket_info['rbfw_pickup_point']) ? $ticket_info['rbfw_pickup_point'] : '';
                     $dropoff_point = !empty($ticket_info['rbfw_dropoff_point']) ? $ticket_info['rbfw_dropoff_point'] : '';
@@ -168,7 +176,10 @@ function rbfw_order_meta_box_callback(){
                 }else{
                     $rent_info = '';
                     $service_info = '';
+                    $service_infos = '';
                 }
+
+
 
                 $variation_info = !empty($ticket_info['rbfw_variation_info']) ? $ticket_info['rbfw_variation_info'] : [];
 
@@ -309,6 +320,48 @@ function rbfw_order_meta_box_callback(){
                             </table>
                         </td>
                     </tr>
+
+
+
+
+                    <?php if ( ! empty( $service_infos ) ){ ?>
+                        <tr>
+                        <td><?php esc_html_e( 'Service Information:', 'booking-and-rental-manager-for-woocommerce' ); ?> </td>
+                            <td>
+                        <?php foreach ($service_infos as $key => $value){ ?>
+                            <?php if(count($value)){ ?>
+
+
+
+                                    <table>
+                                        <tr>
+                                            <td><?php echo $key; ?></td>
+                                        </tr>
+                                        <?php foreach ($value as $key1=>$item){ ?>
+                                            <tr>
+                                                <td><?php echo $item['name'] ?></td>
+                                                <td>
+                                                    <?php
+                                                    if($item['service_price_type']=='day_wise'){
+                                                        echo '('.wc_price($item['price']). 'x'. $item['quantity'] . 'x' .$total_days .'='.wc_price($item['price']*$item['quantity']*$total_days).')';
+                                                    }else{
+                                                        echo '('.wc_price($item['price']). 'x'. $item['quantity'] .'='.wc_price($item['price']*$item['quantity']).')';
+                                                    }
+                                                    ?>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    </table>
+
+                            <?php } ?>
+                        <?php } ?>
+                                </td>
+                        </tr>
+                    <?php } ?>
+
+
+
+
                     <?php if(!empty($rbfw_regf_info)){ ?>
                     <tr>
                         <td><strong><?php rbfw_string('rbfw_text_customer_information',__('Customer Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>

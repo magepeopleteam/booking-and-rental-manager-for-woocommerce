@@ -3572,7 +3572,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_muff_registration_wrapper .rbfw_regf_wrap {
   padding: 0;
   border: none;
-  display: none;
+  /*display: none;*/
 }
 
 .rbfw_muff_registration_wrapper .rbfw_regf_form_header {

@@ -3722,3 +3722,7 @@ div.grid_10 {
         width: 100%;
     }
 }
+
+input:checked[type=checkbox] + .slider{
+    background-color: red;
+}

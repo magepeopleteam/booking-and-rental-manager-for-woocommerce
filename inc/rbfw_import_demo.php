@@ -91,7 +91,9 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
                             }
                             update_post_meta( $rent_post_id, '_thumbnail_id', $thumb_id );
 
+
                            /* $wc_product_args = array(
+
                                 'post_type' 	=> 'product',
                                 'post_title' 	=> $title,
                                 'post_name' => uniqid(),

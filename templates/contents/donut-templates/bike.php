@@ -2,7 +2,7 @@
 // Template Name: Donut Bike Theme
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-} 
+}
 ?>
 <?php
 global $rbfw;
@@ -24,6 +24,7 @@ $rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? 
 $rbfw_dt_sidebar_switch  = get_post_meta( $post_id, 'rbfw_dt_sidebar_switch', true ) ? get_post_meta( $post_id, 'rbfw_dt_sidebar_switch', true ) : 'off';
 $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', true );
 ?>
+
 <div class="rbfw_donut_template">
 	<div class="rbfw_dt_row_header">
 		<div class="rbfw_dt_header_col1">
@@ -114,7 +115,8 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 		<?php endif; ?>
 		<div class="rbfw_dt_registration_col2">
 			<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_booking_detail', 'rbfw_basic_translation_settings', __('Booking Detail','booking-and-rental-manager-for-woocommerce'))); ?></div>
-			<?php include( RBFW_Function::template_path( 'forms/bike-registration.php' ) ); ?>
+			<?php //include( RBFW_Function::template_path( 'forms/bike-registration.php' ) ); ?>
+            <?php include( RBFW_Function::template_path( 'forms/muffin/bike-registration.php' ) ); ?>
 		</div>
 	</div>
 

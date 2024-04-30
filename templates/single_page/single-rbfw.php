@@ -34,6 +34,12 @@ if ( wp_is_block_theme() ) {  ?>
 
 $post_id = get_the_id();
 
+$rbfw_inventory = get_post_meta($post_id,'rbfw_inventory',true);
+/*echo '<pre>';
+print_r($rbfw_inventory);
+echo '<pre>';exit;*/
+
+
 do_action('rbfw_single_page_before_wrapper');
 if ( post_password_required() ) {
     echo get_the_password_form(); // WPCS: XSS ok.
