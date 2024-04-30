@@ -917,9 +917,17 @@ function rbfw_today_date() {
 
 jQuery(document).on('click', '#add-date-range-row',function(e){
     e.preventDefault();
-    var off_date_range_content = jQuery('.off_date_range_content').html();
+    var off_date_range_content = jQuery('.off_date_range_content').clone(true);
     console.log('hhhh',off_date_range_content);
     jQuery('.off_date_range').append(off_date_range_content);
+
+    off_date_range_content.find('.rbfw_off_days_range_start').attr('name','off_days_start[]');
+    off_date_range_content.find('.rbfw_off_days_range_end').attr('name','off_days_end[]');
+    off_date_range_content.removeClass('off_date_range_content hidden');
+    off_date_range_content.insertBefore(".off_date_range_content");
+    return false;
+
+
 });
 
 

@@ -33,6 +33,7 @@ div.superSlider .sliderShowcase.right,
 div.superSlider .sliderShowcase.left {
 	width: 18.65%;min-width: 18.65%;
 	-webkit-flex-direction: column;flex-direction: column;
+	align-self: flex-end;
 }
 div.superSlider .sliderShowcase.style_2,
 div.superSlider .sliderShowcase.style_2 {

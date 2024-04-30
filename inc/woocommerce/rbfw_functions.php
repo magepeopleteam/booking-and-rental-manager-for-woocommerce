@@ -10,7 +10,7 @@ add_filter('woocommerce_get_item_data', 'rbfw_show_cart_items', 90, 2);
 
 /*after place order*/
 add_action('woocommerce_after_checkout_validation', 'rbfw_validation_before_checkout');
-add_action('woocommerce_checkout_create_order_line_item', 'rbfw_add_order_item_data', 90, 4);
+//add_action('woocommerce_checkout_create_order_line_item', 'rbfw_add_order_item_data', 90, 4);
 add_action( 'woocommerce_before_thankyou', 'rbfw_booking_management', 10 );
 function rbfw_add_info_to_cart_item($cart_item_data, $product_id, $variation_id)
 {
@@ -339,6 +339,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
     $cart_item_data['line_total']              = $total_price;
     $cart_item_data['line_subtotal']           = $total_price;
 
+
+
     return apply_filters('rbfw_add_cart_function_after', $cart_item_data, $rbfw_id);
 }
 
@@ -409,6 +411,8 @@ function rbfw_add_order_item_data($item, $cart_item_key, $values, $order)
 
 
 function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
+
+
 
 
 
@@ -760,6 +764,8 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $item->add_meta_data( '_rbfw_service_cost', $rbfw_service_price );
         $item->add_meta_data( '_rbfw_discount_type', $discount_type );
         $item->add_meta_data( '_rbfw_discount_amount', $discount_amount );
+
+
     }
 
     $item->add_meta_data( '_rbfw_id', $rbfw_id );

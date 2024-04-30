@@ -90,6 +90,8 @@ function rbfw_save_meta_box_data( $post_id ) {
 
         $off_days_end 	 = isset( $_POST['off_days_end'] ) ? rbfw_array_strip( $_POST['off_days_end'] ) : '';
 
+    
+
         // getting appointment days
         $rbfw_sd_appointment_ondays 	 = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? rbfw_array_strip( $_POST['rbfw_sd_appointment_ondays'] ) : [];
         $rbfw_sd_appointment_max_qty_per_session 	 = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ?  $_POST['rbfw_sd_appointment_max_qty_per_session'] : '';
