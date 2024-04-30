@@ -222,17 +222,40 @@
                                 <span><?php echo esc_html__('Here you can configure features category.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
                         </section>
-                        <section >
-                            <div>
-                                <label>
-                                    <?php echo esc_html__('Feature Category Title', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </label>
-                                <span><?php echo esc_html__('Set title for feature category.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <section>
+                            <div class="feature-categories">
+                                <div class="feature-category">
+                                    <section class="bg-light">
+                                        <label for="">Feature category title</label>
+                                        <input type="text">
+                                    </section>
+                                    <section class="feature-list">
+                                        <section>
+                                            <button>icon</button>
+                                            <input type="text">
+                                            <button>remove</button>
+                                        </section>
+                                        <section>
+                                            <button>icon</button>
+                                            <input type="text">
+                                            <button>remove</button>
+                                        </section>
+                                    </section>
+                                </div>
+                                <div class="mt-5 text-center">
+                                    <div class="ppof-button add-item" onclick="createFeatureCategory()"><i class="fas fa-circle-plus"></i>Add New Feature Category</div>
+                                </div>
                             </div>
-                            <div>
-                                field_feature_category() will use here. 
-                            </div>
+                            
                         </section>
+                        <script>
+                            function createFeatureCategory(){
+
+                                jQuery(".feature-category").clone().insertAfter(".feature-category:last")
+                                .removeClass('feature-category-clone').addClass('feature-category');
+                                //.children('.testimonial-field').attr('name','rbfw_dt_sidebar_testimonials['+now+'][rbfw_dt_sidebar_testimonial_text]');
+                            };
+                        </script>
                     </div>
             <?php } 
 

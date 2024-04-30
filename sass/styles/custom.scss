@@ -49,7 +49,25 @@
     .testimonial-clone{
         display: none;
     }
-    
+
+    .feature-categories{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: auto;
+        width: 80%;
+        .feature-category{
+            margin-top:30px;
+            .feature-list{
+                display: flex;
+                flex-direction: column;
+                section{
+                    width: 80%;
+                }
+            }
+        }
+    }
+
     .select2.select2-container{
         width: 100% !important;
         .selection{

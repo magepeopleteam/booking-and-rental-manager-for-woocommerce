@@ -6889,6 +6889,23 @@ readers do not read off random characters that represent icons */
 #rbfw_add_meta_box .testimonial-clone {
   display: none;
 }
+#rbfw_add_meta_box .feature-categories {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: auto;
+  width: 80%;
+}
+#rbfw_add_meta_box .feature-categories .feature-category {
+  margin-top: 30px;
+}
+#rbfw_add_meta_box .feature-categories .feature-category .feature-list {
+  display: flex;
+  flex-direction: column;
+}
+#rbfw_add_meta_box .feature-categories .feature-category .feature-list section {
+  width: 80%;
+}
 #rbfw_add_meta_box .select2.select2-container {
   width: 100% !important;
 }
