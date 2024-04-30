@@ -225,6 +225,26 @@
                         <section>
                             <div class="feature-categories">
                                 <div class="feature-category"></div>
+                                <?php $feature_categories = get_post_meta($post_id,'rbfw_feature_category',true); ?>
+                                <?php foreach($feature_categories as $key => $data): ?>
+                                    <div class="feature-category">
+                                        <section class="bg-light">
+                                            <label for="">Feature category title</label>
+                                            <input class="feature-category-title" type="text" name="rbfw_feature_category[<?php echo $key; ?>][cat_title]" value="<?php echo $data['cat_title']; ?>">
+                                        </section>
+                                        <section class="feature-list">
+                                            <section>
+                                                <button>icon</button>
+                                                <input type="text"  >
+                                                <button>remove</button>
+                                            </section>
+                                        </section>
+                                        <button onclick="jQuery(this).parent().remove()">x</button>
+                                    </div>
+                                <?php endforeach; ?>
+                                <div class="mt-5 text-center">
+                                    <div class="ppof-button add-item" onclick="createFeatureCategory()"><i class="fas fa-circle-plus"></i>Add New Feature Category</div>
+                                </div>
                                 <div class="feature-category-clone">
                                     <section class="bg-light">
                                         <label for="">Feature category title</label>
@@ -233,20 +253,18 @@
                                     <section class="feature-list">
                                         <section>
                                             <button>icon</button>
-                                            <input type="text">
+                                            <input type="text" >
                                             <button>remove</button>
                                         </section>
                                     </section>
-                                </div>
-                                <div class="mt-5 text-center">
-                                    <div class="ppof-button add-item" onclick="createFeatureCategory()"><i class="fas fa-circle-plus"></i>Add New Feature Category</div>
+                                    <button onclick="jQuery(this).parent().remove()">x</button>
                                 </div>
                             </div>
                             
                         </section>
                         <script>
                             function createFeatureCategory(){
-                                var items=jQuery('.feature-category-title').length;
+                                var items=jQuery(".feature-category").find('.feature-category-title').length;
                                 items=items++;
                                 jQuery(".feature-category-clone").clone().insertAfter(".feature-category:last").removeClass('feature-category-clone').addClass('feature-category').find('.feature-category-title').attr('name','rbfw_feature_category['+ items +'][cat_title]');
                             };
