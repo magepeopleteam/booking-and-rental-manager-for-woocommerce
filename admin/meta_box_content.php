@@ -35,7 +35,8 @@
             <?php do_action( 'rbfw_item_exs_pricing_after', $rbfw_id ); ?>
         </div>
 
-        <div class="mp_tab_item active" data-tab-item="#rbfw_tax">
+        <!-- <div class="mp_tab_item active" data-tab-item="#rbfw_tax"> -->
+        <div class="mp_tab_item active">
 
 
                 <div class="tab-content active  tab-content-rbfw_tax_meta_boxs">
