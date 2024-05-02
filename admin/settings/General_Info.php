@@ -200,12 +200,11 @@
                                                 <label for="">Feature category title</label>
                                                 <input class="feature-category-title" type="text" name="rbfw_feature_category[<?php echo $key; ?>][cat_title]" value="<?php echo $data['cat_title']; ?>">
                                             </header>
-                                            <div class="feature-list">
-                                                <section>
-                                                    <button>icon</button>
-                                                    <input type="text"  >
-                                                    <button>remove</button>
-                                                </section>
+                                            <div class="feature-list-items">
+                                                
+                                                <div class="text-center">
+                                                    <div class="ppof-button add-item" onclick="createFeatureItem(jQuery(this))"><i class="fas fa-circle-plus"></i>Add New Feature</div>
+                                                </div>
                                             </div>
                                             <button onclick="jQuery(this).parent().remove()">x</button>
                                         </div>
@@ -215,15 +214,10 @@
                                     <div class="feature-category-clone">
                                         <header>
                                             <label for="">Feature category title</label>
-                                            <input class="feature-category-title" type="text" name="rbfw_feature_category[][cat_title]">
+                                            <input class="feature-category-title" type="text" name="">
                                         </header>
-                                        <div class="feature-list">
-                                            <section class="feature-item">
-                                                <button>icon</button>
-                                                <input type="text" >
-                                                <button>remove</button>
-                                            </section>
-                                            <div class="mt-5 text-center">
+                                        <div class="feature-list-items">
+                                            <div class="text-center">
                                                 <div class="ppof-button add-item" onclick="createFeatureItem(jQuery(this))"><i class="fas fa-circle-plus"></i>Add New Feature</div>
                                             </div>
                                         </div>

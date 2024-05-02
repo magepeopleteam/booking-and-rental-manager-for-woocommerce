@@ -6925,13 +6925,13 @@ readers do not read off random characters that represent icons */
   justify-content: space-between;
   background-color: var(--mage-light);
 }
-#rbfw_add_meta_box .feature-categories .feature-category .feature-list {
+#rbfw_add_meta_box .feature-categories .feature-category .feature-list-items {
   padding: 5px;
   background-color: var(--mage-white);
   display: flex;
   flex-direction: column;
 }
-#rbfw_add_meta_box .feature-categories .feature-category .feature-list section {
+#rbfw_add_meta_box .feature-categories .feature-category .feature-list-items section {
   width: 80%;
 }
 #rbfw_add_meta_box .feature-categories .feature-category button {
