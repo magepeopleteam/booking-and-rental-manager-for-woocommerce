@@ -188,57 +188,52 @@
                             </div>
                         </section>
 
-                        <section class="bg-light mt-5">
-                            <div>
-                                <label>
-                                    <?php echo esc_html__('Features Category Settings', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </label>
-                                <span><?php echo esc_html__('Here you can configure features category.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                            </div>
-                        </section>
+                        <?php $this->panel_header('Features Category Settings','Here you can configure features category.'); ?>
+
                         <section>
-                            <div class="feature-categories">
-                                <div class="feature-category"></div>
-                                <?php $feature_categories = get_post_meta($post_id,'rbfw_feature_category',true); ?>
-                                <?php foreach($feature_categories as $key => $data): ?>
-                                    <div class="feature-category">
-                                        <section class="bg-light">
+                            <div class="w-100">
+                                <div class="feature-categories">
+                                    <?php $feature_categories = get_post_meta($post_id,'rbfw_feature_category',true); ?>
+                                    <?php foreach($feature_categories as $key => $data): ?>
+                                        <div class="feature-category">
+                                            <header>
+                                                <label for="">Feature category title</label>
+                                                <input class="feature-category-title" type="text" name="rbfw_feature_category[<?php echo $key; ?>][cat_title]" value="<?php echo $data['cat_title']; ?>">
+                                            </header>
+                                            <div class="feature-list">
+                                                <section>
+                                                    <button>icon</button>
+                                                    <input type="text"  >
+                                                    <button>remove</button>
+                                                </section>
+                                            </div>
+                                            <button onclick="jQuery(this).parent().remove()">x</button>
+                                        </div>
+                                    <?php endforeach; ?>
+                                    
+                                    <!-- clone item -->
+                                    <div class="feature-category-clone">
+                                        <header>
                                             <label for="">Feature category title</label>
-                                            <input class="feature-category-title" type="text" name="rbfw_feature_category[<?php echo $key; ?>][cat_title]" value="<?php echo $data['cat_title']; ?>">
-                                        </section>
-                                        <section class="feature-list">
-                                            <section>
+                                            <input class="feature-category-title" type="text" name="rbfw_feature_category[][cat_title]">
+                                        </header>
+                                        <div class="feature-list">
+                                            <section class="feature-item">
                                                 <button>icon</button>
-                                                <input type="text"  >
+                                                <input type="text" >
                                                 <button>remove</button>
                                             </section>
-                                        </section>
-                                        <button onclick="jQuery(this).parent().remove()">x</button>
+                                            <div class="mt-5 text-center">
+                                                <div class="ppof-button add-item" onclick="createFeatureItem(jQuery(this))"><i class="fas fa-circle-plus"></i>Add New Feature</div>
+                                            </div>
+                                        </div>
+                                        <button onclick="jQuery(this).parent().remove()"><i class="fas fa-trash"></i></button>
                                     </div>
-                                <?php endforeach; ?>
-                                <div class="mt-5 text-center">
+                                </div>
+                                <div class="text-center">
                                     <div class="ppof-button add-item" onclick="createFeatureCategory()"><i class="fas fa-circle-plus"></i>Add New Feature Category</div>
                                 </div>
-                                <!-- clone item -->
-                                <div class="feature-category-clone">
-                                    <section class="bg-light">
-                                        <label for="">Feature category title</label>
-                                        <input class="feature-category-title" type="text">
-                                    </section>
-                                    <section class="feature-list">
-                                        <section class="feature-item">
-                                            <button>icon</button>
-                                            <input type="text" >
-                                            <button>remove</button>
-                                        </section>
-                                        <div class="mt-5 text-center">
-                                            <div class="ppof-button add-item" onclick="createFeatureItem(jQuery(this))"><i class="fas fa-circle-plus"></i>Add New Feature</div>
-                                        </div>
-                                    </section>
-                                    <button onclick="jQuery(this).parent().remove()">x</button>
-                                </div>
                             </div>
-                            
                         </section>
 
                     </div>
@@ -272,15 +267,11 @@
                             .children('.testimonial-field').attr('name','rbfw_dt_sidebar_testimonials['+now+'][rbfw_dt_sidebar_testimonial_text]');
                         };
 
-                        function removeItem(event){
-                            event.preventDefault();
-                            jQuery(this).parent().remove();
-                        }
-
                         function createFeatureCategory(){
                             var items=jQuery(".feature-category").find('.feature-category-title').length;
                             items=items++;
-                            jQuery(".feature-category-clone").clone().insertAfter(".feature-category:last").removeClass('feature-category-clone').addClass('feature-category').find('.feature-category-title').attr('name','rbfw_feature_category['+ items +'][cat_title]');
+                            jQuery(".feature-category-clone").clone().appendTo(".feature-categories").removeClass('feature-category-clone').addClass('feature-category')
+                            .find('.feature-category-title').attr('name','rbfw_feature_category['+ items +'][cat_title]');
                         }
 
                         function createFeatureItem($this){

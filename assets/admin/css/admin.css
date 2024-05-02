@@ -6911,25 +6911,41 @@ readers do not read off random characters that represent icons */
 #rbfw_add_meta_box .testimonial-clone {
   display: none;
 }
-#rbfw_add_meta_box .feature-categories {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin: auto;
-  width: 80%;
-}
 #rbfw_add_meta_box .feature-categories .feature-category-clone {
   display: none;
 }
 #rbfw_add_meta_box .feature-categories .feature-category {
-  margin-top: 30px;
+  border: 1px solid var(--mage-light);
+  margin-bottom: 10px;
+  position: relative;
+}
+#rbfw_add_meta_box .feature-categories .feature-category header {
+  padding: 5px 10px;
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--mage-light);
 }
 #rbfw_add_meta_box .feature-categories .feature-category .feature-list {
+  padding: 5px;
+  background-color: var(--mage-white);
   display: flex;
   flex-direction: column;
 }
 #rbfw_add_meta_box .feature-categories .feature-category .feature-list section {
   width: 80%;
+}
+#rbfw_add_meta_box .feature-categories .feature-category button {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: var(--mage-primary);
+  width: 25px;
+  height: 25px;
+  border: 1px solid var(--mage-primary);
+  color: #fff;
+}
+#rbfw_add_meta_box .feature-categories .feature-category button i {
+  color: var(--mage-white);
 }
 #rbfw_add_meta_box .select2.select2-container {
   width: 100% !important;

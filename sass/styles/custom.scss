@@ -74,21 +74,40 @@
     }
 
     .feature-categories{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin: auto;
-        width: 80%;
         .feature-category-clone{
             display: none;
         }
         .feature-category{
-            margin-top:30px;
+            border: 1px solid $color-light;
+            margin-bottom: 10px;
+            position: relative;
+            header{
+                padding:5px 10px;
+                display: flex;
+                justify-content: space-between;
+                background-color: $color-light;
+                
+            }
             .feature-list{
+                padding: 5px;
+                background-color: $color-white;
                 display: flex;
                 flex-direction: column;
                 section{
                     width: 80%;
+                }
+            }
+            button{
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                background-color: $color-primary;
+                width: 25px;
+                height: 25px;
+                border: 1px solid $color-primary;
+                color: #fff;
+                i{
+                    color: $color-white;
                 }
             }
         }
