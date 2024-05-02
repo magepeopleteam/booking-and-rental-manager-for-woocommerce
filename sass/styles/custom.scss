@@ -88,14 +88,15 @@
                 background-color: $color-light;
                 
             }
-            .feature-list-items{
+            .feature-lists{
                 padding: 5px;
                 background-color: $color-white;
-                display: flex;
-                flex-direction: column;
-                section{
-                    width: 80%;
+                .feature-items{
+                    .feature-item-clone{
+                        display: none;
+                    }
                 }
+                
             }
             button{
                 position: absolute;

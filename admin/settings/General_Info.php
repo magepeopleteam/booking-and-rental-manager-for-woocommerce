@@ -200,10 +200,14 @@
                                                 <label for="">Feature category title</label>
                                                 <input class="feature-category-title" type="text" name="rbfw_feature_category[<?php echo $key; ?>][cat_title]" value="<?php echo $data['cat_title']; ?>">
                                             </header>
-                                            <div class="feature-list-items">
-                                                
+                                            <div class="feature-lists">
+                                                <div class="feature-items">
+                                                    <div class="feature-item-clone">
+                                                        test
+                                                    </div>
+                                                </div>
                                                 <div class="text-center">
-                                                    <div class="ppof-button add-item" onclick="createFeatureItem(jQuery(this))"><i class="fas fa-circle-plus"></i>Add New Feature</div>
+                                                    <div class="ppof-button add-item" onclick="createFeatureItem()"><i class="fas fa-circle-plus"></i>Add New Feature</div>
                                                 </div>
                                             </div>
                                             <button onclick="jQuery(this).parent().remove()">x</button>
@@ -214,11 +218,18 @@
                                     <div class="feature-category-clone">
                                         <header>
                                             <label for="">Feature category title</label>
+                                            <!-- name value will add by jquery on duplication-->
                                             <input class="feature-category-title" type="text" name="">
+
                                         </header>
-                                        <div class="feature-list-items">
+                                        <div class="feature-lists">
+                                            <div class="feature-items">
+                                                    <div class="feature-item-clone">
+                                                        test
+                                                    </div>
+                                                </div>
                                             <div class="text-center">
-                                                <div class="ppof-button add-item" onclick="createFeatureItem(jQuery(this))"><i class="fas fa-circle-plus"></i>Add New Feature</div>
+                                                <div class="ppof-button add-item" onclick="createFeatureItem()"><i class="fas fa-circle-plus"></i>Add New Feature</div>
                                             </div>
                                         </div>
                                         <button onclick="jQuery(this).parent().remove()"><i class="fas fa-trash"></i></button>
@@ -268,8 +279,8 @@
                             .find('.feature-category-title').attr('name','rbfw_feature_category['+ items +'][cat_title]');
                         }
 
-                        function createFeatureItem($this){
-                            $this.closest('.feature-list').find(".feature-item").clone().insertBefore($this.closest('section'));
+                        function createFeatureItem(){
+                            jQuery(".feature-item-clone").clone().appendTo('.feature-items').removeClass('feature-item-clone').addClass('feature-item');
                         }
                     </script>
             <?php } 
