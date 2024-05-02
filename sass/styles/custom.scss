@@ -48,27 +48,24 @@
      .testimonials{
         .testimonial{
             margin-bottom: 10px;
-            .header{
-                display: flex;
-                justify-content: space-between;
-                padding:5px;
-                border-radius: 5px 5px 0 0;
-                background-color: $color-light;
-                h2{
-                    padding: 0;
+            position: relative;
+            button{
+                position: absolute;
+                top: -5px;
+                right: -5px;
+                background-color: $color-primary;
+                width: 25px;
+                height: 25px;
+                border: 1px solid $color-primary;
+                border-radius: 50%;
+                color: #fff;
+                i{
+                    color: $color-white;
                 }
-                button{
-                    padding: 0;
-                    background-color: transparent;
-                    i{
-                        color: $color-primary;
-                    }
-                }
-                
             }
             textarea{
-                border-radius: 0;
-                border:1px solid $color-light;
+                border-radius: 5px;
+                border:1px ridge $color-gray;
             }
         }
     }

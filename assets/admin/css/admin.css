@@ -6888,27 +6888,25 @@ readers do not read off random characters that represent icons */
 }
 #rbfw_add_meta_box .testimonials .testimonial {
   margin-bottom: 10px;
+  position: relative;
 }
-#rbfw_add_meta_box .testimonials .testimonial .header {
-  display: flex;
-  justify-content: space-between;
-  padding: 5px;
-  border-radius: 5px 5px 0 0;
-  background-color: var(--mage-light);
+#rbfw_add_meta_box .testimonials .testimonial button {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: var(--mage-primary);
+  width: 25px;
+  height: 25px;
+  border: 1px solid var(--mage-primary);
+  border-radius: 50%;
+  color: #fff;
 }
-#rbfw_add_meta_box .testimonials .testimonial .header h2 {
-  padding: 0;
-}
-#rbfw_add_meta_box .testimonials .testimonial .header button {
-  padding: 0;
-  background-color: transparent;
-}
-#rbfw_add_meta_box .testimonials .testimonial .header button i {
-  color: var(--mage-primary);
+#rbfw_add_meta_box .testimonials .testimonial button i {
+  color: var(--mage-white);
 }
 #rbfw_add_meta_box .testimonials .testimonial textarea {
-  border-radius: 0;
-  border: 1px solid var(--mage-light);
+  border-radius: 5px;
+  border: 1px ridge var(--mage-gray);
 }
 #rbfw_add_meta_box .testimonial-clone {
   display: none;
