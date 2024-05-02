@@ -396,17 +396,7 @@ function rbfw_get_category_dropdown( $name, $saved_value = '', $class = '' ) {
 			return 'No';
 		}
 	}
-	add_filter( 'manage_rbfw_item_posts_columns', 'rbfw_item_col_mod_head' );
-	function rbfw_item_col_mod_head( $columns ) {
-		unset( $columns['date'] );
-		// unset( $columns['taxonomy-rbfw_item_cat'] );
-		// unset( $columns['taxonomy-rbfw_item_org'] );
-		unset( $columns['taxonomy-rbfw_item_location'] );
-		$columns['rbfw_type'] = __( 'Type', 'mage-eventpress' );
 
-		// $columns['mep_event_date'] = __( 'Event Start Date', 'mage-eventpress' );
-		return $columns;
-	}
 	function rbfw_create_tag_taxonomy() {
 		$labels = array(
 			'name'              => _x( 'Tags', 'dora' ),
