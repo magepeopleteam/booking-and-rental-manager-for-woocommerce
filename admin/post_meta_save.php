@@ -117,7 +117,7 @@ function rbfw_save_meta_box_data( $post_id ) {
 
         update_post_meta( $post_id, 'rbfw_enable_hourly_rate', $rbfw_enable_hourly_rate );
         update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
-        update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
+        //update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
 
         update_post_meta( $post_id, 'rbfw_enable_dropoff_point', $rbfw_enable_dropoff_point );
 
