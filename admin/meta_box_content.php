@@ -1693,7 +1693,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
 				'rbfw_basic_meta_boxs' => $rbfw_template_info_boxs
 			)
 		);
-		//new RMFWAddMetaBox( $rbfw_template_info_boxs_args );
+		// new RMFWAddMetaBox( $rbfw_template_info_boxs_args );
 
 		$rbfw_gallery_meta_boxs = array(
 			'page_nav' => __( 'Gallery', 'booking-and-rental-manager-for-woocommerce' ),

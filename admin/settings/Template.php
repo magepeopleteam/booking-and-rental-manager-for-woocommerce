@@ -48,23 +48,13 @@
 				<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_template_settings_meta_boxes">
 					<?php $this->section_header(); ?>
                     <?php $this->panel_header('Template Settings','Template Settings'); ?>
-
 					<section>
 						<label for=""><?php echo esc_html__('Template Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 						<?php  $template =  get_post_meta($post_id, 'rbfw_single_template', true) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default'; ?>
-						 <?php 
-						 	$the_template = array(
-								'Muffin' => 'Muffin template',
-								'Donut' => 'Donut template',
-								'Default' => 'Classic template',
-							);
-						 ?>
+						<?php $the_template = RBFW_Function::all_details_template(); ?>
 						<select name="rbfw_single_template" id="rbfw_single_template">
-							<option selected="" value="Muffin">Muffin template</option>
-							<option value="Donut">Donut template</option>
-							<option value="Default">Classic template</option>
-							<?php foreach($template as $kay => $value): ?>
-								<option <?php echo (in_array($value,$the_template))?'selected':'' ?> value="<?php echo $kay; ?>"> <?php echo $value; ?> </option>
+							<?php foreach($the_template as $kay => $value): ?>
+								<option <?php echo ($kay==$template)?'selected':'' ?> value="<?php echo $kay; ?>"> <?php echo $value; ?> </option>
 							<?php endforeach; ?>
 						</select>
 					</section>
@@ -88,7 +78,7 @@
                 }
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-                    $rbfw_single_template = isset( $_POST['rbfw_single_template'] ) ? rbfw_array_strip( $_POST['rbfw_single_template'] ) : '';
+                    $rbfw_single_template = isset( $_POST['rbfw_single_template'] ) ? rbfw_array_strip( $_POST['rbfw_single_template'] ) : 'Default';
                     update_post_meta( $post_id, 'rbfw_single_template', $rbfw_single_template );
                 }
             }
