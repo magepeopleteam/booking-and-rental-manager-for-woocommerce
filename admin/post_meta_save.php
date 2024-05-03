@@ -84,13 +84,6 @@ function rbfw_save_meta_box_data( $post_id ) {
         $rbfw_variations_data 	 = isset( $_POST['rbfw_variations_data'] ) ? rbfw_array_strip( $_POST['rbfw_variations_data'] ) : [];
         // End getting resort value
 
-        $rbfw_off_days 	 = isset( $_POST['rbfw_off_days'] ) ? rbfw_array_strip( $_POST['rbfw_off_days'] ) : '';
-
-        $off_days_start	 = isset( $_POST['off_days_start'] ) ? rbfw_array_strip( $_POST['off_days_start'] ) : '';
-
-        $off_days_end 	 = isset( $_POST['off_days_end'] ) ? rbfw_array_strip( $_POST['off_days_end'] ) : '';
-
-    
 
         // getting appointment days
         $rbfw_sd_appointment_ondays 	 = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? rbfw_array_strip( $_POST['rbfw_sd_appointment_ondays'] ) : [];
@@ -184,9 +177,9 @@ function rbfw_save_meta_box_data( $post_id ) {
         update_post_meta( $post_id, 'rbfw_variations_data', $rbfw_variations_data );
         // end saving variations data
 
-        update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
+       
 
-        update_post_meta( $post_id, 'rbfw_category_name', $rbfw_category_name );
+       // update_post_meta( $post_id, 'rbfw_category_name', $rbfw_category_name );
 
         update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
 
@@ -195,20 +188,7 @@ function rbfw_save_meta_box_data( $post_id ) {
         update_post_meta( $post_id, '_tax_status', $_tax_status );
 
 
-        $off_schedules = [];
-        $from_dates = $off_days_start;
-        $to_dates = $off_days_end;
-        if (sizeof($from_dates) > 0) {
-            foreach ($from_dates as $key => $from_date) {
-                if ($from_date && $to_dates[$key]) {
-                    $off_schedules[] = [
-                        'from_date' => $from_date,
-                        'to_date' => $to_dates[$key],
-                    ];
-                }
-            }
-        }
-        update_post_meta($post_id, 'rbfw_offday_range', $off_schedules);
+
 
 
 

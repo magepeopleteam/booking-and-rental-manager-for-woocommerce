@@ -7023,5 +7023,11 @@ readers do not read off random characters that represent icons */
   margin-bottom: 5px;
   text-align: right;
 }
+#rbfw_add_meta_box .mpStyle .customCheckboxLabel {
+  display: inline-block;
+}
+#rbfw_add_meta_box .mpStyle .customCheckboxLabel span.customCheckbox {
+  color: var(--mage-black);
+}
 
 /*# sourceMappingURL=admin.css.map */

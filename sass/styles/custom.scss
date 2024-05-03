@@ -195,5 +195,14 @@
         padding: 8px 10px;
         margin-bottom: 5px;
         text-align: right;
+    }
+    .mpStyle .customCheckboxLabel {
+        display: inline-block;
+        span {
+            &.customCheckbox{
+                color: $color-black;
+            }
         }
+        
+    }
 }
