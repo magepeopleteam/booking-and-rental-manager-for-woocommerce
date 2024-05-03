@@ -26,17 +26,6 @@
 			<?php do_action( 'rbfw_item_exs_pricing_after', $rbfw_id ); ?>
 		</div>
 
-        <div class="mp_tab_item active" data-tab-item="#travel_off_days">
-            <div class='rbfw_general_rbfw_sec <?php echo esc_attr( $gen_class ); ?>' id='rbfw_general_rbfw_sec'>
-                <?php do_action( 'rbfw_item_pricing_after', $rbfw_id ); ?>
-            </div>
-            <?php do_action( 'rbfw_item_exs_pricing_before', $rbfw_id ); ?>
-            <?php rbfw_off_days_config( $rbfw_id ); ?>
-            <?php do_action( 'rbfw_item_exs_pricing_after', $rbfw_id ); ?>
-        </div>
-
-        
-
 		<?php
 		do_action( 'rbfw_location_config_before', $rbfw_id );
 		rbfw_location_config($rbfw_id);
