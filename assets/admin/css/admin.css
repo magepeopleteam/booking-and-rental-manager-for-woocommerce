@@ -6720,6 +6720,12 @@ readers do not read off random characters that represent icons */
   bottom: 0;
   right: 0;
 }
+#rbfw_add_meta_box .show {
+  display: block;
+}
+#rbfw_add_meta_box .hide {
+  display: none;
+}
 
 #rbfw_add_meta_box label {
   font-size: 1rem;

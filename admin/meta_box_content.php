@@ -1572,7 +1572,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
 			'item_version'   => "2.0",
 
 		);
-		new RMFWAddMetaBox( $rbfw_location_meta_boxs_args );
+		//new RMFWAddMetaBox( $rbfw_location_meta_boxs_args );
 
 		$rbfw_template_info_boxs = array(
 			'page_nav' => __( 'Template', 'booking-and-rental-manager-for-woocommerce' ),

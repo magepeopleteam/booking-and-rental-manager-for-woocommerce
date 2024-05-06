@@ -45,13 +45,16 @@
 				$rbfw_enable_pick_point  = get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) ? get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) : 'yes';
 			?>
 			<section >
-				<label><?php esc_html_e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+				<div>
+					<label><?php _e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+					<span><?php esc_html_e( 'Turn Pick-up Location On/Off', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+				</div>
 				<label class="switch">
-					<input type="checkbox" name="rbfw_enable_pick_point" value="<?php echo esc_attr(($rbfw_enable_pick_point=='yes')?$rbfw_enable_pick_point:''); ?>" <?php echo esc_attr(($rbfw_enable_pick_point=='yes')?'checked':''); ?>>
+					<input type="checkbox" name="rbfw_enable_pick_point" value="<?php echo esc_attr($rbfw_enable_pick_point); ?>" <?php echo esc_attr(($rbfw_enable_pick_point=='yes')?'checked':''); ?>>
 					<span class="slider round"></span>
 				</label>
 			</section>
-			<section class="pickup-location ">
+			<section class="rbfw-pickup-location <?php echo esc_attr(($rbfw_enable_pick_point=='yes')?'show':'hide'); ?>" >
 				<div>
 					<div>
 						<input type="text">
@@ -83,12 +86,12 @@
 						var status = jQuery(this).val();
 						
 						if(status == 'yes') {
-							jQuery(this).val('no') 
-							jQuery('.pickup-location').slideToggle();
+							jQuery(this).val('no');
+							jQuery('.rbfw-pickup-location').slideUp().removeClass('show').addClass('hide');
 						}  
 						if(status == 'no') {
-							jQuery(this).val('yes');  
-							jQuery('.pickup-location').slideToggle();
+							jQuery(this).val('yes'); 
+							jQuery('.rbfw-pickup-location').slideDown().removeClass('hide').addClass('show');
 						}
 					});
 				</script>
