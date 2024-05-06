@@ -6920,6 +6920,9 @@ readers do not read off random characters that represent icons */
 #rbfw_add_meta_box .rbfw-pickup-clone {
   display: none;
 }
+#rbfw_add_meta_box .rbfw-drop-off-clone {
+  display: none;
+}
 #rbfw_add_meta_box .feature-categories .feature-category-clone {
   display: none;
 }

@@ -115,6 +115,56 @@
 			<?php
 			}
 
+			public function drop_off_location_config($post_id){
+				$rbfw_enable_dropoff_point  = get_post_meta( $post_id, 'rbfw_enable_dropoff_point', true ) ? get_post_meta( $post_id, 'rbfw_enable_dropoff_point', true ) : 'yes';
+				$rbfw_dropoff_data        = get_post_meta( $post_id, 'rbfw_dropoff_data', true ) ? get_post_meta( $post_id, 'rbfw_dropoff_data', true ) : [];
+				
+			?>
+				<section >
+				<div>
+					<label><?php _e( 'Drop-Off Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+					<span><?php esc_html_e( 'Turn drop off Location On/Off', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+				</div>
+				<label class="switch">
+					<input type="checkbox" name="rbfw_enable_dropoff_point" value="<?php echo esc_attr($rbfw_enable_dropoff_point); ?>" <?php echo esc_attr(($rbfw_enable_dropoff_point=='yes')?'checked':''); ?>>
+					<span class="slider round"></span>
+				</label>
+			</section>
+			<section class="rbfw-drop-off-location <?php echo esc_attr(($rbfw_enable_dropoff_point=='yes')?'show':'hide'); ?>" >
+				<div class="rbfw-drop-off-locations">
+					<?php
+						if ( sizeof( $rbfw_dropoff_data ) > 0 ) :
+							foreach ( $rbfw_dropoff_data as $field ) {
+								$location_name = array_key_exists( 'loc_dropoff_name', $field ) ? esc_attr( $field['loc_dropoff_name'] ) : '';
+								?>
+								<section class="rbfw-pickup">
+									<label for=""><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+									<?php $this->rbfw_get_location_dropdown( 'loc_dropoff_name[]' , $location_name ); ?>
+									<div class="mp_event_remove_move">
+										<button onclick="jQuery(this).parent().parent().remove()" class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
+										
+									</div>
+								</section>
+								<?php
+							}
+						else :
+						endif;
+					?>
+					<section class="rbfw-drop-off-clone">
+						<label for=""><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<?php $this->rbfw_get_location_dropdown( 'loc_dropoff_name[]' ); ?>
+						<div class="mp_event_remove_move">
+							<button onclick="jQuery(this).parent().parent().remove()" class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
+						</div>
+					</section>					
+				</div>
+				<div class="d-flex justify-content-center mt-2">
+					<div class="ppof-button add-item" onclick="createDropOffLocation()"><i class="fa-solid fa-circle-plus"></i> Add New Pick-up Location</d>
+				</div>
+			</section>
+			<?php
+			}
+
             public function add_tabs_content( $post_id ) {
             ?>
                 <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_location_config">
@@ -125,7 +175,7 @@
 					<?php $this->pickup_location_config($post_id); ?>
 
                     <?php $this->panel_header('Drop-off Location Configuration','Here you can set drop off location.'); ?>
-					<?php //$this->pickup_location_config($post_id); ?>
+					<?php $this->drop_off_location_config($post_id); ?>
 					<?php do_action( 'rbfw_location_config_after', $post_id ); ?>
 				</div>
 
@@ -145,9 +195,26 @@
 						}
 					});
 
+					jQuery('input[name=rbfw_enable_dropoff_point]').click(function(){
+						var status = jQuery(this).val();
+						
+						if(status == 'yes') {
+							jQuery(this).val('no');
+							jQuery('.rbfw-drop-off-location').slideUp().removeClass('show').addClass('hide');
+						}  
+						if(status == 'no') {
+							jQuery(this).val('yes'); 
+							jQuery('.rbfw-drop-off-location').slideDown().removeClass('hide').addClass('show');
+						}
+					});
+
 					function createPickupLocation(){
 						jQuery(".rbfw-pickup-clone").clone().appendTo(".rbfw-pickup-locations")
 						.removeClass('rbfw-pickup-clone').addClass('rbfw-pickup');
+					};
+					function createDropOffLocation(){
+						jQuery(".rbfw-drop-off-clone").clone().appendTo(".rbfw-drop-off-locations")
+						.removeClass('rbfw-drop-off-clone').addClass('rbfw-drop-off');
 					};
 				</script>
 			<?php
