@@ -119,16 +119,18 @@
             ?>
                 <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_location_config">
 					<?php $this->section_header(); ?>
+
+					<?php do_action( 'rbfw_location_config_before', $post_id ); ?>
                     <?php $this->panel_header('Pick-up Location Configuration','Here you can set location.'); ?>
+					<?php $this->pickup_location_config($post_id); ?>
 
-					<?php
-						do_action( 'rbfw_location_config_before', $post_id );
-
-						$this->pickup_location_config($post_id);
-
-						do_action( 'rbfw_location_config_after', $post_id );
-					?>
+                    <?php $this->panel_header('Drop-off Location Configuration','Here you can set drop off location.'); ?>
+					<?php //$this->pickup_location_config($post_id); ?>
+					<?php do_action( 'rbfw_location_config_after', $post_id ); ?>
 				</div>
+
+				
+
 				<script>
 					jQuery('input[name=rbfw_enable_pick_point]').click(function(){
 						var status = jQuery(this).val();
@@ -169,7 +171,23 @@
                     $rbfw_enable_pick_point  = isset( $_POST['rbfw_enable_pick_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_pick_point'] ) : 'no';
 					
 					update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
- 
+					
+					// Saving Pickup Location Data
+					$old_rbfw_pickup_data = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
+					$new_rbfw_pickup_data = array();
+					$names                = $_POST['loc_pickup_name'] ? rbfw_array_strip( $_POST['loc_pickup_name'] ) : array();
+					$count                = count( $names );
+					for ( $i = 0; $i < $count; $i ++ ) {
+						if ( $names[ $i ] != '' ) :
+							$new_rbfw_pickup_data[ $i ]['loc_pickup_name'] = stripslashes( strip_tags( $names[ $i ] ) );
+						endif;
+					}
+					$pickup_data_arr = apply_filters( 'rbfw_pickup_arr_save', $new_rbfw_pickup_data );
+					if ( ! empty( $pickup_data_arr ) && $pickup_data_arr != $old_rbfw_pickup_data ) {
+						update_post_meta( $post_id, 'rbfw_pickup_data', $pickup_data_arr );
+					} elseif ( empty( $pickup_data_arr ) && $old_rbfw_pickup_data ) {
+						delete_post_meta( $post_id, 'rbfw_pickup_data', $old_rbfw_pickup_data );
+					}
                 }
             }
 		}
