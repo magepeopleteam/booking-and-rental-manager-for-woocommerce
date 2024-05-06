@@ -47,16 +47,15 @@
                     <?php $this->section_header(); ?>
                     <?php $this->panel_header('Gallery ','Gallery images here'); ?>
 					<section>
-						<div class="w-100">
-							<div class="mb-2">
-								<div class='button upload' id='media_upload_<?php echo esc_attr($post_id); ?>'>
-									<?php echo __('Upload','pickplugins-options-framework');?>
-								</div>
-								<div class='button clear' id='media_clear_<?php echo $post_id; ?>'>
-									<?php echo __('Clear','pickplugins-options-framework');?>
-								</div>
+					<div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper
+            field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
+						<div class='button upload' id='media_upload_<?php echo esc_attr($post_id); ?>'>
+								<?php echo __('Upload','pickplugins-options-framework');?>
 							</div>
-							<div class="gallery-images media-list-<?php echo esc_attr($post_id); ?> sortable">
+							<div class='button clear' id='media_clear_<?php echo $post_id; ?>'>
+								<?php echo __('Clear','pickplugins-options-framework');?>
+							</div>
+							<div class="gallery-images media-list media-list-<?php echo esc_attr($post_id); ?> sortable">
 								<?php
 								$gallery_images = get_post_meta($post_id,'rbfw_gallery_images',true);
 								$gallery_images = $gallery_images ? $gallery_images : [];
@@ -67,9 +66,10 @@
 										$media_type	= get_post_mime_type( $image );
 										$media_title= get_the_title( $image );
 										?>
-										<div class="gallery-image">
-											<div class="remove" onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></div>
-											<img id='media_preview_<?php echo esc_attr($post_id); ?>' src='<?php echo esc_attr($media_url); ?>'/>
+										<div class=" gallery-image">
+											<span class="remove" onclick="jQuery(this).parent().remove()">x</span>
+											<span class="sort" ><i class="fa-solid fa-grip"></i></span>
+											<img id='media_preview_<?php echo esc_attr($post_id); ?>' src='<?php echo esc_attr($media_url); ?>' />
 											<input type='hidden' name='rbfw_gallery_images[]' value='<?php echo esc_attr($image); ?>' />
 										</div>
 									<?php
@@ -79,29 +79,29 @@
 							</div>
 						</div>
 					</section>
-					<script>jQuery(document).ready(function($){
-						$('#media_upload_<?php echo esc_attr($post_id); ?>').click(function() {
-							//var send_attachment_bkp = wp.media.editor.send.attachment;
-							wp.media.editor.send.attachment = function(props, attachment) {
-								attachment_id = attachment.id;
-								attachment_url = attachment.url;
-								html = '<div class="gallery-image">';
-								html += '<div class="remove" onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></div>';
-								html += '<img id='media_preview_<?php echo esc_attr($post_id); ?>' src="'+attachment_url+'"/>';
-								html += '<input type="hidden" name="rbfw_gallery_images[]" value="'+attachment_id+'" />';
-								html += '</div>';
-								$('.media-list-<?php echo esc_attr($post_id); ?>').append(html);
-								//wp.media.editor.send.attachment = send_attachment_bkp;
-							}
-							wp.media.editor.open($(this));
-							return false;
+					<script>
+						jQuery(document).ready(function($){
+							$('#media_upload_<?php echo esc_attr($post_id); ?>').click(function() {
+								//var send_attachment_bkp = wp.media.editor.send.attachment;
+								wp.media.editor.send.attachment = function(props, attachment) {
+									attachment_id = attachment.id;
+									attachment_url = attachment.url;
+									html = '<div class=" gallery-image">';
+									html += '<span class="remove" onclick="jQuery(this).parent().remove()">x</span>';
+									html += '<img src="'+attachment_url+'" style="width:100%"/>';
+									html += '<input type="hidden" name="rbfw_gallery_images[]" value="'+attachment_id+'" />';
+									html += '</div>';
+									$('.media-list-<?php echo esc_attr($post_id); ?>').append(html);
+									//wp.media.editor.send.attachment = send_attachment_bkp;
+								}
+								wp.media.editor.open($(this));
+								return false;
+							});
+							$('#media_clear_<?php echo esc_attr($post_id); ?>').click(function() {
+								$('.media-list-<?php echo esc_attr($post_id); ?> .gallery-image').remove();
+							})
 						});
-						$( ".sortable" ).sortable();
-						$('#media_clear_<?php echo esc_attr($post_id); ?>').click(function() {
-							$('.media-list-<?php echo esc_attr($post_id); ?> .item').remove();
-						})
-					});
-				</script>
+					</script>
                 </div>
             <?php 
             }
