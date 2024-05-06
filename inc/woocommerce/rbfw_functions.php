@@ -10,7 +10,7 @@ add_filter('woocommerce_get_item_data', 'rbfw_show_cart_items', 90, 2);
 
 /*after place order*/
 add_action('woocommerce_after_checkout_validation', 'rbfw_validation_before_checkout');
-//add_action('woocommerce_checkout_create_order_line_item', 'rbfw_add_order_item_data', 90, 4);
+add_action('woocommerce_checkout_create_order_line_item', 'rbfw_add_order_item_data', 90, 4);
 add_action( 'woocommerce_before_thankyou', 'rbfw_booking_management', 10 );
 function rbfw_add_info_to_cart_item($cart_item_data, $product_id, $variation_id)
 {
