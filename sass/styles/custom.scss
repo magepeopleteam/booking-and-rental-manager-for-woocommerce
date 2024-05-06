@@ -216,7 +216,7 @@
         flex-wrap: wrap;
         justify-content:start;
         .gallery-image{
-            width: 23.95%;
+            width: 16.38em;
             height: 120px;
             margin: 5px;
             position: relative;
@@ -224,7 +224,6 @@
                 content: '';
                 width: 100%;
                 height: 100%;
-               
                 background-image: linear-gradient(to right, transparent, $color-black);
                 opacity: .5;
                 position: absolute;

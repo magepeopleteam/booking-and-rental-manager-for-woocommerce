@@ -7047,7 +7047,7 @@ readers do not read off random characters that represent icons */
   justify-content: start;
 }
 #rbfw_add_meta_box .gallery-images .gallery-image {
-  width: 23.95%;
+  width: 16.38em;
   height: 120px;
   margin: 5px;
   position: relative;

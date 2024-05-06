@@ -55,7 +55,7 @@
 							<div class='button clear' id='media_clear_<?php echo $post_id; ?>'>
 								<?php echo __('Clear','pickplugins-options-framework');?>
 							</div>
-							<div class="gallery-images media-list media-list-<?php echo esc_attr($post_id); ?> sortable">
+							<div class="gallery-images media-list-<?php echo esc_attr($post_id); ?> ">
 								<?php
 								$gallery_images = get_post_meta($post_id,'rbfw_gallery_images',true);
 								$gallery_images = $gallery_images ? $gallery_images : [];
@@ -67,8 +67,8 @@
 										$media_title= get_the_title( $image );
 										?>
 										<div class=" gallery-image">
-											<span class="remove" onclick="jQuery(this).parent().remove()">x</span>
-											<span class="sort" ><i class="fa-solid fa-grip"></i></span>
+											<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></span>
+											
 											<img id='media_preview_<?php echo esc_attr($post_id); ?>' src='<?php echo esc_attr($media_url); ?>' />
 											<input type='hidden' name='rbfw_gallery_images[]' value='<?php echo esc_attr($image); ?>' />
 										</div>
@@ -87,7 +87,7 @@
 									attachment_id = attachment.id;
 									attachment_url = attachment.url;
 									html = '<div class=" gallery-image">';
-									html += '<span class="remove" onclick="jQuery(this).parent().remove()">x</span>';
+									html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></span>';
 									html += '<img src="'+attachment_url+'" style="width:100%"/>';
 									html += '<input type="hidden" name="rbfw_gallery_images[]" value="'+attachment_id+'" />';
 									html += '</div>';
