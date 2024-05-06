@@ -47,7 +47,7 @@
 					'hide_empty' => false,
 				) );
 				$arr   = array(
-					'' => rbfw_string_return('rbfw_text_pls_select_location',__('Please Select a Location','booking-and-rental-manager-for-woocommerce'))
+					'' => rbfw_string_return('rbfw_text_pls_select_location',__('Select a Location','booking-and-rental-manager-for-woocommerce'))
 				);
 				foreach ( $terms as $_terms ) {
 					$arr[ $_terms->name ] = $_terms->name;
@@ -104,8 +104,7 @@
 						<label for=""><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 						<?php $this->rbfw_get_location_dropdown( 'loc_pickup_name[]' ); ?>
 						<div class="mp_event_remove_move">
-							<button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
-							<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
+							<button onclick="jQuery(this).parent().parent().remove()" class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
 						</div>
 					</section>					
 				</div>
