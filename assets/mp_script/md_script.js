@@ -121,7 +121,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
     }
 
     if((pickup_date == dropoff_date) && (typeof dropoff_time === "undefined" || dropoff_time == '')){
-        dropoff_time = rbfw_end_time();
+       // dropoff_time = rbfw_end_time();
     }
 
     let data_cat = that.attr('data-cat');

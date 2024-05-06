@@ -960,6 +960,7 @@ function rbfw_change_user_order_status_on_order_status_change( $order_status, $r
         )
     );
 
+
     $loop = new WP_Query( $args );
     foreach ( $loop->posts as $rbfw_post ) {
         $rbfw_post_id = $rbfw_post->ID;
