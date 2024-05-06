@@ -109,6 +109,13 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
     let pickup_time = jQuery('#pickup_time').find(':selected').val();
     let dropoff_time = jQuery('#dropoff_time').find(':selected').val();
     let item_quantity = jQuery('#rbfw_item_quantity').find(':selected').val();
+
+    if(typeof item_quantity === "undefined"){
+        item_quantity = jQuery("[name='rbfw_item_quantity']").val();
+    }
+
+
+
     let rbfw_service_price = jQuery('#rbfw_service_price').val();
 
     if(pickup_date == '' || dropoff_date == ''){

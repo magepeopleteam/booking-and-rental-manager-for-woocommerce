@@ -306,6 +306,10 @@ if($rbfw_enable_variations == 'yes'){
                                 </select>
                             </div>
                         </div>
+                    <?php }elseif ($item_stock_quantity > 0){ ?>
+                          <input type="hidden" name="rbfw_item_quantity" value="1">
+                    <?php } else{ ?>
+                        <input type="hidden" name="rbfw_item_quantity" value="0">
                     <?php } ?>
 
                     <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data)){ ?>
