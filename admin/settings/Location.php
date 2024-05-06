@@ -41,8 +41,34 @@
                 <?php
             }
 
+			public function rbfw_get_location_arr() {
+				$terms = get_terms( array(
+					'taxonomy'   => 'rbfw_item_location',
+					'hide_empty' => false,
+				) );
+				$arr   = array(
+					'' => rbfw_string_return('rbfw_text_pls_select_location',__('Please Select a Location','booking-and-rental-manager-for-woocommerce'))
+				);
+				foreach ( $terms as $_terms ) {
+					$arr[ $_terms->name ] = $_terms->name;
+				}
+		
+				return $arr;
+			}
+
+			public function rbfw_get_location_dropdown( $name, $saved_value = '', $class = '' ){
+				$location_arr = $this->rbfw_get_location_arr();
+				echo "<select name=$name class=$class>";
+				foreach ( $location_arr as $key => $value ) {
+					$selected_text = ! empty( $saved_value ) && $saved_value == $key ? 'Selected' : '';
+					echo "<option value='$key' $selected_text>" . esc_html( $value ) . "</option>";
+				}
+				echo "</select>";
+			}
 			public function pickup_location_config($post_id){
 				$rbfw_enable_pick_point  = get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) ? get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) : 'yes';
+				$rbfw_pickup_data        = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
+				
 			?>
 			<section >
 				<div>
@@ -55,13 +81,18 @@
 				</label>
 			</section>
 			<section class="rbfw-pickup-location <?php echo esc_attr(($rbfw_enable_pick_point=='yes')?'show':'hide'); ?>" >
-				<div>
-					<div>
-						<input type="text">
-					</div>
-					<div class="add-row-pickup-btn">
-						<button id="add-row-pickup" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> Add New Pick-up Location</button>
-					</div>
+				<div class="rbfw-pickup-locations">
+					<section class="rbfw-pickup-clone">
+						<label for=""><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<?php $this->rbfw_get_location_dropdown( 'loc_pickup_name[]' ); ?>
+						<div class="mp_event_remove_move">
+							<button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
+							<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
+						</div>
+					</section>					
+				</div>
+				<div class="d-flex justify-content-center mt-2">
+					<div class="ppof-button add-item" onclick="createPickupLocation()"><i class="fa-solid fa-circle-plus"></i> Add New Pick-up Location</d>
 				</div>
 			</section>
 			<?php
@@ -94,6 +125,11 @@
 							jQuery('.rbfw-pickup-location').slideDown().removeClass('hide').addClass('show');
 						}
 					});
+
+					function createPickupLocation(){
+						jQuery(".rbfw-pickup-clone").clone().appendTo(".rbfw-pickup-locations")
+						.removeClass('rbfw-pickup-clone').addClass('rbfw-pickup');
+					};
 				</script>
 			<?php
 			}
