@@ -8355,6 +8355,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
 
         public function field_media_multi( $option ){
+                    
 
             $id			= isset( $option['id'] ) ? $option['id'] : "";
             if(empty($id)) return;

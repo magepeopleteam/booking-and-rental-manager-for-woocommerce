@@ -7041,5 +7041,44 @@ readers do not read off random characters that represent icons */
 #rbfw_add_meta_box .mpStyle .customCheckboxLabel span.customCheckbox {
   color: var(--mage-black);
 }
+#rbfw_add_meta_box .gallery-images {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+}
+#rbfw_add_meta_box .gallery-images .gallery-image {
+  width: 23.95%;
+  height: 120px;
+  margin: 5px;
+  position: relative;
+}
+#rbfw_add_meta_box .gallery-images .gallery-image::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(to right, transparent, var(--mage-black));
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#rbfw_add_meta_box .gallery-images .gallery-image .remove {
+  position: absolute;
+  color: var(--mage-white);
+  bottom: 0;
+  right: 0;
+  width: 25px;
+  height: 25px;
+  background-color: var(--mage-primary);
+  text-align: center;
+  border-radius: 0 0 0 5px;
+  cursor: pointer;
+}
+#rbfw_add_meta_box .gallery-images .gallery-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
 
 /*# sourceMappingURL=admin.css.map */
