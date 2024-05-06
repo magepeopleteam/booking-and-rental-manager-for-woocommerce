@@ -82,6 +82,24 @@
 			</section>
 			<section class="rbfw-pickup-location <?php echo esc_attr(($rbfw_enable_pick_point=='yes')?'show':'hide'); ?>" >
 				<div class="rbfw-pickup-locations">
+					<?php
+						if ( sizeof( $rbfw_pickup_data ) > 0 ) :
+							foreach ( $rbfw_pickup_data as $field ) {
+								$location_name = array_key_exists( 'loc_pickup_name', $field ) ? esc_attr( $field['loc_pickup_name'] ) : '';
+								?>
+								<section class="rbfw-pickup">
+									<label for=""><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+									<?php $this->rbfw_get_location_dropdown( 'loc_pickup_name[]' , $location_name ); ?>
+									<div class="mp_event_remove_move">
+										<button onclick="jQuery(this).parent().parent().remove()" class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
+										
+									</div>
+								</section>
+								<?php
+							}
+						else :
+						endif;
+					?>
 					<section class="rbfw-pickup-clone">
 						<label for=""><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 						<?php $this->rbfw_get_location_dropdown( 'loc_pickup_name[]' ); ?>
