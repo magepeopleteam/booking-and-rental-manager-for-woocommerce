@@ -236,8 +236,10 @@
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
                     $rbfw_enable_pick_point  = isset( $_POST['rbfw_enable_pick_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_pick_point'] ) : 'no';
+                    $rbfw_enable_dropoff_point  = isset( $_POST['rbfw_enable_dropoff_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_dropoff_point'] ) : 'no';
 					
 					update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
+					update_post_meta( $post_id, 'rbfw_enable_dropoff_point', $rbfw_enable_dropoff_point );
 					
 					// Saving Pickup Location Data
 					$old_rbfw_pickup_data = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
@@ -254,6 +256,23 @@
 						update_post_meta( $post_id, 'rbfw_pickup_data', $pickup_data_arr );
 					} elseif ( empty( $pickup_data_arr ) && $old_rbfw_pickup_data ) {
 						delete_post_meta( $post_id, 'rbfw_pickup_data', $old_rbfw_pickup_data );
+					}
+
+					// Saving Dropoff Data
+					$old_rbfw_dropoff_data = get_post_meta( $post_id, 'rbfw_dropoff_data', true ) ? get_post_meta( $post_id, 'rbfw_dropoff_data', true ) : [];
+					$new_rbfw_dropoff_data = array();
+					$names                 = $_POST['loc_dropoff_name'] ? rbfw_array_strip( $_POST['loc_dropoff_name'] ) : array();
+					$count                 = count( $names );
+					for ( $i = 0; $i < $count; $i ++ ) {
+						if ( $names[ $i ] != '' ) :
+							$new_rbfw_dropoff_data[ $i ]['loc_dropoff_name'] = stripslashes( strip_tags( $names[ $i ] ) );
+						endif;
+					}
+					$dropoff_data_arr = apply_filters( 'rbfw_dropoff_arr_save', $new_rbfw_dropoff_data );
+					if ( ! empty( $dropoff_data_arr ) && $dropoff_data_arr != $old_rbfw_dropoff_data ) {
+						update_post_meta( $post_id, 'rbfw_dropoff_data', $dropoff_data_arr );
+					} elseif ( empty( $dropoff_data_arr ) && $old_rbfw_dropoff_data ) {
+						delete_post_meta( $post_id, 'rbfw_dropoff_data', $old_rbfw_dropoff_data );
 					}
                 }
             }
