@@ -306,6 +306,10 @@ if($rbfw_enable_variations == 'yes'){
                                 </select>
                             </div>
                         </div>
+                    <?php }elseif ($item_stock_quantity > 0){ ?>
+                          <input type="hidden" name="rbfw_item_quantity" value="1">
+                    <?php } else{ ?>
+                        <input type="hidden" name="rbfw_item_quantity" value="0">
                     <?php } ?>
 
                     <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data)){ ?>
@@ -357,15 +361,17 @@ if($rbfw_enable_variations == 'yes'){
                                         <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][price]" value="<?php echo $service['price'] ?>">
                                     </div>
                                     <div class="title"><?php echo $service['title'] ?></div>
-                                    <div class="title"><?php echo $service['service_price_type'] ?></div>
 
                                     <div class="rbfw_qty_input rbfw_service_quantity item_<?php echo $cat.$serkey ?>" style="display: none">
                                         <a class="rbfw_service_quantity_minus" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-minus"></i></a>
-                                        <input type="number"  name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][quantity]" min="0" max="" value="1" class="rbfw_service_qty rbfw_service_info_stock" data-cat="service" data-price="20" data-name="ddd" autocomplete="off">
+                                        <input type="number"  name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][quantity]" min="0" max="" value="1" class="rbfw_service_qty rbfw_service_info_stock" data-cat="service" data-price="20" data-item="<?php echo $cat.$serkey ?>" data-name="ddd" autocomplete="off">
                                         <a class="rbfw_service_quantity_plus" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-plus"></i></a>
                                     </div>
 
-                                    <div class="title"><?php echo $service['price'] ?></div>
+                                    <div class="title"><?php echo wc_price($service['price']) ?></div>
+
+                                    <div class="title"><?php echo ($service['service_price_type']=='day_wise')?'Day Wise':'One Time' ?></div>
+
                                 </div>
                             <?php } ?>
                         </div>
@@ -420,6 +426,7 @@ if($rbfw_enable_variations == 'yes'){
                                 </table>
                             </div>
                         </div>
+
                     <?php } ?>
                 </div>
 
@@ -431,10 +438,10 @@ if($rbfw_enable_variations == 'yes'){
                                 <span class="price-figure" data-price="">
                                 </span>
                             </li>
-                            <li class="rbfw-service-costing rbfw-cond">Service Cost
+                       <!--     <li class="rbfw-service-costing rbfw-cond">Service Cost
                                 <span class="price-figure" data-price="">
                                 </span>
-                            </li>
+                            </li>-->
                             <li class="resource-costing rbfw-cond">Resource Cost
                                 <span class="price-figure" data-price="">
                                 </span>
