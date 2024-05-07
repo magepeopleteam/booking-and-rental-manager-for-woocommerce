@@ -22,7 +22,7 @@
 				<?php do_action( 'rbfw_item_pricing_after', $rbfw_id ); ?>
 			</div>
 			<?php do_action( 'rbfw_item_exs_pricing_before', $rbfw_id ); ?>
-			<?php rbfw_extra_service_config( $rbfw_id ); ?>
+			<?php // rbfw_extra_service_config( $rbfw_id ); ?>
 			<?php do_action( 'rbfw_item_exs_pricing_after', $rbfw_id ); ?>
 		</div>
 
@@ -213,7 +213,7 @@
 		$rbfw_size_data          = get_post_meta( $post_id, 'rbfw_size_data', true ) ? get_post_meta( $post_id, 'rbfw_size_data', true ) : [];
 		$rbfw_pickup_data        = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
 		$rbfw_dropoff_data       = get_post_meta( $post_id, 'rbfw_dropoff_data', true ) ? get_post_meta( $post_id, 'rbfw_dropoff_data', true ) : [];
-		wp_nonce_field( 'rbfw_ticket_type_nonce', 'rbfw_ticket_type_nonce' );
+		
 		$hourly_rate             = get_post_meta( get_the_id(), 'rbfw_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_hourly_rate', true ) : '';
 		$daily_rate              = get_post_meta( get_the_id(), 'rbfw_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_daily_rate', true ) : '';
 		$rbfw_item_type          = get_post_meta( get_the_id(), 'rbfw_item_type', true ) ? get_post_meta( get_the_id(), 'rbfw_item_type', true ) : 'bike_car_sd';
