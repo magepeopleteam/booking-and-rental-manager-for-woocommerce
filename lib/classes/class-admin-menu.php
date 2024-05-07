@@ -267,7 +267,7 @@ if (!class_exists('MageRBFWClass')) {
         public function mp_event_all_in_tab() {
             $cpt_label = $this->get_option('rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent');
             $post_id = get_the_id();
-            wp_nonce_field( 'rbfw_ticket_type_nonce', 'rbfw_ticket_type_nonce' );
+            
             ?>
             <div class="mp_event_tab_area">
                 <aside class="mp_tab_menu">

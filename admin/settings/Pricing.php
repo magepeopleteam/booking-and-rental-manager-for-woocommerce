@@ -43,42 +43,41 @@
             }
 
 			public function rent_type($post_id){
-			?>
-				<section>
-					<div>
-						<label for="">
-							<?php _e('Rent Types', 'booking-and-rental-manager-for-woocommerce' ); ?>
-						</label>
-						<span><?php _e('Select Rent Type', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-					</div>
-					<?php  $rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd']; ?>
-					<?php $item_type = [
-						'bike_car_sd' => 'Bike/Car for single day',
-						'bike_car_md' => 'Bike/Car for multiple day',
-						'resort' => 'Resort',
-						'equipment' => 'Equipment',
-						'dress' => 'Dress',
-						'appointment' => 'Appointment',
-						'others' => 'Others',
-					]; ?>
-					<select name="rbfw_item_type" id="rbfw_item_type">
-						<?php foreach($item_type as $kay => $value): ?>
-							<option <?php echo ($kay==$rbfw_item_type)?'selected':'' ?> value="<?php echo $kay; ?>"> <?php echo $value; ?> </option>
-						<?php endforeach; ?>
-					</select>
-				</section>
-			<?
+				?>
+					<section>
+						<div>
+							<label for="">
+								<?php _e('Rent Types', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							</label>
+							<span><?php _e('Select Rent Type', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<?php  $rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd']; ?>
+						<?php $item_type = [
+							'bike_car_sd' => 'Bike/Car for single day',
+							'bike_car_md' => 'Bike/Car for multiple day',
+							'resort' => 'Resort',
+							'equipment' => 'Equipment',
+							'dress' => 'Dress',
+							'appointment' => 'Appointment',
+							'others' => 'Others',
+						]; ?>
+						<select name="rbfw_item_type" id="rbfw_item_type">
+							<?php foreach($item_type as $kay => $value): ?>
+								<option <?php echo ($kay==$rbfw_item_type)?'selected':'' ?> value="<?php echo $kay; ?>"> <?php echo $value; ?> </option>
+							<?php endforeach; ?>
+						</select>
+					</section>
+			<?php
 			}
 
 			public function add_tabs_content( $post_id ) {
-				
-            ?>
+				wp_nonce_field( 'rbfw_ticket_type_nonce', 'rbfw_ticket_type_nonce' );
+			?>
 				<div class="mpStyle mp_tab_item" data-tab-item="#travel_pricing">
 					<?php $this->section_header(); ?>
-                    <?php $this->panel_header('Template Settings','Template Settings'); ?>
+					<?php $this->panel_header('Template Settings','Template Settings'); ?>
 					<?php $this->rent_type($post_id); ?>
-			 	</div>
-
+				</div>
 			<?php
 			}
 
@@ -104,3 +103,5 @@
 		}
 		new RBFW_Pricing();
 	}
+	
+	
