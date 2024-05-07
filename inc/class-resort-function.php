@@ -536,6 +536,9 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                     $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $checkin_date, $checkout_date, $value['room_type']);
 
+                    $max_available_qty = $max_available_qty['remaining_stock'];
+
+
                     $content   .= '<tr>';
                     $content   .= '<td>';
                     $content   .= '<span class="room_type_title">'.esc_html($value['room_type']).'</span>';
