@@ -26,7 +26,7 @@
         wp.media.editor.send.attachment = function(props, attachment) {
             let attachment_id = attachment.id;
             let attachment_url = attachment.url;
-            let html = '<div class="rbfw_multi_image_item" data-image-id="' + attachment_id + '"><span class="dashicons dashicons-no-alt circleIcon_xs rbfw_close_multi_image_item"></span>';
+            let html = '<div class="rbfw_multi_image_item" data-image-id="' + attachment_id + '"><span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>';
             html += '<img src="' + attachment_url + '" alt="' + attachment_id + '"/>';
             html += '</div>';
             parent.find('.rbfw_multi_image').append(html);

@@ -85,7 +85,7 @@
 										foreach ( $all_images as $image ) {
 											?>
 											<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
-												<span class="dashicons dashicons-no-alt circleIcon_xs rbfw_close_multi_image_item"></span>
+												<span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>
 												<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
 											</div>
 											<?php
@@ -119,7 +119,7 @@
 							?>
 						</div>
 					</section>
-					<span class="dashicons dashicons-no-alt circleIcon_xs rbfw_item_remove"></span>
+					<span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
 				</div>
 				<?php
 				return ob_get_clean();
