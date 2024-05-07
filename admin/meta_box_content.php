@@ -1153,7 +1153,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
  * ******************************/
 
 
-	function rbfw_repeated_item( $id, $meta_key, $data = array() ) {
+function rbfw_repeated_item($id, $meta_key, $data = array() ){
 	ob_start();
 	$array = get_rbfw_repeated_setting_array( $meta_key );
 
@@ -1170,50 +1170,41 @@ function rbfw_add_variations_tab_content($rbfw_id){
 	$content       = array_key_exists( $content_name, $data ) ? html_entity_decode( $data[ $content_name ] ) : '';
 
 	?>
-	<div class='rbfw_remove_area component mb-2'>
-		<section class="component d-flex justify-content-between align-items-center mb-2">
-			<div class="w-30 d-flex justify-content-between align-items-center">
-				<p class=""><?php echo esc_html( $title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
+	<div class='rbfw_remove_area mt-5'>
+		<section class="bg-light">
+			<div>
+				<p class=""><?php echo esc_html( $title ); ?></p>
 			</div>
-			<div class="w-70 d-flex justify-content-between align-items-center">
+			<div >
 				<input type="text" class="formControl" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
-				
 			</div>
 		</section>
-		<section class="component d-flex justify-content-between align-items-center mb-2">
-			<div class="w-30 d-flex justify-content-between align-items-center">
-				<p class=""><?php echo esc_html( $image_title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
-			</div>
-			<div class="w-70 d-flex justify-content-between align-items-center">
-				<div class="rbfw_multi_image_area">
-					<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
-					<div class="rbfw_multi_image">
-						<?php
-							$all_images = explode( ',', $images );
-							if ( $images && sizeof( $all_images ) > 0 ) {
-								foreach ( $all_images as $image ) {
-									?>
-									<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
-										<span class="dashicons dashicons-no-alt circleIcon_xs rbfw_close_multi_image_item"></span>
-										<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
-									</div>
-									<?php
-								}
+		<section >
+			<div class="rbfw_multi_image_area">
+				<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
+				<div class="rbfw_multi_image">
+					<?php
+						$all_images = explode( ',', $images );
+						if ( $images && sizeof( $all_images ) > 0 ) {
+							foreach ( $all_images as $image ) {
+								?>
+								<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
+									<span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>
+									<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
+								</div>
+								<?php
 							}
-						?>
-					</div>
-					<button type="button" class=" add_multi_image ppof-button">
-						<i class="fa-solid fa-circle-plus"></i>
-						<?php esc_html_e( 'Add Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
-					</button>
+						}
+					?>
 				</div>
+				<button type="button" class=" add_multi_image ppof-button">
+					<i class="fa-solid fa-circle-plus"></i>
+					<?php esc_html_e( 'Add Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</button>
 			</div>
 		</section>
-		<section class="component d-flex justify-content-between align-items-center mb-2">
-			<div class="w-30 d-flex justify-content-between align-items-center">
-				<p class=""><?php echo esc_html( $content_title ); ?> <i class="fas fa-question-circle tool-tips"></i></p>
-			</div>
-			<div class="w-70 d-flex justify-content-between align-items-center">
+		<section>
+			<div class="w-100">
 				<?php
 					$settings = array(
 						'wpautop'       => false,
@@ -1232,7 +1223,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
 				?>
 			</div>
 		</section>
-		<span class="dashicons dashicons-no-alt circleIcon_xs rbfw_item_remove"></span>
+		<span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
 	</div>
 	<?php
 	return ob_get_clean();
