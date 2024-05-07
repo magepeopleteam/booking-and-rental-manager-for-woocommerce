@@ -279,6 +279,6 @@ function rbfw_save_meta_box_data( $post_id ) {
         } elseif ( empty( $dropoff_data_arr ) && $old_rbfw_dropoff_data ) {
             delete_post_meta( $post_id, 'rbfw_dropoff_data', $old_rbfw_dropoff_data );
         }
-        save_rbfw_repeated_setting( $post_id, 'mep_event_faq' );
+        //save_rbfw_repeated_setting( $post_id, 'mep_event_faq' );
     }
 }

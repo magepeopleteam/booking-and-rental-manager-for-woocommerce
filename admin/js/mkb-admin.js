@@ -61,6 +61,7 @@
         });
         return false;
     });
+    
     jQuery(window).load(function() {
         jQuery('.mp_tab_menu').each(function() {
             jQuery(this).find('ul li:first-child').trigger('click');

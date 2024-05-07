@@ -1259,6 +1259,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
 		echo rbfw_repeated_item( $id, 'mep_event_faq' );
 		die();
 	}
+	
 	function save_rbfw_repeated_setting( $rbfw_id, $meta_key ) {
 		$array        = get_rbfw_repeated_setting_array( $meta_key );
 		$title_name   = $array['title_name'];
