@@ -539,7 +539,6 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     $max_available_qty = $max_available_qty['remaining_stock'];
 
 
-
                     $content   .= '<tr>';
                     $content   .= '<td>';
                     $content   .= '<span class="room_type_title">'.esc_html($value['room_type']).'</span>';
