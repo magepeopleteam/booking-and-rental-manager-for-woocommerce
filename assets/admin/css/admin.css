@@ -7071,7 +7071,7 @@ readers do not read off random characters that represent icons */
   height: 25px;
   background-color: var(--mage-primary);
   text-align: center;
-  border-radius: 0 0 0 5px;
+  border-radius: 5px 0 0 0;
   cursor: pointer;
 }
 #rbfw_add_meta_box .gallery-images .gallery-image img {

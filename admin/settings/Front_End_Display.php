@@ -1,73 +1,126 @@
 <?php
 
+	/*
+   * @Author 		raselsha@gmail.com
+   */
+	if (!defined('ABSPATH')) {
+		die;
+	} 
+	if (!class_exists('RBFW_Front_End_Display')) {
+        class RBFW_Front_End_Display{
+            public function __construct() {
+                add_action( 'rbfw_meta_box_tab_name', [$this,'add_tab_menu'] );
+                add_action( 'rbfw_meta_box_tab_content', [$this,'add_tabs_content'] );
+                add_action('save_post', array($this, 'settings_save'), 99, 1);
+			}
 
- /*********************************
- * Start: Front-end Display Tab
- * ******************************/
-add_action( 'rbfw_meta_box_tab_name', 'rbfw_frontend_display_tab_name' , 90);
+            public function add_tab_menu() {
+            ?>
+                <li data-target-tabs="#rbfw_frontend_display"><i class="fa-solid fa-display"></i><?php esc_html_e( ' Front-end Display', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+            <?php
+            }
 
-function rbfw_frontend_display_tab_name($rbfw_id){
+            public function section_header(){
+                ?>
+                    <h2 class="mp_tab_item_title"><?php _e('Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                    <p class="mp_tab_item_description"><?php _e('Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        
+                <?php
+            }
 
-	?>
-	<li data-target-tabs="#rbfw_frontend_display"><i class="fa-solid fa-display"></i><?php esc_html_e( ' Front-end Display', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
-	<?php
+            public function panel_header($title,$description){
+                ?>
+                    <section class="bg-light mt-5">
+                        <div>
+                            <label>
+                                <?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $title ); ?>
+                            </label>
+                            <span><?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $description ); ?></span>
+                        </div>
+                    </section>
+                <?php
+            }
 
-}
+            public function add_tabs_content( $post_id ) {
+				$rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : '';
+				$rbfw_available_qty_info_switch = get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) ? get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) : 'no';
+				$rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
+				$rbfw_enable_md_type_item_qty = get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) : 'no';
+			?>
+			<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_frontend_display">
+					
+				<?php $this->section_header(); ?>
+                <?php $this->panel_header('Front-end Display Settings ','Front-end Display Settings'); ?>
 
-add_action( 'rbfw_meta_box_tab_content', 'rbfw_frontend_display_tab_content' , 90);
+				<section >
+					<div>
+						<label><?php _e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<span><?php  _e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<label class="switch">
+						<input type="checkbox" name="rbfw_available_qty_info_switch" value="<?php echo esc_attr($rbfw_available_qty_info_switch); ?>" <?php echo esc_attr(($rbfw_available_qty_info_switch=='yes')?'checked':''); ?>>
+						<span class="slider round"></span>
+					</label>
+				</section>
+				
+				<section >
+					<div>
+						<label><?php _e( 'Enable Multiple Item Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<span><?php  _e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<label class="switch">
+						<input type="checkbox" name="rbfw_enable_md_type_item_qty" value="<?php echo esc_attr($rbfw_enable_md_type_item_qty); ?>" <?php echo esc_attr(($rbfw_enable_md_type_item_qty=='yes')?'checked':''); ?>>
+						<span class="slider round"></span>
+					</label>
+				</section>
 
-function rbfw_frontend_display_tab_content($rbfw_id){
-	$rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : '';
-	$rbfw_available_qty_info_switch = get_post_meta( $rbfw_id, 'rbfw_available_qty_info_switch', true ) ? get_post_meta( $rbfw_id, 'rbfw_available_qty_info_switch', true ) : 'no';
-	$rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
-	$rbfw_enable_md_type_item_qty = get_post_meta( $rbfw_id, 'rbfw_enable_md_type_item_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_md_type_item_qty', true ) : 'no';
-	?>
-
-	<div class="mp_tab_item " data-tab-item="#rbfw_frontend_display">
-		<h2  class="h5 text-white bg-primary mb-1 rounded-top"><?php echo esc_html__( 'Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-		<section class="component d-flex justify-content-between align-items-center mb-2">
-			<div class="w-50 d-flex justify-content-between align-items-center">
-				<label class=""><?php esc_html_e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span><?php esc_html_e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></i></label>
+				<section >
+					<div>
+						<label><?php _e( 'Enable Multiple Extra Service Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<span><?php  _e( 'Enable/Disable multiple service quantity selection. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<label class="switch">
+						<input type="checkbox" name="rbfw_enable_extra_service_qty" value="<?php echo esc_attr($rbfw_enable_extra_service_qty); ?>" <?php echo esc_attr(($rbfw_enable_extra_service_qty=='yes')?'checked':''); ?>>
+						<span class="slider round"></span>
+					</label>
+				</section>
+				
+				<script>
+					jQuery('input[name=rbfw_available_qty_info_switch]').click(function(){
+						var status = jQuery(this).val();
+						
+						if(status == 'yes') {
+							jQuery(this).val('no');
+						}  
+						if(status == 'no') {
+							jQuery(this).val('yes'); 
+						}
+					});
+					jQuery('input[name=rbfw_enable_md_type_item_qty]').click(function(){
+						var status = jQuery(this).val();
+						
+						if(status == 'yes') {
+							jQuery(this).val('no');
+						}  
+						if(status == 'no') {
+							jQuery(this).val('yes'); 
+						}
+					});
+					jQuery('input[name=rbfw_enable_extra_service_qty]').click(function(){
+						var status = jQuery(this).val();
+						
+						if(status == 'yes') {
+							jQuery(this).val('no');
+						}  
+						if(status == 'no') {
+							jQuery(this).val('yes'); 
+						}
+					});
+				</script>
 			</div>
-			<div class="w-50 d-flex justify-content-between align-items-center">
-				<div class="rbfw_switch_wrapper rbfw_m_0">
-					<div class="rbfw_switch">
-						<label for="rbfw_available_qty_info_switch_on" class="<?php if ( $rbfw_available_qty_info_switch == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_available_qty_info_switch" class="rbfw_available_qty_info_switch" value="yes" id="rbfw_available_qty_info_switch_on" <?php if ( $rbfw_available_qty_info_switch == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_available_qty_info_switch_off" class="<?php if ( $rbfw_available_qty_info_switch != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_available_qty_info_switch" class="rbfw_available_qty_info_switch" value="no" id="rbfw_available_qty_info_switch_off" <?php if ( $rbfw_available_qty_info_switch != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-					</div>
-				</div>
-			</div>
-		</section>
+			<?php
+			}
+		}
 
-		<div class="rbfw_switch_md_type_item_qty" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort' ) { echo 'style="display:none"'; } ?>>
-			<section class="component d-flex justify-content-between align-items-center mb-2">
-				<div class="w-50 d-flex justify-content-between align-items-center">
-					<label class=""><?php esc_html_e( 'Enable Multiple Item Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span><?php esc_html_e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></i></label>
-				</div>
-				<div class="w-50 d-flex justify-content-between align-items-center">
-					<div class="rbfw_switch_wrapper rbfw_m_0">
-						<div class="rbfw_switch">
-							<label for="rbfw_enable_md_type_item_qty_on" class="<?php if ( $rbfw_enable_md_type_item_qty == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_md_type_item_qty" class="rbfw_enable_md_type_item_qty" value="yes" id="rbfw_enable_md_type_item_qty_on" <?php if ( $rbfw_enable_md_type_item_qty == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_md_type_item_qty_off" class="<?php if ( $rbfw_enable_md_type_item_qty != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_md_type_item_qty" class="rbfw_enable_md_type_item_qty" value="no" id="rbfw_enable_md_type_item_qty_off" <?php if ( $rbfw_enable_md_type_item_qty != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-						</div>
-					</div>
-				</div>
-			</section>
-			<section class="component d-flex justify-content-between align-items-center mb-2">
-				<div class="w-50 d-flex justify-content-between align-items-center">
-					<label class=""><?php esc_html_e( 'Enable Multiple Extra Service Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span><?php esc_html_e( 'Enable/Disable multiple service quantity selection. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></i></label>
-				</div>
-				<div class="w-50 d-flex justify-content-between align-items-center">
-					<div class="rbfw_switch_wrapper rbfw_switch_extra_service_qty" <?php if ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display: none"'; } ?>>
-						<div class="rbfw_switch">
-							<label for="rbfw_enable_extra_service_qty_on" class="<?php if ( $rbfw_enable_extra_service_qty == 'yes' ) { echo 'active'; } ?>"><input type="radio" name="rbfw_enable_extra_service_qty" class="rbfw_enable_extra_service_qty" value="yes" id="rbfw_enable_extra_service_qty_on" <?php if ( $rbfw_enable_extra_service_qty == 'yes' ) { echo 'Checked'; } ?>> <span>On</span></label><label for="rbfw_enable_extra_service_qty_off" class="<?php if ( $rbfw_enable_extra_service_qty != 'yes' ) { echo 'active'; } ?> off"><input type="radio" name="rbfw_enable_extra_service_qty" class="rbfw_enable_extra_service_qty" value="no" id="rbfw_enable_extra_service_qty_off" <?php if ( $rbfw_enable_extra_service_qty != 'yes' ) { echo 'Checked'; } ?>> <span>Off</span></label>
-						</div>
-					</div>
-				</div>
-			</section>
-		</div>
-	</div>
-	<?php
-}
-
-/*********************************
- * End: Front-end Display Tab
- * ******************************/
+		new RBFW_Front_End_Display();
+	}
