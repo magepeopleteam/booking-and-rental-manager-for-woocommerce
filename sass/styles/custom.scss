@@ -256,9 +256,13 @@
             margin-bottom: 20px;
             header{
                 display: flex;
-                justify-content: space-between;
-                background-color: $color-light;
+                justify-content: start;
+                align-items: center;
                 padding: 10px;
+                gap: 15px;
+                label{
+                    margin: 0;
+                }
             }
             .variations-inner-table{
                 padding: 10px;
