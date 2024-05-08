@@ -124,7 +124,7 @@ function rbfw_save_meta_box_data( $post_id ) {
         update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
         update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
         update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
-        update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
+       // update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
         update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );
 
         update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
