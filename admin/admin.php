@@ -12,6 +12,7 @@ require_once RBFW_PLUGIN_DIR . '/admin/settings/Template.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Gallery.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Front_End_Display.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Faq.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/Variations.php';
 require_once RBFW_PLUGIN_DIR . '/admin/taxonomy.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings.php';
 require_once RBFW_PLUGIN_DIR . '/admin/post_meta_save.php';
