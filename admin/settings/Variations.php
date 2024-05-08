@@ -50,14 +50,8 @@
                 $rbfw_variations_data = get_post_meta( $post_id, 'rbfw_variations_data', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];
             ?>
                 <section class="rbfw_variations_table_wrap <?php echo esc_attr(($rbfw_enable_variations == 'yes')? 'show':'hide'); ?>">
-                    <table class="form-table rbfw_variations_table">
-                        <thead>
-                            <tr>
-                                <th><?php esc_html_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                <th><?php esc_html_e( 'Value(s)', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                <th><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            </tr>
-                        </thead>
+                    <div class="form-table rbfw_variations_table">
+
                         <tbody class="rbfw_variations_table_body ui-sortable">
                         <?php
                         if(! empty($rbfw_variations_data)) :
@@ -65,13 +59,16 @@
                         foreach ($rbfw_variations_data as $key => $value):
                             $selected_value = !empty($value['selected_value']) ? $value['selected_value'] : '';
                         ?>
-                            <tr class="rbfw_variations_table_row" data-key="<?php echo esc_attr($i); ?>">
+                            <div class="rbfw_variations_table_row" data-key="<?php echo esc_attr($i); ?>">
 
-                                <td>
-                                    <input type="text" name="rbfw_variations_data[<?php echo esc_attr($i); ?>][field_label]" value="<?php echo esc_attr( $value['field_label'] ); ?>" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-                                    <input type="hidden" name="rbfw_variations_data[<?php echo esc_attr($i); ?>][field_id]" value="rbfw_variation_id_<?php echo esc_attr($i); ?>">
-                                </td>
-                                <td>
+                                <header>
+                                    <label for="">Field Label</label>
+                                    <div>
+                                        <input type="text" name="rbfw_variations_data[<?php echo esc_attr($i); ?>][field_label]" value="<?php echo esc_attr( $value['field_label'] ); ?>" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                        <input type="hidden" name="rbfw_variations_data[<?php echo esc_attr($i); ?>][field_id]" value="rbfw_variation_id_<?php echo esc_attr($i); ?>">
+                                    </div>
+                                </header>
+                                <div class=variations-inner-table>
                                     <table class="rbfw_variations_value_table">
                                         <thead>
                                             <th><?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
@@ -114,25 +111,26 @@
                                     </table>
                                     <hr>
                                     <button class="add-new-variation-value ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-                                </td>
-                                <td>
-                                    <div class="mp_event_remove_move">
-                                        <button class="button remove-rbfw_variations_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
-                                        <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
-                                    </div>
-                                </td>
-                            </tr>
+                                </div>
+                                <div class="mp_event_remove_move">
+                                    <button class="remove-rbfw_variations_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
+                                    <!-- <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div> -->
+                                </div>
+                            </div>
                         <?php
                         $i++;
                         endforeach;
                         else:
                         ?>
-                            <tr class="rbfw_variations_table_row" data-key="0">
-                                <td>
-                                    <input type="text" name="rbfw_variations_data[0][field_label]" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
-                                    <input type="hidden" name="rbfw_variations_data[0][field_id]" value="rbfw_variation_id_0">
-                                </td>
-                                <td>
+                            <div class="rbfw_variations_table_row" data-key="0">
+                                <header>
+                                    <label for="">Field Label</label>
+                                    <div>
+                                        <input type="text" name="rbfw_variations_data[0][field_label]" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                        <input type="hidden" name="rbfw_variations_data[0][field_id]" value="rbfw_variation_id_0">
+                                    </div>
+                                </header>
+                                <div class="variations-inner-table">
                                     <table class="rbfw_variations_value_table">
                                         <thead>
                                             <th><?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
@@ -164,20 +162,17 @@
                                                 </td>
                                             </tr>
                                         </tbody>
-                                    </table>
-                                    <hr>
-                                    <button class="add-new-variation-value ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-                                </td>
-                                <td>
-                                    <div class="mp_event_remove_move">
-                                        <button class="button remove-rbfw_variations_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
-                                        <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </table> 
+                                    <button class="add-new-variation-value ppof-button mt-2"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                </div>
+                                <div class="mp_event_remove_move">
+                                    <button class="remove-rbfw_variations_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
+                                    <!-- <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div> -->
+                                </div>
+                            </div>
                         <?php endif; ?>
                         </tbody>
-                    </table>
+                    </div>
                     <button id="add-new-variation" class="ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Variation', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                 </section>
             <?php
@@ -230,7 +225,7 @@
                                 let rbfw_variations_table_last_row = jQuery('.rbfw_variations_table .rbfw_variations_table_row:last-child()');
                                 let rbfw_variations_table_last_data_key = parseInt(rbfw_variations_table_last_row.attr('data-key'));
                                 let rbfw_variations_table_new_data_key = rbfw_variations_table_last_data_key + 1;
-                                let rbfw_variations_table_row = '<tr class="rbfw_variations_table_row" data-key="'+rbfw_variations_table_new_data_key+'"><td><input type="text" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_label]" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>"><input type="hidden" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_id]" value="rbfw_variation_id_'+rbfw_variations_table_new_data_key+'"></td><td><table class="rbfw_variations_value_table"><thead><th><?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th><th><?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></th><th> <?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?> <div class="rbfw_tooltip"><i class="fa-solid fa-circle-info"></i><span class="rbfw_tooltiptext"><?php esc_html_e( 'The selected value will be set as a default value in the front end.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></div></th><th><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th></thead><tbody class="rbfw_variations_value_table_tbody"><tr class="rbfw_variations_value_table_row" data-key="0"><td><input type="text" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][name]" placeholder="<?php esc_attr_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?>" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][quantity]" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><input type="checkbox" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr></tbody></table><hr><button class="add-new-variation-value ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
+                                let rbfw_variations_table_row = '<div class=rbfw_variations_table_row data-key="'+rbfw_variations_table_new_data_key+'"><header><label for="">Field Label</label><div><input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_label]"placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>"> <input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_id]"type=hidden value="rbfw_variation_id_'+rbfw_variations_table_new_data_key+'"></div></header><div class=variations-inner-table><table class=rbfw_variations_value_table><thead><th><?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?><th><?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?><th><?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?><div class=rbfw_tooltip><i class="fa-solid fa-circle-info"></i><span class=rbfw_tooltiptext><?php esc_html_e( 'The selected value will be set as a default value in the front end.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></div><th><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?><tbody class=rbfw_variations_value_table_tbody><tr class=rbfw_variations_value_table_row data-key=0><td><input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][name]"placeholder="<?php esc_attr_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?>"class=rbfw_variation_value><td><input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][quantity]"placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"type=number><td><input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][selected_value]"type=checkbox class=rbfw_variation_selected_value><td><div class=mp_event_remove_move><button class="button remove-rbfw_variations_value_table_row"type=button><i class="fa-solid fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fa-arrows-alt fas"></i></div></div></table><button class="add-new-variation-value mt-2 ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button></div><div class=mp_event_remove_move><button class=remove-rbfw_variations_table_row type=button><i class="fa-solid fa-trash-can"></i></button></div></div>';
                                 let rbfw_variations_table_add_new_row = jQuery('.rbfw_variations_table').append(rbfw_variations_table_row);
                             }
                             else{
@@ -305,7 +300,7 @@
                                 e.preventDefault();
                                 e.stopImmediatePropagation();
                                 if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
-                                    jQuery(this).parents('tr').remove();
+                                    jQuery(this).parent().parent().remove();
                                 } else {
                                     return false;
                                 }

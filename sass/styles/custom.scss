@@ -250,4 +250,31 @@
             }
         }
     }
+    .rbfw_variations_table{
+        .rbfw_variations_table_row{
+            border: 1px solid $color-light;
+            margin-bottom: 20px;
+            header{
+                display: flex;
+                justify-content: space-between;
+                background-color: $color-light;
+                padding: 10px;
+            }
+            .variations-inner-table{
+                padding: 10px;
+            }
+            .mp_event_remove_move{
+                text-align: right;
+                display: flex;
+                justify-content: end;
+                button{
+                    display: inline-block;
+                    background-color: $color-primary;
+                    color: $color-white;
+                    border-radius: 5px 0 0 0 ;
+                }
+            }
+        }
+    }
+    
 }
