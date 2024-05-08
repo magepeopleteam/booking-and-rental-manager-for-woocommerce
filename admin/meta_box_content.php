@@ -869,7 +869,7 @@ function rbfw_off_days_config( $post_id ) {
 /*********************************
  * Start: Variations Tab
  * ******************************/
-add_action( 'rbfw_meta_box_tab_name', 'rbfw_add_variations_tab_name' , 80);
+//add_action( 'rbfw_meta_box_tab_name', 'rbfw_add_variations_tab_name' , 80);
 
 function rbfw_add_variations_tab_name($rbfw_id){
 	$rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : '';
@@ -882,7 +882,7 @@ function rbfw_add_variations_tab_name($rbfw_id){
 	<?php
 }
 
-add_action( 'rbfw_meta_box_tab_content', 'rbfw_add_variations_tab_content' , 80);
+//add_action( 'rbfw_meta_box_tab_content', 'rbfw_add_variations_tab_content' , 80);
 
 function rbfw_add_variations_tab_content($rbfw_id){
 	$rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : '';
