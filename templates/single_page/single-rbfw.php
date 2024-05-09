@@ -34,8 +34,8 @@ if ( wp_is_block_theme() ) {  ?>
 
 $post_id = get_the_id();
 
-$rbfw_inventory = get_post_meta($post_id,'rbfw_inventory',true);
-/*echo '<pre>';
+/*$rbfw_inventory = get_post_meta($post_id,'rbfw_inventory',true);
+echo '<pre>';
 print_r($rbfw_inventory);
 echo '<pre>';exit;*/
 

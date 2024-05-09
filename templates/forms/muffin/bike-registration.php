@@ -288,6 +288,7 @@ if($rbfw_enable_variations == 'yes'){
                             <input type="hidden"  name="rbfw_pickup_end_time" id="dropoff_time" value="<?php echo $rbfw_event_end_time; ?>"/>
                         <?php } ?>
 
+
                         <?php if ($rbfw_enable_md_type_item_qty == 'yes' && $item_stock_quantity > 0) { ?>
                             <div class="item">
                                 <div class="rbfw-single-right-heading">
