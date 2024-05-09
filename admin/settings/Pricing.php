@@ -22,8 +22,8 @@
 
 			public function section_header(){
                 ?>
-                    <h2 class="mp_tab_item_title"><?php echo esc_html__('Template Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-                    <p class="mp_tab_item_description"><?php echo esc_html__('Here you can configure template Settings.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    <h2 class="mp_tab_item_title"><?php echo esc_html__('Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                    <p class="mp_tab_item_description"><?php echo esc_html__('Here you can configure price.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         
                 <?php
             }
@@ -356,7 +356,7 @@
 			?>
 				<div class="mpStyle mp_tab_item" data-tab-item="#travel_pricing">
 					<?php $this->section_header(); ?>
-					<?php $this->panel_header('Template Settings','Template Settings'); ?>
+					<?php $this->panel_header('Price Settings','Price Settings'); ?>
 					<?php $this->rent_type($post_id); ?>
 					<?php $this->single_day_table($post_id); ?>
 					<?php $this->resort_price_config($post_id); ?>
