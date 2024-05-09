@@ -365,9 +365,14 @@
 				
 				?>
 				<section class="rbfw_enable_start_end_date_switch_row" <?php if ( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' || $rbfw_item_type == 'resort') { echo 'style="display:none"'; } ?>>
-					<label>
-						<?php esc_html_e( 'Start & End Date/Time:', 'booking-and-rental-manager-for-woocommerce' ); ?>
-					</label>
+					<div>
+						<label>
+							<?php esc_html_e( 'Rent Specific day', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</label>
+						<span>
+							<?php _e('Do you want to offer this for specific day', 'booking-and-rental-manager-for-woocommerce'); ?>
+						</span>
+					</div>
 					<div class="rbfw_switch rbfw_switch_return_date">
 						<label for="rbfw_enable_start_end_date_on" data-value="on" class="rbfw_enable_start_end_date_label <?php if ( $rbfw_enable_start_end_date == 'yes' ) { echo 'active'; } ?>">
 							<input type="radio" name="rbfw_enable_start_end_date" class="rbfw_enable_start_end_date" value="yes" id="rbfw_enable_start_end_date_on" <?php if ( $rbfw_enable_start_end_date == 'yes' ) { echo 'Checked'; } ?>>
