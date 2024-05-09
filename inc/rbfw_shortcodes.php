@@ -50,8 +50,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'post_type' => 'rbfw_item',
         'posts_per_page' => -1,
         'meta_key' => $meta_key,
-        'order' => $order,
         'orderby' => $orderby,
+        'order' => $order,
         'meta_query' => array(
             'relation' => 'OR',
             $rent_type,
