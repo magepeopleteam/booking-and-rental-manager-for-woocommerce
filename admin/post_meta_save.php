@@ -109,7 +109,7 @@ function rbfw_save_meta_box_data( $post_id ) {
 
 
 
-        update_post_meta( $post_id, 'rbfw_enable_start_end_date', $rbfw_enable_start_end_date );
+        //update_post_meta( $post_id, 'rbfw_enable_start_end_date', $rbfw_enable_start_end_date );
         update_post_meta( $post_id, 'rbfw_event_start_date', $rbfw_event_start_date );
         update_post_meta( $post_id, 'rbfw_event_start_time', $rbfw_event_start_time );
         update_post_meta( $post_id, 'rbfw_event_end_date', $rbfw_event_end_date );
@@ -127,7 +127,7 @@ function rbfw_save_meta_box_data( $post_id ) {
        // update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
         update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );
 
-        update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
+        //update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 
         update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
         update_post_meta( $post_id, 'shipping_enable', $shipping_enable );

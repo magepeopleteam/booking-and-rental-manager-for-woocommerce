@@ -41,7 +41,80 @@
                     </section>
                 <?php
             }
+            public function regular_fixed_date($post_id){
+				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd'];
+				$rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
+				$rbfw_enable_start_end_date  = get_post_meta( $post_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $post_id, 'rbfw_enable_start_end_date', true ) : 'yes';
+				$rbfw_event_start_date  = get_post_meta( $post_id, 'rbfw_event_start_date', true ) ? get_post_meta( $post_id, 'rbfw_event_start_date', true ) : '';
+				$rbfw_event_start_time  = get_post_meta( $post_id, 'rbfw_event_start_time', true ) ? get_post_meta( $post_id, 'rbfw_event_start_time', true ) : '';
+				$rbfw_event_end_date  = get_post_meta( $post_id, 'rbfw_event_end_date', true ) ? get_post_meta( $post_id, 'rbfw_event_end_date', true ) : '';
+				$rbfw_event_end_time  = get_post_meta( $post_id, 'rbfw_event_end_time', true ) ? get_post_meta( $post_id, 'rbfw_event_end_time', true ) : '';
+				$rbfw_item_stock_quantity = !empty(get_post_meta( get_the_id(), 'rbfw_item_stock_quantity', true )) ? get_post_meta( get_the_id(), 'rbfw_item_stock_quantity', true ) : 0;
+				
+				?>
+				<section>
+					<div>
+						<label>
+							<?php esc_html_e( 'Rent Specific day', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</label>
+						<span>
+							<?php _e('Do you want to offer this for specific day', 'booking-and-rental-manager-for-woocommerce'); ?>
+						</span>
+					</div>
+                    
+                    <label class="switch">
+                        <input type="checkbox" name="rbfw_enable_start_end_date" value="<?php echo esc_attr(($rbfw_enable_start_end_date=='yes')?$rbfw_enable_start_end_date:'no'); ?>" <?php echo esc_attr(($rbfw_enable_start_end_date=='yes')?'checked':''); ?>>
+                        <span class="slider round"></span>
+                    </label>
 
+				</section>
+
+				<div class="rbfw-fixed-date <?php echo esc_attr(($rbfw_enable_start_end_date=='yes')?'show':'hide'); ?>">
+					
+						<section>
+							<div class="w-50 d-flex justify-content-between align-items-center">
+								<label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+								<div class=" d-flex justify-content-between align-items-center">
+									<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_start_date" id="rbfw_event_start_date" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" readonly>
+								</div>
+							</div>
+							<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
+								<label for=""><?php esc_html_e( 'Start Time:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+								<div class=" d-flex justify-content-between align-items-center">
+									<input type="time" name="rbfw_event_start_time" id="rbfw_event_start_time" value="<?php echo esc_attr( $rbfw_event_start_time ); ?>">
+
+								</div>
+							</div>
+						</section>
+
+						<section>
+							<div class="w-50 d-flex justify-content-between align-items-center">
+								<label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+								<div class=" d-flex justify-content-between align-items-center">
+									<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_end_date" id="rbfw_event_end_date" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
+								</div>
+							</div>
+							<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
+								<label for=""><?php esc_html_e( 'End Time:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+								<div class=" d-flex justify-content-between align-items-center">
+									<input type="time" name="rbfw_event_end_time" id="rbfw_event_end_time" value="<?php echo esc_attr( $rbfw_event_end_time ); ?>">
+								</div>
+							</div>
+						</section>
+					
+				</div>
+
+				
+				<div class='rbfw-item-type '>
+					<div class="rbfw_form_group" data-table="rbfw_item_type_table">
+						<table class="form-table rbfw_item_type_table">
+							
+							<?php echo do_action('rbfw_after_rent_item_type_table_row'); ?>
+						</table>
+					</div>
+				</div>
+				<?php
+			}
 			public function multiple_time_slot_select($post_id){
                 $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
                 $rdfw_available_time = get_post_meta($post_id,'rdfw_available_time',true) ? maybe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];
@@ -86,17 +159,29 @@
 							<?php $this->multiple_time_slot_select($post_id); ?>
 						</div>
 					</section>
+                    <?php $this->regular_fixed_date($post_id); ?>
 			 	</div>
 				<script>
-                        jQuery('input[name=rbfw_time_slot_switch]').click(function(){
-                            var status = jQuery(this).val();
-                            if(status == 'on') {
-                                jQuery(this).val('off') 
-                            }  
-                            if(status == 'off') {
-                                jQuery(this).val('on');  
-                            }
-                        });
+                    jQuery('input[name=rbfw_time_slot_switch]').click(function(){
+                        var status = jQuery(this).val();
+                        if(status == 'on') {
+                            jQuery(this).val('off') 
+                        }  
+                        if(status == 'off') {
+                            jQuery(this).val('on');  
+                        }
+                    });
+                    jQuery('input[name=rbfw_enable_start_end_date]').click(function(){
+                        var status = jQuery(this).val();
+                        if(status == 'yes') {
+                            jQuery(this).val('no');
+                            jQuery('.rbfw-fixed-date').slideUp().removeClass('show').addClass('hide'); 
+                        }  
+                        if(status == 'no') {
+                            jQuery(this).val('yes');
+                            jQuery('.rbfw-fixed-date').slideUp().removeClass('hide').addClass('show');  
+                        }
+                    });
 				</script>
 			<?php
 			}
@@ -118,8 +203,10 @@
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
                     $rbfw_time_slot = isset( $_POST['rbfw_time_slot_switch'] ) ? rbfw_array_strip( $_POST['rbfw_time_slot_switch'] ) : '';
                     $rdfw_available_time = isset( $_POST['rdfw_available_time'] ) ? rbfw_array_strip( $_POST['rdfw_available_time'] ) : [];
+                    $rbfw_enable_start_end_date = isset( $_POST['rbfw_enable_start_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_enable_start_end_date'] ) : 'no';
                     update_post_meta( $post_id, 'rbfw_time_slot_switch', $rbfw_time_slot );
                     update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
+					update_post_meta( $post_id, 'rbfw_enable_start_end_date', $rbfw_enable_start_end_date );
                 }
             }
 		}

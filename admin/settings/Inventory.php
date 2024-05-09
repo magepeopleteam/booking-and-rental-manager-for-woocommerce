@@ -6,8 +6,8 @@
 	if (!defined('ABSPATH')) {
 		die;
 	} 
-	if (!class_exists('RBFW_Variations')) {
-        class RBFW_Variations{
+	if (!class_exists('RBFW_Inventory')) {
+        class RBFW_Inventory{
             public function __construct() {
                 add_action( 'rbfw_meta_box_tab_name', [$this,'add_tab_menu'] );
                 add_action( 'rbfw_meta_box_tab_content', [$this,'add_tabs_content'] );
@@ -19,14 +19,14 @@
 	            $rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
 	
             ?>
-                <li class="<?php echo $rbfw_enable_variations ?>" data-target-tabs="#rbfw_variations" <?php if( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; }?>><i class="fa-solid fa-table-cells-large"></i><?php esc_html_e('Variations', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li class="<?php echo $rbfw_enable_variations ?>" data-target-tabs="#rbfw_variations" <?php if( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; }?>><i class="fa-solid fa-table-cells-large"></i><?php esc_html_e('Inventory', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
             <?php
             }
 
 			public function section_header(){
                 ?>
-                    <h2 class="mp_tab_item_title"><?php echo esc_html__('Variation Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-                    <p class="mp_tab_item_description"><?php echo esc_html__('Here you can configure variation Settings.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    <h2 class="mp_tab_item_title"><?php echo esc_html__('Inventory Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                    <p class="mp_tab_item_description"><?php echo esc_html__('Here you can configure Inventory Settings.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         
                 <?php
             }
@@ -178,9 +178,28 @@
             <?php
             }
 
+            public function stock_settings($post_id){
+				$rbfw_item_stock_quantity  = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) ? get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) : '';
+            ?>
+                <section>
+                    <div>
+                        <label>
+                            <?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </label>
+                        <span><?php esc_html_e( 'Add stock quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                    </div>
+                    <div>
+                        <input type="number" name="rbfw_item_stock_quantity" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity); ?>">
+                    </div>
+                </section>
+            <?php
+            }
+
+
             public function variation_table_switch_on_off($post_id){
 				$rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
             ?>
+                
                 <section >
 					<div>
 						<label><?php _e( 'Item variation', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
@@ -199,7 +218,8 @@
             ?>
                 <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_variations" data-tab-item="#rbfw_variations" <?php if($rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
                     <?php $this->section_header(); ?>
-					<?php $this->panel_header('Variation Settings','Variation Settings'); ?>
+					<?php $this->panel_header('Inventory Settings','Inventory Settings'); ?>
+                    <?php $this->stock_settings($post_id); ?>
                     <?php $this->variation_table_switch_on_off($post_id); ?>
                     <?php $this->variation_settings($post_id); ?>
                 </div>
@@ -339,12 +359,14 @@
                 }
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$rbfw_enable_variations = isset( $_POST['rbfw_enable_variations'] ) ? $_POST['rbfw_enable_variations']  : 'no';
+					$rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? $_POST['rbfw_item_stock_quantity']  : '';
 					
 					update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
+					update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 					
                 }
             }
         }
 
-        new RBFW_Variations();
+        new RBFW_Inventory();
     }
