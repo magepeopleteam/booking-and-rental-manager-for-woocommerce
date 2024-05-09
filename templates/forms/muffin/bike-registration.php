@@ -338,7 +338,8 @@ if($rbfw_enable_variations == 'yes'){
                         $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
                         ?>
 
-                        <?php if(!empty($option_value)){ ?>
+                        <?php if(!empty($option_value)){  ?>
+
                             <div class="multi-service-category-section">
                                 <div class="rbfw-single-right-heading">
                                     <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>

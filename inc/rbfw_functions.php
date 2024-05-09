@@ -2028,17 +2028,25 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     /*start service inventory*/
 
     $rbfw_service_category_price = get_post_meta($post_id, 'rbfw_service_category_price', true);
-    $service_stock = [];
-    foreach($rbfw_service_category_price as $key=>$item1){
-        $cat_title = $item1['cat_title'];
-        $service_q = [];
-        foreach ($item1['cat_services'] as $key1=>$single){
-            foreach($date_range as $date){
-                $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory));
+
+    if (!empty($rbfw_service_category_price)) {
+        $service_stock = [];
+        foreach($rbfw_service_category_price as $key=>$item1){
+            $cat_title = $item1['cat_title'];
+            $service_q = [];
+            foreach ($item1['cat_services'] as $key1=>$single){
+                if($single['title']){
+                    foreach($date_range as $date){
+                        $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory));
+                    }
+                    $service_stock[] = $single['stock_quantity'] - max(array_column($service_q, $single['title']));
+                }
             }
-            $service_stock[] = $single['stock_quantity'] - max(array_column($service_q, $single['title']));
         }
     }
+
+
+
     /*end service inventory*/
 
     /*start extra service inventory*/
