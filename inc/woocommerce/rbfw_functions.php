@@ -1045,10 +1045,10 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
             $zdata[ $key ]['rbfw_order_status']       = $order_status;
             $zdata[ $key ]['rbfw_payment_method']     = $payment_method;
             $zdata[ $key ]['rbfw_user_id']            = $user_id;
-            $zdata[ $key ]['rbfw_billing_name']       = $order_meta['_billing_first_name'][0] . ' ' . $order_meta['_billing_last_name'][0];
-            $zdata[ $key ]['rbfw_billing_email']      = $order_meta['_billing_email'][0];
-            $zdata[ $key ]['rbfw_billing_phone']      = $order_meta['_billing_phone'][0];
-            $zdata[ $key ]['rbfw_billing_address']    = $order_meta['_billing_address_1'][0] . ' ' . $order_meta['_billing_address_2'][0];
+            $zdata[ $key ]['rbfw_billing_name']       = isset($order_meta['_billing_first_name'][0])?$order_meta['_billing_first_name'][0]:'' . ' ' . isset($order_meta['_billing_last_name'][0])?$order_meta['_billing_last_name'][0]:'';
+            $zdata[ $key ]['rbfw_billing_email']      = isset($order_meta['_billing_email'][0])?$order_meta['_billing_email'][0]:'';
+            $zdata[ $key ]['rbfw_billing_phone']      = isset($order_meta['_billing_phone'][0])?$order_meta['_billing_phone'][0]:'';
+            $zdata[ $key ]['rbfw_billing_address']    = isset($order_meta['_billing_address_1'][0])?$order_meta['_billing_address_1'][0]:'' . ' ' . isset($order_meta['_billing_address_2'][0])?$order_meta['_billing_address_2'][0]:'';
             $zdata[ $key ]['start_date']              = $start_date;
             $zdata[ $key ]['end_date']                = $end_date;
             $zdata[ $key ]['rbfw_id']                 = $rbfw_id;
