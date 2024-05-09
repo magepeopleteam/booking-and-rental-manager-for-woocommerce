@@ -683,6 +683,7 @@
   display: inline-block;
   width: 60px;
   height: 24px;
+  margin: 0;
 }
 #rbfw_add_meta_box .switch input {
   opacity: 0;

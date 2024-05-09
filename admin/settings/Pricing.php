@@ -71,6 +71,26 @@
 			<?php
 			}
 
+			public function category_service_price ($post_id){
+				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd']; 
+				$mdedo = ( $rbfw_item_type != 'resort' && $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment')?'block':'none'; 
+			?>
+				<div class="rbfw_general_price_config_wrapper" style="display:<?php echo $mdedo ?> ">
+					<?php $this->panel_header('Category service price ','Category service price '); ?>
+					<?php
+					$options = array(
+						'id'          => 'rbfw_service_category_price',
+						'type'        => 'md_service_category_price',
+						'placeholder'        => 'Service Name',
+					);
+					$option_value         = get_post_meta($post_id, $options['id'], true);
+					$options['value']      = is_serialized($option_value) ? unserialize($option_value) : $option_value;
+					echo rbfw_field_generator( 'md_service_category_price', $options );
+					?>
+				</div>
+			<?php
+			}
+
 			public function single_day_table($post_id){
 				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd'];
 			?>
@@ -353,7 +373,115 @@
 				<?php
 			}
 
-			
+			public function general_price_config($post_id){
+				$rbfw_enable_hourly_rate = get_post_meta($post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_hourly_rate', true ) : 'no';
+				$rbfw_enable_daily_rate  = get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_daily_rate', true ) : 'yes';
+				$rbfw_daily_rate  = get_post_meta( $post_id, 'rbfw_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_daily_rate', true ) : 'yes';
+				$rbfw_hourly_rate  = get_post_meta( $post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_hourly_rate', true ) : 'yes';
+				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd'];
+				$mdedo = ( $rbfw_item_type != 'resort' && $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment')?'block':'none';
+				$rbfw_enable_daywise_price  = get_post_meta( get_the_id(), 'rbfw_enable_daywise_price', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_daywise_price', true ) : 'no';
+				$mdedo_eekday = ( $rbfw_item_type != 'resort' && $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment' && $rbfw_enable_daywise_price=='yes')?'block':'none';
+			?>
+			<div class="rbfw_general_price_config_wrapper" style="display: <?php echo $mdedo ?>;">
+				<?php do_action( 'rbfw_before_general_price_table' ); ?>
+				<?php $this->panel_header('General Price Configuration','General Price Configuration'); ?>
+				<?php do_action( 'rbfw_before_general_price_table_row' ); ?>
+
+				<section >
+					<div >
+						<label for=""><?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+					</div>
+					<div>
+						<label class="switch">
+							<input type="checkbox" name="rbfw_enable_daily_rate" value="<?php echo esc_attr($rbfw_enable_daily_rate); ?>" <?php echo esc_attr(($rbfw_enable_daily_rate=='yes')?'checked':''); ?>>
+							<span class="slider round"></span>
+						</label>
+						<span class="rbfw_daily_rate_input ms-2" >
+							<input type="number" name='rbfw_daily_rate' value="<?php echo esc_html( $rbfw_daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', '' ); ?>" <?php echo ( $rbfw_enable_daily_rate == 'no' ) ? 'disabled':''; ?>>
+						</span>
+					</div>
+				</section>
+
+				<section >
+					<div >
+						<label for=""><?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+					</div>
+					<div>
+						<label class="switch">
+							<input type="checkbox" name="rbfw_enable_hourly_rate" value="<?php echo esc_attr($rbfw_enable_hourly_rate); ?>" <?php echo esc_attr(($rbfw_enable_hourly_rate=='yes')?'checked':''); ?>>
+							<span class="slider round"></span>
+						</label>
+						<span class="rbfw_hourly_rate ms-2" >
+							<input type="number" name='rbfw_hourly_rate' value="<?php echo esc_html( $rbfw_hourly_rate ); ?>" placeholder="<?php esc_html_e( 'Hourly Price', '' ); ?>" <?php echo ( $rbfw_enable_hourly_rate == 'no' ) ? 'disabled':''; ?>>
+						</span>
+					</div>
+				</section>
+
+				
+
+				<section >
+					<div class="w-50 d-flex justify-content-between align-items-center">
+						<label for="">
+							<?php esc_html_e( 'Day-wise Price Configuration:', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<i class="fas fa-question-circle tool-tips"></i>
+						</label>
+					</div>
+					<div class="w-50 ms-5 d-flex justify-content-end align-items-center">
+						<div class="rbfw_switch_wrapper rbfw_switch_daywise_price">
+							<div class="rbfw_switch">
+								<label for="rbfw_enable_daywise_price_on" class="<?php if ( $rbfw_enable_daywise_price == 'yes' ) { echo 'active'; } ?>">
+									<input type="radio" name="rbfw_enable_daywise_price" class="rbfw_enable_daywise_price" value="yes" id="rbfw_enable_daywise_price_on" <?php if ( $rbfw_enable_daywise_price == 'yes' ) { echo 'Checked'; } ?>>
+									<span>On</span>
+								</label>
+								<label for="rbfw_enable_daywise_price_off" class="<?php if ( $rbfw_enable_daywise_price != 'yes' ) { echo 'active'; } ?> off">
+									<input type="radio" name="rbfw_enable_daywise_price" class="rbfw_enable_daywise_price" value="no" id="rbfw_enable_daywise_price_off" <?php if ( $rbfw_enable_daywise_price != 'yes' ) { echo 'Checked'; } ?>>
+									<span>Off</span>
+								</label>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<div class="day-wise-price-configuration">
+					<div class="rbfw_week_table" style="display: <?php echo $mdedo_eekday ?>">
+						<h2 class="h5 text-white bg-primary mb-1 rounded-top">
+							<?php echo esc_html_e( 'Day-wise Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</h2>
+						<section class="component d-flex justify-content-between align-items-center mb-2">
+							<table class='form-table'>
+								<?php do_action( 'rbfw_before_week_price_table_row' ); ?>
+								<thead>
+								<tr>
+									<th scope="row"><?php esc_html_e( 'Day Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+									<th scope="row"><?php esc_html_e( 'Enable/Disable', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+								</tr>
+								</thead>
+								<tbody>
+								<?php
+								$this->rbfw_day_row( __( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun' );
+								$this->rbfw_day_row( __( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon' );
+								$this->rbfw_day_row( __( 'Tuesday:', 'booking-and-rental-manager-for-woocommerce' ), 'tue' );
+								$this->rbfw_day_row( __( 'Wednesday:', 'booking-and-rental-manager-for-woocommerce' ), 'wed' );
+								$this->rbfw_day_row( __( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu' );
+								$this->rbfw_day_row( __( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri' );
+								$this->rbfw_day_row( __( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat' );
+								do_action( 'rbfw_after_week_price_table_row' );
+								?>
+								</tbody>
+							</table>
+						</section>
+					</div>
+				</div>
+
+				<?php do_action( 'rbfw_after_general_price_table_row' ); ?>
+				
+				<?php do_action( 'rbfw_after_general_price_table' ); ?>
+			</div>
+			<?php
+			}
 
 			public function add_tabs_content( $post_id ) {
 			?>
@@ -363,8 +491,8 @@
 					<?php $this->rent_type($post_id); ?>
 					<?php $this->single_day_table($post_id); ?>
 					<?php $this->resort_price_config($post_id); ?>
-					
-					<?php include(dirname(__FILE__).'/../templates/mdedo_price.php'); ?>
+					<?php $this->category_service_price($post_id); ?>
+					<?php $this->general_price_config($post_id); ?>
 					<?php $this->extra_service_table($post_id); ?>
 				</div>
 				<script>
@@ -438,6 +566,34 @@
 					rbfw_service_image_addup();
 					// End extra service add image button and remove image button function
 
+					});
+
+					// Daily price
+					jQuery('input[name=rbfw_enable_daily_rate]').click(function(){
+						var status = jQuery(this).val();
+						if(status == 'yes') {
+							jQuery(this).val('no');
+							jQuery('.rbfw_daily_rate_input input').attr("disabled", true);
+						}  
+						if(status == 'no') {
+							jQuery(this).val('yes'); 
+							jQuery('.rbfw_daily_rate_input input').removeAttr("disabled");
+							
+						}
+					});
+
+					// Hourly price
+					jQuery('input[name=rbfw_enable_hourly_rate]').click(function(){
+						var status = jQuery(this).val();
+						if(status == 'yes') {
+							jQuery(this).val('no');
+							jQuery('.rbfw_hourly_rate input').attr("disabled", true);
+						}  
+						if(status == 'no') {
+							jQuery(this).val('yes'); 
+							jQuery('.rbfw_hourly_rate input').removeAttr("disabled");
+							
+						}
 					});
 					
 				</script>
