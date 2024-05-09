@@ -418,16 +418,13 @@
 					</div>
 				</section>
 
-				
-
-				<section >
-					<div class="w-50 d-flex justify-content-between align-items-center">
+				<section>
+					<div>
 						<label for="">
 							<?php esc_html_e( 'Day-wise Price Configuration:', 'booking-and-rental-manager-for-woocommerce' ); ?>
-							<i class="fas fa-question-circle tool-tips"></i>
 						</label>
 					</div>
-					<div class="w-50 ms-5 d-flex justify-content-end align-items-center">
+					<div>
 						<div class="rbfw_switch_wrapper rbfw_switch_daywise_price">
 							<div class="rbfw_switch">
 								<label for="rbfw_enable_daywise_price_on" class="<?php if ( $rbfw_enable_daywise_price == 'yes' ) { echo 'active'; } ?>">
@@ -441,6 +438,10 @@
 							</div>
 						</div>
 					</div>
+					<label class="switch">
+						<input type="checkbox" name="rbfw_enable_daywise_price" value="<?php echo esc_attr($rbfw_enable_daywise_price); ?>" <?php echo esc_attr(($rbfw_enable_daywise_price=='yes')?'checked':''); ?>>
+						<span class="slider round"></span>
+					</label>
 				</section>
 
 				<div class="day-wise-price-configuration">
