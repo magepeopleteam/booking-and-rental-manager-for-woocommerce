@@ -1664,20 +1664,12 @@ input#rbfw_features_search_icon {
 }
 
 .rbfw_switch label.active {
-    background-color: #0073aa;
-    background-image: -khtml-gradient(linear, left top, left bottom, from(#008bce), to(#0073aa));
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #008bce), color-stop(100%, #0073aa));
-    background-image: -webkit-linear-gradient(top, #008bce, #0073aa);
-    background-image: -linear-gradient(top, #008bce, #0073aa);
+    background-color: var(--mage-primary);
     color: #fff;
 }
 
 .rbfw_switch label.active.off {
-    background-color: #0073aa;
-    background-image: -khtml-gradient(linear, left top, left bottom, from(#008bce), to(#0073aa));
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #008bce), color-stop(100%, #0073aa));
-    background-image: -webkit-linear-gradient(top, #008bce, #0073aa);
-    background-image: -linear-gradient(top, #008bce, #0073aa);
+    background-color: var(--mage-primary);
     color: #fff;
 }
 
@@ -2300,6 +2292,9 @@ input.rbfw_time_slot_edit_slot_label {
 
 .rbfw_switch_return_date {
     margin: 5px;
+}
+.rbfw_switch_return_date label{
+    margin:0;
 }
 
 #rbfw_add_meta_box table.form-table.rbfw_item_type_table tr.rbfw_appointment_ondays_row td {

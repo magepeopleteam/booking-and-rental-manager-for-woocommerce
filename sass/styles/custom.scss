@@ -280,5 +280,20 @@
             }
         }
     }
-    
+    .rbfw_switch_return_date{
+        display: inherit;
+        margin: 0;
+        .rbfw_enable_start_end_date_label{
+            margin: 0;
+            padding:3px;
+            span{
+                color: $color-black;
+            }
+            &.active{
+                span{
+                    color: $color-white;
+                }
+            }
+        }
+    }
 }

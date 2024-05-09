@@ -994,5 +994,19 @@
   color: var(--mage-white);
   border-radius: 5px 0 0 0;
 }
+#rbfw_add_meta_box .rbfw_switch_return_date {
+  display: inherit;
+  margin: 0;
+}
+#rbfw_add_meta_box .rbfw_switch_return_date .rbfw_enable_start_end_date_label {
+  margin: 0;
+  padding: 3px;
+}
+#rbfw_add_meta_box .rbfw_switch_return_date .rbfw_enable_start_end_date_label span {
+  color: var(--mage-black);
+}
+#rbfw_add_meta_box .rbfw_switch_return_date .rbfw_enable_start_end_date_label.active span {
+  color: var(--mage-white);
+}
 
 /*# sourceMappingURL=admin.css.map */
