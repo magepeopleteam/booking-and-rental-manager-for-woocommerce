@@ -103,25 +103,9 @@
                 <?php
             }
 
-            public function add_tabs_content( $post_id ) {
+            public function features_category( $post_id ) {
                 ?>
-                    <div class="mpStyle mp_tab_item " data-tab-item="#rbfw_gen_info">
-                        
-                        <?php $this->section_header(); ?>
-                        
-                        <?php $this->panel_header('Basic Settings','Here you can settings basic info.'); ?>
-                        
-                        
-                        <?php $this->shortcode($post_id); ?>
-
-                        <?php $this->select_category($post_id); ?>
-
-                        <?php $this->shipping_enable($post_id); ?>
-
-                        
-
-                        <?php $this->panel_header('Features Category Settings','Here you can configure features category.'); ?>
-
+                    <?php $this->panel_header('Features Category Settings','Here you can configure features category.'); ?>
                         <section>
                             <div class="w-100">
                                 <div class="feature-categories">
@@ -172,6 +156,28 @@
                                 </div>
                             </div>
                         </section>
+                <?php
+            }
+            public function add_tabs_content( $post_id ) {
+                ?>
+                    <div class="mpStyle mp_tab_item " data-tab-item="#rbfw_gen_info">
+                        
+                        <?php $this->section_header(); ?>
+                        
+                        <?php $this->panel_header('Basic Settings','Here you can settings basic info.'); ?>
+                        
+                        
+                        <?php $this->shortcode($post_id); ?>
+
+                        <?php $this->select_category($post_id); ?>
+
+                        <?php $this->shipping_enable($post_id); ?>
+                        
+                        <?php $this->features_category($post_id); ?>
+
+                        
+
+                        
 
                     </div>
 
