@@ -127,9 +127,7 @@
                     <?php $this->select_template( $post_id ); ?>
                     <?php $this->sidebar_testimonial( $post_id ); ?>
                     <?php $this->template_sidebar_content( $post_id ); ?>
-					
-			 	</div>
-
+				</div>
 			<?php
 			}
 
