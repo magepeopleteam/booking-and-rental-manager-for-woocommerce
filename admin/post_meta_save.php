@@ -115,13 +115,13 @@ function rbfw_save_meta_box_data( $post_id ) {
         update_post_meta( $post_id, 'rbfw_event_end_date', $rbfw_event_end_date );
         update_post_meta( $post_id, 'rbfw_event_end_time', $rbfw_event_end_time );
 
-        update_post_meta( $post_id, 'rbfw_enable_hourly_rate', $rbfw_enable_hourly_rate );
-        update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
+       // update_post_meta( $post_id, 'rbfw_enable_hourly_rate', $rbfw_enable_hourly_rate );
+       // update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
         //update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
 
         update_post_meta( $post_id, 'rbfw_enable_dropoff_point', $rbfw_enable_dropoff_point );
 
-        update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
+        //update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
         update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
         update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
        // update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
