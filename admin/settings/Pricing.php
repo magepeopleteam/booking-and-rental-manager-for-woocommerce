@@ -113,11 +113,6 @@
 													<input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_service_category_price[<?php echo $i; ?>][cat_title]" data-key="<?php echo $i; ?>" placeholder="<?php echo esc_attr__('Service Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
 												</div>
 												<div class="service_category_inner_item_wrap sortable">
-	
-	
-	
-	
-	
 													<?php
 													if(!empty($value['cat_services'])){
 														$c = 0;
@@ -165,17 +160,17 @@
 												<i class="fa-solid fa-circle-plus"></i>
 												<?php echo __('Add New Service','booking-and-rental-manager-for-woocommerce'); ?>
 											</span>
-										</div>
-									</td>
-									<td>
-										<?php if($sortable):?>
-											<span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
-										<?php endif; ?>
-										<span class="button tr_remove" onclick="jQuery(this).parent('tr').remove()"><?php echo ($remove_text); ?></span>
-									</td>
-								</tr>
-								<?php
-								$i++;
+									</div>
+								</td>
+								<td>
+									<?php if($sortable):?>
+										<span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
+									<?php endif; ?>
+									<span class="button tr_remove" onclick="jQuery(this).parent('tr').remove()"><?php echo ($remove_text); ?></span>
+								</td>
+							</tr>
+							<?php
+							$i++;
 							endforeach;
 						else:
 							?>
