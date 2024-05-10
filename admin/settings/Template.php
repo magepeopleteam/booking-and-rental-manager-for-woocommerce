@@ -43,12 +43,26 @@
             }
 
 
-			public function add_tabs_content( $post_id ) {
-            ?>
-				<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_template_settings_meta_boxes">
-					<?php $this->section_header(); ?>
-                    <?php $this->panel_header('Template Settings','Template Settings'); ?>
-					<section>
+			public function sidebar_template_enable( $post_id ) {
+                ?>
+                    <section>
+                        <div>
+                            <label>
+                                <?php echo esc_html__( 'Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </label>
+                            <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        </div>
+                        <?php $dt_sidebar_switch = get_post_meta($post_id,'rbfw_dt_sidebar_switch',true);?>
+                        <label class="switch">
+                            <input type="checkbox" name="rbfw_dt_sidebar_switch" value="<?php echo esc_attr(($dt_sidebar_switch=='on')?$dt_sidebar_switch:'off'); ?>" <?php echo esc_attr(($dt_sidebar_switch=='on')?'checked':''); ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </section>
+                <?php
+            }
+			public function select_template( $post_id ) {
+                ?>
+                <section>
 						<label for=""><?php echo esc_html__('Template Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 						<?php  $template =  get_post_meta($post_id, 'rbfw_single_template', true) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default'; ?>
 						<?php $the_template = RBFW_Function::all_details_template(); ?>
@@ -58,6 +72,16 @@
 							<?php endforeach; ?>
 						</select>
 					</section>
+                <?php
+            }
+			public function add_tabs_content( $post_id ) {
+            ?>
+				<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_template_settings_meta_boxes">
+					<?php $this->section_header(); ?>
+                    <?php $this->panel_header('Template Settings','Template Settings'); ?>
+                    <?php $this->sidebar_template_enable( $post_id ); ?>
+                    <?php $this->select_template( $post_id ); ?>
+					
 			 	</div>
 
 			<?php
