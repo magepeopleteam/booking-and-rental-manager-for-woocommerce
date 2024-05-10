@@ -179,15 +179,7 @@
                     </div>
 
                     <script>
-                        jQuery('input[name=rbfw_dt_sidebar_switch]').click(function(){
-                            var status = jQuery(this).val();
-                            if(status == 'on') {
-                                jQuery(this).val('off') 
-                            }  
-                            if(status == 'off') {
-                                jQuery(this).val('on');  
-                            }
-                        });
+                        
 
                         jQuery('input[name=shipping_enable]').click(function(){  
                             var status = jQuery(this).val();
@@ -199,13 +191,7 @@
                             }
                         });
 
-                        function createTestimonial(){
-                            now = jQuery.now();
-
-                            jQuery(".testimonial-clone").clone().appendTo(".testimonials")
-                            .removeClass('testimonial-clone').addClass('testimonial')
-                            .children('.testimonial-field').attr('name','rbfw_dt_sidebar_testimonials['+now+'][rbfw_dt_sidebar_testimonial_text]');
-                        };
+                        
 
                         function createFeatureCategory(){
                             var items=jQuery(".feature-category").find('.feature-category-title').length;

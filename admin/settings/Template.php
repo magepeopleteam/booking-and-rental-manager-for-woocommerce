@@ -128,6 +128,25 @@
                     <?php $this->sidebar_testimonial( $post_id ); ?>
                     <?php $this->template_sidebar_content( $post_id ); ?>
 				</div>
+
+                <script>
+                    jQuery('input[name=rbfw_dt_sidebar_switch]').click(function(){
+                        var status = jQuery(this).val();
+                        if(status == 'on') {
+                            jQuery(this).val('off') 
+                        }  
+                        if(status == 'off') {
+                            jQuery(this).val('on');  
+                        }
+                    });
+
+                    function createTestimonial(){
+                        now = jQuery.now();
+                        jQuery(".testimonial-clone").clone().appendTo(".testimonials")
+                        .removeClass('testimonial-clone').addClass('testimonial')
+                        .children('.testimonial-field').attr('name','rbfw_dt_sidebar_testimonials['+now+'][rbfw_dt_sidebar_testimonial_text]');
+                    };
+                </script>
 			<?php
 			}
 
