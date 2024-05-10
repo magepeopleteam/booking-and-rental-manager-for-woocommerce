@@ -41,45 +41,51 @@
                 <?php
             }
 
-            public function multiple_category_select($post_id){
-                
+
+           
+
+            public function shortcode($post_id){
+                ?>
+                    <section>
+                        <div>
+                            <label>
+                                <?php echo esc_html__( 'Add To Cart Form Shortcode', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </label>
+                            <span><?php echo esc_html__('This short code you can put anywhere in your content.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        </div>
+                        <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $post_id; ?>']</code>
+                    </section>
+                <?php
+            }
+
+            public function select_category($post_id){
                 $rbfw_categories = get_post_meta($post_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_categories', true)) : [];
                 ?>
-                <select name="rbfw_categories[]" multiple class="category2">
-                    <?php
-                    $terms = get_terms( array(
-                        'taxonomy'   => 'rbfw_item_caregory',
-                        'hide_empty' => false,
-                    ) );
-                    foreach ( $terms as $key => $value ) {
-                        ?>
-                        <option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
-                        <?php
-                    }
-                    ?>
-                </select>
+                    <section>
+                        <div>
+                            <label>
+                                <?php _e( 'Select Categories', 'booking-and-rental-manager-for-woocommerce' ) ?>
+                            </label>
+                            <span><?php _e( 'Add multiple categories', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
+                        </div>
+                        <div class="w-50">
+                            <select name="rbfw_categories[]" multiple class="category2">
+                                <?php
+                                $terms = get_terms( array(
+                                    'taxonomy'   => 'rbfw_item_caregory',
+                                    'hide_empty' => false,
+                                ) );
+                                foreach ( $terms as $key => $value ) {
+                                    ?>
+                                    <option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
+                                    <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                    </section>
                 <?php
             }
-
-            public function related_post( $post_id ) {
-                ?>
-                <div id="rbfw_releted_rbfw" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rbfw_releted_rbfw">
-                    <select name="rbfw_releted_rbfw[]" id="rbfw_releted_rbfw" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
-                        <?php 
-                            $releted_post_id = get_post_meta($post_id,'rbfw_releted_rbfw',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_releted_rbfw', true)) : [];
-                            $the_query = new WP_Query( array(
-                                'post_type' => 'rbfw_item',
-                            ) );
-                        ?>
-                        <?php while ( $the_query->have_posts() ) : $the_query->the_post();?>
-                            <option <?php echo (in_array(get_the_ID(),$releted_post_id))?'selected':'' ?> value="<?php the_ID(); ?>"> <?php the_title(); ?> </option>
-                        <?php endwhile;  ?>
-                        
-                    </select>
-                </div>
-                <?php
-            }
-
 
             public function add_tabs_content( $post_id ) {
                 ?>
@@ -90,38 +96,12 @@
                         <?php $this->panel_header('Basic Settings','Here you can settings basic info.'); ?>
                         
                         
-                        <section>
-                            <div>
-                                <label>
-                                    <?php echo esc_html__( 'Add To Cart Form Shortcode', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </label>
-                                <span><?php echo esc_html__('This short code you can put anywhere in your content.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                            </div>
-                            <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $post_id; ?>']</code>
-                        </section>
+                        <?php $this->shortcode($post_id); ?>
 
-                        <section>
-                            <div>
-                                <label>
-                                    <?php _e( 'Select Categories', 'booking-and-rental-manager-for-woocommerce' ) ?>
-                                </label>
-                                <span><?php _e( 'Add multiple categories', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
-                            </div>
-                            <div class="w-50">
-                                <?php $this->multiple_category_select($post_id); ?>
-                            </div>
-                        </section>
-                        <section>
-                            <div>
-                                <label>
-                                    <?php echo esc_html__( 'Related Items', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </label>
-                                <span><?php echo esc_html__('Add related items here', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                            </div>
-                            <div class="w-50">
-                                <?php $this->related_post($post_id); ?>					
-                            </div>
-                        </section>
+                        <?php $this->select_category($post_id); ?>
+
+                        
+                        
                         <section>
                             <div>
                                 <label>

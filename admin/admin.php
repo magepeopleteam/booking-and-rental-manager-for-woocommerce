@@ -11,6 +11,7 @@ require_once RBFW_PLUGIN_DIR . '/admin/settings/Tax.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Location.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Template.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Gallery.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/Related.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Front_End_Display.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Faq.php';
 require_once RBFW_PLUGIN_DIR . '/admin/taxonomy.php';
