@@ -42,8 +42,6 @@
             }
 
 
-           
-
             public function shortcode($post_id){
                 ?>
                     <section>
@@ -87,6 +85,24 @@
                 <?php
             }
 
+            public function shipping_enable($post_id){
+                ?>
+                <section>
+                    <div>
+                        <label>
+                            <?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </label>
+                        <span><?php echo esc_html__('Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                    </div>
+                    <?php $shipping_enable_switch = get_post_meta($post_id,'shipping_enable',true);?>
+                    <label class="switch">
+                        <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr(($shipping_enable_switch=='on')?$shipping_enable_switch:'off'); ?>" <?php echo esc_attr(($shipping_enable_switch=='on')?'checked':''); ?>>
+                        <span class="slider round"></span>
+                    </label>
+                </section>
+                <?php
+            }
+
             public function add_tabs_content( $post_id ) {
                 ?>
                     <div class="mpStyle mp_tab_item " data-tab-item="#rbfw_gen_info">
@@ -100,35 +116,9 @@
 
                         <?php $this->select_category($post_id); ?>
 
-                        
-                        
-                        <section>
-                            <div>
-                                <label>
-                                    <?php echo esc_html__( 'Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </label>
-                                <span><?php echo esc_html__('Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                            </div>
-                            <?php $dt_sidebar_switch = get_post_meta($post_id,'rbfw_dt_sidebar_switch',true);?>
-                            <label class="switch">
-                                <input type="checkbox" name="rbfw_dt_sidebar_switch" value="<?php echo esc_attr(($dt_sidebar_switch=='on')?$dt_sidebar_switch:'off'); ?>" <?php echo esc_attr(($dt_sidebar_switch=='on')?'checked':''); ?>>
-                                <span class="slider round"></span>
-                            </label>
-                        </section>
+                        <?php $this->shipping_enable($post_id); ?>
 
-                        <section>
-                            <div>
-                                <label>
-                                    <?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </label>
-                                <span><?php echo esc_html__('Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                            </div>
-                            <?php $shipping_enable_switch = get_post_meta($post_id,'shipping_enable',true);?>
-                            <label class="switch">
-                                <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr(($shipping_enable_switch=='on')?$shipping_enable_switch:'off'); ?>" <?php echo esc_attr(($shipping_enable_switch=='on')?'checked':''); ?>>
-                                <span class="slider round"></span>
-                            </label>
-                        </section>
+                        
                         
                         <?php $this->panel_header('Sidebar Testimonial settigns','Sidebar Testimonial settigns'); ?>
                         <section>
