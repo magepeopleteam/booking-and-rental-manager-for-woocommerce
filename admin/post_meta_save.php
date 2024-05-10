@@ -102,9 +102,9 @@ function rbfw_save_meta_box_data( $post_id ) {
         $_tax_class 	 = isset( $_POST['_tax_class'] ) ? rbfw_array_strip( $_POST['_tax_class'] ) : '';
         $_tax_status 	 = isset( $_POST['_tax_status'] ) ? rbfw_array_strip( $_POST['_tax_status'] ) : '';
 
-        $rbfw_service_category_price      = isset( $_POST['rbfw_service_category_price'] ) ? rbfw_array_strip( $_POST['rbfw_service_category_price'] ) : [];
+        // $rbfw_service_category_price      = isset( $_POST['rbfw_service_category_price'] ) ? rbfw_array_strip( $_POST['rbfw_service_category_price'] ) : [];
 
-        update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
+        // update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
 
 
 
