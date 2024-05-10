@@ -68,6 +68,26 @@ if( ! class_exists('RBFW_Related')){
                 </div>
             <?php
         }
+
+        public function settings_save($post_id) {
+                
+            if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
+                return;
+            }
+
+            if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+                return;
+            }
+
+            if ( ! current_user_can( 'edit_post', $post_id ) ) {
+                return;
+            }
+
+            if ( get_post_type( $post_id ) == 'rbfw_item' ) {
+                $related_categories 	 = isset( $_POST['rbfw_releted_rbfw'] ) ? rbfw_array_strip( $_POST['rbfw_releted_rbfw'] ) : [];
+                update_post_meta( $post_id, 'rbfw_releted_rbfw', $related_categories );
+            }
+        }
     }
     new RBFW_Related();
 }
