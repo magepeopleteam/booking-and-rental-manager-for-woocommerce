@@ -119,44 +119,6 @@
                         <?php $this->shipping_enable($post_id); ?>
 
                         
-                        
-                        <?php $this->panel_header('Sidebar Testimonial settigns','Sidebar Testimonial settigns'); ?>
-                        <section>
-                            <div class="w-100 text-center">
-                                <div class="testimonials">
-                                    <?php 
-                                        $sidebar_testimonials = get_post_meta($post_id,'rbfw_dt_sidebar_testimonials',true);
-                                        foreach($sidebar_testimonials as $key => $data): ?>
-                                        <div class="testimonial">
-                                            <button onclick="jQuery(this).parent().remove()"> <i class="fas fa-trash"></i></button>
-                                            <textarea class="testimonial-field" name="rbfw_dt_sidebar_testimonials[<?php echo  $key; ?>]['rbfw_dt_sidebar_testimonial_text']" cols="30" rows="10"><?php echo esc_html(current($data)); ?></textarea>
-                                        </div>
-                                    <?php endforeach; ?>
-
-                                    <div class="testimonial-clone">
-                                        <button onclick="jQuery(this).parent().remove()"> <i class="fas fa-trash"></i> </button>
-                                        <textarea class="testimonial-field" name=""  cols="30" rows="10"></textarea>
-                                    </div>
-                                </div>
-                            
-                                <div class="ppof-button add-item" onclick="createTestimonial()"><i class="fas fa-plus-square"></i><?php _e('Add New Testimonial','booking-and-rental-manager-for-woocommerce'); ?></div>
-                            </div>
-                        </section>
-                        
-                        <?php $this->panel_header('Donut Template Sidebar Content','Donut Template Sidebar Content'); ?>
-                        <section>
-                            <div class="w-100">
-                                <?php 
-                                    $sidebar_content = get_post_meta($post_id,'rbfw_dt_sidebar_content',true);
-                                    $settings = array(
-                                            'textarea_rows' => '10',
-                                            'media_buttons' => true,
-                                            'textarea_name' => 'rbfw_dt_sidebar_content',
-                                    );
-                                    wp_editor( $sidebar_content, 'rbfw_dt_sidebar_content', $settings );
-                                ?>
-                            </div>
-                        </section>
 
                         <?php $this->panel_header('Features Category Settings','Here you can configure features category.'); ?>
 
