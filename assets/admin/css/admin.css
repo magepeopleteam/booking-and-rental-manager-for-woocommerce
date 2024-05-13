@@ -1009,5 +1009,19 @@
 #rbfw_add_meta_box .rbfw_switch_return_date .rbfw_enable_start_end_date_label.active span {
   color: var(--mage-white);
 }
+#rbfw_add_meta_box .service_category_title {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--mage-light);
+}
+#rbfw_add_meta_box .service_category_title label {
+  margin: 0;
+  margin-right: 10px;
+}
+#rbfw_add_meta_box .services_category_wrapper {
+  text-align: center;
+}
 
 /*# sourceMappingURL=admin.css.map */

@@ -296,4 +296,18 @@
             }
         }
     }
+    .service_category_title{
+        display: flex;
+        justify-content: space-between;
+        margin: 5px 0;
+        padding: 5px 0;
+        border-bottom: 1px solid $color-light;
+        label{
+            margin: 0;
+            margin-right: 10px;
+        }
+    }
+    .services_category_wrapper{
+        text-align: center;
+    }
 }

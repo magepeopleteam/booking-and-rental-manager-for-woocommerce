@@ -1024,7 +1024,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box table.form-table.rbfw_pricing_table {
-    border-collapse: unset;
+    border-collapse: collapse;
 }
 
 #rbfw_add_meta_box table.form-table thead tr {
@@ -1059,11 +1059,11 @@ div.mpStyle [class*="_bgColor_1"] i {
 
 #rbfw_add_meta_box table.form-table {
     margin-bottom: 0px;
-    border-collapse: unset;
+    border-collapse: collapse;
 }
 
 #rbfw_add_meta_box table.form-table.rbfw_bike_car_sd_price_table {
-    border-collapse: unset;
+    border-collapse: collapse;
 }
 
 #rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(even){

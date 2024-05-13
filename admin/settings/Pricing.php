@@ -120,11 +120,11 @@
 															$icon = $service['icon'];
 															$title = $service['title'];
 															$price = $service['price'];
-															$stock_quantity = $service['stock_quantity'];
+															$stock_quantity = isset($service['stock_quantity'])?$service['stock_quantity']:'';
 															$service_price_type = $service['service_price_type'];
 															?>
 																<div class="item">
-																	<a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="<?php echo $c; ?>"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>
+																	<a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="<?php echo $c; ?>"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?></a>
 																	<div class="rbfw_service_icon_preview p-1" data-key="<?php echo $c; ?>"><?php if($icon){ echo '<i class="'.$icon.'"></i>'; } ?></div>
 	
 																	<input type='hidden' name='rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php echo esc_attr($icon); ?>' data-key="<?php echo $c; ?>" class="rbfw_service_icon"/>
@@ -192,7 +192,7 @@
 	
 														<a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="0">
 															<i class="fa-solid fa-circle-plus"></i>
-															<?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?>
+															<?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?>
 														</a>
 														<div class="rbfw_service_icon_preview p-1" data-key="0"></div>
 														<input type='hidden' name='rbfw_service_category_price[0][cat_services][0][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' data-key="0" class="rbfw_service_icon"/>
@@ -262,7 +262,7 @@
 						let dataCat = jQuery('.rbfw_service_category_table tbody tr:last-child').attr('data-cat');
 						let nextCat = parseInt(dataCat) + 1;
 						let html = '<tr data-cat="'+nextCat+'"><td><div class="services_category_wrapper"><div class="field-list rbfw_service_category_price"><div class="service_category_inner_wrap"><div class="service_category_title"><label><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_service_category_title" name="rbfw_service_category_price['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></div>';
-						html +='<div class="service_category_inner_item_wrap sortable"><div class="item"><a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a><div class="rbfw_service_icon_preview p-1" data-key="0"></div><input type="hidden" name="rbfw_service_category_price['+nextCat+'][cat_services][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_service_icon">';
+						html +='<div class="service_category_inner_item_wrap sortable"><div class="item"><a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?></a><div class="rbfw_service_icon_preview p-1" data-key="0"></div><input type="hidden" name="rbfw_service_category_price['+nextCat+'][cat_services][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_service_icon">';
 						html +='<input type="text" name="rbfw_service_category_price['+nextCat+'][cat_services][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0">';
 						html +='<input type="text" name="rbfw_service_category_price['+nextCat+'][cat_services][0][price]" placeholder="Price" value="" data-key="0">';
 						html +='<input type="text" name="rbfw_service_category_price['+nextCat+'][cat_services][0][stock]" placeholder="Stock" value="" data-key="0">';
@@ -286,7 +286,7 @@
 	
 						html = '<div class="item">';
 	
-						html += '<a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="'+ c +'"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>';
+						html += '<a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="'+ c +'"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?></a>';
 						html += '<div class="rbfw_service_icon_preview p-1" data-key="'+ c +'"></div>';
 						html += '<input type="hidden" name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][icon]" placeholder="<?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="'+ c +'" class="rbfw_service_icon"/>';
 	
