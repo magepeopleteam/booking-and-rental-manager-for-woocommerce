@@ -362,8 +362,6 @@
                     </div>
 
                     <script>
-                        
-
                         jQuery('input[name=shipping_enable]').click(function(){  
                             var status = jQuery(this).val();
                             if(status == 'on') {
@@ -373,19 +371,6 @@
                                 jQuery(this).val('on');  
                             }
                         });
-
-                        
-
-                        function createFeatureCategory(){
-                            var items=jQuery(".feature-category").find('.feature-category-title').length;
-                            items=items++;
-                            jQuery(".feature-category-clone").clone().appendTo(".feature-categories").removeClass('feature-category-clone').addClass('feature-category')
-                            .find('.feature-category-title').attr('name','rbfw_feature_category['+ items +'][cat_title]');
-                        }
-
-                        function createFeatureItem(){
-                            jQuery(".feature-item-clone").clone().appendTo('.feature-items').removeClass('feature-item-clone').addClass('feature-item');
-                        }
                     </script>
             <?php } 
 
