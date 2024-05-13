@@ -103,59 +103,242 @@
                 <?php
             }
 
+            public function field_feature_category( $option ){
+
+                $id 			= isset( $option['id'] ) ? $option['id'] : "";
+                if(empty($id)) return;
+    
+                $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
+                $conditions 	= isset( $option['conditions'] ) ? $option['conditions'] : array();
+                $placeholder 	= isset( $option['placeholder'] ) ? $option['placeholder'] : "";
+                $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fa-solid fa-trash-can"></i>';
+                $sortable 	    = isset( $option['sortable'] ) ? $option['sortable'] : true;
+                $default 	    = isset( $option['default'] ) ? $option['default'] : array();
+    
+                $values 	    = isset( $option['value'] ) ? $option['value'] : array();
+                $values         = !empty($values) ? $values : $default;
+    
+    
+    
+    
+                $limit 	        = !empty( $option['limit'] ) ? $option['limit'] : '';
+    
+                $field_id       = $id;
+                $field_name     = !empty( $field_name ) ? $field_name : $id;
+    
+                ob_start();
+                ?>
+    
+                <div id="field-wrapper-<?php echo esc_attr($id); ?>" class="field-wrapper field-text-multi-wrapper
+                        field-text-multi-wrapper-<?php echo esc_attr($field_id); ?>">
+                        <table class="form-table rbfw_feature_category_table">
+                            <tbody class="sortable_tr">
+                                <?php
+                                if(!empty($values)):
+                                $i = 0;
+                                foreach ($values as $value):?>
+                                <tr data-cat="<?php echo $i; ?>">
+                                    <td>
+                                        <div class="features_category_wrapper">
+                                            <div class="field-list <?php echo esc_attr($field_id); ?>">
+                                                <div class="feature_category_inner_wrap">
+                                                    <div class="feature_category_title"><label class=" mb-1"><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_feature_category[<?php echo $i; ?>][cat_title]" data-key="<?php echo $i; ?>" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/></div>
+                                                    <div class="feature_category_inner_item_wrap sortable">
+                                                        <?php
+                                                        if(!empty($value['cat_features'])){
+                                                            $c = 0;
+                                                            foreach ($value['cat_features'] as $feature) {
+                                                                $icon = $feature['icon'];
+                                                                $title = $feature['title'];
+                                                        ?>
+                                                        <div class="item">
+                                                            <a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="<?php echo $c; ?>"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>
+                                                            <div class="rbfw_feature_icon_preview p-1" data-key="<?php echo $c; ?>"><?php if($icon){ echo '<i class="'.$icon.'"></i>'; } ?></div>
+                                                            
+                                                            <input type='hidden' name='rbfw_feature_category[<?php echo $i; ?>][cat_features][<?php echo $c; ?>][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php echo esc_attr($icon); ?>' data-key="<?php echo $c; ?>" class="rbfw_feature_icon"/>
+                                                            <input type='text' name='rbfw_feature_category[<?php echo $i; ?>][cat_features][<?php echo $c; ?>][title]'  placeholder='<?php echo esc_attr($placeholder); ?>' value="<?php  echo esc_attr($title); ?>" data-key="<?php echo $c; ?>"/>
+    
+                                                            <?php if($sortable):?>
+                                                            <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
+                                                            <?php endif; ?>
+                                                            <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span>
+                                                        </div>
+                                                        <?php
+                                                            $c++;
+                                                            }
+                                                        }
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="ppof-button add-new-feature"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <?php if($sortable):?>
+                                        <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
+                                        <?php endif; ?>
+                                        <span class="button tr_remove" onclick="jQuery(this).parent('tr').remove()"><?php echo ($remove_text); ?></span>
+                                    </td>
+                                </tr>
+                                    <?php
+                                    $i++;
+                                    endforeach;
+                                    else:
+                                    ?>
+                                        <tr data-cat="0">
+                                            <td>
+                                                <div class="features_category_wrapper">
+    
+                                                <div class="field-list <?php echo esc_attr($field_id); ?>">
+                                                    <div class="feature_category_inner_wrap">
+                                                        <div class="feature_category_title"><label><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" name="rbfw_feature_category[0][cat_title]" data-key="0" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/></div>
+                                                        <div class="feature_category_inner_item_wrap sortable">
+                                                            <div class="item">
+                                                                
+                                                                <a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>
+                                                                <div class="rbfw_feature_icon_preview p-1" data-key="0"></div>
+                                                                <input type='hidden' name='rbfw_feature_category[0][cat_features][0][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' data-key="0" class="rbfw_feature_icon"/>
+                                                                <input type='text' name='rbfw_feature_category[0][cat_features][0][title]'  placeholder='<?php echo esc_attr($placeholder); ?>' value='' data-key="0"/>
+    
+                                                                <?php if($sortable):?>
+                                                                <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
+                                                                <?php endif; ?>
+                                                                <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <span class="ppof-button add-new-feature"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span>
+                                            </td>
+                                            <td>
+                                                <?php if($sortable):?>
+                                                <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
+                                                <?php endif; ?>
+                                                <span class="button tr_remove" onclick="jQuery(this).parent('tr').remove()"><?php echo ($remove_text); ?></span>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                endif;
+                                ?>
+                            </tbody>
+                        </table>
+                    <span class="ppof-button add-feature-category mt-1"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature Category','booking-and-rental-manager-for-woocommerce'); ?></span> 
+                </div>
+    
+                <script>
+                    jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
+                    jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
+    
+                    jQuery(document).on('click', '.add-feature-category',function(e){
+                        e.stopImmediatePropagation();
+                        let dataCat = jQuery('.rbfw_feature_category_table tbody tr:last-child').attr('data-cat');
+                        let nextCat = parseInt(dataCat) + 1;
+                        let html = '<tr data-cat="'+nextCat+'"><td><div class="features_category_wrapper"><div class="field-list rbfw_feature_category"><div class="feature_category_inner_wrap"><div class="feature_category_title"><label><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_feature_category_title" name="rbfw_feature_category['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></div><div class="feature_category_inner_item_wrap sortable"><div class="item"><a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a><div class="rbfw_feature_icon_preview p-1" data-key="0"></div><input type="hidden" name="rbfw_feature_category['+nextCat+'][cat_features][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_feature_icon"> <input type="text" name="rbfw_feature_category['+nextCat+'][cat_features][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0"> <?php if($sortable):?> <span class="button sort"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span></div></div></div></div><span class="ppof-button add-new-feature"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo ($remove_text); ?></span></td></tr>';
+                        jQuery('.rbfw_feature_category_table tbody').append(html);
+                        jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
+                        jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
+                    });
+    
+                    jQuery(document).on('click', '.add-new-feature',function(e){
+                        e.stopImmediatePropagation();
+                        let data_key = jQuery(this).siblings(".rbfw_feature_category").find("div.item:last-child input").attr('data-key');
+                        let i = parseInt(data_key);
+                        let c = i + 1;
+                        let theTarget = jQuery(this).siblings('.rbfw_feature_category').find('.feature_category_inner_wrap .feature_category_inner_item_wrap');
+                        jQuery( ".sortable" ).sortable({ handle: '.sort' });
+                        let dataCat = jQuery(this).closest('tr').attr('data-cat');
+    
+                        html = '<div class="item">';
+    
+                        html += '<a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="'+ c +'"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>';
+    
+                        html += '<div class="rbfw_feature_icon_preview p-1" data-key="'+ c +'"></div>';
+    
+                        html += '<input type="hidden" name="rbfw_feature_category['+ dataCat +'][cat_features]['+ c +'][icon]" placeholder="<?php
+                            echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="'+ c +'" class="rbfw_feature_icon"/>';
+    
+                        html += '<input type="text" name="rbfw_feature_category['+ dataCat +'][cat_features]['+ c +'][title]" placeholder="<?php
+                            echo esc_attr($placeholder); ?>" data-key="'+ c +'"/>';
+    
+                        <?php if($sortable):?>
+                        html += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
+                        <?php endif; ?>
+    
+                        html += '<span class="button remove" onclick="jQuery(this).parent().remove()' +
+                            '"><?php echo ($remove_text); ?></span>';
+                        html += '</div>';
+    
+                        theTarget.append(html);
+                    });
+    
+    
+    
+    
+    
+    
+                    // Features Icon Popup
+                    jQuery(document).on('click', '.rbfw_feature_icon_btn',function(e){
+                        e.stopImmediatePropagation();
+                        let remove_exist_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").removeAttr('data-key');
+                        let remove_active_label 	= jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
+                        let data_key 				= jQuery(this).attr('data-key');
+                        let data_cat 				= jQuery(this).parents('tr').attr('data-cat');
+    
+                        jQuery('#rbfw_features_search_icon').val('');
+                        jQuery('.rbfw_features_icon_list_body label').show();
+                        jQuery("#rbfw_features_icon_list_wrapper").attr('data-key', data_key);
+                        jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat', data_cat);
+                        jQuery("#rbfw_features_icon_list_wrapper").mage_modal({
+                            escapeClose: false,
+                            clickClose: false,
+                            showClose: false
+                        });
+    
+                        // Selected Feature Icon Action
+                        jQuery(document).on('click', '.ggggg label',function(e){
+                            e.stopImmediatePropagation();
+                            let selected_label 		= jQuery(this);
+                            let selected_val 		= jQuery('input', this).val();
+                            let selected_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
+                            let selected_data_cat 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
+    
+                            jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
+    
+                            jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').empty();
+                            jQuery(selected_label).addClass('selected');
+                            jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon[data-key="'+selected_data_key+'"]').val(selected_val);
+                            jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').append('<i class="'+selected_val+'"></i>');
+                        });
+    
+                        // Icon Filter
+                        jQuery('#rbfw_features_search_icon').keyup(function (e) {
+                            let value = jQuery(this).val().toLowerCase();
+                            jQuery(".rbfw_features_icon_list_body label[data-id]").show().filter(function() {
+                                jQuery(this).toggle(jQuery(this).attr('data-id').toLowerCase().indexOf(value) > -1)
+                            }).hide();
+                        });
+                        // End Icon Filter
+                    });
+                    // End Features Icon Popup
+                </script>
+                <?php
+                return ob_get_clean();
+            }
+
             public function features_category( $post_id ) {
                 ?>
                     <?php $this->panel_header('Features Category Settings','Here you can configure features category.'); ?>
-                        <section>
-                            <div class="w-100">
-                                <div class="feature-categories">
-                                    <?php $feature_categories = get_post_meta($post_id,'rbfw_feature_category',true); ?>
-                                    <?php foreach($feature_categories as $key => $data): ?>
-                                        <div class="feature-category">
-                                            <header>
-                                                <label for="">Feature category title</label>
-                                                <input class="feature-category-title" type="text" name="rbfw_feature_category[<?php echo $key; ?>][cat_title]" value="<?php echo $data['cat_title']; ?>">
-                                            </header>
-                                            <div class="feature-lists">
-                                                <div class="feature-items">
-                                                    <div class="feature-item-clone">
-                                                        test
-                                                    </div>
-                                                </div>
-                                                <div class="text-center">
-                                                    <div class="ppof-button add-item" onclick="createFeatureItem()"><i class="fas fa-circle-plus"></i>Add New Feature</div>
-                                                </div>
-                                            </div>
-                                            <button onclick="jQuery(this).parent().remove()">x</button>
-                                        </div>
-                                    <?php endforeach; ?>
-                                    
-                                    <!-- clone item -->
-                                    <div class="feature-category-clone">
-                                        <header>
-                                            <label for="">Feature category title</label>
-                                            <!-- name value will add by jquery on duplication-->
-                                            <input class="feature-category-title" type="text" name="">
-
-                                        </header>
-                                        <div class="feature-lists">
-                                            <div class="feature-items">
-                                                    <div class="feature-item-clone">
-                                                        test
-                                                    </div>
-                                                </div>
-                                            <div class="text-center">
-                                                <div class="ppof-button add-item" onclick="createFeatureItem()"><i class="fas fa-circle-plus"></i>Add New Feature</div>
-                                            </div>
-                                        </div>
-                                        <button onclick="jQuery(this).parent().remove()"><i class="fas fa-trash"></i></button>
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <div class="ppof-button add-item" onclick="createFeatureCategory()"><i class="fas fa-circle-plus"></i>Add New Feature Category</div>
-                                </div>
-                            </div>
-                        </section>
+                    <?php
+                        $options = array(
+                            'id'          => 'rbfw_feature_category',
+                            'type'        => 'feature_category',
+                            'placeholder'        => 'Features Name',
+                        );
+                        $option_value         = get_post_meta($post_id, $options['id'], true);
+                        $options['value']      = is_serialized($option_value) ? unserialize($option_value) : $option_value;
+                        echo $this->field_feature_category($options);
+                    ?>
                 <?php
             }
             public function add_tabs_content( $post_id ) {

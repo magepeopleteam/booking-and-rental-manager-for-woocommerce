@@ -1030,5 +1030,19 @@
 #rbfw_add_meta_box .add-service-category:hover {
   opacity: 0.8;
 }
+#rbfw_add_meta_box .feature_category_title {
+  display: flex;
+  justify-content: space-between;
+  margin: 5px 0;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--mage-light);
+}
+#rbfw_add_meta_box .add-feature-category {
+  background-color: var(--mage-primary);
+  border: 1px solid var(--mage-primary);
+}
+#rbfw_add_meta_box .add-feature-category:hover {
+  opacity: 0.8;
+}
 
 /*# sourceMappingURL=admin.css.map */
