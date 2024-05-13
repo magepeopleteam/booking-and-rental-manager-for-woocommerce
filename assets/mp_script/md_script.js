@@ -46,6 +46,32 @@ jQuery("body").on('click','.rbfw_service_quantity_minus', function (e) {
 });
 
 
+jQuery("body").on('change','.rbfw_service_qty.rbfw_service_info_stock', function (e) {
+    e.preventDefault();
+    var get_value = jQuery(this).val();
+    let max_value = parseInt(jQuery(this).attr('max'));
+
+    if(get_value <= max_value){
+        jQuery(this).val(get_value);
+        var item_no = jQuery(this).data('item');
+        console.log('item_no', item_no);
+        jQuery('.item_' + item_no).data('quantity', Number(get_value));
+    }else{
+        jQuery(this).val(max_value);
+        var item_no = jQuery(this).data('item');
+        console.log('item_no', item_no);
+        jQuery('.item_' + item_no).data('quantity', Number(max_value));
+    }
+
+
+
+    var total_days = jQuery('[name="total_days"]').val();
+    if(total_days!=0){
+        rbfw_service_price_calculation(total_days);
+    }
+});
+
+
 function rbfw_service_price_calculation(total_days){
     jQuery(".rbfw_service_price_data").val(0);
     jQuery('.rbfw_service_quantity').css( "display", "none" );
@@ -56,6 +82,8 @@ function rbfw_service_price_calculation(total_days){
         jQuery(this).val(1);
         var service_price_type =  jQuery(this).data('service_price_type');
         var service_quantity = jQuery(this).data('quantity');
+
+
         jQuery('.item_'+item_no).css( "display", "table" );
         if(service_price_type=='day_wise'){
             total +=  jQuery(this).data('price')*service_quantity*total_days;
@@ -63,6 +91,7 @@ function rbfw_service_price_calculation(total_days){
             total +=  jQuery(this).data('price')*service_quantity;
         }
     });
+
     jQuery('#rbfw_service_price').val(total);
 
     let that = jQuery(this);
@@ -122,7 +151,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
 
 
     if((pickup_date == dropoff_date) && (typeof pickup_time === "undefined" || pickup_time == '')){
-        pickup_time = '00:00';
+      //  pickup_time = '00:00';
     }
 
     if((pickup_date == dropoff_date) && (typeof dropoff_time === "undefined" || dropoff_time == '')){

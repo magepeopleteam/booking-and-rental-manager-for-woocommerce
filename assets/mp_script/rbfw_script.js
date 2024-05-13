@@ -314,7 +314,8 @@ function rbfw_update_input_value_onchange_onclick(){
             jQuery(target_input).val(update_value);
             jQuery(target_input).attr('value',update_value);
         }else{
-            let notice = "<?php rbfw_string('rbfw_text_available_qty_is',__('Available Quantity is: ','booking-and-rental-manager-for-woocommerce')); ?>";
+            //let notice = "<?php rbfw_string('rbfw_text_available_qty_is',__('Available Quantity is: ','booking-and-rental-manager-for-woocommerce')); ?>";
+            let notice = "Available Quantity is ";
             tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top',trigger: 'click'});
         }
     });
@@ -337,7 +338,7 @@ function rbfw_update_input_value_onchange_onclick(){
         }else{
             jQuery(this).val(max_value);
             jQuery(this).attr('value',max_value);
-            let notice = "<?php rbfw_string('rbfw_text_available_qty_is',__('Available Quantity is: ','booking-and-rental-manager-for-woocommerce')); ?>";
+            let notice = "Available Quantity is ";
             tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top'});
         }
     });

@@ -288,6 +288,7 @@ if($rbfw_enable_variations == 'yes'){
                             <input type="hidden"  name="rbfw_pickup_end_time" id="dropoff_time" value="<?php echo $rbfw_event_end_time; ?>"/>
                         <?php } ?>
 
+
                         <?php if ($rbfw_enable_md_type_item_qty == 'yes' && $item_stock_quantity > 0) { ?>
                             <div class="item">
                                 <div class="rbfw-single-right-heading">
@@ -337,7 +338,8 @@ if($rbfw_enable_variations == 'yes'){
                         $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
                         ?>
 
-                        <?php if(!empty($option_value)){ ?>
+                        <?php if(!empty($option_value)){  ?>
+
                             <div class="multi-service-category-section">
                                 <div class="rbfw-single-right-heading">
                                     <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
