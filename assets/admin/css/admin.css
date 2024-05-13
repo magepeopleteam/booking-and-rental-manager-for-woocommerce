@@ -1023,5 +1023,12 @@
 #rbfw_add_meta_box .services_category_wrapper {
   text-align: center;
 }
+#rbfw_add_meta_box .add-service-category {
+  background-color: var(--mage-primary);
+  border: 1px solid var(--mage-primary);
+}
+#rbfw_add_meta_box .add-service-category:hover {
+  opacity: 0.8;
+}
 
 /*# sourceMappingURL=admin.css.map */

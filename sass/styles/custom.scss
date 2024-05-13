@@ -310,4 +310,11 @@
     .services_category_wrapper{
         text-align: center;
     }
+    .add-service-category{
+        background-color: $color-primary;
+        border: 1px solid $color-primary;
+        &:hover{
+            opacity: .8;
+        }
+    }
 }
