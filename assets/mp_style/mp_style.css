@@ -1942,7 +1942,7 @@ div.mpStyle .customRadioLabel input[type="radio"]~.formControl,
     height: 20px;
     width: 20px;
     background-color: var(--theme-alternate-color);
-    border: 2px solid var(--default-color);
+    border: 2px solid var(--theme-color);
     border-radius: 2px;
 }
 
@@ -1957,7 +1957,7 @@ div.mpStyle .customRadioLabel input[type="radio"]~.formControl,
 }
 
 .mpStyle .customCheckboxLabel input:checked~.customCheckbox::before {
-    background: var(--default-color);
+    background: var(--theme-color_cc);
 }
 
 .mpStyle .customCheckboxLabel input:focus~.customCheckbox::before {

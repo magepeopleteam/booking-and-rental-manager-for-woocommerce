@@ -856,13 +856,20 @@ div.rbfw_multi_image {
     display: flex;
     -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
-    margin: 15px 0 0 0;
+    margin-bottom:10px ;
 }
 
 div.rbfw_multi_image_item {
     position: relative;
-    width: 150px;
-    padding: 5px;
+    width: 16.38em;
+    height: 120px;
+    margin: 5px;
+}
+div.rbfw_multi_image_item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
 }
 
 div.rbfw_remove_area {
@@ -873,9 +880,14 @@ div.rbfw_remove_area .rbfw_item_remove,
 div.rbfw_remove_area .rbfw_close_multi_image_item {
     cursor: pointer;
     position: absolute;
-    top: -7px;
-    right: -7px;
-    background-color: var(--danger-color);
+    bottom: 0;
+    right: 0;
+    background-color: var(--mage-primary);
+    color: #fff;
+    width: 22px;
+    height: 22px;
+    text-align: center;
+    border-radius: 5px 0 0 0  ;
 }
 
 .rbfw_plugin_pro_meta_link {
@@ -946,6 +958,7 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 
 #rbfw_add_meta_box .mp_tab_item {
     display: none;
+    width: 100%;
 }
 
 .rbfw_add_faq_content.ppof-button {
@@ -1011,7 +1024,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box table.form-table.rbfw_pricing_table {
-    border-collapse: unset;
+    border-collapse: collapse;
 }
 
 #rbfw_add_meta_box table.form-table thead tr {
@@ -1046,11 +1059,11 @@ div.mpStyle [class*="_bgColor_1"] i {
 
 #rbfw_add_meta_box table.form-table {
     margin-bottom: 0px;
-    border-collapse: unset;
+    border-collapse: collapse;
 }
 
 #rbfw_add_meta_box table.form-table.rbfw_bike_car_sd_price_table {
-    border-collapse: unset;
+    border-collapse: collapse;
 }
 
 #rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(even){
@@ -1105,19 +1118,6 @@ div.mpStyle [class*="_bgColor_1"] i {
     padding-top: 3px;
 }
 
-#rbfw_add_meta_box .form-table td input[type="text"] {
-    width: auto;
-    display: inline-block;
-    font-weight: normal;
-    margin-right: 0.35em;
-}
-
-#rbfw_add_meta_box .form-table select,
-#rbfw_add_meta_box .form-table td input,
-#rbfw_add_meta_box div.mpStyle .formControl {
-
-}
-
 .rbfw_item_type_table tr td label:not(.rbfw_switch.rbfw_switch_return_date label) {
     display: inline-block;
     padding: 5px;
@@ -1161,14 +1161,11 @@ div.mpStyle [class*="_bgColor_1"] i {
 }
 
 #rbfw_add_meta_box .field-text-multi-wrapper .field-list .item {
-    padding:0 .5em;
+    padding:5px;
     background-color:#f2f2f2;
-    margin-bottom: 5px;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
+    margin: 5px 0;
     display: flex;
-    align-items: center;
+    justify-content: space-between;
 }
 
 #rbfw_features_icon_list_wrapper.mage_modal {
@@ -1651,20 +1648,12 @@ input#rbfw_features_search_icon {
 }
 
 .rbfw_switch label.active {
-    background-color: #0073aa;
-    background-image: -khtml-gradient(linear, left top, left bottom, from(#008bce), to(#0073aa));
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #008bce), color-stop(100%, #0073aa));
-    background-image: -webkit-linear-gradient(top, #008bce, #0073aa);
-    background-image: -linear-gradient(top, #008bce, #0073aa);
+    background-color: var(--mage-primary);
     color: #fff;
 }
 
 .rbfw_switch label.active.off {
-    background-color: #0073aa;
-    background-image: -khtml-gradient(linear, left top, left bottom, from(#008bce), to(#0073aa));
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #008bce), color-stop(100%, #0073aa));
-    background-image: -webkit-linear-gradient(top, #008bce, #0073aa);
-    background-image: -linear-gradient(top, #008bce, #0073aa);
+    background-color: var(--mage-primary);
     color: #fff;
 }
 
@@ -1947,14 +1936,14 @@ input#rbfw_features_search_icon {
 }
 
 .mp_tab_item .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
-    background-color: #bf1010;
+    background-color: var(--mage-primary);
     padding: 0px 5px 0px 5px;
     color: #fff;
-    margin:0 5px;
+
 }
 
 .mp_tab_item .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    padding: 5px 8px 5px 5px;
+    padding: 5px;
 }
 
 a.menu-icon-rbfw_item.wp-menu-open {
@@ -2288,6 +2277,9 @@ input.rbfw_time_slot_edit_slot_label {
 .rbfw_switch_return_date {
     margin: 5px;
 }
+.rbfw_switch_return_date label{
+    margin:0;
+}
 
 #rbfw_add_meta_box table.form-table.rbfw_item_type_table tr.rbfw_appointment_ondays_row td {
     display: -webkit-box;
@@ -2418,6 +2410,3 @@ input.rbfw_time_slot_edit_slot_label {
 .mp_tab_item div.updated{
     display: none;
 }
-#rbfw_add_meta_box .select2.select2-container{
-    width: 80% !important;
-} 

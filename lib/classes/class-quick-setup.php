@@ -37,25 +37,25 @@ if(!class_exists('RBFW_Quick_Setup')){
                 <form action="" method="POST">
                     <div id="rbfw-smartwizard">
                         <ul class="nav">
-                            <li class="nav-item">
+                            <li>
                             <a class="nav-link" href="#step-1">
                                 <div class="num">1</div>
                                 <?php esc_html_e('Welcome', 'booking-and-rental-manager-for-woocommerce'); ?>
                             </a>
                             </li>
-                            <li class="nav-item">
+                            <li>
                             <a class="nav-link" href="#step-2">
                                 <span class="num">2</span>
                                 <?php esc_html_e('Basic Settings', 'booking-and-rental-manager-for-woocommerce'); ?>
                             </a>
                             </li>
-                            <li class="nav-item">
+                            <li>
                             <a class="nav-link" href="#step-3">
                                 <span class="num">3</span>
                                 <?php esc_html_e('Payment System', 'booking-and-rental-manager-for-woocommerce'); ?>
                             </a>
                             </li>
-                            <li class="nav-item">
+                            <li>
                             <a class="nav-link " href="#step-4">
                                 <span class="num">4</span>
                                 <?php esc_html_e('Finish', 'booking-and-rental-manager-for-woocommerce'); ?>

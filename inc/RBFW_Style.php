@@ -15,7 +15,7 @@
 			
 			public function rbfw_style() {
 				$default_color   = RBFW_Function::get_style_settings( 'rbfw_default_text_color', '#000' );
-				$theme_color     = RBFW_Function::get_style_settings( 'rbfw_theme_color', '#ef3326' );
+				$theme_color     = RBFW_Function::get_style_settings( 'rbfw_theme_color', '#F12971' );
 				$alternate_color = RBFW_Function::get_style_settings( 'rbfw_theme_alternate_color', '#fff' );
 				$warning_color   = RBFW_Function::get_style_settings( 'rbfw_warning_color', '#E67C30' );
 				

@@ -26,7 +26,7 @@
         wp.media.editor.send.attachment = function(props, attachment) {
             let attachment_id = attachment.id;
             let attachment_url = attachment.url;
-            let html = '<div class="rbfw_multi_image_item" data-image-id="' + attachment_id + '"><span class="dashicons dashicons-no-alt circleIcon_xs rbfw_close_multi_image_item"></span>';
+            let html = '<div class="rbfw_multi_image_item" data-image-id="' + attachment_id + '"><span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>';
             html += '<img src="' + attachment_url + '" alt="' + attachment_id + '"/>';
             html += '</div>';
             parent.find('.rbfw_multi_image').append(html);
@@ -61,6 +61,7 @@
         });
         return false;
     });
+    
     jQuery(window).load(function() {
         jQuery('.mp_tab_menu').each(function() {
             jQuery(this).find('ul li:first-child').trigger('click');
@@ -310,8 +311,8 @@
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
                 jQuery('.rbfw_min_max_booking_day_row').hide();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').show();
-                jQuery('tr.rbfw_enable_start_end_date_switch_row').hide();
-                jQuery('tr.rbfw_enable_start_end_date_field_row').hide();
+                jQuery('.rbfw_enable_start_end_date_switch_row').hide();
+                jQuery('.rbfw_enable_start_end_date_field_row').hide();
 
                 jQuery('.rbfw_off_days').show();
 
@@ -332,8 +333,8 @@
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
                 jQuery('.rbfw_min_max_booking_day_row').hide();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').show();
-                jQuery('tr.rbfw_enable_start_end_date_switch_row').hide();
-                jQuery('tr.rbfw_enable_start_end_date_field_row').hide();
+                jQuery('.rbfw_enable_start_end_date_switch_row').hide();
+                jQuery('.rbfw_enable_start_end_date_field_row').hide();
                 jQuery('[name="rbfw_off_days"]').val('');
                 jQuery('.rbfw_off_days input').prop('checked', false);
                 jQuery('.rbfw_off_days').hide();
@@ -367,8 +368,8 @@
                 jQuery('.rbfw_min_max_booking_day_row').show();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
                 jQuery('tr[data-row=rdfw_available_time]').show();
-                jQuery('tr.rbfw_enable_start_end_date_switch_row').hide();
-                jQuery('tr.rbfw_enable_start_end_date_field_row').hide();
+                jQuery('.rbfw_enable_start_end_date_switch_row').hide();
+                jQuery('.rbfw_enable_start_end_date_field_row').hide();
                 jQuery('.rbfw_off_days').show();
             } else {
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
@@ -389,7 +390,7 @@
                 jQuery('.rbfw_min_max_booking_day_row').show();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
                 jQuery('tr[data-row=rdfw_available_time]').show();
-                jQuery('tr.rbfw_enable_start_end_date_switch_row').show();
+                jQuery('.rbfw_enable_start_end_date_switch_row').show();
                 //jQuery('tr.rbfw_enable_start_end_date_field_row').show();
                 jQuery('.rbfw_off_days').show();
 
@@ -567,12 +568,12 @@
 
         jQuery('.rbfw_switch_return_date label').click(function(e) {
             let data_value = jQuery(this).attr('data-value');
-
+            console.log(data_value);
             if (data_value == 'on') {
-                jQuery('tr.rbfw_enable_start_end_date_field_row').hide();
+                jQuery('.rbfw_enable_start_end_date_field_row').hide();
             }
             if (data_value == 'off') {
-                jQuery('tr.rbfw_enable_start_end_date_field_row').show();
+                jQuery('.rbfw_enable_start_end_date_field_row').show();
             }
 
         });
