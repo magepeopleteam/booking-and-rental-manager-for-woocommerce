@@ -54,7 +54,7 @@ function rbfw_save_meta_box_data( $post_id ) {
         $hourly_rate_sat         = isset( $_POST['rbfw_sat_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_hourly_rate'] ) : '';
         $daily_rate_sat          = isset( $_POST['rbfw_sat_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_daily_rate'] ) : '';
         $enabled_sat             = isset( $_POST['rbfw_enable_sat_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sat_day'] ) : 'no';
-        $rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? rbfw_array_strip( $_POST['rbfw_item_type'] ) : 'others';
+
         
         $rbfw_enable_pick_point  = isset( $_POST['rbfw_enable_pick_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_pick_point'] ) : 'no';
         $rbfw_enable_dropoff_point  = isset( $_POST['rbfw_enable_dropoff_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_dropoff_point'] ) : 'no';
@@ -129,7 +129,7 @@ function rbfw_save_meta_box_data( $post_id ) {
 
         //update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 
-        update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
+
         
 
         update_post_meta( $post_id, 'rbfw_hourly_rate', $hourly_rate );
