@@ -198,50 +198,6 @@ function rbfw_save_meta_box_data( $post_id ) {
 
         // end Appointment ondays
 
-        $old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
-        $new_extra_service = array();
-
-        $service_img     = !empty($_POST['service_img']) ? rbfw_array_strip( $_POST['service_img'] ) : array();
-        $names    = $_POST['service_name'] ? rbfw_array_strip( $_POST['service_name'] ) : array();
-        $urls     = $_POST['service_price'] ? rbfw_array_strip( $_POST['service_price'] ) : array();
-        $service_desc     = $_POST['service_desc'] ? rbfw_array_strip( $_POST['service_desc'] ) : array();
-        $qty      = $_POST['service_qty'] ? rbfw_array_strip( $_POST['service_qty'] ) : array();
-        $qty_type = !empty($_POST['service_qty_type']) ? rbfw_array_strip( $_POST['service_qty_type'] ) : array();
-        $count    = count( $names );
-        for ( $i = 0; $i < $count; $i ++ ) {
-
-            if (!empty($service_img[ $i ])) :
-                $new_extra_service[ $i ]['service_img'] = stripslashes( strip_tags( $service_img[ $i ] ) );
-            endif;
-
-            if ( $names[ $i ] != '' ) :
-                $new_extra_service[ $i ]['service_name'] = stripslashes( strip_tags( $names[ $i ] ) );
-            endif;
-
-            if ( $urls[ $i ] != '' ) :
-                $new_extra_service[ $i ]['service_price'] = stripslashes( strip_tags( $urls[ $i ] ) );
-            endif;
-
-            if ( $service_desc[ $i ] != '' ) :
-                $new_extra_service[ $i ]['service_desc'] = stripslashes( strip_tags( $service_desc[ $i ] ) );
-            endif;
-
-            if ( $qty[ $i ] != '' ) :
-                $new_extra_service[ $i ]['service_qty'] = stripslashes( strip_tags( $qty[ $i ] ) );
-            endif;
-
-            if ( !empty($qty_type[ $i ]) && $qty_type[ $i ] != '' ) :
-                $new_extra_service[ $i ]['service_qty_type'] = stripslashes( strip_tags( $qty_type[ $i ] ) );
-            endif;
-        }
-
-        $extra_service_data_arr = apply_filters( 'rbfw_extra_service_arr_save', $new_extra_service );
-
-        if ( ! empty( $extra_service_data_arr ) && $extra_service_data_arr != $old_extra_service ) {
-            update_post_meta( $post_id, 'rbfw_extra_service_data', $extra_service_data_arr );
-        } elseif ( empty( $extra_service_data_arr ) && $old_extra_service ) {
-            delete_post_meta( $post_id, 'rbfw_extra_service_data', $old_extra_service );
-        }
 
         // Saving Pickup Location Data
         $old_rbfw_pickup_data = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
