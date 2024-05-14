@@ -691,7 +691,7 @@
 				<?php
 			}
 
-			public function appoentment( $post_id){
+			public function appointment( $post_id){
 				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd'];
 				$rbfw_sd_appointment_ondays_data =  get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true) ? get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true) : [];
 				$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) : '';
@@ -849,7 +849,7 @@
 					<?php $this->general_price_config($post_id); ?>
 					<?php $this->resort_price_config($post_id); ?>
 					<?php $this->category_service_price($post_id); ?>
-					<?php $this->appoentment($post_id); ?>
+					<?php $this->appointment($post_id); ?>
 					<?php $this->extra_service_table($post_id); ?>
 				</div>
 				<script>
