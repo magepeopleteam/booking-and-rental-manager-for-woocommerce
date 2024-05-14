@@ -23,51 +23,20 @@ function rbfw_save_meta_box_data( $post_id ) {
 
     if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
-        $hourly_rate = isset( $_POST['rbfw_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_hourly_rate'] ) : 0;
-        $daily_rate  = isset( $_POST['rbfw_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_daily_rate'] ) : 0;
 
-        //sun
-        $hourly_rate_sun = isset( $_POST['rbfw_sun_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sun_hourly_rate'] ) : '';
-        $daily_rate_sun  = isset( $_POST['rbfw_sun_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sun_daily_rate'] ) : '';
-        $enabled_sun     = isset( $_POST['rbfw_enable_sun_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sun_day'] ) : 'no';
-        //mon
-        $hourly_rate_mon = isset( $_POST['rbfw_mon_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_mon_hourly_rate'] ) : '';
-        $daily_rate_mon  = isset( $_POST['rbfw_mon_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_mon_daily_rate'] ) : '';
-        $enabled_mon     = isset( $_POST['rbfw_enable_mon_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_mon_day'] ) : 'no';
-        //tue
-        $hourly_rate_tue = isset( $_POST['rbfw_tue_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_tue_hourly_rate'] ) : '';
-        $daily_rate_tue  = isset( $_POST['rbfw_tue_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_tue_daily_rate'] ) : '';
-        $enabled_tue     = isset( $_POST['rbfw_enable_tue_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_tue_day'] ) : 'no';
-        //wed
-        $hourly_rate_wed = isset( $_POST['rbfw_wed_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_wed_hourly_rate'] ) : '';
-        $daily_rate_wed  = isset( $_POST['rbfw_wed_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_wed_daily_rate'] ) : '';
-        $enabled_wed     = isset( $_POST['rbfw_enable_wed_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_wed_day'] ) : 'no';
-        //thu
-        $hourly_rate_thu = isset( $_POST['rbfw_thu_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_thu_hourly_rate'] ) : '';
-        $daily_rate_thu  = isset( $_POST['rbfw_thu_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_thu_daily_rate'] ) : '';
-        $enabled_thu     = isset( $_POST['rbfw_enable_thu_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_thu_day'] ) : 'no';
-        //fri
-        $hourly_rate_fri = isset( $_POST['rbfw_fri_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_fri_hourly_rate'] ) : '';
-        $daily_rate_fri  = isset( $_POST['rbfw_fri_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_fri_daily_rate'] ) : '';
-        $enabled_fri     = isset( $_POST['rbfw_enable_fri_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_fri_day'] ) : 'no';
-        //sat
-        $hourly_rate_sat         = isset( $_POST['rbfw_sat_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_hourly_rate'] ) : '';
-        $daily_rate_sat          = isset( $_POST['rbfw_sat_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_daily_rate'] ) : '';
-        $enabled_sat             = isset( $_POST['rbfw_enable_sat_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sat_day'] ) : 'no';
 
+        
         
         $rbfw_enable_pick_point  = isset( $_POST['rbfw_enable_pick_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_pick_point'] ) : 'no';
         $rbfw_enable_dropoff_point  = isset( $_POST['rbfw_enable_dropoff_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_dropoff_point'] ) : 'no';
-        $rbfw_enable_daywise_price  = isset( $_POST['rbfw_enable_daywise_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_daywise_price'] ) : 'no';
+
         $rbfw_available_qty_info_switch = isset( $_POST['rbfw_available_qty_info_switch'] ) ? $_POST['rbfw_available_qty_info_switch']  : 'no';
         $rbfw_enable_extra_service_qty  = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? $_POST['rbfw_enable_extra_service_qty']  : 'no';
-        $rbfw_enable_daily_rate  = isset( $_POST['rbfw_enable_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_enable_daily_rate'] ) : 'no';
-        $rbfw_enable_hourly_rate = isset( $_POST['rbfw_enable_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_enable_hourly_rate'] ) : 'no';
         $rbfw_enable_faq_content  = isset( $_POST['rbfw_enable_faq_content'] ) ? rbfw_array_strip( $_POST['rbfw_enable_faq_content'] ) : 'no';
         $rbfw_enable_variations  = isset( $_POST['rbfw_enable_variations'] ) ? rbfw_array_strip( $_POST['rbfw_enable_variations'] ) : 'no';
         $rbfw_enable_md_type_item_qty  = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? $_POST['rbfw_enable_md_type_item_qty'] : 'no';
 
-
+        update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
 
         $rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? $_POST['rbfw_item_stock_quantity'] : 0;
 
@@ -101,12 +70,6 @@ function rbfw_save_meta_box_data( $post_id ) {
         $_tax_class 	 = isset( $_POST['_tax_class'] ) ? rbfw_array_strip( $_POST['_tax_class'] ) : '';
         $_tax_status 	 = isset( $_POST['_tax_status'] ) ? rbfw_array_strip( $_POST['_tax_status'] ) : '';
 
-        // $rbfw_service_category_price      = isset( $_POST['rbfw_service_category_price'] ) ? rbfw_array_strip( $_POST['rbfw_service_category_price'] ) : [];
-
-        // update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
-
-
-
 
         //update_post_meta( $post_id, 'rbfw_enable_start_end_date', $rbfw_enable_start_end_date );
         update_post_meta( $post_id, 'rbfw_event_start_date', $rbfw_event_start_date );
@@ -114,13 +77,10 @@ function rbfw_save_meta_box_data( $post_id ) {
         update_post_meta( $post_id, 'rbfw_event_end_date', $rbfw_event_end_date );
         update_post_meta( $post_id, 'rbfw_event_end_time', $rbfw_event_end_time );
 
-       // update_post_meta( $post_id, 'rbfw_enable_hourly_rate', $rbfw_enable_hourly_rate );
-       // update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
-        //update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
+
 
         update_post_meta( $post_id, 'rbfw_enable_dropoff_point', $rbfw_enable_dropoff_point );
 
-        //update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
         update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
         update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
        // update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
@@ -131,37 +91,8 @@ function rbfw_save_meta_box_data( $post_id ) {
 
         
 
-        update_post_meta( $post_id, 'rbfw_hourly_rate', $hourly_rate );
-        update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );
 
-        // sun
-        update_post_meta( $post_id, 'rbfw_sun_hourly_rate', $hourly_rate_sun );
-        update_post_meta( $post_id, 'rbfw_sun_daily_rate', $daily_rate_sun );
-        update_post_meta( $post_id, 'rbfw_enable_sun_day', $enabled_sun );
-        // mon
-        update_post_meta( $post_id, 'rbfw_mon_hourly_rate', $hourly_rate_mon );
-        update_post_meta( $post_id, 'rbfw_mon_daily_rate', $daily_rate_mon );
-        update_post_meta( $post_id, 'rbfw_enable_mon_day', $enabled_mon );
-        // tue
-        update_post_meta( $post_id, 'rbfw_tue_hourly_rate', $hourly_rate_tue );
-        update_post_meta( $post_id, 'rbfw_tue_daily_rate', $daily_rate_tue );
-        update_post_meta( $post_id, 'rbfw_enable_tue_day', $enabled_tue );
-        // wed
-        update_post_meta( $post_id, 'rbfw_wed_hourly_rate', $hourly_rate_wed );
-        update_post_meta( $post_id, 'rbfw_wed_daily_rate', $daily_rate_wed );
-        update_post_meta( $post_id, 'rbfw_enable_wed_day', $enabled_wed );
-        // thu
-        update_post_meta( $post_id, 'rbfw_thu_hourly_rate', $hourly_rate_thu );
-        update_post_meta( $post_id, 'rbfw_thu_daily_rate', $daily_rate_thu );
-        update_post_meta( $post_id, 'rbfw_enable_thu_day', $enabled_thu );
-        // fri
-        update_post_meta( $post_id, 'rbfw_fri_hourly_rate', $hourly_rate_fri );
-        update_post_meta( $post_id, 'rbfw_fri_daily_rate', $daily_rate_fri );
-        update_post_meta( $post_id, 'rbfw_enable_fri_day', $enabled_fri );
-        // sat
-        update_post_meta( $post_id, 'rbfw_sat_hourly_rate', $hourly_rate_sat );
-        update_post_meta( $post_id, 'rbfw_sat_daily_rate', $daily_rate_sat );
-        update_post_meta( $post_id, 'rbfw_enable_sat_day', $enabled_sat );
+        
 
         // saving resort
         update_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', $rbfw_enable_resort_daylong_price );

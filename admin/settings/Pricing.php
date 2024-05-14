@@ -929,6 +929,7 @@
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
                     $rbfw_item_type = isset( $_POST['rbfw_item_type'] ) ? rbfw_array_strip( $_POST['rbfw_item_type'] ) : [];
 					$rbfw_enable_daily_rate  = isset( $_POST['rbfw_enable_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_enable_daily_rate'] ) : 'no';				
+					
 					$daily_rate  = isset( $_POST['rbfw_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_daily_rate'] ) : 0;
 					$rbfw_enable_hourly_rate = isset( $_POST['rbfw_enable_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_enable_hourly_rate'] ) : 'no';					
 					$hourly_rate = isset( $_POST['rbfw_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_hourly_rate'] ) : 0;
@@ -938,7 +939,6 @@
 					$rbfw_bike_car_sd_data 	 = isset( $_POST['rbfw_bike_car_sd_data'] ) ? rbfw_array_strip( $_POST['rbfw_bike_car_sd_data'] ) : 0;
 
 					update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
-					
 					update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
 					update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
 					update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );
@@ -946,10 +946,68 @@
 					update_post_meta( $post_id, 'rbfw_hourly_rate', $hourly_rate );
 					update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
 					update_post_meta( $post_id, 'rbfw_bike_car_sd_data', $rbfw_bike_car_sd_data );
+					
 
+					// daywise configureation============================
+					//sun
+					$hourly_rate_sun = isset( $_POST['rbfw_sun_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sun_hourly_rate'] ) : '';
+					$daily_rate_sun  = isset( $_POST['rbfw_sun_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sun_daily_rate'] ) : '';
+					$enabled_sun     = isset( $_POST['rbfw_enable_sun_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sun_day'] ) : 'no';
+					//mon
+					$hourly_rate_mon = isset( $_POST['rbfw_mon_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_mon_hourly_rate'] ) : '';
+					$daily_rate_mon  = isset( $_POST['rbfw_mon_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_mon_daily_rate'] ) : '';
+					$enabled_mon     = isset( $_POST['rbfw_enable_mon_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_mon_day'] ) : 'no';
+					//tue
+					$hourly_rate_tue = isset( $_POST['rbfw_tue_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_tue_hourly_rate'] ) : '';
+					$daily_rate_tue  = isset( $_POST['rbfw_tue_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_tue_daily_rate'] ) : '';
+					$enabled_tue     = isset( $_POST['rbfw_enable_tue_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_tue_day'] ) : 'no';
+					//wed
+					$hourly_rate_wed = isset( $_POST['rbfw_wed_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_wed_hourly_rate'] ) : '';
+					$daily_rate_wed  = isset( $_POST['rbfw_wed_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_wed_daily_rate'] ) : '';
+					$enabled_wed     = isset( $_POST['rbfw_enable_wed_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_wed_day'] ) : 'no';
+					//thu
+					$hourly_rate_thu = isset( $_POST['rbfw_thu_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_thu_hourly_rate'] ) : '';
+					$daily_rate_thu  = isset( $_POST['rbfw_thu_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_thu_daily_rate'] ) : '';
+					$enabled_thu     = isset( $_POST['rbfw_enable_thu_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_thu_day'] ) : 'no';
+					//fri
+					$hourly_rate_fri = isset( $_POST['rbfw_fri_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_fri_hourly_rate'] ) : '';
+					$daily_rate_fri  = isset( $_POST['rbfw_fri_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_fri_daily_rate'] ) : '';
+					$enabled_fri     = isset( $_POST['rbfw_enable_fri_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_fri_day'] ) : 'no';
+					//sat
+					$hourly_rate_sat         = isset( $_POST['rbfw_sat_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_hourly_rate'] ) : '';
+					$daily_rate_sat          = isset( $_POST['rbfw_sat_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_daily_rate'] ) : '';
+					$enabled_sat             = isset( $_POST['rbfw_enable_sat_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sat_day'] ) : 'no';
+			
+					// sun
+					update_post_meta( $post_id, 'rbfw_sun_hourly_rate', $hourly_rate_sun );
+					update_post_meta( $post_id, 'rbfw_sun_daily_rate', $daily_rate_sun );
+					update_post_meta( $post_id, 'rbfw_enable_sun_day', $enabled_sun );
+					// mon
+					update_post_meta( $post_id, 'rbfw_mon_hourly_rate', $hourly_rate_mon );
+					update_post_meta( $post_id, 'rbfw_mon_daily_rate', $daily_rate_mon );
+					update_post_meta( $post_id, 'rbfw_enable_mon_day', $enabled_mon );
+					// tue
+					update_post_meta( $post_id, 'rbfw_tue_hourly_rate', $hourly_rate_tue );
+					update_post_meta( $post_id, 'rbfw_tue_daily_rate', $daily_rate_tue );
+					update_post_meta( $post_id, 'rbfw_enable_tue_day', $enabled_tue );
+					// wed
+					update_post_meta( $post_id, 'rbfw_wed_hourly_rate', $hourly_rate_wed );
+					update_post_meta( $post_id, 'rbfw_wed_daily_rate', $daily_rate_wed );
+					update_post_meta( $post_id, 'rbfw_enable_wed_day', $enabled_wed );
+					// thu
+					update_post_meta( $post_id, 'rbfw_thu_hourly_rate', $hourly_rate_thu );
+					update_post_meta( $post_id, 'rbfw_thu_daily_rate', $daily_rate_thu );
+					update_post_meta( $post_id, 'rbfw_enable_thu_day', $enabled_thu );
+					// fri
+					update_post_meta( $post_id, 'rbfw_fri_hourly_rate', $hourly_rate_fri );
+					update_post_meta( $post_id, 'rbfw_fri_daily_rate', $daily_rate_fri );
+					update_post_meta( $post_id, 'rbfw_enable_fri_day', $enabled_fri );
+					// sat
+					update_post_meta( $post_id, 'rbfw_sat_hourly_rate', $hourly_rate_sat );
+					update_post_meta( $post_id, 'rbfw_sat_daily_rate', $daily_rate_sat );
+					update_post_meta( $post_id, 'rbfw_enable_sat_day', $enabled_sat );
 
-					// save extra service data
-
+					// save extra service data==========================================
 					$old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 					$new_extra_service = array();
 			
