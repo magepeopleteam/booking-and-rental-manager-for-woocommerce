@@ -58,7 +58,7 @@
 							<?php esc_html_e( 'Rent Specific day', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</label>
 						<span>
-							<?php _e('Do you want to offer this for specific day', 'booking-and-rental-manager-for-woocommerce'); ?>
+							<?php _e('with this option you can offer any item to rent specific day.', 'booking-and-rental-manager-for-woocommerce'); ?>
 						</span>
 					</div>
                     
@@ -73,13 +73,13 @@
 					
 						<section>
 							<div class="w-50 d-flex justify-content-between align-items-center">
-								<label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+								<label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<div class=" d-flex justify-content-between align-items-center">
 									<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_start_date" id="rbfw_event_start_date" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" readonly>
 								</div>
 							</div>
 							<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
-								<label for=""><?php esc_html_e( 'Start Time:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+								<label for=""><?php esc_html_e( 'Start Time:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<div class=" d-flex justify-content-between align-items-center">
 									<input type="time" name="rbfw_event_start_time" id="rbfw_event_start_time" value="<?php echo esc_attr( $rbfw_event_start_time ); ?>">
 
@@ -89,13 +89,13 @@
 
 						<section>
 							<div class="w-50 d-flex justify-content-between align-items-center">
-								<label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+								<label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<div class=" d-flex justify-content-between align-items-center">
 									<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_end_date" id="rbfw_event_end_date" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
 								</div>
 							</div>
 							<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
-								<label for=""><?php esc_html_e( 'End Time:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"></i></label>
+								<label for=""><?php esc_html_e( 'End Time:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<div class=" d-flex justify-content-between align-items-center">
 									<input type="time" name="rbfw_event_end_time" id="rbfw_event_end_time" value="<?php echo esc_attr( $rbfw_event_end_time ); ?>">
 								</div>
