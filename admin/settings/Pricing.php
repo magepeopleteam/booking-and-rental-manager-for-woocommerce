@@ -510,13 +510,13 @@
 													<img src="<?php echo esc_url($img_url); ?>">
 												<?php endif; ?>
 												</div>
-												<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add Image', 'booking-and-rental-manager-for-woocommerce' ); ?></a><a class="rbfw_remove_service_image_btn btn"><i class="fa-solid fa-circle-minus"></i></a>
+												<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></a><a class="rbfw_remove_service_image_btn btn"><i class="fa-solid fa-circle-minus"></i></a>
 												<input type="hidden" name="service_img[]" value="<?php echo esc_attr( $service_img ); ?>" class="rbfw_service_image"/>
 											</td>
 											<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap" value="<?php echo esc_html( $service_name ); ?>"/></td>
 											<td><input type="text"  class="mp_formControl" name="service_desc[]" placeholder="Service Description" value="<?php echo esc_html( $service_desc ); ?>"/></td>
 											<td><input type="number" class="medium" step="0.01" class="mp_formControl" name="service_price[]" placeholder="Ex: 10" value="<?php echo esc_html( $service_price ); ?>"/></td>
-											<td><input type="number" class="small" name="service_qty[]" placeholder="Ex: 100" value="<?php echo esc_html( $service_qty ); ?>"/></td>
+											<td><input type="number" class="medium" name="service_qty[]" placeholder="Ex: 100" value="<?php echo esc_html( $service_qty ); ?>"/></td>
 											<td>
 												<div class="mp_event_remove_move">
 													<button class="button remove-row" type="button"><i class="fa-solid fa-trash-can"></i></button>
@@ -533,7 +533,7 @@
 							<tr class="empty-row screen-reader-text">
 								<td class="">
 									<div class="rbfw_service_image_preview"></div>
-									<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn button"><i class="fa-solid fa-circle-minus"></i></a>
+									<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( ' Image', 'booking-and-rental-manager-for-woocommerce' ); ?></a><a class="rbfw_remove_service_image_btn button"><i class="fa-solid fa-circle-minus"></i></a>
 									<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
 								</td>
 								<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap"/></td>
