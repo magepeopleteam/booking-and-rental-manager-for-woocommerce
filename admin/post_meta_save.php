@@ -40,9 +40,7 @@ function rbfw_save_meta_box_data( $post_id ) {
 
         $rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? $_POST['rbfw_item_stock_quantity'] : 0;
 
-        $rbfw_enable_resort_daylong_price  = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_resort_daylong_price'] ) : 'no';
         // getting resort value
-        $rbfw_resort_room_data 	 = isset( $_POST['rbfw_resort_room_data'] ) ? rbfw_array_strip( $_POST['rbfw_resort_room_data'] ) : 0;
         // End getting resort value
 
         // getting bike/car single day value
@@ -95,8 +93,8 @@ function rbfw_save_meta_box_data( $post_id ) {
         
 
         // saving resort
-        update_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', $rbfw_enable_resort_daylong_price );
-        update_post_meta( $post_id, 'rbfw_resort_room_data', $rbfw_resort_room_data );
+        
+
         // end saving resort
 
         // saving bike/car single day data
