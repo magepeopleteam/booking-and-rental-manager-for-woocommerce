@@ -235,7 +235,8 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
                 if(response.max_available_qty.service_stock[index]==0){
                     jQuery(this).val(0);
                     let item = jQuery(this).data('item');
-                    jQuery('.rbfw_service_price_data.item_'+item).data('quantity',0)
+                    //jQuery(this).parent('Sold Out');
+                    jQuery('.rbfw_service_price_data.item_'+item).data('quantity',0);
                 }
                 jQuery(this).attr('max',response.max_available_qty.service_stock[index]);
             });

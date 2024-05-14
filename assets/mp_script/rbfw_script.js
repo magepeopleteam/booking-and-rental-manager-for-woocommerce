@@ -404,13 +404,6 @@ function rbfw_bikecarsd_ajax_price_calculation(){
 
                     jQuery(' button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
 
-                    /*if(get_total_price > 0){
-
-                        jQuery(' button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
-                    }
-                    else{
-                        jQuery(' button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
-                    }*/
                 }
             });
 
@@ -458,13 +451,7 @@ function rbfw_bikecarsd_ajax_price_calculation(){
                 jQuery('.rbfw_bikecarsd_price_summary.old').remove();
 
                 jQuery(' button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
-                /*if(get_total_price > 0){
 
-                    jQuery(' button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
-                }
-                else{
-                    jQuery(' button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
-                }*/
             }
         });
     });
