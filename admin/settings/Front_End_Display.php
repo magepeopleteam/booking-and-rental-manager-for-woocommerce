@@ -43,8 +43,6 @@
 
             public function add_tabs_content( $post_id ) {
 				$rbfw_available_qty_info_switch = get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) ? get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) : 'no';
-				$rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
-				$rbfw_enable_md_type_item_qty = get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) : 'no';
 			?>
 			<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_frontend_display">
 					
@@ -61,29 +59,7 @@
 						<span class="slider round"></span>
 					</label>
 				</section>
-				
-				<section >
-					<div>
-						<label><?php _e( 'Enable Multiple Item Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-						<span><?php  _e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-					</div>
-					<label class="switch">
-						<input type="checkbox" name="rbfw_enable_md_type_item_qty" value="<?php echo esc_attr($rbfw_enable_md_type_item_qty); ?>" <?php echo esc_attr(($rbfw_enable_md_type_item_qty=='yes')?'checked':''); ?>>
-						<span class="slider round"></span>
-					</label>
-				</section>
 
-				<section >
-					<div>
-						<label><?php _e( 'Enable Multiple Extra Service Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-						<span><?php  _e( 'Enable/Disable multiple service quantity selection. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-					</div>
-					<label class="switch">
-						<input type="checkbox" name="rbfw_enable_extra_service_qty" value="<?php echo esc_attr($rbfw_enable_extra_service_qty); ?>" <?php echo esc_attr(($rbfw_enable_extra_service_qty=='yes')?'checked':''); ?>>
-						<span class="slider round"></span>
-					</label>
-				</section>
-				
 				<script>
 					jQuery('input[name=rbfw_available_qty_info_switch]').click(function(){
 						var status = jQuery(this).val();
@@ -95,26 +71,8 @@
 							jQuery(this).val('yes'); 
 						}
 					});
-					jQuery('input[name=rbfw_enable_md_type_item_qty]').click(function(){
-						var status = jQuery(this).val();
-						
-						if(status == 'yes') {
-							jQuery(this).val('no');
-						}  
-						if(status == 'no') {
-							jQuery(this).val('yes'); 
-						}
-					});
-					jQuery('input[name=rbfw_enable_extra_service_qty]').click(function(){
-						var status = jQuery(this).val();
-						
-						if(status == 'yes') {
-							jQuery(this).val('no');
-						}  
-						if(status == 'no') {
-							jQuery(this).val('yes'); 
-						}
-					});
+					
+					
 				</script>
 			</div>
 			<?php
@@ -133,12 +91,9 @@
                 }
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$rbfw_available_qty_info_switch = isset( $_POST['rbfw_available_qty_info_switch'] ) ? $_POST['rbfw_available_qty_info_switch']  : 'no';
-					$rbfw_enable_md_type_item_qty  = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? $_POST['rbfw_enable_md_type_item_qty'] : 'no';
-					$rbfw_enable_extra_service_qty  = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? $_POST['rbfw_enable_extra_service_qty']  : 'no';
 					
 					update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
-					update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );
-					update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
+					
 					
                 }
             }

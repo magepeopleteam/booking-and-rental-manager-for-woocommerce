@@ -196,6 +196,22 @@
             }
 
 
+            public function quantity_box_toggle($post_id){
+				$rbfw_enable_md_type_item_qty = get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', true ) : 'no';
+
+                ?>
+                    <section >
+                        <div>
+                            <label><?php _e( 'Enable Multiple Item Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                            <span><?php  _e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="rbfw_enable_md_type_item_qty" value="<?php echo esc_attr($rbfw_enable_md_type_item_qty); ?>" <?php echo esc_attr(($rbfw_enable_md_type_item_qty=='yes')?'checked':''); ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </section>
+                <?php
+            }
             public function variation_table_switch_on_off($post_id){
 				$rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
             ?>
@@ -220,6 +236,7 @@
                     <?php $this->section_header(); ?>
 					<?php $this->panel_header('Inventory Settings','Inventory Settings'); ?>
                     <?php $this->stock_settings($post_id); ?>
+                    <?php $this->quantity_box_toggle($post_id); ?>
                     <?php $this->variation_table_switch_on_off($post_id); ?>
                     <?php $this->variation_settings($post_id); ?>
                 </div>
@@ -235,6 +252,17 @@
 						if(status == 'no') {
 							jQuery(this).val('yes'); 
                             jQuery('.rbfw_variations_table_wrap').slideDown().removeClass('hide').addClass('show');
+						}
+					});
+
+                    jQuery('input[name=rbfw_enable_md_type_item_qty]').click(function(){
+						var status = jQuery(this).val();
+						
+						if(status == 'yes') {
+							jQuery(this).val('no');
+						}  
+						if(status == 'no') {
+							jQuery(this).val('yes'); 
 						}
 					});
 
@@ -360,7 +388,9 @@
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$rbfw_enable_variations = isset( $_POST['rbfw_enable_variations'] ) ? $_POST['rbfw_enable_variations']  : 'no';
 					$rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? $_POST['rbfw_item_stock_quantity']  : '';
+					$rbfw_enable_md_type_item_qty  = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? $_POST['rbfw_enable_md_type_item_qty'] : 'no';
 					
+                    update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );				
 					update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
 					update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 					
