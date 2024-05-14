@@ -543,9 +543,12 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $content .= '</thead>';
                 $content .= '<tbody>';
                 $i = 1;
+
                 foreach ($rbfw_bike_car_sd_data as $value) {
 
                    $max_available_qty = rbfw_get_bike_car_sd_available_qty($id, $selected_date, $value['rent_type'], $selected_time);
+
+
 
                     if($value['qty'] > 0){
 
@@ -568,9 +571,17 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                         $content .= '<td class="w_20_pc">';
                         $content .= '<div class="rbfw_service_price_wrap">';
                         $content .= '<div class="rbfw_qty_input">';
-                        $content .= '<a class="rbfw_qty_minus rbfw_bikecarsd_qty_minus"><i class="fa-solid fa-minus"></i></a>';
-                        $content .= '<input type="number" min="0" max="'.$max_available_qty.'" value="0" name="rbfw_bikecarsd_info['.$i.'][qty]" class="rbfw_bikecarsd_qty" data-price="'.$value['price'].'" data-type="'.$value['rent_type'].'" data-cat="bikecarsd" />';
-                        $content .= '<a class="rbfw_qty_plus rbfw_bikecarsd_qty_plus"><i class="fa-solid fa-plus"></i></a>';
+
+                        if($max_available_qty){
+                            $content .= '<a class="rbfw_qty_minus rbfw_bikecarsd_qty_minus"><i class="fa-solid fa-minus"></i></a>';
+                            $content .= '<input type="number" min="0" max="'.$max_available_qty.'" value="0" name="rbfw_bikecarsd_info['.$i.'][qty]" class="rbfw_bikecarsd_qty" data-price="'.$value['price'].'" data-type="'.$value['rent_type'].'" data-cat="bikecarsd" />';
+                            $content .= '<a class="rbfw_qty_plus rbfw_bikecarsd_qty_plus"><i class="fa-solid fa-plus"></i></a>';
+                        }else{
+                            $content   .= '<div style="width: 120px">Sold Out</div>';
+                        }
+
+
+
                         $content .= '</div>';
 
 
@@ -642,9 +653,17 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     $content   .= '<div class="rbfw_service_price_wrap">';
                     $content   .= '<input type="hidden" name="rbfw_service_info['.$c.'][service_price]" value="'.$value['service_price'].'"/>';
                     $content   .= '<div class="rbfw_qty_input">';
-                    $content   .= '<a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>';
-                    $content   .= '<input type="number" min="0" max="'.esc_attr($max_es_available_qty).'" value="0" name="rbfw_service_info['.$c.'][service_qty]" class="rbfw_service_qty" data-price="'.$value['service_price'].'" data-type="'.$value['service_name'].'" data-cat="service"/>';
-                    $content   .= '<a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>';
+
+                    if($max_es_available_qty){
+                        $content   .= '<a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>';
+                        $content   .= '<input type="number" min="0" max="'.esc_attr($max_es_available_qty).'" value="0" name="rbfw_service_info['.$c.'][service_qty]" class="rbfw_service_qty" data-price="'.$value['service_price'].'" data-type="'.$value['service_name'].'" data-cat="service"/>';
+                        $content   .= '<a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>';
+                    }else{
+                        $content   .= '<div style="width: 120px">Sold Out</div>';
+                    }
+
+
+
                     $content   .= '</div>';
                     
 

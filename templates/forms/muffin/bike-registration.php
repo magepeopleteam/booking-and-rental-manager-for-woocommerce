@@ -354,21 +354,28 @@ if($rbfw_enable_variations == 'yes'){
                                             <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][cat_title]" value="<?php echo $item['cat_title'] ?>">
                                             <?php foreach ($item['cat_services'] as $serkey=>$service){ ?>
                                                 <?php if($service['title']){ ?>
-                                                    <div style="display: flex;gap:20px">
-                                                        <div>
+                                                    <div class="service-price-item" style="display: flex;gap:20px">
+                                                        <div style="display: none" class="rbfw-sold-out">
+                                                            Sold Out
+                                                        </div>
+
+                                                        <div class="rbfw-checkbox">
                                                             <label class="switch">
-                                                                <input type="checkbox" class="rbfw_service_price_data item_<?php echo $cat.$serkey ?>" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][main_cat_name]" data-service_price_type="<?php echo $service['service_price_type'] ?>" data-price="<?php echo $service['price'] ?>" data-quantity="1" data-item="<?php echo $cat.$serkey ?>">
+                                                                <input type="checkbox" class="rbfw_service_price_data item_<?php echo $cat.$serkey ?>" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][main_cat_name]" data-service_price_type="<?php echo $service['service_price_type'] ?>" data-price="<?php echo $service['price'] ?>" data-quantity="1" data-rbfw_enable_md_type_item_qty="<?php echo $rbfw_enable_extra_service_qty ?>" data-item="<?php echo $cat.$serkey ?>">
                                                                 <span class="slider round"></span>
                                                             </label>
                                                             <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][name]" value="<?php echo $service['title'] ?>">
                                                             <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][service_price_type]" value="<?php echo $service['service_price_type'] ?>">
                                                             <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][price]" value="<?php echo $service['price'] ?>">
                                                         </div>
+
                                                         <div class="title">
                                                             <?php echo $service['title'] ?>
                                                         </div>
 
-                                                        <div class="rbfw_qty_input rbfw_service_quantity item_<?php echo $cat.$serkey ?>" style="display: none">
+
+
+                                                        <div  class="rbfw_qty_input rbfw_service_quantity item_<?php echo $cat.$serkey ?>" style="display: none">
                                                             <a class="rbfw_service_quantity_minus" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-minus"></i></a>
                                                             <input type="number"  name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][quantity]" min="0" max="" value="1" class="rbfw_service_qty rbfw_service_info_stock" data-cat="service" data-price="20" data-item="<?php echo $cat.$serkey ?>" data-name="ddd" autocomplete="off">
                                                             <a class="rbfw_service_quantity_plus" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-plus"></i></a>

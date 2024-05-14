@@ -82,9 +82,19 @@ function rbfw_service_price_calculation(total_days){
         jQuery(this).val(1);
         var service_price_type =  jQuery(this).data('service_price_type');
         var service_quantity = jQuery(this).data('quantity');
+        var rbfw_enable_md_type_item_qty = jQuery(this).data('rbfw_enable_md_type_item_qty');
+
+        console.log('rbfw_enable_md_type_item_qty',rbfw_enable_md_type_item_qty);
+
+        //alert(rbfw_enable_md_type_item_qty);
+
+        if(rbfw_enable_md_type_item_qty=='yes'){
+            jQuery('.item_'+item_no).css( "display", "table" );
+        }
 
 
-        jQuery('.item_'+item_no).css( "display", "table" );
+
+
         if(service_price_type=='day_wise'){
             total +=  jQuery(this).data('price')*service_quantity*total_days;
         }else{
@@ -106,7 +116,7 @@ jQuery('.rbfw_bikecarmd_es_qty_minus,.rbfw_bikecarmd_es_qty_plus').click(functio
 
 jQuery('#pickup_date,#dropoff_date,#pickup_time,#dropoff_time').change(function (e) {
     let that = jQuery(this);
-    rbfw_bikecarmd_ajax_price_calculation(that, 0);
+    rbfw_bikecarmd_ajax_price_calculation(that, 0,false);
     service_price_arr = {};
 });
 
@@ -126,7 +136,7 @@ jQuery(document).on('change', '#rbfw_item_quantity', function(e) {
 
 
 
-function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
+function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
 
     if (typeof reload_es === 'undefined' || reload_es === null) {
         reload_es = 1;
@@ -231,14 +241,53 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es){
             jQuery('[name="total_days"]').val(response.total_days);
 
 
-            jQuery(".rbfw_service_info_stock").each(function(index, value) {
+            jQuery(".service-price-item").each(function(index, value) {
+
                 if(response.max_available_qty.service_stock[index]==0){
                     jQuery(this).val(0);
                     let item = jQuery(this).data('item');
-                    jQuery('.rbfw_service_price_data.item_'+item).data('quantity',0)
+
+
+                    jQuery(this).find(".rbfw_qty_input.rbfw_service_quantity").hide();
+                    jQuery(this).find(".rbfw_service_price_data").prop('checked', false);
+                    jQuery(this).find(".rbfw_service_price_data").attr("disabled", true);
+
+                    jQuery(this).find(".rbfw-sold-out").show();
+                    jQuery(this).find(".rbfw-checkbox").hide();
+
+
+
+
+
+                    /*if(!jQuery(this).find(".rbfw_service_price_data").is(":checked")){
+                        jQuery(this).find(".rbfw-sold-out").hide();
+                        jQuery(this).find(".rbfw_qty_input.rbfw_service_quantity").hide();
+                    }else{ // alert(12);
+                        jQuery(this).find(".rbfw-sold-out").show();
+                        jQuery(this).find(".rbfw_qty_input.rbfw_service_quantity").hide();
+                    }*/
+
+                    jQuery(this).find(".rbfw_service_price_data").data('quantity',0);
+                }else{
+
+                    jQuery(this).find(".rbfw_service_price_data").removeAttr("disabled");
+
+                    jQuery(this).find(".rbfw-sold-out").hide();
+                    jQuery(this).find(".rbfw-checkbox").show();
+
+                    /*if(!jQuery(this).find(".rbfw_service_price_data").is(":checked")){
+                        jQuery(this).find(".rbfw-sold-out").hide();
+                        jQuery(this).find(".rbfw_qty_input.rbfw_service_quantity").hide();
+                    }else{
+                        jQuery(this).find(".rbfw-sold-out").hide();
+                        jQuery(this).find(".rbfw_qty_input.rbfw_service_quantity").show();
+                    }*/
+
                 }
-                jQuery(this).attr('max',response.max_available_qty.service_stock[index]);
+                jQuery(this).find(".rbfw_service_info_stock").attr('max',response.max_available_qty.service_stock[index]);
             });
+
+
 
             jQuery(".rbfw_bikecarmd_es_qty").each(function(index, value) {
                 jQuery(this).attr('max',response.max_available_qty.extra_service_instock[index]);
