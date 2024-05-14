@@ -678,6 +678,58 @@
 				<?php
 			}
 
+			public function appoentment( $post_id){
+				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd'];
+				$rbfw_sd_appointment_ondays_data =  get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true) ? get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true) : [];
+				$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) : '';
+
+				?>
+				<section class="rbfw_switch_sd_appointment_row" <?php if ( $rbfw_item_type != 'appointment') { echo 'style="display:none"'; } ?>>
+					
+						<label>
+							<?php esc_html_e( 'Maximum Allowed Quantity Per Session/Time Slot:', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
+						</label>
+						<input type="number" name="rbfw_sd_appointment_max_qty_per_session" id="rbfw_sd_appointment_max_qty_per_session" value="<?php echo esc_attr($rbfw_sd_appointment_max_qty_per_session); ?>">
+					
+				</section>
+				<section>
+					<label class="w-30">
+						<?php esc_html_e( 'Appointment Ondays:', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</label>
+					<div class="rbfw_appointment_ondays_wrap">
+							<div class="rbfw_appointment_ondays_value">
+								<input type="checkbox" name="rbfw_sd_appointment_ondays[]" value="Sunday" <?php if(!empty($rbfw_sd_appointment_ondays_data) && in_array('Sunday',$rbfw_sd_appointment_ondays_data)){ echo 'checked'; }?>>
+								<span><?php esc_html_e( 'Sunday', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</div>
+							<div class="rbfw_appointment_ondays_value">
+								<input type="checkbox" name="rbfw_sd_appointment_ondays[]" value="Monday" <?php if(!empty($rbfw_sd_appointment_ondays_data) && in_array('Monday',$rbfw_sd_appointment_ondays_data)){ echo 'checked'; }?>>
+								<span><?php esc_html_e( 'Monday', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</div>
+							<div class="rbfw_appointment_ondays_value">
+								<input type="checkbox" name="rbfw_sd_appointment_ondays[]" value="Tuesday" <?php if(!empty($rbfw_sd_appointment_ondays_data) && in_array('Tuesday',$rbfw_sd_appointment_ondays_data)){ echo 'checked'; }?>>
+								<span><?php esc_html_e( 'Tuesday', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</div>
+							<div class="rbfw_appointment_ondays_value">
+								<input type="checkbox" name="rbfw_sd_appointment_ondays[]" value="Wednesday" <?php if(!empty($rbfw_sd_appointment_ondays_data) && in_array('Wednesday',$rbfw_sd_appointment_ondays_data)){ echo 'checked'; }?>>
+								<span><?php esc_html_e( 'Wednesday', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</div>
+							<div class="rbfw_appointment_ondays_value">
+								<input type="checkbox" name="rbfw_sd_appointment_ondays[]" value="Thursday" <?php if(!empty($rbfw_sd_appointment_ondays_data) && in_array('Thursday',$rbfw_sd_appointment_ondays_data)){ echo 'checked'; }?>>
+								<span><?php esc_html_e( 'Thursday', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</div>
+							<div class="rbfw_appointment_ondays_value">
+								<input type="checkbox" name="rbfw_sd_appointment_ondays[]" value="Friday" <?php if(!empty($rbfw_sd_appointment_ondays_data) && in_array('Friday',$rbfw_sd_appointment_ondays_data)){ echo 'checked'; }?>>
+								<span><?php esc_html_e( 'Friday', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</div>
+							<div class="rbfw_appointment_ondays_value">
+								<input type="checkbox" name="rbfw_sd_appointment_ondays[]" value="Saturday" <?php if(!empty($rbfw_sd_appointment_ondays_data) && in_array('Saturday',$rbfw_sd_appointment_ondays_data)){ echo 'checked'; }?>>
+								<span><?php esc_html_e( 'Saturday', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</div>
+						</div>
+				</section>
+				<?php
+			}
+
 			public function general_price_config($post_id){
 				$rbfw_enable_hourly_rate = get_post_meta($post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
 				$rbfw_enable_daily_rate  = get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) : 'yes';
@@ -762,6 +814,8 @@
 					</table>
 				</section>
 
+				
+
 				<?php do_action( 'rbfw_after_general_price_table_row' ); ?>
 				
 				<?php do_action( 'rbfw_after_general_price_table' ); ?>
@@ -778,6 +832,7 @@
 					<?php $this->single_day_table($post_id); ?>
 					<?php $this->resort_price_config($post_id); ?>
 					<?php $this->category_service_price($post_id); ?>
+					<?php $this->appoentment($post_id); ?>
 					<?php $this->general_price_config($post_id); ?>
 					<?php $this->extra_service_table($post_id); ?>
 				</div>
@@ -1003,6 +1058,8 @@
 					$rbfw_enable_resort_daylong_price  = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_resort_daylong_price'] ) : 'no';
 					
 					$rbfw_resort_room_data 	 = isset( $_POST['rbfw_resort_room_data'] ) ? rbfw_array_strip( $_POST['rbfw_resort_room_data'] ) : 0;
+					$rbfw_sd_appointment_max_qty_per_session 	 = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ?  $_POST['rbfw_sd_appointment_max_qty_per_session'] : '';
+					$rbfw_sd_appointment_ondays = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? rbfw_array_strip( $_POST['rbfw_sd_appointment_ondays'] ) : [];
 
 					update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
 					update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
@@ -1014,6 +1071,9 @@
 					update_post_meta( $post_id, 'rbfw_bike_car_sd_data', $rbfw_bike_car_sd_data );
 					update_post_meta( $post_id, 'rbfw_resort_room_data', $rbfw_resort_room_data );
 					update_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', $rbfw_enable_resort_daylong_price );
+					update_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', $rbfw_sd_appointment_max_qty_per_session );
+					update_post_meta( $post_id, 'rbfw_sd_appointment_ondays', $rbfw_sd_appointment_ondays );
+
 					// daywise configureation============================
 					//sun
 					$hourly_rate_sun = isset( $_POST['rbfw_sun_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sun_hourly_rate'] ) : '';

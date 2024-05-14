@@ -122,8 +122,6 @@ function rbfw_save_meta_box_data( $post_id ) {
         // end FAQ switch
 
         // saving Appointment ondays
-        update_post_meta( $post_id, 'rbfw_sd_appointment_ondays', $rbfw_sd_appointment_ondays );
-        update_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', $rbfw_sd_appointment_max_qty_per_session );
 
         // end Appointment ondays
 
