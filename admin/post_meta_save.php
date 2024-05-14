@@ -77,7 +77,6 @@ function rbfw_save_meta_box_data( $post_id ) {
         // End getting resort value
 
         // getting bike/car single day value
-        $rbfw_bike_car_sd_data 	 = isset( $_POST['rbfw_bike_car_sd_data'] ) ? rbfw_array_strip( $_POST['rbfw_bike_car_sd_data'] ) : 0;
         // End getting resort value
 
         // getting bike/car single day value
@@ -170,7 +169,7 @@ function rbfw_save_meta_box_data( $post_id ) {
         // end saving resort
 
         // saving bike/car single day data
-        update_post_meta( $post_id, 'rbfw_bike_car_sd_data', $rbfw_bike_car_sd_data );
+
         // end saving bike/car single day data
 
         // saving variations data
