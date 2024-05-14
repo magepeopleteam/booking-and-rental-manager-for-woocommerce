@@ -16,13 +16,13 @@
 
             public function add_tab_menu() {
             ?>
-                <li data-target-tabs="#rbfw_frontend_display"><i class="fa-solid fa-display"></i><?php esc_html_e( ' Front-end Display', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li data-target-tabs="#rbfw_frontend_display"><i class="fa-solid fa-gear"></i><?php esc_html_e( ' Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
             <?php
             }
 
             public function section_header(){
                 ?>
-                    <h2 class="mp_tab_item_title"><?php _e('Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                    <h2 class="mp_tab_item_title"><?php _e('Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
                     <p class="mp_tab_item_description"><?php _e('Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         
                 <?php
@@ -41,15 +41,29 @@
                 <?php
             }
 
-            public function add_tabs_content( $post_id ) {
-				$rbfw_available_qty_info_switch = get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) ? get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) : 'no';
-			?>
-			<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_frontend_display">
-					
-				<?php $this->section_header(); ?>
-                <?php $this->panel_header('Front-end Display Settings ','Front-end Display Settings'); ?>
+            public function shipping_enable($post_id){
+                ?>
+                <section>
+                    <div>
+                        <label>
+                            <?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </label>
+                        <span><?php echo esc_html__('Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                    </div>
+                    <?php $shipping_enable_switch = get_post_meta($post_id,'shipping_enable',true);?>
+                    <label class="switch">
+                        <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr(($shipping_enable_switch=='on')?$shipping_enable_switch:'off'); ?>" <?php echo esc_attr(($shipping_enable_switch=='on')?'checked':''); ?>>
+                        <span class="slider round"></span>
+                    </label>
+                </section>
+                <?php
+            }
 
-				<section >
+            public function quantity_display($post_id){
+				$rbfw_available_qty_info_switch = get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) ? get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) : 'no';
+
+                ?>
+                <section >
 					<div>
 						<label><?php _e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 						<span><?php  _e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
@@ -59,6 +73,31 @@
 						<span class="slider round"></span>
 					</label>
 				</section>
+                <?php
+            }
+            public function shortcode($post_id){
+                ?>
+                    <section>
+                        <div>
+                            <label>
+                                <?php echo esc_html__( 'Add To Cart Form Shortcode', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </label>
+                            <span><?php echo esc_html__('This short code you can put anywhere in your content.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        </div>
+                        <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $post_id; ?>']</code>
+                    </section>
+                <?php
+            }
+
+            public function add_tabs_content( $post_id ) {
+			?>
+			<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_frontend_display">
+					
+				<?php $this->section_header(); ?>
+                <?php $this->panel_header('Front-end Display Settings ','Front-end Display Settings'); ?>
+                <?php $this->quantity_display($post_id); ?>
+                <?php $this->shipping_enable($post_id); ?>
+                <?php $this->shortcode($post_id); ?>
 
 				<script>
 					jQuery('input[name=rbfw_available_qty_info_switch]').click(function(){
@@ -72,6 +111,15 @@
 						}
 					});
 					
+                    jQuery('input[name=shipping_enable]').click(function(){  
+                        var status = jQuery(this).val();
+                        if(status == 'on') {
+                            jQuery(this).val('off') 
+                        }  
+                        if(status == 'off') {
+                            jQuery(this).val('on');  
+                        }
+                    });
 					
 				</script>
 			</div>
@@ -91,7 +139,8 @@
                 }
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$rbfw_available_qty_info_switch = isset( $_POST['rbfw_available_qty_info_switch'] ) ? $_POST['rbfw_available_qty_info_switch']  : 'no';
-					
+                    $shipping_enable 	 = isset( $_POST['shipping_enable'] ) ? rbfw_array_strip( $_POST['shipping_enable'] ) : '';
+					update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
 					update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
 					
 					

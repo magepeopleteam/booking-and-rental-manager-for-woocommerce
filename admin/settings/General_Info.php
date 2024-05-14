@@ -22,7 +22,7 @@
 
             public function section_header(){
                 ?>
-                    <h2 class="mp_tab_item_title"><?php echo esc_html__('General Info', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                    <h2 class="mp_tab_item_title"><?php echo esc_html__('General Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
                     <p class="mp_tab_item_description"><?php echo esc_html__('Here you can configure basic information.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         
                 <?php
@@ -41,21 +41,6 @@
                 <?php
             }
 
-
-            public function shortcode($post_id){
-                ?>
-                    <section>
-                        <div>
-                            <label>
-                                <?php echo esc_html__( 'Add To Cart Form Shortcode', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </label>
-                            <span><?php echo esc_html__('This short code you can put anywhere in your content.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                        </div>
-                        <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $post_id; ?>']</code>
-                    </section>
-                <?php
-            }
-
             public function select_category($post_id){
                 $rbfw_categories = get_post_meta($post_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_categories', true)) : [];
                 ?>
@@ -64,7 +49,7 @@
                             <label>
                                 <?php _e( 'Select Categories', 'booking-and-rental-manager-for-woocommerce' ) ?>
                             </label>
-                            <span><?php _e( 'Add multiple categories', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
+                            <span><?php _e( 'Choose category that is related with this item', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
                         </div>
                         <div class="w-50">
                             <select name="rbfw_categories[]" multiple class="category2">
@@ -85,23 +70,7 @@
                 <?php
             }
 
-            public function shipping_enable($post_id){
-                ?>
-                <section>
-                    <div>
-                        <label>
-                            <?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                        </label>
-                        <span><?php echo esc_html__('Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                    </div>
-                    <?php $shipping_enable_switch = get_post_meta($post_id,'shipping_enable',true);?>
-                    <label class="switch">
-                        <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr(($shipping_enable_switch=='on')?$shipping_enable_switch:'off'); ?>" <?php echo esc_attr(($shipping_enable_switch=='on')?'checked':''); ?>>
-                        <span class="slider round"></span>
-                    </label>
-                </section>
-                <?php
-            }
+            
 
             public function field_feature_category( $option ){
 
@@ -328,7 +297,7 @@
 
             public function features_category( $post_id ) {
                 ?>
-                    <?php $this->panel_header('Features Category Settings','Here you can configure features category.'); ?>
+                    <?php $this->panel_header('Item Features Settings','Here you can add all features as category if needed.'); ?>
                     <?php
                         $options = array(
                             'id'          => 'rbfw_feature_category',
@@ -344,34 +313,11 @@
             public function add_tabs_content( $post_id ) {
                 ?>
                     <div class="mpStyle mp_tab_item " data-tab-item="#rbfw_gen_info">
-                        
                         <?php $this->section_header(); ?>
-                        
-                        <?php $this->panel_header('Basic Settings','Here you can settings basic info.'); ?>
-                        
-                        
-                        <?php $this->shortcode($post_id); ?>
-
+                        <?php $this->panel_header('Category Settings','Here you can assign categories ot each items'); ?>
                         <?php $this->select_category($post_id); ?>
-
-                        <?php $this->shipping_enable($post_id); ?>
-
                         <?php $this->features_category($post_id); ?>
-
-
                     </div>
-
-                    <script>
-                        jQuery('input[name=shipping_enable]').click(function(){  
-                            var status = jQuery(this).val();
-                            if(status == 'on') {
-                                jQuery(this).val('off') 
-                            }  
-                            if(status == 'off') {
-                                jQuery(this).val('on');  
-                            }
-                        });
-                    </script>
             <?php } 
 
             public function settings_save($post_id) {
@@ -390,11 +336,10 @@
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
                     $rbfw_categories 	 = isset( $_POST['rbfw_categories'] ) ? rbfw_array_strip( $_POST['rbfw_categories'] ) : [];
-                    $shipping_enable 	 = isset( $_POST['shipping_enable'] ) ? rbfw_array_strip( $_POST['shipping_enable'] ) : '';
                     $feature_category 	 = isset( $_POST['rbfw_feature_category'] ) ? rbfw_array_strip( $_POST['rbfw_feature_category'] ) : [];
                     
                     update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
-                    update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
+                    
                     update_post_meta( $post_id, 'rbfw_feature_category', $feature_category );
                 }
             }
