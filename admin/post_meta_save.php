@@ -55,7 +55,7 @@ function rbfw_save_meta_box_data( $post_id ) {
         $daily_rate_sat          = isset( $_POST['rbfw_sat_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_daily_rate'] ) : '';
         $enabled_sat             = isset( $_POST['rbfw_enable_sat_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sat_day'] ) : 'no';
         $rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? rbfw_array_strip( $_POST['rbfw_item_type'] ) : 'others';
-        $shipping_enable          = isset( $_POST['shipping_enable'] ) ? rbfw_array_strip( $_POST['shipping_enable'] ) : '';
+        
         $rbfw_enable_pick_point  = isset( $_POST['rbfw_enable_pick_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_pick_point'] ) : 'no';
         $rbfw_enable_dropoff_point  = isset( $_POST['rbfw_enable_dropoff_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_dropoff_point'] ) : 'no';
         $rbfw_enable_daywise_price  = isset( $_POST['rbfw_enable_daywise_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_daywise_price'] ) : 'no';
@@ -97,7 +97,7 @@ function rbfw_save_meta_box_data( $post_id ) {
         $rbfw_event_end_date  = isset( $_POST['rbfw_event_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_date'] ) : '';
         $rbfw_event_end_time  = isset( $_POST['rbfw_event_end_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_time'] ) : '';
 
-        $rbfw_categories 	 = isset( $_POST['rbfw_categories'] ) ? rbfw_array_strip( $_POST['rbfw_categories'] ) : [];
+
 
         $_tax_class 	 = isset( $_POST['_tax_class'] ) ? rbfw_array_strip( $_POST['_tax_class'] ) : '';
         $_tax_status 	 = isset( $_POST['_tax_status'] ) ? rbfw_array_strip( $_POST['_tax_status'] ) : '';
@@ -130,7 +130,7 @@ function rbfw_save_meta_box_data( $post_id ) {
         //update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 
         update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
-        update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
+        
 
         update_post_meta( $post_id, 'rbfw_hourly_rate', $hourly_rate );
         update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );
@@ -180,9 +180,6 @@ function rbfw_save_meta_box_data( $post_id ) {
 
        // update_post_meta( $post_id, 'rbfw_category_name', $rbfw_category_name );
 
-        update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
-
-        update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
         update_post_meta( $post_id, '_tax_class', $_tax_class );
         update_post_meta( $post_id, '_tax_status', $_tax_status );
 
