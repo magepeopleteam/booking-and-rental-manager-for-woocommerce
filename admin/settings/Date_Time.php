@@ -148,27 +148,31 @@
 						</label>
 					</section>
 					<!-- time slot -->
-					<section>
-						<div>
-							<label>
-								<?php _e( 'Available Time Slot', 'booking-and-rental-manager-for-woocommerce' ) ?>
-							</label>
-							<span><?php _e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
-						</div>
-						<div class="w-50">
-							<?php $this->multiple_time_slot_select($post_id); ?>
-						</div>
-					</section>
+					<div class="available-time-slot <?php echo esc_attr(($rbfw_time_slot_switch=='on')?'show':'hide'); ?>">
+						<section>
+							<div >
+								<label>
+									<?php _e( 'Available Time Slot', 'booking-and-rental-manager-for-woocommerce' ) ?>
+								</label>
+								<span><?php _e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
+							</div>
+							<div class="w-70">
+								<?php $this->multiple_time_slot_select($post_id); ?>
+							</div>
+						</section>
+					</div>
                     <?php $this->regular_fixed_date($post_id); ?>
 			 	</div>
 				<script>
                     jQuery('input[name=rbfw_time_slot_switch]').click(function(){
                         var status = jQuery(this).val();
                         if(status == 'on') {
-                            jQuery(this).val('off') 
+                            jQuery(this).val('off');
+							jQuery('.available-time-slot').slideUp().removeClass('show').addClass('hide');
                         }  
                         if(status == 'off') {
-                            jQuery(this).val('on');  
+                            jQuery(this).val('on'); 
+							jQuery('.available-time-slot').slideDown().removeClass('hide').addClass('show'); 
                         }
                     });
                     jQuery('input[name=rbfw_enable_start_end_date]').click(function(){
@@ -179,7 +183,7 @@
                         }  
                         if(status == 'no') {
                             jQuery(this).val('yes');
-                            jQuery('.rbfw-fixed-date').slideUp().removeClass('hide').addClass('show');  
+                            jQuery('.rbfw-fixed-date').slideDown().removeClass('hide').addClass('show');  
                         }
                     });
 				</script>
