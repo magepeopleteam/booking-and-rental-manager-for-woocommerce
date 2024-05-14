@@ -34,18 +34,14 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     if($qty > 0){
                         $main_array[$i][$type] = $qty;
                     }
-                    
                     $i++;
                 endforeach;
             }
-
             return $main_array;
         }
 
         public function rbfw_get_bikecarsd_service_array_reorder($product_id, $service_info){
-            
             $main_array = [];
-
             if(!empty($service_info)){
                 $service_info = array_column($service_info,'service_qty','service_name');
                 $i = 0;
@@ -56,15 +52,13 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                         $main_array[$i][$type] = $qty;
                     }
                     $i++;
-
                     endforeach;
             }
-
             return $main_array;
         }
 
         public function rbfw_get_bikecarsd_rent_info($product_id, $rent_info){
-            $rent_price         = 0;
+            $rent_price   = 0;
             $main_array = [];
             $rbfw_rent_data = get_post_meta( $product_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $product_id, 'rbfw_bike_car_sd_data', true ) : array();
 
@@ -544,7 +538,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $content .= '<tr>';
                 $content .= '<th class="w_50_pc">'.rbfw_string_return('rbfw_text_rent_type',__('Type','booking-and-rental-manager-for-woocommerce')).'</th>';
                 $content .= '<th class="w_30_pc">'.rbfw_string_return('rbfw_text_price',__('Price','booking-and-rental-manager-for-woocommerce')).'</th>';
-                $content .= '<th class="w_20_pc">'.rbfw_string_return('rbfw_text_quantity',__('Quantity','booking-and-rental-manager-for-woocommerce')).'</th>';
+                $content .= '<th data-booked_message="'. esc_attr__( 'Available Quantity is ', 'booking-and-rental-manager-for-woocommerce' ).'" class="w_20_pc">'.rbfw_string_return('rbfw_text_quantity',__('Quantity','booking-and-rental-manager-for-woocommerce')).'</th>';
                 $content .= '</tr>';
                 $content .= '</thead>';
                 $content .= '<tbody>';

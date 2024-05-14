@@ -20,7 +20,7 @@ if (!class_exists('MageRBFWClass')) {
             add_action('admin_menu', array($this, 'admin_menu'));
             /* WooCommerce Action and Filter */
             add_filter('woocommerce_order_status_changed', array($this, 'rbfw_wc_status_update'), 10, 4);
-            //add_action('wp_insert_post', array($this, 'create_hidden_wc_product_on_publish'), 10, 3);
+            add_action('wp_insert_post', array($this, 'create_hidden_wc_product_on_publish'), 10, 3);
             add_action('save_post', array($this, 'run_link_product_on_save'), 99, 1);
             add_action('wp', array($this, 'hide_hidden_wc_product_from_frontend'));
             add_action('parse_query', [$this, 'rbfw_hide_hidden_wc_products_in_list_page']);

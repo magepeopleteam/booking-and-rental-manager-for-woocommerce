@@ -47,9 +47,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $end_date = $_POST['dropoff_date'];
             $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'';
             $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:'';
+
             if (empty($star_time) && empty($end_time)) {
                 $pickup_datetime = date('Y-m-d', strtotime($start_date . ' ' . '00:00:00'));
-                $dropoff_datetime = date('Y-m-d', strtotime($end_date . ' ' . '24:00:00'));
+                $dropoff_datetime = date('Y-m-d', strtotime($end_date . ' ' . rbfw_end_time()));
             } else {
                 $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
                 $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
@@ -129,8 +130,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'duration_price_html' => wc_price($duration_price),
                 'rbfw_service_price' => $rbfw_service_price,
                 'rbfw_service_price_html' => wc_price($rbfw_service_price),
-                'service_cost' => $service_cost,
-                'service_cost_html' => wc_price($service_cost),
+                'service_cost' => $service_cost+$rbfw_service_price,
+                'service_cost_html' => wc_price($service_cost+$rbfw_service_price),
                 'sub_total_price_html' => wc_price($sub_total_price),
                 'discount' => $discount_desc,
                 'total_price' => $total_price,
@@ -138,6 +139,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'max_available_qty' => $max_available_qty,
                 'total_days' => $total_days,
                 'total_duration' => $duration,
+                'ticket_item_quantity' => $item_quantity
             ));
 
             wp_die();

@@ -78,7 +78,7 @@ if (!class_exists('RBFWOrderPage')) {
                     ?>    
                     </tbody>
                 </table>
-            </div> 
+            </div>
             <?php
         }
     }
