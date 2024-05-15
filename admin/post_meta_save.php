@@ -57,25 +57,11 @@ function rbfw_save_meta_box_data( $post_id ) {
 
         // End getting appointment days
 
-        $rbfw_enable_start_end_date  = isset( $_POST['rbfw_enable_start_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_enable_start_end_date'] ) : 'yes';
-        $rbfw_event_start_date  = isset( $_POST['rbfw_event_start_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_date'] ) : '';
-        $rbfw_event_start_time  = isset( $_POST['rbfw_event_start_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_time'] ) : '';
-        $rbfw_event_end_date  = isset( $_POST['rbfw_event_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_date'] ) : '';
-        $rbfw_event_end_time  = isset( $_POST['rbfw_event_end_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_time'] ) : '';
-
+       
 
 
         $_tax_class 	 = isset( $_POST['_tax_class'] ) ? rbfw_array_strip( $_POST['_tax_class'] ) : '';
         $_tax_status 	 = isset( $_POST['_tax_status'] ) ? rbfw_array_strip( $_POST['_tax_status'] ) : '';
-
-        
-
-
-        //update_post_meta( $post_id, 'rbfw_enable_start_end_date', $rbfw_enable_start_end_date );
-        update_post_meta( $post_id, 'rbfw_event_start_date', $rbfw_event_start_date );
-        update_post_meta( $post_id, 'rbfw_event_start_time', $rbfw_event_start_time );
-        update_post_meta( $post_id, 'rbfw_event_end_date', $rbfw_event_end_date );
-        update_post_meta( $post_id, 'rbfw_event_end_time', $rbfw_event_end_time );
 
 
 
