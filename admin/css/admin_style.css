@@ -1264,10 +1264,15 @@ div.mpStyle [class*="_bgColor_1"] i {
     color: #fff;
 }
 
+.rbfw_feature_icon_preview{
+    width: 30px;
+    height: 30px;
+}
+
 .rbfw_feature_icon_preview i {
     border: 1px solid #d3d3d3;
     width: 30px;
-    height: 22px;
+    height: 30px;
     border-radius: 3px;
     text-align: center;
     display: grid;
@@ -1302,15 +1307,16 @@ div.mpStyle [class*="_bgColor_1"] i {
 
 .rbfw_room_type_image_preview,
 .rbfw_service_image_preview {
-    display: inline-block;
+
     line-height: 12px;
+    width: 100px;
 }
 
 .rbfw_room_type_image_preview img,
 .rbfw_service_image_preview img {
     width: 25px;
     height: 25px;
-    border: 1px solid #62e66a;
+    border: 1px solid var(--mage-primary);
 }
 
 

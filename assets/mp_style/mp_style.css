@@ -599,11 +599,7 @@ div.filter_item,
     border-radius: 50px;
 }
 
-.mpStyle .mp_remove_icon,
-.mpStyle [class*="circle"] {
-    -webkit-border-radius: 50%;
-    border-radius: 50%;
-}
+
 
 .mpStyle .buttonGroup>*,
 .mpStyle .groupContent .formControl,
