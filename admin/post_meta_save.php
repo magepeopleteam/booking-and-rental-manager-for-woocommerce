@@ -27,8 +27,6 @@ function rbfw_save_meta_box_data( $post_id ) {
 
         
         
-        $rbfw_enable_pick_point  = isset( $_POST['rbfw_enable_pick_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_pick_point'] ) : 'no';
-        $rbfw_enable_dropoff_point  = isset( $_POST['rbfw_enable_dropoff_point'] ) ? rbfw_array_strip( $_POST['rbfw_enable_dropoff_point'] ) : 'no';
 
         $rbfw_available_qty_info_switch = isset( $_POST['rbfw_available_qty_info_switch'] ) ? $_POST['rbfw_available_qty_info_switch']  : 'no';
         $rbfw_enable_extra_service_qty  = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? $_POST['rbfw_enable_extra_service_qty']  : 'no';
@@ -36,7 +34,7 @@ function rbfw_save_meta_box_data( $post_id ) {
         $rbfw_enable_variations  = isset( $_POST['rbfw_enable_variations'] ) ? rbfw_array_strip( $_POST['rbfw_enable_variations'] ) : 'no';
         $rbfw_enable_md_type_item_qty  = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? $_POST['rbfw_enable_md_type_item_qty'] : 'no';
 
-        update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
+
 
         $rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? $_POST['rbfw_item_stock_quantity'] : 0;
 
@@ -59,7 +57,6 @@ function rbfw_save_meta_box_data( $post_id ) {
 
 
 
-        update_post_meta( $post_id, 'rbfw_enable_dropoff_point', $rbfw_enable_dropoff_point );
 
         update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
         update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
@@ -100,38 +97,7 @@ function rbfw_save_meta_box_data( $post_id ) {
         // end Appointment ondays
 
 
-        // Saving Pickup Location Data
-        $old_rbfw_pickup_data = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
-        $new_rbfw_pickup_data = array();
-        $names                = $_POST['loc_pickup_name'] ? rbfw_array_strip( $_POST['loc_pickup_name'] ) : array();
-        $count                = count( $names );
-        for ( $i = 0; $i < $count; $i ++ ) {
-            if ( $names[ $i ] != '' ) :
-                $new_rbfw_pickup_data[ $i ]['loc_pickup_name'] = stripslashes( strip_tags( $names[ $i ] ) );
-            endif;
-        }
-        $pickup_data_arr = apply_filters( 'rbfw_pickup_arr_save', $new_rbfw_pickup_data );
-        if ( ! empty( $pickup_data_arr ) && $pickup_data_arr != $old_rbfw_pickup_data ) {
-            update_post_meta( $post_id, 'rbfw_pickup_data', $pickup_data_arr );
-        } elseif ( empty( $pickup_data_arr ) && $old_rbfw_pickup_data ) {
-            delete_post_meta( $post_id, 'rbfw_pickup_data', $old_rbfw_pickup_data );
-        }
-        // Saving Dropoff Data
-        $old_rbfw_dropoff_data = get_post_meta( $post_id, 'rbfw_dropoff_data', true ) ? get_post_meta( $post_id, 'rbfw_dropoff_data', true ) : [];
-        $new_rbfw_dropoff_data = array();
-        $names                 = $_POST['loc_dropoff_name'] ? rbfw_array_strip( $_POST['loc_dropoff_name'] ) : array();
-        $count                 = count( $names );
-        for ( $i = 0; $i < $count; $i ++ ) {
-            if ( $names[ $i ] != '' ) :
-                $new_rbfw_dropoff_data[ $i ]['loc_dropoff_name'] = stripslashes( strip_tags( $names[ $i ] ) );
-            endif;
-        }
-        $dropoff_data_arr = apply_filters( 'rbfw_dropoff_arr_save', $new_rbfw_dropoff_data );
-        if ( ! empty( $dropoff_data_arr ) && $dropoff_data_arr != $old_rbfw_dropoff_data ) {
-            update_post_meta( $post_id, 'rbfw_dropoff_data', $dropoff_data_arr );
-        } elseif ( empty( $dropoff_data_arr ) && $old_rbfw_dropoff_data ) {
-            delete_post_meta( $post_id, 'rbfw_dropoff_data', $old_rbfw_dropoff_data );
-        }
+        
         //save_rbfw_repeated_setting( $post_id, 'mep_event_faq' );
     }
 }
