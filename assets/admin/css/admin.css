@@ -893,6 +893,7 @@
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_details {
   width: 80%;
   padding: 2% 5%;
+  overflow: hidden;
 }
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_details h2.mp_tab_item_title {
   padding: 0;

@@ -1309,6 +1309,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 .rbfw_service_image_preview {
     display: inline-block;
     line-height: 12px;
+    width: 100px;
 }
 
 .rbfw_room_type_image_preview img,

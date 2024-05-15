@@ -610,10 +610,10 @@
 					</section>
 
 					<section>
-						<div >
+						<div class="w-100">
 						<?php do_action( 'rbfw_before_resort_price_table' ); ?>
 						<div style="overflow-x:auto;">
-							<table class='form-table rbfw_resort_price_table'>
+							<table class='form-table rbfw_resort_price_table w-100'>
 								<thead>
 								<tr>
 									<th><?php esc_html_e( 'Room Type', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
