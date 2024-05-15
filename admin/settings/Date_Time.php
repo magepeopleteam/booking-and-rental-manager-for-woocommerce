@@ -208,9 +208,18 @@
                     $rbfw_time_slot = isset( $_POST['rbfw_time_slot_switch'] ) ? rbfw_array_strip( $_POST['rbfw_time_slot_switch'] ) : '';
                     $rdfw_available_time = isset( $_POST['rdfw_available_time'] ) ? rbfw_array_strip( $_POST['rdfw_available_time'] ) : [];
                     $rbfw_enable_start_end_date = isset( $_POST['rbfw_enable_start_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_enable_start_end_date'] ) : 'no';
-                    update_post_meta( $post_id, 'rbfw_time_slot_switch', $rbfw_time_slot );
+                    $rbfw_event_start_date  = isset( $_POST['rbfw_event_start_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_date'] ) : '';
+       	 			$rbfw_event_start_time  = isset( $_POST['rbfw_event_start_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_time'] ) : '';
+					$rbfw_event_end_date  = isset( $_POST['rbfw_event_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_date'] ) : '';
+					$rbfw_event_end_time  = isset( $_POST['rbfw_event_end_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_time'] ) : '';
+				
+					update_post_meta( $post_id, 'rbfw_time_slot_switch', $rbfw_time_slot );
                     update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
 					update_post_meta( $post_id, 'rbfw_enable_start_end_date', $rbfw_enable_start_end_date );
+					update_post_meta( $post_id, 'rbfw_event_start_date', $rbfw_event_start_date );
+					update_post_meta( $post_id, 'rbfw_event_start_time', $rbfw_event_start_time );
+					update_post_meta( $post_id, 'rbfw_event_end_date', $rbfw_event_end_date );
+        			update_post_meta( $post_id, 'rbfw_event_end_time', $rbfw_event_end_time );
                 }
             }
 		}

@@ -994,7 +994,10 @@
   display: inline-block;
   background-color: var(--mage-primary);
   color: var(--mage-white);
+}
+#rbfw_add_meta_box .rbfw_variations_table .rbfw_variations_table_row .mp_event_remove_move .remove-rbfw_variations_table_row {
   border-radius: 5px 0 0 0;
+  padding: 8px;
 }
 #rbfw_add_meta_box .rbfw_switch_return_date {
   display: inherit;

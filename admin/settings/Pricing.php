@@ -524,14 +524,16 @@
 											$service_qty_type = array_key_exists( 'service_qty_type', $field ) ? esc_attr( $field['service_qty_type'] ) : 'inputbox';
 											?>
 											<tr>
-												<td class="rbfw_service_image_wrap">
-													<div class="rbfw_service_image_preview">
-													<?php if($img_url): ?>
-														<img src="<?php echo esc_url($img_url); ?>">
-													<?php endif; ?>
+												<td>
+													<div class="rbfw_service_image_wrap text-center">
+														<div class="rbfw_service_image_preview">
+														<?php if($img_url): ?>
+															<img src="<?php echo esc_url($img_url); ?>">
+														<?php endif; ?>
+														</div>
+														<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn btn"><i class="fa-solid fa-circle-minus"></i></a>
+														<input type="hidden" name="service_img[]" value="<?php echo esc_attr( $service_img ); ?>" class="rbfw_service_image"/>
 													</div>
-													<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></a><a class="rbfw_remove_service_image_btn btn"><i class="fa-solid fa-circle-minus"></i></a>
-													<input type="hidden" name="service_img[]" value="<?php echo esc_attr( $service_img ); ?>" class="rbfw_service_image"/>
 												</td>
 												<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap" value="<?php echo esc_html( $service_name ); ?>"/></td>
 												<td><input type="text"  class="mp_formControl" name="service_desc[]" placeholder="Service Description" value="<?php echo esc_html( $service_desc ); ?>"/></td>
@@ -551,10 +553,12 @@
 								?>
 								<!-- empty hidden one for jQuery -->
 								<tr class="empty-row screen-reader-text">
-									<td class="">
-										<div class="rbfw_service_image_preview"></div>
-										<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( ' Image', 'booking-and-rental-manager-for-woocommerce' ); ?></a><a class="rbfw_remove_service_image_btn button"><i class="fa-solid fa-circle-minus"></i></a>
-										<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
+									<td >
+										<div class="rbfw_service_image_wrap text-center">
+											<div class="rbfw_service_image_preview"></div>
+											<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn button"><i class="fa-solid fa-circle-minus"></i></a>
+											<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
+										</div>
 									</td>
 									<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap"/></td>
 									<td><input type="text"  class="mp_formControl " name="service_desc[]" placeholder="Service Description" value=""/></td>
@@ -1124,9 +1128,11 @@
 					$rbfw_sd_appointment_ondays = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? rbfw_array_strip( $_POST['rbfw_sd_appointment_ondays'] ) : [];
 					$rbfw_enable_extra_service_qty  = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? $_POST['rbfw_enable_extra_service_qty']  : 'no';
 
+					
 
 					update_post_meta( $post_id, 'rbfw_enable_category_service_price', $rbfw_enable_category_service_price );
 					update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
+					
 					update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
 					update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
 					update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );

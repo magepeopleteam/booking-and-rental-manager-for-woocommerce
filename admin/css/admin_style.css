@@ -1705,10 +1705,8 @@ input#rbfw_features_search_icon {
 }
 
 .rbfw_service_image_wrap {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
+    justify-content: center;
     align-items: center;
     margin-bottom: 0 !important;
 }
