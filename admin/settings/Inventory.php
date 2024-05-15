@@ -180,6 +180,8 @@
 
             public function stock_settings($post_id){
 				$rbfw_item_stock_quantity  = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) ? get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) : '';
+				$rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
+                
             ?>
                 <section>
                     <div>
@@ -188,8 +190,8 @@
                         </label>
                         <span><?php esc_html_e( 'Add stock quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                     </div>
-                    <div>
-                        <input type="number" name="rbfw_item_stock_quantity" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity); ?>">
+                    <div class="item_stock_quantity">
+                        <input type="number" name="rbfw_item_stock_quantity" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity); ?>" <?php echo ( $rbfw_enable_variations == 'yes' ) ? 'disabled':''; ?>>
                     </div>
                 </section>
             <?php
@@ -248,10 +250,12 @@
 						if(status == 'yes') {
 							jQuery(this).val('no');
                             jQuery('.rbfw_variations_table_wrap').slideUp().removeClass('show').addClass('hide');
+                            jQuery('.item_stock_quantity input').removeAttr("disabled");
 						}  
 						if(status == 'no') {
 							jQuery(this).val('yes'); 
                             jQuery('.rbfw_variations_table_wrap').slideDown().removeClass('hide').addClass('show');
+                            jQuery('.item_stock_quantity input').attr("disabled", true);
 						}
 					});
 

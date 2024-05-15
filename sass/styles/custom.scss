@@ -325,10 +325,11 @@
         display: flex;
         justify-content: space-between;
         margin: 5px 0;
-        padding: 5px 0;
+        padding: 5px;
         border-bottom: 1px solid $color-light;
         width: 62%;
         margin: auto;
+        background-color: $color-light;
     }
     .feature_category_inner_item_wrap{
         width: 62%;
