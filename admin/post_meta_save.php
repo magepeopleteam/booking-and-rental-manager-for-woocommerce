@@ -28,9 +28,7 @@ function rbfw_save_meta_box_data( $post_id ) {
         
         
 
-        $rbfw_available_qty_info_switch = isset( $_POST['rbfw_available_qty_info_switch'] ) ? $_POST['rbfw_available_qty_info_switch']  : 'no';
         $rbfw_enable_extra_service_qty  = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? $_POST['rbfw_enable_extra_service_qty']  : 'no';
-        $rbfw_enable_faq_content  = isset( $_POST['rbfw_enable_faq_content'] ) ? rbfw_array_strip( $_POST['rbfw_enable_faq_content'] ) : 'no';
         $rbfw_enable_variations  = isset( $_POST['rbfw_enable_variations'] ) ? rbfw_array_strip( $_POST['rbfw_enable_variations'] ) : 'no';
         $rbfw_enable_md_type_item_qty  = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? $_POST['rbfw_enable_md_type_item_qty'] : 'no';
 
@@ -58,7 +56,7 @@ function rbfw_save_meta_box_data( $post_id ) {
 
 
 
-        update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
+
         update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
        // update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
         update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );
@@ -89,15 +87,9 @@ function rbfw_save_meta_box_data( $post_id ) {
 
 
         // saving FAQ switch
-        update_post_meta( $post_id, 'rbfw_enable_faq_content', $rbfw_enable_faq_content );
-        // end FAQ switch
-
-        // saving Appointment ondays
-
-        // end Appointment ondays
+        
 
 
         
-        //save_rbfw_repeated_setting( $post_id, 'mep_event_faq' );
     }
 }
