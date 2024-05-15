@@ -1182,7 +1182,7 @@ function rbfw_add_variations_tab_content($rbfw_id){
  /*********************************
  * Start: Front-end Display Tab
  * ******************************/
-add_action( 'rbfw_meta_box_tab_name', 'rbfw_frontend_display_tab_name' , 90);
+//add_action( 'rbfw_meta_box_tab_name', 'rbfw_frontend_display_tab_name' , 90);
 
 function rbfw_frontend_display_tab_name($rbfw_id){
 
@@ -1192,7 +1192,7 @@ function rbfw_frontend_display_tab_name($rbfw_id){
 
 }
 
-add_action( 'rbfw_meta_box_tab_content', 'rbfw_frontend_display_tab_content' , 90);
+//add_action( 'rbfw_meta_box_tab_content', 'rbfw_frontend_display_tab_content' , 90);
 
 function rbfw_frontend_display_tab_content($rbfw_id){
 	$rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : '';
