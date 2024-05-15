@@ -25,30 +25,5 @@ function rbfw_save_meta_box_data( $post_id ) {
 
 
 
-        
-        
-
-        $rbfw_enable_extra_service_qty  = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? $_POST['rbfw_enable_extra_service_qty']  : 'no';
-        
-
-        // getting bike/car single day value
-        // End getting resort value
-
-
-        // getting appointment days
-        $rbfw_sd_appointment_ondays 	 = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? rbfw_array_strip( $_POST['rbfw_sd_appointment_ondays'] ) : [];
-        $rbfw_sd_appointment_max_qty_per_session 	 = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ?  $_POST['rbfw_sd_appointment_max_qty_per_session'] : '';
-
-
-        update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
-
-
-
-
-
-        // saving variations data
-       
-
-        
     }
 }
