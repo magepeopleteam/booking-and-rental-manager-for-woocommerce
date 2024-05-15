@@ -29,21 +29,9 @@ function rbfw_save_meta_box_data( $post_id ) {
         
 
         $rbfw_enable_extra_service_qty  = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? $_POST['rbfw_enable_extra_service_qty']  : 'no';
-        $rbfw_enable_variations  = isset( $_POST['rbfw_enable_variations'] ) ? rbfw_array_strip( $_POST['rbfw_enable_variations'] ) : 'no';
-        $rbfw_enable_md_type_item_qty  = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? $_POST['rbfw_enable_md_type_item_qty'] : 'no';
-
-
-
-        $rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? $_POST['rbfw_item_stock_quantity'] : 0;
-
-        // getting resort value
-        // End getting resort value
+        
 
         // getting bike/car single day value
-        // End getting resort value
-
-        // getting bike/car single day value
-        $rbfw_variations_data 	 = isset( $_POST['rbfw_variations_data'] ) ? rbfw_array_strip( $_POST['rbfw_variations_data'] ) : [];
         // End getting resort value
 
 
@@ -51,44 +39,15 @@ function rbfw_save_meta_box_data( $post_id ) {
         $rbfw_sd_appointment_ondays 	 = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? rbfw_array_strip( $_POST['rbfw_sd_appointment_ondays'] ) : [];
         $rbfw_sd_appointment_max_qty_per_session 	 = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ?  $_POST['rbfw_sd_appointment_max_qty_per_session'] : '';
 
-        // End getting appointment days
-
-
-
-
 
         update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
-       // update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
-        update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );
-
-        //update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
 
 
-        
 
 
-        
-
-        // saving resort
-        
-
-        // end saving resort
-
-        // saving bike/car single day data
-
-        // end saving bike/car single day data
 
         // saving variations data
-        update_post_meta( $post_id, 'rbfw_variations_data', $rbfw_variations_data );
-        // end saving variations data
-
-
-       // update_post_meta( $post_id, 'rbfw_category_name', $rbfw_category_name );
-
-
-        // saving FAQ switch
-        
-
+       
 
         
     }

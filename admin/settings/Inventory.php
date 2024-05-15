@@ -389,10 +389,13 @@
 					$rbfw_enable_variations = isset( $_POST['rbfw_enable_variations'] ) ? $_POST['rbfw_enable_variations']  : 'no';
 					$rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? $_POST['rbfw_item_stock_quantity']  : '';
 					$rbfw_enable_md_type_item_qty  = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? $_POST['rbfw_enable_md_type_item_qty'] : 'no';
+                    $rbfw_variations_data 	 = isset( $_POST['rbfw_variations_data'] ) ? rbfw_array_strip( $_POST['rbfw_variations_data'] ) : [];
 					
                     update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );				
 					update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
 					update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
+                    update_post_meta( $post_id, 'rbfw_variations_data', $rbfw_variations_data );
+
 					
                 }
             }
