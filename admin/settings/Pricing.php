@@ -484,8 +484,9 @@
 				<div class="rbfw_es_price_config_wrapper " <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
 					<?php $this->panel_header('Extra Service Price Settings','Extra Service Price Settings'); ?>
 					<section>
-						<div>
-							<table id="repeatable-fieldset-one" class='rbfw_pricing_table form-table'>
+						<div class="w-100">
+							<div style="overflow-x: auto;">
+							<table class='rbfw_pricing_table form-table w-100' id="repeatable-fieldset-one" >
 								<thead>
 								<tr>
 									<th><?php esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
@@ -568,6 +569,7 @@
 								</tr>
 								</tbody>
 							</table>
+							</div>
 							<p class="mt-2">
 								<button id="add-row" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Extra Service', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 							</p>
