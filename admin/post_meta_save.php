@@ -57,12 +57,6 @@ function rbfw_save_meta_box_data( $post_id ) {
 
         // End getting appointment days
 
-       
-
-
-        $_tax_class 	 = isset( $_POST['_tax_class'] ) ? rbfw_array_strip( $_POST['_tax_class'] ) : '';
-        $_tax_status 	 = isset( $_POST['_tax_status'] ) ? rbfw_array_strip( $_POST['_tax_status'] ) : '';
-
 
 
         update_post_meta( $post_id, 'rbfw_enable_dropoff_point', $rbfw_enable_dropoff_point );
@@ -95,14 +89,6 @@ function rbfw_save_meta_box_data( $post_id ) {
 
 
        // update_post_meta( $post_id, 'rbfw_category_name', $rbfw_category_name );
-
-        update_post_meta( $post_id, '_tax_class', $_tax_class );
-        update_post_meta( $post_id, '_tax_status', $_tax_status );
-
-
-
-
-
 
 
         // saving FAQ switch
