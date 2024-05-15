@@ -1036,6 +1036,12 @@
   margin: 5px 0;
   padding: 5px 0;
   border-bottom: 1px solid var(--mage-light);
+  width: 62%;
+  margin: auto;
+}
+#rbfw_add_meta_box .feature_category_inner_item_wrap {
+  width: 62%;
+  margin: auto;
 }
 #rbfw_add_meta_box .add-feature-category {
   background-color: var(--mage-primary);

@@ -98,8 +98,9 @@
                 ob_start();
                 ?>
     
-                <div id="field-wrapper-<?php echo esc_attr($id); ?>" class="field-wrapper field-text-multi-wrapper
-                        field-text-multi-wrapper-<?php echo esc_attr($field_id); ?>">
+                <div id="field-wrapper-<?php echo esc_attr($id); ?>" class="field-wrapper field-text-multi-wrapper field-text-multi-wrapper-<?php echo esc_attr($field_id); ?>">
+                    <section>  
+                        <div class="w-100">
                         <table class="form-table rbfw_feature_category_table">
                             <tbody class="sortable_tr">
                                 <?php
@@ -108,7 +109,7 @@
                                 foreach ($values as $value):?>
                                 <tr data-cat="<?php echo $i; ?>">
                                     <td>
-                                        <div class="features_category_wrapper">
+                                        <div class="features_category_wrapper text-center">
                                             <div class="field-list <?php echo esc_attr($field_id); ?>">
                                                 <div class="feature_category_inner_wrap">
                                                     <div class="feature_category_title"><label class=" mb-1"><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_feature_category[<?php echo $i; ?>][cat_title]" data-key="<?php echo $i; ?>" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/></div>
@@ -126,11 +127,13 @@
                                                             
                                                             <input type='hidden' name='rbfw_feature_category[<?php echo $i; ?>][cat_features][<?php echo $c; ?>][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php echo esc_attr($icon); ?>' data-key="<?php echo $c; ?>" class="rbfw_feature_icon"/>
                                                             <input type='text' name='rbfw_feature_category[<?php echo $i; ?>][cat_features][<?php echo $c; ?>][title]'  placeholder='<?php echo esc_attr($placeholder); ?>' value="<?php  echo esc_attr($title); ?>" data-key="<?php echo $c; ?>"/>
-    
-                                                            <?php if($sortable):?>
-                                                            <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
-                                                            <?php endif; ?>
-                                                            <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span>
+                                                            <div>
+                                                                <?php if($sortable):?>
+                                                                <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
+                                                                <?php endif; ?>
+                                                                <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span>
+                                                        
+                                                            </div>
                                                         </div>
                                                         <?php
                                                             $c++;
@@ -157,7 +160,7 @@
                                     ?>
                                         <tr data-cat="0">
                                             <td>
-                                                <div class="features_category_wrapper">
+                                                <div class="features_category_wrapper text-center">
     
                                                 <div class="field-list <?php echo esc_attr($field_id); ?>">
                                                     <div class="feature_category_inner_wrap">
@@ -169,11 +172,10 @@
                                                                 <div class="rbfw_feature_icon_preview p-1" data-key="0"></div>
                                                                 <input type='hidden' name='rbfw_feature_category[0][cat_features][0][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' data-key="0" class="rbfw_feature_icon"/>
                                                                 <input type='text' name='rbfw_feature_category[0][cat_features][0][title]'  placeholder='<?php echo esc_attr($placeholder); ?>' value='' data-key="0"/>
-    
-                                                                <?php if($sortable):?>
-                                                                <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
-                                                                <?php endif; ?>
-                                                                <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span>
+                                                                <div>
+                                                                    <?php if($sortable):?>
+                                                                    <span class="button sort"><i class="fas fa-arrows-alt"></i></span><?php endif; ?><span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -192,8 +194,10 @@
                                 ?>
                             </tbody>
                         </table>
-                    <span class="ppof-button add-feature-category mt-1"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature Category','booking-and-rental-manager-for-woocommerce'); ?></span> 
-                </div>
+                        <span class="ppof-button add-feature-category mt-1"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature Category','booking-and-rental-manager-for-woocommerce'); ?></span> 
+                        </div> 
+                    </section> 
+                    </div>
     
                 <script>
                     jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
@@ -203,7 +207,7 @@
                         e.stopImmediatePropagation();
                         let dataCat = jQuery('.rbfw_feature_category_table tbody tr:last-child').attr('data-cat');
                         let nextCat = parseInt(dataCat) + 1;
-                        let html = '<tr data-cat="'+nextCat+'"><td><div class="features_category_wrapper"><div class="field-list rbfw_feature_category"><div class="feature_category_inner_wrap"><div class="feature_category_title"><label><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_feature_category_title" name="rbfw_feature_category['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></div><div class="feature_category_inner_item_wrap sortable"><div class="item"><a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a><div class="rbfw_feature_icon_preview p-1" data-key="0"></div><input type="hidden" name="rbfw_feature_category['+nextCat+'][cat_features][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_feature_icon"> <input type="text" name="rbfw_feature_category['+nextCat+'][cat_features][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0"> <?php if($sortable):?> <span class="button sort"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span></div></div></div></div><span class="ppof-button add-new-feature"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo ($remove_text); ?></span></td></tr>';
+                        let html = '<tr data-cat="'+nextCat+'"><td><div class="features_category_wrapper text-center"><div class="field-list rbfw_feature_category"><div class="feature_category_inner_wrap"><div class="feature_category_title"><label><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_feature_category_title" name="rbfw_feature_category['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></div><div class="feature_category_inner_item_wrap sortable"><div class="item"><a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a><div class="rbfw_feature_icon_preview p-1" data-key="0"></div><input type="hidden" name="rbfw_feature_category['+nextCat+'][cat_features][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_feature_icon"> <input type="text" name="rbfw_feature_category['+nextCat+'][cat_features][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0"><div><?php if($sortable):?> <span class="button sort"><i class="fas fa-arrows-alt"></i></span><?php endif; ?><span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span></div></div></div></div></div><span class="ppof-button add-new-feature"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo ($remove_text); ?></span></td></tr>';
                         jQuery('.rbfw_feature_category_table tbody').append(html);
                         jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
                         jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
@@ -229,13 +233,14 @@
     
                         html += '<input type="text" name="rbfw_feature_category['+ dataCat +'][cat_features]['+ c +'][title]" placeholder="<?php
                             echo esc_attr($placeholder); ?>" data-key="'+ c +'"/>';
-    
+                        html += '<div>';
                         <?php if($sortable):?>
                         html += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
                         <?php endif; ?>
     
                         html += '<span class="button remove" onclick="jQuery(this).parent().remove()' +
                             '"><?php echo ($remove_text); ?></span>';
+                        html += '</div>';
                         html += '</div>';
     
                         theTarget.append(html);
