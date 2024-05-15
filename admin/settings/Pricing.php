@@ -454,9 +454,9 @@
 
 										<td><input type="number" name="rbfw_bike_car_sd_data[0][price]" value="" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
 
-										<td class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>><input class="medium" type="number" name="rbfw_bike_car_sd_data[0][qty]" value="" placeholder="<?php esc_html_e( '(Quantity/Stock)/Day', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+										<td class="rbfw_bike_car_sd_price_table_action_column <?php echo esc_attr($rbfw_item_type == 'appointment'? 'hide':'show'); ?>" ><input class="medium" type="number" name="rbfw_bike_car_sd_data[0][qty]" value="" placeholder="<?php esc_html_e( '(Quantity/Stock)/Day', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
 
-										<td class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
+										<td class="rbfw_bike_car_sd_price_table_action_column <?php echo esc_attr($rbfw_item_type == 'appointment'? 'hide':'show'); ?>" >
 											<div class="mp_event_remove_move">
 												<button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
 											</div>
@@ -465,7 +465,7 @@
 								<?php endif; ?>
 								</tbody>
 							</table>
-							<p class="mt-2" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
+							<p class="mt-2 <?php echo esc_attr($rbfw_item_type == 'appointment'? 'show':'show'); ?>" >
 								<button id="add-bike-car-sd-type-row" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 							</p>
 						</div>
@@ -717,11 +717,11 @@
 			public function appointment( $post_id){
 				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd'];
 				$rbfw_sd_appointment_ondays_data =  get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true) ? get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true) : [];
-				$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) : '';
+				$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) : 'appointment';
 
 				?>
-				<div <?php echo esc_attr( $rbfw_item_type != 'appointment')?'hide':'show'; ?> >
-					<section class="rbfw_switch_sd_appointment_row" >
+				<div class="rbfw_switch_sd_appointment_row <?php echo esc_attr( $rbfw_item_type != 'appointment')?'hide':'show'; ?>">
+					<section>
 						
 							<label>
 								<?php esc_html_e( 'Maximum Allowed Quantity Per Session/Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?>
