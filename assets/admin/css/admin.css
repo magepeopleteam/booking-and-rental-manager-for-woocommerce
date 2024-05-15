@@ -1038,10 +1038,11 @@
   display: flex;
   justify-content: space-between;
   margin: 5px 0;
-  padding: 5px 0;
+  padding: 5px;
   border-bottom: 1px solid var(--mage-light);
   width: 62%;
   margin: auto;
+  background-color: var(--mage-light);
 }
 #rbfw_add_meta_box .feature_category_inner_item_wrap {
   width: 62%;

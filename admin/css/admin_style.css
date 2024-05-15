@@ -1162,10 +1162,10 @@ div.mpStyle [class*="_bgColor_1"] i {
 
 #rbfw_add_meta_box .field-text-multi-wrapper .field-list .item {
     padding:5px;
-    background-color:#f2f2f2;
     margin: 5px 0;
     display: flex;
     justify-content: space-between;
+    border: 1px solid var(--mage-light);
 }
 
 #rbfw_features_icon_list_wrapper.mage_modal {
