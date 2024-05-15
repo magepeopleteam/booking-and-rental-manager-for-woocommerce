@@ -720,17 +720,16 @@
 				$rbfw_sd_appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) ? get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true ) : '';
 
 				?>
-				<div>
-
+				<div <?php echo esc_attr( $rbfw_item_type != 'appointment')?'hide':'show'; ?> >
+					<section class="rbfw_switch_sd_appointment_row" >
+						
+							<label>
+								<?php esc_html_e( 'Maximum Allowed Quantity Per Session/Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							</label>
+							<input type="number" name="rbfw_sd_appointment_max_qty_per_session" id="rbfw_sd_appointment_max_qty_per_session" value="<?php echo esc_attr($rbfw_sd_appointment_max_qty_per_session); ?>">
+						
+					</section>
 				</div>
-				<section class="rbfw_switch_sd_appointment_row <?php echo esc_attr( $rbfw_item_type != 'appointment')?'hide':'show'; ?>" >
-					
-						<label>
-							<?php esc_html_e( 'Maximum Allowed Quantity Per Session/Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-question-circle tool-tips"><span></span></i>
-						</label>
-						<input type="number" name="rbfw_sd_appointment_max_qty_per_session" id="rbfw_sd_appointment_max_qty_per_session" value="<?php echo esc_attr($rbfw_sd_appointment_max_qty_per_session); ?>">
-					
-				</section>
 				<section class="hide">
 					<label class="w-30">
 						<?php esc_html_e( 'Appointment Ondays', 'booking-and-rental-manager-for-woocommerce' ); ?>
