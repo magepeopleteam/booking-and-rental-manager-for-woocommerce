@@ -98,7 +98,7 @@
                                                 </td>
                                                 <td>
                                                 <div class="mp_event_remove_move">
-                                                    <button class="button remove-rbfw_variations_value_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
+                                                    <button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button>
                                                     <div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div>
                                                 </div>
                                                 </td>
@@ -113,7 +113,7 @@
                                     <button class="add-new-variation-value ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                 </div>
                                 <div class="mp_event_remove_move">
-                                    <button class="remove-rbfw_variations_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
+                                    <button class="remove-rbfw_variations_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button>
                                     <!-- <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div> -->
                                 </div>
                             </div>
@@ -156,7 +156,7 @@
                                                 </td>
                                                 <td>
                                                 <div class="mp_event_remove_move">
-                                                    <button class="button remove-rbfw_variations_value_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
+                                                    <button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button>
                                                     <div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div>
                                                 </div>
                                                 </td>
@@ -166,7 +166,7 @@
                                     <button class="add-new-variation-value ppof-button mt-2"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                 </div>
                                 <div class="mp_event_remove_move">
-                                    <button class="remove-rbfw_variations_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
+                                    <button class="remove-rbfw_variations_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button>
                                     <!-- <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div> -->
                                 </div>
                             </div>

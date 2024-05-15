@@ -276,7 +276,10 @@
                     display: inline-block;
                     background-color: $color-primary;
                     color: $color-white;
-                    border-radius: 5px 0 0 0 ;
+                }
+                .remove-rbfw_variations_table_row{
+                    border-radius: 5px 0 0 0;
+                    padding: 8px;
                 }
             }
         }
