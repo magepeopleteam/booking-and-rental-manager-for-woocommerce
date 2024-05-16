@@ -863,6 +863,8 @@
 
 			<?php do_action( 'rbfw_after_week_price_table',$post_id ); ?>
 			
+			<?php do_action('rbfw_after_extra_service_table'); ?>
+			
 			<?php
 			}
 
