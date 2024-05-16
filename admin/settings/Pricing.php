@@ -531,8 +531,10 @@
 															<img src="<?php echo esc_url($img_url); ?>">
 														<?php endif; ?>
 														</div>
-														<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn btn"><i class="fa-solid fa-circle-minus"></i></a>
-														<input type="hidden" name="service_img[]" value="<?php echo esc_attr( $service_img ); ?>" class="rbfw_service_image"/>
+														<div class="service_image_add_remove">
+															<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn btn"><i class="fa-solid fa-circle-minus"></i></a>
+															<input type="hidden" name="service_img[]" value="<?php echo esc_attr( $service_img ); ?>" class="rbfw_service_image"/>
+														</div>
 													</div>
 												</td>
 												<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap" value="<?php echo esc_html( $service_name ); ?>"/></td>
@@ -556,8 +558,10 @@
 									<td >
 										<div class="rbfw_service_image_wrap text-center">
 											<div class="rbfw_service_image_preview"></div>
-											<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn button"><i class="fa-solid fa-circle-minus"></i></a>
-											<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
+											<div class="service_image_add_remove">
+												<a class="rbfw_service_image_btn button"><i class="fa-solid fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn button"><i class="fa-solid fa-circle-minus"></i></a>
+												<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
+											</div>
 										</div>
 									</td>
 									<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap"/></td>

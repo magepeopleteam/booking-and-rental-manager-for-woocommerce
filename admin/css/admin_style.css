@@ -1711,6 +1711,12 @@ input#rbfw_features_search_icon {
     margin-bottom: 0 !important;
 }
 
+.service_image_add_remove{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .rbfw_settings_wrapper table.form-table tr.rbfw_mps_paypal_heading,
 .rbfw_settings_wrapper table.form-table tr.rbfw_mps_stripe_heading {
     background: #5374d9;
