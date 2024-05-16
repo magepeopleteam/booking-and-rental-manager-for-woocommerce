@@ -2026,9 +2026,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     }
 
     /*start service inventory*/
-
     $rbfw_service_category_price = get_post_meta($post_id, 'rbfw_service_category_price', true);
-
     if (!empty($rbfw_service_category_price)) {
         $service_stock = [];
         foreach($rbfw_service_category_price as $key=>$item1){
@@ -2044,10 +2042,24 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
             }
         }
     }
-
-
-
     /*end service inventory*/
+
+    /*start variation inventory*/
+    $rbfw_variations_data = get_post_meta( $post_id, 'rbfw_variations_data', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];
+    //echo '<pre>';print_r($rbfw_variations_data);echo '<pre>';exit;
+    $variant_instock = [];
+    $variant_q = [];
+    foreach($rbfw_variations_data as $key=>$item1){
+        $field_label = $item1['field_label'];
+        foreach ($item1['value'] as $key1=>$single){
+            foreach($date_range as $date){
+                $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory));
+            }
+            $variant_instock[] = $single['quantity'] - max(array_column($variant_q, $single['name']));
+        }
+    }
+    /*end variation inventory*/
+
 
     /*start extra service inventory*/
     $rbfw_extra_service_info = get_post_meta($post_id, 'rbfw_extra_service_data', true);
@@ -2061,8 +2073,11 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     }
     /*end extra service inventory*/
 
-    return array('remaining_stock'=>$remaining_stock,'extra_service_instock'=>$extra_service_instock,'service_stock'=>$service_stock);
-
+    return array('remaining_stock'=>$remaining_stock,
+        'extra_service_instock'=>$extra_service_instock,
+        'service_stock'=>$service_stock,
+        'variant_instock'=>$variant_instock,
+    );
 }
 
 function total_service_quantity($paraent,$service,$date,$inventory){
@@ -2076,6 +2091,19 @@ function total_service_quantity($paraent,$service,$date,$inventory){
                         $total_single_service += $basic_item['quantity'];
                     }
                 }
+            }
+        }
+    }
+    return $total_single_service;
+}
+
+function total_variant_quantity($field_label,$variation,$date,$inventory){
+
+    $total_single_service = 0;
+    foreach($inventory as $item){
+        foreach ($item['rbfw_variation_info'] as $key=>$single){
+            if(in_array($date,$item['booked_dates']) && in_array($variation,$single)){
+                $total_single_service++;
             }
         }
     }
