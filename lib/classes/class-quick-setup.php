@@ -177,6 +177,9 @@ if(!class_exists('RBFW_Quick_Setup')){
 					include_once( ABSPATH . 'wp-admin/includes/file.php' );
 					include_once( ABSPATH . 'wp-admin/includes/misc.php' );
 					include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
+                    $title = '';
+                    $url = '';
+                    $nonce = '';
 					$woocommerce_plugin = new Plugin_Upgrader( new Plugin_Installer_Skin( compact( 'title', 'url', 'nonce', 'plugin', 'api' ) ) );
 					$woocommerce_plugin->install( $api->download_link );
 					activate_plugin( 'woocommerce/woocommerce.php' );
