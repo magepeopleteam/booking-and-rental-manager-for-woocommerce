@@ -323,7 +323,7 @@ if($rbfw_enable_variations == 'yes'){
                                                         <option value=""><?php echo rbfw_string('rbfw_text_choose',__('Choose','booking-and-rental-manager-for-woocommerce')).' '.$data_arr_one['field_label']; ?></option>
                                                     <?php } ?>
                                                     <?php foreach ($data_arr_one['value'] as $data_arr_two) { ?>
-                                                        <option value="<?php echo esc_attr($data_arr_two['name']); ?>" <?php if($data_arr_two['name'] == $selected_value){ echo 'selected'; } ?> ><?php echo esc_html($data_arr_two['name']); ?></option>
+                                                        <option class="rbfw_variant" value="<?php echo esc_attr($data_arr_two['name']); ?>" <?php if($data_arr_two['name'] == $selected_value){ echo 'selected'; } ?> ><?php echo esc_html($data_arr_two['name']); ?></option>
                                                     <?php } ?>
                                                 </select>
                                             <?php } ?>
@@ -515,6 +515,7 @@ if($rbfw_enable_variations == 'yes'){
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
                 <input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
+                <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo $rbfw_enable_variations; ?>">
             </form>
         </div>
     </div>
