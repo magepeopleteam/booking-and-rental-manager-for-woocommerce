@@ -856,12 +856,13 @@
 					</table>
 				</section>
 
-				
-
 				<?php do_action( 'rbfw_after_general_price_table_row' ); ?>
 				
 				<?php do_action( 'rbfw_after_general_price_table' ); ?>
 			</div>
+
+			<?php do_action( 'rbfw_after_week_price_table',$post_id ); ?>
+			
 			<?php
 			}
 
