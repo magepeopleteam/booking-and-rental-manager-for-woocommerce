@@ -1055,5 +1055,8 @@
 #rbfw_add_meta_box .add-feature-category:hover {
   opacity: 0.8;
 }
+#rbfw_add_meta_box .required {
+  color: var(--mage-primary);
+}
 
 /*# sourceMappingURL=admin.css.map */

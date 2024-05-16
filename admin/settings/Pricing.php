@@ -413,11 +413,11 @@
 							<table class='form-table rbfw_bike_car_sd_price_table'>
 								<thead>
 									<tr>
-										<th><?php esc_html_e( 'Type', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-										<th><?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-										<th><?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-										<th class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>><?php esc_html_e( '(Quantity,Stock)/Day', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-										<th class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+										<th><?php _e( 'Type', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+										<th><?php _e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+										<th><?php _e( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+										<th class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>><?php _e( 'Stock/Day <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+										<th class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>><?php _e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									</tr>
 								</thead>
 								<tbody class="rbfw_bike_car_sd_price_table_body">
@@ -489,12 +489,12 @@
 							<table class='rbfw_pricing_table form-table w-100' id="repeatable-fieldset-one" >
 								<thead>
 								<tr>
-									<th><?php esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-									<th><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-									<th><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-									<th><?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-									<th><?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-									<!--<th><?php esc_html_e( 'Qty Box', 'booking-and-rental-manager-for-woocommerce' ); ?></th>-->
+									<th><?php _e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+									<th><?php _e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+									<th><?php _e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+									<th><?php _e( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+									<th><?php _e( 'Stock Quantity <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+									<!--<th><?php _e( 'Qty Box', 'booking-and-rental-manager-for-woocommerce' ); ?></th>-->
 									<th></th>
 								</tr>
 								</thead>
@@ -856,12 +856,15 @@
 					</table>
 				</section>
 
-				
-
 				<?php do_action( 'rbfw_after_general_price_table_row' ); ?>
 				
 				<?php do_action( 'rbfw_after_general_price_table' ); ?>
 			</div>
+
+			<?php do_action( 'rbfw_after_week_price_table',$post_id ); ?>
+			
+			<?php do_action('rbfw_after_extra_service_table'); ?>
+			
 			<?php
 			}
 
