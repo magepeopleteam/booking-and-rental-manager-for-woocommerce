@@ -285,7 +285,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
                 for (i = 0; i < response.max_available_qty.variant_instock.length; ++i) {
                     total_variation_stock = total_variation_stock+response.max_available_qty.variant_instock[i];
                 }
-                console.log('total_variation_stock',total_variation_stock);
+
                 if((total_variation_stock == 0)) {
                     jQuery('.rbfw_nia_notice').remove();
                     jQuery('<div class="rbfw_nia_notice mps_alert_warning">No Items Available!</div>').insertBefore(' button.rbfw_bikecarmd_book_now_btn');
