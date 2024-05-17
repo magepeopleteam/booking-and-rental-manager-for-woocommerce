@@ -141,7 +141,7 @@
 							</label>
 							<span><?php echo esc_html__('It enables/disables the time slot for Bike/Car Single Day and Appointment rent type.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 						</div>
-						<?php $rbfw_time_slot_switch = get_post_meta($post_id,'rbfw_time_slot_switch',true);?>
+						<?php $rbfw_time_slot_switch = get_post_meta($post_id,'rbfw_time_slot_switch',true)? get_post_meta($post_id,'rbfw_time_slot_switch',true) : 'off';?>
 						<label class="switch">
 							<input type="checkbox" name="rbfw_time_slot_switch" value="<?php echo esc_attr(($rbfw_time_slot_switch=='on')?$rbfw_time_slot_switch:'off'); ?>" <?php echo esc_attr(($rbfw_time_slot_switch=='on')?'checked':''); ?>>
 							<span class="slider round"></span>
@@ -205,7 +205,7 @@
                 }
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-                    $rbfw_time_slot = isset( $_POST['rbfw_time_slot_switch'] ) ? rbfw_array_strip( $_POST['rbfw_time_slot_switch'] ) : '';
+                    $rbfw_time_slot = isset( $_POST['rbfw_time_slot_switch'] ) ? rbfw_array_strip( $_POST['rbfw_time_slot_switch'] ) : 'off';
                     $rdfw_available_time = isset( $_POST['rdfw_available_time'] ) ? rbfw_array_strip( $_POST['rdfw_available_time'] ) : [];
                     $rbfw_enable_start_end_date = isset( $_POST['rbfw_enable_start_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_enable_start_end_date'] ) : 'no';
                     $rbfw_event_start_date  = isset( $_POST['rbfw_event_start_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_date'] ) : '';
