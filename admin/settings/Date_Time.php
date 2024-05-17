@@ -52,58 +52,59 @@
 				$rbfw_item_stock_quantity = !empty(get_post_meta( get_the_id(), 'rbfw_item_stock_quantity', true )) ? get_post_meta( get_the_id(), 'rbfw_item_stock_quantity', true ) : 0;
 				
 				?>
-				<section>
-					<div>
-						<label>
-							<?php esc_html_e( 'Rent Specific day', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				<div class="regular_fixed_date <?php echo esc_attr(($rbfw_item_type=='bike_car_sd')?'hide':'show'); ?>">
+					<section>
+						<div>
+							<label>
+								<?php esc_html_e( 'Rent Specific day', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							</label>
+							<span>
+								<?php _e('with this option you can offer any item to rent specific day.', 'booking-and-rental-manager-for-woocommerce'); ?>
+							</span>
+						</div>
+						
+						<label class="switch">
+							<input type="checkbox" name="rbfw_enable_start_end_date" value="<?php echo esc_attr(($rbfw_enable_start_end_date=='yes')?$rbfw_enable_start_end_date:'no'); ?>" <?php echo esc_attr(($rbfw_enable_start_end_date=='yes')?'checked':''); ?>>
+							<span class="slider round"></span>
 						</label>
-						<span>
-							<?php _e('with this option you can offer any item to rent specific day.', 'booking-and-rental-manager-for-woocommerce'); ?>
-						</span>
+
+					</section>
+
+					<div class="rbfw-fixed-date <?php echo esc_attr(($rbfw_enable_start_end_date=='yes')?'show':'hide'); ?>">
+						
+							<section>
+								<div class="w-50 d-flex justify-content-between align-items-center">
+									<label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+									<div class=" d-flex justify-content-between align-items-center">
+										<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_start_date" id="rbfw_event_start_date" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" readonly>
+									</div>
+								</div>
+								<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
+									<label for=""><?php esc_html_e( 'Start Time:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+									<div class=" d-flex justify-content-between align-items-center">
+										<input type="time" name="rbfw_event_start_time" id="rbfw_event_start_time" value="<?php echo esc_attr( $rbfw_event_start_time ); ?>">
+
+									</div>
+								</div>
+							</section>
+
+							<section>
+								<div class="w-50 d-flex justify-content-between align-items-center">
+									<label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+									<div class=" d-flex justify-content-between align-items-center">
+										<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_end_date" id="rbfw_event_end_date" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
+									</div>
+								</div>
+								<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
+									<label for=""><?php esc_html_e( 'End Time:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+									<div class=" d-flex justify-content-between align-items-center">
+										<input type="time" name="rbfw_event_end_time" id="rbfw_event_end_time" value="<?php echo esc_attr( $rbfw_event_end_time ); ?>">
+									</div>
+								</div>
+							</section>
+						
 					</div>
-                    
-                    <label class="switch">
-                        <input type="checkbox" name="rbfw_enable_start_end_date" value="<?php echo esc_attr(($rbfw_enable_start_end_date=='yes')?$rbfw_enable_start_end_date:'no'); ?>" <?php echo esc_attr(($rbfw_enable_start_end_date=='yes')?'checked':''); ?>>
-                        <span class="slider round"></span>
-                    </label>
-
-				</section>
-
-				<div class="rbfw-fixed-date <?php echo esc_attr(($rbfw_enable_start_end_date=='yes')?'show':'hide'); ?>">
-					
-						<section>
-							<div class="w-50 d-flex justify-content-between align-items-center">
-								<label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-								<div class=" d-flex justify-content-between align-items-center">
-									<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_start_date" id="rbfw_event_start_date" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" readonly>
-								</div>
-							</div>
-							<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
-								<label for=""><?php esc_html_e( 'Start Time:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-								<div class=" d-flex justify-content-between align-items-center">
-									<input type="time" name="rbfw_event_start_time" id="rbfw_event_start_time" value="<?php echo esc_attr( $rbfw_event_start_time ); ?>">
-
-								</div>
-							</div>
-						</section>
-
-						<section>
-							<div class="w-50 d-flex justify-content-between align-items-center">
-								<label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-								<div class=" d-flex justify-content-between align-items-center">
-									<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_end_date" id="rbfw_event_end_date" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
-								</div>
-							</div>
-							<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
-								<label for=""><?php esc_html_e( 'End Time:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-								<div class=" d-flex justify-content-between align-items-center">
-									<input type="time" name="rbfw_event_end_time" id="rbfw_event_end_time" value="<?php echo esc_attr( $rbfw_event_end_time ); ?>">
-								</div>
-							</div>
-						</section>
-					
 				</div>
-
 				
 				<div class='rbfw-item-type '>
 					<div class="rbfw_form_group" data-table="rbfw_item_type_table">
