@@ -213,8 +213,8 @@ if($rbfw_enable_variations == 'yes'){
 
                         <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
                         <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
-
-                        <?php if($rbfw_enable_start_end_date == 'yes'){ ?>
+                         <?php //echo $rbfw_enable_start_end_date; ?>
+                        <?php if($rbfw_enable_start_end_date == 'no'){ ?>
                             <div class="item">
                                 <div class="item-content rbfw-datetime">
                                     <div class="<?php echo ($enable_hourly_rate == 'yes' && !empty($availabe_time))?'left':'' ?> date">
