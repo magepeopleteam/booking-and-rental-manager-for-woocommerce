@@ -2025,8 +2025,8 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
     /*start service inventory*/
     $rbfw_service_category_price = get_post_meta($post_id, 'rbfw_service_category_price', true);
+    $service_stock = [];
     if (!empty($rbfw_service_category_price)) {
-        $service_stock = [];
         foreach($rbfw_service_category_price as $key=>$item1){
             $cat_title = $item1['cat_title'];
             $service_q = [];
