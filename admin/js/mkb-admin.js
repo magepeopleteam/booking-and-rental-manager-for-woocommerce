@@ -315,6 +315,7 @@
                 jQuery('.rbfw_enable_start_end_date_field_row').hide();
                 jQuery('.regular_fixed_date').hide();
                 jQuery('.rbfw_off_days').show();
+                jQuery('.wervice_quantity_input_box').hide();
 
             } else if (item_type == 'appointment') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
@@ -394,6 +395,7 @@
                 jQuery('.regular_fixed_date').show();
                 //jQuery('tr.rbfw_enable_start_end_date_field_row').show();
                 jQuery('.rbfw_off_days').show();
+                jQuery('.wervice_quantity_input_box').show();
 
 
             }

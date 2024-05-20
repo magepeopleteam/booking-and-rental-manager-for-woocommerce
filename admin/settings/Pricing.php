@@ -368,7 +368,7 @@
 			public function category_service_price ($post_id){
 				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd']; 
 				$enable_service_price =  get_post_meta($post_id, 'rbfw_enable_category_service_price', true) ? get_post_meta($post_id, 'rbfw_enable_category_service_price', true) : 'off'; 
-				$section_visibility = ( $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment')?'show':'hide'; 
+				$section_visibility = ( $rbfw_item_type == 'bike_car_sd' && $rbfw_item_type != 'appointment')?'show':'hide'; 
 			?>
 				<div class="rbfw_general_price_config_wrapper <?php echo esc_attr( $section_visibility); ?>">
 					<?php $this->panel_header('Service price settings ','Service price settings with category.'); ?>
@@ -485,6 +485,7 @@
 			?>
 				<div class="rbfw_es_price_config_wrapper " <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
 					<?php $this->panel_header('Extra Service Price Settings','Extra Service Price Settings'); ?>
+
 					<section>
 						<div class="w-100">
 							<div style="overflow-x: auto;">
@@ -585,16 +586,18 @@
 							</p>
 						</div>
 					</section>
-					<section >
-						<div>
-							<label><?php _e( 'Enable Service Quantity Box', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-							<span><?php  _e( 'If you Enable this customer can select number of quantity in front-end.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-						</div>
-						<label class="switch">
-							<input type="checkbox" name="rbfw_enable_extra_service_qty" value="<?php echo esc_attr($rbfw_enable_extra_service_qty); ?>" <?php echo esc_attr(($rbfw_enable_extra_service_qty=='yes')?'checked':''); ?>>
-							<span class="slider round"></span>
-						</label>
-					</section>
+					<div class="wervice_quantity_input_box" <?php  if($rbfw_item_type == 'bike_car_sd'){ echo 'style="display:none"'; } ?>>
+						<section >
+							<div>
+								<label><?php _e( 'Enable Service Quantity Box', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+								<span><?php  _e( 'If you Enable this customer can select number of quantity in front-end.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</div>
+							<label class="switch">
+								<input type="checkbox" name="rbfw_enable_extra_service_qty" value="<?php echo esc_attr($rbfw_enable_extra_service_qty); ?>" <?php echo esc_attr(($rbfw_enable_extra_service_qty=='yes')?'checked':''); ?>>
+								<span class="slider round"></span>
+							</label>
+						</section>
+					</div>
 				</div>
 				<?php
 			}
@@ -780,7 +783,7 @@
 				$rbfw_daily_rate  = get_post_meta( $post_id, 'rbfw_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_daily_rate', true ) : 'yes';
 				$rbfw_hourly_rate  = get_post_meta( $post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_hourly_rate', true ) : 'yes';
 				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd'];
-				$mdedo = ( $rbfw_item_type != 'resort' && $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment')?'block':'none';
+				$mdedo = ( $rbfw_item_type != 'resort' && $rbfw_item_type == 'bike_car_sd' && $rbfw_item_type != 'appointment')?'block':'none';
 				$rbfw_enable_daywise_price  = get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) : 'no';
 				$mdedo_eekday = ( $rbfw_item_type != 'resort' && $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment' && $rbfw_enable_daywise_price=='yes')?'block':'none';
 			?>
