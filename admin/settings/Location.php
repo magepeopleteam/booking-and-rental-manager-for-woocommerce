@@ -66,7 +66,7 @@
 				echo "</select>";
 			}
 			public function pickup_location_config($post_id){
-				$rbfw_enable_pick_point  = get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) ? get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) : 'yes';
+				$rbfw_enable_pick_point  = get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) ? get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) : 'no';
 				$rbfw_pickup_data        = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
 				
 			?>
@@ -116,7 +116,7 @@
 			}
 
 			public function drop_off_location_config($post_id){
-				$rbfw_enable_dropoff_point  = get_post_meta( $post_id, 'rbfw_enable_dropoff_point', true ) ? get_post_meta( $post_id, 'rbfw_enable_dropoff_point', true ) : 'yes';
+				$rbfw_enable_dropoff_point  = get_post_meta( $post_id, 'rbfw_enable_dropoff_point', true ) ? get_post_meta( $post_id, 'rbfw_enable_dropoff_point', true ) : 'no';
 				$rbfw_dropoff_data        = get_post_meta( $post_id, 'rbfw_dropoff_data', true ) ? get_post_meta( $post_id, 'rbfw_dropoff_data', true ) : [];
 				
 			?>
