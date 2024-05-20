@@ -313,8 +313,9 @@
                 jQuery('tr[data-row=rbfw_time_slot_switch]').show();
                 jQuery('.rbfw_enable_start_end_date_switch_row').hide();
                 jQuery('.rbfw_enable_start_end_date_field_row').hide();
-
+                jQuery('.regular_fixed_date').hide();
                 jQuery('.rbfw_off_days').show();
+                jQuery('.wervice_quantity_input_box').hide();
 
             } else if (item_type == 'appointment') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
@@ -338,7 +339,7 @@
                 jQuery('[name="rbfw_off_days"]').val('');
                 jQuery('.rbfw_off_days input').prop('checked', false);
                 jQuery('.rbfw_off_days').hide();
-
+                jQuery('.regular_fixed_date').hide();
 
                 let this_table_row_length = jQuery('.rbfw_bike_car_sd_price_table_row').length;
 
@@ -391,8 +392,10 @@
                 jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
                 jQuery('tr[data-row=rdfw_available_time]').show();
                 jQuery('.rbfw_enable_start_end_date_switch_row').show();
+                jQuery('.regular_fixed_date').show();
                 //jQuery('tr.rbfw_enable_start_end_date_field_row').show();
                 jQuery('.rbfw_off_days').show();
+                jQuery('.wervice_quantity_input_box').show();
 
 
             }

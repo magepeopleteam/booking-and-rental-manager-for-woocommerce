@@ -26,7 +26,7 @@ if(!class_exists('RBFW_Quick_Setup')){
         }
 
         public function rbfw_setup_page_callback(){
-            $sz_logo = RBFW_PLUGIN_URL .'/css/images/sz-logo.png';
+            $sz_logo = RBFW_PLUGIN_URL .'/css/images/welcome-logo.png';
             global $rbfw;
             $cpt_label        = $rbfw->get_name();
             $cpt_slug         = $rbfw->get_slug();
@@ -309,7 +309,7 @@ if(!class_exists('RBFW_Quick_Setup')){
                     margin-bottom: 10px;
                 }
                 .rbfw-sz-header img{
-                    max-width: 430px;
+                    max-width: 660px;
                 }
                 .rbfw_item_page_rbfw_quick_setup #adminmenumain{
                     display: none;
