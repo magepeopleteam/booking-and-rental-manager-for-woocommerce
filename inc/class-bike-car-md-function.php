@@ -56,6 +56,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
             }
             $item_quantity = $_POST['item_quantity'];
+            $rbfw_enable_variations = $_POST['rbfw_enable_variations'];
             $rbfw_service_price = $_POST['rbfw_service_price']*$item_quantity;
             $service_price_arr = !empty($_POST['service_price_arr']) ? $_POST['service_price_arr'] : [];
 
@@ -139,7 +140,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'max_available_qty' => $max_available_qty,
                 'total_days' => $total_days,
                 'total_duration' => $duration,
-                'ticket_item_quantity' => $item_quantity
+                'ticket_item_quantity' => $item_quantity,
+                'rbfw_enable_variations' => $rbfw_enable_variations,
             ));
 
             wp_die();
