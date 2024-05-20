@@ -15,11 +15,11 @@
 			}
 
             public function add_tab_menu($rbfw_id) {
-                $rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : '';
+                $rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 	            $rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
 	
             ?>
-                <li class="<?php echo $rbfw_enable_variations ?>" data-target-tabs="#rbfw_variations" <?php if( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; }?>><i class="fa-solid fa-table-cells-large"></i><?php esc_html_e('Inventory', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li data-target-tabs="#rbfw_variations" <?php if( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; }?>><i class="fa-solid fa-table-cells-large"></i><?php esc_html_e('Inventory', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
             <?php
             }
 
