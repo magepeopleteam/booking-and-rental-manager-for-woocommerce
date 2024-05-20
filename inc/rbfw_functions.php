@@ -3646,8 +3646,8 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
         $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true );
     }
 
-    $rbfw_hourly_rate = get_post_meta($post_id, 'rbfw_hourly_rate', true);
-    $rbfw_daily_rate = get_post_meta($post_id, 'rbfw_daily_rate', true);
+    $rbfw_hourly_rate = (int)get_post_meta($post_id, 'rbfw_hourly_rate', true);
+    $rbfw_daily_rate = (int)get_post_meta($post_id, 'rbfw_daily_rate', true);
     $duration_price = 0;
     $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
     //echo $diff->days;exit;
