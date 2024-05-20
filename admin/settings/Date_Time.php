@@ -76,7 +76,7 @@
 								<div class="w-50 d-flex justify-content-between align-items-center">
 									<label for=""><?php esc_html_e( 'Start Date:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 									<div class=" d-flex justify-content-between align-items-center">
-										<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_start_date" id="rbfw_event_start_date" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" readonly>
+										<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_start_date" id="rbfw_event_start_date" value="<?php echo esc_attr( $rbfw_event_start_date ); ?>" >
 									</div>
 								</div>
 								<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
@@ -92,7 +92,7 @@
 								<div class="w-50 d-flex justify-content-between align-items-center">
 									<label for=""><?php esc_html_e( 'End Date:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 									<div class=" d-flex justify-content-between align-items-center">
-										<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_end_date" id="rbfw_event_end_date" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
+										<input type="text" placeholder="YYYY-MM-DD" name="rbfw_event_end_date" id="rbfw_event_end_date" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" >
 									</div>
 								</div>
 								<div class="w-50 ms-5 d-flex justify-content-between align-items-center">
