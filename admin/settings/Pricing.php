@@ -366,7 +366,7 @@
 			}
 
 			public function category_service_price ($post_id){
-				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd']; 
+				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : 'bike_car_sd'; 
 				$enable_service_price =  get_post_meta($post_id, 'rbfw_enable_category_service_price', true) ? get_post_meta($post_id, 'rbfw_enable_category_service_price', true) : 'off'; 
 				$section_visibility = ( $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment')?'show':'hide'; 
 			?>
@@ -407,7 +407,6 @@
 				$rbfw_bike_car_sd_data 	 = get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
 			?>
 				<div class="rbfw_bike_car_sd_wrapper <?php  echo esc_attr($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' )?'show':'hide'; ?>" >
-					<!-- <h2 class="h5 text-white bg-primary mb-1 rounded-top"><?php echo esc_html_e( 'Price Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2> -->
 					<section>
 						<div class="w-100">
 							<div style="overflow-x: auto;">
@@ -779,12 +778,12 @@
 				$rbfw_enable_daily_rate  = get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) : 'yes';
 				$rbfw_daily_rate  = get_post_meta( $post_id, 'rbfw_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_daily_rate', true ) : 'yes';
 				$rbfw_hourly_rate  = get_post_meta( $post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_hourly_rate', true ) : 'yes';
-				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : ['bike_car_sd'];
+				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : 'bike_car_sd';
 				$mdedo = ( $rbfw_item_type != 'resort' && $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment')?'block':'none';
 				$rbfw_enable_daywise_price  = get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) : 'no';
 				$mdedo_eekday = ( $rbfw_item_type != 'resort' && $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment' && $rbfw_enable_daywise_price=='yes')?'block':'none';
 			?>
-			<div class="rbfw_general_price_config_wrapper" style="display: <?php echo $mdedo ?>;">
+			<div class="rbfw_general_price_config_wrapper " style="display: <?php echo $mdedo ?>;">
 				<?php do_action( 'rbfw_before_general_price_table' ); ?>
 				<?php $this->panel_header('General Price Configuration','General Price Configuration'); ?>
 				<?php do_action( 'rbfw_before_general_price_table_row' ); ?>
