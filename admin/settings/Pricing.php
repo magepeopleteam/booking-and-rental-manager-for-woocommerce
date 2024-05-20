@@ -455,9 +455,9 @@
 
 											<td><input type="number" name="rbfw_bike_car_sd_data[0][price]" value="" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
 
-											<td class="rbfw_bike_car_sd_price_table_action_column <?php echo esc_attr($rbfw_item_type == 'appointment'? 'hide':'show'); ?>" ><input class="medium" type="number" name="rbfw_bike_car_sd_data[0][qty]" value="" placeholder="<?php esc_html_e( '(Quantity/Stock)/Day', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+											<td class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?> ><input class="medium" type="number" name="rbfw_bike_car_sd_data[0][qty]" value="" placeholder="<?php esc_html_e( '(Quantity/Stock)/Day', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
 
-											<td class="rbfw_bike_car_sd_price_table_action_column <?php echo esc_attr($rbfw_item_type == 'appointment'? 'hide':'show'); ?>" >
+											<td class="rbfw_bike_car_sd_price_table_action_column"<?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
 												<div class="mp_event_remove_move">
 													<button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
 												</div>
