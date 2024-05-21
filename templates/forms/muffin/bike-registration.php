@@ -520,6 +520,6 @@ if($rbfw_enable_variations == 'yes'){
         </div>
     </div>
 <?php }else{ ?>
-    <h3><?php esc_html_e( 'Deate Expored !', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+    <h3><?php esc_html_e( 'Date Expired !', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 <?php } ?>
 
