@@ -63,7 +63,7 @@ if(!class_exists('RBFW_Quick_Setup')){
                             </li>
                         </ul>
 
-                        <div class="tab-content">
+                        <div class="tab-content" style="margin-top: -5px;">
 
                             <div id="step-1" class="tab-pane" role="tabpanel" aria-labelledby="step-1">
                                 <h2 class="title"><?php esc_html_e('Welcome to the Booking and Rental Manager Setup Wizard!', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
@@ -309,7 +309,7 @@ if(!class_exists('RBFW_Quick_Setup')){
                     margin-bottom: 10px;
                 }
                 .rbfw-sz-header img{
-                    max-width: 660px;
+                    max-width: 664px;
                 }
                 .rbfw_item_page_rbfw_quick_setup #adminmenumain{
                     display: none;
@@ -350,19 +350,19 @@ if(!class_exists('RBFW_Quick_Setup')){
                     top: 0;
                 }
                 .rbfw-sz-header{
-                    margin-bottom: 20px;
                     margin-top: 100px;
                 }
                 .sw > .tab-content{
                     margin: auto;
-                    width: 650px;
+                    width: 646px;
                     background: #fff;
                     border: 1px solid #d3d3d3;
                     border-radius: 0px;
+                    border-top: 0;
                 }
                 .sw .toolbar{
                     margin: auto;
-                    width: 650px;
+                    width: 646px;
                     background: #fff;
                     border: 1px solid #d3d3d3;
                     border-radius: 0px;
