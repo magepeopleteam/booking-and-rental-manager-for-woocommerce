@@ -60,7 +60,7 @@ if ( ! class_exists( 'Mage_Rating' ) ) {
 
         public function plugin_logo() {
 
-            $this->plugin_logo = RBFW_PLUGIN_URL .'/css/images/icon-128x128.gif';
+            $this->plugin_logo = RBFW_PLUGIN_URL .'/css/images/logo.png';
             return $this;
         }
 
@@ -312,6 +312,8 @@ if ( ! class_exists( 'Mage_Rating' ) ) {
             .mage_rating_notice_wrap img{
                 width: auto;
                 height: 80px;
+                height: 85px;
+                margin: 5px 10px 0 0;
             }
             .mage-rating-button-container{
                 margin-bottom: 10px;
