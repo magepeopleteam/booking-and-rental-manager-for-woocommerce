@@ -60,7 +60,7 @@ if ( ! class_exists( 'Mage_Rating' ) ) {
 
         public function plugin_logo() {
 
-            $this->plugin_logo = RBFW_PLUGIN_URL .'/css/images/icon-128x128.gif';
+            $this->plugin_logo = RBFW_PLUGIN_URL .'/css/images/logo.png';
             return $this;
         }
 
