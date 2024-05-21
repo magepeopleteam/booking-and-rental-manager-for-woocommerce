@@ -398,12 +398,10 @@ function rbfw_woo_install_check() {
 }
 add_filter( 'manage_rbfw_item_posts_columns', 'rbfw_item_col_mod_head' );
 function rbfw_item_col_mod_head( $columns ) {
-    unset( $columns['date'] );
+
     // unset( $columns['taxonomy-rbfw_item_cat'] );
     // unset( $columns['taxonomy-rbfw_item_org'] );
     unset( $columns['taxonomy-rbfw_item_location'] );
-    $columns['rbfw_type'] = __( 'Type', 'mage-eventpress' );
-
     // $columns['mep_event_date'] = __( 'Event Start Date', 'mage-eventpress' );
     return $columns;
 }
