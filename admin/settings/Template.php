@@ -81,7 +81,7 @@
                             <div class="w-100 text-center">
                                 <div class="testimonials">
                                     <?php 
-                                        $sidebar_testimonials = get_post_meta($post_id,'rbfw_dt_sidebar_testimonials',true);
+                                        $sidebar_testimonials = get_post_meta($post_id,'rbfw_dt_sidebar_testimonials',true)? get_post_meta($post_id,'rbfw_dt_sidebar_testimonials',true) : [];
                                         foreach($sidebar_testimonials as $key => $data): ?>
                                         <div class="testimonial">
                                             <button onclick="jQuery(this).parent().remove()"> <i class="fas fa-trash"></i></button>

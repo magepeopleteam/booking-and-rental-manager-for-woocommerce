@@ -2023,13 +2023,9 @@ div>.ppof-metabox {
     background-color: #fff;
 }
 
-#rbfw_add_meta_box table.form-table.rbfw_feature_category_table tr:nth-child(odd) {
-    background-color: #f7f7f7;
-    border: 1px solid #d3d3d3;
-}
 
 #rbfw_add_meta_box table.form-table.rbfw_feature_category_table tr:nth-child(even) {
-    background-color: #f7f7f7;
+
     border: 1px solid #d3d3d3;
 }
 

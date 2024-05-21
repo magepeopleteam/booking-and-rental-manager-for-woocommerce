@@ -6,8 +6,8 @@
 	if (!defined('ABSPATH')) {
 		die;
 	} 
-	if (!class_exists('RBFW_Front_End_Display')) {
-        class RBFW_Front_End_Display{
+	if (!class_exists('RBFW_Settings')) {
+        class RBFW_Settings{
             public function __construct() {
                 add_action( 'rbfw_meta_box_tab_name', [$this,'add_tab_menu'] );
                 add_action( 'rbfw_meta_box_tab_content', [$this,'add_tabs_content'] );
@@ -148,5 +148,5 @@
             }
 		}
 
-		new RBFW_Front_End_Display();
+		new RBFW_Settings();
 	}

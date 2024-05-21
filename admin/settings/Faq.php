@@ -51,7 +51,7 @@
             }
 			public function rbfw_repeated_item($id, $meta_key, $data = array() ){
 				ob_start();
-				$array = get_rbfw_repeated_setting_array( $meta_key );
+				$array = $this->get_rbfw_repeated_setting_array( $meta_key );
 
 				$title       = $array['title'];
 				$title_name  = $array['title_name'];
@@ -236,6 +236,8 @@
 								delete_post_meta( $post_id, $meta_key, $old_data );
 							}
 						}
+						$rbfw_enable_faq_content  = isset( $_POST['rbfw_enable_faq_content'] ) ? rbfw_array_strip( $_POST['rbfw_enable_faq_content'] ) : 'no';
+						update_post_meta( $post_id, 'rbfw_enable_faq_content', $rbfw_enable_faq_content );
 					}
  
                 }

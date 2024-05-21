@@ -26,7 +26,7 @@ if(!class_exists('RBFW_Quick_Setup')){
         }
 
         public function rbfw_setup_page_callback(){
-            $sz_logo = RBFW_PLUGIN_URL .'/css/images/sz-logo.png';
+            $sz_logo = RBFW_PLUGIN_URL .'/css/images/welcome-logo.png';
             global $rbfw;
             $cpt_label        = $rbfw->get_name();
             $cpt_slug         = $rbfw->get_slug();
@@ -177,6 +177,9 @@ if(!class_exists('RBFW_Quick_Setup')){
 					include_once( ABSPATH . 'wp-admin/includes/file.php' );
 					include_once( ABSPATH . 'wp-admin/includes/misc.php' );
 					include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
+                    $title = '';
+                    $url = '';
+                    $nonce = '';
 					$woocommerce_plugin = new Plugin_Upgrader( new Plugin_Installer_Skin( compact( 'title', 'url', 'nonce', 'plugin', 'api' ) ) );
 					$woocommerce_plugin->install( $api->download_link );
 					activate_plugin( 'woocommerce/woocommerce.php' );
@@ -306,7 +309,7 @@ if(!class_exists('RBFW_Quick_Setup')){
                     margin-bottom: 10px;
                 }
                 .rbfw-sz-header img{
-                    max-width: 430px;
+                    max-width: 660px;
                 }
                 .rbfw_item_page_rbfw_quick_setup #adminmenumain{
                     display: none;

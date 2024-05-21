@@ -1162,10 +1162,10 @@ div.mpStyle [class*="_bgColor_1"] i {
 
 #rbfw_add_meta_box .field-text-multi-wrapper .field-list .item {
     padding:5px;
-    background-color:#f2f2f2;
     margin: 5px 0;
     display: flex;
     justify-content: space-between;
+    border: 1px solid var(--mage-light);
 }
 
 #rbfw_features_icon_list_wrapper.mage_modal {
@@ -1705,12 +1705,16 @@ input#rbfw_features_search_icon {
 }
 
 .rbfw_service_image_wrap {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
     display: flex;
+    justify-content: center;
     align-items: center;
     margin-bottom: 0 !important;
+}
+
+.service_image_add_remove{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .rbfw_settings_wrapper table.form-table tr.rbfw_mps_paypal_heading,

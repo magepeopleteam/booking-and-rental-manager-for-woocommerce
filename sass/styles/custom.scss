@@ -276,7 +276,10 @@
                     display: inline-block;
                     background-color: $color-primary;
                     color: $color-white;
-                    border-radius: 5px 0 0 0 ;
+                }
+                .remove-rbfw_variations_table_row{
+                    border-radius: 5px 0 0 0;
+                    padding: 8px;
                 }
             }
         }
@@ -322,10 +325,11 @@
         display: flex;
         justify-content: space-between;
         margin: 5px 0;
-        padding: 5px 0;
+        padding: 5px;
         border-bottom: 1px solid $color-light;
         width: 62%;
         margin: auto;
+        background-color: $color-light;
     }
     .feature_category_inner_item_wrap{
         width: 62%;
@@ -337,5 +341,8 @@
         &:hover{
             opacity: .8;
         }
+    }
+    .required{
+        color: $color-primary;
     }
 }

@@ -15,11 +15,11 @@
 			}
 
             public function add_tab_menu($rbfw_id) {
-                $rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : '';
+                $rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 	            $rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
 	
             ?>
-                <li class="<?php echo $rbfw_enable_variations ?>" data-target-tabs="#rbfw_variations" <?php if( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; }?>><i class="fa-solid fa-table-cells-large"></i><?php esc_html_e('Inventory', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li data-target-tabs="#rbfw_variations" <?php if( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){ echo 'style="display:none"'; }?>><i class="fa-solid fa-table-cells-large"></i><?php esc_html_e('Inventory', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
             <?php
             }
 
@@ -71,15 +71,15 @@
                                 <div class=variations-inner-table>
                                     <table class="rbfw_variations_value_table">
                                         <thead>
-                                            <th><?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                            <th><?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                            <th><?php _e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                            <th><?php _e( 'Stock Quantity <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                             <th>
-                                                <?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                                <?php _e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                                 <div class="rbfw_tooltip"><i class="fa-solid fa-circle-info"></i>
                                                     <span class="rbfw_tooltiptext"><?php esc_html_e( 'The selected value will be set as a default value in the front end.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                                 </div>
                                             </th>
-                                            <th><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                            <th><?php _e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         </thead>
                                         <tbody class="rbfw_variations_value_table_tbody">
                                             <?php
@@ -98,7 +98,7 @@
                                                 </td>
                                                 <td>
                                                 <div class="mp_event_remove_move">
-                                                    <button class="button remove-rbfw_variations_value_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
+                                                    <button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button>
                                                     <div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div>
                                                 </div>
                                                 </td>
@@ -113,7 +113,7 @@
                                     <button class="add-new-variation-value ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                 </div>
                                 <div class="mp_event_remove_move">
-                                    <button class="remove-rbfw_variations_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
+                                    <button class="remove-rbfw_variations_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button>
                                     <!-- <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div> -->
                                 </div>
                             </div>
@@ -134,7 +134,7 @@
                                     <table class="rbfw_variations_value_table">
                                         <thead>
                                             <th><?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                            <th><?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                            <th><?php _e( 'Stock Quantity <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                             <th>
                                                 <?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                                 <div class="rbfw_tooltip"><i class="fa-solid fa-circle-info"></i>
@@ -156,7 +156,7 @@
                                                 </td>
                                                 <td>
                                                 <div class="mp_event_remove_move">
-                                                    <button class="button remove-rbfw_variations_value_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
+                                                    <button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button>
                                                     <div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div>
                                                 </div>
                                                 </td>
@@ -166,7 +166,7 @@
                                     <button class="add-new-variation-value ppof-button mt-2"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                 </div>
                                 <div class="mp_event_remove_move">
-                                    <button class="remove-rbfw_variations_table_row" type="button"><span class="dashicons dashicons-trash" ></span></button>
+                                    <button class="remove-rbfw_variations_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button>
                                     <!-- <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div> -->
                                 </div>
                             </div>
@@ -180,6 +180,8 @@
 
             public function stock_settings($post_id){
 				$rbfw_item_stock_quantity  = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) ? get_post_meta( $post_id, 'rbfw_item_stock_quantity', true ) : '';
+				$rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
+                
             ?>
                 <section>
                     <div>
@@ -188,8 +190,8 @@
                         </label>
                         <span><?php esc_html_e( 'Add stock quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                     </div>
-                    <div>
-                        <input type="number" name="rbfw_item_stock_quantity" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity); ?>">
+                    <div class="item_stock_quantity">
+                        <input type="number" name="rbfw_item_stock_quantity" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity); ?>" <?php echo ( $rbfw_enable_variations == 'yes' ) ? 'disabled':''; ?>>
                     </div>
                 </section>
             <?php
@@ -248,10 +250,12 @@
 						if(status == 'yes') {
 							jQuery(this).val('no');
                             jQuery('.rbfw_variations_table_wrap').slideUp().removeClass('show').addClass('hide');
+                            jQuery('.item_stock_quantity input').removeAttr("disabled");
 						}  
 						if(status == 'no') {
 							jQuery(this).val('yes'); 
                             jQuery('.rbfw_variations_table_wrap').slideDown().removeClass('hide').addClass('show');
+                            jQuery('.item_stock_quantity input').attr("disabled", true);
 						}
 					});
 
@@ -273,12 +277,12 @@
                                 let rbfw_variations_table_last_row = jQuery('.rbfw_variations_table .rbfw_variations_table_row:last-child()');
                                 let rbfw_variations_table_last_data_key = parseInt(rbfw_variations_table_last_row.attr('data-key'));
                                 let rbfw_variations_table_new_data_key = rbfw_variations_table_last_data_key + 1;
-                                let rbfw_variations_table_row = '<div class=rbfw_variations_table_row data-key="'+rbfw_variations_table_new_data_key+'"><header><label for="">Field Label</label><div><input type="text" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_label]"placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>"> <input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_id]"type=hidden value="rbfw_variation_id_'+rbfw_variations_table_new_data_key+'"></div></header><div class=variations-inner-table><table class=rbfw_variations_value_table><thead><th><?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?><th><?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?><th><?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?><div class=rbfw_tooltip><i class="fa-solid fa-circle-info"></i><span class=rbfw_tooltiptext><?php esc_html_e( 'The selected value will be set as a default value in the front end.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></div><th><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?><tbody class=rbfw_variations_value_table_tbody><tr class=rbfw_variations_value_table_row data-key=0><td><input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][name]"placeholder="<?php esc_attr_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?>"class=rbfw_variation_value><td><input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][quantity]"placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"type=number><td><input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][selected_value]"type=checkbox class=rbfw_variation_selected_value><td><div class=mp_event_remove_move><button class="button remove-rbfw_variations_value_table_row"type=button><i class="fa-solid fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fa-arrows-alt fas"></i></div></div></table><button class="add-new-variation-value mt-2 ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button></div><div class=mp_event_remove_move><button class=remove-rbfw_variations_table_row type=button><i class="fa-solid fa-trash-can"></i></button></div></div>';
+                                let rbfw_variations_table_row = '<div class=rbfw_variations_table_row data-key="'+rbfw_variations_table_new_data_key+'"><header><label for="">Field Label</label><div><input type="text" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_label]"placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>"> <input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_id]"type=hidden value="rbfw_variation_id_'+rbfw_variations_table_new_data_key+'"></div></header><div class=variations-inner-table><table class=rbfw_variations_value_table><thead><th><?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?><th><?php _e( 'Stock Quantity <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?><th><?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?><div class=rbfw_tooltip><i class="fa-solid fa-circle-info"></i><span class=rbfw_tooltiptext><?php esc_html_e( 'The selected value will be set as a default value in the front end.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></div><th><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?><tbody class=rbfw_variations_value_table_tbody><tr class=rbfw_variations_value_table_row data-key=0><td><input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][name]"placeholder="<?php esc_attr_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?>"class=rbfw_variation_value><td><input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][quantity]"placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"type=number><td><input name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][selected_value]"type=checkbox class=rbfw_variation_selected_value><td><div class=mp_event_remove_move><button class="button remove-rbfw_variations_value_table_row"type=button><i class="fa-solid fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fa-arrows-alt fas"></i></div></div></table><button class="add-new-variation-value mt-2 ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button></div><div class=mp_event_remove_move><button class=remove-rbfw_variations_table_row type=button><i class="fa-solid fa-trash-can"></i></button></div></div>';
                                 let rbfw_variations_table_add_new_row = jQuery('.rbfw_variations_table').append(rbfw_variations_table_row);
                             }
                             else{
                                 let rbfw_variations_table_new_data_key = 0;
-                                let rbfw_variations_table_row = '<tr class="rbfw_variations_table_row" data-key="'+rbfw_variations_table_new_data_key+'"><td><input type="text" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_label]" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>"><input type="hidden" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_id]" value="rbfw_variation_id_'+rbfw_variations_table_new_data_key+'"></td><td><table class="rbfw_variations_value_table"><thead><th><?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th><th><?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></th><th> <?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?> <div class="rbfw_tooltip"><i class="fa-solid fa-circle-info"></i><span class="rbfw_tooltiptext"><?php esc_html_e( 'The selected value will be set as a default value in the front end.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></div></th><th><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th></thead><tbody class="rbfw_variations_value_table_tbody"><tr class="rbfw_variations_value_table_row" data-key="0"><td><input type="text" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][name]" placeholder="<?php esc_attr_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?>" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][quantity]" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><input type="checkbox" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr></tbody></table><hr><button class="add-new-variation-value ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
+                                let rbfw_variations_table_row = '<tr class="rbfw_variations_table_row" data-key="'+rbfw_variations_table_new_data_key+'"><td><input type="text" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_label]" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>"><input type="hidden" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][field_id]" value="rbfw_variation_id_'+rbfw_variations_table_new_data_key+'"></td><td><table class="rbfw_variations_value_table"><thead><th><?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th><th><?php _e( 'Stock Quantity <b class="required">*</b> ', 'booking-and-rental-manager-for-woocommerce' ); ?></th><th> <?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?> <div class="rbfw_tooltip"><i class="fa-solid fa-circle-info"></i><span class="rbfw_tooltiptext"><?php esc_html_e( 'The selected value will be set as a default value in the front end.', 'booking-and-rental-manager-for-woocommerce' ); ?></span></div></th><th><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th></thead><tbody class="rbfw_variations_value_table_tbody"><tr class="rbfw_variations_value_table_row" data-key="0"><td><input type="text" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][name]" placeholder="<?php esc_attr_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?>" class="rbfw_variation_value"></td><td><input type="number" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][value][0][quantity]" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><input type="checkbox" name="rbfw_variations_data['+rbfw_variations_table_new_data_key+'][selected_value]" class="rbfw_variation_selected_value"></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button><div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div></div></td></tr></tbody></table><hr><button class="add-new-variation-value ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); ?></button></td><td><div class="mp_event_remove_move"><button class="button remove-rbfw_variations_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
                                 let rbfw_variations_table_add_new_row = jQuery('.rbfw_variations_table').append(rbfw_variations_table_row);
                             }
 
@@ -389,10 +393,13 @@
 					$rbfw_enable_variations = isset( $_POST['rbfw_enable_variations'] ) ? $_POST['rbfw_enable_variations']  : 'no';
 					$rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? $_POST['rbfw_item_stock_quantity']  : '';
 					$rbfw_enable_md_type_item_qty  = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? $_POST['rbfw_enable_md_type_item_qty'] : 'no';
+                    $rbfw_variations_data 	 = isset( $_POST['rbfw_variations_data'] ) ? rbfw_array_strip( $_POST['rbfw_variations_data'] ) : [];
 					
                     update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );				
 					update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
 					update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
+                    update_post_meta( $post_id, 'rbfw_variations_data', $rbfw_variations_data );
+
 					
                 }
             }
