@@ -18,9 +18,12 @@ if( ! class_exists('RBFW_Custom_Post')){
             add_filter( 'manage_edit-rbfw_item_sortable_columns', array($this,'rbfw_cpt_sortable_columns') ) ;
         }
 
-        public function rbfw_cpt_sortable_columns($columns){
-            $columns['rbfw_item_type']='rbfw_item_type';
-            $columns['author']='author';
+        public function rbfw_cpt_columns($columns){
+            unset($columns['date']);
+            $columns['rbfw_item_type']= esc_html__('Rent Type','booking-and-rental-manager-for-woocommerce');
+            $columns['rbfw_categories']      =  esc_html__('Categories','booking-and-rental-manager-for-woocommerce');
+            $columns['author']      =  esc_html__('Author','booking-and-rental-manager-for-woocommerce');
+            $columns['date']        = esc_html__('Date','booking-and-rental-manager-for-woocommerce');
             return $columns;
         }
 
@@ -53,12 +56,9 @@ if( ! class_exists('RBFW_Custom_Post')){
             }
         }
 
-        public function rbfw_cpt_columns($columns){
-            unset($columns['date']);
-            $columns['rbfw_item_type']= esc_html__('Rent Type','booking-and-rental-manager-for-woocommerce');
-            $columns['rbfw_categories']      =  esc_html__('Categories','booking-and-rental-manager-for-woocommerce');
-            $columns['author']      =  esc_html__('Author','booking-and-rental-manager-for-woocommerce');
-            $columns['date']        = esc_html__('Date','booking-and-rental-manager-for-woocommerce');
+        public function rbfw_cpt_sortable_columns($columns){
+            $columns['rbfw_item_type']='rbfw_item_type';
+            $columns['author']='author';
             return $columns;
         }
 
