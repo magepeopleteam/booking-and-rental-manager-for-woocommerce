@@ -368,7 +368,7 @@
 			public function category_service_price ($post_id){
 				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : 'bike_car_sd'; 
 				$enable_service_price =  get_post_meta($post_id, 'rbfw_enable_category_service_price', true) ? get_post_meta($post_id, 'rbfw_enable_category_service_price', true) : 'off'; 
-				$section_visibility = ( $rbfw_item_type == 'bike_car_sd' && $rbfw_item_type != 'appointment' && $rbfw_item_type != 'resort')?'show':'hide'; 
+				$section_visibility = ( $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment' && $rbfw_item_type != 'resort')?'show':'hide'; 
 			?>
 				<div class="rbfw_general_price_config_wrapper <?php echo esc_attr( $section_visibility); ?>">
 					<?php $this->panel_header('Service price settings ','Service price settings with category.'); ?>
