@@ -1513,11 +1513,11 @@ function rbfw_update_settings(){
 
 function rbfw_page_create()
 {
-    $page_obj = rbfw_exist_page_by_title('Rent list');
+    $page_obj = rbfw_exist_page_by_slug('rent-list');
 
     if($page_obj === false){
         $args = array(
-            'post_title'    => 'Rent list',
+            'post_title'    => 'Rent List',
             'post_content'  => "[rent-list style='list']",
             'post_status'   => 'publish',
             'post_type'     => 'page'
@@ -1525,11 +1525,11 @@ function rbfw_page_create()
         wp_insert_post( $args );
     }
 
-    $page_obj = rbfw_exist_page_by_title('Rent grid');
+    $page_obj = rbfw_exist_page_by_slug('rent-grid');
 
     if($page_obj === false){
         $args = array(
-            'post_title'    => 'Rent grid',
+            'post_title'    => 'Rent Grid',
             'post_content'  => "[rent-list style='grid']",
             'post_status'   => 'publish',
             'post_type'     => 'page'
@@ -3484,6 +3484,17 @@ function rbfw_hex2rgba( $color, $opacity = false ) {
 function rbfw_exist_page_by_title( $title ) {
     global $wpdb;
     $return = $wpdb->get_row( "SELECT ID FROM wp_posts WHERE post_title = '" . $title . "' && post_status = 'publish' && post_type = 'page' ", 'ARRAY_N' );
+
+    if( empty( $return ) ) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function rbfw_exist_page_by_slug( $slug ) {
+    global $wpdb;
+    $return = $wpdb->get_row( "SELECT ID FROM wp_posts WHERE post_name = '" . $slug . "' && post_status = 'publish' && post_type = 'page' ", 'ARRAY_N' );
 
     if( empty( $return ) ) {
         return false;
