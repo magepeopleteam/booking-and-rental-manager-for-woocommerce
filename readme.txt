@@ -208,6 +208,14 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
+= 2.0.0 =
+* Multiple category pricing ontime and daywise feature added
+* Stock managemant problem solved
+* Seasional price calculation problem solved
+* Day wise price calculation problem solved
+* Admin dhashboad UX/UI modification
+
+
 = 1.4.5 =
 * Rental search problem soleved.
 * Day wise or one time services added.
