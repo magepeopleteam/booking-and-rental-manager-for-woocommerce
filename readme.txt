@@ -209,10 +209,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 = 2.0.0 =
-* Multiple category pricing ontime and daywise
+* Multiple category pricing ontime and daywise feature added
 * Stock managemant problem solved
-* Seasional price calculation solved
-* Day wise price calculation solved
+* Seasional price calculation problem solved
+* Day wise price calculation problem solved
 * Admin dhashboad UX/UI modification
 
 
