@@ -55,8 +55,8 @@
 					</div>
 					<?php  $rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : 'bike_car_sd'; ?>
 					<?php $item_type = [
-						'bike_car_sd' => 'Bike/Car for single day',
-						'bike_car_md' => 'Bike/Car for multiple day',
+						'bike_car_sd' => 'Rent item for single day',
+						'bike_car_md' => 'Rent item for multiple day',
 						'resort' => 'Resort',
 						'equipment' => 'Equipment',
 						'dress' => 'Dress',
