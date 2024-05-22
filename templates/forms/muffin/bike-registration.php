@@ -54,6 +54,8 @@ $hourly_rate_sat = get_post_meta($rbfw_id, 'rbfw_sat_hourly_rate', true) ? get_p
 $daily_rate_sat = get_post_meta($rbfw_id, 'rbfw_sat_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_sat_daily_rate', true) : 0;
 $enabled_sat = get_post_meta($rbfw_id, 'rbfw_enable_sat_day', true) ? get_post_meta($rbfw_id, 'rbfw_enable_sat_day', true) : 'yes';
 
+$enable_service_price =  get_post_meta($post_id, 'rbfw_enable_category_service_price', true) ? get_post_meta($post_id, 'rbfw_enable_category_service_price', true) : 'off';
+
 $current_day = date_i18n('D');
 
 if($current_day == 'Sun' && $enabled_sun == 'yes'){
@@ -338,7 +340,7 @@ if($rbfw_enable_variations == 'yes'){
                         $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
                         ?>
 
-                        <?php if(!empty($option_value)){  ?>
+                        <?php if(!empty($option_value) && ($enable_service_price=='on')){  ?>
 
                             <div class="multi-service-category-section">
                                 <div class="rbfw-single-right-heading">
