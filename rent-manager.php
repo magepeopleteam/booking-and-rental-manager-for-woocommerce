@@ -116,6 +116,7 @@ function rbfw_activation_redirect( $plugin ) {
 function rbfw_register_activation_func() {
 	update_option('rewrite_rules','');
 	rbfw_update_settings();
+    rbfw_page_create();
 	do_action('rbfw_after_register_activation');
 }
 

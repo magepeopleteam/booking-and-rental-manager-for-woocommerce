@@ -1511,6 +1511,36 @@ function rbfw_update_settings(){
     }
 }
 
+function rbfw_page_create()
+{
+    $page_obj = rbfw_exist_page_by_title('Rent list');
+
+    if($page_obj === false){
+        $args = array(
+            'post_title'    => 'Rent list',
+            'post_content'  => "[rent-list style='list']",
+            'post_status'   => 'publish',
+            'post_type'     => 'page'
+        );
+        wp_insert_post( $args );
+    }
+
+    $page_obj = rbfw_exist_page_by_title('Rent grid');
+
+    if($page_obj === false){
+        $args = array(
+            'post_title'    => 'Rent grid',
+            'post_content'  => "[rent-list style='grid']",
+            'post_status'   => 'publish',
+            'post_type'     => 'page'
+        );
+        wp_insert_post( $args );
+    }
+
+
+
+}
+
 
 // Check pro plugin active
 function rbfw_check_pro_active(){
