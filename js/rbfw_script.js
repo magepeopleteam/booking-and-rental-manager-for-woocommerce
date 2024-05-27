@@ -165,7 +165,7 @@
             this_target.slideToggle();
 
             jQuery(this).text(function(i, text) {
-                return text === rbfw_ajaxurl.view_more_feature_btn_text ? rbfw_ajaxurl.hide_more_feature_btn_text : rbfw_ajaxurl.view_more_feature_btn_text;
+                return text === rbfw_ajaxurl.view_more_feature_btn_text ? rbfw_ajaxurl.view_more_feature_btn_text : rbfw_ajaxurl.hide_more_feature_btn_text;
             })
         });
 
@@ -176,7 +176,7 @@
             this_target.slideToggle();
 
             jQuery(this).text(function(i, text) {
-                return text === rbfw_ajaxurl.view_more_offers_btn_text ? rbfw_ajaxurl.hide_more_offers_btn_text : rbfw_ajaxurl.view_more_offers_btn_text;
+                return text === rbfw_ajaxurl.view_more_offers_btn_text ? rbfw_ajaxurl.view_more_offers_btn_text : rbfw_ajaxurl.hide_more_offers_btn_text;
             })
         });
     });

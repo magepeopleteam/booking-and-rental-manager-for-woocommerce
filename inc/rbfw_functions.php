@@ -2071,35 +2071,39 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     /*end service inventory*/
 
     /*start variation inventory*/
-    $rbfw_variations_data = get_post_meta( $post_id, 'rbfw_variations_data', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];
-
     $variant_instock = [];
-    $variant_q = [];
-    foreach($rbfw_variations_data as $key=>$item1){
-        $field_label = $item1['field_label'];
-        if($field_label){
-            foreach ($item1['value'] as $key1=>$single){
-                if($single['name']){
-                    foreach($date_range as $date){
-                        $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory));
+    $rbfw_variations_data = get_post_meta( $post_id, 'rbfw_variations_data', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];
+    if(!empty($rbfw_variations_data)){
+        $variant_q = [];
+        foreach($rbfw_variations_data as $key=>$item1){
+            $field_label = $item1['field_label'];
+            if($field_label){
+                foreach ($item1['value'] as $key1=>$single){
+                    if($single['name']){
+                        foreach($date_range as $date){
+                            $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory));
+                        }
+                        $variant_instock[] = $single['quantity'] - max(array_column($variant_q, $single['name']));
                     }
-                    $variant_instock[] = $single['quantity'] - max(array_column($variant_q, $single['name']));
                 }
             }
         }
     }
+
     /*end variation inventory*/
 
 
     /*start extra service inventory*/
-    $rbfw_extra_service_info = get_post_meta($post_id, 'rbfw_extra_service_data', true);
     $extra_service_instock = [];
-    $service_q = [];
-    foreach($rbfw_extra_service_info as $service=>$es){
-        foreach($date_range as $date){
-            $service_q[] = array('date'=>$date,$es['service_name']=>total_extra_service_quantity($es['service_name'],$date,$rbfw_inventory));
+    $rbfw_extra_service_info = get_post_meta($post_id, 'rbfw_extra_service_data', true);
+    if(!empty($rbfw_extra_service_info)){
+        $service_q = [];
+        foreach($rbfw_extra_service_info as $service=>$es){
+            foreach($date_range as $date){
+                $service_q[] = array('date'=>$date,$es['service_name']=>total_extra_service_quantity($es['service_name'],$date,$rbfw_inventory));
+            }
+            $extra_service_instock[$service] = $es['service_qty'] - max(array_column($service_q, $es['service_name']));
         }
-        $extra_service_instock[$service] = $es['service_qty'] - max(array_column($service_q, $es['service_name']));
     }
     /*end extra service inventory*/
 

@@ -448,27 +448,27 @@ if($rbfw_enable_variations == 'yes'){
                     <div class="rbfw_bikecarmd_price_result">
                         <div class="item-content rbfw-costing">
                             <ul class="rbfw-ul">
-                                <li class="duration-costing rbfw-cond">Duration Cost
+                                <li class="duration-costing rbfw-cond">
+                                    <?php echo $rbfw->get_option('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')) ?>
                                     <span class="price-figure" data-price="">
                                     </span>
                                 </li>
-                           <!--     <li class="rbfw-service-costing rbfw-cond">Service Cost
-                                    <span class="price-figure" data-price="">
-                                    </span>
-                                </li>-->
-                                <li class="resource-costing rbfw-cond">Resource Cost
+                                <li class="resource-costing rbfw-cond">
+                                    <?php echo $rbfw->get_option('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')) ?>
                                     <span class="price-figure" data-price="">
                                     </span>
                                 </li>
-                                <li class="subtotal">Subtotal
+                                <li class="subtotal">
+                                    <?php echo $rbfw->get_option('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce')) ?>
                                     <span class="price-figure" data-price="">
                                     </span>
                                 </li>
-                                <li class="discount">Discount
+                                <li class="discount">
+                                    <?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')) ?>
                                     <span></span>
                                 </li>
                                 <li class="total">
-                                    <strong>Total</strong>
+                                    <?php echo $rbfw->get_option('rbfw_text_price', 'rbfw_basic_translation_settings', __('Price','booking-and-rental-manager-for-woocommerce')) ?>
                                     <span class="price-figure" data-price="">
                                     </span>
                                 </li>
