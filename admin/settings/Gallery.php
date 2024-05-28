@@ -47,8 +47,7 @@
                     <?php $this->section_header(); ?>
                     <?php $this->panel_header('Gallery ','Please upload gallary images size in ratio 4:3. Ex: Image size width=1200px and height=900px. gallery and feature image should be in same size.'); ?>
 					<section>
-					<div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper
-            field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
+					<div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
 						<div class='button upload' id='media_upload_<?php echo esc_attr($post_id); ?>'>
 								<?php echo __('Upload','pickplugins-options-framework');?>
 							</div>

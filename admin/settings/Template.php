@@ -134,10 +134,37 @@
                 $template =  get_post_meta($post_id, 'rbfw_single_template', true) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default'; 
                 ?>
                 <div class="additional-gallery <?php echo $template=='Muffin'?'show':'hide' ?>">
-                    <?php $this->panel_header('Additional Gallery','Add additional gallery for Muffin template'); ?>
+                    <?php $this->panel_header('Additional Gallery','Please upload gallary images size in ratio 4:3. Ex: Image size width=1200px and height=900px. gallery and feature image should be in same size.'); ?>
                     <section>
-                        <div class="w-100">
-                           Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur quos nulla at sapiente eveniet voluptatum rem, facere, distinctio doloremque optio incidunt harum impedit sit eum minus libero debitis. Ullam, est.
+                        <div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
+                            <div class='button upload' id='media_upload_<?php echo esc_attr($post_id); ?>'>
+                                <?php echo __('Upload','pickplugins-options-framework');?>
+                            </div>
+                            <div class='button clear' id='media_clear_<?php echo $post_id; ?>'>
+                                <?php echo __('Clear','pickplugins-options-framework');?>
+                            </div>
+                            <div class="gallery-images media-list-<?php echo esc_attr($post_id); ?> ">
+                                <?php
+                                $gallery_images = get_post_meta($post_id,'rbfw_gallery_images',true);
+                                $gallery_images = $gallery_images ? $gallery_images : [];
+                                
+                                if(!empty($gallery_images) && is_array($gallery_images)):
+                                    foreach ($gallery_images as $image ):
+                                        $media_url	= wp_get_attachment_url( $image );
+                                        $media_type	= get_post_mime_type( $image );
+                                        $media_title= get_the_title( $image );
+                                        ?>
+                                        <div class=" gallery-image">
+                                            <span class="remove" onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></span>
+                                            
+                                            <img id='media_preview_<?php echo esc_attr($post_id); ?>' src='<?php echo esc_attr($media_url); ?>' />
+                                            <input type='hidden' name='rbfw_gallery_images[]' value='<?php echo esc_attr($image); ?>' />
+                                        </div>
+                                    <?php
+                                    endforeach;
+                                endif;
+                                ?>
+                            </div>
                         </div>
                     </section>
                 </div>
