@@ -44,7 +44,9 @@
 
 
 			public function sidebar_template_enable( $post_id ) {
-                ?>
+                $template =  get_post_meta($post_id, 'rbfw_single_template', true) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default'; 
+            ?>
+                <div class="donut-template-sidebar-switch <?php echo $template=='Donut'?'show':'hide' ?>">
                     <section>
                         <div>
                             <label>
@@ -58,6 +60,7 @@
                             <span class="slider round"></span>
                         </label>
                     </section>
+                </div>
                 <?php
             }
 			public function select_template( $post_id ) {
@@ -75,47 +78,54 @@
                 <?php
             }
 			public function sidebar_testimonial( $post_id ) {
+                $template =  get_post_meta($post_id, 'rbfw_single_template', true) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default'; 
                 ?>
+                <div class="sidebar-testimonial-settigns <?php echo $template=='Donut'?'show':'hide' ?>">
                     <?php $this->panel_header('Sidebar Testimonial settigns','Sidebar Testimonial settigns'); ?>
-                        <section>
-                            <div class="w-100 text-center">
-                                <div class="testimonials">
-                                    <?php 
-                                        $sidebar_testimonials = get_post_meta($post_id,'rbfw_dt_sidebar_testimonials',true)? get_post_meta($post_id,'rbfw_dt_sidebar_testimonials',true) : [];
-                                        foreach($sidebar_testimonials as $key => $data): ?>
-                                        <div class="testimonial">
-                                            <button onclick="jQuery(this).parent().remove()"> <i class="fas fa-trash"></i></button>
-                                            <textarea class="testimonial-field" name="rbfw_dt_sidebar_testimonials[<?php echo  $key; ?>]['rbfw_dt_sidebar_testimonial_text']" cols="30" rows="10"><?php echo esc_html(current($data)); ?></textarea>
-                                        </div>
-                                    <?php endforeach; ?>
-
-                                    <div class="testimonial-clone">
-                                        <button onclick="jQuery(this).parent().remove()"> <i class="fas fa-trash"></i> </button>
-                                        <textarea class="testimonial-field" name=""  cols="30" rows="10"></textarea>
+                    <section>
+                        <div class="w-100 text-center">
+                            <div class="testimonials">
+                                <?php 
+                                    $sidebar_testimonials = get_post_meta($post_id,'rbfw_dt_sidebar_testimonials',true)? get_post_meta($post_id,'rbfw_dt_sidebar_testimonials',true) : [];
+                                    foreach($sidebar_testimonials as $key => $data): ?>
+                                    <div class="testimonial">
+                                        <button onclick="jQuery(this).parent().remove()"> <i class="fas fa-trash"></i></button>
+                                        <textarea class="testimonial-field" name="rbfw_dt_sidebar_testimonials[<?php echo  $key; ?>]['rbfw_dt_sidebar_testimonial_text']" cols="30" rows="10"><?php echo esc_html(current($data)); ?></textarea>
                                     </div>
+                                <?php endforeach; ?>
+
+                                <div class="testimonial-clone">
+                                    <button onclick="jQuery(this).parent().remove()"> <i class="fas fa-trash"></i> </button>
+                                    <textarea class="testimonial-field" name=""  cols="30" rows="10"></textarea>
                                 </div>
-                            
-                                <div class="ppof-button add-item" onclick="createTestimonial()"><i class="fas fa-plus-square"></i><?php _e('Add New Testimonial','booking-and-rental-manager-for-woocommerce'); ?></div>
                             </div>
-                        </section>
+                        
+                            <div class="ppof-button add-item" onclick="createTestimonial()"><i class="fas fa-plus-square"></i><?php _e('Add New Testimonial','booking-and-rental-manager-for-woocommerce'); ?></div>
+                        </div>
+                    </section>
+                </div>
                 <?php
             }
 			public function template_sidebar_content( $post_id ) {
+                $template =  get_post_meta($post_id, 'rbfw_single_template', true) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default'; 
+
                 ?>
+                <div class="donut-template-sidebar-content <?php echo $template=='Donut'?'show':'hide' ?>">
                     <?php $this->panel_header('Donut Template Sidebar Content','Donut Template Sidebar Content'); ?>
-                        <section>
-                            <div class="w-100">
-                                <?php 
-                                    $sidebar_content = get_post_meta($post_id,'rbfw_dt_sidebar_content',true);
-                                    $settings = array(
-                                            'textarea_rows' => '10',
-                                            'media_buttons' => true,
-                                            'textarea_name' => 'rbfw_dt_sidebar_content',
-                                    );
-                                    wp_editor( $sidebar_content, 'rbfw_dt_sidebar_content', $settings );
-                                ?>
-                            </div>
-                        </section>
+                    <section>
+                        <div class="w-100">
+                            <?php 
+                                $sidebar_content = get_post_meta($post_id,'rbfw_dt_sidebar_content',true);
+                                $settings = array(
+                                        'textarea_rows' => '10',
+                                        'media_buttons' => true,
+                                        'textarea_name' => 'rbfw_dt_sidebar_content',
+                                );
+                                wp_editor( $sidebar_content, 'rbfw_dt_sidebar_content', $settings );
+                            ?>
+                        </div>
+                    </section>
+                </div>
                 <?php
             }
 			public function add_tabs_content( $post_id ) {
@@ -123,8 +133,8 @@
 				<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_template_settings_meta_boxes">
 					<?php $this->section_header(); ?>
                     <?php $this->panel_header('Template Settings','Template Settings'); ?>
-                    <?php $this->sidebar_template_enable( $post_id ); ?>
                     <?php $this->select_template( $post_id ); ?>
+                    <?php $this->sidebar_template_enable( $post_id ); ?>
                     <?php $this->sidebar_testimonial( $post_id ); ?>
                     <?php $this->template_sidebar_content( $post_id ); ?>
 				</div>
@@ -137,6 +147,21 @@
                         }  
                         if(status == 'off') {
                             jQuery(this).val('on');  
+                        }
+                    });
+
+                    jQuery('#rbfw_single_template').on('change',function(){
+                        var template = jQuery(this).val();
+                        console.log(template);
+                        if(template == 'Donut') {
+                            jQuery('.donut-template-sidebar-switch').slideDown(); 
+                            jQuery('.sidebar-testimonial-settigns').slideDown(); 
+                            jQuery('.donut-template-sidebar-content').slideDown(); 
+                        }
+                        else{
+                            jQuery('.donut-template-sidebar-switch').slideUp();
+                            jQuery('.sidebar-testimonial-settigns').slideUp();
+                            jQuery('.donut-template-sidebar-content').slideUp();
                         }
                     });
 

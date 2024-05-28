@@ -16,20 +16,6 @@
   --mage-red:#d91e1e;
 }
 
-@font-face {
-  font-display: swap;
-  font-family: "ubuntu";
-  font-style: normal;
-  font-weight: 300;
-  src: url("../../fonts/Ubuntu-Regular.woff") format("woff");
-}
-@font-face {
-  font-display: swap;
-  font-family: "ubuntuBold";
-  font-style: normal;
-  font-weight: 500;
-  src: url("../../fonts/Ubuntu-Bold.woff") format("woff");
-}
 #rbfw_add_meta_box .p-0 {
   padding: 0em;
 }
