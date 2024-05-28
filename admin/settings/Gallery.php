@@ -45,7 +45,7 @@
             ?>
                 <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_gallery_images_meta_boxes">
                     <?php $this->section_header(); ?>
-                    <?php $this->panel_header('Gallery ','Gallery images here'); ?>
+                    <?php $this->panel_header('Gallery ','Please upload gallary images size in ratio 4:3. Ex: Image size width=1200px and height=900px. gallery and feature image should be in same size.'); ?>
 					<section>
 					<div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper
             field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
