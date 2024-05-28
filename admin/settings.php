@@ -109,6 +109,17 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                     'off'  => 'Off'
                 )
             ),
+            array(
+                'name' => 'rbfw_pricing_info_display',
+                'label' => __( 'Pricing Info Display', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => __( "If you want to display pricing info, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'no',
+                'options' => array(
+                    'yes' => 'Yes',
+                    'no'  => 'No'
+                )
+            ),
 		),
 		'rbfw_basic_translation_settings' => array(
 			array(

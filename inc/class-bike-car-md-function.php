@@ -169,16 +169,20 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                 jQuery(document).ready(function() {
 
+
+
                     <?php if($rbfw_enable_start_end_date == 'no'){ ?>
                     jQuery('#pickup_date').trigger('change');
                     <?php } ?>
                     jQuery('#pickup_date').change(function(e) {
                         let selected_date = jQuery(this).val();
+
                         const [gYear, gMonth, gDay] = selected_date.split('-');
+
                         jQuery("#dropoff_date").datepicker("destroy");
                         jQuery('#dropoff_date').datepicker({
                             dateFormat: 'yy-mm-dd',
-                            minDate: new Date(gYear, gMonth - 1, gDay),
+
                             beforeShowDay: function(date)
                             {
                                 return rbfw_off_day_dates(date,'md','yes');
