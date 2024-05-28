@@ -158,7 +158,14 @@ function rbfw_add_to_cart_shortcode_func($atts){
         'id' => ''
     ), $atts );
 
+
+
     $post_id = $attributes['id'];
+
+    define("add_to_cart_id", $post_id);
+
+
+
 
     if(empty($post_id)){
 
