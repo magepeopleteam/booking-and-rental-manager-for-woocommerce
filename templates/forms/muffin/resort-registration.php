@@ -35,10 +35,12 @@
 				<div class="item">
 					<div class="item-content pricing-content">
 						<div class="section-header">
-							<div class="rbfw-single-right-heading rbfw_pricing_info_heading"><?php echo $rbfw->get_option('rbfw_text_pricing_info', 'rbfw_basic_translation_settings', __('Pricing Info','booking-and-rental-manager-for-woocommerce')); ?></div>
-
+							<div class="rbfw-single-right-heading rbfw_pricing_info_heading">
+                                <?php echo $rbfw->get_option('rbfw_text_pricing_info', 'rbfw_basic_translation_settings', __('Pricing Info','booking-and-rental-manager-for-woocommerce')); ?>
+                            </div>
 						</div>
-						<div class="price-item-container">
+                        <?php $rbfw_pricing_info_display = rbfw_get_option('rbfw_pricing_info_display','rbfw_basic_gen_settings'); ?>
+                        <div class="price-item-container <?php echo ($rbfw_pricing_info_display=='yes')?'open':'' ?>" style="display: <?php echo ($rbfw_pricing_info_display=='yes')?'block':'none' ?>">
 							<table class="price-item-container-table">
 								<tr>
 									<th><?php rbfw_string('rbfw_text_room_type',__('Room Type','booking-and-rental-manager-for-woocommerce')); ?></th>

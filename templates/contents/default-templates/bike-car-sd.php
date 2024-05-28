@@ -42,43 +42,49 @@ $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','
 										<?php do_action( 'rbfw_tab_menu_list', $post_id ); ?>
 									</ul>
 								</div><!--end of tab-menu-->
-								<div class="rbfw-tab rbfw-tab-active" data-id="features">
-									<div class="rbfw-single-left-information-item">
-										<?php if ( $rbfw_feature_category ) :
-											foreach ( $rbfw_feature_category as $value ) :
-												$cat_title = $value['cat_title'];
-												$cat_features = $value['cat_features'] ? $value['cat_features'] : [];
-										?>
-										<div class="rbfw-sub-heading"><?php echo esc_html($cat_title); ?></div>
-										<ul>
-											<?php
-											if(!empty($cat_features)):
-												$i = 1;
-												foreach ($cat_features as $features):
-													$icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
-													$title = $features['title'];
-													if($title):?>
-														<li style="<?php echo ($i > 4)?'display:none':''?>" data-status="<?php echo ($i > 4)?'extra':''?>">
-															<i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_esc_html($title); ?></span>
-														</li>
-													<?php
-													endif;
-													$i++;
-												endforeach;
-											endif;
-											?>
-											<li style="width:100%">
-												<a class="rbfw_muff_lmf_btn">
-													<?php echo $rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
-												</a>
-											</li>
-										</ul>
-										<?php
-											endforeach;
-										endif;
-										?>
-									</div>
-								</div><!--end of tab one-->
+
+                                <div class="rbfw-tab rbfw-tab-active" data-id="features">
+                                    <div class="rbfw-single-left-information-item">
+                                        <?php if ( $rbfw_feature_category ) {
+                                            foreach ( $rbfw_feature_category as $value ) {
+                                                $cat_title = $value['cat_title'];
+                                                $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
+                                                ?>
+                                                <div class="rbfw-sub-heading"><?php echo esc_html($cat_title); ?></div>
+                                                <ul>
+                                                    <?php
+                                                    if(!empty($cat_features)){
+                                                        $i = 1;
+                                                        foreach ($cat_features as $features){
+                                                            $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+                                                            $title = $features['title'];
+                                                            if($title){ ?>
+                                                                <li style="<?php echo ($i > 4)?'display:none':''?>" data-status="<?php echo ($i > 4)?'extra':''?>">
+                                                                    <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_esc_html($title); ?></span>
+                                                                </li>
+                                                                <?php
+                                                            }
+                                                            $i++;
+                                                        }
+                                                    }
+                                                    ?>
+                                                    <?php  if($i>4){ ?>
+                                                        <li style="width:100%">
+                                                            <a class="rbfw_muff_lmf_btn">
+                                                                <?php echo $rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
+                                                            </a>
+                                                        </li>
+                                                    <?php } ?>
+                                                </ul>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+
+
+                                <!--end of tab one-->
 								<div class="rbfw-tab " data-id="description">
 								<div class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?></div>	
 									<?php the_content(); ?>

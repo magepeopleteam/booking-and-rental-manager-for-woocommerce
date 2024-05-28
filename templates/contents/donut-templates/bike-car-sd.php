@@ -109,11 +109,17 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 					endforeach;
 				endif;
 				?>
-				<li style="width:100%">
-					<a class="rbfw_muff_lmf_btn">
-						<?php echo $rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
-					</a>
-				</li>
+
+                <?php  if($i>4){ ?>
+                    <li style="width:100%">
+                        <a class="rbfw_muff_lmf_btn">
+                            <?php echo $rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
+                        </a>
+                    </li>
+                <?php } ?>
+
+
+
 			</ul>
 			<?php
 				endforeach;

@@ -152,14 +152,20 @@ add_shortcode('rent-add-to-cart', 'rbfw_add_to_cart_shortcode_func');
 
 function rbfw_add_to_cart_shortcode_func($atts){
 
+
+
     $attributes = shortcode_atts( array(
         'id' => ''
     ), $atts );
 
+
+
     $post_id = $attributes['id'];
 
-    if(empty($post_id)){
+    define("add_to_cart_id", $post_id);
 
+
+    if(empty($post_id)){
         return;
     }
 

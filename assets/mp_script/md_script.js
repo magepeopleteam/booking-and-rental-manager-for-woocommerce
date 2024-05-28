@@ -138,6 +138,7 @@ jQuery(document).on('change', '#rbfw_item_quantity', function(e) {
 
 function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
 
+
     if (typeof reload_es === 'undefined' || reload_es === null) {
         reload_es = 1;
     }
