@@ -137,15 +137,15 @@
                     <?php $this->panel_header('Additional Gallery','Please upload gallary images size in ratio 4:3. Ex: Image size width=1200px and height=900px. gallery and feature image should be in same size.'); ?>
                     <section>
                         <div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
-                            <div class='button upload' id='media_upload_<?php echo esc_attr($post_id); ?>'>
+                            <div class='button upload' id='rbfw_gallery_images_additional_<?php echo esc_attr($post_id); ?>'>
                                 <?php echo __('Upload','pickplugins-options-framework');?>
                             </div>
-                            <div class='button clear' id='media_clear_<?php echo $post_id; ?>'>
+                            <div class='button clear' id='media_clear_additional_<?php echo $post_id; ?>'>
                                 <?php echo __('Clear','pickplugins-options-framework');?>
                             </div>
-                            <div class="gallery-images media-list-<?php echo esc_attr($post_id); ?> ">
+                            <div class="gallery-images media-list-additional-<?php echo esc_attr($post_id); ?> ">
                                 <?php
-                                $gallery_images = get_post_meta($post_id,'rbfw_gallery_images',true);
+                                $gallery_images = get_post_meta($post_id,'rbfw_gallery_images_additional',true);
                                 $gallery_images = $gallery_images ? $gallery_images : [];
                                 
                                 if(!empty($gallery_images) && is_array($gallery_images)):
@@ -158,7 +158,7 @@
                                             <span class="remove" onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></span>
                                             
                                             <img id='media_preview_<?php echo esc_attr($post_id); ?>' src='<?php echo esc_attr($media_url); ?>' />
-                                            <input type='hidden' name='rbfw_gallery_images[]' value='<?php echo esc_attr($image); ?>' />
+                                            <input type='hidden' name='rbfw_gallery_images_additional[]' value='<?php echo esc_attr($image); ?>' />
                                         </div>
                                     <?php
                                     endforeach;
@@ -219,6 +219,28 @@
                         .removeClass('testimonial-clone').addClass('testimonial')
                         .children('.testimonial-field').attr('name','rbfw_dt_sidebar_testimonials['+now+'][rbfw_dt_sidebar_testimonial_text]');
                     };
+
+                    jQuery(document).ready(function($){
+							$('#rbfw_gallery_images_additional_<?php echo esc_attr($post_id); ?>').click(function() {
+								//var send_attachment_bkp = wp.media.editor.send.attachment;
+								wp.media.editor.send.attachment = function(props, attachment) {
+									attachment_id = attachment.id;
+									attachment_url = attachment.url;
+									html = '<div class=" gallery-image">';
+									html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></span>';
+									html += '<img src="'+attachment_url+'" style="width:100%"/>';
+									html += '<input type="hidden" name="rbfw_gallery_images_additional[]" value="'+attachment_id+'" />';
+									html += '</div>';
+									$('.media-list-additional-<?php echo esc_attr($post_id); ?>').append(html);
+									//wp.media.editor.send.attachment = send_attachment_bkp;
+								}
+								wp.media.editor.open($(this));
+								return false;
+							});
+							$('#media_clear_additional_<?php echo esc_attr($post_id); ?>').click(function() {
+								$('.media-list-additional-<?php echo esc_attr($post_id); ?> .gallery-image').remove();
+							})
+						});
                 </script>
 			<?php
 			}
@@ -242,11 +264,15 @@
                     $dt_sidebar_switch 	 = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? rbfw_array_strip($_POST['rbfw_dt_sidebar_switch']) : '';
                     $testimonials 	 = isset( $_POST['rbfw_dt_sidebar_testimonials'] ) ? rbfw_array_strip( $_POST['rbfw_dt_sidebar_testimonials'] ) : [];
                     $sidebar_content 	 = isset( $_POST['rbfw_dt_sidebar_content'] ) ? rbfw_array_strip( $_POST['rbfw_dt_sidebar_content'] ) : [];
+                    $gallery_images = isset( $_POST['rbfw_gallery_images_additional'] ) ? rbfw_array_strip( $_POST['rbfw_gallery_images_additional'] ) : [];
                    
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_switch', $dt_sidebar_switch );
                     update_post_meta( $post_id, 'rbfw_single_template', $rbfw_single_template );
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_testimonials', $testimonials );
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_content', $sidebar_content );
+					update_post_meta($post_id, 'rbfw_gallery_images_additional', $gallery_images);
+
+					
                 }
             }
 		}
