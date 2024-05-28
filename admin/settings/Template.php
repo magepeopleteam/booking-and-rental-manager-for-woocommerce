@@ -106,6 +106,7 @@
                 </div>
                 <?php
             }
+			
 			public function template_sidebar_content( $post_id ) {
                 $template =  get_post_meta($post_id, 'rbfw_single_template', true) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default'; 
 
@@ -128,6 +129,20 @@
                 </div>
                 <?php
             }
+
+            public function additional_gallery( $post_id ) {
+                $template =  get_post_meta($post_id, 'rbfw_single_template', true) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default'; 
+                ?>
+                <div class="additional-gallery <?php echo $template=='Muffin'?'show':'hide' ?>">
+                    <?php $this->panel_header('Additional Gallery','Add additional gallery for Muffin template'); ?>
+                    <section>
+                        <div class="w-100">
+                           Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur quos nulla at sapiente eveniet voluptatum rem, facere, distinctio doloremque optio incidunt harum impedit sit eum minus libero debitis. Ullam, est.
+                        </div>
+                    </section>
+                </div>
+                <?php
+            }
 			public function add_tabs_content( $post_id ) {
             ?>
 				<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_template_settings_meta_boxes">
@@ -137,6 +152,7 @@
                     <?php $this->sidebar_template_enable( $post_id ); ?>
                     <?php $this->sidebar_testimonial( $post_id ); ?>
                     <?php $this->template_sidebar_content( $post_id ); ?>
+                    <?php $this->additional_gallery( $post_id ); ?>
 				</div>
 
                 <script>
@@ -152,7 +168,6 @@
 
                     jQuery('#rbfw_single_template').on('change',function(){
                         var template = jQuery(this).val();
-                        console.log(template);
                         if(template == 'Donut') {
                             jQuery('.donut-template-sidebar-switch').slideDown(); 
                             jQuery('.sidebar-testimonial-settigns').slideDown(); 
@@ -162,6 +177,12 @@
                             jQuery('.donut-template-sidebar-switch').slideUp();
                             jQuery('.sidebar-testimonial-settigns').slideUp();
                             jQuery('.donut-template-sidebar-content').slideUp();
+                            jQuery('.additional-gallery').slideUp();
+                        }
+                        if(template == 'Muffin') {
+                            jQuery('.additional-gallery').slideDown();
+                        }else{
+                            jQuery('.additional-gallery').slideUp();
                         }
                     });
 
