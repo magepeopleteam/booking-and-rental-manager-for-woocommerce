@@ -43,6 +43,7 @@
 
             public function select_category($post_id){
                 $rbfw_categories = get_post_meta($post_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_categories', true)) : [];
+
                 ?>
                     <section>
                         <div>
@@ -346,9 +347,9 @@
 
                     $rbfw_categories 	 = isset( $_POST['rbfw_categories'] ) ? rbfw_array_strip( $_POST['rbfw_categories'] ) : [];
 
-                    foreach ($rbfw_categories as $item){
-                        wp_set_object_terms( $post_id, $item,'rbfw_item_caregory');
-                    }
+
+                    wp_set_object_terms( $post_id, $rbfw_categories,'rbfw_item_caregory');
+
 
                     $feature_category 	 = isset( $_POST['rbfw_feature_category'] ) ? rbfw_array_strip( $_POST['rbfw_feature_category'] ) : [];
                     
