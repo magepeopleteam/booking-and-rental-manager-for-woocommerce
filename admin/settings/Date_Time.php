@@ -126,14 +126,14 @@
 			public function multiple_time_slot_select($post_id){
                 $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
                 $rdfw_available_time = get_post_meta($post_id,'rdfw_available_time',true) ? maybe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];
-                ?>
+				?>
                 <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
 					<select name="rdfw_available_time[]" id="rdfw_available_time" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
-						<?php foreach($rbfw_time_slots as $kay => $value): ?>
+						<?php foreach($rbfw_time_slots as $key => $value): ?>
                         <?php if(get_the_title( $post_id ) == 'Auto Draft'){ ?>
-							<option selected value="<?php echo $kay; ?>"> <?php echo $value; ?> </option>
+							<option selected value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
 						<?php }else{ ?>
-                                <option <?php echo (in_array($value,$rdfw_available_time))?'selected':'' ?> value="<?php echo $kay; ?>"> <?php echo $value; ?> </option>
+                            <option <?php echo (in_array($value,$rdfw_available_time))?'selected':'' ?> value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
                         <?php } ?>
                         <?php endforeach; ?>
 					</select>
