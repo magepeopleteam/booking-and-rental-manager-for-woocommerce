@@ -207,7 +207,18 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 
+
+
+
 == Changelog ==
+
+== Changelog ==
+= 2.0.1 =
+* Category ID added in category list.
+* Count field fixed in category list.
+* Shortcode of rent-list category parameter replaced by cat_ids.
+
+
 = 2.0.0 =
 * Multiple category pricing ontime and daywise feature added
 * Stock managemant problem solved

@@ -51,7 +51,7 @@ add_action("init","rbfw_taxonomy_register",10);
 
 
 function add_rbfw_item_caregory_columns( $columns ) {
-    $columns['term_id'] = 'term_id';
+    $columns['term_id'] = 'Category ID';
     return $columns;
 }
 add_filter( 'manage_edit-rbfw_item_caregory_columns', 'add_rbfw_item_caregory_columns' );
