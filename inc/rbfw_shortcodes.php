@@ -19,6 +19,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'type'  => '',
         'location' => '',
         'category' => '',
+        'cat_ids' => '',
         'columns' => '',
     ), $atts );
 
@@ -30,7 +31,12 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $type   = $attributes['type'];
     $location   = $attributes['location'];
     $category   = $attributes['category'];
+    $cat_ids   = $attributes['cat_ids'];
     $columns   = $attributes['columns'];
+
+    if($category){
+        $cat_ids = $category;
+    }
 
 
 

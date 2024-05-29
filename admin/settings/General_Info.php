@@ -43,6 +43,7 @@
 
             public function select_category($post_id){
                 $rbfw_categories = get_post_meta($post_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_categories', true)) : [];
+
                 ?>
                     <section>
                         <div>
@@ -340,7 +341,16 @@
                 }
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
+
+                  //  wp_set_object_terms( $post_id, string|int|array $terms, string $taxonomy, bool $append = false )
+
+
                     $rbfw_categories 	 = isset( $_POST['rbfw_categories'] ) ? rbfw_array_strip( $_POST['rbfw_categories'] ) : [];
+
+
+                    wp_set_object_terms( $post_id, $rbfw_categories,'rbfw_item_caregory');
+
+
                     $feature_category 	 = isset( $_POST['rbfw_feature_category'] ) ? rbfw_array_strip( $_POST['rbfw_feature_category'] ) : [];
                     
                     update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
