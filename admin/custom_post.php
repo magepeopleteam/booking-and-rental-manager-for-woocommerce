@@ -46,10 +46,12 @@ if( ! class_exists('RBFW_Custom_Post')){
                 break;
                 case 'rbfw_categories':
                     $cats = get_post_meta($post_id,'rbfw_categories',true);
-                    foreach ($cats as $key => $cat) {
-                        echo __("<a href='edit.php?post_type=rbfw_item&rbfw_categories=".$cat."'>".$cat."</a>");
-                        if ($key !== count($cats) - 1) {
-                            echo __(', ');
+                    if ( ! empty($cats) ) {
+                        foreach ($cats as $key => $cat) {
+                            echo __("<a href='edit.php?post_type=rbfw_item&rbfw_categories=".$cat."'>".$cat."</a>");
+                            if ($key !== count($cats) - 1) {
+                                echo __(', ');
+                            }
                         }
                     }
                 break;
