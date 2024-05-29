@@ -3,8 +3,7 @@ Contributors: magepeopleteam, aamahin
 Plugin link: https://mage-people.com/
 Tags: booking calendar, Woocommerce Reservation Booking, Rental Booking, Woocommerce Rental Booking, Rental Plugin 
 Requires at least: 5.3
-Stable tag: 2.0.0
-Version: 2.0.0
+Stable tag: trunk
 Tested up to: 6.3
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -209,15 +208,15 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 
-
-== Changelog ==
-
 == Changelog ==
 = 2.0.1 =
 * Category ID added in category list.
 * Count field fixed in category list.
 * Shortcode of rent-list category parameter replaced by cat_ids.
-
+* Dashboard categories empty column error fix.
+* Additional Gallery added to template section for Muffin template.
+* On donut template selection sidebar options visible.
+* Custom time slot selection issue fix in date/time section. 
 
 = 2.0.0 =
 * Multiple category pricing ontime and daywise feature added
