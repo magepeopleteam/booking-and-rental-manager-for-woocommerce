@@ -34,10 +34,9 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $cat_ids   = $attributes['cat_ids'];
     $columns   = $attributes['columns'];
 
-    if($category){
-        $cat_ids = $category;
+    if(!$category){
+        $category  = $cat_ids;
     }
-
 
 
     $rent_type = !empty($type) ? array(
@@ -69,7 +68,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
 
     if(!empty($category)):
-        $category = explode(',', $attributes['category']);
+        $category = explode(',', $category);
         foreach ($category as $cat){
             $category_name=isset(get_term($cat)->name) ? get_term($cat)->name : '';
             $args['meta_query'][] = array(
