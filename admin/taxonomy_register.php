@@ -49,3 +49,16 @@ function rbfw_taxonomy_register(){
 
 add_action("init","rbfw_taxonomy_register",10);
 
+
+function add_rbfw_item_caregory_columns( $columns ) {
+    $columns['term_id'] = 'term_id';
+    return $columns;
+}
+add_filter( 'manage_edit-rbfw_item_caregory_columns', 'add_rbfw_item_caregory_columns' );
+
+function add_rbfw_item_caregory_column_content( $content, $column_name, $term_id ) {
+    return $term_id;
+}
+
+add_filter( 'manage_rbfw_item_caregory_custom_column', 'add_rbfw_item_caregory_column_content', 2, 3 );
+
