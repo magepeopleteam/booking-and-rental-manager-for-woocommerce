@@ -2,12 +2,13 @@
     $(document).ready(function() {
         const service_id = $('.rbfw-single-container').attr('data-service-id');
         // DatePicker
+        let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
         $('#pickup_date').datepicker({
             dateFormat: 'yy-mm-dd',
             minDate: 0,
             beforeShowDay: function(date)
             {
-                return rbfw_off_day_dates(date,'md');
+                return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
             }
         });
 

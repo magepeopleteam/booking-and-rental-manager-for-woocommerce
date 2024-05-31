@@ -3,6 +3,8 @@
 /* Start Calendar Script */
 jQuery(function(){
 
+    let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
+
     var defaultConfig = {
         weekDayLength: 1,
         onClickDate: onclick_cal_date,
@@ -14,7 +16,7 @@ jQuery(function(){
         prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
         nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
         disable: function (date) {
-            return rbfw_off_day_dates(date);
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
 
         },
         customDateProps: (date) => ({
@@ -853,7 +855,7 @@ function rbfw_mps_checkout_header_link(){
 
 /*start multiple day pricing booking*/
 
-function rbfw_off_day_dates(date,type='',drop_off=''){
+function rbfw_off_day_dates(date,type='',today_enable='no'){
 
 
 
@@ -863,8 +865,17 @@ function rbfw_off_day_dates(date,type='',drop_off=''){
     var curr_year = date.getFullYear();
     var date_in = curr_date+"-"+curr_month+"-"+curr_year;
 
-    var date_iii = new Date();
 
+
+    var date_today = new Date();
+
+    if(today_enable=='yes'){
+        var month = date_today.getMonth()-1;
+        var day = date_today.getDate();
+        var date_today = date_today.getFullYear() + '/' +
+            (month<10 ? '0' : '') + month + '/' +
+            (day<10 ? '0' : '') + day;
+    }
 
     var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     var day_in = weekday[date.getDay()];
@@ -876,7 +887,7 @@ function rbfw_off_day_dates(date,type='',drop_off=''){
     var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
 
 
-    if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || date <  date_iii){
+    if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || (date <  date_today) ){
         if(type=='md'){
             return [false, "notav", 'Not Available'];
         }else{
