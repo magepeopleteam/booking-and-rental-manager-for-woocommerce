@@ -213,6 +213,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 == Changelog ==
 
 == Changelog ==
+= 2.0.2 =
+* Current day booking option added.
+
+
 = 2.0.1 =
 * Category ID added in category list.
 * Count field fixed in category list.
