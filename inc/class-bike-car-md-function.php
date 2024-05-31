@@ -169,7 +169,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
                 jQuery(document).ready(function() {
 
-
+                    let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
 
                     <?php if($rbfw_enable_start_end_date == 'no'){ ?>
                     jQuery('#pickup_date').trigger('change');
@@ -182,10 +182,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                         jQuery("#dropoff_date").datepicker("destroy");
                         jQuery('#dropoff_date').datepicker({
                             dateFormat: 'yy-mm-dd',
-
+                            minDate: new Date(gYear, gMonth - 1, gDay),
                             beforeShowDay: function(date)
                             {
-                                return rbfw_off_day_dates(date,'md','yes');
+                                return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
                             }
                         });
                     });

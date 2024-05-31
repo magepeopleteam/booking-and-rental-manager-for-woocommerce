@@ -120,6 +120,18 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                     'no'  => 'No'
                 )
             ),
+
+            array(
+                'name' => 'today_booking_enable',
+                'label' => __( 'Today booking enable', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => __( "If you want to enable today booking, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'no',
+                'options' => array(
+                    'yes' => 'Yes',
+                    'no'  => 'No'
+                )
+            ),
 		),
 		'rbfw_basic_translation_settings' => array(
 			array(
