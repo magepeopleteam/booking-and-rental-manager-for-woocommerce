@@ -14,6 +14,7 @@
         width: 100%;
         height: 600px;
         overflow: hidden;
+        margin-bottom: 70px;
         .rbfw-swiper{
             width: 100%;
             height: 70%;
@@ -60,6 +61,44 @@
             }
             .swiper-slide-thumb-active {
                 opacity: 1;
+            }
+        }
+    }
+    .title{
+        text-align: center;
+    }
+    .devider{
+        width: 200px;
+        margin: 50px auto;
+        height: 2px;
+        background-color: #000;
+    }
+    .feature-lists{
+        .feature-title{
+            text-align: center;
+        }
+        .feature-items{
+            display: flex;
+            justify-content: center;
+            .item{
+                width: 150px;
+                height: 150px;
+                background-color: #ddd;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                margin: 20px;
+                
+                i{
+                    font-size: 50px;
+                    padding: 20px;
+                    color: #999;
+                }
+                h2{
+                    font-size: 30px;
+                    margin: 0;
+                }
             }
         }
     }

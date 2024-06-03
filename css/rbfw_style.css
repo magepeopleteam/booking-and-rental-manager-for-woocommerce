@@ -5961,6 +5961,7 @@ body.single-rbfw_item div.ast-container {
   width: 100%;
   height: 600px;
   overflow: hidden;
+  margin-bottom: 70px;
 }
 .rbfw_nebula_template .rbfw-nebula-slider .rbfw-swiper {
   width: 100%;
@@ -6008,6 +6009,41 @@ body.single-rbfw_item div.ast-container {
 }
 .rbfw_nebula_template .rbfw-nebula-slider .rbfw-swiper-thumbnail .swiper-slide-thumb-active {
   opacity: 1;
+}
+.rbfw_nebula_template .title {
+  text-align: center;
+}
+.rbfw_nebula_template .devider {
+  width: 200px;
+  margin: 50px auto;
+  height: 2px;
+  background-color: #000;
+}
+.rbfw_nebula_template .feature-lists .feature-title {
+  text-align: center;
+}
+.rbfw_nebula_template .feature-lists .feature-items {
+  display: flex;
+  justify-content: center;
+}
+.rbfw_nebula_template .feature-lists .feature-items .item {
+  width: 150px;
+  height: 150px;
+  background-color: #ddd;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px;
+}
+.rbfw_nebula_template .feature-lists .feature-items .item i {
+  font-size: 50px;
+  padding: 20px;
+  color: #999;
+}
+.rbfw_nebula_template .feature-lists .feature-items .item h2 {
+  font-size: 30px;
+  margin: 0;
 }
 
 /*# sourceMappingURL=rbfw_style.css.map */
