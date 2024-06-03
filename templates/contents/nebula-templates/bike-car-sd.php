@@ -73,19 +73,16 @@ $price = $smallest_price;
 endif;
 $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settings', 'on');
 ?>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
 
     <div class="rbfw_nebula_template">
         <header> 
             <h2>
                 <span>$100</span>/<?php esc_html_e('day',''); ?> | <span>$10</span>/<?php esc_html_e('hr',''); ?>
             </h2>
-        </header>
-        
-               
-        
-        <div class="nebula-slider">
-            <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="swiper mySwiper2">
+        </header>        
+        <div class="rbfw-nebula-slider">
+            <div class="rbfw-swiper">
                 <div class="swiper-wrapper">
                     <?php 
                         foreach($gallery_images as $key => $value):?>
@@ -94,44 +91,21 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                         </div>
                     <?php endforeach; ?>
                 </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
-        </div>
-        <div thumbsSlider="" class="swiper mySwiper">
-            <div class="swiper-wrapper">
-                <?php 
-                    foreach($gallery_images as $key => $value):?>
-                    <div class="swiper-slide">
-                        <img src="<?php  echo wp_get_attachment_url($value ); ?>" />
-                    </div>
-                <?php endforeach; ?>
+                <div class="swiper-navigation">
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+            </div>
+            <div class="rbfw-swiper-thumbnail">
+                <div class="swiper-wrapper">
+                    <?php 
+                        foreach($gallery_images as $key => $value):?>
+                        <div class="swiper-slide">
+                            <img src="<?php  echo wp_get_attachment_url($value ); ?>" />
+                        </div>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </div>
-        </div>
-
-        <!-- Swiper JS -->
-        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-        <!-- Initialize Swiper -->
-        <script>
-        var swiper = new Swiper(".mySwiper", {
-            loop: true,
-            spaceBetween: 10,
-            slidesPerView: 4,
-            freeMode: true,
-            watchSlidesProgress: true,
-        });
-        var swiper2 = new Swiper(".mySwiper2", {
-            loop: true,
-            spaceBetween: 10,
-            navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-            },
-            thumbs: {
-            swiper: swiper,
-            },
-        });
-        </script>
     </div>
 

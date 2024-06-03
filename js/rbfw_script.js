@@ -230,3 +230,23 @@ function rbfw_aig_showSlides(n) {
     captionText.innerHTML = dots[slideIndex - 1].alt;
 }
 /* End: Additional Gallary Images */
+// swiper slider for nebula template
+let rbfwSwiper = new Swiper(".rbfw-swiper-thumbnail", {
+    loop: true,
+    spaceBetween: 10,
+    slidesPerView: 6,
+    freeMode: true,
+    watchSlidesProgress: true,
+});
+let swiperSlider = new Swiper(".rbfw-swiper", {
+    loop: true,
+    spaceBetween: 10,
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+    },
+    thumbs: {
+    swiper: rbfwSwiper,
+    },
+});
+// end swiper slider for nebula template

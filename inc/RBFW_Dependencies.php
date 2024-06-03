@@ -73,8 +73,11 @@
 				if ( strlen( $default_language ) > 0 ) {
 					$default_language = explode( '_', $default_language )[0];
 				}
+
+				wp_enqueue_style( 'rbfw_swiper_slider', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', array(), '1.1' );
 				wp_enqueue_style( 'rbfw_calendar', RBFW_PLUGIN_URL . '/css/calendar.css', array(), '1.0.1' );
 
+				wp_enqueue_script('rbfw_swiper_js','https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', array('jquery'), '1.1', true);
 				wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
 				wp_localize_script( 'rbfw_calendar', 'rbfw_calendar_object',
 					array( 
