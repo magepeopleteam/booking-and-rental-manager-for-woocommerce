@@ -202,7 +202,7 @@ function rbfw_mps_currency_symbol(){
     }
 }
 
-function rbfw_mps_price($amount){
+function rbfw_mps_price($amount=0){
     global $rbfw;
     $currency_symbol = rbfw_mps_currency_symbol();
     $currency_position = $rbfw->get_option('rbfw_mps_currency_position', 'rbfw_basic_payment_settings','left');

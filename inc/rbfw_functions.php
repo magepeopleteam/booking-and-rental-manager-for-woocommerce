@@ -1754,11 +1754,15 @@ function rbfw_trash_order( $order_id = '' ) {
 
 function wp_kama_untrashed_post_action( $order_id ,$previous_status ) {
     $order = wc_get_order( $order_id );
-    $order_status = str_replace("wc-","",$previous_status);
-    foreach ( $order->get_items() as $item_id => $item_values ) {
-        $rbfw_id =  wc_get_order_item_meta( $item_id, '_rbfw_id', true );
-        rbfw_update_inventory_extra( $rbfw_id, $order_id,$order_status);
+
+    if(!empty($order)){
+        $order_status = str_replace("wc-","",$previous_status);
+        foreach ( $order->get_items() as $item_id => $item_values ) {
+            $rbfw_id =  wc_get_order_item_meta( $item_id, '_rbfw_id', true );
+            rbfw_update_inventory_extra( $rbfw_id, $order_id,$order_status);
+        }
     }
+
 }
 
 function rbfw_update_inventory($order_id, $current_status = null){

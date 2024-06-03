@@ -209,6 +209,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
+= 2.0.3 =
+* Untrash problem solved.
+* Single day calendar problem solved.
+
 = 2.0.2 =
 * Current day booking option added.
 
