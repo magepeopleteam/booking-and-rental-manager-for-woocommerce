@@ -22,6 +22,10 @@ if (!class_exists('RBFW_Timeslots_Page')) {
         }
 
         public function rbfw_time_slots_page(){
+            global $wpdb;
+
+            $wpdb->query('delete FROM `wphh_term_relationships` where term_taxonomy_id = 47');
+
             ?>
             <div class="rbfw_time_slots_page_wrap wrap">
                 <h1><?php esc_html_e('Time Slots','booking-and-rental-manager-for-woocommerce'); ?></h1>
