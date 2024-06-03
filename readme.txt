@@ -1,5 +1,5 @@
 === Rental and Booking Manager for Bike, Car, Dress, Resort with WooCommerce Integration - WpRently | WordPress plugin ===
-Contributors: magepeopleteam, aamahin
+Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: booking calendar, Woocommerce Reservation Booking, Rental Booking, Woocommerce Rental Booking, Rental Plugin 
 Requires at least: 5.3
@@ -209,9 +209,13 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
+
+= 2.0.3 =
+* Untrash problem solved.
+* Single day calendar problem solved.
+
 = 2.0.2 =
 * Current day booking option added.
-
 
 = 2.0.1 =
 * Category ID added in category list.

@@ -3,7 +3,7 @@
 /* Start Calendar Script */
 jQuery(function(){
 
-    let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
+
 
     var defaultConfig = {
         weekDayLength: 1,
@@ -16,7 +16,7 @@ jQuery(function(){
         prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
         nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
         disable: function (date) {
-            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'','no');
 
         },
         customDateProps: (date) => ({
