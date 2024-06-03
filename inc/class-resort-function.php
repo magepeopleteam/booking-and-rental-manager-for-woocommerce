@@ -841,12 +841,14 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             jQuery(document).ready(function(){
                 // Check-in date picker
 
+                let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
+
                 jQuery('#checkin_date').datepicker({
                     dateFormat: 'yy-mm-dd',
                     minDate: 0,
                     beforeShowDay: function(date)
                     {
-                        return rbfw_off_day_dates(date,'md');
+                        return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
                     }
                 });
 
@@ -862,7 +864,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                         minDate: new Date(gYear, gMonth - 1, gDay),
                         beforeShowDay: function(date)
                         {
-                            return rbfw_off_day_dates(date,'md');
+                            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
                         }
                     });
 

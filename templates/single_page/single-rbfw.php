@@ -46,6 +46,10 @@ if ( post_password_required() ) {
 } else {
     do_action( 'woocommerce_before_single_product' );
     //include_once( RBFW_Function::get_template($post_id) );
+    $today_booking_enable = rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings');
+    ?>
+    <input type="hidden" class="rbfw_today_booking_enable" value="<?php echo $today_booking_enable ?>">
+    <?php
     RBFW_Function::get_template($post_id);
 
 }
