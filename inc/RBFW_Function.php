@@ -67,6 +67,7 @@
 					'Muffin' => 'Muffin template',
 					'Donut' => 'Donut template',
 					'Default' => 'Classic template',
+					'Nebula' => 'Nebula template',
 				);
 
 				$name = $the_array;

@@ -9,6 +9,7 @@
   "main": "rent-manager.php",
   "scripts": {
     "start": "sass --watch sass/main.scss assets/admin/css/admin.css",
+    "frontend": "sass --watch sass/frontend/main.scss css/rbfw_style.css",
     "build": "sass --watch --style compressed sass/main.scss assets/admin/css/admin.css"
   },
   "author": "mage-people",
