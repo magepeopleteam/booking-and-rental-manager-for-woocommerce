@@ -81,22 +81,23 @@
             display: flex;
             justify-content: center;
             .item{
-                width: 150px;
-                height: 150px;
+                width: 120px;
+                height: 120px;
                 background-color: #ddd;
                 display: flex;
+                flex-wrap: wrap;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 margin: 20px;
                 
                 i{
-                    font-size: 50px;
-                    padding: 20px;
+                    font-size: 35px;
+                    padding:15px 20px;
                     color: #999;
                 }
                 h2{
-                    font-size: 30px;
+                    font-size: 20px;
                     margin: 0;
                 }
             }
