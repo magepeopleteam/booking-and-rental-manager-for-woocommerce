@@ -144,7 +144,7 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
         </div>
         <!-- Start booking -->
         <div class="start-booking">
-        
+            <?php include( RBFW_Function::template_path( 'forms/nebula/bike-car-sd-registration.php' ) ); ?>
         </div>
         <!-- Related items -->
     </div>
