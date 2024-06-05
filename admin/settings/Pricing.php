@@ -146,7 +146,7 @@
 																	<?php if($sortable):?>
 																		<span class="button sort"><i class="fas fa-arrows-alt"></i></span>
 																	<?php endif; ?>
-																	<span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span>
+																	<span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo ($remove_text); ?></span>
 																</div>
 															</div>
 															<?php
@@ -218,7 +218,7 @@
 																<i class="fas fa-arrows-alt"></i>
 															</span>
 														<?php endif; ?>
-														<span class="button remove" onclick="jQuery(this).parent().remove()">
+														<span class="button remove" onclick="jQuery(this).parent().parent().remove()">
 															<?php echo ($remove_text); ?>
 														</span>
 													</div>
@@ -266,7 +266,7 @@
 						html += '<label class="" for="rbfw_dt_sidebar_switch-on"> <input name="rbfw_service_category_price['+ nextCat +'][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time"> <span class="sw-button"> One Time</span> </label>';
 						html += '<label class="checked" for="rbfw_dt_sidebar_switch-off"> <input name="rbfw_service_category_price['+ nextCat +'][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked=""> <span class="sw-button"> Day Wise</span> </label>';
 	
-						html +='<div><?php if($sortable):?><span class="button sort"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span></div></div></div></div></div><span class="ppof-button add-new-service"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo ($remove_text); ?></span></td></tr>';
+						html +='<div><?php if($sortable):?><span class="button sort"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo ($remove_text); ?></span></div></div></div></div></div><span class="ppof-button add-new-service"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo ($remove_text); ?></span></td></tr>';
 						jQuery('.rbfw_service_category_table tbody').append(html);
 						jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
 						jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
@@ -299,7 +299,7 @@
 						html += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
 						<?php endif; ?>
 	
-						html += '<span class="button remove" onclick="jQuery(this).parent().remove()' + '"><?php echo ($remove_text); ?></span>';
+						html += '<span class="button remove" onclick="jQuery(this).parent().parent().remove()' + '"><?php echo ($remove_text); ?></span>';
 						html += '</div></div>';
 	
 						theTarget.append(html);
