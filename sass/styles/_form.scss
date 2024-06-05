@@ -11,6 +11,7 @@
       border: 1px solid $color-dark;
       color: $color-secondary;
       padding: $spacing;
+      font-weight: normal;
       &.small{
         width:calc($input-width/3);
       }
