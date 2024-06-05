@@ -50,13 +50,13 @@ if( ! class_exists('RBFW_Security_Deposit')){
             $rbfw_security_deposit_type  = get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) : 'percentage';
             $rbfw_security_deposit_amount  = get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) : 0;
             ?>
-            <div class="rbfw_discount_xday_table <?php echo esc_attr(($rbfw_enable_security_deposit=='yes')?'show':'hide'); ?>">
+            <div class="rbfw_security_deposit_table <?php echo esc_attr(($rbfw_enable_security_deposit=='yes')?'show':'hide'); ?>">
                 <section>
                     <div class="w-100">
                         <table class="form-table rbfw_discount_table">
                             <thead>
                             <tr>
-                                <th><div class="rbfw_td_title"><?php echo esc_html_e( 'Discount Type', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
+                                <th><div class="rbfw_td_title"><?php echo esc_html_e( 'Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
                                 <th><div class="rbfw_td_title"><?php echo esc_html_e( 'Number of percentage/fixed amount', 'booking-and-rental-manager-for-woocommerce' ); ?></div></th>
                             </tr>
                             </thead>
@@ -84,11 +84,11 @@ if( ! class_exists('RBFW_Security_Deposit')){
 
                     if(status == 'yes') {
                         jQuery(this).val('no');
-                        jQuery('.rbfw_discount_xday_table').slideUp().removeClass('show').addClass('hide');
+                        jQuery('.rbfw_security_deposit_table').slideUp().removeClass('show').addClass('hide');
                     }
                     if(status == 'no') {
                         jQuery(this).val('yes');
-                        jQuery('.rbfw_discount_xday_table').slideDown().removeClass('hide').addClass('show');
+                        jQuery('.rbfw_security_deposit_table').slideDown().removeClass('hide').addClass('show');
                     }
                 });
             </script>

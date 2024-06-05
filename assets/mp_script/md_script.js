@@ -207,14 +207,21 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
         success: function (response) {
 
             jQuery('.duration-costing .price-figure').html(response.duration_price_html);
-            //jQuery('.rbfw-service-costing .price-figure').html(response.rbfw_service_price_html);
             jQuery('.resource-costing .price-figure').html(response.service_cost_html);
             jQuery('.subtotal .price-figure').html(response.sub_total_price_html);
 
             if(response.discount){
+                jQuery('.discount').show();
                 jQuery('.discount span').html(response.discount);
             }else{
                 jQuery('.discount').hide();
+            }
+
+            if(response.security_deposit_amount){
+                jQuery('.security_deposit').show();
+                jQuery('.security_deposit span').html(response.security_deposit_desc);
+            }else{
+                jQuery('.security_deposit').show();
             }
 
             jQuery('.total .price-figure').html(response.total_price_html);

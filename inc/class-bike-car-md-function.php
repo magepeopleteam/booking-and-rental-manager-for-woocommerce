@@ -68,6 +68,9 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
+
+
+
             if(!empty($service_price_arr)){
                 foreach ($service_price_arr as $data_name => $values) {
                     if($item_quantity > 1 && (int)$values['data_qty'] == 1 && $rbfw_enable_extra_service_qty != 'yes'){
@@ -80,21 +83,35 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $sub_total_price = $duration_price + $service_cost+$rbfw_service_price;
 
-            $total_price = $sub_total_price;
 
+            $security_deposit_amount = 0;
+            $security_deposit_desc = 0;
+            $rbfw_enable_security_deposit = get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) ? get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) : 'no';
+            if($rbfw_enable_security_deposit=='yes'){
+                $rbfw_security_deposit_type = get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) : 'percentage';
+                $rbfw_security_deposit_amount = get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) : '0';
+                if($rbfw_security_deposit_type=='percentage'){
+                    $security_deposit_amount = $rbfw_security_deposit_amount*$sub_total_price/100;
+                    $security_deposit_desc = $security_deposit_amount.'%';
+                }else{
+                    $security_deposit_amount = $rbfw_security_deposit_amount;
+                    $security_deposit_desc = rbfw_mps_price($security_deposit_amount);
+                }
+            }
+
+
+
+            $discount_amount = 0;
             $discount_desc = 0;
 
+
             if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
-
-
                 if(empty($star_time) && empty($end_time)){
                     $pickup_datetime  = date( 'Y-m-d', strtotime( $start_date.' '.'00:00:00' ) );
                     $dropoff_datetime = date( 'Y-m-d', strtotime( $end_date.' '.rbfw_end_time() ) );
                 } else {
                     $pickup_datetime  = date( 'Y-m-d H:i', strtotime( $start_date . ' ' . $star_time ) );
                     $dropoff_datetime = date( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
-
-
                 }
                 $pickup_datetime  = new DateTime( $pickup_datetime );
                 $dropoff_datetime = new DateTime( $dropoff_datetime );
@@ -106,8 +123,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 }
 
                 if(!empty($discount_arr)){
-                    $total_price = $discount_arr['total_amount'];
-                    $discount_type = $discount_arr['discount_type'];
                     $discount_amount = $discount_arr['discount_amount'];
                     $discount_desc = $discount_arr['discount_desc'];
                 }
@@ -135,8 +150,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'service_cost_html' => wc_price($service_cost+$rbfw_service_price),
                 'sub_total_price_html' => wc_price($sub_total_price),
                 'discount' => $discount_desc,
-                'total_price' => $total_price,
-                'total_price_html' => wc_price($total_price),
+                'security_deposit_desc' => $security_deposit_desc,
+                'security_deposit_amount' => $security_deposit_amount,
+                'total_price' => $sub_total_price+$security_deposit_amount-$discount_amount,
+                'total_price_html' => wc_price($sub_total_price+$security_deposit_amount-$discount_amount),
                 'max_available_qty' => $max_available_qty,
                 'total_days' => $total_days,
                 'total_duration' => $duration,

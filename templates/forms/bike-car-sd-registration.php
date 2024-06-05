@@ -38,7 +38,8 @@
 
 				<!-- ITEM -->
 				<div class="item rbfw-bikecarsd-step" data-step="1">
-					<div id="rbfw-bikecarsd-calendar"></div>
+
+                    <div id="rbfw-bikecarsd-calendar"></div>
 
 					<div class="rbfw-bikecarsd-calendar-footer">
                         <i class="fa-solid fa-circle-info"></i>

@@ -994,8 +994,7 @@ function rbfw_booking_management( $order_id ) {
 
             $start_date = wc_get_order_item_meta( $item_id, 'start_date', true );
             $end_date = wc_get_order_item_meta( $item_id, 'end_date', true );
-            $rbfw_service_price_data_actual = wc_get_order_item_meta( $item_id, '_rbfw_service_price_data_actual', true );
-
+            $rbfw_service_price_data_actual = wc_get_order_item_meta( $item_id, '_rbfw_service_price_data_actual', true ) ? wc_get_order_item_meta( $item_id, '_rbfw_service_price_data_actual', true ) : [];
 
 
             $rbfw_id = rbfw_get_order_item_meta( $item_id, '_rbfw_id', true );
