@@ -23,7 +23,7 @@ function rbfw_dynamic_css(){
 	$rbfw_single_page_base_color_2 = $rbfw->get_option('rbfw_single_page_base_color_2', 'rbfw_basic_style_settings');
 	$rbfw_single_page_base_color_3 = $rbfw->get_option('rbfw_single_page_base_color_3', 'rbfw_basic_style_settings');
 	$rbfw_single_page_base_color_6 = $rbfw->get_option('rbfw_single_page_base_color_6', 'rbfw_basic_style_settings');
-	$uidatepicker = rbfw_hex2rgba($rbfw_single_page_base_color_6, 0.7);
+	$uidatepicker = rbfw_hex2rgba($rbfw_single_page_base_color_5, 0.7);
 	
 	$inline_css =  
 	":root{
@@ -36,8 +36,6 @@ function rbfw_dynamic_css(){
 		--rbfw_muff_color2:{$rbfw_single_page_base_color_1}; 
 		--rbfw_dt_color7:{$rbfw_single_page_base_color_2};     
 		--rbfw_dt_color9:{$rbfw_single_page_base_color_3};     
-		     
-		     
 		--rbfw_muff_color7:{$rbfw_single_page_base_color_6};     
 	}
 	.ui-datepicker table thead{
