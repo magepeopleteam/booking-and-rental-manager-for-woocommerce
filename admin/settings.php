@@ -1570,10 +1570,24 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 		'rbfw_basic_style_settings' => array(
 			array(
 				'name'    => 'rbfw_rent_list_base_color',
-				'label'   => __( 'Rent List Base Color', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'Select Rent List Base Color', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => __( 'Rent List Primary Color', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Select Rent List Primary Color', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'color',
-				'default' => '#06D286'
+				'default' => '#dd3333'
+			),
+			array(
+				'name'    => 'rbfw_single_page_base_color_4',
+				'label'   => __( 'Rent List Secondary Color', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Select Rent List Page Secondary Color', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'color',
+				'default' => '#000000'
+			),
+			array(
+				'name'    => 'rbfw_single_page_base_color_5',
+				'label'   => __( 'Rent Booking Page Primary Color', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Select Booking Page Primary Color', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'color',
+				'default' => '#dd3333'
 			),
 			array(
 				'name'    => 'rbfw_single_page_base_color_1',
@@ -1596,20 +1610,8 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'type'    => 'color',
 				'default' => '#6F1E51'
 			),
-			array(
-				'name'    => 'rbfw_single_page_base_color_4',
-				'label'   => __( 'Single Page Base Color-4', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'Select Single Page Base Color-4', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'color',
-				'default' => '#0ec40e'
-			),
-			array(
-				'name'    => 'rbfw_single_page_base_color_5',
-				'label'   => __( 'Single Page Base Color-5', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'Select Single Page Base Color-5', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'color',
-				'default' => '#FA4236'
-			),
+			
+			
 			array(
 				'name'    => 'rbfw_single_page_base_color_6',
 				'label'   => __( 'Single Page Base Color-6', 'booking-and-rental-manager-for-woocommerce' ),

@@ -137,7 +137,15 @@
 				$hide_more_feature_btn_text = $rbfw->get_option('rbfw_text_hide_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce'));
 				$view_more_offers_btn_text = $rbfw->get_option('rbfw_text_view_more_offers', 'rbfw_basic_translation_settings', __('View More Offers','booking-and-rental-manager-for-woocommerce'));
 				$hide_more_offers_btn_text = $rbfw->get_option('rbfw_text_hide_more_offers', 'rbfw_basic_translation_settings', __('Hide More Offers','booking-and-rental-manager-for-woocommerce'));
-
+				// -----dynamic css------
+				$rent_list_base_color = $rbfw->get_option('rbfw_rent_list_base_color', 'rbfw_basic_style_settings');
+				$rbfw_single_page_base_color_1 = $rbfw->get_option('rbfw_single_page_base_color_1', 'rbfw_basic_style_settings');
+				$rbfw_single_page_base_color_2 = $rbfw->get_option('rbfw_single_page_base_color_2', 'rbfw_basic_style_settings');
+				$rbfw_single_page_base_color_3 = $rbfw->get_option('rbfw_single_page_base_color_3', 'rbfw_basic_style_settings');
+				$rbfw_single_page_base_color_4 = $rbfw->get_option('rbfw_single_page_base_color_4', 'rbfw_basic_style_settings');
+				$rbfw_single_page_base_color_5 = $rbfw->get_option('rbfw_single_page_base_color_5', 'rbfw_basic_style_settings');
+				$rbfw_single_page_base_color_6 = $rbfw->get_option('rbfw_single_page_base_color_6', 'rbfw_basic_style_settings');
+								
 				$version = time(); // Time() function will prevent cache
 				wp_enqueue_script('jquery');
 				wp_enqueue_script('jquery-ui-core');
@@ -154,7 +162,6 @@
 			
 				//font awesome
 				wp_enqueue_style('fontawesome.v6',  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
-
 				do_action('rbfw_frontend_enqueue_scripts');
 				
 			}			
