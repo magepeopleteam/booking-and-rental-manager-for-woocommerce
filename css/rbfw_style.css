@@ -1867,6 +1867,10 @@ table.rbfw_room_cart_table th span {
   padding: 18px 32px 18px 32px;
 }
 
+.rbfw_rent_list_style_list .rbfw_rent_list_button_wrap a.rbfw_rent_list_btn:hover {
+  background-color: var(--rbfw_single_page_base_color4);
+}
+
 .rbfw_rent_list_style_list .rbfw_rent_list_highlighted_features {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -3353,10 +3357,10 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_registration_wrapper {
-  border: 0 solid #e5e5e5;
+  border: 0 solid var(--rbfw_booking_form_bg_color);
   padding: 30px;
   border-radius: 10px;
-  background-color: #ffebeb;
+  background-color: var(--rbfw_booking_form_bg_color);
 }
 
 .rbfw_muff_row_slider {
@@ -3468,7 +3472,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_registration_wrapper .slider {
-  background-color: #333;
+  background-color: #b7b7b7;
 }
 
 .rbfw_muff_registration_wrapper input:checked + .slider {
@@ -3507,7 +3511,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_muff_registration_wrapper .rbfw_prev_btn,
 .rbfw_muff_registration_wrapper .rbfw_bikecarmd_backstep1_btn {
   background-color: var(--rbfw_muff_color3);
-  box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
   padding: 15px;
   margin-bottom: 0px;
   text-decoration: none;
@@ -3518,6 +3521,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   border-radius: 5px;
   font-weight: bold;
   font-size: 16px;
+  transition: all .5s;
 }
 
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn, .mp_rbfw_book_now_submit {
@@ -3526,7 +3530,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   width: 100%;
 }
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn:hover {
-  background-color: var(--rbfw_dt_color8);
+  background-color: var(--rbfw_single_page_secondary_color);
   box-shadow: 0px 8.40727px 15.7636px rgba(0, 0, 0, 0.3);
 }
 
@@ -4064,7 +4068,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   .rbfw_faq_accordion_wrapper
   .rbfw_faq_content {
   background-color: transparent;
-  color: #797f94;
   font-weight: 500;
 }
 
@@ -5373,7 +5376,6 @@ img.rbfw_aig_hover-shadow {
   background: #f5f5f5;
   border-top: none;
   font-size: 15px;
-  color: #6f6f6f;
   line-height: 28px;
   position: relative;
   visibility: hidden;

@@ -1590,6 +1590,20 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'default' => '#dd3333'
 			),
 			array(
+				'name'    => 'rbfw_single_page_secondary_color',
+				'label'   => __( 'Rent Booking Page Secondary Color', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Select Booking Page Secondary Color', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'color',
+				'default' => '#333'
+			),
+			array(
+				'name'    => 'rbfw_booking_form_bg_color',
+				'label'   => __( 'Rent Booking Page Form Background Color', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Select Booking Page Form Background Color', 'booking-and-rental-manager-for-woocommerce' ),
+				'type'    => 'color',
+				'default' => '#ddd'
+			),
+			array(
 				'name'    => 'rbfw_single_page_base_color_1',
 				'label'   => __( 'Single Page Base Color-1', 'booking-and-rental-manager-for-woocommerce' ),
 				'desc'    => __( 'Select Single Page Base Color-1', 'booking-and-rental-manager-for-woocommerce' ),
