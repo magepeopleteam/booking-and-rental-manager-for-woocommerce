@@ -2106,7 +2106,8 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
             foreach($date_range as $date){
                 $service_q[] = array('date'=>$date,$es['service_name']=>total_extra_service_quantity($es['service_name'],$date,$rbfw_inventory));
             }
-            $extra_service_instock[$service] = $es['service_qty'] - max(array_column($service_q, $es['service_name']));
+            $seraa = array_column($service_q, $es['service_name']);
+            $extra_service_instock[$service] = $es['service_qty'] - max($seraa);
         }
     }
     /*end extra service inventory*/
