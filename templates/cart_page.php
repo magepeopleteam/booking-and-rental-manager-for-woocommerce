@@ -280,6 +280,8 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
 
     $discount_type 	= $cart_item['discount_type'] ? $cart_item['discount_type'] : '';
     $discount_amount 	= $cart_item['discount_amount'] ? $cart_item['discount_amount'] : '';
+    $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['security_deposit_amount'] : '';
+
 
     $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
@@ -396,10 +398,19 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
                 } ?>
             <?php } ?>
 
+
+
             <?php if ( ! empty( $discount_amount ) ): ?>
                 <tr>
                     <th><?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                     <td><?php echo wc_price($discount_amount); ?></td>
+                </tr>
+            <?php endif; ?>
+
+            <?php if ( ! empty( $security_deposit_amount ) ): ?>
+                <tr>
+                    <th><?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Security Deposit','booking-and-rental-manager-for-woocommerce')); ?>:</th>
+                    <td><?php echo wc_price($security_deposit_amount); ?></td>
                 </tr>
             <?php endif; ?>
 

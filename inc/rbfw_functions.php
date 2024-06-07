@@ -2106,6 +2106,9 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
             foreach($date_range as $date){
                 $service_q[] = array('date'=>$date,$es['service_name']=>total_extra_service_quantity($es['service_name'],$date,$rbfw_inventory));
             }
+            
+
+
             $extra_service_instock[$service] = $es['service_qty'] - max(array_column($service_q, $es['service_name']));
         }
     }
@@ -3755,18 +3758,9 @@ function getAllDates($startingDate, $endingDate)
 
 function check_seasonal_price($Book_date,$rbfw_sp_prices)
 {
-    //rbfw_sp_start_date
-    //rbfw_sp_end_date
-    //rbfw_sp_price_h
-    //rbfw_sp_price_d
-
     foreach ($rbfw_sp_prices as $rbfw_sp_price){
-
         $rbfw_sp_start_date = $rbfw_sp_price['rbfw_sp_start_date'];
         $rbfw_sp_end_date = $rbfw_sp_price['rbfw_sp_end_date'];
-
-        //echo $Book_date,' ';
-
 
         $sp_dates_array = getAllDates($rbfw_sp_start_date, $rbfw_sp_end_date);
 
@@ -3775,6 +3769,24 @@ function check_seasonal_price($Book_date,$rbfw_sp_prices)
         }else{
             return 'not_found';
         }
-
     }
+}
+
+function rbfw_security_deposit($post_id,$sub_total_price)
+{
+    $security_deposit_amount = 0;
+    $security_deposit_desc = 0;
+    $rbfw_enable_security_deposit = get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) ? get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) : 'no';
+    if($rbfw_enable_security_deposit=='yes'){
+        $rbfw_security_deposit_type = get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) : 'percentage';
+        $rbfw_security_deposit_amount = get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) : '0';
+        if($rbfw_security_deposit_type=='percentage'){
+            $security_deposit_amount = $rbfw_security_deposit_amount*$sub_total_price/100;
+            $security_deposit_desc = $security_deposit_amount.'%';
+        }else{
+            $security_deposit_amount = $rbfw_security_deposit_amount;
+            $security_deposit_desc = rbfw_mps_price($security_deposit_amount);
+        }
+    }
+    return array('security_deposit_amount'=>$security_deposit_amount,'security_deposit_desc'=>$security_deposit_desc);
 }

@@ -110,10 +110,14 @@ function rbfw_order_meta_box_callback(){
                 </tbody>
             </table>
 
-            <?php 
+            <?php
+
+
+
                 /* Loop Ticket Info */
                 $ticket_infos = !empty(get_post_meta($order_id,'rbfw_ticket_info',true)) ? get_post_meta($order_id,'rbfw_ticket_info',true) : [];
                 $subtotal = 0;
+
 
                 foreach ($ticket_infos as $ticket_info) {
 
@@ -189,6 +193,9 @@ function rbfw_order_meta_box_callback(){
                 $total_cost = rbfw_mps_price($ticket_info['ticket_price']);
                 $discount_amount = !empty($ticket_info['discount_amount']) ? (float)$ticket_info['discount_amount'] : 0;
                 $discount_amount = rbfw_mps_price($discount_amount);
+                $security_deposit_amount = !empty($ticket_info['security_deposit_amount']) ? (float)$ticket_info['security_deposit_amount'] : 0;
+                $security_deposit_amount = rbfw_mps_price($discount_amount);
+
                 $discount_type = !empty($ticket_info['discount_type']) ? $ticket_info['discount_type'] : '';
                 $rbfw_regf_info = !empty($ticket_info['rbfw_regf_info']) ? $ticket_info['rbfw_regf_info'] : [];
 
@@ -427,6 +434,13 @@ function rbfw_order_meta_box_callback(){
                         <td><strong><?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
                         <td><?php echo $discount_amount; ?></td>
                     </tr>
+                    <?php } ?>
+
+                    <?php if(!empty($security_deposit_amount)){ ?>
+                        <tr>
+                            <td><strong><?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
+                            <td><?php echo $security_deposit_amount; ?></td>
+                        </tr>
                     <?php } ?>
 
                     <tr>

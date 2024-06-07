@@ -92,7 +92,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
             }
         }
         
-        public function rbfw_thankyou_shortcode_func(){
+        public function rbfw_thankyou_shortcode_func(){  exit;
             global $rbfw;
             $t_page_id = rbfw_get_option('rbfw_thankyou_page','rbfw_basic_gen_settings');
             $current_page_id = get_queried_object_id();

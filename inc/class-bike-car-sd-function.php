@@ -786,9 +786,18 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                         $content.= '<li class="subtotal">'.$rbfw->get_option('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce')).'<span class="price-figure" data-price="'.$subtotal_price.'">'.rbfw_mps_price($subtotal_price).'</span></li>';
 
                                         if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'excluding_tax'){
-
                                             $content.= '<li class="tax">'.$rbfw->get_option('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')).'<span class="price-figure" data-price="'.$percent.'">'.rbfw_mps_price($percent).'</span></li>';
                                         }
+
+                                        $security_deposit = rbfw_security_deposit($post_id,$subtotal_price);
+
+
+
+
+                                        if($security_deposit['security_deposit_desc']){
+                                            $content.= '<li class="subtotal">'.$rbfw->get_option('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce')).'<span class="price-figure" data-price="'.$security_deposit['security_deposit_amount'].'">'.$security_deposit['security_deposit_desc'].'</span></li>';
+                                        }
+                                        $total_price = $total_price + $security_deposit['security_deposit_amount'];
 
                                         $content.='<li class="total"><strong>'.$rbfw->get_option('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce')).'</strong> <span class="price-figure" data-price="'.$total_price.'">'.rbfw_mps_price($total_price).' '.$tax_status.'</span></li>
                                     </ul>

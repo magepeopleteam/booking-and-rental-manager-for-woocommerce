@@ -84,27 +84,12 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $sub_total_price = $duration_price + $service_cost+$rbfw_service_price;
 
 
-            $security_deposit_amount = 0;
-            $security_deposit_desc = 0;
-            $rbfw_enable_security_deposit = get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) ? get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) : 'no';
-            if($rbfw_enable_security_deposit=='yes'){
-                $rbfw_security_deposit_type = get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) : 'percentage';
-                $rbfw_security_deposit_amount = get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) : '0';
-                if($rbfw_security_deposit_type=='percentage'){
-                    $security_deposit_amount = $rbfw_security_deposit_amount*$sub_total_price/100;
-                    $security_deposit_desc = $security_deposit_amount.'%';
-                }else{
-                    $security_deposit_amount = $rbfw_security_deposit_amount;
-                    $security_deposit_desc = rbfw_mps_price($security_deposit_amount);
-                }
-            }
+            $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
 
 
 
             $discount_amount = 0;
             $discount_desc = 0;
-
-
             if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
                 if(empty($star_time) && empty($end_time)){
                     $pickup_datetime  = date( 'Y-m-d', strtotime( $start_date.' '.'00:00:00' ) );
@@ -150,10 +135,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'service_cost_html' => wc_price($service_cost+$rbfw_service_price),
                 'sub_total_price_html' => wc_price($sub_total_price),
                 'discount' => $discount_desc,
-                'security_deposit_desc' => $security_deposit_desc,
-                'security_deposit_amount' => $security_deposit_amount,
-                'total_price' => $sub_total_price+$security_deposit_amount-$discount_amount,
-                'total_price_html' => wc_price($sub_total_price+$security_deposit_amount-$discount_amount),
+                'security_deposit_desc' => $security_deposit['security_deposit_desc'],
+                'security_deposit_amount' => $security_deposit['security_deposit_amount'],
+                'total_price' => $sub_total_price+$security_deposit['security_deposit_amount']-$discount_amount,
+                'total_price_html' => wc_price($sub_total_price+$security_deposit['security_deposit_amount']-$discount_amount),
                 'max_available_qty' => $max_available_qty,
                 'total_days' => $total_days,
                 'total_duration' => $duration,
