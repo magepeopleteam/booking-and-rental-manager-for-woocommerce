@@ -151,6 +151,10 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
     let item_quantity = jQuery('#rbfw_item_quantity').find(':selected').val();
     let rbfw_enable_variations = jQuery('#rbfw_enable_variations').val();
 
+    var rbfw_input_stock_quantity = jQuery('#rbfw_input_stock_quantity').val();
+
+
+
     if(typeof item_quantity === "undefined"){
         item_quantity = jQuery("[name='rbfw_item_quantity']").val();
     }
@@ -220,6 +224,8 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
             jQuery('.total .price-figure').html(response.total_price_html);
             jQuery('.rbfw-duration').show();
             jQuery('.rbfw-duration .item-content').html(response.total_duration);
+
+
 
 
             var remaining_stock =  response.max_available_qty.remaining_stock;
@@ -296,14 +302,23 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
                     jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',false);
                 }
             }else{
-                if((response.max_available_qty.remaining_stock == 0)) {
-                    jQuery('.rbfw_nia_notice').remove();
-                    jQuery('<div class="rbfw_nia_notice mps_alert_warning">No Items Available!</div>').insertBefore(' button.rbfw_bikecarmd_book_now_btn');
-                    jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
-                } else {
+                console.log('rbfw_input_stock_quantity',rbfw_input_stock_quantity);
+
+                if((rbfw_input_stock_quantity == 'no_has_value')) {
                     jQuery('.rbfw_nia_notice').remove();
                     jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',false);
+                }else{
+                    if((response.max_available_qty.remaining_stock == 0)) {
+                        jQuery('.rbfw_nia_notice').remove();
+                        jQuery('<div class="rbfw_nia_notice mps_alert_warning">No Items Available!</div>').insertBefore(' button.rbfw_bikecarmd_book_now_btn');
+                        jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
+                    } else {
+                        jQuery('.rbfw_nia_notice').remove();
+                        jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',false);
+                    }
                 }
+
+
             }
 
 
