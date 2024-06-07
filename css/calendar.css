@@ -119,7 +119,7 @@
   background: transparent;
   border: none;
   padding: 10px;
-  color: var(--rbfw_single_page_base_color4);
+  color: var(--rbfw_muff_color3);
   font-size: 2rem;
 }
 
@@ -260,7 +260,7 @@
 }
 
 .calendar-box .week .day span:not(.week .day[disabled="disabled"] span) {
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_muff_color3);
   color: white;
 }
 

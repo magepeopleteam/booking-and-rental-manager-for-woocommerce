@@ -48,9 +48,10 @@ function rbfw_dynamic_css(){
 		--rbfw_dt_color7:{$rbfw_single_page_base_color_2};     
 		--rbfw_dt_color9:{$rbfw_single_page_base_color_3};     
 		--rbfw_muff_color7:{$rbfw_single_page_base_color_6};     
+		--rbfw_primary_opacity:{$uidatepicker};     
 	}
 	.ui-datepicker table thead{
-		background-color:{$uidatepicker};
+		background-color:var(--rbfw_primary_opacity);
 	}
 	";
 	// 
