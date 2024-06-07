@@ -473,7 +473,7 @@ CSS for Single Page Template
 
 .mp_right_section button.rbfw-book-now-btn {
   text-decoration: none;
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_muff_color3);
   text-align: center;
   display: block;
   color: #fff;
@@ -969,7 +969,7 @@ div.superSlider .iconIndicator:hover {
 
 .rbfw_chk_availability_btn {
   text-decoration: none;
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_muff_color3);
   text-align: center;
   display: block;
   color: #fff;
@@ -982,7 +982,7 @@ div.superSlider .iconIndicator:hover {
 }
 
 .rbfw_chk_availability_btn:hover {
-  background: var(--rbfw_dt_color1);
+  background: var(--rbfw_single_page_secondary_color);
   color: #fff;
   transition: 0.2s;
   opacity: 1 !important;
