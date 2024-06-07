@@ -1092,7 +1092,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 
 #rbfw_add_meta_box table.form-table tbody tr td:first-child {
     font-weight: 600;
-    color: #474747;
+    color: #000;
 }
 
 #rbfw_add_meta_box .mp_tab_item h3 {
