@@ -10,57 +10,51 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action('wp_head','rbfw_dynamic_css');
+add_action('rbfw_frontend_enqueue_scripts','rbfw_dynamic_css');
 function rbfw_dynamic_css(){
 	global $rbfw;
 	$rent_list_base_color = $rbfw->get_option('rbfw_rent_list_base_color', 'rbfw_basic_style_settings');
+	$rbfw_single_page_base_color_4 = $rbfw->get_option('rbfw_single_page_base_color_4', 'rbfw_basic_style_settings');
+	$rbfw_single_page_base_color_5 = $rbfw->get_option('rbfw_single_page_base_color_5', 'rbfw_basic_style_settings');
+	$rbfw_single_page_secondary_color = $rbfw->get_option('rbfw_single_page_secondary_color', 'rbfw_basic_style_settings');
+	$rbfw_booking_form_bg_color = $rbfw->get_option('rbfw_booking_form_bg_color', 'rbfw_basic_style_settings');
+
 	$rbfw_single_page_base_color_1 = $rbfw->get_option('rbfw_single_page_base_color_1', 'rbfw_basic_style_settings');
 	$rbfw_single_page_base_color_2 = $rbfw->get_option('rbfw_single_page_base_color_2', 'rbfw_basic_style_settings');
 	$rbfw_single_page_base_color_3 = $rbfw->get_option('rbfw_single_page_base_color_3', 'rbfw_basic_style_settings');
-	$rbfw_single_page_base_color_4 = $rbfw->get_option('rbfw_single_page_base_color_4', 'rbfw_basic_style_settings');
-	$rbfw_single_page_base_color_5 = $rbfw->get_option('rbfw_single_page_base_color_5', 'rbfw_basic_style_settings');
 	$rbfw_single_page_base_color_6 = $rbfw->get_option('rbfw_single_page_base_color_6', 'rbfw_basic_style_settings');
-	?>
-	<style>
-	<?php if(!empty($rent_list_base_color)): ?>
-		:root {
-			--rbfw_rent_list_color1: <?php echo $rent_list_base_color; ?>;
-		}
-	<?php endif; ?>
-	<?php if(!empty($rbfw_single_page_base_color_1)): ?>
-		:root {
-			--rbfw_dt_color1: <?php echo $rbfw_single_page_base_color_1; ?>;
-			--rbfw_muff_color2: <?php echo $rbfw_single_page_base_color_1; ?>;
-		}
-	<?php endif; ?>	
-	<?php if(!empty($rbfw_single_page_base_color_2)): ?>
-		:root {
-			--rbfw_dt_color7: <?php echo $rbfw_single_page_base_color_2; ?>;
-		}
-	<?php endif; ?>	
-	<?php if(!empty($rbfw_single_page_base_color_3)): ?>
-		:root {
-			--rbfw_dt_color9: <?php echo $rbfw_single_page_base_color_3; ?>;
-		}
-	<?php endif; ?>
-	<?php if(!empty($rbfw_single_page_base_color_4)): ?>
-		:root {
-			--rbfw_single_page_base_color4: <?php echo $rbfw_single_page_base_color_4; ?>;
-		}
-	<?php endif; ?>
-	<?php if(!empty($rbfw_single_page_base_color_5)): ?>
-		:root {
-			--rbfw_muff_color3: <?php echo $rbfw_single_page_base_color_5; ?>;
-		}
-	<?php endif; ?>
-	<?php if(!empty($rbfw_single_page_base_color_6)): ?>
-		:root {
-			--rbfw_muff_color7: <?php echo $rbfw_single_page_base_color_6; ?>;
-		}
-		.ui-datepicker table thead{
-			background-color: <?php echo rbfw_hex2rgba($rbfw_single_page_base_color_6, 0.7); ?>;
-		}
-	<?php endif; ?>
-	</style>
-	<?php
+	
+	$rent_list_base_color = $rent_list_base_color? $rent_list_base_color: '#dd3333';
+	$rbfw_single_page_base_color_4 = $rbfw_single_page_base_color_4? $rbfw_single_page_base_color_4: '#000000';
+	$rbfw_single_page_base_color_5 = $rbfw_single_page_base_color_5? $rbfw_single_page_base_color_5: '#dd3333';
+	$rbfw_single_page_secondary_color = $rbfw_single_page_secondary_color? $rbfw_single_page_secondary_color: '#333';
+	$rbfw_booking_form_bg_color = $rbfw_booking_form_bg_color? $rbfw_booking_form_bg_color: '#ddd';
+	$rbfw_single_page_base_color_1 = $rbfw_single_page_base_color_1? $rbfw_single_page_base_color_1: '#ffcd00';
+	$rbfw_single_page_base_color_2 = $rbfw_single_page_base_color_2? $rbfw_single_page_base_color_2: '#074836';
+	$rbfw_single_page_base_color_3 = $rbfw_single_page_base_color_3? $rbfw_single_page_base_color_3: '#6F1E51';
+	$rbfw_single_page_base_color_6 = $rbfw_single_page_base_color_6? $rbfw_single_page_base_color_6: '#1ABC9C';
+
+	$uidatepicker = rbfw_hex2rgba($rbfw_single_page_base_color_5, 0.7);
+
+	$inline_css =  
+	":root{
+		--rbfw_rent_list_color1:{$rent_list_base_color};  
+		--rbfw_single_page_base_color4:{$rbfw_single_page_base_color_4}; 
+		--rbfw_muff_color3:{$rbfw_single_page_base_color_5};     
+		--rbfw_single_page_secondary_color:{$rbfw_single_page_secondary_color};     
+		--rbfw_booking_form_bg_color:{$rbfw_booking_form_bg_color};     
+		--rbfw_dt_color1:{$rbfw_single_page_base_color_1};
+		--rbfw_muff_color2:{$rbfw_single_page_base_color_1}; 
+		--rbfw_dt_color7:{$rbfw_single_page_base_color_2};     
+		--rbfw_dt_color9:{$rbfw_single_page_base_color_3};     
+		--rbfw_muff_color7:{$rbfw_single_page_base_color_6};     
+		--rbfw_primary_opacity:{$uidatepicker};     
+	}
+	.ui-datepicker table thead{
+		background-color:var(--rbfw_primary_opacity);
+	}
+	";
+	// 
+	wp_add_inline_style('rbfw-style', $inline_css);
+
 }
