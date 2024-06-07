@@ -165,7 +165,7 @@
   position: relative;
   display: inline-block;
   font-size: 110%;
-  background-color: var(--rbfw_dt_color1) !important;
+  background-color: var(--rbfw_single_page_secondary_color) !important;
 }
 
 /* weekend */
@@ -214,8 +214,9 @@
 }
 
 .calendar-box .week .day.selected span {
-  background: var(--rbfw_dt_color1) !important;
+  background: var(--rbfw_single_page_secondary_color) !important;
   color: white;
+  font-weight: bold;
 }
 
 .calendar-box .week .day.selected[disabled] span {
@@ -265,7 +266,7 @@
 }
 
 .calendar-box .week .day span:not(.week .day[disabled="disabled"] span):hover {
-  background: var(--rbfw_dt_color1);
+  background: var(--rbfw_single_page_secondary_color);
   color: white;
 }
 .rbfw_donut_template  .calendar-box .week .day span:not(.week .day[disabled="disabled"] span) {
