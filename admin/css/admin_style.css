@@ -275,45 +275,52 @@ div#mage-primary-button {
 }
 
 .mage_settings_panel_wrap .metabox-holder {
-    background: #FFF;
     padding: 0;
     width: 80%;
 }
 
 .mage_settings_panel_wrap .metabox-holder .group {
-    padding: 20px;
+    padding: 5%;
+}
+#rbfw_basic_style_settings h2{
+    padding: 30px 0;
+}
+.mage_settings_panel_wrap .rbfw-nav-tab {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 15px;
+    color: var(--mage-black);
+    border-left: 2px solid transparent;
+    font-size: 16px;
+    margin: 0;
+    text-decoration: none;
 }
 
-.mage_settings_panel_wrap .rbfw-nav-tab {
-    float: none;
-    margin-left: 0;
-    padding: 10px;
-    font-size: 14px;
-    line-height: 25px;
-    font-weight: normal;
-    background: #161b37;
-    color: #FFF;
-    text-decoration: none;
-    white-space: nowrap;
-    max-width: 100%;
-    display: block;
-    overflow: hidden;
-    width: auto;
-    transition: 0.1s;
-    border-top: none;
-    border-left: 0;
-    border-right: 0;
-    border-bottom: 1px solid #7d7d7d;
+.mage_settings_panel_wrap .rbfw-nav-tab::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    border-bottom: 1px solid var(--mage-gray);
+    width: 90%;
 }
 
 .mage_settings_panel_wrap .rbfw-nav-tab.rbfw-nav-tab-active {
-    background: #3BC97C;
-    border-color: #3BC97C;
+    background-color: var(--mage-white);
+    color: var(--d_color);
+    border-left: 2px solid var(--mage-primary);
+    transition: 0.1s;
+}
+
+.mage_settings_panel_wrap .rbfw-nav-tab.rbfw-nav-tab-active::after {
+    width: 100%;
 }
 
 .mage_settings_panel_wrap .rbfw-nav-tab:hover {
-    background: #3BC97C;
-    transition: 0.1s;
+    background-color: var(--mage-white);
+    border-left: 2px solid var(--mage-primary);
 }
 
 .mage_settings_panel_wrap .rbfw-nav-tab:focus {
@@ -324,7 +331,11 @@ div#mage-primary-button {
 }
 
 .mage_settings_panel_wrap table tr {
+    font-size: 16px;
+    padding: 5px 30px;
+    border-radius: 0;
     border-bottom: 1px solid #f5f5f5;
+    transition: 0.2s;
 }
 
 .mage_settings_panel_wrap table th {
@@ -351,14 +362,12 @@ div#mage-primary-button {
 }
 
 .mage_settings_panel_wrap p.submit input:hover {
-    transition: 0.2s;
+    background: var(--mage-primary);
+    border-color: var(--mage-primary);
 }
 
 .mage_settings_panel_wrap .metabox-holder h2 {
-    border-bottom: 2px solid #161b37;
     font-size: 20px;
-    padding: 15px;
-    background: #DDD;
     margin: 0;
 }
 
@@ -428,20 +437,16 @@ div#mep_event_list_thumbnail_meta_boxes table td input#enable_global_qty {
 }
 
 .mage_settings_panel_wrap {
-    display: block;
     overflow: hidden;
     position: relative;
-    display: -webkit-flex;
     display: flex;
-    -webkit-flex-wrap: wrap;
-    flex-wrap: wrap;
-    background: #161b37;
+    background: var(--mage-white);
 }
 
 .mage_settings_panel_wrap .rbfw-nav-tab-wrapper {
     width: 20%;
-    padding-top: 0;
-    border-bottom: none;
+    background-color: var(--mage-light);
+    padding: 25px 0 25px 25px;
 }
 
 .mage_settings_panel_wrap .rbfw-nav-tab-wrapper i,
@@ -449,6 +454,7 @@ div#mep_event_list_thumbnail_meta_boxes table td input#enable_global_qty {
     line-height: inherit;
     margin-right: 5px;
     width: 20px;
+    color: var(--mage-primary);
 }
 
 .mp_tab_item .item .content input {
@@ -900,11 +906,10 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 }
 
 .rbfw_settings_panel_header {
-    background: #161b37;
-    padding: 30px 20px 30px 20px;
-    color: #fff;
-    font-size: 20px;
-    border-bottom: 1px solid #7d7d7d;
+    color: var(--mage-white);
+    font-size: 1.2rem;
+    padding:10px;
+    background-color: var(--mage-primary);
 }
 
 .rbfw_settings_panel_header small {
@@ -922,7 +927,7 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 }
 
 .rbfw_settings_wrapper table.form-table tr:nth-child(odd) {
-    background-color: #00328014;
+    background-color: #f2f2f2;
 }
 
 .rbfw_settings_wrapper table.form-table tr:nth-child(even) {
