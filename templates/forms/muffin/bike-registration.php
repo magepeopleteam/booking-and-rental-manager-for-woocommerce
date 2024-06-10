@@ -524,6 +524,7 @@ if($rbfw_enable_variations == 'yes'){
                 <input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo $rbfw_enable_variations; ?>">
                 <input type="hidden" id="rbfw_input_stock_quantity" name="rbfw_input_stock_quantity" value="<?php echo $input_stock_quantity ?>">
+                <input type="hidden" id="rbfw_end_time" name="rbfw_end_time" value="<?php echo rbfw_end_time() ?>">
             </form>
         </div>
     </div>

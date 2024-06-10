@@ -115,9 +115,11 @@ jQuery('.rbfw_bikecarmd_es_qty_minus,.rbfw_bikecarmd_es_qty_plus').click(functio
 });
 
 jQuery('#pickup_date,#dropoff_date,#pickup_time,#dropoff_time').change(function (e) {
-    let that = jQuery(this);
-    rbfw_bikecarmd_ajax_price_calculation(that, 0,false);
-    service_price_arr = {};
+    let pickup_date = jQuery('#pickup_date').val();
+    let dropoff_date = jQuery('#dropoff_date').val();
+    let pickup_time = jQuery('#pickup_time').find(':selected').val();
+    let dropoff_time = jQuery('#dropoff_time').find(':selected').val();
+    total_day_calcilation(pickup_date,dropoff_date,pickup_time,dropoff_time);
 });
 
 jQuery('.rbfw_bikecarmd_es_qty').change(function (e) {
@@ -135,6 +137,32 @@ jQuery(document).on('change', '#rbfw_item_quantity', function(e) {
 });
 
 
+function total_day_calcilation(pickup_date,dropoff_date,pickup_time,dropoff_time){
+    jQuery.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: rbfw_ajax.rbfw_ajaxurl,
+        data: {
+            'action' : 'rbfw_total_day_calcilation',
+            'pickup_date': pickup_date,
+            'pickup_time': pickup_time,
+            'dropoff_date': dropoff_date,
+            'dropoff_time': dropoff_time,
+        },
+        success: function (response) {
+            jQuery('[name="total_days"]').val(response.total_days);
+            var total_days = jQuery('[name="total_days"]').val();
+            if(total_days!=0){
+                rbfw_service_price_calculation(total_days);
+            }
+        },
+        error : function(response){
+            console.log(response);
+        }
+    });
+}
+
+
 
 function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
 
@@ -143,11 +171,13 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
         reload_es = 1;
     }
     let post_id = jQuery('[data-service-id]').data('service-id');
+
     let pickup_date = jQuery('#pickup_date').val();
     let dropoff_date = jQuery('#dropoff_date').val();
 
     let pickup_time = jQuery('#pickup_time').find(':selected').val();
     let dropoff_time = jQuery('#dropoff_time').find(':selected').val();
+
     let item_quantity = jQuery('#rbfw_item_quantity').find(':selected').val();
     let rbfw_enable_variations = jQuery('#rbfw_enable_variations').val();
 
@@ -210,6 +240,8 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
         },
         success: function (response) {
 
+            jQuery('[name="total_days"]').val(response.total_days);
+
             jQuery('.duration-costing .price-figure').html(response.duration_price_html);
             //jQuery('.rbfw-service-costing .price-figure').html(response.rbfw_service_price_html);
             jQuery('.resource-costing .price-figure').html(response.service_cost_html);
@@ -217,6 +249,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
 
             if(response.discount){
                 jQuery('.discount span').html(response.discount);
+                jQuery('.discount').show();
             }else{
                 jQuery('.discount').hide();
             }
@@ -247,7 +280,10 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
             jQuery('#rbfw_item_quantity').html(quantity_options);
 
             jQuery('.rbfw_reg_form_rb').show();
-            jQuery('[name="total_days"]').val(response.total_days);
+
+
+
+
 
 
             jQuery(".service-price-item").each(function(index, value) {
@@ -317,13 +353,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
                         jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',false);
                     }
                 }
-
-
             }
-
-
-
-
         },
         error : function(response){
             console.log(response);

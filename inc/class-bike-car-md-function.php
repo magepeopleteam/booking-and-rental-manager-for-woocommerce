@@ -15,7 +15,12 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             add_action('wp_footer', array($this, 'rbfw_bike_car_md_frontend_scripts'));
             add_action('wp_ajax_rbfw_bikecarmd_ajax_price_calculation', array($this, 'rbfw_md_duration_price_calculation_ajax'));
             add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_price_calculation', array($this,'rbfw_md_duration_price_calculation_ajax'));
+
+            add_action('wp_ajax_rbfw_total_day_calcilation', array($this, 'rbfw_total_day_calcilation'));
+            add_action('wp_ajax_nopriv_rbfw_total_day_calcilation', array($this,'rbfw_total_day_calcilation'));
         }
+
+
         
         public function rbfw_get_bikecarmd_service_array_reorder($product_id, $service_info){
 
@@ -37,6 +42,31 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             return $main_array;
             
+        }
+
+        function rbfw_total_day_calcilation(){
+
+            $start_date = $_POST['pickup_date'];
+            $end_date = $_POST['dropoff_date'];
+            $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'';
+            $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:'';
+
+            if (empty($star_time) && empty($end_time)) {
+                $pickup_datetime = date('Y-m-d', strtotime($start_date . ' ' . '00:00:00'));
+                $dropoff_datetime = date('Y-m-d', strtotime($end_date . ' ' . rbfw_end_time()));
+            } else {
+                $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
+                $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
+            }
+
+            $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
+            $total_days = $diff->days;
+
+            echo json_encode( array(
+                'total_days' => $total_days,
+            ));
+
+            wp_die();
         }
 
         function rbfw_md_duration_price_calculation_ajax(){
