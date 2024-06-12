@@ -10,9 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action('wp_head','rbfw_dynamic_css');
+add_action('rbfw_frontend_enqueue_scripts','rbfw_dynamic_css');
 function rbfw_dynamic_css(){
 	global $rbfw;
+
 	$rent_list_base_color = $rbfw->get_option_trans('rbfw_rent_list_base_color', 'rbfw_basic_style_settings');
 	$rbfw_single_page_base_color_1 = $rbfw->get_option_trans('rbfw_single_page_base_color_1', 'rbfw_basic_style_settings');
 	$rbfw_single_page_base_color_2 = $rbfw->get_option_trans('rbfw_single_page_base_color_2', 'rbfw_basic_style_settings');
@@ -63,4 +64,5 @@ function rbfw_dynamic_css(){
 	<?php endif; ?>
 	</style>
 	<?php
+
 }
