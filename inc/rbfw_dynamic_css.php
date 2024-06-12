@@ -13,13 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action('wp_head','rbfw_dynamic_css');
 function rbfw_dynamic_css(){
 	global $rbfw;
-	$rent_list_base_color = $rbfw->get_option('rbfw_rent_list_base_color', 'rbfw_basic_style_settings');
-	$rbfw_single_page_base_color_1 = $rbfw->get_option('rbfw_single_page_base_color_1', 'rbfw_basic_style_settings');
-	$rbfw_single_page_base_color_2 = $rbfw->get_option('rbfw_single_page_base_color_2', 'rbfw_basic_style_settings');
-	$rbfw_single_page_base_color_3 = $rbfw->get_option('rbfw_single_page_base_color_3', 'rbfw_basic_style_settings');
-	$rbfw_single_page_base_color_4 = $rbfw->get_option('rbfw_single_page_base_color_4', 'rbfw_basic_style_settings');
-	$rbfw_single_page_base_color_5 = $rbfw->get_option('rbfw_single_page_base_color_5', 'rbfw_basic_style_settings');
-	$rbfw_single_page_base_color_6 = $rbfw->get_option('rbfw_single_page_base_color_6', 'rbfw_basic_style_settings');
+	$rent_list_base_color = $rbfw->get_option_trans('rbfw_rent_list_base_color', 'rbfw_basic_style_settings');
+	$rbfw_single_page_base_color_1 = $rbfw->get_option_trans('rbfw_single_page_base_color_1', 'rbfw_basic_style_settings');
+	$rbfw_single_page_base_color_2 = $rbfw->get_option_trans('rbfw_single_page_base_color_2', 'rbfw_basic_style_settings');
+	$rbfw_single_page_base_color_3 = $rbfw->get_option_trans('rbfw_single_page_base_color_3', 'rbfw_basic_style_settings');
+	$rbfw_single_page_base_color_4 = $rbfw->get_option_trans('rbfw_single_page_base_color_4', 'rbfw_basic_style_settings');
+	$rbfw_single_page_base_color_5 = $rbfw->get_option_trans('rbfw_single_page_base_color_5', 'rbfw_basic_style_settings');
+	$rbfw_single_page_base_color_6 = $rbfw->get_option_trans('rbfw_single_page_base_color_6', 'rbfw_basic_style_settings');
 	?>
 	<style>
 	<?php if(!empty($rent_list_base_color)): ?>

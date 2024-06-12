@@ -15,7 +15,12 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             add_action('wp_footer', array($this, 'rbfw_bike_car_md_frontend_scripts'));
             add_action('wp_ajax_rbfw_bikecarmd_ajax_price_calculation', array($this, 'rbfw_md_duration_price_calculation_ajax'));
             add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_price_calculation', array($this,'rbfw_md_duration_price_calculation_ajax'));
+
+            add_action('wp_ajax_rbfw_total_day_calcilation', array($this, 'rbfw_total_day_calcilation'));
+            add_action('wp_ajax_nopriv_rbfw_total_day_calcilation', array($this,'rbfw_total_day_calcilation'));
         }
+
+
         
         public function rbfw_get_bikecarmd_service_array_reorder($product_id, $service_info){
 
@@ -37,6 +42,31 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             return $main_array;
             
+        }
+
+        function rbfw_total_day_calcilation(){
+
+            $start_date = $_POST['pickup_date'];
+            $end_date = $_POST['dropoff_date'];
+            $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'';
+            $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:'';
+
+            if (empty($star_time) && empty($end_time)) {
+                $pickup_datetime = date('Y-m-d', strtotime($start_date . ' ' . '00:00:00'));
+                $dropoff_datetime = date('Y-m-d', strtotime($end_date . ' ' . rbfw_end_time()));
+            } else {
+                $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
+                $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
+            }
+
+            $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
+            $total_days = $diff->days;
+
+            echo json_encode( array(
+                'total_days' => $total_days,
+            ));
+
+            wp_die();
         }
 
         function rbfw_md_duration_price_calculation_ajax(){
@@ -735,9 +765,9 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $rbfw_enable_extra_service_qty = get_post_meta( $product_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $product_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
                 /* Start Tax Calculations */
-                $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-                $mps_tax_switch = $rbfw->get_option('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-                $mps_tax_format = $rbfw->get_option('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
+                $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+                $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
+                $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
                 $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $percent = 0;
                 $tax_status = '';

@@ -12,7 +12,7 @@ $post_title = get_the_title();
 $post_content  = get_the_content();
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
 $rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
-$slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','');
+$slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_settings','');
 $post_review_rating = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating() : '';
 $currency_symbol = rbfw_mps_currency_symbol();
 $rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize(get_post_meta( $post_id, 'rbfw_releted_rbfw', true )) : [];
@@ -111,7 +111,7 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 				?>
 				<li style="width:100%">
 					<a class="rbfw_muff_lmf_btn">
-						<?php echo $rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
+						<?php echo $rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
 					</a>
 				</li>
 			</ul>
@@ -130,7 +130,7 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 		</div>
 		<?php endif; ?>
 		<div class="rbfw_dt_registration_col2">
-			<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_booking_detail', 'rbfw_basic_translation_settings', __('Booking Detail','booking-and-rental-manager-for-woocommerce'))); ?></div>
+			<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_booking_detail', 'rbfw_basic_translation_settings', __('Booking Detail','booking-and-rental-manager-for-woocommerce'))); ?></div>
 			<?php include( RBFW_Function::template_path( 'forms/bike-car-sd-registration.php' ) ); ?>
 		</div>
 	</div>
@@ -139,7 +139,7 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 	<div class="rbfw_dt_row_faq">
 		<div class="rbfw_dt_heading">
 			<div class="rbfw_dt_heading_tab active" data-tab="tab1">
-				<?php echo esc_html($rbfw->get_option('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Freequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?>
+				<?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Freequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?>
 			</div>
 			<div class="rbfw_dt_heading_tab" data-tab="tab2">
 				<?php do_action( 'rbfw_dt_review_tab', $post_id ); ?>
@@ -158,7 +158,7 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 
 	<?php if(!empty($rbfw_related_post_arr)): ?>
 	<div class="rbfw_dt_row_related_item">
-		<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings', __('You May Also Like','booking-and-rental-manager-for-woocommerce'))); ?></div>
+		<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings', __('You May Also Like','booking-and-rental-manager-for-woocommerce'))); ?></div>
 		<?php do_action( 'rbfw_related_products_style_two', $post_id ); ?>
 	</div>
 	<?php endif; ?>

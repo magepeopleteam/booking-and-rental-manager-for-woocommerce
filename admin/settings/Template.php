@@ -117,6 +117,7 @@
                         <div class="w-100">
                             <?php 
                                 $sidebar_content = get_post_meta($post_id,'rbfw_dt_sidebar_content',true);
+                                $sidebar_content = $sidebar_content ? $sidebar_content : '';
                                 $settings = array(
                                         'textarea_rows' => '10',
                                         'media_buttons' => true,
