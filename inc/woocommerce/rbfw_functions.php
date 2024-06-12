@@ -34,9 +34,9 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
     $rbfw_service_info_all = isset($_POST['rbfw_service_info']) ? rbfw_array_strip($_POST['rbfw_service_info']) : [];
 
-    $pickup_date = $_POST['rbfw_pickup_start_date'];
+    $pickup_date = isset($_POST['rbfw_pickup_start_date']) ? $_POST['rbfw_pickup_start_date'] : '';
     $pickup_time = !empty($_POST['pickup_time']) ? $_POST['pickup_time'] : '';
-    $dropoff_date = $_POST['rbfw_pickup_end_date'];
+    $dropoff_date = isset($_POST['rbfw_pickup_end_date']) ? $_POST['rbfw_pickup_end_date'] : '';
     $dropoff_time = !empty($_POST['dropoff_time']) ? $_POST['dropoff_time'] : '';
     if (empty($pickup_time) && empty($dropoff_time)) {
         $pickup_datetime = date('Y-m-d', strtotime($pickup_date . ' ' . '00:00:00'));
