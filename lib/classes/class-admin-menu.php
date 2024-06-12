@@ -178,7 +178,7 @@ if (!class_exists('MageRBFWClass')) {
             return $pages_options;
         }
 
-        function get_option_trans($option, $section, $default = '') {
+        function get_option_trans($option='text', $section='rbfw_basic_gen_settings', $default = '') {
             $options = get_option($section);
             if (!empty($options[$option])) {
 

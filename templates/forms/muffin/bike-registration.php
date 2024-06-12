@@ -468,13 +468,10 @@ if($rbfw_enable_variations == 'yes'){
                                     <span class="price-figure" data-price="">
                                     </span>
                                 </li>
-<<<<<<< HEAD
+
                                 <li class="discount" style="display:none;">
-                                    <?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')) ?>
-=======
-                                <li class="discount">
                                     <?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')) ?>
->>>>>>> e5fe370aa45e57e64e64008aea5bbf3fa9a92f74
+
                                     <span></span>
                                 </li>
                                 <li class="security_deposit" style="display:none;">

@@ -63,6 +63,13 @@ if( ! class_exists('RBFW_Security_Deposit')){
                             <tbody class="mp_event_type_sortable">
 
                             <tr>
+                                <section>
+                                    <label for="">Security Deposit Label</label>
+                                    <input type="number" name="rbfw_security_deposit_label" value="0" placeholder="Security Deposit L">
+                                </section>
+                            </tr>
+
+                            <tr>
                                 <td>
                                     <select class="rbfw_security_deposit_type" name="rbfw_security_deposit_type">
                                         <option value="percentage" <?php if($rbfw_security_deposit_type == 'percentage'){ echo 'selected'; } ?>><?php echo esc_html_e( 'Percentage', 'booking-and-rental-manager-for-woocommerce' ); ?></option>

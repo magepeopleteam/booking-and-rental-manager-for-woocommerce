@@ -95,7 +95,7 @@ function rbfw_end_time(){
 function rbfw_get_string( $option_name, $default_string ) {
     return rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string );
 }
-function rbfw_string( $option_name, $default_string ) {
+function rbfw_string( $option_name='No text found', $default_string='Default text' ) {
     echo rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string );
 }
 function rbfw_string_return( $option_name, $default_string ) {
@@ -2106,15 +2106,10 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
             foreach($date_range as $date){
                 $service_q[] = array('date'=>$date,$es['service_name']=>total_extra_service_quantity($es['service_name'],$date,$rbfw_inventory));
             }
-<<<<<<< HEAD
-            
 
-
-            $extra_service_instock[$service] = $es['service_qty'] - max(array_column($service_q, $es['service_name']));
-=======
             $seraa = array_column($service_q, $es['service_name']);
             $extra_service_instock[$service] = $es['service_qty'] - max($seraa);
->>>>>>> e5fe370aa45e57e64e64008aea5bbf3fa9a92f74
+
         }
     }
     /*end extra service inventory*/
