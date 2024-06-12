@@ -40,15 +40,15 @@ function rbfw_order_meta_box_callback(){
     $payment_method = get_post_meta($order_id, 'rbfw_payment_method', true);
     $payment_id = get_post_meta($order_id, 'rbfw_payment_id', true);
     
-    $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
     if($rbfw_payment_system == 'wps'){
         $order_no = get_post_meta($order_id, 'rbfw_order_id', true);
     }else{
         $order_no = $post_id;
     }
-    $mps_tax_switch = $rbfw->get_option('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-    $mps_tax_format = $rbfw->get_option('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
+    $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
+    $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
 
     $grand_total = !empty(get_post_meta($order_id,'rbfw_ticket_total_price',true)) ? rbfw_mps_price(get_post_meta($order_id,'rbfw_ticket_total_price',true)) : '';
     $rbfw_order_tax = !empty(get_post_meta($order_id,'rbfw_order_tax',true)) ? rbfw_mps_price(get_post_meta($order_id,'rbfw_order_tax',true)) : '';
@@ -110,10 +110,14 @@ function rbfw_order_meta_box_callback(){
                 </tbody>
             </table>
 
-            <?php 
+            <?php
+
+
+
                 /* Loop Ticket Info */
                 $ticket_infos = !empty(get_post_meta($order_id,'rbfw_ticket_info',true)) ? get_post_meta($order_id,'rbfw_ticket_info',true) : [];
                 $subtotal = 0;
+
 
                 foreach ($ticket_infos as $ticket_info) {
 
@@ -189,6 +193,9 @@ function rbfw_order_meta_box_callback(){
                 $total_cost = rbfw_mps_price($ticket_info['ticket_price']);
                 $discount_amount = !empty($ticket_info['discount_amount']) ? (float)$ticket_info['discount_amount'] : 0;
                 $discount_amount = rbfw_mps_price($discount_amount);
+                $security_deposit_amount = !empty($ticket_info['security_deposit_amount']) ? (float)$ticket_info['security_deposit_amount'] : 0;
+                $security_deposit_amount = rbfw_mps_price($discount_amount);
+
                 $discount_type = !empty($ticket_info['discount_type']) ? $ticket_info['discount_type'] : '';
                 $rbfw_regf_info = !empty($ticket_info['rbfw_regf_info']) ? $ticket_info['rbfw_regf_info'] : [];
 
@@ -228,7 +235,7 @@ function rbfw_order_meta_box_callback(){
 
                     <?php if(!empty($discount_type)){ ?>
                     <tr>
-                        <td><strong><?php echo $rbfw->get_option('rbfw_text_discount_type', 'rbfw_basic_translation_settings', __('Discount Type','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
+                        <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_discount_type', 'rbfw_basic_translation_settings', __('Discount Type','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
                         <td><?php echo $discount_type; ?></td>
                     </tr>
                     <?php } ?>
@@ -417,16 +424,23 @@ function rbfw_order_meta_box_callback(){
                     </tr>
                     <?php if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($tax)){ ?>
                     <tr>
-                        <td><strong><?php echo $rbfw->get_option('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
+                        <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
                         <td><?php echo rbfw_mps_price($tax); ?></td>
                     </tr>
                     <?php } ?>
 
                     <?php if(!empty($discount_amount)){ ?>
                     <tr>
-                        <td><strong><?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
+                        <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
                         <td><?php echo $discount_amount; ?></td>
                     </tr>
+                    <?php } ?>
+
+                    <?php if(!empty($security_deposit_amount)){ ?>
+                        <tr>
+                            <td><strong><?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
+                            <td><?php echo $security_deposit_amount; ?></td>
+                        </tr>
                     <?php } ?>
 
                     <tr>
@@ -522,7 +536,7 @@ function save_rbfw_order_meta_box( $post_id ) {
         $current_status = get_post_meta( $post_id, 'rbfw_order_status', true );
         
         global $rbfw;
-        $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+        $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
         if($rbfw_payment_system == 'wps'){
 
