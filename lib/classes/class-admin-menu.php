@@ -99,23 +99,23 @@ if (!class_exists('MageRBFWClass')) {
         }
 
         public function get_name() {
-            return $this->get_option('rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent Item');
+            return $this->get_option_trans('rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent Item');
         }
 
         public function get_slug() {
-            return $this->get_option('rbfw_rent_slug', 'rbfw_basic_gen_settings', 'rent');
+            return $this->get_option_trans('rbfw_rent_slug', 'rbfw_basic_gen_settings', 'rent');
         }
 
         public function get_icon() {
-            return $this->get_option('rbfw_rent_icon', 'rbfw_basic_gen_settings', 'dashicons-clipboard');;
+            return $this->get_option_trans('rbfw_rent_icon', 'rbfw_basic_gen_settings', 'dashicons-clipboard');;
         }
 
         public function get_cat_name() {
-            return $this->get_option('rbfw_rent_cat_label', 'rbfw_basic_gen_settings', 'Category');
+            return $this->get_option_trans('rbfw_rent_cat_label', 'rbfw_basic_gen_settings', 'Category');
         }
 
         public function get_cat_slug() {
-            return $this->get_option('rbfw_rent_cat_slug', 'rbfw_basic_gen_settings', 'rent-category');
+            return $this->get_option_trans('rbfw_rent_cat_slug', 'rbfw_basic_gen_settings', 'rent-category');
         }
 
         function rbfw_go_pro_page(){
@@ -178,7 +178,7 @@ if (!class_exists('MageRBFWClass')) {
             return $pages_options;
         }
 
-        function get_option($option, $section, $default = '') {
+        function get_option_trans($option, $section, $default = '') {
             $options = get_option($section);
             if (!empty($options[$option])) {
 
@@ -193,10 +193,10 @@ if (!class_exists('MageRBFWClass')) {
         }
 
         public function send_email($sent_email, $rbfw_id = '', $email_sub = '', $content = '', $order_id = '', $attathment_file_url = '') {
-            $global_email_text = $this->get_option('mep_confirmation_email_text', 'email_setting_sec', '');
+            $global_email_text = $this->get_option_trans('mep_confirmation_email_text', 'email_setting_sec', '');
             $global_email_form_email = $this->email_from_email();
             $global_email_form = $this->email_from_name();
-            $global_email_sub = $this->get_option('mep_email_subject', 'email_setting_sec', '');
+            $global_email_sub = $this->get_option_trans('mep_email_subject', 'email_setting_sec', '');
             $admin_email = get_option('admin_email');
             $site_name = get_option('blogname');
             $attachments = array();
@@ -260,12 +260,12 @@ if (!class_exists('MageRBFWClass')) {
         }
 
         public function add_meta_box_func() {
-            $cpt_label = $this->get_option('rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent');
+            $cpt_label = $this->get_option_trans('rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent');
             add_meta_box('rbfw_add_meta_box', __( $cpt_label . ' Settings : ', 'booking-and-rental-manager-for-woocommerce') . get_the_title(get_the_id()), array($this, 'mp_event_all_in_tab'), 'rbfw_item', 'normal', 'high');
         }
 
         public function mp_event_all_in_tab() {
-            $cpt_label = $this->get_option('rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent');
+            $cpt_label = $this->get_option_trans('rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent');
             $post_id = get_the_id();
             wp_nonce_field( 'rbfw_ticket_type_nonce', 'rbfw_ticket_type_nonce' );
             ?>
@@ -472,7 +472,7 @@ if (!class_exists('MageRBFWClass')) {
         function rbfw_add_order_data($meta_data = array(), $ticket_info = array(),$rbfw_service_price_data_actual=array()) {
 
             global $rbfw;
-            $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+            $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
             $title = $meta_data['rbfw_billing_name'];
             $cpt_name = 'rbfw_order';
 
@@ -604,7 +604,7 @@ if (!class_exists('MageRBFWClass')) {
 
 
             global $rbfw;
-            $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+            $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
             $title = $meta_data['rbfw_billing_name'];
             $cpt_name = 'rbfw_order_meta';
 

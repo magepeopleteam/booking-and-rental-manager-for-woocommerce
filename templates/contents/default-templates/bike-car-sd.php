@@ -8,9 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $rbfw;
 $post_id = get_the_id();
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
-$tab_style = $rbfw->get_option('rbfw_single_rent_tab_style', 'rbfw_basic_single_rent_page_settings','vertical');
+$tab_style = $rbfw->get_option_trans('rbfw_single_rent_tab_style', 'rbfw_basic_single_rent_page_settings','vertical');
 $rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
-$slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','');
+$slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_settings','');
 ?>
 	<div class="mp_default_theme mp_bike_car_sd_theme">
 		<div class="mpContainer">
@@ -71,7 +71,7 @@ $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','
                                                     <?php  if($i>4){ ?>
                                                         <li style="width:100%">
                                                             <a class="rbfw_muff_lmf_btn">
-                                                                <?php echo $rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
+                                                                <?php echo $rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
                                                             </a>
                                                         </li>
                                                     <?php } ?>
@@ -86,13 +86,13 @@ $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','
 
                                 <!--end of tab one-->
 								<div class="rbfw-tab " data-id="description">
-								<div class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?></div>	
+								<div class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?></div>	
 									<?php the_content(); ?>
 								</div><!--end of tab two-->
 
 								<?php if(!empty($rbfw_enable_faq_content) && $rbfw_enable_faq_content == 'yes'): ?>
 								<div class="rbfw-tab " data-id="faq">
-								<div class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Frequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?></div>
+								<div class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Frequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?></div>
 									<?php do_action( 'rbfw_the_faq_only', $post_id ); ?>
 								</div><!--end of tab three-->
 								<?php endif; ?>

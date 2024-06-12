@@ -467,15 +467,15 @@ if (!class_exists('Rbfw_Account_Page')) {
                 $payment_method = get_post_meta($order_id, 'rbfw_payment_method', true);
                 $payment_id = get_post_meta($order_id, 'rbfw_payment_id', true);
                 
-                $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+                $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
             
                 if($rbfw_payment_system == 'wps'){
                     $order_no = get_post_meta($order_id, 'rbfw_order_id', true);
                 }else{
                     $order_no = $order_id;
                 }
-                $mps_tax_switch = $rbfw->get_option('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-                $mps_tax_format = $rbfw->get_option('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
+                $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
+                $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
 
                 ob_start();
                 ?>
@@ -721,7 +721,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                     </tr>
                     <?php if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($tax)){ ?>
                     <tr>
-                        <td><strong><?php echo $rbfw->get_option('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
+                        <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
                         <td><?php echo rbfw_mps_price($tax); ?></td>
                     </tr>
                     <?php } ?>    
