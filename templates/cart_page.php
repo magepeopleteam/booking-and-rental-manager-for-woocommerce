@@ -5,8 +5,16 @@ $rbfw_rent_type 	= get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 
 
 $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) : 'yes';
+
 ?>
-<?php do_action( 'rbfw_before_cart_item_display', $cart_item, $rbfw_id ); ?>
+<?php
+
+do_action( 'rbfw_before_cart_item_display', $cart_item, $rbfw_id );
+$security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['security_deposit_amount'] : '';
+
+
+
+?>
 
 <?php /* Type: Resort */ ?>
 <?php if($rbfw_rent_type == 'resort'){
@@ -152,6 +160,7 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
 
     $rbfw_bikecarsd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : array();
     $rbfw_extra_service_data = get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
+    
     $rbfw_item_quantity = 1;
 
     if(!empty($rbfw_bikecarsd_data)):
@@ -238,6 +247,13 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
                 <td><?php echo wc_price($rbfw_bikecarsd_service_price); ?></td>
             </tr>
         <?php endif; ?>
+        <?php if ( ! empty( $security_deposit_amount ) ): ?>
+            <tr>
+                <th><?php echo (!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit'); ?>:</th>
+                <td><?php echo wc_price($security_deposit_amount); ?></td>
+            </tr>
+        <?php endif; ?>
+
     </table>
 <?php } ?>
 
@@ -280,7 +296,7 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
 
     $discount_type 	= $cart_item['discount_type'] ? $cart_item['discount_type'] : '';
     $discount_amount 	= $cart_item['discount_amount'] ? $cart_item['discount_amount'] : '';
-    $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['security_deposit_amount'] : '';
+
 
 
     $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
@@ -409,7 +425,7 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
 
             <?php if ( ! empty( $security_deposit_amount ) ): ?>
                 <tr>
-                    <th><?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Security Deposit','booking-and-rental-manager-for-woocommerce')); ?>:</th>
+                    <th><?php echo (!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit'); ?>:</th>
                     <td><?php echo wc_price($security_deposit_amount); ?></td>
                 </tr>
             <?php endif; ?>

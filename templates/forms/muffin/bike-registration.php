@@ -475,7 +475,7 @@ if($rbfw_enable_variations == 'yes'){
                                     <span></span>
                                 </li>
                                 <li class="security_deposit" style="display:none;">
-                                    <?php echo $rbfw->get_option('rbfw_text_security_deposit', 'rbfw_basic_translation_settings', __('Security Deposit','booking-and-rental-manager-for-woocommerce')) ?>
+                                    <?php echo $rbfw->get_option_trans('rbfw_text_security_deposit', 'rbfw_basic_translation_settings', __('Security Deposit','booking-and-rental-manager-for-woocommerce')) ?>
                                     <span></span>
                                 </li>
                                 <li class="total">

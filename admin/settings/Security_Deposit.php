@@ -65,7 +65,7 @@ if( ! class_exists('RBFW_Security_Deposit')){
                             <tr>
                                 <section>
                                     <label for="">Security Deposit Label</label>
-                                    <input type="number" name="rbfw_security_deposit_label" value="0" placeholder="Security Deposit L">
+                                    <input type="text" name="rbfw_security_deposit_label" value="<?php echo get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) : 'Security Deposit' ?>" placeholder="">
                                 </section>
                             </tr>
 
@@ -132,7 +132,9 @@ if( ! class_exists('RBFW_Security_Deposit')){
                 $rbfw_enable_security_deposit 	 = isset( $_POST['rbfw_enable_security_deposit'] ) ? rbfw_array_strip( $_POST['rbfw_enable_security_deposit'] ) : 'no';
                 $rbfw_security_deposit_type 	 = isset( $_POST['rbfw_security_deposit_type'] ) ? rbfw_array_strip( $_POST['rbfw_security_deposit_type'] ) : 'percentage';
                 $rbfw_security_deposit_amount 	 = isset( $_POST['rbfw_security_deposit_amount'] ) ? rbfw_array_strip( $_POST['rbfw_security_deposit_amount'] ) : 0;
+                $rbfw_security_deposit_label 	 = isset( $_POST['rbfw_security_deposit_label'] ) ? rbfw_array_strip( $_POST['rbfw_security_deposit_label'] ) : 'Security Deposit';
                 update_post_meta( $post_id, 'rbfw_enable_security_deposit', $rbfw_enable_security_deposit );
+                update_post_meta( $post_id, 'rbfw_security_deposit_label', $rbfw_security_deposit_label );
                 update_post_meta( $post_id, 'rbfw_security_deposit_type', $rbfw_security_deposit_type );
                 update_post_meta( $post_id, 'rbfw_security_deposit_amount', $rbfw_security_deposit_amount );
             }

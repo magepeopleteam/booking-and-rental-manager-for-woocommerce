@@ -122,8 +122,10 @@ function rbfw_order_meta_box_callback(){
                 foreach ($ticket_infos as $ticket_info) {
 
 
-                
-            
+
+
+
+
                 $item_name = !empty($ticket_info['ticket_name']) ? $ticket_info['ticket_name'] : '';
                 $rbfw_id = $ticket_info['rbfw_id'];
                 $item_id = $rbfw_id;
@@ -194,7 +196,7 @@ function rbfw_order_meta_box_callback(){
                 $discount_amount = !empty($ticket_info['discount_amount']) ? (float)$ticket_info['discount_amount'] : 0;
                 $discount_amount = rbfw_mps_price($discount_amount);
                 $security_deposit_amount = !empty($ticket_info['security_deposit_amount']) ? (float)$ticket_info['security_deposit_amount'] : 0;
-                $security_deposit_amount = rbfw_mps_price($discount_amount);
+                $security_deposit_amount = rbfw_mps_price($security_deposit_amount);
 
                 $discount_type = !empty($ticket_info['discount_type']) ? $ticket_info['discount_type'] : '';
                 $rbfw_regf_info = !empty($ticket_info['rbfw_regf_info']) ? $ticket_info['rbfw_regf_info'] : [];
@@ -438,7 +440,7 @@ function rbfw_order_meta_box_callback(){
 
                     <?php if(!empty($security_deposit_amount)){ ?>
                         <tr>
-                            <td><strong><?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
+                            <td><strong><?php echo (!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit'); ?>:</strong></td>
                             <td><?php echo $security_deposit_amount; ?></td>
                         </tr>
                     <?php } ?>
