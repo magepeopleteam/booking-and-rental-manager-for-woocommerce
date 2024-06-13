@@ -610,6 +610,7 @@
   border: 1px solid var(--mage-dark);
   color: var(--mage-secondary);
   padding: 0.5em;
+  font-weight: normal;
 }
 #rbfw_add_meta_box textarea.small, #rbfw_add_meta_box select.small, #rbfw_add_meta_box input[type=text].small, #rbfw_add_meta_box input[type=email].small, #rbfw_add_meta_box input[type=search].small, #rbfw_add_meta_box input[type=tel].small, #rbfw_add_meta_box input[type=url].small, #rbfw_add_meta_box input[type=password].small, #rbfw_add_meta_box input[type=file].small, #rbfw_add_meta_box input[type=color].small, #rbfw_add_meta_box input[type=number].small, #rbfw_add_meta_box input[type=range].small, #rbfw_add_meta_box input[type=date].small, #rbfw_add_meta_box input[type=month].small, #rbfw_add_meta_box input[type=week].small, #rbfw_add_meta_box input[type=time].small, #rbfw_add_meta_box input[type=datetime].small, #rbfw_add_meta_box input[type=datetime-local].small {
   width: 5.3333333333em;
@@ -1003,7 +1004,7 @@
   display: flex;
   justify-content: space-between;
   margin: 5px 0;
-  padding: 5px 0;
+  padding: 5px;
   border-bottom: 1px solid var(--mage-light);
 }
 #rbfw_add_meta_box .service_category_title label {

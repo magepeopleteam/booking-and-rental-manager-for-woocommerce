@@ -3719,6 +3719,3 @@ div.grid_10 {
     }
 }
 
-input:checked[type=checkbox] + .slider{
-    background-color: red;
-}
