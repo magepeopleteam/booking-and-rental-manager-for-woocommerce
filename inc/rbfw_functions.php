@@ -3494,7 +3494,8 @@ function rbfw_hex2rgba( $color, $opacity = false ) {
 
 function rbfw_exist_page_by_title( $title ) {
     global $wpdb;
-    $return = $wpdb->get_row( "SELECT ID FROM wp_posts WHERE post_title = '" . $title . "' && post_status = 'publish' && post_type = 'page' ", 'ARRAY_N' );
+    $posts_table = $wpdb->prefix.'posts';
+    $return = $wpdb->get_row( "SELECT ID FROM $posts_table WHERE post_title = '" . $title . "' && post_status = 'publish' && post_type = 'page' ", 'ARRAY_N' );
 
     if( empty( $return ) ) {
         return false;
@@ -3505,7 +3506,8 @@ function rbfw_exist_page_by_title( $title ) {
 
 function rbfw_exist_page_by_slug( $slug ) {
     global $wpdb;
-    $return = $wpdb->get_row( "SELECT ID FROM wp_posts WHERE post_name = '" . $slug . "' && post_status = 'publish' && post_type = 'page' ", 'ARRAY_N' );
+    $posts_table = $wpdb->prefix.'posts';
+    $return = $wpdb->get_row( "SELECT ID FROM $posts_table WHERE post_name = '" . $slug . "' && post_status = 'publish' && post_type = 'page' ", 'ARRAY_N' );
 
     if( empty( $return ) ) {
         return false;
