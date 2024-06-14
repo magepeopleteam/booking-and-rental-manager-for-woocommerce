@@ -1076,8 +1076,6 @@ function rbfw_cart_ticket_info($product_id, $rbfw_pickup_start_date, $rbfw_picku
                     update_post_meta($order_id, 'rbfw_order_status', $order_status);
                     update_post_meta($order_meta_id, 'rbfw_order_status', $order_status);
                 }
-
             }
         }
-
     }
