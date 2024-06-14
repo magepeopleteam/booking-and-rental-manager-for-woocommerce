@@ -3799,4 +3799,5 @@ function rbfw_security_deposit($post_id,$sub_total_price)
         }
 
     }
+    return array(['security_deposit_amount'=>$security_deposit_amount,'security_deposit_desc'=>$security_deposit_desc]);
 }
