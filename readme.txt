@@ -210,12 +210,6 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
-= 2.0.4 =
-* Pricing and discount problem solved after pickup or drop off date change.
-* Yoast seo plugin not supported, solved it.
-* Warning removed
-* Without input inventory customer can booking.
-
 = 2.0.3 =
 * Untrash problem solved.
 * Single day calendar problem solved.
