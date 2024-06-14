@@ -9,7 +9,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
- 
+
 if (!class_exists('Rbfw_Thankyou_Page')) {
 
 	class Rbfw_Thankyou_Page{
@@ -20,7 +20,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
         }
 
         public function rbfw_thankyou_page(){
-             
+
             $t_page_id = rbfw_get_option('rbfw_thankyou_page','rbfw_basic_gen_settings');
 
             if($t_page_id){
@@ -53,7 +53,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         'post_type'     => 'page'
                     );
                     $post_id = wp_insert_post( $args );
-    
+
                     if($post_id){
                         $gen_settings = !empty(get_option('rbfw_basic_gen_settings')) ? get_option('rbfw_basic_gen_settings') : [];
                         $new_gen_settings = array_merge($gen_settings, ['rbfw_thankyou_page' => $post_id]);
@@ -63,7 +63,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                 }
             }
         }
-     
+
         public function rbfw_add_post_state( $post_states, $post ) {
             $t_page_id = rbfw_get_option('rbfw_thankyou_page','rbfw_basic_gen_settings');
 
@@ -91,20 +91,22 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                 echo '<script>window.location=document.location.href;</script>';
             }
         }
-        
-        public function rbfw_thankyou_shortcode_func(){
+
+
+        public function rbfw_thankyou_shortcode_func(){  
             global $rbfw;
             $t_page_id = rbfw_get_option('rbfw_thankyou_page','rbfw_basic_gen_settings');
             $current_page_id = get_queried_object_id();
-            $checkout_account = $rbfw->get_option('rbfw_mps_checkout_account', 'rbfw_basic_payment_settings','on');
-            $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-            $mps_tax_switch = $rbfw->get_option('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-            $mps_tax_format = $rbfw->get_option('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
-            
+            $checkout_account = $rbfw->get_option_trans('rbfw_mps_checkout_account', 'rbfw_basic_payment_settings','on');
+            $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+            $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
+            $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
+
+
             if($current_page_id != $t_page_id){
                 return;
             }
-            
+
             if($checkout_account == 'on' && !is_user_logged_in()){
                 return;
             }
@@ -116,7 +118,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
             if(isset($_GET['paymentId'])){
 
                 $payment_id = $_GET['paymentId'];
-                $payer_id = !empty($_GET['PayerID']) ? $_GET['PayerID'] : '';               
+                $payer_id = !empty($_GET['PayerID']) ? $_GET['PayerID'] : '';
 
                 $args = array(
                     'post_type' => 'rbfw_order',
@@ -128,7 +130,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         ),
                     )
                 );
-              
+
                 $the_query = new WP_Query($args);
 
                 if ( $the_query->have_posts() ) {
@@ -155,14 +157,14 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
 
                             $rbfw_start_datetime = rbfw_get_datetime($ticket_info['rbfw_start_datetime'], 'date-text');
                             $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-text');
-        
+
                         }elseif($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
-        
+
                             $rbfw_start_datetime = rbfw_get_datetime($ticket_info['rbfw_start_datetime'], 'date-time-text');
                             $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date');
-        
+
                         }else{
-        
+
                             $rbfw_start_datetime = rbfw_get_datetime($ticket_info['rbfw_start_datetime'], 'date-time-text');
                             $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-time-text');
                         }
@@ -192,10 +194,10 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                             $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                             $rent_info = $BikeCarSdClass->rbfw_get_bikecarsd_rent_info($item_id, $rent_info);
                             $service_info = $BikeCarSdClass->rbfw_get_bikecarsd_service_info($item_id, $service_info);
-                    
+
                         }elseif($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){
                             $BikeCarMdClass = new RBFW_BikeCarMd_Function();
-                     
+
                             $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                             $service_info = $BikeCarMdClass->rbfw_get_bikecarmd_service_info($item_id, $service_info);
                             $item_quantity = !empty($ticket_info['rbfw_item_quantity']) ? $ticket_info['rbfw_item_quantity'] : '';
@@ -207,7 +209,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                             $rent_info  = $ResortClass->rbfw_get_resort_room_info($item_id, $rent_info, $package);
                             $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                             $service_info = $ResortClass->rbfw_get_resort_service_info($item_id, $service_info);
-                    
+
                         }else{
                             $rent_info = '';
                             $service_info = '';
@@ -218,7 +220,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         $duration_cost = rbfw_mps_price($ticket_info['duration_cost']);
                         $service_cost = rbfw_mps_price($ticket_info['service_cost']);
                         $total_cost = rbfw_mps_price($ticket_info['ticket_price']);
-        
+
                         $discount_amount = !empty($ticket_info['discount_amount']) ? rbfw_mps_price($ticket_info['discount_amount']) : '';
                         $rbfw_regf_info = !empty($ticket_info['rbfw_regf_info']) ? $ticket_info['rbfw_regf_info'] : [];
 
@@ -249,7 +251,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                 <tr>
                                     <td><strong><?php rbfw_string('rbfw_text_email',__('Email','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                                     <td><?php echo esc_html($billing_email); ?></td>
-                                </tr>                        
+                                </tr>
                                 <tr>
                                     <td><strong><?php rbfw_string('rbfw_text_payment_method',__('Payment method','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                                     <td><?php echo esc_html($payment_method); ?></td>
@@ -257,7 +259,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                 <tr>
                                     <td><strong><?php rbfw_string('rbfw_text_payment_id',__('Payment ID','booking-and-rental-manager-for-woocommerce')); ; echo ':';  ?></strong></td>
                                     <td><?php echo esc_html($payment_id); ?></td>
-                                </tr>                                             
+                                </tr>
                             </tbody>
                         </table>
                         <table>
@@ -283,7 +285,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                     <td><strong><?php rbfw_string('rbfw_text_rent_information',__('Rent Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                                     <td>
                                         <table>
-                                        <?php 
+                                        <?php
                                             if(!empty($rent_info)){
                                                 foreach ($rent_info as $key => $value) {
                                                     ?>
@@ -304,7 +306,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                     <td><strong><?php rbfw_string('rbfw_text_room_information',__('Room Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                                     <td>
                                         <table>
-                                        <?php 
+                                        <?php
                                             if(!empty($rent_info)){
                                                 foreach ($rent_info as $key => $value) {
                                                     ?>
@@ -324,7 +326,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                     <td><strong><?php rbfw_string('rbfw_text_extra_service_information',__('Extra Service Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                                     <td>
                                         <table>
-                                        <?php 
+                                        <?php
                                         if($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
                                             if(!empty($service_info)){
                                                 foreach ($service_info as $key => $value) {
@@ -390,7 +392,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                 </tr>
                                 <?php } ?>
                                 <tr>
-                                    <td><strong><?php rbfw_string('rbfw_text_start_date_and_time',__('Start Date and Time','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                                    <td><strong>jjj<?php rbfw_string('rbfw_text_start_date_and_time',__('Start Date and Time','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                                     <td><?php echo esc_html($rbfw_start_datetime); ?></td>
                                 </tr>
                                 <tr>
@@ -398,8 +400,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                     <td><?php echo esc_html($rbfw_end_datetime); ?></td>
                                 </tr>
 
-                                <?php if(!empty($variation_info)){ 
-                                foreach ($variation_info as $key => $value) { 
+                                <?php if(!empty($variation_info)){
+                                foreach ($variation_info as $key => $value) {
                                 ?>
                                 <tr>
                                     <td><strong><?php echo esc_html($value['field_label']); ?></strong></td>
@@ -412,7 +414,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                     <td><strong><?php echo $rbfw->get_option('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
                                     <td><?php echo $item_quantity; ?></td>
                                 </tr>
-                                <?php } ?> 
+                                <?php } ?>
                                 <tr>
                                     <td><strong><?php rbfw_string('rbfw_text_duration_cost',__('Duration Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                                     <td><?php echo $duration_cost; ?></td>
@@ -426,15 +428,15 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                     <td><strong><?php echo $rbfw->get_option('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
                                     <td><?php echo $tax; ?></td>
                                 </tr>
-                                <?php } ?> 
-                                
+                                <?php } ?>
+
                                 <?php if(!empty($discount_amount)){ ?>
                                 <tr>
                                     <td><strong><?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
                                     <td><?php echo $discount_amount; ?></td>
                                 </tr>
                                 <?php } ?>
-                                    
+
                                 <tr>
                                     <td><strong><?php rbfw_string('rbfw_text_total_cost',__('Total Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                                     <td><?php echo $total_cost.' '.$tax_status; ?></td>
@@ -449,14 +451,14 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                     }
                 }
             }
-            
+
             // For Offline Payment
             if(!empty($_GET['order_id']) && !empty($_GET['token'])){
 
                 $order_id = $_GET['order_id'];
                 $current_token = $_GET['token'];
                 $origin_token = get_post_meta($order_id, 'rbfw_token', true);
-                
+
                 if($current_token != $origin_token){
                     return;
                 }
@@ -465,7 +467,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                 $billing_name = get_post_meta($order_id, 'rbfw_billing_name', true);
                 $billing_email = get_post_meta($order_id, 'rbfw_billing_email', true);
                 $payment_method = get_post_meta($order_id, 'rbfw_payment_method', true);
-            
+
                 $ticket_info = !empty(get_post_meta($order_id,'rbfw_ticket_info',true)[0]) ? get_post_meta($order_id,'rbfw_ticket_info',true)[0] : [];
 
                 $item_name = !empty($ticket_info['ticket_name']) ? $ticket_info['ticket_name'] : '';
@@ -497,7 +499,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                 $tax = !empty($ticket_info['rbfw_mps_tax']) ? $ticket_info['rbfw_mps_tax'] : 0;
                 $mps_tax_percentage = !empty(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $tax_status = '';
-                
+
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && $mps_tax_format == 'including_tax'){
                     $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($tax).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';
                 }
@@ -508,7 +510,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                     $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                     $rent_info = $BikeCarSdClass->rbfw_get_bikecarsd_rent_info($item_id, $rent_info);
                     $service_info = $BikeCarSdClass->rbfw_get_bikecarsd_service_info($item_id, $service_info);
-            
+
                 }elseif($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){
                     $BikeCarMdClass = new RBFW_BikeCarMd_Function();
 
@@ -525,7 +527,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
 
                     $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                     $service_info = $ResortClass->rbfw_get_resort_service_info($item_id, $service_info);
-            
+
                 }else{
                     $rent_info = '';
                     $service_info = '';
@@ -564,11 +566,11 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_email',__('Email','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td><?php echo esc_html($billing_email); ?></td>
-                        </tr>                        
+                        </tr>
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_payment_method',__('Payment method','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td><?php echo esc_html($payment_method); ?></td>
-                        </tr>                                           
+                        </tr>
                     </tbody>
                 </table>
                 <table >
@@ -594,7 +596,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                             <td><strong><?php rbfw_string('rbfw_text_rent_information',__('Rent Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td>
                                 <table >
-                                <?php 
+                                <?php
                                     if(!empty($rent_info)){
                                         foreach ($rent_info as $key => $value) {
                                             ?>
@@ -615,7 +617,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                             <td><strong><?php rbfw_string('rbfw_text_room_information',__('Room Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td>
                                 <table >
-                                <?php 
+                                <?php
                                     if(!empty($rent_info)){
                                         foreach ($rent_info as $key => $value) {
                                             ?>
@@ -635,7 +637,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                             <td><strong><?php rbfw_string('rbfw_text_extra_service_information',__('Extra Service Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td>
                                 <table >
-                                <?php 
+                                <?php
                                 if($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
                                     if(!empty($service_info)){
                                         foreach ($service_info as $key => $value) {
@@ -701,7 +703,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         </tr>
                         <?php } ?>
                         <tr>
-                            <td><strong><?php rbfw_string('rbfw_text_start_date_and_time',__('Start Date and Time','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                            <td><strong>ggggggg<?php rbfw_string('rbfw_text_start_date_and_time',__('Start Date and Time','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td><?php echo esc_html($rbfw_start_datetime); ?></td>
                         </tr>
                         <tr>
@@ -709,14 +711,14 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                             <td><?php echo esc_html($rbfw_end_datetime); ?></td>
                         </tr>
 
-                        <?php if(!empty($variation_info)){ 
-                        foreach ($variation_info as $key => $value) { 
+                        <?php if(!empty($variation_info)){
+                        foreach ($variation_info as $key => $value) {
                         ?>
                         <tr>
                             <td><strong><?php echo esc_html($value['field_label']); ?></strong></td>
                             <td><?php echo esc_html($value['field_value']); ?></td>
                         </tr>
-                        <?php } } ?>                         
+                        <?php } } ?>
 
                         <?php if(!empty($item_quantity)){ ?>
                         <tr>
@@ -758,7 +760,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                 $content = ob_get_clean();
                 return $content;
             }
-            
+
         }
     }
     new Rbfw_Thankyou_Page();

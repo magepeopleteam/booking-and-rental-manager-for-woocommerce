@@ -176,7 +176,7 @@ class RBFW_Setting_API {
      */
     function callback_text( $args ) {
 
-        $value       = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $value       = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
         $size        = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
         $type        = isset( $args['type'] ) ? $args['type'] : 'text';
         $maxlength        = isset( $args['maxlength'] ) ? $args['maxlength'] : '';
@@ -203,7 +203,7 @@ class RBFW_Setting_API {
      * @param array   $args settings field args
      */
     function callback_number( $args ) {
-        $value       = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $value       = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
         $size        = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
         $type        = isset( $args['type'] ) ? $args['type'] : 'number';
         $placeholder = empty( $args['placeholder'] ) ? '' : ' placeholder="' . $args['placeholder'] . '"';
@@ -224,7 +224,7 @@ class RBFW_Setting_API {
      */
     function callback_checkbox( $args ) {
 
-        $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $value = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
 
         $html  = '<fieldset>';
         $html  .= sprintf( '<label for="wpuf-%1$s[%2$s]">', $args['section'], $args['id'] );
@@ -267,7 +267,7 @@ class RBFW_Setting_API {
 	function callback_media( $args ){
 
 		$id			= isset( $args['id'] ) ? $args['id'] : "";
-		$value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+		$value = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
 		$media_url	= wp_get_attachment_url( $value );
 		$media_type	= get_post_mime_type( $value );
 		$media_title= get_the_title( $value );
@@ -307,7 +307,7 @@ class RBFW_Setting_API {
 
     function callback_multicheck( $args ) {
 
-        $value = $this->get_option( $args['id'], $args['section'], $args['std'] );
+        $value = $this->get_option_trans( $args['id'], $args['section'], $args['std'] );
         $html  = '<fieldset>';
         $html .= sprintf( '<input type="hidden" name="%1$s[%2$s]" value="" />', $args['section'], $args['id'] );
         foreach ( $args['options'] as $key => $label ) {
@@ -330,7 +330,7 @@ class RBFW_Setting_API {
      */
     function callback_radio( $args ) {
 
-        $value = $this->get_option( $args['id'], $args['section'], $args['std'] );
+        $value = $this->get_option_trans( $args['id'], $args['section'], $args['std'] );
         $html  = '<fieldset>';
 
         foreach ( $args['options'] as $key => $label ) {
@@ -352,7 +352,7 @@ class RBFW_Setting_API {
      */
     function callback_select( $args ) {
 
-        $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $value = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
         $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
         $class  = isset( $args['class'] ) && !is_null( $args['class'] ) ? $args['class'] : '';
         $html  = sprintf( '<select class="%1$s" name="%2$s[%3$s]" id="%2$s[%3$s]">', $size.' '.$class, $args['section'], $args['id'] );
@@ -369,7 +369,7 @@ class RBFW_Setting_API {
 
     function callback_generatepage( $args ) {
 
-        $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $value = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
         $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
         $class  = isset( $args['class'] ) && !is_null( $args['class'] ) ? $args['class'] : '';
         $html  = sprintf( '<select class="%1$s" name="%2$s[%3$s]" id="%2$s[%3$s]">', $size.' '.$class, $args['section'], $args['id'] );
@@ -391,7 +391,7 @@ class RBFW_Setting_API {
      */
     function callback_textarea( $args ) {
 
-        $value       = esc_textarea( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $value       = esc_textarea( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
         $size        = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
         $placeholder = empty( $args['placeholder'] ) ? '' : ' placeholder="'.$args['placeholder'].'"';
 
@@ -418,7 +418,7 @@ class RBFW_Setting_API {
      */
     function callback_wysiwyg( $args ) {
 
-        $value = $this->get_option( $args['id'], $args['section'], $args['std'] );
+        $value = $this->get_option_trans( $args['id'], $args['section'], $args['std'] );
         $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : '500px';
 
         echo '<div style="max-width: ' . mep_esc_html($size) . ';">';
@@ -447,7 +447,7 @@ class RBFW_Setting_API {
      */
     function callback_file( $args ) {
 
-        $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $value = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
         $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
         $id    = $args['section']  . '[' . $args['id'] . ']';
         $label = isset( $args['options']['button_label'] ) ? $args['options']['button_label'] : __( 'Choose File' );
@@ -466,7 +466,7 @@ class RBFW_Setting_API {
      */
     function callback_password( $args ) {
 
-        $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $value = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
         $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
 
         $html  = sprintf( '<input type="password" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
@@ -482,7 +482,7 @@ class RBFW_Setting_API {
      */
     function callback_color( $args ) {
 
-        $value = esc_attr( $this->get_option( $args['id'], $args['section'], $args['std'] ) );
+        $value = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
         if(empty($value)){
             $value = $args['std'];
         }
@@ -504,7 +504,7 @@ class RBFW_Setting_API {
     function callback_pages( $args ) {
 
         $dropdown_args = array(
-            'selected' => esc_attr($this->get_option($args['id'], $args['section'], $args['std'] ) ),
+            'selected' => esc_attr($this->get_option_trans($args['id'], $args['section'], $args['std'] ) ),
             'name'     => $args['section'] . '[' . $args['id'] . ']',
             'id'       => $args['section'] . '[' . $args['id'] . ']',
             'echo'     => 0
