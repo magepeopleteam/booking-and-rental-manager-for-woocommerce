@@ -3772,6 +3772,7 @@ function check_seasonal_price($Book_date,$rbfw_sp_prices)
     }
 }
 
+
 function rbfw_security_deposit($post_id,$sub_total_price)
 {
     $security_deposit_amount = 0;
