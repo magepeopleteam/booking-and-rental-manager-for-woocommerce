@@ -338,7 +338,7 @@
                 jQuery('.rbfw_enable_start_end_date_field_row').hide();
                 jQuery('[name="rbfw_off_days"]').val('');
                 jQuery('.rbfw_off_days input').prop('checked', false);
-                jQuery('.rbfw_off_days').hide();
+                jQuery('.rbfw_off_days').show();
                 jQuery('.regular_fixed_date').hide();
 
                 let this_table_row_length = jQuery('.rbfw_bike_car_sd_price_table_row').length;

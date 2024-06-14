@@ -57,21 +57,21 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     <table class="rbfw_room_cart_table">
         <?php if ( ! empty( $start_datetime ) ): ?>
             <tr>
-                <th><?php echo $rbfw->get_option_trans('rbfw_text_checkin_date', 'rbfw_basic_translation_settings', __('Check-In Date','booking-and-rental-manager-for-woocommerce'));?>:</th>
+                <th><?php echo $rbfw->get_option('rbfw_text_checkin_date', 'rbfw_basic_translation_settings', __('Check-In Date','booking-and-rental-manager-for-woocommerce'));?>:</th>
                 <td><?php echo rbfw_date_format($start_datetime); ?></td>
             </tr>
         <?php endif; ?>
 
         <?php if ( ! empty( $end_datetime ) ): ?>
             <tr>
-                <th><?php echo $rbfw->get_option_trans('rbfw_text_checkout_date', 'rbfw_basic_translation_settings', __('Check-Out Date','booking-and-rental-manager-for-woocommerce')); ?>:</th>
+                <th><?php echo $rbfw->get_option('rbfw_text_checkout_date', 'rbfw_basic_translation_settings', __('Check-Out Date','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                 <td><?php echo rbfw_date_format($end_datetime); ?></td>
             </tr>
         <?php endif; ?>
 
         <?php if ( ! empty( $rbfw_room_price_category ) ): ?>
             <tr>
-                <th><?php echo $rbfw->get_option_trans('rbfw_text_package', 'rbfw_basic_translation_settings', __('Package','booking-and-rental-manager-for-woocommerce')); ?>:</th>
+                <th><?php echo $rbfw->get_option('rbfw_text_package', 'rbfw_basic_translation_settings', __('Package','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                 <td><?php echo $rbfw_room_price_category; ?></td>
             </tr>
         <?php endif; ?>
@@ -124,21 +124,21 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
         <?php if ( ! empty( $rbfw_room_duration_price ) ): ?>
             <tr>
-                <th><?php echo $rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')); ?>:</th>
+                <th><?php echo $rbfw->get_option('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                 <td><?php echo wc_price($rbfw_room_duration_price); ?></td>
             </tr>
         <?php endif; ?>
 
         <?php if ( ! empty( $rbfw_room_service_price ) ): ?>
             <tr>
-                <th><?php echo $rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')); ?>:</th>
+                <th><?php echo $rbfw->get_option('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                 <td><?php echo wc_price($rbfw_room_service_price); ?></td>
             </tr>
         <?php endif; ?>
 
         <?php if ( ! empty( $discount_amount ) ): ?>
             <tr>
-                <th><?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</th>
+                <th><?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                 <td><?php echo wc_price($discount_amount); ?></td>
             </tr>
         <?php endif; ?>
@@ -184,7 +184,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     <table class="rbfw_bikecarsd_cart_table rbfw_room_cart_table">
         <?php if ( ! empty( $start_datetime )): ?>
             <tr>
-                <th><?php echo $rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', __('Start Date and Time','booking-and-rental-manager-for-woocommerce'));?>:</th>
+                <th><?php echo $rbfw->get_option('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', __('Start Date and Time','booking-and-rental-manager-for-woocommerce'));?>:</th>
                 <td><?php echo rbfw_date_format($start_datetime); if(!empty($start_time)){ echo ' @'.$start_time; } ?></td>
             </tr>
         <?php endif; ?>
@@ -236,14 +236,14 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
         <?php if ( ! empty( $rbfw_bikecarsd_duration_price ) ): ?>
             <tr>
-                <th><?php echo $rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')); ?>:</th>
+                <th><?php echo $rbfw->get_option('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                 <td><?php echo wc_price($rbfw_bikecarsd_duration_price); ?></td>
             </tr>
         <?php endif; ?>
 
         <?php if ( ! empty( $rbfw_bikecarsd_service_price ) ): ?>
             <tr>
-                <th><?php echo $rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')); ?>:</th>
+                <th><?php echo $rbfw->get_option('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                 <td><?php echo wc_price($rbfw_bikecarsd_service_price); ?></td>
             </tr>
         <?php endif; ?>
@@ -296,8 +296,11 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
     $discount_type 	= $cart_item['discount_type'] ? $cart_item['discount_type'] : '';
     $discount_amount 	= $cart_item['discount_amount'] ? $cart_item['discount_amount'] : '';
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> b37cc7b4eb0027d32ff7df240627263482c6fdf3
 
     $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
@@ -307,25 +310,25 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     <ul>
 
         <?php if ( ! empty( $rbfw_pickup_point ) ): ?>
-            <li><?php echo $rbfw->get_option_trans('rbfw_text_pickup_point', 'rbfw_basic_translation_settings', __('Pickup Point','booking-and-rental-manager-for-woocommerce')); echo ': ' . $rbfw_pickup_point; ?></li>
+            <li><?php echo $rbfw->get_option('rbfw_text_pickup_point', 'rbfw_basic_translation_settings', __('Pickup Point','booking-and-rental-manager-for-woocommerce')); echo ': ' . $rbfw_pickup_point; ?></li>
         <?php endif; ?>
 
         <?php if ( ! empty( $rbfw_dropoff_point ) ): ?>
-            <li><?php echo $rbfw->get_option_trans('rbfw_text_dropoff_point', 'rbfw_basic_translation_settings', __('Drop-off Point','booking-and-rental-manager-for-woocommerce')); echo ': ' . $rbfw_dropoff_point; ?></li>
+            <li><?php echo $rbfw->get_option('rbfw_text_dropoff_point', 'rbfw_basic_translation_settings', __('Drop-off Point','booking-and-rental-manager-for-woocommerce')); echo ': ' . $rbfw_dropoff_point; ?></li>
         <?php endif; ?>
 
         <?php if ( !empty($start_datetime) && !empty($start_time)): ?>
             <li>
-                <?php echo $rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Date & Time','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $start_datetime, 'date-time-text' ); ?>
+                <?php echo $rbfw->get_option('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Date & Time','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $start_datetime, 'date-time-text' ); ?>
             </li>
         <?php else: ?>
-            <li><?php echo $rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Date & Time','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $start_datetime, 'date-text' ); ?></li>
+            <li><?php echo $rbfw->get_option('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Date & Time','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $start_datetime, 'date-text' ); ?></li>
         <?php endif; ?>
 
         <?php if (!empty($end_datetime) && !empty($end_time)): ?>
-            <li><?php echo $rbfw->get_option_trans('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time gg','booking-and-rental-manager-for-woocommerce'));  echo ': ' . rbfw_get_datetime( $end_datetime, 'date-time-text' ); ?></li>
+            <li><?php echo $rbfw->get_option('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time gg','booking-and-rental-manager-for-woocommerce'));  echo ': ' . rbfw_get_datetime( $end_datetime, 'date-time-text' ); ?></li>
         <?php else: ?>
-            <li><?php echo $rbfw->get_option_trans('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time hh','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $end_datetime, 'date-text' ); ?></li>
+            <li><?php echo $rbfw->get_option('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time hh','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $end_datetime, 'date-text' ); ?></li>
         <?php endif; ?>
 
         <?php if(!empty($variation_info)){
@@ -335,14 +338,14 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
             <?php } } ?>
 
         <?php if ( ! empty( $rbfw_item_quantity ) ): ?>
-            <li><?php echo $rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce')); echo ': '.$rbfw_item_quantity; ?></li>
+            <li><?php echo $rbfw->get_option('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce')); echo ': '.$rbfw_item_quantity; ?></li>
         <?php endif; ?>
 
         <table class="rbfw_room_cart_table">
             <?php if ( ! empty( $start_datetime ) && ! empty( $end_datetime ) ): ?>
                 <tr>
                     <th>
-                        <?php echo $rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost:','booking-and-rental-manager-for-woocommerce')); ?>
+                        <?php echo $rbfw->get_option('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost:','booking-and-rental-manager-for-woocommerce')); ?>
                         <br>
                         <span>
                             <?php
@@ -414,15 +417,14 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 } ?>
             <?php } ?>
 
-
-
             <?php if ( ! empty( $discount_amount ) ): ?>
                 <tr>
-                    <th><?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</th>
+                    <th><?php echo $rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                     <td><?php echo wc_price($discount_amount); ?></td>
                 </tr>
             <?php endif; ?>
 
+<<<<<<< HEAD
             <?php if ( ! empty( $security_deposit_amount ) ): ?>
                 <tr>
                     <th><?php echo (!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit'); ?>:</th>
@@ -430,6 +432,8 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 </tr>
             <?php endif; ?>
 
+=======
+>>>>>>> b37cc7b4eb0027d32ff7df240627263482c6fdf3
         </table>
 
     </ul>
