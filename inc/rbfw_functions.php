@@ -24,6 +24,7 @@ function rbfw_array_strip( $array_or_string ) {
 
     return $array_or_string;
 }
+
 function rbfw_get_location_arr() {
     $terms = get_terms( array(
         'taxonomy'   => 'rbfw_item_location',
