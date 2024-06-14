@@ -6,7 +6,7 @@
 	$rbfw_id = $post_id ? $post_id : get_the_ID();
 	$rbfw_rent_type = !empty(get_post_meta( $rbfw_id, 'rbfw_item_type', true )) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 	$rbfw_product_id = get_post_meta( $rbfw_id, "link_wc_product", true ) ? get_post_meta( $rbfw_id, "link_wc_product", true ) : $rbfw_id;
-	$rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+	$rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
 	if($rbfw_payment_system == 'mps'){
 
@@ -38,8 +38,7 @@
 
 				<!-- ITEM -->
 				<div class="item rbfw-bikecarsd-step" data-step="1">
-
-                    <div id="rbfw-bikecarsd-calendar"></div>
+					<div id="rbfw-bikecarsd-calendar"></div>
 
 					<div class="rbfw-bikecarsd-calendar-footer">
                         <i class="fa-solid fa-circle-info"></i>
@@ -59,7 +58,7 @@
 				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
 					<button type="submit" name="add-to-cart" value="<?php echo $rbfw_product_id; ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn <?php echo $rbfw_payment_system; ?>" disabled>
                         <?php
-                        echo $rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));
+                        echo $rbfw->get_option('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));
                         ?>
 					</button>
 				</div>

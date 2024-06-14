@@ -69,7 +69,7 @@ if( ! class_exists('RBFW_Custom_Post')){
             $cpt_label        = $rbfw->get_name();
             $cpt_slug         = $rbfw->get_slug();    
             $cpt_icon         = $rbfw->get_icon();
-            $gutenburg_switch  = $rbfw->get_option_trans('rbfw_gutenburg_switch', 'rbfw_basic_gen_settings', 'on');
+            $gutenburg_switch  = $rbfw->get_option('rbfw_gutenburg_switch', 'rbfw_basic_gen_settings', 'on');
             if(isset($gutenburg_switch) && $gutenburg_switch == 'on'){
                 $editor = true;
             } else {
