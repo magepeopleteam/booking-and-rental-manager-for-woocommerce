@@ -78,12 +78,12 @@ function rbfw_get_category_dropdown( $name, $saved_value = '', $class = '' ) {
 function rbfw_get_option( $option, $section, $default = '' ) {
     global $rbfw;
 
-    return $rbfw->get_option_trans( $option, $section, $default );
+    return $rbfw->get_option( $option, $section, $default );
 }
 
 function rbfw_end_time(){
     global $rbfw;
-    $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+    $rbfw_count_extra_day_enable = $rbfw->get_option('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
     if($rbfw_count_extra_day_enable=='on'){
         return '24:00:00';
     }else{
@@ -95,7 +95,7 @@ function rbfw_end_time(){
 function rbfw_get_string( $option_name, $default_string ) {
     return rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string );
 }
-function rbfw_string( $option_name='No text found', $default_string='Default text' ) {
+function rbfw_string( $option_name, $default_string ) {
     echo rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string );
 }
 function rbfw_string_return( $option_name, $default_string ) {
@@ -783,8 +783,8 @@ function rbfw_related_products($post_id){
 
     global $rbfw;
     $rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize(get_post_meta( $post_id, 'rbfw_releted_rbfw', true )) : array();
-    $hourly_rate_label = $rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
-    $prices_start_at = $rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
+    $hourly_rate_label = $rbfw->get_option('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
+    $prices_start_at = $rbfw->get_option('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
 
     if(isset($rbfw_related_post_arr) && ! empty($rbfw_related_post_arr)){
         ?>
@@ -990,10 +990,10 @@ function rbfw_footer_scripts(){
             jQuery(document).ready(function(){
 
                 // tab tooltip
-                let highlighted_features 	= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_hightlighted_features', 'rbfw_basic_translation_settings', __('Highlighted Features','booking-and-rental-manager-for-woocommerce'))); ?>";
-                let description 			= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?>";
-                let faq 					= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Frequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?>";
-                let reviews 				= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_reviews', 'rbfw_basic_translation_settings', __('Reviews','booking-and-rental-manager-for-woocommerce'))); ?>";
+                let highlighted_features 	= "<?php echo esc_html($rbfw->get_option('rbfw_text_hightlighted_features', 'rbfw_basic_translation_settings', __('Highlighted Features','booking-and-rental-manager-for-woocommerce'))); ?>";
+                let description 			= "<?php echo esc_html($rbfw->get_option('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?>";
+                let faq 					= "<?php echo esc_html($rbfw->get_option('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Frequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?>";
+                let reviews 				= "<?php echo esc_html($rbfw->get_option('rbfw_text_reviews', 'rbfw_basic_translation_settings', __('Reviews','booking-and-rental-manager-for-woocommerce'))); ?>";
                 tippy('.rbfw-features', {content: highlighted_features,theme: 'blue',placement: 'right'});
                 tippy('.rbfw-description', {content: description,theme: 'blue',placement: 'right'});
                 tippy('.rbfw-faq', {content: faq,theme: 'blue',placement: 'right'});
@@ -1596,7 +1596,7 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
 
     global $rbfw;
-    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+    $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
     $rbfw_item_type = !empty(get_post_meta($rbfw_id, 'rbfw_item_type', true)) ? get_post_meta($rbfw_id, 'rbfw_item_type', true) : '';
     $rbfw_inventory_info = !empty(get_post_meta($rbfw_id, 'rbfw_inventory', true)) ? get_post_meta($rbfw_id, 'rbfw_inventory', true) : [];
 
@@ -1644,7 +1644,7 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
             if ( ($hours > 0)  || ($start_time == '00:00:00' && $end_time == rbfw_end_time()) ) {
 
 
-                $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+                $rbfw_count_extra_day_enable = $rbfw->get_option('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
                 if($rbfw_count_extra_day_enable=='on'){
                     for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
 
@@ -1767,7 +1767,7 @@ function wp_kama_untrashed_post_action( $order_id ,$previous_status ) {
 
 function rbfw_update_inventory($order_id, $current_status = null){
     global $rbfw;
-    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+    $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
     /* get order meta data from wp_postmeta table */
     global $wpdb;
@@ -1819,7 +1819,7 @@ function rbfw_update_inventory($order_id, $current_status = null){
 
 function rbfw_update_inventory_extra($rbfw_id, $order_id,$order_status){
     global $rbfw;
-    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+    $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
     if($rbfw_payment_system == 'wps'){
         $inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
@@ -2106,10 +2106,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
             foreach($date_range as $date){
                 $service_q[] = array('date'=>$date,$es['service_name']=>total_extra_service_quantity($es['service_name'],$date,$rbfw_inventory));
             }
-
-            $seraa = array_column($service_q, $es['service_name']);
-            $extra_service_instock[$service] = $es['service_qty'] - max($seraa);
-
+            $extra_service_instock[$service] = $es['service_qty'] - max(array_column($service_q, $es['service_name']));
         }
     }
     /*end extra service inventory*/
@@ -2621,8 +2618,8 @@ function rbfw_related_products_style_two($post_id){
 
     global $rbfw;
     $rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize(get_post_meta( $post_id, 'rbfw_releted_rbfw', true )) : array();
-    $hourly_rate_label = $rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
-    $prices_start_at = $rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
+    $hourly_rate_label = $rbfw->get_option('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
+    $prices_start_at = $rbfw->get_option('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
 
     if(!empty($rbfw_related_post_arr)){
 
@@ -2873,9 +2870,9 @@ function rbfw_related_products_style_three($post_id){
 
     global $rbfw;
     $rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize(get_post_meta( $post_id, 'rbfw_releted_rbfw', true )) : array();
-    $hourly_rate_label = $rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
-    $prices_start_at = $rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
-    $reviews_label = $rbfw->get_option_trans('rbfw_text_reviews', 'rbfw_basic_translation_settings', __('Reviews','booking-and-rental-manager-for-woocommerce'));
+    $hourly_rate_label = $rbfw->get_option('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
+    $prices_start_at = $rbfw->get_option('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
+    $reviews_label = $rbfw->get_option('rbfw_text_reviews', 'rbfw_basic_translation_settings', __('Reviews','booking-and-rental-manager-for-woocommerce'));
 
     if(!empty($rbfw_related_post_arr)){
 
@@ -3760,9 +3757,18 @@ function getAllDates($startingDate, $endingDate)
 
 function check_seasonal_price($Book_date,$rbfw_sp_prices)
 {
+    //rbfw_sp_start_date
+    //rbfw_sp_end_date
+    //rbfw_sp_price_h
+    //rbfw_sp_price_d
+
     foreach ($rbfw_sp_prices as $rbfw_sp_price){
+
         $rbfw_sp_start_date = $rbfw_sp_price['rbfw_sp_start_date'];
         $rbfw_sp_end_date = $rbfw_sp_price['rbfw_sp_end_date'];
+
+        //echo $Book_date,' ';
+
 
         $sp_dates_array = getAllDates($rbfw_sp_start_date, $rbfw_sp_end_date);
 
@@ -3771,24 +3777,6 @@ function check_seasonal_price($Book_date,$rbfw_sp_prices)
         }else{
             return 'not_found';
         }
-    }
-}
 
-function rbfw_security_deposit($post_id,$sub_total_price)
-{
-    $security_deposit_amount = 0;
-    $security_deposit_desc = 0;
-    $rbfw_enable_security_deposit = get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) ? get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) : 'no';
-    if($rbfw_enable_security_deposit=='yes'){
-        $rbfw_security_deposit_type = get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) : 'percentage';
-        $rbfw_security_deposit_amount = get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) : '0';
-        if($rbfw_security_deposit_type=='percentage'){
-            $security_deposit_amount = $rbfw_security_deposit_amount*$sub_total_price/100;
-            $security_deposit_desc = $security_deposit_amount.'%';
-        }else{
-            $security_deposit_amount = $rbfw_security_deposit_amount;
-            $security_deposit_desc = rbfw_mps_price($security_deposit_amount);
-        }
     }
-    return array('security_deposit_amount'=>$security_deposit_amount,'security_deposit_desc'=>$security_deposit_desc);
 }
