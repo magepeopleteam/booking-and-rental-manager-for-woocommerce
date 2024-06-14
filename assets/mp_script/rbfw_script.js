@@ -19,7 +19,13 @@ jQuery(function(){
             return rbfw_off_day_dates(date,'','no');
 
         },
-
+        customDateProps: (date) => ({
+            classes: 'rbfw-date-element',
+            data: {
+                type: 'date',
+                form: 'date-object'
+            }
+        })
     };
 
     if ( jQuery('#rbfw-bikecarsd-calendar').length ) {
@@ -874,6 +880,9 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
     var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     var day_in = weekday[date.getDay()];
     var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
+
+
+
 
     var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
 

@@ -133,12 +133,10 @@
 			
 			public function rbfw_enqueue_scripts() {
 				global $rbfw;
-
-				$view_more_feature_btn_text = $rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Hide More','booking-and-rental-manager-for-woocommerce'));
-				$hide_more_feature_btn_text = $rbfw->get_option_trans('rbfw_text_hide_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce'));
-				$view_more_offers_btn_text = $rbfw->get_option_trans('rbfw_text_view_more_offers', 'rbfw_basic_translation_settings', __('View More Offers','booking-and-rental-manager-for-woocommerce'));
-				$hide_more_offers_btn_text = $rbfw->get_option_trans('rbfw_text_hide_more_offers', 'rbfw_basic_translation_settings', __('Hide More Offers','booking-and-rental-manager-for-woocommerce'));
-
+				$view_more_feature_btn_text = $rbfw->get_option('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Hide More','booking-and-rental-manager-for-woocommerce'));
+				$hide_more_feature_btn_text = $rbfw->get_option('rbfw_text_hide_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce'));
+				$view_more_offers_btn_text = $rbfw->get_option('rbfw_text_view_more_offers', 'rbfw_basic_translation_settings', __('View More Offers','booking-and-rental-manager-for-woocommerce'));
+				$hide_more_offers_btn_text = $rbfw->get_option('rbfw_text_hide_more_offers', 'rbfw_basic_translation_settings', __('Hide More Offers','booking-and-rental-manager-for-woocommerce'));			
 				$version = time(); // Time() function will prevent cache
 				wp_enqueue_script('jquery');
 				wp_enqueue_script('jquery-ui-core');
