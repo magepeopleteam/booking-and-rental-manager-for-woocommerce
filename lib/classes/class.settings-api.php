@@ -572,7 +572,7 @@ class RBFW_Setting_API {
      * @param string  $default default text if it's not found
      * @return string
      */
-    function get_option( $option, $section, $default = '' ) {
+    function get_option_trans( $option, $section, $default = '' ) {
 
         $options = get_option( $section );
 
