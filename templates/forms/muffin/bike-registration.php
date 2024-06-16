@@ -472,7 +472,9 @@ if($rbfw_enable_variations == 'yes'){
                                     <span></span>
                                 </li>
                                 <li class="security_deposit" style="display:none;">
+
                                     <?php echo (!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit'); ?>
+
                                     <span></span>
                                 </li>
                                 <li class="total">
