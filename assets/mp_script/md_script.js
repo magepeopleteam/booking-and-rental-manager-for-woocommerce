@@ -258,7 +258,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
                 jQuery('.security_deposit').show();
                 jQuery('.security_deposit span').html(response.security_deposit_desc);
             }else{
-                jQuery('.security_deposit').show();
+                jQuery('.security_deposit').hide();
             }
 
             jQuery('.total .price-figure').html(response.total_price_html);
