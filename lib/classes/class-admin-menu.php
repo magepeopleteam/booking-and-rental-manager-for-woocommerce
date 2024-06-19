@@ -192,6 +192,20 @@ if (!class_exists('MageRBFWClass')) {
             return $default;
         }
 
+        function get_option($option='text', $section='rbfw_basic_gen_settings', $default = '') {
+            $options = get_option($section);
+            if (!empty($options[$option])) {
+
+                if(is_array($options[$option])){
+                    return $options[$option];
+                }else {
+                    return esc_html($options[$option]);
+                }
+
+            }
+            return $default;
+        }
+
 
         public function send_email($sent_email, $rbfw_id = '', $email_sub = '', $content = '', $order_id = '', $attathment_file_url = '') {
             $global_email_text = $this->get_option_trans('mep_confirmation_email_text', 'email_setting_sec', '');
