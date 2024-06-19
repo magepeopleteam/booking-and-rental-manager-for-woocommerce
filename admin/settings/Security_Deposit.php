@@ -13,7 +13,7 @@ if( ! class_exists('RBFW_Security_Deposit')){
         }
         public function add_tab_menu(){
             ?>
-                <li data-target-tabs="#rbfw_security_deposit"><i class="fas fa-plug"></i><?php esc_html_e('Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+            <li data-target-tabs="#rbfw_security_deposit"><i class="fas fa-plug"></i><?php esc_html_e('Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
             <?php
         }
 
@@ -106,16 +106,16 @@ if( ! class_exists('RBFW_Security_Deposit')){
 
         public function add_tabs_content($post_id){
             ?>
-                <div class="mpStyle mp_tab_item " data-tab-item="#rbfw_security_deposit">
-                    <?php $this->section_header(); ?>
-                    <?php $this->panel_header($post_id); ?>
-                    <?php $this->related_items($post_id); ?>
-                </div>
+            <div class="mpStyle mp_tab_item " data-tab-item="#rbfw_security_deposit">
+                <?php $this->section_header(); ?>
+                <?php $this->panel_header($post_id); ?>
+                <?php $this->related_items($post_id); ?>
+            </div>
             <?php
         }
 
         public function settings_save($post_id) {
-                
+
             if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
                 return;
             }

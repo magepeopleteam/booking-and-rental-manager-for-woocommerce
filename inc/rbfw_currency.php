@@ -185,8 +185,8 @@ function rbfw_mps_currency_list(){
 
 function rbfw_mps_currency_symbol(){
     global $rbfw;
-    $currency = $rbfw->get_option('rbfw_mps_currency', 'rbfw_basic_payment_settings','USD');
-    $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+    $currency = $rbfw->get_option_trans('rbfw_mps_currency', 'rbfw_basic_payment_settings','USD');
+    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
     $currency_obj = rbfw_currency_object();
     $currency_symbol = '';
     foreach ($currency_obj as $key => $value) {
@@ -205,11 +205,11 @@ function rbfw_mps_currency_symbol(){
 function rbfw_mps_price($amount=0){
     global $rbfw;
     $currency_symbol = rbfw_mps_currency_symbol();
-    $currency_position = $rbfw->get_option('rbfw_mps_currency_position', 'rbfw_basic_payment_settings','left');
-    $currency_decimal_number = $rbfw->get_option('rbfw_mps_currency_decimal_number', 'rbfw_basic_payment_settings','2');
-    $currency_thousand_seperator = $rbfw->get_option('rbfw_mps_currency_thousand_seperator', 'rbfw_basic_payment_settings',',');
-    $currency_decimal_seperator = $rbfw->get_option('rbfw_mps_currency_decimal_seperator', 'rbfw_basic_payment_settings','.');
-    $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+    $currency_position = $rbfw->get_option_trans('rbfw_mps_currency_position', 'rbfw_basic_payment_settings','left');
+    $currency_decimal_number = $rbfw->get_option_trans('rbfw_mps_currency_decimal_number', 'rbfw_basic_payment_settings','2');
+    $currency_thousand_seperator = $rbfw->get_option_trans('rbfw_mps_currency_thousand_seperator', 'rbfw_basic_payment_settings',',');
+    $currency_decimal_seperator = $rbfw->get_option_trans('rbfw_mps_currency_decimal_seperator', 'rbfw_basic_payment_settings','.');
+    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
     $number = $amount;
     $amount = preg_replace('/\s+/', '', $amount); // remove white spaces
     $amount = preg_replace('/[^0-9.]+/', '', $amount); // filter number only
