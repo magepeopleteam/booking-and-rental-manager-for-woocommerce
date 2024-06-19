@@ -556,9 +556,6 @@ if ( ! function_exists( 'mep_esc_html' ) ) {
 if ( ! function_exists( 'rbfw_field_generator' ) ) {
     function rbfw_field_generator( $type, $option ) {
 
-
-
-
         $FormFieldsGenerator = new RbfwFormFieldsGenerator();
         if ( $type === 'text' ) {
             return $FormFieldsGenerator->field_text( $option );
@@ -648,8 +645,6 @@ if ( ! function_exists( 'rbfw_field_generator' ) ) {
             return $FormFieldsGenerator->field_add_to_cart_shortcode( $option );
         }elseif (  $type === 'rbfw_add_category' ) {
             return $FormFieldsGenerator->field_rbfw_add_category( $option );
-        } elseif ( $type === 'feature_category' ) {
-            return $FormFieldsGenerator->field_feature_category( $option );
         }elseif ( $type === 'md_service_category_price' ) {
             return $FormFieldsGenerator->field_service_price( $option );
         }
@@ -3471,7 +3466,7 @@ function rbfw_hex2rgba( $color, $opacity = false ) {
     } elseif ( strlen( $color ) == 3 ) {
         $hex = array( $color[0] . $color[0], $color[1] . $color[1], $color[2] . $color[2] );
     } else {
-        return $default;
+        return $defaultColor;
     }
 
     // Convert hex values to rgb values
