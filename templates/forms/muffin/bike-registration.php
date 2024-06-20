@@ -124,6 +124,7 @@ $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_ser
 $rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
 $rbfw_variations_data = get_post_meta( $rbfw_id, 'rbfw_variations_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_variations_data', true ) : [];
 
+$input_stock_quantity = '';
 if($rbfw_enable_variations == 'yes'){
 
     $item_stock_quantity = rbfw_get_variations_stock($rbfw_id);
@@ -131,6 +132,9 @@ if($rbfw_enable_variations == 'yes'){
 } else {
 
     $item_stock_quantity = !empty(get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true)) ? get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true) : 0;
+    if(empty($item_stock_quantity)){
+        $input_stock_quantity = 'no_has_value';
+    }
 }
 
 
@@ -307,8 +311,10 @@ if($rbfw_enable_variations == 'yes'){
                                 </div>
                             </div>
                         <?php }elseif ($item_stock_quantity > 0){ ?>
-                              <input type="hidden" name="rbfw_item_quantity" value="1">
-                        <?php } else{ ?>
+                            <input type="hidden" name="rbfw_item_quantity" value="1">
+                        <?php } elseif($input_stock_quantity == 'no_has_value'){ ?>
+                            <input type="hidden" name="rbfw_item_quantity" value="1">
+                        <?php }else{ ?>
                             <input type="hidden" name="rbfw_item_quantity" value="0">
                         <?php } ?>
 
@@ -528,6 +534,7 @@ if($rbfw_enable_variations == 'yes'){
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
                 <input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo $rbfw_enable_variations; ?>">
+                <input type="hidden" id="rbfw_input_stock_quantity" name="rbfw_input_stock_quantity" value="<?php echo $input_stock_quantity ?>">
             </form>
         </div>
     </div>
