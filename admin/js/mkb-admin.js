@@ -316,6 +316,7 @@
                 jQuery('.regular_fixed_date').hide();
                 jQuery('.rbfw_off_days').show();
                 jQuery('.wervice_quantity_input_box').hide();
+                jQuery('#add-bike-car-sd-type-row').show();
 
             } else if (item_type == 'appointment') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
@@ -340,6 +341,7 @@
                 jQuery('.rbfw_off_days input').prop('checked', false);
                 jQuery('.rbfw_off_days').show();
                 jQuery('.regular_fixed_date').hide();
+                jQuery('#add-bike-car-sd-type-row').hide();
 
                 let this_table_row_length = jQuery('.rbfw_bike_car_sd_price_table_row').length;
 

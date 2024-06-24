@@ -471,7 +471,7 @@
 								</table>
 							</div>
 							<p class="mt-2 <?php echo esc_attr($rbfw_item_type == 'appointment'? 'show':'show'); ?>" >
-								<button id="add-bike-car-sd-type-row" class="ppof-button"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+								<button id="add-bike-car-sd-type-row" class="ppof-button" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 							</p>
 						</div>
 					</section>
@@ -886,11 +886,12 @@
 					<?php $this->section_header(); ?>
 					
 					<?php $this->rent_type($post_id); ?>
+					<?php $this->appointment($post_id); ?>
 					<?php $this->bike_car_single_day($post_id); ?>
 					<?php $this->general_price_config($post_id); ?>
 					<?php $this->resort_price_config($post_id); ?>
 					<?php $this->category_service_price($post_id); ?>
-					<?php $this->appointment($post_id); ?>
+					
 					<?php $this->extra_service_table($post_id); ?>
 				</div>
 				<script>
