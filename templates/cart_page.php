@@ -320,6 +320,8 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
             <li><?php echo $rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Date & Time','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $start_datetime, 'date-text' ); ?></li>
         <?php endif; ?>
 
+
+
         <?php if (!empty($end_datetime) && !empty($end_time)): ?>
             <li><?php echo $rbfw->get_option_trans('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time gg','booking-and-rental-manager-for-woocommerce'));  echo ': ' . rbfw_get_datetime( $end_datetime, 'date-time-text' ); ?></li>
         <?php else: ?>
