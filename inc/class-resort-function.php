@@ -503,7 +503,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 $available_qty_info_switch = get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) : 'no';
 
                 $content    = '';
-
+                $content   .= '<div class="rbfw_resort_rt_price_table_container">';
                 $content   .= '<table class="rbfw_room_price_table rbfw_resort_rt_price_table">';
                 $content   .= '<thead>';
                 $content   .= '<tr>';
@@ -576,6 +576,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 endforeach;
                 $content   .= '</tbody>';
                 $content   .= '</table>';
+                $content   .= '</div>';
 
 
                 if(!empty($rbfw_extra_service_data)) {

@@ -974,7 +974,6 @@ div.superSlider .iconIndicator:hover {
   display: block;
   color: #fff;
   font-size: 16px;
-  width: 100%;
   padding: 10px;
   border: none;
   transition: 0.2s;
@@ -1059,6 +1058,10 @@ p.rbfw_alert_warning {
   text-align: center;
   padding: 10px;
   display: none;
+}
+
+.rbfw_resort_rt_price_table_container{
+  overflow: auto;
 }
 
 table.rbfw_room_price_table {
@@ -4544,6 +4547,7 @@ img.rbfw_aig_hover-shadow {
   display: -ms-flexbox;
   display: flex;
   align-items: end;
+  justify-content: space-between;
 }
 
 .rbfw_muffin_template .rbfw-datetime .rbfw-datetime-part {
