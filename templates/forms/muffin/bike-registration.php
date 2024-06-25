@@ -495,7 +495,6 @@ if($rbfw_enable_variations == 'yes'){
 
                     <?php if(rbfw_chk_regf_fields_exist($rbfw_id) === true){ ?>
                         <div class="item">
-
                             <div class="rbfw_reg_form_rb" style="display: none">
                                 <?php
                                 $reg_form = new Rbfw_Reg_Form();
@@ -535,6 +534,7 @@ if($rbfw_enable_variations == 'yes'){
                 <input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo $rbfw_enable_variations; ?>">
                 <input type="hidden" id="rbfw_input_stock_quantity" name="rbfw_input_stock_quantity" value="<?php echo $input_stock_quantity ?>">
+                <input type="hidden" id="rbfw_enable_time_slot" name="rbfw_enable_time_slot" value="<?php echo !empty(get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true) : 'on'; ?>">
             </form>
         </div>
     </div>

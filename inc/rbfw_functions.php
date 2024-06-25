@@ -3527,7 +3527,6 @@ function rbfw_get_available_times($rbfw_id){
                 $the_array[$rts_value] = $rts_key;
             }
         }
-
     }
     return $the_array;
 }
