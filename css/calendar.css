@@ -125,7 +125,7 @@
 
 .rbfw_donut_template .calendar-box .prev-button,
 .rbfw_donut_template .calendar-box .next-button {
-  color: var(--rbfw_dt_color7);
+  color: var(--rbfw_muff_color3);
 }
 
 .mpStyle .calendar-box button.prev-button:hover,
@@ -185,13 +185,13 @@
 
 .rbfw_donut_template .calendar-box .week.start-on-monday .day:nth-child(6),
 .rbfw_donut_template .calendar-box .week.start-on-monday .day:last-child {
-  color: var(--rbfw_dt_color1);
+  color: var(--rbfw_muff_color3);
 }
 
 /* start on monday - sunday */
 
 .calendar-box .week.start-on-monday .day:last-child {
-  color: var(--rbfw_single_page_base_color4);
+  color: var(--rbfw_muff_color3);;
 }
 
 .calendar-box .day.today span::after {
@@ -275,7 +275,7 @@
 }
 
 .rbfw_donut_template  .calendar-box .week .day span:not(.week .day[disabled="disabled"] span):hover {
-  background: var(--rbfw_dt_color1);
+  background: var(--rbfw_single_page_secondary_color);
   color: white;
 }
 
