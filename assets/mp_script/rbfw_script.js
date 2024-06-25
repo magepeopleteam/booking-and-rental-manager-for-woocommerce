@@ -18,14 +18,7 @@ jQuery(function(){
         disable: function (date) {
             return rbfw_off_day_dates(date,'','no');
 
-        },
-        customDateProps: (date) => ({
-            classes: 'rbfw-date-element',
-            data: {
-                type: 'date',
-                form: 'date-object'
-            }
-        })
+        }
     };
 
     if ( jQuery('#rbfw-bikecarsd-calendar').length ) {
@@ -856,6 +849,7 @@ function rbfw_mps_checkout_header_link(){
 /*start multiple day pricing booking*/
 
 function rbfw_off_day_dates(date,type='',today_enable='no'){
+
 
 
 
