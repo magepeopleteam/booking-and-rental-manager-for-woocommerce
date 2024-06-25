@@ -704,7 +704,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         </tr>
                         <?php } ?>
                         <tr>
-                            <td><strong>ggggggg<?php rbfw_string('rbfw_text_start_date_and_time',__('Start Date and Time','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                            <td><strong><?php rbfw_string('rbfw_text_start_date_and_time',__('Start Date and Time','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td><?php echo esc_html($rbfw_start_datetime); ?></td>
                         </tr>
                         <tr>
