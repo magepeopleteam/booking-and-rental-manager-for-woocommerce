@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } 
 ?>
+
 <?php
 
 global $rbfw;

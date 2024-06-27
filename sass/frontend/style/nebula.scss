@@ -85,19 +85,18 @@
                 height: 120px;
                 background-color: #ddd;
                 display: flex;
-                flex-wrap: wrap;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 margin: 20px;
-                
+                text-align: center;
                 i{
                     font-size: 35px;
                     padding:15px 20px;
                     color: #999;
                 }
                 h2{
-                    font-size: 20px;
+                    font-size: 10px;
                     margin: 0;
                 }
             }
