@@ -32,14 +32,15 @@ div.superSlider .sliderShowcase {display: -webkit-flex;display: flex;-webkit-jus
 div.superSlider .sliderShowcase.right,
 div.superSlider .sliderShowcase.left {
 	width: 18.65%;min-width: 18.65%;
-	-webkit-flex-direction: column;flex-direction: column;
-	align-self: flex-end;
+	-webkit-flex-direction: column;
+	flex-direction: column;
 }
 div.superSlider .sliderShowcase.style_2,
 div.superSlider .sliderShowcase.style_2 {
 	width: 39%;min-width: 39%;
-	-webkit-flex-direction: initial;flex-direction: initial;
-	-webkit-flex-wrap: wrap;flex-wrap: wrap;
+	-webkit-flex-direction: initial;
+	flex-direction: initial;
+	flex-wrap: wrap;
 }
 div.superSlider .sliderShowcase.style_2 > div {width: calc(50% - 5px);margin: 0 var(--default-mp-xs) 0 0;}
 div.superSlider .sliderShowcase.style_2 > div:first-child {width: 100%;margin: 0 0 var(--default-mp-xs) 0;}

@@ -94,7 +94,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
             }
             /* End: Registration Form Variables */
 
-            $checkout_account = $rbfw->get_option('rbfw_mps_checkout_account', 'rbfw_basic_payment_settings','on');
+            $checkout_account = $rbfw->get_option_trans('rbfw_mps_checkout_account', 'rbfw_basic_payment_settings','on');
             
             $errors = '';
 
@@ -355,9 +355,9 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
             }
 
             /* Start Tax Calculations */
-            $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-            $mps_tax_switch = $rbfw->get_option('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-            $mps_tax_format = $rbfw->get_option('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
+            $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+            $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
+            $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
             $mps_tax_percentage = !empty(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) : '';
             $percent = 0;
 
@@ -549,17 +549,17 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
      
             $post_id = strip_tags($_POST['post_id']);
 
-            $checkout_account = $rbfw->get_option('rbfw_mps_checkout_account', 'rbfw_basic_payment_settings','on');
-            $payment_gateway = $rbfw->get_option('rbfw_mps_payment_gateway', 'rbfw_basic_payment_settings','offline');
-            $payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+            $checkout_account = $rbfw->get_option_trans('rbfw_mps_checkout_account', 'rbfw_basic_payment_settings','on');
+            $payment_gateway = $rbfw->get_option_trans('rbfw_mps_payment_gateway', 'rbfw_basic_payment_settings','offline');
+            $payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
             $content = '';
             $rent_type = strip_tags($_POST['rent_type']);
 
             /* Start Tax Calculations */
-            $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-            $mps_tax_switch = $rbfw->get_option('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-            $mps_tax_format = $rbfw->get_option('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
+            $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+            $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
+            $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
             $mps_tax_percentage = !empty(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) : '';
             $percent = 0;
             $tax_status = '';
@@ -625,13 +625,13 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 $content .= '<div class="rbfw_mps_user_order_header">'.rbfw_string_return('rbfw_text_order_summary',__('Order Summary','booking-and-rental-manager-for-woocommerce')).'</div>';
 
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_start_date', 'rbfw_basic_translation_settings', __('Start Date','booking-and-rental-manager-for-woocommerce')).'</div>';
+                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_start_date', 'rbfw_basic_translation_settings', __('Start Date','booking-and-rental-manager-for-woocommerce')).'</div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.esc_html($selected_date).'</div>';
                 $content .= '</div>';
 
                 if(!empty($selected_time)){
                     $content .= '<div class="rbfw_mps_user_order_row">';
-                    $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_start_time', 'rbfw_basic_translation_settings', __('Start Time','booking-and-rental-manager-for-woocommerce')).'</div>';
+                    $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_start_time', 'rbfw_basic_translation_settings', __('Start Time','booking-and-rental-manager-for-woocommerce')).'</div>';
                     $content .= '<div class="rbfw_mps_user_order_data">'.esc_html($selected_time).'</div>';                
                     $content .= '</div>';
                 }
@@ -687,7 +687,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
 
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'excluding_tax'){
                     $content .= '<div class="rbfw_mps_user_order_row">';
-                    $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
+                    $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
                     $content .= '<div class="rbfw_mps_user_order_data">'.rbfw_mps_price($percent).'</div>';                
                     $content .= '</div>';
                 }
@@ -727,38 +727,38 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
 
                 if(!empty($pickup_point)):
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_pickup_point', 'rbfw_basic_translation_settings', __('Pick-up Point','booking-and-rental-manager-for-woocommerce')).'</div>';
+                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_pickup_point', 'rbfw_basic_translation_settings', __('Pick-up Point','booking-and-rental-manager-for-woocommerce')).'</div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.esc_html($pickup_point).'</div>';
                 $content .= '</div>';
                 endif;
 
                 if(!empty($dropoff_point)):
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_dropoff_point', 'rbfw_basic_translation_settings', __('Drop-off Point','booking-and-rental-manager-for-woocommerce')).'</div>';
+                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_dropoff_point', 'rbfw_basic_translation_settings', __('Drop-off Point','booking-and-rental-manager-for-woocommerce')).'</div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.esc_html($dropoff_point).'</div>';
                 $content .= '</div>';
                 endif;
 
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_start_date', 'rbfw_basic_translation_settings', __('Start Date','booking-and-rental-manager-for-woocommerce')).'</div>';
+                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_start_date', 'rbfw_basic_translation_settings', __('Start Date','booking-and-rental-manager-for-woocommerce')).'</div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.esc_html($start_date).'</div>';
                 $content .= '</div>';
 
                 if(!empty($start_time)):
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_start_time', 'rbfw_basic_translation_settings', __('Start Time','booking-and-rental-manager-for-woocommerce')).'</div>';
+                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_start_time', 'rbfw_basic_translation_settings', __('Start Time','booking-and-rental-manager-for-woocommerce')).'</div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.esc_html($start_time).'</div>';                
                 $content .= '</div>';
                 endif;
 
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_end_date', 'rbfw_basic_translation_settings', __('End Date','booking-and-rental-manager-for-woocommerce')).'</div>';
+                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_end_date', 'rbfw_basic_translation_settings', __('End Date','booking-and-rental-manager-for-woocommerce')).'</div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.esc_html($end_date).'</div>';
                 $content .= '</div>';
 
                 if(!empty($end_time)):
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_end_time', 'rbfw_basic_translation_settings', __('End Time','booking-and-rental-manager-for-woocommerce')).'</div>';
+                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_end_time', 'rbfw_basic_translation_settings', __('End Time','booking-and-rental-manager-for-woocommerce')).'</div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.esc_html($end_time).'</div>';                
                 $content .= '</div>';
                 endif;
@@ -775,7 +775,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 endif;
 
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce')).'</div>';
+                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce')).'</div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.esc_html($item_quantity).'</div>';                
                 $content .= '</div>';
 
@@ -818,18 +818,18 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 /* End Tax Calculations */
 
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
+                $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.rbfw_mps_price($duration_cost).'</div>';                
                 $content .= '</div>';
 
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
+                $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.rbfw_mps_price($service_cost).'</div>';                
                 $content .= '</div>';
 
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'excluding_tax'){
                     $content .= '<div class="rbfw_mps_user_order_row">';
-                    $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
+                    $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
                     $content .= '<div class="rbfw_mps_user_order_data">'.rbfw_mps_price($percent).'</div>';                
                     $content .= '</div>';
                 }
@@ -852,7 +852,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                     $discount_desc = $discount_arr['discount_desc'];
                 
                     $content .= '<div class="rbfw_mps_user_order_row">';
-                    $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
+                    $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
                     $content .= '<div class="rbfw_mps_user_order_data">'.$discount_desc.'</div>';                
                     $content .= '</div>';                    
                 }
@@ -905,17 +905,17 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 $content .= '<div class="rbfw_mps_user_order_header">'.rbfw_string_return('rbfw_text_order_summary',__('Order Summary','rbfw-pro')).'</div>';
 
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_checkin_date', 'rbfw_basic_translation_settings', __('Check-In Date','booking-and-rental-manager-for-woocommerce')).'</div>';
+                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_checkin_date', 'rbfw_basic_translation_settings', __('Check-In Date','booking-and-rental-manager-for-woocommerce')).'</div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.rbfw_date_format($start_date).'</div>';
                 $content .= '</div>';
 
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_checkout_date', 'rbfw_basic_translation_settings', __('Check-Out Date','booking-and-rental-manager-for-woocommerce')).'</div>';
+                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_checkout_date', 'rbfw_basic_translation_settings', __('Check-Out Date','booking-and-rental-manager-for-woocommerce')).'</div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.rbfw_date_format($end_date).'</div>';                
                 $content .= '</div>';
 
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option('rbfw_text_package', 'rbfw_basic_translation_settings', __('Package','booking-and-rental-manager-for-woocommerce')).'</div>';
+                $content .= '<div class="rbfw_mps_user_order_head">'.$rbfw->get_option_trans('rbfw_text_package', 'rbfw_basic_translation_settings', __('Package','booking-and-rental-manager-for-woocommerce')).'</div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.$package.'</div>';                
                 $content .= '</div>';
                 
@@ -952,18 +952,18 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                 }
             
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
+                $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.rbfw_mps_price($duration_cost).'</div>';                
                 $content .= '</div>';
 
                 $content .= '<div class="rbfw_mps_user_order_row">';
-                $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
+                $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
                 $content .= '<div class="rbfw_mps_user_order_data">'.rbfw_mps_price($service_cost).'</div>';                
                 $content .= '</div>';
 
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'excluding_tax'){
                     $content .= '<div class="rbfw_mps_user_order_row">';
-                    $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
+                    $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
                     $content .= '<div class="rbfw_mps_user_order_data">'.rbfw_mps_price($percent).'</div>';                
                     $content .= '</div>';
                 }
@@ -986,7 +986,7 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                     $discount_desc = $discount_arr['discount_desc'];
                 
                     $content .= '<div class="rbfw_mps_user_order_row">';
-                    $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
+                    $content .= '<div class="rbfw_mps_user_order_head"><strong>'.$rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')).'</strong></div>';
                     $content .= '<div class="rbfw_mps_user_order_data">'.$discount_desc.'</div>';                
                     $content .= '</div>';                    
                 }

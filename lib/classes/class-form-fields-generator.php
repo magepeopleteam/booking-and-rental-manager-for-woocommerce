@@ -3024,7 +3024,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                         <div class="service_category_inner_wrap">
                                             <div class="service_category_title">
                                                 <label class=" mb-1">
-                                                    <?php echo esc_html('Service Category Title','booking-and-rental-manager-for-woocommerce'); ?>
+                                                    <?php echo esc_html__('Service Category Title','booking-and-rental-manager-for-woocommerce'); ?>
                                                 </label>
                                                 <input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_service_category_price[<?php echo $i; ?>][cat_title]" data-key="<?php echo $i; ?>" placeholder="<?php echo esc_attr__('Service Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
                                             </div>
@@ -3103,7 +3103,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                         <div class="service_category_inner_wrap">
                                             <div class="service_category_title">
                                                 <label>
-                                                    <?php echo esc_html('Service Category Title','booking-and-rental-manager-for-woocommerce'); ?>
+                                                    <?php echo esc_html__('Service Category Title','booking-and-rental-manager-for-woocommerce'); ?>
                                                 </label>
                                                 <input type="text" name="rbfw_service_category_price[0][cat_title]" data-key="0" placeholder="<?php echo esc_attr__('Service Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
                                             </div>
@@ -3177,7 +3177,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                     e.stopImmediatePropagation();
                     let dataCat = jQuery('.rbfw_service_category_table tbody tr:last-child').attr('data-cat');
                     let nextCat = parseInt(dataCat) + 1;
-                    let html = '<tr data-cat="'+nextCat+'"><td><div class="services_category_wrapper"><div class="field-list rbfw_service_category_price"><div class="service_category_inner_wrap"><div class="service_category_title"><label><?php echo esc_html('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_service_category_title" name="rbfw_service_category_price['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></div>';
+                    let html = '<tr data-cat="'+nextCat+'"><td><div class="services_category_wrapper"><div class="field-list rbfw_service_category_price"><div class="service_category_inner_wrap"><div class="service_category_title"><label><?php echo esc_html__('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_service_category_title" name="rbfw_service_category_price['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></div>';
                     html +='<div class="service_category_inner_item_wrap sortable"><div class="item"><a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a><div class="rbfw_service_icon_preview p-1" data-key="0"></div><input type="hidden" name="rbfw_service_category_price['+nextCat+'][cat_services][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_service_icon">';
                     html +='<input type="text" name="rbfw_service_category_price['+nextCat+'][cat_services][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0">';
                     html +='<input type="text" name="rbfw_service_category_price['+nextCat+'][cat_services][0][price]" placeholder="Price" value="" data-key="0">';
