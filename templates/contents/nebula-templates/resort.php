@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } 
 ?>
+resort
 <?php
 global $rbfw;
 $post_id = get_the_id();

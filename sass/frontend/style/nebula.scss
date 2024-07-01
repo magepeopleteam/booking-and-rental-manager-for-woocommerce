@@ -74,6 +74,7 @@
         background-color: #000;
     }
     .feature-lists{
+        margin-bottom: 70px;
         .feature-title{
             text-align: center;
         }
@@ -99,6 +100,18 @@
                     font-size: 10px;
                     margin: 0;
                 }
+            }
+        }
+    }
+    .start-booking{
+        .rbfw-bikecarsd-booking{
+            display:flex;
+            justify-content: space-between;
+            .booking-calender-view{
+                width: 60%;
+            }
+            .booking-timeslot-view{
+                width: 40%;
             }
         }
     }

@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } 
 ?>
+bike multi
 <?php
 global $rbfw;
 $post_id = get_the_id();

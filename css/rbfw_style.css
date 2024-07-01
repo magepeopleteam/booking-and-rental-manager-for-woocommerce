@@ -6019,6 +6019,9 @@ body.single-rbfw_item div.ast-container {
   height: 2px;
   background-color: #000;
 }
+.rbfw_nebula_template .feature-lists {
+  margin-bottom: 70px;
+}
 .rbfw_nebula_template .feature-lists .feature-title {
   text-align: center;
 }
@@ -6045,6 +6048,16 @@ body.single-rbfw_item div.ast-container {
 .rbfw_nebula_template .feature-lists .feature-items .item h2 {
   font-size: 10px;
   margin: 0;
+}
+.rbfw_nebula_template .start-booking .rbfw-bikecarsd-booking {
+  display: flex;
+  justify-content: space-between;
+}
+.rbfw_nebula_template .start-booking .rbfw-bikecarsd-booking .booking-calender-view {
+  width: 60%;
+}
+.rbfw_nebula_template .start-booking .rbfw-bikecarsd-booking .booking-timeslot-view {
+  width: 40%;
 }
 
 /*# sourceMappingURL=rbfw_style.css.map */
