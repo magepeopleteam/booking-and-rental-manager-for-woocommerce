@@ -39,7 +39,7 @@ if ( wp_is_block_theme() ) {  ?>
         ?>
         <input type="hidden" class="rbfw_today_booking_enable" value="<?php echo $today_booking_enable ?>">
         <?php
-        RBFW_Function::get_template($post_id);
+        RBFW_Frontend::get_template($post_id);
 
     }
     do_action('rbfw_single_page_after_wrapper');

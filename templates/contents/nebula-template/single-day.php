@@ -73,8 +73,8 @@ if(!empty($rbfw_price_arr)){
 $price = $smallest_price;
 endif;
 $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settings', 'on');
-?>
 
+?>
 
     <div class="rbfw_nebula_template">
         <header> 
@@ -147,7 +147,7 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
         <div class="start-booking">
             <h2 class="title"><?php _e('Book online','booking-and-rental-manager-for-woocommerce'); ?></h2>
             <div class="devider"></div>
-            <?php include( RBFW_Function::template_path( 'forms/nebula/bike-car-sd-registration.php' ) ); ?>
+            <?php include(  RBFW_TEMPLATE_PATH . 'forms/nebula/bike-car-sd-registration.php' ); ?>
         </div>
         <!-- Related items -->
     </div>

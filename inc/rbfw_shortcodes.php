@@ -112,18 +112,32 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                     $expire = 'yes';
                 }
             }
-
+            // load c
             if($expire == 'no'){
-                if($style == 'grid'):
-                    include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) );
-                elseif($style == 'list'):
-                    include( RBFW_Function::template_path( 'rent_list_styles/list.php' ) );
-                else:
-                    include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) );
-                endif;
+                $template_grid = get_template_directory().'/templates/archive-view/grid.php';
+                $template_list = get_template_directory().'/templates/archive-view/list.php';
+                if($style == 'grid'){		
+                    if ( file_exists( $template_grid ) ) {
+                        include($template_grid);
+                    } elseif ( file_exists(  RBFW_TEMPLATE_PATH . 'archive-view/grid.php' ) ) {
+                        include( RBFW_TEMPLATE_PATH . 'archive-view/grid.php' );
+                    } else {
+                        echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
+                    }
+                }
+                elseif($style == 'list'){
+                    if ( file_exists( $template_list ) ) {
+                        include($template_list);
+                    } elseif ( file_exists(  RBFW_TEMPLATE_PATH . '/archive-view/list.php' ) ) {
+                        include( RBFW_TEMPLATE_PATH . 'archive-view/list.php' );
+                    } else {
+                        echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
+                    }
+                }
+                else{
+                    include( RBFW_TEMPLATE_PATH . 'archive-view/list.php' );
+                }
             }
-
-
 
             $d++;
         endwhile;
@@ -182,21 +196,21 @@ function rbfw_add_to_cart_shortcode_func($atts){
 
     if($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){
 
-        include( RBFW_Function::template_path( 'forms/bike-car-sd-registration.php' ) );
+        include( RBFW_TEMPLATE_PATH . 'forms/bike-car-sd-registration.php' );
         $BikeCarSdclass = new RBFW_BikeCarSd_Function();
         $BikeCarSdclass->rbfw_bike_car_sd_frontend_scripts($post_id);
 
     }
     elseif($rbfw_item_type == 'bike_car_md' || $rbfw_item_type == 'equipment' || $rbfw_item_type == 'dress' || $rbfw_item_type == 'others'){
 
-        include( RBFW_Function::template_path( 'forms/bike-registration.php' ) );
+        include(  RBFW_TEMPLATE_PATH . 'forms/bike-registration.php' );
         $BikeCarMdclass = new RBFW_BikeCarMd_Function();
         $BikeCarMdclass->rbfw_bike_car_md_frontend_scripts($post_id);
 
     }
     elseif($rbfw_item_type == 'resort'){
 
-        include( RBFW_Function::template_path( 'forms/resort-registration.php' ) );
+        include(  RBFW_TEMPLATE_PATH . 'forms/resort-registration.php' );
         $Resortclass = new RBFW_Resort_Function();
         $Resortclass->rbfw_resort_frontend_scripts($post_id);
     }

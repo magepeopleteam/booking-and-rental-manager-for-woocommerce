@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } 
 ?>
-bike multi
+
 <?php
 global $rbfw;
 $post_id = get_the_id();
@@ -96,7 +96,7 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                 <div class="rbfw_muff_heading">
                     <?php echo esc_html($rbfw->get_option('rbfw_text_start_booking', 'rbfw_basic_translation_settings', __('Start Booking','booking-and-rental-manager-for-woocommerce'))); ?>
                 </div>
-                <?php include( RBFW_Function::template_path( 'forms/muffin/bike-registration.php' ) ); ?>
+                <?php include(  RBFW_TEMPLATE_PATH . 'forms/muffin/bike-registration.php' ); ?>
             </div>
         </div>
         <div class="rbfw_muff_content_col2">
