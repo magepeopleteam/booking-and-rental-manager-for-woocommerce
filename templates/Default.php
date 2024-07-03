@@ -32,7 +32,7 @@ switch($rent_type){
         $file_name = 'multi-day.php';
 }
 
-$template_path = __DIR__.'/contents/default-template/'.$file_name;	
+$template_path = __DIR__.'/single-view/default-template/'.$file_name;	
 if ( file_exists( $template_path ) ) {
     include($template_path);
 } else {
