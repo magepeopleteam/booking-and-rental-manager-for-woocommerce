@@ -78,38 +78,21 @@
 			public static function get_template($post_id) {
 
 				$template = !empty(get_post_meta($post_id, 'rbfw_single_template', true)) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default';
-				
-				$template_name = $template.'.php';
-
-
-
-
-				$main_template_dir = RBFW_PLUGIN_DIR . '/templates/' . $template_name;
-
-
-				
-				if ( ! file_exists( $main_template_dir ) ) {
-
-					echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
-
+				$template_path = get_template_directory().'/templates/'. $template.'.php';				
+				if ( file_exists( $template_path ) ) {
+					include($template_path);
+				} elseif ( file_exists( RBFW_Function::template_path($template.'.php' ) ) ) {
+					include( RBFW_Function::template_path($template.'.php') );
 				} else {
-
-					include( RBFW_Function::template_path($template_name) );
-					
+					echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
 				}
-								
 			}
 
 			public static function template_path( $file_name ): string {
-		
 				$default_dir   = RBFW_PLUGIN_DIR . '/templates/';
 				$dir           = $default_dir;
 				$file_path     = $dir . $file_name;
-
-
-
-
-				return $default_dir . $file_name;
+				return $file_path;
 			}
 
 			//*******************************//

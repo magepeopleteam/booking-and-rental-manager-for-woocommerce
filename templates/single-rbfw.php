@@ -1,0 +1,58 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) die;
+
+if ( wp_is_block_theme() ) {  ?>
+    <!DOCTYPE html>
+    <html <?php language_attributes(); ?>>
+    <head>
+        <meta charset="<?php bloginfo( 'charset' ); ?>">
+        <?php
+        $block_content = do_blocks( '
+		<!-- wp:group {"layout":{"type":"constrained"}} -->
+		<div class="wp-block-group">
+		<!-- wp:post-content /-->
+		</div>
+		<!-- /wp:group -->'
+        );
+        wp_head(); ?>
+    </head>
+    <body <?php body_class(); ?>>
+    <?php wp_body_open(); ?>
+        <div class="wp-site-blocks">
+            <header class="wp-block-template-part site-header">
+                <?php block_header_area(); ?>
+            </header>
+        </div>
+    <?php
+    } else {
+        get_header();
+        the_post();
+}
+
+    $post_id = get_the_id();
+    do_action('rbfw_single_page_before_wrapper');
+    if ( post_password_required() ) {
+        echo get_the_password_form(); // WPCS: XSS ok.
+    } else {
+        do_action( 'woocommerce_before_single_product' );
+        $today_booking_enable = rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings');
+        ?>
+        <input type="hidden" class="rbfw_today_booking_enable" value="<?php echo $today_booking_enable ?>">
+        <?php
+        RBFW_Function::get_template($post_id);
+
+    }
+    do_action('rbfw_single_page_after_wrapper');
+    do_action('rbfw_single_page_footer',$post_id);
+
+if ( wp_is_block_theme() ) {
+    ?>
+    <footer class="wp-block-template-part">
+        <?php block_footer_area(); ?>
+    </footer>
+    <?php wp_footer(); ?>
+    </body>
+    <?php
+    } else {
+    get_footer();
+}

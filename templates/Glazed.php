@@ -1,52 +1,40 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-    die;
-} // Cannot access pages directly.
+/**
+ * @author Shahadat Hossain <raselsha@gmail.com>
+ * @since 2.0.4
+ * @version 1.0.0
+ * 
+ * This template can be overridden by copying it to yourtheme/templates/.
+ */
+
+
+if ( ! defined( 'ABSPATH' ) ) die;
 
 global $post_id;
 
 $rent_type = get_post_meta($post_id, 'rbfw_item_type', true);
 
-if($rent_type == 'bike_car_sd'){
-
-    $file_name = 'bike-car-sd.php';
-}
-elseif($rent_type == 'bike_car_md'){
-
-    $file_name = 'bike.php';
-}
-elseif($rent_type == 'equipment'){
-
-    $file_name = 'bike.php';
-}
-elseif($rent_type == 'dress'){
-
-    $file_name = 'bike.php';
-}
-elseif($rent_type == 'resort'){
-
-    $file_name = 'resort.php';
-}
-elseif($rent_type == 'appointment'){
-
-    $file_name = 'bike-car-sd.php';
-}
-elseif($rent_type == 'others'){
-
-    $file_name = 'bike.php';
-}												
-else{
-
-    $file_name = 'bike.php';
+switch($rent_type){
+    case 'bike_car_sd':
+    case 'appointment':
+        $file_name = 'single-day.php';
+    break;
+    case 'bike_car_md':
+    case 'equipment':
+    case 'dress':
+    case 'others':
+        $file_name = 'multi-day.php';
+    break;
+    case 'resort':
+        $file_name = 'resort.php';
+    break;
+    default:
+        $file_name = 'multi-day.php';
 }
 
-$file_path = RBFW_Function::template_path('contents/glazed-templates/'.$file_name);
-
-if ( file_exists($file_path) ) {
-
-    include($file_path);
-
+$template_path = __DIR__.'/contents/glazed-template/'.$file_name;	
+if ( file_exists( $template_path ) ) {
+    include($template_path);
 } else {
-    
     echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
 }
