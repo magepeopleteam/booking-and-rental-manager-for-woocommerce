@@ -75,13 +75,6 @@
 				return apply_filters( 'rbfw_template_list_arr', $name );
 			}
 
-			public static function template_path( $file_name ): string {
-				$default_dir   = RBFW_PLUGIN_DIR . '/templates/';
-				$dir           = $default_dir;
-				$file_path     = $dir . $file_name;
-				return $file_path;
-			}
-
 			//*******************************//
 			public static function get_thumbnail( $post_id = '', $image_id = '', $size = 'full' ){
 				return self::get_image_url( $post_id, $image_id, $size );
