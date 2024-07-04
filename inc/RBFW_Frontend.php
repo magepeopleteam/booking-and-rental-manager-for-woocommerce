@@ -49,10 +49,15 @@
 
 				$theme_dir_path = get_template_directory().'/templates/single/'. $template.'/'.$file_name;
 				$plugin_dir_path = RBFW_TEMPLATE_PATH .'single/'. $template.'/'.$file_name;
-
+				$theme_dir_header = get_template_directory() .'/templates/single/'. $template.'/header.php';
+				$plugin_dir_header = RBFW_TEMPLATE_PATH .'single/'. $template.'/header.php';
+				
+				
 				if ( file_exists( $theme_dir_path ) ) {
+					include($theme_dir_header);
 					include($theme_dir_path);
 				} elseif ( file_exists( $plugin_dir_path )  ) {
+					include( $plugin_dir_header );
 					include( $plugin_dir_path );
 				} else {
 					echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
