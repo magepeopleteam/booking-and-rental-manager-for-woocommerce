@@ -114,36 +114,35 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             }
             // load c
             if($expire == 'no'){
-                $template_grid = get_template_directory().'/templates/archive-view/grid.php';
-                $template_list = get_template_directory().'/templates/archive-view/list.php';
+                $theme_grid = get_template_directory().'/templates/archive/grid.php';
+                $theme_list = get_template_directory().'/templates/archive/list.php';
+                $plugin_grid = RBFW_TEMPLATE_PATH.'archive/grid.php';
+                $plugin_list = RBFW_TEMPLATE_PATH.'archive/list.php';
                 if($style == 'grid'){		
-                    if ( file_exists( $template_grid ) ) {
-                        include($template_grid);
-                    } elseif ( file_exists(  RBFW_TEMPLATE_PATH . 'archive-view/grid.php' ) ) {
-                        include( RBFW_TEMPLATE_PATH . 'archive-view/grid.php' );
+                    if ( file_exists( $theme_grid ) ) {
+                        include($theme_grid);
+                    } elseif ( file_exists( $plugin_grid ) ) {
+                        include( $plugin_grid );
                     } else {
                         echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
                     }
                 }
                 elseif($style == 'list'){
-                    if ( file_exists( $template_list ) ) {
-                        include($template_list);
-                    } elseif ( file_exists(  RBFW_TEMPLATE_PATH . '/archive-view/list.php' ) ) {
-                        include( RBFW_TEMPLATE_PATH . 'archive-view/list.php' );
+                    if ( file_exists( $theme_list ) ) {
+                        include($theme_list);
+                    } elseif ( file_exists( $plugin_list ) ) {
+                        include( $plugin_list );
                     } else {
                         echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
                     }
                 }
                 else{
-                    include( RBFW_TEMPLATE_PATH . 'archive-view/list.php' );
+                    include( $plugin_list );
                 }
             }
-
             $d++;
         endwhile;
-
         else:
-
             ?>
             <div class="rbfw-lsn-new-message-box">
                 <div class="rbfw-lsn-new-message-box-info">
