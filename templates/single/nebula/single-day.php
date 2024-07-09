@@ -4,36 +4,12 @@ if ( ! defined( 'ABSPATH' ) ) exit; ?>
 
     <div class="rbfw_nebula_template">
         <header> 
-            <h2>
-                <span>$100</span>/<?php esc_html_e('day',''); ?> | <span>$10</span>/<?php esc_html_e('hr',''); ?>
-            </h2>
+            <?php do_action('rbfw_template_pricing'); ?>
+            
         </header>  
         <!-- nebula slider template -->
         <div class="rbfw-nebula-slider">
-            <div class="rbfw-swiper">
-                <div class="swiper-wrapper">
-                    <?php 
-                        foreach($gallery_images as $key => $value):?>
-                        <div class="swiper-slide">
-                            <img src="<?php  echo wp_get_attachment_url($value ); ?>" />
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-                <div class="swiper-navigation">
-                    <div class="swiper-button-next"></div>
-                    <div class="swiper-button-prev"></div>
-                </div>
-            </div>
-            <div class="rbfw-swiper-thumbnail">
-                <div class="swiper-wrapper">
-                    <?php 
-                        foreach($gallery_images as $key => $value):?>
-                        <div class="swiper-slide">
-                            <img src="<?php  echo wp_get_attachment_url($value ); ?>" />
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
+            <?php do_action('rbfw_template_slider'); ?>
         </div>
         <!-- title -->
         <h2 class="title"><?php the_title(); ?></h2>

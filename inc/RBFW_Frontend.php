@@ -11,6 +11,16 @@
 			
 			public function __construct() {
 				add_filter( 'single_template', array( $this, 'single_template' ) );
+				add_action('rbfw_template_pricing', array($this,'pricing'));
+				add_action('rbfw_template_slider', array($this,'slider'));
+			}
+
+			public function pricing(){
+				include( RBFW_Frontend::load_template_parts('pricing'));
+			}
+
+			public function slider(){
+				include( RBFW_Frontend::load_template_parts('slider'));
 			}
 
 			public function single_template($single_template) {
@@ -26,9 +36,9 @@
 
 			public static function load_template($post_id) {
 
-				$template = !empty(get_post_meta($post_id, 'rbfw_single_template', true)) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default';
+				$template_name = !empty(get_post_meta($post_id, 'rbfw_single_template', true)) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default';
 				$rent_type = get_post_meta($post_id, 'rbfw_item_type', true);
-				$template = strtolower($template);
+				$template_name = strtolower($template_name);
 				switch($rent_type){
 					case 'bike_car_sd':
 					case 'appointment':
@@ -47,23 +57,30 @@
 						$file_name = 'multi-day.php';
 				}
 
-				$theme_dir_path = get_template_directory().'/templates/single/'. $template.'/'.$file_name;
-				$plugin_dir_path = RBFW_TEMPLATE_PATH .'single/'. $template.'/'.$file_name;
-				$theme_dir_header = get_template_directory() .'/templates/single/'. $template.'/header.php';
-				$plugin_dir_header = RBFW_TEMPLATE_PATH .'single/'. $template.'/header.php';
+				$template_path = get_stylesheet_directory().'/templates/single/'. $template_name.'/'.$file_name;
+				$default_path = RBFW_TEMPLATE_PATH .'single/'. $template_name.'/'.$file_name;
+				$load_template = file_exists( $template_path )? $template_path : $default_path;
 				
-				
-				if ( file_exists( $theme_dir_path ) ) {
-					include($theme_dir_header);
-					include($theme_dir_path);
-				} elseif ( file_exists( $plugin_dir_path )  ) {
-					include( $plugin_dir_header );
-					include( $plugin_dir_path );
-				} else {
-					echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
-				}
+				include( RBFW_Frontend::load_template_parts('header') );
+				include( $load_template );
 			}
+
+
+			public static function load_template_parts($file_name) {
+
+				$file_name = $file_name.'.php';
+
+				$template_name = !empty(get_post_meta(get_the_ID(), 'rbfw_single_template', true)) ? get_post_meta(get_the_ID(), 'rbfw_single_template', true) : 'Default';
+				$template_name = strtolower($template_name);
+
+				$template_path = get_stylesheet_directory().'/templates/single/'. $template_name.'/parts/'.$file_name;
+				$default_path = RBFW_TEMPLATE_PATH .'single/'. $template_name.'/parts/'.$file_name;
 			
+				$path = file_exists( $template_path )? $template_path : $default_path;
+				return $path;
+			}
+
+
 		}
 		new RBFW_Frontend();
 	}
