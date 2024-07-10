@@ -26,7 +26,7 @@
 			public function single_template($single_template) {
 				global $post;
 				if ( $post->post_type && $post->post_type == RBFW_Function::get_cpt_name() ){  
-					$single_template = get_template_directory().'/templates/single-rbfw.php';
+					$single_template = get_stylesheet_directory().'/templates/single-rbfw.php';
 					if( ! file_exists($single_template)){
 						$single_template =  RBFW_PLUGIN_DIR . '/templates/single-rbfw.php';
 					}
@@ -58,10 +58,8 @@
 				}
 
 				$template_path = get_stylesheet_directory().'/templates/single/'. $template_name.'/'.$file_name;
-				$default_path = RBFW_TEMPLATE_PATH .'single/'. $template_name.'/'.$file_name;
+				$default_path = RBFW_TEMPLATE_PATH .'/single/'. $template_name.'/'.$file_name;
 				$load_template = file_exists( $template_path )? $template_path : $default_path;
-				
-				include( RBFW_Frontend::load_template_parts('header') );
 				include( $load_template );
 			}
 
@@ -74,7 +72,7 @@
 				$template_name = strtolower($template_name);
 
 				$template_path = get_stylesheet_directory().'/templates/single/'. $template_name.'/parts/'.$file_name;
-				$default_path = RBFW_TEMPLATE_PATH .'single/'. $template_name.'/parts/'.$file_name;
+				$default_path = RBFW_TEMPLATE_PATH .'/single/'. $template_name.'/parts/'.$file_name;
 			
 				$path = file_exists( $template_path )? $template_path : $default_path;
 				return $path;

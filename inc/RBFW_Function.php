@@ -48,31 +48,30 @@
 			//***********Template********************//
 			public static function all_details_template() {
 				
-				$default_path  = RBFW_PLUGIN_DIR . '/templates/';
-				$dir           = glob( $default_path . "*" );
-				$names         = array();
-				foreach ( $dir as $filename ) {
-					if ( is_file( $filename ) ) {
-						$file           = basename($filename,'.php');
-						$names[ $file ] = $file.' template';
+				$template_path = get_stylesheet_directory().'/templates/single/';
+				$default_path = RBFW_TEMPLATE_PATH .'/single/';
+				$load_template = file_exists( $template_path )? $template_path : $default_path;
+				$default_path  = glob( $load_template . "*" );
+				
+				foreach ( $default_path as $template_dir ) {
+					if(is_dir($template_dir)){
+						$template_name = preg_replace("/[^a-zA-Z0-9]/", "",(ucfirst(basename($template_dir,''))));
+						$template_lists[ $template_name ] = $template_name.' Template';
 					}
+					
 				}
-				$name = [];
-				foreach ( $names as $key => $value ) {
-					$name[ $key ] = $value;
+				foreach ( $template_lists as $key => $value ) {
+					$templates[ $key ] = $value;
 				}
+				// $the_array = array(
+				// 	'Muffin' => 'Muffin template',
+				// 	'Donut' => 'Donut template',
+				// 	'Default' => 'Classic template',
+				// 	'Nebula' => 'Nebula template',
+				// );
+				// $name = $the_array;
 
-
-				$the_array = array(
-					'Muffin' => 'Muffin template',
-					'Donut' => 'Donut template',
-					'Default' => 'Classic template',
-					'Nebula' => 'Nebula template',
-				);
-
-				$name = $the_array;
-
-				return apply_filters( 'rbfw_template_list_arr', $name );
+				return apply_filters( 'rbfw_template_list_arr', $templates );
 			}
 
 			//*******************************//
