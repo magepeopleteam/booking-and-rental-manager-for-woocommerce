@@ -13,7 +13,7 @@
 if ( ! defined( 'ABSPATH' ) ) { die; } // Cannot access pages directly.
 
 define( 'RBFW_PLUGIN_DIR', dirname( __FILE__ ) );
-define( 'RBFW_TEMPLATE_PATH', plugin_dir_path(__FILE__).'templates' );
+define( 'RBFW_TEMPLATE_PATH', plugin_dir_path(__FILE__).'templates/' );
 define( 'RBFW_PLUGIN_URL', plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) );
 
 require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Dependencies.php';

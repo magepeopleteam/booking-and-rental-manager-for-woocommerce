@@ -48,12 +48,10 @@
 			//***********Template********************//
 			public static function all_details_template() {
 				
-				$template_path = get_stylesheet_directory().'/templates/single/';
-				$default_path = RBFW_TEMPLATE_PATH .'/single/';
-				$load_template = file_exists( $template_path )? $template_path : $default_path;
-				$default_path  = glob( $load_template . "*" );
+				$template_path = RBFW_Function::check_template_path('single/');
+				$template_path  = glob( $template_path . "*" );
 				
-				foreach ( $default_path as $template_dir ) {
+				foreach ( $template_path as $template_dir ) {
 					if(is_dir($template_dir)){
 						$template_name = preg_replace("/[^a-zA-Z0-9]/", "",(ucfirst(basename($template_dir,''))));
 						$template_lists[ $template_name ] = $template_name.' Template';
@@ -63,17 +61,15 @@
 				foreach ( $template_lists as $key => $value ) {
 					$templates[ $key ] = $value;
 				}
-				// $the_array = array(
-				// 	'Muffin' => 'Muffin template',
-				// 	'Donut' => 'Donut template',
-				// 	'Default' => 'Classic template',
-				// 	'Nebula' => 'Nebula template',
-				// );
-				// $name = $the_array;
 
 				return apply_filters( 'rbfw_template_list_arr', $templates );
 			}
-
+			public static function check_template_path($dir) {
+				$theme_path = get_stylesheet_directory().'/templates/'.$dir;
+				$default_path = RBFW_TEMPLATE_PATH . $dir;
+				$path = file_exists( $theme_path )? $theme_path : $default_path;
+				return $path;
+			}
 			//*******************************//
 			public static function get_thumbnail( $post_id = '', $image_id = '', $size = 'full' ){
 				return self::get_image_url( $post_id, $image_id, $size );

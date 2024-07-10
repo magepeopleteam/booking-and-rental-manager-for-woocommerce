@@ -1,8 +1,6 @@
 <div class="rbfw-swiper">
     <div class="swiper-wrapper">
         <?php 
-        
-            print_r($gallery_images);
             foreach($gallery_images as $key => $value):?>
             <div class="swiper-slide">
                 <img src="<?php  echo wp_get_attachment_url($value ); ?>" />
