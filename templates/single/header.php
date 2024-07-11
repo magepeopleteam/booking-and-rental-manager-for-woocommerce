@@ -5,7 +5,6 @@ $post_id = get_the_ID();
 $rbfw_id = $post_id;
 $post_title = get_the_title();
 $post_content  = get_the_content();
-$rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
 $rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
 $slide_style = $rbfw->get_option('super_slider_style', 'super_slider_settings','');
 $post_review_rating = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating($post_id,'muffin','style1') : '';
@@ -43,9 +42,7 @@ $post_comfort_progress_width = function_exists('rbfw_review_get_progress_bar_wid
 $gallery_images_additional = rbfw_get_additional_gallary_images($post_id, 6);
 $prices_start_at = $rbfw->get_option('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
 
-// -------gallery images-------
-$rbfw_gallery_images = get_post_meta(get_the_ID(),'rbfw_gallery_images');
-$gallery_images = $rbfw_gallery_images[0];
+
 
 /* Single Day/Appointment Type */
 $rbfw_rent_type = get_post_meta( $post_id, 'rbfw_item_type', true );
