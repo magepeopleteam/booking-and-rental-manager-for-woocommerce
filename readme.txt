@@ -212,6 +212,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 = 2.0.5 =
 * Template theme compatibility
+* Custom template building capability 
 * New template Nebula introduced
 * String translation daywise added
 
