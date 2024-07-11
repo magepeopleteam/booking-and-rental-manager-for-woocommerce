@@ -12,7 +12,7 @@
 			public function __construct() {
 				add_filter( 'single_template', array( $this, 'single_template' ) );
 				add_action('rbfw_template_pricing', array( $this,'load_template_parts'),10,1 );
-				add_action('rbfw_template_slider',  array( $this,'load_template_parts'),10,1 );
+				add_action('rbfw_template_slider',  array( $this,'load_template_parts'),10,1 );				
 			}
 
 			public function single_template($single_template) {
@@ -57,7 +57,7 @@
 				$header = 'single/header.php';
 				$header = RBFW_Function::check_template_path($header);
 				include( $header );
-
+				
 				$file_name 	   = $file.'.php';
 				$template_name = !empty(get_post_meta(get_the_ID(), 'rbfw_single_template', true)) ? get_post_meta(get_the_ID(), 'rbfw_single_template', true) : 'Default';
 				$template_name = strtolower($template_name);

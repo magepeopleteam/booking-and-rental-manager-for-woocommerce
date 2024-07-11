@@ -4,9 +4,10 @@
 	} // Cannot access pages directly.
 	if ( ! class_exists( 'RBFW_Function' ) ) {
 		class RBFW_Function {
+
 			public static function get_post_info( $post_id, $key, $default = '' ) {
 				$data = get_post_meta( $post_id, $key, true ) ?: $default;
-
+				
 				return self::data_sanitize( $data );
 			}
 
@@ -62,16 +63,26 @@
 				foreach ( $template_lists as $key => $value ) {
 					$templates[ $key ] = $value;
 				}
-
-				return apply_filters( 'rbfw_template_list_arr', $templates );
+				
+				return apply_filters('rbfw_template_list', $templates );
 			}
 
-			public static function check_template_path($dir) {
-				$theme_path = get_stylesheet_directory().'/templates/'.$dir;
-				$default_path = RBFW_TEMPLATE_PATH . $dir;
-				$path = file_exists( $theme_path )? $theme_path : $default_path;
-				return $path;
+			public static function check_template_path($path) {
+				$theme_path = get_stylesheet_directory().'/templates/'.$path;
+				$default_path = RBFW_TEMPLATE_PATH . $path;
+				if (is_dir($theme_path)) {
+					return $theme_path;
+				} elseif (is_dir($default_path)) {
+					return $default_path;
+				} elseif(file_exists($theme_path)){
+					return $theme_path;
+				}elseif(file_exists($default_path)){
+					return $default_path;
+				}else{
+					return $default_path;
+				}
 			}
+
 			//*******************************//
 			public static function get_thumbnail( $post_id = '', $image_id = '', $size = 'full' ){
 				return self::get_image_url( $post_id, $image_id, $size );
