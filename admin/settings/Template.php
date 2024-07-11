@@ -68,7 +68,7 @@
                 <section>
 						<label for=""><?php echo esc_html__('Template Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 						<?php  $template =  get_post_meta($post_id, 'rbfw_single_template', true) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default'; ?>
-						<?php $the_template = RBFW_Function::all_details_template(); ?>
+						<?php $the_template = RBFW_Function::get_all_template(); ?>
 						<select name="rbfw_single_template" id="rbfw_single_template">
 							<?php foreach($the_template as $kay => $value): ?>
 								<option <?php echo ($kay==$template)?'selected':'' ?> value="<?php echo $kay; ?>"> <?php echo $value; ?> </option>

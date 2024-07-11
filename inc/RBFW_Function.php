@@ -46,7 +46,8 @@
 			}
 
 			//***********Template********************//
-			public static function all_details_template() {
+
+			public static function get_all_template() {
 				
 				$template_path = RBFW_Function::check_template_path('single/');
 				$template_path  = glob( $template_path . "*" );
@@ -64,6 +65,7 @@
 
 				return apply_filters( 'rbfw_template_list_arr', $templates );
 			}
+
 			public static function check_template_path($dir) {
 				$theme_path = get_stylesheet_directory().'/templates/'.$dir;
 				$default_path = RBFW_TEMPLATE_PATH . $dir;
