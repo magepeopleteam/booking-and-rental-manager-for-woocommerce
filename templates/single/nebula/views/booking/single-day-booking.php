@@ -38,7 +38,6 @@
 				?>	
 				</button>
 			</div>
-
 			<?php
 			$rbfw_regf_info = [];
 			if(class_exists('Rbfw_Reg_Form')){
