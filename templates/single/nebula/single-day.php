@@ -5,6 +5,7 @@
             <div class="rbfw-swiper">
                 <div class="swiper-wrapper">
                     <?php 
+                        $gallery_images = RBFW_Frontend::get_slider_images($post_id);
                         foreach($gallery_images as $key => $value):?>
                         <div class="swiper-slide">
                             <img src="<?php  echo wp_get_attachment_url($value ); ?>" />
@@ -41,7 +42,9 @@
         <!-- Feature icon -->
         <div class="rbfw-nebula-features">
             <div class="feature-lists">
-                <?php if ( $rbfw_feature_category ) :
+                <?php 
+                $rbfw_feature_category = RBFW_Frontend::get_feature_categories($post_id);
+                if ( $rbfw_feature_category ) :
                     foreach ( $rbfw_feature_category as $value ) :
                         $cat_title = $value['cat_title'];
                         $cat_features = $value['cat_features'] ? $value['cat_features'] : [];

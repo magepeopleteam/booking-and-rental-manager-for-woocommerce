@@ -10,8 +10,7 @@
 		class RBFW_Frontend {
 			
 			public function __construct() {
-				add_filter( 'single_template', array( $this, 'single_template' ) );
-				add_action('rbfw_template_view_pricing', array( $this,'view_pricing') );			
+				add_filter( 'single_template', array( $this, 'single_template' ) );		
 			}
 
 			public function single_template($single_template) {
@@ -21,6 +20,18 @@
 					$single_template = $template_path.'single-rbfw.php';
 				}
 				return $single_template;
+			}
+
+			public static function get_slider_images($post_id) {
+				$rbfw_gallery_images = get_post_meta(get_the_ID(),'rbfw_gallery_images');
+				$gallery_images = $rbfw_gallery_images[0];
+				return $gallery_images;
+			}
+
+			public static function get_feature_categories($post_id) {
+				$rbfw_gallery_images = get_post_meta(get_the_ID(),'rbfw_gallery_images');
+				$gallery_images = $rbfw_gallery_images[0];
+				return $gallery_images;
 			}
 
 			public static function load_template($post_id) {
@@ -52,6 +63,14 @@
 				include( $template_path );
 			}
 
+			public function load_template_parts($file){	
+				$file_name 	   = $file.'.php';
+				$template_name = !empty(get_post_meta(get_the_ID(), 'rbfw_single_template', true)) ? get_post_meta(get_the_ID(), 'rbfw_single_template', true) : 'Default';
+				$template_name = strtolower($template_name);
+				$template_path =  'single/'. $template_name.'/views/'.$file_name;
+				$template_path =  RBFW_Function::check_template_path($template_path);
+				return $template_path;
+			}
 		}
 		new RBFW_Frontend();
 	}
