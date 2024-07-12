@@ -9,6 +9,7 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
 <?php
 
 do_action( 'rbfw_before_cart_item_display', $cart_item, $rbfw_id );
+
 $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['security_deposit_amount'] : '';
 
 
@@ -139,6 +140,12 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
             <tr>
                 <th><?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                 <td><?php echo wc_price($discount_amount); ?></td>
+            </tr>
+        <?php endif; ?>
+        <?php if ( ! empty( $security_deposit_amount ) ): ?>
+            <tr>
+                <th><?php echo (!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit'); ?>:</th>
+                <td><?php echo wc_price($security_deposit_amount); ?></td>
             </tr>
         <?php endif; ?>
 

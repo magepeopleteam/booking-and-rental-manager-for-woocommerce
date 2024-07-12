@@ -25,6 +25,10 @@ function rbfw_admin_settings_sec_reg_basic( $default_sec ) {
 			'id'    => 'rbfw_basic_style_settings',
 			'title' => '<i class="fa-solid fa-palette"></i>'.__( 'Style Settings', 'booking-and-rental-manager-for-woocommerce' )
 		),
+        array(
+            'id'    => 'rbfw_custom_style_settings',
+            'title' => '<i class="fa-solid fa-palette"></i>'.__( 'Custom CSS', 'booking-and-rental-manager-for-woocommerce' )
+        ),
 
 		array(
 			'id'    => 'rbfw_basic_payment_settings',
@@ -136,6 +140,17 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                 'name' => 'display_default_time_enable_time_slot',
                 'label' => __( 'Dispaly default time while time slot disable', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc' => __( "If you want to Dispaly default time while time slot disable, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'no',
+                'options' => array(
+                    'yes' => 'Yes',
+                    'no'  => 'No'
+                )
+            ),
+            array(
+                'name' => 'inventory_based_on_pickup_return',
+                'label' => __( 'Inventory manage based on pickup or return', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => __( "If you want to inventory manage based on pickup or return, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
                 'type' => 'select',
                 'default' => 'no',
                 'options' => array(
@@ -1646,6 +1661,13 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 			),
 
 		),
+        'rbfw_custom_style_settings' => array(
+            array(
+                'name'    => 'rbfw_custom_css',
+                'label'   => __( 'Write Your Custom CSS Code Here', 'booking-and-rental-manager-for-woocommerce' ),
+                'type'    => 'textarea',
+            ),
+        )
 
 	);
 

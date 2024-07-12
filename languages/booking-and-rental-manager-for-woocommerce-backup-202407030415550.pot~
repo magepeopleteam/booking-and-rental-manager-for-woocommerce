@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: Booking and Rental Manager for Bike | Car | Resort | "
 "Appointment | Dress | Equipment - WpRently\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-03 04:15+0000\n"
+"POT-Creation-Date: 2024-07-03 04:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -1969,6 +1969,7 @@ msgstr ""
 #: lib/classes/class-form-fields-generator.php:3214
 #: templates/forms/bike-registration.php:396
 #: templates/forms/muffin/bike-registration.php:395
+msgctxt "Day Wise ed"
 msgid "Day Wise"
 msgstr ""
 
