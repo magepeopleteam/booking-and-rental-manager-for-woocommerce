@@ -43,9 +43,9 @@
         <div class="rbfw-nebula-features">
             <div class="feature-lists">
                 <?php 
-                $rbfw_feature_category = RBFW_Frontend::get_feature_categories($post_id);
-                if ( $rbfw_feature_category ) :
-                    foreach ( $rbfw_feature_category as $value ) :
+                $feature_list = RBFW_Frontend::get_feature_list($post_id);
+                if ( $feature_list ) :
+                    foreach ( $feature_list as $value ) :
                         $cat_title = $value['cat_title'];
                         $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
                     ?>
@@ -85,7 +85,7 @@
         </div>
         <!-- Related Product -->
         <div class="rbfw-nebula-related">
-            <?php do_action('rbfw_template_view_related'); ?>
+            <?php do_action( 'rbfw_related_products',get_the_ID() ); ?>
         </div>
         <!-- Related items -->
     </div>

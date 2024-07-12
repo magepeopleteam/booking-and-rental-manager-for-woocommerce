@@ -22,18 +22,6 @@
 				return $single_template;
 			}
 
-			public static function get_slider_images($post_id) {
-				$rbfw_gallery_images = get_post_meta(get_the_ID(),'rbfw_gallery_images');
-				$gallery_images = $rbfw_gallery_images[0];
-				return $gallery_images;
-			}
-
-			public static function get_feature_categories($post_id) {
-				$rbfw_gallery_images = get_post_meta(get_the_ID(),'rbfw_gallery_images');
-				$gallery_images = $rbfw_gallery_images[0];
-				return $gallery_images;
-			}
-
 			public static function load_template($post_id) {
 
 				$template_name = !empty(get_post_meta($post_id, 'rbfw_single_template', true)) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default';
@@ -63,13 +51,15 @@
 				include( $template_path );
 			}
 
-			public function load_template_parts($file){	
-				$file_name 	   = $file.'.php';
-				$template_name = !empty(get_post_meta(get_the_ID(), 'rbfw_single_template', true)) ? get_post_meta(get_the_ID(), 'rbfw_single_template', true) : 'Default';
-				$template_name = strtolower($template_name);
-				$template_path =  'single/'. $template_name.'/views/'.$file_name;
-				$template_path =  RBFW_Function::check_template_path($template_path);
-				return $template_path;
+			public static function get_slider_images($post_id) {
+				$gallery_images = get_post_meta($post_id,'rbfw_gallery_images');
+				$gallery_images = $gallery_images[0];
+				return $gallery_images;
+			}
+
+			public static function get_feature_list($post_id) {
+				$feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
+				return $feature_category;
 			}
 		}
 		new RBFW_Frontend();
