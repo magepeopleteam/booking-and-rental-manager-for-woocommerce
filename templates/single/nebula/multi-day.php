@@ -1,1 +1,0 @@
-<?php include(  RBFW_TEMPLATE_PATH . 'forms/muffin/bike-registration.php' ); ?>
