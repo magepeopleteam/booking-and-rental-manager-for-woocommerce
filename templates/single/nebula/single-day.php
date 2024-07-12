@@ -76,9 +76,17 @@
             </div>
         </div>
         <!-- Start booking -->
-        
+        <div class="rbfw-nebula-booking">
+            <div class="start-booking">
+                <h2 class="title"><?php _e('Book online','booking-and-rental-manager-for-woocommerce'); ?></h2>
+                <div class="devider"></div>
+                <?php do_action('rbfw_booking_form'); ?>
+            </div>
+        </div>
         <!-- Related Product -->
-        <?php do_action( 'rbfw_related_products',get_the_ID() ); ?>
+        <div class="rbfw-nebula-related">
+            <?php do_action( 'rbfw_related_products',get_the_ID() ); ?>
+        </div>
         <!-- Related items -->
     </div>
 
