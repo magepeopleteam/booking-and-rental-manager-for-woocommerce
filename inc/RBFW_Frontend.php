@@ -87,6 +87,7 @@
 				include( $template_path );
 			}
 
+
 			// public static function related_products($post_id){
 			// 	$post_id = get_the_ID();
 			// 	$template_name = RBFW_Frontend::get_template_name($post_id);
