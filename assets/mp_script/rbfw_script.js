@@ -2,11 +2,8 @@
 
 /* Start Calendar Script */
 jQuery(function(){
-
-
-
     var defaultConfig = {
-        weekDayLength: 1,
+        weekDayLength:3,
         onClickDate: onclick_cal_date,
         showYearDropdown: true,
         startOnMonday: true,
@@ -17,7 +14,6 @@ jQuery(function(){
         nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
         disable: function (date) {
             return rbfw_off_day_dates(date,'','no');
-
         }
     };
 
@@ -79,7 +75,7 @@ jQuery(function(){
 });
 
 function onclick_cal_date(date) {
-
+  
     jQuery('#rbfw-bikecarsd-calendar').updateCalendarOptions({
         date: date
     });

@@ -51,8 +51,24 @@
 			}
 
 			public static function get_rent_type($post_id) {
-				$rent_type = get_post_meta($post_id, 'rbfw_item_type', true);
+				$rent_type = !empty(get_post_meta( $post_id, 'rbfw_item_type', true )) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				return $rent_type;
+			}
+
+			public static function get_wc_product_id($post_id) {
+				$product_id = get_post_meta( $post_id, "link_wc_product", true ) ? get_post_meta( $post_id, "link_wc_product", true ) : $post_id;
+				return $product_id;
+			}
+
+			public static function get_payment_system_type() {
+				global $rbfw;
+				$payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+				if($payment_system == 'mps'){
+					$payment_system = 'mps_enabled';
+				}else{
+					$payment_system = 'wps_enabled';
+				}
+				return $payment_system;
 			}
 
 			public static function get_rent_type_template($post_id) {
@@ -78,7 +94,7 @@
 				return $file_name;
 			}
 
-			public static function booking_form($post_id) {
+			public static function booking_form() {
 				$post_id = get_the_ID();
 				$rent_type_template = RBFW_Frontend::get_rent_type_template($post_id);
 				$template_name = RBFW_Frontend::get_template_name($post_id);

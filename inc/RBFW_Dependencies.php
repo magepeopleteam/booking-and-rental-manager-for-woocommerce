@@ -17,8 +17,16 @@
 				add_action('wp_head', array( $this, 'rbfw_ajax_url' ), 5 );
 				add_action('admin_enqueue_scripts', array( $this, 'rbfw_add_admin_scripts' ), 10, 1);
 				add_action('wp_enqueue_scripts', array( $this, 'rbfw_enqueue_scripts' ), 90);	
+				add_action('wp_enqueue_scripts', array( $this, 'frontend_booking_calender' ));	
 			}
 			
+			public function frontend_booking_calender(){
+				// wp_enqueue_style('booking-calender-style', RBFW_PLUGIN_URL . '/assets/frontend/css/booking-calender-style.css');
+				// wp_enqueue_style('booking-calender-theme', RBFW_PLUGIN_URL . '/assets/frontend/css/booking-calender-theme.css');
+				// wp_enqueue_script('booking-calendar', RBFW_PLUGIN_URL . '/assets/frontend/js/calendar.min.js', array('jquery'), '2.9.2', true );
+                wp_enqueue_script('custom-booking-calendar', RBFW_PLUGIN_URL . '/assets/frontend/js/calendar-booking.js', array(), time(), true );
+			}
+
 			public function common_enqueue() {
 
 				//font awesome
