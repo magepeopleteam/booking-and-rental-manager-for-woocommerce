@@ -20,13 +20,6 @@
 				add_action('wp_enqueue_scripts', array( $this, 'frontend_booking_calender' ));	
 			}
 			
-			public function frontend_booking_calender(){
-				// wp_enqueue_style('booking-calender-style', RBFW_PLUGIN_URL . '/assets/frontend/css/booking-calender-style.css');
-				// wp_enqueue_style('booking-calender-theme', RBFW_PLUGIN_URL . '/assets/frontend/css/booking-calender-theme.css');
-				// wp_enqueue_script('booking-calendar', RBFW_PLUGIN_URL . '/assets/frontend/js/calendar.min.js', array('jquery'), '2.9.2', true );
-                wp_enqueue_script('custom-booking-calendar', RBFW_PLUGIN_URL . '/assets/frontend/js/calendar-booking.js', array(), time(), true );
-			}
-
 			public function common_enqueue() {
 
 				//font awesome
@@ -61,7 +54,7 @@
 				
 			}
 
-			public function frontend_script(){
+			public function frontend_booking_calender(){
 				global $post;
 				$post_id = !empty($post->ID) ? $post->ID : '';
 
@@ -82,11 +75,15 @@
 					$default_language = explode( '_', $default_language )[0];
 				}
 
-				wp_enqueue_style( 'rbfw_swiper_slider', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', array(), '1.1' );
-				wp_enqueue_style( 'rbfw_calendar', RBFW_PLUGIN_URL . '/css/calendar.css', array(), '1.0.1' );
+				wp_enqueue_style('booking-calender-style', RBFW_PLUGIN_URL . '/assets/frontend/css/calender-style.css');
+				// wp_enqueue_style('booking-calender-theme', RBFW_PLUGIN_URL . '/assets/frontend/css/calender-theme.css');
+				wp_enqueue_style('booking-calender-custom', RBFW_PLUGIN_URL . '/assets/frontend/css/calender-custom.css');
+				
+				wp_enqueue_script('booking-calendar-lib', RBFW_PLUGIN_URL . '/assets/frontend/js/calendar.min.js', array('jquery'), '2.9.2', true );
+                // wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/assets/frontend/js/calendar.js', array('jquery'), '1.0.2', false);
+				wp_enqueue_script('booking-calendar-custom', RBFW_PLUGIN_URL . '/assets/frontend/js/calendar-custom.js', array(), time(), true );
 
-				wp_enqueue_script('rbfw_swiper_js','https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', array('jquery'), '1.1', true);
-				wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
+				
 				wp_localize_script( 'rbfw_calendar', 'rbfw_calendar_object',
 					array( 
 						'default_timezone' => $default_timezone,
@@ -155,7 +152,9 @@
 				wp_enqueue_script('jquery-ui-accordion');
 				wp_enqueue_style('dashicons');
 				wp_enqueue_style('rbfw-jquery-ui-style', plugin_dir_url(__DIR__) . 'css/jquery-ui.css', array());
-			
+				wp_enqueue_style( 'rbfw_swiper_slider', 'https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css', array(), '1.1' );
+				wp_enqueue_script('rbfw_swiper_js','https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js', array('jquery'), '1.1', true);
+
 				wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array(), $version);
 				wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), $version, true);
 				wp_localize_script( 'rbfw_custom_script', 'rbfw_ajaxurl', array('rbfw_ajaxurl' => admin_url('admin-ajax.php'), 'view_more_feature_btn_text' => $view_more_feature_btn_text, 'hide_more_feature_btn_text' => $hide_more_feature_btn_text, 'view_more_offers_btn_text' => $view_more_offers_btn_text, 'hide_more_offers_btn_text' => $hide_more_offers_btn_text));
