@@ -11,12 +11,19 @@
 	<!--    Main Layout 	-->
 	<div data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
 		<form action="" method='post' class="mp_rbfw_ticket_form">
-			<div class="booking-area">
+			<div class="single-day-booking-area">
 				<div class="calender">
 					<div id="rbfw-single-day-booking" data-start-weekday=''></div>
 				</div>
-				<div class="timeslot">
-
+				<div class="timeslot" >
+					<ul class="items">
+						
+						<?php 
+							$timslot = RBFW_Frontend::get_time_slots();
+							foreach( $timslot as $key => $value): ?>
+								<li class="times" onclick="RBFW_Single_Day_Booking.selectTimeSlot(this)"><?php echo $value; ?></li>
+						<?php endforeach; ?>
+					</ul>
 				</div>
 			</div>
 		</form>

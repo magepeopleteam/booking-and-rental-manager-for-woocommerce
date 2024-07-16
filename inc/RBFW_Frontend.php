@@ -60,6 +60,12 @@
 				return $product_id;
 			}
 
+			public static function get_time_slots() {
+				$post_id = get_the_ID();
+                $available_time_slot = get_post_meta($post_id,'rdfw_available_time',true) ? maybe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];
+				return $available_time_slot;
+			}
+
 			public static function get_payment_system_type() {
 				global $rbfw;
 				$payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
@@ -102,15 +108,6 @@
 				$template_path = RBFW_Function::check_template_path($template_path);
 				include( $template_path );
 			}
-
-
-			// public static function related_products($post_id){
-			// 	$post_id = get_the_ID();
-			// 	$template_name = RBFW_Frontend::get_template_name($post_id);
-			// 	$path = 'single/'. $template_name .'/views/related.php';
-			// 	$path = RBFW_Function::check_template_path($path);
-			// 	include( $path );				
-			// }
 		}
 		new RBFW_Frontend();
 	}

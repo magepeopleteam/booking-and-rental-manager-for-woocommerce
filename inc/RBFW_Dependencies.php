@@ -23,10 +23,10 @@
 			public function common_enqueue() {
 
 				//font awesome
-				// wp_enqueue_style('fontawesome.v6', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
+				wp_enqueue_style('fontawesome.v6', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
 
 				//flaticon
-				// wp_enqueue_style('flaticon', RBFW_PLUGIN_URL . '/assets/fonts/flaticon/flaticon.css');
+				//wp_enqueue_style('flaticon', RBFW_PLUGIN_URL . '/assets/fonts/flaticon/flaticon.css');
 			
 				//mp style
 				wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
@@ -80,7 +80,7 @@
 				wp_enqueue_style('rbfw-calender-custom', RBFW_PLUGIN_URL . '/assets/frontend/css/calender-custom.css');
 				
 				wp_enqueue_script('rbfw-calendar-lib', RBFW_PLUGIN_URL . '/assets/frontend/js/calendar.min.js', array('jquery'), '2.9.2', true );
-                // wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/assets/frontend/js/calendar.js', array('booking-calendar-lib'), '1.0.2', false);
+                wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/assets/frontend/js/calendar.js', array('booking-calendar-lib'), '1.0.2', false);
 				wp_enqueue_script('rbfw-calendar-custom', RBFW_PLUGIN_URL . '/assets/frontend/js/calendar-custom.js', array('rbfw-calendar-lib'), time(), true );
 
 				

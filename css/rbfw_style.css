@@ -5945,7 +5945,7 @@ body.single-rbfw_item div.ast-container {
   justify-content: end;
 }
 
-.rbfw_nebula_template {
+.rbfw-nebula-template {
   max-width: 1440px;
   height: 100%;
   margin: 30px 0;
@@ -5954,16 +5954,16 @@ body.single-rbfw_item div.ast-container {
   margin-top: 30px;
   background-color: transparent;
 }
-.rbfw_nebula_template header {
+.rbfw-nebula-template header {
   text-align: right;
 }
-.rbfw_nebula_template .rbfw-nebula-slider {
+.rbfw-nebula-template .rbfw-nebula-slider {
   width: 100%;
   height: 600px;
   overflow: hidden;
   margin-bottom: 70px;
 }
-.rbfw_nebula_template .rbfw-nebula-slider .rbfw-swiper {
+.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper {
   width: 100%;
   height: 70%;
   margin-left: auto;
@@ -5971,7 +5971,7 @@ body.single-rbfw_item div.ast-container {
   overflow: hidden;
   position: relative;
 }
-.rbfw_nebula_template .rbfw-nebula-slider .rbfw-swiper .swiper-slide {
+.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper .swiper-slide {
   text-align: center;
   font-size: 18px;
   background: #fff;
@@ -5981,55 +5981,55 @@ body.single-rbfw_item div.ast-container {
   background-size: cover;
   background-position: center;
 }
-.rbfw_nebula_template .rbfw-nebula-slider .rbfw-swiper .swiper-slide img {
+.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper .swiper-slide img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.rbfw_nebula_template .rbfw-nebula-slider .rbfw-swiper .swiper-navigation {
+.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper .swiper-navigation {
   width: 100%;
 }
-.rbfw_nebula_template .rbfw-nebula-slider .rbfw-swiper-thumbnail {
+.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper-thumbnail {
   height: 30%;
   box-sizing: border-box;
   padding: 10px 0;
   overflow: hidden;
 }
-.rbfw_nebula_template .rbfw-nebula-slider .rbfw-swiper-thumbnail .swiper-slide {
+.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper-thumbnail .swiper-slide {
   width: 25%;
   height: 100%;
   opacity: 0.4;
 }
-.rbfw_nebula_template .rbfw-nebula-slider .rbfw-swiper-thumbnail .swiper-slide img {
+.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper-thumbnail .swiper-slide img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.rbfw_nebula_template .rbfw-nebula-slider .rbfw-swiper-thumbnail .swiper-slide-thumb-active {
+.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper-thumbnail .swiper-slide-thumb-active {
   opacity: 1;
 }
-.rbfw_nebula_template .title {
+.rbfw-nebula-template .title {
   text-align: center;
 }
-.rbfw_nebula_template .devider {
+.rbfw-nebula-template .devider {
   width: 200px;
   margin: 50px auto;
   height: 2px;
   background-color: #000;
 }
-.rbfw_nebula_template .feature-lists {
+.rbfw-nebula-template .rbfw-nebula-features .feature-lists {
   margin-bottom: 70px;
 }
-.rbfw_nebula_template .feature-lists .feature-title {
+.rbfw-nebula-template .rbfw-nebula-features .feature-lists .feature-title {
   text-align: center;
 }
-.rbfw_nebula_template .feature-lists .feature-items {
+.rbfw-nebula-template .rbfw-nebula-features .feature-lists .feature-items {
   display: flex;
   justify-content: center;
 }
-.rbfw_nebula_template .feature-lists .feature-items .item {
+.rbfw-nebula-template .rbfw-nebula-features .feature-lists .feature-items .item {
   width: 120px;
   height: 120px;
   background-color: #ddd;
@@ -6040,24 +6040,57 @@ body.single-rbfw_item div.ast-container {
   margin: 20px;
   text-align: center;
 }
-.rbfw_nebula_template .feature-lists .feature-items .item i {
+.rbfw-nebula-template .rbfw-nebula-features .feature-lists .feature-items .item i {
   font-size: 35px;
   padding: 15px 20px;
   color: #999;
 }
-.rbfw_nebula_template .feature-lists .feature-items .item h2 {
+.rbfw-nebula-template .rbfw-nebula-features .feature-lists .feature-items .item h2 {
   font-size: 10px;
   margin: 0;
 }
-.rbfw_nebula_template .start-booking .rbfw-bikecarsd-booking {
+.rbfw-nebula-template .rbfw-nebula-booking .booking-area {
+  border: 1px solid #ddd;
+  padding: 30px;
+}
+.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area {
   display: flex;
   justify-content: space-between;
+  max-height: 450px;
 }
-.rbfw_nebula_template .start-booking .rbfw-bikecarsd-booking .booking-calender-view {
-  width: 60%;
+.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .calender {
+  width: 70%;
+  padding: 30px;
 }
-.rbfw_nebula_template .start-booking .rbfw-bikecarsd-booking .booking-timeslot-view {
-  width: 40%;
+.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot {
+  width: 30%;
+  padding: 30px;
+}
+.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid transparent;
+  height: 100%;
+  overflow-y: scroll;
+}
+.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .times {
+  padding: 10px;
+  font-size: 20px;
+  color: #333;
+  border: 1px solid #ddd;
+  text-align: center;
+  margin: 10px 30px;
+}
+.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .times:hover {
+  cursor: pointer;
+  background-color: #000;
+  color: #fff;
+}
+.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .times.active {
+  cursor: pointer;
+  background-color: #000;
+  color: #fff;
 }
 
 /*# sourceMappingURL=rbfw_style.css.map */
