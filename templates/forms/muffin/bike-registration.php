@@ -493,6 +493,18 @@ if($rbfw_enable_variations == 'yes'){
                         </div>
                     </div>
 
+                    <?php
+
+                    $reg_form = new Rbfw_Reg_Form();
+                    $reg_fields = $reg_form->rbfw_generate_regf_fields($rbfw_id);
+
+                    //print_r($reg_fields);
+
+
+                    ?>
+
+
+
                     <?php if(rbfw_chk_regf_fields_exist($rbfw_id) === true){ ?>
                         <div class="item">
                             <div class="rbfw_reg_form_rb" style="display: none">

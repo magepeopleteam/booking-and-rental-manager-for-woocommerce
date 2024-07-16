@@ -37,6 +37,22 @@ if (!class_exists('RBFWInventoryPage')) {
                         <input type="text" class="rbfw_inventory_filter_date" placeholder="dd-mm-yyyy"/>
                     </div>
                     <div class="rbfw_inventory_filter_input_group">
+                      <div class="w-50 ms-5 d-flex justify-content-between align-items-center">
+                        <label for="">Start Time:</label>
+                        <div class=" d-flex justify-content-between align-items-center">
+                        <input type="time"  id="rbfw_inventory_event_start_time" value="">
+                        </div>
+						</div>
+                    </div>
+                    <div class="rbfw_inventory_filter_input_group">
+                        <div class="w-50 d-flex justify-content-between align-items-center">
+									<label for="">End Time:</label>
+									<div class=" d-flex justify-content-between align-items-center">
+										<input type="time" id="rbfw_inventory_event_end_time" value="">
+									</div>
+								</div>
+                    </div>
+                    <div class="rbfw_inventory_filter_input_group">
                         <label></label>
                         <button class="rbfw_inventory_filter_btn"><?php esc_html_e('Filter','booking-and-rental-manager-for-woocommerce'); ?></button>
                     </div>
@@ -73,9 +89,9 @@ if (!class_exists('RBFWInventoryPage')) {
             <?php
         }
 
-        public function rbfw_inventory_page_table($query, $date = null){
+        public function rbfw_inventory_page_table($query, $date = null,$start_date,$end_date){
             ob_start();
-            $inventory_based_on_pickup_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
+            $inventory_based_on_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
             ?>
                 <table class="rbfw_inventory_page_table">
                     <thead  class="rbfw_inventory_page_table_head">
@@ -149,17 +165,20 @@ if (!class_exists('RBFWInventoryPage')) {
                         
                         $rbfw_inventory = !empty(get_post_meta($post_id, 'rbfw_inventory', true)) ? get_post_meta($post_id, 'rbfw_inventory', true) : [];
 
-                        $inventory_based_on_pickup_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
+                        $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
 
                         $remaining_item_stock = $rbfw_item_stock_quantity;
                         $remaining_es_stock = $total_es_qty;
                         $sold_item_qty = 0;
                         $sold_es_qty = 0;
 
+
+
                         if(!empty($rbfw_inventory)){
                             
                             foreach ($rbfw_inventory as $key => $inventory) {
-                                if ( in_array($current_date, $inventory['booked_dates']) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || (($inventory_based_on_pickup_return=='yes')?$inventory['rbfw_order_status'] == 'picked':'')) ){
+                                $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
+                                if ( in_array($current_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$inventory['rbfw_order_status'] == 'returned':'')) ){
 
                                     $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
                                     $rbfw_variation_info = !empty($inventory['rbfw_variation_info']) ? $inventory['rbfw_variation_info'] : [];
@@ -177,6 +196,17 @@ if (!class_exists('RBFWInventoryPage')) {
                                         }
                                         
                                     } else {
+                                        $inventory_start_date = $booked_dates[0];
+                                        $inventory_end_date = end($booked_dates);
+                                        $inventory_start_time = $inventory['rbfw_start_time'];
+                                        $inventory_end_time = $inventory['rbfw_end_time'];
+                                        $inventory_start_datetime = date('Y-m-d H:i', strtotime($inventory_start_date . ' ' . $inventory_start_time));
+                                        $inventory_end_datetime = date('Y-m-d H:i', strtotime($inventory_end_date . ' ' . $inventory_end_time));
+
+                                       /* if(){
+                                            $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
+                                            $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
+                                        }*/
 
                                         $sold_item_qty += $rbfw_item_quantity;
                                     }
@@ -205,7 +235,7 @@ if (!class_exists('RBFWInventoryPage')) {
                                     foreach ($item1['cat_services'] as $key1=>$single){
                                         if($single['title']){
                                             $service_quantity[] = $single['stock_quantity'];
-                                            $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_pickup_return));
+                                            $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return));
                                             $service_stock[] = $single['stock_quantity'] - max(array_column($service_q, $single['title']));
                                         }
                                     }
@@ -248,6 +278,8 @@ if (!class_exists('RBFWInventoryPage')) {
         public function rbfw_get_stock_by_filter(){
 
             $selected_date = strip_tags($_POST['selected_date']);
+            $start_date = strip_tags($_POST['start_date']);
+            $end_date = strip_tags($_POST['end_date']);
 
             $args = array(
                 'post_type' => 'rbfw_item',
@@ -257,7 +289,7 @@ if (!class_exists('RBFWInventoryPage')) {
 
             $query = new WP_Query( $args );
 
-            $content = $this->rbfw_inventory_page_table($query, $selected_date);
+            $content = $this->rbfw_inventory_page_table($query, $selected_date,$start_date,$end_date);
 
             echo $content;
 
@@ -269,7 +301,7 @@ if (!class_exists('RBFWInventoryPage')) {
             $data_request = strip_tags($_POST['data_request']);
             $data_date = strip_tags($_POST['data_date']);
             $data_id = strip_tags($_POST['data_id']);
-            $inventory_based_on_pickup_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
+            $inventory_based_on_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
             $rent_type = !empty(get_post_meta($data_id, 'rbfw_item_type', true)) ? get_post_meta($data_id, 'rbfw_item_type', true) : ''; 
             $rbfw_enable_variations = !empty(get_post_meta($data_id, 'rbfw_enable_variations', true)) ? get_post_meta($data_id, 'rbfw_enable_variations', true) : 'no';      
             $rbfw_variations_data = !empty(get_post_meta($data_id, 'rbfw_variations_data', true)) ? get_post_meta($data_id, 'rbfw_variations_data', true) : [];
@@ -321,7 +353,7 @@ if (!class_exists('RBFWInventoryPage')) {
                     
                     foreach ($rbfw_inventory as $key => $inventory) {
 
-                        if ( in_array($data_date, $inventory['booked_dates']) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ){
+                        if ( in_array($data_date, $inventory['booked_dates']) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked') ){
 
                             $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
                             $rbfw_variation_info = !empty($inventory['rbfw_variation_info']) ? $inventory['rbfw_variation_info'] : [];
@@ -626,7 +658,7 @@ if (!class_exists('RBFWInventoryPage')) {
                             <tr>
                             <td><?php echo $single['title']; ?></td>
                             <?php
-                            $service_q[] = array('date'=>$data_date,$single['title']=>total_service_quantity($cat_title,$single['title'],$data_date,$rbfw_inventory,$inventory_based_on_pickup_return));
+                            $service_q[] = array('date'=>$data_date,$single['title']=>total_service_quantity($cat_title,$single['title'],$data_date,$rbfw_inventory,$inventory_based_on_return));
                             ?>
                             <td>
                             <?php echo $single['stock_quantity'] - max(array_column($service_q, $single['title'])); ?>
@@ -694,6 +726,8 @@ if (!class_exists('RBFWInventoryPage')) {
                     e.preventDefault();
                     e.stopImmediatePropagation();
                     let selected_date = jQuery('.rbfw_inventory_filter_date').val();
+                    let start_date = jQuery('#rbfw_inventory_event_start_time').val();
+                    let end_date = jQuery('#rbfw_inventory_event_end_time').val();
                     let placeholder_loader = jQuery('.rbfw-inventory-page-ph').clone();
           
                     if(selected_date == ''){
@@ -707,6 +741,8 @@ if (!class_exists('RBFWInventoryPage')) {
                         data: {
                             'action' : 'rbfw_get_stock_by_filter',
                             'selected_date' : selected_date,
+                            'start_date' : start_date,
+                            'end_date' : end_date,
                         },
                         beforeSend: function() {
                             jQuery('.rbfw_inventory_page_table_wrap').empty();

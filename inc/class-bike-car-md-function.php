@@ -93,7 +93,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
             $total_days = $diff->days;
 
-            $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date);
+            $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime);
             $duration_price = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$star_time,$end_time)*$item_quantity;
 
 
