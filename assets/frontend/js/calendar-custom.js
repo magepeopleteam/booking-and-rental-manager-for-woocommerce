@@ -1,15 +1,32 @@
 jQuery(document).ready(function($){
+    
+    if($('#rbfw-single-day-booking').length){
+        new RBFW_Single_Day_Booking($);
+    }
+    
+});
 
-    if($('#rbfw-single-day-booking-calendar').length){
+
+class RBFW_Single_Day_Booking{
+
+    constructor($) {
+        
+        let config = this.getCalendarConfig($);
+        $('#rbfw-single-day-booking').calendar(config);
+
+    }
+
+    getCalendarConfig($){
         let todayDate= new Date;
         let yearLimitYear = todayDate.getFullYear()+1;
         let yearLimitMonth =todayDate.getMonth();
         let yearLimitDay =todayDate.getDate();
-        console.log(yearLimitYear+'-'+yearLimitMonth+'-'+yearLimitDay);
+        // console.log(yearLimitYear+'-'+yearLimitMonth+'-'+yearLimitDay);
+
         let config = {
             date: null,
             weekDayLength:1,
-            onClickDate: onclick_cal_date,
+            onClickDate: this.dateSelected.bind(this),
             monthYearSeparator:' | ',
             showThreeMonthsInARow: true,
             enableMonthChange: true,
@@ -19,15 +36,23 @@ jQuery(document).ready(function($){
             highlightSelectedWeek: false,
             todayButtonContent: "Today",
             showYearDropdown: true,
-            min:  new Date,
-            max: yearLimitYear+'-'+yearLimitMonth+'-'+yearLimitDay,
-            disable: function (date) {},
+            min: null,
+            max: null,
+            disable:function (date) {
+                return this.disableDate.bind(date);
+            }
+            
             startOnMonday: false,
             prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
             nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
-
         }
-        $('#rbfw-single-day-booking-calendar').calendar(config);
+        return config;
+        
     }
-    
-});
+
+    dateSelected(date){
+        jQuery('#rbfw-single-day-booking').updateCalendarOptions({date});
+    }
+}
+
+

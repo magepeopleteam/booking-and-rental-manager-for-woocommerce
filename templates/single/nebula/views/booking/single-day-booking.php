@@ -13,7 +13,7 @@
 		<form action="" method='post' class="mp_rbfw_ticket_form">
 			<div class="booking-area">
 				<div class="calender">
-					<div id="rbfw-single-day-booking-calendar" data-start-weekday=''></div>
+					<div id="rbfw-single-day-booking" data-start-weekday=''></div>
 				</div>
 				<div class="timeslot">
 
