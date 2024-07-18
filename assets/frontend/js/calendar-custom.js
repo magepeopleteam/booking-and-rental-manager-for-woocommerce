@@ -22,12 +22,6 @@ class RBFW_Single_Day_Booking{
     }
 
     getCalendarConfig($){
-        let todayDate= new Date;
-        let yearLimitYear = todayDate.getFullYear()+1;
-        let yearLimitMonth =todayDate.getMonth();
-        let yearLimitDay =todayDate.getDate();
-        // console.log(yearLimitYear+'-'+yearLimitMonth+'-'+yearLimitDay);
-
         let config = {
             date: null,
             weekDayLength:1,
@@ -36,7 +30,7 @@ class RBFW_Single_Day_Booking{
             showThreeMonthsInARow: true,
             enableMonthChange: true,
             enableYearView: true,
-            showTodayButton: true,
+            showTodayButton: false,
             highlightSelectedWeekday: false,
             highlightSelectedWeek: false,
             todayButtonContent: "Today",
@@ -44,7 +38,7 @@ class RBFW_Single_Day_Booking{
             min: null,
             max: null,
             disable:function(date){
-                return RBFW_Single_Day_Booking.disableDate(date);
+                return RBFW_Single_Day_Booking.disableDate(date,'','no');
             },
             startOnMonday: false,
             prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
@@ -53,29 +47,64 @@ class RBFW_Single_Day_Booking{
         return config;
         
     }
-
+     // when calendar date selected
     dateSelected(date){
         jQuery('#rbfw-single-day-booking').updateCalendarOptions({date});
+        let d = new Date(date);
+        let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+        let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d);
+        let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+        let s_Date = ye+'-'+mo+'-'+da;
+        jQuery('#rbfw_bikecarsd_selected_date').val(s_Date);
     }
-
-    static disableDate(date){
-        return date < new Date();
+    // disable date lists
+    static disableDate(date,type='',today_enable='no'){
+        var curr_date = ("0" + (date.getDate())).slice(-2);
+        var curr_month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var curr_year = date.getFullYear();
+        var date_in = curr_date+"-"+curr_month+"-"+curr_year;    
+        var date_today = new Date();
+    
+        if(today_enable=='yes'){
+            var month = date_today.getMonth()-1;
+            var day = date_today.getDate();
+            var date_today = date_today.getFullYear() + '/' +
+                (month<10 ? '0' : '') + month + '/' +
+                (day<10 ? '0' : '') + day;
+        }
+    
+        var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
+        var day_in = weekday[date.getDay()];
+        var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
+    
+        var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
+    
+    
+        if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || (date <  date_today) ){
+            if(type=='md'){
+                return [false, "notav", 'Not Available'];
+            }else{
+                return true;
+            }
+        }else{
+    
+            if(type=='md'){
+                return [true, "av", "available"];
+            }else{
+                return false;
+            }
+        }
     }
 
     static selectTimeSlot(element){
-        var element = jQuery(element);
-        var cssClass = element.attr('class');
-        cssClass ='.'+cssClass;
-        jQuery(cssClass).removeClass('active');
-        element.addClass('active');
+        console.log(element.attr('class'));
         jQuery('.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disabled)').click(function (e) { 
             jQuery('.rbfw_bikecarsd_time').removeClass('selected');
             jQuery(this).addClass('selected');
             let gTime = jQuery(this).attr('data-time');
             jQuery('#rbfw_bikecarsd_selected_time').val(gTime);
-            let selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
-            let post_id = jQuery('#rbfw_post_id').val();
-            let rent_type = jQuery('#rbfw_rent_type').val();
+
+            
             let is_muffin_template = jQuery('.rbfw_muffin_template').length;
             if(is_muffin_template > 0){
                 is_muffin_template = '1';
