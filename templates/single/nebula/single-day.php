@@ -1,4 +1,8 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit; ?>
+<?php if ( ! defined( 'ABSPATH' ) ) exit;
+global $rbfw;
+$enable_faq_content = RBFW_Frontend::get_enable_faq_content();
+
+?>
     <div class="rbfw-nebula-template">
         <!-- nebula slider template -->
         <div class="rbfw-nebula-slider">
@@ -83,12 +87,23 @@
                 <?php do_action('rbfw_booking_form'); ?>
             </div>
         </div>
+         <!-- FAQ Product -->
+        <div class="rbfw-nebula-faq">
+            <?php   if($enable_faq_content == 'yes') { ?>
+                <div class="rbfw_muff_row_faq">
+                    <h2 class="title"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Freequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?></h2>
+                    <div class="devider"></div>
+                    <?php do_action( 'rbfw_the_faq_style_two', $post_id ); ?>
+                </div>
+            <?php } ?>
+        </div>
+
         <!-- Related Product -->
         <div class="rbfw-nebula-related">
             <div class="rbfw-related-products-wrapper">
                 <?php do_action( 'rbfw_related_products',get_the_ID() ); ?>
             </div>
         </div>
-        <!-- Related items -->
+
     </div>
 

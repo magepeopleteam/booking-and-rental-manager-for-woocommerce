@@ -94,7 +94,10 @@
 			public static function get_time_slot_switch() {
 				!empty(get_post_meta(get_the_ID(), 'rbfw_time_slot_switch', true)) ? get_post_meta(get_the_ID(), 'rbfw_time_slot_switch', true) : 'on';
 			}
-
+			public static function get_enable_faq_content(){
+				$enable_faq_content  = get_post_meta( get_the_ID(), 'rbfw_enable_faq_content', true ) ? get_post_meta( get_the_ID(), 'rbfw_enable_faq_content', true ) : 'no';
+				return $enable_faq_content;
+			}
 			public static function get_rent_type_template($post_id) {
 				$rent_type = RBFW_Frontend::get_rent_type($post_id);
 				
