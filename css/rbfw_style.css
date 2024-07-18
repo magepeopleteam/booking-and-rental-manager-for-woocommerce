@@ -6074,7 +6074,7 @@ body.single-rbfw_item div.ast-container {
   height: 100%;
   overflow-y: scroll;
 }
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .times {
+.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .rbfw_bikecarsd_time {
   padding: 10px;
   font-size: 20px;
   color: #333;
@@ -6082,12 +6082,12 @@ body.single-rbfw_item div.ast-container {
   text-align: center;
   margin: 10px 30px;
 }
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .times:hover {
+.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .rbfw_bikecarsd_time:hover {
   cursor: pointer;
   background-color: #000;
   color: #fff;
 }
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .times.active {
+.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .rbfw_bikecarsd_time.selected {
   cursor: pointer;
   background-color: #000;
   color: #fff;

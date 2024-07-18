@@ -97,14 +97,16 @@ class RBFW_Single_Day_Booking{
     }
 
     static selectTimeSlot(element){
-        console.log(element.attr('class'));
+
         jQuery('.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disabled)').click(function (e) { 
             jQuery('.rbfw_bikecarsd_time').removeClass('selected');
             jQuery(this).addClass('selected');
             let gTime = jQuery(this).attr('data-time');
             jQuery('#rbfw_bikecarsd_selected_time').val(gTime);
+            let post_id = jQuery('#rbfw_post_id').val();
+            let selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
+            let rent_type = jQuery('#rbfw_rent_type').val();
 
-            
             let is_muffin_template = jQuery('.rbfw_muffin_template').length;
             if(is_muffin_template > 0){
                 is_muffin_template = '1';
@@ -122,7 +124,7 @@ class RBFW_Single_Day_Booking{
                     'is_muffin_template': is_muffin_template
                 },
                 beforeSend: function() {
-    
+                    jQuery('.single-day-booking-result').empty();
                     jQuery('.rbfw_bikecarsd_time_table_wrap').addClass('rbfw_loader_in');
                     jQuery('.rbfw_bikecarsd_time_table_wrap').append('<i class="fas fa-spinner fa-spin"></i>');
     
@@ -134,16 +136,16 @@ class RBFW_Single_Day_Booking{
                     }
                 },
                 success: function (response) {
-    
+                    
                     if( rent_type == 'bike_car_sd' ){
-    
-                        jQuery('.rbfw-bikecarsd-step[data-step="2"]').hide();
+                        
+                        jQuery('.rbfw-bikecarsd-step[data-step="3"]').hide();
                     }
     
                     jQuery('.rbfw_bikecarsd_time_table_wrap').removeClass('rbfw_loader_in');
                     jQuery('.rbfw_bikecarsd_time_table_wrap i.fa-spinner').remove();
                     jQuery('.rbfw_bikecarsd_pricing_table_container').remove();
-                    jQuery('.rbfw-bikecarsd-result').append(response);
+                    jQuery('.single-day-booking-result').append(response);
     
                     if( rent_type == 'appointment' ){
     
