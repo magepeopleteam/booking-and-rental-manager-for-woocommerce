@@ -54,9 +54,8 @@ class RBFW_Single_Day_Booking{
         
     }
 
-    dateSelected(date,$){
-        $('#rbfw-single-day-booking').updateCalendarOptions({date});
-
+    dateSelected(date){
+        jQuery('#rbfw-single-day-booking').updateCalendarOptions({date});
     }
 
     static disableDate(date){
