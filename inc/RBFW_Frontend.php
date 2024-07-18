@@ -98,7 +98,22 @@
 				$enable_faq_content  = get_post_meta( get_the_ID(), 'rbfw_enable_faq_content', true ) ? get_post_meta( get_the_ID(), 'rbfw_enable_faq_content', true ) : 'no';
 				return $enable_faq_content;
 			}
+			public static function get_enable_daywise_price() {
+				$daywise_price  = get_post_meta(get_the_ID(), 'rbfw_enable_daywise_price', true) ? get_post_meta(get_the_ID(), 'rbfw_enable_daywise_price', true) : 'no';
+				return $daywise_price;
+			}
+
+			public static function get_enable_daily_rate() {
+				$enable_daily_rate = get_post_meta(get_the_ID(), 'rbfw_enable_daily_rate', true) ? get_post_meta(get_the_ID(), 'rbfw_enable_daily_rate', true) : 'yes';
+				return $enable_daily_rate;
+			}
+
+			public static function get_enable_hourly_rate() {
+				$enable_hourly_rate = get_post_meta(get_the_ID(), 'rbfw_enable_hourly_rate', true) ? get_post_meta(get_the_ID(), 'rbfw_enable_hourly_rate', true) : 'no';
+				return $enable_hourly_rate;
+			}
 			public static function get_rent_type_template($post_id) {
+
 				$rent_type = RBFW_Frontend::get_rent_type($post_id);
 				
 				switch($rent_type){
