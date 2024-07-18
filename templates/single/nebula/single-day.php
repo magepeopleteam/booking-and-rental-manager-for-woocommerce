@@ -85,7 +85,9 @@
         </div>
         <!-- Related Product -->
         <div class="rbfw-nebula-related">
-            <?php do_action( 'rbfw_related_products',get_the_ID() ); ?>
+            <div class="rbfw-related-products-wrapper">
+                <?php do_action( 'rbfw_related_products',get_the_ID() ); ?>
+            </div>
         </div>
         <!-- Related items -->
     </div>
