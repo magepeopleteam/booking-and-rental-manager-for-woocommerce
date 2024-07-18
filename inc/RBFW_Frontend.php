@@ -77,6 +77,24 @@
 				return $payment_system;
 			}
 
+			public static function get_appointment_days() {
+				$appointment_days = json_encode(get_post_meta(get_the_ID(), 'rbfw_sd_appointment_ondays', true));
+				return $appointment_days;
+			}
+
+			public static function get_regi_form_info() {
+                $rbfw_regf_info = [];
+                if(class_exists('Rbfw_Reg_Form')){
+                    $ClassRegForm = new Rbfw_Reg_Form();
+                    $rbfw_regf_info = $ClassRegForm->rbfw_get_regf_all_fields_name(get_the_ID());
+                }
+				return $rbfw_regf_info;
+			}
+				
+			public static function get_time_slot_switch() {
+				!empty(get_post_meta(get_the_ID(), 'rbfw_time_slot_switch', true)) ? get_post_meta(get_the_ID(), 'rbfw_time_slot_switch', true) : 'on';
+			}
+
 			public static function get_rent_type_template($post_id) {
 				$rent_type = RBFW_Frontend::get_rent_type($post_id);
 				
