@@ -84,7 +84,7 @@ $enable_faq_content = RBFW_Frontend::get_enable_faq_content();
             <h2 class="title"><?php _e('Book online','booking-and-rental-manager-for-woocommerce'); ?></h2>
             <div class="devider"></div>
             <div class="booking-area">
-                <?php do_action('rbfw_booking_form'); ?>
+                <?php include(  RBFW_TEMPLATE_PATH . 'forms/muffin/bike-car-sd-registration.php' ); ?>
             </div>
         </div>
          <!-- FAQ Product -->
@@ -101,7 +101,7 @@ $enable_faq_content = RBFW_Frontend::get_enable_faq_content();
         <!-- Related Product -->
         <div class="rbfw-nebula-related">
             <div class="rbfw-related-products-wrapper">
-                <?php do_action( 'rbfw_related_products',get_the_ID() ); ?>
+                <?php do_action( 'rbfw_related_products', $post_id ); ?>
             </div>
         </div>
 

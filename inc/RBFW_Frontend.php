@@ -11,7 +11,7 @@
 			
 			public function __construct() {
 				add_filter( 'single_template', array( $this, 'single_template' ) );		
-				add_action( 'rbfw_booking_form', array( $this, 'booking_form' ) );				
+				// add_action( 'rbfw_booking_form', array( $this, 'booking_form' ) );				
 			}
 
 			public function single_template($single_template) {
