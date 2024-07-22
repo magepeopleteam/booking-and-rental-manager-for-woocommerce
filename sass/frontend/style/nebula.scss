@@ -150,6 +150,16 @@
                     }
                 }
             }
+            .rbfw-datetime {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                flex-direction: column;
+                @media (min-width:768px) {
+                    flex-direction: row;
+                    align-items: end;
+                }
+            }
         }
     }
 }
