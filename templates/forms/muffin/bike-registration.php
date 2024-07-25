@@ -498,7 +498,7 @@ if($rbfw_enable_variations == 'yes'){
                     $reg_form = new Rbfw_Reg_Form();
                     $reg_fields = $reg_form->rbfw_generate_regf_fields($rbfw_id);
 
-                    //print_r($reg_fields);
+                  //  print_r($reg_fields);
 
 
                     ?>

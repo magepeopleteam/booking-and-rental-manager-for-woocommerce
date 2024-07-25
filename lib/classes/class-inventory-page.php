@@ -89,7 +89,8 @@ if (!class_exists('RBFWInventoryPage')) {
             <?php
         }
 
-        public function rbfw_inventory_page_table($query, $date = null,$start_date,$end_date){
+        public function rbfw_inventory_page_table($query, $date = null, $start_time = null, $end_time = null){
+
             ob_start();
             $inventory_based_on_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
             ?>
@@ -186,15 +187,11 @@ if (!class_exists('RBFWInventoryPage')) {
                                     $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
                                     
                                     if($rent_type == 'bike_car_sd' || $rent_type == 'appointment' || $rent_type == 'resort') {
-                                        
                                         if (!empty($rbfw_type_info)) {
-
                                             foreach ($rbfw_type_info as $key => $type_info) {
-
                                                 $sold_item_qty += $type_info;
                                             }
                                         }
-                                        
                                     } else {
                                         $inventory_start_date = $booked_dates[0];
                                         $inventory_end_date = end($booked_dates);
@@ -203,12 +200,32 @@ if (!class_exists('RBFWInventoryPage')) {
                                         $inventory_start_datetime = date('Y-m-d H:i', strtotime($inventory_start_date . ' ' . $inventory_start_time));
                                         $inventory_end_datetime = date('Y-m-d H:i', strtotime($inventory_end_date . ' ' . $inventory_end_time));
 
-                                       /* if(){
-                                            $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
-                                            $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
-                                        }*/
 
-                                        $sold_item_qty += $rbfw_item_quantity;
+                                        if($start_time && $end_time){
+                                            $pickup_datetime = date('Y-m-d H:i', strtotime($date . ' ' . $start_time));
+                                            $dropoff_datetime = date('Y-m-d H:i', strtotime($date . ' ' . $end_time));
+                                            $index_no = array_search($current_date, $booked_dates);
+                                            $total_date = count($booked_dates);
+                                            if($total_date==1){
+                                                if(($inventory_end_datetime>$pickup_datetime && $inventory_start_datetime<$pickup_datetime)|| ($inventory_end_datetime>$dropoff_datetime && $inventory_start_datetime<$dropoff_datetime)){
+                                                    $sold_item_qty += $rbfw_item_quantity;
+                                                }
+                                            }else{
+                                                if($index_no==0){
+                                                    if($inventory_end_datetime>$pickup_datetime && $inventory_start_datetime<$pickup_datetime){
+                                                        $sold_item_qty += $rbfw_item_quantity;
+                                                    }
+                                                }elseif ($total_date==$index_no){
+                                                    if($inventory_end_datetime>$dropoff_datetime && $inventory_start_datetime<$dropoff_datetime){
+                                                        $sold_item_qty += $rbfw_item_quantity;
+                                                    }
+                                                }else{
+                                                    
+                                                }
+                                            }
+                                        }else{
+                                            $sold_item_qty += $rbfw_item_quantity;
+                                        }
                                     }
 
                                     if (!empty($rbfw_service_info)) {
