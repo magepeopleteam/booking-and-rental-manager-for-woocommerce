@@ -210,6 +210,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.0.5 =
+* Picked note, returned note and returned security deposit amount added in order list.
+* Rent list item pricing display issue solved.
+* Registration form problem solved.
+
 = 2.0.4 =
 * Pricing and discount problem solved after pickup or drop off date change.
 * Yoast seo plugin not supported, solved it.
