@@ -53,7 +53,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
     $args = array(
         'post_type' => 'rbfw_item',
-        'posts_per_page' => -1,
+        'posts_per_page' => $show,
         'meta_key' => $meta_key,
         'orderby' => $orderby,
         'order' => $order,
@@ -113,7 +113,9 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 }
             }
 
-            if($expire == 'no'){
+            include( RBFW_Function::template_path( 'rent_list_styles/list.php' ) );
+
+            /*if($expire == 'no'){
                 if($style == 'grid'):
                     include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) );
                 elseif($style == 'list'):
@@ -121,7 +123,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 else:
                     include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) );
                 endif;
-            }
+            }*/
 
 
 

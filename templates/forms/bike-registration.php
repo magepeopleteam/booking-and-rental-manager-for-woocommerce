@@ -393,7 +393,7 @@ if($rbfw_enable_variations == 'yes'){
 
                                                         <div class="title"><?php echo wc_price($service['price']) ?></div>
 
-                                                        <div class="title"><?php echo ($service['service_price_type']=='day_wise')?'Day Wise':'One Time' ?></div>
+                                                        <div class="title"><?php echo ($service['service_price_type']=='day_wise')?esc_html__('Day Wise','booking-and-rental-manager-for-woocommerce'):esc_html__('One Time','booking-and-rental-manager-for-woocommerce') ?></div>
                                                     </div>
                                                 <?php } ?>
                                             <?php } ?>

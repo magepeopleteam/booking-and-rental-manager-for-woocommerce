@@ -1589,138 +1589,7 @@ function rbfw_search_query_exlude_hidden_wc_fix( $query ) {
 /*****************************
  * Create Inventory Meta
  *****************************/
-function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
-
-
-    global $rbfw;
-    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-    $rbfw_item_type = !empty(get_post_meta($rbfw_id, 'rbfw_item_type', true)) ? get_post_meta($rbfw_id, 'rbfw_item_type', true) : '';
-    $rbfw_inventory_info = !empty(get_post_meta($rbfw_id, 'rbfw_inventory', true)) ? get_post_meta($rbfw_id, 'rbfw_inventory', true) : [];
-
-    if($rbfw_payment_system == 'wps'){
-        $order = wc_get_order( $order_id );
-        $rbfw_order_status = $order->get_status();
-    } else {
-        $rbfw_order_status = !empty(get_post_meta($order_id, 'rbfw_order_status', true)) ? get_post_meta($order_id, 'rbfw_order_status', true) : '';
-    }
-
-    $start_date = !empty($ticket_info['rbfw_start_date']) ? $ticket_info['rbfw_start_date'] : '';
-    $end_date = !empty($ticket_info['rbfw_end_date']) ? $ticket_info['rbfw_end_date'] : '';
-    $start_time = !empty($ticket_info['rbfw_start_time']) ? $ticket_info['rbfw_start_time'] : '';
-    $end_time = !empty($ticket_info['rbfw_end_time']) ? $ticket_info['rbfw_end_time'] : '';
-    $rbfw_item_quantity = !empty($ticket_info['rbfw_item_quantity']) ? $ticket_info['rbfw_item_quantity'] : 0;
-    $rbfw_type_info = !empty($ticket_info['rbfw_type_info']) ? $ticket_info['rbfw_type_info'] : [];
-    $rbfw_variation_info = !empty($ticket_info['rbfw_variation_info']) ? $ticket_info['rbfw_variation_info'] : [];
-    $rbfw_service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
-    $rbfw_service_infos = !empty($ticket_info['rbfw_service_infos']) ? $ticket_info['rbfw_service_infos'] : [];
-    $date_range = [];
-
-
-
-    if( ($rbfw_item_type == 'bike_car_md') || ($rbfw_item_type == 'dress') || ($rbfw_item_type == 'equipment') || ($rbfw_item_type == 'others') ){
-
-        // Start: Date Time Calculation
-        $start_datetime  = date( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
-        $end_datetime = date( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
-        $start_datetime  = new DateTime( $start_datetime );
-        $end_datetime = new DateTime( $end_datetime );
-
-        $diff = date_diff( $start_datetime, $end_datetime );
-        $days = 0;
-        $hours = 0;
-
-        $start_date = strtotime($start_date);
-        $end_date = strtotime($end_date);
-
-        if ( $diff ) {
-            $days    = $diff->days;
-            $hours   += $diff->h;
-
-
-
-            if ( ($hours > 0)  || ($start_time == '00:00:00' && $end_time == rbfw_end_time()) ) {
-
-
-                $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
-                if($rbfw_count_extra_day_enable=='on'){
-                    for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
-
-                        $date = date('d-m-Y', $currentDate);
-                        $date_range[] = $date;
-
-                    }
-                }else{
-                    for ($currentDate = $start_date; $currentDate < $end_date; $currentDate += (86400)) {
-
-                        $date = date('d-m-Y', $currentDate);
-                        $date_range[] = $date;
-
-                    }
-                }
-
-
-
-            } else {
-
-                for ($currentDate = $start_date; $currentDate < $end_date; $currentDate += (86400)) {
-
-                    $date = date('d-m-Y', $currentDate);
-
-                    $date_range[] = $date;
-
-                }
-
-            }
-
-        }
-        // End: Date Time Calculation
-
-    } else {
-
-        $start_date = strtotime($start_date);
-        $end_date = strtotime($end_date);
-
-        for ($currentDate = $start_date; $currentDate <= $end_date;
-
-             $currentDate += (86400)) {
-
-            $date = date('d-m-Y', $currentDate);
-
-            $date_range[] = $date;
-
-        }
-    }
-
-
-
-
-
-
-
-    $order_array = [];
-    $order_array['booked_dates'] = $date_range;
-    $order_array['rbfw_start_time'] = $start_time;
-    $order_array['rbfw_end_time'] = $end_time;
-    $order_array['rbfw_type_info'] = $rbfw_type_info;
-    $order_array['rbfw_variation_info'] = $rbfw_variation_info;
-    $order_array['rbfw_service_info'] = $rbfw_service_info;
-    $order_array['rbfw_service_infos'] = $rbfw_service_infos;
-    $order_array['rbfw_item_quantity'] = $rbfw_item_quantity;
-    $order_array['rbfw_order_status'] = $rbfw_order_status;
-
-    $rbfw_inventory_info[$order_id] = $order_array;
-
-
-
-
-
-
-
-    update_post_meta($rbfw_id, 'rbfw_inventory', $rbfw_inventory_info);
-
-    return true;
-}
 
 /******************************************
  * Inventory Remove: WP Trash Post
@@ -1763,55 +1632,7 @@ function wp_kama_untrashed_post_action( $order_id ,$previous_status ) {
 
 }
 
-function rbfw_update_inventory($order_id, $current_status = null){
-    global $rbfw;
-    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
-    /* get order meta data from wp_postmeta table */
-    global $wpdb;
-    $order_items_table = $wpdb->prefix . 'woocommerce_order_items';
-    $order = $wpdb->get_results("SELECT * FROM `$order_items_table` WHERE order_id = ".$order_id."");
-
-
-
-    if($rbfw_payment_system == 'wps'){
-
-        foreach( $order as $item ) {
-            $order_itemmeta_table = $wpdb->prefix . 'woocommerce_order_itemmeta';
-            $item_id = $item->order_item_id;
-            $item_meta_data = $wpdb->get_results("SELECT * FROM `$order_itemmeta_table` WHERE order_item_id = ".$item_id." AND meta_key = '_rbfw_id' ");
-
-            foreach ($item_meta_data as $meta_data) {
-                $rbfw_id = $meta_data->meta_value;
-                $inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
-
-                if (!empty($inventory) && array_key_exists($order_id, $inventory)){
-
-                    $inventory[$order_id]['rbfw_order_status'] = $current_status;
-
-
-                    update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
-                }
-            }
-
-        }
-
-    } else {
-
-        $rbfw_id = get_post_meta($order_id, 'rbfw_id', true);
-        $inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
-
-        if (!empty($inventory) && array_key_exists($order_id, $inventory)){
-
-            $inventory[$order_id]['rbfw_order_status'] = $current_status;
-
-            update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
-        }
-    }
-
-
-
-}
 
 
 
@@ -2012,22 +1833,23 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
         // End Bike/car Multiple Day Type
     }
 
-    /*    echo '<pre>';
-        print_r($rbfw_inventory);
-        echo '<pre>';exit;*/
+    $inventory_based_on_pickup_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
+
 
     if (!empty($rbfw_inventory)) {
 
         $total_qty = 0;
         $qty_array = [];
         $extra_service_quantity = [];
-        foreach ($date_range as $key => $range_date) {
+        foreach ($date_range as $key1 => $range_date) {
             foreach ($rbfw_inventory as $key => $inventory) {
+
                 $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
                 $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
-
                 $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
-                if ( in_array($range_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ) {
+
+
+                if ( in_array($range_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || (($inventory_based_on_pickup_return=='yes')?$inventory['rbfw_order_status'] == 'picked':'') ) ) {
                     if ($rent_type == 'resort') {
                         foreach ($rbfw_type_info as $type_name => $type_qty) {
                             if ($type_name == $type) {
@@ -2036,10 +1858,14 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                         }
                     } else {
                         /*total booking quantity*/
+
+
                         $total_qty += $rbfw_item_quantity;
                     }
                 }
+
             }
+
             $remaining_stock = $type_stock - $total_qty;
             $remaining_stock = max(0, $remaining_stock);
             $qty_array[] = $remaining_stock;
@@ -2063,7 +1889,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
             foreach ($item1['cat_services'] as $key1=>$single){
                 if($single['title']){
                     foreach($date_range as $date){
-                        $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory));
+                        $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_pickup_return));
                     }
                     $service_stock[] = $single['stock_quantity'] - max(array_column($service_q, $single['title']));
                 }
@@ -2075,7 +1901,9 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     /*start variation inventory*/
     $variant_instock = [];
     $rbfw_variations_data = get_post_meta( $post_id, 'rbfw_variations_data', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];
-    if(!empty($rbfw_variations_data)){
+    $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
+
+    if(($rbfw_enable_variations=='yes') && !empty($rbfw_variations_data)){
         $variant_q = [];
         foreach($rbfw_variations_data as $key=>$item1){
             $field_label = $item1['field_label'];
@@ -2083,9 +1911,10 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                 foreach ($item1['value'] as $key1=>$single){
                     if($single['name']){
                         foreach($date_range as $date){
-                            $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory));
+                            $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_pickup_return));
                         }
-                        $variant_instock[] = $single['quantity'] - max(array_column($variant_q, $single['name']));
+                        $booked_quantity = array_column($variant_q, $single['name']);
+                        $variant_instock[] = $single['quantity'] - max($booked_quantity);
                     }
                 }
             }
@@ -2102,7 +1931,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
         $service_q = [];
         foreach($rbfw_extra_service_info as $service=>$es){
             foreach($date_range as $date){
-                $service_q[] = array('date'=>$date,$es['service_name']=>total_extra_service_quantity($es['service_name'],$date,$rbfw_inventory));
+                $service_q[] = array('date'=>$date,$es['service_name']=>total_extra_service_quantity($es['service_name'],$date,$rbfw_inventory,$inventory_based_on_pickup_return));
             }
             $extra_service_instock[$service] = $es['service_qty'] - max(array_column($service_q, $es['service_name']));
         }
@@ -2116,11 +1945,13 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     );
 }
 
-function total_service_quantity($paraent,$service,$date,$inventory){
+function total_service_quantity($paraent,$service,$date,$inventory,$inventory_based_on_pickup_return){
     $total_single_service = 0;
     //echo '<pre>';print_r($inventory);echo '<pre>';exit;
     foreach($inventory as $item){
-        if(in_array($date,$item['booked_dates']) && array_key_exists($paraent,$item['rbfw_service_infos'])){
+
+        if(in_array($date,$item['booked_dates']) && array_key_exists($paraent,$item['rbfw_service_infos']) && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || (($inventory_based_on_pickup_return=='yes')?$item['rbfw_order_status'] == 'picked':'')  )){
+
             foreach ($item['rbfw_service_infos'] as $key=>$single){
                 foreach ($single as $basic_item){
                     if(in_array($service,$basic_item)){
@@ -2133,12 +1964,12 @@ function total_service_quantity($paraent,$service,$date,$inventory){
     return $total_single_service;
 }
 
-function total_variant_quantity($field_label,$variation,$date,$inventory){
+function total_variant_quantity($field_label,$variation,$date,$inventory,$inventory_based_on_pickup_return){
 
     $total_single_service = 0;
     foreach($inventory as $item){
         foreach ($item['rbfw_variation_info'] as $key=>$single){
-            if(in_array($date,$item['booked_dates']) && in_array($variation,$single)){
+            if(in_array($date,$item['booked_dates']) && in_array($variation,$single) && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || (($inventory_based_on_pickup_return=='yes')?$item['rbfw_order_status'] == 'picked':'')  )){
                 $total_single_service++;
             }
         }
@@ -2147,10 +1978,12 @@ function total_variant_quantity($field_label,$variation,$date,$inventory){
 }
 
 
-function total_extra_service_quantity($service,$date,$inventory){
+function total_extra_service_quantity($service,$date,$inventory,$inventory_based_on_pickup_return){
+
     $total_single_service = 0;
     foreach($inventory as $item){
-        if(in_array($date,$item['booked_dates']) && array_key_exists($service,$item['rbfw_service_info'])){
+
+        if(in_array($date,$item['booked_dates'])  && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || (($inventory_based_on_pickup_return=='yes')?$item['rbfw_order_status'] == 'picked':'') )){
             $total_single_service += $item['rbfw_service_info'][$service];
         }
     }
@@ -2243,94 +2076,7 @@ function rbfw_get_multiple_date_es_available_qty($post_id, $start_date, $end_dat
     return $remaining_stock;
 }
 
-/****************************************************
- * Multiple Rent:
- * Get Variation Available Quantity
- ****************************************************/
-function rbfw_get_multiple_date_variations_available_qty($post_id, $start_date, $end_date, $variation){
 
-    if (empty($post_id) || empty($start_date) || empty($end_date) || empty($variation)) {
-        return;
-    }
-
-    $variation_stock = 0;
-    $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
-
-    // Start: Get Date Range
-    $date_range = [];
-    $start_date = strtotime($start_date);
-    $end_date = strtotime($end_date);
-
-    for ($currentDate = $start_date; $currentDate <= $end_date;
-
-         $currentDate += (86400)) {
-
-        $date = date('d-m-Y', $currentDate);
-
-        $date_range[] = $date;
-
-    }
-    // End: Get Date Range
-
-    // Loop For Extra variations
-    $rbfw_variations_data = get_post_meta($post_id, 'rbfw_variations_data', true);
-
-    if (!empty($rbfw_variations_data)) {
-
-        foreach ($rbfw_variations_data as $key => $data_arr_one) {
-
-            foreach ($data_arr_one['value'] as $data_arr_two) {
-
-                if ($data_arr_two['name'] == $variation) {
-
-                    $variation_stock += $data_arr_two['quantity'];
-                }
-            }
-        }
-    }
-    // End Loop For Extra variations
-
-    if (!empty($rbfw_inventory)) {
-
-        $total_qty = 0;
-        $qty_array = [];
-
-        foreach ($date_range as $key => $range_date) {
-
-            foreach ($rbfw_inventory as $key => $inventory) {
-
-                $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
-                $rbfw_variation_info = !empty($inventory['rbfw_variation_info']) ? $inventory['rbfw_variation_info'] : [];
-
-                if ( in_array($range_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ) {
-
-                    foreach ($rbfw_variation_info as $field_key => $field_value) {
-
-                        if ($field_value['field_value'] == $variation) {
-
-                            $total_qty += 1;
-                        }
-                    }
-                }
-            }
-            $remaining_stock = $variation_stock - $total_qty;
-            $remaining_stock = max(0, $remaining_stock);
-            $qty_array[] = $remaining_stock;
-            $total_qty = 0;
-        }
-    }
-
-    if (empty($qty_array)) {
-
-        $remaining_stock = $variation_stock;
-
-    } else {
-
-        $remaining_stock = min($qty_array);
-    }
-
-    return $remaining_stock;
-}
 
 /****************************************************
  * Multiple Rent:
@@ -3522,7 +3268,6 @@ function rbfw_get_available_times($rbfw_id){
                 $the_array[$rts_value] = $rts_key;
             }
         }
-
     }
     return $the_array;
 }
@@ -3556,6 +3301,7 @@ function rbfw_update_inventory_order_status(){
                 foreach ($inventory as $key => $value) {
                     $order_id = $key;
                     $order_status = rbfw_get_order_status_by_id($order_id);
+                    $inventory[$order_id]['rbfw_order_status'] = $order_status;
                     $inventory[$order_id]['rbfw_order_status'] = $order_status;
                 }
             }
@@ -3691,8 +3437,8 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
         $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true );
     }
 
-    $rbfw_hourly_rate = (int)get_post_meta($post_id, 'rbfw_hourly_rate', true);
-    $rbfw_daily_rate = (int)get_post_meta($post_id, 'rbfw_daily_rate', true);
+    $rbfw_hourly_rate = get_post_meta($post_id, 'rbfw_hourly_rate', true);
+    $rbfw_daily_rate = get_post_meta($post_id, 'rbfw_daily_rate', true);
     $duration_price = 0;
     $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
     //echo $diff->days;exit;

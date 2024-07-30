@@ -53,7 +53,9 @@ if (!class_exists('RBFWInventoryPage')) {
                     <?php echo $this->rbfw_inventory_page_table($query); ?>
                 </div>
             </div>
-            <div id="rbfw_stock_view_result_wrap"><div id="rbfw_stock_view_result_inner_wrap"></div></div>
+            <div id="rbfw_stock_view_result_wrap">
+                <div id="rbfw_stock_view_result_inner_wrap"></div>
+            </div>
             <div class="rbfw-inventory-page-ph">
                 <div class="rbfw-ph-item">
                     <div class="rbfw-ph-col-12">
@@ -73,6 +75,7 @@ if (!class_exists('RBFWInventoryPage')) {
 
         public function rbfw_inventory_page_table($query, $date = null){
             ob_start();
+            $inventory_based_on_pickup_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
             ?>
                 <table class="rbfw_inventory_page_table">
                     <thead  class="rbfw_inventory_page_table_head">
@@ -83,6 +86,8 @@ if (!class_exists('RBFWInventoryPage')) {
                             <th class="rbfw_text_center"><?php esc_html_e('Item Sold Qty','booking-and-rental-manager-for-woocommerce'); ?></th>
                             <th class="rbfw_text_center"><?php esc_html_e('Extra Service Stock','booking-and-rental-manager-for-woocommerce'); ?></th>
                             <th class="rbfw_text_center"><?php esc_html_e('Extra Service Sold Qty','booking-and-rental-manager-for-woocommerce'); ?></th>                            
+                            <th class="rbfw_text_center"><?php esc_html_e('Category Service','booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th class="rbfw_text_center"><?php esc_html_e('Category Service Sold Qty','booking-and-rental-manager-for-woocommerce'); ?></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -98,13 +103,19 @@ if (!class_exists('RBFWInventoryPage')) {
                         $rbfw_variations_data = !empty(get_post_meta($post_id, 'rbfw_variations_data', true)) ? get_post_meta($post_id, 'rbfw_variations_data', true) : [];
                         $rbfw_resort_room_data = !empty(get_post_meta($post_id, 'rbfw_resort_room_data', true)) ? get_post_meta($post_id, 'rbfw_resort_room_data', true) : [];
                         $rbfw_bike_car_sd_data = !empty(get_post_meta($post_id, 'rbfw_bike_car_sd_data', true)) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
+
                         $rbfw_extra_service_data = !empty(get_post_meta($post_id, 'rbfw_extra_service_data', true)) ? get_post_meta($post_id, 'rbfw_extra_service_data', true) : [];
                         $total_es_qty = 0;
-
                         foreach ($rbfw_extra_service_data as $value) {
-
                             $total_es_qty += !empty($value['service_qty']) ? $value['service_qty'] : 0;
-                        }    
+                        }
+
+
+
+
+
+
+
 
                         $rbfw_item_stock_quantity = 0;
 
@@ -138,6 +149,8 @@ if (!class_exists('RBFWInventoryPage')) {
                         
                         $rbfw_inventory = !empty(get_post_meta($post_id, 'rbfw_inventory', true)) ? get_post_meta($post_id, 'rbfw_inventory', true) : [];
 
+                        $inventory_based_on_pickup_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
+
                         $remaining_item_stock = $rbfw_item_stock_quantity;
                         $remaining_es_stock = $total_es_qty;
                         $sold_item_qty = 0;
@@ -146,7 +159,7 @@ if (!class_exists('RBFWInventoryPage')) {
                         if(!empty($rbfw_inventory)){
                             
                             foreach ($rbfw_inventory as $key => $inventory) {
-                                if ( in_array($current_date, $inventory['booked_dates']) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing') ){
+                                if ( in_array($current_date, $inventory['booked_dates']) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || (($inventory_based_on_pickup_return=='yes')?$inventory['rbfw_order_status'] == 'picked':'')) ){
 
                                     $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
                                     $rbfw_variation_info = !empty($inventory['rbfw_variation_info']) ? $inventory['rbfw_variation_info'] : [];
@@ -181,6 +194,24 @@ if (!class_exists('RBFWInventoryPage')) {
                             $remaining_es_stock = $total_es_qty - $sold_es_qty;
                         }
 
+
+                            $rbfw_service_category_price = get_post_meta($post_id, 'rbfw_service_category_price', true);
+                            $service_quantity = [];
+                            $service_stock = [];
+                            if (!empty($rbfw_service_category_price)) {
+                                foreach($rbfw_service_category_price as $key=>$item1){
+                                    $cat_title = $item1['cat_title'];
+                                    $service_q = [];
+                                    foreach ($item1['cat_services'] as $key1=>$single){
+                                        if($single['title']){
+                                            $service_quantity[] = $single['stock_quantity'];
+                                            $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_pickup_return));
+                                            $service_stock[] = $single['stock_quantity'] - max(array_column($service_q, $single['title']));
+                                        }
+                                    }
+                                }
+                            }
+
                         
                     ?>
                         <tr>
@@ -193,6 +224,8 @@ if (!class_exists('RBFWInventoryPage')) {
                             <td class="rbfw_text_center"><?php  echo $sold_item_qty; ?></td>
                             <td class="rbfw_text_center"><?php echo $remaining_es_stock; ?>/<?php echo $total_es_qty; ?></td>
                             <td class="rbfw_text_center"><?php echo $sold_es_qty; ?></td>
+                            <td class="rbfw_text_center"><?php echo array_sum($service_stock); ?>/<?php echo array_sum($service_quantity); ?></td>
+                            <td class="rbfw_text_center"><?php echo array_sum($service_quantity)-array_sum($service_stock); ?></td>
                         </tr>
                     <?php
                         }
@@ -236,6 +269,7 @@ if (!class_exists('RBFWInventoryPage')) {
             $data_request = strip_tags($_POST['data_request']);
             $data_date = strip_tags($_POST['data_date']);
             $data_id = strip_tags($_POST['data_id']);
+            $inventory_based_on_pickup_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
             $rent_type = !empty(get_post_meta($data_id, 'rbfw_item_type', true)) ? get_post_meta($data_id, 'rbfw_item_type', true) : ''; 
             $rbfw_enable_variations = !empty(get_post_meta($data_id, 'rbfw_enable_variations', true)) ? get_post_meta($data_id, 'rbfw_enable_variations', true) : 'no';      
             $rbfw_variations_data = !empty(get_post_meta($data_id, 'rbfw_variations_data', true)) ? get_post_meta($data_id, 'rbfw_variations_data', true) : [];
@@ -243,6 +277,7 @@ if (!class_exists('RBFWInventoryPage')) {
             $rbfw_bike_car_sd_data = !empty(get_post_meta($data_id, 'rbfw_bike_car_sd_data', true)) ? get_post_meta($data_id, 'rbfw_bike_car_sd_data', true) : [];
             $rbfw_extra_service_data = !empty(get_post_meta($data_id, 'rbfw_extra_service_data', true)) ? get_post_meta($data_id, 'rbfw_extra_service_data', true) : [];
             $total_es_qty = 0;
+
 
             foreach ($rbfw_extra_service_data as $key => $extra_service_data) {
 
@@ -473,7 +508,7 @@ if (!class_exists('RBFWInventoryPage')) {
                 <table class="rbfw_inventory_page_inner_table">
                     <thead>
                         <tr>
-                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Rent Type','booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Rent Type','booking-and-rental-manager-for-woocommerce'); ?>gggg</th>
                             <th class="rbfw_inventory_vf_label"><?php esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce'); ?></th>
                         </tr>
                     </thead>
@@ -487,6 +522,14 @@ if (!class_exists('RBFWInventoryPage')) {
                     </tbody>
                 </table>
             <?php } ?>
+
+
+
+
+
+
+
+
 
             <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_type != 'resort' && $rent_type != 'bike_car_sd' && $rent_type != 'appointment'){ 
             ?>
@@ -557,10 +600,51 @@ if (!class_exists('RBFWInventoryPage')) {
                             <td><?php echo $extra_service_data['service_name']; ?></td>
                             <td><?php echo $extra_service_data['service_qty']; ?></td>
                         </tr>
-                        <?php } ?>                        
+                        <?php } ?>
                     </tbody>
                 </table>
             <?php } ?>
+
+            <?php
+
+            $rbfw_service_category_price = get_post_meta($data_id, 'rbfw_service_category_price', true);
+            $service_stock = [];
+            if (!empty($rbfw_service_category_price)) { ?>
+                <div class="rbfw_inventory_vf_label"><?php esc_html_e('Category wise service:','booking-and-rental-manager-for-woocommerce'); ?></div>
+                <table class="rbfw_inventory_page_inner_table">
+                <?php
+                foreach($rbfw_service_category_price as $key=>$item1){
+                    $cat_title = $item1['cat_title'];
+                    ?>
+                    <tr><th colspan="2" class="rbfw_inventory_vf_label"> <?php echo $cat_title; ?></th></tr>
+
+                    <?php
+                    $service_q = [];
+                    foreach ($item1['cat_services'] as $key1=>$single){
+                        if($single['title']){
+                            ?>
+                            <tr>
+                            <td><?php echo $single['title']; ?></td>
+                            <?php
+                            $service_q[] = array('date'=>$data_date,$single['title']=>total_service_quantity($cat_title,$single['title'],$data_date,$rbfw_inventory,$inventory_based_on_pickup_return));
+                            ?>
+                            <td>
+                            <?php echo $single['stock_quantity'] - max(array_column($service_q, $single['title'])); ?>
+                            </td>
+                            </tr>
+                           <?php
+                        }
+                    }
+                    ?>
+
+                    <?php
+                }
+                ?>
+                <table>
+                <?php
+            }
+            ?>
+
 
             <?php
             wp_die();

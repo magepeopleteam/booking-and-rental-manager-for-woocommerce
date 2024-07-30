@@ -136,11 +136,11 @@
 
 																<label class="" for="rbfw_dt_sidebar_switch-on">
 																	<input name="rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][service_price_type]" type="radio" <?php echo ($service_price_type=='one_time')?'checked':''  ?> id="rbfw_dt_sidebar_switch-on" value="one_time">
-																	<span class="sw-button"> One Time</span>
+																	<span class="sw-button"><?php echo esc_html__('One Time','booking-and-rental-manager-for-woocommerce'); ?> </span>
 																</label>
 																<label class="checked" for="rbfw_dt_sidebar_switch-off">
 																	<input name="rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][service_price_type]" type="radio" <?php echo ($service_price_type=='day_wise')?'checked':''  ?> id="rbfw_dt_sidebar_switch-off" value="day_wise">
-																	<span class="sw-button"> Day Wise</span>
+																	<span class="sw-button"><?php echo esc_html__('Day Wise','booking-and-rental-manager-for-woocommerce'); ?> </span>
 																</label>
 																<div>
 																	<?php if($sortable):?>
@@ -205,11 +205,11 @@
 
 													<label class="" for="rbfw_dt_sidebar_switch-on">
 														<input name="rbfw_service_category_price[0][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time">
-														<span class="sw-button"> One Time</span>
+														<span class="sw-button"><?php echo esc_html__('One Time','booking-and-rental-manager-for-woocommerce'); ?> </span>
 													</label>
 													<label class="checked" for="rbfw_dt_sidebar_switch-off">
 														<input name="rbfw_service_category_price[0][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked="">
-														<span class="sw-button"> Day Wise</span>
+														<span class="sw-button"><?php echo esc_html__('Day Wise','booking-and-rental-manager-for-woocommerce'); ?> </span>
 													</label>
 
 													<div>
@@ -263,8 +263,8 @@
 						html +='<input type="text" name="rbfw_service_category_price['+nextCat+'][cat_services][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0">';
 						html +='<input type="text" class="medium" name="rbfw_service_category_price['+nextCat+'][cat_services][0][price]" placeholder="Price" value="" data-key="0">';
 						html +='<input type="text" class="medium" name="rbfw_service_category_price['+nextCat+'][cat_services][0][stock]" placeholder="Stock" value="" data-key="0">';
-						html += '<label class="" for="rbfw_dt_sidebar_switch-on"> <input name="rbfw_service_category_price['+ nextCat +'][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time"> <span class="sw-button"> One Time</span> </label>';
-						html += '<label class="checked" for="rbfw_dt_sidebar_switch-off"> <input name="rbfw_service_category_price['+ nextCat +'][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked=""> <span class="sw-button"> Day Wise</span> </label>';
+						html += '<label class="" for="rbfw_dt_sidebar_switch-on"> <input name="rbfw_service_category_price['+ nextCat +'][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time"> <span class="sw-button"><?php echo esc_html__('One Time','booking-and-rental-manager-for-woocommerce'); ?></span> </label>';
+						html += '<label class="checked" for="rbfw_dt_sidebar_switch-off"> <input name="rbfw_service_category_price['+ nextCat +'][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked=""> <span class="sw-button"><?php echo esc_html__('Day Wise','booking-and-rental-manager-for-woocommerce'); ?> </span> </label>';
 	
 						html +='<div><?php if($sortable):?><span class="button sort"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo ($remove_text); ?></span></div></div></div></div></div><span class="ppof-button add-new-service"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo ($remove_text); ?></span></td></tr>';
 						jQuery('.rbfw_service_category_table tbody').append(html);
@@ -291,8 +291,8 @@
 						html += '<input type="text" class="medium" name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][price]" placeholder="Price" data-key="'+ c +'"/>';
 						html += '<input type="text" class="medium" name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][stock]" placeholder="Stock" data-key="'+ c +'"/>';
 	
-						html += '<label class="" for="rbfw_dt_sidebar_switch-on"> <input name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time"> <span class="sw-button"> One Time</span> </label>';
-						html += '<label class="checked" for="rbfw_dt_sidebar_switch-off"> <input name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked=""> <span class="sw-button"> Day Wise</span> </label>';
+						html += '<label class="" for="rbfw_dt_sidebar_switch-on"> <input name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time"> <span class="sw-button"> <?php echo esc_html__('One Time','booking-and-rental-manager-for-woocommerce'); ?> </span> </label>';
+						html += '<label class="checked" for="rbfw_dt_sidebar_switch-off"> <input name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked=""> <span class="sw-button"><?php echo esc_html__('Day Wise','booking-and-rental-manager-for-woocommerce'); ?> </span> </label>';
 	
 						<?php if($sortable):?>
 						html += '<div>';
@@ -805,7 +805,7 @@
 							<span class="slider round"></span>
 						</label>
 						<span class="rbfw_daily_rate_input ms-2" >
-							<input type="number" name='rbfw_daily_rate' value="<?php echo esc_html( $rbfw_daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', '' ); ?>" <?php echo ( $rbfw_enable_daily_rate == 'no' ) ? 'disabled':''; ?>>
+							<input type="number" name='rbfw_daily_rate' step="0.01" value="<?php echo esc_html( $rbfw_daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', '' ); ?>" <?php echo ( $rbfw_enable_daily_rate == 'no' ) ? 'disabled':''; ?>>
 						</span>
 					</div>
 				</section>
@@ -821,7 +821,7 @@
 							<span class="slider round"></span>
 						</label>
 						<span class="rbfw_hourly_rate ms-2" >
-							<input type="number" name='rbfw_hourly_rate' value="<?php echo esc_html( $rbfw_hourly_rate ); ?>" placeholder="<?php esc_html_e( 'Hourly Price', '' ); ?>" <?php echo ( $rbfw_enable_hourly_rate == 'no' ) ? 'disabled':''; ?>>
+							<input type="number" name='rbfw_hourly_rate' step="0.01" value="<?php echo esc_html( $rbfw_hourly_rate ); ?>" placeholder="<?php esc_html_e( 'Hourly Price', '' ); ?>" <?php echo ( $rbfw_enable_hourly_rate == 'no' ) ? 'disabled':''; ?>>
 						</span>
 					</div>
 				</section>

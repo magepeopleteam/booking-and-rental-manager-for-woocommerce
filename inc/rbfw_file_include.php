@@ -12,6 +12,7 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-meta-box.php';
 require_once RBFW_PLUGIN_DIR . '/admin/admin.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-icon-library.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_functions.php';
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_inventory_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_dynamic_css.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-resort-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_shortcodes.php';
