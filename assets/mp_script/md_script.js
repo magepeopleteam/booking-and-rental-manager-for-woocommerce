@@ -151,7 +151,10 @@ function total_day_calcilation(pickup_date,dropoff_date,pickup_time,dropoff_time
         },
         success: function (response) {
             jQuery('[name="total_days"]').val(response.total_days);
+            jQuery('[name="total_hours"]').val(response.total_hours);
             var total_days = jQuery('[name="total_days"]').val();
+            var total_hours = jQuery('[name="total_hours"]').val();
+            console.log(total_hours);
             if(total_days!=0){
                 rbfw_service_price_calculation(total_days);
             }

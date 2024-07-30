@@ -61,9 +61,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
             $total_days = $diff->days;
+            $total_hours = $diff->h;
 
             echo json_encode( array(
                 'total_days' => $total_days,
+                'total_hours' => $total_hours,
             ));
 
             wp_die();

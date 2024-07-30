@@ -3204,6 +3204,7 @@ function rbfw_duplicate_post() {
             foreach ( $post_meta as $meta_key => $meta_values ) {
                 update_post_meta( $new_post_id, $meta_key,  maybe_unserialize($meta_values[0]) );
             }
+            update_post_meta($new_post_id, 'rbfw_inventory', '');
         }
     }
 }

@@ -355,6 +355,7 @@ if($rbfw_enable_variations == 'yes'){
                                     <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </div>
                                 <input type="hidden" name="total_days" value="0">
+                                <input type="hidden" name="total_hours" value="0">
                                 <?php foreach ($option_value as $cat=>$item){ ?>
                                     <?php if($item['cat_title']){ ?>
                                         <div class="servise-item">
