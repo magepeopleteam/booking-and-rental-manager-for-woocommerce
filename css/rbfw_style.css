@@ -1667,6 +1667,7 @@ table.rbfw_room_cart_table th span {
   position: absolute;
   right: 15px;
   top: 130px;
+  z-index: 5;
 }
 
 .rbfw_rent_list_price_badge {
