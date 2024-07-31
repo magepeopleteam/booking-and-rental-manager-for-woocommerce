@@ -52,7 +52,7 @@ $enabled_mon = get_post_meta($post_id, 'rbfw_enable_mon_day', true) ? get_post_m
 $enabled_tue = get_post_meta($post_id, 'rbfw_enable_tue_day', true) ? get_post_meta($post_id, 'rbfw_enable_tue_day', true) : 'yes';
 $enabled_wed = get_post_meta($post_id, 'rbfw_enable_wed_day', true) ? get_post_meta($post_id, 'rbfw_enable_wed_day', true) : 'yes';
 $enabled_thu = get_post_meta($post_id, 'rbfw_enable_thu_day', true) ? get_post_meta($post_id, 'rbfw_enable_thu_day', true) : 'yes';
-$enabled_fri = get_post_meta($post_id, 'rbfw_enable_fri_day', true) ? get_post_meta($post_id, 'rbfw_enable_fri_day', true) : 'yes';	
+$enabled_fri = get_post_meta($post_id, 'rbfw_enable_fri_day', true) ? get_post_meta($post_id, 'rbfw_enable_fri_day', true) : 'yes';
 $enabled_sat = get_post_meta($post_id, 'rbfw_enable_sat_day', true) ? get_post_meta($post_id, 'rbfw_enable_sat_day', true) : 'yes';
 
 $current_day = date('D');
@@ -72,7 +72,7 @@ if($current_day == 'Sun' && $enabled_sun == 'yes'){
 }elseif($current_day == 'Sat' && $enabled_sat == 'yes'){
     $price = (float)$price_sat;
 }else{
-    $price = (float)$price;	
+    $price = (float)$price;
 }
 
 $current_date = date('Y-m-d');
@@ -118,11 +118,11 @@ if(!empty($rbfw_room_data) && $rbfw_rent_type == 'resort'):
         if(!empty($value['rbfw_room_daylong_rate'])){
             $rbfw_daylong_rate[] =  $value['rbfw_room_daylong_rate'];
         }
-        
+
         if(!empty($value['rbfw_room_daynight_rate'])){
             $rbfw_daynight_rate[] = $value['rbfw_room_daynight_rate'];
         }
-        
+
     }
     $merged_arr = array_merge($rbfw_daylong_rate,$rbfw_daynight_rate);
 
@@ -145,7 +145,7 @@ if(!empty($rbfw_bike_car_sd_data) && ($rbfw_rent_type == 'bike_car_sd' || $rbfw_
         if(!empty($value['price'])){
             $rbfw_price_arr[] =  $value['price'];
         }
-        
+
     }
 
     if(!empty($rbfw_price_arr)){
@@ -162,13 +162,13 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
 
 <div class="rbfw_rent_list_col   rbfw_grid_list_col_<?php echo $d; ?>">
     <div class="rbfw_rent_list_inner_wrapper">
-        
+
         <div class="rbfw_rent_list_featured_img_wrap">
             <a href="<?php echo esc_url($post_link); ?>">
                 <div class="rbfw_rent_list_featured_img" style="background-image:url(<?php echo esc_url($post_featured_img); ?>)"></div>
             </a>
         </div>
-        
+
         <div class="rbfw_rent_list_content">
 
             <div class="rbfw_rent_list_price_wrap">
@@ -179,7 +179,7 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
                 <?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
                     <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($prices_start_at); ?></span><span class="rbfw_rent_list_price_badge_price"><?php echo rbfw_mps_price($price); ?></span></div>
                 <?php endif; ?>
-                
+
                 <?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
                     <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($prices_start_at); ?></span><span class="rbfw_rent_list_price_badge_price"> <?php echo rbfw_mps_price($price); ?></span></div>
                 <?php endif; ?>
@@ -232,6 +232,6 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
             <div class="rbfw_rent_list_button_wrap">
                 <a href="<?php echo esc_url($post_link); ?>" class="rbfw_rent_list_btn"><?php echo esc_html($book_now_label); ?></a>
             </div>
-        </div>    
+        </div>
     </div>
 </div>

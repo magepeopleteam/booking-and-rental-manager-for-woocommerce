@@ -14,11 +14,44 @@ $post_content       = $the_content;
 $post_content       = strlen($post_content) >= 40 ? substr($post_content, 0, 100) . '...' : $post_content;
 
 $hourly_rate_label = $rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
+$daily_rate_label = $rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily rate','booking-and-rental-manager-for-woocommerce'));
+$rbfw_enable_hourly_rate = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
+$rbfw_enable_daily_rate  = get_post_meta( get_the_id(), 'rbfw_enable_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_daily_rate', true ) : 'no';
+
+if($rbfw_enable_hourly_rate == 'no'){
+    $the_price_label = $daily_rate_label;
+} else {
+    $the_price_label = $hourly_rate_label;
+}
+
 $prices_start_at = $rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
 $rbfw_rent_type = get_post_meta( $post_id, 'rbfw_item_type', true );
 
-$price = get_post_meta($post_id, 'rbfw_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_hourly_rate', true) : 0;
+if($rbfw_enable_hourly_rate == 'yes'){
+
+    $price = get_post_meta($post_id, 'rbfw_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_hourly_rate', true) : 0;
+    $price_sun = get_post_meta($post_id, 'rbfw_sun_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_sun_hourly_rate', true) : 0;
+    $price_mon = get_post_meta($post_id, 'rbfw_mon_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_mon_hourly_rate', true) : 0;
+    $price_tue = get_post_meta($post_id, 'rbfw_tue_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_tue_hourly_rate', true) : 0;
+    $price_wed = get_post_meta($post_id, 'rbfw_wed_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_wed_hourly_rate', true) : 0;
+    $price_thu = get_post_meta($post_id, 'rbfw_thu_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_thu_hourly_rate', true) : 0;
+    $price_fri = get_post_meta($post_id, 'rbfw_fri_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_fri_hourly_rate', true) : 0;
+    $price_sat = get_post_meta($post_id, 'rbfw_sat_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_sat_hourly_rate', true) : 0;
+
+} else {
+
+    $price = get_post_meta($post_id, 'rbfw_daily_rate', true) ? get_post_meta($post_id, 'rbfw_daily_rate', true) : 0;
+    $price_sun = get_post_meta($post_id, 'rbfw_sun_daily_rate', true) ? get_post_meta($post_id, 'rbfw_sun_daily_rate', true) : 0;
+    $price_mon = get_post_meta($post_id, 'rbfw_mon_daily_rate', true) ? get_post_meta($post_id, 'rbfw_mon_daily_rate', true) : 0;
+    $price_tue = get_post_meta($post_id, 'rbfw_tue_daily_rate', true) ? get_post_meta($post_id, 'rbfw_tue_daily_rate', true) : 0;
+    $price_wed = get_post_meta($post_id, 'rbfw_wed_daily_rate', true) ? get_post_meta($post_id, 'rbfw_wed_daily_rate', true) : 0;
+    $price_thu = get_post_meta($post_id, 'rbfw_thu_daily_rate', true) ? get_post_meta($post_id, 'rbfw_thu_daily_rate', true) : 0;
+    $price_fri = get_post_meta($post_id, 'rbfw_fri_daily_rate', true) ? get_post_meta($post_id, 'rbfw_fri_daily_rate', true) : 0;
+    $price_sat = get_post_meta($post_id, 'rbfw_sat_daily_rate', true) ? get_post_meta($post_id, 'rbfw_sat_daily_rate', true) : 0;
+}
+
 $price = (float)$price;
+
 // sunday rate
 $price_sun = get_post_meta($post_id, 'rbfw_sun_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_sun_hourly_rate', true) : 0;
 $enabled_sun = get_post_meta($post_id, 'rbfw_enable_sun_day', true) ? get_post_meta($post_id, 'rbfw_enable_sun_day', true) : 'yes';
@@ -41,7 +74,7 @@ $enabled_thu = get_post_meta($post_id, 'rbfw_enable_thu_day', true) ? get_post_m
 
 // friday rate
 $price_fri = get_post_meta($post_id, 'rbfw_fri_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_fri_hourly_rate', true) : 0;
-$enabled_fri = get_post_meta($post_id, 'rbfw_enable_fri_day', true) ? get_post_meta($post_id, 'rbfw_enable_fri_day', true) : 'yes';	
+$enabled_fri = get_post_meta($post_id, 'rbfw_enable_fri_day', true) ? get_post_meta($post_id, 'rbfw_enable_fri_day', true) : 'yes';
 
 // saturday rate
 $price_sat = get_post_meta($post_id, 'rbfw_sat_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_sat_hourly_rate', true) : 0;
@@ -64,7 +97,7 @@ if($current_day == 'Sun' && $enabled_sun == 'yes'){
 }elseif($current_day == 'Sat' && $enabled_sat == 'yes'){
     $price = (float)$price_sat;
 }else{
-    $price = (float)$price;	
+    $price = (float)$price;
 }
 
 $current_date = date('Y-m-d');
@@ -101,11 +134,11 @@ if(!empty($rbfw_room_data) && $rbfw_rent_type == 'resort'):
         if(!empty($value['rbfw_room_daylong_rate'])){
             $rbfw_daylong_rate[] =  $value['rbfw_room_daylong_rate'];
         }
-        
+
         if(!empty($value['rbfw_room_daynight_rate'])){
             $rbfw_daynight_rate[] = $value['rbfw_room_daynight_rate'];
         }
-        
+
     }
     $merged_arr = array_merge($rbfw_daylong_rate,$rbfw_daynight_rate);
 
@@ -128,7 +161,7 @@ if(!empty($rbfw_bike_car_sd_data) && ($rbfw_rent_type == 'bike_car_sd' || $rbfw_
         if(!empty($value['price'])){
             $rbfw_price_arr[] =  $value['price'];
         }
-        
+
     }
 
     if(!empty($rbfw_price_arr)){
@@ -144,16 +177,16 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
 ?>
 <div class="rbfw_rent_list_col">
     <div class="rbfw_rent_list_inner_wrapper">
-        
+
         <div class="rbfw_rent_list_price_wrap">
             <?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
-                <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($hourly_rate_label); ?></span> <span class="rbfw_rent_list_price_badge_price"><?php echo rbfw_mps_price($price); ?></span> </div>
+                <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($the_price_label); ?></span> <span class="rbfw_rent_list_price_badge_price"><?php echo rbfw_mps_price($price); ?></span> </div>
             <?php endif; ?>
 
             <?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
                 <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($prices_start_at); ?></span> <span class="rbfw_rent_list_price_badge_price"><?php echo rbfw_mps_price($price); ?></span></div>
             <?php endif; ?>
-            
+
             <?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
                 <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($prices_start_at); ?></span><span class="rbfw_rent_list_price_badge_price"> <?php echo rbfw_mps_price($price); ?></span></div>
             <?php endif; ?>
@@ -164,7 +197,7 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
                 <div class="rbfw_rent_list_featured_img" style="background-image:url(<?php echo esc_url($post_featured_img); ?>)"></div>
             </a>
         </div>
-        
+
         <div class="rbfw_rent_list_content">
             <div class="rbfw_rent_list_title_wrap">
                 <a href="<?php echo esc_url($post_link); ?>"><?php echo esc_html($post_title); ?></a>
@@ -178,7 +211,7 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
             <?php if(!empty($post_content)): ?>
             <div class="rbfw_rent_list_description">
                 <?php echo $post_content; ?>
-            </div>                
+            </div>
             <?php endif; ?>
 
             <div class="rbfw_muff_highlighted_features rbfw_rent_list_highlighted_features">

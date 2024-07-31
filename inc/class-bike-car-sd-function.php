@@ -177,6 +177,9 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     $total_price = (float)$subtotal_price;
                 endif;
 
+                $security_deposit = rbfw_security_deposit($product_id,$total_price);
+                $total_price = $total_price + $security_deposit['security_deposit_amount'];
+
                 /* Start Tax Calculations */
                 $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
                 $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
@@ -194,6 +197,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 /* End Tax Calculations */
 
                 $main_array[0]['ticket_name'] = $title;
+                $main_array[0]['security_deposit_amount'] = $security_deposit['security_deposit_amount'];
                 $main_array[0]['ticket_price'] = $total_price;
                 $main_array[0]['ticket_qty'] = 1;
                 $main_array[0]['rbfw_start_date'] = $rbfw_start_datetime;

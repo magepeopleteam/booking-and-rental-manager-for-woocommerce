@@ -54,6 +54,14 @@
 			}
 
 			public function frontend_script(){
+
+                global $rbfw;
+                $custom_cost = $rbfw->get_option_trans('rbfw_custom_css', 'rbfw_custom_style_settings');
+                ?>
+                <style>
+                    <?php echo $custom_cost; ?>
+                </style>
+               <?php
 				global $post;
 				$post_id = !empty($post->ID) ? $post->ID : '';
 
