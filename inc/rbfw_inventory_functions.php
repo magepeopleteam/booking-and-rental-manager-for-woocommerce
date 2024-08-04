@@ -400,17 +400,38 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 }
 
 
-function total_service_quantity($paraent,$service,$date,$inventory,$inventory_based_on_return){
+function total_service_quantity($paraent,$service,$date,$inventory,$inventory_based_on_return,$start_time = null, $end_time = null){
     $total_single_service = 0;
-    //echo '<pre>';print_r($inventory);echo '<pre>';exit;
+
     foreach($inventory as $item){
 
-        if(in_array($date,$item['booked_dates']) && array_key_exists($paraent,$item['rbfw_service_infos']) && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'')  )){
+        $booked_dates = !empty($item['booked_dates']) ? $item['booked_dates'] : [];
 
-            foreach ($item['rbfw_service_infos'] as $key=>$single){
-                foreach ($single as $basic_item){
-                    if(in_array($service,$basic_item)){
-                        $total_single_service += $basic_item['quantity'];
+        if(in_array($date,$item['booked_dates']) && array_key_exists($paraent,$item['rbfw_service_infos']) && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'')  )){
+            $inventory_start_date = $booked_dates[0];
+            $inventory_end_date = end($booked_dates);
+            $inventory_start_time = $item['rbfw_start_time'];
+            $inventory_end_time = $item['rbfw_end_time'];
+            $inventory_start_datetime = strtotime($inventory_start_date . ' ' . $inventory_start_time);
+            $inventory_end_datetime =  strtotime($inventory_end_date . ' ' . $inventory_end_time);
+            if($start_time && $end_time){
+                $pickup_datetime = strtotime($date . ' ' . $start_time);
+                $dropoff_datetime = strtotime($date . ' ' . $end_time);
+                if(!(($inventory_start_datetime>$pickup_datetime && $inventory_start_datetime>$dropoff_datetime) || ($inventory_end_datetime<$pickup_datetime && $inventory_end_datetime<$dropoff_datetime))){
+                    foreach ($item['rbfw_service_infos'] as $key=>$single){
+                        foreach ($single as $basic_item){
+                            if(in_array($service,$basic_item)){
+                                $total_single_service += $basic_item['quantity'];
+                            }
+                        }
+                    }
+                }
+            }else{
+                foreach ($item['rbfw_service_infos'] as $key=>$single){
+                    foreach ($single as $basic_item){
+                        if(in_array($service,$basic_item)){
+                            $total_single_service += $basic_item['quantity'];
+                        }
                     }
                 }
             }

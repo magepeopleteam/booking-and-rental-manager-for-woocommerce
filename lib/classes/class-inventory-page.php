@@ -89,6 +89,7 @@ if (!class_exists('RBFWInventoryPage')) {
             <?php
         }
 
+
         public function rbfw_inventory_page_table($query, $date = null, $start_time = null, $end_time = null){
 
             ob_start();
@@ -126,13 +127,6 @@ if (!class_exists('RBFWInventoryPage')) {
                         foreach ($rbfw_extra_service_data as $value) {
                             $total_es_qty += !empty($value['service_qty']) ? $value['service_qty'] : 0;
                         }
-
-
-
-
-
-
-
 
                         $rbfw_item_stock_quantity = 0;
 
@@ -192,49 +186,38 @@ if (!class_exists('RBFWInventoryPage')) {
                                                 $sold_item_qty += $type_info;
                                             }
                                         }
-                                    } else {
+                                        if (!empty($rbfw_service_info)) {
+                                        foreach ($rbfw_service_info as $key => $service_info) {
+                                            $sold_es_qty += $service_info;
+                                        }
+                                    }
+                                    }else {
                                         $inventory_start_date = $booked_dates[0];
                                         $inventory_end_date = end($booked_dates);
                                         $inventory_start_time = $inventory['rbfw_start_time'];
                                         $inventory_end_time = $inventory['rbfw_end_time'];
-                                        $inventory_start_datetime = date('Y-m-d H:i', strtotime($inventory_start_date . ' ' . $inventory_start_time));
-                                        $inventory_end_datetime = date('Y-m-d H:i', strtotime($inventory_end_date . ' ' . $inventory_end_time));
-
-
+                                        $inventory_start_datetime = strtotime($inventory_start_date . ' ' . $inventory_start_time);
+                                        $inventory_end_datetime =  strtotime($inventory_end_date . ' ' . $inventory_end_time);
                                         if($start_time && $end_time){
-                                            $pickup_datetime = date('Y-m-d H:i', strtotime($date . ' ' . $start_time));
-                                            $dropoff_datetime = date('Y-m-d H:i', strtotime($date . ' ' . $end_time));
-                                            $index_no = array_search($current_date, $booked_dates);
-                                            $total_date = count($booked_dates);
-                                            if($total_date==1){
-                                                if(($inventory_end_datetime>$pickup_datetime && $inventory_start_datetime<$pickup_datetime)|| ($inventory_end_datetime>$dropoff_datetime && $inventory_start_datetime<$dropoff_datetime)){
-                                                    $sold_item_qty += $rbfw_item_quantity;
-                                                }
-                                            }else{
-                                                if($index_no==0){
-                                                    if($inventory_end_datetime>$pickup_datetime && $inventory_start_datetime<$pickup_datetime){
-                                                        $sold_item_qty += $rbfw_item_quantity;
+                                            $pickup_datetime = strtotime($date . ' ' . $start_time);
+                                            $dropoff_datetime = strtotime($date . ' ' . $end_time);
+                                            if(!(($inventory_start_datetime>$pickup_datetime && $inventory_start_datetime>$dropoff_datetime) || ($inventory_end_datetime<$pickup_datetime && $inventory_end_datetime<$dropoff_datetime))){
+                                                $sold_item_qty += $rbfw_item_quantity;
+                                                if (!empty($rbfw_service_info)) {
+                                                    foreach ($rbfw_service_info as $key => $service_info) {
+                                                        $sold_es_qty += $service_info;
                                                     }
-                                                }elseif ($total_date==$index_no){
-                                                    if($inventory_end_datetime>$dropoff_datetime && $inventory_start_datetime<$dropoff_datetime){
-                                                        $sold_item_qty += $rbfw_item_quantity;
-                                                    }
-                                                }else{
-                                                    
                                                 }
                                             }
                                         }else{
                                             $sold_item_qty += $rbfw_item_quantity;
+                                            if (!empty($rbfw_service_info)) {
+                                                foreach ($rbfw_service_info as $key => $service_info) {
+                                                    $sold_es_qty += $service_info;
+                                                }
+                                            }
                                         }
                                     }
-
-                                    if (!empty($rbfw_service_info)) {
-                                        foreach ($rbfw_service_info as $key => $service_info) {
-                                            
-                                            $sold_es_qty += $service_info;
-                                        }
-                                    }
-                                    
                                 }
                             }
                             $remaining_item_stock = $rbfw_item_stock_quantity - (int)$sold_item_qty;
@@ -252,7 +235,7 @@ if (!class_exists('RBFWInventoryPage')) {
                                     foreach ($item1['cat_services'] as $key1=>$single){
                                         if($single['title']){
                                             $service_quantity[] = $single['stock_quantity'];
-                                            $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return));
+                                            $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return,$start_time , $end_time ));
                                             $service_stock[] = $single['stock_quantity'] - max(array_column($service_q, $single['title']));
                                         }
                                     }
@@ -503,7 +486,7 @@ if (!class_exists('RBFWInventoryPage')) {
 
                                 $d++;
                             }
-                            // End: extra service closing array
+
 
                         }
                     }

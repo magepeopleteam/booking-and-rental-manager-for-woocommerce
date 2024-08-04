@@ -3258,11 +3258,14 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
         $days = $diff->days;
         $hours = $diff->h;
         $minutes = $diff->i;
+        if ($minutes) {
+            $hours = $hours + 1;
+        }
         if ($hours) {
             $days = $days + 1;
         }
-        if ($minutes) {
-            $hours = $hours + 1;
+        if ($minutes && ($days==0)) {
+            $days = 1;
         }
         for ($i = 0; $i < $days; $i++) {
 
