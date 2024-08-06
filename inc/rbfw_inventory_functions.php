@@ -314,7 +314,6 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                          }else{
                              $total_qty += $rbfw_item_quantity;
                          }
-
                     }
                 }
 
