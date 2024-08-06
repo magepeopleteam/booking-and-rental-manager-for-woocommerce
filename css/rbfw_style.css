@@ -1624,7 +1624,7 @@ table.rbfw_room_cart_table th span {
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_col {
-
+box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
     text-align: center;
     vertical-align: top;
     margin-bottom: 20px;
@@ -1647,7 +1647,7 @@ table.rbfw_room_cart_table th span {
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_inner_wrapper {
-  box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
+  height: 100%;
   position: relative;
 }
 
@@ -1731,9 +1731,7 @@ table.rbfw_room_cart_table th span {
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_content {
-  padding: 20px;
-  padding-top: 35px;
-  padding-bottom: 0;
+  padding: 20px 20px 50px 20px;
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_footer {
@@ -1824,6 +1822,9 @@ table.rbfw_room_cart_table th span {
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_button_wrap {
   text-align: left;
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
 }
 
 .rbfw_rent_list_title_wrap a {
