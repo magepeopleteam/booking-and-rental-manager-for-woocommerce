@@ -148,9 +148,9 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                 )
             ),
             array(
-                'name' => 'inventory_based_on_pickup_return',
-                'label' => __( 'Inventory manage based on pickup or return', 'booking-and-rental-manager-for-woocommerce' ),
-                'desc' => __( "If you want to inventory manage based on pickup or return, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
+                'name' => 'inventory_based_on_return',
+                'label' => __( 'Inventory manage based on return', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => __( "If you want to inventory manage based on return, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
                 'type' => 'select',
                 'default' => 'no',
                 'options' => array(

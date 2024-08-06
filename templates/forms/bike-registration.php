@@ -355,6 +355,7 @@ if($rbfw_enable_variations == 'yes'){
                                     <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </div>
                                 <input type="hidden" name="total_days" value="0">
+                                <input type="hidden" name="countable_time" value="0">
                                 <?php foreach ($option_value as $cat=>$item){ ?>
                                     <?php if($item['cat_title']){ ?>
                                         <div class="servise-item">
@@ -380,7 +381,7 @@ if($rbfw_enable_variations == 'yes'){
                                                         </div>
 
                                                         <div class="title">
-                                                            <?php echo $service['title'] ?>
+                                                            <?php echo $service['title'] ?><span class="remaining_stock"></span>
                                                         </div>
 
 
@@ -430,7 +431,7 @@ if($rbfw_enable_variations == 'yes'){
                                                             </label>
                                                         </div>
                                                     </td>
-                                                    <td><?php echo mep_esc_html($extra['service_name']); ?></td>
+                                                    <td><?php echo mep_esc_html($extra['service_name']); ?><span class="es_stock"></span></td>
                                                     <td class="w_20"><?php echo rbfw_mps_price($extra['service_price']); ?></td>
                                                     <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>
                                                         <td class="rbfw_bikecarmd_es_input_box" style="display:none">
