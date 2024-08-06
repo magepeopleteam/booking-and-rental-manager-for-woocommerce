@@ -235,7 +235,7 @@ echo '<pre>';*/
                 if(!empty($cat_features)){
                     $i = 1;
                     foreach ($cat_features as $features) {
-
+                        if($i<=5){
                             $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                             $title = $features['title'];
                             $rand_number = rand();
@@ -244,7 +244,8 @@ echo '<pre>';*/
                                 <li class="title <?php echo $rand_number ?>"><i class="<?php echo mep_esc_html($icon) ?>"></i><?php echo $title ?></li>
                                 <?php
                             }
-                            $i++;
+                        }
+                        $i++;
                     }
                 }
                 ?>
