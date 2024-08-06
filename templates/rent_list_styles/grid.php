@@ -203,14 +203,15 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
                         if(!empty($cat_features)){
                             $i = 1;
                             foreach ($cat_features as $features) {
-
-                                $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
-                                $title = $features['title'];
-                                $rand_number = rand();
-                                if($title) {
-                                    ?>
-                                    <li class="title <?php echo $rand_number ?>"><i class="<?php echo mep_esc_html($icon) ?>"></i><?php echo $title ?></li>
-                                    <?php
+                                if($i<=5){
+                                    $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+                                    $title = $features['title'];
+                                    $rand_number = rand();
+                                    if($title) {
+                                        ?>
+                                        <li class="title <?php echo $rand_number ?>"><i class="<?php echo mep_esc_html($icon) ?>"></i><?php echo $title ?></li>
+                                        <?php
+                                    }
                                 }
                                 $i++;
                             }
