@@ -203,18 +203,16 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
                         if(!empty($cat_features)){
                             $i = 1;
                             foreach ($cat_features as $features) {
+
                                 $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                                 $title = $features['title'];
-                                if($title):
-                                    if($i == 5){
-                                        echo '<li style="width:100%"><a class="rbfw_muff_lmf_btn">'.$rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('View More Features','booking-and-rental-manager-for-woocommerce')).'</a></li>';
-                                    }
-                                    echo '<li ';
-                                    if($i > 4){
-                                        echo 'style="display:none"'; echo 'data-status="extra"';
-                                    } echo '><i class="'.mep_esc_html($icon).'"></i><span><abbr title="'.$title.'">' . substr($title, 0, 30) . '</abbr></span></li>';
-                                    endif;
-                                    $i++;
+                                $rand_number = rand();
+                                if($title) {
+                                    ?>
+                                    <li class="title <?php echo $rand_number ?>"><i class="<?php echo mep_esc_html($icon) ?>"></i><?php echo $title ?></li>
+                                    <?php
+                                }
+                                $i++;
                             }
                         }
                         ?>

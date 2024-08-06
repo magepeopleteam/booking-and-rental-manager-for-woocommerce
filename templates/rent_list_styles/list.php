@@ -174,6 +174,11 @@ if(!empty($rbfw_bike_car_sd_data) && ($rbfw_rent_type == 'bike_car_sd' || $rbfw_
 endif;
 
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
+
+/*echo '<pre>';
+print_r($rbfw_feature_category);
+echo '<pre>';*/
+
 ?>
 <div class="rbfw_rent_list_col">
     <div class="rbfw_rent_list_inner_wrapper">
@@ -215,8 +220,9 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
             <?php endif; ?>
 
             <div class="rbfw_muff_highlighted_features rbfw_rent_list_highlighted_features">
-                <?php if ( $rbfw_feature_category ) :
-                $n = 1;
+                <?php
+                if ( $rbfw_feature_category ) :
+                    $n = 1;
                 foreach ( $rbfw_feature_category as $value ) :
 
                 $cat_title = $value['cat_title'];
@@ -233,20 +239,12 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
                             $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                             $title = $features['title'];
                             $rand_number = rand();
-                            if($title):
-
-                                echo '<li class="title'.$rand_number.'" '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i></li>';
-                            ?>
-                            <script>
-                            jQuery(document).ready(function(){
-                                let content<?php echo $rand_number; ?> = '<?php echo $title; ?>';
-                                tippy('<?php echo '.title'.$rand_number; ?>', {content: content<?php echo $rand_number; ?>,theme: 'blue',placement: 'top'});
-                            });
-                            </script>
-                            <?php
-                            endif;
-
-                        $i++;
+                            if($title) {
+                                ?>
+                                <li class="title <?php echo $rand_number ?>"><i class="<?php echo mep_esc_html($icon) ?>"></i><?php echo $title ?></li>
+                                <?php
+                            }
+                            $i++;
                     }
                 }
                 ?>
