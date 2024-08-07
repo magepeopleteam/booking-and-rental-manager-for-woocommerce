@@ -6160,4 +6160,8 @@ body.single-rbfw_item div.ast-container {
   display: flex;
   justify-content: end;
 }
-
+/* booking form resourse service */
+.resource-qty{
+  display: none;
+  font-size: 12px;
+}
