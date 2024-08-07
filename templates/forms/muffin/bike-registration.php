@@ -429,7 +429,7 @@ if($rbfw_enable_variations == 'yes'){
                                                     </td>
                                                     <td class="resource-title-qty">
                                                         <?php echo mep_esc_html($extra['service_name']); ?>
-                                                        <i class="resource-qty"><?php _e('Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo esc_html('('.$extra['service_qty'].')'); ?></span></i>
+                                                        <i class="resource-qty"><?php _e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo esc_html('('.$extra['service_qty'].')'); ?></span></i>
                                                     </td>
                                                     <td class="w_20"><?php echo rbfw_mps_price($extra['service_price']); ?></td>
                                                     <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>

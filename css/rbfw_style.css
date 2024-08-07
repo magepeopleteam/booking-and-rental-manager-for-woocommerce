@@ -757,6 +757,7 @@ a.rbfw-related-product-btn {
   line-height: 16px;
   display: inline-block;
   text-decoration: none;
+  border-radius: 5px;
 }
 
 a.rbfw-related-product-btn:hover {
@@ -1666,8 +1667,10 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
   align-items: center;
   position: absolute;
   right: 15px;
-  top: 130px;
+  top: 94px;
   z-index: 5;
+  padding: 10px;
+  
 }
 
 .rbfw_rent_list_price_badge {
@@ -1985,6 +1988,7 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
     }
     .rbfw_rent_list_style_grid.rbfw-w-33 {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 1300px;
     }
     .rbfw_rent_list_style_grid.rbfw-w-25 {
         grid-template-columns: repeat(4, minmax(0, 1fr));;
@@ -2002,6 +2006,13 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
         width: 70;
         max-width: 70%;
         min-width: 70%;
+    }
+/* block theme css */
+    .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull))
+    {
+      width: 1300px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
     }
 
 }
