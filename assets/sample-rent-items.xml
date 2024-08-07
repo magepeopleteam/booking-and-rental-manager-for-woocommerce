@@ -890,7 +890,7 @@
 
 		<postmeta>
 		<meta_key>rbfw_feature_category</meta_key>
-		<meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:12:"Our Services";s:12:"cat_features";a:5:{i:0;a:2:{s:4:"icon";s:19:"fas fa-address-book";s:5:"title";s:48:"Very High Quality Product";}i:1;a:2:{s:4:"icon";s:16:"fas fa-allergies";s:5:"title";s:48:"Good Coffee";}i:2;a:2:{s:4:"icon";s:15:"fas fa-asterisk";s:5:"title";s:48:"Important items";}i:3;a:2:{s:4:"icon";s:16:"fab fa-app-store";s:5:"title";s:48:"Good Product";}i:4;a:2:{s:4:"icon";s:22:"fab fa-accessible-icon";s:5:"title";s:48:"Lorem Ipsum is simply dummy text";}}}}</meta_value>
+		<meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:12:"Our Services";s:12:"cat_features";a:5:{i:0;a:2:{s:4:"icon";s:19:"fas fa-address-book";s:5:"title";s:48:"Lorem Ipsum is simply dummy text of the printing";}i:1;a:2:{s:4:"icon";s:16:"fas fa-allergies";s:5:"title";s:48:"Lorem Ipsum is simply dummy text of the printing";}i:2;a:2:{s:4:"icon";s:15:"fas fa-asterisk";s:5:"title";s:48:"Lorem Ipsum is simply dummy text of the printing";}i:3;a:2:{s:4:"icon";s:16:"fab fa-app-store";s:5:"title";s:48:"Lorem Ipsum is simply dummy text of the printing";}i:4;a:2:{s:4:"icon";s:22:"fab fa-accessible-icon";s:5:"title";s:48:"Lorem Ipsum is simply dummy text of the printing";}}}}</meta_value>
 		</postmeta>
 
 		<postmeta>
@@ -2139,7 +2139,7 @@
 
 		<postmeta>
 		<meta_key>rbfw_feature_category</meta_key>
-		<meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:20:"Highlighted Features";s:12:"cat_features";a:6:{i:0;a:2:{s:4:"icon";s:19:"fas fa-address-card";s:5:"title";s:48:"Lorem Ipsum is simply dummy text";}i:1;a:2:{s:4:"icon";s:11:"fas fa-beer";s:5:"title";s:48:"Lorem Ipsum is simply dummy text";}i:2;a:2:{s:4:"icon";s:15:"fas fa-asterisk";s:5:"title";s:48:"Lorem Ipsum is simply dummy text";}i:3;a:2:{s:4:"icon";s:19:"fab fa-autoprefixer";s:5:"title";s:48:"Lorem Ipsum is simply dummy text";}i:4;a:2:{s:4:"icon";s:16:"fas fa-ambulance";s:5:"title";s:48:"Lorem Ipsum is simply dummy";}i:5;a:2:{s:4:"icon";s:14:"fab fa-avianex";s:5:"title";s:48:"Lorem Ipsum is simply";}}}}</meta_value>
+		<meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:20:"Highlighted Features";s:12:"cat_features";a:6:{i:0;a:2:{s:4:"icon";s:19:"fas fa-address-card";s:5:"title";s:48:"Lorem Ipsum is simply dummy text of the printing";}i:1;a:2:{s:4:"icon";s:11:"fas fa-beer";s:5:"title";s:48:"Lorem Ipsum is simply dummy text of the printing";}i:2;a:2:{s:4:"icon";s:15:"fas fa-asterisk";s:5:"title";s:48:"Lorem Ipsum is simply dummy text of the printing";}i:3;a:2:{s:4:"icon";s:19:"fab fa-autoprefixer";s:5:"title";s:48:"Lorem Ipsum is simply dummy text of the printing";}i:4;a:2:{s:4:"icon";s:16:"fas fa-ambulance";s:5:"title";s:48:"Lorem Ipsum is simply dummy text of the printing";}i:5;a:2:{s:4:"icon";s:14:"fab fa-avianex";s:5:"title";s:48:"Lorem Ipsum is simply dummy text of the printing";}}}}</meta_value>
 		</postmeta>
 
 		<postmeta>
