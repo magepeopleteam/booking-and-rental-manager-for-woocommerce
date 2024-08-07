@@ -1667,8 +1667,10 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
   align-items: center;
   position: absolute;
   right: 15px;
-  top: 130px;
+  top: 94px;
   z-index: 5;
+  padding: 10px;
+  
 }
 
 .rbfw_rent_list_price_badge {
