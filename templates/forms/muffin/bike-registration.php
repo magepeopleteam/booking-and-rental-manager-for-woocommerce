@@ -427,7 +427,7 @@ if($rbfw_enable_variations == 'yes'){
                                                             </label>
                                                         </div>
                                                     </td>
-                                                    <td>
+                                                    <td class="resource-title-qty">
                                                         <?php echo mep_esc_html($extra['service_name']); ?>
                                                         <i class="resource-qty"><?php _e('Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo esc_html('('.$extra['service_qty'].')'); ?></span></i>
                                                     </td>
