@@ -1986,10 +1986,10 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
     }
     .rbfw_rent_list_style_grid.rbfw-w-33 {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 1300px;
     }
     .rbfw_rent_list_style_grid.rbfw-w-25 {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        max-width: 1300px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));;
     }
     .rbfw_rent_list_style_grid.rbfw-w-20 {
         grid-template-columns: repeat(5, minmax(0, 1fr));;
@@ -2004,6 +2004,13 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
         width: 70;
         max-width: 70%;
         min-width: 70%;
+    }
+/* block theme css */
+    .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull))
+    {
+      width: 1300px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
     }
 
 }
