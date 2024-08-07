@@ -347,14 +347,14 @@ if($rbfw_enable_variations == 'yes'){
                         $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
                         ?>
 
+
                         <?php if(!empty($option_value) && ($enable_service_price=='on')){  ?>
 
                             <div class="multi-service-category-section">
                                 <div class="rbfw-single-right-heading">
                                     <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </div>
-                                <input type="hidden" name="total_days" value="0">
-                                <input type="hidden" name="countable_time" value="0">
+
                                 <?php foreach ($option_value as $cat=>$item){ ?>
                                     <?php if($item['cat_title']){ ?>
                                         <div class="servise-item">
@@ -536,6 +536,8 @@ if($rbfw_enable_variations == 'yes'){
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo $rbfw_enable_variations; ?>">
                 <input type="hidden" id="rbfw_input_stock_quantity" name="rbfw_input_stock_quantity" value="<?php echo $input_stock_quantity ?>">
                 <input type="hidden" id="rbfw_enable_time_slot" name="rbfw_enable_time_slot" value="<?php echo !empty(get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true) : 'on'; ?>">
+                <input type="hidden" name="total_days" value="0">
+                <input type="hidden" name="countable_time" value="0">
             </form>
         </div>
     </div>
