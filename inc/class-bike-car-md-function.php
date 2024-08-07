@@ -312,7 +312,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                                 jQuery(this_checkbox).prop('checked', true);
                                 jQuery(this_checkbox).parents('div').siblings('.rbfw_bikecarmd_es_input_box').find('.rbfw_bikecarmd_es_qty').val('1').attr('value','1');
                                 jQuery(this_checkbox).val('1');
-                                jQuery(this_checkbox).parents('div').siblings('.rbfw_bikecarmd_es_input_box').show();
+                                jQuery(this_checkbox).parents('td').siblings('.rbfw_bikecarmd_es_input_box').show();
                                 jQuery(this_checkbox).parent('.switch').siblings('.rbfw-resource-qty').val('1').attr('value','1');
                             } else {
                                 jQuery(this_checkbox).attr('data-status', '0');

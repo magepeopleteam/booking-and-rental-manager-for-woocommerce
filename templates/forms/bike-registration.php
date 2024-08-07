@@ -354,8 +354,7 @@ if($rbfw_enable_variations == 'yes'){
                                 <div class="rbfw-single-right-heading">
                                     <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </div>
-                                <input type="hidden" name="total_days" value="0">
-                                <input type="hidden" name="countable_time" value="0">
+                                
                                 <?php foreach ($option_value as $cat=>$item){ ?>
                                     <?php if($item['cat_title']){ ?>
                                         <div class="servise-item">
@@ -532,6 +531,8 @@ if($rbfw_enable_variations == 'yes'){
                 <input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo $rbfw_enable_variations; ?>">
                 <input type="hidden" id="rbfw_input_stock_quantity" name="rbfw_input_stock_quantity" value="<?php echo $input_stock_quantity ?>">
+                <input type="hidden" name="total_days" value="0">
+                <input type="hidden" name="countable_time" value="0">
             </form>
         </div>
     </div>
