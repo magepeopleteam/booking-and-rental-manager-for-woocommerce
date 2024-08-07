@@ -6,6 +6,7 @@ global $rbfw;
 $post_id            = get_the_id();
 $post_title         = get_the_title();
 $post_featured_img  = !empty(get_the_post_thumbnail_url( $post_id, 'full' )) ? get_the_post_thumbnail_url( $post_id, 'full' ) : RBFW_PLUGIN_URL. '/assets/images/no_image.png';
+
 $post_link          = get_the_permalink();
 $book_now_label     = $rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));
 $post_review_rating = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating() : '';
@@ -174,6 +175,11 @@ if(!empty($rbfw_bike_car_sd_data) && ($rbfw_rent_type == 'bike_car_sd' || $rbfw_
 endif;
 
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
+
+/*echo '<pre>';
+print_r($rbfw_feature_category);
+echo '<pre>';*/
+
 ?>
 <div class="rbfw_rent_list_col">
     <div class="rbfw_rent_list_inner_wrapper">
@@ -215,7 +221,11 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
             <?php endif; ?>
 
             <div class="rbfw_muff_highlighted_features rbfw_rent_list_highlighted_features">
-                <?php if ( $rbfw_feature_category ) :
+                <?php
+
+
+
+                if ( $rbfw_feature_category ) :
                 $n = 1;
                 foreach ( $rbfw_feature_category as $value ) :
 
@@ -234,15 +244,9 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
                             $title = $features['title'];
                             $rand_number = rand();
                             if($title):
-
-                                echo '<li class="title'.$rand_number.'" '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i></li>';
+                                echo '<li title="'.$title.'" class="title'.$rand_number.'" '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i></li>';
                             ?>
-                            <script>
-                            jQuery(document).ready(function(){
-                                let content<?php echo $rand_number; ?> = '<?php echo $title; ?>';
-                                tippy('<?php echo '.title'.$rand_number; ?>', {content: content<?php echo $rand_number; ?>,theme: 'blue',placement: 'top'});
-                            });
-                            </script>
+                            
                             <?php
                             endif;
 
