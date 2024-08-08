@@ -266,6 +266,7 @@ if($rbfw_enable_variations == 'yes'){
                                         </div>
                                     </div>
                                     <?php if($enable_hourly_rate == 'yes' && !empty($availabe_time)){ ?>
+                                        <input name="rbfw_available_time" type="hidden" id="rbfw_available_time" value="yes">
                                         <div class="right time">
                                             <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_time', 'rbfw_basic_translation_settings', __('Return Time','booking-and-rental-manager-for-woocommerce'))); ?></div>
                                             <div class="rbfw-p-relative">

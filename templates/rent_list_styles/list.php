@@ -6,6 +6,7 @@ global $rbfw;
 $post_id            = get_the_id();
 $post_title         = get_the_title();
 $post_featured_img  = !empty(get_the_post_thumbnail_url( $post_id, 'full' )) ? get_the_post_thumbnail_url( $post_id, 'full' ) : RBFW_PLUGIN_URL. '/assets/images/no_image.png';
+
 $post_link          = get_the_permalink();
 $book_now_label     = $rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));
 $post_review_rating = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating() : '';
@@ -221,8 +222,11 @@ echo '<pre>';*/
 
             <div class="rbfw_muff_highlighted_features rbfw_rent_list_highlighted_features">
                 <?php
+
+
+
                 if ( $rbfw_feature_category ) :
-                    $n = 1;
+                $n = 1;
                 foreach ( $rbfw_feature_category as $value ) :
 
                 $cat_title = $value['cat_title'];
@@ -235,16 +239,23 @@ echo '<pre>';*/
                 if(!empty($cat_features)){
                     $i = 1;
                     foreach ($cat_features as $features) {
-                        if($i<=5){
+
                             $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                             $title = $features['title'];
                             $rand_number = rand();
-                            if($title) {
-                                ?>
-                                <li class="title <?php echo $rand_number ?>"><i class="<?php echo mep_esc_html($icon) ?>"></i><?php echo $title ?></li>
-                                <?php
-                            }
-                        }
+                            if($title):
+
+                                echo '<li class="title'.$rand_number.'" '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i>'.$title.'</li>';
+                            ?>
+                            <script>
+                            jQuery(document).ready(function(){
+                                let content<?php echo $rand_number; ?> = '<?php echo $title; ?>';
+                                tippy('<?php echo '.title'.$rand_number; ?>', {content: content<?php echo $rand_number; ?>,theme: 'blue',placement: 'top'});
+                            });
+                            </script>
+                            <?php
+                            endif;
+
                         $i++;
                     }
                 }
