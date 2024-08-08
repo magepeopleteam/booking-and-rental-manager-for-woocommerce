@@ -113,17 +113,15 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 }
             }
 
-            include( RBFW_Function::template_path( 'rent_list_styles/list.php' ) );
+            //include( RBFW_Function::template_path( 'rent_list_styles/list.php' ) );
 
-            /*if($expire == 'no'){
+            if($expire == 'no'){
                 if($style == 'grid'):
                     include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) );
-                elseif($style == 'list'):
-                    include( RBFW_Function::template_path( 'rent_list_styles/list.php' ) );
                 else:
-                    include( RBFW_Function::template_path( 'rent_list_styles/grid.php' ) );
+                    include( RBFW_Function::template_path( 'rent_list_styles/list.php' ) );
                 endif;
-            }*/
+            }
 
 
 

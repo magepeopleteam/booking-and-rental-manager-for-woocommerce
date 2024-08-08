@@ -757,6 +757,7 @@ a.rbfw-related-product-btn {
   line-height: 16px;
   display: inline-block;
   text-decoration: none;
+  border-radius: 5px;
 }
 
 a.rbfw-related-product-btn:hover {
@@ -1624,8 +1625,8 @@ table.rbfw_room_cart_table th span {
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_col {
-
-    text-align: center;
+box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
+    text-align: left;
     vertical-align: top;
     margin-bottom: 20px;
 
@@ -1647,7 +1648,7 @@ table.rbfw_room_cart_table th span {
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_inner_wrapper {
-  box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
+  height: 100%;
   position: relative;
 }
 
@@ -1666,8 +1667,10 @@ table.rbfw_room_cart_table th span {
   align-items: center;
   position: absolute;
   right: 15px;
-  top: 130px;
+  top: 94px;
   z-index: 5;
+  padding: 10px;
+  
 }
 
 .rbfw_rent_list_price_badge {
@@ -1731,9 +1734,7 @@ table.rbfw_room_cart_table th span {
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_content {
-  padding: 20px;
-  padding-top: 35px;
-  padding-bottom: 0;
+  padding: 20px 20px 50px 20px;
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_footer {
@@ -1824,6 +1825,9 @@ table.rbfw_room_cart_table th span {
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_button_wrap {
   text-align: left;
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
 }
 
 .rbfw_rent_list_title_wrap a {
@@ -2001,6 +2005,13 @@ table.rbfw_room_cart_table th span {
         width: 70;
         max-width: 70%;
         min-width: 70%;
+    }
+/* block theme css */
+    .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull))
+    {
+      max-width: 1300px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
     }
 
 }
@@ -6159,4 +6170,8 @@ body.single-rbfw_item div.ast-container {
   display: flex;
   justify-content: end;
 }
-
+/* booking form resourse service */
+.resource-qty{
+  display: none;
+  font-size: 12px;
+}

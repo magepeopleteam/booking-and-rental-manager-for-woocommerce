@@ -331,7 +331,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
             });
 
             jQuery(".es_stock").each(function(index, value) {
-                jQuery(this).text('('+response.max_available_qty.extra_service_instock[index]+')');
+                jQuery(this).text(response.max_available_qty.extra_service_instock[index]);
             });
 
             jQuery('.rbfw_rp_loader').hide();
