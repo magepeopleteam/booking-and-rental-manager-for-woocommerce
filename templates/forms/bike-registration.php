@@ -421,7 +421,10 @@ if($rbfw_enable_variations == 'yes'){
                                             <?php if($extra['service_qty'] > 0){ ?>
                                                 <tr>
                                                     <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
-                                                        <div class="label">
+                                                        <div style="display: none" class="rbfw-sold-out">
+                                                            Sold Out
+                                                        </div>
+                                                        <div class="label rbfw-checkbox">
                                                             <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_name]" value="<?php echo mep_esc_html($extra['service_name']); ?>">
                                                             <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_qty]" class="rbfw-resource-qty" value="">
                                                             <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_price]"  value="<?php echo $extra['service_price']; ?>">

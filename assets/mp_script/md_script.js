@@ -331,8 +331,23 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
             });
 
             jQuery(".es_stock").each(function(index, value) {
+                if(response.max_available_qty.extra_service_instock[index]==0){
+
+                    jQuery(this).find(".rbfw-sold-out").show();
+                    jQuery(this).find(".rbfw-checkbox").hide();
+                }
                 jQuery(this).text(response.max_available_qty.extra_service_instock[index]);
             });
+
+            jQuery(".rbfw_bikecarmd_es_hidden_input_box").each(function(index, value) {
+                if(response.max_available_qty.extra_service_instock[index]==0){
+                    jQuery(this).find(".rbfw-sold-out").show();
+                    jQuery(this).find(".rbfw-checkbox").hide();
+                }
+            });
+
+
+
 
             jQuery('.rbfw_rp_loader').hide();
 
