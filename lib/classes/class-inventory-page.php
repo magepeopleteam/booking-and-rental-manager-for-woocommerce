@@ -734,6 +734,10 @@ if (!class_exists('RBFWInventoryPage')) {
                         alert('Please select the date');
                         return;
                     }
+                    if(start_date && !end_date){
+                        alert('Please select the end time');
+                        return;
+                    }
 
                     jQuery.ajax({
                         type: 'POST',
@@ -760,6 +764,8 @@ if (!class_exists('RBFWInventoryPage')) {
                     e.preventDefault();
                     e.stopImmediatePropagation();
                     jQuery('.rbfw_inventory_filter_date').val('');
+                    jQuery('#rbfw_inventory_event_start_time').val('');
+                    jQuery('#rbfw_inventory_event_end_time').val('');
                     let selected_date = '';
                     let placeholder_loader = jQuery('.rbfw-inventory-page-ph').clone();
 

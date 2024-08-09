@@ -265,6 +265,7 @@ if($rbfw_enable_variations == 'yes'){
                                         </div>
                                     </div>
                                     <?php if($enable_hourly_rate == 'yes' && !empty($availabe_time)){ ?>
+                                        <input name="rbfw_available_time"  id="rbfw_available_time" value="yes" type="hidden">
                                         <div class="right time">
                                             <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_time', 'rbfw_basic_translation_settings', __('Return Time','booking-and-rental-manager-for-woocommerce'))); ?></div>
                                             <div class="rbfw-p-relative">
@@ -347,12 +348,14 @@ if($rbfw_enable_variations == 'yes'){
                         $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
                         ?>
 
+
                         <?php if(!empty($option_value) && ($enable_service_price=='on')){  ?>
 
                             <div class="multi-service-category-section">
                                 <div class="rbfw-single-right-heading">
                                     <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </div>
+
                                 <?php foreach ($option_value as $cat=>$item){ ?>
                                     <?php if($item['cat_title']){ ?>
                                         <div class="servise-item">
@@ -417,10 +420,14 @@ if($rbfw_enable_variations == 'yes'){
                                             <?php if($extra['service_qty'] > 0){ ?>
                                                 <tr>
                                                     <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
-                                                        <div class="label">
+                                                        <div style="display: none" class="rbfw-sold-out">
+                                                            Sold Out
+                                                        </div>
+                                                        <div class="label rbfw-checkbox">
                                                             <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_name]" value="<?php echo mep_esc_html($extra['service_name']); ?>">
                                                             <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_qty]" class="rbfw-resource-qty" value="">
                                                             <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_price]"  value="<?php echo $extra['service_price']; ?>">
+
                                                             <label class="switch">
                                                                 <input type="checkbox" max="4"  class="rbfw-resource-price rbfw-resource-price-multiple-qty key_value_<?php echo $key+1 ?>" data-status="0" value="1" data-cat="service"  data-price="<?php echo $extra['service_price']; ?>" data-name="<?php echo mep_esc_html($extra['service_name']); ?>">
                                                                 <span class="slider round"></span>

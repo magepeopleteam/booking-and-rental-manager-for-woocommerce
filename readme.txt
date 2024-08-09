@@ -209,11 +209,18 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
+= 2.0.7 =
+* Single day item pricing solved.
+* Realated product pricing problem solved.
+* Multiple day item end date problem solved.
+
+
 = 2.0.6 =
 * Price circle overlaping fix.
 * Multiple day booking resource section stock quanty added.
 * Block theme width adjustment.
 * css update in few sections
+
 = 2.0.5 =
 * Picked note, returned note and returned security deposit amount added in order list.
 * Rent list item pricing display issue solved.

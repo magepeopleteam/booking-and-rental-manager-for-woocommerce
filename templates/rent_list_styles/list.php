@@ -244,9 +244,21 @@ echo '<pre>';*/
                             $title = $features['title'];
                             $rand_number = rand();
                             if($title):
+<<<<<<< HEAD
+
+                                echo '<li class="title'.$rand_number.'" '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i>'.$title.'</li>';
+                            ?>
+                            <script>
+                            jQuery(document).ready(function(){
+                                let content<?php echo $rand_number; ?> = '<?php echo $title; ?>';
+                                tippy('<?php echo '.title'.$rand_number; ?>', {content: content<?php echo $rand_number; ?>,theme: 'blue',placement: 'top'});
+                            });
+                            </script>
+=======
                                 echo '<li title="'.$title.'" class="title'.$rand_number.'" '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i></li>';
                             ?>
                             
+>>>>>>> 0230577e6ce83cca283dd73c35bbaa1ecfae00c9
                             <?php
                             endif;
 
