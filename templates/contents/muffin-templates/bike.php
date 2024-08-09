@@ -15,10 +15,12 @@ $rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', 
 $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_settings','');
 $post_review_rating = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating($post_id,'muffin','style1') : '';
 $currency_symbol = rbfw_mps_currency_symbol();
+
 $get_hourly_price = rbfw_get_bike_car_md_hourly_daily_price($post_id, 'hourly');
 $get_daily_price = rbfw_get_bike_car_md_hourly_daily_price($post_id, 'daily');
 $enable_daily_rate = get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) : 'yes';
 $enable_hourly_rate = get_post_meta($rbfw_id, 'rbfw_enable_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_hourly_rate', true) : 'no';
+
 $rbfw_enable_daywise_price = get_post_meta($rbfw_id, 'rbfw_enable_daywise_price', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daywise_price', true) : 'no';
 $rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize(get_post_meta( $post_id, 'rbfw_releted_rbfw', true )) : [];
 $post_review_rating_style2 = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating($post_id,'muffin', 'style2') : '';

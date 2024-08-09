@@ -355,10 +355,7 @@ if($rbfw_enable_variations == 'yes'){
                                 <div class="rbfw-single-right-heading">
                                     <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </div>
-<<<<<<< HEAD
-=======
 
->>>>>>> ae976443649e59fa339f53a0e34c58db97f113a8
                                 <?php foreach ($option_value as $cat=>$item){ ?>
                                     <?php if($item['cat_title']){ ?>
                                         <div class="servise-item">
