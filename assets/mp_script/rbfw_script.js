@@ -3,6 +3,16 @@
 /* Start Calendar Script */
 jQuery(function(){
 
+    jQuery(window).load(function(){
+       // applyCalendar();
+    });
+
+
+    /* End Calendar Script */
+});
+
+//applyCalendar();
+function applyCalendar(){
 
 
     var defaultConfig = {
@@ -16,9 +26,7 @@ jQuery(function(){
         prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
         nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
         disable: function (date) {
-
             return rbfw_off_day_dates(date,'','no');
-
         }
     };
 
@@ -50,12 +58,6 @@ jQuery(function(){
     }
 
 
-
-
-
-
-
-
     let rent_type = jQuery('#rbfw_rent_type').val();
     // Start: Calendar script
     if(rent_type == 'appointment'){
@@ -76,8 +78,8 @@ jQuery(function(){
             }
         });
     }
-    /* End Calendar Script */
-});
+
+}
 
 function onclick_cal_date(date) {
 

@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <?php
 global $rbfw;
-$post_id = get_the_id();
+$post_id=$post_id??0;
 $rbfw_id = $post_id;
 $post_title = get_the_title();
 $post_content  = get_the_content();

@@ -76,10 +76,11 @@
 
 			public static function get_template($post_id) {
 
+
+
 				$template = !empty(get_post_meta($post_id, 'rbfw_single_template', true)) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default';
 				
 				$template_name = $template.'.php';
-
 
 
 
@@ -104,7 +105,6 @@
 				$default_dir   = RBFW_PLUGIN_DIR . '/templates/';
 				$dir           = $default_dir;
 				$file_path     = $dir . $file_name;
-
 
 
 

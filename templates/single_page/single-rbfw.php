@@ -33,6 +33,7 @@ if ( wp_is_block_theme() ) {  ?>
 
 
 $post_id = get_the_id();
+$frontend = 'yes';
 
 /*$rbfw_inventory = get_post_meta($post_id,'rbfw_inventory',true);
 echo '<pre>';

@@ -98,16 +98,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $service_price_arr = !empty($_POST['service_price_arr']) ? $_POST['service_price_arr'] : [];
 
             $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
-            $total_days = $diff->days;
 
             $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime);
             $duration_price = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$star_time,$end_time)*$item_quantity;
 
-
             $rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
-
-
-
 
             if(!empty($service_price_arr)){
                 foreach ($service_price_arr as $data_name => $values) {
@@ -120,11 +115,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             }
 
             $sub_total_price = $duration_price + $service_cost+$rbfw_service_price;
-
-
             $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
-
-
 
             $discount_amount = 0;
             $discount_desc = 0;
@@ -151,6 +142,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 }
             }
 
+
+
+
+            $days    = 0;
             $hours    = 0;
             $duration = '';
             if ( $diff ) {
@@ -165,6 +160,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 }
                 if ( $hours > 0 ) {
                     $duration .= $hours > 1 ? $hours.' '.rbfw_string_return('rbfw_text_hours',__('Hours','booking-and-rental-manager-for-woocommerce')) : $hours.' '.rbfw_string_return('rbfw_text_hour',__('Hour','booking-and-rental-manager-for-woocommerce'));
+                    $days +=$days;
                 }
             }
 
@@ -182,7 +178,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'total_price' => $sub_total_price+$security_deposit['security_deposit_amount']-$discount_amount,
                 'total_price_html' => wc_price($sub_total_price+$security_deposit['security_deposit_amount']-$discount_amount),
                 'max_available_qty' => $max_available_qty,
-                'total_days' => $total_days,
+                'total_days' => $days,
                 'total_duration' => $duration,
                 'ticket_item_quantity' => $item_quantity,
                 'rbfw_enable_variations' => $rbfw_enable_variations,
@@ -207,103 +203,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 return;
             endif;
             $rbfw_enable_start_end_date  = get_post_meta( $post_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $post_id, 'rbfw_enable_start_end_date', true ) : 'yes';
-            ?>
 
-            <script>
-
-                    jQuery('.rbfw_bikecarmd_es_qty_plus').click(function(e) {
-                        let target_input = jQuery(this).siblings("input[type=number]");
-                        let target_input2 = jQuery(this).parents('td').siblings('.rbfw_bikecarmd_es_hidden_input_box').find('.rbfw-resource-qty');
-                        let current_value = parseInt(jQuery(this).siblings("input[type=number]").val());
-                        let max_value = parseInt(jQuery(this).siblings("input[type=number]").attr('max'));
-                        let update_value = current_value + 1;
-                        if(update_value <= max_value){
-                            jQuery(target_input).val(update_value);
-                            jQuery(target_input).attr('value', update_value);
-                            jQuery(target_input2).val(update_value);
-                            jQuery(target_input2).attr('value', update_value);
-                        }else{
-                            let notice = "<?php rbfw_string('rbfw_text_available_qty_is',__('Available Quantity is: ','booking-and-rental-manager-for-woocommerce')); ?>";
-                            tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top',trigger: 'click'});
-                        }
-                    });
-
-                    jQuery('.rbfw_bikecarmd_es_qty_minus').click(function(e) {
-                        let target_input = jQuery(this).siblings("input[type=number]");
-                        let target_input2 = jQuery(this).parents('td').siblings('.rbfw_bikecarmd_es_hidden_input_box').find('.rbfw-resource-qty');
-                        let current_value = parseInt(jQuery(this).siblings("input[type=number]").val());
-                        let update_value = current_value - 1;
-                        if (current_value > 0) {
-                            jQuery(target_input,target_input2).val(update_value);
-                            jQuery(target_input,target_input2).attr('value', update_value);
-                            jQuery(target_input2).val(update_value);
-                            jQuery(target_input2).attr('value', update_value);
-                        }
-                    });
-
-                    jQuery('.rbfw_bikecarmd_es_qty').change(function(e) {
-                        let get_value = jQuery(this).val();
-                        let max_value = parseInt(jQuery(this).attr('max'));
-
-                        if(get_value <= max_value){
-                            jQuery(this).val(get_value);
-                            jQuery(this).attr('value', get_value);
-                        }else{
-                            jQuery(this).val(max_value);
-                            jQuery(this).attr('value',max_value);
-                            let notice = "<?php rbfw_string('rbfw_text_available_qty_is',__('Available Quantity is: ','booking-and-rental-manager-for-woocommerce')); ?>";
-                            tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top'});
-                        }
-                    });
-
-
-                    let service_price_arr = {};
-
-                    jQuery('.rbfw-resource-price-multiple-qty').change(function(e) {
-                        e.preventDefault();
-                        e.stopImmediatePropagation();
-
-                        let that = jQuery(this);
-                        let this_checkbox = jQuery(this);
-                        let this_checkbox_status = this_checkbox.attr('data-status');
-
-                        if (this_checkbox_status.length > 0) {
-                            if (this_checkbox_status == '0') {
-                                jQuery(this_checkbox).attr('data-status', '1');
-                                jQuery(this_checkbox).attr('checked', true);
-                                jQuery(this_checkbox).prop('checked', true);
-                                jQuery(this_checkbox).parents('div').siblings('.rbfw_bikecarmd_es_input_box').find('.rbfw_bikecarmd_es_qty').val('1').attr('value','1');
-                                jQuery(this_checkbox).val('1');
-                                jQuery(this_checkbox).parents('td').siblings('.rbfw_bikecarmd_es_input_box').show();
-                                jQuery(this_checkbox).parents('td').siblings('.resource-title-qty').find('.resource-qty').css('display','block');
-                                jQuery(this_checkbox).parent('.switch').siblings('.rbfw-resource-qty').val('1').attr('value','1');
-                            } else {
-                                jQuery(this_checkbox).parents('td').siblings('.rbfw_bikecarmd_es_input_box').hide();
-                                jQuery(this_checkbox).parents('td').siblings('.resource-title-qty').find('.resource-qty').hide();
-                                jQuery(this_checkbox).attr('data-status', '0');
-                                jQuery(this_checkbox).removeAttr('checked');
-                                jQuery(this_checkbox).prop('checked', false);
-                                jQuery(this_checkbox).parents('div').siblings('.rbfw_bikecarmd_es_input_box').find('.rbfw_bikecarmd_es_qty').val('0').attr('value','0');
-                                jQuery(this_checkbox).val('0');
-                                jQuery(this_checkbox).parents('div').siblings('.rbfw_bikecarmd_es_input_box').hide();
-                                jQuery(this_checkbox).parent('.switch').siblings('.rbfw-resource-qty').val('').attr('value','');
-                            }
-                        }
-
-                        let status = this_checkbox.attr('data-status');
-                        let data_name = jQuery(this_checkbox).attr('data-name');
-
-                        if(status == '1'){
-                            rbfw_bikecarmd_ajax_price_calculation(that, 0);
-                        }else{
-                            delete service_price_arr[data_name];
-                            rbfw_bikecarmd_ajax_price_calculation(that, 0);
-                        }
-                    });
-
-            </script>
-
-            <?php
         }
 
         public function rbfw_bikecarmd_ticket_info($product_id, $rbfw_start_datetime = null, $rbfw_end_datetime = null, $pickup_point = null, $dropoff_point = null, $rbfw_service_info = array(), $duration_cost = null, $service_cost = null, $ticket_total_price = null, $item_quantity = null, $start_date = null,$end_date = null,$start_time = null,$end_time = null, $variation_info = array(), $discount_type = null, $discount_amount = null, $rbfw_regf_info = array()){
