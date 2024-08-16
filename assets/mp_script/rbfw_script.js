@@ -4,7 +4,7 @@
 jQuery(function(){
 
 
-
+    var rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
     var defaultConfig = {
         weekDayLength: 1,
         onClickDate: onclick_cal_date,
@@ -17,7 +17,7 @@ jQuery(function(){
         nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
         disable: function (date) {
 
-            return rbfw_off_day_dates(date,'','no');
+            return rbfw_off_day_dates(date,'',rbfw_today_booking_enable);
 
         }
     };
@@ -866,13 +866,8 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
 
 
     var date_today = new Date();
-
     if(today_enable=='yes'){
-        var month = date_today.getMonth()-1;
-        var day = date_today.getDate();
-        var date_today = date_today.getFullYear() + '/' +
-            (month<10 ? '0' : '') + month + '/' +
-            (day<10 ? '0' : '') + day;
+        date_today.setDate(date_today.getDate() - 1);
     }
 
     var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
