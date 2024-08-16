@@ -4,7 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 $rbfw_id = $post_id ??0;
 global $frontend;
+global $submit_name;
 $frontend = $frontend??0;
+$submit_name=$submit_name??'admin-purchase';
 $daily_rate = get_post_meta($rbfw_id, 'rbfw_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_daily_rate', true) : 0;
 $hourly_rate = get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) : 0;
 $enable_daily_rate = get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) : 'yes';
@@ -159,8 +161,11 @@ if($rbfw_enable_variations == 'yes'){
 
 ?>
 
-<?php if($expire == 'no'){ ?>
-    <div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
+<?php if($expire == 'yes'){ ?>
+    <h3><?php esc_html_e( 'Date Expired !', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+<?php die; } ?>
+
+<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
         <div class="rbfw-single-right-container">
             <form action="" method='post' class="mp_rbfw_ticket_form">
                 <div class="rbfw_bike_car_md_item_wrapper">
@@ -513,14 +518,14 @@ if($rbfw_enable_variations == 'yes'){
 
                             <?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>
 
-                            <button type="submit" name="add-to-cart" value="<?php echo mep_esc_html($rbfw_product_id); ?>" class="rbfw_mps_book_now_btn_regf_____ mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn <?php echo esc_attr($rbfw_payment_system); ?>" disabled >
+                            <button type="submit" name="<?php echo $submit_name ?>" value="<?php echo mep_esc_html($rbfw_product_id); ?>" class="rbfw_mps_book_now_btn_regf_____ mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn <?php echo esc_attr($rbfw_payment_system); ?>" disabled >
                                 <?php rbfw_string('rbfw_text_book_now',__('Book Now','booking-and-rental-manager-for-woocommerce')); ?>
                             </button>
                         </div>
                     <?php } else{ ?>
                         <div class="item">
                             <?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>
-                            <button type="submit" name="add-to-cart" value="<?php echo mep_esc_html($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn <?php echo esc_attr($rbfw_payment_system); ?>" disabled <?php if( $rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date ) { echo 'style="display:none"'; }?>>
+                            <button type="submit" name="<?php echo $submit_name ?>" value="<?php echo mep_esc_html($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn <?php echo esc_attr($rbfw_payment_system); ?>" disabled <?php if( $rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date ) { echo 'style="display:none"'; }?>>
                                 <?php rbfw_string('rbfw_text_book_now',__('Book Now','booking-and-rental-manager-for-woocommerce')); ?>
                             </button>
                         </div>
@@ -549,7 +554,5 @@ if($rbfw_enable_variations == 'yes'){
             </form>
         </div>
     </div>
-<?php }else{ ?>
-    <h3><?php esc_html_e( 'Date Expired !', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
-<?php } ?>
+
 

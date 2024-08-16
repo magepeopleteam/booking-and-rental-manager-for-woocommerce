@@ -3,16 +3,9 @@
 /* Start Calendar Script */
 jQuery(function(){
 
-    jQuery(window).load(function(){
-       // applyCalendar();
-    });
 
 
-    /* End Calendar Script */
-});
-
-//applyCalendar();
-function applyCalendar(){
+    var rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
 
 
     var defaultConfig = {
@@ -26,7 +19,7 @@ function applyCalendar(){
         prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
         nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
         disable: function (date) {
-            return rbfw_off_day_dates(date,'','no');
+            return rbfw_off_day_dates(date,'',rbfw_today_booking_enable);
         }
     };
 
@@ -78,8 +71,7 @@ function applyCalendar(){
             }
         });
     }
-
-}
+});
 
 function onclick_cal_date(date) {
 
@@ -857,34 +849,23 @@ function rbfw_mps_checkout_header_link(){
 function rbfw_off_day_dates(date,type='',today_enable='no'){
 
 
-
-
-
     var curr_date = ("0" + (date.getDate())).slice(-2);
     var curr_month = ("0" + (date.getMonth() + 1)).slice(-2);
     var curr_year = date.getFullYear();
     var date_in = curr_date+"-"+curr_month+"-"+curr_year;
 
-
-
     var date_today = new Date();
-
     if(today_enable=='yes'){
-        var month = date_today.getMonth()-1;
-        var day = date_today.getDate();
-        var date_today = date_today.getFullYear() + '/' +
-            (month<10 ? '0' : '') + month + '/' +
-            (day<10 ? '0' : '') + day;
+        date_today.setDate(date_today.getDate() - 1);
     }
 
     var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     var day_in = weekday[date.getDay()];
     var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
 
-
-
-
     var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
+
+
 
 
     if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || (date <  date_today) ){
