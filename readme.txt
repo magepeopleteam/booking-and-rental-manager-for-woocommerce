@@ -206,9 +206,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 
-
-
 == Changelog ==
+= 2.0.8 =
+* Same day booking for Single day problem solved.
+
+
 = 2.0.7 =
 * Single day item pricing solved.
 * Realated product pricing problem solved.
