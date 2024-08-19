@@ -455,6 +455,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     $content .= '</div>';
                 }
 
+                $content .= '<h2 class="rbfw-bikecarsd-calendar-header-title">'.__('Please pick up a time','booking-and-rental-manager-for-woocommerce').'</h2>';
                 $content .= '<div class="rbfw_bikecarsd_time_table_wrap">';
 
                 

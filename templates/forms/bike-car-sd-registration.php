@@ -29,7 +29,7 @@
 					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fa-solid fa-clock"></i> <?php rbfw_string('rbfw_text_real_time_availability',__('Real-time availability','booking-and-rental-manager-for-woocommerce')); ?></div>
 					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fa-solid fa-bolt"></i> <?php rbfw_string('rbfw_text_instant_confirmation',__('Instant confirmation','booking-and-rental-manager-for-woocommerce')); ?></div>
 				</div>
-
+				<h2 class="rbfw-bikecarsd-calendar-header-title"><?php esc_html_e('Please select a pick up date','booking-and-rental-manager-for-woocommerce') ?></h2>
 				<div class="item rbfw-bikecarsd-step" data-step="1">
 					<div id="rbfw-bikecarsd-calendar"></div>
 
