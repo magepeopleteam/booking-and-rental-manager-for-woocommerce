@@ -244,9 +244,11 @@ echo '<pre>';*/
                             $title = $features['title'];
                             $rand_number = rand();
                             if($title):
+
                                 echo '<li title="'.$title.'" class="title'.$rand_number.'" '; if($i > 4){ echo 'style="display:none"'; echo 'data-status="extra"'; } echo '><i class="'.mep_esc_html($icon).'"></i></li>';
                             ?>
                             
+
                             <?php
                             endif;
 

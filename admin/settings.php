@@ -127,8 +127,8 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 
             array(
                 'name' => 'today_booking_enable',
-                'label' => __( 'Same booking enable', 'booking-and-rental-manager-for-woocommerce' ),
-                'desc' => __( "If you want to enable today booking, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
+                'label' => __( 'Same day booking enable', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => __( "If you want to enable same day booking, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
                 'type' => 'select',
                 'default' => 'no',
                 'options' => array(

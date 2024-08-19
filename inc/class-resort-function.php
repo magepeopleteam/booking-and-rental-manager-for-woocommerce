@@ -538,7 +538,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                 if($value['rbfw_room_available_qty'] > 0){
 
-                    $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $checkin_date, $checkout_date, $value['room_type']);
+                    $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $checkin_date, $checkout_date, $value['room_type'],'','');
 
                     $max_available_qty = $max_available_qty['remaining_stock'];
 

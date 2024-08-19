@@ -3174,10 +3174,14 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   left: 50%;
   z-index: 2;
 }
+.rbfw_bikecarsd_pricing_table_wrap{
+  position: relative;
+}
 
 .rbfw-bikecarsd-step[data-step="1"].rbfw_loader_in::after,
 .rbfw_bikecarsd_time_table_wrap.rbfw_loader_in::after,
-.rbfw_bikecarsd_price_summary.rbfw_loader_in::after {
+.rbfw_bikecarsd_price_summary.rbfw_loader_in::after,
+.rbfw_bikecarsd_pricing_table_wrap.rbfw_loader_in::after {
   content: "";
   position: absolute;
   top: 0;
@@ -3213,7 +3217,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   z-index: 2;
 }
 
-.rbfw_bikecarsd_price_summary i.fa-spinner {
+.rbfw_bikecarsd_price_summary i.fa-spinner, .rbfw_bikecarsd_pricing_table_wrap i.fa-spinner {
   position: absolute;
   top: 50%;
   left: 50%;
