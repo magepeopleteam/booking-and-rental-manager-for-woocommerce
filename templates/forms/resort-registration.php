@@ -117,7 +117,7 @@
 					<div class="rbfw-resort-result"></div>
 				</div>
 				<input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="resort">
-				<input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
+				<input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
 			</form>
 
 		</div>

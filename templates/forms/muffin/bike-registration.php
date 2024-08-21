@@ -507,6 +507,18 @@ if($rbfw_enable_variations == 'yes'){
                         </div>
                     </div>
 
+
+                    <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
+                    <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
+                    <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
+                    <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo $rbfw_enable_variations; ?>">
+                    <input type="hidden" name="rbfw_input_stock_quantity" id="rbfw_input_stock_quantity"  value="<?php echo $input_stock_quantity ?>">
+                    <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo !empty(get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true) : 'on'; ?>">
+                    <input type="hidden" name="total_days" value="0">
+                    <input type="hidden" name="countable_time" value="0">
+
+
+
                     <?php if(rbfw_chk_regf_fields_exist($rbfw_id) === true){ ?>
                         <div class="item">
                             <div class="rbfw_reg_form_rb" style="display: none">
@@ -543,14 +555,7 @@ if($rbfw_enable_variations == 'yes'){
                     <div class="rbfw-bikecarmd-result">
                     </div>
                 </div>
-                <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
-                <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
-                <input type="hidden" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
-                <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo $rbfw_enable_variations; ?>">
-                <input type="hidden" id="rbfw_input_stock_quantity" name="rbfw_input_stock_quantity" value="<?php echo $input_stock_quantity ?>">
-                <input type="hidden" id="rbfw_enable_time_slot" name="rbfw_enable_time_slot" value="<?php echo !empty(get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true) : 'on'; ?>">
-                <input type="hidden" name="total_days" value="0">
-                <input type="hidden" name="countable_time" value="0">
+
             </form>
         </div>
     </div>
