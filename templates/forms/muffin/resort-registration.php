@@ -2,7 +2,9 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		die;
 	}
-	$rbfw_id = $post_id ? $post_id : get_the_ID();
+$rbfw_id = $post_id ??0;
+global $frontend;
+$frontend = $frontend??0;
 	global $rbfw;
 	$daily_rate = get_post_meta($rbfw_id, 'rbfw_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_daily_rate', true) : 0;
 	$hourly_rate = get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) : 0;
