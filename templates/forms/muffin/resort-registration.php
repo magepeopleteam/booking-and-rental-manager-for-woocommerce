@@ -78,6 +78,7 @@ $frontend = $frontend??0;
 
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
+                    <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
 
 
 				<div class="item">
@@ -121,7 +122,8 @@ $frontend = $frontend??0;
 					<div class="rbfw-resort-result"></div>
 				</div>
 				<input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="resort">
-				<input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
+                <input type="hidden" name="rbfw_enable_resort_daylong_price" id="rbfw_enable_resort_daylong_price"  value="<?php echo $rbfw_enable_resort_daylong_price; ?>">
+
 			</form>
 
 		</div>

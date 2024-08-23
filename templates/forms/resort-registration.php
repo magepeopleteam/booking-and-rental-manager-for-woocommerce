@@ -2,7 +2,8 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		die;
 	}
-	$rbfw_id = $post_id ? $post_id : get_the_ID();
+
+    $rbfw_id = $post_id ??0;
 	global $rbfw;
 	$daily_rate = get_post_meta($rbfw_id, 'rbfw_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_daily_rate', true) : 0;
 	$hourly_rate = get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) : 0;
@@ -74,7 +75,7 @@
 				</div>
 				<!--    ITEM END        -->
 				<!-- ITEM -->
-
+                    <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $post_id; ?>">
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
 
@@ -117,7 +118,8 @@
 					<div class="rbfw-resort-result"></div>
 				</div>
 				<input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="resort">
-				<input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
+
+				<input type="hidden" name="rbfw_enable_resort_daylong_price" id="rbfw_enable_resort_daylong_price"  value="<?php echo $rbfw_enable_resort_daylong_price; ?>">
 			</form>
 
 		</div>

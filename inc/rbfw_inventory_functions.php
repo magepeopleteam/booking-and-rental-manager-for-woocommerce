@@ -227,7 +227,7 @@ function rbfw_update_inventory($order_id, $current_status = null){
 
 }
 
-function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime,$dropoff_datetime){
+function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null){
 
     if (empty($post_id) || empty($start_date) || empty($end_date)) {
         return;
