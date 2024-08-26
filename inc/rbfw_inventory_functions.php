@@ -69,7 +69,7 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
 
 function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
-
+    //echo '<pre>';print_r($ticket_info);echo '<pre>';exit;
 
     global $rbfw;
     $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');

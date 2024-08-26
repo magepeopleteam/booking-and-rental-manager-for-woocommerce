@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     die;
 } // Cannot access pages directly.
 
-global $post_id;
+$post_id = $post_id??0;
 
 $rent_type = get_post_meta($post_id, 'rbfw_item_type', true);
 

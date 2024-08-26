@@ -2,10 +2,12 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		die;
 	}
-$rbfw_id = $post_id ??0;
-global $frontend;
-$frontend = $frontend??0;
+
+    $rbfw_id = $post_id ??0;
+    global $frontend;
+    $frontend = $frontend??0;
 	global $rbfw;
+
 	$daily_rate = get_post_meta($rbfw_id, 'rbfw_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_daily_rate', true) : 0;
 	$hourly_rate = get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) : 0;
 	$enable_daily_rate = get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) : 'yes';
@@ -78,7 +80,7 @@ $frontend = $frontend??0;
 
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
-                    <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
+                    <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $post_id; ?>">
 
 
 				<div class="item">

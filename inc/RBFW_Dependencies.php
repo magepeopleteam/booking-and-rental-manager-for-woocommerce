@@ -54,9 +54,10 @@
 
                 wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), time(), true);
 
+
                 wp_enqueue_style( 'rbfw_calendar', RBFW_PLUGIN_URL . '/css/calendar.css', array(), '1.0.1' );
 
-
+                wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
 				
 			}
 
@@ -142,6 +143,8 @@
 				wp_enqueue_script('smartWizard', plugins_url('admin/js/jquery.smartWizard.min.js', __DIR__), array('jquery'), '6.0.6', false);
 
                 wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
+
+
 
                 do_action('rbfw_admin_enqueue_scripts');
 			  

@@ -6,8 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <?php
 global $rbfw;
-$post_id = get_the_id();
-$rbfw_id = $post_id;
+$rbfw_id = $post_id ??0;
+global $frontend;
+$frontend = $frontend??0;
+
 $post_title = get_the_title();
 $post_content  = get_the_content();
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
