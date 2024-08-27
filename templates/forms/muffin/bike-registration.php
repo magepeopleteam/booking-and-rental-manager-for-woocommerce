@@ -127,11 +127,11 @@ $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_ser
 $rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
 $rbfw_variations_data = get_post_meta( $rbfw_id, 'rbfw_variations_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_variations_data', true ) : [];
 
+//echo '<pre>';print_r($rbfw_variations_data);echo '<pre>';exit;
+
 $input_stock_quantity = '';
 if($rbfw_enable_variations == 'yes'){
-
     $item_stock_quantity = rbfw_get_variations_stock($rbfw_id);
-
 } else {
 
     $item_stock_quantity = !empty(get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true)) ? get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true) : 0;

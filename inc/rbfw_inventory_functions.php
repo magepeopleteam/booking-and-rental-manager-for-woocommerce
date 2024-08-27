@@ -445,8 +445,7 @@ function total_extra_service_quantity($service,$date,$inventory,$inventory_based
 
     $total_single_service = 0;
     foreach($inventory as $item){
-
-        if(in_array($date,$item['booked_dates'])  && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'') )){
+        if(in_array($date,$item['booked_dates'])  && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'') ) && isset($item['rbfw_service_info'][$service])){
             $total_single_service += $item['rbfw_service_info'][$service];
         }
     }

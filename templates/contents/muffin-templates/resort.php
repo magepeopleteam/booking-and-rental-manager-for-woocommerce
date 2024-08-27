@@ -8,6 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 global $rbfw;
 $post_id = $post_id??0;
 $rbfw_id = $post_id;
+$frontend = $frontend??0;
+global $rbfw;
+
 $post_title = get_the_title();
 $post_content  = get_the_content();
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
@@ -118,6 +121,9 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 			</div>
 		</div>
 	</div>
+
+    <?php if($frontend){ ?>
+
 	<div class="rbfw_muff_row_slider">
         <div class="rbfw_muff_slider mpStyle <?php echo $slide_style; ?>">
             <?php do_action( 'add_super_slider', $post_id ,'rbfw_gallery_images'); ?>
@@ -129,6 +135,7 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
             <?php echo $post_content; ?>
         </div>
     </div>
+
     <div class="rbfw_muff_row_hf">
 
         <div class="rbfw_muff_highlighted_features" data-type="resort">
@@ -172,12 +179,16 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
         </div>
     </div>
 
+    <?php } ?>
+
     <div class="rbfw_muff_row_registration">
         <div class="rbfw_muff_registration_wrapper" data-type="resort">
             <div class="rbfw_muff_heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_start_booking', 'rbfw_basic_translation_settings', __('Start Booking','booking-and-rental-manager-for-woocommerce'))); ?></div>
             <?php include( RBFW_Function::template_path( 'forms/muffin/resort-registration.php' ) ); ?>
         </div>
     </div>
+
+    <?php if($frontend){ ?>
 
 
     <?php if(!empty($gallery_images_additional)) { ?>
@@ -292,4 +303,5 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 			<?php do_action( 'rbfw_the_faq_style_two', $post_id ); ?>
 		</div>
 	<?php } ?>
+    <?php } ?>
 </div>

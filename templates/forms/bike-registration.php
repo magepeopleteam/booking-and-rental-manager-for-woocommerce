@@ -2,9 +2,11 @@
 if ( ! defined( 'ABSPATH' ) ) {
     die;
 }
+
 $rbfw_id = $post_id ??0;
 global $frontend;
 $frontend = $frontend??0;
+
 $daily_rate = get_post_meta($rbfw_id, 'rbfw_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_daily_rate', true) : 0;
 $hourly_rate = get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) : 0;
 $enable_daily_rate = get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) : 'yes';
@@ -256,7 +258,6 @@ if($rbfw_enable_variations == 'yes'){
                                 </div>
                             </div>
 
-
                             <div class="item">
                                 <div class="item-content rbfw-datetime">
                                     <div class="<?php if($enable_hourly_rate == 'yes' && !empty($availabe_time)){ echo 'left'; }?> date">
@@ -356,7 +357,7 @@ if($rbfw_enable_variations == 'yes'){
                                 <div class="rbfw-single-right-heading">
                                     <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </div>
-                                
+
                                 <?php foreach ($option_value as $cat=>$item){ ?>
                                     <?php if($item['cat_title']){ ?>
                                         <div class="servise-item">
