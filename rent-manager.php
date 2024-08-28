@@ -104,7 +104,6 @@ register_deactivation_hook( __FILE__, 'rbfw_register_deactivation_func' );
 // add_action( 'activated_plugin', 'rbfw_activation_redirect' );
 add_action('admin_init', 'rbfw_activation_redirect', 90);
 function rbfw_activation_redirect( $plugin ) {
-
     if(get_option('rbfw_sz_form_submit') === false){
 
 
@@ -119,6 +118,7 @@ function rbfw_activation_redirect( $plugin ) {
         // if( $plugin == plugin_basename( __FILE__ ) ) { }
     }
 }
+
 
 function rbfw_register_activation_func() {
     update_option('rewrite_rules','');
