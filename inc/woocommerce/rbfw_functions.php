@@ -177,13 +177,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $rbfw_pickup_start_time = $_POST['rbfw_pickup_start_time'];
         $rbfw_pickup_end_time = $_POST['rbfw_pickup_end_time'];
     }else{
-        if(rbfw_get_option('display_default_time_enable_time_slot','rbfw_basic_gen_settings')=='yes'){
-            $rbfw_pickup_start_time =  '00:00:00';
-            $rbfw_pickup_end_time =  rbfw_end_time();
-        }else{
-            $rbfw_pickup_start_time =  '';
-            $rbfw_pickup_end_time = '';
-        }
+        $rbfw_pickup_start_time =  '00:00:00';
+        $rbfw_pickup_end_time =  rbfw_end_time();
     }
 
 
@@ -738,18 +733,9 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
             $start_datetime = rbfw_get_datetime( $values['rbfw_start_datetime'], 'date-time-text' );
             $end_datetime = rbfw_get_datetime( $values['rbfw_end_datetime'], 'date-time-text' );
         }else{
-            if(rbfw_get_option('display_default_time_enable_time_slot','rbfw_basic_gen_settings')=='yes'){
-                $start_datetime =  rbfw_get_datetime( $values['rbfw_start_datetime'], 'date-time-text' ) ;
-                $end_datetime = rbfw_get_datetime( $values['rbfw_end_datetime'], 'date-time-text' );
-            }else{
-                $start_datetime = $values['rbfw_start_datetime'] ? rbfw_get_datetime( $values['rbfw_start_datetime'], 'date-text' ) : '';
-                $end_datetime = $values['rbfw_end_datetime'] ? rbfw_get_datetime( $values['rbfw_end_datetime'], 'date-text' ) : '';
-            }
+            $start_datetime = $values['rbfw_start_datetime'] ? rbfw_get_datetime( $values['rbfw_start_datetime'], 'date-text' ) : '';
+            $end_datetime = $values['rbfw_end_datetime'] ? rbfw_get_datetime( $values['rbfw_end_datetime'], 'date-text' ) : '';
         }
-
-
-
-
 
         $start_date_raw = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
         $end_date_raw = $values['rbfw_end_datetime'] ? $values['rbfw_end_datetime'] : '';

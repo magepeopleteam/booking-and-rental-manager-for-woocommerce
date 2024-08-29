@@ -399,102 +399,111 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
         }
 
         public function rbfw_check_resort_availibility(){
-            global $rbfw;
-            $errors = '';
 
-            if(empty($_POST['post_id'])):
-            $errors .= '<p class="rbfw_alert_warning"><i class="fa-solid fa-circle-info"></i> '.__('Something is wrong! Please try again.','booking-and-rental-manager-for-woocommerce').'</p>';
-            endif;
+            if($_POST['rbfw_enable_resort_daylong_price']=='yes'){
 
-            if(empty($_POST['checkin_date'])):
-            $errors .= '<p class="rbfw_alert_warning"><i class="fa-solid fa-circle-info"></i> '.__('Check-In date is required!','booking-and-rental-manager-for-woocommerce').'</p>';
-            endif;
-
-
-            if(empty($_POST['checkout_date'])):
-            $errors .= '<p class="rbfw_alert_warning"><i class="fa-solid fa-circle-info"></i> '.__('Check-Out date is required!','booking-and-rental-manager-for-woocommerce').'</p>';
-            endif;
-
-            $is_muffin_template = $_POST['is_muffin_template'];
-
-            if(empty($errors)){
                 global $rbfw;
-                $post_id 				= strip_tags($_POST['post_id']);
-                $checkin_date 			= strip_tags($_POST['checkin_date']);
-                $checkout_date 			= strip_tags($_POST['checkout_date']);
-                $rbfw_resort_room_data 	= get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];
-                $daylong_counter  		= 0;
-                $daynight_counter 		= 0;
-                $content				= '';
+                $errors = '';
 
-                $rbfw_minimum_booking_day = get_post_meta( $post_id, 'rbfw_minimum_booking_day', true );
-                $rbfw_maximum_booking_day = get_post_meta( $post_id, 'rbfw_maximum_booking_day', true );
-                $min_max_day_notice = '';
+                if(empty($_POST['post_id'])):
+                    $errors .= '<p class="rbfw_alert_warning"><i class="fa-solid fa-circle-info"></i> '.__('Something is wrong! Please try again.','booking-and-rental-manager-for-woocommerce').'</p>';
+                endif;
 
-                $checkin_date  = date( 'Y-m-d', strtotime( $checkin_date ) );
-                $checkout_date = date( 'Y-m-d', strtotime( $checkout_date ) );
-                $checkin_date  = new DateTime( $checkin_date );
-                $checkout_date = new DateTime( $checkout_date );
-                $diff = date_diff( $checkin_date, $checkout_date );
-                $days = $diff->days;
+                if(empty($_POST['checkin_date'])):
+                    $errors .= '<p class="rbfw_alert_warning"><i class="fa-solid fa-circle-info"></i> '.__('Check-In date is required!','booking-and-rental-manager-for-woocommerce').'</p>';
+                endif;
 
-                if(!empty($rbfw_minimum_booking_day) && $days < $rbfw_minimum_booking_day){
-                    $min_max_day_notice .= '<span class="min_max_day_notice mps_alert_warning"><i class="fa-solid fa-circle-info"></i> '.rbfw_string_return('rbfw_text_min_number_days_have_to_book',__('Minimum number of days have to book is','booking-and-rental-manager-for-woocommerce')). ': '.'<strong>'.$rbfw_minimum_booking_day.'</strong></span>';
-                }
 
-                if(!empty($rbfw_maximum_booking_day) && $days > $rbfw_maximum_booking_day){
-                    $min_max_day_notice .= '<span class="min_max_day_notice mps_alert_warning"><i class="fa-solid fa-circle-info"></i> '.rbfw_string_return('rbfw_text_max_number_days_have_to_book',__('Maximum number of days can book is','booking-and-rental-manager-for-woocommerce')). ': '.'<strong>'.$rbfw_maximum_booking_day.'</strong></span>';
-                }
+                if(empty($_POST['checkout_date'])):
+                    $errors .= '<p class="rbfw_alert_warning"><i class="fa-solid fa-circle-info"></i> '.__('Check-Out date is required!','booking-and-rental-manager-for-woocommerce').'</p>';
+                endif;
 
-                if(!empty($min_max_day_notice)  && rbfw_check_min_max_booking_day_active() === true){
+                $is_muffin_template = $_POST['is_muffin_template'];
 
-                    $content .= $min_max_day_notice;
+                if(empty($errors)){
+                    global $rbfw;
+                    $post_id 				= strip_tags($_POST['post_id']);
+                    $checkin_date 			= strip_tags($_POST['checkin_date']);
+                    $checkout_date 			= strip_tags($_POST['checkout_date']);
+                    $rbfw_resort_room_data 	= get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];
+                    $daylong_counter  		= 0;
+                    $daynight_counter 		= 0;
+                    $content				= '';
+
+                    $rbfw_minimum_booking_day = get_post_meta( $post_id, 'rbfw_minimum_booking_day', true );
+                    $rbfw_maximum_booking_day = get_post_meta( $post_id, 'rbfw_maximum_booking_day', true );
+                    $min_max_day_notice = '';
+
+                    $checkin_date  = date( 'Y-m-d', strtotime( $checkin_date ) );
+                    $checkout_date = date( 'Y-m-d', strtotime( $checkout_date ) );
+                    $checkin_date  = new DateTime( $checkin_date );
+                    $checkout_date = new DateTime( $checkout_date );
+                    $diff = date_diff( $checkin_date, $checkout_date );
+                    $days = $diff->days;
+
+                    if(!empty($rbfw_minimum_booking_day) && $days < $rbfw_minimum_booking_day){
+                        $min_max_day_notice .= '<span class="min_max_day_notice mps_alert_warning"><i class="fa-solid fa-circle-info"></i> '.rbfw_string_return('rbfw_text_min_number_days_have_to_book',__('Minimum number of days have to book is','booking-and-rental-manager-for-woocommerce')). ': '.'<strong>'.$rbfw_minimum_booking_day.'</strong></span>';
+                    }
+
+                    if(!empty($rbfw_maximum_booking_day) && $days > $rbfw_maximum_booking_day){
+                        $min_max_day_notice .= '<span class="min_max_day_notice mps_alert_warning"><i class="fa-solid fa-circle-info"></i> '.rbfw_string_return('rbfw_text_max_number_days_have_to_book',__('Maximum number of days can book is','booking-and-rental-manager-for-woocommerce')). ': '.'<strong>'.$rbfw_maximum_booking_day.'</strong></span>';
+                    }
+
+                    if(!empty($min_max_day_notice)  && rbfw_check_min_max_booking_day_active() === true){
+
+                        $content .= $min_max_day_notice;
+                        echo $content;
+                        wp_die();
+                    }
+
+                    foreach ($rbfw_resort_room_data as $key => $value) {
+                        $daylong_counter  += (float)$value['rbfw_room_daylong_rate'];
+                        $daynight_counter += (float)$value['rbfw_room_daynight_rate'];
+                    }
+
+                    if($is_muffin_template == 1){
+                        $content .= do_action('rbfw_discount_ad', $post_id, 'muffin');
+                    }
+
+                    $content .= '<div class="rbfw_room_price_category_tabs_title mb-08">'.$rbfw->get_option_trans('rbfw_text_select_booking_type', 'rbfw_basic_translation_settings', __('CHOOSE BOOKING TYPE','booking-and-rental-manager-for-woocommerce')).'</div>';
+
+                    $content .= '<div class="rbfw_room_price_category_tabs_label" data-days="'.$days.'">';
+
+                    if($daylong_counter > 0 && $daynight_counter > 0){
+                        $content .= '<label for="rbfw_room_daylong_price" class="rbfw_room_price_label"><input type="radio" name="rbfw_room_price_category" value="daylong" class="rbfw_room_price_category" id="rbfw_room_daylong_price">'.$rbfw->get_option_trans('rbfw_text_daylong', 'rbfw_basic_translation_settings', __('Daylong','booking-and-rental-manager-for-woocommerce')).'<small>'.$rbfw->get_option_trans('rbfw_text_daylong_subtitle', 'rbfw_basic_translation_settings', __('9 AM to 6 PM','booking-and-rental-manager-for-woocommerce')).'</small></label>';
+                        $content .= '<label for="rbfw_room_daynight_price" class="rbfw_room_price_label "><input type="radio" name="rbfw_room_price_category" value="daynight" class="rbfw_room_price_category" id="rbfw_room_daynight_price" checked>'.$rbfw->get_option_trans('rbfw_text_daynight', 'rbfw_basic_translation_settings', __('Daynight','booking-and-rental-manager-for-woocommerce')).'<small>'.$rbfw->get_option_trans('rbfw_text_daynight_subtitle', 'rbfw_basic_translation_settings', __('Day & Night Stay','booking-and-rental-manager-for-woocommerce')).'</small></label>';
+                    }
+                    if($daylong_counter > 0 && $daynight_counter == 0) {
+                        $content .= '<label for="rbfw_room_daylong_price" class="rbfw_room_price_label "><input type="radio" name="rbfw_room_price_category" value="daylong" class="rbfw_room_price_category" id="rbfw_room_daylong_price" checked>'.$rbfw->get_option_trans('rbfw_text_daylong', 'rbfw_basic_translation_settings', __('Daylong','booking-and-rental-manager-for-woocommerce')).'<small>'.$rbfw->get_option_trans('rbfw_text_daylong_subtitle', 'rbfw_basic_translation_settings', __('9 AM to 6 PM','booking-and-rental-manager-for-woocommerce')).'</small></label>';
+                        $content .= '<label for="rbfw_room_daynight_price" class="rbfw_room_price_label disabled"><input type="radio" name="rbfw_room_price_category" value="daynight" class="rbfw_room_price_category" id="rbfw_room_daynight_price" disabled>'.$rbfw->get_option_trans('rbfw_text_daynight', 'rbfw_basic_translation_settings', __('Daynight','booking-and-rental-manager-for-woocommerce')).'<small>'.$rbfw->get_option_trans('rbfw_text_daynight_subtitle', 'rbfw_basic_translation_settings', __('Day & Night Stay','booking-and-rental-manager-for-woocommerce')).'</small></label>';
+                    }
+                    if($daylong_counter == 0 && $daynight_counter > 0) {
+                        $content .= '<label for="rbfw_room_daylong_price" class="rbfw_room_price_label disabled"><input type="radio" name="rbfw_room_price_category" value="daylong" class="rbfw_room_price_category" id="rbfw_room_daylong_price" disabled>' . $rbfw->get_option_trans('rbfw_text_daylong', 'rbfw_basic_translation_settings', __('Daylong', 'booking-and-rental-manager-for-woocommerce')) . '<small>' . $rbfw->get_option_trans('rbfw_text_daylong_subtitle', 'rbfw_basic_translation_settings', __('9 AM to 6 PM', 'booking-and-rental-manager-for-woocommerce')) . '</small></label>';
+                        $content .= '<label for="rbfw_room_daynight_price" class="rbfw_room_price_label "><input type="radio" name="rbfw_room_price_category" value="daynight" class="rbfw_room_price_category" id="rbfw_room_daynight_price" checked>' . $rbfw->get_option_trans('rbfw_text_daynight', 'rbfw_basic_translation_settings', __('Daynight', 'booking-and-rental-manager-for-woocommerce')) . '<small>' . $rbfw->get_option_trans('rbfw_text_daynight_subtitle', 'rbfw_basic_translation_settings', __('Day & Night Stay', 'booking-and-rental-manager-for-woocommerce')) . '</small></label>';
+                    }
+
+                    $content .= '</div>';
                     echo $content;
-                    wp_die();
                 }
-
-                foreach ($rbfw_resort_room_data as $key => $value) {
-                    $daylong_counter  += (float)$value['rbfw_room_daylong_rate'];
-                    $daynight_counter += (float)$value['rbfw_room_daynight_rate'];
+                else{
+                    echo $errors;
                 }
+                wp_die();
 
-                if($is_muffin_template == 1){
-                    $content .= do_action('rbfw_discount_ad', $post_id, 'muffin');
-                }
-
-                $content .= '<div class="rbfw_room_price_category_tabs_title mb-08">'.$rbfw->get_option_trans('rbfw_text_select_booking_type', 'rbfw_basic_translation_settings', __('CHOOSE BOOKING TYPE','booking-and-rental-manager-for-woocommerce')).'</div>';
-
-                $content .= '<div class="rbfw_room_price_category_tabs_label" data-days="'.$days.'">';
-
-                if($daylong_counter > 0 && $daynight_counter > 0):
-                    $content .= '<label for="rbfw_room_daylong_price" class="rbfw_room_price_label"><input type="radio" name="rbfw_room_price_category" value="daylong" class="rbfw_room_price_category" id="rbfw_room_daylong_price">'.$rbfw->get_option_trans('rbfw_text_daylong', 'rbfw_basic_translation_settings', __('Daylong','booking-and-rental-manager-for-woocommerce')).'<small>'.$rbfw->get_option_trans('rbfw_text_daylong_subtitle', 'rbfw_basic_translation_settings', __('9 AM to 6 PM','booking-and-rental-manager-for-woocommerce')).'</small></label>';
-                    $content .= '<label for="rbfw_room_daynight_price" class="rbfw_room_price_label "><input type="radio" name="rbfw_room_price_category" value="daynight" class="rbfw_room_price_category" id="rbfw_room_daynight_price" checked>'.$rbfw->get_option_trans('rbfw_text_daynight', 'rbfw_basic_translation_settings', __('Daynight','booking-and-rental-manager-for-woocommerce')).'<small>'.$rbfw->get_option_trans('rbfw_text_daynight_subtitle', 'rbfw_basic_translation_settings', __('Day & Night Stay','booking-and-rental-manager-for-woocommerce')).'</small></label>';
-                endif;
-                if($daylong_counter > 0 && $daynight_counter == 0):
-                    $content .= '<label for="rbfw_room_daylong_price" class="rbfw_room_price_label "><input type="radio" name="rbfw_room_price_category" value="daylong" class="rbfw_room_price_category" id="rbfw_room_daylong_price" checked>'.$rbfw->get_option_trans('rbfw_text_daylong', 'rbfw_basic_translation_settings', __('Daylong','booking-and-rental-manager-for-woocommerce')).'<small>'.$rbfw->get_option_trans('rbfw_text_daylong_subtitle', 'rbfw_basic_translation_settings', __('9 AM to 6 PM','booking-and-rental-manager-for-woocommerce')).'</small></label>';
-                    $content .= '<label for="rbfw_room_daynight_price" class="rbfw_room_price_label disabled"><input type="radio" name="rbfw_room_price_category" value="daynight" class="rbfw_room_price_category" id="rbfw_room_daynight_price" disabled>'.$rbfw->get_option_trans('rbfw_text_daynight', 'rbfw_basic_translation_settings', __('Daynight','booking-and-rental-manager-for-woocommerce')).'<small>'.$rbfw->get_option_trans('rbfw_text_daynight_subtitle', 'rbfw_basic_translation_settings', __('Day & Night Stay','booking-and-rental-manager-for-woocommerce')).'</small></label>';
-                endif;
-                if($daylong_counter == 0 && $daynight_counter > 0):
-                    $content .= '<label for="rbfw_room_daylong_price" class="rbfw_room_price_label disabled"><input type="radio" name="rbfw_room_price_category" value="daylong" class="rbfw_room_price_category" id="rbfw_room_daylong_price" disabled>'.$rbfw->get_option_trans('rbfw_text_daylong', 'rbfw_basic_translation_settings', __('Daylong','booking-and-rental-manager-for-woocommerce')).'<small>'.$rbfw->get_option_trans('rbfw_text_daylong_subtitle', 'rbfw_basic_translation_settings', __('9 AM to 6 PM','booking-and-rental-manager-for-woocommerce')).'</small></label>';
-                    $content .= '<label for="rbfw_room_daynight_price" class="rbfw_room_price_label "><input type="radio" name="rbfw_room_price_category" value="daynight" class="rbfw_room_price_category" id="rbfw_room_daynight_price" checked>'.$rbfw->get_option_trans('rbfw_text_daynight', 'rbfw_basic_translation_settings', __('Daynight','booking-and-rental-manager-for-woocommerce')).'<small>'.$rbfw->get_option_trans('rbfw_text_daynight_subtitle', 'rbfw_basic_translation_settings', __('Day & Night Stay','booking-and-rental-manager-for-woocommerce')).'</small></label>';
-                endif;
-
-                $content .= '</div>';
-                echo $content;
+            }else{
+                $this->rbfw_get_active_price_table($_POST['post_id'],'daynight',strip_tags($_POST['checkin_date']),strip_tags($_POST['checkout_date']));
             }
-            else{
-                echo $errors;
-            }
-            wp_die();
         }
 
-        public function rbfw_get_active_price_table(){
+        public function rbfw_get_active_price_table($post_id=0,$active_tab='',$checkin_date='',$checkout_date=''){
             global $rbfw;
-            if(isset($_POST['post_id']) && isset($_POST['active_tab'])):
-                $post_id    = $_POST['post_id'];
+            if(!($post_id && $active_tab)){
+                $post_id = $_POST['post_id'];
                 $active_tab = $_POST['active_tab'];
                 $checkin_date = strip_tags($_POST['checkin_date']);
                 $checkout_date = strip_tags($_POST['checkout_date']);
+            }
+            if(isset($post_id) && isset($active_tab)){
                 $origin             = date_create($checkin_date);
                 $target             = date_create($checkout_date);
                 $interval           = date_diff($origin, $target);
@@ -529,18 +538,18 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                     $img_url    = wp_get_attachment_url($value['rbfw_room_image']);
                     $uniq_id    = rand();
-                    if($img_url):
-                        $img    = '<a href="#rbfw_room_img_'.$uniq_id.'" rel="mage_modal:open"><img src="'.esc_url($img_url).'"/></a>';
-                        $img   .= '<div id="rbfw_room_img_'.$uniq_id.'" class="mage_modal"><img src="'.esc_url($img_url).'"/></div>';
-                    else:
-                        $img    = '';
-                    endif;
+                    if($img_url) {
+                        $img = '<a href="#rbfw_room_img_' . $uniq_id . '" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
+                        $img .= '<div id="rbfw_room_img_' . $uniq_id . '" class="mage_modal"><img src="' . esc_url($img_url) . '"/></div>';
+                    }else{
+                        $img = '';
+                    }
 
-                    if($active_tab == 'daylong'):
+                    if($active_tab == 'daylong') {
                         $price = $value['rbfw_room_daylong_rate'];
-                    elseif($active_tab == 'daynight'):
+                    }elseif($active_tab == 'daynight') {
                         $price = $value['rbfw_room_daynight_rate'];
-                    endif;
+                    }
 
                 if($value['rbfw_room_available_qty'] > 0){
 
@@ -553,17 +562,19 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     $content   .= '<td>';
                     $content   .= '<span class="room_type_title">'.esc_html($value['room_type']).'</span>';
                     $content   .= '<input type="hidden" name="rbfw_room_info['.$i.'][room_type]" value="'.$value['room_type'].'"/>';
-                    if($value['rbfw_room_desc']):
-                    $content .= '<small class="rbfw_room_desc">';
-                    $content .= $value['rbfw_room_desc'];
-                    $content .= '</small>';
 
-                    if($available_qty_info_switch == 'yes'){
-                        $content .= '<small class="rbfw_available_qty_notice">('.rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce')).$max_available_qty.')</small>';
+                    if($value['rbfw_room_desc']) {
+                        $content .= '<small class="rbfw_room_desc">';
+                        $content .= $value['rbfw_room_desc'];
+                        $content .= '</small>';
+
+                        if ($available_qty_info_switch == 'yes') {
+                            $content .= '<small class="rbfw_available_qty_notice">(' . rbfw_string_return('rbfw_text_available', __('Available:', 'booking-and-rental-manager-for-woocommerce')) . $max_available_qty . ')</small>';
+                        }
+
+                        $content .= '<input type="hidden" name="rbfw_room_info[' . $i . '][room_desc]" value="' . $value['rbfw_room_desc'] . '"/>';
                     }
 
-                    $content .= '<input type="hidden" name="rbfw_room_info['.$i.'][room_desc]" value="'.$value['rbfw_room_desc'].'"/>';
-                    endif;
                     $content   .= '</td>';
                     $content   .= '<td>'.$img.'</td>';
                     $content   .= '<td>';
@@ -604,18 +615,18 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                     $c = 0;
 
-                    foreach ($rbfw_extra_service_data as $key => $value):
+                    foreach ($rbfw_extra_service_data as $key => $value) {
 
                         $max_es_available_qty = rbfw_get_multiple_date_es_available_qty($post_id, $checkin_date, $checkout_date, $value['service_name']);
 
                         $img_url = wp_get_attachment_url($value['service_img']);
                         $uniq_id = rand();
-                        if ($img_url):
+                        if ($img_url) {
                             $img = '<a href="#rbfw_room_img_' . $uniq_id . '" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
                             $img .= '<div id="rbfw_room_img_' . $uniq_id . '" class="mage_modal"><img src="' . esc_url($img_url) . '"/></div>';
-                        else:
+                        } else {
                             $img = '';
-                        endif;
+                        }
 
                         if ($value['service_qty'] > 0) {
 
@@ -624,7 +635,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                             $content .= $value['service_name'];
                             $content .= '<input type="hidden" name="rbfw_service_info[' . $c . '][service_name]" value="' . $value['service_name'] . '"/>';
 
-                            if ($value['service_desc']):
+                            if ($value['service_desc']) {
                                 $content .= '<small class="rbfw_room_desc">';
                                 $content .= $value['service_desc'];
                                 $content .= '</small>';
@@ -634,7 +645,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                 }
 
                                 $content .= '<input type="hidden" name="rbfw_service_info[' . $c . '][service_desc]" value="' . $value['service_desc'] . '"/>';
-                            endif;
+                            }
 
                             $content .= '</td>';
                             $content .= '<td>' . $img . '</td>';
@@ -657,7 +668,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                         }
 
                         $c++;
-                    endforeach;
+                    }
                     $content .= '</tbody>';
                     $content .= '</table>';
 
@@ -689,14 +700,14 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                                 </button>
                             </div>';
 
-                if($active_tab == 'daynight' && $total_days > 0):
+                if($active_tab == 'daynight' && $total_days > 0) {
                     echo $content;
-                elseif($active_tab == 'daylong'):
+                }elseif($active_tab == 'daylong') {
                     echo $content;
-                else:
+                }else{
                     echo '<div class="rbfw_alert_warning"><i class="fa-solid fa-circle-info"></i> '.esc_html__("Sorry, the day-night package is not available on the same check-in and check-out date.","booking-and-rental-manager-for-woocommerce").'</div>';
-                endif;
-            endif;
+                }
+            }
 
             wp_die();
         }

@@ -136,7 +136,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                     'no'  => 'No'
                 )
             ),
-            array(
+            /*array(
                 'name' => 'display_default_time_enable_time_slot',
                 'label' => __( 'Dispaly default time while time slot disable', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc' => __( "If you want to Dispaly default time while time slot disable, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
@@ -146,7 +146,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                     'yes' => 'Yes',
                     'no'  => 'No'
                 )
-            ),
+            ),*/
             array(
                 'name' => 'inventory_based_on_return',
                 'label' => __( 'Inventory manage based on return', 'booking-and-rental-manager-for-woocommerce' ),

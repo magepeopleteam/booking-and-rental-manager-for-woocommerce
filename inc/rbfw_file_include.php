@@ -104,7 +104,6 @@ function rbfw_free_woocommerce_integrate(){
 
         $ps = array(
             'wps' => 'WC Payment System',
-            'mps' => 'Mage Payment System',
         );
 
         return $ps;
