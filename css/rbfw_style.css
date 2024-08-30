@@ -2239,14 +2239,21 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
 a.rbfw_back_step_btn {
   display: block;
   margin-bottom: 10px;
-  color: rgba(0, 0, 0, 0.6);
   cursor: pointer;
-  font-size: 14px;
   text-decoration: none;
+  background: #f5f5f5;
+  color: var(--rbfw_single_page_secondary_color);
+  padding: 10px;
+  border-radius: 5px;
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: .9rem;
+  font-weight: bold;
 }
 
 a.rbfw_back_step_btn i{
   color: var(--rbfw_muff_color3);
+  
 }
 
 .rbfw_back_step_btn:hover {
@@ -2264,7 +2271,7 @@ a.rbfw_back_step_btn i{
   border-radius: 5px;
   text-align: left;
   margin-bottom: 10px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
 }
 .rbfw_step_selected_date i{
@@ -2376,7 +2383,14 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 .single-day-notice{
   padding:10px;
+  color: var(--rbfw_single_page_secondary_color);
   background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: .9rem;
+  font-weight: bold;
 }
 .single-day-notice i{
   color: var(--rbfw_muff_color3);
@@ -3451,8 +3465,8 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 .rbfw_muff_registration_wrapper .rbfw-datetime .date .calendar,
 .rbfw_muff_registration_wrapper .rbfw-datetime .time .clock {
-  background-color: var(--rbfw_muff_color3);
-  color: var(--rbfw_muff_color5);
+  background-color: var(--rbfw_muff_color5);
+  color: var(--rbfw_muff_color3);
   border-radius: 5px;
   display: flex;
   align-items: center;
