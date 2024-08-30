@@ -268,8 +268,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
 
 
-
-
     $start_datetime     = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
     $end_datetime       = $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
     $start_date         = $cart_item['rbfw_start_date'] ? $cart_item['rbfw_start_date'] : '';

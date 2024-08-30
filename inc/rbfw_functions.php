@@ -202,9 +202,21 @@ if ( ! function_exists( 'mep_get_date_diff' ) ) {
         $interval  = date_diff( $datetime2, $datetime1 );
 
         $arr = [];
-        if($start_datetime == $end_datetime){ $days = 1; } else { $days = $interval->days; }
-        if(!empty($interval->h)){ $hours = $interval->h; } else { $hours = 0; }
-        if(!empty($interval->i)){ $minutes = $interval->i; } else { $minutes = 0; }
+        if($start_datetime == $end_datetime){
+            $days = 1;
+        } else {
+            $days = $interval->days;
+        }
+        if(!empty($interval->h)){
+            $hours = $interval->h;
+        } else {
+            $hours = 0;
+        }
+        if(!empty($interval->i)){
+            $minutes = $interval->i;
+        } else {
+            $minutes = 0;
+        }
 
         return [ $days, $hours, $minutes ];
 

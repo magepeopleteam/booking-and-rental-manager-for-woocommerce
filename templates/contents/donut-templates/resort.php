@@ -6,8 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <?php
 global $rbfw;
-$post_id = get_the_id();
-$rbfw_id = $post_id;
+$rbfw_id = $post_id ??0;
+global $frontend;
+$frontend = $frontend??0;
+
 $post_title = get_the_title();
 $post_content  = get_the_content();
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
@@ -90,6 +92,9 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 			</div>
 		</div>
 	</div>
+
+    <?php if($frontend){ ?>
+
 	<div class="rbfw_dt_row_content">
 		<div class="rbfw_dt_content_col1">
 			<div class="rbfw_dt_slider mpStyle <?php echo $slide_style; ?>">
@@ -138,6 +143,8 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 		</div>
 	</div>
 
+    <?php } ?>
+
 	<div class="rbfw_dt_row_registration <?php if($rbfw_dt_sidebar_switch == 'on'){ echo 'rbfw_dt_sidebar_enabled'; } ?>">
 		<?php if($rbfw_dt_sidebar_switch == 'on'): ?>
 		<div class="rbfw_dt_registration_col1">
@@ -150,6 +157,8 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 			<?php include( RBFW_Function::template_path( 'forms/resort-registration.php' ) ); ?>
 		</div>
 	</div>
+
+    <?php if($frontend){ ?>
 
 	<?php if($rbfw_enable_faq_content == 'yes'): ?>
 	<div class="rbfw_dt_row_faq">
@@ -178,4 +187,5 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 		<?php do_action( 'rbfw_related_products_style_two', $post_id ); ?>
 	</div>
 	<?php endif; ?>
+    <?php } ?>
 </div>

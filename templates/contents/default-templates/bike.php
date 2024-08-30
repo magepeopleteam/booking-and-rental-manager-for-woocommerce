@@ -6,7 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <?php
 global $rbfw;
-$post_id = get_the_id();
+global $frontend;
+$post_id = $post_id??0;
+$frontend = $frontend??0;
+
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
 $tab_style = $rbfw->get_option_trans('rbfw_single_rent_tab_style', 'rbfw_basic_single_rent_page_settings','vertical');
 $rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
@@ -15,6 +18,7 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 	<div class="mp_default_theme">
 		<div class="mpContainer">
 			<div class="mp_details_page">
+                <?php  if($frontend){ ?>
 				<div class="mp_left_section">
 					<div class="mpStyle <?php echo $slide_style; ?>">
 						<?php do_action( 'add_super_slider', $post_id ,'rbfw_gallery_images'); ?>
@@ -102,6 +106,7 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 					</div>
 					<div class="rbfw-related-products-wrapper"><?php do_action( 'rbfw_related_products', $post_id ); ?></div>
 				</div>
+                <?php } ?>
 				<div class="mp_right_section">
 					<?php //include( RBFW_Function::template_path( 'forms/bike-registration.php' ) ); ?>
                     <?php include( RBFW_Function::template_path( 'forms/muffin/bike-registration.php' ) ); ?>

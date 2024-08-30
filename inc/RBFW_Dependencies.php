@@ -43,13 +43,21 @@
 				wp_enqueue_script( 'tippy-bundle.umd.min', 'https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy-bundle.umd.min.js', array('jquery'), '6.3.7', true );
 				// loading popup css
 				wp_enqueue_style('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/css/jquery.modal.min.css');
-				// loading popup js 
+				// loading popup js
+
+                wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array());
+
 				wp_enqueue_script('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/js/jquery.modal.min.js', array('jquery'), '0.9.1', false);
 
                 wp_enqueue_script( 'rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true );
                 wp_enqueue_script( 'md_script', RBFW_PLUGIN_URL . '/assets/mp_script/md_script.js', array(), time(), true );
 
+                wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), time(), true);
 
+
+                wp_enqueue_style( 'rbfw_calendar', RBFW_PLUGIN_URL . '/css/calendar.css', array(), '1.0.1' );
+
+                wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
 				
 			}
 
@@ -81,7 +89,7 @@
 				if ( strlen( $default_language ) > 0 ) {
 					$default_language = explode( '_', $default_language )[0];
 				}
-				wp_enqueue_style( 'rbfw_calendar', RBFW_PLUGIN_URL . '/css/calendar.css', array(), '1.0.1' );
+
 
 				wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
 				wp_localize_script( 'rbfw_calendar', 'rbfw_calendar_object',
@@ -134,7 +142,11 @@
 				wp_localize_script('jquery', 'rbfw_ajax', array( 'rbfw_ajaxurl' => admin_url( 'admin-ajax.php')));
 				wp_enqueue_script('smartWizard', plugins_url('admin/js/jquery.smartWizard.min.js', __DIR__), array('jquery'), '6.0.6', false);
 
-				do_action('rbfw_admin_enqueue_scripts');	
+                wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
+
+
+
+                do_action('rbfw_admin_enqueue_scripts');
 			  
 			}
 			
@@ -153,12 +165,9 @@
 				wp_enqueue_style('dashicons');
 				wp_enqueue_style('rbfw-jquery-ui-style', plugin_dir_url(__DIR__) . 'css/jquery-ui.css', array());
 			
-				wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array(), $version);
-				wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), $version, true);
+
 				wp_localize_script( 'rbfw_custom_script', 'rbfw_ajaxurl', array('rbfw_ajaxurl' => admin_url('admin-ajax.php'), 'view_more_feature_btn_text' => $view_more_feature_btn_text, 'hide_more_feature_btn_text' => $hide_more_feature_btn_text, 'view_more_offers_btn_text' => $view_more_offers_btn_text, 'hide_more_offers_btn_text' => $hide_more_offers_btn_text));
-			
 				wp_localize_script('jquery', 'rbfw_ajax', array('rbfw_ajaxurl' => admin_url('admin-ajax.php')));
-			
 				//font awesome
 				wp_enqueue_style('fontawesome.v6',  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
 				do_action('rbfw_frontend_enqueue_scripts');

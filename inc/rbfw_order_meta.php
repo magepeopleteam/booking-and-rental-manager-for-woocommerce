@@ -159,6 +159,9 @@ function rbfw_order_meta_box_callback(){
             <?php 
                 /* Loop Ticket Info */
                 $ticket_infos = !empty(get_post_meta($order_id,'rbfw_ticket_info',true)) ? get_post_meta($order_id,'rbfw_ticket_info',true) : [];
+
+                //echo '<pre>';print_r($ticket_infos);echo '<pre>';exit;
+
                 $subtotal = 0;
 
                 foreach ($ticket_infos as $ticket_info) {

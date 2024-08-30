@@ -99,7 +99,6 @@ if(!class_exists('RBFW_Quick_Setup')){
                                         <div class="rbfw-sz-form-input">
                                             <select id="rbfw_sz_payment_system" name="rbfw_sz_payment_system">
                                                 <option value="wps"><?php esc_html_e('WooCommerce Payment System', 'booking-and-rental-manager-for-woocommerce'); ?></option>
-                                                <option value="mps"><?php esc_html_e('Mage Payment System', 'booking-and-rental-manager-for-woocommerce'); ?></option>
                                             </select>
                                         </div>
                                     </div>

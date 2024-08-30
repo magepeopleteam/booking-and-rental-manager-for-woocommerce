@@ -6,8 +6,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <?php
 global $rbfw;
-$post_id = get_the_id();
+global $frontend;
+
+$post_id=$post_id??0;
 $rbfw_id = $post_id;
+$frontend = $frontend??0;
+
 $post_title = get_the_title();
 $post_content  = get_the_content();
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
@@ -52,6 +56,8 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 ?>
 <div class="rbfw_muffin_template">
 
+    <?php  if($frontend){ ?>
+
     <div class="rbfw_muff_row_header">
 		<div class="rbfw_muff_header_col1">
             <div class="rbfw_muff_title">
@@ -85,6 +91,8 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 		</div>
 	</div>
 
+    <?php } ?>
+
     <div class="rbfw_muff_row_slider">
         <div class="rbfw_muff_slider mpStyle <?php echo $slide_style; ?>">
             <?php do_action( 'add_super_slider', $post_id ,'rbfw_gallery_images'); ?>
@@ -100,6 +108,9 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                 <?php include( RBFW_Function::template_path( 'forms/muffin/bike-registration.php' ) ); ?>
             </div>
         </div>
+
+        <?php  if($frontend){ ?>
+
         <div class="rbfw_muff_content_col2">
             <div class="rbfw_muff_content_wrapper">
                 <div class="rbfw_muff_post_content">
@@ -153,7 +164,12 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 				<?php } ?>
             </div>
 		</div>
+
+        <?php } ?>
+
     </div>
+
+    <?php  if($frontend){ ?>
 
 	<?php if(rbfw_check_pro_active() === true && $review_system == 'on'){ ?>
         <div class="rbfw_muff_row_review_summary">
@@ -265,4 +281,6 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 		<?php do_action( 'rbfw_the_faq_style_two', $post_id ); ?>
 	</div>
 	<?php } ?>
+
+    <?php } ?>
 </div>
