@@ -447,6 +447,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 if($is_muffin_template == 0){
                     $content .= '<div class="rbfw_step_selected_date"><i class="fa-solid fa-calendar-check"></i> '.rbfw_string_return('rbfw_text_you_selected',__('You selected','booking-and-rental-manager-for-woocommerce')).': '.$result.'</div>';
+                    $content .= '<div class="single-day-notice"><i class="fa-solid fa-circle-info"></i> '.__('Please pick up a time','booking-and-rental-manager-for-woocommerce').'</div>';
                 }
 
                 if($is_muffin_template == 1){
@@ -454,6 +455,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     $content .= '<div class="rbfw_muff_selected_date_col"><span class="rbfw_muff_selected_date_value">'.$result.'</span></div>';
                     $content .= '</div>';
                 }
+
 
                 $content .= '<div class="rbfw_bikecarsd_time_table_wrap">';
 

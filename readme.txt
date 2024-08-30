@@ -206,9 +206,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 
-
-
 == Changelog ==
+= 2.0.8 =
+* Same day booking for Single day problem solved.
+
+
 = 2.0.7 =
 * Single day item pricing solved.
 * Realated product pricing problem solved.
@@ -220,6 +222,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 * Multiple day booking resource section stock quanty added.
 * Block theme width adjustment.
 * css update in few sections
+* Feature List Broken Fixed
 
 = 2.0.5 =
 * Picked note, returned note and returned security deposit amount added in order list.
