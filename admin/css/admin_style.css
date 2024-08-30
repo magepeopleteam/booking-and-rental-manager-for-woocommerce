@@ -1169,6 +1169,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     margin: 5px 0;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     border: 1px solid var(--mage-light);
 }
 
