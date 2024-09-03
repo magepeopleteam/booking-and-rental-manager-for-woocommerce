@@ -1,6 +1,7 @@
 /***********************
 RBFW TAB
 ************************/
+
 :root {
   --rbfw_single_page_base_color4: #0ec40e;
 }
@@ -38,7 +39,7 @@ RBFW TAB
 }
 
 .rbfw-tab-menu ul li a.active-a {
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_muff_color3);
   color: #fff;
   border: none;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
@@ -46,7 +47,7 @@ RBFW TAB
 
 .rbfw-tab-menu ul li a:hover {
   background: #fff;
-  color: var(--rbfw_single_page_base_color4);
+  color: var(--rbfw_muff_color3);
   transition: 0.2s;
   opacity: 1;
 }
@@ -76,6 +77,7 @@ RBFW TAB
 /***********************
 RBFW Toggle Switch
 ************************/
+
 .switch {
   position: relative;
   display: inline-block;
@@ -117,7 +119,7 @@ RBFW Toggle Switch
 }
 
 input:checked + .slider {
-  background-color: var(--rbfw_single_page_base_color4);
+  background-color: var(--rbfw_muff_color3);
 }
 
 input:checked + .slider:before {
@@ -131,6 +133,7 @@ input:checked + .slider:before {
 }
 
 /* Rounded sliders */
+
 .slider.round {
   border-radius: 34px;
   position: absolute;
@@ -143,6 +146,7 @@ input:checked + .slider:before {
 /***********************
 CSS for Single Page Template
 ************************/
+
 .rbfw-ul {
   list-style: none;
   margin: 0;
@@ -195,11 +199,9 @@ CSS for Single Page Template
   color: var(--rbfw_dt_color2);
   border-radius: 0;
 }
-
 .rbfw_donut_template .rbfw_muff_lmf_btn {
   color: var(--rbfw_muff_color3);
 }
-
 .rbfw-single-container {
   max-width: 1440px;
   margin: 0 auto;
@@ -226,6 +228,7 @@ CSS for Single Page Template
     align-items: start;
   }
 }
+
 @media only screen and (min-width: 874px) {
   .rbfw-single-left-information-item ul.rbfw-ul li {
     float: left;
@@ -239,6 +242,7 @@ CSS for Single Page Template
     align-items: start;
   }
 }
+
 @media only screen and (min-width: 900px) {
   .rbfw-single-left-information-item ul.rbfw-ul li {
     float: left;
@@ -252,6 +256,7 @@ CSS for Single Page Template
     align-items: start;
   }
 }
+
 .rbfw-single-right-container .item {
   margin: 20px 0;
 }
@@ -385,6 +390,7 @@ CSS for Single Page Template
   width: 20px;
   height: 20px;
   margin-top: 5px;
+  color:var(--rbfw_muff_color3);
 }
 
 .rbfw-single-left-information-item ul li span {
@@ -398,6 +404,8 @@ CSS for Single Page Template
   align-items: center;
   cursor: pointer;
 }
+
+
 
 .pricing-content .price-item-container {
   display: none;
@@ -443,6 +451,7 @@ CSS for Single Page Template
     display: none;
 }
 */
+
 .rbfw-costing .rbfw-loader {
   position: absolute;
   left: 0;
@@ -464,7 +473,7 @@ CSS for Single Page Template
 
 .mp_right_section button.rbfw-book-now-btn {
   text-decoration: none;
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_muff_color3);
   text-align: center;
   display: block;
   color: #fff;
@@ -478,15 +487,15 @@ CSS for Single Page Template
 }
 
 .mp_right_section button.rbfw-book-now-btn[disabled] {
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_muff_color3);
   color: #fff;
   cursor: not-allowed;
 }
 
 .mp_right_section button.rbfw-book-now-btn:hover,
 .mp_right_section button.rbfw-book-now-btn:focus {
-  background: var(--rbfw_dt_color1);
-  color: #000;
+  background: var(--rbfw_single_page_secondary_color);
+  color: #fff;
 }
 
 .rbfw-duration {
@@ -501,6 +510,7 @@ CSS for Single Page Template
 }
 
 /*********************************/
+
 div.rbfw_faq_item .rbfw_faq_title {
   -webkit-transition: 350ms ease-in-out;
   transition: 350ms ease-in-out;
@@ -544,6 +554,7 @@ div.rbfw_faq_item div.superSlider {
 }
 
 /* css added by ariful */
+
 div.mp_default_theme {
   width: 100%;
   margin: 30px 0;
@@ -620,7 +631,6 @@ div.mp_right_section {
 #rbfw_faq_accordion .rbfw_faq_content_wrapper {
   border-color: #f5f5f5;
 }
-
 .rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_content_wrapper {
   background-color: rgb(255, 255, 255);
 }
@@ -630,7 +640,6 @@ div.mp_right_section {
   flex-direction: row;
   justify-content: end;
 }
-
 .rbfw-post-sharing a {
   width: 30px;
   height: 30px;
@@ -648,7 +657,7 @@ div.mp_right_section {
 }
 
 .rbfw-post-sharing a:hover {
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_muff_color3);
   color: #fff;
   transition: 0.2s;
   border-radius: 5px;
@@ -678,7 +687,7 @@ div.mp_right_section {
 
 .rbfw-related-products-wrapper .owl-carousel .owl-nav button:hover {
   color: #fff;
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_muff_color3);
   transition: 0.2s;
 }
 
@@ -739,7 +748,7 @@ div.mp_right_section {
 }
 
 a.rbfw-related-product-btn {
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_muff_color3);
   color: #fff;
   padding: 10px;
   margin-bottom: 10px;
@@ -752,7 +761,7 @@ a.rbfw-related-product-btn {
 }
 
 a.rbfw-related-product-btn:hover {
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_single_page_secondary_color);
   color: #fff;
   transition: 0.2s;
   opacity: 1;
@@ -813,6 +822,7 @@ a.rbfw-related-product-btn:hover {
     text-align: right;
   }
 }
+
 @media only screen and (max-width: 899px) {
   .rbfw-header-container {
     display: block;
@@ -828,31 +838,33 @@ a.rbfw-related-product-btn:hover {
     text-align: left;
   }
 }
-.tippy-box[data-theme~=blue] {
-  background-color: var(--rbfw_single_page_base_color4);
+
+.tippy-box[data-theme~="blue"] {
+  background-color: var(--rbfw_single_page_secondary_color);
   color: rgb(255, 255, 255);
 }
 
-.tippy-box[data-theme~=blue][data-placement^=top] > .tippy-arrow::before {
-  border-top-color: var(--rbfw_single_page_base_color4);
+.tippy-box[data-theme~="blue"][data-placement^="top"] > .tippy-arrow::before {
+  border-top-color: var(--rbfw_single_page_secondary_color);
 }
 
-.tippy-box[data-theme~=blue][data-placement^=bottom] > .tippy-arrow::before {
-  border-bottom-color: var(--rbfw_single_page_base_color4);
+.tippy-box[data-theme~="blue"][data-placement^="bottom"]
+  > .tippy-arrow::before {
+  border-bottom-color: var(--rbfw_single_page_secondary_color);
 }
 
-.tippy-box[data-theme~=blue][data-placement^=left] > .tippy-arrow::before {
-  border-left-color: var(--rbfw_single_page_base_color4);
+.tippy-box[data-theme~="blue"][data-placement^="left"] > .tippy-arrow::before {
+  border-left-color: var(--rbfw_single_page_secondary_color);
 }
 
-.tippy-box[data-theme~=blue][data-placement^=right] > .tippy-arrow::before {
-  border-right-color: var(--rbfw_single_page_base_color4);
+.tippy-box[data-theme~="blue"][data-placement^="right"] > .tippy-arrow::before {
+  border-right-color: var(--rbfw_single_page_secondary_color);
 }
 
 div.superSlider .iconIndicator {
   font-size: 20px;
   color: #fff;
-  background: rgba(0, 0, 0, 0.0901960784);
+  background: #00000017;
   width: 45px;
   text-align: center;
   height: 45px;
@@ -861,7 +873,7 @@ div.superSlider .iconIndicator {
 }
 
 div.superSlider .iconIndicator:hover {
-  background-color: var(--rbfw_single_page_base_color4);
+  background-color: var(--rbfw_muff_color3);
 }
 
 .rbfw_donut_template div.superSlider .iconIndicator:hover {
@@ -907,6 +919,7 @@ div.superSlider .iconIndicator:hover {
     padding-bottom: 10px;
   }
 }
+
 @media only screen and (max-width: 599px) {
   .vertical.rbfw-tab-container,
   .horizontal.rbfw-tab-container {
@@ -934,6 +947,7 @@ div.superSlider .iconIndicator:hover {
     margin-top: 10px;
   }
 }
+
 @media only screen and (max-width: 792px) {
   .mp_default_theme div.mp_details_page {
     display: block;
@@ -949,18 +963,18 @@ div.superSlider .iconIndicator:hover {
     width: 100%;
   }
 }
+
 .mb-08 {
   margin-bottom: 8px !important;
 }
 
 .rbfw_chk_availability_btn {
   text-decoration: none;
-  background: var(--rbfw_single_page_base_color4);
+  background: var(--rbfw_muff_color3);
   text-align: center;
   display: block;
   color: #fff;
   font-size: 16px;
-  width: 100%;
   padding: 10px;
   border: none;
   transition: 0.2s;
@@ -968,7 +982,7 @@ div.superSlider .iconIndicator:hover {
 }
 
 .rbfw_chk_availability_btn:hover {
-  background: var(--rbfw_dt_color1);
+  background: var(--rbfw_single_page_secondary_color);
   color: #fff;
   transition: 0.2s;
   opacity: 1 !important;
@@ -980,10 +994,10 @@ div.superSlider .iconIndicator:hover {
 }
 
 p.rbfw_alert_warning {
-  background: rgba(196, 45, 45, 0.3411764706);
+  background: #c42d2d57;
   padding: 5px;
   margin-bottom: 5px;
-  border: 1px solid rgba(196, 45, 45, 0.3411764706);
+  border: 1px solid #c42d2d57;
   color: #440606;
   font-size: 16px;
 }
@@ -1045,6 +1059,10 @@ p.rbfw_alert_warning {
   text-align: center;
   padding: 10px;
   display: none;
+}
+
+.rbfw_resort_rt_price_table_container{
+  overflow: auto;
 }
 
 table.rbfw_room_price_table {
@@ -1111,14 +1129,14 @@ table.rbfw_room_price_table tbody td img {
   display: flex;
 }
 
-.rbfw_qty_input input[type=number] {
+.rbfw_qty_input input[type="number"] {
   -webkit-appearance: textfield;
   -moz-appearance: textfield;
   appearance: textfield;
 }
 
-.rbfw_qty_input input[type=number]::-webkit-inner-spin-button,
-.rbfw_qty_input input[type=number]::-webkit-outer-spin-button {
+.rbfw_qty_input input[type="number"]::-webkit-inner-spin-button,
+.rbfw_qty_input input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 
@@ -1163,7 +1181,7 @@ table.rbfw_room_price_table tbody td img {
   font-size: 12px;
 }
 
-.rbfw_qty_input input[type=number] {
+.rbfw_qty_input input[type="number"] {
   border: 1px solid #ddd;
   font-size: 16px;
   height: 30px;
@@ -1172,7 +1190,7 @@ table.rbfw_room_price_table tbody td img {
   width: 30px;
   border-radius: 0;
   margin: 0;
-  padding: 2px;
+  padding:2px;
 }
 
 .rbfw_selected_room_dates {
@@ -1256,6 +1274,7 @@ table.rbfw_room_cart_table th span {
 }
 
 /*Review Form Css*/
+
 .rbfw-review-section input,
 .rbfw-review-section textarea {
   display: block;
@@ -1596,16 +1615,21 @@ table.rbfw_room_cart_table th span {
     margin-left: 2px;
   }
 }
+
 /*End Review Form Css*/
+
 /*Rent List Shortcode Styles*/
+
 :root {
   --rbfw_rent_list_color1: #06d286;
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_col {
-box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);  text-align: left;
-  vertical-align: top;
-  margin-bottom: 20px;
+box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    vertical-align: top;
+    margin-bottom: 20px;
+
 }
 
 .rbfw_grid_view_more_features_btn i {
@@ -1722,12 +1746,17 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);  text-align: left;
   display: inline-block;
 }
 
-.rbfw_rent_list_style_grid .rbfw_rent_list_button_wrap .rbfw_grid_view_more_features_btn {
+.rbfw_rent_list_style_grid
+  .rbfw_rent_list_button_wrap
+  .rbfw_grid_view_more_features_btn {
   margin-left: 5px;
   font-size: 12px;
 }
 
-.rbfw_rent_list_style_grid .rbfw_rent_list_highlighted_features ul li.rbfw-visibility-hidden {
+.rbfw_rent_list_style_grid
+  .rbfw_rent_list_highlighted_features
+  ul
+  li.rbfw-visibility-hidden {
   display: none;
 }
 
@@ -1847,6 +1876,10 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);  text-align: left;
   padding: 18px 32px 18px 32px;
 }
 
+.rbfw_rent_list_style_list .rbfw_rent_list_button_wrap a.rbfw_rent_list_btn:hover {
+  background-color: var(--rbfw_single_page_base_color4);
+}
+
 .rbfw_rent_list_style_list .rbfw_rent_list_highlighted_features {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -1921,7 +1954,9 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);  text-align: left;
   margin-right: 10px;
 }
 
-.rbfw_rent_list_style_list .rbfw-review-rating-wrapper .rbfw-review-rating-info {
+.rbfw_rent_list_style_list
+  .rbfw-review-rating-wrapper
+  .rbfw-review-rating-info {
   display: inline-block;
 }
 
@@ -1942,32 +1977,35 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);  text-align: left;
 }
 
 @media only screen and (min-width: 792px) {
-  .rbfw_rent_list_style_grid {
-    display: grid;
-    gap: 10px;
-  }
-  .rbfw_rent_list_style_grid.rbfw-w-50 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .rbfw_rent_list_style_grid.rbfw-w-33 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .rbfw_rent_list_style_grid.rbfw-w-25 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  .rbfw_rent_list_style_grid.rbfw-w-20 {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-  .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper .rbfw_rent_list_featured_img_wrap {
-    width: 30%;
-    max-width: 30%;
-    min-width: 30%;
-  }
-  .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper .rbfw_rent_list_content {
-    width: 70;
-    max-width: 70%;
-    min-width: 70%;
-  }
+
+    .rbfw_rent_list_style_grid{
+        display: grid;
+        gap:10px;
+    }
+
+    .rbfw_rent_list_style_grid.rbfw-w-50 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .rbfw_rent_list_style_grid.rbfw-w-33 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .rbfw_rent_list_style_grid.rbfw-w-25 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));;
+    }
+    .rbfw_rent_list_style_grid.rbfw-w-20 {
+        grid-template-columns: repeat(5, minmax(0, 1fr));;
+    }
+
+    .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper .rbfw_rent_list_featured_img_wrap {
+        width: 30%;
+        max-width: 30%;
+        min-width: 30%;
+    }
+    .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper .rbfw_rent_list_content {
+        width: 70;
+        max-width: 70%;
+        min-width: 70%;
+    }
 /* block theme css */
     .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull))
     {
@@ -1975,23 +2013,30 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);  text-align: left;
       margin-left: auto !important;
       margin-right: auto !important;
     }
+
 }
+
 @media only screen and (max-width: 792px) and (min-width: 600px) {
   .rbfw_rent_list_style_grid .rbfw_rent_list_col {
     min-width: 50%;
     max-width: 50%;
   }
-  .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper .rbfw_rent_list_featured_img_wrap {
+  .rbfw_rent_list_style_list
+    .rbfw_rent_list_inner_wrapper
+    .rbfw_rent_list_featured_img_wrap {
     width: 22%;
     max-width: 22%;
     min-width: 22%;
   }
-  .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper .rbfw_rent_list_content {
+  .rbfw_rent_list_style_list
+    .rbfw_rent_list_inner_wrapper
+    .rbfw_rent_list_content {
     width: 78%;
     max-width: 78%;
     min-width: 78%;
   }
 }
+
 @media only screen and (max-width: 599px) {
   .rbfw_rent_list_style_grid .rbfw_rent_list_col {
     min-width: 100%;
@@ -2001,13 +2046,16 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);  text-align: left;
     display: block;
   }
 }
+
 @media only screen and (max-width: 400px) {
   .rbfw_rent_list_style_grid .rbfw_rent_list_col {
     min-width: 100%;
     max-width: 100%;
   }
 }
+
 /*End Rent List Shortcode styles*/
+
 .rbfw-review-section button.button {
   background: #f5f5f5;
   color: rgba(0, 0, 0, 0.6);
@@ -2046,6 +2094,7 @@ div.mp_bike_car_sd_theme .rbfw-single-right-container {
 }
 
 /* Bike/Car SD Theme CSS */
+
 .rbfw_bikecarsd_time_table_wrap {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2090,6 +2139,7 @@ body.theme-twentytwentythree .rbfw_muffin_template button {
 body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
   max-width: 49%;
 } */
+
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn {
   border: none;
 }
@@ -2099,48 +2149,65 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
   color: #aaa;
 }
 
-.rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
-  background: rgba(14, 196, 14, 0.1803921569);
-  color: var(--rbfw_single_page_base_color4);
-  border-color: var(--rbfw_single_page_base_color4);
+.rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover
+  span {
+  background: var(--rbfw_primary_opacity);
+  color: var(--rbfw_single_page_secondary_color);
+  border-color: var(--rbfw_muff_color3);
   opacity: 1;
 }
 
-.rbfw_donut_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
+.rbfw_donut_template
+  .rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover
+  span {
   background: var(--rbfw_dt_color7);
   color: var(--rbfw_dt_color2);
   border-color: var(--rbfw_dt_color7);
   opacity: 1;
 }
 
-.rbfw_muffin_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
+.rbfw_muffin_template
+  .rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover
+  span {
   color: var(--rbfw_dt_color2);
 }
 
-.rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time span.rbfw_bikecarsd_time_span {
+.rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time
+  span.rbfw_bikecarsd_time_span {
   display: block;
   padding: 10px;
   text-transform: capitalize;
-  border: 1px solid rgba(14, 196, 14, 0.1803921569);
+  border: 1px solid var(--rbfw_muff_color3);
   border-radius: 5px;
   color: #000;
   font-size: 1rem;
   background-color: #fff;
 }
 
-.rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.disabled span.rbfw_bikecarsd_time_span {
+.rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time.disabled
+  span.rbfw_bikecarsd_time_span {
   color: #aaa;
 }
 
-.rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.selected:not(a.rbfw_bikecarsd_time.selected.disabled) span.rbfw_bikecarsd_time_span {
-  background: var(--rbfw_single_page_base_color4);
+.rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time.selected:not(a.rbfw_bikecarsd_time.selected.disabled)
+  span.rbfw_bikecarsd_time_span {
+  background: var(--rbfw_muff_color3);
   color: #fff;
-  border-color: var(--rbfw_single_page_base_color4);
+  border-color: var(--rbfw_muff_color3);
   opacity: 1;
   font-weight: bold;
 }
 
-.rbfw_donut_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.selected:not(a.rbfw_bikecarsd_time.selected.disabled) span.rbfw_bikecarsd_time_span {
+.rbfw_donut_template
+  .rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time.selected:not(a.rbfw_bikecarsd_time.selected.disabled)
+  span.rbfw_bikecarsd_time_span {
   background: var(--rbfw_dt_color1);
   color: #fff;
   border-color: var(--rbfw_dt_color7);
@@ -2148,7 +2215,9 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
   font-weight: bold;
 }
 
-.rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.disabled span.rbfw_bikecarsd_time_booked {
+.rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time.disabled
+  span.rbfw_bikecarsd_time_booked {
   background: #2d5fd5;
   color: #fff;
   display: block;
@@ -2188,7 +2257,7 @@ a.rbfw_back_step_btn i{
 }
 
 .rbfw_back_step_btn:hover {
-  color: #099c09;
+  color: var(--rbfw_muff_color3);
 }
 
 .rbfw_donut_template .rbfw_back_step_btn:hover {
@@ -2196,8 +2265,8 @@ a.rbfw_back_step_btn i{
 }
 
 .rbfw_step_selected_date {
-  background: var(--rbfw_dt_color1);
-  color: #000;
+  background: #f5f5f5;
+  color: var(--rbfw_single_page_secondary_color);
   padding: 10px;
   border-radius: 5px;
   text-align: left;
@@ -2238,7 +2307,7 @@ table.rbfw_bikecarsd_price_table tbody td {
   padding-left: 10px;
 }
 
-table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n+1) {
+table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n + 1) {
   background-color: rgba(128, 128, 128, 0.075);
 }
 
@@ -2347,13 +2416,12 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw-bikecarsd-calendar-footer i {
-  color: var(--rbfw_single_page_base_color4);
+  color: var(--rbfw_muff_color3);
 }
 
 .rbfw_muffin_template .rbfw-bikecarsd-calendar-footer i {
   color: var(--rbfw_muff_color3);
 }
-
 .rbfw_service_price {
   margin-bottom: 5px;
   width: 80px;
@@ -2410,7 +2478,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* End Bike/Car SD Theme CSS */
+
 /* MPS Form css*/
+
 .rbfw_mps_signin_form_wrap,
 .rbfw_mps_signup_form_wrap,
 .rbfw_mps_checkout_form_wrap {
@@ -2428,9 +2498,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_mps_user_input,
-.rbfw_mps_input_group input[type=text],
-.rbfw_mps_input_group input[type=email],
-.rbfw_mps_input_group input[type=password] {
+.rbfw_mps_input_group input[type="text"],
+.rbfw_mps_input_group input[type="email"],
+.rbfw_mps_input_group input[type="password"] {
   display: block;
   width: 100%;
   padding: 0.375rem 0.75rem;
@@ -2441,7 +2511,8 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   background-color: #fff;
   border: 1px solid #ced4da;
   border-radius: 5px;
-  transition: #86b7fe 0.15s ease-in-out, rgba(13, 110, 253, 0.25) 0.15s ease-in-out;
+  transition: #86b7fe 0.15s ease-in-out,
+    rgba(13, 110, 253, 0.25) 0.15s ease-in-out;
 }
 
 .rbfw_mps_user_input:focus {
@@ -2702,7 +2773,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /*End MPS form css*/
+
 /* MPS Thank you page css*/
+
 .rbfw_thankyou_page_wrap,
 .rbfw_account_page_wrap {
   padding-top: 30px;
@@ -2717,9 +2790,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   background: #ddd;
 }
 
-.rbfw_thankyou_page_wrap table tbody tr:nth-child(2n+1),
-.rbfw_account_page_wrap table tbody tr:nth-child(2n+1) {
-  background-color: rgba(0, 50, 128, 0.0784313725);
+.rbfw_thankyou_page_wrap table tbody tr:nth-child(2n + 1),
+.rbfw_account_page_wrap table tbody tr:nth-child(2n + 1) {
+  background-color: #00328014;
 }
 
 .rbfw_thankyou_page_wrap table tbody tr:nth-child(2n),
@@ -2728,19 +2801,23 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* End MPS Thank you page css*/
+
 /* MPS booking account page css*/
+
 @media only screen and (max-width: 600px) {
   .rbfw_ba_user_form_wrap .rbfw_ba_form_wrap {
     width: 100%;
     padding: 20px;
   }
 }
+
 @media only screen and (min-width: 601px) {
   .rbfw_ba_user_form_wrap .rbfw_ba_form_wrap {
     width: 50%;
     padding: 20px;
   }
 }
+
 .rbfw_ba_user_form_wrap {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2775,9 +2852,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   margin-bottom: 5px;
 }
 
-.rbfw_ba_input_group input[type=text],
-.rbfw_ba_input_group input[type=password],
-.rbfw_ba_input_group input[type=email],
+.rbfw_ba_input_group input[type="text"],
+.rbfw_ba_input_group input[type="password"],
+.rbfw_ba_input_group input[type="email"],
 .rbfw_ba_user_input {
   display: block;
   width: 100%;
@@ -2789,7 +2866,8 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   background-color: #fff;
   border: 1px solid #ced4da;
   border-radius: 5px;
-  transition: #86b7fe 0.15s ease-in-out, rgba(13, 110, 253, 0.25) 0.15s ease-in-out;
+  transition: #86b7fe 0.15s ease-in-out,
+    rgba(13, 110, 253, 0.25) 0.15s ease-in-out;
 }
 
 .rbfw_ba_user_input:focus {
@@ -2902,13 +2980,14 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     flex-direction: column;
   }
 }
+
 .rbfw_booking_receipt_btn,
 .rbfw_order_action_btn {
   background-color: #22d02d;
   border-radius: 5px;
   border: 1px solid #22d02d;
   color: #fff;
-  transition: 2s;
+  transition: 02s;
   display: inline-block;
   text-decoration: none;
   font-size: 14px;
@@ -2954,6 +3033,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* End MPS booking account page css*/
+
 .mp_left_section div.superSlider .iconIndicator,
 .rbfw_muffin_template div.superSlider .iconIndicator {
   color: #fff;
@@ -2981,7 +3061,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   cursor: pointer;
 }
 
-.rbfw_mps_radio_group label[for=rbfw_mps_user_payment_method_paypal] img {
+.rbfw_mps_radio_group label[for="rbfw_mps_user_payment_method_paypal"] img {
   width: auto;
   height: 20px;
   margin-left: 5px;
@@ -2989,7 +3069,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   border: 1px solid #d3d3d3;
 }
 
-.rbfw_mps_radio_group label[for=rbfw_mps_user_payment_method_stripe] img {
+.rbfw_mps_radio_group label[for="rbfw_mps_user_payment_method_stripe"] img {
   width: 270px;
   height: auto;
   margin-left: 5px;
@@ -3031,7 +3111,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   text-align: center;
   height: 365px;
 }
-
 .rbfw_dt_row_related_item .owl-carousel.owl-drag .owl-item {
   overflow: hidden;
   border-radius: 0px;
@@ -3158,6 +3237,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     opacity: 0.8;
   }
 }
+
 .rbfw-bikecarsd-step[data-step="2"] i.fa-spinner {
   position: absolute;
   top: 40%;
@@ -3181,6 +3261,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* Slider Mobile View css */
+
 @media only screen and (max-width: 792px) {
   .mpStyle.style_1 div.superSlider .sliderShowcase.right,
   .mpStyle.style_1 div.superSlider .sliderShowcase.left {
@@ -3200,7 +3281,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     display: block;
   }
 }
+
 /* Muffin Template CSS */
+
 :root {
   --rbfw_muff_color1: #fbfdff;
   --rbfw_muff_color2: #ffb800;
@@ -3322,10 +3405,10 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_registration_wrapper {
-  border: 0 solid #e5e5e5;
+  border: 0 solid var(--rbfw_booking_form_bg_color);
   padding: 30px;
   border-radius: 10px;
-  background-color: #ffebeb;
+  background-color: var(--rbfw_booking_form_bg_color);
 }
 
 .rbfw_muff_row_slider {
@@ -3437,7 +3520,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_registration_wrapper .slider {
-  background-color: #333;
+  background-color: #b7b7b7;
 }
 
 .rbfw_muff_registration_wrapper input:checked + .slider {
@@ -3457,25 +3540,25 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_registration_wrapper .rbfw_qty_input a,
-.rbfw_muff_registration_wrapper .rbfw_qty_input input[type=number] {
+.rbfw_muff_registration_wrapper .rbfw_qty_input input[type="number"] {
   width: 40px;
   height: 40px;
 }
 
 .rbfw_muff_registration_wrapper .rbfw_qty_input,
-.rbfw_muff_registration_wrapper .rbfw_qty_input input[type=number] {
+.rbfw_muff_registration_wrapper .rbfw_qty_input input[type="number"] {
   border: none;
   background-color: var(--rbfw_muff_color6);
 }
 
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn,
-.rbfw_muff_registration_wrapper .rbfw_mps_pay_now_button:not(.rbfw_mps_pay_now_button[disabled]),
+.rbfw_muff_registration_wrapper
+  .rbfw_mps_pay_now_button:not(.rbfw_mps_pay_now_button[disabled]),
 .rbfw_muff_registration_wrapper .rbfw_stripe_form_wrap button,
 .rbfw_muff_registration_wrapper .rbfw_next_btn,
 .rbfw_muff_registration_wrapper .rbfw_prev_btn,
 .rbfw_muff_registration_wrapper .rbfw_bikecarmd_backstep1_btn {
   background-color: var(--rbfw_muff_color3);
-  box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
   padding: 15px;
   margin-bottom: 0px;
   text-decoration: none;
@@ -3486,6 +3569,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   border-radius: 5px;
   font-weight: bold;
   font-size: 16px;
+  transition: all .5s;
 }
 
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn, .mp_rbfw_book_now_submit {
@@ -3493,13 +3577,12 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   /* box-shadow: 0px 8.40727px 15.7636px rgba(250, 54, 54, 0.3); */
   width: 100%;
 }
-
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn:hover {
-  background-color: var(--rbfw_dt_color8);
+  background-color: var(--rbfw_single_page_secondary_color);
   box-shadow: 0px 8.40727px 15.7636px rgba(0, 0, 0, 0.3);
 }
 
-.rbfw_muff_registration_wrapper[data-type=resort] .rbfw-book-now-btn {
+.rbfw_muff_registration_wrapper[data-type="resort"] .rbfw-book-now-btn {
   width: max-content;
 }
 
@@ -3552,7 +3635,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   padding: 10px;
 }
 
-.mp_rbfw_ticket_form .rbfw_regf_form_header {
+.mp_rbfw_ticket_form .rbfw_regf_form_header{
   background-color: #f5f5f5;
 }
 
@@ -3713,7 +3796,10 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   padding-top: 30px;
 }
 
-.rbfw_muff_review_rating_wrap .rbfw-review-rating-wrapper .rbfw-star-rating span.dashicons {
+.rbfw_muff_review_rating_wrap
+  .rbfw-review-rating-wrapper
+  .rbfw-star-rating
+  span.dashicons {
   color: var(--rbfw_muff_color2);
 }
 
@@ -3752,15 +3838,17 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   margin-bottom: -2px;
 }
 
-.rbfw_muff_row_reviews .rbfw_muff_heading_tab:not(.rbfw_muff_heading_tab.active) {
+.rbfw_muff_row_reviews
+  .rbfw_muff_heading_tab:not(.rbfw_muff_heading_tab.active) {
   color: #979797;
 }
 
-.rbfw_muff_row_reviews .rbfw_muff_heading_tab[data-tab=tab2] {
+.rbfw_muff_row_reviews .rbfw_muff_heading_tab[data-tab="tab2"] {
   margin-left: 20px;
 }
 
-.rbfw_muff_row_faq .rbfw_muff_faq_tab_content:not(.rbfw_muff_faq_tab_content.active) {
+.rbfw_muff_row_faq
+  .rbfw_muff_faq_tab_content:not(.rbfw_muff_faq_tab_content.active) {
   display: none;
 }
 
@@ -3789,11 +3877,19 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   list-style-type: none;
 }
 
-.rbfw_muff_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span {
+.rbfw_muff_row_reviews
+  .rbfw-review-section
+  .rbfw-review-content
+  .rbfw-review-stars
+  span {
   color: var(--rbfw_muff_color1);
 }
 
-.rbfw_muff_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span.dashicons-star-empty {
+.rbfw_muff_row_reviews
+  .rbfw-review-section
+  .rbfw-review-content
+  .rbfw-review-stars
+  span.dashicons-star-empty {
   background: transparent;
 }
 
@@ -3801,7 +3897,10 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   border-radius: 0;
 }
 
-.rbfw_muff_row_reviews .rbfw-review-section .rbfw-single-review-row .rbfw-single-review-col-2 {
+.rbfw_muff_row_reviews
+  .rbfw-review-section
+  .rbfw-single-review-row
+  .rbfw-single-review-col-2 {
   border-radius: 5px;
   background: #ffffff;
   border: none;
@@ -3835,12 +3934,18 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   margin-top: 20px;
 }
 
-.rbfw_muff_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span {
+.rbfw_muff_row_reviews
+  .rbfw-review-section
+  .rbfw-review-content
+  .rbfw-review-stars
+  span {
   color: var(--rbfw_muff_color2);
   margin-right: 2px;
 }
 
-.rbfw_muff_row_faq #rbfw_faq_accordion_style_two .rbfw_faq_heading_wrapper::before {
+.rbfw_muff_row_faq
+  #rbfw_faq_accordion_style_two
+  .rbfw_faq_heading_wrapper::before {
   background-color: transparent;
 }
 
@@ -3981,12 +4086,18 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   text-align: center;
 }
 
-.rbfw_muff_row_faq #rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper.active .rbfw_faq_heading_collapsed::before {
+.rbfw_muff_row_faq
+  #rbfw_faq_accordion_style_two
+  .rbfw_faq_accordion_wrapper.active
+  .rbfw_faq_heading_collapsed::before {
   content: "\f077";
   color: var(--rbfw_muff_color1);
 }
 
-.rbfw_muff_row_faq #rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper .rbfw_faq_heading_collapsed::before {
+.rbfw_muff_row_faq
+  #rbfw_faq_accordion_style_two
+  .rbfw_faq_accordion_wrapper
+  .rbfw_faq_heading_collapsed::before {
   content: "\f078";
   color: var(--rbfw_muff_color1);
 }
@@ -4000,9 +4111,11 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   background-color: transparent;
 }
 
-.rbfw_muff_row_faq #rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper .rbfw_faq_content {
+.rbfw_muff_row_faq
+  #rbfw_faq_accordion_style_two
+  .rbfw_faq_accordion_wrapper
+  .rbfw_faq_content {
   background-color: transparent;
-  color: #797f94;
   font-weight: 500;
 }
 
@@ -4040,13 +4153,14 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
   background: inherit;
-  background-color: var(--rbfw_single_page_base_color4);
+  background-color: var(--rbfw_muff_color3);
   color: #fff;
   text-align: center;
   border: none;
 }
 
-.rbfw_single_muffin_template .ui-state-default,
+.rbfw_single_muffin_template
+.ui-state-default,
 .rbfw_single_muffin_template .ui-widget-content .ui-state-default,
 .rbfw_single_muffin_template .ui-widget-header .ui-state-default {
   background: inherit;
@@ -4056,7 +4170,8 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   border: none;
 }
 
-.rbfw_single_donut_template .ui-state-default,
+.rbfw_single_donut_template
+.ui-state-default,
 .rbfw_single_donut_template .ui-widget-content .ui-state-default,
 .rbfw_single_donut_template .ui-widget-header .ui-state-default {
   background: inherit;
@@ -4069,13 +4184,13 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .ui-state-default:hover,
 .ui-widget-content .ui-state-default:hover,
 .ui-widget-header .ui-state-default:hover {
-  background-color: var(--rbfw_dt_color1);
+  background-color: var(--rbfw_single_page_secondary_color);
 }
 
 .rbfw_single_muffin_template .ui-state-default:hover,
 .rbfw_single_muffin_template .ui-widget-content .ui-state-default:hover,
 .rbfw_single_muffin_template .ui-widget-header .ui-state-default:hover {
-  background-color: var(--rbfw_dt_color8);
+  background-color: var(--rbfw_single_page_secondary_color);
 }
 
 .ui-state-highlight,
@@ -4090,25 +4205,24 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .ui-widget-header .ui-state-active {
   font-weight: 600;
   color: #fff;
-  background-color: var(--rbfw_single_page_base_color4);
+  background-color: var(--rbfw_single_page_secondary_color);
 }
 
 .ui-widget-header {
   background: none;
-  background-color: var(--rbfw_single_page_base_color4);
+  background-color:var(--rbfw_muff_color3);
   color: #fff;
 }
 
 .rbfw_single_donut_template .ui-widget-header {
   background: none;
   background-color:var(--rbfw_muff_color3);
-  background-color: var(--rbfw_dt_color7);
   color: #fff;
 }
 
 .rbfw_single_muffin_template .ui-widget-header {
   background: none;
-  background-color: var(--rbfw_muff_color3);
+  background-color:var(--rbfw_muff_color3);
   color: #fff;
 }
 
@@ -4136,7 +4250,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   background-color: var(--rbfw_muff_color3);
   color: #fff;
 }
-
 .rbfw_aig_column {
   width: 100px;
   display: inline-block;
@@ -4147,6 +4260,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* The Modal (background) */
+
 .rbfw_aig_modal {
   display: none;
   position: fixed;
@@ -4161,6 +4275,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* Modal Content */
+
 .rbfw_aig_modal-content {
   position: relative;
   margin: auto;
@@ -4170,6 +4285,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* The Close Button */
+
 .rbfw_aig_close {
   color: white;
   position: absolute;
@@ -4187,6 +4303,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* Hide the slides by default */
+
 .rbfw_aig_slides {
   display: none;
   text-align: center;
@@ -4200,6 +4317,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* Next & rbfw_aig_previous buttons */
+
 .rbfw_aig_prev,
 .rbfw_aig_next {
   cursor: pointer;
@@ -4226,17 +4344,20 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* Position the "rbfw_aig_next button" to the right */
+
 .rbfw_aig_next {
   right: 0;
 }
 
 /* On hover, add a black background color with a little bit see-through */
+
 .rbfw_aig_prev:hover,
 .rbfw_aig_next:hover {
   background-color: var(--rbfw_muff_color3);
 }
 
 /* Number text (1/3 etc) */
+
 .rbfw_aig_numbertext {
   color: #f2f2f2;
   font-size: 12px;
@@ -4246,6 +4367,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* Caption text */
+
 .rbfw_aig_caption-container {
   text-align: center;
   background-color: black;
@@ -4264,22 +4386,28 @@ img.rbfw_aig_img_thumb {
   opacity: 1;
 }
 
-.rbfw_additional_image_gallary_wrap[data-style=style2] {
+.rbfw_additional_image_gallary_wrap[data-style="style2"] {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
 }
 
-.rbfw_additional_image_gallary_wrap[data-style=style2] .rbfw_additional_image_gallary_inner_col {
+.rbfw_additional_image_gallary_wrap[data-style="style2"]
+  .rbfw_additional_image_gallary_inner_col {
   width: 50%;
 }
 
-.rbfw_muff_row_slider .rbfw_additional_image_gallary_wrap[data-style=style2] .rbfw_additional_image_gallary_inner_col:first-child .rbfw_additional_image_gallary_col {
+.rbfw_muff_row_slider
+  .rbfw_additional_image_gallary_wrap[data-style="style2"]
+  .rbfw_additional_image_gallary_inner_col:first-child
+  .rbfw_additional_image_gallary_col {
   width: 100%;
 }
 
-.rbfw_additional_image_gallary_wrap[data-style=style2] .rbfw_additional_image_gallary_inner_col:first-child .rbfw_aig_img_wrap {
+.rbfw_additional_image_gallary_wrap[data-style="style2"]
+  .rbfw_additional_image_gallary_inner_col:first-child
+  .rbfw_aig_img_wrap {
   height: 325px;
 }
 
@@ -4291,7 +4419,11 @@ img.rbfw_aig_hover-shadow {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.rbfw_muffin_template .calendar-box .week .day span:not(.week .day[disabled=disabled] span) {
+.rbfw_muffin_template
+  .calendar-box
+  .week
+  .day
+  span:not(.week .day[disabled="disabled"] span) {
   background-color: var(--rbfw_muff_color7);
 }
 
@@ -4299,18 +4431,27 @@ img.rbfw_aig_hover-shadow {
   color: var(--rbfw_muff_color7);
 }
 
-.rbfw_muffin_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time span.rbfw_bikecarsd_time_span {
+.rbfw_muffin_template
+  .rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time
+  span.rbfw_bikecarsd_time_span {
   border: 1px solid var(--rbfw_muff_color3);
   background-color: var(--rbfw_muff_color1);
   color: var(--rbfw_dt_color4);
 }
 
-.rbfw_muffin_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
+.rbfw_muffin_template
+  .rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover
+  span {
   background: var(--rbfw_muff_color3);
   border-color: var(--rbfw_muff_color3);
 }
 
-.rbfw_muffin_template .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.selected:not(a.rbfw_bikecarsd_time.selected.disabled) span.rbfw_bikecarsd_time_span {
+.rbfw_muffin_template
+  .rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time.selected:not(a.rbfw_bikecarsd_time.selected.disabled)
+  span.rbfw_bikecarsd_time_span {
   background: var(--rbfw_muff_color3);
   border-color: var(--rbfw_muff_color3);
 }
@@ -4321,11 +4462,12 @@ img.rbfw_aig_hover-shadow {
   background: var(--rbfw_muff_color7);
 }
 
-.rbfw_muff_selected_date[data-type=bike_car_md] {
+.rbfw_muff_selected_date[data-type="bike_car_md"] {
   padding-top: 50px;
 }
 
-.rbfw_muff_selected_date[data-type=bike_car_md] .rbfw_muff_selected_date_value {
+.rbfw_muff_selected_date[data-type="bike_car_md"]
+  .rbfw_muff_selected_date_value {
   margin-bottom: 20px;
   display: block;
 }
@@ -4357,15 +4499,16 @@ img.rbfw_aig_hover-shadow {
 }
 
 .rbfw_muffin_template table.rbfw_bikecarsd_price_table thead {
-  background-color: var(--rbfw_dt_color8);
+  background-color: var(--rbfw_single_page_secondary_color);
   color: #fff;
 }
-
 .rbfw_muffin_template table.rbfw_bikecarsd_price_table thead th {
   padding: 10px;
 }
-
-.rbfw_muffin_template table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n+1) {
+.rbfw_muffin_template
+  table.rbfw_bikecarsd_price_table
+  tbody
+  tr:nth-child(2n + 1) {
   background-color: #f8f8f8;
 }
 
@@ -4373,7 +4516,7 @@ img.rbfw_aig_hover-shadow {
   background-color: #ffffff;
 }
 
-.rbfw_muff_pricing_card_price[data-type=resort] {
+.rbfw_muff_pricing_card_price[data-type="resort"] {
   display: inline-block;
   margin: 5px;
 }
@@ -4386,7 +4529,7 @@ img.rbfw_aig_hover-shadow {
   display: block;
 }
 
-.rbfw_muff_highlighted_features[data-type=resort] {
+.rbfw_muff_highlighted_features[data-type="resort"] {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4425,13 +4568,13 @@ img.rbfw_aig_hover-shadow {
   width: 50%;
 }
 
-.rbfw_muff_registration_wrapper[data-type=resort] {
+.rbfw_muff_registration_wrapper[data-type="resort"] {
   border: none;
   padding: 20px;
   border-radius: 0;
 }
 
-.rbfw_muff_registration_wrapper[data-type=resort] .rbfw_muff_heading {
+.rbfw_muff_registration_wrapper[data-type="resort"] .rbfw_muff_heading {
   text-align: left;
   text-transform: capitalize;
 }
@@ -4448,6 +4591,7 @@ img.rbfw_aig_hover-shadow {
   display: -ms-flexbox;
   display: flex;
   align-items: end;
+  justify-content: space-between;
 }
 
 .rbfw_muffin_template .rbfw-datetime .rbfw-datetime-part {
@@ -4464,7 +4608,6 @@ img.rbfw_aig_hover-shadow {
 
 .rbfw_muffin_template .rbfw_chk_availability_btn {
   background-color: var(--rbfw_muff_color3);
-  box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
   padding: 10px 43px;
   margin-bottom: 0px;
   text-decoration: none;
@@ -4678,6 +4821,7 @@ img.rbfw_aig_hover-shadow {
     padding: 0 50px 0 50px;
   }
 }
+
 @media only screen and (max-width: 792px) {
   .rbfw_muffin_template {
     padding: 30px;
@@ -4750,10 +4894,11 @@ img.rbfw_aig_hover-shadow {
     width: 50px;
     height: 50px;
   }
-  .rbfw_additional_image_gallary_wrap[data-style=style2] {
+  .rbfw_additional_image_gallary_wrap[data-style="style2"] {
     flex-direction: column;
   }
-  .rbfw_additional_image_gallary_wrap[data-style=style2] .rbfw_additional_image_gallary_inner_col {
+  .rbfw_additional_image_gallary_wrap[data-style="style2"]
+    .rbfw_additional_image_gallary_inner_col {
     width: 100%;
   }
   .rbfw_muffin_template #rbfw-bikecarsd-calendar {
@@ -4778,7 +4923,9 @@ img.rbfw_aig_hover-shadow {
     font-size: 14px;
   }
 }
+
 /* Donut Template CSS */
+
 :root {
   --template-max-width: 1270px;
   --rbfw_dt_color1: #ffcd00;
@@ -4950,7 +5097,6 @@ img.rbfw_aig_hover-shadow {
 .rbfw_donut_template .rbfw_dt_heading {
   color:var(--rbfw_single_page_secondary_color);
 }
-
 .rbfw_dt_row_registration.rbfw_dt_sidebar_enabled {
   display: -webkit-box;
   display: -webkit-flex;
@@ -4988,7 +5134,9 @@ img.rbfw_aig_hover-shadow {
   padding-left: 20px;
 }
 
-.rbfw_dt_row_registration.rbfw_dt_sidebar_enabled .rbfw_dt_registration_col1 img {
+.rbfw_dt_row_registration.rbfw_dt_sidebar_enabled
+  .rbfw_dt_registration_col1
+  img {
   max-width: 100%;
   margin: 0;
   margin-bottom: 20px;
@@ -5140,7 +5288,10 @@ img.rbfw_aig_hover-shadow {
   border-left: 5px solid var(--rbfw_single_page_secondary_color);
 }
 
-.rbfw_dt_row_registration .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time span.rbfw_bikecarsd_time_span {
+.rbfw_dt_row_registration
+  .rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time
+  span.rbfw_bikecarsd_time_span {
   border-radius: 0;
 }
 
@@ -5148,7 +5299,11 @@ img.rbfw_aig_hover-shadow {
   border-radius: 0;
 }
 
-.rbfw_dt_row_registration .calendar-box .week .day span:not(.week .day[disabled=disabled] span) {
+.rbfw_dt_row_registration
+  .calendar-box
+  .week
+  .day
+  span:not(.week .day[disabled="disabled"] span) {
   background: var(--rbfw_muff_color3);
   border-color: var(--rbfw_muff_color3);
 }
@@ -5158,15 +5313,20 @@ img.rbfw_aig_hover-shadow {
   a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover
   span {
   background: var(--rbfw_single_page_secondary_color);
-.rbfw_dt_row_registration .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
+}
+
+.rbfw_donut_template
+  .rbfw_dt_row_registration
+  .rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover
+  span {
   background: var(--rbfw_dt_color7);
 }
 
-.rbfw_donut_template .rbfw_dt_row_registration .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time:not(a.rbfw_bikecarsd_time.disabled):hover span {
-  background: var(--rbfw_dt_color7);
-}
-
-.rbfw_dt_row_registration .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.selected:not(a.rbfw_bikecarsd_time.selected.disabled) span.rbfw_bikecarsd_time_span {
+.rbfw_dt_row_registration
+  .rbfw_bikecarsd_time_table_wrap
+  a.rbfw_bikecarsd_time.selected:not(a.rbfw_bikecarsd_time.selected.disabled)
+  span.rbfw_bikecarsd_time_span {
   background: var(--rbfw_dt_color7);
 }
 
@@ -5184,7 +5344,6 @@ img.rbfw_aig_hover-shadow {
   color: var(--rbfw_dt_color7);
   font-weight: 600;
 }
-
 #rbfw_faq_accordion_style_two {
   width: 100%;
 }
@@ -5210,7 +5369,9 @@ img.rbfw_aig_hover-shadow {
   position: relative;
 }
 
-#rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper .rbfw_faq_heading_collapsed::before {
+#rbfw_faq_accordion_style_two
+  .rbfw_faq_accordion_wrapper
+  .rbfw_faq_heading_collapsed::before {
   content: "\f067";
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
@@ -5228,7 +5389,9 @@ img.rbfw_aig_hover-shadow {
   transition: 0.3s linear;
 }
 
-#rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper.active .rbfw_faq_heading_collapsed::before {
+#rbfw_faq_accordion_style_two
+  .rbfw_faq_accordion_wrapper.active
+  .rbfw_faq_heading_collapsed::before {
   content: "\f068";
 }
 
@@ -5261,7 +5424,6 @@ img.rbfw_aig_hover-shadow {
   background: #f5f5f5;
   border-top: none;
   font-size: 15px;
-  color: #6f6f6f;
   line-height: 28px;
   position: relative;
   visibility: hidden;
@@ -5273,7 +5435,9 @@ img.rbfw_aig_hover-shadow {
   max-height: 0;
 }
 
-#rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper.active .rbfw_faq_content {
+#rbfw_faq_accordion_style_two
+  .rbfw_faq_accordion_wrapper.active
+  .rbfw_faq_content {
   visibility: visible;
   opacity: 1;
   padding: 10px 30px 10px 60px;
@@ -5309,7 +5473,7 @@ img.rbfw_aig_hover-shadow {
   color: #979797;
 }
 
-.rbfw_dt_row_faq .rbfw_dt_heading_tab[data-tab=tab2] {
+.rbfw_dt_row_faq .rbfw_dt_heading_tab[data-tab="tab2"] {
   margin-left: 20px;
 }
 
@@ -5333,11 +5497,9 @@ img.rbfw_aig_hover-shadow {
   padding: 20px 0;
   width: 100%;
 }
-
 .rbfw_donut_template .rbfw-related-product-inner {
   border: 1px solid var(--rbfw_dt_color3);
 }
-
 .rbfw_dt_row_related_item .rbfw-related-product-bottom-card-pricing-box {
   border: 1px dashed var(--rbfw_dt_color1);
   border-radius: 4px;
@@ -5415,11 +5577,19 @@ img.rbfw_aig_hover-shadow {
   list-style-type: none;
 }
 
-.rbfw_dt_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span {
+.rbfw_dt_row_reviews
+  .rbfw-review-section
+  .rbfw-review-content
+  .rbfw-review-stars
+  span {
   color: var(--rbfw_dt_color1);
 }
 
-.rbfw_dt_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span.dashicons-star-empty {
+.rbfw_dt_row_reviews
+  .rbfw-review-section
+  .rbfw-review-content
+  .rbfw-review-stars
+  span.dashicons-star-empty {
   background: #ccc;
 }
 
@@ -5427,7 +5597,10 @@ img.rbfw_aig_hover-shadow {
   border-radius: 0;
 }
 
-.rbfw_dt_row_reviews .rbfw-review-section .rbfw-single-review-row .rbfw-single-review-col-2 {
+.rbfw_dt_row_reviews
+  .rbfw-review-section
+  .rbfw-single-review-row
+  .rbfw-single-review-col-2 {
   border-radius: 0;
   background: var(--rbfw_dt_color3);
   border: none;
@@ -5450,9 +5623,19 @@ img.rbfw_aig_hover-shadow {
   cursor: pointer;
 }
 
-.rbfw_dt_row_reviews .rbfw-review-rating-container > input:checked ~ label::before,
-.rbfw_dt_row_reviews .rbfw-review-rating-container > input + label:hover ~ label::before,
-.rbfw_dt_row_reviews .rbfw-review-rating-container > input + label:hover::before,
+.rbfw_dt_row_reviews
+  .rbfw-review-rating-container
+  > input:checked
+  ~ label::before,
+.rbfw_dt_row_reviews
+  .rbfw-review-rating-container
+  > input
+  + label:hover
+  ~ label::before,
+.rbfw_dt_row_reviews
+  .rbfw-review-rating-container
+  > input
+  + label:hover::before,
 .rbfw_dt_row_reviews .rbfw-review-section .comment-respond p.comment-notes a,
 .rbfw_dt_row_reviews .rbfw-review-section .comment-respond p.logged-in-as a,
 .rbfw_dt_row_reviews .rbfw-review-section #cancel-comment-reply-link {
@@ -5467,7 +5650,11 @@ img.rbfw_aig_hover-shadow {
   margin-top: 20px;
 }
 
-.rbfw_dt_row_reviews .rbfw-review-section .rbfw-review-content .rbfw-review-stars span {
+.rbfw_dt_row_reviews
+  .rbfw-review-section
+  .rbfw-review-content
+  .rbfw-review-stars
+  span {
   color: var(--rbfw_dt_color2);
   background: var(--rbfw_dt_color7);
   padding: 5px;
@@ -5547,6 +5734,7 @@ img.rbfw_aig_hover-shadow {
     float: right;
   }
 }
+
 @media only screen and (max-width: 792px) {
   .rbfw_dt_row_header {
     display: block;
@@ -5575,17 +5763,26 @@ img.rbfw_aig_hover-shadow {
   color: var(--rbfw_muff_color3);
   cursor: pointer;
 }
-
 .rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .prev-button:hover,
-.rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .next-button:hover {
+.rbfw_muffin_template
+  #rbfw-bikecarsd-calendar
+  .calendar-box
+  .next-button:hover {
   color: var(--rbfw_muff_color8);
 }
-
-.rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .week.start-on-monday .day {
+.rbfw_muffin_template
+  #rbfw-bikecarsd-calendar
+  .calendar-box
+  .week.start-on-monday
+  .day {
   color: var(--rbfw_muff_color3);
 }
-
-.rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .week .day span:not(.week .day[disabled=disabled] span) {
+.rbfw_muffin_template
+  #rbfw-bikecarsd-calendar
+  .calendar-box
+  .week
+  .day
+  span:not(.week .day[disabled="disabled"] span) {
   background-color: var(--rbfw_muff_color3);
 }
 
@@ -5605,21 +5802,17 @@ img.rbfw_aig_hover-shadow {
   .day
   span:not(.week .day[disabled="disabled"] span):hover {
   background: var(--rbfw_single_page_secondary_color);
-
-.rbfw_muffin_template #rbfw-bikecarsd-calendar .calendar-box .week .day span:not(.week .day[disabled=disabled] span):hover {
-  background: var(--rbfw_dt_color8) !important;
 }
 
 .rbfw_muffin_template .rbfw_back_step_btn:hover {
   color: var(--rbfw_muff_color3);
 }
-
 .rbfw_muffin_template .rbfw_muff_selected_date {
   background: var(--rbfw_muff_color3);
   color: var(--rbfw_muff_color1);
 }
-
 /* End Donut Template Css */
+
 .rbfw_donut_template .calendar-box .buttons-container {
   background: #f0eaea;
   padding: 10px 45px;
@@ -5658,12 +5851,12 @@ img.rbfw_aig_hover-shadow {
 .mp_default_theme #checkin_date,
 .mp_default_theme #checkout_date,
 .mp_default_theme .pricing-content {
-  border-left: 5px solid var(--rbfw_single_page_base_color4);
+  border-left: 5px solid var(--rbfw_muff_color3);
 }
 
 .mp_default_theme .rbfw-datetime .date .calendar,
 .mp_default_theme .rbfw-datetime .time .clock {
-  color: var(--rbfw_single_page_base_color4) !important;
+  color: var(--rbfw_muff_color3) !important;
 }
 
 .mp_default_theme .rbfw_bikecarmd_backstep1_btn {
@@ -5692,6 +5885,7 @@ img.rbfw_aig_hover-shadow {
 }
 
 /********Added By sumon*******************/
+
 div.rbfw_rent_list_highlighted_features {
   position: relative;
 }
@@ -5726,10 +5920,11 @@ span.rbfw_item_absolute:hover {
 }
 
 /*Custom Registration Form Css*/
+
 .rbfw_regf_wrap {
   font-size: 14px;
   border-radius: 5px;
-  border: 1px solid #ddd;
+  border:1px solid #ddd;
   margin-bottom: 10px;
 }
 
@@ -5739,10 +5934,10 @@ span.rbfw_item_absolute:hover {
   padding: 0 10px;
 }
 
-.rbfw_regf_group input[type=text],
-.rbfw_regf_group input[type=email],
-.rbfw_regf_group input[type=date],
-.rbfw_regf_group input[type=file],
+.rbfw_regf_group input[type="text"],
+.rbfw_regf_group input[type="email"],
+.rbfw_regf_group input[type="date"],
+.rbfw_regf_group input[type="file"],
 .rbfw_regf_group select,
 .rbfw_regf_group textarea {
   display: block;
@@ -5755,7 +5950,8 @@ span.rbfw_item_absolute:hover {
   background-color: #fff;
   border: 1px solid #ced4da;
   border-radius: 5px;
-  transition: #86b7fe 0.15s ease-in-out, rgba(13, 110, 253, 0.25) 0.15s ease-in-out;
+  transition: #86b7fe 0.15s ease-in-out,
+  rgba(13, 110, 253, 0.25) 0.15s ease-in-out;
   box-sizing: border-box;
 }
 
@@ -5766,8 +5962,8 @@ span.rbfw_item_absolute:hover {
   font-weight: bold;
 }
 
-.rbfw_regf_group input[type=radio],
-.rbfw_regf_group input[type=checkbox] {
+.rbfw_regf_group input[type="radio"],
+.rbfw_regf_group input[type="checkbox"] {
   margin-right: 5px;
 }
 
@@ -5806,7 +6002,7 @@ table.rbfw_regf_cart_table {
   color: #fff;
 }
 
-.rbfw_regf_group input[type=file] {
+.rbfw_regf_group input[type="file"] {
   padding: 4px !important;
 }
 
@@ -5829,7 +6025,7 @@ table.rbfw_regf_cart_table {
   color: #7d7d7d;
 }
 
-.rbfw-review-input-group input[type=radio] {
+.rbfw-review-input-group input[type="radio"] {
   display: inline-block;
   width: auto;
   margin-right: 5px;
@@ -5980,7 +6176,7 @@ body.single-rbfw_item div.ast-container {
 
 .rbfw-lsn-tip-icon-info::before {
   font-size: 18px;
-  content: "\f129";
+  content: "";
   top: 5px;
   left: 16px;
   font-family: FontAwesome;
@@ -6006,168 +6202,6 @@ body.single-rbfw_item div.ast-container {
   display: flex;
   justify-content: end;
 }
-
-.rbfw-nebula-template {
-  max-width: 1440px;
-  height: 100%;
-  margin: 30px 0;
-  max-width: var(--template-max-width);
-  margin: auto;
-  margin-top: 30px;
-  background-color: transparent;
-}
-.rbfw-nebula-template header {
-  text-align: right;
-}
-.rbfw-nebula-template .rbfw-nebula-slider {
-  width: 100%;
-  height: 600px;
-  overflow: hidden;
-  margin-bottom: 70px;
-}
-.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper {
-  width: 100%;
-  height: 70%;
-  margin-left: auto;
-  margin-right: auto;
-  overflow: hidden;
-  position: relative;
-}
-.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper .swiper-slide {
-  text-align: center;
-  font-size: 18px;
-  background: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-size: cover;
-  background-position: center;
-}
-.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper .swiper-slide img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper .swiper-navigation {
-  width: 100%;
-}
-.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper-thumbnail {
-  height: 30%;
-  box-sizing: border-box;
-  padding: 10px 0;
-  overflow: hidden;
-}
-.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper-thumbnail .swiper-slide {
-  width: 25%;
-  height: 100%;
-  opacity: 0.4;
-}
-.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper-thumbnail .swiper-slide img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.rbfw-nebula-template .rbfw-nebula-slider .rbfw-swiper-thumbnail .swiper-slide-thumb-active {
-  opacity: 1;
-}
-.rbfw-nebula-template .title {
-  text-align: center;
-}
-.rbfw-nebula-template .devider {
-  width: 200px;
-  margin: 50px auto;
-  height: 2px;
-  background-color: #000;
-}
-.rbfw-nebula-template .rbfw-nebula-features .feature-lists {
-  margin-bottom: 70px;
-}
-.rbfw-nebula-template .rbfw-nebula-features .feature-lists .feature-title {
-  text-align: center;
-}
-.rbfw-nebula-template .rbfw-nebula-features .feature-lists .feature-items {
-  display: flex;
-  justify-content: center;
-}
-.rbfw-nebula-template .rbfw-nebula-features .feature-lists .feature-items .item {
-  width: 120px;
-  height: 120px;
-  background-color: #ddd;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 20px;
-  text-align: center;
-}
-.rbfw-nebula-template .rbfw-nebula-features .feature-lists .feature-items .item i {
-  font-size: 35px;
-  padding: 15px 20px;
-  color: #999;
-}
-.rbfw-nebula-template .rbfw-nebula-features .feature-lists .feature-items .item h2 {
-  font-size: 10px;
-  margin: 0;
-}
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area {
-  border: 1px solid #ddd;
-  padding: 30px;
-}
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area {
-  display: flex;
-  justify-content: space-between;
-  max-height: 450px;
-}
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .calender {
-  width: 70%;
-  padding: 30px;
-}
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot {
-  width: 30%;
-  padding: 30px;
-}
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border: 1px solid transparent;
-  height: 100%;
-  overflow-y: scroll;
-}
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .rbfw_bikecarsd_time {
-  padding: 10px;
-  font-size: 20px;
-  color: #333;
-  border: 1px solid #ddd;
-  text-align: center;
-  margin: 10px 30px;
-}
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .rbfw_bikecarsd_time:hover {
-  cursor: pointer;
-  background-color: #000;
-  color: #fff;
-}
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area .single-day-booking-area .timeslot .items .rbfw_bikecarsd_time.selected {
-  cursor: pointer;
-  background-color: #000;
-  color: #fff;
-}
-.rbfw-nebula-template .rbfw-nebula-booking .booking-area .rbfw-datetime {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-direction: column;
-}
-@media (min-width: 768px) {
-  .rbfw-nebula-template .rbfw-nebula-booking .booking-area .rbfw-datetime {
-    flex-direction: row;
-    align-items: end;
-  }
-}
-
-/*# sourceMappingURL=rbfw_style.css.map */
 /* booking form resourse service */
 .resource-qty{
   display: none;
