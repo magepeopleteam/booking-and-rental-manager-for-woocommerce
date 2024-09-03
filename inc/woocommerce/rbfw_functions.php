@@ -419,7 +419,7 @@ function rbfw_show_cart_items($item_data, $cart_item)
 
     if (get_post_type($rbfw_id) == $rbfw->get_cpt_name()) {
 
-        include RBFW_PLUGIN_DIR . '/templates/cart_page.php';
+        include( RBFW_Function::get_template_path( 'cart_page.php' ) );
 
         //rbfw_show_cart_item_func($cart_item, $rbfw_id);
     }
