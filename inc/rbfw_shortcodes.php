@@ -53,7 +53,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
     $args = array(
         'post_type' => 'rbfw_item',
-        'posts_per_page' => -1,
+        'posts_per_page' => $show,
         'meta_key' => $meta_key,
         'orderby' => $orderby,
         'order' => $order,

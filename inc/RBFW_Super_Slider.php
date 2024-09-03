@@ -188,10 +188,15 @@
 			}
 			public function post_thumbnail( $image_id = '' ) {
 				$thumbnail = RBFW_Function::get_image_url( '', $image_id );
+
+                $rbfw_image_display = '';
+                if (str_contains($thumbnail, 'no_image.png')) {
+                    $rbfw_image_display = 'rbfw-display-none';
+                }
 				if ( $thumbnail ) {
 					?>
-					<div class="superSlider">
-						<div data-bg-image="<?php echo esc_html( $thumbnail ); ?>"></div>
+					<div class="superSlider <?php echo $rbfw_image_display ?>">
+						<div  data-bg-image="<?php echo esc_html( $thumbnail ); ?>"></div>
 					</div>
 					<?php
 				}

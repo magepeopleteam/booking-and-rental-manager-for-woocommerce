@@ -206,9 +206,28 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 
-
-
 == Changelog ==
+= 2.0.8 =
+* Same day booking for Single day problem solved.
+
+
+= 2.0.7 =
+* Single day item pricing solved.
+* Realated product pricing problem solved.
+* Multiple day item end date problem solved.
+
+
+= 2.0.6 =
+* Price circle overlaping fix.
+* Multiple day booking resource section stock quanty added.
+* Block theme width adjustment.
+* css update in few sections
+* Feature List Broken Fixed
+
+= 2.0.5 =
+* Picked note, returned note and returned security deposit amount added in order list.
+* Rent list item pricing display issue solved.
+* Registration form problem solved.
 
 = 2.0.5 =
 * Template theme compatibility
@@ -219,7 +238,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 = 2.0.4 =
 * Pricing and discount problem solved after pickup or drop off date change.
 * Yoast seo plugin not supported, solved it.
-* Warning removed
+* Warning removed.
 * Without input inventory customer can booking.
 
 = 2.0.3 =

@@ -2,6 +2,9 @@
 
 /* Start Calendar Script */
 jQuery(function(){
+
+    var rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
+
     var defaultConfig = {
         weekDayLength:3,
         onClickDate: onclick_cal_date,
@@ -13,7 +16,8 @@ jQuery(function(){
         prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
         nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
         disable: function (date) {
-            return rbfw_off_day_dates(date,'','no');
+            return rbfw_off_day_dates(date,'',rbfw_today_booking_enable);
+
         }
     };
 
@@ -45,12 +49,6 @@ jQuery(function(){
     }
 
 
-
-
-
-
-
-
     let rent_type = jQuery('#rbfw_rent_type').val();
     // Start: Calendar script
     if(rent_type == 'appointment'){
@@ -71,7 +69,6 @@ jQuery(function(){
             }
         });
     }
-    /* End Calendar Script */
 });
 
 function onclick_cal_date(date) {
@@ -132,6 +129,7 @@ function onclick_cal_date(date) {
             /* End Calendar Script */
         },
         success: function (response) {
+          
             jQuery('.rbfw-bikecarsd-step[data-step="1"]').hide();
             jQuery('.rbfw-bikecarsd-step[data-step="1"]').removeClass('rbfw_loader_in');
             jQuery('.rbfw-bikecarsd-step[data-step="1"] i.fa-spinner').remove();
@@ -384,11 +382,14 @@ function rbfw_bikecarsd_ajax_price_calculation(){
                         currentRequest.abort();
                     }
                     jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
-                    jQuery('.rbfw_bikecarsd_price_summary.old').addClass('rbfw_loader_in');
-                    jQuery('.rbfw_bikecarsd_price_summary.old').append('<i class="fas fa-spinner fa-spin"></i>');
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap').addClass('rbfw_loader_in');
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap').append('<i class="fas fa-spinner fa-spin"></i>');
                     jQuery(' button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
                 },
                 success: function (response) {
+
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
 
                     jQuery(response).insertAfter('.rbfw_bikecarsd_price_summary.old');
                     jQuery('.rbfw_bikecarsd_price_summary.old').remove();
@@ -428,7 +429,7 @@ function rbfw_bikecarsd_ajax_price_calculation(){
             type: 'POST',
             url: rbfw_ajax.rbfw_ajaxurl,
             data: {
-                'action'        : 'rbfw_bikecarsd_ajax_price_calculation',
+                'action'  : 'rbfw_bikecarsd_ajax_price_calculation',
                 'bikecarsd_price_arr': bikecarsd_price_arr,
                 'service_price_arr': service_price_arr
             },
@@ -438,11 +439,10 @@ function rbfw_bikecarsd_ajax_price_calculation(){
                 jQuery('.rbfw_bikecarsd_price_summary.old').append('<i class="fas fa-spinner fa-spin"></i>');
             },
             success: function (response) {
+                console.log('tttttt');
                 jQuery(response).insertAfter('.rbfw_bikecarsd_price_summary.old');
                 jQuery('.rbfw_bikecarsd_price_summary.old').remove();
-
                 jQuery(' button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
-
             }
         });
     });
@@ -847,34 +847,23 @@ function rbfw_mps_checkout_header_link(){
 function rbfw_off_day_dates(date,type='',today_enable='no'){
 
 
-
-
-
     var curr_date = ("0" + (date.getDate())).slice(-2);
     var curr_month = ("0" + (date.getMonth() + 1)).slice(-2);
     var curr_year = date.getFullYear();
     var date_in = curr_date+"-"+curr_month+"-"+curr_year;
 
-
-
     var date_today = new Date();
-
     if(today_enable=='yes'){
-        var month = date_today.getMonth()-1;
-        var day = date_today.getDate();
-        var date_today = date_today.getFullYear() + '/' +
-            (month<10 ? '0' : '') + month + '/' +
-            (day<10 ? '0' : '') + day;
+        date_today.setDate(date_today.getDate() - 1);
     }
 
     var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     var day_in = weekday[date.getDay()];
     var rbfw_off_days = JSON.parse(jQuery("#rbfw_off_days").val());
 
-
-
-
     var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
+
+
 
 
     if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || (date <  date_today) ){

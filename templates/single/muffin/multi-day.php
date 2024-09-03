@@ -6,8 +6,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <?php
 global $rbfw;
-$post_id = get_the_id();
+global $frontend;
+
+$post_id=$post_id??0;
 $rbfw_id = $post_id;
+$frontend = $frontend??0;
+
 $post_title = get_the_title();
 $post_content  = get_the_content();
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
@@ -15,10 +19,12 @@ $rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', 
 $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_settings','');
 $post_review_rating = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating($post_id,'muffin','style1') : '';
 $currency_symbol = rbfw_mps_currency_symbol();
+
 $get_hourly_price = rbfw_get_bike_car_md_hourly_daily_price($post_id, 'hourly');
 $get_daily_price = rbfw_get_bike_car_md_hourly_daily_price($post_id, 'daily');
 $enable_daily_rate = get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) : 'yes';
 $enable_hourly_rate = get_post_meta($rbfw_id, 'rbfw_enable_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_hourly_rate', true) : 'no';
+
 $rbfw_enable_daywise_price = get_post_meta($rbfw_id, 'rbfw_enable_daywise_price', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daywise_price', true) : 'no';
 $rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize(get_post_meta( $post_id, 'rbfw_releted_rbfw', true )) : [];
 $post_review_rating_style2 = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating($post_id,'muffin', 'style2') : '';
@@ -49,6 +55,8 @@ $gallery_images_additional = rbfw_get_additional_gallary_images($post_id);
 $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settings', 'on');
 ?>
 <div class="rbfw_muffin_template">
+
+    <?php  if($frontend){ ?>
 
     <div class="rbfw_muff_row_header">
 		<div class="rbfw_muff_header_col1">
@@ -83,6 +91,8 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 		</div>
 	</div>
 
+    <?php } ?>
+
     <div class="rbfw_muff_row_slider">
         <div class="rbfw_muff_slider mpStyle <?php echo $slide_style; ?>">
             <?php do_action( 'add_super_slider', $post_id ,'rbfw_gallery_images'); ?>
@@ -98,6 +108,9 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                 <?php include(  RBFW_TEMPLATE_PATH . 'forms/muffin/bike-registration.php' ); ?>
             </div>
         </div>
+
+        <?php  if($frontend){ ?>
+
         <div class="rbfw_muff_content_col2">
             <div class="rbfw_muff_content_wrapper">
                 <div class="rbfw_muff_post_content">
@@ -151,7 +164,12 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 				<?php } ?>
             </div>
 		</div>
+
+        <?php } ?>
+
     </div>
+
+    <?php  if($frontend){ ?>
 
 	<?php if(rbfw_check_pro_active() === true && $review_system == 'on'){ ?>
         <div class="rbfw_muff_row_review_summary">
@@ -263,4 +281,6 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 		<?php do_action( 'rbfw_the_faq_style_two', $post_id ); ?>
 	</div>
 	<?php } ?>
+
+    <?php } ?>
 </div>

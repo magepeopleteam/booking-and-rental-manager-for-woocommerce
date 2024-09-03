@@ -580,7 +580,6 @@
             if (data_value == 'off') {
                 jQuery('.rbfw_enable_start_end_date_field_row').show();
             }
-
         });
 
 
@@ -605,6 +604,32 @@
         $('.category2').select2({
             placeholder: 'This is my placeholder',
             allowClear: true
+        });
+
+
+        jQuery('[name="rbfw_order_status"]').change(function(e) {
+
+            let selected_status = jQuery(this).val();
+
+           console.log('selected_status',selected_status);
+
+            if(selected_status=='picked'){
+                jQuery('.rbfw_return_note').hide();
+                jQuery('.rbfw_return_security_deposit_amount').hide();
+                jQuery('.rbfw_pickup_note').show();
+                console.log('oooooo');
+
+            }else if(selected_status=='returned'){
+                jQuery('.rbfw_pickup_note').hide();
+                jQuery('.rbfw_return_note').show();
+                jQuery('.rbfw_return_security_deposit_amount').show();
+            }else{
+                jQuery('.rbfw_pickup_note').hide();
+                jQuery('.rbfw_return_note').hide();
+                jQuery('.rbfw_return_security_deposit_amount').hide();
+            }
+
+
         });
 
 

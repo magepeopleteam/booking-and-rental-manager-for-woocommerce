@@ -3,23 +3,44 @@
         const service_id = $('.rbfw-single-container').attr('data-service-id');
         // DatePicker
         let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
-        $('#pickup_date').datepicker({
-            dateFormat: 'yy-mm-dd',
-            minDate: 0,
-            beforeShowDay: function(date)
-            {
-                return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-            }
+
+        $('body').on('focusin', '.pickup_date', function(e) {
+            $(this).datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: 0,
+                beforeShowDay: function(date)
+                {
+                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+                }
+            });
         });
 
-        $('#pickup_time').change(function(e) {
-            let pickup_date = $('#pickup_date').val();
-            let dropoff_date = $('#dropoff_date').val();
+
+
+        jQuery('body').on('change', '.pickup_date', function(e) {
+            let selected_date = jQuery(this).val();
+
+            const [gYear, gMonth, gDay] = selected_date.split('-');
+
+            jQuery(".dropoff_date").datepicker("destroy");
+            jQuery('.dropoff_date').datepicker({
+                dateFormat: 'yy-mm-dd',
+                minDate: new Date(gYear, gMonth - 1, gDay),
+                beforeShowDay: function(date)
+                {
+                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+                }
+            });
+        });
+
+        $('.pickup_time').change(function(e) {
+            let pickup_date = $('.pickup_date').val();
+            let dropoff_date = $('.dropoff_date').val();
 
             if (pickup_date == dropoff_date) {
                 let selected_time = $(this).val();
                 selected_time = rbfw_convertTo24HrsFormat(selected_time);
-                $("#dropoff_time").val("").trigger("change");
+                $(".dropoff_time").val("").trigger("change");
 
                 $("#dropoff_time option").each(function() {
                     var thisOptionValue = $(this).val();
@@ -43,18 +64,17 @@
             }
         });
 
-        $('#dropoff_date').change(function(e) {
-            $("#pickup_time").trigger("change");
+        $('.dropoff_date').change(function(e) {
+            $(".pickup_time").trigger("change");
 
         });
 
 
-        $('#dropoff_date').click(function(e) {
-            let pickup_date = $('#pickup_date').val();
+        $('.dropoff_date').click(function(e) {
+            let pickup_date = $('.pickup_date').val();
             if (pickup_date == '') {
                 alert('Please select the pickup date!');
             }
-
         });
 
 

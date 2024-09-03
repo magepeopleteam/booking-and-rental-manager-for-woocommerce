@@ -486,6 +486,8 @@ if (!class_exists('MageRBFWClass')) {
 
         function rbfw_add_order_data($meta_data = array(), $ticket_info = array(),$rbfw_service_price_data_actual) {
 
+
+
             global $rbfw;
             $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
             $title = $meta_data['rbfw_billing_name'];
@@ -574,7 +576,7 @@ if (!class_exists('MageRBFWClass')) {
                     $post_id = wp_insert_post($args);
 
 
-
+                   // echo '<pre>';print_r($meta_data);echo '<pre>';exit;
 
 
                     if (sizeof($meta_data) > 0) {
