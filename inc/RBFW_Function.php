@@ -4,9 +4,10 @@
 	} // Cannot access pages directly.
 	if ( ! class_exists( 'RBFW_Function' ) ) {
 		class RBFW_Function {
+
 			public static function get_post_info( $post_id, $key, $default = '' ) {
 				$data = get_post_meta( $post_id, $key, true ) ?: $default;
-
+				
 				return self::data_sanitize( $data );
 			}
 
@@ -46,69 +47,40 @@
 			}
 
 			//***********Template********************//
-			public static function all_details_template() {
+
+			public static function get_all_template() {
 				
-				$default_path  = RBFW_PLUGIN_DIR . '/templates/';
-				$dir           = glob( $default_path . "*" );
-				$names         = array();
-				foreach ( $dir as $filename ) {
-					if ( is_file( $filename ) ) {
-						$file           = basename($filename,'.php');
-						$names[ $file ] = $file.' template';
+				$template_path = RBFW_Function::get_template_path('single/');
+				$template_path  = glob( $template_path . "*" );
+				
+				foreach ( $template_path as $template_dir ) {
+					if(is_dir($template_dir)){
+						$template_name = preg_replace("/[^a-zA-Z0-9]/", "",(ucfirst(basename($template_dir,''))));
+						$template_lists[ $template_name ] = $template_name.' Template';
 					}
-				}
-				$name = [];
-				foreach ( $names as $key => $value ) {
-					$name[ $key ] = $value;
-				}
-
-
-				$the_array = array(
-					'Muffin' => 'Muffin template',
-					'Donut' => 'Donut template',
-					'Default' => 'Classic template',
-				);
-
-				$name = $the_array;
-
-				return apply_filters( 'rbfw_template_list_arr', $name );
-			}
-
-			public static function get_template($post_id) {
-
-
-
-				$template = !empty(get_post_meta($post_id, 'rbfw_single_template', true)) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default';
-				
-				$template_name = $template.'.php';
-
-
-
-				$main_template_dir = RBFW_PLUGIN_DIR . '/templates/' . $template_name;
-
-
-				
-				if ( ! file_exists( $main_template_dir ) ) {
-
-					echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
-
-				} else {
-
-					include( RBFW_Function::template_path($template_name) );
 					
 				}
-								
+				foreach ( $template_lists as $key => $value ) {
+					$templates[ $key ] = $value;
+				}
+				
+				return apply_filters('rbfw_template_list', $templates );
 			}
 
-			public static function template_path( $file_name ): string {
-		
-				$default_dir   = RBFW_PLUGIN_DIR . '/templates/';
-				$dir           = $default_dir;
-				$file_path     = $dir . $file_name;
-
-
-
-				return $default_dir . $file_name;
+			public static function get_template_path($path='') {
+				$theme_path = get_stylesheet_directory().'/templates/'.$path;
+				$default_path = RBFW_TEMPLATE_PATH . $path;
+				if (is_dir($theme_path)) {
+					return $theme_path;
+				} elseif (is_dir($default_path)) {
+					return $default_path;
+				} elseif(file_exists($theme_path)){
+					return $theme_path;
+				}elseif(file_exists($default_path)){
+					return $default_path;
+				}else{
+					return $default_path;
+				}
 			}
 
 			//*******************************//
