@@ -83,39 +83,6 @@
 				}
 			}
 
-			public static function get_template($post_id) {
-				$template = !empty(get_post_meta($post_id, 'rbfw_single_template', true)) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default';
-				$template_name = $template.'.php';
-
-
-
-				$main_template_dir = RBFW_PLUGIN_DIR . '/templates/' . $template_name;
-
-
-				
-				if ( ! file_exists( $main_template_dir ) ) {
-
-					echo __( 'Sorry, No Template Found!', 'booking-and-rental-manager-for-woocommerce' );
-
-				} else {
-
-					include( RBFW_Function::template_path($template_name) );
-					
-				}
-								
-			}
-
-			public static function template_path( $file_name ): string {
-		
-				$default_dir   = RBFW_PLUGIN_DIR . '/templates/';
-				$dir           = $default_dir;
-				$file_path     = $dir . $file_name;
-
-
-
-				return $default_dir . $file_name;
-			}
-
 			//*******************************//
 			public static function get_thumbnail( $post_id = '', $image_id = '', $size = 'full' ){
 				return self::get_image_url( $post_id, $image_id, $size );
