@@ -4334,7 +4334,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   border-radius: 0 3px 3px 0;
   user-select: none;
   -webkit-user-select: none;
-  background: #2be2af;
+  background:  var(--rbfw_muff_color3);;
   border-radius: 50%;
   height: 50px;
   text-decoration: none;
