@@ -1,13 +1,15 @@
 <?php
-// Template Name: Donut Bike/Car Sd Theme
+// Template Name: Resort Theme
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 } 
 ?>
 <?php
 global $rbfw;
-$post_id = get_the_id();
-$rbfw_id = $post_id;
+$rbfw_id = $post_id ??0;
+global $frontend;
+$frontend = $frontend??0;
+
 $post_title = get_the_title();
 $post_content  = get_the_content();
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
@@ -15,36 +17,47 @@ $rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', 
 $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_settings','');
 $post_review_rating = function_exists('rbfw_review_display_average_rating') ? rbfw_review_display_average_rating() : '';
 $currency_symbol = rbfw_mps_currency_symbol();
+
 $rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize(get_post_meta( $post_id, 'rbfw_releted_rbfw', true )) : [];
 
-/* Single Day/Appointment Type */
-$rbfw_bike_car_sd_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+/* Resort Type */
+$rbfw_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true );
 $rbfw_rent_type = get_post_meta( $post_id, 'rbfw_item_type', true );
 
-$price = 0;
-if(!empty($rbfw_bike_car_sd_data) && ($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment')):
-	$rbfw_price_arr = [];
+if(!empty($rbfw_room_data) && $rbfw_rent_type == 'resort'):
+	$rbfw_daylong_rate = [];
+	$rbfw_daynight_rate = [];
+	foreach ($rbfw_room_data as $key => $value) {
 
-	foreach ($rbfw_bike_car_sd_data as $key => $value) {
-
-		if(!empty($value['price'])){
-			$rbfw_price_arr[] =  $value['price'];
+		if(!empty($value['rbfw_room_daylong_rate'])){
+			$rbfw_daylong_rate[] =  $value['rbfw_room_daylong_rate'];
+		}
+		
+		if(!empty($value['rbfw_room_daynight_rate'])){
+			$rbfw_daynight_rate[] = $value['rbfw_room_daynight_rate'];
 		}
 		
 	}
+	//$merged_arr = array_merge($rbfw_daylong_rate,$rbfw_daynight_rate);
 
-	if(!empty($rbfw_price_arr)){
-		$smallest_price = min($rbfw_price_arr);
-		$smallest_price = (float)$smallest_price;
+	if(!empty($rbfw_daylong_rate)){
+		$rbfw_daylong_rate_smallest_price = min($rbfw_daylong_rate);
+		$rbfw_daylong_rate_smallest_price = (float)$rbfw_daylong_rate_smallest_price;
 	} else {
-		$smallest_price = 0;
+		$rbfw_daylong_rate_smallest_price = 0;
 	}
-	$price = $smallest_price;
+
+	if(!empty($rbfw_daynight_rate)){
+		$rbfw_daynight_rate_smallest_price = min($rbfw_daynight_rate);
+		$rbfw_daynight_rate_smallest_price = (float)$rbfw_daynight_rate_smallest_price;
+	} else {
+		$rbfw_daynight_rate_smallest_price = 0;
+	}	
+	
 endif;
 
 $rbfw_dt_sidebar_switch  = get_post_meta( $post_id, 'rbfw_dt_sidebar_switch', true ) ? get_post_meta( $post_id, 'rbfw_dt_sidebar_switch', true ) : 'off';
 $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', true );
-
 ?>
 <div class="rbfw_donut_template">
 	<div class="rbfw_dt_row_header">
@@ -66,15 +79,22 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 					<div class="rbfw_dt_pricing_card_col1"><?php echo $currency_symbol; ?></div>
 					<div class="rbfw_dt_pricing_card_col2">
 
-						<?php if (!empty($price)) : ?>
-						<div class="rbfw_dt_pricing_card_price rbfw_text_center"><?php echo $price; ?></div>
+						<?php if (!empty($rbfw_daylong_rate_smallest_price)) : ?>
+						<div class="rbfw_dt_pricing_card_price"><?php echo $rbfw_daylong_rate_smallest_price; ?><span> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_daylong', 'rbfw_basic_translation_settings', __('DAYLONG','booking-and-rental-manager-for-woocommerce'))); ?></span></div>
 						<?php endif; ?>
-						
+
+						<?php if (!empty($rbfw_daynight_rate_smallest_price)) : ?>
+						<div class="rbfw_dt_pricing_card_price"><?php echo $rbfw_daynight_rate_smallest_price; ?><span> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_daynight', 'rbfw_basic_translation_settings', __('DAYNIGHT','booking-and-rental-manager-for-woocommerce'))); ?></span></div>
+						<?php endif; ?>
+
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+    <?php if($frontend){ ?>
+
 	<div class="rbfw_dt_row_content">
 		<div class="rbfw_dt_content_col1">
 			<div class="rbfw_dt_slider mpStyle <?php echo $slide_style; ?>">
@@ -122,6 +142,9 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 			</div>
 		</div>
 	</div>
+
+    <?php } ?>
+
 	<div class="rbfw_dt_row_registration <?php if($rbfw_dt_sidebar_switch == 'on'){ echo 'rbfw_dt_sidebar_enabled'; } ?>">
 		<?php if($rbfw_dt_sidebar_switch == 'on'): ?>
 		<div class="rbfw_dt_registration_col1">
@@ -131,9 +154,11 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 		<?php endif; ?>
 		<div class="rbfw_dt_registration_col2">
 			<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_booking_detail', 'rbfw_basic_translation_settings', __('Booking Detail','booking-and-rental-manager-for-woocommerce'))); ?></div>
-			<?php include( RBFW_Function::template_path( 'forms/bike-car-sd-registration.php' ) ); ?>
+			<?php include( RBFW_Function::get_template_path( 'forms/resort-registration.php' ) ); ?>
 		</div>
 	</div>
+
+    <?php if($frontend){ ?>
 
 	<?php if($rbfw_enable_faq_content == 'yes'): ?>
 	<div class="rbfw_dt_row_faq">
@@ -162,4 +187,5 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 		<?php do_action( 'rbfw_related_products_style_two', $post_id ); ?>
 	</div>
 	<?php endif; ?>
+    <?php } ?>
 </div>
