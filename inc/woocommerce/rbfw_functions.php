@@ -1081,6 +1081,12 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
     $order          = wc_get_order( $order_id );
     $order_meta     = get_post_meta( $order_id );
 
+    $billing_name = $order->get_billing_first_name().' '.$order->get_billing_last_name();
+    $billing_email = $order->get_billing_email();
+    $billing_phone = $order->get_billing_phone();
+    $billing_address = $order->get_shipping_address_1().' '.$order->get_shipping_address_2();
+
+
     $order_status   = $order->get_status();
     $payment_method = isset( $order_meta['_payment_method_title'][0] ) ? $order_meta['_payment_method_title'][0] : '';
     $user_id        = isset( $order_meta['_customer_user'][0] ) ? $order_meta['_customer_user'][0] : '';
@@ -1103,10 +1109,10 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
             $zdata[ $key ]['rbfw_order_status']       = $order_status;
             $zdata[ $key ]['rbfw_payment_method']     = $payment_method;
             $zdata[ $key ]['rbfw_user_id']            = $user_id;
-            $zdata[ $key ]['rbfw_billing_name']       = (isset($order_meta['_billing_first_name'][0])?$order_meta['_billing_first_name'][0]:'') . ' ' . (isset($order_meta['_billing_last_name'][0])?$order_meta['_billing_last_name'][0]:'');
-            $zdata[ $key ]['rbfw_billing_email']      = isset($order_meta['_billing_email'][0])?$order_meta['_billing_email'][0]:'';
-            $zdata[ $key ]['rbfw_billing_phone']      = isset($order_meta['_billing_phone'][0])?$order_meta['_billing_phone'][0]:'';
-            $zdata[ $key ]['rbfw_billing_address']    = (isset($order_meta['_billing_address_1'][0])?$order_meta['_billing_address_1'][0]:'') . ' ' . (isset($order_meta['_billing_address_2'][0])?$order_meta['_billing_address_2'][0]:'');
+            $zdata[ $key ]['rbfw_billing_name']       = $billing_name;
+            $zdata[ $key ]['rbfw_billing_email']      = $billing_email;
+            $zdata[ $key ]['rbfw_billing_phone']      = $billing_phone;
+            $zdata[ $key ]['rbfw_billing_address']    = $billing_address;
             $zdata[ $key ]['start_date']              = $start_date;
             $zdata[ $key ]['end_date']                = $end_date;
             $zdata[ $key ]['rbfw_id']                 = $rbfw_id;
