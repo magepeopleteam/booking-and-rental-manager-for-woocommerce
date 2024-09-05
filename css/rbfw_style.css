@@ -4151,9 +4151,10 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   display: none;
 }
 
+.rbfw_single_default_template
 .ui-state-default,
-.ui-widget-content .ui-state-default,
-.ui-widget-header .ui-state-default {
+.rbfw_single_default_template .ui-widget-content .ui-state-default,
+.rbfw_single_default_template .ui-widget-header .ui-state-default {
   background: inherit;
   background-color: var(--rbfw_muff_color3);
   color: #fff;
@@ -4335,7 +4336,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
   border-radius: 0 3px 3px 0;
   user-select: none;
   -webkit-user-select: none;
-  background: #2be2af;
+  background:  var(--rbfw_muff_color3);;
   border-radius: 50%;
   height: 50px;
   text-decoration: none;
