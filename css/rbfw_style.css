@@ -321,7 +321,9 @@ CSS for Single Page Template
 }
 
 .rbfw-datetime input,
-.rbfw-datetime select {
+.rbfw-datetime select,
+.rbfw-datetime select.rbfw-select,
+.rbfw-datetime input[type=text].rbfw-input{
   width: 100%;
   border: none;
   background-color: #f5f5f5;

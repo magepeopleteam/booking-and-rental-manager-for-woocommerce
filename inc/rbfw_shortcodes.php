@@ -157,15 +157,23 @@ add_shortcode('rent-add-to-cart', 'rbfw_add_to_cart_shortcode_func');
 
 function rbfw_add_to_cart_shortcode_func($atts){
 
+   // echo print_r($atts);exit;
+
 
 
     $attributes = shortcode_atts( array(
-        'id' => ''
+        'id' => '',
+        'backend' => ''
     ), $atts );
 
 
 
     $post_id = $attributes['id'];
+    $backend = $attributes['backend']??0;
+
+
+
+
 
     define("add_to_cart_id", $post_id);
 
@@ -176,9 +184,12 @@ function rbfw_add_to_cart_shortcode_func($atts){
 
     $rbfw_item_type = get_post_meta($post_id, 'rbfw_item_type', true);
 
-    ob_start();
 
-    do_action( 'woocommerce_before_single_product' );
+    if(!$backend){
+        ob_start();
+        do_action( 'woocommerce_before_single_product' );
+    }
+
 
     if($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){
 
@@ -189,7 +200,9 @@ function rbfw_add_to_cart_shortcode_func($atts){
     }
     elseif($rbfw_item_type == 'bike_car_md' || $rbfw_item_type == 'equipment' || $rbfw_item_type == 'dress' || $rbfw_item_type == 'others'){
 
+
         include(  RBFW_TEMPLATE_PATH . 'forms/multi-day-registration.php' );
+
         $BikeCarMdclass = new RBFW_BikeCarMd_Function();
         $BikeCarMdclass->rbfw_bike_car_md_frontend_scripts($post_id);
 
@@ -201,9 +214,11 @@ function rbfw_add_to_cart_shortcode_func($atts){
         $Resortclass->rbfw_resort_frontend_scripts($post_id);
     }
 
-    $content = ob_get_clean();
+    if(!$backend){
+        $content = ob_get_clean();
+        return $content;
+    }
 
-    return $content;
 }
 
 /******************************

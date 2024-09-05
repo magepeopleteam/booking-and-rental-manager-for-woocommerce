@@ -80,6 +80,9 @@ if (!class_exists('RBFW_Timeslots_Page')) {
         public function rbfw_time_slots_table(){
 
             $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+            //$rbfw_time_slots = usort($rbfw_time_slots);
+            //echo '<pre>';print_r($rbfw_time_slots);echo '<pre>';exit;
+
             ?>
             <table class="rbfw_time_slots_page_table">
                 <thead>

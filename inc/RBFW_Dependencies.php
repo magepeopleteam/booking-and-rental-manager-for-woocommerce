@@ -124,6 +124,7 @@
 				wp_enqueue_style('rbfw-admin', plugin_dir_url(__DIR__) . 'assets/admin/css/admin.css', array(),time());
 				wp_enqueue_style('rbfw-placeholder-loading', plugin_dir_url(__DIR__) . 'css/placeholder-loading.css');
 				wp_enqueue_style('smart_wizard_all', plugin_dir_url(__DIR__) . 'admin/css/smart_wizard_all.min.css');
+               // wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array());
 
 
 				/**************************
@@ -141,6 +142,7 @@
 				wp_enqueue_script('rbfw-script', plugins_url('admin/js/mkb-admin.js', __DIR__), array('jquery', 'jquery-ui-datepicker'), time(), false);
 				wp_localize_script('jquery', 'rbfw_ajax', array( 'rbfw_ajaxurl' => admin_url( 'admin-ajax.php')));
 				wp_enqueue_script('smartWizard', plugins_url('admin/js/jquery.smartWizard.min.js', __DIR__), array('jquery'), '6.0.6', false);
+
 
                 wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
 

@@ -478,6 +478,7 @@ if (!class_exists('MageRBFWClass')) {
 
             if($rbfw_payment_system == 'wps'){
 
+
                 $rbfw_id = $meta_data['rbfw_id'];
                 $wc_order_id = $meta_data['rbfw_order_id'];
                 $ticket_info = $meta_data['rbfw_ticket_info'];
@@ -559,7 +560,7 @@ if (!class_exists('MageRBFWClass')) {
                     $post_id = wp_insert_post($args);
 
 
-                   // echo '<pre>';print_r($meta_data);echo '<pre>';exit;
+                    echo '<pre>';print_r($meta_data);echo '<pre>';
 
 
                     if (sizeof($meta_data) > 0) {
@@ -584,6 +585,7 @@ if (!class_exists('MageRBFWClass')) {
                         $total_price = $total_price + $order_tax;
                     }
 
+                    update_post_meta($post_id, 'ticket_name', $wc_order_id);
                     update_post_meta($post_id, 'rbfw_ticket_total_price', $total_price);
                     update_post_meta($post_id, 'rbfw_link_order_id', $wc_order_id);
 

@@ -15,7 +15,6 @@ add_action( 'woocommerce_before_thankyou', 'rbfw_booking_management', 10 );
 /*order status change from woocommerse order or rbfw order list*/
 add_action( 'rbfw_wc_order_status_change', 'rbfw_change_user_order_status_on_order_status_change', 10, 3 );
 
-
 /*add_filter( 'woocommerce_billing_fields', 'wc_unrequire_wc_phone_field');
 function wc_unrequire_wc_phone_field( $fields ) {
     $fields['billing_phone']['required'] = false;
