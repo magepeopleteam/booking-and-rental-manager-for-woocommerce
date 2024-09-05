@@ -146,7 +146,8 @@
 				<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_date_settings_meta_boxes">
 					<?php $this->section_header(); ?>
                     <?php $this->panel_header('Date & Time Settings','Here you can set Date & Time'); ?>
-					<section>
+
+                    <section>
 						<div>
 							<label>
 								<?php echo esc_html__( 'Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -159,6 +160,7 @@
 							<span class="slider round"></span>
 						</label>
 					</section>
+
 					<!-- time slot -->
 					<div class="available-time-slot <?php echo esc_attr(($rbfw_time_slot_switch=='on')?'show':'hide'); ?>">
 						<section>

@@ -106,7 +106,7 @@
         }
 
         // Toggle Action
-        $('.rbfw-toggle-btn,.rbfw_pricing_info_heading').click(function() {
+        $(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',function() {
             const $this = $(this);
             const target = $('.price-item-container');
             if (target.hasClass('open')) {
