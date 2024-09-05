@@ -470,24 +470,7 @@ if (!class_exists('MageRBFWClass')) {
             }
         }
 
-        function template_file_path($file_name) {
-            $template_path = get_stylesheet_directory() . '/rbfw_templates/';
-            $default_path = plugin_dir_path(__DIR__) . '../templates/';
-            $thedir = is_dir($template_path) ? $template_path : $default_path;
-            $themedir = $thedir . $file_name;
-            $the_file_path = locate_template(array('rbfw_templates/' . $file_name)) ? $themedir : $default_path . $file_name;
-            return $the_file_path;
-        }
-
-        function get_template($post_id) {
-            $template_name = get_post_meta($post_id, 'rbfw_theme_file', true) ? get_post_meta($post_id, 'rbfw_theme_file', true) : 'default.php';
-            return $file_path = $this->template_file_path('themes/' . $template_name);
-        }
-
         function rbfw_add_order_data($meta_data = array(), $ticket_info = array(),$rbfw_service_price_data_actual) {
-
-
-
             global $rbfw;
             $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
             $title = $meta_data['rbfw_billing_name'];

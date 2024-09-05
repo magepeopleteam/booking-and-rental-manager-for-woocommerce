@@ -1,8 +1,8 @@
 <?php
-// Template Name: Bike/Car Single Day Theme
+// Template Name: Bike Theme
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-} 
+}
 ?>
 <?php
 global $rbfw;
@@ -10,20 +10,20 @@ global $frontend;
 $post_id = $post_id??0;
 $frontend = $frontend??0;
 
-
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
 $tab_style = $rbfw->get_option_trans('rbfw_single_rent_tab_style', 'rbfw_basic_single_rent_page_settings','vertical');
 $rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
 $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_settings','');
 ?>
-	<div class="mp_default_theme mp_bike_car_sd_theme">
+	<div class="mp_default_theme">
 		<div class="mpContainer">
 			<div class="mp_details_page">
                 <?php  if($frontend){ ?>
-                <div class="mp_left_section">
+				<div class="mp_left_section">
 					<div class="mpStyle <?php echo $slide_style; ?>">
 						<?php do_action( 'add_super_slider', $post_id ,'rbfw_gallery_images'); ?>
 					</div>
+
 					<div class="rbfw-single-left-container">
 						<div class="rbfw-single-left-information">
 						<div class="rbfw-header-container">
@@ -43,13 +43,13 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 										<?php if(!empty($rbfw_enable_faq_content) && $rbfw_enable_faq_content == 'yes'): ?>
 										<li><a href="#" class="rbfw-faq rbfw-tab-a"
 											 data-id="faq"><i class="fa-solid fa-circle-question"></i></a></li>
-										<?php endif; ?>	 
+										<?php endif; ?>
 										<?php do_action( 'rbfw_tab_menu_list', $post_id ); ?>
 									</ul>
 								</div><!--end of tab-menu-->
 
                                 <div class="rbfw-tab rbfw-tab-active" data-id="features">
-                                    <div class="rbfw-single-left-information-item">
+									<div class="rbfw-single-left-information-item">
                                         <?php if ( $rbfw_feature_category ) {
                                             foreach ( $rbfw_feature_category as $value ) {
                                                 $cat_title = $value['cat_title'];
@@ -88,10 +88,8 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
                                     </div>
                                 </div>
 
-
-                                <!--end of tab one-->
 								<div class="rbfw-tab " data-id="description">
-								<div class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?></div>	
+								<div class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?></div>
 									<?php the_content(); ?>
 								</div><!--end of tab two-->
 
@@ -101,7 +99,7 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 									<?php do_action( 'rbfw_the_faq_only', $post_id ); ?>
 								</div><!--end of tab three-->
 								<?php endif; ?>
-								
+
 								<?php do_action( 'rbfw_tab_content', $post_id ); ?>
 							</div><!--end of container-->
 						</div>
@@ -109,12 +107,9 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 					<div class="rbfw-related-products-wrapper"><?php do_action( 'rbfw_related_products', $post_id ); ?></div>
 				</div>
                 <?php } ?>
-
 				<div class="mp_right_section">
-					<?php include( RBFW_Function::template_path( 'forms/bike-car-sd-registration.php' ) ); ?>
+                    <?php include( RBFW_Function::get_template_path( 'forms/multi-day-registration.php' ) ); ?>
 				</div>
 			</div>
 		</div>
 	</div>
-
-
