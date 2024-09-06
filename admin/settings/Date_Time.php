@@ -125,6 +125,13 @@
 			}
 			public function multiple_time_slot_select($post_id){
                 $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+
+                foreach ($rbfw_time_slots as $key=>$value){
+                    $time[$key] = date('H:i', strtotime($value));
+                }
+                $rbfw_time_slots = $time;
+                asort($rbfw_time_slots);
+
                 $rdfw_available_time = get_post_meta($post_id,'rdfw_available_time',true) ? maybe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];
 				?>
                 <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
@@ -170,6 +177,7 @@
 								</label>
 								<span><?php _e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
 							</div>
+
 
 							<div class="w-70">
 								<?php $this->multiple_time_slot_select($post_id); ?>
