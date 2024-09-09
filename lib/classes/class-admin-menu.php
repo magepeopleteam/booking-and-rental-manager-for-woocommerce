@@ -560,7 +560,7 @@ if (!class_exists('MageRBFWClass')) {
                     $post_id = wp_insert_post($args);
 
 
-                    echo '<pre>';print_r($meta_data);echo '<pre>';
+                    //echo '<pre>';print_r($meta_data);echo '<pre>';
 
 
                     if (sizeof($meta_data) > 0) {

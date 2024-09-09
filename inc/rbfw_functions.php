@@ -3339,3 +3339,20 @@ function rbfw_security_deposit($post_id,$sub_total_price)
     }
     return array('security_deposit_amount'=>$security_deposit_amount,'security_deposit_desc'=>$security_deposit_desc);
 }
+
+function rbfw_format_time_slot($time_slots_arr){
+
+    $arr = [];
+
+    if(empty($time_slots_arr)){
+
+        return $arr;
+    }
+
+    foreach ($time_slots_arr as $key => $value) {
+
+        $arr[$key] = date('H:i', strtotime($value));
+    }
+
+    return $arr;
+}
