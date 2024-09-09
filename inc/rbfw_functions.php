@@ -3053,6 +3053,9 @@ function rbfw_exist_page_by_slug( $slug ) {
 function rbfw_get_available_times($rbfw_id){
     $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
     $rdfw_available_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
+
+
+
     $the_array = [];
 
     foreach ($rbfw_time_slots as $rts_key => $rts_value) {
@@ -3340,19 +3343,4 @@ function rbfw_security_deposit($post_id,$sub_total_price)
     return array('security_deposit_amount'=>$security_deposit_amount,'security_deposit_desc'=>$security_deposit_desc);
 }
 
-function rbfw_format_time_slot($time_slots_arr){
 
-    $arr = [];
-
-    if(empty($time_slots_arr)){
-
-        return $arr;
-    }
-
-    foreach ($time_slots_arr as $key => $value) {
-
-        $arr[$key] = date('H:i', strtotime($value));
-    }
-
-    return $arr;
-}
