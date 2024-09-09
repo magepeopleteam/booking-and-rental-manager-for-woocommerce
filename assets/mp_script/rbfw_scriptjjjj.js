@@ -21,13 +21,9 @@ jQuery(function(){
         }
     };
 
-    jQuery('body').on('focus',"#rbfw-bikecarsd-calendar", function(){
-        jQuery(this).calendar(defaultConfig);
-    });
-
-/*    if ( jQuery('#rbfw-bikecarsd-calendar').length ) {
+    if ( jQuery('#rbfw-bikecarsd-calendar').length ) {
         var calendar = jQuery('#rbfw-bikecarsd-calendar').calendar(defaultConfig);
-    }*/
+    }
 
     var date = new Date();
     var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];

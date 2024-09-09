@@ -361,86 +361,52 @@ if (!class_exists('RBFWInventoryPage')) {
                             $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
                         
                             if($rent_type == 'bike_car_sd' || $rent_type == 'appointment' || $rent_type == 'resort') {
-                                            
                                 if (!empty($rbfw_type_info)) {
-
                                     foreach ($rbfw_type_info as $name => $qty) {
-
                                         $sold_item_qty += $qty;
                                     }
                                 }
-
-                                // Start: resort closing array
-                                
-
                                 $i = 0;
                                 foreach ($rbfw_resort_room_data_closing as $key => $resort_room_data) {
-                
                                     $type_name = $rbfw_resort_room_data_closing[$i]['room_type'];
                                     $type_qty =$rbfw_resort_room_data_closing[$i]['rbfw_room_available_qty'];
-
                                     if (!empty($rbfw_type_info)) {
-
                                         foreach ($rbfw_type_info as $name => $qty) {
                                             if ($name == $type_name) {
                                                 $rbfw_resort_room_data_closing[$i]['rbfw_room_available_qty'] = $type_qty - $qty;
                                             }
-                                            
                                         }
                                     }
-
                                     $i++;
                                 }
-                                // End: resort closing array
-
-                                // Start: bike_car_sd closing array
-                                
-
                                 $c = 0;
                                 foreach ($rbfw_bike_car_sd_data_closing as $key => $bike_car_sd_data) {
-                
                                     $type_name = $rbfw_bike_car_sd_data_closing[$c]['rent_type'];
                                     $type_qty =$rbfw_bike_car_sd_data_closing[$c]['qty'];
-
                                     if (!empty($rbfw_type_info)) {
-
                                         foreach ($rbfw_type_info as $name => $qty) {
                                             if ($name == $type_name) {
                                                 $rbfw_bike_car_sd_data_closing[$c]['qty'] = $type_qty - $qty;
                                             }
-                                            
                                         }
                                     }
-
                                     $c++;
                                 }
-                                // End: bike_car_sd closing array
-   
                             } else {
 
                                 $sold_item_qty += $rbfw_item_quantity;
-
-                                // Start: variation closing array
-                                
-
                                 $f = 0;
                                 foreach ($rbfw_variations_data_closing as $key => $v_data) {
-                
                                     $field_id = $rbfw_variations_data_closing[$f]['field_id'];
                                     $field_label = $rbfw_variations_data_closing[$f]['field_label'];
                                     $field_value = $rbfw_variations_data_closing[$f]['value'];
                                     
                                     if(!empty($rbfw_variation_info)){
-
                                         foreach ($rbfw_variation_info as $key => $v_info) {
-
                                             $s_field_id = $v_info['field_id'];
                                             $s_field_label = $v_info['field_label'];
                                             $s_field_value = $v_info['field_value'];
-
                                             if($s_field_id == $field_id){
-                                                
-                                                
                                                 $g = 0;
                                                 foreach ($field_value as $key => $f_value) {
                                                     
@@ -448,48 +414,33 @@ if (!class_exists('RBFWInventoryPage')) {
                                                     $fv_qty = $f_value['quantity'];
     
                                                     if ($s_field_value == $fv_name) {
-                                                        $rbfw_variations_data_closing[$f]['value'][$g]['quantity'] = $fv_qty - 1;
+                                                        $rbfw_variations_data_closing[$f]['value'][$g]['quantity'] = $fv_qty - $rbfw_item_quantity;
                                                     }
-    
                                                     $g++;
                                                 }
-                                                
                                             }
-
                                         }
                                     }
-                                    
                                     $f++;
                                 }
-                                
-                                // End: variation closing array
                             }
-
-                            // Start: extra service closing array
-                            
-
                             $d = 0;
                             foreach ($rbfw_extra_service_data_closing as $key => $extra_service_data) {
-            
                                 $es_name = $rbfw_extra_service_data_closing[$d]['service_name'];
                                 $es_qty =$rbfw_extra_service_data_closing[$d]['service_qty'];
-
                                 if (!empty($rbfw_service_info)) {
-
                                     foreach ($rbfw_service_info as $name => $qty) {
                                         if ($name == $es_name) {
                                             $rbfw_extra_service_data_closing[$d]['service_qty'] = $es_qty - $qty;
                                         }
-                                        
                                     }
                                 }
-
                                 $d++;
                             }
-
-
                         }
                     }
+
+
 
                     $remaining_item_stock = $rbfw_item_stock_quantity - $sold_item_qty;
                     $rbfw_resort_room_data = $rbfw_resort_room_data_closing;
@@ -553,18 +504,13 @@ if (!class_exists('RBFWInventoryPage')) {
                         <?php } ?>                        
                     </tbody>
                 </table>
-            <?php } ?>
 
+           <?php } ?>
+<?php
 
+if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_type != 'resort' && $rent_type != 'bike_car_sd' && $rent_type != 'appointment'){
 
-
-
-
-
-
-
-            <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_type != 'resort' && $rent_type != 'bike_car_sd' && $rent_type != 'appointment'){ 
-            ?>
+    ?>
             <table class="rbfw_inventory_page_inner_table">
                 <thead>
                     <tr>
@@ -574,43 +520,49 @@ if (!class_exists('RBFWInventoryPage')) {
                 <tbody>
                     <tr>
                         <td>
-                            <?php
-                                echo '<table class="rbfw_inventory_page_inner_table rbfw_border_none">';
-                                    foreach ($rbfw_variations_data as $_variations_data) {
-                                        echo '<tr>';
-                                            echo '<th class="rbfw_inventory_page_inner_vf_th">';
-                                                echo '<div class="rbfw_inventory_vf_label">'.$_variations_data['field_label'].':</div>';
-                                                if(!empty($_variations_data['value'])){
-                                                    echo '<table class="rbfw_inventory_page_inner_table">';
-                                                        echo '<thead>';
-                                                            echo '<tr>';
-                                                                echo '<th class="rbfw_inventory_vf_label">';
-                                                                    esc_html_e('Name','booking-and-rental-manager-for-woocommerce');
-                                                                echo '</th>';
-                                                                echo '<th class="rbfw_inventory_vf_label">';
-                                                                    esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce');
-                                                                echo '</th>';
-                                                            echo '</tr>';
-                                                        echo '</thead>';
-                                                    foreach ($_variations_data['value'] as $value) {
-                                                        echo '<tbody>';
-                                                            echo '<tr>';
-                                                                echo '<td>';
-                                                                    echo $value['name'];
-                                                                echo '</td>';
-                                                                echo '<td '; if(empty($value['quantity']) || $value['quantity'] <= 0){ echo "data-status=empty"; } echo '>';
-                                                                    echo $value['quantity'];
-                                                                echo '</td>';
-                                                            echo '</tr>';
-                                                        echo '</tbody>';
-                                                    }
-                                                    echo '</table>'; 
-                                                }
-                                            echo '</th>';
-                                        echo '</tr>';
-                                    }
-                                echo '</table>';
-                            ?>
+
+                           <table class="rbfw_inventory_page_inner_table rbfw_border_none">
+
+
+                              <?php foreach ($rbfw_variations_data as $_variations_data) {   ?>
+
+                                       <tr>
+                                            <th class="rbfw_inventory_page_inner_vf_th">
+                                                <div class="rbfw_inventory_vf_label">
+                                                   <?php echo $_variations_data['field_label'].':' ?>
+                                                </div>
+                                                <?php if(!empty($_variations_data['value'])){ ?>
+                                                    <table class="rbfw_inventory_page_inner_table">
+                                                        <thead>
+                                                           <tr>
+                                                                <th class="rbfw_inventory_vf_label">
+                                                                    <?php esc_html_e('Name','booking-and-rental-manager-for-woocommerce'); ?>
+                                                                </th>
+                                                                <th class="rbfw_inventory_vf_label">
+                                                                    <?php esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce'); ?>
+                                                               </th>
+                                                            </tr>
+                                                       </thead>
+
+                                                    <?php foreach ($_variations_data['value'] as $value) { ?>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                   <?php echo $value['name']; ?>
+                                                                </td>
+                                                                <td data-status="<?php if(empty($value['quantity']) || $value['quantity'] <= 0){ echo "empty"; }?>">
+                                                                    <?php echo $value['quantity']; ?>
+                                                               </td>
+                                                            </tr>
+                                                        </tbody>
+                                                   <?php } ?>
+                                                    </table>
+                                                <?php } ?>
+                                            </th>
+                                        </tr>
+                                    <?php } ?>
+                                </table>
+
                         </td>
                     </tr>
                 </tbody>
