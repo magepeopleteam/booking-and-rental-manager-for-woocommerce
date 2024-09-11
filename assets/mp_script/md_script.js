@@ -450,11 +450,14 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
             if(response.rbfw_enable_variations == 'yes'){
                 let total_variation_stock = 0;
                 jQuery(".rbfw_variant").each(function(index, value) {
+                    var variant_text = jQuery(this).val();
                     if(response.max_available_qty.variant_instock[index]<response.ticket_item_quantity){
                         jQuery(this).attr("disabled", 'disabled');
+                        jQuery(this).text(variant_text+' (Stock Out)');
                     }else{
                          total_variation_stock = 1;
-                        jQuery(this).removeAttr("disabled");
+                         jQuery(this).removeAttr("disabled");
+                        jQuery(this).text(variant_text);
                     }
                 });
                 if((total_variation_stock == 0)) {
