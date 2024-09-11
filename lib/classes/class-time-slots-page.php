@@ -373,5 +373,5 @@ if (!class_exists('RBFW_Timeslots_Page')) {
             <?php
         }
     }
-    new RBFW_Timeslots_Page();
+   $RBFW_Timeslots_Page = new RBFW_Timeslots_Page();
 }

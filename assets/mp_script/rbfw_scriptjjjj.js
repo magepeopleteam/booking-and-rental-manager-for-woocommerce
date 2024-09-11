@@ -25,7 +25,6 @@ jQuery(function(){
         var calendar = jQuery('#rbfw-bikecarsd-calendar').calendar(defaultConfig);
     }
 
-
     var date = new Date();
     var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     var day_in = weekday[date.getDay()];

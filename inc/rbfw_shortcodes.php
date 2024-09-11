@@ -194,6 +194,7 @@ function rbfw_add_to_cart_shortcode_func($atts){
     if($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){
 
         include( RBFW_TEMPLATE_PATH . 'forms/single-day-registration.php' );
+
         $BikeCarSdclass = new RBFW_BikeCarSd_Function();
         $BikeCarSdclass->rbfw_bike_car_sd_frontend_scripts($post_id);
 
@@ -210,6 +211,7 @@ function rbfw_add_to_cart_shortcode_func($atts){
     elseif($rbfw_item_type == 'resort'){
 
         include(  RBFW_TEMPLATE_PATH . 'forms/resort-registration.php' );
+
         $Resortclass = new RBFW_Resort_Function();
         $Resortclass->rbfw_resort_frontend_scripts($post_id);
     }

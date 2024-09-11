@@ -430,7 +430,10 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $id = $_POST['post_id'];
                 $selected_date = $_POST['selected_date'];
                 $is_muffin_template = $_POST['is_muffin_template'];
-                $available_times = rbfw_get_available_times($id);
+                //$available_times = rbfw_get_available_times($id);
+
+
+                $available_times = get_post_meta($id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($id, 'rdfw_available_time', true)) : [];
 
                 $default_timezone = wp_timezone_string();
                 $date = new DateTime("now", new DateTimeZone($default_timezone) );

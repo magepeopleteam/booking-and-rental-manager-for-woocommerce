@@ -460,7 +460,7 @@ function total_variant_quantity($field_label,$variation,$date,$inventory,$invent
     foreach($inventory as $item){
         foreach ($item['rbfw_variation_info'] as $key=>$single){
             if(in_array($date,$item['booked_dates']) && in_array($variation,$single) && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'')  )){
-                $total_single_service++;
+                $total_single_service += $item['rbfw_item_quantity'];
             }
         }
     }
