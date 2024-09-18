@@ -633,6 +633,20 @@
         });
 
 
+        jQuery('input[name=rbfw_enable_category_service_price_sd]').click(function(){
+            var status = jQuery(this).val();
+            if(status == 'on') {
+                jQuery(this).val('off')
+                jQuery('#field-wrapper-rbfw_service_category_price_sd').slideUp().removeClass('show').addClass('hide');
+            }
+            if(status == 'off') {
+                jQuery(this).val('on');
+                jQuery('#field-wrapper-rbfw_service_category_price_sd').slideDown().removeClass('hide').addClass('show');
+            }
+            console.log('status',status);
+        });
+
+
 
     });
 }(jQuery));

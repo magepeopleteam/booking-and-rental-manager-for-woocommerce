@@ -363,7 +363,7 @@ if($rbfw_enable_variations == 'yes'){
                                 </div>
 
                                 <?php foreach ($option_value as $cat=>$item){ ?>
-                                  
+
                                         <div class="servise-item">
                                             <p>
                                                 <?php echo $item['cat_title'] ?>

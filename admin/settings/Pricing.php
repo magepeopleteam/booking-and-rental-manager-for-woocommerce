@@ -365,6 +365,229 @@
 				return ob_get_clean();
 			}
 
+            public function field_service_price_sd( $option ){
+                $id 			= isset( $option['id'] ) ? $option['id'] : "";
+                if(empty($id)) return;
+
+                $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
+                $conditions 	= isset( $option['conditions'] ) ? $option['conditions'] : array();
+                $placeholder 	= isset( $option['placeholder'] ) ? $option['placeholder'] : "";
+                $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fa-solid fa-trash-can"></i>';
+                $sortable 	    = isset( $option['sortable'] ) ? $option['sortable'] : true;
+                $default 	    = isset( $option['default'] ) ? $option['default'] : array();
+
+                $values 	    = isset( $option['value'] ) ? $option['value'] : array();
+                $values         = !empty($values) ? $values : $default;
+                $limit 	        = !empty( $option['limit'] ) ? $option['limit'] : '';
+
+
+
+                $field_id       = $id;
+                $field_name     = !empty( $field_name ) ? $field_name : $id;
+
+                ob_start();
+                ?>
+
+                <table class="form-table rbfw_service_category_table">
+                    <tbody class="sortable_tr">
+                    <?php
+                    if(!empty($values)):
+                        $i = 0;
+                        foreach ($values as $value):?>
+                            <tr data-cat="<?php echo $i; ?>">
+                                <td>
+                                    <div class="services_category_wrapper">
+                                        <div class="field-list <?php echo esc_attr($field_id); ?>">
+                                            <div class="service_category_inner_wrap">
+                                                <section class="service_category_title">
+                                                    <label class=" mb-1">
+                                                        <?php echo esc_html__('Service Category Title','booking-and-rental-manager-for-woocommerce'); ?>
+                                                    </label>
+                                                    <input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_service_category_price_sd[<?php echo $i; ?>][cat_title]" data-key="<?php echo $i; ?>" placeholder="<?php echo esc_attr__('Service Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
+                                                </section>
+                                                <div class="service_category_inner_item_wrap sortable">
+                                                    <?php
+                                                    if(!empty($value['cat_services'])){
+                                                        $c = 0;
+                                                        foreach ($value['cat_services'] as $service) {
+                                                            $icon = $service['icon'];
+                                                            $title = $service['title'];
+                                                            $price = $service['price'];
+                                                            $stock_quantity = isset($service['stock_quantity'])?$service['stock_quantity']:'';
+                                                            $service_price_type = $service['service_price_type'];
+                                                            ?>
+                                                            <div class="item">
+                                                                <a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="<?php echo $c; ?>"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?></a>
+                                                                <div class="rbfw_service_icon_preview p-1" data-key="<?php echo $c; ?>"><?php if($icon){ echo '<i class="'.$icon.'"></i>'; } ?></div>
+
+                                                                <input type='hidden' name='rbfw_service_category_price_sd[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php echo esc_attr($icon); ?>' data-key="<?php echo $c; ?>" class="rbfw_service_icon"/>
+                                                                <input type='text' name='rbfw_service_category_price_sd[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][title]'  placeholder='<?php echo esc_attr($placeholder); ?>' value="<?php  echo esc_attr($title); ?>" data-key="<?php echo $c; ?>"/>
+
+                                                                <input type='text' class="medium" name='rbfw_service_category_price_sd[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][price]'  placeholder='<?php echo __('Price','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php  echo esc_attr($price); ?>'  data-key="0"/>
+
+                                                                <input type='text' class="medium" name='rbfw_service_category_price_sd[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][stock_quantity]'  placeholder='<?php echo __('Stock','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php  echo esc_attr($stock_quantity); ?>'  data-key="0"/>
+
+
+                                                                <div>
+                                                                    <?php if($sortable):?>
+                                                                        <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
+                                                                    <?php endif; ?>
+                                                                    <span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo ($remove_text); ?></span>
+                                                                </div>
+                                                            </div>
+                                                            <?php
+                                                            $c++;
+                                                        }
+                                                    }
+                                                    ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="ppof-button add-new-service-sd">
+											<i class="fa-solid fa-circle-plus"></i>
+											<?php echo __('Add New Service','booking-and-rental-manager-for-woocommerce'); ?>
+										</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <?php if($sortable):?>
+                                        <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
+                                    <?php endif; ?>
+                                    <span class="button tr_remove" onclick="jQuery(this).parent('tr').remove()"><?php echo ($remove_text); ?></span>
+                                </td>
+                            </tr>
+                            <?php
+                            $i++;
+                        endforeach;
+                    else:
+                        ?>
+
+                        <tr data-cat="0">
+                            <td>
+                                <div class="services_category_wrapper">
+                                    <div class="field-list <?php echo esc_attr($field_id); ?>">
+                                        <div class="service_category_inner_wrap">
+                                            <section class="service_category_title">
+                                                <label>
+                                                    <?php echo esc_html__('Service Category Title','booking-and-rental-manager-for-woocommerce'); ?>
+                                                </label>
+                                                <input type="text" name="rbfw_service_category_price_sd[0][cat_title]" data-key="0" placeholder="<?php echo esc_attr__('Service Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
+                                            </section>
+                                            <div class="service_category_inner_item_wrap sortable">
+
+                                                <div class="item">
+
+                                                    <a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="0">
+                                                        <i class="fa-solid fa-circle-plus"></i>
+                                                        <?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?>
+                                                    </a>
+                                                    <div class="rbfw_service_icon_preview p-1" data-key="0"></div>
+                                                    <input type='hidden' name='rbfw_service_category_price_sd[0][cat_services][0][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' data-key="0" class="rbfw_service_icon"/>
+                                                    <input type='text' name='rbfw_service_category_price_sd[0][cat_services][0][title]'  placeholder='<?php echo esc_attr($placeholder); ?>' value='' data-key="0"/>
+
+                                                    <input type='text' class="medium" name='rbfw_service_category_price_sd[0][cat_services][0][price]'  placeholder='<?php echo __('Price','booking-and-rental-manager-for-woocommerce'); ?>' value='' data-key="0"/>
+
+                                                    <input type='text' class="medium" name='rbfw_service_category_price_sd[0][cat_services][0][stock_quantity]'  placeholder='<?php echo __('Stock','booking-and-rental-manager-for-woocommerce'); ?>' value=''  data-key="0"/>
+
+
+
+                                                    <div>
+                                                        <?php if($sortable):?>
+                                                            <span class="button sort">
+																<i class="fas fa-arrows-alt"></i>
+															</span>
+                                                        <?php endif; ?>
+                                                        <span class="button remove" onclick="jQuery(this).parent().parent().remove()">
+															<?php echo ($remove_text); ?>
+														</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="ppof-button add-new-service">
+										<i class="fa-solid fa-circle-plus"></i>
+										<?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?>
+									</span>
+                                </div>
+                            </td>
+                            <td>
+                                <?php if($sortable):?>
+                                    <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
+                                <?php endif; ?>
+                                <span class="button tr_remove" onclick="jQuery(this).parent('tr').remove()">
+									<?php echo ($remove_text); ?>
+								</span>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    </tbody>
+                </table>
+                <span class="ppof-button add-service-category-sd mt-1">
+					<i class="fa-solid fa-circle-plus"></i>
+					<?php echo __('Add New Service Category','booking-and-rental-manager-for-woocommerce'); ?>
+				</span>
+                <script>
+                    jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
+                    jQuery('.tr_remove').click(function (e) {
+                        jQuery(this).closest("tr").remove();
+                    });
+
+                    jQuery(document).on('click', '.add-service-category-sd',function(e){
+                        e.stopImmediatePropagation();
+                        let dataCat = jQuery('.rbfw_service_category_table tbody tr:last-child').attr('data-cat');
+                        let nextCat = parseInt(dataCat) + 1;
+                        let html = '<tr data-cat="'+nextCat+'"><td><div class="services_category_wrapper"><div class="field-list rbfw_service_category_price_sd"><div class="service_category_inner_wrap"><section class="service_category_title"><label><?php echo esc_html__('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_service_category_title" name="rbfw_service_category_price_sd['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></section>';
+                        html +='<div class="service_category_inner_item_wrap sortable"><div class="item"><a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?></a><div class="rbfw_service_icon_preview p-1" data-key="0"></div><input type="hidden" name="rbfw_service_category_price_sd['+nextCat+'][cat_services][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_service_icon">';
+                        html +='<input type="text" name="rbfw_service_category_price_sd['+nextCat+'][cat_services][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0">';
+                        html +='<input type="text" class="medium" name="rbfw_service_category_price_sd['+nextCat+'][cat_services][0][price]" placeholder="Price" value="" data-key="0">';
+                        html +='<input type="text" class="medium" name="rbfw_service_category_price_sd['+nextCat+'][cat_services][0][stock]" placeholder="Stock" value="" data-key="0">';
+
+                        html +='<div><?php if($sortable):?><span class="button sort"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo ($remove_text); ?></span></div></div></div></div></div><span class="ppof-button add-new-service-sd"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo ($remove_text); ?></span></td></tr>';
+                        jQuery('.rbfw_service_category_table tbody').append(html);
+                        jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
+                        jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
+                    });
+
+                    jQuery(document).on('click', '.add-new-service-sd',function(e){
+                        e.stopImmediatePropagation();
+                        let data_key = jQuery(this).siblings(".rbfw_service_category_price_sd").find("div.item:last-child input").attr('data-key');
+                        let i = parseInt(data_key);
+                        let c = i + 1;
+                        let theTarget = jQuery(this).siblings('.rbfw_service_category_price_sd').find('.service_category_inner_wrap .service_category_inner_item_wrap');
+                        jQuery( ".sortable" ).sortable({ handle: '.sort' });
+                        let dataCat = jQuery(this).closest('tr').attr('data-cat');
+
+                        html = '<div class="item">';
+
+                        html += '<a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="'+ c +'"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?></a>';
+                        html += '<div class="rbfw_service_icon_preview p-1" data-key="'+ c +'"></div>';
+                        html += '<input type="hidden" name="rbfw_service_category_price_sd['+ dataCat +'][cat_services]['+ c +'][icon]" placeholder="<?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="'+ c +'" class="rbfw_service_icon"/>';
+
+                        html += '<input type="text" name="rbfw_service_category_price_sd['+ dataCat +'][cat_services]['+ c +'][title]" placeholder="<?php echo esc_attr($placeholder); ?>" data-key="'+ c +'"/>';
+                        html += '<input type="text" class="medium" name="rbfw_service_category_price_sd['+ dataCat +'][cat_services]['+ c +'][price]" placeholder="Price" data-key="'+ c +'"/>';
+                        html += '<input type="text" class="medium" name="rbfw_service_category_price_sd['+ dataCat +'][cat_services]['+ c +'][stock]" placeholder="Stock" data-key="'+ c +'"/>';
+
+
+                        <?php if($sortable):?>
+                        html += '<div>';
+                        html += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
+                        <?php endif; ?>
+
+                        html += '<span class="button remove" onclick="jQuery(this).parent().parent().remove()' + '"><?php echo ($remove_text); ?></span>';
+                        html += '</div></div>';
+
+                        theTarget.append(html);
+                    });
+
+
+
+
+                </script>
+                <?php
+                return ob_get_clean();
+            }
+
 			public function category_service_price ($post_id){
 				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : 'bike_car_sd'; 
 				$enable_service_price =  get_post_meta($post_id, 'rbfw_enable_category_service_price', true) ? get_post_meta($post_id, 'rbfw_enable_category_service_price', true) : 'off'; 
@@ -398,6 +621,7 @@
 						echo $this->field_service_price($options);
 						?>
 					</div>
+
 				</div>
 			<?php
 			}
@@ -405,11 +629,56 @@
 			public function bike_car_single_day($post_id){
 				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : 'bike_car_sd';
 				$rbfw_bike_car_sd_data 	 = get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
-			?>
-				<div class="rbfw_bike_car_sd_wrapper <?php  echo esc_attr($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' )?'show':'hide'; ?>" >
-					<section>
+
+                ?>
+
+                <div class="rbfw_bike_car_sd_wrapper <?php  echo esc_attr($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' )?'show':'hide'; ?>" >
+
+
+
+
+                    <section>
+
 						<div class="w-100">
 							<div style="overflow-x: auto;">
+                                <?php
+                                $rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : 'bike_car_sd';
+                                $enable_service_price_sd =  get_post_meta($post_id, 'rbfw_enable_category_service_price_sd', true) ? get_post_meta($post_id, 'rbfw_enable_category_service_price_sd', true) : 'off';
+                                $section_visibility = ( $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment' && $rbfw_item_type != 'resort')?'show':'hide';
+                                ?>
+                                <div class="rbfw_general_price_config_wrapper_sd">
+                                    <?php $this->panel_header('Service price settings ','Service price settings with category.'); ?>
+                                    <section>
+                                        <div>
+                                            <label>
+                                                <?php echo esc_html__( 'Enable Category service price ', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                            </label>
+                                            <span><?php echo esc_html__('You can enable/disable this section switching this button.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                        </div>
+                                        <?php $dt_sidebar_switch = get_post_meta($post_id,'rbfw_dt_sidebar_switch',true);?>
+                                        <label class="switch">
+                                            <input type="checkbox" name="rbfw_enable_category_service_price_sd" value="<?php echo esc_attr(($enable_service_price_sd=='on')?$enable_service_price_sd:'off'); ?>" <?php echo esc_attr(($enable_service_price_sd=='on')?'checked':''); ?>>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </section>
+
+                                    <div id='field-wrapper-<?php echo esc_attr('rbfw_service_category_price_sd'); ?>' class="field-wrapper field-text-multi-wrapper field-text-multi-wrapper-rbfw_service_category_price <?php echo esc_attr(($enable_service_price_sd=='on')?'show':'hide') ?>">
+                                        <?php
+                                        $options = array(
+                                            'id'          => 'rbfw_service_category_price_sd',
+                                            'type'        => 'md_service_category_price',
+                                            'placeholder'        => 'Service Name',
+                                        );
+                                        $option_value         = get_post_meta($post_id, $options['id'], true);
+                                        $options['value']      = is_serialized($option_value) ? unserialize($option_value) : $option_value;
+                                        echo $this->field_service_price_sd($options);
+                                        ?>
+                                    </div>
+
+                                </div>
+
+
+
 								<table class='form-table rbfw_bike_car_sd_price_table'>
 									<thead>
 										<tr>
@@ -475,7 +744,6 @@
 							</p>
 						</div>
 					</section>
-
 				</div>
 			<?php
 			}
@@ -906,6 +1174,7 @@
                             jQuery(this).val('on');  
 							jQuery('#field-wrapper-rbfw_service_category_price').slideDown().removeClass('hide').addClass('show');
                         }
+                        console.log('status',status);
                     });
 
 					jQuery('input[name=rbfw_enable_extra_service_qty]').click(function(){
@@ -1133,9 +1402,15 @@
 					$hourly_rate = isset( $_POST['rbfw_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_hourly_rate'] ) : 0;
 					
 					$rbfw_enable_daywise_price  = isset( $_POST['rbfw_enable_daywise_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_daywise_price'] ) : 'no';
-					$rbfw_enable_category_service_price      = isset( $_POST['rbfw_enable_category_service_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_category_service_price'] ) : 'off';
+
+                    $rbfw_enable_category_service_price      = isset( $_POST['rbfw_enable_category_service_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_category_service_price'] ) : 'off';
 					$rbfw_service_category_price      = isset( $_POST['rbfw_service_category_price'] ) ? rbfw_array_strip( $_POST['rbfw_service_category_price'] ) : [];
-					$rbfw_bike_car_sd_data 	 = isset( $_POST['rbfw_bike_car_sd_data'] ) ? rbfw_array_strip( $_POST['rbfw_bike_car_sd_data'] ) : 0;
+
+                    $rbfw_enable_category_service_price_sd      = isset( $_POST['rbfw_enable_category_service_price_sd'] ) ? rbfw_array_strip( $_POST['rbfw_enable_category_service_price_sd'] ) : 'off';
+                    $rbfw_service_category_price_sd      = isset( $_POST['rbfw_service_category_price_sd'] ) ? rbfw_array_strip( $_POST['rbfw_service_category_price_sd'] ) : [];
+
+
+                    $rbfw_bike_car_sd_data 	 = isset( $_POST['rbfw_bike_car_sd_data'] ) ? rbfw_array_strip( $_POST['rbfw_bike_car_sd_data'] ) : 0;
 					$rbfw_enable_resort_daylong_price  = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_resort_daylong_price'] ) : 'no';
 					
 					$rbfw_resort_room_data 	 = isset( $_POST['rbfw_resort_room_data'] ) ? rbfw_array_strip( $_POST['rbfw_resort_room_data'] ) : 0;
@@ -1143,10 +1418,13 @@
 					$rbfw_sd_appointment_ondays = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? rbfw_array_strip( $_POST['rbfw_sd_appointment_ondays'] ) : [];
 					$rbfw_enable_extra_service_qty  = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? $_POST['rbfw_enable_extra_service_qty']  : 'no';
 
-					
+
 
 					update_post_meta( $post_id, 'rbfw_enable_category_service_price', $rbfw_enable_category_service_price );
 					update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
+
+                    update_post_meta( $post_id, 'rbfw_enable_category_service_price_sd', $rbfw_enable_category_service_price_sd );
+                    update_post_meta( $post_id, 'rbfw_service_category_price_sd', $rbfw_service_category_price_sd );
 					
 					update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
 					update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
