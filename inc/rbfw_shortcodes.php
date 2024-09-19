@@ -91,6 +91,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
     ?>
     <div class="rbfw_rent_list_wrapper <?php echo $grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>">
+
         <?php
         $d = 1;
         if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
@@ -114,7 +115,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             }
             // load c
             if($expire == 'no'){
-                $grid=RBFW_Function::get_template_path('archive/grid.php');
+//                $grid=RBFW_Function::get_template_path('archive/grid.php');
+                $grid=RBFW_Function::get_template_path('archive/grid_new.php');
                 $list=RBFW_Function::get_template_path('archive/list.php');
 
                 if($style == 'grid'){		
