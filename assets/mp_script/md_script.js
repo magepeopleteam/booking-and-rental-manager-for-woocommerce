@@ -1,9 +1,20 @@
+jQuery('body').on('change', '.pickup_date', function(e) {
+    jQuery(".dropoff_date").val('');
+});
 jQuery('body').on('change','.pickup_date,.dropoff_date,.pickup_time,.dropoff_time',function (e) {
     let pickup_date = jQuery('#pickup_date').val();
     let dropoff_date = jQuery('#dropoff_date').val();
     let pickup_time = jQuery('#pickup_time').find(':selected').val();
     let dropoff_time = jQuery('#dropoff_time').find(':selected').val();
     let rbfw_available_time = jQuery('#rbfw_available_time').val();
+
+
+    if(!dropoff_date){
+        jQuery('<div class="rbfw_nia_notice mps_alert_warning">Please enter drop off date!</div>').insertBefore(' button.rbfw_bikecarmd_book_now_btn');
+        jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
+    }
+
+
 
     if(rbfw_available_time=='yes'){
         if(pickup_date && dropoff_date && pickup_time && dropoff_time){
