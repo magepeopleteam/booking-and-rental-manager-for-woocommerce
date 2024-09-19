@@ -63,9 +63,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $total_days = $diff->days;
             $total_hours = $diff->h;
 
-            $countable_time = 'no';
+            $countable_time = 'yes';
             if($total_days || $total_hours){
                 $countable_time = 'yes';
+            }else{
+                $total_days = 1;
             }
 
             echo json_encode( array(
@@ -161,6 +163,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 if ( $hours > 0 ) {
                     $duration .= $hours > 1 ? $hours.' '.rbfw_string_return('rbfw_text_hours',__('Hours','booking-and-rental-manager-for-woocommerce')) : $hours.' '.rbfw_string_return('rbfw_text_hour',__('Hour','booking-and-rental-manager-for-woocommerce'));
                     $days +=$days;
+                }
+                if(!($days || $hours)){
+                    $days =1;
+                    $duration .= $days > 1 ? $days.' '.rbfw_string_return('rbfw_text_days',__('Days','booking-and-rental-manager-for-woocommerce')).' ' : $days.' '.rbfw_string_return('rbfw_text_day',__('Day','booking-and-rental-manager-for-woocommerce')).' ';
                 }
             }
 
