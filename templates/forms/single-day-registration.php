@@ -80,8 +80,5 @@
 	<!--    Main Layout END-->
 <?php
 
-add_action('admin_enqueue_scripts', 'common_enqueue_script' );
-function common_enqueue_script() {
-    wp_enqueue_script( 'rbfw_script_backend', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_scriptjjjj.js', array(), time(), true );
-}
+
 ?>
