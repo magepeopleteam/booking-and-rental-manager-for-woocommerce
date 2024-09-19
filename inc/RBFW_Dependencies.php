@@ -52,7 +52,7 @@
 
                 wp_enqueue_script( 'rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true );
                 wp_enqueue_script( 'md_script', RBFW_PLUGIN_URL . '/assets/mp_script/md_script.js', array(), time(), true );
-                wp_enqueue_script( 'md_script', RBFW_PLUGIN_URL . '/assets/mp_script/single_day_script.js', array(), time(), true );
+                wp_enqueue_script( 'md_script script', RBFW_PLUGIN_URL . '/assets/mp_script/single_day_script.js', array(), time(), true );
 
                 wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), time(), true);
 
