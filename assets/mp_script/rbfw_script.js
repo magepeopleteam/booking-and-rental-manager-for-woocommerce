@@ -134,17 +134,12 @@ function onclick_cal_date(date) {
             jQuery('.rbfw-bikecarsd-step[data-step="1"]').hide();
             jQuery('.rbfw-bikecarsd-step[data-step="1"]').removeClass('rbfw_loader_in');
             jQuery('.rbfw-bikecarsd-step[data-step="1"] i.fa-spinner').remove();
-
             jQuery('.rbfw-bikecarsd-result').append(response);
-
             rbfw_step_func();
-
             var time_slot_switch = jQuery('#time_slot_switch').val();
-
             if(time_slot_switch == 'on'){
                 rbfw_bikecarsd_time_click_func();
             }
-
             if(time_slot_switch == 'off'){
                 rbfw_bikecarsd_without_time_func();
             }
@@ -174,6 +169,7 @@ function rbfw_bikecarsd_time_click_func(){
         jQuery('.rbfw_bikecarsd_time').removeClass('selected');
         jQuery(this).addClass('selected');
         let gTime = jQuery(this).attr('data-time');
+
         jQuery('#rbfw_bikecarsd_selected_time').val(gTime);
         let selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
         let post_id = jQuery('#rbfw_post_id').val();
