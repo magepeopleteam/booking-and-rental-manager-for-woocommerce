@@ -1051,6 +1051,8 @@ function rbfw_booking_management( $order_id ) {
     $order_status = $order->get_status();
 
 
+
+
     if ( $order_status != 'failed' ) {
 
         foreach ( $order->get_items() as $item_id => $item_values ) {
@@ -1058,11 +1060,14 @@ function rbfw_booking_management( $order_id ) {
             $item_id = $item_id;
 
             $start_date = wc_get_order_item_meta( $item_id, 'start_date', true );
+
             $end_date = wc_get_order_item_meta( $item_id, 'end_date', true );
             $rbfw_service_price_data_actual = wc_get_order_item_meta( $item_id, '_rbfw_service_price_data_actual', true ) ? wc_get_order_item_meta( $item_id, '_rbfw_service_price_data_actual', true ) : [];
 
 
             $rbfw_id = rbfw_get_order_item_meta( $item_id, '_rbfw_id', true );
+
+
 
             if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
 
@@ -1097,6 +1102,7 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
     $order_status   = $order->get_status();
     $payment_method = isset( $order_meta['_payment_method_title'][0] ) ? $order_meta['_payment_method_title'][0] : '';
     $user_id        = isset( $order_meta['_customer_user'][0] ) ? $order_meta['_customer_user'][0] : '';
+
 
 
     foreach ( $ticket_info as $_ticket ) {

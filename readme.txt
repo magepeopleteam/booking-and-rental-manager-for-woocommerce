@@ -207,6 +207,13 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
+= 2.1.0 =
+* Reports paid amount and filtering problem solved.
+
+
+
+
+
 = 2.0.9 =
 * Multiple day validation.
 * Minimum day count 1
