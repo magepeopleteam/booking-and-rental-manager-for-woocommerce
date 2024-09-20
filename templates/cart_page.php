@@ -377,8 +377,8 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                                 <td>
                                     <?php
                                     if($item['service_price_type']=='day_wise'){
-                                        $rbfw_service_price =  $rbfw_service_price+$item['price']*$item['quantity']*$total_days;
-                                        echo '('.wc_price($item['price']). 'x'. $item['quantity'] . 'x' .$total_days .'='.wc_price($item['price']*$item['quantity']*$total_days).')';
+                                        $rbfw_service_price =  (float)$rbfw_service_price+(float)$item['price']*(int)$item['quantity']*(int)$total_days;
+                                        echo '('.wc_price($item['price']). 'x'. $item['quantity'] . 'x' .$total_days .'='.wc_price($item['price']*(int)$item['quantity']*$total_days).')';
                                     }else{
                                         echo '('.wc_price($item['price']). 'x'. $item['quantity'] .'='.wc_price($item['price']*$item['quantity']).')';
                                     }
