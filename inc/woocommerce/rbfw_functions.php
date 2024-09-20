@@ -134,6 +134,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
     $rbfw_bikecarsd_selected_date = isset($_POST['rbfw_bikecarsd_selected_date']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_selected_date']) : '';
     $bikecarsd_selected_date = isset($_POST['rbfw_bikecarsd_selected_date']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_selected_date']) : '';
     $rbfw_bikecarsd_selected_time = isset($_POST['rbfw_bikecarsd_selected_time']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_selected_time']) : '';
+
+
     $rbfw_start_datetime = $rbfw_bikecarsd_selected_date;
     $rbfw_end_datetime = $rbfw_bikecarsd_selected_date;
     $rbfw_type_info_all = isset($_POST['rbfw_bikecarsd_info']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_info']) : [];
@@ -474,12 +476,13 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
     global $rbfw;
     $rbfw_rent_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 
-    $item->add_meta_data( 'start_date', $values['start_date'] );
-    $item->add_meta_data( 'end_date', $values['end_date']);
+
 
 
     /* Type: Resort */
     if($rbfw_rent_type == 'resort'){
+        $item->add_meta_data( 'start_date', $values['start_date'] );
+        $item->add_meta_data( 'end_date', $values['end_date']);
         $rbfw_start_datetime = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
         $rbfw_end_datetime = $values['rbfw_end_datetime'] ? $values['rbfw_end_datetime'] : '';
         $rbfw_room_price_category = $values['rbfw_room_price_category'] ? $values['rbfw_room_price_category'] : '';
@@ -717,6 +720,9 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         /* End Type: Bikecarsd */
 
     } else {
+
+        $item->add_meta_data( 'start_date', $values['start_date'] );
+        $item->add_meta_data( 'end_date', $values['end_date']);
 
         $rbfw_extra_service_data 	= get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
 
