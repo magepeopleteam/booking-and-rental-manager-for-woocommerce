@@ -46,6 +46,7 @@
 				// loading popup js
 
                 wp_enqueue_style('rbfw-style', plugin_dir_url(__DIR__) . 'css/rbfw_style.css', array());
+                wp_enqueue_style('rbfw-rent-items', plugin_dir_url(__DIR__) . 'css/rbfw_rent_items.css', array());
 
 				wp_enqueue_script('jquery.modal.min', plugin_dir_url(__DIR__) . 'admin/js/jquery.modal.min.js', array('jquery'), '0.9.1', false);
 

@@ -50,10 +50,11 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'compare' => 'LIKE'
     ) : '';
 
-
+    $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
     $args = array(
         'post_type' => 'rbfw_item',
         'posts_per_page' => $show,
+        'paged' => $paged,
         'meta_key' => $meta_key,
         'orderby' => $orderby,
         'order' => $order,
@@ -63,9 +64,6 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             $location_query
         )
     );
-
-
-
 
     if(!empty($category)):
         $category = explode(',', $category);
@@ -117,7 +115,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             if($expire == 'no'){
 //                $grid=RBFW_Function::get_template_path('archive/grid.php');
                 $grid=RBFW_Function::get_template_path('archive/grid_new.php');
-                $list=RBFW_Function::get_template_path('archive/list.php');
+//                $list=RBFW_Function::get_template_path('archive/list.php');
+                $list=RBFW_Function::get_template_path('archive/list_new.php');
 
                 if($style == 'grid'){		
                     include($grid);
@@ -149,6 +148,18 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     </div>
     <?php
     $content = ob_get_clean();
+
+    if( isset( $atts['pagination'] ) && $atts['pagination'] == 'yes') {
+        $content .= '<div class="pagination rbfw_pagination">';
+        $content .= paginate_links(array(
+            'total' => $query->max_num_pages,
+            'prev_text' => __('« '), // Optional: Add previous and next text
+            'next_text' => __(' »'),
+        ));
+        $content .= '</div>';
+    }
+    wp_reset_postdata();
+
     return $content;
 }
 
