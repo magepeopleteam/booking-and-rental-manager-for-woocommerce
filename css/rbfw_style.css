@@ -186,7 +186,7 @@ CSS for Single Page Template
 }
 
 .rbfw-sub-heading {
-  font-size: 16px;
+  font-size: 20px;
   border-bottom:1px solid #999;
   padding:10px 0px;
   margin-bottom: 10px;
@@ -927,9 +927,9 @@ ul.rbfw-feature-lists li{
   margin: 15px 0;
 }
 ul.rbfw-feature-lists li i{
-  font-size: 34px;
+  font-size: 28px;
   color:var(--rbfw_muff_color3);
-  margin-right: 5px;
+  margin-right: 16px;
 }
 
 @media (min-width:640px) {

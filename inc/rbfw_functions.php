@@ -738,7 +738,8 @@ function rbfw_get_faq_func($post_id){
         <script>
             jQuery(document).ready(function(){
                 jQuery( "#rbfw_faq_accordion" ).accordion({
-                    heightStyle: "content"
+                    heightStyle: "content",
+                    
                 });
             });
         </script>
