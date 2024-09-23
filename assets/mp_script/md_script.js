@@ -10,7 +10,8 @@ jQuery('body').on('change','.pickup_date,.dropoff_date,.pickup_time,.dropoff_tim
 
 
     if(!dropoff_date){
-        jQuery('<div class="rbfw_nia_notice mps_alert_warning">Please enter drop off date!</div>').insertBefore(' button.rbfw_bikecarmd_book_now_btn');
+        //jQuery('.mps_alert_warning').remove();
+        //jQuery('<div class="rbfw_nia_notice mps_alert_warning">Please enter drop off date!</div>').insertBefore(' button.rbfw_bikecarmd_book_now_btn');
         jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
     }
 
@@ -26,8 +27,6 @@ jQuery('body').on('change','.pickup_date,.dropoff_date,.pickup_time,.dropoff_tim
         }
     }
 });
-
-
 
 
 /*day wise service start*/
@@ -431,7 +430,11 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
                     jQuery(this).find(".rbfw-sold-out").hide();
                     jQuery(this).find(".rbfw-checkbox").show();
                 }
+                if(response.max_available_qty.service_stock[index]==0){
+                    jQuery(this).find(".rbfw_service_info_stock").attr('value',response.max_available_qty.service_stock[index]);
+                }
                 jQuery(this).find(".rbfw_service_info_stock").attr('max',response.max_available_qty.service_stock[index]);
+
                 jQuery(this).find(".remaining_stock").text('('+response.max_available_qty.service_stock[index]+')');
             });
 
@@ -459,7 +462,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
 
 
             if(response.rbfw_enable_variations == 'yes'){
-                let total_variation_stock = 0;
+                var total_variation_stock = 0;
                 jQuery(".rbfw_variant").each(function(index, value) {
                     var variant_text = jQuery(this).val();
                     if(response.max_available_qty.variant_instock[index]<response.ticket_item_quantity){
@@ -471,6 +474,7 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
                         jQuery(this).text(variant_text);
                     }
                 });
+                alert(total_variation_stock);
                 if((total_variation_stock == 0)) {
                     jQuery('.rbfw_nia_notice').remove();
                     jQuery('<div class="rbfw_nia_notice mps_alert_warning">No Items Available!</div>').insertBefore(' button.rbfw_bikecarmd_book_now_btn');

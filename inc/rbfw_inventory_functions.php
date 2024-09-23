@@ -340,17 +340,23 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     if (!empty($rbfw_service_category_price)) {
         foreach($rbfw_service_category_price as $key=>$item1){
             $cat_title = $item1['cat_title'];
-            $service_q = [];
+
             foreach ($item1['cat_services'] as $key1=>$single){
                 if($single['title']){
+                    $service_q = [];
                     foreach($date_range as $date){
                         $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return));
                     }
-                    $service_stock[] = $single['stock_quantity'] - max(array_column($service_q, $single['title']));
+
+                    //echo '<pre>';print_r($service_q);echo '<pre>';
+
+                    $service_stock[] = (int)$single['stock_quantity'] - max(array_column($service_q, $single['title']));
                 }
             }
         }
     }
+
+
     /*end service inventory*/
 
     /*start variation inventory*/
