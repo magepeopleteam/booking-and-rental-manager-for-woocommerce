@@ -116,7 +116,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 }
             }
 
-            $sub_total_price = $duration_price + $service_cost+$rbfw_service_price;
+            $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_service_price;
             $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
 
             $discount_amount = 0;

@@ -470,7 +470,7 @@ if (!class_exists('MageRBFWClass')) {
             }
         }
 
-        function rbfw_add_order_data($meta_data = array(), $ticket_info = array(),$rbfw_service_price_data_actual) {
+        function rbfw_add_order_data($meta_data = array(), $ticket_info = array(),$rbfw_service_price_data_actual = array()) {
 
             global $rbfw;
             $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
