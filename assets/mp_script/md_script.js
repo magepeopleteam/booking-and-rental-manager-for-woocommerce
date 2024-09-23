@@ -263,8 +263,10 @@ function total_day_calcilation(pickup_date,dropoff_date,pickup_time,dropoff_time
 function rbfw_service_price_calculation(total_days){
     jQuery(".rbfw_service_price_data").val(0);
     jQuery('.rbfw_service_quantity').css( "display", "none" );
+    jQuery('.available-stock').css('display','none');
     var total = 0;
     jQuery(".rbfw_service_price_data:checked").each(function() {
+        jQuery('.available-stock').css('display','block');
         var item_no = jQuery(this).data('item');
         console.log('item_no',item_no);
         jQuery(this).val(1);
@@ -278,6 +280,8 @@ function rbfw_service_price_calculation(total_days){
 
         if(rbfw_enable_md_type_item_qty=='yes'){
             jQuery('.item_'+item_no).css( "display", "table" );
+            jQuery('.rbfw_service_quantity').removeAttr('style');
+            
         }
         if(service_price_type=='day_wise'){
             total +=  jQuery(this).data('price')*service_quantity*total_days;

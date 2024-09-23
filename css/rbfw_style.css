@@ -378,7 +378,7 @@ CSS for Single Page Template
   top: 50%;
   left: 2px;
   transform: translateY(-50%);
-  padding: 15px;
+  padding:13px 15px;
 }
 
 .rbfw-datetime .time i.fa-angle-down {
@@ -6213,4 +6213,14 @@ body.single-rbfw_item div.ast-container {
 .resource-qty{
   display: none;
   font-size: 12px;
+}
+
+.available-stock{
+  display: none;
+  font-size: 12px;
+}
+
+.day-time-wise{
+  font-size: 12px;
+  color: var(--rbfw_muff_color3);
 }
