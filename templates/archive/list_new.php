@@ -21,7 +21,7 @@ if($rbfw_enable_hourly_rate == 'no'){
 }
 
 $post_content       = $the_content;
-//$post_content       = strlen($post_content) >= 40 ? substr($post_content, 0, 60) . '...' : $post_content;
+$post_content       = strlen($post_content) >= 40 ? substr($post_content, 0, 60) . '...' : $post_content;
 
 $prices_start_at = $rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
 $rbfw_rent_type = get_post_meta( $post_id, 'rbfw_item_type', true );

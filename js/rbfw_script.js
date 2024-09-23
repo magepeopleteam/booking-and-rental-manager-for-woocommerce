@@ -203,6 +203,25 @@
                 return text === rbfw_ajaxurl.view_more_offers_btn_text ? rbfw_ajaxurl.view_more_offers_btn_text : rbfw_ajaxurl.hide_more_offers_btn_text;
             })
         });
+
+
+        document.querySelector('.rbfw_rent_items_grid').addEventListener('click', function() {
+            var wrapperElement = document.getElementById('rbfw_rent_list_wrapper');
+
+            var originalClasses = wrapperElement.className;
+
+            console.log('Original Classes:', originalClasses);
+
+            // Remove all classes from the wrapper element
+            // wrapperElement.className = '';
+
+            // Add a new class
+            // wrapperElement.classList.add('rbfw_rent_list_to_grid');
+
+            // You can restore the original classes later if needed:
+            // wrapperElement.className = originalClasses;
+        });
+
     });
 })(jQuery)
 

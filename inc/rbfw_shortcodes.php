@@ -94,8 +94,12 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         <div class="shoe_result_text">
             <span> <?php echo esc_attr( $shoe_result );?></span>
         </div>
+        <div class="rbfw_rent_list_grid_icon_holder">
+            <div class="rbfw_rent_items_list_grid rbfw_rent_items_grid" id="rbfw_rent_items_grid">Grid</div>
+            <div class="rbfw_rent_items_list_grid rbfw_rent_items_list" id="rbfw_rent_items_list">List</div>
+        </div>
     </div>
-    <div class="rbfw_rent_list_wrapper <?php echo $grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>">
+    <div class="rbfw_rent_list_wrapper <?php echo $grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>" id="rbfw_rent_list_wrapper">
 
         <?php
         $d = 1;
