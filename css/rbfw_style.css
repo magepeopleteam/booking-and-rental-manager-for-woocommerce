@@ -187,9 +187,8 @@ CSS for Single Page Template
 
 .rbfw-sub-heading {
   font-size: 16px;
-  background: #f5f5f5;
-  padding: 10px;
-  border-radius: 5px;
+  border-bottom:1px solid #999;
+  padding:10px 0px;
   margin-bottom: 10px;
   font-weight: 600;
 }
@@ -387,19 +386,6 @@ CSS for Single Page Template
   right: 15px;
 }
 
-.rbfw-single-left-information-item ul li i {
-  font-size: 16px;
-  width: 20px;
-  height: 20px;
-  margin-top: 5px;
-  color:var(--rbfw_muff_color3);
-}
-
-.rbfw-single-left-information-item ul li span {
-  padding-left: 5px;
-  font-size: 16px;
-}
-
 .pricing-content .section-header {
   display: flex;
   justify-content: space-between;
@@ -571,7 +557,12 @@ div.mp_details_page {
   justify-content: space-between;
 }
 
-div.mp_left_section,
+div.mp_left_section {
+  background: #fff;
+  padding: 10px;
+  padding-top: 0;
+}
+
 div.mp_right_section {
   border: 1px solid #f5f5f5;
   padding: 10px;
@@ -594,7 +585,9 @@ div.mp_right_section {
   padding-left: 0;
   padding-right: 0;
 }
-
+.rbfw-tab-container section{
+  margin-bottom: 20px;
+}
 .rbfw-header-container {
   padding-top: 20px;
   padding-bottom: 20px;
@@ -668,8 +661,6 @@ div.mp_right_section {
 
 .rbfw-related-products-wrapper {
   position: relative;
-  padding-top: 20px;
-  padding-bottom: 20px;
 }
 
 .rbfw-related-products-wrapper .owl-carousel .owl-nav {
@@ -919,6 +910,34 @@ div.superSlider .iconIndicator:hover {
     padding-left: 0;
     padding-top: 10px;
     padding-bottom: 10px;
+  }
+}
+ul.rbfw-feature-lists{
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+ul.rbfw-feature-lists li{
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  margin: 15px 0;
+}
+ul.rbfw-feature-lists li i{
+  font-size: 34px;
+  color:var(--rbfw_muff_color3);
+  margin-right: 5px;
+}
+
+@media (min-width:640px) {
+  ul.rbfw-feature-lists{
+    flex-direction: row;
+  }
+  ul.rbfw-feature-lists li{
+    width: 32%;
   }
 }
 
