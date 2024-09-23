@@ -3225,7 +3225,7 @@ function rbfw_off_dates($post_id){
     return json_encode($off_dates);
 }
 
-function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropoff_datetime=0,$start_date,$star_time,$end_time)
+function rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$star_time,$end_time)
 {
 
     $Book_dates_array = getAllDates($pickup_datetime, $dropoff_datetime);

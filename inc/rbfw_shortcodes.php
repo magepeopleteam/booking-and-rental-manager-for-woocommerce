@@ -78,7 +78,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     endif;
 
     $query = new WP_Query($args);
-
+    $total_posts = $query->found_posts;
+    $post_count = $query->post_count;
     ob_start();
 //echo '<pre>';print_r($query);echo '</pre>';
     $grid_class = 'rbfw-w-33';
@@ -87,7 +88,13 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $grid_class = ($columns==1 || $columns==2)?'rbfw-w-50':(($columns==3)?'rbfw-w-33':(($columns==4)?'rbfw-w-25':(($columns==5)?'rbfw-w-20':'rbfw-w-20')));
     }
 
+    $shoe_result =  $total_posts. ' results. Showing '.$post_count. ' of '. $total_posts. ' of total';
     ?>
+    <div class="rbfw_rent_show_result_list_grid_icon_holder">
+        <div class="shoe_result_text">
+            <span> <?php echo esc_attr( $shoe_result );?></span>
+        </div>
+    </div>
     <div class="rbfw_rent_list_wrapper <?php echo $grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>">
 
         <?php

@@ -6268,7 +6268,7 @@ ul, li {
   margin-left: auto;
   margin-right: auto;
   /*max-height:100%;*/
-  height: 280px;
+  min-height: 100%;
 }
 .rbfw_rent_list_grid_view_top_img:hover {
   transform: scaleX(-1);
@@ -6285,15 +6285,16 @@ ul, li {
   letter-spacing: -0.01em;
   text-transform: capitalize;
   color: #202020;
-  height: 65px;
+  /*height: 65px;*/
   margin-block-start: 10px;
   margin-block-end: 10px;
+  min-height: 64px;
 }
 
 .rbfw_rent_list_grid_row {
   display: -webkit-box;
   display: -ms-flexbox;
-  display: flex;
+  display: grid;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
@@ -6302,7 +6303,7 @@ ul, li {
   align-items: center;
   padding-bottom: 5px;
   border-bottom: 1px solid #d9d9d9;
-  gap: 10px;
+  gap: 1px;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
