@@ -59,14 +59,13 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
             }
 
+
+
             $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
             $total_days = $diff->days;
             $total_hours = $diff->h;
-
             $countable_time = 'yes';
-            if($total_days || $total_hours){
-                $countable_time = 'yes';
-            }else{
+            if(!($total_days || $total_hours)){
                 $total_days = 1;
             }
 
@@ -150,6 +149,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $days    = 0;
             $hours    = 0;
             $duration = '';
+
             if ( $diff ) {
                 $days    = $diff->days;
                 $hours   += $diff->h;
