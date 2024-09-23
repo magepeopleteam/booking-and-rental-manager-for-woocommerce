@@ -708,27 +708,27 @@ function rbfw_get_faq_func($post_id){
         $rbfw_faq_content 	= array_column($rbfw_faq_arr, 'rbfw_faq_content');
         $count_faq_arr 		= count($rbfw_faq_arr);
         ?>
-        <div id="rbfw_faq_accordion">
-            <?php for ($x = 0; $x < $count_faq_arr; $x++) { ?>
-                <?php if(! empty($rbfw_faq_title[$x])): ?>
-                    <h3 class="rbfw_faq_header"><?php echo esc_html($rbfw_faq_title[$x]); ?></h3>
+         <div id="rbfw_faq_accordion">
+            <?php foreach ($rbfw_faq_arr as $faq) { ?>
+                <?php if (!empty($faq['rbfw_faq_title'])): ?>
+                    <h3 class="rbfw_faq_header"><?php echo esc_html($faq['rbfw_faq_title']); ?></h3>
                 <?php endif; ?>
                 <div class="rbfw_faq_content_wrapper">
                     <div class="rbfw_faq_img">
                         <?php
-                        if(! empty($rbfw_faq_img[$x])):
-                            $rbfw_img_id_arr = explode (",", $rbfw_faq_img[$x]);
+                        if (!empty($faq['rbfw_faq_img'])):
+                            $rbfw_img_id_arr = explode(",", $faq['rbfw_faq_img']);
                             foreach ($rbfw_img_id_arr as $attachment_id) {
-                                $url = wp_get_attachment_url( $attachment_id );
-                                echo '<img src="'.esc_url($url).'"/>';
+                                $url = wp_get_attachment_url($attachment_id);
+                                echo '<img src="' . esc_url($url) . '"/>';
                             }
                         endif;
                         ?>
                     </div>
                     <p class="rbfw_faq_desc">
                         <?php
-                        if(! empty($rbfw_faq_content[$x])):
-                            echo esc_html($rbfw_faq_content[$x]);
+                        if (!empty($faq['rbfw_faq_content'])):
+                            echo esc_html($faq['rbfw_faq_content']);
                         endif;
                         ?>
                     </p>
