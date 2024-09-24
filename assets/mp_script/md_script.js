@@ -267,7 +267,6 @@ function rbfw_service_price_calculation(total_days){
     var total = 0;
     jQuery(".rbfw_service_price_data:checked").each(function() {
         var item_no = jQuery(this).data('item');
-        console.log('item_no',item_no);
         jQuery(this).val(1);
         var service_price_type =  jQuery(this).data('service_price_type');
         var service_quantity = jQuery(this).data('quantity');
