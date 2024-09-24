@@ -1,23 +1,3 @@
-.rbfw_rent_list_lists_view{
-    cursor: pointer;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    gap: 20px;
-    /*background: #fff;*/
-    -webkit-box-shadow: 10px 10px 50px 5px rgba(0, 0, 0, 0);
-    box-shadow: 10px 10px 50px 5px rgba(0, 0, 0, 0);
-    /*border: 1px solid #d9d9d9;*/
-    -webkit-transition: border 0.3s, -webkit-box-shadow 0.3s;
-    transition: border 0.3s, -webkit-box-shadow 0.3s;
-    -o-transition: box-shadow 0.3s, border 0.3s;
-    transition: box-shadow 0.3s, border 0.3s;
-    transition: box-shadow 0.3s, border 0.3s, -webkit-box-shadow 0.3s;
-    justify-content: space-between;
-    width: 100%;
-    background-color: #f1f1e5;
-    min-height: 280px;
-}
 .rbfw_rent_list_lists_images{
     width: 35%;
     max-width: inherit;
@@ -28,9 +8,9 @@
     background-position: center;
 }
 .rbfw_rent_list_lists_info{
-    display: flex;
-    gap: 15px;
+    display: grid;
     width: 65%;
+    padding: 1px 5px;
     max-width: inherit;
     background-repeat: no-repeat;
     background-size: cover;
@@ -45,84 +25,6 @@
     background-position: center;
     /*background-color: #0a4b78;*/
 }
-.rbfw_rent_list_lists_right{
-    display: flex;
-    width: 180px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    /*background-color: #0c0c0c;*/
-}
-.rbfw_rent_list_price_wrap_new{
-    position: absolute;
-    z-index: 1;
-    background: var(--rbfw_rent_list_color1);
-    padding: 5px 15px;
-    top: 10px;
-    left: 15px;
-    background-color: #00000099;
-    font-family: 'Roboto', sans-serif;
-    text-transform: capitalize;
-    font-size: 22px;
-    font-weight: bold;
-    color: #f9f9f9;
-    border-radius: 5px;
-    transform: skewX(360deg);
-    box-shadow: rgb(255 255 255 / 40%) 0 1px 3px 0, rgb(255 255 255 / 5%) 0 0 0 1px;
-    transition: none;
-}
-
-
-.rbfw_rent_item_lists_content_title {
-    display: inline-block;
-    margin-top: 20px;
-    font-weight: 600;
-    font-size: 24px;
-    line-height: 32px;
-    letter-spacing: -0.01em;
-    text-transform: capitalize;
-    color: #202020;
-}
-
-.rbfw_rent_item_content_list_bottom {
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: 1fr 1fr;
-    grid-template-columns: 1fr 1fr;
-    padding-inline-start: 0px;
-}
-.bfw_rent_list_booking_btn_holder{
-    margin-top: 120px;
-}
-
-p{
-    margin-block-start: 0;
-    margin-block-end: 0;
-}
-.rbfw_rent_item_lists_content_text{
-    padding-top: 0px;
-    font-size: 13px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 350px;
-}
-.rbfw_rent_item_content_body_bottom{
-    padding-left: 15px;
-}
-
-.bfw_rent_list_btn_holder{
-    width: 180px;
-}
-
-.rbfw_rent_list_grid_to_list_view_top{
-    width: 35%;
-    display: flex;
-    float: left;
-    padding: 10px;
-    min-height: 318px;
-}
-
 .rbfw_rent_show_result_list_grid_icon_holder {
     display: flex;
     justify-content: space-between;
@@ -130,31 +32,15 @@ p{
     padding: 10px;
     background-color: #f9f9f9;
 }
-
 .shoe_result_text {
     text-align: left;
     font-size: 16px;
     color: #333;
 }
-
 .rbfw_rent_list_grid_icon_holder {
     display: flex;
     gap: 10px; /
 }
-
-.rbfw_rent_items_grid, .rbfw_rent_items_list {
-    cursor: pointer;
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
-    color: #333;
-    transition: background-color 0.3s ease;
-}
-
-.rbfw_rent_items_grid:hover, .rbfw_rent_items_list:hover {
-    background-color: #e0e0e0;
-}
-
 .rbfw_rent_lists_grid_view{
     cursor: pointer;
     display: -webkit-box;
@@ -175,18 +61,69 @@ p{
     background-color: #f1f1e5;
     min-height: 620px;
 }
-.rbfw_rent_list_grid_images{
-    width: 100%;
-    max-width: inherit;
-    min-height: 280px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+.rbfw_rent_item_content_list_bottom {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    padding-inline-start: 0px;
+    font-size: 14px;
+    margin-left: 10px;
 }
-.rbfw_rent_list_to_grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+p{
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+.rbfw_rent_list_btn_holder{
+    width: 180px;
+    padding-left: 15px;
+}
+.rbfw_rent_items_grid, .rbfw_rent_items_list {
+    cursor: pointer;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    color: #333;
+    transition: background-color 0.3s ease;
+}
+.rbfw_rent_items_grid:hover, .rbfw_rent_items_list:hover {
+    background-color: #e0e0e0;
+}
+.rbfw_rent_item_description{
+    display: grid;
+    width: 100%;
+    text-align: left;
+    max-height: 15px;
+}
+.rbfw_rent_item_description_text{
+    color: #444444;
+    font-size: 13px;
+    width: calc( 100% - 20px );
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 10px;
+}
+.selected_list_grid{
+    background-color: #990000;
+    color: #f6f6f6;
 }
 
+
+/*Animation*/
+.rbfw_rent_list_lists_images,
+.rbfw_rent_list_grid_view_top,
+.rbfw_rent_item_content_list_bottom {
+    transition: all 0.3s ease;
+}
+.rbfw_rent_list_grid_view_top {
+    opacity: 1;
+    transform: scale(1);
+}
+.rbfw_rent_list_lists_images {
+    opacity: 1;
+    /*transform: scale(0.9);*/
+}
 
 @media only screen and (max-width: 1220px) {
     .rbfw_rent_list_lists_left {
@@ -200,6 +137,14 @@ p{
     .rbfw_rent_list_lists_view{
         display: grid;
     }
+    .rbfw_rent_list_lists_images{
+        min-height: 100%;
+    }
+
+    .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper{
+        display: grid;
+    }
+
     .rbfw_rent_list_lists_images {
         width: 100%;
     }
@@ -213,7 +158,6 @@ p{
         width: 100%;
     }
     .bfw_rent_list_booking_btn_holder {
-        /*margin-top: 5px;*/
         margin: 10px;
     }
 }

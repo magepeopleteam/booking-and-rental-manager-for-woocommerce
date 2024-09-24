@@ -13,15 +13,13 @@ $hourly_rate_label = $rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basi
 $daily_rate_label = $rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily rate','booking-and-rental-manager-for-woocommerce'));
 $rbfw_enable_hourly_rate = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
 $rbfw_enable_daily_rate  = get_post_meta( get_the_id(), 'rbfw_enable_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_daily_rate', true ) : 'no';
+$post_content       = $the_content;
 
 if($rbfw_enable_hourly_rate == 'no'){
     $the_price_label = $daily_rate_label;
 } else {
     $the_price_label = $hourly_rate_label;
 }
-
-$post_content       = $the_content;
-$post_content       = strlen($post_content) >= 40 ? substr($post_content, 0, 60) . '...' : $post_content;
 
 $prices_start_at = $rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
 $rbfw_rent_type = get_post_meta( $post_id, 'rbfw_item_type', true );
@@ -170,96 +168,73 @@ if( $rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_ren
 }else{
     $price_level = $prices_start_at;
 }
+
 ?>
-<div class="rbfw_rent_list_col">
+<div class="rbfw_rent_list_col   rbfw_grid_list_col_<?php echo $d; ?>">
     <div class="rbfw_rent_list_inner_wrapper">
-        <div class="rbfw_rent_list_lists_view">
-            <div class="rbfw_rent_list_lists_images">
-                <div class="rbfw_rent_list_price_wrap_new" style="display: none">
-                    <?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
-                        <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($the_price_label); ?></span> <span class="rbfw_rent_list_price_badge_price"><?php echo rbfw_mps_price($price); ?></span> </div>
-                    <?php endif; ?>
-
-                    <?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
-                        <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($prices_start_at); ?></span> <span class="rbfw_rent_list_price_badge_price"><?php echo rbfw_mps_price($price); ?></span></div>
-                    <?php endif; ?>
-
-                    <?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
-                        <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($prices_start_at); ?></span><span class="rbfw_rent_list_price_badge_price"> <?php echo rbfw_mps_price($price); ?></span></div>
-                    <?php endif; ?>
+        <div class="<?php echo esc_attr( $image_holder )?>">
+            <a class="rbfw_rent_list_grid_view_top_img" href="<?php echo esc_url($post_link); ?>">
+                <img src="<?php echo esc_url($post_featured_img); ?>" alt="Catalog Image">
+            </a>
+        </div>
+        <div class="<?php echo esc_attr( $rent_item_info )?>">
+            <div class="rbfw_rent_list_content">
+                <a href="<?php echo esc_url($post_link); ?>"><h2 class="rbfw_rent_list_grid_title"> <?php echo esc_html($post_title); ?></h2></a>
+                <div class="rbfw_rent_list_grid_row">
+                    <p class="rbfw_rent_list_row_price_level"><?php echo esc_html( $price_level ); ?></p>
+                    <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo rbfw_mps_price($price); ?></span></p>
                 </div>
-                <a class="rbfw_rent_list_grid_view_top_img" href="<?php echo esc_url($post_link); ?>">
-                    <img src="<?php echo esc_url($post_featured_img); ?>" alt="Catalog Image">
+            </div>
+
+            <div class="rbfw_rent_item_description" id="rbfw_rent_item_description"><p class="rbfw_rent_item_description_text" style="display: <?php echo esc_attr( $is_display )?>"><?php echo esc_html( $post_content )?></p></div>
+
+            <?php if ( $rbfw_feature_category ) :
+                $n = 1;
+                foreach ( $rbfw_feature_category as $value ) :
+                    $cat_title = $value['cat_title'];
+                    $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
+
+                    if($n == 1){
+                        ?>
+                        <ul class="<?php echo esc_attr( $rent_item_list_info )?>">
+                            <?php
+                            if(!empty($cat_features)){
+                                $i = 1;
+                                foreach ($cat_features as $features) {
+                                    if($i<=5){
+                                        $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+                                        $title = $features['title'];
+                                        $rand_number = rand();
+                                        if($title) {
+                                            ?>
+                                            <li class=" bfw_rent_list_items title <?php echo $rand_number ?>"> <span class="bfw_rent_list_items_icon"><i class="<?php echo mep_esc_html($icon) ?>"></i> <?php echo $title ?></span></li>
+                                            <?php
+                                        }
+                                    }
+                                    $i++;
+                                }
+                            }
+                            ?>
+                        </ul>
+                        <?php
+                    }
+                    $n++;
+                endforeach;
+            endif;
+            ?>
+
+            <div class="rbfw_rent_list_btn_holder">
+                <a class="bfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url($post_link); ?>">
+                <span>
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3.75 9H14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M9 3.75L14.25 9L9 14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </span>
+                    <span> <?php echo esc_html($book_now_label); ?> </span>
                 </a>
             </div>
-            <div class="rbfw_rent_list_lists_info">
-                <div class="rbfw_rent_list_lists_left">
-                    <div class="rbfw_rent_item_content_body">
-                        <div class="rbfw_rent_list_content">
-                            <a href="<?php echo esc_url($post_link); ?>"><h2 class="rbfw_rent_list_grid_title"> <?php echo esc_html($post_title); ?></h2></a>
-                            <div class="rbfw_rent_list_grid_row">
-                                <p class="rbfw_rent_list_row_price_level"><?php echo esc_html( $price_level ); ?></p>
-                                <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo rbfw_mps_price($price); ?></span></p>
-                            </div>
-                        </div>
-                        <div class="rbfw_rent_item_content_body_bottom">
-                            <p class="rbfw_rent_item_lists_content_text"><?php echo esc_attr( $post_content )?></p>
 
-                            <?php if ( $rbfw_feature_category ) :
-                                $n = 1;
-                                foreach ( $rbfw_feature_category as $value ) :
-                                    $cat_title = $value['cat_title'];
-                                    $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
-
-                                    if($n == 1){
-                                        ?>
-                                        <ul class="rbfw_rent_item_content_list_bottom">
-                                            <?php
-                                            if(!empty($cat_features)){
-                                                $i = 1;
-                                                foreach ($cat_features as $features) {
-                                                    if($i<=5){
-                                                        $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
-                                                        $title = $features['title'];
-                                                        $rand_number = rand();
-                                                        if($title) {
-                                                            ?>
-                                                            <li class="rbfw_rent_item_content_list_bottom-item <?php echo $rand_number ?>"> <span class="bfw_rent_list_items_icon"><i class="<?php echo mep_esc_html($icon) ?>"></i> <?php echo $title ?></span></li>
-                                                            <?php
-                                                        }
-                                                    }
-                                                    $i++;
-                                                }
-                                            }
-                                            ?>
-                                        </ul>
-                                        <?php
-                                    }
-                                    $n++;
-                                endforeach;
-                            endif;
-                            ?>
-
-
-                        </div>
-                    </div>
-                </div>
-                <div class="bfw_rent_list_btn_holder">
-                    <div class="bfw_rent_list_booking_btn_holder">
-                        <a class="bfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url($post_link); ?>">
-                            <span>
-                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M3.75 9H14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                    <path d="M9 3.75L14.25 9L9 14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                </svg>
-                            </span>
-                            <span> <?php echo esc_html($book_now_label); ?> </span>
-                        </a>
-                    </div>
-
-                </div>
-
-            </div>
         </div>
     </div>
 </div>

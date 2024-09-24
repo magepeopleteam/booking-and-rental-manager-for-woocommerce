@@ -205,21 +205,82 @@
         });
 
 
-        document.querySelector('.rbfw_rent_items_grid').addEventListener('click', function() {
+        function setCookie( name, value, days ) {
+            let expires = "";
+            if (days) {
+                let date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Convert days to milliseconds
+                expires = "; expires=" + date.toUTCString();
+            }
+            document.cookie = name + "=" + (value || "") + expires + "; path=/";
+        }
+
+        function getCookie(name) {
+            let cookieArr = document.cookie.split(';');
+            for (let i = 0; i < cookieArr.length; i++) {
+                let cookiePair = cookieArr[i].split('=');
+                if (name === cookiePair[0].trim()) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            return null;
+        }
+
+
+        $(document).on( 'click', '.rbfw_rent_items_list_grid', function(){
+
+            let clickedId = $(this).attr('id');
+
+            $("#"+clickedId).siblings().removeClass('selected_list_grid');
+            $("#"+clickedId).addClass('selected_list_grid');
+
             var wrapperElement = document.getElementById('rbfw_rent_list_wrapper');
 
-            var originalClasses = wrapperElement.className;
+            /*if( 'Grid '){
+                var image = 'rbfw_rent_list_grid_view_top';
+                var info = 'rbfw_inner_details';
+                var list_info = 'rbfw_rent_list_info';
+            }else{
+                image = 'rbfw_rent_list_lists_images';
+                info = 'rbfw_rent_list_lists_info';
+                list_info = 'rbfw_rent_item_content_list_bottom';
+            }*/
 
-            console.log('Original Classes:', originalClasses);
+            var minHeightValue = '';
 
-            // Remove all classes from the wrapper element
-            // wrapperElement.className = '';
+            if( clickedId === 'rbfw_rent_items_grid' ){
+               wrapperElement.classList.replace(wrapperElement.classList[wrapperElement.classList.length - 1], 'rbfw_rent_list_style_grid');
+               let $element = $('#rbfw_rent_list_wrapper').find('.rbfw_rent_list_lists_images');
+               let $element1 = $('#rbfw_rent_list_wrapper').find('.rbfw_rent_list_lists_info');
+               let $element2 = $('#rbfw_rent_list_wrapper').find('.rbfw_rent_item_content_list_bottom');
 
-            // Add a new class
-            // wrapperElement.classList.add('rbfw_rent_list_to_grid');
+               $element.removeClass('rbfw_rent_list_lists_images').addClass('rbfw_rent_list_grid_view_top');
+               $element1.removeClass('rbfw_rent_list_lists_info').addClass('rbfw_inner_details');
+               $element2.removeClass('rbfw_rent_item_content_list_bottom').addClass('rbfw_rent_list_info');
 
-            // You can restore the original classes later if needed:
-            // wrapperElement.className = originalClasses;
+                $(".rbfw_rent_item_description_text").css("display", "none");
+
+               setCookie( 'rbfw_rent_item_list_grid', 'rbfw_rent_item_grid', 1 );
+
+           } else{
+
+               wrapperElement.classList.replace(wrapperElement.classList[wrapperElement.classList.length - 1], 'rbfw_rent_list_style_list');
+               let $element = $('#rbfw_rent_list_wrapper').find('.rbfw_rent_list_grid_view_top');
+               let $element1 = $('#rbfw_rent_list_wrapper').find('.rbfw_inner_details');
+               let $element2 = $('#rbfw_rent_list_wrapper').find('.rbfw_rent_list_info');
+
+               $element.removeClass('rbfw_rent_list_grid_view_top').addClass('rbfw_rent_list_lists_images');
+               $element1.removeClass('rbfw_inner_details').addClass('rbfw_rent_list_lists_info');
+               $element2.removeClass('rbfw_rent_list_info').addClass('rbfw_rent_item_content_list_bottom');
+               let inner_wrapper = $('.rbfw_rent_list_inner_wrapper');
+               inner_wrapper.css('min-height', '' );
+
+                setCookie( 'rbfw_rent_item_list_grid', 'rbfw_rent_item_list', 1 );
+
+                $(".rbfw_rent_item_description_text").css("display", "grid");
+
+           }
+
         });
 
     });

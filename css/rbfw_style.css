@@ -1943,7 +1943,7 @@ table.rbfw_room_cart_table th span {
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_content {
-  padding: 15px;
+  padding: 5px 15px;
 }
 
 .rbfw_rent_list_description {
@@ -1978,6 +1978,9 @@ table.rbfw_room_cart_table th span {
   margin-right: 0;
   color: var(--rbfw_rent_list_color1);
 }
+.bfw_rent_list_btn_holder{
+  padding-bottom: 5px;
+}
 
 @media only screen and (min-width: 792px) {
 
@@ -2006,7 +2009,6 @@ table.rbfw_room_cart_table th span {
         min-width: 30%;
     }
     .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper .rbfw_rent_list_content {
-        width: 70;
         max-width: 70%;
         min-width: 70%;
     }
@@ -6275,20 +6277,20 @@ ul, li {
 }
 
 .rbfw_inner_details{
-  padding: 20px;
+  padding: 4px 20px 10px 20px;
 }
 .rbfw_rent_list_grid_title {
   font-weight: 600;
-  font-size: 24px;
-  line-height: 32px;
-  margin-bottom: 20px;
+  font-size: 22px;
+  line-height: 26px;
+  margin-bottom: 6px;
   letter-spacing: -0.01em;
   text-transform: capitalize;
   color: #202020;
-  /*height: 65px;*/
-  margin-block-start: 10px;
-  margin-block-end: 10px;
-  min-height: 64px;
+  /* height: 65px; */
+  margin-block-start: 5px;
+  margin-block-end: 3px;
+  min-height: 52px;
 }
 
 .rbfw_rent_list_grid_row {
@@ -6332,14 +6334,15 @@ ul, li {
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
   flex-direction: column;
-  padding-top: 3px;
+  /*padding-top: 3px;*/
   margin-bottom: 30px;
   margin-block-end: 20px;
   margin-block-start: 5px;
   padding-inline-start: 10px;
+  font-size: 15px;
 }
 .bfw_rent_list_items {
-  padding-left: 20px;
+  padding-left: 2px;
   position: relative;
 }
 
@@ -6356,8 +6359,8 @@ ul, li {
   -webkit-transition: padding-left 0.3s;
   -o-transition: padding-left 0.3s;
   transition: padding-left 0.3s;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: 6px;
+  padding-bottom: 6px;
   z-index: 2;
   background: #f8748c;
   border-radius: 2px;

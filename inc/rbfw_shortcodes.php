@@ -80,6 +80,52 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $query = new WP_Query($args);
     $total_posts = $query->found_posts;
     $post_count = $query->post_count;
+
+    if(isset($_COOKIE['rbfw_rent_item_list_grid'])) {
+        $rbfw_rent_item_list_grid = $_COOKIE['rbfw_rent_item_list_grid'];
+//        error_log( print_r( ['$rbfw_rent_item_list_grid' => $rbfw_rent_item_list_grid], true ) );
+    }else{
+        $rbfw_rent_item_list_grid = '';
+    }
+
+    if( $rbfw_rent_item_list_grid === '' ){
+        if( $style == 'grid' ){
+            $image_holder = 'rbfw_rent_list_grid_view_top';
+            $rent_item_info = 'rbfw_inner_details';
+            $rent_item_list_info = 'rbfw_rent_list_info';
+            $is_display = 'none';
+            $style = 'grid';
+            $is_grid_selected = 'selected_list_grid';
+            $is_list_selected = '';
+        }else{
+            $image_holder = 'rbfw_rent_list_lists_images';
+            $rent_item_info = 'rbfw_rent_list_lists_info';
+            $rent_item_list_info = 'rbfw_rent_item_content_list_bottom';
+            $is_display = 'grid';
+            $style = 'list';
+            $is_grid_selected = '';
+            $is_list_selected = 'selected_list_grid';
+        }
+    }else{
+        if( $rbfw_rent_item_list_grid == 'rbfw_rent_item_grid' ){
+            $image_holder = 'rbfw_rent_list_grid_view_top';
+            $rent_item_info = 'rbfw_inner_details';
+            $rent_item_list_info = 'rbfw_rent_list_info';
+            $is_display = 'none';
+            $style = 'grid';
+            $is_grid_selected = 'selected_list_grid';
+            $is_list_selected = '';
+        }else{
+            $image_holder = 'rbfw_rent_list_lists_images';
+            $rent_item_info = 'rbfw_rent_list_lists_info';
+            $rent_item_list_info = 'rbfw_rent_item_content_list_bottom';
+            $is_display = 'grid';
+            $style = 'list';
+            $is_grid_selected = '';
+            $is_list_selected = 'selected_list_grid';
+        }
+    }
+
     ob_start();
 //echo '<pre>';print_r($query);echo '</pre>';
     $grid_class = 'rbfw-w-33';
@@ -95,8 +141,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             <span> <?php echo esc_attr( $shoe_result );?></span>
         </div>
         <div class="rbfw_rent_list_grid_icon_holder">
-            <div class="rbfw_rent_items_list_grid rbfw_rent_items_grid" id="rbfw_rent_items_grid">Grid</div>
-            <div class="rbfw_rent_items_list_grid rbfw_rent_items_list" id="rbfw_rent_items_list">List</div>
+            <div class="rbfw_rent_items_list_grid rbfw_rent_items_grid <?php echo esc_attr( $is_grid_selected )?>" id="rbfw_rent_items_grid">Grid</div>
+            <div class="rbfw_rent_items_list_grid rbfw_rent_items_list <?php echo esc_attr( $is_list_selected )?>" id="rbfw_rent_items_list">List</div>
         </div>
     </div>
     <div class="rbfw_rent_list_wrapper <?php echo $grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>" id="rbfw_rent_list_wrapper">
@@ -129,7 +175,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 //                $list=RBFW_Function::get_template_path('archive/list.php');
                 $list=RBFW_Function::get_template_path('archive/list_new.php');
 
-                if($style == 'grid'){		
+                if($style == 'grid'){
                     include($grid);
                 }
                 elseif($style == 'list'){

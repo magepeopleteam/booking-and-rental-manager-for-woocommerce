@@ -13,6 +13,7 @@ $hourly_rate_label = $rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basi
 $daily_rate_label = $rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily rate','booking-and-rental-manager-for-woocommerce'));
 $rbfw_enable_hourly_rate = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
 $rbfw_enable_daily_rate  = get_post_meta( get_the_id(), 'rbfw_enable_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_daily_rate', true ) : 'no';
+$post_content       = $the_content;
 
 if($rbfw_enable_hourly_rate == 'no'){
     $the_price_label = $daily_rate_label;
@@ -167,15 +168,16 @@ if( $rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_ren
 }else{
     $price_level = $prices_start_at;
 }
+
 ?>
 <div class="rbfw_rent_list_col   rbfw_grid_list_col_<?php echo $d; ?>">
-    <div class="rbfw_rent_list_inner_wrapper ">
-        <div class="rbfw_rent_list_grid_view_top">
+    <div class="rbfw_rent_list_inner_wrapper">
+        <div class="<?php echo esc_attr( $image_holder )?>">
             <a class="rbfw_rent_list_grid_view_top_img" href="<?php echo esc_url($post_link); ?>">
                 <img src="<?php echo esc_url($post_featured_img); ?>" alt="Catalog Image">
             </a>
         </div>
-        <div class="rbfw_inner_details">
+        <div class="<?php echo esc_attr( $rent_item_info )?>">
             <div class="rbfw_rent_list_content">
                 <a href="<?php echo esc_url($post_link); ?>"><h2 class="rbfw_rent_list_grid_title"> <?php echo esc_html($post_title); ?></h2></a>
                 <div class="rbfw_rent_list_grid_row">
@@ -184,7 +186,9 @@ if( $rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_ren
                 </div>
             </div>
 
-                <?php if ( $rbfw_feature_category ) :
+            <div class="rbfw_rent_item_description" id="rbfw_rent_item_description"><p class="rbfw_rent_item_description_text" style="display: <?php echo esc_attr( $is_display )?>"><?php echo esc_html( $post_content )?></p></div>
+
+            <?php if ( $rbfw_feature_category ) :
                     $n = 1;
                     foreach ( $rbfw_feature_category as $value ) :
                         $cat_title = $value['cat_title'];
@@ -192,7 +196,7 @@ if( $rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_ren
 
                         if($n == 1){
                             ?>
-                            <ul class=" rbfw_rent_list_info">
+                            <ul class="<?php echo esc_attr( $rent_item_list_info )?>">
                                 <?php
                                 if(!empty($cat_features)){
                                     $i = 1;
@@ -219,7 +223,7 @@ if( $rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_ren
                 endif;
                 ?>
 
-            <div class="bfw_rent_list_btn_holder">
+            <div class="rbfw_rent_list_btn_holder">
                 <a class="bfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url($post_link); ?>">
                 <span>
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
