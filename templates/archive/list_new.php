@@ -224,7 +224,7 @@ if( $rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_ren
             ?>
 
             <div class="rbfw_rent_list_btn_holder">
-                <a class="bfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url($post_link); ?>">
+                <a class="rbfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url($post_link); ?>">
                 <span>
                     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3.75 9H14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
