@@ -615,17 +615,30 @@ div.mp_right_section {
 }
 
 #rbfw_faq_accordion .rbfw_faq_header {
-  background: #f5f5f5;
+  background: transparent;
   color: #000;
-  border-color: #f5f5f5;
+  border-bottom:1px dotted #999;
   font-size: 16px;
   font-weight: 400;
   text-align: left;
+  margin-bottom: 10px;
+  padding:5px;
+
+}
+#rbfw_faq_accordion .rbfw_faq_header i{
+  margin-right: 15px;
+  color: var(--rbfw_muff_color3);
+}
+#rbfw_faq_accordion .rbfw_faq_header:hover {
+  cursor: pointer;
 }
 
 #rbfw_faq_accordion .rbfw_faq_content_wrapper {
   border-color: #f5f5f5;
+  display: none;
 }
+
+
 .rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_content_wrapper {
   background-color: rgb(255, 255, 255);
 }

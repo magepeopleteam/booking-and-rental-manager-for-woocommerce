@@ -708,10 +708,10 @@ function rbfw_get_faq_func($post_id){
         $rbfw_faq_content 	= array_column($rbfw_faq_arr, 'rbfw_faq_content');
         $count_faq_arr 		= count($rbfw_faq_arr);
         ?>
-         <div id="rbfw_faq_accordion">
+        <div id="rbfw_faq_accordion">
             <?php foreach ($rbfw_faq_arr as $faq) { ?>
                 <?php if (!empty($faq['rbfw_faq_title'])): ?>
-                    <h3 class="rbfw_faq_header"><?php echo esc_html($faq['rbfw_faq_title']); ?></h3>
+                    <h3 class="rbfw_faq_header"> <i class="fas fa-plus"></i><?php echo esc_html($faq['rbfw_faq_title']); ?></h3>
                 <?php endif; ?>
                 <div class="rbfw_faq_content_wrapper">
                     <div class="rbfw_faq_img">
@@ -736,10 +736,14 @@ function rbfw_get_faq_func($post_id){
             <?php } ?>
         </div>
         <script>
-            jQuery(document).ready(function(){
-                jQuery( "#rbfw_faq_accordion" ).accordion({
-                    heightStyle: "content",
-                    
+            jQuery(document).ready(function($){
+                $('#rbfw_faq_accordion .rbfw_faq_content_wrapper').first().slideDown();
+                 $('#rbfw_faq_accordion .rbfw_faq_header').first().find('i').removeClass('fa-plus').addClass('fa-minus');
+
+                $('.rbfw_faq_header').click(function(e){
+                    e.preventDefault();
+                    $(this).next('.rbfw_faq_content_wrapper').slideToggle();
+                    $(this).find('i').toggleClass('fa-plus fa-minus');
                 });
             });
         </script>
