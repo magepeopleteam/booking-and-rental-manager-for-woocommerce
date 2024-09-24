@@ -395,8 +395,8 @@ if($rbfw_enable_variations == 'yes'){
                                                                 <div class="title"><?php echo wc_price($service['price']) ?></div>
                                                                 <span class="day-time-wise"><?php echo ($service['service_price_type']=='day_wise')?esc_html__('Day Wise','booking-and-rental-manager-for-woocommerce'):esc_html__('One Time','booking-and-rental-manager-for-woocommerce') ?></span>
                                                             </td>
-                                                            <td class="rbfw_service_quantity" style="display: none;">
-                                                                <div class="rbfw_qty_input item_<?php echo $cat.$serkey ?>" >
+                                                            <td class="rbfw_service_quantity item_<?php echo $cat.$serkey ?>" style="display: none;">
+                                                                <div class="rbfw_qty_input" >
                                                                     <a class="rbfw_service_quantity_minus" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-minus"></i></a>
                                                                     <input type="number"  name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][quantity]" min="0" max="" value="1" class="rbfw_service_qty rbfw_service_info_stock" data-cat="service" data-price="20" data-item="<?php echo $cat.$serkey ?>" data-name="ddd" autocomplete="off">
                                                                     <a class="rbfw_service_quantity_plus" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-plus"></i></a>

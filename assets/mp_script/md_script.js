@@ -279,9 +279,8 @@ function rbfw_service_price_calculation(total_days){
         //alert(rbfw_enable_md_type_item_qty);
 
         if(rbfw_enable_md_type_item_qty=='yes'){
-            jQuery('.item_'+item_no).css( "display", "table" );
-            jQuery('.rbfw_service_quantity').removeAttr('style');
-            
+            // jQuery('.item_'+item_no).css( "display", "table" );
+            jQuery('.item_'+item_no).removeAttr('style');
         }
         if(service_price_type=='day_wise'){
             total +=  jQuery(this).data('price')*service_quantity*total_days;
