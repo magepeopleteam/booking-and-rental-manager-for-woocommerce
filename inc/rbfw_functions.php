@@ -3260,31 +3260,26 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
         }
 
 
-
-
-
         //echo $total_days;
         for ($i = 0; $i < $total_days; $i++) {
 
 
             $day = strtolower(date('D', strtotime("+$i day", strtotime($start_date))));
 
-            if ($i == ($total_days - 1)) {
-                if ($hours) {
-                    if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
-                        $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,$hours);
+            if (($i == ($total_days - 1)) && $hours) {
 
-                        if($sp_price!='not_found'){
-                            $duration_price = $sp_price + $duration_price;
-                            continue;
-                        }
+                if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
+                    $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,$hours);
+                    if($sp_price!='not_found'){
+                        $duration_price = $sp_price + $duration_price;
+                        continue;
                     }
+                }
 
-                    if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
-                        $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_hourly_rate', true) * $hours + $duration_price;
-                    } else {
+                if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
+                    $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_hourly_rate', true) * $hours + $duration_price;
+                } else {
                         $duration_price = ($rbfw_hourly_rate * $hours + $duration_price);
-                    }
                 }
             } else {
                 if($rbfw_enable_daily_rate=='no'){
@@ -3337,7 +3332,7 @@ function getAllDates($startingDate, $endingDate)
     return $datesArray;
 }
 
-function check_seasonal_price($Book_date,$rbfw_sp_prices,$hours='0',$rbfw_enable_daily_rate='')
+function check_seasonal_price($Book_date,$rbfw_sp_prices,$hours='0',$rbfw_enable_daily_rate='0')
 {
     foreach ($rbfw_sp_prices as $rbfw_sp_price) {
         $rbfw_sp_start_date = $rbfw_sp_price['rbfw_sp_start_date'];
