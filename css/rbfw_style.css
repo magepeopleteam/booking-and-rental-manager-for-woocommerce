@@ -81,7 +81,7 @@ RBFW Toggle Switch
 .switch {
   position: relative;
   display: inline-block;
-  width: 50px;
+  width: 44px;
   height: 22px;
   margin-bottom: 0 !important;
   margin-right: 10px;
@@ -108,14 +108,14 @@ RBFW Toggle Switch
 .slider:before {
   position: absolute;
   content: "";
-  height: 16px;
-  width: 16px;
-  left: 4px;
-  bottom: 4px;
+  height: 18px;
+  width: 18px;
+  left: 2px;
+  top: 2px;
   background-color: white;
   -webkit-transition: 0.4s;
   transition: 0.4s;
-  top: 3px;
+
 }
 
 input:checked + .slider {
@@ -123,9 +123,9 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+  -webkit-transform: translateX(22px);
+  -ms-transform: translateX(22px);
+  transform: translateX(22px);
 }
 
 .rbfw_donut_template input:checked + .slider {
@@ -186,10 +186,9 @@ CSS for Single Page Template
 }
 
 .rbfw-sub-heading {
-  font-size: 16px;
-  background: #f5f5f5;
-  padding: 10px;
-  border-radius: 5px;
+  font-size: 20px;
+  border-bottom:1px solid #999;
+  padding:10px 0px;
   margin-bottom: 10px;
   font-weight: 600;
 }
@@ -378,26 +377,13 @@ CSS for Single Page Template
   top: 50%;
   left: 2px;
   transform: translateY(-50%);
-  padding: 15px;
+  padding:13px 15px;
 }
 
 .rbfw-datetime .time i.fa-angle-down {
   position: absolute;
   top: 15px;
   right: 15px;
-}
-
-.rbfw-single-left-information-item ul li i {
-  font-size: 16px;
-  width: 20px;
-  height: 20px;
-  margin-top: 5px;
-  color:var(--rbfw_muff_color3);
-}
-
-.rbfw-single-left-information-item ul li span {
-  padding-left: 5px;
-  font-size: 16px;
 }
 
 .pricing-content .section-header {
@@ -571,7 +557,12 @@ div.mp_details_page {
   justify-content: space-between;
 }
 
-div.mp_left_section,
+div.mp_left_section {
+  background: #fff;
+  padding: 10px;
+  padding-top: 0;
+}
+
 div.mp_right_section {
   border: 1px solid #f5f5f5;
   padding: 10px;
@@ -594,7 +585,9 @@ div.mp_right_section {
   padding-left: 0;
   padding-right: 0;
 }
-
+.rbfw-tab-container section{
+  margin-bottom: 20px;
+}
 .rbfw-header-container {
   padding-top: 20px;
   padding-bottom: 20px;
@@ -622,17 +615,30 @@ div.mp_right_section {
 }
 
 #rbfw_faq_accordion .rbfw_faq_header {
-  background: #f5f5f5;
+  background: transparent;
   color: #000;
-  border-color: #f5f5f5;
+  border-bottom:1px dotted #999;
   font-size: 16px;
   font-weight: 400;
   text-align: left;
+  margin-bottom: 10px;
+  padding:5px;
+
+}
+#rbfw_faq_accordion .rbfw_faq_header i{
+  margin-right: 15px;
+  color: var(--rbfw_muff_color3);
+}
+#rbfw_faq_accordion .rbfw_faq_header:hover {
+  cursor: pointer;
 }
 
 #rbfw_faq_accordion .rbfw_faq_content_wrapper {
   border-color: #f5f5f5;
+  display: none;
 }
+
+
 .rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_content_wrapper {
   background-color: rgb(255, 255, 255);
 }
@@ -668,8 +674,6 @@ div.mp_right_section {
 
 .rbfw-related-products-wrapper {
   position: relative;
-  padding-top: 20px;
-  padding-bottom: 20px;
 }
 
 .rbfw-related-products-wrapper .owl-carousel .owl-nav {
@@ -718,7 +722,7 @@ div.mp_right_section {
   -webkit-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
   background-repeat: no-repeat;
-  background-color: #f5f5f5;
+  background-color: transparent;
 }
 
 .rbfw-related-product-thumb:hover {
@@ -919,6 +923,34 @@ div.superSlider .iconIndicator:hover {
     padding-left: 0;
     padding-top: 10px;
     padding-bottom: 10px;
+  }
+}
+ul.rbfw-feature-lists{
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+ul.rbfw-feature-lists li{
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  margin: 10px 0;
+}
+ul.rbfw-feature-lists li i{
+  font-size: 28px;
+  color:var(--rbfw_muff_color3);
+  margin-right: 16px;
+}
+
+@media (min-width:640px) {
+  ul.rbfw-feature-lists{
+    flex-direction: row;
+  }
+  ul.rbfw-feature-lists li{
+    width: 32%;
   }
 }
 
@@ -3112,7 +3144,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 .rbfw-related-product .owl-item .item {
   padding: 5px;
-  margin: 15px;
   border-radius: 0px;
   text-align: center;
   height: 365px;
@@ -3127,15 +3158,14 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 .owl-carousel .owl-item img {
   display: block;
-  width: 100%;
-  object-fit: cover;
-  width: 100%;
+  object-fit: contain;
   height: 200px;
+  object-position: top center;
 }
 
 .rbfw-related-product-inner {
-  box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.1);
-  padding: 5px;
+  box-shadow: 0 0 1px #333;
+  /* border: 1px solid rgba(0, 0, 0, 0.1); */
   display: flex;
   justify-content: space-between;
   flex-direction: column;
@@ -6442,4 +6472,13 @@ ul, li {
   .rbfw_rent_list_style_grid.rbfw-w-33 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
+}
+.available-stock{
+  display: none;
+  font-size: 12px;
+}
+
+.day-time-wise{
+  font-size: 12px;
+  color: var(--rbfw_muff_color3);
 }

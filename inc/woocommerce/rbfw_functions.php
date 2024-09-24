@@ -808,8 +808,8 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
                     foreach ($item_parent as $key1=>$item_child){
                         $rbfw_service_infos_order .='<tr><td>'.$item_child['name'].'</td><td>';
                         if($item_child['service_price_type']=='day_wise'){
-                            $rbfw_service_price =  (float)$rbfw_service_price+(float)$item_child['price']*(int)$item_child['quantity']*(int)$total_days;
-                            $rbfw_service_infos_order .= '('.wc_price($item_child['price']). 'x'. $item_child['quantity'] . 'x' .$total_days .'='.wc_price($item_child['price']*$item_child['quantity']*$total_days).')';
+                            $rbfw_service_price =  (float)$rbfw_service_price + (float)$item_child['price']*(int)$item_child['quantity']*(int)$total_days;
+                            $rbfw_service_infos_order .= '('.wc_price((float)$item_child['price']). 'x'. $item_child['quantity'] . 'x' .$total_days .'='.wc_price((float)$item_child['price']*(int)$item_child['quantity']*(int)$total_days).')';
                         }else{
                             $rbfw_service_infos_order .= '('.wc_price($item_child['price']). 'x'. $item_child['quantity'] .'='.wc_price((float)$item_child['price']*(int)$item_child['quantity']).')';
                         }
