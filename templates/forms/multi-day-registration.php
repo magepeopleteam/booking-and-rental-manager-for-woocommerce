@@ -387,7 +387,7 @@ if($rbfw_enable_variations == 'yes'){
                                                             <td>
                                                                 <div class="title">
                                                                     <?php echo $service['title'] ?></span>
-                                                                    <i  class="available-stock"><?php _e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="remaining_stock"></span></i></span>
+                                                                    <i  class="available-stock item_<?php echo $cat.$serkey ?>"><?php _e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="remaining_stock"></span></i></span>
                                                                 </div>
                                                             </td>
                                                            
