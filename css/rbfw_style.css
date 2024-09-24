@@ -3160,7 +3160,8 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw-related-product-inner {
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 1px #333;
+  /* border: 1px solid rgba(0, 0, 0, 0.1); */
   display: flex;
   justify-content: space-between;
   flex-direction: column;
