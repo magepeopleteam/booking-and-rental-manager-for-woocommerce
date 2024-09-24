@@ -59,14 +59,13 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
             }
 
+
+
             $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
             $total_days = $diff->days;
             $total_hours = $diff->h;
-
             $countable_time = 'yes';
-            if($total_days || $total_hours){
-                $countable_time = 'yes';
-            }else{
+            if(!($total_days || $total_hours)){
                 $total_days = 1;
             }
 
@@ -102,7 +101,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
 
             $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime);
-            $duration_price = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$star_time,$end_time)*$item_quantity;
+            $duration_price = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$star_time,$end_time)*$item_quantity;
 
             $rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
@@ -116,7 +115,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 }
             }
 
-            $sub_total_price = $duration_price + $service_cost+$rbfw_service_price;
+            $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_service_price;
             $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
 
             $discount_amount = 0;
@@ -150,6 +149,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $days    = 0;
             $hours    = 0;
             $duration = '';
+
             if ( $diff ) {
                 $days    = $diff->days;
                 $hours   += $diff->h;

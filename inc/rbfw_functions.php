@@ -3225,7 +3225,7 @@ function rbfw_off_dates($post_id){
     return json_encode($off_dates);
 }
 
-function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropoff_datetime=0,$start_date,$star_time,$end_time)
+function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropoff_datetime=0,$start_date='',$end_date='', $star_time='',$end_time='')
 {
 
     $Book_dates_array = getAllDates($pickup_datetime, $dropoff_datetime);
@@ -3233,55 +3233,156 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
     if (is_plugin_active('booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php')){
         $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true );
     }
+    $rbfw_enable_daily_rate = get_post_meta($post_id, 'rbfw_enable_daily_rate', true);
+    $rbfw_enable_hourly_rate = get_post_meta($post_id, 'rbfw_enable_hourly_rate', true);
 
     $rbfw_hourly_rate = get_post_meta($post_id, 'rbfw_hourly_rate', true);
     $rbfw_daily_rate = get_post_meta($post_id, 'rbfw_daily_rate', true);
+
     $duration_price = 0;
     $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
+
+
     //echo $diff->days;exit;
     if ($diff) {
-        $days = $diff->days;
+        $total_days = $diff->days;
         $hours = $diff->h;
         $minutes = $diff->i;
         if ($minutes) {
             $hours = $hours + 1;
         }
         if ($hours) {
-            $days = $days + 1;
+            $total_days = $total_days + 1;
         }
-        if ($minutes && ($days==0)) {
-            $days = 1;
+        if ($minutes && ($total_days==0)) {
+            $total_days = 1;
         }
-        if(!($days || $hours)){
-            $days = 1;
+        if(!($total_days || $hours)){
+            $total_days = 1;
         }
-        for ($i = 0; $i < $days; $i++) {
 
-            if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
-                $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices);
-                if($sp_price!='not_found'){
-                    $duration_price = $sp_price+$duration_price;
-                    continue;
-                }
-            }
+        //echo $total_days;
+        for ($i = 0; $i < $total_days; $i++) {
 
             $day = strtolower(date('D', strtotime("+$i day", strtotime($start_date))));
 
-            if (($star_time!=$end_time) && $i == ($days - 1)) {
-                if ($hours) {
-                    if (get_post_meta($post_id, 'rbfw_'.$day.'_daily_rate', true) == 'yes') {
+            if($rbfw_enable_daily_rate=='no' && $rbfw_enable_hourly_rate=='yes'){
+
+
+                if($i==0){
+
+                    if($total_days==1){
+                        $f_hours = $hours;
+                    }else{
+                        $first_diff = date_diff(new DateTime($pickup_datetime), new DateTime($start_date. ' ' . '24:00:00'));
+                        $f_hours = $first_diff->h;
+                    }
+
+                    if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
+                        $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,$f_hours);
+                        if($sp_price!='not_found'){
+                            $duration_price = $sp_price + $duration_price;
+                            continue;
+                        }
+                    }
+
+                    if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
+                        $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_hourly_rate', true) * $f_hours + $duration_price;
+                    } else {
+                        $duration_price = ($rbfw_hourly_rate * $f_hours + $duration_price);
+                    }
+
+                }elseif($i == ($total_days - 1)) {
+
+                    $last_diff = date_diff(new DateTime($end_date. ' ' . '00:00:00'), new DateTime($dropoff_datetime));
+                    $l_hours = $last_diff->h;
+
+                    if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
+                        $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,$l_hours);
+                        if($sp_price!='not_found'){
+                            $duration_price = $sp_price + $duration_price;
+                            continue;
+                        }
+                    }
+
+                    if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
+                        $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_hourly_rate', true) * $l_hours + $duration_price;
+                    } else {
+                        $duration_price = ($rbfw_hourly_rate * $l_hours + $duration_price);
+                    }
+                } else {
+                    if($rbfw_enable_daily_rate=='no'){
+                        if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
+                            $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,'0',$rbfw_enable_daily_rate );
+                            if($sp_price!='not_found'){
+                                $duration_price = $sp_price + $duration_price;
+                                continue;
+                            }
+                        }
+                        if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
+                            $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_hourly_rate', true) * 24 + $duration_price;
+                        } else {
+                            $duration_price = $rbfw_hourly_rate*24 + $duration_price;
+                        }
+                    }
+                }
+
+
+            }else{
+
+                if (($i == ($total_days - 1)) && $hours) {
+
+                    if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
+                        $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,$hours);
+                        if($sp_price!='not_found'){
+                            $duration_price = $sp_price + $duration_price;
+                            continue;
+                        }
+                    }
+
+                    if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
                         $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_hourly_rate', true) * $hours + $duration_price;
                     } else {
                         $duration_price = ($rbfw_hourly_rate * $hours + $duration_price);
                     }
-                }
-            } else {
-                if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
-                    $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_daily_rate', true) + $duration_price;
                 } else {
-                    $duration_price = $rbfw_daily_rate + $duration_price;
+                    if($rbfw_enable_daily_rate=='no'){
+                        if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
+                            $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,'0',$rbfw_enable_daily_rate );
+                            if($sp_price!='not_found'){
+                                $duration_price = $sp_price + $duration_price;
+                                continue;
+                            }
+                        }
+                        if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
+                            $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_hourly_rate', true) * 24 + $duration_price;
+                        } else {
+                            $duration_price = $rbfw_hourly_rate*24 + $duration_price;
+                        }
+
+                    }else{
+                        if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
+                            $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices);
+                            if($sp_price!='not_found'){
+                                $duration_price = $sp_price + $duration_price;
+                                continue;
+                            }
+                        }
+                        if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
+                            $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_daily_rate', true) + $duration_price;
+                        } else {
+                            $duration_price = $rbfw_daily_rate + $duration_price;
+                        }
+                    }
                 }
+
             }
+
+
+
+
+
+
         }
     }
     return $duration_price;
@@ -3302,25 +3403,24 @@ function getAllDates($startingDate, $endingDate)
     return $datesArray;
 }
 
-function check_seasonal_price($Book_date,$rbfw_sp_prices)
+function check_seasonal_price($Book_date,$rbfw_sp_prices,$hours='0',$rbfw_enable_daily_rate='0')
 {
-    //rbfw_sp_start_date
-    //rbfw_sp_end_date
-    //rbfw_sp_price_h
-    //rbfw_sp_price_d
-
     foreach ($rbfw_sp_prices as $rbfw_sp_price) {
-
         $rbfw_sp_start_date = $rbfw_sp_price['rbfw_sp_start_date'];
         $rbfw_sp_end_date = $rbfw_sp_price['rbfw_sp_end_date'];
-
-        //echo $Book_date,' ';
-
-
         $sp_dates_array = getAllDates($rbfw_sp_start_date, $rbfw_sp_end_date);
-
         if (in_array($Book_date, $sp_dates_array)) {
-            return $rbfw_sp_price['rbfw_sp_price_d'];
+            if($hours){
+                return $rbfw_sp_price['rbfw_sp_price_h'] * $hours;
+            }else{
+                if($rbfw_enable_daily_rate=='no'){
+                    return $rbfw_sp_price['rbfw_sp_price_h'] * 24;
+                }else{
+                    return $rbfw_sp_price['rbfw_sp_price_d'];
+                }
+
+            }
+
         } else {
             return 'not_found';
         }
