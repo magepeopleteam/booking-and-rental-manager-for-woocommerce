@@ -937,7 +937,7 @@ ul.rbfw-feature-lists li{
   display: flex;
   align-items: center;
   justify-content: start;
-  margin: 15px 0;
+  margin: 10px 0;
 }
 ul.rbfw-feature-lists li i{
   font-size: 28px;
