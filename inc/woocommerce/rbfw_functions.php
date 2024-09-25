@@ -286,7 +286,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
 
 
-        $base_price = rbfw_price_calculation($rbfw_id, $start_datetime, $end_datetime, $start_date);
+        //$base_price = rbfw_price_calculation($rbfw_id, $start_datetime, $end_datetime, $start_date);
+        $base_price = rbfw_md_duration_price_calculation($rbfw_id,$start_datetime,$end_datetime,$start_date,$end_date,$start_time,$end_time);
         $base_price = $base_price * $rbfw_item_quantity;
         // $total_price = apply_filters('rbfw_cart_base_price', $base_price);
 
@@ -558,8 +559,10 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
             endforeach;
         endif;
 
+        $resort_service_arr = [];
+
         if ( ! empty( $rbfw_service_info ) ):
-            $resort_service_arr = [];
+
             foreach ($rbfw_service_info as $key => $value):
                 $service_name = $key; //service name
                 if(array_key_exists($service_name, $extra_services)){ // if service name exist in array

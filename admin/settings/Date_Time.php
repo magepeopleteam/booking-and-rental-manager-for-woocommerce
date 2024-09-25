@@ -144,7 +144,7 @@
                         <?php if(get_the_title( $post_id ) == 'Auto Draft'){ ?>
 							<option selected value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
 						<?php }else{ ?>
-                            <option <?php echo (in_array(date('h:i A', strtotime($value)),$rdfw_available_time))?'selected':'' ?> value="<?php echo date('h:i A', strtotime($value)); ?>"> <?php echo $key; ?> </option>
+                            <option <?php echo (in_array(date('H:i A', strtotime($value)),$rdfw_available_time))?'selected':'' ?> value="<?php echo date('H:i A', strtotime($value)); ?>"> <?php echo $key; ?> </option>
                         <?php } ?>
                         <?php endforeach; ?>
 					</select>
