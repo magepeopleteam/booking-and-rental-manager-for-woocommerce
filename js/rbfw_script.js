@@ -296,7 +296,7 @@
             var tomorrowFormatted = flatpickr.formatDate(tomorrow, "m-d-Y");
 
             // Initialize Flatpickr with range mode, showing 2 months, blocking previous days, and defaulting to today & tomorrow
-            var calendar = flatpickr("#pickup-date", {
+            var calendar = flatpickr("#rbfw_rent_item_search_pickup_date", {
                 dateFormat: "m-d-Y",
                 defaultDate: [todayFormatted, tomorrowFormatted], // Preselect today and tomorrow
                 minDate: "today", // Block previous days
