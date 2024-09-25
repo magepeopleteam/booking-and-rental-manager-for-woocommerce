@@ -380,7 +380,7 @@ function rbfw_rent_search_shortcode( $attr ){
                             <div class="rbfw_rent_item_search-item_date">
                                 <div class="rbfw_rent_item_date_picker">
                                     <label for="rbfw_rent_item_search_pickup_date"><?php rbfw_string('rbfw_text_pickup_date',__('Pickup Date','booking-and-rental-manager-for-woocommerce')); ?></label>
-                                    <div class="date-picker-wrapper">
+                                    <div class="rbfw_rent_item_search_date_picker_wrapper">
                                         <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>">
                                         <i class="fa fa-calendar" id="rbfw_rent_item_search_calendar_icon"></i>
                                     </div>
