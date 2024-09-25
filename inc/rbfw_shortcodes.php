@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_shortcode('rent-list', 'rbfw_rent_list_shortcode_func');
 function rbfw_rent_list_shortcode_func($atts = null) {
 
-
     $attributes = shortcode_atts( array(
         'style' => 'grid',
         'show'  => -1,
@@ -322,3 +321,92 @@ function rbfw_rent_search_shortcode_func() {
     </div>
     <?php
 }
+
+add_shortcode('rbfw_rent_search', 'rbfw_rent_search_shortcode' );
+//[rbfw_search] bike_car_sd, appointment, bike_car_md, equipment, dress, resort, others
+function rbfw_rent_search_shortcode( $attr ){
+    $search_page_id = rbfw_get_option('rental-product','rbfw_basic_gen_settings');
+    $search_page_id = rbfw_get_option('rental-product','rbfw_basic_gen_settings');
+    $search_page_link = get_page_link($search_page_id);
+    $location = !empty($_GET['rbfw_search_location']) ? strip_tags($_GET['rbfw_search_location']) : '';
+    $type = !empty($_GET['rbfw_search_type']) ? strip_tags($_GET['rbfw_search_type']) : '';
+    $pickup_date = !empty($_GET['rbfw-pickup-date']) ? strip_tags($_GET['rbfw-pickup-date']) : '';
+
+    $location_arr = rbfw_get_location_arr();
+    $all_types = array(
+            'bike_car_sd'   => 'Bike Car SD',
+            'appointment'   => 'Appointment',
+            'bike_car_md'   => 'Bike Car MD',
+            'equipment'     => 'Equipment',
+            'dress'         => 'Dress',
+            'resort'        => 'Resort',
+            'others'        => 'Others',
+    );
+
+    ob_start();
+    ?>
+
+    <section class="rbfw_rent_item_search_elementor_section">
+        <div class="rbfw_rent_item_search_elementor_container">
+            <form class="rbfw_search_form_new" action="<?php echo esc_url($search_page_link); ?>" method="GET">
+                <div class="rbfw_rent_item_search_container">
+                    <div class="rbfwRentItemSearchTitleHolder">
+                        <div class="rbfw_rent_item_Search_tiitle_text">
+                            <div class="rbfw_rent_item_header"><?php rbfw_string('rbfw_text_quick_search',__('Quick search','booking-and-rental-manager-for-woocommerce')); ?></div>
+                        </div>
+                    </div>
+                    <div class="rbfw_rent_item_searchContentHolder">
+                        <div class="rbfw_rent_item_searchTypeLocationHolder">
+                            <div class="rbfw_rent_item_search_item">
+                                <label for="rbfw_rent_item_search_type"><?php rbfw_string('rbfw_text_type',__('Type','booking-and-rental-manager-for-woocommerce')); ?></label>
+                                <select class="rbfw_rent_item_search_type_location" name="rbfw_search_type" id="rbfw_rent_item_search_type">
+                                    <option value="all_type"><?php rbfw_string('rbfw_text_type',__('All Types','booking-and-rental-manager-for-woocommerce')); ?></option>
+                                    <?php foreach ( $all_types as $key => $value ) { ?>
+                                        <option value="<?php echo esc_attr($key); ?>" <?php if($type == $key){ echo 'selected'; }?>> <?php echo esc_html($value); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="rbfw_rent_item_search_item">
+                                <label for="rbfw_rent_item_search_location"><?php rbfw_string('rbfw_text_pickup_location',__('Pickup Location','booking-and-rental-manager-for-woocommerce')); ?></label>
+                                <select class="rbfw_rent_item_search_type_location" name="rbfw_search_location" id="rbfw_rent_item_search_location">
+    <!--                                <option value="all_location">All Locations</option>-->
+                                    <?php foreach ( $location_arr as $key => $value ) { ?>
+                                        <option value="<?php echo esc_attr($key); ?>" <?php if($location == $key){ echo 'selected'; }?>><?php echo esc_html($value); ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="rbfw_rent_item_search_dateButtonHolder">
+                            <div class="rbfw_rent_item_search-item_date">
+                                <div class="rbfw_rent_item_date_picker">
+                                    <label for="rbfw_rent_item_search_pickup_date"><?php rbfw_string('rbfw_text_pickup_date',__('Pickup Date','booking-and-rental-manager-for-woocommerce')); ?></label>
+                                    <div class="date-picker-wrapper">
+                                        <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>">
+                                        <i class="fa fa-calendar" id="rbfw_rent_item_search_calendar_icon"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Search Button -->
+                            <div class="rbfw_rent_item_search_button_holder">
+                                <div class="rbfw_rent_item_search_button">
+                                    <button type="submit" class="rbfw_rent_item_search_submit">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </section>
+<?php
+    $search_content = ob_get_clean();
+
+    return $search_content;
+//    ob_get_clean(); }
+}
+
+?>

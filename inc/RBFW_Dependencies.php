@@ -167,13 +167,19 @@
 				wp_enqueue_script('jquery-ui-accordion');
 				wp_enqueue_style('dashicons');
 				wp_enqueue_style('rbfw-jquery-ui-style', plugin_dir_url(__DIR__) . 'css/jquery-ui.css', array());
-			
+
 
 				wp_localize_script( 'rbfw_custom_script', 'rbfw_ajaxurl', array('rbfw_ajaxurl' => admin_url('admin-ajax.php'), 'view_more_feature_btn_text' => $view_more_feature_btn_text, 'hide_more_feature_btn_text' => $hide_more_feature_btn_text, 'view_more_offers_btn_text' => $view_more_offers_btn_text, 'hide_more_offers_btn_text' => $hide_more_offers_btn_text));
 				wp_localize_script('jquery', 'rbfw_ajax', array('rbfw_ajaxurl' => admin_url('admin-ajax.php')));
 				//font awesome
 				wp_enqueue_style('fontawesome.v6',  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
-				do_action('rbfw_frontend_enqueue_scripts');
+
+                wp_enqueue_style( 'flatpickr-css', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css', array(), null );
+                wp_enqueue_script( 'flatpickr-js', 'https://cdn.jsdelivr.net/npm/flatpickr', array('jquery'), null, true );
+                wp_enqueue_script( 'my-plugin-flatpickr-init', plugin_dir_url(__FILE__) . 'js/flatpickr-init.js', array('flatpickr-js'), null, true );
+
+
+                do_action('rbfw_frontend_enqueue_scripts');
 				
 			}			
 		}

@@ -163,3 +163,226 @@ p{
 }
 
 
+/*Search Short Code*/
+
+
+.rbfw_rent_item_search_elementor_section .rbfw_rent_item_search_elementor_container {
+    display: flex;
+    margin-right: auto;
+    margin-left: auto;
+    position: relative;
+}
+
+
+.rbfw_rent_item_search_container {
+    display: flex;
+    gap: 20px;
+    position: relative;
+    padding: 55px 35px 55px 40px;
+    z-index: 2;
+    box-shadow: 0 5px 35.2px 4.8px rgba(0, 0, 0, 0.08);
+    background-color: #F8F8F8;
+    border-bottom: solid 1px #666666;
+    overflow: hidden;
+    max-width: 100%;
+    margin: auto;
+}
+.rbfw_search_form_new{
+    margin: auto;
+}
+.rbfwRentItemSearchTitleHolder{
+    display: flex;
+    position: relative;
+    width: 130px;
+}
+.rbfw_rent_item_searchContentHolder{
+    display: flex;
+    width: calc( 100% - 130px );
+    gap: 30px;
+}
+.rbfw_rent_item_searchTypeLocationHolder{
+    display: flex;
+    width: 50%;
+    gap: 15px;
+}
+.rbfw_rent_item_search_dateButtonHolder{
+    display: flex;
+    width: 50%;
+    gap: 30px;
+}
+
+.c-filter__field--header {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    margin-right: 65px;
+    white-space: nowrap;
+}
+
+.rbfw_rent_item_SearchTitl_text {
+    flex: 1 1 33%;
+    position: relative;
+    margin-right: 40px;
+    /*margin-top: 15px;*/
+}
+
+.rbfw_rent_item_header {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.6px;
+    color: #333333;
+    text-transform: uppercase;
+    white-space: normal;
+    word-wrap: break-word;
+    width: 100px;
+    padding-left: 10px;
+}
+
+.rbfw_rent_item_search_type_location{
+    margin: 0;
+    height: auto;
+    line-height: 1.2;
+    border: none;
+    width: 100%;
+    font-size: 15px;
+    border-radius: 0;
+    background-color: #f6f6f6f6;
+    cursor: pointer;
+    border-bottom: solid 1px #dddddd;
+}
+
+.rbfw_rent_item_search_item {
+    /*flex: 1;*/
+    /*min-width: 200px;*/
+    display: flex;
+    flex-direction: column;
+}
+#rbfw_rent_item_search_pickup_date{
+    border-color: unset;
+    padding: 7px 0px 0px 0px;
+    border-width: unset;
+    border-style: unset;
+    background-color: unset;
+    color: #666666;
+    font-size: 15px;
+}
+
+label {
+    font-size: 16px;
+    padding-top: 8px;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+    padding-left: 12px;
+}
+
+select, input[type="date"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #333;
+    width: 100%;
+}
+
+.rbfw_rent_item_search_button_holder {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+button {
+    padding: 18px 10px;
+    background-color: #e3b71e;
+    /* margin-top: 9px; */
+    border: none;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 21px;
+    display: flex;
+    align-items: center;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button i {
+    padding-left: 12px;
+    margin-right: 8px;
+}
+
+.date-picker-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.rbfw_rent_item_date_picker {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    position: relative;
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 700;
+    color: #666666;
+    text-transform: uppercase;
+    padding-bottom: 15px;
+}
+
+.c-filter__title {
+    position: relative;
+    font-size: 12px;
+    line-height: 1;
+    font-weight: 700;
+    color: #666666;
+    text-transform: uppercase;
+}
+
+.date-picker-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    /* background-color: #ffffff; */
+    padding: 7px;
+    border-bottom: solid 1px #dddddd;
+    color: #666666;
+    font-size: 15px;
+    min-width: 205px;
+}
+
+.date-picker-wrapper i {
+    position: absolute;
+    margin-top: 4px;
+    right: 10px;
+    font-size: 18px;
+    color: #007bff;
+    cursor: pointer;
+}
+
+#calendar-icon {
+    cursor: pointer;
+}
+
+
+@media (max-width: 900px) {
+    .rbfw_rent_searchTitleHolder {
+        width: 100%;
+    }
+
+    .rbfw_rent_item_searchContentHolder {
+        width: 100%;
+    }
+}

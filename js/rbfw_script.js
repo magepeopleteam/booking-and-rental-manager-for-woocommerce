@@ -285,6 +285,42 @@
 
         });
 
+        function rbfw_pick_date_from_flatpicker(){
+
+            var today = new Date();
+            var tomorrow = new Date();
+            tomorrow.setDate(today.getDate() + 1); // Add 1 day to get tomorrow
+
+            // Format the dates as "m-d-Y"
+            var todayFormatted = flatpickr.formatDate(today, "m-d-Y");
+            var tomorrowFormatted = flatpickr.formatDate(tomorrow, "m-d-Y");
+
+            // Initialize Flatpickr with range mode, showing 2 months, blocking previous days, and defaulting to today & tomorrow
+            var calendar = flatpickr("#pickup-date", {
+                dateFormat: "m-d-Y",
+                defaultDate: [todayFormatted, tomorrowFormatted], // Preselect today and tomorrow
+                minDate: "today", // Block previous days
+                mode: "range", // Allow date range picking (Pickup Date to Return Date)
+                showMonths: 2, // Show current and next month
+                onChange: function(selectedDates, dateStr, instance) {
+                    // Update the div text with the selected date range
+                    if (selectedDates.length === 2) {
+                        var startDate = flatpickr.formatDate(selectedDates[0], "m-d-Y");
+                        var endDate = flatpickr.formatDate(selectedDates[1], "m-d-Y");
+                        $("#rbfw_rent_item_search_pickup_date").val(startDate + " — " + endDate); // Set the div text to selected range
+                    }
+                }
+            });
+
+            // Open the calendar when the calendar icon is clicked
+            $('#rbfw_rent_item_search_calendar_icon').on('click', function() {
+                calendar.open(); // Trigger the calendar to open
+            });
+
+        }
+        rbfw_pick_date_from_flatpicker();
+
+
     });
 })(jQuery)
 
