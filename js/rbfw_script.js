@@ -287,27 +287,24 @@
 
         function rbfw_pick_date_from_flatpicker(){
 
-            var today = new Date();
-            var tomorrow = new Date();
+            let today = new Date();
+            let tomorrow = new Date();
             tomorrow.setDate(today.getDate() + 1); // Add 1 day to get tomorrow
 
             // Format the dates as "m-d-Y"
-            var todayFormatted = flatpickr.formatDate(today, "m-d-Y");
-            var tomorrowFormatted = flatpickr.formatDate(tomorrow, "m-d-Y");
+            let todayFormatted = flatpickr.formatDate(today, "d-m-Y");
 
             // Initialize Flatpickr with range mode, showing 2 months, blocking previous days, and defaulting to today & tomorrow
-            var calendar = flatpickr("#rbfw_rent_item_search_pickup_date", {
-                dateFormat: "m-d-Y",
-                defaultDate: [todayFormatted, tomorrowFormatted], // Preselect today and tomorrow
-                minDate: "today", // Block previous days
-                mode: "range", // Allow date range picking (Pickup Date to Return Date)
-                showMonths: 2, // Show current and next month
+            let calendar = flatpickr("#rbfw_rent_item_search_calendar_icon", {
+                dateFormat: "d-m-Y",  // Set the format to 'Y-m-d'
+                defaultDate: todayFormatted,  // Preselect today
+                minDate: "today",  // Block previous days
+                showMonths: 1,  // Show current and next month
                 onChange: function(selectedDates, dateStr, instance) {
-                    // Update the div text with the selected date range
-                    if (selectedDates.length === 2) {
-                        var startDate = flatpickr.formatDate(selectedDates[0], "m-d-Y");
-                        var endDate = flatpickr.formatDate(selectedDates[1], "m-d-Y");
-                        $("#rbfw_rent_item_search_pickup_date").val(startDate + " — " + endDate); // Set the div text to selected range
+                    // Update the input field with the selected single date
+                    if (selectedDates.length === 1) {
+                        let selectedDate = flatpickr.formatDate(selectedDates[0], "d-m-Y");
+                        $("#rbfw_rent_item_search_pickup_date").val( selectedDate );  // Set the input value to the selected date
                     }
                 }
             });
