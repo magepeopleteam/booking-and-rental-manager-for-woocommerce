@@ -1659,7 +1659,8 @@ table.rbfw_room_cart_table th span {
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_col {
-box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);*/
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     text-align: left;
     vertical-align: top;
     margin-bottom: 20px;
@@ -1768,7 +1769,7 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_content {
-  padding: 20px 20px 50px 20px;
+  padding: 5px 10px;
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_footer {
@@ -1974,7 +1975,7 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_content {
-  padding: 15px;
+  padding: 5px 15px;
 }
 
 .rbfw_rent_list_description {
@@ -2009,12 +2010,16 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
   margin-right: 0;
   color: var(--rbfw_rent_list_color1);
 }
+.bfw_rent_list_btn_holder{
+  padding-bottom: 5px;
+}
 
 @media only screen and (min-width: 792px) {
 
     .rbfw_rent_list_style_grid{
         display: grid;
-        gap:10px;
+        /*gap:10px;*/
+        gap:30px;
     }
 
     .rbfw_rent_list_style_grid.rbfw-w-50 {
@@ -2036,7 +2041,6 @@ box-shadow: 0px 3px 30px 0px rgba(0, 0, 0, 0.1);
         min-width: 30%;
     }
     .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper .rbfw_rent_list_content {
-        width: 70;
         max-width: 70%;
         min-width: 70%;
     }
@@ -6245,6 +6249,230 @@ body.single-rbfw_item div.ast-container {
   font-size: 12px;
 }
 
+
+/*New Css*/
+
+a{
+  text-decoration: none;
+}
+a:hover{
+  text-decoration: underline;
+}
+ul, li {
+  list-style-type: none;
+}
+.rbfw_rent_list_col {
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.rbfw_rent_list_inner_wrapper{
+  background-color: #f1f1e5;
+}
+
+.rbfw_rent_list_grid_view_top {
+  position: relative;
+  width: 100%;
+  /*max-height: 280px;*/
+  max-width: unset !important;
+  /*max-height: 280px;*/
+  z-index: 1;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+}
+
+.rbfw_rent_list_grid_view_top_img {
+  display: block;
+  width: 100%;
+  height: 100%; /* Ensure the anchor takes full width and height of parent */
+}
+
+.rbfw_rent_list_grid_view_top_img img {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  /*max-height:100%;*/
+  min-height: 100%;
+}
+.rbfw_rent_list_grid_view_top_img:hover {
+  transform: scaleX(-1);
+}
+
+.rbfw_inner_details{
+  padding: 4px 20px 10px 20px;
+}
+.rbfw_rent_list_grid_title {
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 26px;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+  text-transform: capitalize;
+  color: #202020;
+  /* height: 65px; */
+  margin-block-start: 5px;
+  margin-block-end: 3px;
+  min-height: 52px;
+}
+
+.rbfw_rent_list_grid_row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: grid;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #d9d9d9;
+  gap: 1px;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+.rbfw_rent_list_row_price_level {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 26px;
+  color: #515151;
+  letter-spacing: -0.01em;
+  max-width: 130px;
+}
+.rbfw_rent_list_row_price {
+  font-weight: 500;
+  text-align: right;
+  font-size: 28px;
+  line-height: 35px;
+  text-transform: capitalize;
+  color: #de0a89;
+}
+
+.rbfw_rent_list_info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  /*padding-top: 3px;*/
+  margin-bottom: 30px;
+  margin-block-end: 20px;
+  margin-block-start: 5px;
+  padding-inline-start: 10px;
+  font-size: 15px;
+}
+.bfw_rent_list_items {
+  padding-left: 2px;
+  position: relative;
+}
+
+.rbfw_rent_list_btn {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  max-width: 125px;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  padding-left: 50px;
+  -webkit-transition: padding-left 0.3s;
+  -o-transition: padding-left 0.3s;
+  transition: padding-left 0.3s;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  z-index: 2;
+  background: #f8748c;
+  border-radius: 2px;
+}
+
+.rbfw_rent_list_btn span:first-child {
+  position: absolute;
+  height: 63px;
+  width: 60px;
+  min-width: 60px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  overflow: hidden;
+  -webkit-transition: width 0.3s;
+  -o-transition: width 0.3s;
+  transition: width 0.3s;
+  left: 0;
+  z-index: 1;
+}
+
+.rbfw_pagination{
+  display: flex;
+  justify-content: center; /* Centers the pagination links */
+  margin: 20px 0;
+}
+.rbfw_pagination .page-numbers {
+  background-color: #fff;
+  border-top: 1px solid #ededdb;
+  border-right: 1px solid #ededdb;
+  border-bottom: 1px solid #ededdb;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 58px;
+  height: 58px;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 30px;
+  letter-spacing: 0.01em;
+  color: #515151;
+  -webkit-transition: color 0.3s, border 0.3s, background;
+}
+
+.rbfw_pagination .page-numbers:hover {
+  box-shadow: rgba(0, 0, 0, .16) 0px 1px 4px;
+}
+
+.rbfw_pagination .current {
+  background-color: #b7b589;
+  color: #ffffff;
+}
+
+@media only screen and (max-width: 2420px) {
+  .rbfw_rent_list_style_grid {
+    gap: 30px;
+  }
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media only screen and (max-width: 1450px) {
+  .rbfw_rent_list_style_grid.rbfw-w-33 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media only screen and (max-width: 850px) {
+  .rbfw_rent_list_style_grid.rbfw-w-33 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
 .available-stock{
   display: none;
   font-size: 12px;

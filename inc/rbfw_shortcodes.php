@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_shortcode('rent-list', 'rbfw_rent_list_shortcode_func');
 function rbfw_rent_list_shortcode_func($atts = null) {
 
-
     $attributes = shortcode_atts( array(
         'style' => 'grid',
         'show'  => -1,
@@ -38,6 +37,37 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $category  = $cat_ids;
     }
 
+    $location = !empty( $_GET['rbfw_search_location'] ) ? strip_tags( $_GET['rbfw_search_location'] ) : $location;
+    if( $category ){
+        $category = !empty( $_GET['rbfw_search_type'] ) ? strip_tags( trim( $_GET['rbfw_search_type'] ) ) : $category ;
+    }else{
+        $search_category = !empty( $_GET['rbfw_search_type'] ) ? strip_tags( trim( $_GET['rbfw_search_type'] ) ) : '' ;
+    }
+
+    $pickup_date = !empty( $_GET['rbfw-pickup-date'] ) ? strip_tags( trim( $_GET['rbfw-pickup-date'] ) ) : '';
+    if( $pickup_date !== 'Pickup date' && !empty( $pickup_date )) {
+        $date = DateTime::createFromFormat('F j, Y', $pickup_date );
+        $pickup_date = $date->format('d-m-Y');
+    }
+
+    if( !empty( $pickup_date ) && $pickup_date !== 'Pickup date' ){
+        $date_time = new DateTime( $pickup_date );
+        $day_of_week = strtolower( $date_time->format('l' ) );
+        $date_range_query = array(
+            'relation' => 'OR', // Either condition can be true
+            array(
+                'key'     => 'rbfw_off_days',
+                'compare' => 'NOT EXISTS', // Meta key doesn't exist
+            ),
+            array(
+                'key'     => 'rbfw_off_days',
+                'value'   => $day_of_week,
+                'compare' => 'NOT LIKE', // Meta key exists, but doesn't contain the day of the week
+            ),
+        );
+    } else {
+        $date_range_query = '';
+    }
 
     $rent_type = !empty($type) ? array(
         'key' => 'rbfw_item_type',
@@ -50,36 +80,96 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'compare' => 'LIKE'
     ) : '';
 
-
+    $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
     $args = array(
         'post_type' => 'rbfw_item',
         'posts_per_page' => $show,
+        'paged' => $paged,
         'meta_key' => $meta_key,
         'orderby' => $orderby,
         'order' => $order,
         'meta_query' => array(
-            'relation' => 'OR',
+            'relation' => 'AND',
             $rent_type,
-            $location_query
+            $location_query,
+            $date_range_query,
         )
     );
 
 
 
-
-    if(!empty($category)):
-        $category = explode(',', $category);
-        foreach ($category as $cat){
-            $category_name=isset(get_term($cat)->name) ? get_term($cat)->name : '';
+    if( $category ){
+        if(!empty($category)):
+            $category = explode(',', $category);
+            foreach ($category as $cat){
+                $category_name=isset(get_term($cat)->name) ? get_term($cat)->name : '';
+                $args['meta_query'][] = array(
+                    'key' => 'rbfw_categories',
+                    'value' => $category_name,
+                    'compare' => 'LIKE'
+                );
+            }
+        endif;
+    }else{
+        if( !empty( $search_category ) ):
+            $search_category_name=$search_category;
             $args['meta_query'][] = array(
                 'key' => 'rbfw_categories',
-                'value' => $category_name,
+                'value' => $search_category_name,
                 'compare' => 'LIKE'
             );
-        }
-    endif;
+        endif;
+    }
+
+
 
     $query = new WP_Query($args);
+    $total_posts = $query->found_posts;
+    $post_count = $query->post_count;
+
+    if(isset($_COOKIE['rbfw_rent_item_list_grid'])) {
+        $rbfw_rent_item_list_grid = $_COOKIE['rbfw_rent_item_list_grid'];
+    }else{
+        $rbfw_rent_item_list_grid = '';
+    }
+
+    if( $rbfw_rent_item_list_grid === '' ){
+        if( $style == 'grid' ){
+            $image_holder = 'rbfw_rent_list_grid_view_top';
+            $rent_item_info = 'rbfw_inner_details';
+            $rent_item_list_info = 'rbfw_rent_list_info';
+            $is_display = 'none';
+            $style = 'grid';
+            $is_grid_selected = 'selected_list_grid';
+            $is_list_selected = '';
+        }else{
+            $image_holder = 'rbfw_rent_list_lists_images';
+            $rent_item_info = 'rbfw_rent_list_lists_info';
+            $rent_item_list_info = 'rbfw_rent_item_content_list_bottom';
+            $is_display = 'grid';
+            $style = 'list';
+            $is_grid_selected = '';
+            $is_list_selected = 'selected_list_grid';
+        }
+    }else{
+        if( $rbfw_rent_item_list_grid == 'rbfw_rent_item_grid' ){
+            $image_holder = 'rbfw_rent_list_grid_view_top';
+            $rent_item_info = 'rbfw_inner_details';
+            $rent_item_list_info = 'rbfw_rent_list_info';
+            $is_display = 'none';
+            $style = 'grid';
+            $is_grid_selected = 'selected_list_grid';
+            $is_list_selected = '';
+        }else{
+            $image_holder = 'rbfw_rent_list_lists_images';
+            $rent_item_info = 'rbfw_rent_list_lists_info';
+            $rent_item_list_info = 'rbfw_rent_item_content_list_bottom';
+            $is_display = 'grid';
+            $style = 'list';
+            $is_grid_selected = '';
+            $is_list_selected = 'selected_list_grid';
+        }
+    }
 
     ob_start();
 //echo '<pre>';print_r($query);echo '</pre>';
@@ -89,8 +179,19 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $grid_class = ($columns==1 || $columns==2)?'rbfw-w-50':(($columns==3)?'rbfw-w-33':(($columns==4)?'rbfw-w-25':(($columns==5)?'rbfw-w-20':'rbfw-w-20')));
     }
 
+    $shoe_result =  $total_posts. ' results. Showing '.$post_count. ' of '. $total_posts. ' of total';
     ?>
-    <div class="rbfw_rent_list_wrapper <?php echo $grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>">
+    <div class="rbfw_rent_show_result_list_grid_icon_holder">
+        <div class="shoe_result_text">
+            <span> <?php echo esc_attr( $shoe_result );?></span>
+        </div>
+        <div class="rbfw_rent_list_grid_icon_holder">
+            <div class="rbfw_rent_items_list_grid rbfw_rent_items_grid <?php echo esc_attr( $is_grid_selected )?>" id="rbfw_rent_items_grid">Grid</div>
+            <div class="rbfw_rent_items_list_grid rbfw_rent_items_list <?php echo esc_attr( $is_list_selected )?>" id="rbfw_rent_items_list">List</div>
+        </div>
+    </div>
+    <div class="rbfw_rent_list_wrapper <?php echo $grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>" id="rbfw_rent_list_wrapper">
+
         <?php
         $d = 1;
         if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
@@ -114,10 +215,12 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             }
             // load c
             if($expire == 'no'){
-                $grid=RBFW_Function::get_template_path('archive/grid.php');
-                $list=RBFW_Function::get_template_path('archive/list.php');
+//                $grid=RBFW_Function::get_template_path('archive/grid.php');
+                $grid=RBFW_Function::get_template_path('archive/grid_new.php');
+//                $list=RBFW_Function::get_template_path('archive/list.php');
+                $list=RBFW_Function::get_template_path('archive/list_new.php');
 
-                if($style == 'grid'){		
+                if($style == 'grid'){
                     include($grid);
                 }
                 elseif($style == 'list'){
@@ -147,6 +250,18 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     </div>
     <?php
     $content = ob_get_clean();
+
+    if( isset( $atts['pagination'] ) && $atts['pagination'] == 'yes') {
+        $content .= '<div class="pagination rbfw_pagination">';
+        $content .= paginate_links(array(
+            'total' => $query->max_num_pages,
+            'prev_text' => __('« '), // Optional: Add previous and next text
+            'next_text' => __(' »'),
+        ));
+        $content .= '</div>';
+    }
+    wp_reset_postdata();
+
     return $content;
 }
 
@@ -253,3 +368,61 @@ function rbfw_rent_search_shortcode_func() {
     </div>
     <?php
 }
+
+add_shortcode('rbfw_rent_search', 'rbfw_rent_search_shortcode' );
+//[rbfw_search] bike_car_sd, appointment, bike_car_md, equipment, dress, resort, others
+function rbfw_rent_search_shortcode( $attr ){
+
+    $search_page_id = rbfw_get_option('rbfw_search_page','rbfw_basic_gen_settings');
+    $search_page_link = get_page_link($search_page_id);
+    $location = !empty($_GET['rbfw_search_location']) ? strip_tags($_GET['rbfw_search_location']) : '';
+    $type = !empty($_GET['rbfw_search_type']) ? strip_tags($_GET['rbfw_search_type']) : '';
+    $pickup_date = !empty($_GET['rbfw-pickup-date']) ? strip_tags($_GET['rbfw-pickup-date']) : 'Pickup date';
+
+    ob_start();
+    ?>
+
+    <section class="rbfw_rent_item_search_elementor_section">
+        <div class="rbfw_rent_item_search_elementor_container">
+            <form class="rbfw_search_form_new" action="<?php echo esc_url($search_page_link); ?>" method="GET">
+                <div class="rbfw_rent_item_search_container">
+
+                    <div class="rbfw_rent_item_searchContentHolder">
+                        <div class="rbfw_rent_item_searchTypeLocationHolder">
+                            <div class="rbfw_rent_item_search_item">
+                                <?php rbfw_get_dropdown_new( 'rbfw_search_type', $type,  'rbfw_rent_item_search_type_location', 'category' );?>
+                            </div>
+                            <div class="rbfw_rent_item_search_item">
+                                <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location' );?>
+                            </div>
+                        </div>
+                        <div class="rbfw_rent_item_search_dateButtonHolder">
+                            <div class="rbfw_rent_item_search-item_date">
+                                <div class="rbfw_rent_item_date_picker">
+                                    <div class="rbfw_rent_item_search_date_picker_wrapper">
+                                        <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
+                                        <i class="fa fa-calendar" id="rbfw_rent_item_search_calendar_icon"></i>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="rbfw_rent_item_search_button_holder">
+                                <div class="rbfw_rent_item_search_button">
+                                    <button type="submit" class="rbfw_rent_item_search_submit">Search</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </section>
+<?php
+    $search_content = ob_get_clean();
+
+    return $search_content;
+//    ob_get_clean(); }
+}
+
+?>
