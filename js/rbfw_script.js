@@ -296,15 +296,16 @@
 
             // Initialize Flatpickr with range mode, showing 2 months, blocking previous days, and defaulting to today & tomorrow
             let calendar = flatpickr("#rbfw_rent_item_search_calendar_icon", {
-                dateFormat: "d-m-Y",  // Set the format to 'Y-m-d'
+                dateFormat: "d-m-Y",  // Display format in the calendar
                 defaultDate: todayFormatted,  // Preselect today
                 minDate: "today",  // Block previous days
                 showMonths: 1,  // Show current and next month
                 onChange: function(selectedDates, dateStr, instance) {
                     // Update the input field with the selected single date
                     if (selectedDates.length === 1) {
-                        let selectedDate = flatpickr.formatDate(selectedDates[0], "d-m-Y");
-                        $("#rbfw_rent_item_search_pickup_date").val( selectedDate );  // Set the input value to the selected date
+                        // Format the selected date as 'January 10, 2024'
+                        let selectedDate = flatpickr.formatDate(selectedDates[0], "F j, Y");
+                        $("#rbfw_rent_item_search_pickup_date").val(selectedDate);  // Set the input value to the formatted date
                     }
                 }
             });
@@ -314,6 +315,9 @@
                 calendar.open(); // Trigger the calendar to open
             });
 
+            $("#rbfw_rent_item_search_pickup_date").on('focus', function (){
+                calendar.open();
+            });
         }
         rbfw_pick_date_from_flatpicker();
 

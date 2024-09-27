@@ -3452,4 +3452,117 @@ function rbfw_security_deposit($post_id,$sub_total_price)
     return array('security_deposit_amount'=>$security_deposit_amount,'security_deposit_desc'=>$security_deposit_desc);
 }
 
+/**
+ * Get unique categories from post meta with key 'rbfw_categories' using WP_Query.
+ *
+ * @return array|false Array of unique categories or false on failure.
+ */
+function get_rbfw_post_categories_from_meta() {
+    $args = array(
+        'post_type'      => 'any',
+        'meta_key'       => 'rbfw_categories',
+        'meta_compare'   => 'EXISTS',
+        'posts_per_page' => -1,
+        'orderby'        => 'meta_id',
+        'order'          => 'DESC',
+    );
+
+    $query = new WP_Query($args);
+    if (!$query->have_posts()) {
+        return false;
+    }
+    $all_categories = [];
+
+    while ($query->have_posts()) {
+        $query->the_post();
+        $meta_value = get_post_meta(get_the_ID(), 'rbfw_categories', true);
+        $meta_value = maybe_unserialize($meta_value);
+        if (is_array($meta_value) && count($meta_value) > 0) {
+            $all_categories = array_merge($all_categories, $meta_value);
+        }
+    }
+    wp_reset_postdata();
+
+    $all_categories = array_filter( $all_categories, function($value ) {
+        return !empty($value);
+    });
+
+    return array_unique( $all_categories );
+}
+
+
+/**
+ * Get location data from wp_postmeta table using meta_key 'rbfw_pickup_data'.
+ *
+ * @return array|false Array of location data or false on failure.
+ */
+function get_rbfw_pickup_data_wp_query() {
+    $args = array(
+        'post_type'      => 'any',
+        'meta_key'       => 'rbfw_pickup_data',
+        'meta_compare'   => 'EXISTS',
+        'orderby'        => 'meta_id',
+        'order'          => 'DESC',
+        'posts_per_page' => -1,
+    );
+    $query = new WP_Query($args);
+
+    if (!$query->have_posts()) {
+        return false;
+    }
+
+    $locations = [];
+
+    while ($query->have_posts()) {
+        $query->the_post();
+        $pickup_data = get_post_meta(get_the_ID(), 'rbfw_pickup_data', true);
+        $pickup_data = maybe_unserialize($pickup_data);
+        if (!empty($pickup_data)) {
+            $locations[] = $pickup_data;
+        }
+    }
+    wp_reset_postdata();
+
+    $all_locations = [];
+    if( count( $locations ) > 0 ) {
+        foreach ($locations as $locations_group) {
+            foreach ($locations_group as $location) {
+                if (!empty($location['loc_pickup_name'])) {
+                    $all_locations[$location['loc_pickup_name']] = $location['loc_pickup_name'];
+                }
+            }
+        }
+        $unique_locations = array_unique($all_locations);
+    }
+
+    return $unique_locations;
+}
+
+function rbfw_get_dropdown_new( $name, $saved_value , $class , $dropdown_for ) {
+
+    if( $dropdown_for === 'category' ){
+        $title =  __( 'Rental Type', 'booking-and-rental-manager-for-woocommerce'  );
+        $category_arr = get_rbfw_post_categories_from_meta();
+    }elseif( $dropdown_for === 'location' ){
+        $title =  __( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce'  );
+        $category_arr = get_rbfw_pickup_data_wp_query();
+    }else{
+        $title = '';
+        $category_arr = [];
+    }
+
+    $option = '';
+    $option .= "<select name=$name class=$class>";
+    $option .= "<option value='' >" . $title . "</option>";
+
+    if( count( $category_arr ) > 0 ){
+        foreach ( $category_arr as $key => $value ) {
+            $selected_text = ! empty( $saved_value ) && $saved_value == $value ? 'Selected' : '';
+            $option .= "<option value='$value' $selected_text>" . esc_html( $value ) . "</option>";
+        }
+    }
+    $option .= "</select>";
+
+    echo $option;
+}
 
