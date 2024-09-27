@@ -188,6 +188,16 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
     ?>
     <table class="rbfw_bikecarsd_cart_table rbfw_room_cart_table">
+
+        <?php if ( ! empty( $rbfw_pickup_point ) ): ?>
+            <li><?php echo $rbfw->get_option_trans('rbfw_text_pickup_point', 'rbfw_basic_translation_settings', __('Pickup Point','booking-and-rental-manager-for-woocommerce')); echo ': ' . $rbfw_pickup_point; ?></li>
+        <?php endif; ?>
+
+        <?php if ( ! empty( $rbfw_dropoff_point ) ): ?>
+            <li><?php echo $rbfw->get_option_trans('rbfw_text_dropoff_point', 'rbfw_basic_translation_settings', __('Drop-off Point','booking-and-rental-manager-for-woocommerce')); echo ': ' . $rbfw_dropoff_point; ?></li>
+        <?php endif; ?>
+
+
         <?php if ( ! empty( $start_datetime )): ?>
             <tr>
                 <th><?php echo $rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', __('Start Date and Time','booking-and-rental-manager-for-woocommerce'));?>:</th>

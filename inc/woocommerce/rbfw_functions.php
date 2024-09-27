@@ -224,6 +224,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $total_price = $total_price + $security_deposit['security_deposit_amount'];
         $start_date = $bikecarsd_selected_date;
         $end_date = $bikecarsd_selected_date;
+        $cart_item_data['rbfw_pickup_point'] = $rbfw_pickup_point;
+        $cart_item_data['rbfw_dropoff_point'] = $rbfw_dropoff_point;
         $cart_item_data['rbfw_start_datetime'] = $rbfw_start_datetime;
         $cart_item_data['rbfw_end_datetime'] = $rbfw_end_datetime;
         $cart_item_data['rbfw_start_date'] = $bikecarsd_selected_date;
@@ -262,7 +264,6 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         }
 
 
-
         $rbfw_service_price = $rbfw_service_price*$rbfw_item_quantity;
 
         /* service price end for multiple days */
@@ -273,17 +274,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $end_time = $rbfw_pickup_end_time;
 
 
-
-
-
         $start_datetime = date('Y-m-d H:i', strtotime($rbfw_pickup_start_date . ' ' . $start_time));
         $end_datetime = date('Y-m-d H:i', strtotime($rbfw_pickup_end_date . ' ' . $end_time));
-
-
-
-
-
-
 
 
         //$base_price = rbfw_price_calculation($rbfw_id, $start_datetime, $end_datetime, $start_date);

@@ -16,7 +16,7 @@ $rbfw_enable_daywise_price = get_post_meta($rbfw_id, 'rbfw_enable_daywise_price'
 //$availabe_time = rbfw_get_available_times($rbfw_id);
 $availabe_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
 
-//echo '<pre>';print_r($availabe_time);echo '<pre>';
+
 
 $off_dates_list = get_post_meta($rbfw_id, 'rbfw_off_dates', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_off_dates', true)) : [];
 
@@ -137,7 +137,6 @@ $input_stock_quantity = '';
 if($rbfw_enable_variations == 'yes'){
     $item_stock_quantity = rbfw_get_variations_stock($rbfw_id);
 } else {
-
     $item_stock_quantity = !empty(get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true)) ? get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true) : 0;
     if(empty($item_stock_quantity)){
         $input_stock_quantity = 'no_has_value';
@@ -145,8 +144,7 @@ if($rbfw_enable_variations == 'yes'){
 }
 
 
-
-	$rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) : 'yes';
+    $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) : 'yes';
 	$rbfw_event_start_date  = get_post_meta( $rbfw_id, 'rbfw_event_start_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_start_date', true ) : '';
 	$rbfw_event_start_time  = get_post_meta( $rbfw_id, 'rbfw_event_start_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_start_time', true ) : '';
 	$rbfw_event_start_time  = date('h:i a', strtotime($rbfw_event_start_time));
@@ -285,7 +283,7 @@ if($rbfw_enable_variations == 'yes'){
                                                 <select class="rbfw-select rbfw-time-price dropoff_time" name="rbfw_pickup_end_time" id="dropoff_time" required>
                                                     <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_time', 'rbfw_basic_translation_settings', __('Return time','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                                     <?php foreach ($availabe_time as $key => $time) : ?>
-                                                        <option value="<?php echo mep_esc_html($key); ?>"><?php echo mep_esc_html(date('h:i A', strtotime($time))); ?></option>
+                                                        <option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html(date('h:i A', strtotime($time))); ?></option>
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>

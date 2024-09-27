@@ -48,17 +48,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $start_date = $_POST['pickup_date'];
             $end_date = $_POST['dropoff_date'];
-            $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'';
-            $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:'';
+            $star_time = (isset($_POST['pickup_time']) && $_POST['pickup_time'])?$_POST['pickup_time']:'00:00:00';
+            $end_time = (isset($_POST['dropoff_time']) && $_POST['dropoff_time'])?$_POST['dropoff_time']:rbfw_end_time();
 
-            if (empty($star_time) && empty($end_time)) {
-                $pickup_datetime = date('Y-m-d', strtotime($start_date . ' ' . '00:00:00'));
-                $dropoff_datetime = date('Y-m-d', strtotime($end_date . ' ' . rbfw_end_time()));
-            } else {
-                $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
-                $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
-            }
-
+            $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
+            $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
 
             $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
@@ -83,25 +77,24 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $post_id = $_POST['post_id'];
             $start_date = $_POST['pickup_date'];
             $end_date = $_POST['dropoff_date'];
-            $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'';
-            $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:'';
 
-            if (empty($star_time) && empty($end_time)) {
-                $pickup_datetime = date('Y-m-d', strtotime($start_date . ' ' . '00:00:00'));
-                $dropoff_datetime = date('Y-m-d', strtotime($end_date . ' ' . rbfw_end_time()));
-            } else {
-                $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
-                $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
-            }
-            $item_quantity = $_POST['item_quantity'];
-            $rbfw_enable_variations = $_POST['rbfw_enable_variations'];
-            $rbfw_service_price = $_POST['rbfw_service_price']*$item_quantity;
-            $service_price_arr = !empty($_POST['service_price_arr']) ? $_POST['service_price_arr'] : [];
+            $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'00:00:00';
+            $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:rbfw_end_time();
+
+            $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
+            $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
             $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
 
+
+            $item_quantity = $_POST['item_quantity'];
+            $rbfw_enable_variations = $_POST['rbfw_enable_variations'];
+            $rbfw_available_time = $_POST['rbfw_available_time'];
+            $rbfw_service_price = $_POST['rbfw_service_price']*$item_quantity;
+            $service_price_arr = !empty($_POST['service_price_arr']) ? $_POST['service_price_arr'] : [];
+
             $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime);
-            $duration_price = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$star_time,$end_time)*$item_quantity;
+            $duration_price = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$star_time,$end_time,$rbfw_available_time)*$item_quantity;
 
             $rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 

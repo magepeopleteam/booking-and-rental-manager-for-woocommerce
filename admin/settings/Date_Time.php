@@ -126,9 +126,10 @@
 			public function multiple_time_slot_select($post_id){
                 $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
 
-              
+               // echo '<pre>';print_r($rbfw_time_slots);echo '<pre>';
 
                 global  $RBFW_Timeslots_Page;
+
                 $rbfw_time_slots = $RBFW_Timeslots_Page->rbfw_format_time_slot($rbfw_time_slots);
 
                 asort($rbfw_time_slots);
@@ -144,7 +145,7 @@
                         <?php if(get_the_title( $post_id ) == 'Auto Draft'){ ?>
 							<option selected value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
 						<?php }else{ ?>
-                            <option <?php echo (in_array(date('H:i A', strtotime($value)),$rdfw_available_time))?'selected':'' ?> value="<?php echo date('H:i A', strtotime($value)); ?>"> <?php echo $key; ?> </option>
+                            <option <?php echo (in_array(date('h:i A', strtotime($value)),$rdfw_available_time))?'selected':'' ?> value="<?php echo date('h:i A', strtotime($value)); ?>"> <?php echo $key; ?> </option>
                         <?php } ?>
                         <?php endforeach; ?>
 					</select>
@@ -235,6 +236,7 @@
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
                     $rbfw_time_slot = isset( $_POST['rbfw_time_slot_switch'] ) ? rbfw_array_strip( $_POST['rbfw_time_slot_switch'] ) : 'off';
+
                     $rdfw_available_time = isset( $_POST['rdfw_available_time'] ) ? rbfw_array_strip( $_POST['rdfw_available_time'] ) : [];
 
             /*        $rbfw_enable_start_end_date = 'yes';
