@@ -288,9 +288,9 @@ function rbfw_add_to_cart_shortcode_func($atts){
 
 
 
-
-
-    define("add_to_cart_id", $post_id);
+    if (defined('add_to_cart_id')) {
+        define("add_to_cart_id", $post_id);
+    }
 
 
     if(empty($post_id)){
