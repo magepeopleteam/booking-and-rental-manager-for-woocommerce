@@ -279,7 +279,7 @@
 
                 setCookie( 'rbfw_rent_item_list_grid', 'rbfw_rent_item_list', 1 );
 
-                $(".rbfw_rent_item_description_text").css("display", "grid");
+                $(".rbfw_rent_item_description_text").css("display", "-webkit-box");
 
            }
 

@@ -193,7 +193,7 @@ if( !$continue ){
     }
 
     ?>
-    <div class="rbfw_rent_list_col   rbfw_grid_list_col_<?php echo $d; ?>">
+    <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo $d; ?>">
         <div class="rbfw_rent_list_inner_wrapper">
             <div class="<?php echo esc_attr( $image_holder )?>">
                 <a class="rbfw_rent_list_grid_view_top_img" href="<?php echo esc_url($post_link); ?>">
@@ -202,14 +202,23 @@ if( !$continue ){
             </div>
             <div class="<?php echo esc_attr( $rent_item_info )?>">
                 <div class="rbfw_rent_list_content">
-                    <a href="<?php echo esc_url($post_link); ?>"><h2 class="rbfw_rent_list_grid_title"> <?php echo esc_html($post_title); ?></h2></a>
-                    <div class="rbfw_rent_list_grid_row">
-                        <p class="rbfw_rent_list_row_price_level"><?php echo esc_html( $price_level ); ?></p>
-                        <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo rbfw_mps_price($price); ?></span></p>
+                    <div class="rbfw_rent_list_grid_title_wrapper">
+                        <h2 class="rbfw_rent_list_grid_title">
+                            <a href="<?php echo esc_url($post_link); ?>"><?php echo esc_html($post_title); ?></a>
+                        </h2>
+                        <div class="rbfw_rent_list_grid_row rbfw_pricing-box">
+                            <p class="rbfw_rent_list_row_price">
+                                <span class="prc currency_left"><?php echo rbfw_mps_price($price); ?></span>
+                            </p>
+                            <span class="rbfw_rent_list_row_price_level">/ <?php echo esc_html($price_level); ?></span>
+                        </div>
+                    </div>
+                    <div class="rbfw_rent_item_description" id="rbfw_rent_item_description">
+                        <p class="rbfw_rent_item_description_text" style="display: <?php echo esc_attr( $is_display )?>">
+                            <?php echo esc_html( $post_content )?>
+                        </p>
                     </div>
                 </div>
-
-                <div class="rbfw_rent_item_description" id="rbfw_rent_item_description"><p class="rbfw_rent_item_description_text" style="display: <?php echo esc_attr( $is_display )?>"><?php echo esc_html( $post_content )?></p></div>
 
                 <?php if ( $rbfw_feature_category ) :
                     $n = 1;
@@ -230,7 +239,7 @@ if( !$continue ){
                                             $rand_number = rand();
                                             if($title) {
                                                 ?>
-                                                <li class=" bfw_rent_list_items title <?php echo $rand_number ?>"> <span class="bfw_rent_list_items_icon"><i class="<?php echo mep_esc_html($icon) ?>"></i> <?php echo $title ?></span></li>
+                                                <li class=" bfw_rent_list_items title <?php echo $rand_number ?>"> <span class="bfw_rent_list_items_icon"><i class="<?php echo mep_esc_html($icon) ?>"></i></span> <?php echo $title ?></li>
                                                 <?php
                                             }
                                         }
@@ -248,13 +257,14 @@ if( !$continue ){
 
                 <div class="rbfw_rent_list_btn_holder">
                     <a class="rbfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url($post_link); ?>">
-                    <span>
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3.75 9H14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M9 3.75L14.25 9L9 14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </svg>
-                    </span>
                         <span> <?php echo esc_html($book_now_label); ?> </span>
+                        <span>
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3.75 9H14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M9 3.75L14.25 9L9 14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </span>
+
                     </a>
                 </div>
 
