@@ -215,7 +215,11 @@ if( !$continue ){
                     </div>
                     <div class="rbfw_rent_item_description" id="rbfw_rent_item_description">
                         <p class="rbfw_rent_item_description_text" style="display: <?php echo esc_attr( $is_display )?>">
-                            <?php echo esc_html( $post_content )?>
+                            <?php
+                                // Trim the content to 14 words
+                                $post_content = wp_trim_words( $post_content, 14, '...' );
+                                echo esc_html( $post_content )
+                            ?>
                         </p>
                     </div>
                 </div>
@@ -258,11 +262,8 @@ if( !$continue ){
                 <div class="rbfw_rent_list_btn_holder">
                     <a class="rbfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url($post_link); ?>">
                         <span> <?php echo esc_html($book_now_label); ?> </span>
-                        <span>
-                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M3.75 9H14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                                <path d="M9 3.75L14.25 9L9 14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg>
+                        <span class="button-icon">
+                          <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M6 17L11 12L6 7M13 17L18 12L13 7" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
                         </span>
 
                     </a>

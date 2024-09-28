@@ -209,79 +209,82 @@ if (!$continue) {
             </div>
             <div class="<?php echo esc_attr($rent_item_info) ?>">
                 <div class="rbfw_rent_list_content">
-                    <h2 class="rbfw_rent_list_grid_title">
-                        <a href="<?php echo esc_url($post_link); ?>"><?php echo esc_html($post_title); ?></a>
-                    </h2>
+                    <div class="rbfw_rent_list_grid_title_wrapper">
+                        <h2 class="rbfw_rent_list_grid_title">
+                            <a href="<?php echo esc_url($post_link); ?>"><?php echo esc_html($post_title); ?></a>
+                        </h2>
 
-                    <div class="rbfw_rent_list_grid_row">
-                        <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo rbfw_mps_price($price); ?></span></p>
-                        <span class="rbfw_rent_list_row_price_level">/ <?php echo esc_html($price_level); ?></span>
+                        <div class="rbfw_rent_list_grid_row rbfw_pricing-box">
+                            <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo rbfw_mps_price($price); ?></span></p>
+                            <span class="rbfw_rent_list_row_price_level">/ <?php echo esc_html($price_level); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="rbfw_rent_item_description" id="rbfw_rent_item_description">
+                        <p class="rbfw_rent_item_description_text" style="display: <?php echo esc_attr( $is_display )?>">
+                            <?php
+                            // Trim the content to 14 words
+                            $post_content = wp_trim_words( $post_content, 14, '...' );
+                            echo esc_html( $post_content )
+                            ?>
+                        </p>
                     </div>
                 </div>
 
-                <div class="rbfw_rent_item_description" id="rbfw_rent_item_description">
-                    <p class="rbfw_rent_item_description_text" style="display: <?php echo esc_attr($is_display) ?>">
-                        <?php echo esc_html($post_content) ?>
-                    </p>
-                </div>
-
                 <div class="rbfw_rent_item_bottom_info">
-                <?php if ($rbfw_feature_category) :
-                    $n = 1;
-                    foreach ($rbfw_feature_category as $value) :
-                        $cat_title = $value['cat_title'];
-                        $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
+                    <?php if ($rbfw_feature_category) :
+                        $n = 1;
+                        foreach ($rbfw_feature_category as $value) :
+                            $cat_title = $value['cat_title'];
+                            $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
 
-                        if ($n == 1) {
-                            ?>
-                            <ul class="<?php echo esc_attr($rent_item_list_info) ?>">
-                                <?php
-                                if (!empty($cat_features)) {
-                                    $i = 1;
-                                    foreach ($cat_features as $features) {
-                                        if ($i <= 5) {
-                                            $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
-                                            $title = $features['title'];
-                                            $rand_number = rand();
-                                            if ($title) {
-                                                ?>
-                                                <li class=" bfw_rent_list_items title <?php echo $rand_number ?>"><span
-                                                            class="bfw_rent_list_items_icon"><i
-                                                                class="<?php echo mep_esc_html($icon) ?>"></i></span> <?php echo $title ?></li>
-                                                <?php
-                                            }
-                                        }
-                                        $i++;
-                                    }
-                                }
+                            if ($n == 1) {
                                 ?>
-                            </ul>
-                            <?php
-                        }
-                        $n++;
-                    endforeach;
-                endif;
-                ?>
+                                <ul class="<?php echo esc_attr($rent_item_list_info) ?>">
+                                    <?php
+                                    if (!empty($cat_features)) {
+                                        $i = 1;
+                                        foreach ($cat_features as $features) {
+                                            if ($i <= 5) {
+                                                $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+                                                $title = $features['title'];
+                                                $rand_number = rand();
+                                                if ($title) {
+                                                    ?>
+                                                    <li class=" bfw_rent_list_items title <?php echo $rand_number ?>"><span
+                                                                class="bfw_rent_list_items_icon"><i
+                                                                    class="<?php echo mep_esc_html($icon) ?>"></i></span> <?php echo $title ?></li>
+                                                    <?php
+                                                }
+                                            }
+                                            $i++;
+                                        }
+                                    }
+                                    ?>
+                                </ul>
+                                <?php
+                            }
+                            $n++;
+                        endforeach;
+                    endif;
+                    ?>
 
-                <div class="rbfw_rent_list_btn_holder">
-                    <a class="rbfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url($post_link); ?>">
-                        <?php echo esc_html($book_now_label); ?>
-                        <span class="button-icon">
-                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3.75 9H14.25" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M9 3.75L14.25 9L9 14.25" stroke="white" stroke-width="2" stroke-linecap="round"
-                                  stroke-linejoin="round"></path>
-                        </svg>
-                    </span>
-                    </a>
-                </div>
-                <!-- /.rbfw_content_wrapper -->
+                    <div class="rbfw_rent_list_btn_holder">
+                        <a class="rbfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url($post_link); ?>">
+                            <?php echo esc_html($book_now_label); ?>
+                            <span class="button-icon">
+                            <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g
+                                id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                                               stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path
+                                    d="M6 17L11 12L6 7M13 17L18 12L13 7" stroke="#000000" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round"></path> </g>
+                            </svg>
+                        </span>
+                        </a>
+                    </div>
+                    <!-- /.rbfw_content_wrapper -->
                 </div>
             </div>
-
-
-
-
 
 
         </div>
