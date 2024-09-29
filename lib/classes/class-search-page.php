@@ -14,7 +14,7 @@ if (!class_exists('Rbfw_Search_Page')) {
     class Rbfw_Search_Page{
         public function __construct(){
             add_action('wp_loaded', array($this,'rbfw_search_page'));
-            add_shortcode('rbfw_search', array($this,'rbfw_search_shortcode_func'));
+            add_shortcode('rbfw_search_old', array($this,'rbfw_search_shortcode_func'));
             add_filter('display_post_states', array($this, 'rbfw_add_post_state'), 10, 2);
         }
 

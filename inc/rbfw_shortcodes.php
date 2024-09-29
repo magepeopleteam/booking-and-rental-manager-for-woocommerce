@@ -341,7 +341,7 @@ function rbfw_add_to_cart_shortcode_func($atts){
 /******************************
  * Rent Filter Form Shortcode
  ******************************/
-add_shortcode('rbfw-search', 'rbfw_rent_search_shortcode_func');
+add_shortcode('rbfw-search1', 'rbfw_rent_search_shortcode_func');
 function rbfw_rent_search_shortcode_func() {
 
     $search_page_id = rbfw_get_option('rbfw_search_page','rbfw_basic_gen_settings');
@@ -368,7 +368,7 @@ function rbfw_rent_search_shortcode_func() {
     <?php
 }
 
-add_shortcode('rbfw_rent_search', 'rbfw_rent_search_shortcode' );
+add_shortcode('rbfw_search', 'rbfw_rent_search_shortcode' );
 //[rbfw_search] bike_car_sd, appointment, bike_car_md, equipment, dress, resort, others
 function rbfw_rent_search_shortcode( $attr ){
 
