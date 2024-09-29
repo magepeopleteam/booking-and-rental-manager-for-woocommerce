@@ -293,6 +293,7 @@ function rbfw_add_to_cart_shortcode_func($atts){
     }
 
 
+
     if(empty($post_id)){
         return;
     }
