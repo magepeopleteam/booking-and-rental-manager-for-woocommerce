@@ -13,8 +13,8 @@ jQuery(function(){
         showTodayButton: false,
         highlightSelectedWeekday: false,
         highlightSelectedWeek: false,
-        prevButton: '<i class="fa-solid fa-circle-chevron-left"></i>',
-        nextButton: '<i class="fa-solid fa-circle-chevron-right"></i>',
+        prevButton: '<i class="fa-solid fa-chevron-left"></i>',
+        nextButton: '<i class="fa-solid fa-chevron-right"></i>',
         disable: function (date) {
             return rbfw_off_day_dates(date,'',rbfw_today_booking_enable);
 
