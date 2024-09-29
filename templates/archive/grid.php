@@ -161,12 +161,14 @@ endif;
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
 ?>
 
-<div class="rbfw_rent_list_col   rbfw_grid_list_col_<?php echo $d; ?>">
+<div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo $d; ?>">
     <div class="rbfw_rent_list_inner_wrapper">
 
         <div class="rbfw_rent_list_featured_img_wrap">
             <a href="<?php echo esc_url($post_link); ?>">
-                <div class="rbfw_rent_list_featured_img" style="background-image:url(<?php echo esc_url($post_featured_img); ?>)"></div>
+                <div class="rbfw_rent_list_featured_img">
+                    <img src="<?php echo esc_url($post_featured_img); ?>" alt="<?php echo esc_attr($post_title); ?>">
+                </div>
             </a>
         </div>
 
@@ -174,15 +176,24 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
 
             <div class="rbfw_rent_list_price_wrap">
                 <?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
-                    <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($the_price_label); ?></span> <span class="rbfw_rent_list_price_badge_price"><?php echo rbfw_mps_price($price); ?></span> </div>
+                    <div class="rbfw_rent_list_price_badge">
+                        <span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($the_price_label); ?></span>
+                        <span class="rbfw_rent_list_price_badge_price"><?php echo rbfw_mps_price($price); ?></span>
+                    </div>
                 <?php endif; ?>
 
                 <?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
-                    <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($prices_start_at); ?></span><span class="rbfw_rent_list_price_badge_price"><?php echo rbfw_mps_price($price); ?></span></div>
+                    <div class="rbfw_rent_list_price_badge">
+                        <span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($prices_start_at); ?></span>
+                        <span class="rbfw_rent_list_price_badge_price"><?php echo rbfw_mps_price($price); ?></span>
+                    </div>
                 <?php endif; ?>
 
                 <?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
-                    <div class="rbfw_rent_list_price_badge"><span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($prices_start_at); ?></span><span class="rbfw_rent_list_price_badge_price"> <?php echo rbfw_mps_price($price); ?></span></div>
+                    <div class="rbfw_rent_list_price_badge">
+                        <span class="rbfw_rent_list_price_badge_label"><?php echo esc_html($prices_start_at); ?></span>
+                        <span class="rbfw_rent_list_price_badge_price"> <?php echo rbfw_mps_price($price); ?></span>
+                    </div>
                 <?php endif; ?>
             </div>
 
