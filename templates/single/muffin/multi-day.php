@@ -76,13 +76,18 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 				<div class="rbfw_muff_pricing_card">
 
 					<div class="rbfw_muff_pricing_card_col2">
-
 						<?php if (($enable_daily_rate == 'yes' || $rbfw_enable_daywise_price == 'yes') && !empty($get_daily_price)) : ?>
-						<div class="rbfw_muff_pricing_card_price"><span class="rbfw_muff_pricing_card_price_badge"><?php echo rbfw_mps_price($get_daily_price); ?></span><span> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_day', 'rbfw_basic_translation_settings', __('PER DAY','booking-and-rental-manager-for-woocommerce'))); ?></span></div>
+						    <div class="rbfw_muff_pricing_card_price">
+                                <span class="rbfw_muff_pricing_card_price_badge"><?php echo rbfw_mps_price($get_daily_price); ?></span>
+                                <span> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_day', 'rbfw_basic_translation_settings', __('PER DAY','booking-and-rental-manager-for-woocommerce'))); ?></span>
+                            </div>
 						<?php endif; ?>
-
+                        <span>-OR-</span>
 						<?php if (($enable_hourly_rate == 'yes'  || $rbfw_enable_daywise_price == 'yes') && !empty($get_hourly_price)) : ?>
-						<div class="rbfw_muff_pricing_card_price"><span class="rbfw_muff_pricing_card_price_badge"><?php echo rbfw_mps_price($get_hourly_price); ?></span><span> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_hour', 'rbfw_basic_translation_settings', __('PER HOUR','booking-and-rental-manager-for-woocommerce'))); ?></span></div>
+						    <div class="rbfw_muff_pricing_card_price">
+                                <span class="rbfw_muff_pricing_card_price_badge"><?php echo rbfw_mps_price($get_hourly_price); ?></span>
+                                <span> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_hour', 'rbfw_basic_translation_settings', __('PER HOUR','booking-and-rental-manager-for-woocommerce'))); ?></span>
+                            </div>
 						<?php endif; ?>
 
 					</div>
@@ -125,7 +130,7 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                             $cat_title = $value['cat_title'];
                             $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
                             ?>
-                            <div class="rbfw-sub-heading"><?php echo esc_html($cat_title); ?></div>
+                            <h3 class="rbfw-sub-heading"><?php echo esc_html($cat_title); ?></h3>
                             <ul>
                                 <?php
                                 if(!empty($cat_features)){

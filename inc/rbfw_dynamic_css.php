@@ -28,7 +28,7 @@ function rbfw_dynamic_css(){
 	$rbfw_single_page_base_color_4 = $rbfw_single_page_base_color_4? $rbfw_single_page_base_color_4: '#000000';
 	$rbfw_single_page_base_color_5 = $rbfw_single_page_base_color_5? $rbfw_single_page_base_color_5: '#ff3726';
 	$rbfw_single_page_secondary_color = $rbfw_single_page_secondary_color? $rbfw_single_page_secondary_color: '#333';
-	$rbfw_booking_form_bg_color = $rbfw_booking_form_bg_color? $rbfw_booking_form_bg_color: '#ddd';
+	$rbfw_booking_form_bg_color = $rbfw_booking_form_bg_color? $rbfw_booking_form_bg_color: '#ecf0f4';
 	$rbfw_single_page_base_color_1 = $rbfw_single_page_base_color_1? $rbfw_single_page_base_color_1: '#ffcd00';
 	$rbfw_single_page_base_color_2 = $rbfw_single_page_base_color_2? $rbfw_single_page_base_color_2: '#074836';
 	$rbfw_single_page_base_color_3 = $rbfw_single_page_base_color_3? $rbfw_single_page_base_color_3: '#6F1E51';

@@ -2343,7 +2343,7 @@ function rbfw_related_products_style_two($post_id){
                             <?php endif; ?>
                         </div>
 
-                        <div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
+                        <h3 class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></h3>
 
                         <?php if(!empty($highlited_features)): ?>
                             <div class="rbfw-related-product-features">
@@ -2609,7 +2609,7 @@ function rbfw_related_products_style_three($post_id){
                         </div>
                     <?php } ?>
                     <div class="rbfw-related-product-inner-content-wrap">
-                        <div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
+                        <h3 class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></h3>
                         <div class="rbfw-related-product-bottom-card">
 
                             <div class="rbfw-related-product-bottom-card-pricing-box">

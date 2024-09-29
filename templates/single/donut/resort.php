@@ -111,7 +111,7 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 					$cat_title = $value['cat_title'];
 					$cat_features = $value['cat_features'] ? $value['cat_features'] : [];
 			?>
-			<div class="rbfw-sub-heading"><?php echo esc_html($cat_title); ?></div>
+			<h3 class="rbfw-sub-heading"><?php echo esc_html($cat_title); ?></h3>
 			<ul>
 				<?php
 				if(!empty($cat_features)):
