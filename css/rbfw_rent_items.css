@@ -47,7 +47,8 @@
     align-items: center;
     padding: 10px;
     background-color: #f9f9f9;
-    gap: 15px
+    gap: 15px;
+    margin-bottom: 0;
 }
 
 .shoe_result_text {
@@ -337,7 +338,6 @@ p {
 select, input[type="date"] {
     padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 5px;
     font-size: 14px;
     color: #333;
     width: 100%;

@@ -147,14 +147,12 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
             </div>
         </div>
 
-
-
         <div class="rbfw_muff_row_content">
             <div class="rbfw_muff_content_col1">
                 <div class="rbfw_muff_registration_wrapper">
-                    <div class="rbfw_muff_heading">
+                    <h2 class="rbfw_muff_heading">
                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_start_booking', 'rbfw_basic_translation_settings', __('Start Booking','booking-and-rental-manager-for-woocommerce'))); ?>
-                    </div>
+                    </h2>
                     <?php include( RBFW_Function::get_template_path( 'forms/single-day-registration.php' ) ); ?>
                 </div>
             </div>
@@ -168,9 +166,9 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                     </div>
                     <?php if(!empty($gallery_images_additional)) { ?>
                         <div class="rbfw_muff_row_slider">
-                            <div class="rbfw_muff_heading">
+                            <h3 class="rbfw_muff_heading">
                                 <?php echo esc_html($rbfw->get_option_trans('rbfw_text_photos', 'rbfw_basic_translation_settings', __('Photos','booking-and-rental-manager-for-woocommerce'))); ?>
-                            </div>
+                            </h3>
                             <?php echo $gallery_images_additional; ?>
                         </div>
                     <?php } ?>
@@ -180,9 +178,9 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 
         <?php if(rbfw_check_pro_active() === true && $review_system == 'on'){ ?>
             <div class="rbfw_muff_row_review_summary">
-                <div class="rbfw_muff_heading">
+                <h3 class="rbfw_muff_heading">
                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_ratings', 'rbfw_basic_translation_settings', __('Ratings','booking-and-rental-manager-for-woocommerce'))); ?>
-                </div>
+                </h3>
                 <div class="rbfw_muff_row_review_inner">
                     <div class="rbfw_muff_review_summ_col">
                         <div class="rbfw_muff_review_rating_wrap">
@@ -284,17 +282,17 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 
         <?php if(!empty($rbfw_related_post_arr)): ?>
             <div class="rbfw_muff_row_related_item">
-                <div class="rbfw_muff_heading">
+                <h3 class="rbfw_muff_heading">
                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings', __('You May Also Like','booking-and-rental-manager-for-woocommerce'))); ?>
-                </div>
+                </h3>
                 <?php do_action( 'rbfw_related_products_style_three', $post_id ); ?>
             </div>
         <?php endif; ?>
         <?php if($rbfw_enable_faq_content == 'yes') { ?>
             <div class="rbfw_muff_row_faq">
-                <div class="rbfw_muff_heading rbfw_muff_faq_heading">
+                <h3 class="rbfw_muff_heading rbfw_muff_faq_heading">
                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Freequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?>
-                </div>
+                </h3>
                 <?php do_action( 'rbfw_the_faq_style_two', $post_id ); ?>
             </div>
         <?php } ?>

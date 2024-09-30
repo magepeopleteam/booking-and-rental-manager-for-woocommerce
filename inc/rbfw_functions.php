@@ -710,8 +710,9 @@ function rbfw_get_faq_func($post_id){
         ?>
         <div id="rbfw_faq_accordion">
             <?php foreach ($rbfw_faq_arr as $faq) { ?>
+                <div class="rbfw_faq_item">
                 <?php if (!empty($faq['rbfw_faq_title'])): ?>
-                    <h3 class="rbfw_faq_header"> <i class="fas fa-plus"></i><?php echo esc_html($faq['rbfw_faq_title']); ?></h3>
+                    <h3 class="rbfw_faq_header"><?php echo esc_html($faq['rbfw_faq_title']); ?> <i class="fas fa-plus"></i></h3>
                 <?php endif; ?>
                 <div class="rbfw_faq_content_wrapper">
                     <div class="rbfw_faq_img">
@@ -732,6 +733,7 @@ function rbfw_get_faq_func($post_id){
                         endif;
                         ?>
                     </p>
+                </div>
                 </div>
             <?php } ?>
         </div>
@@ -803,17 +805,15 @@ function rbfw_related_products($post_id){
 
     if(isset($rbfw_related_post_arr) && ! empty($rbfw_related_post_arr)){
         ?>
-        <div class="rbfw-related-product-heading">
+        <h3 class="rbfw-related-product-heading">
             <?php rbfw_string('rbfw_text_related_items',__('Related Items','booking-and-rental-manager-for-woocommerce')); ?>
-        </div>
-        <hr>
+        </h3>
+
         <div class="owl-carousel rbfw-related-product">
             <?php foreach ($rbfw_related_post_arr as $rbfw_related_post_id) {
                 $rbfw_rent_type = get_post_meta( $rbfw_related_post_id, 'rbfw_item_type', true );
                 $thumb_url  = !empty(get_the_post_thumbnail_url( $rbfw_related_post_id, 'full' )) ? get_the_post_thumbnail_url( $rbfw_related_post_id, 'full' ) : RBFW_PLUGIN_URL. '/assets/images/no_image.png';
                 $title = get_the_title($rbfw_related_post_id);
-
-
 
                 $hourly_rate_label = $rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
                 $daily_rate_label = $rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily rate','booking-and-rental-manager-for-woocommerce'));
@@ -968,23 +968,39 @@ function rbfw_related_products($post_id){
 
                 <div class="item">
                     <div class="rbfw-related-product-inner">
-                        <div class="rbfw-related-product-thumb-wrap"><a href="<?php echo esc_url($permalink); ?>"><div class="rbfw-related-product-thumb"><img src="<?php echo esc_url($thumb_url); ?>" alt="<?php esc_attr_e('Featured Image','booking-and-rental-manager-for-woocommerce'); ?>"></div></a></div>
-                        <div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
+                        <div class="rbfw-related-product-thumb-wrap">
+                            <a href="<?php echo esc_url($permalink); ?>">
+                                <div class="rbfw-related-product-thumb">
+                                    <img src="<?php echo esc_url($thumb_url); ?>" alt="<?php esc_attr_e('Featured Image','booking-and-rental-manager-for-woocommerce'); ?>">
+                                </div>
+                            </a>
+                        </div>
 
-                        <?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
+                        <div class="rbfw-related-product-content-wrapper">
+                            <div class="rbfw-related-product-content-inner">
+                                <h3 class="rbfw-related-product-title-wrap">
+                                    <a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a>
+                                </h3>
 
-                            <div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
-                        <?php endif; ?>
+                                <?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
+                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
+                                <?php endif; ?>
 
-                        <?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
-                            <div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
-                        <?php endif; ?>
+                                <?php if($rbfw_rent_type == 'resort' && !empty($rbfw_room_data)): ?>
+                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
+                                <?php endif; ?>
 
-                        <?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
-                            <div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
-                        <?php endif; ?>
+                                <?php if(($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment') && !empty($rbfw_bike_car_sd_data)): ?>
+                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html($prices_start_at); ?>: <?php echo rbfw_mps_price($price); ?></div>
+                                <?php endif; ?>
+                            </div>
 
-                        <div class="rbfw-related-product-btn-wrap"><a href="<?php echo esc_url($permalink); ?>" class="rbfw-related-product-btn"><?php rbfw_string('rbfw_text_read_more',__('Read More','booking-and-rental-manager-for-woocommerce')); ?></a></div>
+                            <div class="rbfw-related-product-btn-wrap">
+                                <a href="<?php echo esc_url($permalink); ?>" class="rbfw-related-product-btn">
+                                    <?php rbfw_string('rbfw_text_read_more',__('Read More','booking-and-rental-manager-for-woocommerce')); ?>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             <?php } ?>
@@ -2327,7 +2343,7 @@ function rbfw_related_products_style_two($post_id){
                             <?php endif; ?>
                         </div>
 
-                        <div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
+                        <h3 class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></h3>
 
                         <?php if(!empty($highlited_features)): ?>
                             <div class="rbfw-related-product-features">
@@ -2593,7 +2609,7 @@ function rbfw_related_products_style_three($post_id){
                         </div>
                     <?php } ?>
                     <div class="rbfw-related-product-inner-content-wrap">
-                        <div class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></div>
+                        <h3 class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url($permalink); ?>"><?php echo esc_html($title); ?></a></h3>
                         <div class="rbfw-related-product-bottom-card">
 
                             <div class="rbfw-related-product-bottom-card-pricing-box">
