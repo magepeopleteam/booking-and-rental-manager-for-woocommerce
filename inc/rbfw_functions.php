@@ -1934,48 +1934,48 @@ function rbfw_import_dummy_time_slots(){
 
         '12:00 AM' => __( '12:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
         '12:30 AM' => __( '12:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '1:00 AM'  => __( '1:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '1:30 AM'  => __( '1:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '2:00 AM'  => __( '2:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '2:30 AM'  => __( '2:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '3:00 AM'  => __( '3:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '3:30 AM'  => __( '3:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '4:00 AM'  => __( '4:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '4:30 AM'  => __( '4:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '5:00 AM'  => __( '5:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '5:30 AM'  => __( '5:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '6:00 AM'  => __( '6:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '6:30 AM'  => __( '6:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '7:00 AM'  => __( '7:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '7:30 AM'  => __( '7:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '8:00 AM'  => __( '8:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '8:30 AM'  => __( '8:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '9:00 AM'  => __( '9:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-        '9:30 AM'  => __( '9:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '01:00 AM'  => __( '1:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '01:30 AM'  => __( '1:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '02:00 AM'  => __( '2:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '02:30 AM'  => __( '2:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '03:00 AM'  => __( '3:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '03:30 AM'  => __( '3:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '04:00 AM'  => __( '4:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '04:30 AM'  => __( '4:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '05:00 AM'  => __( '5:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '05:30 AM'  => __( '5:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '06:00 AM'  => __( '6:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '06:30 AM'  => __( '6:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '00:00 AM'  => __( '7:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '07:30 AM'  => __( '7:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '08:00 AM'  => __( '8:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '08:30 AM'  => __( '8:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '09:00 AM'  => __( '9:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+        '09:30 AM'  => __( '9:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
         '10:00 AM' => __( '10:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
         '10:30 AM' => __( '10:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
         '11:00 AM' => __( '11:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
         '11:30 AM' => __( '11:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
         '12:00 PM' => __( '12:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
         '12:30 PM' => __( '12:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '1:00 PM'  => __( '1:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '1:30 PM'  => __( '1:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '2:00 PM'  => __( '2:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '2:30 PM'  => __( '2:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '3:00 PM'  => __( '3:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '3:30 PM'  => __( '3:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '4:00 PM'  => __( '4:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '4:30 PM'  => __( '4:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '5:00 PM'  => __( '5:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '5:30 PM'  => __( '5:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '6:00 PM'  => __( '6:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '6:30 PM'  => __( '6:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '7:00 PM'  => __( '7:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '7:30 PM'  => __( '7:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '8:00 PM'  => __( '8:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '8:30 PM'  => __( '8:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '9:00 PM'  => __( '9:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-        '9:30 PM'  => __( '9:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '01:00 PM'  => __( '1:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '01:30 PM'  => __( '1:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '02:00 PM'  => __( '2:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '02:30 PM'  => __( '2:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '03:00 PM'  => __( '3:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '03:30 PM'  => __( '3:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '04:00 PM'  => __( '4:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '04:30 PM'  => __( '4:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '05:00 PM'  => __( '5:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '05:30 PM'  => __( '5:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '06:00 PM'  => __( '6:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '06:30 PM'  => __( '6:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '07:00 PM'  => __( '7:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '07:30 PM'  => __( '7:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '08:00 PM'  => __( '8:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '08:30 PM'  => __( '8:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '09:00 PM'  => __( '9:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+        '09:30 PM'  => __( '9:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
         '10:00 PM' => __( '10:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
         '10:30 PM' => __( '10:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
         '11:00 PM' => __( '11:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
@@ -3241,9 +3241,9 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
     $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
 
 
-    //echo $diff->days;exit;
     if ($diff) {
         $total_days = $diff->days;
+        $actual_days = $diff->days;
         $hours = $diff->h;
         $minutes = $diff->i;
         if ($minutes) {
@@ -3282,6 +3282,9 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                     }elseif($total_days == 1) {
                         $first_diff = date_diff(new DateTime($pickup_datetime), new DateTime($start_date. ' ' . '24:00:00'));
                         $f_hours = $first_diff->h;
+                        if ($first_diff->i) {
+                            $f_hours = $f_hours + 1;
+                        }
                         if(isset($rbfw_sp_prices) && $rbfw_sp_prices && ($sp_price = check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,$f_hours))!='not_found'){
                             $duration_price = $sp_price + $duration_price;
                         } else {
@@ -3294,6 +3297,9 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
 
                         $last_diff = date_diff(new DateTime($end_date. ' ' . '00:00:00'), new DateTime($dropoff_datetime));
                         $l_hours = $last_diff->h;
+                        if ($last_diff->i) {
+                            $l_hours = $l_hours + 1;
+                        }
                         if(isset($rbfw_sp_prices) && $rbfw_sp_prices && ($sp_price = check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,$l_hours))!='not_found'){
                             $duration_price = $sp_price + $duration_price;
                         } else {
@@ -3307,6 +3313,10 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
 
                         $first_diff = date_diff(new DateTime($pickup_datetime), new DateTime($start_date. ' ' . '24:00:00'));
                         $f_hours = $first_diff->h;
+                        if ($diff->i) {
+                            $f_hours = $f_hours + 1;
+                        }
+
                         if(isset($rbfw_sp_prices) && $rbfw_sp_prices && ($sp_price = check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,24))!='not_found'){
                             $duration_price = $sp_price + $duration_price;
                         }else{
@@ -3321,7 +3331,11 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                 }elseif($i == ($total_days - 1)) {
 
                     $last_diff = date_diff(new DateTime($end_date. ' ' . '00:00:00'), new DateTime($dropoff_datetime));
+
                     $l_hours = $last_diff->h;
+                    if ($last_diff->i) {
+                        $l_hours = $l_hours + 1;
+                    }
 
                     if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
                         $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,$l_hours);
@@ -3396,7 +3410,7 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
             }
         }
     }
-    return $duration_price;
+    return array('duration_price'=>$duration_price,'total_days'=>$total_days,'actual_days'=>$actual_days,'hours'=>$hours);
 }
 
 
