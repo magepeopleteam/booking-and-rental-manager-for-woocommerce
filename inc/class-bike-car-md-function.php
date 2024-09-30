@@ -162,7 +162,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 }
                 if ( $hours > 0 ) {
                     $duration .= $hours > 1 ? $hours.' '.rbfw_string_return('rbfw_text_hours',__('Hours','booking-and-rental-manager-for-woocommerce')) : $hours.' '.rbfw_string_return('rbfw_text_hour',__('Hour','booking-and-rental-manager-for-woocommerce'));
-                    $days +=$days;
+                    $days =$days+1;
                 }
                 if(!($days || $hours)){
                     $days =1;
