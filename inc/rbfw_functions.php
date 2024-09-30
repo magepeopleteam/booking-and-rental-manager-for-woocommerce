@@ -3563,10 +3563,10 @@ function get_rbfw_pickup_data_wp_query() {
                 }
             }
         }
-        $unique_locations = array_unique($all_locations);
+        $all_locations = array_unique($all_locations);
     }
 
-    return $unique_locations;
+    return $all_locations;
 }
 
 function rbfw_get_dropdown_new( $name, $saved_value , $class , $dropdown_for ) {
@@ -3586,7 +3586,7 @@ function rbfw_get_dropdown_new( $name, $saved_value , $class , $dropdown_for ) {
     $option .= "<select name=$name class=$class>";
     $option .= "<option value='' >" . $title . "</option>";
 
-    if( count( $category_arr ) > 0 ){
+    if( is_array( $category_arr ) && count( $category_arr ) > 0 ){
         foreach ( $category_arr as $key => $value ) {
             $selected_text = ! empty( $saved_value ) && $saved_value == $value ? 'Selected' : '';
             $option .= "<option value='$value' $selected_text>" . esc_html( $value ) . "</option>";
