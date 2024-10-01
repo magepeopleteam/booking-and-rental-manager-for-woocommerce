@@ -310,10 +310,10 @@
 				if ( $slider_indicator == 'on' || $popup_slider_icon == 'on' ) {
 					?>
 					<div class="iconIndicator prevItem">
-						<span class="fas fa-chevron-circle-left"></span>
+						<span class="fas fa-chevron-left"></span>
 					</div>
 					<div class="iconIndicator nextItem">
-						<span class="fas fa-chevron-circle-right"></span>
+						<span class="fas fa-chevron-right"></span>
 					</div>
 					<?php
 				}

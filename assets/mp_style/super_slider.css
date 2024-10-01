@@ -55,9 +55,16 @@ div.superSlider .area_column .sliderShowcaseItem {width: calc(25% - var(--defaul
 div.superSlider .sliderShowcase div.superSlider .area_column {margin: 0 0 var(--default-mp-xs) 0;position: relative;cursor: pointer;overflow: hidden;}
 div.superSlider .sliderShowcaseItem img {height: 100%;}
 div.superSlider .sliderMoreItem {
-	position: absolute;left: 0;top: 0;right: 0;bottom: 0;
-	-webkit-border-radius: 5px;border-radius: 5px;
-	background-color: #000B;font-size: 18px;color: #FFF;
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	-webkit-border-radius: 5px;
+	border-radius: 0;
+	background-color: #000B;
+	font-size: 18px;
+	color: #FFF;
 }
 div.superSlider .sliderMoreItem span {margin: 0 5px;font-size: 10px;}
 div.superSlider .sliderMoreItem span:last-child {font-size: 18px;}
@@ -66,7 +73,18 @@ div.superSlider .slideIndicator {-webkit-flex-wrap: wrap;flex-wrap: wrap;margin:
 div.superSlider .slideIndicatorItem { border: 3px solid #DDD;margin: 5px;background-color: #DDD;width: 75px;overflow: hidden;position: relative;}
 div.superSlider .slideIndicatorItem.activeSlide { border-color: var(--active_color); background-color: var(--active_color);}
 /*******Icon indicator***************/
-div.superSlider .iconIndicator {position: absolute;z-index: 111;top: calc(50% - 15px);font-size: 30px;cursor: pointer;color: #222;display: flex;justify-content: center;align-items: center;transform: translateY(-50%);}
+div.superSlider .iconIndicator {
+	position: absolute;
+	z-index: 111;
+	top: calc(50% - 15px);
+	font-size: 20px;
+	cursor: pointer;
+	color: #222;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	transform: translateY(-50%);
+}
 div.superSlider .iconIndicator:hover {color: #FFF;}
 div.superSlider .iconIndicator.prevItem {left: 20px;}
 div.superSlider .iconIndicator.nextItem {right: 20px;}

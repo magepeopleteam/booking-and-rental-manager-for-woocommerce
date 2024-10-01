@@ -1,0 +1,469 @@
+.rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    align-items: center;
+}
+
+
+.rbfw_rent_list_lists_images {
+    width: 33%;
+    max-width: inherit;
+    min-height: 300px;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.rbfw_rent_list_lists_info {
+    width: 67%;
+}
+
+@media(max-width: 991px) {
+    .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper {
+        flex-direction: column;
+    }
+
+    .rbfw_rent_list_lists_info, .rbfw_rent_list_lists_images {
+        width: 100%;
+    }
+}
+
+
+.rbfw_rent_list_lists_left {
+    display: flex;
+    width: calc(100% - 180px);
+    /*width: 100%;*/
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    /*background-color: #0a4b78;*/
+}
+
+.rbfw_rent_show_result_list_grid_icon_holder {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    gap: 15px;
+    margin-bottom: 0;
+}
+
+.shoe_result_text {
+    text-align: left;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #333;
+}
+
+.rbfw_rent_list_grid_icon_holder {
+    display: flex;
+    gap: 10px;
+/
+}
+
+.rbfw_rent_lists_grid_view {
+    cursor: pointer;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: grid;
+    gap: 20px;
+    /* background: #fff; */
+    -webkit-box-shadow: 10px 10px 50px 5px rgba(0, 0, 0, 0);
+    box-shadow: 10px 10px 50px 5px rgba(0, 0, 0, 0);
+    /* border: 1px solid #d9d9d9; */
+    -webkit-transition: border 0.3s, -webkit-box-shadow 0.3s;
+    transition: border 0.3s, -webkit-box-shadow 0.3s;
+    -o-transition: box-shadow 0.3s, border 0.3s;
+    transition: box-shadow 0.3s, border 0.3s;
+    transition: box-shadow 0.3s, border 0.3s, -webkit-box-shadow 0.3s;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #f1f1e5;
+    min-height: 620px;
+}
+
+.rbfw_rent_item_content_list_bottom {
+    display: -ms-grid;
+    display: grid;
+    -ms-grid-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    padding-inline-start: 0px;
+    font-size: 14px;
+    margin: 0 0 30px 0;
+}
+
+.rbfw_rent_item_content_list_bottom .bfw_rent_list_items {
+    font-size: 16px;
+    gap: 7px;
+    color: #0a0a0a;
+}
+
+.rbfw_rent_item_content_list_bottom .bfw_rent_list_items i {
+    color: var(--rbfw_color_primary);
+}
+
+p {
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+.rbfw_rent_list_btn_holder {
+
+}
+
+.rbfw_rent_items_grid, .rbfw_rent_items_list {
+    cursor: pointer;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+    color: #333;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+}
+
+.rbfw_rent_items_list_grid svg {
+    width: 24px;
+    height: auto;
+}
+
+.rbfw_rent_items_grid:hover, .rbfw_rent_items_list:hover {
+    background-color: #e0e0e0;
+}
+
+.rbfw_rent_item_description {
+    display: grid;
+    width: 100%;
+    text-align: left;
+}
+
+.rbfw_rent_item_description_text {
+    color: currentColor;
+    font-size: 1em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.rbfw_rent_list_style_list .rbfw_rent_item_description_text {
+    display: -webkit-box !important;
+}
+
+.selected_list_grid, .selected_list_grid:hover {
+    background-color: var(--rbfw_color_primary);
+    border-color: var(--rbfw_color_primary);
+    color: #f6f6f6;
+}
+
+.selected_list_grid svg path {
+    fill: #fff;
+}
+
+
+/*Animation*/
+.rbfw_rent_list_lists_images,
+.rbfw_rent_list_grid_view_top,
+.rbfw_rent_item_content_list_bottom {
+    transition: all 0.3s ease;
+}
+
+.rbfw_rent_list_grid_view_top {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.rbfw_rent_list_lists_images {
+    opacity: 1;
+    /*transform: scale(0.9);*/
+}
+
+@media only screen and (max-width: 1220px) {
+    .rbfw_rent_list_lists_left {
+        width: 100%;
+    }
+
+    .bfw_rent_list_btn_holder {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 750px) {
+    .rbfw_rent_list_lists_view {
+        display: grid;
+    }
+
+    .rbfw_rent_list_lists_images {
+        min-height: 100%;
+    }
+
+    .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper {
+        display: grid;
+    }
+
+    .rbfw_rent_list_lists_images {
+        width: 100%;
+    }
+
+    .rbfw_rent_list_lists_info {
+        width: 100%;
+        display: grid;
+    }
+
+    .bfw_rent_list_btn_holder {
+        display: block;
+        width: 100%;
+    }
+
+    .bfw_rent_list_booking_btn_holder {
+        margin: 10px;
+    }
+}
+
+
+/*Search Short Code*/
+
+
+.rbfw_rent_item_search_elementor_section .rbfw_rent_item_search_elementor_container {
+    display: flex;
+    margin-right: auto;
+    margin-left: auto;
+    position: relative;
+}
+
+
+.rbfw_rent_item_search_container {
+    display: flex;
+    gap: 20px;
+    position: relative;
+    padding: 20px 30px;
+    z-index: 2;
+    box-shadow: 0 5px 35.2px 4.8px rgba(0, 0, 0, 0.08);
+    background-color: #F8F8F8;
+    border-bottom: solid 1px #666666;
+    overflow: hidden;
+    max-width: 100%;
+    margin: auto;
+}
+
+.rbfw_search_form_new {
+    width: 100%;
+    margin: auto;
+}
+
+.rbfwRentItemSearchTitleHolder {
+    display: flex;
+    position: relative;
+    width: 130px;
+}
+
+.rbfw_rent_item_searchContentHolder {
+    display: flex;
+    width: 100%;
+    gap: 30px;
+}
+
+.rbfw_rent_item_searchTypeLocationHolder {
+    display: flex;
+    width: 50%;
+    gap: 35px;
+}
+
+.rbfw_rent_item_search_dateButtonHolder {
+    display: flex;
+    width: 50%;
+    gap: 30px;
+}
+
+.c-filter__field--header {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    margin-right: 65px;
+    white-space: nowrap;
+}
+
+.rbfw_rent_item_SearchTitl_text {
+    flex: 1 1 33%;
+    position: relative;
+    margin-right: 40px;
+    /*margin-top: 15px;*/
+}
+
+.rbfw_rent_item_header {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.6px;
+    color: #333333;
+    text-transform: uppercase;
+    white-space: normal;
+    word-wrap: break-word;
+    width: 100px;
+    padding-left: 10px;
+}
+
+.rbfw_rent_item_search_type_location {
+    margin-top: 7px;
+    height: auto;
+    line-height: 1.2;
+    border: none;
+    width: 100%;
+    font-size: 15px;
+    border-radius: 0;
+    background-color: #f6f6f6f6;
+    cursor: pointer;
+    border-bottom: solid 1px #dddddd;
+}
+
+.rbfw_rent_item_search_item {
+    width: 100%;
+}
+
+#rbfw_rent_item_search_pickup_date {
+    border-color: unset;
+    padding: 15px 0px 0px 0px;
+    border-width: unset;
+    border-style: unset;
+    background-color: unset;
+    color: #666666;
+    font-size: 15px;
+}
+
+select, input[type="date"] {
+    padding: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    color: #333;
+    width: 100%;
+}
+
+.rbfw_rent_item_search-item_date {
+    width: 50%;
+}
+
+.rbfw_rent_item_search_button_holder {
+    display: flex;
+    /*align-items: flex-end;*/
+    width: 50%;
+    justify-content: center;
+}
+
+.rbfw_rent_item_search_submit {
+    padding: 7px 10px;
+    background-color: #c51458;
+    border: none;
+    color: white;
+    width: calc(100% - 40px);
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 2px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.rbfw_rent_item_search_button button:hover {
+    background-color: #0056b3;
+}
+
+.rbfw_rent_item_search_button button i {
+    padding-left: 12px;
+    margin-right: 8px;
+}
+
+.rbfw_rent_item_date_picker {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.rbfw_rent_item_search_date_picker_wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    /* background-color: #ffffff; */
+    padding: 7px;
+    border-bottom: solid 1px #dddddd;
+    color: #666666;
+    font-size: 15px;
+    /*min-width: 205px;*/
+}
+
+.rbfw_rent_item_search_date_picker_wrapper i {
+    position: absolute;
+    margin-top: 20px;
+    right: 10px;
+    font-size: 18px;
+    color: #007bff;
+    cursor: pointer;
+}
+
+#calendar-icon {
+    cursor: pointer;
+}
+
+.rbfw_rent_item_search_button {
+    width: 100%;
+}
+
+
+@media (max-width: 1000px) {
+    .rbfw_rent_item_search_container {
+        display: block;
+        width: 100%;
+    }
+
+    .rbfwRentItemSearchTitleHolder {
+        display: block;
+        position: relative;
+        width: 100%;
+        float: left;
+    }
+
+    .rbfw_rent_item_header {
+        width: 100%;
+        padding-bottom: 10px;
+    }
+
+    .rbfw_rent_item_searchContentHolder {
+        width: 100%;
+    }
+}
+
+@media (max-width: 750px) {
+    .rbfw_rent_item_searchContentHolder {
+        display: block;
+    }
+
+    .rbfw_rent_item_searchTypeLocationHolder, .rbfw_rent_item_search_dateButtonHolder {
+        width: 100%;
+    }
+
+    .rbfw_rent_item_search_button {
+        margin-left: 50px;
+    }
+
+    .rbfw_rent_item_search_submit {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 420px) {
+
+    .rbfw_rent_item_search_container {
+        display: block;
+        width: calc(100% - 10px);
+    }
+
+    .rbfw_rent_item_search_button {
+        margin-left: unset;
+    }
+}
+
+
+

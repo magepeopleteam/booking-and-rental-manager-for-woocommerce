@@ -204,6 +204,9 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
+== Changelog ==
+= 2.1.1 =
+* add_to_cart_id Constant warning removed.
 
 == Changelog ==
 = 2.1.1 =
