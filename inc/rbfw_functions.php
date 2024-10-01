@@ -3240,8 +3240,8 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
     $duration_price = 0;
     $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
 
-
     if ($diff) {
+
         $total_days = $diff->days;
         $actual_days = $diff->days;
         $hours = $diff->h;
@@ -3263,8 +3263,8 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
         for ($i = 0; $i < $total_days; $i++) {
 
             $day = strtolower(date('D', strtotime("+$i day", strtotime($start_date))));
-            if($rbfw_enable_daily_rate=='no' && $rbfw_enable_hourly_rate=='yes'){
 
+            if($rbfw_enable_daily_rate=='no' && $rbfw_enable_hourly_rate=='yes'){
                 if($i==0){
                     if($start_date == $end_date){
                         if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
@@ -3311,11 +3311,14 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                         }
                     }else{
 
+
+
                         $first_diff = date_diff(new DateTime($pickup_datetime), new DateTime($start_date. ' ' . '24:00:00'));
-                        $f_hours = $first_diff->h;
-                        if ($diff->i) {
+                        $f_hours = $first_diff->h?$first_diff->h:24;
+                        if ($first_diff->i) {
                             $f_hours = $f_hours + 1;
                         }
+
 
                         if(isset($rbfw_sp_prices) && $rbfw_sp_prices && ($sp_price = check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,24))!='not_found'){
                             $duration_price = $sp_price + $duration_price;
@@ -3332,7 +3335,7 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
 
                     $last_diff = date_diff(new DateTime($end_date. ' ' . '00:00:00'), new DateTime($dropoff_datetime));
 
-                    $l_hours = $last_diff->h;
+                    $l_hours = $last_diff->h?$last_diff->h:24;
                     if ($last_diff->i) {
                         $l_hours = $l_hours + 1;
                     }
@@ -3366,6 +3369,7 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                     }
                 }
             }elseif($rbfw_enable_daily_rate=='yes' && $rbfw_enable_hourly_rate=='no'){
+                echo 'ttt';
                 if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
                     $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices);
                     if($sp_price!='not_found'){

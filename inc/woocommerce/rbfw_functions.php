@@ -115,7 +115,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
 
     if (function_exists('rbfw_get_discount_array')) {
-        $discount_arr = rbfw_get_discount_array($rbfw_id, $pickup_datetime, $dropoff_datetime, $rbfw_room_total_price);
+        $discount_arr = rbfw_get_discount_array($rbfw_id, $total_days, $rbfw_room_total_price);
     } else {
         $discount_arr = [];
     }
@@ -279,14 +279,16 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
 
         //$base_price = rbfw_price_calculation($rbfw_id, $start_datetime, $end_datetime, $start_date);
-        $base_price = rbfw_md_duration_price_calculation($rbfw_id,$start_datetime,$end_datetime,$start_date,$end_date,$start_time,$end_time);
-        $base_price = $base_price * $rbfw_item_quantity;
-        // $total_price = apply_filters('rbfw_cart_base_price', $base_price);
+        $duration_price_info = rbfw_md_duration_price_calculation($rbfw_id,$start_datetime,$end_datetime,$start_date,$end_date,$start_time,$end_time);
 
+        $duration_price = $duration_price_info['duration_price'] * $rbfw_item_quantity;
+        $total_days = $duration_price_info['total_days'];
+        $actual_days = $duration_price_info['actual_days'];
+        $hours = $duration_price_info['hours'];
 
         $rbfw_extra_service_price = 0;
 
-        $rbfw_duration_price = $base_price;
+        $rbfw_duration_price = $duration_price;
 
 
         $rbfw_extra_service_data = get_post_meta($rbfw_id, 'rbfw_extra_service_data', true) ? get_post_meta($rbfw_id, 'rbfw_extra_service_data', true) : '';
@@ -338,7 +340,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
         $discount_amount = 0;
         if (function_exists('rbfw_get_discount_array')) {
-            $discount_arr = rbfw_get_discount_array($rbfw_id, $pickup_datetime, $dropoff_datetime, $sub_total_price);
+            $discount_arr = rbfw_get_discount_array($rbfw_id, $total_days, $sub_total_price);
         } else {
             $discount_arr = [];
         }
@@ -375,7 +377,6 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $cart_item_data['security_deposit_amount'] = $security_deposit['security_deposit_amount'];
         $cart_item_data['security_deposit_desc'] = $security_deposit['security_deposit_desc'];
         $cart_item_data['total_days'] = $total_days;
-
 
     }
 
