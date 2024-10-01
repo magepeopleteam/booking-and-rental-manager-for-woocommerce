@@ -196,6 +196,8 @@ function rbfw_order_meta_box_callback(){
                         $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                         $rent_info = $BikeCarSdClass->rbfw_get_bikecarsd_rent_info($item_id, $rent_info);
                         $service_info = $BikeCarSdClass->rbfw_get_bikecarsd_service_info($item_id, $service_info);
+                        $pickup_point = !empty($ticket_info['rbfw_pickup_point']) ? $ticket_info['rbfw_pickup_point'] : '';
+                        $dropoff_point = !empty($ticket_info['rbfw_dropoff_point']) ? $ticket_info['rbfw_dropoff_point'] : '';
 
                     }elseif($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){
                         $BikeCarMdClass = new RBFW_BikeCarMd_Function();
@@ -259,7 +261,7 @@ function rbfw_order_meta_box_callback(){
                         <td><strong><?php rbfw_string('rbfw_text_item_type',__('Item Type','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                         <td><?php echo rbfw_get_type_label($rent_type); ?></td>
                     </tr>
-                    <?php if($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){ ?>
+                    <?php if($rent_type == 'bike_car_md' || $rent_type == 'bike_car_sd' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){ ?>
                     <tr>
                         <td><strong><?php rbfw_string('rbfw_text_pickup_location',__('Pickup Location','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                         <td><?php echo esc_html($pickup_point); ?></td>

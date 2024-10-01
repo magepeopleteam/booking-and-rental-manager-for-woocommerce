@@ -272,12 +272,8 @@ function rbfw_bikecarsd_without_time_func(){
             rbfw_step_func();
             rbfw_display_es_box_onchange_onclick();
             rbfw_mps_book_now_btn_action();
-
-
             jQuery('.rbfw_back_step_btn').attr('back-step','1');
-
             jQuery('.rbfw_muff_registration_wrapper .rbfw_regf_wrap').show();
-
         },
         complete:function(response) {
             jQuery('html, body').animate({
