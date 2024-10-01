@@ -304,11 +304,11 @@ function rbfw_bikecarsd_without_time_func(){
         }
     });
 
-
+let bikecarsd_price_arr = {};
+let service_price_arr = {};
     jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus,.rbfw_service_qty_minus,.rbfw_service_qty_plus',function (e) {
 
-        let bikecarsd_price_arr = {};
-        let service_price_arr = {};
+
 
         let data_cat = jQuery(this).siblings('input[type=number]').attr('data-cat');
 
@@ -420,12 +420,17 @@ function rbfw_bikecarsd_without_time_func(){
 
     jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus',function (e) {
 
+
         let count = jQuery('.rbfw_bikecarsd_rt_price_table tbody tr').length;
+
         let total_qty = 0;
         for (let index = 1; index <= count; index++) {
             let qty = jQuery('input[name="rbfw_bikecarsd_info['+index+'][qty]"]').val();
-            total_qty += parseInt(qty);
+            if(jQuery.isNumeric( qty )){
+                total_qty += parseInt(qty);
+            }
         }
+
 
         if(total_qty > 0){
             jQuery('.rbfw_bikecarsd_es_price_table').show();

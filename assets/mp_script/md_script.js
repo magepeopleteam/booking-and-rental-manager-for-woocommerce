@@ -161,7 +161,7 @@ jQuery('body').on('change','.rbfw_bikecarmd_es_qty',function(e) {
 });
 
 
-let service_price_arr = {};
+
 
 jQuery('body').on('change','.rbfw-resource-price-multiple-qty',function(e) {
     e.preventDefault();
