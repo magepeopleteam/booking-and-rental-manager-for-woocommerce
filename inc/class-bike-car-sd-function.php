@@ -429,16 +429,14 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
         public function rbfw_bikecarsd_time_table(){
             if(isset($_POST['post_id'])){
+
                 $id = $_POST['post_id'];
                 $selected_date = $_POST['selected_date'];
                 $is_muffin_template = $_POST['is_muffin_template'];
-                //$available_times = rbfw_get_available_times($id);
-
-
                 $available_times = get_post_meta($id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($id, 'rdfw_available_time', true)) : [];
 
                 $default_timezone = wp_timezone_string();
-                $date = new DateTime("now", new DateTimeZone($default_timezone) );
+                $date = new DateTime("now", new DateTimeZone($default_timezone));
                 $nowTime  = $date->format('H:i');
                 $nowDate  = $date->format('Y-m-d');
 
@@ -464,26 +462,30 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 $content .= '<div class="rbfw_bikecarsd_time_table_wrap">';
 
-                
-                foreach ($available_times as $value) {
-                    $converted_time =  date("H:i", strtotime($value)); 
-                    $ts_time = $this->rbfw_get_time_slot_by_label($value);
-                   
-                    $is_booked = $this->rbfw_get_time_booking_status($id, $selected_date, $ts_time);
-                    
-                    $disabled = '';
+                if(!empty($available_times)){
+                    foreach ($available_times as $value) {
+                        $converted_time =  date("H:i", strtotime($value));
+                        $ts_time = $this->rbfw_get_time_slot_by_label($value);
 
-                    if((($nowDate == $selected_date) && ($converted_time < $nowTime)) || ($is_booked === true)){
-                        $disabled = 'disabled';
+                        $is_booked = $this->rbfw_get_time_booking_status($id, $selected_date, $ts_time);
+
+                        $disabled = '';
+
+                        if((($nowDate == $selected_date) && ($converted_time < $nowTime)) || ($is_booked === true)){
+                            $disabled = 'disabled';
+                        }
+                        $content .= '<a data-time="'.$value.'" class="rbfw_bikecarsd_time '.$disabled.'"><span class="rbfw_bikecarsd_time_span">'.$value.'</span>';
+
+                        if($is_booked === true){
+                            $content .= '<span class="rbfw_bikecarsd_time_booked">'.rbfw_string_return('rbfw_text_booked',__('Booked','booking-and-rental-manager-for-woocommerce')).'</span>';
+                        }
+
+                        $content .= '</a>';
                     }
-                    $content .= '<a data-time="'.$value.'" class="rbfw_bikecarsd_time '.$disabled.'"><span class="rbfw_bikecarsd_time_span">'.$value.'</span>';
-
-                    if($is_booked === true){
-                        $content .= '<span class="rbfw_bikecarsd_time_booked">'.rbfw_string_return('rbfw_text_booked',__('Booked','booking-and-rental-manager-for-woocommerce')).'</span>';
-                    }
-
-                    $content .= '</a>';
                 }
+
+                
+
                 
                 $content .= '</div>';
                 $content .= '</div>';
