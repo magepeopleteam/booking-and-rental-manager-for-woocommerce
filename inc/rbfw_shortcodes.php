@@ -7,6 +7,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Rent List Shortcode
  ******************************/
 add_shortcode('rent-list', 'rbfw_rent_list_shortcode_func');
+/******************************
+ * Rent List Shortcode
+ ******************************/
+add_shortcode('search-result', 'rbfw_rent_list_shortcode_func');
 function rbfw_rent_list_shortcode_func($atts = null) {
 
     $attributes = shortcode_atts( array(
@@ -127,6 +131,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $total_posts = $query->found_posts;
     $post_count = $query->post_count;
 
+    $j = 1;
     if(isset($_COOKIE['rbfw_rent_item_list_grid'])) {
         $rbfw_rent_item_list_grid = $_COOKIE['rbfw_rent_item_list_grid'];
     }else{
@@ -142,6 +147,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             $style = 'grid';
             $is_grid_selected = 'selected_list_grid';
             $is_list_selected = '';
+            $display_cat_features = 3;
         }else{
             $image_holder = 'rbfw_rent_list_lists_images';
             $rent_item_info = 'rbfw_rent_list_lists_info';
@@ -150,6 +156,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             $style = 'list';
             $is_grid_selected = '';
             $is_list_selected = 'selected_list_grid';
+
+            $display_cat_features = 5;
         }
     }else{
         if( $rbfw_rent_item_list_grid == 'rbfw_rent_item_grid' ){
@@ -160,6 +168,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             $style = 'grid';
             $is_grid_selected = 'selected_list_grid';
             $is_list_selected = '';
+
+            $display_cat_features = 3;
         }else{
             $image_holder = 'rbfw_rent_list_lists_images';
             $rent_item_info = 'rbfw_rent_list_lists_info';
@@ -168,6 +178,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             $style = 'list';
             $is_grid_selected = '';
             $is_list_selected = 'selected_list_grid';
+
+            $display_cat_features = 5;
         }
     }
 
@@ -179,9 +191,20 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $grid_class = ($columns==1 || $columns==2)?'rbfw-w-50':(($columns==3)?'rbfw-w-33':(($columns==4)?'rbfw-w-25':(($columns==5)?'rbfw-w-20':'rbfw-w-20')));
     }
 
+
     $shoe_result =  $total_posts. ' results. Showing '.$post_count. ' of '. $total_posts. ' of total';
     ?>
     <div class="rbfw_rent_show_result_list_grid_icon_holder">
+
+        <div class="rbfw_popup_wrapper" id="rbfw_popup_wrapper">
+            <div class="rbfw_rent_cat_info_popup">
+                <span class="rbfw_popup_close_btn" id="rbfw_popup_close_btn">&times;</span>
+                <div id="rbfw_popup_content">
+
+                </div>
+            </div>
+        </div>
+
         <div class="shoe_result_text">
             <span> <?php echo esc_attr( $shoe_result );?></span>
         </div>
@@ -239,6 +262,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 }
             }
             $d++;
+            $j++;
         endwhile;
         else:
             ?>
@@ -379,9 +403,9 @@ function rbfw_rent_search_shortcode_func() {
 
 add_shortcode('rbfw_search', 'rbfw_rent_search_shortcode' );
 //[rbfw_search] bike_car_sd, appointment, bike_car_md, equipment, dress, resort, others
-function rbfw_rent_search_shortcode( $attr ){
+function rbfw_rent_search_shortcode( $attr = null ){
 
-    $search_page_id = rbfw_get_option('rbfw_search_page','rbfw_basic_gen_settings');
+    $search_page_id = rbfw_get_option('search-item-list','rbfw_basic_gen_settings');
     $search_page_link = get_page_link($search_page_id);
     $location = !empty($_GET['rbfw_search_location']) ? strip_tags($_GET['rbfw_search_location']) : '';
     $type = !empty($_GET['rbfw_search_type']) ? strip_tags($_GET['rbfw_search_type']) : '';
