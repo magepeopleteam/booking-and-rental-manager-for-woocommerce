@@ -402,7 +402,6 @@ function rbfw_rent_search_shortcode_func() {
 }
 
 add_shortcode('rbfw_search', 'rbfw_rent_search_shortcode' );
-//[rbfw_search] bike_car_sd, appointment, bike_car_md, equipment, dress, resort, others
 function rbfw_rent_search_shortcode( $attr = null ){
 
     $search_page_id = rbfw_get_option('search-item-list','rbfw_basic_gen_settings');
@@ -416,7 +415,8 @@ function rbfw_rent_search_shortcode( $attr = null ){
 
     <section class="rbfw_rent_item_search_elementor_section">
         <div class="rbfw_rent_item_search_elementor_container">
-            <form class="rbfw_search_form_new" action="<?php echo esc_url($search_page_link); ?>" method="GET">
+<!--            <form class="rbfw_search_form_new" action="--><?php //echo esc_url($search_page_link); ?><!--" method="GET">-->
+            <form class="rbfw_search_form_new" action="<?php echo get_home_url() . '/search-item-list/';  ?>" method="GET">
                 <div class="rbfw_rent_item_search_container">
 
                     <div class="rbfw_rent_item_searchContentHolder">
