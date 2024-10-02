@@ -371,7 +371,7 @@
 				$section_visibility = ( $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment' && $rbfw_item_type != 'resort')?'show':'hide'; 
 			?>
 				<div class="rbfw_general_price_config_wrapper <?php echo esc_attr( $section_visibility); ?>">
-					<?php $this->panel_header('Service price settings ','Service price settings with category.'); ?>
+					<?php $this->panel_header('Service item price settings ','Service price settings with category.'); ?>
 					<section>
                         <div>
                             <label>
@@ -825,14 +825,14 @@
 						</span>
 					</div>
 				</section>
-
+				<?php $this->panel_header('Day-wise Price Configuration ','Day-wise Price Configuration lets you set different prices for each day of the week'); ?>
 				<section>
 					<div>
 						<label>
-							<?php esc_html_e( 'Day-wise Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<?php esc_html_e( 'Enable Day-wise Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</label>
 						<span>
-							<?php esc_html_e( 'If you enable this, price calculation will work as weekly day. it will overwrite general daily price.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<?php esc_html_e( 'Enabling this will set prices based on the day of the week, overriding the general daily price', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</span>
 					</div>
 

@@ -1039,6 +1039,7 @@
 #rbfw_add_meta_box .add-feature-category {
   background-color: var(--mage-primary);
   border: 1px solid var(--mage-primary);
+  margin-left: 15%;
 }
 #rbfw_add_meta_box .add-feature-category:hover {
   opacity: 0.8;
