@@ -288,13 +288,7 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 		</div>
 	</div>
 	<?php endif; ?>
-
-	<?php if(!empty($rbfw_related_post_arr)): ?>
-	<div class="rbfw_muff_row_related_item">
-		<h3 class="rbfw_muff_heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings', __('You May Also Like','booking-and-rental-manager-for-woocommerce'))); ?></h3>
-		<?php do_action( 'rbfw_related_products_style_three', $post_id ); ?>
-	</div>
-	<?php endif; ?>
+	
 	<?php if($rbfw_enable_faq_content == 'yes') { ?>
 		<div class="rbfw_muff_row_faq">
 			<div class="rbfw_muff_heading rbfw_muff_faq_heading">
@@ -303,5 +297,13 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
 			<?php do_action( 'rbfw_the_faq_style_two', $post_id ); ?>
 		</div>
 	<?php } ?>
+
+	<?php if(!empty($rbfw_related_post_arr)): ?>
+	<div class="rbfw_muff_row_related_item">
+		<h3 class="rbfw_muff_heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings', __('You May Also Like','booking-and-rental-manager-for-woocommerce'))); ?></h3>
+		<?php do_action( 'rbfw_related_products_style_three', $post_id ); ?>
+	</div>
+	<?php endif; ?>
+	
     <?php } ?>
 </div>

@@ -18,8 +18,11 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
             add_action('wp_ajax_rbfw_bikecarsd_type_list', array($this, 'rbfw_bikecarsd_type_list'));
             add_action('wp_ajax_nopriv_rbfw_bikecarsd_type_list', array($this,'rbfw_bikecarsd_type_list'));
             add_action('wp_ajax_rbfw_bikecarsd_ajax_price_calculation', array($this, 'rbfw_bikecarsd_ajax_price_calculation'));
-            add_action('wp_ajax_nopriv_rbfw_bikecarsd_ajax_price_calculation', array($this,'rbfw_bikecarsd_ajax_price_calculation'));               
+            add_action('wp_ajax_nopriv_rbfw_bikecarsd_ajax_price_calculation', array($this,'rbfw_bikecarsd_ajax_price_calculation'));
+
+
         }
+
 
         public function rbfw_get_bikecarsd_rent_array_reorder($product_id, $rent_info){
             

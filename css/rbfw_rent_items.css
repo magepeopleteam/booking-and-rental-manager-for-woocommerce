@@ -246,7 +246,7 @@ p {
     z-index: 2;
     box-shadow: 0 5px 35.2px 4.8px rgba(0, 0, 0, 0.08);
     background-color: #F8F8F8;
-    border-bottom: solid 1px #666666;
+
     overflow: hidden;
     max-width: 100%;
     margin: auto;
@@ -267,6 +267,7 @@ p {
     display: flex;
     width: 100%;
     gap: 30px;
+    align-items: center;
 }
 
 .rbfw_rent_item_searchTypeLocationHolder {
@@ -309,7 +310,6 @@ p {
 }
 
 .rbfw_rent_item_search_type_location {
-    margin-top: 7px;
     height: auto;
     line-height: 1.2;
     border: none;
@@ -318,7 +318,7 @@ p {
     border-radius: 0;
     background-color: #f6f6f6f6;
     cursor: pointer;
-    border-bottom: solid 1px #dddddd;
+    border: 1px solid #dddddd;
 }
 
 .rbfw_rent_item_search_item {
@@ -327,7 +327,6 @@ p {
 
 #rbfw_rent_item_search_pickup_date {
     border-color: unset;
-    padding: 15px 0px 0px 0px;
     border-width: unset;
     border-style: unset;
     background-color: unset;
@@ -335,9 +334,9 @@ p {
     font-size: 15px;
 }
 
-select, input[type="date"] {
+.rbfw_rent_item_search_type_location {
     padding: 10px;
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     font-size: 14px;
     color: #333;
     width: 100%;
@@ -355,12 +354,11 @@ select, input[type="date"] {
 }
 
 .rbfw_rent_item_search_submit {
-    padding: 7px 10px;
-    background-color: #c51458;
+    padding: 5px 10px;
+    background-color: var(--rbfw_color_primary);
     border: none;
     color: white;
     width: calc(100% - 40px);
-    margin-top: 10px;
     cursor: pointer;
     border-radius: 2px;
     text-align: center;
@@ -368,7 +366,7 @@ select, input[type="date"] {
 }
 
 .rbfw_rent_item_search_button button:hover {
-    background-color: #0056b3;
+    background-color: var(--rbfw_color_primary);
 }
 
 .rbfw_rent_item_search_button button i {
@@ -386,9 +384,8 @@ select, input[type="date"] {
     position: relative;
     display: flex;
     align-items: center;
-    /* background-color: #ffffff; */
-    padding: 7px;
-    border-bottom: solid 1px #dddddd;
+
+    border: 1px solid #dddddd;
     color: #666666;
     font-size: 15px;
     /*min-width: 205px;*/
@@ -396,10 +393,9 @@ select, input[type="date"] {
 
 .rbfw_rent_item_search_date_picker_wrapper i {
     position: absolute;
-    margin-top: 20px;
     right: 10px;
     font-size: 18px;
-    color: #007bff;
+    color: var(--rbfw_color_primary);
     cursor: pointer;
 }
 
@@ -409,6 +405,102 @@ select, input[type="date"] {
 
 .rbfw_rent_item_search_button {
     width: 100%;
+}
+
+.rbfw_show_all_cat_features{
+    display: block;
+    float: left;
+    position: relative;
+    color: #666666;
+    padding: 10px;
+    width: 100%;
+    /*max-height: 600px;*/
+    top: -15px;
+    text-align: justify;
+    /*overflow: scroll;*/
+}
+
+.rbfw_see_more_category:hover + #rbfw_show_all_cat_features {
+    display: block; /* Show div1 when div0 is hovered */
+}
+.rbfw_see_more_category{
+    display: block;
+    float: right;
+    position: relative;
+    cursor: pointer;
+    font-size: 13px;
+    color: #333333;
+    z-index: 10;
+}
+.rbfw_popup_fearure_title_text{
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+}
+/* Styles for the popup wrapper */
+.rbfw_popup_wrapper {
+    display: none;
+    top: 0;
+    position: fixed;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgb(0 0 0 / 41%);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* Styles for the popup */
+.rbfw_rent_cat_info_popup {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    width: 400px;
+    max-width: 90%;
+    text-align: left;
+    top: 100px;
+    margin: auto;
+}
+
+/* Close button styles */
+.rbfw_popup_close_btn {
+    position: absolute;
+    top: 3px;
+    padding: 3px 8px;
+    right: 2px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #000;
+}
+
+/* Popup content styles */
+#rbfw_popup_content{
+    display: flex;
+    margin-top: 10px;
+    width: calc( 100% - 28px );
+}
+
+/* Styles for the list */
+ul.rbfw_show_all_cat_features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul.rbfw_show_all_cat_features li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+ul.rbfw_show_all_cat_features li:last-child {
+    border-bottom: none;
+}
+
+.bfw_rent_list_items_icon {
+    margin-right: 10px;
 }
 
 
