@@ -133,10 +133,23 @@
 
             public function additional_gallery( $post_id ) {
                 $template =  get_post_meta($post_id, 'rbfw_single_template', true) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default'; 
+                $additional_gallary =  get_post_meta($post_id, 'rbfw_enable_additional_gallary', true);
+                $additional_gallary =  $additional_gallary ? $additional_gallary : 'off'; 
+                
                 ?>
                 <div class="additional-gallery <?php echo $template=='Muffin'?'show':'hide' ?>">
                     <?php $this->panel_header('Additional Gallery','Please upload gallary images size in ratio 4:3. Ex: Image size width=1200px and height=900px. gallery and feature image should be in same size.'); ?>
-                    <section>
+                    <section >
+                        <div>
+                            <label><?php _e( 'Enable Additional Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                            <span><?php  _e( 'Enable/Disable Additional Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="rbfw_enable_additional_gallary" value="<?php echo esc_attr($additional_gallary); ?>" <?php echo esc_attr(($additional_gallary=='on')?'checked':''); ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </section>
+                    <section  class="additional-gallary-image <?php echo $additional_gallary=='on'?'show':'hide' ?>">
                         <div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
                             <div class='button upload' id='rbfw_gallery_images_additional_<?php echo esc_attr($post_id); ?>'>
                                 <?php echo __('Upload','pickplugins-options-framework');?>
@@ -184,6 +197,19 @@
 				</div>
 
                 <script>
+
+                    jQuery('input[name=rbfw_enable_additional_gallary]').click(function(){
+                        var status = jQuery(this).val();
+                        if(status == 'on') {
+                            jQuery(this).val('off');
+							jQuery('.additional-gallary-image').slideUp().removeClass('show').addClass('hide');
+                        }  
+                        if(status == 'off') {
+                            jQuery(this).val('on'); 
+							jQuery('.additional-gallary-image').slideDown().removeClass('hide').addClass('show'); 
+                        }
+                    });
+
                     jQuery('input[name=rbfw_dt_sidebar_switch]').click(function(){
                         var status = jQuery(this).val();
                         if(status == 'on') {
@@ -269,13 +295,16 @@
                     $dt_sidebar_switch 	 = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? rbfw_array_strip($_POST['rbfw_dt_sidebar_switch']) : '';
                     $testimonials 	 = isset( $_POST['rbfw_dt_sidebar_testimonials'] ) ? rbfw_array_strip( $_POST['rbfw_dt_sidebar_testimonials'] ) : [];
                     $sidebar_content 	 = isset( $_POST['rbfw_dt_sidebar_content'] ) ? rbfw_array_strip( $_POST['rbfw_dt_sidebar_content'] ) : [];
+                    $additional_gallery_images = isset( $_POST['rbfw_enable_additional_gallary'] ) ? rbfw_array_strip( $_POST['rbfw_enable_additional_gallary'] ) : 'off';
                     $gallery_images = isset( $_POST['rbfw_gallery_images_additional'] ) ? rbfw_array_strip( $_POST['rbfw_gallery_images_additional'] ) : [];
 
+                    
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_switch', $dt_sidebar_switch );
                     update_post_meta( $post_id, 'rbfw_single_template', $rbfw_single_template );
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_testimonials', $testimonials );
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_content', $sidebar_content );
-					update_post_meta($post_id, 'rbfw_gallery_images_additional', $gallery_images);
+					update_post_meta( $post_id, 'rbfw_enable_additional_gallary', $additional_gallery_images);
+					update_post_meta( $post_id, 'rbfw_gallery_images_additional', $gallery_images);
 
 					
                 }
