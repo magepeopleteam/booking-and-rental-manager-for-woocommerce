@@ -246,7 +246,7 @@ p {
     z-index: 2;
     box-shadow: 0 5px 35.2px 4.8px rgba(0, 0, 0, 0.08);
     background-color: #F8F8F8;
-    border-bottom: solid 1px #666666;
+
     overflow: hidden;
     max-width: 100%;
     margin: auto;
@@ -267,6 +267,7 @@ p {
     display: flex;
     width: 100%;
     gap: 30px;
+    align-items: center;
 }
 
 .rbfw_rent_item_searchTypeLocationHolder {
@@ -309,7 +310,6 @@ p {
 }
 
 .rbfw_rent_item_search_type_location {
-    margin-top: 7px;
     height: auto;
     line-height: 1.2;
     border: none;
@@ -318,7 +318,7 @@ p {
     border-radius: 0;
     background-color: #f6f6f6f6;
     cursor: pointer;
-    border-bottom: solid 1px #dddddd;
+    border: 1px solid #dddddd;
 }
 
 .rbfw_rent_item_search_item {
@@ -327,7 +327,6 @@ p {
 
 #rbfw_rent_item_search_pickup_date {
     border-color: unset;
-    padding: 15px 0px 0px 0px;
     border-width: unset;
     border-style: unset;
     background-color: unset;
@@ -355,12 +354,11 @@ p {
 }
 
 .rbfw_rent_item_search_submit {
-    padding: 7px 10px;
-    background-color: #c51458;
+    padding: 5px 10px;
+    background-color: var(--rbfw_color_primary);
     border: none;
     color: white;
     width: calc(100% - 40px);
-    margin-top: 10px;
     cursor: pointer;
     border-radius: 2px;
     text-align: center;
@@ -368,7 +366,7 @@ p {
 }
 
 .rbfw_rent_item_search_button button:hover {
-    background-color: #0056b3;
+    background-color: var(--rbfw_color_primary);
 }
 
 .rbfw_rent_item_search_button button i {
@@ -386,9 +384,8 @@ p {
     position: relative;
     display: flex;
     align-items: center;
-    /* background-color: #ffffff; */
-    padding: 7px;
-    border-bottom: solid 1px #dddddd;
+
+    border: 1px solid #dddddd;
     color: #666666;
     font-size: 15px;
     /*min-width: 205px;*/
@@ -396,10 +393,9 @@ p {
 
 .rbfw_rent_item_search_date_picker_wrapper i {
     position: absolute;
-    margin-top: 20px;
     right: 10px;
     font-size: 18px;
-    color: #007bff;
+    color: var(--rbfw_color_primary);
     cursor: pointer;
 }
 

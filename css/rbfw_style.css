@@ -6658,6 +6658,8 @@ ul, li {
 
 .rbfw_rent_list_grid_title a {
     color: #202020;
+    text-decoration: none;
+    font-size: 20px;
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_grid_title {
@@ -6717,7 +6719,7 @@ ul, li {
     font-size: 28px;
     letter-spacing: -1px;
     text-transform: capitalize;
-    color: var(--rbfw_color_secondary);
+    color: var(--rbfw_color_primary);
     line-height: 1;
 }
 
@@ -6782,13 +6784,17 @@ ul, li {
     padding: 12px 30px;
     transition: all 0.3s ease-in-out;
     z-index: 2;
-    background: #ecf0f4;
-    color: #0a0a0a;
+    background: var(--rbfw_color_primary);
+    color: #fff;
     border-radius: 2px;
     text-align: center;
     justify-content: center;
     text-transform: uppercase;
     font-weight: 500;
+    
+}
+a.rbfw_rent_list_btn{
+    text-decoration: none;
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_btn {
@@ -6812,7 +6818,7 @@ ul, li {
 }
 
 .rbfw_rent_list_btn:hover {
-    background: var(--rbfw_color_primary);
+    background:  var(--rbfw_single_page_secondary_color);
     color: #fff;
 }
 

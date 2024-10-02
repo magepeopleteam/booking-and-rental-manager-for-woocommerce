@@ -278,12 +278,13 @@ if (!$continue) {
                         <a class="rbfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url($post_link); ?>">
                             <?php echo esc_html($book_now_label); ?>
                             <span class="button-icon">
-                            <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g
+                            <i class="fas fa-angle-double-right"></i>
+                            <!-- <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g
                                 id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round"
                                                                                stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path
                                     d="M6 17L11 12L6 7M13 17L18 12L13 7" stroke="#000000" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round"></path> </g>
-                            </svg>
+                            </svg> -->
                         </span>
                         </a>
                     </div>
