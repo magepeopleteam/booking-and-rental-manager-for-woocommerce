@@ -3424,7 +3424,7 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                     }
                 }
             }elseif($rbfw_enable_daily_rate=='yes' && $rbfw_enable_hourly_rate=='no'){
-                echo 'ttt';
+
                 if(isset($rbfw_sp_prices) && $rbfw_sp_prices){
                     $sp_price =  check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices);
                     if($sp_price!='not_found'){

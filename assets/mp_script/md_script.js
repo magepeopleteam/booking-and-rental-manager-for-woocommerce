@@ -413,6 +413,13 @@ function rbfw_bikecarmd_ajax_price_calculation(that, reload_es,stock_no_effect){
             }
 
             jQuery('#rbfw_item_quantity').html(quantity_options);
+
+
+            jQuery('.rbfw_quantity_md').show();
+            jQuery('.multi-service-category-section').show();
+            jQuery('.rbfw-variations-content-wrapper').show();
+            jQuery('.rbfw_resourse_md').show();
+            jQuery('.rbfw_bikecarmd_price_result').show();
             jQuery('.rbfw_reg_form_rb').show();
 
             /*multiple service price day wise*/

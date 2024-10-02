@@ -516,6 +516,9 @@ CSS for Single Page Template
 .rbfw-duration {
     display: none;
 }
+.rbfw_bikecarsd_book_now_btn_wrap button.rbfw_disabled_button{
+    background: #918180 !important;
+}
 
 .rbfw-duration .item-content {
     background: #f5f5f5;

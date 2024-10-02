@@ -126,6 +126,8 @@ if($rbfw_payment_system == 'mps'){
 
 $rbfw_enable_md_type_item_qty = get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) ? get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) : 'no';
 
+
+
 $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
 $rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
@@ -308,7 +310,7 @@ if($rbfw_enable_variations == 'yes'){
 
 
                         <?php if ($rbfw_enable_md_type_item_qty == 'yes' && $item_stock_quantity > 0) { ?>
-                            <div class="item">
+                            <div class="item rbfw_quantity_md" style="display: none">
                                 <div class="rbfw-single-right-heading">
                                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce'))); ?>
                                 </div>
@@ -330,7 +332,7 @@ if($rbfw_enable_variations == 'yes'){
                         <?php } ?>
 
                         <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data)){ ?>
-                            <div class="rbfw-variations-content-wrapper">
+                            <div class="rbfw-variations-content-wrapper" style="display: none">
                                 <?php foreach ($rbfw_variations_data as $data_arr_one) {
                                     $selected_value = !empty($data_arr_one['selected_value']) ? $data_arr_one['selected_value'] : '';
                                     ?>
@@ -359,7 +361,7 @@ if($rbfw_enable_variations == 'yes'){
                         ?>
 
                         <?php if (!empty($option_value) && $enable_service_price === 'on') { ?>
-                            <div class="multi-service-category-section">
+                            <div class="multi-service-category-section" style="display: none">
                                 <?php foreach ($option_value as $cat => $item) { ?>
                                     <div class="servise-item">
                                         <div class="rbfw-single-right-heading"><?php echo esc_html($item['cat_title']); ?></div>
@@ -434,7 +436,7 @@ if($rbfw_enable_variations == 'yes'){
                         <?php } ?>
 
                         <?php if(!empty($extra_service_list)){ ?>
-                            <div class="item">
+                            <div class="item rbfw_resourse_md" style="display: none">
                                 <div class="rbfw-single-right-heading">
                                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_resources', 'rbfw_basic_translation_settings', __('Resources','booking-and-rental-manager-for-woocommerce'))); ?>
                                 </div>
@@ -487,7 +489,7 @@ if($rbfw_enable_variations == 'yes'){
                     </div>
 
 
-                    <div class="rbfw_bikecarmd_price_result">
+                    <div class="rbfw_bikecarmd_price_result" style="display: none">
                         <div class="item-content rbfw-costing">
                             <ul class="rbfw-ul">
                                 <li class="duration-costing rbfw-cond">
