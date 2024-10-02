@@ -49,20 +49,22 @@ function rbfw_taxonomy_register(){
 
 
 add_action("init","rbfw_taxonomy_register",10);
-// register_activation_hook( __FILE__, 'rbfw_taxonomy_register' );
 
-add_action("init","insert_dummy_taxonomy_terms",10);
+add_action("init","insert_dummy_taxonomy_terms");
 
 function insert_dummy_taxonomy_terms() {
-    // Define the terms you want to insert
-    $terms = array('Bike', 'Car', 'Equipment', 'Yacht', 'Boat', 'Helicopter', 'Dress', 'Tent', 'Resort');
+    $value = get_option('rbfw_taxonomy_imported');
 
-    foreach ($terms as $term) {
-        // Check if the term already exists
-        if (!term_exists($term, 'rbfw_item_caregory')) {
-            // Insert the term into the taxonomy
-            wp_insert_term($term, 'rbfw_item_caregory');
+    if( $value!='yes' ){
+        $terms = array('Bike', 'Car', 'Equipment', 'Yacht', 'Boat', 'Helicopter', 'Dress', 'Tent', 'Resort');
+        foreach ($terms as $term) {
+            // Check if the term already exists
+            if (!term_exists($term, 'rbfw_item_caregory')) {
+                // Insert the term into the taxonomy
+                wp_insert_term($term, 'rbfw_item_caregory');
+            }
         }
+        update_option('rbfw_taxonomy_imported', 'yes');
     }
 }
 
