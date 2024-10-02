@@ -436,7 +436,11 @@ select, input[type="date"] {
     color: #333333;
     z-index: 10;
 }
-
+.rbfw_popup_fearure_title_text{
+    font-size: 18px;
+    font-weight: 600;
+    color: #333333;
+}
 /* Styles for the popup wrapper */
 .rbfw_popup_wrapper {
     display: none;
@@ -461,7 +465,7 @@ select, input[type="date"] {
     width: 400px;
     max-width: 90%;
     text-align: left;
-    top: 200px;
+    top: 100px;
     margin: auto;
 }
 

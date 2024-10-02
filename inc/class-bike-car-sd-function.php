@@ -20,43 +20,10 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
             add_action('wp_ajax_rbfw_bikecarsd_ajax_price_calculation', array($this, 'rbfw_bikecarsd_ajax_price_calculation'));
             add_action('wp_ajax_nopriv_rbfw_bikecarsd_ajax_price_calculation', array($this,'rbfw_bikecarsd_ajax_price_calculation'));
 
-            add_action('wp_ajax_rbfw_get_rent_item_category_info', array($this,'rbfw_get_rent_item_category_info'));
+
         }
 
-        public function rbfw_get_rent_item_category_info(){
 
-            $all_cat_features = '';
-
-            if(isset($_POST['post_id'])){
-
-                $post_id = sanitize_text_field( $_POST['post_id'] );
-                $rbfw_feature_category = get_post_meta($post_id, 'rbfw_feature_category', true) ? maybe_unserialize(get_post_meta($post_id,
-                    'rbfw_feature_category', true)) : [];
-                $all_cat_features = '';
-                $all_cat_features .= '<ul class="rbfw_show_all_cat_features" id="rbfw_show_all_cat_features-'.$post_id.'"> ';
-                foreach ($rbfw_feature_category as $value) {
-                    $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
-                    $cat_title = $value['cat_title'];
-
-                    if (!empty($cat_features)) {
-                        foreach ($cat_features as $features) {
-                            $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
-                            $title = $features['title'];
-                            $rand_number = rand();
-                            if ($title) {
-                                $icom = mep_esc_html($icon);
-                                $all_cat_features .= "<li class='bfw_rent_list_items title  $rand_number '><span class='bfw_rent_list_items_icon'><i class='$icom'></i></span>  $title </li>";
-                            }
-                        }
-                    }
-
-                }
-                $all_cat_features .= '</ul>';
-
-            }
-
-            wp_send_json_success($all_cat_features);
-        }
         public function rbfw_get_bikecarsd_rent_array_reorder($product_id, $rent_info){
             
             $main_array = [];
