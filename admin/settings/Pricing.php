@@ -1009,12 +1009,18 @@
 						if(status == 'yes') {
 							jQuery(this).val('no');
 							jQuery('.rbfw_hourly_rate input').attr("disabled", true);
-						}  
+                            if(jQuery('input[name=rbfw_time_slot_switch]').val()=='on'){
+                                jQuery('input[name=rbfw_time_slot_switch]').trigger( "click" );
+                            }
+						}
 						if(status == 'no') {
 							jQuery(this).val('yes'); 
 							jQuery('.rbfw_hourly_rate input').removeAttr("disabled");
-							
-						}
+                            if(jQuery('input[name=rbfw_time_slot_switch]').val()=='off'){
+                                jQuery('input[name=rbfw_time_slot_switch]').trigger( "click" );
+                            }
+
+                        }
 					});
 					
 					// daywise price
@@ -1228,6 +1234,7 @@
 					$urls     = $_POST['service_price'] ? rbfw_array_strip( $_POST['service_price'] ) : array();
 					$service_desc     = $_POST['service_desc'] ? rbfw_array_strip( $_POST['service_desc'] ) : array();
 					$qty      = $_POST['service_qty'] ? rbfw_array_strip( $_POST['service_qty'] ) : array();
+
 					$qty_type = !empty($_POST['service_qty_type']) ? rbfw_array_strip( $_POST['service_qty_type'] ) : array();
 					$count    = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
@@ -1256,6 +1263,8 @@
 							$new_extra_service[ $i ]['service_qty_type'] = stripslashes( strip_tags( $qty_type[ $i ] ) );
 						endif;
 					}
+
+                   // echo '<pre>';print_r($new_extra_service);echo '<pre>';exit;
 			
 					$extra_service_data_arr = apply_filters( 'rbfw_extra_service_arr_save', $new_extra_service );
 			

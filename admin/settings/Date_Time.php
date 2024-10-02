@@ -126,9 +126,8 @@
 			public function multiple_time_slot_select($post_id){
                 $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
 
-              
-
                 global  $RBFW_Timeslots_Page;
+
                 $rbfw_time_slots = $RBFW_Timeslots_Page->rbfw_format_time_slot($rbfw_time_slots);
 
                 asort($rbfw_time_slots);
@@ -146,6 +145,7 @@
                     }
                 }
 
+
                 ?>
                 <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
                     <select name="rdfw_available_time[]" id="rdfw_available_time" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
@@ -155,6 +155,7 @@
                             <?php }else{ ?>
                                 <option <?php echo (in_array(date('h:i A', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo date('h:i A', strtotime($value)); ?>"> <?php echo $key; ?> </option>
                             <?php } ?>
+
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -244,6 +245,7 @@
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
                     $rbfw_time_slot = isset( $_POST['rbfw_time_slot_switch'] ) ? rbfw_array_strip( $_POST['rbfw_time_slot_switch'] ) : 'off';
+
                     $rdfw_available_time = isset( $_POST['rdfw_available_time'] ) ? rbfw_array_strip( $_POST['rdfw_available_time'] ) : [];
 
             /*        $rbfw_enable_start_end_date = 'yes';

@@ -205,8 +205,20 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
 == Changelog ==
+= 2.1.2 =
+* Pickup and drop off point added in single day.
+* Registration form and service info dispaly after select ticket.
+* Bug fixing
+
+== Changelog ==
 = 2.1.1 =
 * add_to_cart_id Constant warning removed.
+
+== Changelog ==
+= 2.1.1 =
+* Hourly price solved if day pricing disable.
+* Time slot order fixed
+
 
 
 == Changelog ==
