@@ -335,9 +335,9 @@ p {
     font-size: 15px;
 }
 
-select, input[type="date"] {
+.rbfw_rent_item_search_type_location {
     padding: 10px;
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     font-size: 14px;
     color: #333;
     width: 100%;
