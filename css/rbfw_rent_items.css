@@ -335,7 +335,7 @@ p {
     font-size: 15px;
 }
 
-select, input[type="date"] {
+rbfw_rent_item_search_item select, input[type="date"] {
     padding: 10px;
     border: 1px solid #ddd;
     font-size: 14px;
@@ -561,5 +561,47 @@ ul.rbfw_show_all_cat_features li:last-child {
     }
 }
 
+
+/*Filter Css */
+
+.filter-sidebar {
+    width: 250px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-right: 1px solid #ddd;
+}
+
+.filter-sidebar h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.filter-sidebar label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.filter-sidebar input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+.filter-sidebar .price-range {
+    margin-bottom: 20px;
+}
+
+.filter-sidebar .price-range p {
+    margin-bottom: 10px;
+}
+
+.filter-sidebar .category,
+.filter-sidebar .locations,
+.filter-sidebar .product-type {
+    margin-bottom: 20px;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
 
 
