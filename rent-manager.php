@@ -25,7 +25,6 @@ require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
  * @return void
  */
 
-
 function appsero_init_tracker_booking_and_rental_manager_for_woocommerce() {
 
     if ( ! class_exists( 'Appsero\Client' ) ) {

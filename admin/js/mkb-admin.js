@@ -494,14 +494,12 @@
             dateFormat: 'dd-mm-yy'
         });
 
-        jQuery('#rbfw_sd_appointment_max_qty_per_session,#rdfw_available_time').change(function(e) {
-
+        jQuery('#rbfw_sd_appointment_max_qty_per_session').change(function(e) {
             let this_value = jQuery('#rbfw_sd_appointment_max_qty_per_session').val();
             let target = jQuery('input[name="rbfw_bike_car_sd_data[0][qty]"]');
             let selected_time_slots = jQuery('#rdfw_available_time').find(':selected');
             let updated_value = this_value * selected_time_slots.length;
             target.val(updated_value);
-            target.attr('value', updated_value);
         });
 
         /* Template Options On Load Document */
