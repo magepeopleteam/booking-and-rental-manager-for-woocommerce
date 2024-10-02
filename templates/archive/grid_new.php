@@ -200,6 +200,7 @@ if (!$continue) {
     }
 
     ?>
+
     <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo $d; ?>">
         <div class="rbfw_rent_list_inner_wrapper">
             <div class="<?php echo esc_attr($image_holder) ?>">
@@ -243,9 +244,10 @@ if (!$continue) {
                                 <ul class="<?php echo esc_attr($rent_item_list_info) ?>">
                                     <?php
                                     if (!empty($cat_features)) {
+
                                         $i = 1;
                                         foreach ($cat_features as $features) {
-                                            if ($i <= 5) {
+                                            if ($i <= $display_cat_features ) {
                                                 $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                                                 $title = $features['title'];
                                                 $rand_number = rand();
@@ -261,6 +263,9 @@ if (!$continue) {
                                         }
                                     }
                                     ?>
+                                    <?php  if( count( $cat_features ) > $display_cat_features ){?>
+                                    <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo $post_id?>">See more</div>
+                                    <?php }?>
                                 </ul>
                                 <?php
                             }
