@@ -6774,6 +6774,7 @@ ul, li {
     display: inline-block;
     min-width: 20px;
     text-align: center;
+    color: var(--rbfw_color_primary);
 }
 
 .rbfw_rent_list_btn {
@@ -6856,11 +6857,7 @@ a.rbfw_rent_list_btn{
 
 .rbfw_pagination .page-numbers {
     background-color: #fff;
-    border-top: 1px solid #ededdb;
-    border-right: 1px solid #ededdb;
-    border-bottom: 1px solid #ededdb;
-    display: -webkit-box;
-    display: -ms-flexbox;
+    border: 1px solid #ededdb;
     display: flex;
     -webkit-box-pack: center;
     -ms-flex-pack: center;
@@ -6883,7 +6880,14 @@ a.rbfw_rent_list_btn{
 }
 
 .rbfw_pagination .current {
-    background-color: #b7b589;
+    background-color: var(--rbfw_color_primary);
+    color: #ffffff;
+}
+.rbfw_pagination a{
+    text-decoration: none;
+}
+.rbfw_pagination a:hover {
+    background-color: var(--rbfw_single_page_secondary_color);
     color: #ffffff;
 }
 
