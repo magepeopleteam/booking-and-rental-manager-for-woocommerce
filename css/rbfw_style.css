@@ -6604,7 +6604,8 @@ ul, li {
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_grid_view_top_img {
-    height: 330px;
+    height: 285px;
+    margin: 5px;
 }
 
 
@@ -6721,7 +6722,7 @@ ul, li {
 }
 
 .rbfw_rent_list_info {
-    display: grid;
+    display: list;
     grid-template-columns: 1fr 1fr;
     font-size: 15px;
     column-gap: 15px;

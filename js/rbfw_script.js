@@ -321,6 +321,42 @@
         }
         rbfw_pick_date_from_flatpicker();
 
+        /*$('.rbfw_see_more_category').hover(
+            function() {
+                let hoverId = $(this).attr('id')
+                let idNumber = hoverId.split('-').pop();
+                $('#rbfw_show_all_cat_features-'+idNumber).show();
+            },
+            function() {
+                let hoverId = $(this).attr('id');
+                let idNumber = hoverId.split('-').pop();
+                $('#rbfw_show_all_cat_features-'+idNumber).hide();
+            }
+        );*/
+        $('#rbfw_popup_close_btn').on('click', function() {
+            $('#rbfw_popup_wrapper').hide();
+            $('#rbfw_popup_content').empty(); // Clear the content when closed
+        });
+
+        $('body').on( 'click', '.rbfw_see_more_category', function(e){
+            e.preventDefault();
+            let clickedId = $(this).attr('id');
+            let item_number = clickedId.split('-').pop();
+            $("#rbfw_popup_wrapper").show();
+            $("#rbfw_popup_content").html('<div class="rbfw_loader">Loading....</div>')
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax.rbfw_ajaxurl,
+                data: {
+                    'action' : 'rbfw_get_rent_item_category_info',
+                    'post_id': item_number,
+                },
+                success: function (response) {
+                    $('#rbfw_popup_content').html( response.data );
+                },
+            });
+        });
 
     });
 })(jQuery)

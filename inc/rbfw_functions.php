@@ -1548,6 +1548,23 @@ function rbfw_page_create()
     }
 
 
+    $page_slug = 'search-item-list';
+    // Check if the page already exists
+    $existing_page = get_page_by_path($page_slug);
+    if (!$existing_page) {
+        // Page doesn't exist, so create it
+        $page_data = array(
+            'post_title'    => 'Search Item List',
+            'post_content'  => '[rbfw_search] [search-result]',
+            'post_status'   => 'publish',
+            'post_type'     => 'page',
+            'post_name'     => $page_slug,
+        );
+
+        // Insert the page into the database
+        wp_insert_post($page_data);
+    }
+
 
 }
 
