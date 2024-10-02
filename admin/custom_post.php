@@ -20,8 +20,8 @@ if( ! class_exists('RBFW_Custom_Post')){
 
         public function rbfw_cpt_columns($columns){
             unset($columns['date']);
-            $columns['rbfw_item_type']= esc_html__('Rent Type','booking-and-rental-manager-for-woocommerce');
-            $columns['rbfw_categories']      =  esc_html__('Categories','booking-and-rental-manager-for-woocommerce');
+            $columns['rbfw_item_type']= esc_html__('Price Type','booking-and-rental-manager-for-woocommerce');
+            $columns['rbfw_categories']      =  esc_html__('Rent Type','booking-and-rental-manager-for-woocommerce');
             $columns['author']      =  esc_html__('Author','booking-and-rental-manager-for-woocommerce');
             $columns['date']        = esc_html__('Date','booking-and-rental-manager-for-woocommerce');
             return $columns;
