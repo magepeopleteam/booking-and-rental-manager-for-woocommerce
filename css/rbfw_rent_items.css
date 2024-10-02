@@ -335,9 +335,10 @@ p {
     font-size: 15px;
 }
 
-rbfw_rent_item_search_item select, input[type="date"] {
+.rbfw_rent_item_search_type_location {
+
     padding: 10px;
-    border: 1px solid #ddd;
+    /*border: 1px solid #ddd;*/
     font-size: 14px;
     color: #333;
     width: 100%;
@@ -563,45 +564,51 @@ ul.rbfw_show_all_cat_features li:last-child {
 
 
 /*Filter Css */
-
-.filter-sidebar {
+.rbfw_filter_sidebar {
     width: 250px;
     padding: 20px;
     background-color: #f5f5f5;
     border-right: 1px solid #ddd;
 }
-
-.filter-sidebar h3 {
+.rbfw_filter_sidebar h3 {
     margin-bottom: 10px;
     font-size: 18px;
 }
-
-.filter-sidebar label {
+.rbfw_filter_sidebar label {
     display: block;
     margin-bottom: 5px;
 }
-
-.filter-sidebar input[type="checkbox"] {
+.rbfw_filter_sidebar input[type="checkbox"] {
     margin-right: 5px;
 }
 
-.filter-sidebar .price-range {
+.rbfw_filter_sidebar .rbfw_price-range {
     margin-bottom: 20px;
 }
 
-.filter-sidebar .price-range p {
+.rbfw_filter_sidebar .rbfw_price-range p {
     margin-bottom: 10px;
 }
 
-.filter-sidebar .category,
-.filter-sidebar .locations,
-.filter-sidebar .product-type {
+.rbfw_filter_sidebar .feature,
+.rbfw_filter_sidebar .category,
+.rbfw_filter_sidebar .locations,
+.rbfw_filter_sidebar .product-type {
     margin-bottom: 20px;
 }
-
 .content {
     flex-grow: 1;
     padding: 20px;
+}
+
+.rbfw_toggle-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.rbfw_toggle-icon {
+    float: right;
+    font-size: 1.2em;
 }
 
 

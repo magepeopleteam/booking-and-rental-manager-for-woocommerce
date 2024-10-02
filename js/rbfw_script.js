@@ -358,13 +358,25 @@
             });
         });
 
+
+        $('.rbfw_toggle-content').hide();
+        $('.rbfw_toggle-header').on('click', function() {
+            var content = $(this).next('.rbfw_toggle-content');
+            content.slideToggle();
+            var icon = $(this).find('.rbfw_toggle-icon');
+            if (icon.text() === '+') {
+                icon.text('−');
+            } else {
+                icon.text('+');
+            }
+        });
         function get_left_filter_data( filter_date ){
             console.log( filter_date );
         }
-
         var selectedLocation = [];
         var selectedcategory = [];
         var selectedType = [];
+        var selectedFeatures = [];
         var get_filters = {
             location: [],
             category: [],
@@ -417,14 +429,29 @@
             get_left_filter_data( get_filters );
         });
 
+        $('.rbfw_rent_feature').on('change', function() {
+            var value = $(this).val();
+            if ($(this).is(':checked')) {
+                if (!selectedFeatures.includes(value)) {
+                    selectedFeatures.push(value);
+                }
+            } else {
+                selectedFeatures = selectedFeatures.filter(function(item) {
+                    return item !== value;
+                });
+            }
+            get_filters.feature = selectedFeatures;
+            get_left_filter_data( get_filters );
+        });
+
         // Price slider handling
         var start_val = 0;
         var end_val = 0;
         $("#slider-range").slider({
             range: true,
             min: 0,
-            max: 1000,
-            values: [100, 500], // Default values
+            max: 10000,
+            values: [0, 10000], // Default values
             slide: function(event, ui) {
                 // Continuously update the displayed value while sliding
                 $("#price").val("$" + ui.values[0] + " - $" + ui.values[1]);
@@ -442,11 +469,11 @@
             }
         });
 
-        $("#price").val("$" + $("#slider-range").slider("values", 0) +
-            " - $" + $("#slider-range").slider("values", 1));
-
+        $("#price").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
         get_filters.price.start = $("#slider-range").slider("values", 0);
         get_filters.price.end = $("#slider-range").slider("values", 1);
+
+
 
 
     });

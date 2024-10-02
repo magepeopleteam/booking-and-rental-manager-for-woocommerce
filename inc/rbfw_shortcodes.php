@@ -459,54 +459,96 @@ function rbfw_rent_search_shortcode( $attr = null ){
 
 add_shortcode('rbfw_left_filter', 'rbfw_rent_left_filter' );
 function rbfw_rent_left_filter( $attr = null ){
-    $category_arr = get_rbfw_post_categories_from_meta();
-    $location = get_rbfw_pickup_data_wp_query();
 
-    error_log( print_r( [ '$category_arr' => $category_arr, '$location' => $location ], true ) );
+    /*$features_to_search = array("Electric Horn", "Disc Brakes", "Various Sizeable"); // The values you want to search for
+    $meta_queries = array('relation' => 'OR'); // Relation set to 'OR' so it matches any of the feature titles
+    foreach ($features_to_search as $feature) {
+        $meta_queries[] = array(
+            'key'     => 'rbfw_feature_category',
+            'value'   => $feature,
+            'compare' => 'LIKE', // Use LIKE because the value is part of a serialized array
+        );
+    }
+    $args = array(
+        'post_type'  => 'any', // Change 'any' to your specific post type if needed
+        'meta_query' => $meta_queries,
+        'posts_per_page' => -1,
+    );
+    $query = new WP_Query($args);
+
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            error_log( print_r( [ '$rbfw_features_category' => get_the_ID() ], true ) );
+        }
+        wp_reset_postdata();
+    }*/
+
+
+
+    $rbfw_categorys = get_rbfw_post_categories_from_meta();
+    $rbfw_locations = get_rbfw_pickup_data_wp_query();
+    $rbfw_rent_types =get_rbfw_item_type_wp_query();
+    $rbfw_features_category =  get_rbfw_post_features_from_meta();
+
+
     ob_start();
     ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
 
     <form action="#" id="rbfw_left_filter">
-        <div class="filter-sidebar">
+        <div class="rbfw_filter_sidebar">
             <h3>Filter by:</h3>
 
             <!-- Price Range -->
-            <div class="price-range">
-                <h4>Price</h4>
-                <p>
-                    <label for="price">Price range:</label>
-                    <input type="text" id="price" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                </p>
-                <div id="slider-range"></div>
+            <div class="rbfw_price-range">
+                <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">+</span></h5>
+                <div class="rbfw_toggle-content" style="display: none">
+                    <p>
+                        <label for="price">Price range:</label>
+                        <input type="text" id="price" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    </p>
+                    <div id="slider-range"></div>
+                </div>
             </div>
 
-            <!-- Location Checkboxes -->
             <div class="locations">
-                <h4>Location</h4>
-                <label><input type="checkbox" class="rbfw_location" value="Dhaka"> Dhaka</label>
-                <label><input type="checkbox" class="rbfw_location" value="Rajshahi"> Rajshahi</label>
-                <label><input type="checkbox" class="rbfw_location" value="Chittagong"> Chittagong</label>
+                <h5 class="rbfw_toggle-header">Pickup Location<span class="rbfw_toggle-icon">+</span></h5>
+                <div class="rbfw_toggle-content" style="display: none">
+                    <?php foreach ( $rbfw_locations as $key => $location ) { ?>
+                        <label><input type="checkbox" class="rbfw_location" value="<?php echo esc_attr( $key )?>"> <?php echo esc_attr( $location )?></label>
+                    <?php } ?>
+                </div>
             </div>
 
-            <!-- Product Category Checkboxes -->
             <div class="category">
-                <h4>Category</h4>
-                <label><input type="checkbox" class="rbfw_category" value="Bike"> Bike</label>
-                <label><input type="checkbox" class="rbfw_category" value="Car"> Car</label>
-                <label><input type="checkbox" class="rbfw_category" value="Bus"> Bus</label>
-                <label><input type="checkbox" class="rbfw_category" value="Dress"> Dress</label>
+                <h5 class="rbfw_toggle-header">Item Category <span class="rbfw_toggle-icon">+</span></h5>
+                <div class="rbfw_toggle-content" style="display: none">
+                    <?php foreach ( $rbfw_categorys as $category ) { ?>
+                        <label><input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>"> <?php echo esc_attr( $category )?></label>
+                    <?php } ?>
+                </div>
             </div>
 
-            <!-- Product Type Checkboxes -->
             <div class="product-type">
-                <h4>Product Type</h4>
-                <label><input type="checkbox" class="rbfw_rent_type" value="Type1"> Type 1</label>
-                <label><input type="checkbox" class="rbfw_rent_type" value="Type2"> Type 2</label>
-                <label><input type="checkbox" class="rbfw_rent_type" value="Type3"> Type 3</label>
-                <label><input type="checkbox" class="rbfw_rent_type" value="Type4"> Type 4</label>
-                <label><input type="checkbox" class="rbfw_rent_type" value="Type5"> Type 5</label>
+                <h5 class="rbfw_toggle-header">Item Type <span class="rbfw_toggle-icon">+</span></h5>
+                <div class="rbfw_toggle-content" style="display: none">
+                    <?php foreach ( $rbfw_rent_types as $item ) { ?>
+                        <label><input type="checkbox" class="rbfw_rent_type" value="<?php echo esc_attr( $item )?>"> <?php echo esc_attr( $item )?> </label>
+                    <?php } ?>
+                </div>
             </div>
+
+            <div class="product-type">
+                <h5 class="rbfw_toggle-header">Item Features<span class="rbfw_toggle-icon">+</span></h5>
+                <div class="rbfw_toggle-content" style="display: none">
+                    <?php foreach ( $rbfw_features_category as $features ) { ?>
+                        <label><input type="checkbox" class="rbfw_rent_feature" value="<?php echo esc_attr( $features['title'] )?>"> <?php echo esc_attr( $features['title'] )?> </label>
+                    <?php } ?>
+                </div>
+            </div>
+
+            <input type="button" value="Filter">
         </div>
     </form>
 
