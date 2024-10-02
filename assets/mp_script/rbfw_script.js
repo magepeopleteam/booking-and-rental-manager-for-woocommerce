@@ -251,13 +251,7 @@ function rbfw_bikecarsd_without_time_func(){
         },
         success: function (response) {
             jQuery('.rbfw-bikecarsd-result-loader').hide();
-
             jQuery('.rbfw-bikecarsd-result').append(response);
-            rbfw_update_input_value_onchange_onclick();
-
-            rbfw_bikecarsd_ajax_price_calculation();
-            rbfw_step_func();
-            rbfw_display_es_box_onchange_onclick();
             rbfw_mps_book_now_btn_action();
             jQuery('.rbfw_back_step_btn').attr('back-step','1');
             jQuery('.rbfw_muff_registration_wrapper .rbfw_regf_wrap').show();
@@ -359,7 +353,7 @@ function rbfw_bikecarsd_without_time_func(){
                 jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
                 jQuery('.rbfw_bikecarsd_pricing_table_wrap').addClass('rbfw_loader_in');
                 jQuery('.rbfw_bikecarsd_pricing_table_wrap').append('<i class="fas fa-spinner fa-spin"></i>');
-                jQuery(' button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
+
 
                 },
             success: function (response) {
@@ -367,6 +361,7 @@ function rbfw_bikecarsd_without_time_func(){
                 jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
                 jQuery(response).insertAfter('.rbfw_bikecarsd_price_summary.old');
                 jQuery('.rbfw_bikecarsd_price_summary.old').remove();
+
             }
         });
     });
@@ -437,7 +432,7 @@ function rbfw_bikecarsd_without_time_func(){
             jQuery('.rbfw_regf_wrap').hide();
             jQuery('.rbfw_bike_car_sd_available_es_qty_notice').hide();
             jQuery('button.rbfw_bikecarsd_book_now_btn').attr('disabled');
-            jQuery(' button.rbfw_bikecarsd_book_now_btn').addClass('rbfw_disabled_button');
+            jQuery('button.rbfw_bikecarsd_book_now_btn').addClass('rbfw_disabled_button');
         }
     });
 
