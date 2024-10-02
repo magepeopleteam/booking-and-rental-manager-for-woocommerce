@@ -1068,6 +1068,9 @@ div.mpStyle [class*="_bgColor_1"] i {
 #rbfw_add_meta_box table.form-table {
     margin-bottom: 0px;
     border-collapse: collapse;
+    
+}
+#rbfw_add_meta_box .rbfw_feature_category_table{
     width: 70%;
     margin: auto;
 }
