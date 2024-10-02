@@ -461,6 +461,8 @@ add_shortcode('rbfw_left_filter', 'rbfw_rent_left_filter' );
 function rbfw_rent_left_filter( $attr = null ){
     $category_arr = get_rbfw_post_categories_from_meta();
     $location = get_rbfw_pickup_data_wp_query();
+
+    error_log( print_r( [ '$category_arr' => $category_arr, '$location' => $location ], true ) );
     ob_start();
     ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
@@ -482,28 +484,28 @@ function rbfw_rent_left_filter( $attr = null ){
             <!-- Location Checkboxes -->
             <div class="locations">
                 <h4>Location</h4>
-                <label><input type="checkbox" value="Dhaka"> Dhaka</label>
-                <label><input type="checkbox" value="Rajshahi"> Rajshahi</label>
-                <label><input type="checkbox" value="Chittagong"> Chittagong</label>
+                <label><input type="checkbox" class="rbfw_location" value="Dhaka"> Dhaka</label>
+                <label><input type="checkbox" class="rbfw_location" value="Rajshahi"> Rajshahi</label>
+                <label><input type="checkbox" class="rbfw_location" value="Chittagong"> Chittagong</label>
             </div>
 
             <!-- Product Category Checkboxes -->
             <div class="category">
                 <h4>Category</h4>
-                <label><input type="checkbox" value="Bike"> Bike</label>
-                <label><input type="checkbox" value="Car"> Car</label>
-                <label><input type="checkbox" value="Bus"> Bus</label>
-                <label><input type="checkbox" value="Dress"> Dress</label>
+                <label><input type="checkbox" class="rbfw_category" value="Bike"> Bike</label>
+                <label><input type="checkbox" class="rbfw_category" value="Car"> Car</label>
+                <label><input type="checkbox" class="rbfw_category" value="Bus"> Bus</label>
+                <label><input type="checkbox" class="rbfw_category" value="Dress"> Dress</label>
             </div>
 
             <!-- Product Type Checkboxes -->
             <div class="product-type">
                 <h4>Product Type</h4>
-                <label><input type="checkbox" value="Type1"> Type 1</label>
-                <label><input type="checkbox" value="Type2"> Type 2</label>
-                <label><input type="checkbox" value="Type3"> Type 3</label>
-                <label><input type="checkbox" value="Type4"> Type 4</label>
-                <label><input type="checkbox" value="Type5"> Type 5</label>
+                <label><input type="checkbox" class="rbfw_rent_type" value="Type1"> Type 1</label>
+                <label><input type="checkbox" class="rbfw_rent_type" value="Type2"> Type 2</label>
+                <label><input type="checkbox" class="rbfw_rent_type" value="Type3"> Type 3</label>
+                <label><input type="checkbox" class="rbfw_rent_type" value="Type4"> Type 4</label>
+                <label><input type="checkbox" class="rbfw_rent_type" value="Type5"> Type 5</label>
             </div>
         </div>
     </form>
@@ -512,18 +514,7 @@ function rbfw_rent_left_filter( $attr = null ){
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
     <script>
-        $("#slider-range").slider({
-            range: true,
-            min: 0,
-            max: 1000,
-            values: [100, 500],
-            slide: function(event, ui) {
-                $("#price").val("$" + ui.values[0] + " - $" + ui.values[1]);
-            }
-        });
-        console.log(values);
-        $("#price").val("$" + $("#slider-range").slider("values", 0) +
-            " - $" + $("#slider-range").slider("values", 1));
+
     </script>
 
     <?php

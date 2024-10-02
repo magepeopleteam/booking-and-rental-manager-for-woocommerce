@@ -358,6 +358,97 @@
             });
         });
 
+        function get_left_filter_data( filter_date ){
+            console.log( filter_date );
+        }
+
+        var selectedLocation = [];
+        var selectedcategory = [];
+        var selectedType = [];
+        var get_filters = {
+            location: [],
+            category: [],
+            type: [],
+            price: { start: 0, end: 0 },
+        };
+        $('.rbfw_location').on('change', function() {
+            var value = $(this).val();
+            if ($(this).is(':checked')) {
+                if (!selectedLocation.includes(value)) {
+                    selectedLocation.push(value);
+                }
+            } else {
+                selectedLocation = selectedLocation.filter(function(item) {
+                    return item !== value;
+                });
+            }
+            get_filters.location = selectedLocation;
+
+            get_left_filter_data( get_filters );
+        });
+
+        $('.rbfw_category').on('change', function() {
+            var value = $(this).val();
+            if ($(this).is(':checked')) {
+                if (!selectedcategory.includes(value)) {
+                    selectedcategory.push(value);
+                }
+            } else {
+                selectedcategory = selectedcategory.filter(function(item) {
+                    return item !== value;
+                });
+            }
+            get_filters.category = selectedcategory;
+            get_left_filter_data( get_filters );
+        });
+
+        $('.rbfw_rent_type').on('change', function() {
+            var value = $(this).val();
+            if ($(this).is(':checked')) {
+                if (!selectedType.includes(value)) {
+                    selectedType.push(value);
+                }
+            } else {
+                selectedType = selectedType.filter(function(item) {
+                    return item !== value;
+                });
+            }
+            get_filters.type = selectedType;
+            get_left_filter_data( get_filters );
+        });
+
+        // Price slider handling
+        var start_val = 0;
+        var end_val = 0;
+        $("#slider-range").slider({
+            range: true,
+            min: 0,
+            max: 1000,
+            values: [100, 500], // Default values
+            slide: function(event, ui) {
+                // Continuously update the displayed value while sliding
+                $("#price").val("$" + ui.values[0] + " - $" + ui.values[1]);
+            },
+            stop: function(event, ui) {
+                // Only update the get_filters when the mouse is released (stop sliding)
+                start_val = ui.values[0];
+                end_val = ui.values[1];
+
+                // Update the price in get_filters object
+                get_filters.price.start = start_val;
+                get_filters.price.end = end_val;
+
+                get_left_filter_data( get_filters );
+            }
+        });
+
+        $("#price").val("$" + $("#slider-range").slider("values", 0) +
+            " - $" + $("#slider-range").slider("values", 1));
+
+        get_filters.price.start = $("#slider-range").slider("values", 0);
+        get_filters.price.end = $("#slider-range").slider("values", 1);
+
+
     });
 })(jQuery)
 
