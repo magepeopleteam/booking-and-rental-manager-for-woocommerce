@@ -5,8 +5,17 @@
 global $rbfw;
 $post_id = get_the_id();
 $post_title = get_the_title();
+$gallery_images = get_post_meta(get_the_ID(),'rbfw_gallery_images',true);
+
+if(isset($gallery_images)){
+    $gallery_image = wp_get_attachment_url($gallery_images[0]);
+}
+else{
+    $gallery_image = RBFW_PLUGIN_URL.'/assets/images/no_image.png';
+}
+
 $post_featured_img = !empty(get_the_post_thumbnail_url($post_id, 'full')) ? get_the_post_thumbnail_url($post_id,
-    'full') : RBFW_PLUGIN_URL.'/assets/images/no_image.png';
+    'full') : $gallery_image;
 $post_link = get_the_permalink();
 $book_now_label = $rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings',
     __('Book Now', 'booking-and-rental-manager-for-woocommerce'));
