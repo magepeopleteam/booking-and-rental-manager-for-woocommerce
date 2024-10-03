@@ -496,7 +496,7 @@ function rbfw_rent_left_filter( $attr = null ){
     ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
 
-    <form action="#" id="rbfw_left_filter">
+    <form action="#" id="rbfw_left_filter_form" type="post">
         <div class="rbfw_filter_sidebar">
             <h3>Filter by:</h3>
 
@@ -548,9 +548,10 @@ function rbfw_rent_left_filter( $attr = null ){
                 </div>
             </div>
 
-            <input type="button" value="Filter">
+<!--            <input class="rbfw_filter_data" name="rbfw_filter_data" type="button" value="Filter">-->
         </div>
     </form>
+    <div class="rbfw_filter_data">Filter</div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>

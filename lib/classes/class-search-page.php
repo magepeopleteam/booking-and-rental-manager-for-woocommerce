@@ -20,6 +20,10 @@ if (!class_exists('Rbfw_Search_Page')) {
 
             add_action('wp_ajax_rbfw_get_rent_item_category_info', array($this,'rbfw_get_rent_item_category_info'));
             add_action('wp_ajax_nopriv_rbfw_get_rent_item_category_info', array($this,'rbfw_get_rent_item_category_info'));
+
+            //Left side filter
+            add_action('wp_ajax_rbfw_get_left_side_filter_data', array($this,'rbfw_get_left_side_filter_data'));
+            add_action('wp_ajax_nopriv_rbfw_get_left_side_filter_data', array($this,'rbfw_get_left_side_filter_data'));
         }
 
         public function rbfw_search_page(){
@@ -150,6 +154,98 @@ if (!class_exists('Rbfw_Search_Page')) {
 
             wp_send_json_success($all_cat_features);
         }
+
+        public function rbfw_get_left_side_filter_data(){
+            $response = '';
+            if( isset( $_POST['filter_date'] ) ){
+                $filter_date = $_POST['filter_date'];
+
+//                error_log( print_r( [ '$filter_date' => $filter_date ], true ) );
+                $features_to_search = isset( $filter_date['feature'] ) ? $filter_date['feature'] : [];
+                $feature_meta_queries = '';
+                if( is_array( $features_to_search ) && count( $features_to_search ) > 0 ){
+                    $feature_meta_queries = array('relation' => 'OR'); // Relation set to 'OR' so it matches any of the feature titles
+                    foreach ($features_to_search as $feature) {
+                        $feature_meta_queries[] = array(
+                            'key'     => 'rbfw_feature_category',
+                            'value'   => sanitize_text_field( $feature ),
+                            'compare' => 'LIKE', // Use LIKE because the value is part of a serialized array
+                        );
+                    }
+                }
+
+                $rent_types = isset( $filter_date['type'] ) ? $filter_date['type'] : [];
+                $rent_type = '';
+                if( is_array( $rent_types ) && count( $rent_types ) > 0 ){
+                    $rent_type = array('relation' => 'OR');
+                    foreach ($rent_types as $type) {
+                        $rent_type[] = !empty($type) ? array(
+                            'key' => 'rbfw_item_type',
+                            'value' => sanitize_text_field( $type ),
+                            'compare' => '==',
+                        ) : '';
+                    }
+                }
+
+//                error_log( print_r( [ '$rent_type' => $rent_type ], true ) );
+
+                $rent_locations = isset( $filter_date['location'] ) ? $filter_date['location'] : [];
+                $location_query = '';
+                if( is_array( $rent_locations ) && count( $rent_locations ) > 0 ) {
+                    $location_query = array('relation' => 'OR');
+                    foreach ( $rent_locations as $location ) {
+                        $location_query = !empty($location) ? array(
+                            'key' => 'rbfw_pickup_data',
+                            'value' => sanitize_text_field( $location ),
+                            'compare' => 'LIKE'
+                        ) : '';
+                    }
+                }
+
+                $rent_categories = isset( $filter_date['category'] ) ? $filter_date['category'] : [];
+
+                if( is_array( $rent_locations ) && count( $rent_locations ) > 0 ) {
+                    $category_query = array('relation' => 'OR');
+                    foreach ($rent_categories as $category_name) {
+                        $category_query['meta_query'][] = array(
+                            'key' => 'rbfw_categories',
+                            'value' => $category_name,
+                            'compare' => 'LIKE'
+                        );
+                    }
+                }else{
+                    $category_query = '';
+                }
+
+
+
+                $args = array(
+                    'post_type'  => 'any', // Change 'any' to your specific post type if needed
+                    'meta_query' => array(
+                        'relation' => 'OR',
+                        $feature_meta_queries,
+                        $rent_type,
+                        $location_query,
+                        $category_query,
+                    ),
+//                    'meta_query' => $rent_type,
+                    'posts_per_page' => -1,
+                );
+                $query = new WP_Query($args);
+
+                if ($query->have_posts()) {
+                    while ($query->have_posts()) {
+                        $query->the_post();
+                        error_log( print_r( [ 'the_title' => get_the_title() ], true ) );
+                    }
+                    wp_reset_postdata();
+                }
+
+            }
+
+            wp_send_json_success( $response );
+        }
+
     }
     new Rbfw_Search_Page();
 }

@@ -358,7 +358,7 @@
             });
         });
 
-
+//Left Filtering
         $('.rbfw_toggle-content').hide();
         $('.rbfw_toggle-header').on('click', function() {
             var content = $(this).next('.rbfw_toggle-content');
@@ -371,8 +371,21 @@
             }
         });
         function get_left_filter_data( filter_date ){
-            console.log( filter_date );
+            // console.log( filter_date );
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax.rbfw_ajaxurl,
+                data: {
+                    'action' : 'rbfw_get_left_side_filter_data',
+                    'filter_date': filter_date,
+                },
+                success: function (response) {
+                    console.log( response );
+                    $('#rbfw_popup_content').html( response.data );
+                },
+            });
         }
+
         var selectedLocation = [];
         var selectedcategory = [];
         var selectedType = [];
@@ -396,7 +409,7 @@
             }
             get_filters.location = selectedLocation;
 
-            get_left_filter_data( get_filters );
+            // get_left_filter_data( get_filters );
         });
 
         $('.rbfw_category').on('change', function() {
@@ -411,7 +424,7 @@
                 });
             }
             get_filters.category = selectedcategory;
-            get_left_filter_data( get_filters );
+            // get_left_filter_data( get_filters );
         });
 
         $('.rbfw_rent_type').on('change', function() {
@@ -426,7 +439,7 @@
                 });
             }
             get_filters.type = selectedType;
-            get_left_filter_data( get_filters );
+            // get_left_filter_data( get_filters );
         });
 
         $('.rbfw_rent_feature').on('change', function() {
@@ -441,7 +454,7 @@
                 });
             }
             get_filters.feature = selectedFeatures;
-            get_left_filter_data( get_filters );
+            // get_left_filter_data( get_filters );
         });
 
         // Price slider handling
@@ -465,7 +478,7 @@
                 get_filters.price.start = start_val;
                 get_filters.price.end = end_val;
 
-                get_left_filter_data( get_filters );
+
             }
         });
 
@@ -473,7 +486,16 @@
         get_filters.price.start = $("#slider-range").slider("values", 0);
         get_filters.price.end = $("#slider-range").slider("values", 1);
 
+        $(document).on('click', '.rbfw_filter_data', function() {
+            // alert('CLICKED');
+            get_left_filter_data(get_filters); // Assuming get_filters is a function or a variable
+        });
 
+        /*$('#rbfw_left_filter_form').submit(function(event) {
+            event.preventDefault(); // Prevent the default form submission
+            alert('CLICKED');
+            // get_left_filter_data( get_filters );
+        });*/
 
 
     });
