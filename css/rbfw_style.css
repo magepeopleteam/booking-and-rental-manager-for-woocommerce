@@ -3338,7 +3338,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     border: none !important;
     padding: 7px 0;
 }
-
+.rbfw_bikecarmd_es_table tr td:last-child {
+    text-align: right;
+}
 .w_20 {
     width: 20%;
 }
