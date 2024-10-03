@@ -266,7 +266,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         }
 
 
-        $rbfw_service_price = $rbfw_service_price*$rbfw_item_quantity;
+        $rbfw_service_price = $rbfw_service_price * $rbfw_item_quantity;
+
 
         /* service price end for multiple days */
 
@@ -353,6 +354,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $security_deposit = rbfw_security_deposit($rbfw_id,$sub_total_price);
 
         $total_price = $sub_total_price + $security_deposit['security_deposit_amount'] - $discount_amount;
+
+       // echo $rbfw_service_price;exit;
 
 
         $rbfw_ticket_info = rbfw_cart_ticket_info($rbfw_id, $rbfw_pickup_start_date, $rbfw_pickup_start_time, $rbfw_pickup_end_date, $rbfw_pickup_end_time, $rbfw_pickup_point, $rbfw_dropoff_point, $rbfw_item_quantity, $rbfw_duration_price, $rbfw_service_price, $total_price, $rbfw_service_info, $variation_info, $discount_type, $discount_amount, $rbfw_regf_info,$rbfw_service_infos,$total_days,$security_deposit);

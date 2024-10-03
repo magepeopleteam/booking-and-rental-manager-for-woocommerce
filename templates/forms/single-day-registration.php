@@ -93,7 +93,7 @@
                 }
                 $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
                 $available_times = get_post_meta($post_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];
-                
+
 
                 if($time_slot_switch == 'on' && !empty($available_times)){
                     $time_slot_switch = 'on';
