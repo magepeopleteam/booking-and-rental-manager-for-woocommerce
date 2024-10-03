@@ -132,7 +132,7 @@ if(! class_exists('RBFW_Rent_Manager')){
 
         public static function get_plugin_data($data) {
             $get_rbfw_plugin_data = get_plugin_data( __FILE__ );
-            $rbfw_data = $get_rbfw_plugin_data[$data];
+            $rbfw_data = $get_rbfw_plugin_data[$data]??'';
             return $rbfw_data;
         }
 
