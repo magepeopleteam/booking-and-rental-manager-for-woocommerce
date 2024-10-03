@@ -271,6 +271,9 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                     <div class="rbfw_muff_heading_tab active" data-tab="tab1">
                         <?php do_action( 'rbfw_muff_review_tab', $post_id ); ?>
                     </div>
+                    <div class="rbfw_muff_review_write_btn_wrapper">
+                        <button class="rbfw_muff_review_write_btn"><?php echo esc_html($rbfw->get_option('rbfw_text_write_review', 'rbfw_basic_translation_settings', __('Write Review','booking-and-rental-manager-for-woocommerce'))); ?></button>
+                    </div>
                 </div>
                 <div class="rbfw_muff_faq_tab_contents">
                     <div class="rbfw_muff_faq_tab_content active" data-content="tab1">
