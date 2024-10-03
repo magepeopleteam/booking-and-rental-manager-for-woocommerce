@@ -244,7 +244,7 @@ p {
     position: relative;
     padding: 20px 30px;
     z-index: 2;
-    box-shadow: 0 5px 35.2px 4.8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0 0 0px #dfdfdf;
     background-color: #F8F8F8;
 
     overflow: hidden;
@@ -323,6 +323,19 @@ p {
 
 .rbfw_rent_item_search_item {
     width: 100%;
+    position: relative;
+}
+
+#rbfw_rent_item_search_calendar_icon{
+    position: absolute;
+    right:6px;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding-top: 13px;
+    font-size: 9px;
+    text-align: right;
 }
 
 #rbfw_rent_item_search_pickup_date {
@@ -330,8 +343,13 @@ p {
     border-width: unset;
     border-style: unset;
     background-color: unset;
-    color: #666666;
+    color: #333;
     font-size: 15px;
+    background-color: #f6f6f6f6;
+    cursor: pointer;
+    border: 1px solid #dddddd;
+    border-radius: 0;
+    padding: 7px;
 }
 
 .rbfw_rent_item_search_type_location {
