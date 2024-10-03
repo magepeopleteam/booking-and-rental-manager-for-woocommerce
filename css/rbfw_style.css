@@ -812,7 +812,8 @@ div.mp_right_section {
 .rbfw-related-product .rbfw-related-product-title-wrap {
     margin-top: 0 !important;
     margin-bottom: 10px;
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: normal;
 }
 
 .rbfw-related-product-title-wrap .rbfw-related-product-title-wrap a {
@@ -826,7 +827,7 @@ div.mp_right_section {
 }
 
 .rbfw-related-product-price-wrap {
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--rbfw_single_page_secondary_color);
     margin-bottom: 10px;
     font-size: 16px;
 }
