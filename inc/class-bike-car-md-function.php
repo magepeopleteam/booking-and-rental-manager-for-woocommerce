@@ -81,8 +81,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $item_quantity = $_POST['item_quantity'];
             $rbfw_enable_variations = $_POST['rbfw_enable_variations'];
             $rbfw_available_time = $_POST['rbfw_available_time']??'no';
-            $rbfw_service_price = $_POST['rbfw_service_price']*$item_quantity;
-            $service_price_arr = !empty($_POST['service_price_arr']) ? $_POST['service_price_arr'] : [];
+            $rbfw_service_price = $_POST['rbfw_service_price'] * $item_quantity;
+
 
             $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
             $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
@@ -97,16 +97,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $hours = $duration_price_info['hours'];
 
             $rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
-            $service_cost = 0;
-            if(!empty($service_price_arr)){
-                foreach ($service_price_arr as $data_name => $values) {
-                    if($item_quantity > 1 && (int)$values['data_qty'] == 1 && $rbfw_enable_extra_service_qty != 'yes'){
-                        $service_cost += $item_quantity * (float)$values['data_price'];
-                    } else {
-                        $service_cost += (int)$values['data_qty'] * (float)$values['data_price'];
-                    }
-                }
-            }
+
+            $service_cost = $_POST['rbfw_es_service_price'];
 
             $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_service_price;
             $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);

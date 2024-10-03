@@ -290,6 +290,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $rbfw_pickup_point  = $cart_item['rbfw_pickup_point'] ? $cart_item['rbfw_pickup_point'] : '';
     $rbfw_dropoff_point = $cart_item['rbfw_dropoff_point'] ? $cart_item['rbfw_dropoff_point'] : '';
 
+    $rbfw_duration_price = $cart_item['rbfw_duration_price'] ? $cart_item['rbfw_duration_price'] : 0;
     $rbfw_item_quantity = $cart_item['rbfw_item_quantity'] ? $cart_item['rbfw_item_quantity'] : 1;
     $rbfw_duration_price = $cart_item['rbfw_duration_price'] ? $cart_item['rbfw_duration_price'] : '';
     $rbfw_service_price = $cart_item['rbfw_service_price'] ? $cart_item['rbfw_service_price'] : '';
@@ -371,7 +372,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                         </span>
                     </th>
                     <td>
-                        <?php echo '('.wc_price(rbfw_price_calculation( $rbfw_id, $start_datetime, $end_datetime, $start_date )) .' x '.$rbfw_item_quantity.')'. ' = '.wc_price(rbfw_price_calculation( $rbfw_id, $start_datetime, $end_datetime, $start_date ) * $rbfw_item_quantity);?>
+                        <?php echo '('.wc_price($rbfw_duration_price) .' x '.$rbfw_item_quantity.')'. ' = '.wc_price($rbfw_duration_price * $rbfw_item_quantity);?>
                     </td>
                 </tr>
             <?php endif; ?>
