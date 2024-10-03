@@ -565,6 +565,15 @@ if ( ! function_exists( 'mep_esc_html' ) ) {
         return wp_kses( $string, $allow_attr );
     }
 }
+if ( ! function_exists( 'mep_trim_string' ) ) {
+    function mep_trim_string($text, $length = 20){
+        $trimmed_text = substr($text, 0, $length);
+        if (strlen($text) > $length) {
+            $trimmed_text .= '...';
+        }
+        return $trimmed_text;
+    }
+}
 if ( ! function_exists( 'rbfw_field_generator' ) ) {
     function rbfw_field_generator( $type, $option ) {
 
