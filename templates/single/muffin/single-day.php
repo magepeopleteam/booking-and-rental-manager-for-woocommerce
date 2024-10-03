@@ -125,8 +125,8 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                                     $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                                     $title = $features['title'];
                                     if($i<5):?>
-                                        <li>
-                                            <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_esc_html($title); ?></span>
+                                        <li title="<?php echo mep_esc_html($title); ?>">
+                                            <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_trim_string(mep_esc_html($title),22); ?></span>
                                         </li>
                                     <?php
                                     endif;

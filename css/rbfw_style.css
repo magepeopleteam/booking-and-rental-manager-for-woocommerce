@@ -613,7 +613,6 @@ div.mp_right_section {
 }
 
 .rbfw-tab-container {
-    padding-top: 20px;
     padding-bottom: 20px;
     border-radius: 4px;
     padding-left: 0;
@@ -3656,7 +3655,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin: 0;
     font-size: 16px;
     margin-bottom: 15px;
-    width: 44%;
+    width: 48%;
 }
 
 .rbfw_muff_highlighted_features ul li i {
@@ -5129,7 +5128,8 @@ tr:nth-child(2n + 1) {
     }
 
     .rbfw_muff_row_slider_content .rbfw_muff_highlighted_features {
-        padding: 0 50px 0 50px;
+        padding: 0;
+        padding-left:50px;
     }
 }
 

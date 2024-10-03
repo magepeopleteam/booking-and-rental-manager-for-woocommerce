@@ -46,7 +46,10 @@ $post_staff_progress_width = function_exists('rbfw_review_get_progress_bar_width
 $post_facilities_progress_width = function_exists('rbfw_review_get_progress_bar_width') ? rbfw_review_get_progress_bar_width($post_review_average_facilities) : '';
 $post_comfort_progress_width = function_exists('rbfw_review_get_progress_bar_width') ? rbfw_review_get_progress_bar_width($post_review_average_comfort) : '';
 
-$gallery_images_additional = rbfw_get_additional_gallary_images($post_id, 6);
+$additional_gallary_status =  get_post_meta(get_the_ID(), 'rbfw_enable_additional_gallary', true);
+$additional_gallary_status =  $additional_gallary_status ? $additional_gallary_status : 'off'; 
+
+$gallery_images_additional = rbfw_get_additional_gallary_images($post_id, 2);
 $prices_start_at = $rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
 
 /* Single Day/Appointment Type */
@@ -123,8 +126,8 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                                     $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                                     $title = $features['title'];
                                     if($i<5):?>
-                                        <li>
-                                            <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_esc_html($title); ?></span>
+                                        <li title="<?php echo mep_esc_html($title); ?>">
+                                            <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_trim_string(mep_esc_html($title),22); ?></span>
                                         </li>
                                     <?php
                                     endif;
@@ -166,6 +169,7 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                         </h2>
                         <?php echo $post_content; ?>
                     </div>
+                    <?php if($additional_gallary_status=='on'): ?>
                     <?php if(!empty($gallery_images_additional)) { ?>
                         <div class="rbfw_muff_row_slider">
                             <h3 class="rbfw_muff_heading">
@@ -173,6 +177,13 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                             </h3>
                             <?php echo $gallery_images_additional; ?>
                         </div>
+                    <?php } ?>
+                    <?php endif; ?>
+                    <?php if($rbfw_enable_faq_content == 'yes') { ?>
+                        <div class="faq" data-id="faq">
+                            <h3 class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Frequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?></h3>
+                            <?php do_action( 'rbfw_the_faq_only', $post_id ); ?>
+                        </div><!--end of tab three-->
                     <?php } ?>
                 </div>
             </div>
@@ -284,15 +295,6 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                 </div>
             </div>
         <?php endif; ?>
-        
-        <?php if($rbfw_enable_faq_content == 'yes') { ?>
-            <div class="rbfw_muff_row_faq">
-                <h3 class="rbfw_muff_heading rbfw_muff_faq_heading">
-                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Freequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?>
-                </h3>
-                <?php do_action( 'rbfw_the_faq_style_two', $post_id ); ?>
-            </div>
-        <?php } ?>
         
         <?php if(!empty($rbfw_related_post_arr)): ?>
             <div class="rbfw_muff_row_related_item">
