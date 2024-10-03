@@ -10,9 +10,10 @@
  * Domain Path: /languages/
  */
 
+if( ! defined('ABSPATH') )die;
 
 if(! class_exists('RBFW_Rent_Manager')){
-    class RBFW_Rent_Manager{
+    final class RBFW_Rent_Manager{
         public function __construct() {
             $this->define_contstants();
             $this->include_plugin_files(); 
