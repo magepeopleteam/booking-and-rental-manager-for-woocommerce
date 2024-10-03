@@ -4262,11 +4262,11 @@ span {
 }
 
 .rbfw_muff_row_related_item .rbfw-related-product-review-badge-wrap {
-    text-align: right;
-    margin-top: -13px;
+
+    top:13px;
     overflow: hidden;
     position: absolute;
-    width: 100%;
+    left: 10px;
 }
 
 .rbfw_muff_row_related_item .rbfw-related-product-review-badge-1 {
@@ -4280,14 +4280,13 @@ span {
 }
 
 .rbfw_muff_row_related_item .rbfw-related-product-review-badge-2 {
-    display: inline-block;
+    display: none;
     background-color: #7e7e7e;
     color: #fff;
     padding: 5px 20px;
     border-radius: 15px;
     font-size: 14px;
     font-weight: 600;
-    margin-right: -10px;
 }
 
 .rbfw_muff_row_faq .rbfw_muff_desc {
