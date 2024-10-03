@@ -3641,6 +3641,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin: 0;
     margin-bottom: 20px;
     padding-left: 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .rbfw_muff_highlighted_features ul li {
@@ -3648,6 +3651,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin: 0;
     font-size: 16px;
     margin-bottom: 15px;
+    width: 44%;
 }
 
 .rbfw_muff_highlighted_features ul li i {
