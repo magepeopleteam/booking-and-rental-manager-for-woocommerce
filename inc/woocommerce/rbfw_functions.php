@@ -244,6 +244,26 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
     }else {
 
+
+
+        $start_date = $rbfw_pickup_start_date;
+        $start_time = $rbfw_pickup_start_time;
+        $end_date = $rbfw_pickup_end_date;
+        $end_time = $rbfw_pickup_end_time;
+
+
+        $start_datetime = date('Y-m-d H:i', strtotime($rbfw_pickup_start_date . ' ' . $start_time));
+        $end_datetime = date('Y-m-d H:i', strtotime($rbfw_pickup_end_date . ' ' . $end_time));
+
+
+        //$base_price = rbfw_price_calculation($rbfw_id, $start_datetime, $end_datetime, $start_date);
+        $duration_price_info = rbfw_md_duration_price_calculation($rbfw_id,$start_datetime,$end_datetime,$start_date,$end_date,$start_time,$end_time);
+
+        $duration_price = $duration_price_info['duration_price'] * $rbfw_item_quantity;
+        $total_days = $duration_price_info['total_days'];
+        $actual_days = $duration_price_info['actual_days'];
+        $hours = $duration_price_info['hours'];
+
         /* service price start for multiple days */
 
         $rbfw_service_price = 0;
@@ -264,30 +284,11 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
                 }
             }
         }
-
-
         $rbfw_service_price = $rbfw_service_price * $rbfw_item_quantity;
 
 
         /* service price end for multiple days */
 
-        $start_date = $rbfw_pickup_start_date;
-        $start_time = $rbfw_pickup_start_time;
-        $end_date = $rbfw_pickup_end_date;
-        $end_time = $rbfw_pickup_end_time;
-
-
-        $start_datetime = date('Y-m-d H:i', strtotime($rbfw_pickup_start_date . ' ' . $start_time));
-        $end_datetime = date('Y-m-d H:i', strtotime($rbfw_pickup_end_date . ' ' . $end_time));
-
-
-        //$base_price = rbfw_price_calculation($rbfw_id, $start_datetime, $end_datetime, $start_date);
-        $duration_price_info = rbfw_md_duration_price_calculation($rbfw_id,$start_datetime,$end_datetime,$start_date,$end_date,$start_time,$end_time);
-
-        $duration_price = $duration_price_info['duration_price'] * $rbfw_item_quantity;
-        $total_days = $duration_price_info['total_days'];
-        $actual_days = $duration_price_info['actual_days'];
-        $hours = $duration_price_info['hours'];
 
         $rbfw_extra_service_price = 0;
         $rbfw_duration_price = $duration_price;
@@ -358,7 +359,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
        // echo $rbfw_service_price;exit;
 
 
-        $rbfw_ticket_info = rbfw_cart_ticket_info($rbfw_id, $rbfw_pickup_start_date, $rbfw_pickup_start_time, $rbfw_pickup_end_date, $rbfw_pickup_end_time, $rbfw_pickup_point, $rbfw_dropoff_point, $rbfw_item_quantity, $rbfw_duration_price, $rbfw_service_price, $total_price, $rbfw_service_info, $variation_info, $discount_type, $discount_amount, $rbfw_regf_info,$rbfw_service_infos,$total_days,$security_deposit);
+        $rbfw_ticket_info = rbfw_cart_ticket_info($rbfw_id, $rbfw_pickup_start_date, $rbfw_pickup_start_time, $rbfw_pickup_end_date, $rbfw_pickup_end_time, $rbfw_pickup_point, $rbfw_dropoff_point, $rbfw_item_quantity, $rbfw_duration_price, $rbfw_service_price+$rbfw_extra_service_price, $total_price, $rbfw_service_info, $variation_info, $discount_type, $discount_amount, $rbfw_regf_info,$rbfw_service_infos,$total_days,$security_deposit);
         $cart_item_data['rbfw_pickup_point'] = $rbfw_pickup_point;
         $cart_item_data['rbfw_dropoff_point'] = $rbfw_dropoff_point;
         $cart_item_data['rbfw_start_date'] = $start_date;
@@ -374,7 +375,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $cart_item_data['rbfw_variation_info'] = $variation_info;
         $cart_item_data['rbfw_ticket_info'] = $rbfw_ticket_info;
         $cart_item_data['rbfw_duration_price'] = $rbfw_duration_price;
-        $cart_item_data['rbfw_service_price'] = $rbfw_service_price;
+        $cart_item_data['rbfw_service_price'] = $rbfw_service_price+$rbfw_extra_service_price;
         $cart_item_data['discount_type'] = $discount_type;
         $cart_item_data['discount_amount'] = $discount_amount;
         $cart_item_data['security_deposit_amount'] = $security_deposit['security_deposit_amount'];
@@ -823,7 +824,6 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
                     foreach ($item_parent as $key1=>$item_child){
                         $rbfw_service_infos_order .='<tr><td>'.$item_child['name'].'</td><td>';
                         if($item_child['service_price_type']=='day_wise'){
-                            $rbfw_service_price =  (float)$rbfw_service_price + (float)$item_child['price']*(int)$item_child['quantity']*(int)$total_days;
                             $rbfw_service_infos_order .= '('.wc_price((float)$item_child['price']). 'x'. $item_child['quantity'] . 'x' .$total_days .'='.wc_price((float)$item_child['price']*(int)$item_child['quantity']*(int)$total_days).')';
                         }else{
                             $rbfw_service_infos_order .= '('.wc_price($item_child['price']). 'x'. $item_child['quantity'] .'='.wc_price((float)$item_child['price']*(int)$item_child['quantity']).')';
