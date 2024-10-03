@@ -137,11 +137,20 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                             
                         <?php  endforeach;?>
                         </ul>
+                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo $post_id?>">See more</div>
                     <?php  endif; ?>
                 </div>
             </div>
         </div>
+        <!-- popup content will show here -->
+        <div class="rbfw_popup_wrapper" id="rbfw_popup_wrapper">
+            <div class="rbfw_rent_cat_info_popup">
+                <span class="rbfw_popup_close_btn" id="rbfw_popup_close_btn">&times;</span>
+                <div id="rbfw_popup_content">
 
+                </div>
+            </div>
+        </div>
         <div class="rbfw_muff_row_content">
             <div class="rbfw_muff_content_col1">
                 <div class="rbfw_muff_registration_wrapper">
