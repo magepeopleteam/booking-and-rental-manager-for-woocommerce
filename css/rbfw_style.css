@@ -6595,7 +6595,7 @@ ul, li {
 .rbfw_rent_list_grid_view_top_img {
     display: block;
     width: 100%;
-    height: 270px;
+    height: 255px;
     overflow: hidden;
 }
 
@@ -6898,7 +6898,7 @@ ul, li {
 @media (max-width: 767px) {
     .rbfw_rent_list_style_grid.rbfw-w-33 {
         grid-template-columns: repeat(1, minmax(0, 1fr));
-        gap: 30px;
+        gap: 15px;
     }
 }
 
