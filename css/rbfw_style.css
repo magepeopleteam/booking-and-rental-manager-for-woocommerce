@@ -4351,7 +4351,6 @@ span {
     background-color: var(--rbfw_dt_color2);
     padding: 30px;
     margin-bottom: 20px;
-    border-radius: 10px;
 }
 
 .rbfw_muffin_template .rbfw-bikecarmd-result {
@@ -5055,8 +5054,8 @@ tr:nth-child(2n + 1) {
     display: flex;
     text-align: center;
     align-items: center;
-    border-radius: 10px;
     overflow: hidden;
+    margin-right: 50px;
 }
 
 .rbfw_muff_review_summ_col:nth-child(1) .rbfw_muff_review_rating_wrap {
@@ -5093,6 +5092,7 @@ tr:nth-child(2n + 1) {
         display: -webkit-flex;
         display: -ms-flexbox;
         display: flex;
+        border: 1px solid #d8d8d8;
     }
 
     .rbfw_muff_review_summ_col:nth-child(1) {
