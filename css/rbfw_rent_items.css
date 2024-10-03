@@ -432,10 +432,22 @@ p {
     color: #333333;
     z-index: 10;
 }
-.rbfw_popup_fearure_title_text{
+.rbfw_popup_fearure_title{
     font-size: 18px;
     font-weight: 600;
     color: #333333;
+    margin: 10px 0;
+}
+ul.rbfw_popup_fearure_lists{
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+ul.rbfw_popup_fearure_lists li{
+    margin: 5px 0;
+    padding: 5px 0;
+    border-bottom: 1px solid #ebebeb;
 }
 /* Styles for the popup wrapper */
 .rbfw_popup_wrapper {

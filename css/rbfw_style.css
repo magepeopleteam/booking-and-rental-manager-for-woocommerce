@@ -214,7 +214,7 @@ CSS for Single Page Template
     font-size: 20px;
     border-bottom: 1px solid #e1e1e1;
     padding: 10px 0px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     font-weight: 600;
 }
 
@@ -372,7 +372,7 @@ CSS for Single Page Template
     height: 50px;
     margin-bottom: 0;
     box-sizing: border-box;
-    background-color: #fff;
+    /* background-color: #fff; */
 }
 
 .rbfw-datetime .date {
@@ -536,7 +536,7 @@ div.rbfw_faq_item .rbfw_faq_title {
 
 div.rbfw_faq_item {
     margin: 0 0 var(--default-mp) 0;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.1);
 }
 
 div.rbfw_faq_item .rbfw_faq_title {
@@ -652,7 +652,7 @@ div.mp_right_section {
 
 #rbfw_faq_accordion .rbfw_faq_header {
     background: transparent;
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 600;
     text-align: left;
     padding: 14px 15px;
@@ -812,7 +812,8 @@ div.mp_right_section {
 .rbfw-related-product .rbfw-related-product-title-wrap {
     margin-top: 0 !important;
     margin-bottom: 10px;
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: normal;
 }
 
 .rbfw-related-product-title-wrap .rbfw-related-product-title-wrap a {
@@ -826,7 +827,7 @@ div.mp_right_section {
 }
 
 .rbfw-related-product-price-wrap {
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--rbfw_single_page_secondary_color);
     margin-bottom: 10px;
     font-size: 16px;
 }
@@ -1023,7 +1024,7 @@ ul.rbfw-feature-lists {
 ul.rbfw-feature-lists li {
     width: 90%;
     display: flex;
-    align-items: center;
+    align-items: start;
     justify-content: start;
     margin-bottom: 0;
 }
@@ -1038,6 +1039,7 @@ ul.rbfw-feature-lists li i {
     color: var(--rbfw_color_primary);
     margin-right: 8px;
     min-width: 22px;
+    margin-top: 5px;
 }
 
 @media (min-width: 640px) {
@@ -1600,6 +1602,7 @@ table.rbfw_room_cart_table th span {
 .rbfw-review-section ul.rbfw-review-list {
     margin: 0;
     margin-bottom: 20px;
+    padding: 0;
 }
 
 .rbfw-review-section ul.rbfw-review-list ul {
@@ -3643,6 +3646,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin: 0;
     margin-bottom: 20px;
     padding-left: 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .rbfw_muff_highlighted_features ul li {
@@ -3650,6 +3656,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin: 0;
     font-size: 16px;
     margin-bottom: 15px;
+    width: 44%;
 }
 
 .rbfw_muff_highlighted_features ul li i {
@@ -4059,7 +4066,8 @@ span.dashicons {
 .rbfw_muff_row_reviews .rbfw_muff_heading {
     padding-bottom: 0;
     border-bottom: 2px solid #d3d3d3;
-    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .rbfw_muff_row_faq .rbfw_muff_heading {
@@ -4181,13 +4189,11 @@ span {
     text-transform: capitalize;
     text-decoration: none;
     margin-top: 20px;
-    box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
     border-radius: 5px;
 }
 
 .rbfw_muff_row_reviews .rbfw_muff_review_write_btn {
     background-color: var(--rbfw_color_primary);
-    box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
     padding: 9px 43px;
     margin-bottom: 0px;
     text-decoration: none;
@@ -4265,11 +4271,11 @@ span {
 }
 
 .rbfw_muff_row_related_item .rbfw-related-product-review-badge-wrap {
-    text-align: right;
-    margin-top: -13px;
+
+    top:13px;
     overflow: hidden;
     position: absolute;
-    width: 100%;
+    left: 10px;
 }
 
 .rbfw_muff_row_related_item .rbfw-related-product-review-badge-1 {
@@ -4283,14 +4289,13 @@ span {
 }
 
 .rbfw_muff_row_related_item .rbfw-related-product-review-badge-2 {
-    display: inline-block;
+    display: none;
     background-color: #7e7e7e;
     color: #fff;
     padding: 5px 20px;
     border-radius: 15px;
     font-size: 14px;
     font-weight: 600;
-    margin-right: -10px;
 }
 
 .rbfw_muff_row_faq .rbfw_muff_desc {
@@ -4355,7 +4360,6 @@ span {
     background-color: var(--rbfw_dt_color2);
     padding: 30px;
     margin-bottom: 20px;
-    border-radius: 10px;
 }
 
 .rbfw_muffin_template .rbfw-bikecarmd-result {
@@ -5059,8 +5063,8 @@ tr:nth-child(2n + 1) {
     display: flex;
     text-align: center;
     align-items: center;
-    border-radius: 10px;
     overflow: hidden;
+    margin-right: 50px;
 }
 
 .rbfw_muff_review_summ_col:nth-child(1) .rbfw_muff_review_rating_wrap {
@@ -5097,6 +5101,7 @@ tr:nth-child(2n + 1) {
         display: -webkit-flex;
         display: -ms-flexbox;
         display: flex;
+        border: 1px solid #d8d8d8;
     }
 
     .rbfw_muff_review_summ_col:nth-child(1) {
