@@ -1020,7 +1020,7 @@ ul.rbfw-feature-lists {
 ul.rbfw-feature-lists li {
     width: 90%;
     display: flex;
-    align-items: center;
+    align-items: start;
     justify-content: start;
     margin-bottom: 0;
 }
@@ -1035,6 +1035,7 @@ ul.rbfw-feature-lists li i {
     color: var(--rbfw_color_primary);
     margin-right: 8px;
     min-width: 22px;
+    margin-top: 5px;
 }
 
 @media (min-width: 640px) {
