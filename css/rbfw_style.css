@@ -2152,7 +2152,7 @@ li.rbfw-visibility-hidden {
 
 .rbfw_rent_list_style_grid {
     display: grid;
-    gap: 30px;
+    gap: 15px;
 }
 
 .rbfw_rent_list_style_grid.rbfw-w-25 {
@@ -6903,7 +6903,7 @@ a.rbfw_rent_list_btn{
 
 @media only screen and (max-width: 2420px) {
     .rbfw_rent_list_style_grid {
-        gap: 30px;
+        gap: 15px;
     }
 
     grid-template-columns: repeat(2, minmax(0, 1fr));
