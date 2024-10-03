@@ -13,6 +13,17 @@
 if( ! defined('ABSPATH') )die;
 
 if(! class_exists('RBFW_Rent_Manager')){
+    /**
+     * Class RBFW_Rent_Manager
+     * 
+     * This class serves as the main entry point for the Rent Manager plugin.
+     * 
+     * @author Sahahdat <raselsha@gmail.com>
+     * @version 1.0.0
+     * @since 2.1.1
+     * 
+     */
+
     final class RBFW_Rent_Manager{
         public function __construct() {
             $this->define_contstants();
