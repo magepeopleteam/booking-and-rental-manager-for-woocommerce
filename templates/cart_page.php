@@ -372,7 +372,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                         </span>
                     </th>
                     <td>
-                        <?php echo '('.wc_price($rbfw_duration_price) .' x '.$rbfw_item_quantity.')'. ' = '.wc_price($rbfw_duration_price * $rbfw_item_quantity);?>
+                        <?php echo '('.wc_price((float)$rbfw_duration_price) .' x '.$rbfw_item_quantity.')'. ' = '.wc_price((float)$rbfw_duration_price * $rbfw_item_quantity);?>
                     </td>
                 </tr>
             <?php endif; ?>
