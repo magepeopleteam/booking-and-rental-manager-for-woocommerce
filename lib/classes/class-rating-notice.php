@@ -43,7 +43,7 @@ if ( ! class_exists( 'Mage_Rating' ) ) {
 
         public function plugin_url() {
 
-            return rbfw_get_plugin_data('PluginURI');
+            return RBFW_Rent_Manager::get_plugin_data('PluginURI');
         }
 
         public function rating_url() {
@@ -72,7 +72,7 @@ if ( ! class_exists( 'Mage_Rating' ) ) {
 
         public function text_domain() {
 
-            $this->text_domain = rbfw_get_plugin_data('TextDomain');
+            $this->text_domain = RBFW_Rent_Manager::get_plugin_data('TextDomain');
             return $this;
     
         }
