@@ -214,7 +214,7 @@ CSS for Single Page Template
     font-size: 20px;
     border-bottom: 1px solid #e1e1e1;
     padding: 10px 0px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     font-weight: 600;
 }
 
@@ -372,7 +372,7 @@ CSS for Single Page Template
     height: 50px;
     margin-bottom: 0;
     box-sizing: border-box;
-    background-color: #fff;
+    /* background-color: #fff; */
 }
 
 .rbfw-datetime .date {
