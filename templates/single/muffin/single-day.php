@@ -46,9 +46,11 @@ $post_staff_progress_width = function_exists('rbfw_review_get_progress_bar_width
 $post_facilities_progress_width = function_exists('rbfw_review_get_progress_bar_width') ? rbfw_review_get_progress_bar_width($post_review_average_facilities) : '';
 $post_comfort_progress_width = function_exists('rbfw_review_get_progress_bar_width') ? rbfw_review_get_progress_bar_width($post_review_average_comfort) : '';
 
-$gallery_images_additional = rbfw_get_additional_gallary_images($post_id, 6);
+$gallery_images_additional = rbfw_get_additional_gallary_images($post_id, 2);
 $prices_start_at = $rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
 
+$additional_gallary_status =  get_post_meta(get_the_ID(), 'rbfw_enable_additional_gallary', true);
+$additional_gallary_status =  $additional_gallary_status ? $additional_gallary_status : 'off'; 
 /* Single Day/Appointment Type */
 $rbfw_rent_type = get_post_meta( $post_id, 'rbfw_item_type', true );
 $rbfw_bike_car_sd_data = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
@@ -110,43 +112,45 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
             </div>
             <div class="rbfw_muff_content_col2">
                 <div class="rbfw_muff_highlighted_features">
-                    <?php if ( $rbfw_feature_category ) :
-                        foreach ( $rbfw_feature_category as $value ) :
+                    <?php if ( $rbfw_feature_category ) :?>
+                        <ul class="muff_features_item">
+                        <?php foreach ( $rbfw_feature_category as $value ) :
                             $cat_title = $value['cat_title'];
-                        $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
-                        ?>
-                            <h2 class="rbfw_muff_post_content_headline"><?php echo esc_html($cat_title); ?></h2>
-                            <ul>
-                                <?php
-                                if(!empty($cat_features)):
-                                    $i = 1;
-                                    foreach ($cat_features as $features):
-                                        $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
-                                        $title = $features['title'];
-                                        if($title):?>
-                                            <li style="<?php echo ($i > 4)?'display:none':''?>" data-status="<?php echo ($i > 4)?'extra':''?>">
-                                                <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_esc_html($title); ?></span>
-                                            </li>
-                                        <?php
-                                        endif;
-                                        $i++;
-                                    endforeach;
-                                endif;
-                                ?>
-                                <li style="width:100%">
-                                    <a class="rbfw_muff_lmf_btn">
-                                        <?php echo $rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
-                                    </a>
-                                </li>
-                            </ul>
-                        <?php
-                        endforeach;
-                        endif;
-                        ?>
+                            $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
+                            ?>
+                            <?php
+                            if(!empty($cat_features)):
+                                $i = 1;
+                                foreach ($cat_features as $features):
+                                    $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+                                    $title = $features['title'];
+                                    if($i<5):?>
+                                        <li title="<?php echo mep_esc_html($title); ?>">
+                                            <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_trim_string(mep_esc_html($title),22); ?></span>
+                                        </li>
+                                    <?php
+                                    endif;
+                                    $i++;
+                                endforeach;
+                            endif;
+                            ?>
+                            
+                        <?php  endforeach;?>
+                        </ul>
+                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo $post_id?>">See more</div>
+                    <?php  endif; ?>
                 </div>
             </div>
         </div>
+        <!-- popup content will show here -->
+        <div class="rbfw_popup_wrapper" id="rbfw_popup_wrapper">
+            <div class="rbfw_rent_cat_info_popup">
+                <span class="rbfw_popup_close_btn" id="rbfw_popup_close_btn">&times;</span>
+                <div id="rbfw_popup_content">
 
+                </div>
+            </div>
+        </div>
         <div class="rbfw_muff_row_content">
             <div class="rbfw_muff_content_col1">
                 <div class="rbfw_muff_registration_wrapper">
@@ -164,14 +168,22 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                         </h2>
                         <?php echo $post_content; ?>
                     </div>
-                    <?php if(!empty($gallery_images_additional)) { ?>
-                        <div class="rbfw_muff_row_slider">
-                            <h3 class="rbfw_muff_heading">
-                                <?php echo esc_html($rbfw->get_option_trans('rbfw_text_photos', 'rbfw_basic_translation_settings', __('Photos','booking-and-rental-manager-for-woocommerce'))); ?>
-                            </h3>
-                            <?php echo $gallery_images_additional; ?>
-                        </div>
-                    <?php } ?>
+                    <?php if($additional_gallary_status=='on'): ?>
+                        <?php if(!empty($gallery_images_additional)) { ?>
+                            <div class="rbfw_muff_row_slider">
+                                <h3 class="rbfw_muff_heading">
+                                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_photos', 'rbfw_basic_translation_settings', __('Photos','booking-and-rental-manager-for-woocommerce'))); ?>
+                                </h3>
+                                <?php echo $gallery_images_additional; ?>
+                            </div>
+                        <?php } ?>
+                        <?php endif; ?>
+                        <?php if($rbfw_enable_faq_content == 'yes') { ?>
+                            <div class="faq" data-id="faq">
+                                <h3 class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Frequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?></h3>
+                                <?php do_action( 'rbfw_the_faq_only', $post_id ); ?>
+                            </div><!--end of tab three-->
+                        <?php } ?>
                 </div>
             </div>
         </div>
@@ -271,6 +283,9 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                     <div class="rbfw_muff_heading_tab active" data-tab="tab1">
                         <?php do_action( 'rbfw_muff_review_tab', $post_id ); ?>
                     </div>
+                    <div class="rbfw_muff_review_write_btn_wrapper">
+                        <button class="rbfw_muff_review_write_btn"><?php echo esc_html($rbfw->get_option('rbfw_text_write_review', 'rbfw_basic_translation_settings', __('Write Review','booking-and-rental-manager-for-woocommerce'))); ?></button>
+                    </div>
                 </div>
                 <div class="rbfw_muff_faq_tab_contents">
                     <div class="rbfw_muff_faq_tab_content active" data-content="tab1">
@@ -280,6 +295,7 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
             </div>
         <?php endif; ?>
 
+
         <?php if(!empty($rbfw_related_post_arr)): ?>
             <div class="rbfw_muff_row_related_item">
                 <h3 class="rbfw_muff_heading">
@@ -288,13 +304,6 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                 <?php do_action( 'rbfw_related_products_style_three', $post_id ); ?>
             </div>
         <?php endif; ?>
-        <?php if($rbfw_enable_faq_content == 'yes') { ?>
-            <div class="rbfw_muff_row_faq">
-                <h3 class="rbfw_muff_heading rbfw_muff_faq_heading">
-                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Freequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?>
-                </h3>
-                <?php do_action( 'rbfw_the_faq_style_two', $post_id ); ?>
-            </div>
-        <?php } ?>
+        
     </div>
 

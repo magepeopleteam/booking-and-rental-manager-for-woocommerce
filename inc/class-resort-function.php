@@ -496,6 +496,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
         }
 
         public function rbfw_get_active_price_table($post_id=0,$active_tab='',$checkin_date='',$checkout_date=''){
+
             global $rbfw;
             if(!($post_id && $active_tab)){
                 $post_id = $_POST['post_id'];

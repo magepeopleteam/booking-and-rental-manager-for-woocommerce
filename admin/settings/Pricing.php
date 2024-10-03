@@ -185,7 +185,7 @@
 												<label>
 													<?php echo esc_html__('Service Category Title','booking-and-rental-manager-for-woocommerce'); ?>
 												</label>
-												<input type="text" name="rbfw_service_category_price[0][cat_title]" data-key="0" placeholder="<?php echo esc_attr__('Service Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
+												<input type="text" name="rbfw_service_category_price[0][cat_title]" value="Service Type" data-key="0" placeholder="<?php echo esc_attr__('Service Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
 											</section>
 											<div class="service_category_inner_item_wrap sortable">
 
@@ -258,7 +258,7 @@
 						e.stopImmediatePropagation();
 						let dataCat = jQuery('.rbfw_service_category_table tbody tr:last-child').attr('data-cat');
 						let nextCat = parseInt(dataCat) + 1;
-						let html = '<tr data-cat="'+nextCat+'"><td><div class="services_category_wrapper"><div class="field-list rbfw_service_category_price"><div class="service_category_inner_wrap"><section class="service_category_title"><label><?php echo esc_html__('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_service_category_title" name="rbfw_service_category_price['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></section>';
+						let html = '<tr data-cat="'+nextCat+'"><td><div class="services_category_wrapper"><div class="field-list rbfw_service_category_price"><div class="service_category_inner_wrap"><section class="service_category_title"><label><?php echo esc_html__('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_service_category_title" name="rbfw_service_category_price['+nextCat+'][cat_title]" data-cat="'+nextCat+'" value="Service Type" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></section>';
 						html +='<div class="service_category_inner_item_wrap sortable"><div class="item"><a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?></a><div class="rbfw_service_icon_preview p-1" data-key="0"></div><input type="hidden" name="rbfw_service_category_price['+nextCat+'][cat_services][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_service_icon">';
 						html +='<input type="text" name="rbfw_service_category_price['+nextCat+'][cat_services][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0">';
 						html +='<input type="text" class="medium" name="rbfw_service_category_price['+nextCat+'][cat_services][0][price]" placeholder="Price" value="" data-key="0">';
@@ -371,7 +371,7 @@
 				$section_visibility = ( $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment' && $rbfw_item_type != 'resort')?'show':'hide'; 
 			?>
 				<div class="rbfw_general_price_config_wrapper <?php echo esc_attr( $section_visibility); ?>">
-					<?php $this->panel_header('Service price settings ','Service price settings with category.'); ?>
+					<?php $this->panel_header('Service item price settings ','Service price settings with category.'); ?>
 					<section>
                         <div>
                             <label>
@@ -825,14 +825,14 @@
 						</span>
 					</div>
 				</section>
-
+				<?php $this->panel_header('Day-wise Price Configuration ','Day-wise Price Configuration lets you set different prices for each day of the week'); ?>
 				<section>
 					<div>
 						<label>
-							<?php esc_html_e( 'Day-wise Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<?php esc_html_e( 'Enable Day-wise Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</label>
 						<span>
-							<?php esc_html_e( 'If you enable this, price calculation will work as weekly day. it will overwrite general daily price.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<?php esc_html_e( 'Enabling this will set prices based on the day of the week, overriding the general daily price', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</span>
 					</div>
 
@@ -1009,12 +1009,18 @@
 						if(status == 'yes') {
 							jQuery(this).val('no');
 							jQuery('.rbfw_hourly_rate input').attr("disabled", true);
-						}  
+                            if(jQuery('input[name=rbfw_time_slot_switch]').val()=='on'){
+                                jQuery('input[name=rbfw_time_slot_switch]').trigger( "click" );
+                            }
+						}
 						if(status == 'no') {
 							jQuery(this).val('yes'); 
 							jQuery('.rbfw_hourly_rate input').removeAttr("disabled");
-							
-						}
+                            if(jQuery('input[name=rbfw_time_slot_switch]').val()=='off'){
+                                jQuery('input[name=rbfw_time_slot_switch]').trigger( "click" );
+                            }
+
+                        }
 					});
 					
 					// daywise price
@@ -1228,6 +1234,7 @@
 					$urls     = $_POST['service_price'] ? rbfw_array_strip( $_POST['service_price'] ) : array();
 					$service_desc     = $_POST['service_desc'] ? rbfw_array_strip( $_POST['service_desc'] ) : array();
 					$qty      = $_POST['service_qty'] ? rbfw_array_strip( $_POST['service_qty'] ) : array();
+
 					$qty_type = !empty($_POST['service_qty_type']) ? rbfw_array_strip( $_POST['service_qty_type'] ) : array();
 					$count    = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
@@ -1256,6 +1263,8 @@
 							$new_extra_service[ $i ]['service_qty_type'] = stripslashes( strip_tags( $qty_type[ $i ] ) );
 						endif;
 					}
+
+                   // echo '<pre>';print_r($new_extra_service);echo '<pre>';exit;
 			
 					$extra_service_data_arr = apply_filters( 'rbfw_extra_service_arr_save', $new_extra_service );
 			

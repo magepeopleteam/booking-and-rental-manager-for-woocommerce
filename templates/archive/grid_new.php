@@ -5,8 +5,17 @@
 global $rbfw;
 $post_id = get_the_id();
 $post_title = get_the_title();
+$gallery_images = get_post_meta(get_the_ID(),'rbfw_gallery_images',true);
+
+if(isset($gallery_images)){
+    $gallery_image = wp_get_attachment_url($gallery_images[0]);
+}
+else{
+    $gallery_image = RBFW_PLUGIN_URL.'/assets/images/no_image.png';
+}
+
 $post_featured_img = !empty(get_the_post_thumbnail_url($post_id, 'full')) ? get_the_post_thumbnail_url($post_id,
-    'full') : RBFW_PLUGIN_URL.'/assets/images/no_image.png';
+    'full') : $gallery_image;
 $post_link = get_the_permalink();
 $book_now_label = $rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings',
     __('Book Now', 'booking-and-rental-manager-for-woocommerce'));
@@ -255,7 +264,7 @@ if (!$continue) {
                                                     ?>
                                                     <li class=" bfw_rent_list_items title <?php echo $rand_number ?>"><span
                                                                 class="bfw_rent_list_items_icon"><i
-                                                                    class="<?php echo mep_esc_html($icon) ?>"></i></span> <?php echo $title ?></li>
+                                                                    class="<?php echo mep_esc_html($icon) ?>"></i></span> <?php echo mep_trim_string(mep_esc_html($title),38); ?></li>
                                                     <?php
                                                 }
                                             }
@@ -278,12 +287,7 @@ if (!$continue) {
                         <a class="rbfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url($post_link); ?>">
                             <?php echo esc_html($book_now_label); ?>
                             <span class="button-icon">
-                            <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g
-                                id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                                               stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path
-                                    d="M6 17L11 12L6 7M13 17L18 12L13 7" stroke="#000000" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round"></path> </g>
-                            </svg>
+                            <i class="fas fa-angle-double-right"></i>
                         </span>
                         </a>
                     </div>

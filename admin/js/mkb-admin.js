@@ -297,8 +297,6 @@
             if (item_type == 'bike_car_sd') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
                 jQuery('.rbfw_general_price_config_wrapper').addClass('rbfw-d-none');
-                jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').hide();
-                jQuery('.mp_tab_item[data-target-tabs="#rbfw_location_config"]').hide();
                 jQuery('.rbfw_switch_extra_service_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_variations"]').hide();
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
@@ -496,14 +494,12 @@
             dateFormat: 'dd-mm-yy'
         });
 
-        jQuery('#rbfw_sd_appointment_max_qty_per_session,#rdfw_available_time').change(function(e) {
-
+        jQuery('#rbfw_sd_appointment_max_qty_per_session').change(function(e) {
             let this_value = jQuery('#rbfw_sd_appointment_max_qty_per_session').val();
             let target = jQuery('input[name="rbfw_bike_car_sd_data[0][qty]"]');
             let selected_time_slots = jQuery('#rdfw_available_time').find(':selected');
             let updated_value = this_value * selected_time_slots.length;
             target.val(updated_value);
-            target.attr('value', updated_value);
         });
 
         /* Template Options On Load Document */

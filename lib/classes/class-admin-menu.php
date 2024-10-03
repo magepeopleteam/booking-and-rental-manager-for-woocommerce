@@ -140,8 +140,8 @@ if (!class_exists('MageRBFWClass')) {
             echo '<div class="rbfw_settings_wrapper">';
             echo '<div class="rbfw_settings_inner_wrapper">';
             echo '<div class="rbfw_settings_panel_header">';
-            echo rbfw_get_plugin_data('Name');
-            echo '<small>'.rbfw_get_plugin_data('Version').'</small>';
+            echo RBFW_Rent_Manager::get_plugin_data('Name');
+            echo '<small>'.RBFW_Rent_Manager::get_plugin_data('Version').'</small>';
             echo '</div>';
             echo '<div class="mage_settings_panel_wrap rbfw_settings_panel">';
             $this->settings_api->show_navigation();

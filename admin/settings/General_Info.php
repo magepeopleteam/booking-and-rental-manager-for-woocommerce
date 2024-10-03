@@ -43,14 +43,15 @@
 
             public function select_category($post_id){
                 $rbfw_categories = get_post_meta($post_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_categories', true)) : [];
-
+                global $rbfw;
+                $label = $rbfw->get_name();
                 ?>
                     <section>
                         <div>
                             <label>
-                                <?php _e( 'Select Categories', 'booking-and-rental-manager-for-woocommerce' ) ?>
+                                <?php echo _e( 'Select ', 'booking-and-rental-manager-for-woocommerce' ).esc_html($label).__( ' Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
-                            <span><?php _e( 'Choose category that is related with this item', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
+                            <span><?php _e( 'Choose a type that is related with this item', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
                         </div>
                         <div class="w-50">
                             <select name="rbfw_categories[]" multiple class="category2">
