@@ -289,9 +289,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $hours = $duration_price_info['hours'];
 
         $rbfw_extra_service_price = 0;
-
         $rbfw_duration_price = $duration_price;
-
 
         $rbfw_extra_service_data = get_post_meta($rbfw_id, 'rbfw_extra_service_data', true) ? get_post_meta($rbfw_id, 'rbfw_extra_service_data', true) : '';
         if (!empty($rbfw_extra_service_data)) {
