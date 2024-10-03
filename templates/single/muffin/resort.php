@@ -110,43 +110,45 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
             </div>
             <div class="rbfw_muff_content_col2">
                 <div class="rbfw_muff_highlighted_features">
-                    <?php if ( $rbfw_feature_category ) :
-                        foreach ( $rbfw_feature_category as $value ) :
+                    <?php if ( $rbfw_feature_category ) :?>
+                        <ul class="muff_features_item">
+                        <?php foreach ( $rbfw_feature_category as $value ) :
                             $cat_title = $value['cat_title'];
-                        $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
-                        ?>
-                            <h2 class="rbfw_muff_post_content_headline"><?php echo esc_html($cat_title); ?></h2>
-                            <ul>
-                                <?php
-                                if(!empty($cat_features)):
-                                    $i = 1;
-                                    foreach ($cat_features as $features):
-                                        $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
-                                        $title = $features['title'];
-                                        if($title):?>
-                                            <li style="<?php echo ($i > 4)?'display:none':''?>" data-status="<?php echo ($i > 4)?'extra':''?>">
-                                                <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_esc_html($title); ?></span>
-                                            </li>
-                                        <?php
-                                        endif;
-                                        $i++;
-                                    endforeach;
-                                endif;
-                                ?>
-                                <li style="width:100%">
-                                    <a class="rbfw_muff_lmf_btn">
-                                        <?php echo $rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
-                                    </a>
-                                </li>
-                            </ul>
-                        <?php
-                        endforeach;
-                        endif;
-                        ?>
+                            $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
+                            ?>
+                            <?php
+                            if(!empty($cat_features)):
+                                $i = 1;
+                                foreach ($cat_features as $features):
+                                    $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+                                    $title = $features['title'];
+                                    if($i<5):?>
+                                        <li>
+                                            <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_esc_html($title); ?></span>
+                                        </li>
+                                    <?php
+                                    endif;
+                                    $i++;
+                                endforeach;
+                            endif;
+                            ?>
+                            
+                        <?php  endforeach;?>
+                        </ul>
+                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo $post_id?>">See more</div>
+                    <?php  endif; ?>
                 </div>
             </div>
         </div>
+        <!-- popup content will show here -->
+        <div class="rbfw_popup_wrapper" id="rbfw_popup_wrapper">
+            <div class="rbfw_rent_cat_info_popup">
+                <span class="rbfw_popup_close_btn" id="rbfw_popup_close_btn">&times;</span>
+                <div id="rbfw_popup_content">
 
+                </div>
+            </div>
+        </div>
         <div class="rbfw_muff_row_content">
             <div class="rbfw_muff_content_col1">
                 <div class="rbfw_muff_registration_wrapper">
