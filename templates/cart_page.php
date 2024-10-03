@@ -166,7 +166,10 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
     $rbfw_bikecarsd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : array();
     $rbfw_extra_service_data = get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
-    
+
+    $rbfw_pickup_point  = $cart_item['rbfw_pickup_point'] ? $cart_item['rbfw_pickup_point'] : '';
+    $rbfw_dropoff_point = $cart_item['rbfw_dropoff_point'] ? $cart_item['rbfw_dropoff_point'] : '';
+
     $rbfw_item_quantity = 1;
 
     if(!empty($rbfw_bikecarsd_data)):
@@ -188,6 +191,16 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
     ?>
     <table class="rbfw_bikecarsd_cart_table rbfw_room_cart_table">
+
+        <?php if ( ! empty( $rbfw_pickup_point ) ): ?>
+            <li><?php echo $rbfw->get_option_trans('rbfw_text_pickup_point', 'rbfw_basic_translation_settings', __('Pickup Point','booking-and-rental-manager-for-woocommerce')); echo ': ' . $rbfw_pickup_point; ?></li>
+        <?php endif; ?>
+
+        <?php if ( ! empty( $rbfw_dropoff_point ) ): ?>
+            <li><?php echo $rbfw->get_option_trans('rbfw_text_dropoff_point', 'rbfw_basic_translation_settings', __('Drop-off Point','booking-and-rental-manager-for-woocommerce')); echo ': ' . $rbfw_dropoff_point; ?></li>
+        <?php endif; ?>
+
+
         <?php if ( ! empty( $start_datetime )): ?>
             <tr>
                 <th><?php echo $rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', __('Start Date and Time','booking-and-rental-manager-for-woocommerce'));?>:</th>
