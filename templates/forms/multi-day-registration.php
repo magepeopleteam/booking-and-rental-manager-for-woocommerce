@@ -454,7 +454,7 @@ if($rbfw_enable_variations == 'yes'){
                                                         </div>
                                                         <div class="label rbfw-checkbox">
                                                             <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_name]" value="<?php echo mep_esc_html($extra['service_name']); ?>">
-                                                            <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_qty]" class="rbfw-resource-qty" value="">
+                                                            <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_qty]" class="rbfw-resource-qty key_value_cart_<?php echo $key+1 ?>" value="">
                                                             <input type="hidden" name="rbfw_service_info[<?php echo $c; ?>][service_price]"  value="<?php echo $extra['service_price']; ?>">
 
                                                             <label class="switch">
