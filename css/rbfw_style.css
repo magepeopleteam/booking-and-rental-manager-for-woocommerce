@@ -1029,7 +1029,6 @@ ul.rbfw-feature-lists li {
 }
 
 .rbfw-single-left-information ul.rbfw-feature-lists li {
-    font-size: 18px;
     color: #0a0a0a;
 }
 
@@ -6806,6 +6805,12 @@ ul, li {
 }
 a.rbfw_rent_list_btn{
     text-decoration: none;
+    color: #fff;
+}
+
+a.rbfw_rent_list_btn:hover{
+    text-decoration: none;
+    color: #fff;
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_btn {
