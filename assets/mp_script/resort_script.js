@@ -312,9 +312,9 @@ jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_serv
             jQuery('.rbfw_room_price_summary').html(response);
             let get_total_price = jQuery('.rbfw_room_price_summary .duration-costing .price-figure').attr('data-price');
             if(get_total_price > 0){
-                jQuery('.rbfw_room_price_category_details button.rbfw_resort_book_now_btn').removeAttr('disabled');
+                jQuery(' button.rbfw_resort_book_now_btn').removeAttr('disabled');
             }else{
-                jQuery('.rbfw_room_price_category_details button.rbfw_resort_book_now_btn').attr('disabled',true);
+                jQuery(' button.rbfw_resort_book_now_btn').attr('disabled',true);
             }
 
         }
