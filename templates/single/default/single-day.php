@@ -48,7 +48,7 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 									</ul> -->
 								</div><!--end of tab-menu-->
 
-                                <div class="rbfw-features" data-id="features">
+                                <div class="rbfw-features" >
 									<div class="rbfw-single-left-information-item">
                                         <?php if ( $rbfw_feature_category ) {
                                             foreach ( $rbfw_feature_category as $value ) {

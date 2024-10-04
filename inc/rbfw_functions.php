@@ -968,10 +968,10 @@ function rbfw_footer_scripts(){
                 let description 			= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?>";
                 let faq 					= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Frequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?>";
                 let reviews 				= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_reviews', 'rbfw_basic_translation_settings', __('Reviews','booking-and-rental-manager-for-woocommerce'))); ?>";
-                tippy('.rbfw-features', {content: highlighted_features,theme: 'blue',placement: 'right'});
-                tippy('.rbfw-description', {content: description,theme: 'blue',placement: 'right'});
-                tippy('.rbfw-faq', {content: faq,theme: 'blue',placement: 'right'});
-                tippy('.rbfw-review', {content: reviews,theme: 'blue',placement: 'right'});
+                // tippy('.rbfw-features', {content: highlighted_features,theme: 'blue',placement: 'right'});
+                // tippy('.rbfw-description', {content: description,theme: 'blue',placement: 'right'});
+                // tippy('.rbfw-faq', {content: faq,theme: 'blue',placement: 'right'});
+                // tippy('.rbfw-review', {content: reviews,theme: 'blue',placement: 'right'});
                 // end tab tooltip
             });
         </script>
