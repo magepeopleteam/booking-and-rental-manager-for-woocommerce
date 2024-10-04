@@ -340,7 +340,7 @@ if($rbfw_enable_variations == 'yes'){
                                         <div class="rbfw-single-right-heading"><?php echo esc_html($data_arr_one['field_label']); ?></div>
                                         <div class="item-content rbfw-p-relative">
                                             <?php if(!empty($data_arr_one['value'])){  ?>
-                                                <select class="rbfw-select rbfw_variation_field" name="<?php echo esc_attr($data_arr_one['field_id']); ?>" id="<?php echo esc_attr($data_arr_one['field_id']); ?>" data-field="<?php echo esc_attr($data_arr_one['field_label']); ?>">
+                                                <select class="rbfw-select rbfw_variation_field" required name="<?php echo esc_attr($data_arr_one['field_id']); ?>" id="<?php echo esc_attr($data_arr_one['field_id']); ?>" data-field="<?php echo esc_attr($data_arr_one['field_label']); ?>">
                                                     <?php if(empty($selected_value)){ ?>
                                                         <option value=""><?php echo rbfw_string('rbfw_text_choose',__('Choose','booking-and-rental-manager-for-woocommerce')).' '.$data_arr_one['field_label']; ?></option>
                                                     <?php } ?>

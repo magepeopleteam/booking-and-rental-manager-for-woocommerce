@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+
 add_filter( 'rbfw_settings_sec_reg', 'rbfw_admin_settings_sec_reg_basic', 9 );
 function rbfw_admin_settings_sec_reg_basic( $default_sec ) {
 	$sections = array(

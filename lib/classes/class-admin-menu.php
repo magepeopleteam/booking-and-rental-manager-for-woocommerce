@@ -27,6 +27,8 @@ if (!class_exists('MageRBFWClass')) {
             /* End WooCommerce Action and Filter */
         }
 
+
+
     function rbfw_hide_hidden_wc_products_in_list_page($query) {
         global $pagenow;
         $taxonomy = 'product_visibility';

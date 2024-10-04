@@ -8,7 +8,7 @@ $post_title = get_the_title();
 $gallery_images = get_post_meta(get_the_ID(),'rbfw_gallery_images',true);
 
 if(isset($gallery_images)){
-    $gallery_image = wp_get_attachment_url($gallery_images[0]);
+    $gallery_image = isset($gallery_images[0])?wp_get_attachment_url($gallery_images[0]):'';
 }
 else{
     $gallery_image = RBFW_PLUGIN_URL.'/assets/images/no_image.png';

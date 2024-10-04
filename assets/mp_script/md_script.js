@@ -433,9 +433,12 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
                 var total_variation_stock = 0;
                 jQuery(".rbfw_variant").each(function(index, value) {
                     var variant_text = jQuery(this).val();
-                    if(response.max_available_qty.variant_instock[index]<response.ticket_item_quantity){
+                    if(response.max_available_qty.variant_instock[index] < response.ticket_item_quantity){
                         jQuery(this).attr("disabled", 'disabled');
                         jQuery(this).text(variant_text+' (Stock Out)');
+                        if(jQuery(this).is(':selected')){
+                            jQuery(this).removeAttr("selected");
+                        }
                     }else{
                          total_variation_stock = 1;
                          jQuery(this).removeAttr("disabled");

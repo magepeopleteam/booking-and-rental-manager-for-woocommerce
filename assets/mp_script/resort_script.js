@@ -218,7 +218,8 @@ jQuery(document).on('change','.rbfw_room_qty,.rbfw_service_qty',function (e) {
             jQuery('.rbfw_room_price_category_details i.fa-spinner').remove();
 
             jQuery('.rbfw_room_price_summary').html(response);
-            let get_total_price = jQuery('.rbfw_room_price_summary .duration-costing .price-figure').attr('data-price');
+            let get_total_price = parseInt(jQuery('.rbfw_room_price_summary .duration-costing .price-figure').attr('data-price'));
+            console.log('jjjjjjj',get_total_price);
             if(get_total_price > 0){
                 jQuery('.rbfw_room_price_category_details button.rbfw_resort_book_now_btn').removeAttr('disabled');
             }
@@ -310,11 +311,12 @@ jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_serv
             //jQuery('.rbfw_rp_loader').hide();
 
             jQuery('.rbfw_room_price_summary').html(response);
-            let get_total_price = jQuery('.rbfw_room_price_summary .duration-costing .price-figure').attr('data-price');
+            let get_total_price = parseInt(jQuery('.rbfw_room_price_summary .duration-costing .price-figure').attr('data-price'));
+            console.log('kkk',get_total_price);
             if(get_total_price > 0){
-                jQuery('.rbfw_room_price_category_details button.rbfw_resort_book_now_btn').removeAttr('disabled');
+                jQuery('button.rbfw_resort_book_now_btn').removeAttr('disabled');
             }else{
-                jQuery('.rbfw_room_price_category_details button.rbfw_resort_book_now_btn').attr('disabled',true);
+                jQuery('button.rbfw_resort_book_now_btn').attr('disabled',true);
             }
 
         }

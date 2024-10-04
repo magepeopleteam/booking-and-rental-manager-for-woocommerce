@@ -44,6 +44,7 @@
                     </div>
                 <?php endif; ?>
                 <?php if ($location_switch == 'yes' && !empty($dropoff_location)) : ?>
+
                     <div class="item">
                         <div class="rbfw-single-right-heading">
                             <?php echo esc_html($rbfw->get_option_trans('rbfw_text_dropoff_location', 'rbfw_basic_translation_settings', __('Drop-off Location','booking-and-rental-manager-for-woocommerce'))); ?>
@@ -74,7 +75,6 @@
 					<div class="rbfw-bikecarsd-result-order-details"></div>
 				</div>
 
-
 				<!-- Button -->
 				
 				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
@@ -94,13 +94,11 @@
                 $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
                 $available_times = get_post_meta($post_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];
 
-
                 if($time_slot_switch == 'on' && !empty($available_times)){
                     $time_slot_switch = 'on';
                 }else{
                     $time_slot_switch = 'off';
                 }
-
                 $appointment_days = json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true));
                 ?>
 
