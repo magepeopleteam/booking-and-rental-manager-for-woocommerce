@@ -21,6 +21,10 @@ if (!class_exists('Rbfw_Search_Page')) {
             add_action('wp_ajax_rbfw_get_rent_item_category_info', array($this,'rbfw_get_rent_item_category_info'));
             add_action('wp_ajax_nopriv_rbfw_get_rent_item_category_info', array($this,'rbfw_get_rent_item_category_info'));
 
+            //left Filter popup
+            add_action('wp_ajax_rbfw_get_rent_item_left_filter_more_data_popup', array($this,'rbfw_get_rent_item_left_filter_more_data_popup'));
+            add_action('wp_ajax_nopriv_rbfw_get_rent_item_left_filter_more_data_popup', array($this,'rbfw_get_rent_item_left_filter_more_data_popup'));
+
             //Left side filter
             add_action('wp_ajax_rbfw_get_left_side_filter_data', array($this,'rbfw_get_left_side_filter_data'));
             add_action('wp_ajax_nopriv_rbfw_get_left_side_filter_data', array($this,'rbfw_get_left_side_filter_data'));
@@ -164,6 +168,11 @@ if (!class_exists('Rbfw_Search_Page')) {
                 if (isset($_POST['filter_date'])) {
                     $filter_date = $_POST['filter_date'];
                     $item_style = isset( $_POST['rbfw_item_style'] ) ? sanitize_text_field( $_POST['rbfw_item_style'] ) : '';
+                    $text_search = isset( $filter_date['title_text']  ) ? sanitize_text_field( $filter_date['title_text'] ) : '';
+                    $search_by_title = '';
+                    if( !empty( $text_search ) ){
+                        $search_by_title = $text_search;
+                    }
 
                     $filter_by_price = isset($filter_date['price']) ? $filter_date['price'] : [];
                     if (count($filter_by_price) > 0) {
@@ -214,7 +223,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                     if (is_array($rent_locations) && count($rent_locations) > 0) {
                         $location_query = array('relation' => 'OR');
                         foreach ($rent_locations as $location) {
-                            $location_query = !empty($location) ? array(
+                            $location_query[] = !empty($location) ? array(
                                 'key' => 'rbfw_pickup_data',
                                 'value' => sanitize_text_field($location),
                                 'compare' => 'LIKE'
@@ -228,7 +237,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                     if (is_array($rent_categories) && count($rent_categories) > 0) {
                         $category_query = array('relation' => 'OR');
                         foreach ($rent_categories as $category_name) {
-                            $category_query = !empty($category_name) ? array(
+                            $category_query[] = !empty($category_name) ? array(
                                 'key' => 'rbfw_categories',
                                 'value' => sanitize_text_field($category_name),
                                 'compare' => 'LIKE'
@@ -238,8 +247,12 @@ if (!class_exists('Rbfw_Search_Page')) {
                         $category_query = '';
                     }
 
+                    $posts_per_page = 20;
+                    $number_of_page = 1;
+
                     $args = array(
                         'post_type' => 'rbfw_item',
+                        's'              => $search_by_title,
                         'meta_query' => array(
                             'relation' => 'OR',
                             $price_filter_query,
@@ -250,20 +263,31 @@ if (!class_exists('Rbfw_Search_Page')) {
                         ),
                         'orderby' => 'ID',
                         'order' => 'DESC',
-                        'posts_per_page' => 20,
+                        'paged' => $number_of_page,
+                        'posts_per_page' => $posts_per_page,
                     );
                     $query = new WP_Query($args);
                     $total_posts = $query->found_posts;
                     $post_count = $query->post_count;
 
                     $d = 1;
+                    $post_ids = [];
                     if ($query->have_posts()) {
                         while ($query->have_posts()) {
                             $query->the_post();
-                            $response .= $this->display_filter_rent_items(get_the_ID(), get_the_title(), get_the_content(), $item_style, $d);
+                            $post_ids[] = get_the_ID();
+                            $response .= $this->display_filter_rent_items( get_the_ID(), get_the_title(), get_the_content(), $item_style, $d );
                             $d++;
                         }
                         wp_reset_postdata();
+                    }
+
+                    $pages_in_ary = [];
+                    $total_pages = ceil( $total_posts / $posts_per_page );
+                    if( $total_pages > 1 ){
+                        for( $i= 1; $i<= $total_pages; $i++ ){
+                            $pages_in_ary[] = $i;
+                        }
                     }
 
                     $shoe_result = $total_posts . ' results. Showing ' . $post_count . ' of ' . $total_posts . ' of total';
@@ -300,7 +324,6 @@ if (!class_exists('Rbfw_Search_Page')) {
                     $checkDateTime = DateTime::createFromFormat('d-m-Y', $check_date);
 
                     if ($checkDateTime >= $startDateTime && $checkDateTime <= $endDateTime) {
-                        error_log(print_r(['$continue' => $continue], true));
                         $continue = true;
                     }
                 }
@@ -604,6 +627,33 @@ if (!class_exists('Rbfw_Search_Page')) {
 
             return $content;
         }
+
+        public function rbfw_get_rent_item_left_filter_more_data_popup(){
+            $nonce = isset( $_POST['rbfw_nonce'] ) ? sanitize_text_field( $_POST['rbfw_nonce'] ) : '';
+            if ( wp_verify_nonce( $nonce, 'rbfw_nonce' ) ) {
+                if (isset( $_POST['data_category'] ) ) {
+                    $data_category = sanitize_text_field( $_POST['data_category'] );
+
+                    $rbfw_features =  get_rbfw_post_features_from_meta();
+                    ob_start();
+                    ?>
+                    <div class="rbfw_rent_item_fearture_holder">
+                        <h5 class="rbfw_toggle-header">Item Features</h5>
+                        <div class="rbfw_toggle-content rbfw_toggle_container">
+                    <?php
+                    foreach ( $rbfw_features as $features){ ?>
+                            <div class="rbfw_types"><input type="checkbox" class="rbfw_rent_feature" value="<?php echo esc_attr( $features['title'] )?>"> <?php echo esc_attr( $features['title'] )?> </div>
+                    <?php  } ?>
+                        </div>
+                    </div>
+                    <?php
+                    $content = ob_get_clean();
+                    error_log( print_r( [ '$content' => $content ], true ) );
+                    wp_send_json_success( $content );
+                }
+            }
+        }
+
 
     }
     new Rbfw_Search_Page();

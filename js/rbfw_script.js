@@ -337,6 +337,10 @@
             $('#rbfw_popup_wrapper').hide();
             $('#rbfw_popup_content').empty(); // Clear the content when closed
         });
+        $('#rbfw_left_filter_popup_close_btn').on('click', function() {
+            $('#rbfw_left_filter_popup_wrapper').hide();
+            $('#rbfw_left_filter_popup_content').empty(); // Clear the content when closed
+        });
 
         $('body').on( 'click', '.rbfw_see_more_category', function(e){
             e.preventDefault();
@@ -371,6 +375,7 @@
             }
         });
         function get_left_filter_data( filter_date ){
+            // console.log( filter_date );
 
             if ($('#rbfw_rent_list_wrapper').hasClass('rbfw_rent_list_style_grid')) {
                 var rbfw_item_style = 'grid';
@@ -378,6 +383,7 @@
                 rbfw_item_style = 'list';
             }
             $(".rbfw_left_filter_button").text('Filtering...');
+            $(".rbfw_left_filter_button").css('background-color', '#c3b9bd');
             // $('#rbfw_rent_list_wrapper').html('<div class="rbfw_filter_item_loadeing_text">Loading Data ...</div>');
             $('#rbfw_rent_list_pagination').hide();
             jQuery.ajax({
@@ -395,6 +401,7 @@
                         $('#rbfw_rent_list_wrapper').html( response.data.display_date );
                         $('#rbfw_shoe_result_text').html('<span >'+text_display+'</span>');
                         $(".rbfw_left_filter_button").text('Filter');
+                        $(".rbfw_left_filter_button").css('background-color', '#e71d73');
                     }else{
                         $('#rbfw_shoe_result_text').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
                     }
@@ -412,8 +419,9 @@
             category: [],
             type: [],
             price: { start: 0, end: 0 },
+            title_text: '',
         };
-        $('.rbfw_location').on('change', function() {
+        $(document).on('change', '.rbfw_location', function() {
             var value = $(this).val();
             if ($(this).is(':checked')) {
                 if (!selectedLocation.includes(value)) {
@@ -425,9 +433,11 @@
                 });
             }
             get_filters.location = selectedLocation;
+
+            get_left_filter_data(get_filters);
         });
 
-        $('.rbfw_category').on('change', function() {
+        $(document).on('change', '.rbfw_category', function() {
             var value = $(this).val();
             if ($(this).is(':checked')) {
                 if (!selectedcategory.includes(value)) {
@@ -439,9 +449,11 @@
                 });
             }
             get_filters.category = selectedcategory;
+
+            get_left_filter_data(get_filters);
         });
 
-        $('.rbfw_rent_type').on('change', function() {
+        $(document).on('change', '.rbfw_rent_type', function() {
             var value = $(this).val();
             if ($(this).is(':checked')) {
                 if (!selectedType.includes(value)) {
@@ -453,9 +465,11 @@
                 });
             }
             get_filters.type = selectedType;
+
+            get_left_filter_data(get_filters);
         });
 
-        $('.rbfw_rent_feature').on('change', function() {
+        $(document).on('change', '.rbfw_rent_feature', function() {
             var value = $(this).val();
             if ($(this).is(':checked')) {
                 if (!selectedFeatures.includes(value)) {
@@ -467,6 +481,8 @@
                 });
             }
             get_filters.feature = selectedFeatures;
+
+            get_left_filter_data(get_filters);
         });
 
         // Price slider handling
@@ -490,7 +506,7 @@
                 get_filters.price.start = start_val;
                 get_filters.price.end = end_val;
 
-
+                get_left_filter_data(get_filters);
             }
         });
 
@@ -499,15 +515,38 @@
         get_filters.price.end = $("#slider-range").slider("values", 1);
 
         $(document).on('click', '.rbfw_left_filter_button', function() {
-            get_left_filter_data(get_filters); // Assuming get_filters is a function or a variable
+            // get_left_filter_data(get_filters); // Assuming get_filters is a function or a variable
+        });
+        $(document).on('click', '.rbfw_left_filter_search_btn', function() {
+            // get_left_filter_data(get_filters); // Assuming get_filters is a function or a variable
+            let filter_title_text = $("input[name='rbfw_search_by_title']").val();
+            get_filters.title_text = filter_title_text.trim();
+            get_left_filter_data(get_filters);
+            // console.log( get_filters );
         });
 
-        /*$('#rbfw_left_filter_form').submit(function(event) {
-            event.preventDefault(); // Prevent the default form submission
-            alert('CLICKED');
-            // get_left_filter_data( get_filters );
-        });*/
 
+        $(document).on('click', '.rbfw_left_filter_more_feature_loaders', function(e) {
+            e.preventDefault();
+            let clickedId = $(this).attr('id');
+            $("#rbfw_left_filter_popup_wrapper").show();
+            $("#rbfw_left_filter_popup_content").html('<div class="rbfw_loader">Loading....</div>');
+
+            let category = 'feature';
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax.rbfw_ajaxurl,
+                data: {
+                    'action' : 'rbfw_get_rent_item_left_filter_more_data_popup',
+                    'data_category': category,
+                    'rbfw_nonce': rbfw_vars.rbfw_nonce,
+                },
+                success: function (response) {
+                    console.log( response );
+                    $('#rbfw_left_filter_popup_content').html( response.data );
+                },
+            });
+        });
 
     });
 })(jQuery)

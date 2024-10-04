@@ -513,7 +513,24 @@ ul.rbfw_popup_fearure_lists li{
     margin-top: 10px;
     width: calc( 100% - 28px );
 }
-
+.rbfw_toggle-content{
+    font-size: 14px;
+    max-width: 200px;
+    word-wrap: break-word;
+}
+.rbfw_types{
+    display: block;
+    float: left;
+    position: relative;
+    width: 173px;
+    margin-right: 10px;
+}
+.rbfw_toggle_container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 20px;
+}
 /* Styles for the list */
 ul.rbfw_show_all_cat_features {
     list-style: none;
@@ -703,5 +720,39 @@ ul.rbfw_show_all_cat_features li:last-child {
     font-size: 20px;
     padding-right: 5px;
 }
-
+.rbfw_left_filter_text_Search_holder {
+    width: 100%;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+}
+.rbfw_left_filter_search_text_input{
+    width: calc(100% - 50px);
+}
+.rbfw_search_by_title{
+    width: calc(100% - 8px);
+    padding: 8px 6px;
+    border: 1px solid #ddd9d9;
+}
+.rbfw_left_filter_search_btn{
+    padding: 3px 5px;
+    border: 1px solid #c1bcbc;
+    color: #222;
+    cursor: pointer;
+    font-size: 14px;
+}
+.rbfw_left_filter_more_feature_loaders{
+    background-color: #4d4a4a;
+    width: 50px;
+    text-align: center;
+    margin: auto;
+    font-size: 12px;
+    padding: 4px 10px;
+    cursor: pointer;
+    border: 1px solid #ada5a5;
+    color: #F6F6F6;
+}
+.rbfw_left_filter_more_feature_loaders:hover{
+    text-decoration: underline;
+}
 

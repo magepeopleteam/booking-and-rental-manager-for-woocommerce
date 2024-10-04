@@ -483,8 +483,21 @@ function rbfw_rent_left_filter( $attr = null ){
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
 
     <div class="rbfw_filter_sidebar">
-        <form action="#" id="rbfw_left_filter_form" type="post">
+        <div class="rbfw_popup_wrapper" id="rbfw_left_filter_popup_wrapper">
+            <div class="rbfw_rent_cat_info_popup">
+                <span class="rbfw_popup_close_btn" id="rbfw_left_filter_popup_close_btn">&times;</span>
+                <div id="rbfw_left_filter_popup_content">
+
+                </div>
+            </div>
+        </div>
             <h4 data-placeholder=""><span class="rbfw_filter_icon mR_xs fas fa-filter"></span>Filters</h4>
+            <div class="rbfw_left_filter_text_Search_holder">
+                <div class="rbfw_left_filter_search_text_input">
+                    <input name="rbfw_search_by_title" class="rbfw_search_by_title" placeholder="Title search">
+                </div>
+                <div class="rbfw_left_filter_search_btn">Filter</div>
+            </div>
             <div class="rbfw_price-range">
                 <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">+</span></h5>
                 <div class="rbfw_toggle-content" style="display: none">
@@ -522,14 +535,21 @@ function rbfw_rent_left_filter( $attr = null ){
             <div class="rbfw_rent_item_fearture_holder">
                 <h5 class="rbfw_toggle-header">Item Features<span class="rbfw_toggle-icon">+</span></h5>
                 <div class="rbfw_toggle-content" style="display: none">
-                    <?php foreach ( $rbfw_features_category as $features ) { ?>
-                        <label><input type="checkbox" class="rbfw_rent_feature" value="<?php echo esc_attr( $features['title'] )?>"> <?php echo esc_attr( $features['title'] )?> </label>
-                    <?php } ?>
+                    <?php
+                    $total_feature = count( $rbfw_features_category );
+                    $feature_start = 1;
 
+                    foreach ( $rbfw_features_category as $features ) {
+                        if( $feature_start <= 8 ){ ?>
+                            <label><input type="checkbox" class="rbfw_rent_feature" value="<?php echo esc_attr( $features['title'] )?>"> <?php echo esc_attr( $features['title'] )?> </label>
+                    <?php }
+                        $feature_start ++;
+                    }
+                    if( $total_feature > 8 ){ ?>
+                        <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_feature">More +</div>
+                    <?php }?>
                 </div>
-<!--                <button id="rbfw_feature_loadMore">Load More</button>-->
             </div>
-        </form>
         <div class="rbfw_left_filter_button">Filter</div>
     </div>
 
