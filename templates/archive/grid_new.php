@@ -14,6 +14,7 @@ else{
     $gallery_image = RBFW_PLUGIN_URL.'/assets/images/no_image.png';
 }
 
+
 $post_featured_img = !empty(get_the_post_thumbnail_url($post_id, 'full')) ? get_the_post_thumbnail_url($post_id,
     'full') : $gallery_image;
 $post_link = get_the_permalink();
