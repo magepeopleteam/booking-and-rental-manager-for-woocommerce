@@ -204,6 +204,12 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
+
+== Changelog ==
+= 2.1.3 =
+* pricing fixed on cart and thankyou page.
+
+
 == Changelog ==
 = 2.1.2 =
 * Pickup and drop off point added in single day.
