@@ -477,6 +477,7 @@ function rbfw_rent_left_filter( $attr = null ){
     $rbfw_locations = get_rbfw_pickup_data_wp_query();
     $rbfw_rent_types =get_rbfw_item_type_wp_query();
     $rbfw_features_category =  get_rbfw_post_features_from_meta();
+    $type_display = 5;
 
     ob_start();
     ?>
@@ -491,48 +492,80 @@ function rbfw_rent_left_filter( $attr = null ){
                 </div>
             </div>
         </div>
+        <div class="rbfw_title_text">
+            <button id="rbfw_left_filter_clearButton" class="rbfw_left_filter_clearButton" style="display: none">Clear All</button>
             <h4 data-placeholder=""><span class="rbfw_filter_icon mR_xs fas fa-filter"></span>Filters</h4>
-            <div class="rbfw_left_filter_text_Search_holder">
-                <div class="rbfw_left_filter_search_text_input">
-                    <input name="rbfw_search_by_title" class="rbfw_search_by_title" placeholder="Title search">
-                </div>
-                <div class="rbfw_left_filter_search_btn">Filter</div>
+        </div>
+        <div class="rbfw_left_filter_text_Search_holder">
+            <div class="rbfw_left_filter_search_text_input">
+                <input name="rbfw_search_by_title" class="rbfw_search_by_title" placeholder="Title search">
             </div>
-            <div class="rbfw_price-range">
-                <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">+</span></h5>
-                <div class="rbfw_toggle-content" style="display: none">
-                    <p>
-                        <label for="price">Price range:</label>
-                        <input type="text" id="price" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                    </p>
-                    <div id="slider-range"></div>
-                </div>
+            <div class="rbfw_left_filter_search_btn">Filter</div>
+        </div>
+        <div class="rbfw_price-range">
+            <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">+</span></h5>
+            <div class="rbfw_toggle-content" style="display: none">
+                <p>
+                    <label for="price">Price range:</label>
+                    <input type="text" id="price" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                </p>
+                <div id="slider-range"></div>
             </div>
-            <div class="rbfw_filter_sidebar_locations">
-                <h5 class="rbfw_toggle-header">Pickup Location<span class="rbfw_toggle-icon">+</span></h5>
-                <div class="rbfw_toggle-content" style="display: none">
-                    <?php foreach ( $rbfw_locations as $key => $location ) { ?>
+        </div>
+        <div class="rbfw_filter_sidebar_locations">
+            <h5 class="rbfw_toggle-header">Pickup Location<span class="rbfw_toggle-icon">+</span></h5>
+            <div class="rbfw_toggle-content" style="display: none">
+                <?php
+                if( is_array( $rbfw_locations ) ){
+                    $total_location = count( $rbfw_locations );
+                    $count_location_display = 1;
+                    foreach ( $rbfw_locations as $key => $location ) {
+                        if( $count_location_display <= $type_display ){
+                        ?>
                         <label><input type="checkbox" class="rbfw_location" value="<?php echo esc_attr( $key )?>"> <?php echo esc_attr( $location )?></label>
-                    <?php } ?>
-                </div>
+                    <?php
+                        }
+                        $count_location_display++;
+                    }
+                    if( $total_location > $type_display ){ ?>
+                        <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_location">More +</div>
+                    <?php }
+                }
+
+                ?>
             </div>
-            <div class="rbfw_filter_sidebar_category">
-                <h5 class="rbfw_toggle-header">Item Category <span class="rbfw_toggle-icon">+</span></h5>
-                <div class="rbfw_toggle-content" style="display: none">
-                    <?php foreach ( $rbfw_categorys as $category ) { ?>
-                        <label><input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>"> <?php echo esc_attr( $category )?></label>
-                    <?php } ?>
-                </div>
+        </div>
+        <div class="rbfw_filter_sidebar_category">
+            <h5 class="rbfw_toggle-header">Item Category <span class="rbfw_toggle-icon">+</span></h5>
+            <div class="rbfw_toggle-content" style="display: none">
+                <?php
+                if( is_array( $rbfw_categorys ) ){
+                $total_category = count( $rbfw_categorys );
+                $category_display_count = 1;
+                foreach ( $rbfw_categorys as $category ) {
+                    if( $category_display_count <= $type_display ){
+                    ?>
+                    <label><input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>"> <?php echo esc_attr( $category )?></label>
+                <?php
+                    }
+                    $category_display_count++;
+                }
+                if( $total_category > $type_display ){ ?>
+                    <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_category">More +</div>
+                <?php }
+                }
+                ?>
             </div>
-            <div class="rbfw_filter_sidebar_product-type">
-                <h5 class="rbfw_toggle-header">Item Type <span class="rbfw_toggle-icon">+</span></h5>
-                <div class="rbfw_toggle-content" style="display: none">
-                    <?php foreach ( $rbfw_rent_types as $item ) { ?>
-                        <label><input type="checkbox" class="rbfw_rent_type" value="<?php echo esc_attr( $item )?>"> <?php echo esc_attr( $item )?> </label>
-                    <?php } ?>
-                </div>
+        </div>
+        <div class="rbfw_filter_sidebar_product-type">
+            <h5 class="rbfw_toggle-header">Item Type <span class="rbfw_toggle-icon">+</span></h5>
+            <div class="rbfw_toggle-content" style="display: block">
+                <?php foreach ( $rbfw_rent_types as $item ) { ?>
+                    <label><input type="checkbox" class="rbfw_rent_type" value="<?php echo esc_attr( $item )?>"> <?php echo esc_attr( $item )?> </label>
+                <?php } ?>
             </div>
-            <div class="rbfw_rent_item_fearture_holder">
+        </div>
+        <div class="rbfw_rent_item_fearture_holder">
                 <h5 class="rbfw_toggle-header">Item Features<span class="rbfw_toggle-icon">+</span></h5>
                 <div class="rbfw_toggle-content" style="display: none">
                     <?php
@@ -540,12 +573,12 @@ function rbfw_rent_left_filter( $attr = null ){
                     $feature_start = 1;
 
                     foreach ( $rbfw_features_category as $features ) {
-                        if( $feature_start <= 8 ){ ?>
+                        if( $feature_start <= $type_display ){ ?>
                             <label><input type="checkbox" class="rbfw_rent_feature" value="<?php echo esc_attr( $features['title'] )?>"> <?php echo esc_attr( $features['title'] )?> </label>
                     <?php }
                         $feature_start ++;
                     }
-                    if( $total_feature > 8 ){ ?>
+                    if( $total_feature > $type_display ){ ?>
                         <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_feature">More +</div>
                     <?php }?>
                 </div>

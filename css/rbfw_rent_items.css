@@ -529,13 +529,28 @@ ul.rbfw_popup_fearure_lists li{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
-    padding: 20px;
+    font-size: 13px;
 }
 /* Styles for the list */
 ul.rbfw_show_all_cat_features {
     list-style: none;
     padding: 0;
     margin: 0;
+}
+.rbfw_left_filter_clearButton{
+    position: absolute;
+    right: 5px;
+    margin-top: 4px;
+    border: 1px solid #dbd6d6;
+    padding: 5px 6px;
+    border-radius: 3px;
+    color: #d52020;
+    font-size: 11px;
+}
+.rbfw_left_filter_clearButton:hover{
+    background-color: #d52020;
+    color: #f6f6f6;
+    cursor: pointer;
 }
 
 ul.rbfw_show_all_cat_features li {

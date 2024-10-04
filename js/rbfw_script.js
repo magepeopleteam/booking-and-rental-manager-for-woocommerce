@@ -290,27 +290,20 @@
             let today = new Date();
             let tomorrow = new Date();
             tomorrow.setDate(today.getDate() + 1); // Add 1 day to get tomorrow
-
-            // Format the dates as "m-d-Y"
             let todayFormatted = flatpickr.formatDate(today, "d-m-Y");
-
-            // Initialize Flatpickr with range mode, showing 2 months, blocking previous days, and defaulting to today & tomorrow
             let calendar = flatpickr("#rbfw_rent_item_search_calendar_icon", {
-                dateFormat: "d-m-Y",  // Display format in the calendar
-                defaultDate: todayFormatted,  // Preselect today
-                minDate: "today",  // Block previous days
-                showMonths: 1,  // Show current and next month
+                dateFormat: "d-m-Y",
+                defaultDate: todayFormatted,
+                minDate: "today",
+                showMonths: 1,
                 onChange: function(selectedDates, dateStr, instance) {
-                    // Update the input field with the selected single date
                     if (selectedDates.length === 1) {
-                        // Format the selected date as 'January 10, 2024'
                         let selectedDate = flatpickr.formatDate(selectedDates[0], "F j, Y");
                         $("#rbfw_rent_item_search_pickup_date").val(selectedDate);  // Set the input value to the formatted date
                     }
                 }
             });
 
-            // Open the calendar when the calendar icon is clicked
             $('#rbfw_rent_item_search_calendar_icon').on('click', function() {
                 calendar.open(); // Trigger the calendar to open
             });
@@ -321,18 +314,6 @@
         }
         rbfw_pick_date_from_flatpicker();
 
-        /*$('.rbfw_see_more_category').hover(
-            function() {
-                let hoverId = $(this).attr('id')
-                let idNumber = hoverId.split('-').pop();
-                $('#rbfw_show_all_cat_features-'+idNumber).show();
-            },
-            function() {
-                let hoverId = $(this).attr('id');
-                let idNumber = hoverId.split('-').pop();
-                $('#rbfw_show_all_cat_features-'+idNumber).hide();
-            }
-        );*/
         $('#rbfw_popup_close_btn').on('click', function() {
             $('#rbfw_popup_wrapper').hide();
             $('#rbfw_popup_content').empty(); // Clear the content when closed
@@ -375,7 +356,8 @@
             }
         });
         function get_left_filter_data( filter_date ){
-            // console.log( filter_date );
+
+            $("#rbfw_left_filter_clearButton").show();
 
             if ($('#rbfw_rent_list_wrapper').hasClass('rbfw_rent_list_style_grid')) {
                 var rbfw_item_style = 'grid';
@@ -494,15 +476,12 @@
             max: 10000,
             values: [0, 0], // Default values
             slide: function(event, ui) {
-                // Continuously update the displayed value while sliding
                 $("#price").val("$" + ui.values[0] + " - $" + ui.values[1]);
             },
             stop: function(event, ui) {
-                // Only update the get_filters when the mouse is released (stop sliding)
                 start_val = ui.values[0];
                 end_val = ui.values[1];
 
-                // Update the price in get_filters object
                 get_filters.price.start = start_val;
                 get_filters.price.end = end_val;
 
@@ -514,21 +493,20 @@
         get_filters.price.start = $("#slider-range").slider("values", 0);
         get_filters.price.end = $("#slider-range").slider("values", 1);
 
-        $(document).on('click', '.rbfw_left_filter_button', function() {
-            // get_left_filter_data(get_filters); // Assuming get_filters is a function or a variable
-        });
+
         $(document).on('click', '.rbfw_left_filter_search_btn', function() {
-            // get_left_filter_data(get_filters); // Assuming get_filters is a function or a variable
+
             let filter_title_text = $("input[name='rbfw_search_by_title']").val();
             get_filters.title_text = filter_title_text.trim();
             get_left_filter_data(get_filters);
-            // console.log( get_filters );
+
         });
 
 
         $(document).on('click', '.rbfw_left_filter_more_feature_loaders', function(e) {
+
             e.preventDefault();
-            let clickedId = $(this).attr('id');
+            let filter_type = $(this).attr('id');
             $("#rbfw_left_filter_popup_wrapper").show();
             $("#rbfw_left_filter_popup_content").html('<div class="rbfw_loader">Loading....</div>');
 
@@ -538,14 +516,27 @@
                 url: rbfw_ajax.rbfw_ajaxurl,
                 data: {
                     'action' : 'rbfw_get_rent_item_left_filter_more_data_popup',
-                    'data_category': category,
+                    'filter_type': filter_type,
                     'rbfw_nonce': rbfw_vars.rbfw_nonce,
                 },
                 success: function (response) {
-                    console.log( response );
                     $('#rbfw_left_filter_popup_content').html( response.data );
                 },
             });
+
+        });
+
+        $(document).on('click', '.rbfw_left_filter_clearButton',function() {
+            $('.rbfw_location, .rbfw_category, .rbfw_rent_type, .rbfw_rent_feature').prop('checked', false);
+            let clear_get_filters = {
+                location: [],
+                category: [],
+                type: [],
+                price: { start: 0, end: 0 },
+                title_text: '',
+            };
+            get_left_filter_data(clear_get_filters);
+            $("#rbfw_left_filter_clearButton").hide();
         });
 
     });

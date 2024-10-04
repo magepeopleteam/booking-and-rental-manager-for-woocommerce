@@ -630,28 +630,60 @@ if (!class_exists('Rbfw_Search_Page')) {
 
         public function rbfw_get_rent_item_left_filter_more_data_popup(){
             $nonce = isset( $_POST['rbfw_nonce'] ) ? sanitize_text_field( $_POST['rbfw_nonce'] ) : '';
+            $content = '';
+            $rbfw_features = [];
             if ( wp_verify_nonce( $nonce, 'rbfw_nonce' ) ) {
-                if (isset( $_POST['data_category'] ) ) {
-                    $data_category = sanitize_text_field( $_POST['data_category'] );
+                if (isset( $_POST['filter_type'] ) ) {
+                    $filter_type = trim( sanitize_text_field( $_POST['filter_type'] ) );
+                    if( $filter_type === 'rbfw_left_filter_location' ){
+                        $rbfw_features =  get_rbfw_pickup_data_wp_query();
+                        $type_text = 'Pickup Location';
+                        $check_box_class = 'rbfw_location';
+                    }else if( $filter_type === 'rbfw_left_filter_category' ){
+                        $rbfw_features =  get_rbfw_post_categories_from_meta();
+                        $type_text = 'Item Category';
+                        $check_box_class = 'rbfw_category';
+                    }else if( $filter_type === 'rbfw_left_filter_feature' ){
+                        $rbfw_features =  get_rbfw_post_features_from_meta();
+                        $type_text = 'Item Features';
+                        $check_box_class = 'rbfw_rent_feature';
+                    }else{
+                        $rbfw_features =  [];
+                        $type_text = '';
+                        $check_box_class = '';
+                    }
 
-                    $rbfw_features =  get_rbfw_post_features_from_meta();
                     ob_start();
                     ?>
                     <div class="rbfw_rent_item_fearture_holder">
-                        <h5 class="rbfw_toggle-header">Item Features</h5>
+                        <h5 class="rbfw_toggle-header"><?php echo $type_text?></h5>
                         <div class="rbfw_toggle-content rbfw_toggle_container">
                     <?php
-                    foreach ( $rbfw_features as $features){ ?>
-                            <div class="rbfw_types"><input type="checkbox" class="rbfw_rent_feature" value="<?php echo esc_attr( $features['title'] )?>"> <?php echo esc_attr( $features['title'] )?> </div>
-                    <?php  } ?>
+                    if( $filter_type === 'rbfw_left_filter_feature'){
+                        foreach ( $rbfw_features as $features){ ?>
+                            <div class="rbfw_types"><input type="checkbox" class="<?php echo esc_attr( $check_box_class )?>" value="<?php echo esc_attr( $features['title'] )?>"> <?php echo esc_attr( $features['title'] )?> </div>
+                        <?php }
+                    }else if( $filter_type === 'rbfw_left_filter_category' ){
+                        foreach ( $rbfw_features as $category ) {
+                        ?>
+                        <label><input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>"> <?php echo esc_attr( $category )?></label>
+                            <?php }
+                        }else if( $filter_type === 'rbfw_left_filter_location' ){
+                        foreach ( $rbfw_features as $key => $location ){
+                        ?>
+                        <label><input type="checkbox" class="rbfw_location" value="<?php echo esc_attr( $key )?>"> <?php echo esc_attr( $location )?></label>
+                            <?php }
+                        }
+                    ?>
+
                         </div>
                     </div>
                     <?php
                     $content = ob_get_clean();
-                    error_log( print_r( [ '$content' => $content ], true ) );
-                    wp_send_json_success( $content );
                 }
             }
+
+            wp_send_json_success( $content );
         }
 
 
