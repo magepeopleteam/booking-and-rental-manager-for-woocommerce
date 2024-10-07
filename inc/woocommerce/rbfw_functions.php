@@ -41,26 +41,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
     $rbfw_item_quantity = isset($_POST['rbfw_item_quantity']) ? $_POST['rbfw_item_quantity'] : 1;
     $rbfw_service_info_all = isset($_POST['rbfw_service_info']) ? rbfw_array_strip($_POST['rbfw_service_info']) : [];
 
-    $pickup_date = isset($_POST['rbfw_pickup_start_date']) ? $_POST['rbfw_pickup_start_date'] : '';
-    $pickup_time = !empty($_POST['pickup_time']) ? $_POST['pickup_time'] : '';
-    $dropoff_date = isset($_POST['rbfw_pickup_end_date']) ? $_POST['rbfw_pickup_end_date'] : '';
-    $dropoff_time = !empty($_POST['dropoff_time']) ? $_POST['dropoff_time'] : '';
-    if (empty($pickup_time) && empty($dropoff_time)) {
-        $pickup_datetime = date('Y-m-d', strtotime($pickup_date . ' ' . '00:00:00'));
-        $dropoff_datetime = date('Y-m-d', strtotime($dropoff_date . ' ' . rbfw_end_time()));
-    } else {
-        $pickup_datetime = date('Y-m-d H:i', strtotime($pickup_date . ' ' . $pickup_time));
-        $dropoff_datetime = date('Y-m-d H:i', strtotime($dropoff_date . ' ' . $dropoff_time));
-    }
-    $pickup_datetime = new DateTime($pickup_datetime);
-    $dropoff_datetime = new DateTime($dropoff_datetime);
-
-    $diff = date_diff($pickup_datetime, $dropoff_datetime);
-    $total_days = $diff->days;
-
-
     $rbfw_service_info = array();
-    $variation_info = [];
     $rbfw_enable_extra_service_qty = get_post_meta($rbfw_id, 'rbfw_enable_extra_service_qty', true) ? get_post_meta($rbfw_id, 'rbfw_enable_extra_service_qty', true) : 'no';
     $c = 0;
     if (!empty($rbfw_service_info_all)) {
@@ -92,6 +73,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
     $rbfw_resort = new RBFW_Resort_Function();
     $rbfw_checkin_datetime = isset($_POST['rbfw_start_datetime']) ? strip_tags($_POST['rbfw_start_datetime']) : '';
     $rbfw_checkout_datetime = isset($_POST['rbfw_end_datetime']) ? strip_tags($_POST['rbfw_end_datetime']) : '';
+
+    echo $rbfw_checkin_datetime;exit;
 
 
     $rbfw_room_price_category = isset($_POST['rbfw_room_price_category']) ? rbfw_array_strip($_POST['rbfw_room_price_category']) : '';
@@ -125,6 +108,10 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $discount_type = $discount_arr['discount_type'];
         $discount_amount = $discount_arr['discount_amount'];
     }
+
+
+
+
 
     $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info($rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info);
     /* End Type: Resort */
@@ -167,22 +154,6 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
     $rbfw_dropoff_point = isset($_POST['rbfw_dropoff_point']) ? $_POST['rbfw_dropoff_point'] : '';
 
     $rbfw_bikecarsd_ticket_info = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info($rbfw_id, $rbfw_start_datetime, $rbfw_end_datetime, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info,$rbfw_pickup_point,$rbfw_dropoff_point);
-
-
-
-
-
-    $rbfw_pickup_start_date = isset($_POST['rbfw_pickup_start_date']) ? $_POST['rbfw_pickup_start_date'] : '';
-    $rbfw_pickup_end_date = isset($_POST['rbfw_pickup_end_date']) ? $_POST['rbfw_pickup_end_date'] : '';
-
-
-    if(isset($_POST['rbfw_pickup_start_time']) && isset($_POST['rbfw_pickup_end_time'])){
-        $rbfw_pickup_start_time = $_POST['rbfw_pickup_start_time'];
-        $rbfw_pickup_end_time = $_POST['rbfw_pickup_end_time'];
-    }else{
-        $rbfw_pickup_start_time =  '00:00:00';
-        $rbfw_pickup_end_time =  rbfw_end_time();
-    }
 
 
     $cart_item_data['rbfw_id'] = $rbfw_id;
@@ -244,20 +215,15 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
     }else {
 
+        $start_date = $_POST['rbfw_pickup_start_date'];
+        $end_date = $_POST['rbfw_pickup_end_date'];
+        $start_time = isset($_POST['rbfw_pickup_start_time'])?$_POST['rbfw_pickup_start_time']:'00:00:00';
+        $end_time = isset($_POST['rbfw_pickup_end_time'])?$_POST['rbfw_pickup_end_time']:rbfw_end_time();
+        $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $start_time));
+        $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
 
-        $start_date = $rbfw_pickup_start_date;
-        $start_time = $rbfw_pickup_start_time;
-        $end_date = $rbfw_pickup_end_date;
-        $end_time = $rbfw_pickup_end_time;
-
-
-        $start_datetime = date('Y-m-d H:i', strtotime($rbfw_pickup_start_date . ' ' . $start_time));
-        $end_datetime = date('Y-m-d H:i', strtotime($rbfw_pickup_end_date . ' ' . $end_time));
-
-
-        //$base_price = rbfw_price_calculation($rbfw_id, $start_datetime, $end_datetime, $start_date);
-        $duration_price_info = rbfw_md_duration_price_calculation($rbfw_id,$start_datetime,$end_datetime,$start_date,$end_date,$start_time,$end_time);
+        $duration_price_info = rbfw_md_duration_price_calculation($rbfw_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$start_time,$end_time);
 
         $duration_price = $duration_price_info['duration_price'] * $rbfw_item_quantity;
         $total_days = $duration_price_info['total_days'];

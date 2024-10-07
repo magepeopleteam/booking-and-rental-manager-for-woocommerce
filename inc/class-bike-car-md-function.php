@@ -74,21 +74,21 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
         function rbfw_md_duration_price_calculation_ajax(){
 
             $post_id = $_POST['post_id'];
+
             $start_date = $_POST['pickup_date'];
             $end_date = $_POST['dropoff_date'];
             $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'00:00:00';
             $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:rbfw_end_time();
+            $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
+            $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
+
             $item_quantity = $_POST['item_quantity'];
             $rbfw_enable_variations = $_POST['rbfw_enable_variations'];
             $rbfw_available_time = $_POST['rbfw_available_time']??'no';
             $rbfw_service_price = $_POST['rbfw_service_price'] * $item_quantity;
 
 
-            $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
-            $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
-
             $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime);
-
             $duration_price_info = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$star_time,$end_time,$rbfw_available_time);
 
             $duration_price = $duration_price_info['duration_price']*$item_quantity;

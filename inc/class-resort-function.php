@@ -781,13 +781,6 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             $mps_tax_percentage = !empty(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) : '';
             $percent = 0;
             $tax_status = '';
-            if($rbfw_payment_system == 'mps' &&  $mps_tax_switch == 'on' && !empty($mps_tax_percentage)){
-                //Convert our percentage value into a decimal.
-                $percentInDecimal = $mps_tax_percentage / 100;
-                //Get the result.
-                $percent = $percentInDecimal * $total_price;
-                $total_price = $total_price + $percent;
-            }
 
             if($rbfw_payment_system == 'mps' &&  $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'including_tax'){
                 $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($percent).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';
@@ -838,7 +831,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                                     /* End Discount Calculations */
 
-                                    $content.='<li class="total"><strong>'.$rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce')).'</strong> <span class="price-figure" data-price="'.($total_price-$discount_amount+$security_deposit['security_deposit_amount']).'">'.rbfw_mps_price($total_price-$discount_amount+$security_deposit['security_deposit_amount']).' '.$tax_status.'</span></li>
+                                    $content.='<li class="total"><strong>'.$rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce')).'</strong> <span class="price-figure" data-price="'.($total_price-$discount_amount+$security_deposit['security_deposit_amount']).'">'.rbfw_mps_price($total_price - $discount_amount + $security_deposit['security_deposit_amount']).' '.$tax_status.'</span></li>
                                 </ul>
                                 <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
                             </div>
