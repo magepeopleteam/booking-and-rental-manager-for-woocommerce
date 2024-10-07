@@ -109,7 +109,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 $category_name=isset(get_term($cat)->name) ? get_term($cat)->name : '';
                 $args['meta_query'][] = array(
                     'key' => 'rbfw_categories',
-                    'value' => $category_name,
+                    'value' => serialize($category_name),
                     'compare' => 'LIKE'
                 );
             }
@@ -119,7 +119,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             $search_category_name=$search_category;
             $args['meta_query'][] = array(
                 'key' => 'rbfw_categories',
-                'value' => $search_category_name,
+                'value' => serialize($search_category_name),
                 'compare' => 'LIKE'
             );
         endif;

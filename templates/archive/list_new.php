@@ -8,7 +8,8 @@ $post_title = get_the_title();
 
 $gallery_images = get_post_meta(get_the_ID(),'rbfw_gallery_images',true);
 
-if( ! empty($gallery_images)){
+if(! empty($gallery_images)){
+
     $gallery_image = wp_get_attachment_url($gallery_images[0]);
 }
 else{

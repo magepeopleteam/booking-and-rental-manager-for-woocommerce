@@ -580,7 +580,6 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
 
             if(!empty($rbfw_regf_info)){
                 $errors = '';
-
                 foreach ($rbfw_regf_info as $field_name => $field_value) {
                     if(class_exists('Rbfw_Reg_Form')){
                         $ClassRegForm = new Rbfw_Reg_Form();
@@ -600,8 +599,6 @@ if ( ! class_exists( 'RBFW_MPS_Function' ) ) {
                     echo json_encode(['rbfw_regf_warning'=> $content]);
                     wp_die();
                 }
-
-
             }
 
             $content .= '<div class="rbfw_mps_user_order_summary">';
