@@ -3,6 +3,30 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+add_action('wp', 'rbfw_hide_hidden_product_from_single', 90);
+
+if (!function_exists('rbfw_hide_hidden_product_from_single')) {
+    function rbfw_hide_hidden_product_from_single() {
+        global $post, $wp_query;
+        if (is_product()) {
+            $post_id = $post->ID;
+            $visibility = get_the_terms($post_id, 'product_visibility') ? get_the_terms($post_id, 'product_visibility') : [0];
+            if (is_object($visibility[0])) {
+                if ($visibility[0]->name == 'exclude-from-catalog') {
+                    $check_event_hidden = get_post_meta($post_id, 'link_rbfw_id', true) ? get_post_meta($post_id, 'link_rbfw_id', true) : 0;
+                    if ($check_event_hidden > 0) {
+                        $wp_query->set_404();
+                        status_header(404);
+                        get_template_part(404);
+                        exit();
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 // Language Load
 add_action( 'init', 'rbfw_language_load' );
 function rbfw_language_load() {
@@ -944,10 +968,10 @@ function rbfw_footer_scripts(){
                 let description 			= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?>";
                 let faq 					= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Frequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?>";
                 let reviews 				= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_reviews', 'rbfw_basic_translation_settings', __('Reviews','booking-and-rental-manager-for-woocommerce'))); ?>";
-                tippy('.rbfw-features', {content: highlighted_features,theme: 'blue',placement: 'right'});
-                tippy('.rbfw-description', {content: description,theme: 'blue',placement: 'right'});
-                tippy('.rbfw-faq', {content: faq,theme: 'blue',placement: 'right'});
-                tippy('.rbfw-review', {content: reviews,theme: 'blue',placement: 'right'});
+                // tippy('.rbfw-features', {content: highlighted_features,theme: 'blue',placement: 'right'});
+                // tippy('.rbfw-description', {content: description,theme: 'blue',placement: 'right'});
+                // tippy('.rbfw-faq', {content: faq,theme: 'blue',placement: 'right'});
+                // tippy('.rbfw-review', {content: reviews,theme: 'blue',placement: 'right'});
                 // end tab tooltip
             });
         </script>
