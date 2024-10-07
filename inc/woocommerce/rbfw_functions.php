@@ -289,6 +289,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
         /* service price end for multiple days */
 
+        echo $duration_price;exit;
+
 
         $rbfw_extra_service_price = 0;
         $rbfw_duration_price = $duration_price;
