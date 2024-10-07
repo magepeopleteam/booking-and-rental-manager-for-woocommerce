@@ -170,7 +170,7 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                             $readmore = __('See More','booking-and-rental-manager-for-woocommerce');
                             $readLess = __('Less','booking-and-rental-manager-for-woocommerce');
                             $post_content = get_the_content();
-                            $trimmed_content = wp_trim_words( $post_content, 120, '... <a href="#" class="rbfw-read-more">'.$readmore.'</a>' );
+                            $trimmed_content = wp_trim_words( $post_content, 100, '... <a href="#" class="rbfw-read-more">'.$readmore.'</a>' );
                             $full_content = apply_filters( 'the_content', $post_content );
                             $full_content .= '<a href="#" class="rbfw-read-more">'.$readLess.'</a>';
                         ?>
