@@ -341,7 +341,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
 
             if(response.discount){
                 jQuery('.discount').show();
-                jQuery('.discount span').html(response.discount);
+                jQuery('.discount span').html(response.discount_html);
                 jQuery('.discount').show();
             }else{
                 jQuery('.discount').hide();
