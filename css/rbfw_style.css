@@ -2022,7 +2022,7 @@ li.rbfw-visibility-hidden {
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_btn:hover {
-    background: var(--rbfw_color_secondary);
+    background: var(--rbfw_single_page_secondary_color);
     color: #fff;
 }
 
