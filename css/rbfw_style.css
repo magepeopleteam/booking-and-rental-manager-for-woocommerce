@@ -218,6 +218,9 @@ CSS for Single Page Template
     font-weight: 600;
 }
 
+.rbfw-related-product-btn-wrap{
+    margin: auto;
+}
 .rbfw_donut_template .rbfw-sub-heading {
     background: var(--rbfw_single_page_secondary_color);
     color: var(--rbfw_dt_color2);
@@ -1029,7 +1032,6 @@ ul.rbfw-feature-lists li {
 }
 
 .rbfw-single-left-information ul.rbfw-feature-lists li {
-    font-size: 18px;
     color: #0a0a0a;
 }
 
@@ -1329,11 +1331,10 @@ table.rbfw_room_price_table tbody td img {
     font-size: 16px;
     font-weight: normal;
     text-align: center;
-    width: 40px;
+    width: 30px;
     border-radius: 0;
     margin: 0 !important;
     padding: 2px !important;
-    height: 40px !important;
 }
 
 .rbfw_selected_room_dates {
@@ -2476,13 +2477,16 @@ table.rbfw_bikecarsd_price_table thead th {
     border: 0;
     text-align: left;
     padding: 10px;
+    text-transform: capitalize;
 }
 
 table.rbfw_bikecarsd_price_table tbody td {
     font-size: 14px;
     font-weight: normal;
     border: 0;
+    padding: 5px;
     padding-left: 10px;
+   
 }
 
 table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n + 1) {
@@ -6572,7 +6576,7 @@ a {
 }
 
 ul, li {
-    list-style-type: none;
+
 }
 
 .rbfw_rent_list_col {
@@ -6806,6 +6810,12 @@ ul, li {
 }
 a.rbfw_rent_list_btn{
     text-decoration: none;
+    color: #fff;
+}
+
+a.rbfw_rent_list_btn:hover{
+    text-decoration: none;
+    color: #fff;
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_btn {

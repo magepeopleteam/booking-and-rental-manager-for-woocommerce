@@ -408,3 +408,14 @@ function rbfw_aig_showSlides(n) {
     captionText.innerHTML = dots[slideIndex - 1].alt;
 }
 /* End: Additional Gallary Images */
+// using muffin tempalte descriptoin show hide 
+jQuery(document).ready(function($) {
+    $('.rbfw-read-more').on('click', function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        var $postContent = $this.closest('.rbfw_muff_post_content');
+        $postContent.find('.trimmed-content').toggle();
+        $postContent.find('.full-content').toggle();
+        
+    });
+});
