@@ -291,10 +291,9 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $rbfw_pickup_point  = $cart_item['rbfw_pickup_point'] ? $cart_item['rbfw_pickup_point'] : '';
     $rbfw_dropoff_point = $cart_item['rbfw_dropoff_point'] ? $cart_item['rbfw_dropoff_point'] : '';
 
+    $rbfw_duration_price_individual = $cart_item['rbfw_duration_price_individual'] ? $cart_item['rbfw_duration_price_individual'] : 0;
+
     $rbfw_duration_price = $cart_item['rbfw_duration_price'] ? $cart_item['rbfw_duration_price'] : 0;
-
-
-
 
 
     $rbfw_item_quantity = $cart_item['rbfw_item_quantity'] ? $cart_item['rbfw_item_quantity'] : 1;
@@ -318,9 +317,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $discount_type 	= $cart_item['discount_type'] ? $cart_item['discount_type'] : '';
     $discount_amount 	= $cart_item['discount_amount'] ? $cart_item['discount_amount'] : '';
 
-
     $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
-
 
     ?>
 
@@ -362,7 +359,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
         <table class="rbfw_room_cart_table">
             <?php if ( ! empty( $start_datetime ) && ! empty( $end_datetime ) ): ?>
-
                 <tr>
                     <th>
                         <?php echo $rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost:','booking-and-rental-manager-for-woocommerce')); ?>
@@ -376,7 +372,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                         </span>
                     </th>
                     <td>
-                        <?php echo '('.wc_price((float)$rbfw_duration_price) .' x '.$rbfw_item_quantity.')'. ' = '.wc_price((float)$rbfw_duration_price * $rbfw_item_quantity);?>
+                        <?php echo '('.wc_price((float)$rbfw_duration_price_individual) .' x '.$rbfw_item_quantity.')'. ' = '.wc_price((float)$rbfw_duration_price_individual * $rbfw_item_quantity);?>
                     </td>
                 </tr>
             <?php endif; ?>
