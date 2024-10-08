@@ -523,6 +523,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 $available_qty_info_switch = get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) : 'no';
 
                 $content    = '';
+                $content    .= '<input type="hidden" name="rbfw_room_price_category" value="'.$active_tab.'"/>';
                 $content   .= '<div class="rbfw_resort_rt_price_table_container">';
                 $content   .= '<table class="rbfw_room_price_table rbfw_resort_rt_price_table">';
                 $content   .= '<thead>';
@@ -739,6 +740,9 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
 
 
+
+
+
             foreach ($room_price_arr as $key => $value):
                 $room_price += (float)$value['data_qty'] * (float)$value['data_price'];
             endforeach;
@@ -812,18 +816,18 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                                         if(function_exists('rbfw_get_discount_array')){
 
-                                            $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_price);
+                                            $discount_arr = rbfw_get_discount_array($post_id, $total_days, $total_price);
 
                                         } else {
                                             $discount_arr = [];
                                         }
 
-                                        if(!empty($discount_arr)){
+                                        if(($discount_arr['discount_amount'])){
                                             $discount_amount = $discount_arr['discount_amount'];
                                             $discount_desc = $discount_arr['discount_desc'];
                                             $content .= '<li class="discount">';
                                             $content .= $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce'));
-                                            $content .= '<span>'.$discount_desc.'</span>';
+                                            $content .= '<span>'.wc_price($discount_arr['discount_amount']).'</span>';
                                             $content .= '</li>';
                                         }
                                     }
