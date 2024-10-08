@@ -280,9 +280,10 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 <?php if($rbfw_rent_type == 'bike_car_md' || $rbfw_rent_type == 'dress' || $rbfw_rent_type == 'equipment' || $rbfw_rent_type == 'others'){
 
 
-
     $start_datetime     = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
+
     $end_datetime       = $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
+
     $start_date         = $cart_item['rbfw_start_date'] ? $cart_item['rbfw_start_date'] : '';
     $start_time         = $cart_item['rbfw_start_time'] ? $cart_item['rbfw_start_time'] : '';
     $end_date           = $cart_item['rbfw_end_date'] ? $cart_item['rbfw_end_date'] : '';
@@ -361,6 +362,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
         <table class="rbfw_room_cart_table">
             <?php if ( ! empty( $start_datetime ) && ! empty( $end_datetime ) ): ?>
+
                 <tr>
                     <th>
                         <?php echo $rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost:','booking-and-rental-manager-for-woocommerce')); ?>
