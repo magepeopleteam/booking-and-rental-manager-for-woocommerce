@@ -399,10 +399,18 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
         }
 
         public function rbfw_check_resort_availibility(){
-            if($_POST['rbfw_enable_resort_daylong_price']=='yes'){
-                $price_type = 'daylong';
-            }else{
+
+            $origin             = date_create($_POST['checkin_date']);
+            $target             = date_create($_POST['checkout_date']);
+            $interval           = date_diff($origin, $target);
+            $total_days         = $interval->format('%a');
+
+
+            if($total_days){
                 $price_type = 'daynight';
+
+            }else{
+                $price_type = 'daylong';
             }
             $this->rbfw_get_active_price_table($_POST['post_id'],$price_type,strip_tags($_POST['checkin_date']),strip_tags($_POST['checkout_date']));
         }
