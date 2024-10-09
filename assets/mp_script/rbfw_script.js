@@ -803,8 +803,6 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
     var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
 
 
-
-
     if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || (date <  date_today) ){
         if(type=='md'){
             return [false, "notav", 'Not Available'];

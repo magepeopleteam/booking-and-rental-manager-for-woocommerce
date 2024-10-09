@@ -3450,9 +3450,7 @@ function check_seasonal_price($Book_date,$rbfw_sp_prices,$hours='0',$rbfw_enable
                 }else{
                     return $rbfw_sp_price['rbfw_sp_price_d'];
                 }
-
             }
-
         } else {
             return 'not_found';
         }
@@ -3468,11 +3466,11 @@ function rbfw_security_deposit($post_id,$sub_total_price)
         $rbfw_security_deposit_type = get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) : 'percentage';
         $rbfw_security_deposit_amount = get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) : '0';
         if($rbfw_security_deposit_type=='percentage'){
-            $security_deposit_amount = $rbfw_security_deposit_amount*$sub_total_price/100;
-            $security_deposit_desc = $security_deposit_amount.'%';
+            $security_deposit_amount = $rbfw_security_deposit_amount * $sub_total_price/100;
+            $security_deposit_desc = wc_price($security_deposit_amount);
         }else{
             $security_deposit_amount = $rbfw_security_deposit_amount;
-            $security_deposit_desc = rbfw_mps_price($security_deposit_amount);
+            $security_deposit_desc = wc_price($security_deposit_amount);
         }
     }
     return array('security_deposit_amount'=>$security_deposit_amount,'security_deposit_desc'=>$security_deposit_desc);

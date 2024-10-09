@@ -15,16 +15,11 @@
             });
         });
 
-
-
         jQuery('body').on('change', '.pickup_date', function(e) {
 
             let selected_date = jQuery(this).val();
             const [gYear, gMonth, gDay] = selected_date.split('-');
-
             jQuery(".dropoff_date").datepicker("destroy");
-
-
 
             jQuery('.dropoff_date').datepicker({
                 dateFormat: 'yy-mm-dd',
