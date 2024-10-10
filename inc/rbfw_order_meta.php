@@ -307,109 +307,108 @@ function rbfw_order_meta_box_callback(){
                     </tr>
                     <?php } ?>
                     <?php if($rent_type == 'resort'){ ?>
-                    <tr>
-                        <td><strong><?php rbfw_string('rbfw_text_room_information',__('Room Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                        <td>
-                            <table class="wp-list-table widefat fixed striped table-view-list">                     
-                            <?php 
-                                if(!empty($rent_info)){
-                                    foreach ($rent_info as $key => $value) {
-                                        ?>
-                                        <tr>
-                                            <td><strong><?php esc_html_e($key); ?></strong></td>
-                                            <td><?php echo $value; ?></td>
-                                        </tr>
-                                        <?php
+                        <tr>
+                            <td><strong><?php rbfw_string('rbfw_text_room_information',__('Room Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                            <td>
+                                <table class="wp-list-table widefat fixed striped table-view-list">
+                                <?php
+                                    if(!empty($rent_info)){
+                                        foreach ($rent_info as $key => $value) {
+                                            ?>
+                                            <tr>
+                                                <td><strong><?php esc_html_e($key); ?></strong></td>
+                                                <td><?php echo $value; ?></td>
+                                            </tr>
+                                            <?php
+                                        }
                                     }
-                                }
-                            ?>
-                            </table>
-                        </td>
-                    </tr>
+                                ?>
+                                </table>
+                            </td>
+                        </tr>
                     <?php } ?>
 
-                    <tr>
-                        <td><strong><?php rbfw_string('rbfw_text_extra_service_information',__('Extra Service Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                        <td>
-                            <table class="wp-list-table widefat fixed striped table-view-list">                     
-                            <?php 
-                            if($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
-                                if(!empty($service_info)){
-                                    foreach ($service_info as $key => $value) {
-                                        ?>
-                                        <tr>
-                                            <td><strong><?php echo $key; ?></strong></td>
-                                            <td><?php echo $value; ?></td>
-                                        </tr>
-                                        <?php
+                    <?php if ( ! empty( $service_info ) ){ ?>
+                        <tr>
+                            <td>
+                                <strong><?php rbfw_string('rbfw_text_extra_service_information',__('Extra Service Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong>
+                            </td>
+                            <td>
+                                <table class="wp-list-table widefat fixed striped table-view-list">
+                                    <?php
+                                    if($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
+                                        if(!empty($service_info)){
+                                            foreach ($service_info as $key => $value) {
+                                                ?>
+                                                <tr>
+                                                    <td><strong><?php echo $key; ?></strong></td>
+                                                    <td><?php echo $value; ?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                            elseif($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){
-                                $total_days = $ticket_info['total_days'];
-                                if(!empty($service_info)){
-                                    foreach ($service_info as $key => $value) {
-                                        ?>
-                                        <tr>
-                                            <td><strong><?php esc_html_e($key); ?></strong></td>
-                                            <td><?php echo $value; ?></td>
-                                        </tr>
-                                        <?php
+                                    elseif($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){
+                                        $total_days = $ticket_info['total_days'];
+                                        if(!empty($service_info)){
+                                            foreach ($service_info as $key => $value) {
+                                                ?>
+                                                <tr>
+                                                    <td><strong><?php esc_html_e($key); ?></strong></td>
+                                                    <td><?php echo $value; ?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
+                                    } elseif($rent_type == 'resort'){
+                                        if(!empty($service_info)){
+                                            foreach ($service_info as $key => $value) {
+                                                ?>
+                                                <tr>
+                                                    <td><strong><?php esc_html_e($key); ?></strong></td>
+                                                    <td><?php echo $value; ?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
                                     }
-                                }
-                            }
-                            elseif($rent_type == 'resort'){
-                                if(!empty($service_info)){
-                                    foreach ($service_info as $key => $value) {
-                                        ?>
-                                        <tr>
-                                            <td><strong><?php esc_html_e($key); ?></strong></td>
-                                            <td><?php echo $value; ?></td>
-                                        </tr>
-                                        <?php
-                                    }
-                                }
-                            }
-                            ?>
-                            </table>
-                        </td>
-                    </tr>
-
-
+                                ?>
+                                </table>
+                            </td>
+                        </tr>
+                    <?php } ?>
 
 
                     <?php if ( ! empty( $service_infos ) ){ ?>
                         <tr>
-                        <td><?php esc_html_e( 'Service Information:', 'booking-and-rental-manager-for-woocommerce' ); ?> </td>
                             <td>
-                        <?php foreach ($service_infos as $key => $value){ ?>
-                            <?php if(count($value)){ ?>
-
-
-
-                                    <table>
-                                        <tr>
-                                            <td><?php echo $key; ?></td>
-                                        </tr>
-                                        <?php foreach ($value as $key1=>$item){ ?>
+                                <?php esc_html_e( 'Service Information:', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </td>
+                            <td>
+                                <?php foreach ($service_infos as $key => $value){ ?>
+                                    <?php if(count($value)){ ?>
+                                        <table>
                                             <tr>
-                                                <td><?php echo $item['name'] ?></td>
-                                                <td>
-                                                    <?php
-                                                    if($item['service_price_type']=='day_wise'){
-                                                        echo '('.wc_price($item['price']). 'x'. $item['quantity'] . 'x' .$total_days .'='.wc_price($item['price']*$item['quantity']*$total_days).')';
-                                                    }else{
-                                                        echo '('.wc_price($item['price']). 'x'. $item['quantity'] .'='.wc_price($item['price']*$item['quantity']).')';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?php echo $key; ?></td>
                                             </tr>
-                                        <?php } ?>
-                                    </table>
-
-                            <?php } ?>
-                        <?php } ?>
-                                </td>
+                                            <?php foreach ($value as $key1=>$item){ ?>
+                                                <tr>
+                                                    <td><?php echo $item['name'] ?></td>
+                                                    <td>
+                                                        <?php
+                                                        if($item['service_price_type']=='day_wise'){
+                                                            echo '('.wc_price($item['price']). 'x'. $item['quantity'] . 'x' .$total_days .'='.wc_price($item['price']*$item['quantity']*$total_days).')';
+                                                        }else{
+                                                            echo '('.wc_price($item['price']). 'x'. $item['quantity'] .'='.wc_price($item['price']*$item['quantity']).')';
+                                                        }
+                                                        ?>
+                                                    </td>
+                                                </tr>
+                                            <?php } ?>
+                                        </table>
+                                    <?php } ?>
+                                <?php } ?>
+                            </td>
                         </tr>
                     <?php } ?>
 
