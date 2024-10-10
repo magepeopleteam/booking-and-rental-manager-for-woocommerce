@@ -135,63 +135,52 @@ if(isset($post_id) && isset($active_tab)){
 
         <?php
 
-    $c = 0;
+        $c = 0;
+        foreach ($rbfw_extra_service_data as $key => $value) {
+            $max_es_available_qty = rbfw_get_multiple_date_es_available_qty($post_id, $checkin_date, $checkout_date, $value['service_name']);
+            $img_url = wp_get_attachment_url($value['service_img']);
+            $uniq_id = rand();
+            if ($img_url) {
+                $img = '<a href="#rbfw_room_img_' . $uniq_id . '" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
+                $img .= '<div id="rbfw_room_img_' . $uniq_id . '" class="mage_modal"><img src="' . esc_url($img_url) . '"/></div>';
+            }
+            else {
+                $img = '';
+            }
 
-    foreach ($rbfw_extra_service_data as $key => $value) {
-
-    $max_es_available_qty = rbfw_get_multiple_date_es_available_qty($post_id, $checkin_date, $checkout_date, $value['service_name']);
-
-    $img_url = wp_get_attachment_url($value['service_img']);
-    $uniq_id = rand();
-    if ($img_url) {
-    $img = '<a href="#rbfw_room_img_' . $uniq_id . '" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
-    $img .= '<div id="rbfw_room_img_' . $uniq_id . '" class="mage_modal"><img src="' . esc_url($img_url) . '"/></div>';
-    } else {
-    $img = '';
-    }
-
-    if ($value['service_qty'] > 0) {  ?>
-
-    <tr>
-        <td>
-
-        <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_name]" value="<?php echo  $value['service_name'] ?>"/>
-
-        <?php if (isset($value['service_desc']) && $value['service_desc']) { ?>
-
-            <small class="rbfw_room_desc">';
-                <?php echo $value['service_desc']; ?>
-            </small>
-
-        <?php } if ($available_qty_info_switch == 'yes') { ?>
-            <small class="rbfw_available_qty_notice">(<?php echo  rbfw_string_return('rbfw_text_available', __('Available:', 'booking-and-rental-manager-for-woocommerce')) . $max_es_available_qty ?>)</small>';
-        <?php } ?>
-
-        <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_desc]" value="<?php echo  $value['service_desc'] ?>"/>
-    <?php } ?>
-
-        </td>
-        <td><?php echo  $img ?></td>
-        <td>';
-            $content .= rbfw_mps_price($value['service_price']);
-            <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_price]" value="<?php echo  $value['service_price'] ?>"/>
-            </td>';
-        <td>';
-            <div class="rbfw_service_price_wrap">
-                <div class="rbfw_qty_input">
-                    <a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>
-                    <input type="number" min="0" max="<?php echo  esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo  $c ?>][service_qty]" class="rbfw_service_qty" data-price="<?php echo  $value['service_price'] ?>" data-type="<?php echo  $value['service_name'] ?>" data-cat="service"/>
-                    <a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>
-                    </div>
-
-
-                </div>
-            </td>
-        </tr>
-    <?php
-    }
-
-    $c++;
+            if ($value['service_qty'] > 0) {  ?>
+                <tr>
+                    <td>
+                        <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_name]" value="<?php echo  $value['service_name'] ?>"/>
+                        <?php if (isset($value['service_desc']) && $value['service_desc']) { ?>
+                            <small class="rbfw_room_desc">
+                                <?php echo $value['service_desc']; ?>
+                            </small>
+                        <?php } ?>
+                        <?php if ($available_qty_info_switch == 'yes') { ?>
+                            <small class="rbfw_available_qty_notice">(<?php echo  rbfw_string_return('rbfw_text_available', __('Available:', 'booking-and-rental-manager-for-woocommerce')) . $max_es_available_qty ?>)</small>
+                        <?php } ?>
+                        <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_desc]" value="<?php echo  $value['service_desc'] ?>"/>
+                    </td>
+                    <td><?php echo  $img ?></td>
+                    <td>
+                        <?php echo rbfw_mps_price($value['service_price']); ?>
+                        <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_price]" value="<?php echo  $value['service_price'] ?>"/>
+                    </td>
+                    <td>
+                        <div class="rbfw_service_price_wrap">
+                            <div class="rbfw_qty_input">
+                                <a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>
+                                <input type="number" min="0" max="<?php echo  esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo  $c ?>][service_qty]" class="rbfw_service_qty" data-price="<?php echo  $value['service_price'] ?>" data-type="<?php echo  $value['service_name'] ?>" data-cat="service"/>
+                                <a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            }
+            $c++;
+        }
     }
     ?>
     </tbody>
