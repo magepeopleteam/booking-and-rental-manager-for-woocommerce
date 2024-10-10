@@ -493,6 +493,8 @@ ul.rbfw_popup_fearure_lists li{
     text-align: left;
     top: 100px;
     margin: auto;
+    height: 85vh;
+    overflow: hidden;
 }
 
 /* Close button styles */
@@ -510,7 +512,9 @@ ul.rbfw_popup_fearure_lists li{
 #rbfw_popup_content{
     display: flex;
     margin-top: 10px;
-    width: calc( 100% - 28px );
+
+    overflow: scroll;
+    height: 80vh;
 }
 
 /* Styles for the list */
