@@ -531,6 +531,8 @@ if($rbfw_enable_variations == 'yes'){
                     </div>
 
 
+
+
                     <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
                     <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price"  value="0">
                     <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">

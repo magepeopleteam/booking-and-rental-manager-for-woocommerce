@@ -210,6 +210,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 * Resort discount and checkout problem solved.
 * Discount price displaying convert to amount instead of percentage.
 * Code updated
+* Multiday cart page pricing solved.
 
 
 = 2.1.3 =

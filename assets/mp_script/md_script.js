@@ -2,6 +2,7 @@ jQuery('body').on('change', '.pickup_date', function(e) {
     jQuery(".dropoff_date").val('');
 });
 jQuery('body').on('change', '.pickup_date, .dropoff_date, .pickup_time, .dropoff_time', function (e) {
+
     let pickup_date = jQuery('#pickup_date').val();
     let dropoff_date = jQuery('#dropoff_date').val();
     let pickup_time = jQuery('#pickup_time').find(':selected').val();
