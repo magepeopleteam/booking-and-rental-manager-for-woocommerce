@@ -291,7 +291,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $rbfw_pickup_point  = $cart_item['rbfw_pickup_point'] ? $cart_item['rbfw_pickup_point'] : '';
     $rbfw_dropoff_point = $cart_item['rbfw_dropoff_point'] ? $cart_item['rbfw_dropoff_point'] : '';
 
-    $rbfw_duration_price_individual = $cart_item['rbfw_duration_price_individual'] ? $cart_item['rbfw_duration_price_individual'] : 0;
+    $rbfw_duration_price_individual = isset($cart_item['rbfw_duration_price_individual'] )? $cart_item['rbfw_duration_price_individual'] : 0;
 
     $rbfw_duration_price = $cart_item['rbfw_duration_price'] ? $cart_item['rbfw_duration_price'] : 0;
 
