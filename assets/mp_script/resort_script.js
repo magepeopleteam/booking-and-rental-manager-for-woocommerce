@@ -200,7 +200,6 @@ jQuery(document).on('change','.rbfw_room_qty,.rbfw_service_qty',function (e) {
         success: function (response) {
 
 
-
             jQuery('.rbfw_room_price_category_details').removeClass('rbfw_loader_in');
             jQuery('.rbfw_room_price_category_details i.fa-spinner').remove();
 
@@ -312,7 +311,7 @@ jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_serv
 
 
 
-    jQuery('.rbfw_room_qty,.rbfw_service_qty').change(function (e) {
+    jQuery('.rbfw_room_qty, .rbfw_servicesd_qty, .rbfw_service_qty').change(function (e) {
         let get_value = jQuery(this).val();
         let max_value = parseInt(jQuery(this).attr('max'));
 

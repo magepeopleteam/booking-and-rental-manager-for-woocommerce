@@ -264,7 +264,7 @@ function rbfw_bikecarsd_without_time_func(){
 
 // update input value onclick and onchange
 
-jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus',function (e) {
+jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus, .rbfw_service_qty_plus',function (e) {
         let target_input = jQuery(this).siblings("input[type=number]");
         let current_value = parseInt(jQuery(this).siblings("input[type=number]").val());
         let max_value = parseInt(jQuery(this).siblings("input[type=number]").attr('max'));
@@ -279,7 +279,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus',
             tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top',trigger: 'click'});
         }
     });
-    jQuery(document).on('click','.rbfw_bikecarsd_qty_minus,.rbfw_servicesd_qty_minus',function (e) {
+    jQuery(document).on('click','.rbfw_bikecarsd_qty_minus,.rbfw_servicesd_qty_minus, .rbfw_service_qty_minus',function (e) {
         let target_input = jQuery(this).siblings("input[type=number]");
         let current_value = parseInt(jQuery(this).siblings("input[type=number]").val());
         let update_value = current_value - 1;
@@ -305,6 +305,9 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus',
 
 
     jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus,.rbfw_servicesd_qty_minus,.rbfw_servicesd_qty_plus',function (e) {
+
+
+
 
         let data_cat = jQuery(this).siblings('input[type=number]').attr('data-cat');
         let post_id = jQuery('#rbfw_post_id').val();
@@ -361,7 +364,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus',
         });
     });
 
-    jQuery(document).on('change','.rbfw_bikecarsd_qty, .rbfw_service_qty',function (e) {
+    jQuery(document).on('change','.rbfw_bikecarsd_qty, .rbfw_servicesd_qty',function (e) {
         let data_cat         = jQuery(this).attr('data-cat');
         if(data_cat == 'bikecarsd'){
             let data_qty         = jQuery(this).attr('value');
@@ -374,7 +377,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus',
                 bikecarsd_price_arr[data_type]  = {'data_qty' : data_qty,'data_price' : data_price,'data_type' : data_type};
             }
         }
-        if(data_cat == 'service'){
+        if(data_cat == 'service'){  
             let data_qty         = jQuery(this).attr('value');
             let data_price       = jQuery(this).attr('data-price');
             let data_type        = jQuery(this).attr('data-type');
@@ -421,8 +424,8 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus',
             jQuery('button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
             jQuery(' button.rbfw_bikecarsd_book_now_btn').removeClass('rbfw_disabled_button');
         }else{
-            jQuery('.rbfw_service_qty').val('0');
-            jQuery('.rbfw_service_qty').trigger('change');
+            jQuery('.rbfw_servicesd_qty').val('0');
+            jQuery('.rbfw_servicesd_qty').trigger('change');
             jQuery('.rbfw_bikecarsd_es_price_table').hide();
             jQuery('.rbfw_regf_wrap').hide();
             jQuery('.rbfw_bike_car_sd_available_es_qty_notice').hide();
@@ -443,8 +446,8 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus',
             jQuery('.rbfw_bikecarsd_es_price_table').show();
             jQuery('.rbfw_bike_car_sd_available_es_qty_notice').show();
         }else{
-            jQuery('.rbfw_service_qty').val('0');
-            jQuery('.rbfw_service_qty').trigger('change');
+            jQuery('.rbfw_servicesd_qty').val('0');
+            jQuery('.rbfw_servicesd_qty').trigger('change');
             jQuery('.rbfw_bikecarsd_es_price_table').hide();
             jQuery('.rbfw_bike_car_sd_available_es_qty_notice').hide();
         }

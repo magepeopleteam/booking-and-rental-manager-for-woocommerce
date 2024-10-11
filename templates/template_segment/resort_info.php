@@ -151,6 +151,7 @@ if(isset($post_id) && isset($active_tab)){
             if ($value['service_qty'] > 0) {  ?>
                 <tr>
                     <td>
+                        <?php echo $value['service_name'] ?>
                         <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_name]" value="<?php echo  $value['service_name'] ?>"/>
                         <?php if (isset($value['service_desc']) && $value['service_desc']) { ?>
                             <small class="rbfw_room_desc">
@@ -162,7 +163,9 @@ if(isset($post_id) && isset($active_tab)){
                         <?php } ?>
                         <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_desc]" value="<?php echo  $value['service_desc'] ?>"/>
                     </td>
-                    <td><?php echo  $img ?></td>
+                    <td>
+                        <?php echo  $img ?>
+                    </td>
                     <td>
                         <?php echo rbfw_mps_price($value['service_price']); ?>
                         <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_price]" value="<?php echo  $value['service_price'] ?>"/>
@@ -171,7 +174,7 @@ if(isset($post_id) && isset($active_tab)){
                         <div class="rbfw_service_price_wrap">
                             <div class="rbfw_qty_input">
                                 <a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>
-                                <input type="number" min="0" max="<?php echo  esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo  $c ?>][service_qty]" class="rbfw_service_qty" data-price="<?php echo  $value['service_price'] ?>" data-type="<?php echo  $value['service_name'] ?>" data-cat="service"/>
+                                <input type="number" min="0" max="<?php echo  esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo  $c ?>][service_qty]" class="rbfw_servicesd_qty" data-price="<?php echo  $value['service_price'] ?>" data-type="<?php echo  $value['service_name'] ?>" data-cat="service"/>
                                 <a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>
                             </div>
                         </div>
