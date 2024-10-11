@@ -3325,7 +3325,7 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                         $duration_price = $sp_price + $duration_price;
                     }
                     if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
-                        $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_hourly_rate', true) * 24 + $duration_price;
+                        $duration_price = (float)get_post_meta($post_id, 'rbfw_'.$day.'_hourly_rate', true) * 24 + $duration_price;
                     } else {
                         $duration_price = $rbfw_hourly_rate*24 + $duration_price;
                     }
@@ -3335,7 +3335,7 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                     $duration_price = $sp_price + $duration_price;
                 }
                 if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
-                    $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_daily_rate', true) + $duration_price;
+                    $duration_price = (float)get_post_meta($post_id, 'rbfw_'.$day.'_daily_rate', true) + $duration_price;
                 } else {
                     $duration_price = $rbfw_daily_rate + $duration_price;
                 }
@@ -3345,7 +3345,7 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                         $duration_price = $sp_price + $duration_price;
                     }
                     if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
-                        $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_hourly_rate', true) * $hours + $duration_price;
+                        $duration_price = (float)get_post_meta($post_id, 'rbfw_'.$day.'_hourly_rate', true) * $hours + $duration_price;
                     } else {
                         $duration_price = ($rbfw_hourly_rate * $hours + $duration_price);
                     }
@@ -3354,7 +3354,7 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                         $duration_price = $sp_price + $duration_price;
                     }
                     if (get_post_meta($post_id, 'rbfw_enable_' . $day . '_day', true) == 'yes') {
-                        $duration_price = get_post_meta($post_id, 'rbfw_'.$day.'_daily_rate', true) + $duration_price;
+                        $duration_price = (float)get_post_meta($post_id, 'rbfw_'.$day.'_daily_rate', true) + $duration_price;
                     } else {
                         $duration_price = $rbfw_daily_rate + $duration_price;
                     }
