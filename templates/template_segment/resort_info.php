@@ -84,7 +84,7 @@ if(isset($post_id) && isset($active_tab)){
         <tr>
         <td>
         <span class="room_type_title"><?php echo esc_html($value['room_type']) ?></span>
-        <input type="hidden" name="rbfw_room_info[ <?php echo $i ?>][room_type]" value="<?php echo $value['room_type'] ?>"/>
+        <input type="hidden" name="rbfw_room_info[<?php echo $i ?>][room_type]" value="<?php echo $value['room_type'] ?>"/>
 
         <?php if($value['rbfw_room_desc']) { ?>
         <small class="rbfw_room_desc">
