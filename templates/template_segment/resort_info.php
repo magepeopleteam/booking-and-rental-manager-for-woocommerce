@@ -14,6 +14,7 @@ if(isset($post_id) && isset($active_tab)){
     $rbfw_resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];
     $rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
     $rbfw_product_id = get_post_meta( $post_id, "link_wc_product", true ) ? get_post_meta( $post_id, "link_wc_product", true ) : $post_id;
+
     $currency_symbol = rbfw_mps_currency_symbol();
     $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
     if($rbfw_payment_system == 'mps'){
@@ -23,7 +24,7 @@ if(isset($post_id) && isset($active_tab)){
     }
     $available_qty_info_switch = get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) : 'no';
 
-?>
+    ?>
 
     <br>
     <div class="rbfw_room_price_category_tabs" data-active="daynight">
@@ -83,7 +84,7 @@ if(isset($post_id) && isset($active_tab)){
         <tr>
         <td>
         <span class="room_type_title"><?php echo esc_html($value['room_type']) ?></span>
-        <input type="hidden" name="rbfw_room_info[ <?php echo $i ?>][room_type]" value="<?php echo $value['room_type'] ?>"/>
+        <input type="hidden" name="rbfw_room_info[<?php echo $i ?>][room_type]" value="<?php echo $value['room_type'] ?>"/>
 
         <?php if($value['rbfw_room_desc']) { ?>
         <small class="rbfw_room_desc">
@@ -135,63 +136,55 @@ if(isset($post_id) && isset($active_tab)){
 
         <?php
 
-    $c = 0;
+        $c = 0;
+        foreach ($rbfw_extra_service_data as $key => $value) {
+            $max_es_available_qty = rbfw_get_multiple_date_es_available_qty($post_id, $checkin_date, $checkout_date, $value['service_name']);
+            $img_url = wp_get_attachment_url($value['service_img']);
+            $uniq_id = rand();
+            if ($img_url) {
+                $img = '<a href="#rbfw_room_img_' . $uniq_id . '" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
+                $img .= '<div id="rbfw_room_img_' . $uniq_id . '" class="mage_modal"><img src="' . esc_url($img_url) . '"/></div>';
+            }
+            else {
+                $img = '';
+            }
 
-    foreach ($rbfw_extra_service_data as $key => $value) {
-
-    $max_es_available_qty = rbfw_get_multiple_date_es_available_qty($post_id, $checkin_date, $checkout_date, $value['service_name']);
-
-    $img_url = wp_get_attachment_url($value['service_img']);
-    $uniq_id = rand();
-    if ($img_url) {
-    $img = '<a href="#rbfw_room_img_' . $uniq_id . '" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
-    $img .= '<div id="rbfw_room_img_' . $uniq_id . '" class="mage_modal"><img src="' . esc_url($img_url) . '"/></div>';
-    } else {
-    $img = '';
-    }
-
-    if ($value['service_qty'] > 0) {  ?>
-
-    <tr>
-        <td>
-
-        <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_name]" value="<?php echo  $value['service_name'] ?>"/>
-
-        <?php if (isset($value['service_desc']) && $value['service_desc']) { ?>
-
-            <small class="rbfw_room_desc">';
-                <?php echo $value['service_desc']; ?>
-            </small>
-
-        <?php } if ($available_qty_info_switch == 'yes') { ?>
-            <small class="rbfw_available_qty_notice">(<?php echo  rbfw_string_return('rbfw_text_available', __('Available:', 'booking-and-rental-manager-for-woocommerce')) . $max_es_available_qty ?>)</small>';
-        <?php } ?>
-
-        <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_desc]" value="<?php echo  $value['service_desc'] ?>"/>
-    <?php } ?>
-
-        </td>
-        <td><?php echo  $img ?></td>
-        <td>';
-            $content .= rbfw_mps_price($value['service_price']);
-            <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_price]" value="<?php echo  $value['service_price'] ?>"/>
-            </td>';
-        <td>';
-            <div class="rbfw_service_price_wrap">
-                <div class="rbfw_qty_input">
-                    <a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>
-                    <input type="number" min="0" max="<?php echo  esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo  $c ?>][service_qty]" class="rbfw_service_qty" data-price="<?php echo  $value['service_price'] ?>" data-type="<?php echo  $value['service_name'] ?>" data-cat="service"/>
-                    <a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>
-                    </div>
-
-
-                </div>
-            </td>
-        </tr>
-    <?php
-    }
-
-    $c++;
+            if ($value['service_qty'] > 0) {  ?>
+                <tr>
+                    <td>
+                        <?php echo $value['service_name'] ?>
+                        <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_name]" value="<?php echo  $value['service_name'] ?>"/>
+                        <?php if (isset($value['service_desc']) && $value['service_desc']) { ?>
+                            <small class="rbfw_room_desc">
+                                <?php echo $value['service_desc']; ?>
+                            </small>
+                        <?php } ?>
+                        <?php if ($available_qty_info_switch == 'yes') { ?>
+                            <small class="rbfw_available_qty_notice">(<?php echo  rbfw_string_return('rbfw_text_available', __('Available:', 'booking-and-rental-manager-for-woocommerce')) . $max_es_available_qty ?>)</small>
+                        <?php } ?>
+                        <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_desc]" value="<?php echo  $value['service_desc'] ?>"/>
+                    </td>
+                    <td>
+                        <?php echo  $img ?>
+                    </td>
+                    <td>
+                        <?php echo rbfw_mps_price($value['service_price']); ?>
+                        <input type="hidden" name="rbfw_service_info[<?php echo  $c ?>][service_price]" value="<?php echo  $value['service_price'] ?>"/>
+                    </td>
+                    <td>
+                        <div class="rbfw_service_price_wrap">
+                            <div class="rbfw_qty_input">
+                                <a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>
+                                <input type="number" min="0" max="<?php echo  esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo  $c ?>][service_qty]" class="rbfw_service_qty" data-price="<?php echo  $value['service_price'] ?>" data-type="<?php echo  $value['service_name'] ?>" data-cat="service"/>
+                                <a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <?php
+            }
+            $c++;
+        }
     }
     ?>
     </tbody>
@@ -220,7 +213,7 @@ if(class_exists('Rbfw_Reg_Form')){
 }
 ?>
     <div class="item rbfw_text_book_now">
-        <button type="submit" name="add-to-cart" value="<?php $rbfw_product_id ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_resort_book_now_btn rbfw_disabled_button <?php echo $rbfw_payment_system ?> " disabled>
+        <button type="submit" name="add-to-cart" value="<?php echo $rbfw_product_id ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_resort_book_now_btn rbfw_disabled_button <?php echo $rbfw_payment_system ?> " disabled>
             <?php echo $rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce')) ?>
         </button>
     </div>
