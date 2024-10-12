@@ -157,31 +157,34 @@ function rbfw_resort_get_price_table(){
 }
 
 jQuery(document).on('change','.rbfw_room_qty,.rbfw_service_qty',function (e) {
+
     let checkin_date     = jQuery('#checkin_date').val();
     let checkout_date    = jQuery('#checkout_date').val();
     let data_cat         = jQuery(this).attr('data-cat');
+    console.log('data_cat',data_cat);
     if(data_cat == 'room'){
-        let data_qty         = jQuery(this).attr('value');
+        let data_qty         = jQuery(this).val();
         let data_price       = jQuery(this).attr('data-price');
         let data_type        = jQuery(this).attr('data-type');
         if(data_qty == 0){
-            delete service_prices_arr[data_type];
+            delete room_prices_arr[data_type];
         }
         else{
-            service_prices_arr[data_type]  = {'data_qty' : data_qty,'data_price' : data_price,'data_type' : data_type};
+            room_prices_arr[data_type]  = {'data_qty' : data_qty,'data_price' : data_price,'data_type' : data_type};
         }
     }
+
     if(data_cat == 'service'){
-        let data_qty         = jQuery(this).attr('value');
+        let data_qty         = jQuery(this).val();
         let data_price       = jQuery(this).attr('data-price');
         let data_type        = jQuery(this).attr('data-type');
         if(data_qty == 0){
             delete service_prices_arr[data_type];
-        }
-        else{
+        } else{
             service_prices_arr[data_type]  = {'data_qty' : data_qty,'data_price' : data_price,'data_type' : data_type};
         }
     }
+
     jQuery.ajax({
         type: 'POST',
         url: rbfw_ajax.rbfw_ajaxurl,
@@ -242,6 +245,7 @@ jQuery(document).on('click','.rbfw_room_qty_minus,.rbfw_service_qty_minus',funct
 });
 
 jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_service_qty_minus,.rbfw_service_qty_plus',function (e) {
+
     e.preventDefault();
 
     let post_id = jQuery('#rbfw_post_id').val();
@@ -307,24 +311,22 @@ jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_serv
     });
 });
 
+jQuery(document).on('change','.rbfw_service_qty',function (e) {
+    let get_value = jQuery(this).val();
+    let max_value = parseInt(jQuery(this).attr('max'));
+
+    if(get_value <= max_value){
+        jQuery(this).val(get_value);
+        jQuery(this).attr('value',get_value);
+    }else{
+        jQuery(this).val(max_value);
+        jQuery(this).attr('value',max_value);
+        let notice = "Available Quantity is ";
+        tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top'});
+    }
+});
 
 
-
-
-    jQuery('.rbfw_room_qty, .rbfw_servicesd_qty, .rbfw_service_qty').change(function (e) {
-        let get_value = jQuery(this).val();
-        let max_value = parseInt(jQuery(this).attr('max'));
-
-        if(get_value <= max_value){
-            jQuery(this).val(get_value);
-            jQuery(this).attr('value',get_value);
-        }else{
-            jQuery(this).val(max_value);
-            jQuery(this).attr('value',max_value);
-            let notice = "<?php rbfw_string('rbfw_text_available_qty_is',__('Available Quantity is: ','booking-and-rental-manager-for-woocommerce')); ?>";
-            tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top'});
-        }
-    });
 
 
     jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus',function (e) {

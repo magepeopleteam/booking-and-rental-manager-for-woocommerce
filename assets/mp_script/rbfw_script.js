@@ -288,7 +288,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus, 
             jQuery(target_input).attr('value',update_value);
         }
     });
-    jQuery(document).on('change','.rbfw_bikecarsd_qty,.rbfw_service_qty',function (e) {
+    jQuery(document).on('change','.rbfw_bikecarsd_qty',function (e) {
         let get_value = jQuery(this).val();
         let max_value = parseInt(jQuery(this).attr('max'));
 
@@ -305,9 +305,6 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus, 
 
 
     jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus,.rbfw_servicesd_qty_minus,.rbfw_servicesd_qty_plus',function (e) {
-
-
-
 
         let data_cat = jQuery(this).siblings('input[type=number]').attr('data-cat');
         let post_id = jQuery('#rbfw_post_id').val();
@@ -366,6 +363,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus, 
 
     jQuery(document).on('change','.rbfw_bikecarsd_qty, .rbfw_servicesd_qty',function (e) {
         let data_cat         = jQuery(this).attr('data-cat');
+
         if(data_cat == 'bikecarsd'){
             let data_qty         = jQuery(this).attr('value');
             let data_price       = jQuery(this).attr('data-price');
@@ -378,7 +376,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus, 
             }
         }
         if(data_cat == 'service'){  
-            let data_qty         = jQuery(this).attr('value');
+            let data_qty         = jQuery(this).val();
             let data_price       = jQuery(this).attr('data-price');
             let data_type        = jQuery(this).attr('data-type');
             if(data_qty == 0){
@@ -388,6 +386,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus, 
                 service_price_arr[data_type]  = {'data_qty' : data_qty,'data_price' : data_price,'data_type' : data_type};
             }
         }
+
         jQuery.ajax({
             type: 'POST',
             url: rbfw_ajax.rbfw_ajaxurl,
@@ -429,7 +428,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus, 
             jQuery('.rbfw_bikecarsd_es_price_table').hide();
             jQuery('.rbfw_regf_wrap').hide();
             jQuery('.rbfw_bike_car_sd_available_es_qty_notice').hide();
-            jQuery('button.rbfw_bikecarsd_book_now_btn').attr('disabled');
+            jQuery('button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
             jQuery('button.rbfw_bikecarsd_book_now_btn').addClass('rbfw_disabled_button');
         }
     });

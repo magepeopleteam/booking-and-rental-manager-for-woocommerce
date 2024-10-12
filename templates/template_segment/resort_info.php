@@ -14,6 +14,7 @@ if(isset($post_id) && isset($active_tab)){
     $rbfw_resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];
     $rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
     $rbfw_product_id = get_post_meta( $post_id, "link_wc_product", true ) ? get_post_meta( $post_id, "link_wc_product", true ) : $post_id;
+
     $currency_symbol = rbfw_mps_currency_symbol();
     $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
     if($rbfw_payment_system == 'mps'){
@@ -23,7 +24,7 @@ if(isset($post_id) && isset($active_tab)){
     }
     $available_qty_info_switch = get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) : 'no';
 
-?>
+    ?>
 
     <br>
     <div class="rbfw_room_price_category_tabs" data-active="daynight">
@@ -174,7 +175,7 @@ if(isset($post_id) && isset($active_tab)){
                         <div class="rbfw_service_price_wrap">
                             <div class="rbfw_qty_input">
                                 <a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>
-                                <input type="number" min="0" max="<?php echo  esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo  $c ?>][service_qty]" class="rbfw_servicesd_qty" data-price="<?php echo  $value['service_price'] ?>" data-type="<?php echo  $value['service_name'] ?>" data-cat="service"/>
+                                <input type="number" min="0" max="<?php echo  esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo  $c ?>][service_qty]" class="rbfw_service_qty" data-price="<?php echo  $value['service_price'] ?>" data-type="<?php echo  $value['service_name'] ?>" data-cat="service"/>
                                 <a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>
                             </div>
                         </div>
@@ -212,7 +213,7 @@ if(class_exists('Rbfw_Reg_Form')){
 }
 ?>
     <div class="item rbfw_text_book_now">
-        <button type="submit" name="add-to-cart" value="<?php $rbfw_product_id ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_resort_book_now_btn rbfw_disabled_button <?php echo $rbfw_payment_system ?> " disabled>
+        <button type="submit" name="add-to-cart" value="<?php echo $rbfw_product_id ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_resort_book_now_btn rbfw_disabled_button <?php echo $rbfw_payment_system ?> " disabled>
             <?php echo $rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce')) ?>
         </button>
     </div>
