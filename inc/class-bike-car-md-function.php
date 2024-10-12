@@ -46,10 +46,12 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
         function rbfw_total_day_calcilation(){
 
-            $start_date = $_POST['pickup_date'];
-            $end_date = $_POST['dropoff_date'];
+            $start_date = ($_POST['date_format']=='d/m/Y')?str_replace('/', '-', $_POST['pickup_date']):$_POST['pickup_date'];
+            $end_date = ($_POST['date_format']=='d/m/Y')?str_replace('/', '-', $_POST['dropoff_date']):$_POST['dropoff_date'];
+
             $star_time = (isset($_POST['pickup_time']) && $_POST['pickup_time'])?$_POST['pickup_time']:'00:00:00';
             $end_time = (isset($_POST['dropoff_time']) && $_POST['dropoff_time'])?$_POST['dropoff_time']:rbfw_end_time();
+
 
             $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
             $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
@@ -75,8 +77,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $post_id = $_POST['post_id'];
 
-            $start_date = $_POST['pickup_date'];
-            $end_date = $_POST['dropoff_date'];
+
+            $start_date = ($_POST['date_format']=='d/m/Y')?str_replace('/', '-', $_POST['pickup_date']):$_POST['pickup_date'];
+            $end_date = ($_POST['date_format']=='d/m/Y')?str_replace('/', '-', $_POST['dropoff_date']):$_POST['dropoff_date'];
+
             $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'00:00:00';
             $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:rbfw_end_time();
             $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));

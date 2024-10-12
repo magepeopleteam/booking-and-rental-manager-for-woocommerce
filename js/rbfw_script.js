@@ -3,10 +3,24 @@
         const service_id = $('.rbfw-single-container').attr('data-service-id');
         // DatePicker
         let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
+        let wp_date_format = jQuery('#wp_date_format').val();
+
+       // alert(wp_date_format);
+
+        if(wp_date_format=='F j, Y'){
+            wp_date_format = 'dd M yy';
+        }else if(wp_date_format=='m/d/Y'){
+            wp_date_format = 'mm/dd/yy';
+        }else if(wp_date_format=='d/m/Y'){
+            wp_date_format = 'dd/mm/yy';
+        }else{
+            wp_date_format = 'yy-mm-dd';
+        }
+       // wp_date_format = 'yy-mm-dd';
 
         $('body').on('focusin', '.pickup_date', function(e) {
             $(this).datepicker({
-                dateFormat: 'yy-mm-dd',
+                dateFormat: wp_date_format,
                 minDate: 0,
                 beforeShowDay: function(date)
                 {
@@ -18,12 +32,27 @@
         jQuery('body').on('change', '.pickup_date', function(e) {
 
             let selected_date = jQuery(this).val();
-            const [gYear, gMonth, gDay] = selected_date.split('-');
+            let selected_date_tostring = new Date(jQuery(this).val());
+
+           let gDay = '';
+           let gMonth = '';
+           let gYear = '';
+
+            if(wp_date_format=='dd/mm/yy'){
+                 gDay = selected_date.split('/')[0];
+                 gMonth = selected_date.split('/')[1] - 1;
+                 gYear = selected_date.split('/')[2];
+            }else{
+                 gYear = selected_date_tostring.getFullYear();
+                 gMonth = selected_date_tostring.getMonth();
+                 gDay = selected_date_tostring.getDate();
+            }
+
             jQuery(".dropoff_date").datepicker("destroy");
 
             jQuery('.dropoff_date').datepicker({
-                dateFormat: 'yy-mm-dd',
-                minDate: new Date(gYear, gMonth - 1, gDay),
+                dateFormat: wp_date_format,
+                minDate: new Date(gYear, gMonth, gDay),
                 beforeShowDay: function(date)
                 {
                     return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);

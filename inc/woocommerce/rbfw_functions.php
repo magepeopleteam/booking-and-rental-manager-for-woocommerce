@@ -209,10 +209,11 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
     }else {
 
-        $start_date = $_POST['rbfw_pickup_start_date'];
-        $end_date = $_POST['rbfw_pickup_end_date'];
+        $start_date = ($_POST['wp_date_format']=='d/m/Y')?str_replace('/', '-', $_POST['rbfw_pickup_start_date']):$_POST['rbfw_pickup_start_date'];
+        $end_date = ($_POST['wp_date_format']=='d/m/Y')?str_replace('/', '-', $_POST['rbfw_pickup_end_date']):$_POST['rbfw_pickup_end_date'];
         $start_time = isset($_POST['rbfw_pickup_start_time'])?$_POST['rbfw_pickup_start_time']:'00:00:00';
         $end_time = isset($_POST['rbfw_pickup_end_time'])?$_POST['rbfw_pickup_end_time']:rbfw_end_time();
+
         $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $start_time));
         $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
