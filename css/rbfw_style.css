@@ -285,12 +285,13 @@ CSS for Single Page Template
 }
 
 .rbfw-single-right-container .item {
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 .rbfw-single-right-container .item:first-child {
     margin-top: 0px;
 }
+
 
 .rbfw-single-right-heading {
     font-size: 16px;
@@ -508,6 +509,7 @@ CSS for Single Page Template
     padding: 10px !important;
     border: none;
     font-weight: 700;
+    margin-top: 20px;
 }
 
 .mp_right_section button.rbfw-book-now-btn[disabled] {
