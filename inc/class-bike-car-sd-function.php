@@ -444,7 +444,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $nowDate  = $date->format('Y-m-d');
 
                 $date_to_string = new DateTime($selected_date);
-                $result = $date_to_string->format('F j, Y');
+                $result = $date_to_string->format(get_option('date_format'));
 
                 ob_start();
                 $content  = '';
