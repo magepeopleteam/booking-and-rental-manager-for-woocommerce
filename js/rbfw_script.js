@@ -1,5 +1,6 @@
 (function($) {
     $(document).ready(function() {
+
         const service_id = $('.rbfw-single-container').attr('data-service-id');
         // DatePicker
         let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
@@ -34,9 +35,7 @@
             let selected_date = jQuery(this).val();
             let selected_date_tostring = new Date(jQuery(this).val());
 
-           let gDay = '';
-           let gMonth = '';
-           let gYear = '';
+
 
             if(wp_date_format=='dd/mm/yy'){
                  gDay = selected_date.split('/')[0];

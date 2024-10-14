@@ -20,6 +20,8 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 <?php if($rbfw_rent_type == 'resort'){
 
     $start_datetime    = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
+
+
     $end_datetime 		= $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
     $rbfw_room_price_category 	= $cart_item['rbfw_room_price_category'] ? $cart_item['rbfw_room_price_category'] : '';
 

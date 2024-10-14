@@ -113,6 +113,7 @@
                 <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
                 <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range" class="llll"  value='<?php echo rbfw_off_dates($post_id); ?>'>
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
+
 			</form>
 		</div>
 		<!--    Right Side END-->

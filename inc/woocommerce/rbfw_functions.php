@@ -81,6 +81,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $rbfw_room_price_category = isset($_POST['rbfw_room_price_category']) ? rbfw_array_strip($_POST['rbfw_room_price_category']) : '';
         $rbfw_room_info_all = isset($_POST['rbfw_room_info']) ? rbfw_array_strip($_POST['rbfw_room_info']) : [];
 
+
         $rbfw_room_info = array();
         $i = 0;
         foreach ($rbfw_room_info_all as $key => $value) {
@@ -116,7 +117,10 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
 
 
+
+
         $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info($rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info);
+
 
 
 
