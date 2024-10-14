@@ -22,6 +22,8 @@ if(isset($_POST['post_id'])){
     $date_to_string = new DateTime($selected_date);
     $result = $date_to_string->format(get_option('date_format'));
 
+    //echo  $date_to_string->format(get_option('date_format'));exit;
+
 
 
     $currency_symbol = rbfw_mps_currency_symbol();

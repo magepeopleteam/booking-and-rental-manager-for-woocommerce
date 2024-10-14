@@ -132,7 +132,7 @@
 
                 asort($rbfw_time_slots);
 
-      
+
 
 
                 $rdfw_available_time = get_post_meta($post_id,'rdfw_available_time',true) ? maybe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];

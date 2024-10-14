@@ -444,7 +444,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $nowDate  = $date->format('Y-m-d');
 
                 $date_to_string = new DateTime($selected_date);
-                $result = $date_to_string->format('F j, Y');
+                $result = $date_to_string->format(get_option('date_format'));
 
                 ob_start();
                 $content  = '';
@@ -458,7 +458,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 if($is_muffin_template == 1){
                     $content .= '<div class="rbfw_step_selected_date rbfw_muff_selected_date">';
-                    $content .= '<div class="rbfw_muff_selected_date_col"><span class="rbfw_muff_selected_date_value">'.$result.'</span></div>';
+                    $content .= '<div class="rbfw_muff_selected_date_col"><span class="rbfw_muff_selected_date_value">'.$result.'hhh</span></div>';
                     $content .= '</div>';
                 }
 
