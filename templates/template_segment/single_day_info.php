@@ -20,7 +20,10 @@ if(isset($_POST['post_id'])){
     $nowDate  = $date->format('Y-m-d');
 
     $date_to_string = new DateTime($selected_date);
-    $result = $date_to_string->format('F j, Y');
+    $result = $date_to_string->format(get_option('date_format'));
+
+
+
     $currency_symbol = rbfw_mps_currency_symbol();
     $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
@@ -73,16 +76,16 @@ if(isset($_POST['post_id'])){
                             <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </div>
 
-                                <div class="tab">
-                                    <?php foreach ($option_value as $cat=>$item){ ?>
-                                        <?php if($item['cat_title']){ ?>
-                                            <button class="tablinks" onclick="openCity(event, 'service_item_<?php echo $cat ?>')"><?php echo $item['cat_title'] ?></button>
-                                            <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][cat_title]" value="<?php echo $item['cat_title'] ?>">
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                                </div>
+                        <div class="tab">
+                            <?php foreach ($option_value as $cat=>$item){ ?>
+                                <?php if($item['cat_title']){ ?>
+                                    <button class="tablinks" onclick="openCity(event, 'service_item_<?php echo $cat ?>')"><?php echo $item['cat_title'] ?></button>
+                                    <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][cat_title]" value="<?php echo $item['cat_title'] ?>">
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </div>
 
                                 <?php foreach ($option_value as $cat=>$item){ ?>
                                     <?php if($item['cat_title']){ ?>

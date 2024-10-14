@@ -77,7 +77,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $post_id = $_POST['post_id'];
 
-
             $start_date = ($_POST['date_format']=='d/m/Y')?str_replace('/', '-', $_POST['pickup_date']):$_POST['pickup_date'];
             $end_date = ($_POST['date_format']=='d/m/Y')?str_replace('/', '-', $_POST['dropoff_date']):$_POST['dropoff_date'];
 
@@ -94,7 +93,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime);
             $duration_price_info = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$star_time,$end_time,$rbfw_available_time);
-            $duration_price = $duration_price_info['duration_price']*$item_quantity;
+            $duration_price = $duration_price_info['duration_price'] * $item_quantity;
             $total_days = $duration_price_info['total_days'];
             $actual_days = $duration_price_info['actual_days'];
             $hours = $duration_price_info['hours'];
@@ -109,7 +108,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
                 if(function_exists('rbfw_get_discount_array')){
                     $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price);
-                    $discount_amount = $discount_arr['discount_amount'];
+                    $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
                 }
             }
 

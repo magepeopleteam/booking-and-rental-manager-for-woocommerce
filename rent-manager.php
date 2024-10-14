@@ -110,7 +110,6 @@ if(! class_exists('RBFW_Rent_Manager')){
 
         public function include_plugin_files() {
             require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Dependencies.php';
-            
         }
 
         public function flush_rules_on_save_posts( $post_id ) {

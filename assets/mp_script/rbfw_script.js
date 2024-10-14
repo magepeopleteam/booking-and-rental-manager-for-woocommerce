@@ -76,6 +76,9 @@ jQuery(function(){
 
 function onclick_cal_date(date) {
 
+
+
+
     jQuery('#rbfw-bikecarsd-calendar').updateCalendarOptions({
         date: date
     });
@@ -84,7 +87,12 @@ function onclick_cal_date(date) {
     let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(d);
     let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
     let s_Date = ye+'-'+mo+'-'+da;
+
+
+
     jQuery('#rbfw_bikecarsd_selected_date').val(s_Date);
+
+
     let post_id = jQuery('#rbfw_post_id').val();
     let is_muffin_template = jQuery('.rbfw_muffin_template').length;
 
@@ -138,7 +146,6 @@ function onclick_cal_date(date) {
                 jQuery('.rbfw-bikecarsd-result').append(response);
                 var time_slot_switch = jQuery('#time_slot_switch').val();
 
-             
 
                 if(time_slot_switch != 'on'){
                     rbfw_bikecarsd_without_time_func();

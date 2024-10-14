@@ -3,12 +3,16 @@ global $rbfw;
 if(!($post_id && $active_tab)){
     $post_id = $_POST['post_id'];
     $active_tab = $_POST['active_tab'];
+
     $checkin_date = strip_tags($_POST['checkin_date']);
     $checkout_date = strip_tags($_POST['checkout_date']);
 }
 if(isset($post_id) && isset($active_tab)){
+
     $origin             = date_create($checkin_date);
     $target             = date_create($checkout_date);
+
+
     $interval           = date_diff($origin, $target);
     $total_days         = $interval->format('%a');
     $rbfw_resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];

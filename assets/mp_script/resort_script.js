@@ -6,7 +6,7 @@ let room_prices_arr = {};
 let service_prices_arr = {};
 
 jQuery('#checkin_date').datepicker({
-    dateFormat: 'yy-mm-dd',
+    dateFormat: js_date_format,
     minDate: 0,
     beforeShowDay: function(date)
     {
@@ -17,7 +17,26 @@ jQuery('#checkin_date').datepicker({
 jQuery('#checkin_date').change(function(e) {
 
     let selected_date = jQuery(this).val();
-    const [gYear, gMonth, gDay] = selected_date.split('-');
+
+
+    let selected_date_tostring = new Date(jQuery(this).val());
+
+    let gDay = '';
+    let gMonth = '';
+    let gYear = '';
+
+    if(js_date_format=='dd/mm/yy'){
+        gDay = selected_date.split('/')[0];
+        gMonth = selected_date.split('/')[1] - 1;
+        gYear = selected_date.split('/')[2];
+    }else{
+        gYear = selected_date_tostring.getFullYear();
+        gMonth = selected_date_tostring.getMonth();
+        gDay = selected_date_tostring.getDate();
+    }
+
+
+
     if(rbfw_enable_resort_daylong_price=='no'){
          var extra_day = 1;
     }else {
@@ -28,7 +47,7 @@ jQuery('#checkin_date').change(function(e) {
     jQuery("#checkout_date").val('');
     jQuery("#checkout_date").attr('value', '');
     jQuery('#checkout_date').datepicker({
-        dateFormat: 'yy-mm-dd',
+        dateFormat: js_date_format,
         minDate: new Date(gYear, gMonth - 1, parseInt(gDay) + extra_day),
         beforeShowDay: function(date)
         {
