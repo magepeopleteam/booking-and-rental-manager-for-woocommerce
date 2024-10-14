@@ -458,7 +458,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 if($is_muffin_template == 1){
                     $content .= '<div class="rbfw_step_selected_date rbfw_muff_selected_date">';
-                    $content .= '<div class="rbfw_muff_selected_date_col"><span class="rbfw_muff_selected_date_value">'.$result.'hhh</span></div>';
+                    $content .= '<div class="rbfw_muff_selected_date_col"><span class="rbfw_muff_selected_date_value">'.$result.'</span></div>';
                     $content .= '</div>';
                 }
 
