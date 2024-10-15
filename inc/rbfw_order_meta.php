@@ -2,7 +2,6 @@
 /*
 * Author 	:	MagePeople Team
 * Copyright	: 	mage-people.com
-
 */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -212,14 +211,14 @@ function rbfw_order_meta_box_callback(){
                     }
 
                     $variation_info = !empty($ticket_info['rbfw_variation_info']) ? $ticket_info['rbfw_variation_info'] : [];
-                    $duration_cost = rbfw_mps_price($ticket_info['duration_cost']);
-                    $service_cost = rbfw_mps_price($ticket_info['service_cost']);
+                    $duration_cost = $ticket_info['duration_cost'];
+                    $service_cost = $ticket_info['service_cost'];
                     $subtotal += $ticket_info['ticket_price'];
-                    $total_cost = rbfw_mps_price($ticket_info['ticket_price']);
+                    $total_cost = $ticket_info['ticket_price'];
                     $discount_amount = !empty($ticket_info['discount_amount']) ? (float)$ticket_info['discount_amount'] : 0;
 
                     $security_deposit_amount = !empty($ticket_info['security_deposit_amount']) ? (float)$ticket_info['security_deposit_amount'] : 0;
-                    $security_deposit_amount = rbfw_mps_price($security_deposit_amount);
+                    $security_deposit_amount = $security_deposit_amount;
 
                     $discount_type = !empty($ticket_info['discount_type']) ? $ticket_info['discount_type'] : '';
                     $rbfw_regf_info = !empty($ticket_info['rbfw_regf_info']) ? $ticket_info['rbfw_regf_info'] : [];
@@ -436,48 +435,50 @@ function rbfw_order_meta_box_callback(){
                             <?php if(!empty($variation_info)){
                             foreach ($variation_info as $key => $value) {
                             ?>
-                            <tr>
-                                <td><strong><?php echo esc_html($value['field_label']); ?></strong></td>
-                                <td><?php echo esc_html($value['field_value']); ?></td>
-                            </tr>
+                                <tr>
+                                    <td><strong><?php echo esc_html($value['field_label']); ?></strong></td>
+                                    <td><?php echo esc_html($value['field_value']); ?></td>
+                                </tr>
                             <?php } } ?>
 
                             <tr>
                                 <td><strong><?php rbfw_string('rbfw_text_duration_cost',__('Duration Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                                <td><?php echo $duration_cost; ?></td>
+                                <td><?php echo wc_price($duration_cost); ?></td>
                             </tr>
-                            <tr>
-                                <td><strong><?php rbfw_string('rbfw_text_resource_cost',__('Resource Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                                <td><?php echo $service_cost; ?></td>
-                            </tr>
+                            <?php if($service_cost){ ?>
+                                <tr>
+                                    <td><strong><?php rbfw_string('rbfw_text_resource_cost',__('Resource Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                                    <td><?php echo wc_price($service_cost); ?></td>
+                                </tr>
+                            <?php } ?>
+
                             <?php if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($tax)){ ?>
                             <tr>
                                 <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
-                                <td><?php echo rbfw_mps_price($tax); ?></td>
+                                <td><?php echo wc_price($tax); ?></td>
                             </tr>
                             <?php } ?>
 
 
 
                             <?php if($discount_amount){ ?>
-                            <tr>
-                                <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
-                                <td><?php echo $discount_amount; ?></td>
-                            </tr>
+                                <tr>
+                                    <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
+                                    <td><?php echo wc_price($discount_amount); ?></td>
+                                </tr>
                             <?php } ?>
 
 
                             <?php if($security_deposit_amount){ ?>
                                 <tr>
                                     <td><strong><?php echo (!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit'); ?>:</strong></td>
-                                    <td><?php echo $security_deposit_amount; ?></td>
+                                    <td><?php echo wc_price($security_deposit_amount); ?></td>
                                 </tr>
                             <?php } ?>
 
-
                             <tr>
                                 <td><strong><?php rbfw_string('rbfw_text_total_cost',__('Total Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                                <td><?php echo $total_cost.' '.$tax_status; ?></td>
+                                <td><?php echo wc_price($total_cost).' '.$tax_status; ?></td>
                             </tr>
                         </tbody>
                     </table>
@@ -513,7 +514,7 @@ function rbfw_order_meta_box_callback(){
                     </tr>
                     <tr>
                         <td><strong><?php rbfw_string('rbfw_text_total_cost',__('Total Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                        <td><?php echo $grand_total; ?></td>
+                        <td><?php echo wc_price($grand_total); ?></td>
                     </tr>
                 </tbody>
             </table>

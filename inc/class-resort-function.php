@@ -302,8 +302,17 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
         public function rbfw_resort_price_calculation($product_id, $checkin_date, $checkout_date, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info = array(), $rbfw_request = null){
             global $rbfw;
             if( !empty($product_id) && !empty($checkin_date) && !empty($checkout_date) && !empty($rbfw_room_info) ):
+
+
+                $checkin_date = (get_option('date_format')=='d/m/Y')?str_replace('/', '-', $checkin_date):$checkin_date;
+                $checkout_date = (get_option('date_format')=='d/m/Y')?str_replace('/', '-', $checkout_date):$checkout_date;
+
+
+
                 $origin             = date_create($checkin_date);
                 $target             = date_create($checkout_date);
+
+
                 $interval           = date_diff($origin, $target);
                 $total_days         = $interval->format('%a');
                 $room_price         = 0;
@@ -400,15 +409,19 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
         public function rbfw_check_resort_availibility(){
 
-            $origin             = date_create($_POST['checkin_date']);
-            $target             = date_create($_POST['checkout_date']);
+
+            $start_date = (get_option('date_format')=='d/m/Y')?str_replace('/', '-', $_POST['checkin_date']):$_POST['checkin_date'];
+            $end_date = (get_option('date_format')=='d/m/Y')?str_replace('/', '-', $_POST['checkout_date']):$_POST['checkout_date'];
+
+
+
+            $origin             = date_create($start_date);
+            $target             = date_create($end_date);
             $interval           = date_diff($origin, $target);
             $total_days         = $interval->format('%a');
 
-
             if($total_days){
                 $price_type = 'daynight';
-
             }else{
                 $price_type = 'daylong';
             }
@@ -416,9 +429,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
         }
 
         public function rbfw_get_active_price_table($post_id=0,$active_tab='',$checkin_date='',$checkout_date=''){
-
             include( RBFW_Function::get_template_path( 'template_segment/resort_info.php' ) );
-
             wp_die();
         }
 
@@ -426,10 +437,12 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             if(isset($_POST['checkin_date']) && isset($_POST['checkout_date'])):
             global $rbfw;
             $content            = '';
-            $checkin_date       = $_POST['checkin_date'];
-            $checkout_date      = $_POST['checkout_date'];
-            $start_date = $checkin_date;
-            $end_date = $checkout_date;
+
+
+            $checkin_date = (get_option('date_format')=='d/m/Y')?str_replace('/', '-', $_POST['checkin_date']):$_POST['checkin_date'];
+            $checkout_date = (get_option('date_format')=='d/m/Y')?str_replace('/', '-', $_POST['checkout_date']):$_POST['checkout_date'];
+
+
             $post_id            = strip_tags($_POST['post_id']);
             $origin             = date_create($checkin_date);
             $target             = date_create($checkout_date);
@@ -560,7 +573,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             $rbfw_enable_resort_daylong_price  = get_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', true ) : 'no';
             ?>
             <script>
-            jQuery(document).ready(function(){
+                jQuery(document).ready(function(){
 				// Rent type change action
 
                 let rbfw_item_type = jQuery('#rbfw_item_type').val();

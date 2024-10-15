@@ -9,9 +9,13 @@ if(!($post_id && $active_tab)){
 }
 if(isset($post_id) && isset($active_tab)){
 
+
+    $checkin_date = (get_option('date_format')=='d/m/Y')?str_replace('/', '-', $checkin_date):$checkin_date;
+    $checkout_date = (get_option('date_format')=='d/m/Y')?str_replace('/', '-', $checkout_date):$checkout_date;
+
+
     $origin             = date_create($checkin_date);
     $target             = date_create($checkout_date);
-
 
     $interval           = date_diff($origin, $target);
     $total_days         = $interval->format('%a');

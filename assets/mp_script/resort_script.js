@@ -36,7 +36,6 @@ jQuery('#checkin_date').change(function(e) {
     }
 
 
-
     if(rbfw_enable_resort_daylong_price=='no'){
          var extra_day = 1;
     }else {
@@ -48,7 +47,7 @@ jQuery('#checkin_date').change(function(e) {
     jQuery("#checkout_date").attr('value', '');
     jQuery('#checkout_date').datepicker({
         dateFormat: js_date_format,
-        minDate: new Date(gYear, gMonth - 1, parseInt(gDay) + extra_day),
+        minDate: new Date(gYear, gMonth , parseInt(gDay) + extra_day),
         beforeShowDay: function(date)
         {
             return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
