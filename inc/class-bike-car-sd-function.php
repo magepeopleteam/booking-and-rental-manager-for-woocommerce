@@ -508,6 +508,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
         public function rbfw_bikecarsd_ajax_price_calculation(){
 
+
+
                 global $rbfw;
                 $content            = '';          
                 $bikecarsd_price_arr     = !empty($_POST['bikecarsd_price_arr']) ? $_POST['bikecarsd_price_arr'] : [];
@@ -571,7 +573,6 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                                             $content.= '<li class="tax">'.$rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')).'<span class="price-figure" data-price="'.$percent.'">'.rbfw_mps_price($percent).'</span></li>';
                                         }
-
 
                                         $security_deposit = rbfw_security_deposit($post_id,$subtotal_price);
 
