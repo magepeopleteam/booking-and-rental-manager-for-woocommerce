@@ -1,7 +1,7 @@
 <?php
 /*
 * Author 	:	MagePeople Team
-* Copyright	: 	mage-people.com
+* Copyright	:	mage-people.com
 * Developer :   Ariful
 * Version	:	1.0.0
 */
@@ -12,75 +12,169 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if (!class_exists('RBFWOrderPage')) {
 
-	class RBFWOrderPage{
+	class RBFWOrderPage {
 
-        public function rbfw_order_page(){
-            $args = array(
-                'post_type' => 'rbfw_order',
-                'order' => 'DESC',
-                'posts_per_page' => -1
-            );
-            $query = new WP_Query( $args );
-            ?>
-            <div class="rbfw_order_page_wrap wrap">
-                <h1><?php esc_html_e('Order List','booking-and-rental-manager-for-woocommerce'); ?></h1>
-                <table class="rbfw_order_page_table">
-                    <thead>
-                        <tr>
-                            <th><?php esc_html_e('Order','booking-and-rental-manager-for-woocommerce'); ?></th>
-                            <th><?php esc_html_e('Order Created Date','booking-and-rental-manager-for-woocommerce'); ?></th>
-                            <th><?php esc_html_e('Booking Start Date','booking-and-rental-manager-for-woocommerce'); ?></th>
-                            <th><?php esc_html_e('Status','booking-and-rental-manager-for-woocommerce'); ?></th>
-                            <th><?php esc_html_e('Total','booking-and-rental-manager-for-woocommerce'); ?></th>
-                            <th><?php esc_html_e('Action','booking-and-rental-manager-for-woocommerce'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    <?php 
-                    if ( $query->have_posts() ) { 
-                        while ( $query->have_posts() ) {
-                        $query->the_post();
-                        global $post;
-                        $post_id = $post->ID;
-                        $status = get_post_meta($post_id, 'rbfw_order_status', true);
-                        $total_price = get_post_meta($post_id, 'rbfw_ticket_total_price', true);
-                        $start_date = get_post_meta($post_id, 'rbfw_start_datetime', true);
-                        $ticket_infos = !empty(get_post_meta($post_id,'rbfw_ticket_info',true)) ? get_post_meta($post_id,'rbfw_ticket_info',true) : [];
-                        $rbfw_start_datetime = '';
-                        if(!empty($ticket_infos)){
-                            $rbfw_start_datetime .= '<ul>';
-                            foreach ($ticket_infos as $ticket_info) {
-                                $rbfw_start_datetime .= '<li>'.rbfw_get_datetime($ticket_info['rbfw_start_datetime'], 'date-time-text').'</li>';
-                            }
-                            $rbfw_start_datetime .= '</ul>';
-                        }
+		private $posts_per_page = 10; // Default number of posts to display per page
 
+		public function rbfw_order_page() {
+			// Retrieve the selected posts per page value from the URL or use the default
+			$this->posts_per_page = isset($_GET['posts_per_page']) ? intval($_GET['posts_per_page']) : $this->posts_per_page;
 
-                    ?>
-                        <tr>
-                            <td><a href="<?php echo esc_url(admin_url('post.php?post='.$post_id.'&action=edit')); ?>" class="rbfw_order_title"><?php echo esc_html(get_the_title()); ?></a></td>
-                            <td><?php echo esc_html(get_the_date( 'F j, Y' )).' '.esc_html(get_the_time()); ?></td>
-                            <td><?php echo $rbfw_start_datetime; ?></td>
-                            <td><span class="rbfw_order_status <?php echo $status; ?>"><?php echo esc_html($status); ?></span></td>
-                            <td><?php echo rbfw_mps_price($total_price); ?></td>
-                            <td><a href="<?php echo esc_url(admin_url('post.php?post='.$post_id.'&action=edit')); ?>" class="rbfw_order_edit_btn"><i class="fa-solid fa-pen-to-square"></i> <?php esc_html_e('Edit','booking-and-rental-manager-for-woocommerce'); ?></a></td>
-                        </tr>
-                    <?php
-                        }
-                    }else{
-                        ?>
-                        <tr>
-                            <td colspan="20"><?php esc_html_e( 'Sorry, No data found!', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
-                        </tr>
-                        <?php
-                    }
-                    wp_reset_postdata();
-                    ?>    
-                    </tbody>
-                </table>
-            </div>
-            <?php
-        }
-    }
-    new RBFWOrderPage();
+			$args = array(
+				'post_type' => 'rbfw_order',
+				'order' => 'DESC',
+				'posts_per_page' => -1
+			);
+			$query = new WP_Query($args);
+			$total_posts = $query->post_count; // Get total posts
+			?>
+
+			<div class="rbfw_order_page_wrap wrap">
+				<h1><?php esc_html_e('Order List', 'booking-and-rental-manager-for-woocommerce'); ?></h1>
+
+				
+
+				<!-- Search Input -->
+				<input type="text" id="search" class="search-input" placeholder="<?php esc_attr_e('Search by order id or customer name..', 'booking-and-rental-manager-for-woocommerce'); ?>" />
+
+				<table class="rbfw_order_page_table">
+					<thead>
+						<tr>
+							<th><?php esc_html_e('Order', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+							<th><?php esc_html_e('Order Created Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+							<th><?php esc_html_e('Booking Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+							<th><?php esc_html_e('Booking End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+							<th><?php esc_html_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+							<th><?php esc_html_e('Total', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+							<th><?php esc_html_e('Action', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+						</tr>
+					</thead>
+					<tbody id="order-list">
+						<?php
+						if ($query->have_posts()) {
+							while ($query->have_posts()) {
+								$query->the_post();
+								global $post;
+								$post_id = $post->ID;
+								$status = get_post_meta($post_id, 'rbfw_order_status', true);
+								$total_price = get_post_meta($post_id, 'rbfw_ticket_total_price', true);
+								$ticket_infos = get_post_meta($post_id, 'rbfw_ticket_info', true);
+								$ticket_info_array = maybe_unserialize($ticket_infos);
+								$rbfw_start_datetime = '';
+								$rbfw_end_datetime = '';
+								if (!empty($ticket_info_array) && is_array($ticket_info_array)) {
+									foreach ($ticket_info_array as $ticket_info) {
+										$rbfw_start_datetime = isset($ticket_info['rbfw_start_datetime']) ? $ticket_info['rbfw_start_datetime'] : '';
+										$rbfw_end_datetime = isset($ticket_info['rbfw_end_datetime']) ? $ticket_info['rbfw_end_datetime'] : '';
+									}
+								}
+						?>
+								<tr class="order-row">
+									<td><a href="<?php echo esc_url(admin_url('post.php?post=' . $post_id . '&action=edit')); ?>" class="rbfw_order_title"><?php echo esc_html(get_the_title()); ?></a></td>
+									<td><?php echo esc_html(get_the_date('F j, Y') . ' ' . get_the_time()); ?></td>
+									<td><?php echo esc_html($rbfw_start_datetime); ?></td>
+									<td><?php echo esc_html($rbfw_end_datetime); ?></td>
+									<td><span class="rbfw_order_status <?php echo esc_attr($status); ?>"><?php echo esc_html($status); ?></span></td>
+									<td><?php echo rbfw_mps_price($total_price); ?></td>
+									<td><a href="<?php echo esc_url(admin_url('post.php?post=' . $post_id . '&action=edit')); ?>" class="rbfw_order_edit_btn"><i class="fa-solid fa-pen-to-square"></i> <?php esc_html_e('Edit', 'booking-and-rental-manager-for-woocommerce'); ?></a></td>
+								</tr>
+						<?php
+							}
+						} else {
+						?>
+							<tr>
+								<td colspan="7"><?php esc_html_e('Sorry, No data found!', 'booking-and-rental-manager-for-woocommerce'); ?></td>
+							</tr>
+						<?php
+						}
+						wp_reset_postdata();
+						?>
+					</tbody>
+				</table>
+<!-- Posts per Page Dropdown -->
+<label for="posts-per-page"><?php esc_html_e('Posts per Page:', 'booking-and-rental-manager-for-woocommerce'); ?></label>
+    <select id="posts-per-page">
+        <option value="2" <?php selected($this->posts_per_page, 2); ?>>2</option>
+        <option value="5" <?php selected($this->posts_per_page, 5); ?>>5</option>
+        <option value="10" <?php selected($this->posts_per_page, 10); ?>>10</option>
+        <option value="20" <?php selected($this->posts_per_page, 20); ?>>20</option>
+        <option value="25" <?php selected($this->posts_per_page, 25); ?>>25</option>
+        <option value="30" <?php selected($this->posts_per_page, 30); ?>>30</option>
+    </select>
+				<!-- Pagination -->
+				<div id="pagination" class="pagination"></div>
+			</div>
+
+			<script>
+				document.addEventListener('DOMContentLoaded', function () {
+					const rows = document.querySelectorAll('.order-row');
+					let rowsPerPage = <?php echo $this->posts_per_page; ?>;
+					let currentPage = 1;
+					const paginationElement = document.getElementById('pagination');
+
+					// Function to display rows based on the current page
+					function displayRows(page) {
+						const start = (page - 1) * rowsPerPage;
+						const end = start + rowsPerPage;
+
+						rows.forEach((row, index) => {
+							row.style.display = (index >= start && index < end) ? '' : 'none';
+						});
+					}
+
+					// Function to set up pagination
+					function setupPagination() {
+						paginationElement.innerHTML = '';
+						const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+						for (let i = 1; i <= totalPages; i++) {
+							const button = document.createElement('button');
+							button.className = 'page-button';
+							button.textContent = i;
+							button.dataset.page = i;
+
+							button.addEventListener('click', function () {
+								currentPage = parseInt(this.dataset.page);
+								displayRows(currentPage);
+								document.querySelectorAll('.page-button').forEach(btn => btn.classList.remove('active'));
+								this.classList.add('active');
+							});
+
+							paginationElement.appendChild(button);
+						}
+						// Set the first button as active by default
+						if (paginationElement.firstChild) {
+							paginationElement.firstChild.classList.add('active');
+						}
+					}
+
+					// Search functionality
+					document.getElementById('search').addEventListener('keyup', function () {
+						const filter = this.value.toLowerCase();
+						rows.forEach(row => {
+							const title = row.cells[0].textContent.toLowerCase();
+							row.style.display = title.includes(filter) ? '' : 'none';
+						});
+						// Reset pagination on search
+						currentPage = 1;
+						displayRows(currentPage);
+					});
+
+					// Dropdown change event
+					document.getElementById('posts-per-page').addEventListener('change', function () {
+						rowsPerPage = parseInt(this.value);
+						setupPagination();
+						displayRows(1); // Reset to the first page
+					});
+
+					// Initial setup
+					setupPagination();
+					displayRows(currentPage);
+				});
+			</script>
+			<?php
+		}
+	}
+	new RBFWOrderPage();
 }
+
