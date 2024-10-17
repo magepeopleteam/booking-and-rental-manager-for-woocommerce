@@ -143,35 +143,39 @@
 
 				?>
 				<div class='rbfw_remove_area rbfw_faq_item'>
-					<h4 class="rbfw_faq_header">
-						<i class="fas fa-plus"></i> 
-						<?php echo esc_html( $title_value ); ?>
-						<input type="hidden" class="formControl" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
-					</h4>
-					<div class="rbfw_faq_content_wrapper">
-						<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
-						<div class="rbfw_multi_image rbfw_faq_img">
-							<?php
-								$all_images = explode( ',', $images );
-								if ( $images && sizeof( $all_images ) > 0 ) {
-									foreach ( $all_images as $image ) {
-										?>
-										<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
-											<span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>
-											<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
-										</div>
-										<?php
-									}
-								}
-							?>
+					<div class="rbfw_faq_header">
+						<div class="rbfw_faq_accordion_icon"><i class="fas fa-plus"></i></div> 
+						<div class="rbfw_faq_header_title"><?php echo esc_html( $title_value ); ?></div>
+						<input type="hidden" class="formControl rbfw_faq_hid_input" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
+						<div class="rbfw_faq_action_btns">
+							<span class="rbfw_faq_item_edit"><i class='far fa-edit'></i></span>
+							<span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
 						</div>
-						<p class="rbfw_faq_desc">
-							<?php echo $content; ?>
-							<input type="hidden" class="formControl" name="<?php echo esc_attr( $content_name ); ?>[]" value="<?php echo $content; ?>"/>
-						</p>
 					</div>
-					
-					<span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
+					<div class="rbfw_faq_content_wrapper">
+						<div class="rbfw_multi_image_area">
+							<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
+								<div class="rbfw_multi_image rbfw_faq_img">
+									<?php
+										$all_images = explode( ',', $images );
+										if ( $images && sizeof( $all_images ) > 0 ) {
+											foreach ( $all_images as $image ) {
+												?>
+												<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
+													<span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>
+													<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
+												</div>
+												<?php
+											}
+										}
+									?>
+								</div>
+							</div>
+							<div class="rbfw_faq_desc">
+								<?php echo $content; ?>
+							</div>
+							<input type="hidden" class="formControl rbfw_faq_hid_input" name="<?php echo esc_attr( $content_name ); ?>[]" value="<?php echo $content; ?>"/>	
+					</div>
 				</div>
 				<?php
 				return ob_get_clean();
@@ -230,12 +234,51 @@
 
 					$('.rbfw_faq_header').click(function(e){
 						e.preventDefault();
-						$(this).next('.rbfw_faq_content_wrapper').slideToggle();
-						$(this).find('i').toggleClass('fa-plus fa-minus');
+						let parent = $(this).parent('.rbfw_faq_item');
+						parent.find('.rbfw_faq_content_wrapper').slideToggle();
+						parent.find('.rbfw_faq_accordion_icon i').toggleClass('fa-plus fa-minus');
+					});
+				});
+			</script>
+			<script>
+				jQuery(document).ready(function($){
+					$('.rbfw_faq_item_edit').click(function (e) { 
+						e.preventDefault();
+						console.log('d');
+						let parent = $(this).parent('.rbfw_faq_item');
+						console.log(parent);
+						let titleWrap = parent.find('.rbfw_faq_header_title');
+						let descWrap = parent.find('.rbfw_faq_desc');
+						parent.find('.rbfw_faq_content_wrapper').attr('data','display-block');
+						$('.rbfw_faq_hid_input').remove();
 					});
 				});
 			</script>
 			<style>
+				.rbfw-faq-content-wrapper-main .rbfw_faq_item_edit:hover{
+					background-color: #000;
+				}
+				.rbfw-faq-content-wrapper-main .rbfw_faq_header_title{
+					width:85%;
+				}
+				.rbfw-faq-content-wrapper-main div.rbfw_remove_area .rbfw_item_remove,.rbfw-faq-content-wrapper-main .rbfw_faq_item_edit{
+					height: 30px;
+					width: 30px;
+					text-align: center;
+					line-height: 30px;
+					display: inline-block;
+				}
+				.rbfw-faq-content-wrapper-main div.rbfw_remove_area .rbfw_item_remove{
+					position: inherit;
+					border-radius: 0px;
+				}
+				.rbfw-faq-content-wrapper-main .rbfw_faq_item_edit{
+					cursor: pointer;
+					/*position: absolute;*/
+					background-color: var(--mage-primary);
+					color: #fff;
+					border-radius: 0px;
+				}
 				.rbfw-faq-content-wrapper-main .rbfw_faq_img {
 					display: flex;
 				}
@@ -260,7 +303,7 @@
 					color: var(--default-color);
 				}
 
-				.rbfw-faq-content-wrapper-main .rbfw_faq_header i {
+				.rbfw-faq-content-wrapper-main .rbfw_faq_header .rbfw_faq_accordion_icon i{
 					color: var(--rbfw_color_secondary);
 					background-color: #fff;
 					height: 30px;
