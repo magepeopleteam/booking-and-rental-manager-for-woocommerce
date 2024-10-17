@@ -34,11 +34,6 @@ function fetch_order_details_callback() {
         <div class="rbfw_order_meta_box_wrap">
             <div class="rbfw_order_meta_box_body">
                 <h2><?php esc_html_e('Order Details', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
-                <div class="export-print-buttons">
-                    <button id="export-to-excel" class="button button-primary"><?php esc_html_e('Export to Excel', 'booking-and-rental-manager-for-woocommerce'); ?></button>
-                    <button id="print-order-details" class="button button-secondary"><?php esc_html_e('Print Order Details', 'booking-and-rental-manager-for-woocommerce'); ?></button>
-                </div>
-
                 <table class="wp-list-table widefat fixed striped table-view-list">
                     <tbody>
                         <?php if ($billing_name) : ?>
