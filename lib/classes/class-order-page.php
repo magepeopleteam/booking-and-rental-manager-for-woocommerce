@@ -14,10 +14,9 @@ if (!class_exists('RBFWOrderPage')) {
 
 	class RBFWOrderPage {
 
-		private $posts_per_page = 10; // Default number of posts to display per page
+		private $posts_per_page = 10;
 
 		public function rbfw_order_page() {
-			// Retrieve the selected posts per page value from the URL or use the default
 			$this->posts_per_page = isset($_GET['posts_per_page']) ? intval($_GET['posts_per_page']) : $this->posts_per_page;
 
 			$args = array(
@@ -26,15 +25,11 @@ if (!class_exists('RBFWOrderPage')) {
 				'posts_per_page' => -1
 			);
 			$query = new WP_Query($args);
-			$total_posts = $query->post_count; // Get total posts
+			$total_posts = $query->post_count;
 			?>
 
 			<div class="rbfw_order_page_wrap wrap">
 				<h1><?php esc_html_e('Order List', 'booking-and-rental-manager-for-woocommerce'); ?></h1>
-
-				
-
-				<!-- Search Input -->
 				<input type="text" id="search" class="search-input" placeholder="<?php esc_attr_e('Search by order id or customer name..', 'booking-and-rental-manager-for-woocommerce'); ?>" />
 
 				<table class="rbfw_order_page_table">
@@ -76,7 +71,15 @@ if (!class_exists('RBFWOrderPage')) {
 									<td><?php echo esc_html($rbfw_end_datetime); ?></td>
 									<td><span class="rbfw_order_status <?php echo esc_attr($status); ?>"><?php echo esc_html($status); ?></span></td>
 									<td><?php echo rbfw_mps_price($total_price); ?></td>
-									<td><a href="<?php echo esc_url(admin_url('post.php?post=' . $post_id . '&action=edit')); ?>" class="rbfw_order_edit_btn"><i class="fa-solid fa-pen-to-square"></i> <?php esc_html_e('Edit', 'booking-and-rental-manager-for-woocommerce'); ?></a></td>
+									<td><a href="javascript:void(0);" class="rbfw_order_edit_btn" data-post-id="<?php echo $post_id; ?>"><i class="fa-solid fa-pen-to-square"></i> <?php esc_html_e('View Details', 'booking-and-rental-manager-for-woocommerce'); ?></a></td>
+									</tr>
+									<tr id="order-details-<?php echo $post_id; ?>" class="order-details" style="display: none;">
+										<td colspan="7"><div class="order-details-content"></div></td>
+									</tr>
+									<div id="loader" style="display: none;">
+    <div class="loader"></div> <!-- Add a loader element -->
+</div>
+
 								</tr>
 						<?php
 							}
@@ -91,87 +94,133 @@ if (!class_exists('RBFWOrderPage')) {
 						?>
 					</tbody>
 				</table>
-<!-- Posts per Page Dropdown -->
-<label for="posts-per-page"><?php esc_html_e('Posts per Page:', 'booking-and-rental-manager-for-woocommerce'); ?></label>
-    <select id="posts-per-page">
-        <option value="2" <?php selected($this->posts_per_page, 2); ?>>2</option>
-        <option value="5" <?php selected($this->posts_per_page, 5); ?>>5</option>
-        <option value="10" <?php selected($this->posts_per_page, 10); ?>>10</option>
-        <option value="20" <?php selected($this->posts_per_page, 20); ?>>20</option>
-        <option value="25" <?php selected($this->posts_per_page, 25); ?>>25</option>
-        <option value="30" <?php selected($this->posts_per_page, 30); ?>>30</option>
-    </select>
-				<!-- Pagination -->
+					<label for="posts-per-page"><?php esc_html_e('Posts per Page:', 'booking-and-rental-manager-for-woocommerce'); ?></label>
+						<select id="posts-per-page">
+							<option value="2" <?php selected($this->posts_per_page, 2); ?>>2</option>
+							<option value="5" <?php selected($this->posts_per_page, 5); ?>>5</option>
+							<option value="10" <?php selected($this->posts_per_page, 10); ?>>10</option>
+							<option value="20" <?php selected($this->posts_per_page, 20); ?>>20</option>
+							<option value="25" <?php selected($this->posts_per_page, 25); ?>>25</option>
+							<option value="30" <?php selected($this->posts_per_page, 30); ?>>30</option>
+						</select>
 				<div id="pagination" class="pagination"></div>
 			</div>
-
 			<script>
-				document.addEventListener('DOMContentLoaded', function () {
-					const rows = document.querySelectorAll('.order-row');
-					let rowsPerPage = <?php echo $this->posts_per_page; ?>;
-					let currentPage = 1;
-					const paginationElement = document.getElementById('pagination');
+document.addEventListener('DOMContentLoaded', function () {
+    const rows = document.querySelectorAll('.order-row');
+    const rowsPerPageSelect = document.getElementById('posts-per-page');
+    let rowsPerPage = parseInt(rowsPerPageSelect.value);
+    let currentPage = 1;
+    const paginationElement = document.getElementById('pagination');
+    
+    function displayRows(page, rowsToShow = rows) {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
 
-					// Function to display rows based on the current page
-					function displayRows(page) {
-						const start = (page - 1) * rowsPerPage;
-						const end = start + rowsPerPage;
+        rows.forEach(row => row.style.display = 'none'); // Hide all rows initially
+        rowsToShow.forEach((row, index) => {
+            if (index >= start && index < end) {
+                row.style.display = ''; // Show rows within the range
+            }
+        });
+    }
 
-						rows.forEach((row, index) => {
-							row.style.display = (index >= start && index < end) ? '' : 'none';
-						});
-					}
+    function setupPagination(rowsToShow = rows) {
+        paginationElement.innerHTML = '';
+        const totalPages = Math.ceil(rowsToShow.length / rowsPerPage);
 
-					// Function to set up pagination
-					function setupPagination() {
-						paginationElement.innerHTML = '';
-						const totalPages = Math.ceil(rows.length / rowsPerPage);
+        for (let i = 1; i <= totalPages; i++) {
+            const button = document.createElement('button');
+            button.className = 'page-button';
+            button.textContent = i;
+            button.dataset.page = i;
 
-						for (let i = 1; i <= totalPages; i++) {
-							const button = document.createElement('button');
-							button.className = 'page-button';
-							button.textContent = i;
-							button.dataset.page = i;
+            button.addEventListener('click', function () {
+                currentPage = parseInt(this.dataset.page);
+                displayRows(currentPage, rowsToShow);
+                document.querySelectorAll('.page-button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
 
-							button.addEventListener('click', function () {
-								currentPage = parseInt(this.dataset.page);
-								displayRows(currentPage);
-								document.querySelectorAll('.page-button').forEach(btn => btn.classList.remove('active'));
-								this.classList.add('active');
-							});
+            paginationElement.appendChild(button);
+        }
 
-							paginationElement.appendChild(button);
-						}
-						// Set the first button as active by default
-						if (paginationElement.firstChild) {
-							paginationElement.firstChild.classList.add('active');
-						}
-					}
+        // Set the first button as active by default
+        if (paginationElement.firstChild) {
+            paginationElement.firstChild.classList.add('active');
+        }
+    }
 
-					// Search functionality
-					document.getElementById('search').addEventListener('keyup', function () {
-						const filter = this.value.toLowerCase();
-						rows.forEach(row => {
-							const title = row.cells[0].textContent.toLowerCase();
-							row.style.display = title.includes(filter) ? '' : 'none';
-						});
-						// Reset pagination on search
-						currentPage = 1;
-						displayRows(currentPage);
-					});
+    document.getElementById('search').addEventListener('keyup', function () {
+        const filter = this.value.toLowerCase();
+        const filteredRows = Array.from(rows).filter(row => {
+            const title = row.cells[0].textContent.toLowerCase();
+            return title.includes(filter);
+        });
 
-					// Dropdown change event
-					document.getElementById('posts-per-page').addEventListener('change', function () {
-						rowsPerPage = parseInt(this.value);
-						setupPagination();
-						displayRows(1); // Reset to the first page
-					});
+        // Reset pagination and display filtered rows
+        currentPage = 1;
+        setupPagination(filteredRows);
+        displayRows(currentPage, filteredRows);
+    });
 
-					// Initial setup
-					setupPagination();
-					displayRows(currentPage);
-				});
-			</script>
+    // Dropdown change event
+    rowsPerPageSelect.addEventListener('change', function () {
+        rowsPerPage = parseInt(this.value);
+        setupPagination();
+        displayRows(1); // Reset to the first page
+    });
+
+    // Initial setup
+    setupPagination();
+    displayRows(currentPage);
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.rbfw_order_edit_btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+            const postId = this.getAttribute('data-post-id');
+            const orderDetailsRow = document.getElementById(`order-details-${postId}`);
+            const loader = document.getElementById('loader');
+
+            if (orderDetailsRow.style.display === 'none') {
+                // Show the loader
+                loader.style.display = 'flex';
+
+                // Make an AJAX request to fetch the order details
+                fetch(ajaxurl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        action: 'fetch_order_details',
+                        post_id: postId,
+                    })
+                })
+                .then(response => response.text())
+                .then(data => {
+                    orderDetailsRow.querySelector('.order-details-content').innerHTML = data;
+                    orderDetailsRow.style.display = 'table-row';
+                    // Hide the loader
+                    loader.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Hide the loader in case of an error
+                    loader.style.display = 'none';
+                });
+            } else {
+                orderDetailsRow.style.display = 'none';
+            }
+        });
+    });
+});
+
+</script>
+
+
 			<?php
 		}
 	}
