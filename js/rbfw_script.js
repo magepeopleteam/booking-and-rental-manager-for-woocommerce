@@ -1,34 +1,53 @@
 (function($) {
     $(document).ready(function() {
+
         const service_id = $('.rbfw-single-container').attr('data-service-id');
         // DatePicker
         let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
+        let wp_date_format = jQuery('#wp_date_format').val();
+
+       // alert(wp_date_format);
+
+        if(wp_date_format=='F j, Y'){
+            wp_date_format = 'dd M yy';
+        }else if(wp_date_format=='m/d/Y'){
+            wp_date_format = 'mm/dd/yy';
+        }else if(wp_date_format=='d/m/Y'){
+            wp_date_format = 'dd/mm/yy';
+        }else{
+            wp_date_format = 'yy-mm-dd';
+        }
+       // wp_date_format = 'yy-mm-dd';
 
         $('body').on('focusin', '.pickup_date', function(e) {
             $(this).datepicker({
-                dateFormat: 'yy-mm-dd',
+                dateFormat: wp_date_format,
                 minDate: 0,
                 beforeShowDay: function(date)
                 {
                     return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-                }
+                },
+                onSelect: function (dateString, data) {
+                    let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+                    $('input[name="pickup_date"]').val(date_ymd).trigger('change');
+                },
             });
         });
 
-
-
-        jQuery('body').on('change', '.pickup_date', function(e) {
+        jQuery('body').on('change', 'input[name="pickup_date"]', function(e) {
 
             let selected_date = jQuery(this).val();
             const [gYear, gMonth, gDay] = selected_date.split('-');
 
             jQuery(".dropoff_date").datepicker("destroy");
 
-
-
             jQuery('.dropoff_date').datepicker({
-                dateFormat: 'yy-mm-dd',
-                minDate: new Date(gYear, gMonth - 1, gDay),
+                dateFormat: wp_date_format,
+                minDate: new Date(gYear,  gMonth - 1, gDay),
+                onSelect: function (dateString, data) {
+                    let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+                    $('input[name="dropoff_date"]').val(date_ymd_drop).trigger('change');
+                },
                 beforeShowDay: function(date)
                 {
                     return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);

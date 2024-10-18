@@ -230,6 +230,7 @@ function rbfw_update_inventory($order_id, $current_status = null){
 
 function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null){
 
+
     if (empty($post_id) || empty($start_date) || empty($end_date)) {
         return;
     }
@@ -449,11 +450,12 @@ function total_service_quantity($paraent,$service,$date,$inventory,$inventory_ba
 
 
 function total_extra_service_quantity($service,$date,$inventory,$inventory_based_on_return){
-
     $total_single_service = 0;
-    foreach($inventory as $item){
-        if(in_array($date,$item['booked_dates'])  && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'') ) && isset($item['rbfw_service_info'][$service])){
-            $total_single_service += $item['rbfw_service_info'][$service];
+    if(!empty($inventory)){
+        foreach($inventory as $item){
+            if(in_array($date,$item['booked_dates'])  && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'') ) && isset($item['rbfw_service_info'][$service])){
+                $total_single_service += $item['rbfw_service_info'][$service];
+            }
         }
     }
     return $total_single_service;

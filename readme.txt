@@ -204,6 +204,28 @@ Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without
 
 Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
 
+
+== Changelog ==
+
+= 2.1.5 =
+* Single day discount problem solved.
+* Resort date problem solved.
+* Order list modifications.
+* Language wise datepicker and price problem solved.
+* Price info in multi day, daywise and seasonal price added.
+
+
+= 2.1.4 =
+* Resort discount and checkout problem solved.
+* Discount price displaying convert to amount instead of percentage.
+* Code updated.
+* Multiday cart page pricing solved.
+
+
+= 2.1.3 =
+* pricing fixed on cart and thankyou page.
+
+
 == Changelog ==
 = 2.1.2 =
 * Pickup and drop off point added in single day.

@@ -1048,7 +1048,6 @@ ul.rbfw-feature-lists li i {
     color: var(--rbfw_color_primary);
     margin-right: 8px;
     min-width: 22px;
-    margin-top: 5px;
 }
 
 @media (min-width: 640px) {
@@ -6960,6 +6959,7 @@ div.rbfw_day_wise_price {
     margin-bottom: 10px;
 }
 
+
 div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     font-size: 12px;
 }
@@ -6971,3 +6971,8 @@ div.rbfw_seasonal_price_info tr:nth-child(odd){
 div.rbfw_seasonal_price_info tr:nth-child(even) td{
    text-align: center;
 }
+
+div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
+    font-size: 12px;
+}
+

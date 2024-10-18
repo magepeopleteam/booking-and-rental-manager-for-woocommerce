@@ -20,7 +20,12 @@ if(isset($_POST['post_id'])){
     $nowDate  = $date->format('Y-m-d');
 
     $date_to_string = new DateTime($selected_date);
-    $result = $date_to_string->format('F j, Y');
+    $result = $date_to_string->format(get_option('date_format'));
+
+    //echo  $date_to_string->format(get_option('date_format'));exit;
+
+
+
     $currency_symbol = rbfw_mps_currency_symbol();
     $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
@@ -73,16 +78,16 @@ if(isset($_POST['post_id'])){
                             <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </div>
 
-                                <div class="tab">
-                                    <?php foreach ($option_value as $cat=>$item){ ?>
-                                        <?php if($item['cat_title']){ ?>
-                                            <button class="tablinks" onclick="openCity(event, 'service_item_<?php echo $cat ?>')"><?php echo $item['cat_title'] ?></button>
-                                            <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][cat_title]" value="<?php echo $item['cat_title'] ?>">
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                                </div>
+                        <div class="tab">
+                            <?php foreach ($option_value as $cat=>$item){ ?>
+                                <?php if($item['cat_title']){ ?>
+                                    <button class="tablinks" onclick="openCity(event, 'service_item_<?php echo $cat ?>')"><?php echo $item['cat_title'] ?></button>
+                                    <input type="hidden" name="rbfw_service_price_data[<?php echo $cat ?>][cat_title]" value="<?php echo $item['cat_title'] ?>">
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </div>
 
                                 <?php foreach ($option_value as $cat=>$item){ ?>
                                     <?php if($item['cat_title']){ ?>
@@ -111,7 +116,7 @@ if(isset($_POST['post_id'])){
                                                                 </div>
                                                                 <div  class="rbfw_qty_input rbfw_service_quantity item_<?php echo $cat.$serkey ?>">
                                                                     <a class="rbfw_service_quantity_minus_sd" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-minus"></i></a>
-                                                                    <input type="number"  name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][quantity]" min="0"  value="1" class="rbfw_service_qty rbfw_service_info_stock" data-cat="service" data-price="20" data-item="<?php echo $cat.$serkey ?>" data-name="ddd" autocomplete="off">
+                                                                    <input type="number"  name="rbfw_service_price_data[<?php echo $cat ?>][<?php echo $serkey ?>][quantity]" min="0"  value="1" class="rbfw_servicesd_qty rbfw_service_info_stock" data-cat="service" data-price="20" data-item="<?php echo $cat.$serkey ?>" data-name="ddd" autocomplete="off">
                                                                     <a class="rbfw_service_quantity_plus_sd" data-item="<?php echo $cat.$serkey ?>"><i class="fa-solid fa-plus"></i></a>
                                                                 </div>
                                                                 <div class="title"><?php echo wc_price($service['price']) ?></div>
@@ -244,9 +249,9 @@ if(isset($_POST['post_id'])){
                                 <input type="hidden" name="rbfw_service_info[<?php echo $c ?>][service_price]" value="<?php echo $value['service_price'] ?>"/>
                                 <div class="rbfw_qty_input">
                                     <?php if($max_es_available_qty){ ?>
-                                        <a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>
-                                        <input type="number" min="0" max="<?php echo esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo $c ?>][service_qty]" class="rbfw_service_qty" data-price="<?php echo $value['service_price'] ?>" data-type="<?php echo $value['service_name'] ?>" data-cat="service"/>
-                                        <a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>
+                                        <a class="rbfw_qty_minus rbfw_servicesd_qty_minus"><i class="fa-solid fa-minus"></i></a>
+                                        <input type="number" min="0" max="<?php echo esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo $c ?>][service_qty]" class="rbfw_servicesd_qty" data-price="<?php echo $value['service_price'] ?>" data-type="<?php echo $value['service_name'] ?>" data-cat="service"/>
+                                        <a class="rbfw_qty_plus rbfw_servicesd_qty_plus"><i class="fa-solid fa-plus"></i></a>
                                     <?php }else{ ?>
                                         <div style="width: 120px">Sold Out</div>
                                     <?php } ?>

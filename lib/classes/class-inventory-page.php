@@ -442,7 +442,7 @@ if (!class_exists('RBFWInventoryPage')) {
 
 
 
-                    $remaining_item_stock = $rbfw_item_stock_quantity - $sold_item_qty;
+                    $remaining_item_stock = (float)$rbfw_item_stock_quantity - (float)$sold_item_qty;
                     $rbfw_resort_room_data = $rbfw_resort_room_data_closing;
                     $rbfw_bike_car_sd_data = $rbfw_bike_car_sd_data_closing;
                     $rbfw_extra_service_data = $rbfw_extra_service_data_closing;

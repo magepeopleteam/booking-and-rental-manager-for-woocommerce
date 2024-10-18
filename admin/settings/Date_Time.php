@@ -133,7 +133,11 @@
                 asort($rbfw_time_slots);
 
 
+
+
                 $rdfw_available_time = get_post_meta($post_id,'rdfw_available_time',true) ? maybe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];
+
+
 
                 $rdfw_available_time_update = [];
 
@@ -151,7 +155,7 @@
                     <select name="rdfw_available_time[]" id="rdfw_available_time" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
                         <?php foreach($rbfw_time_slots as $key => $value): ?>
                             <?php if(get_the_title( $post_id ) == 'Auto Draft'){ ?>
-                                <option selected value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
+                                <option selected value="<?php echo date('h:i A', strtotime($value)); ?>"> <?php echo $key; ?> </option>
                             <?php }else{ ?>
                                 <option <?php echo (in_array(date('h:i A', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo date('h:i A', strtotime($value)); ?>"> <?php echo $key; ?> </option>
                             <?php } ?>
