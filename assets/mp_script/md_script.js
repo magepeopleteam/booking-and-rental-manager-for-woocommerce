@@ -1,7 +1,7 @@
 jQuery('body').on('change', '.pickup_date', function(e) {
     jQuery(".dropoff_date").val('');
 });
-jQuery('body').on('change', '.pickup_date, .dropoff_date, .pickup_time, .dropoff_time', function (e) {
+jQuery('body').on('change', '#hidden_pickup_date, #hidden_dropoff_date, .pickup_time, .dropoff_time', function (e) {
 
     let pickup_date = jQuery('#pickup_date').val();
     let dropoff_date = jQuery('#dropoff_date').val();
@@ -274,8 +274,14 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
     let post_id = jQuery('[data-service-id]').data('service-id');
 
     let date_format = jQuery('#wp_date_format').val();
-    let pickup_date = jQuery('.pickup_date').val();
-    let dropoff_date = jQuery('.dropoff_date').val();
+
+
+    let pickup_date = jQuery('#hidden_pickup_date').val();
+    let dropoff_date = jQuery('#hidden_dropoff_date').val();
+
+
+
+
     let rbfw_available_time = jQuery('#rbfw_available_time').val();
 
     let pickup_time = jQuery('.pickup_time').find(':selected').val();

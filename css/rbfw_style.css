@@ -6952,3 +6952,8 @@ a.rbfw_rent_list_btn:hover{
     font-size: 12px;
     color: var(--rbfw_color_primary);
 }
+div.rbfw_day_wise_price{
+    overflow: hidden;
+    overflow-x: scroll;
+    margin-bottom: 10px;
+}

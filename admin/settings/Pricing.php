@@ -248,7 +248,8 @@
 					<i class="fa-solid fa-circle-plus"></i>
 					<?php echo __('Add New Service Category','booking-and-rental-manager-for-woocommerce'); ?>
 				</span>
-				<script>
+
+                <script>
 					jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
 					jQuery('.tr_remove').click(function (e) {
 						jQuery(this).closest("tr").remove();
@@ -862,7 +863,7 @@
 							$this->rbfw_day_row( __( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu' );
 							$this->rbfw_day_row( __( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri' );
 							$this->rbfw_day_row( __( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat' );
-							do_action( 'rbfw_after_week_price_table_row' );
+							//do_action( 'rbfw_after_week_price_table_row' );
 							?>
 						</tbody>
 					</table>
