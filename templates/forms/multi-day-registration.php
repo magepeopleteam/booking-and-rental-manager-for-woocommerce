@@ -128,25 +128,25 @@ if($rbfw_enable_variations == 'yes'){
                                                     <?php if ($enable_daily_rate == 'yes') { ?>
                                                         <tr>
                                                             <td><?php echo esc_html($rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily','booking-and-rental-manager-for-woocommerce'))); ?>(<?php echo get_woocommerce_currency_symbol() ?>)</td>
-                                                            <td><?php echo ($sunday['enable'] =='yes')? $sunday['daily_rate'] :$daily_rate ?></td>
-                                                            <td><?php echo ($monday['enable'] =='yes')? $monday['daily_rate'] :$daily_rate ?></td>
-                                                            <td><?php echo ($tueday['enable'] =='yes')? $tueday['daily_rate'] :$daily_rate ?></td>
-                                                            <td><?php echo ($wedday['enable'] =='yes')? $wedday['daily_rate'] :$daily_rate ?></td>
-                                                            <td><?php echo ($thuday['enable'] =='yes')? $thuday['daily_rate'] :$daily_rate ?></td>
-                                                            <td><?php echo ($friday['enable'] =='yes')? $friday['daily_rate'] :$daily_rate ?></td>
-                                                            <td><?php echo ($satday['enable'] =='yes')? $satday['daily_rate'] :$daily_rate ?></td>
+                                                            <td><?php echo ($sunday['enable'] =='yes' && $sunday['daily_rate'])? $sunday['daily_rate'] :$daily_rate ?></td>
+                                                            <td><?php echo ($monday['enable'] =='yes' && $monday['daily_rate'])? $monday['daily_rate'] :$daily_rate ?></td>
+                                                            <td><?php echo ($tueday['enable'] =='yes' && $tueday['daily_rate'])? $tueday['daily_rate'] :$daily_rate ?></td>
+                                                            <td><?php echo ($wedday['enable'] =='yes' && $wedday['daily_rate'])? $wedday['daily_rate'] :$daily_rate ?></td>
+                                                            <td><?php echo ($thuday['enable'] =='yes' && $thuday['daily_rate'])? $thuday['daily_rate'] :$daily_rate ?></td>
+                                                            <td><?php echo ($friday['enable'] =='yes' && $friday['daily_rate'])? $friday['daily_rate'] :$daily_rate ?></td>
+                                                            <td><?php echo ($satday['enable'] =='yes' && $satday['daily_rate'])? $satday['daily_rate'] :$daily_rate ?></td>
                                                         </tr>
                                                     <?php } ?>
                                                     <?php if ($enable_hourly_rate == 'yes') { ?>
                                                         <tr>
                                                             <td><?php echo esc_html($rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly','booking-and-rental-manager-for-woocommerce'))); ?>(<?php echo get_woocommerce_currency_symbol() ?>)</td>
-                                                            <td><?php echo ($sunday['enable'] =='yes')? $sunday['hourly_rate'] :$hourly_rate ?></td>
-                                                            <td><?php echo ($monday['enable'] =='yes')? $monday['hourly_rate'] :$hourly_rate ?></td>
-                                                            <td><?php echo ($tueday['enable'] =='yes')? $tueday['hourly_rate'] :$hourly_rate ?></td>
-                                                            <td><?php echo ($wedday['enable'] =='yes')? $wedday['hourly_rate'] :$hourly_rate ?></td>
-                                                            <td><?php echo ($thuday['enable'] =='yes')? $thuday['hourly_rate'] :$hourly_rate ?></td>
-                                                            <td><?php echo ($friday['enable'] =='yes')? $friday['hourly_rate'] :$hourly_rate ?></td>
-                                                            <td><?php echo ($satday['enable'] =='yes')? $satday['hourly_rate'] :$hourly_rate ?></td>
+                                                            <td><?php echo ($sunday['enable'] =='yes' && $sunday['hourly_rate'])? $sunday['hourly_rate'] :$hourly_rate ?></td>
+                                                            <td><?php echo ($monday['enable'] =='yes' && $monday['hourly_rate'])? $monday['hourly_rate'] :$hourly_rate ?></td>
+                                                            <td><?php echo ($tueday['enable'] =='yes' && $tueday['hourly_rate'])? $tueday['hourly_rate'] :$hourly_rate ?></td>
+                                                            <td><?php echo ($wedday['enable'] =='yes' && $wedday['hourly_rate'])? $wedday['hourly_rate'] :$hourly_rate ?></td>
+                                                            <td><?php echo ($thuday['enable'] =='yes' && $thuday['hourly_rate'])? $thuday['hourly_rate'] :$hourly_rate ?></td>
+                                                            <td><?php echo ($friday['enable'] =='yes' && $friday['hourly_rate'])? $friday['hourly_rate'] :$hourly_rate ?></td>
+                                                            <td><?php echo ($satday['enable'] =='yes' && $satday['hourly_rate'])? $satday['hourly_rate'] :$hourly_rate ?></td>
                                                         </tr>
                                                     <?php } ?>
                                                 </table>
