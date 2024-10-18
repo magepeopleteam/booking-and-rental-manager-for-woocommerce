@@ -206,17 +206,19 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
-= 2.1.4 =
+
+= 2.1.5 =
 * Single day discount problem solved.
 * Resort date problem solved.
-* Order list modifications
-
+* Order list modifications.
+* Language wise datepicker and price problem solved.
+* Price info in multi day, daywise and seasonal price added.
 
 
 = 2.1.4 =
 * Resort discount and checkout problem solved.
 * Discount price displaying convert to amount instead of percentage.
-* Code updated
+* Code updated.
 * Multiday cart page pricing solved.
 
 

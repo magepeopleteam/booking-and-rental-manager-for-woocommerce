@@ -1,7 +1,6 @@
 let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
 let rbfw_enable_resort_daylong_price = jQuery('#rbfw_enable_resort_daylong_price').val();
 
-
 let room_prices_arr = {};
 let service_prices_arr = {};
 
@@ -11,30 +10,17 @@ jQuery('#checkin_date').datepicker({
     beforeShowDay: function(date)
     {
         return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-    }
+    },
+    onSelect: function (dateString, data) {
+        let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+        jQuery('input[name="rbfw_start_datetime"]').val(date_ymd_drop).trigger('change');
+    },
 });
 
-jQuery('#checkin_date').change(function(e) {
+jQuery('#hidden_checkin_date').change(function(e) {
 
     let selected_date = jQuery(this).val();
-
-
-    let selected_date_tostring = new Date(jQuery(this).val());
-
-    let gDay = '';
-    let gMonth = '';
-    let gYear = '';
-
-    if(js_date_format=='dd/mm/yy'){
-        gDay = selected_date.split('/')[0];
-        gMonth = selected_date.split('/')[1] - 1;
-        gYear = selected_date.split('/')[2];
-    }else{
-        gYear = selected_date_tostring.getFullYear();
-        gMonth = selected_date_tostring.getMonth();
-        gDay = selected_date_tostring.getDate();
-    }
-
+    const [gYear, gMonth, gDay] = selected_date.split('-');
 
     if(rbfw_enable_resort_daylong_price=='no'){
          var extra_day = 1;
@@ -47,11 +33,15 @@ jQuery('#checkin_date').change(function(e) {
     jQuery("#checkout_date").attr('value', '');
     jQuery('#checkout_date').datepicker({
         dateFormat: js_date_format,
-        minDate: new Date(gYear, gMonth , parseInt(gDay) + extra_day),
+        minDate: new Date(gYear, gMonth - 1 , parseInt(gDay) + extra_day),
         beforeShowDay: function(date)
         {
             return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-        }
+        },
+        onSelect: function (dateString, data) {
+            let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+            jQuery('input[name="rbfw_end_datetime"]').val(date_ymd_drop).trigger('change');
+        },
     });
 });
 
@@ -62,8 +52,8 @@ jQuery(document).on('click','.rbfw_chk_availability_btn',function(e) {
     e.preventDefault();
     let checkin_date_notice 	= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_choose_checkin_date', 'rbfw_basic_translation_settings', __('Please Choose Check-In Date','booking-and-rental-manager-for-woocommerce'))); ?>";
     let checkout_date_notice 	= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_choose_checkout_date', 'rbfw_basic_translation_settings', __('Please Choose Check-Out Date','booking-and-rental-manager-for-woocommerce'))); ?>";
-    let checkin_date 			= jQuery('#checkin_date').val();
-    let checkout_date 			= jQuery('#checkout_date').val();
+    let checkin_date 			= jQuery('#hidden_checkin_date').val();
+    let checkout_date 			= jQuery('#hidden_checkout_date').val();
     let post_id 				= jQuery('#rbfw_post_id').val();
     let reset_active_tab        = jQuery('.rbfw_room_price_category_tabs').removeAttr('data-active');
     let reset_active_class      = jQuery('.rbfw_room_price_category_tabs .rbfw_room_price_label').removeClass('active');
@@ -146,8 +136,8 @@ jQuery(document).on('click','.rbfw_room_price_label',function (e) {
 function rbfw_resort_get_price_table(){
     let active_tab_value = jQuery('.rbfw_room_price_category_tabs').attr('data-active');
     let post_id 		 = jQuery('#rbfw_post_id').val();
-    let checkin_date     = jQuery('#checkin_date').val();
-    let checkout_date    = jQuery('#checkout_date').val();
+    let checkin_date     = jQuery('#hidden_checkin_date').val();
+    let checkout_date    = jQuery('#hidden_checkout_date').val();
     jQuery.ajax({
         type: 'POST',
         url: rbfw_ajax.rbfw_ajaxurl,
@@ -165,8 +155,6 @@ function rbfw_resort_get_price_table(){
         success: function (response) {
             jQuery('.rbfw_room_price_category_details_loader').hide();
             jQuery('.rbfw_room_price_category_details').html(response);
-            //rbfw_update_input_value_onchange_onclick();
-           // rbfw_room_price_calculation();
             rbfw_mps_book_now_btn_action();
             rbfw_display_resort_es_box_onchange_onclick();
             jQuery('.rbfw_muff_registration_wrapper .rbfw_regf_wrap').show();
@@ -176,8 +164,8 @@ function rbfw_resort_get_price_table(){
 
 jQuery(document).on('change','.rbfw_room_qty,.rbfw_service_qty',function (e) {
 
-    let checkin_date     = jQuery('#checkin_date').val();
-    let checkout_date    = jQuery('#checkout_date').val();
+    let checkin_date     = jQuery('#hidden_checkin_date').val();
+    let checkout_date    = jQuery('#hidden_checkout_date').val();
     let data_cat         = jQuery(this).attr('data-cat');
     console.log('data_cat',data_cat);
     if(data_cat == 'room'){
@@ -267,8 +255,8 @@ jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_serv
     e.preventDefault();
 
     let post_id = jQuery('#rbfw_post_id').val();
-    let checkin_date     = jQuery('#checkin_date').val();
-    let checkout_date    = jQuery('#checkout_date').val();
+    let checkin_date     = jQuery('#hidden_checkin_date').val();
+    let checkout_date    = jQuery('#hidden_checkout_date').val();
     let data_cat         = jQuery(this).siblings('input[type=number]').attr('data-cat');
     console.log('ffff',data_cat)
     if(data_cat == 'room'){
@@ -372,8 +360,6 @@ jQuery(document).on('change','.rbfw_service_qty',function (e) {
 // display extra services box onclick and onchange
 function rbfw_display_resort_es_box_onchange_onclick(){
 
-
-
     jQuery('.rbfw_room_qty').change(function (e) {
         let count = jQuery('.rbfw_resort_rt_price_table tbody tr').length;
         let total_qty = 0;
@@ -381,9 +367,7 @@ function rbfw_display_resort_es_box_onchange_onclick(){
             let qty = jQuery('input[name="rbfw_room_info['+index+'][room_qty]"]').val();
             total_qty += parseInt(qty);
         }
-
         if(total_qty > 0){
-
             jQuery('.rbfw_resort_es_price_table').show();
             jQuery('.rbfw_resort_available_es_qty_notice').show();
         }else{
@@ -400,8 +384,8 @@ function rbfw_display_resort_es_box_onchange_onclick(){
 function rbfw_mps_book_now_btn_action(){
     jQuery('button.rbfw_resort_book_now_btn.mps_enabled').click(function (e) {
         e.preventDefault();
-        let start_date = jQuery('#checkin_date').val();
-        let end_date = jQuery('#checkout_date').val();
+        let start_date = jQuery('#hidden_checkin_date').val();
+        let end_date = jQuery('#hidden_checkout_date').val();
         let rent_type = jQuery('#rbfw_rent_type').val();
         let package = jQuery('.rbfw_room_price_category_tabs').attr('data-active');
         let type_length = jQuery('.rbfw_resort_rt_price_table tbody tr').length;
@@ -437,6 +421,7 @@ function rbfw_mps_book_now_btn_action(){
         var this_radio_arr = [];
 
         if(rbfw_regf_fields.length > 0){
+
             rbfw_regf_fields.forEach((field_name, index) => {
 
                 let this_field_type = jQuery('[name="'+field_name+'"]').attr('type');
@@ -451,20 +436,16 @@ function rbfw_mps_book_now_btn_action(){
                         jQuery('.'+field_name+':checked').each(function(i){
                             this_checkbox_arr.push(jQuery(this).val());
                         });
-
                         rbfw_regf_checkboxes[field_name] = this_checkbox_arr;
                     }
 
                     if(this_field_type == 'radio'){
-
                         jQuery('.'+field_name+':checked').each(function(d){
                             this_radio_arr.push(jQuery(this).val());
                         });
-
                         rbfw_regf_radio[field_name] = this_radio_arr;
                     }
                 }
-
                 rbfw_regf_info[field_name] = this_value;
             });
         }

@@ -97,8 +97,6 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $rbfw_room_service_price =  $rbfw_resort->rbfw_resort_price_calculation($rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_service_price');
         $rbfw_room_total_price =    $rbfw_resort->rbfw_resort_price_calculation($rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_total_price');
 
-        $rbfw_checkin_datetime = (get_option('date_format')=='d/m/Y')?str_replace('/', '-', $rbfw_checkin_datetime):$rbfw_checkin_datetime;
-        $rbfw_checkout_datetime = (get_option('date_format')=='d/m/Y')?str_replace('/', '-', $rbfw_checkout_datetime):$rbfw_checkout_datetime;
 
 
         $origin             = date_create($rbfw_checkin_datetime);

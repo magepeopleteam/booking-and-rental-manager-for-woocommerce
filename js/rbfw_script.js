@@ -26,32 +26,28 @@
                 beforeShowDay: function(date)
                 {
                     return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-                }
+                },
+                onSelect: function (dateString, data) {
+                    let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+                    $('input[name="pickup_date"]').val(date_ymd).trigger('change');
+                },
             });
         });
 
-        jQuery('body').on('change', '.pickup_date', function(e) {
+        jQuery('body').on('change', 'input[name="pickup_date"]', function(e) {
 
             let selected_date = jQuery(this).val();
-            let selected_date_tostring = new Date(jQuery(this).val());
-
-
-
-            if(wp_date_format=='dd/mm/yy'){
-                 gDay = selected_date.split('/')[0];
-                 gMonth = selected_date.split('/')[1] - 1;
-                 gYear = selected_date.split('/')[2];
-            }else{
-                 gYear = selected_date_tostring.getFullYear();
-                 gMonth = selected_date_tostring.getMonth();
-                 gDay = selected_date_tostring.getDate();
-            }
+            const [gYear, gMonth, gDay] = selected_date.split('-');
 
             jQuery(".dropoff_date").datepicker("destroy");
 
             jQuery('.dropoff_date').datepicker({
                 dateFormat: wp_date_format,
-                minDate: new Date(gYear, gMonth, gDay),
+                minDate: new Date(gYear,  gMonth - 1, gDay),
+                onSelect: function (dateString, data) {
+                    let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+                    $('input[name="dropoff_date"]').val(date_ymd_drop).trigger('change');
+                },
                 beforeShowDay: function(date)
                 {
                     return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);

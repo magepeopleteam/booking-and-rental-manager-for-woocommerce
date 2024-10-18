@@ -157,22 +157,10 @@ function rbfw_order_meta_box_callback(){
 
                     $rbfw_start_datetime = rbfw_get_datetime($ticket_info['rbfw_start_datetime'], 'date-time-text');
                     $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-time-text');
-                    $rbfw_start_time = !empty($ticket_info['rbfw_start_time']) ? $ticket_info['rbfw_start_time'] : '';
-                    $rbfw_end_time =  !empty($ticket_info['rbfw_end_time']) ? $ticket_info['rbfw_end_time'] : '';
-
-                    if($rent_type == 'resort' || (empty($rbfw_start_time) && empty($rbfw_end_time))){
-
-                        $rbfw_start_datetime = rbfw_get_datetime($ticket_info['rbfw_start_datetime'], 'date-text');
-                        $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-text');
-                    }
 
                     $tax = !empty($ticket_info['rbfw_mps_tax']) ? $ticket_info['rbfw_mps_tax'] : 0;
-                    $mps_tax_percentage = !empty(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) : '';
                     $tax_status = '';
 
-                    if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && $mps_tax_format == 'including_tax'){
-                        $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($tax).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';
-                    }
 
                     if($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
                         $BikeCarSdClass = new RBFW_BikeCarSd_Function();
@@ -182,20 +170,13 @@ function rbfw_order_meta_box_callback(){
                         $service_info = $BikeCarSdClass->rbfw_get_bikecarsd_service_info($item_id, $service_info);
                         $pickup_point = !empty($ticket_info['rbfw_pickup_point']) ? $ticket_info['rbfw_pickup_point'] : '';
                         $dropoff_point = !empty($ticket_info['rbfw_dropoff_point']) ? $ticket_info['rbfw_dropoff_point'] : '';
-
                     }elseif($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){
                         $BikeCarMdClass = new RBFW_BikeCarMd_Function();
-
                         $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                         $service_info = $BikeCarMdClass->rbfw_get_bikecarmd_service_info($item_id, $service_info);
-
                         $service_infos = !empty($ticket_info['rbfw_service_infos']) ? $ticket_info['rbfw_service_infos'] : [];
-
-
-                        $item_quantity = !empty($ticket_info['rbfw_item_quantity']) ? $ticket_info['rbfw_item_quantity'] : 1;
                         $pickup_point = !empty($ticket_info['rbfw_pickup_point']) ? $ticket_info['rbfw_pickup_point'] : '';
                         $dropoff_point = !empty($ticket_info['rbfw_dropoff_point']) ? $ticket_info['rbfw_dropoff_point'] : '';
-
                     }elseif($rent_type == 'resort'){
                         $ResortClass = new RBFW_Resort_Function();
                         $package = $ticket_info['rbfw_resort_package'];
@@ -203,7 +184,6 @@ function rbfw_order_meta_box_callback(){
                         $rent_info  = $ResortClass->rbfw_get_resort_room_info($item_id, $rent_info, $package);
                         $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                         $service_info = $ResortClass->rbfw_get_resort_service_info($item_id, $service_info);
-
                     }else{
                         $rent_info = '';
                         $service_info = '';
@@ -216,10 +196,8 @@ function rbfw_order_meta_box_callback(){
                     $subtotal += $ticket_info['ticket_price'];
                     $total_cost = $ticket_info['ticket_price'];
                     $discount_amount = !empty($ticket_info['discount_amount']) ? (float)$ticket_info['discount_amount'] : 0;
-
                     $security_deposit_amount = !empty($ticket_info['security_deposit_amount']) ? (float)$ticket_info['security_deposit_amount'] : 0;
                     $security_deposit_amount = $security_deposit_amount;
-
                     $discount_type = !empty($ticket_info['discount_type']) ? $ticket_info['discount_type'] : '';
                     $rbfw_regf_info = !empty($ticket_info['rbfw_regf_info']) ? $ticket_info['rbfw_regf_info'] : [];
 
@@ -393,9 +371,6 @@ function rbfw_order_meta_box_callback(){
                                 </tr>
                             <?php } ?>
 
-
-
-
                             <?php if(!empty($rbfw_regf_info)){ ?>
                             <tr>
                                 <td><strong><?php rbfw_string('rbfw_text_customer_information',__('Customer Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
@@ -433,12 +408,12 @@ function rbfw_order_meta_box_callback(){
                             </tr>
 
                             <?php if(!empty($variation_info)){
-                            foreach ($variation_info as $key => $value) {
-                            ?>
-                                <tr>
-                                    <td><strong><?php echo esc_html($value['field_label']); ?></strong></td>
-                                    <td><?php echo esc_html($value['field_value']); ?></td>
-                                </tr>
+                                foreach ($variation_info as $key => $value) {
+                                    ?>
+                                    <tr>
+                                        <td><strong><?php echo esc_html($value['field_label']); ?></strong></td>
+                                        <td><?php echo esc_html($value['field_value']); ?></td>
+                                    </tr>
                             <?php } } ?>
 
                             <tr>
