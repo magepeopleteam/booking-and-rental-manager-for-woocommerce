@@ -189,10 +189,11 @@ if($rbfw_enable_variations == 'yes'){
                                         $sp_price_d = array_key_exists( 'rbfw_sp_price_d', $sp ) ? $sp['rbfw_sp_price_d'] : '0';
                                         ?>
                                         <tr>
-                                            <td><?php echo esc_html( rbfw_date_format($start_date) ); ?></td>
-                                            <td><?php echo esc_html( rbfw_date_format($end_date) ); ?></td>
-                                            <td><?php echo  wc_price($sp_price_d) ; ?></td>
-                                            <td><?php echo  wc_price($sp_price_h ); ?></td>
+                                            <td colspan="2">From <strong><?php echo esc_html( rbfw_date_format($start_date) ); ?></strong> To <strong><?php echo esc_html( rbfw_date_format($end_date) ); ?></strong> </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo  wc_price($sp_price_d) ; ?></td>
+                                            <td><strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>  <?php echo  wc_price($sp_price_h ); ?></td>
                                         </tr>
                                         <?php
                                     }
@@ -202,20 +203,13 @@ if($rbfw_enable_variations == 'yes'){
                                     $seasonal_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) ? get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) : [];
                                     if(!empty($seasonal_prices)){
                                         ?>
-                                        <div class="mp_settings_area mpStyle rbfw_seasonal_price_config_wrapper ">
+                                        <div class="mp_settings_area mpStyle rbfw_seasonal_price_config_wrapper rbfw_seasonal_price_info">
                                             <section>
                                                 <div class="w-100">
                                                     <div class="mp_item_insert ">
-                                                        <h3></h3>
-                                                        <table>
-                                                            <tr>
-                                                                <th><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                                                <th><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                                                <th><?php esc_html_e( 'Daily Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                                                <th><?php esc_html_e( 'Hourly Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                                            </tr>
-                                                            <?php
 
+                                                        <table>
+                                                            <?php
                                                             if ( sizeof( $seasonal_prices ) > 0 ) {
                                                                 foreach ( $seasonal_prices as $prices ) {
                                                                     rbfw_after_week_price_table_seasonal_price_item( $prices );
