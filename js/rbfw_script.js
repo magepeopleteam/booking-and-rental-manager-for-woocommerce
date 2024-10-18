@@ -29,12 +29,12 @@
                 },
                 onSelect: function (dateString, data) {
                     let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-                    $('input[name="pickup_date"]').val(date_ymd).trigger('change');
+                    $('input[name="rbfw_pickup_start_date"]').val(date_ymd).trigger('change');
                 },
             });
         });
 
-        jQuery('body').on('change', 'input[name="pickup_date"]', function(e) {
+        jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {
 
             let selected_date = jQuery(this).val();
             const [gYear, gMonth, gDay] = selected_date.split('-');
@@ -46,7 +46,7 @@
                 minDate: new Date(gYear,  gMonth - 1, gDay),
                 onSelect: function (dateString, data) {
                     let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-                    $('input[name="dropoff_date"]').val(date_ymd_drop).trigger('change');
+                    $('input[name="rbfw_pickup_end_date"]').val(date_ymd_drop).trigger('change');
                 },
                 beforeShowDay: function(date)
                 {

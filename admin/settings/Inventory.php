@@ -218,7 +218,7 @@
 				$rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
             ?>
                 
-                <section >
+                <section>
 					<div>
 						<label><?php _e( 'Item variation', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 						<span><?php  _e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.','booking-and-rental-manager-for-woocommerce' ); ?></span>
