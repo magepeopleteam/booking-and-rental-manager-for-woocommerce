@@ -2281,7 +2281,10 @@ li.rbfw-visibility-hidden {
     transition: 0.2s;
     opacity: 1;
 }
-
+.price-item-container{
+    padding: 5px;
+    border: 1px solid #f5f5f5;
+}
 .price-item-container-table {
     margin: 0 !important;
     font-size: 16px;
@@ -6952,4 +6955,19 @@ a.rbfw_rent_list_btn:hover{
 .day-time-wise {
     font-size: 12px;
     color: var(--rbfw_color_primary);
+}
+div.rbfw_day_wise_price {
+    margin-bottom: 10px;
+}
+
+div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
+    font-size: 12px;
+}
+
+div.rbfw_seasonal_price_info tr:nth-child(odd){
+    background-color: #f5f5f5;
+}
+
+div.rbfw_seasonal_price_info tr:nth-child(even) td{
+   text-align: center;
 }
