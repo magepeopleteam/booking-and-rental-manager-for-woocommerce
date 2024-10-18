@@ -183,7 +183,7 @@ if($rbfw_enable_start_end_date=='no'){
                                 $enable      = !empty(get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true )) ? get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) : '';
                                 return array('enable'=>$enable,'day_name'=>$day_name,'daily_rate'=>$daily_rate,'hourly_rate'=>$hourly_rate);
                             }
-                            function rbfw_after_week_price_table_seasonal_price_item( $sp = array() ) {
+                            function rbfw_after_seasonal_price( $sp = array() ) {
                                 $start_date = array_key_exists( 'rbfw_sp_start_date', $sp ) ? $sp['rbfw_sp_start_date'] : '';
                                 $end_date   = array_key_exists( 'rbfw_sp_end_date', $sp ) ? $sp['rbfw_sp_end_date'] : '';
                                 $sp_price_h = array_key_exists( 'rbfw_sp_price_h', $sp ) ? $sp['rbfw_sp_price_h'] : '0';
@@ -213,7 +213,7 @@ if($rbfw_enable_start_end_date=='no'){
                                                     <?php
                                                     if ( sizeof( $seasonal_prices ) > 0 ) {
                                                         foreach ( $seasonal_prices as $prices ) {
-                                                            rbfw_after_week_price_table_seasonal_price_item( $prices );
+                                                            rbfw_after_seasonal_price( $prices );
                                                         }
                                                     }
                                                     ?>
