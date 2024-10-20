@@ -51,7 +51,8 @@
                 dLoader(parent);
             },
             success: function(data) {
-                $this.before(data);
+                //$this.before(data);
+                $('.rbfw-faq-content-wrapper-main').append(data);
                 tinymce.execCommand('mceAddEditor', true, time);
                 dLoaderRemove(parent);
             },
@@ -61,7 +62,7 @@
         });
         return false;
     });
-    
+
     jQuery(window).load(function() {
         jQuery('.mp_tab_menu').each(function() {
             jQuery(this).find('ul li:first-child').trigger('click');
@@ -607,19 +608,19 @@
 
             let selected_status = jQuery(this).val();
 
-           console.log('selected_status',selected_status);
+            console.log('selected_status', selected_status);
 
-            if(selected_status=='picked'){
+            if (selected_status == 'picked') {
                 jQuery('.rbfw_return_note').hide();
                 jQuery('.rbfw_return_security_deposit_amount').hide();
                 jQuery('.rbfw_pickup_note').show();
                 console.log('oooooo');
 
-            }else if(selected_status=='returned'){
+            } else if (selected_status == 'returned') {
                 jQuery('.rbfw_pickup_note').hide();
                 jQuery('.rbfw_return_note').show();
                 jQuery('.rbfw_return_security_deposit_amount').show();
-            }else{
+            } else {
                 jQuery('.rbfw_pickup_note').hide();
                 jQuery('.rbfw_return_note').hide();
                 jQuery('.rbfw_return_security_deposit_amount').hide();
