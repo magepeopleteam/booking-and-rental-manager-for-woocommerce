@@ -6,6 +6,7 @@
 	if (!defined('ABSPATH')) {
 		die;
 	} 
+
 	if (!class_exists('RBFW_FAQ')) {
         class RBFW_FAQ{
             public function __construct() {
@@ -15,6 +16,9 @@
 				add_action( 'wp_ajax_nopriv_get_rbfw_add_faq_content', [$this,'get_rbfw_add_faq_content']);
 
                 add_action('save_post', array($this, 'settings_save'), 99, 1);
+				
+				add_action( 'wp_ajax_rbfw_save_faq_data', [$this,'rbfw_save_faq_data'] );
+				add_action( 'wp_ajax_nopriv_rbfw_save_faq_data', [$this,'rbfw_save_faq_data']);
 			}
 
 			public function get_rbfw_add_faq_content() {
@@ -66,13 +70,16 @@
 				$content       = array_key_exists( $content_name, $data ) ? html_entity_decode( $data[ $content_name ] ) : '';
 
 				?>
-				<div class='rbfw_remove_area mt-5'>
+				<div class='rbfw_remove_area mt-5 rbfw_faq_item'>
 					<section class="bg-light">
 						<div>
 							<p class=""><?php echo esc_html( $title ); ?></p>
 						</div>
 						<div >
 							<input type="text" class="formControl" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
+						</div>
+						<div>
+							<span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
 						</div>
 					</section>
 					<section >
@@ -119,13 +126,12 @@
 							?>
 						</div>
 					</section>
-					<span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
 				</div>
 				<?php
 				return ob_get_clean();
 			}
 
-			public function rbfw_repeated_item_accordion($id, $meta_key, $data = array() ){
+			public function rbfw_repeated_item_accordion($id, $meta_key, $data = array(), $i = null ){
 				ob_start();
 				$array = $this->get_rbfw_repeated_setting_array( $meta_key );
 
@@ -142,39 +148,67 @@
 				$content       = array_key_exists( $content_name, $data ) ? html_entity_decode( $data[ $content_name ] ) : '';
 
 				?>
-				<div class='rbfw_remove_area rbfw_faq_item'>
+				<div class='rbfw_remove_area rbfw_faq_item' data-id="<?php echo esc_attr($i); ?>">
 					<div class="rbfw_faq_header">
 						<div class="rbfw_faq_accordion_icon"><i class="fas fa-plus"></i></div> 
-						<div class="rbfw_faq_header_title"><?php echo esc_html( $title_value ); ?></div>
-						<input type="hidden" class="formControl rbfw_faq_hid_input" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
+						<div class="rbfw_faq_header_title">
+							<?php echo esc_html( $title_value ); ?>
+						</div>
+						<div class="rbfw_faq_header_title2">
+							<input type="text" class="formControl rbfw_faq_title_input" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
+						</div>
 						<div class="rbfw_faq_action_btns">
-							<span class="rbfw_faq_item_edit"><i class='far fa-edit'></i></span>
+							<span class="rbfw_faq_item_edit" data-id="<?php echo esc_attr($i); ?>"><i class='far fa-edit'></i></span>
 							<span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
 						</div>
 					</div>
 					<div class="rbfw_faq_content_wrapper">
 						<div class="rbfw_multi_image_area">
 							<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
-								<div class="rbfw_multi_image rbfw_faq_img">
-									<?php
-										$all_images = explode( ',', $images );
-										if ( $images && sizeof( $all_images ) > 0 ) {
-											foreach ( $all_images as $image ) {
-												?>
-												<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
-													<span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>
-													<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
-												</div>
-												<?php
-											}
+							<div class="rbfw_multi_image rbfw_faq_img">
+								<?php
+									$all_images = explode( ',', $images );
+									if ( $images && sizeof( $all_images ) > 0 ) {
+										foreach ( $all_images as $image ) {
+											?>
+											<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
+												<span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>
+												<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
+											</div>
+											<?php
 										}
-									?>
-								</div>
+									}
+								?>
 							</div>
+							<div class="rbfw_faq_img_add_btn_wrap">	
+								<button type="button" class=" add_multi_image ppof-button">
+									<i class="fa-solid fa-circle-plus"></i>
+									<?php esc_html_e( 'Add Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								</button>
+							</div>
+						</div>
 							<div class="rbfw_faq_desc">
 								<?php echo $content; ?>
 							</div>
-							<input type="hidden" class="formControl rbfw_faq_hid_input" name="<?php echo esc_attr( $content_name ); ?>[]" value="<?php echo $content; ?>"/>	
+							<div class="rbfw_faq_desc2">
+							<?php
+								$settings = array(
+									'wpautop'       => false,
+									'media_buttons' => false,
+									'textarea_name' => $content_name . '[]',
+									'tabindex'      => '323',
+									'editor_height' => 200,
+									'editor_css'    => '',
+									'editor_class'  => '',
+									'teeny'         => false,
+									'dfw'           => false,
+									'tinymce'       => true,
+									'quicktags'     => true
+								);
+								wp_editor( $content, $id, $settings );
+							?>
+							</div>
+	
 					</div>
 				</div>
 				<?php
@@ -199,21 +233,28 @@
 						<span class="slider round"></span>
 					</label>
 				</section>
-				
+
 				<div class="rbfw-faq-content-wrapper-main <?php echo esc_attr(($rbfw_enable_faq_content=='yes')?'show':'hide'); ?>">
 					<?php
 							$faqs = RBFW_Function::get_post_info( $post_id, 'mep_event_faq', array() );
 							if ( sizeof( $faqs ) > 0 ) {
+								$i = 0;
 								foreach ( $faqs as $faq ) {
 									$id = 'rbfw_faq_content_' . uniqid();
-									echo $this->rbfw_repeated_item_accordion( $id, 'mep_event_faq', $faq );
+									echo $this->rbfw_repeated_item_accordion( $id, 'mep_event_faq', $faq, $i );
+									$i++;
 								}
 							}
 						?>
-						<button type="button" class="rbfw_add_faq_content ppof-button mt-2">
-							<i class="fa-solid fa-circle-plus"></i>
-							<?php esc_html_e( 'Add New FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?>
-						</button>
+				</div>
+				<div class="rbfw_faq_content_btn_wrap">
+					<button type="button" class="rbfw_add_faq_content ppof-button">
+						<i class="fa-solid fa-circle-plus"></i>
+						<?php esc_html_e( 'Add New FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</button>
+					
+					<button type="button" class="rbfw_save_faq_content_btn ppof-button"> <?php esc_html_e( 'Save', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fa-solid fa-circle-notch fa-spin"></i>
+					</button>
 				</div>
 			</div>
 			<script>
@@ -232,7 +273,25 @@
 			<script>
 				jQuery(document).ready(function($){
 
-					$('.rbfw_faq_header').click(function(e){
+					$('.rbfw_faq_item_edit').click(function (e) { 
+						e.preventDefault();
+						let dataId = $(this).data('id');
+						let parent = $('.rbfw_faq_item[data-id='+dataId+']')
+						let title1Wrap = parent.find('.rbfw_faq_header_title');
+						let title2Wrap = parent.find('.rbfw_faq_header_title2');
+						let desc1Wrap = parent.find('.rbfw_faq_desc');
+						let desc2Wrap = parent.find('.rbfw_faq_desc2');
+						let imgbtnWrap = parent.find('.rbfw_faq_img_add_btn_wrap');
+						let contentWrap = parent.find('.rbfw_faq_content_wrapper');
+						
+						title1Wrap.hide();
+						title2Wrap.show();
+						desc1Wrap.hide();
+						desc2Wrap.show();
+						imgbtnWrap.show();
+					});
+
+					jQuery('.rbfw_faq_header').click(function(e){
 						e.preventDefault();
 						let parent = $(this).parent('.rbfw_faq_item');
 						parent.find('.rbfw_faq_content_wrapper').slideToggle();
@@ -241,25 +300,83 @@
 				});
 			</script>
 			<script>
-				jQuery(document).ready(function($){
-					$('.rbfw_faq_item_edit').click(function (e) { 
+				jQuery(document).ready(function ($) {
+					$('.rbfw_save_faq_content_btn').click(function (e) { 
 						e.preventDefault();
-						console.log('d');
-						let parent = $(this).parent('.rbfw_faq_item');
-						console.log(parent);
-						let titleWrap = parent.find('.rbfw_faq_header_title');
-						let descWrap = parent.find('.rbfw_faq_desc');
-						parent.find('.rbfw_faq_content_wrapper').attr('data','display-block');
-						$('.rbfw_faq_hid_input').remove();
+						let count = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item').length;
+						let theDataArr = [];
+						let postID = $('#post_ID').val();
+						for (let i = 1; i <= count; i++) {
+							let rbfw_faq_title = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item:nth-child('+i+') [name="rbfw_faq_title[]"]').val();
+							let rbfw_faq_img = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item:nth-child('+i+') [name="rbfw_faq_img[]"]').val();
+							let rbfw_faq_content = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item:nth-child('+i+') [name="rbfw_faq_content[]"]').val();
+							
+							theDataArr.push({rbfw_faq_title : rbfw_faq_title, rbfw_faq_img: rbfw_faq_img, rbfw_faq_content: rbfw_faq_content});
+
+						}
+				
+						jQuery.ajax({
+							type: 'POST',
+							url: ajaxurl,
+							data: {
+								'action': 'rbfw_save_faq_data',
+								'data': JSON.stringify(theDataArr),
+								'postID': postID
+							},
+							success: function(response) {
+								console.log('Done');
+							},
+						});
 					});
 				});
 			</script>
 			<style>
+				.rbfw_faq_content_btn_wrap section.bg-light div:nth-child(2){
+					width: 85%;
+				}
+				#rbfw_add_meta_box .rbfw-faq-content-wrapper-main  .rbfw_faq_content_btn_wrap section.bg-light  input[type=text]{
+					width: 100%;
+				}
+				.rbfw-faq-content-wrapper-main .rbfw_faq_content_btn_wrap div.rbfw_remove_area .rbfw_item_remove{
+					/*margin-top: 5px;*/
+				}
+
+				.rbfw_add_faq_content.ppof-button{
+					margin:0;
+				}
+				.rbfw_faq_content_btn_wrap button.ppof-button{
+					display: inline-block;
+					line-height: 20px;
+					margin-top: 20px;
+				}
+				.rbfw_save_faq_content_btn{
+					position: relative;
+					width: 100px;
+				}
+				.rbfw_save_faq_content_btn i{
+					position: absolute;
+					right: 15px;
+					margin-right: 0;
+					display: none;
+				}
+
+				#rbfw_add_meta_box input[type=text].rbfw_faq_title_input,
+				div.mpStyle .formControl.rbfw_faq_title_input{
+					width: 100%;
+				}
+
+				.rbfw_faq_header_title2,
+				.rbfw_faq_desc2,
+				.rbfw_faq_img_add_btn_wrap{
+					display:none;
+				}
 				.rbfw-faq-content-wrapper-main .rbfw_faq_item_edit:hover{
 					background-color: #000;
 				}
-				.rbfw-faq-content-wrapper-main .rbfw_faq_header_title{
+				.rbfw-faq-content-wrapper-main .rbfw_faq_header_title,
+				.rbfw-faq-content-wrapper-main .rbfw_faq_header_title2{
 					width:85%;
+					padding-right: 10px;
 				}
 				.rbfw-faq-content-wrapper-main div.rbfw_remove_area .rbfw_item_remove,.rbfw-faq-content-wrapper-main .rbfw_faq_item_edit{
 					height: 30px;
@@ -302,6 +419,7 @@
 					background: var(--mage-light);
 					color: var(--default-color);
 				}
+				
 
 				.rbfw-faq-content-wrapper-main .rbfw_faq_header .rbfw_faq_accordion_icon i{
 					color: var(--rbfw_color_secondary);
@@ -331,7 +449,13 @@
 			</style>
 			<?php 
 			}
-
+			public function rbfw_save_faq_data(){
+				$postID = $_POST['postID'];
+				$jsObj = !empty($_POST['data']) ? $_POST['data'] : [];
+				$jsObj = 	json_decode(stripslashes($jsObj),TRUE);
+				update_post_meta($postID,'jsObj',$jsObj);
+				wp_die();
+			}
             public function add_tabs_content( $post_id ) {
 				$rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
 			?>
@@ -340,7 +464,7 @@
 				<?php $this->section_header(); ?>
                 
 				<?php $this->panel_header('FAQ Settings','FAQ Settings'); ?>
-				<section >
+				<section>
 					<div>
 						<label><?php _e( 'FAQ Content', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 						<span><?php  _e( 'FAQ Content turn on/off', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
@@ -355,6 +479,7 @@
 					<?php
 							$faqs = RBFW_Function::get_post_info( $post_id, 'mep_event_faq', array() );
 							if ( sizeof( $faqs ) > 0 ) {
+								
 								foreach ( $faqs as $faq ) {
 									$id = 'rbfw_faq_content_' . uniqid();
 									echo $this->rbfw_repeated_item( $id, 'mep_event_faq', $faq );
