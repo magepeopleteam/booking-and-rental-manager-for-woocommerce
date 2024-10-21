@@ -1044,10 +1044,8 @@ ul.rbfw-feature-lists li {
 }
 
 ul.rbfw-feature-lists li i {
-    font-size: 20px;
     color: var(--rbfw_color_primary);
     margin-right: 8px;
-    min-width: 22px;
 }
 
 @media (min-width: 640px) {
