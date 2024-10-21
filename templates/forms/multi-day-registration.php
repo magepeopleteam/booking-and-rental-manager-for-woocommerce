@@ -99,7 +99,7 @@ if($rbfw_enable_start_end_date=='no'){
                             </div>
                             <?php $rbfw_pricing_info_display = rbfw_get_option('rbfw_pricing_info_display','rbfw_basic_gen_settings'); ?>
                         </div>
-                        <div class="price-item-container  mpStyle  <?php echo ($rbfw_pricing_info_display=='yes')?'open':'' ?>" style="display: <?php echo ($rbfw_pricing_info_display=='yes')?'block':'none' ?>">
+                        <div class="price-item-container pricing-content_dh  mpStyle  <?php echo ($rbfw_pricing_info_display=='yes')?'open':'' ?>" style="display: <?php echo ($rbfw_pricing_info_display=='yes')?'block':'none' ?>">
                             <?php if($rbfw_enable_daywise_price == 'yes'){ ?>
                                 <?php
 

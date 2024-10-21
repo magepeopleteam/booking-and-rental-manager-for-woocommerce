@@ -329,7 +329,7 @@ CSS for Single Page Template
     top: 12px;
 }
 
-.pricing-content .price-type {
+.pricing-content .price-type, .pricing-content_dh .price-type {
     margin-bottom: 10px;
     display: -webkit-box;
     display: -webkit-flex;
@@ -338,22 +338,22 @@ CSS for Single Page Template
     border-bottom: 1px solid #ddd;
 }
 
-.pricing-content .price-type p {
+.pricing-content .price-type p, .pricing-content_dh .price-type p {
     padding: 5px;
     font-size: 14px;
 }
 
-.pricing-content .price-type p:first-child {
+.pricing-content .price-type p:first-child, .pricing-content_dh .price-type p:first-child {
     font-weight: 600;
     width: 40%;
 }
 
-.pricing-content .price-type p:last-child {
+.pricing-content .price-type p:last-child, pricing-content_dh .price-type p:last-child {
     text-align: right;
     width: 60%;
 }
 
-.pricing-content .price-type:last-child {
+.pricing-content .price-type:last-child, .pricing-content_dh .price-type:last-child {
     margin-bottom: 0;
 }
 
