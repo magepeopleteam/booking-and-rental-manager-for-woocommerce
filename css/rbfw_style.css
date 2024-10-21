@@ -309,7 +309,7 @@ CSS for Single Page Template
     margin-bottom: 8px;
 }
 
-.pricing-content {
+.pricing-content, .pricing-content_dh {
     background-color: #f5f5f5;
     padding: 15px;
     position: relative;
@@ -434,7 +434,7 @@ CSS for Single Page Template
 }
 
 
-.pricing-content .price-item-container {
+.pricing-content .price-item-container, .price-item-container.pricing-content_dh {
     display: none;
     padding-top: 10px;
     padding-bottom: 10px;
