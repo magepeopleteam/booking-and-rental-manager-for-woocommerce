@@ -3317,7 +3317,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .owl-carousel .owl-item img {
     display: block;
     object-fit: cover;
-    height: 200px;
     object-position: top center;
 }
 
