@@ -53,7 +53,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $rbfw_room_service_price 	= $cart_item['rbfw_room_service_price'] ? $cart_item['rbfw_room_service_price'] : '';
 
     $discount_type 	= $cart_item['discount_type'] ? $cart_item['discount_type'] : '';
-    $discount_amount 	= $cart_item['discount_amount'] ? $cart_item['discount_amount'] : '';
+    $discount_amount 	= $cart_item['discount_amount'] ? $cart_item['discount_amount'] : '0';
 
     ?>
     <table class="rbfw_room_cart_table">
@@ -138,7 +138,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
             </tr>
         <?php endif; ?>
 
-        <?php if ( ! empty( $discount_amount ) ): ?>
+        <?php if ( $discount_amount  ): ?>
             <tr>
                 <th><?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                 <td><?php echo wc_price($discount_amount); ?></td>
@@ -230,7 +230,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 }
 
             endforeach;
-
         endif; ?>
 
         <?php if ( ! empty( $rbfw_service_info ) ):
@@ -283,7 +282,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
 
     $start_datetime     = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
-
     $end_datetime       = $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
 
     $start_date         = $cart_item['rbfw_start_date'] ? $cart_item['rbfw_start_date'] : '';
@@ -435,7 +433,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 } ?>
             <?php } ?>
 
-            <?php if ( ! empty( $discount_amount ) ): ?>
+            <?php if (  $discount_amount ): ?>
                 <tr>
                     <th><?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                     <td><?php echo wc_price($discount_amount); ?></td>

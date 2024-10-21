@@ -77,11 +77,11 @@ if($rbfw_enable_start_end_date=='no'){
         $expire = 'yes';
     }
 }
-
 ?>
 
 <?php if($expire == 'yes'){ ?>
     <h3><?php esc_html_e( 'Date Expired !', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+
     <?php die; } ?>
 
 <div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
@@ -97,9 +97,7 @@ if($rbfw_enable_start_end_date=='no'){
                                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pricing_info', 'rbfw_basic_translation_settings', __('Pricing Info','booking-and-rental-manager-for-woocommerce'))); ?>
                                 </div>
                             </div>
-
                             <?php $rbfw_pricing_info_display = rbfw_get_option('rbfw_pricing_info_display','rbfw_basic_gen_settings'); ?>
-
                         </div>
                         <div class="price-item-container  mpStyle  <?php echo ($rbfw_pricing_info_display=='yes')?'open':'' ?>" style="display: <?php echo ($rbfw_pricing_info_display=='yes')?'block':'none' ?>">
                             <?php if($rbfw_enable_daywise_price == 'yes'){ ?>
@@ -168,58 +166,47 @@ if($rbfw_enable_start_end_date=='no'){
                             <?php } ?>
 
                             <?php
-
-                            rbfw_day_row( __( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun' );
-                            rbfw_day_row( __( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon' );
-                            rbfw_day_row( __( 'Tuesday:', 'booking-and-rental-manager-for-woocommerce' ), 'tue' );
-                            rbfw_day_row( __( 'Wednesday:', 'booking-and-rental-manager-for-woocommerce' ), 'wed' );
-                            rbfw_day_row( __( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu' );
-                            rbfw_day_row( __( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri' );
-                            rbfw_day_row( __( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat' );
-
                             function rbfw_day_row( $day_name, $day_slug ) {
                                 $hourly_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) : '';
                                 $daily_rate  = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) : '';
                                 $enable      = !empty(get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true )) ? get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) : '';
                                 return array('enable'=>$enable,'day_name'=>$day_name,'daily_rate'=>$daily_rate,'hourly_rate'=>$hourly_rate);
                             }
-                            function rbfw_after_seasonal_price( $sp = array() ) {
-                                $start_date = array_key_exists( 'rbfw_sp_start_date', $sp ) ? $sp['rbfw_sp_start_date'] : '';
-                                $end_date   = array_key_exists( 'rbfw_sp_end_date', $sp ) ? $sp['rbfw_sp_end_date'] : '';
-                                $sp_price_h = array_key_exists( 'rbfw_sp_price_h', $sp ) ? $sp['rbfw_sp_price_h'] : '0';
-                                $sp_price_d = array_key_exists( 'rbfw_sp_price_d', $sp ) ? $sp['rbfw_sp_price_d'] : '0';
-                                ?>
-                                <tr>
-                                    <td colspan="2">From <strong><?php echo esc_html( rbfw_date_format($start_date) ); ?></strong> To <strong><?php echo esc_html( rbfw_date_format($end_date) ); ?></strong> </td>
-                                </tr>
-                                <tr>
-                                    <td><strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo  wc_price($sp_price_d) ; ?></td>
-                                    <td><strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>  <?php echo  wc_price($sp_price_h ); ?></td>
-                                </tr>
-                                <?php
-                            }
                             ?>
-
                             <?php
-                            $seasonal_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) ? get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) : [];
+
+                            $seasonal_prices = [];
+                            if (is_plugin_active('booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php')){
+                                $seasonal_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) ? get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) : [];
+                            }
                             if(!empty($seasonal_prices)){
                                 ?>
                                 <div class="mp_settings_area mpStyle rbfw_seasonal_price_config_wrapper rbfw_seasonal_price_info">
                                     <section>
                                         <div class="w-100">
                                             <div class="mp_item_insert ">
-
                                                 <table>
                                                     <?php
                                                     if ( sizeof( $seasonal_prices ) > 0 ) {
-                                                        foreach ( $seasonal_prices as $prices ) {
-                                                            rbfw_after_seasonal_price( $prices );
+                                                        foreach ( $seasonal_prices as $sp ) {
+                                                            $start_date = array_key_exists( 'rbfw_sp_start_date', $sp ) ? $sp['rbfw_sp_start_date'] : '';
+                                                            $end_date   = array_key_exists( 'rbfw_sp_end_date', $sp ) ? $sp['rbfw_sp_end_date'] : '';
+                                                            $sp_price_h = array_key_exists( 'rbfw_sp_price_h', $sp ) ? $sp['rbfw_sp_price_h'] : '0';
+                                                            $sp_price_d = array_key_exists( 'rbfw_sp_price_d', $sp ) ? $sp['rbfw_sp_price_d'] : '0';
+                                                            ?>
+                                                            <tr>
+                                                                <td colspan="2"><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format($start_date) ); ?></strong><?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>  <strong><?php echo esc_html( rbfw_date_format($end_date) ); ?></strong> </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td><strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo  wc_price($sp_price_d) ; ?></td>
+                                                                <td><strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>  <?php echo  wc_price($sp_price_h ); ?></td>
+                                                            </tr>
+                                                            <?php
                                                         }
                                                     }
                                                     ?>
                                                 </table>
                                             </div>
-
                                         </div>
                                     </section>
                                 </div>

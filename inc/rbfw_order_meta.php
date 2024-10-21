@@ -32,14 +32,8 @@ function rbfw_order_meta_box_callback(){
     
     $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
-    if($rbfw_payment_system == 'wps'){
-        $order_no = get_post_meta($order_id, 'rbfw_order_id', true);
-    }else{
-        $order_no = $post_id;
-    }
+    $order_no = get_post_meta($order_id, 'rbfw_order_id', true);
     $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-    $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
-
     $grand_total = !empty(get_post_meta($order_id,'rbfw_ticket_total_price',true)) ? rbfw_mps_price(get_post_meta($order_id,'rbfw_ticket_total_price',true)) : '';
     $rbfw_order_tax = !empty(get_post_meta($order_id,'rbfw_order_tax',true)) ? rbfw_mps_price(get_post_meta($order_id,'rbfw_order_tax',true)) : '';
     ?>
@@ -190,6 +184,7 @@ function rbfw_order_meta_box_callback(){
                         $service_infos = '';
                     }
 
+                    $total_days = $ticket_info['total_days']??'';
                     $variation_info = !empty($ticket_info['rbfw_variation_info']) ? $ticket_info['rbfw_variation_info'] : [];
                     $duration_cost = $ticket_info['duration_cost'];
                     $service_cost = $ticket_info['service_cost'];
@@ -219,14 +214,18 @@ function rbfw_order_meta_box_callback(){
                                 <td><?php echo rbfw_get_type_label($rent_type); ?></td>
                             </tr>
                             <?php if($rent_type == 'bike_car_md' || $rent_type == 'bike_car_sd' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){ ?>
-                            <tr>
-                                <td><strong><?php rbfw_string('rbfw_text_pickup_location',__('Pickup Location','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                                <td><?php echo esc_html($pickup_point); ?></td>
-                            </tr>
-                            <tr>
-                                <td><strong><?php rbfw_string('rbfw_text_dropoff_location',__('Drop-off Location','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                                <td><?php echo esc_html($dropoff_point); ?></td>
-                            </tr>
+                                <?php if($pickup_point){ ?>
+                                    <tr>
+                                        <td><strong><?php rbfw_string('rbfw_text_pickup_location',__('Pickup Location','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                                        <td><?php echo esc_html($pickup_point); ?></td>
+                                    </tr>
+                                <?php } ?>
+                                <?php if($dropoff_point){ ?>
+                                    <tr>
+                                        <td><strong><?php rbfw_string('rbfw_text_dropoff_location',__('Drop-off Location','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                                        <td><?php echo esc_html($dropoff_point); ?></td>
+                                    </tr>
+                                <?php } ?>
                             <?php } ?>
                             <?php if($rent_type == 'resort'){ ?>
                                 <tr>
@@ -267,7 +266,9 @@ function rbfw_order_meta_box_callback(){
                             <?php } ?>
                             <?php if($rent_type == 'resort'){ ?>
                                 <tr>
-                                    <td><strong><?php rbfw_string('rbfw_text_room_information',__('Room Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                                    <td>
+                                        <strong><?php rbfw_string('rbfw_text_room_information',__('Room Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong>
+                                    </td>
                                     <td>
                                         <table class="wp-list-table widefat fixed striped table-view-list">
                                         <?php
@@ -306,9 +307,7 @@ function rbfw_order_meta_box_callback(){
                                                         <?php
                                                     }
                                                 }
-                                            }
-                                            elseif($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){
-                                                $total_days = $ticket_info['total_days'];
+                                            }elseif($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){
                                                 if(!empty($service_info)){
                                                     foreach ($service_info as $key => $value) {
                                                         ?>
@@ -356,7 +355,7 @@ function rbfw_order_meta_box_callback(){
                                                             <td>
                                                                 <?php
                                                                 if($item['service_price_type']=='day_wise'){
-                                                                    echo '('.wc_price($item['price']). 'x'. $item['quantity'] . 'x' .$total_days .'='.wc_price($item['price']*$item['quantity']*$total_days).')';
+                                                                    echo '('.wc_price($item['price']). 'x'. $item['quantity'] . 'x' .$total_days .'='.wc_price($item['price'] * $item['quantity'] * $total_days).')';
                                                                 }else{
                                                                     echo '('.wc_price($item['price']). 'x'. $item['quantity'] .'='.wc_price($item['price']*$item['quantity']).')';
                                                                 }
@@ -373,7 +372,9 @@ function rbfw_order_meta_box_callback(){
 
                             <?php if(!empty($rbfw_regf_info)){ ?>
                             <tr>
-                                <td><strong><?php rbfw_string('rbfw_text_customer_information',__('Customer Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                                <td>
+                                    <strong><?php rbfw_string('rbfw_text_customer_information',__('Customer Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong>
+                                </td>
                                 <td>
                                     <table class="wp-list-table widefat fixed striped table-view-list">
                                     <?php
