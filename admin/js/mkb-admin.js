@@ -38,30 +38,80 @@
         return false;
     });
     //*********Add F.A.Q Item************//
-    jQuery(document).on('click', '.rbfw_add_faq_content', function() {
-        let $this = jQuery(this);
-        let parent = $this.closest('.tabsItem');
-        let dt = new Date();
-        let time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-        $.ajax({
-            type: 'POST',
-            url: rbfw_ajax_url,
-            data: { "action": "get_rbfw_add_faq_content", "id": time },
-            beforeSend: function() {
-                dLoader(parent);
-            },
-            success: function(data) {
-                //$this.before(data);
-                $('.rbfw-faq-content-wrapper-main').append(data);
-                tinymce.execCommand('mceAddEditor', true, time);
-                dLoaderRemove(parent);
-            },
-            error: function(response) {
-                console.log(response);
+
+    jQuery(document).ready(function() {
+        function rbfw_update_editor_content() {
+            let count = jQuery('.rbfw-faq-content-wrapper-main .rbfw_faq_item').length;
+
+            for (let i = 0; i < count; i++) {
+
+                let getID = jQuery('.rbfw_faq_item[data-id=' + i + '] textarea[name="rbfw_faq_content[]"]').attr('id');
+                tinymce.init({
+                    selector: "#" + getID,
+                    setup: (editor) => {
+                        editor.on("keyup", (e) => {
+                            let thisContent = tinyMCE.activeEditor.getContent();
+                            jQuery("#" + getID).html(thisContent);
+                            jQuery("#" + getID).parents('.rbfw_faq_item').find('.rbfw_faq_desc').html(thisContent);
+                        })
+                    }
+                });
+
             }
+
+        }
+        rbfw_update_editor_content();
+
+        jQuery(document).on('click', '.rbfw_add_faq_content', function() {
+            let $this = jQuery(this);
+            let parent = $this.closest('.tabsItem');
+            let dt = new Date();
+            let time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+            let theCount = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item').length;
+            let i = parseInt(theCount);
+            let theID = 'rbfw_faq_content_' + i;
+
+            $.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                data: { "action": "get_rbfw_add_faq_content", "id": theID, 'count': theCount },
+                beforeSend: function() {
+                    dLoader(parent);
+                },
+                success: function(data) {
+                    $('.rbfw-faq-content-wrapper-main').append(data);
+                    tinymce.execCommand('mceAddEditor', true, theID);
+                    dLoaderRemove(parent);
+
+                    if (data) {
+                        //var myContent = tinymce.get(theID).getContent();
+
+                    }
+
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+
+            tinymce.init({
+                selector: "#" + theID,
+                setup: (editor) => {
+                    editor.on("keyup", (e) => {
+                        let thisContent = tinyMCE.activeEditor.getContent();
+                        console.log(thisContent);
+                        jQuery("#" + theID).html(thisContent);
+                        jQuery("#" + theID).parents('.rbfw_faq_item').find('.rbfw_faq_desc').html(thisContent);
+                    })
+                }
+            });
+
+            return false;
         });
-        return false;
     });
+
+
+
 
     jQuery(window).load(function() {
         jQuery('.mp_tab_menu').each(function() {
