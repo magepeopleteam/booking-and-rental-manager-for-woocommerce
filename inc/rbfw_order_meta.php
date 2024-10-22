@@ -15,6 +15,190 @@ function rbfw_order_meta_box() {
     add_meta_box('rbfw-order-meta-box-sidebar', __( 'Order Status Update', 'booking-and-rental-manager-for-woocommerce' ), 'rbfw_order_meta_box_sidebar_callback', '', 'side', 'core');
 }
 
+
+add_action('wp_ajax_fetch_order_details', 'fetch_order_details_callback');
+
+function fetch_order_details_callback() {
+    if (isset($_POST['post_id'])) {
+        $post_id = intval($_POST['post_id']);
+        $billing_name = get_post_meta($post_id, 'rbfw_billing_name', true);
+        $billing_email = get_post_meta($post_id, 'rbfw_billing_email', true);
+        $payment_method = get_post_meta($post_id, 'rbfw_payment_method', true);
+        $payment_id = get_post_meta($post_id, 'rbfw_payment_id', true);
+        $rbfw_pickup_note = get_post_meta($post_id, 'rbfw_pickup_note', true);
+        $rbfw_return_note = get_post_meta($post_id, 'rbfw_return_note', true);
+        $rbfw_return_security_deposit_amount = get_post_meta($post_id, 'rbfw_return_security_deposit_amount', true);
+        $ticket_infos = maybe_unserialize(get_post_meta($post_id, 'rbfw_ticket_info', true));
+        ob_start();
+        ?>
+        <div class="rbfw_order_meta_box_wrap">
+            <div class="rbfw_order_meta_box_body">
+                <h2><?php esc_html_e('Order Details', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
+                <table class="wp-list-table widefat fixed striped table-view-list">
+                    <tbody>
+                        <?php if ($billing_name) : ?>
+                            <tr>
+                                <td><strong><?php esc_html_e('Billing Name:', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
+                                <td><?php echo esc_html($billing_name); ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if ($billing_email) : ?>
+                            <tr>
+                                <td><strong><?php esc_html_e('Billing Email:', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
+                                <td><?php echo esc_html($billing_email); ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if ($payment_method) : ?>
+                            <tr>
+                                <td><strong><?php esc_html_e('Payment Method:', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
+                                <td><?php echo esc_html($payment_method); ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if ($payment_id) : ?>
+                            <tr>
+                                <td><strong><?php esc_html_e('Payment ID:', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
+                                <td><?php echo esc_html($payment_id); ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if ($rbfw_pickup_note) : ?>
+                            <tr>
+                                <td><strong><?php esc_html_e('Pickup Note:', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
+                                <td><?php echo esc_html($rbfw_pickup_note); ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if ($rbfw_return_note) : ?>
+                            <tr>
+                                <td><strong><?php esc_html_e('Return Note:', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
+                                <td><?php echo esc_html($rbfw_return_note); ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if ($rbfw_return_security_deposit_amount) : ?>
+                            <tr>
+                                <td><strong><?php esc_html_e('Return Security Deposit:', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
+                                <td><?php echo esc_html($rbfw_return_security_deposit_amount); ?></td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+
+                <?php if (!empty($ticket_infos) && is_array($ticket_infos)) : ?>
+                    <h2><?php esc_html_e('Service Information', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
+                    <?php
+                    $unique_services = [];
+                    foreach ($ticket_infos as $ticket_info) {
+                        if (!empty($ticket_info['rbfw_service_info']) && is_array($ticket_info['rbfw_service_info'])) {
+                            foreach ($ticket_info['rbfw_service_info'] as $service_key => $service_value) {
+                                if (!isset($unique_services[$service_key])) {
+                                    $unique_services[$service_key] = $service_value;
+                                }
+                            }
+                        }
+                    }
+                    if (!empty($unique_services)) {
+                        echo '<table class="wp-list-table widefat fixed striped table-view-list">';
+                        echo '<thead><tr><th>' . esc_html__('Service Name', 'booking-and-rental-manager-for-woocommerce') . '</th><th>' . esc_html__('Quantity', 'booking-and-rental-manager-for-woocommerce') . '</th></tr></thead>';
+                        echo '<tbody>';
+                        foreach ($unique_services as $service_key => $service_value) {
+                            echo '<tr>';
+                            echo '<td>' . esc_html($service_key) . '</td>';
+                            echo '<td>' . esc_html($service_value) . '</td>';
+                            echo '</tr>';
+                        }
+                        echo '</tbody></table>';
+                    }
+                    ?>
+
+                    <h2><?php esc_html_e('Ticket Information', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
+                    <table class="wp-list-table widefat fixed striped table-view-list">
+                        <thead>
+                            <tr>
+                                <?php
+                                $show_columns = [ 'item_name' => false, 'pickup_location' => false, 'dropoff_location' => false, 'package' => false, 'discount_type' => false, 'rent_info' => false, 'duration_cost' => false, 'resource_cost' => false, 'tax' => false, 'discount' => false, 'security_deposit' => false, 'total_cost' => false, 'rent_type' => false, ];
+                                foreach ($ticket_infos as $ticket_info) {
+                                    $show_columns['item_name'] = $show_columns['item_name'] || !empty($ticket_info['ticket_name']);
+                                    $show_columns['pickup_location'] = $show_columns['pickup_location'] || !empty($ticket_info['rbfw_pickup_point']);
+                                    $show_columns['dropoff_location'] = $show_columns['dropoff_location'] || !empty($ticket_info['rbfw_dropoff_point']);
+                                    $show_columns['package'] = $show_columns['package'] || !empty($ticket_info['rbfw_resort_package']);
+                                    $show_columns['discount_type'] = $show_columns['discount_type'] || !empty($ticket_info['discount_type']);
+                                    $show_columns['rent_info'] = $show_columns['rent_info'] || !empty($ticket_info['rbfw_type_info']);
+                                    $show_columns['duration_cost'] = $show_columns['duration_cost'] || isset($ticket_info['duration_cost']);
+                                    $show_columns['resource_cost'] = $show_columns['resource_cost'] || isset($ticket_info['service_cost']) && $ticket_info['service_cost'] > 0; // Check for resource cost
+                                    $show_columns['tax'] = $show_columns['tax'] || isset($ticket_info['rbfw_mps_tax']) && $ticket_info['rbfw_mps_tax'] > 0; // Check for tax
+                                    $show_columns['discount'] = $show_columns['discount'] || isset($ticket_info['discount_amount']) && $ticket_info['discount_amount'] > 0; // Check for discount
+                                    $show_columns['security_deposit'] = $show_columns['security_deposit'] || isset($ticket_info['security_deposit_amount']) && $ticket_info['security_deposit_amount'] > 0; // Check for security deposit
+                                    $show_columns['total_cost'] = $show_columns['total_cost'] || isset($ticket_info['ticket_price']); // Total cost is always shown
+                                    $show_columns['rent_type'] = $show_columns['rent_type'] || !empty($ticket_info['rbfw_rent_type']); // Check for rent type
+                                }
+                                foreach ($show_columns as $column_key => $show) {
+                                    if ($show) {
+                                        echo '<th>' . esc_html__(ucwords(str_replace('_', ' ', $column_key)), 'booking-and-rental-manager-for-woocommerce') . '</th>';
+                                    }
+                                }
+                                ?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $unique_tickets = [];
+                            foreach ($ticket_infos as $ticket_info) {
+                                $ticket_identifier = $ticket_info['ticket_name'] . '|' . 
+                                                     $ticket_info['rbfw_pickup_point'] . '|' . 
+                                                     $ticket_info['rbfw_dropoff_point'] . '|' . 
+                                                     $ticket_info['rbfw_resort_package'] . '|' . 
+                                                     $ticket_info['discount_type'] . '|' . 
+                                                     $ticket_info['duration_cost'] . '|' . 
+                                                     $ticket_info['service_cost'] . '|' . 
+                                                     $ticket_info['rbfw_mps_tax'] . '|' . 
+                                                     $ticket_info['discount_amount'] . '|' . 
+                                                     $ticket_info['security_deposit_amount'] . '|' . 
+                                                     $ticket_info['ticket_price'] . '|' . 
+                                                     $ticket_info['rbfw_rent_type'];
+                                if (!isset($unique_tickets[$ticket_identifier])) {
+                                    $unique_tickets[$ticket_identifier] = $ticket_info; 
+                                }
+                            }
+                            foreach ($unique_tickets as $unique_ticket) {
+                                echo '<tr>';
+                                if ($show_columns['item_name']) echo '<td>' . esc_html($unique_ticket['ticket_name'] ?? 'N/A') . '</td>';
+                                if ($show_columns['pickup_location']) echo '<td>' . esc_html($unique_ticket['rbfw_pickup_point'] ?? 'N/A') . '</td>';
+                                if ($show_columns['dropoff_location']) echo '<td>' . esc_html($unique_ticket['rbfw_dropoff_point'] ?? 'N/A') . '</td>';
+                                if ($show_columns['package']) echo '<td>' . esc_html($unique_ticket['rbfw_resort_package'] ?? 'N/A') . '</td>';
+                                if ($show_columns['discount_type']) echo '<td>' . esc_html($unique_ticket['discount_type'] ?? 'N/A') . '</td>';
+                                if ($show_columns['rent_info']) {
+                                    $rent_info = $unique_ticket['rbfw_type_info'] ?? 'N/A';
+                                    if (is_array($rent_info)) {
+                                        $rent_info_string = '';
+                                        foreach ($rent_info as $type => $quantity) {
+                                            $rent_info_string .= esc_html($type) . ': ' . esc_html($quantity) . '<br>';
+                                        }
+                                        echo '<td>' . $rent_info_string . '</td>';
+                                    } else {
+                                        echo '<td>' . esc_html($rent_info) . '</td>';
+                                    }
+                                }
+                                if ($show_columns['duration_cost']) echo '<td>' . wc_price($unique_ticket['duration_cost'] ?? 0) . '</td>';
+                                if ($show_columns['resource_cost']) echo '<td>' . wc_price($unique_ticket['service_cost'] ?? 0) . '</td>';
+                                if ($show_columns['tax']) echo '<td>' . wc_price($unique_ticket['rbfw_mps_tax'] ?? 0) . '</td>';
+                                if ($show_columns['discount']) echo '<td>' . wc_price($unique_ticket['discount_amount'] ?? 0) . '</td>';
+                                if ($show_columns['security_deposit']) echo '<td>' . wc_price($unique_ticket['security_deposit_amount'] ?? 0) . '</td>';
+                                if ($show_columns['total_cost']) echo '<td>' . wc_price($unique_ticket['ticket_price'] ?? 0) . '</td>';
+                                if ($show_columns['rent_type']) echo '<td>' . esc_html($unique_ticket['rbfw_rent_type'] ?? 'N/A') . '</td>'; 
+                                echo '</tr>';
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php
+        $output = ob_get_clean(); 
+
+        echo $output;
+    }
+    wp_die(); 
+}
+
 function rbfw_order_meta_box_callback(){
     global $post;
     global $rbfw;
@@ -149,7 +333,6 @@ function rbfw_order_meta_box_callback(){
                 $subtotal = 0;
 
                 foreach ($ticket_infos as $ticket_info) {
-
                     $item_name = !empty($ticket_info['ticket_name']) ? $ticket_info['ticket_name'] : '';
                     $rbfw_id = $ticket_info['rbfw_id'];
                     $item_id = $rbfw_id;
@@ -344,13 +527,17 @@ function rbfw_order_meta_box_callback(){
                                         <?php esc_html_e( 'Service Information:', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                     </td>
                                     <td>
-                                        <?php foreach ($service_infos as $key => $value){ ?>
+                                        <?php foreach ($service_infos as $key => $value){ 
+                                            
+                                            ?>
+                                            
                                             <?php if(count($value)){ ?>
                                                 <table>
                                                     <tr>
                                                         <td><?php echo $key; ?></td>
                                                     </tr>
                                                     <?php foreach ($value as $key1=>$item){ ?>
+                                                        
                                                         <tr>
                                                             <td><?php echo $item['name'] ?></td>
                                                             <td>
