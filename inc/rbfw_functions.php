@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-add_action('wp', 'rbfw_hide_hidden_product_from_single', 90);
+/*add_action('wp', 'rbfw_hide_hidden_product_from_single', 90);
 
 if (!function_exists('rbfw_hide_hidden_product_from_single')) {
     function rbfw_hide_hidden_product_from_single() {
@@ -24,7 +24,7 @@ if (!function_exists('rbfw_hide_hidden_product_from_single')) {
             }
         }
     }
-}
+}*/
 
 
 // Language Load
