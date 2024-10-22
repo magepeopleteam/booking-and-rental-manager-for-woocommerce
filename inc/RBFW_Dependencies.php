@@ -134,6 +134,8 @@
 				wp_enqueue_script('jquery-ui-core');
 				wp_enqueue_script('jquery-ui-sortable');
 				wp_enqueue_script('jquery-ui-datepicker');
+				wp_enqueue_script('jquery-effects-slide');
+				wp_enqueue_script('jquery-effects-fade');
 				wp_enqueue_style('wp-color-picker');
 				wp_enqueue_script('wp-color-picker');
 				wp_enqueue_script('rbfw-options-framework', plugins_url('admin/js/mage-options-framework.js', __DIR__), array('jquery', 'wp-color-picker', 'jquery-ui-sortable'));
