@@ -309,7 +309,7 @@ CSS for Single Page Template
     margin-bottom: 8px;
 }
 
-.pricing-content, .pricing-content_dh {
+.pricing-content {
     background-color: #f5f5f5;
     padding: 15px;
     position: relative;
@@ -329,7 +329,7 @@ CSS for Single Page Template
     top: 12px;
 }
 
-.pricing-content .price-type, .pricing-content_dh .price-type {
+.pricing-content .price-type {
     margin-bottom: 10px;
     display: -webkit-box;
     display: -webkit-flex;
@@ -338,22 +338,22 @@ CSS for Single Page Template
     border-bottom: 1px solid #ddd;
 }
 
-.pricing-content .price-type p, .pricing-content_dh .price-type p {
+.pricing-content .price-type p {
     padding: 5px;
     font-size: 14px;
 }
 
-.pricing-content .price-type p:first-child, .pricing-content_dh .price-type p:first-child {
+.pricing-content .price-type p:first-child {
     font-weight: 600;
     width: 40%;
 }
 
-.pricing-content .price-type p:last-child, pricing-content_dh .price-type p:last-child {
+.pricing-content .price-type p:last-child {
     text-align: right;
     width: 60%;
 }
 
-.pricing-content .price-type:last-child, .pricing-content_dh .price-type:last-child {
+.pricing-content .price-type:last-child {
     margin-bottom: 0;
 }
 
@@ -434,7 +434,7 @@ CSS for Single Page Template
 }
 
 
-.pricing-content .price-item-container, .price-item-container.pricing-content_dh {
+.pricing-content .price-item-container {
     display: none;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -2496,7 +2496,7 @@ table.rbfw_bikecarsd_price_table tbody td {
     border: 0;
     padding: 5px;
     padding-left: 10px;
-   
+
 }
 
 table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n + 1) {
@@ -4470,7 +4470,7 @@ span {
     border: 0 !important;
     background: #fff;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    padding: 3px !important;
+    padding: 3px;
 }
 
 .ui-datepicker table {
@@ -6820,7 +6820,7 @@ ul, li {
     justify-content: center;
     text-transform: uppercase;
     font-weight: 500;
-    
+
 }
 a.rbfw_rent_list_btn{
     text-decoration: none;
