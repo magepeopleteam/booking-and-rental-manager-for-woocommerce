@@ -445,7 +445,7 @@
 					margin-top: 20px;
 				}
 				#rbfw_add_meta_box .rbfw-faq-content-wrapper-main .rbfw_faq_desc2 label{
-					margin-bottom: -20px;
+					margin-bottom: -15px;
 					font-weight: 500;
 
 				}
@@ -515,7 +515,7 @@
 					right: 0;
 					position: absolute;
 					display: none;
-					padding-top: 40px;
+					padding-top: 60px;
 					padding-bottom: 40px;
 				}
 				div.rbfw_remove_area{
