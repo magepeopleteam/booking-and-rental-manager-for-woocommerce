@@ -23,8 +23,7 @@
 
 
 			public function get_rbfw_add_faq_content() {
-				$id = RBFW_Function::data_sanitize( $_POST['id'] );
-				$id = 'id_'.uniqid();
+				$id = 'id'.uniqid();
 				$count = RBFW_Function::data_sanitize( $_POST['count'] );
 				$count = (int)$count;
 				echo $this->rbfw_repeated_item_addnew($id, 'mep_event_faq', [], $count);
@@ -57,83 +56,7 @@
                     </section>
                 <?php
             }
-			public function rbfw_repeated_item($id, $meta_key, $data = array(), $i = null ){
-				ob_start();
-				$array = $this->get_rbfw_repeated_setting_array( $meta_key );
 
-				$title       = $array['title'];
-				$title_name  = $array['title_name'];
-				$title_value = array_key_exists( $title_name, $data ) ? html_entity_decode( $data[ $title_name ] ) : '';
-
-				$image_title = $array['img_title'];
-				$image_name  = $array['img_name'];
-				$images      = array_key_exists( $image_name, $data ) ? $data[ $image_name ] : '';
-
-				$content_title = $array['content_title'];
-				$content_name  = $array['content_name'];
-				$content       = array_key_exists( $content_name, $data ) ? html_entity_decode( $data[ $content_name ] ) : '';
-
-				?>
-				<div class='rbfw_remove_area mt-5 rbfw_faq_item' data-id="<?php echo esc_attr($i); ?>">
-					<section class="bg-light">
-						<div>
-							<p class=""><?php echo esc_html( $title ); ?></p>
-						</div>
-						<div >
-							<input type="text" class="formControl rbfw_faq_title_input" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
-						</div>
-						<div>
-							<span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
-						</div>
-					</section>
-					<section >
-						<div class="rbfw_multi_image_area">
-							<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
-							<div class="rbfw_multi_image">
-								<?php
-									$all_images = explode( ',', $images );
-									if ( $images && sizeof( $all_images ) > 0 ) {
-										foreach ( $all_images as $image ) {
-											?>
-											<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
-												<span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>
-												<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
-											</div>
-											<?php
-										}
-									}
-								?>
-							</div>
-							<button type="button" class=" add_multi_image ppof-button">
-								<i class="fa-solid fa-circle-plus"></i>
-								<?php esc_html_e( 'Add Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
-							</button>
-						</div>
-					</section>
-					<section>
-						<div class="w-100">
-							<?php
-								$settings = array(
-									'wpautop'       => false,
-									'media_buttons' => false,
-									'textarea_name' => $content_name . '[]',
-									'tabindex'      => '323',
-									'editor_height' => 200,
-									'editor_css'    => '',
-									'editor_class'  => '',
-									'teeny'         => false,
-									'dfw'           => false,
-									'tinymce'       => true,
-									'quicktags'     => true
-								);
-								wp_editor( $content, $id, $settings );
-							?>
-						</div>
-					</section>
-				</div>
-				<?php
-				return ob_get_clean();
-			}
 			public function rbfw_repeated_item_addnew($id, $meta_key, $data = array(), $i = null ){
 				ob_start();
 				$array = $this->get_rbfw_repeated_setting_array( $meta_key );
@@ -187,11 +110,7 @@
 					<div class="rbfw_faq_slide_wrap">
 						<div class="rbfw_faq_slide_overlay">
 							<div class="rbfw_faq_slide_header">
-
 								<div class="rbfw_faq_slide_actionlinks">
-									<button type="button" class="rbfw_save_faq_content_btn ppof-button"> 
-										<?php esc_html_e( 'Save', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fa-solid fa-circle-notch fa-spin"></i>
-									</button>
 									<span class="rbfw_faq_slide_close"><i class="fa fa-times" aria-hidden="true"></i></span>
 								</div>
 							</div>
@@ -257,12 +176,24 @@
 										wp_editor( $content, $id, $settings );
 									?>
 								</div>
+								<div class="rbfw_faq_slide_footer">
+									<div class="rbfw_faq_slide_actionlinks">
+										<button type="button" class="rbfw_save_faq_content_btn ppof-button"> 
+											<?php esc_html_e( 'Save & Close', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fa-solid fa-circle-notch fa-spin"></i>
+										</button>
+									</div>								
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 				<?php
-				return ob_get_clean();
+				$temp = ob_get_clean();
+				//$temp .= \_WP_Editors::enqueue_scripts();
+				//$temp .= print_footer_scripts();
+				//	$temp .= \_WP_Editors::editor_js();
+
+				return $temp;
 			}
 			public function rbfw_repeated_item_accordion($id, $meta_key, $data = array(), $i = null ){
 				ob_start();
@@ -317,11 +248,7 @@
 					<div class="rbfw_faq_slide_wrap">
 						<div class="rbfw_faq_slide_overlay">
 							<div class="rbfw_faq_slide_header">
-
 								<div class="rbfw_faq_slide_actionlinks">
-									<button type="button" class="rbfw_save_faq_content_btn ppof-button"> 
-										<?php esc_html_e( 'Save', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fa-solid fa-circle-notch fa-spin"></i>
-									</button>
 									<span class="rbfw_faq_slide_close"><i class="fa fa-times" aria-hidden="true"></i></span>
 								</div>
 							</div>
@@ -387,7 +314,15 @@
 										wp_editor( $content, $id, $settings );
 									?>
 								</div>
+								<div class="rbfw_faq_slide_footer">
+								<div class="rbfw_faq_slide_actionlinks">
+									<button type="button" class="rbfw_save_faq_content_btn ppof-button"> 
+										<?php esc_html_e( 'Save & Close', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fa-solid fa-circle-notch fa-spin"></i>
+									</button>
+								</div>								
 							</div>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -441,6 +376,18 @@
 				</div>
 			</div>
 			<style>
+				<?php 
+				if(use_block_editor_for_post_type('rbfw_item')){
+					?>
+					.rbfw_faq_slide_overlay{
+						padding-top: 60px !important;
+					}
+					.rbfw_faq_slide_body{
+						padding-bottom: 50px !important;
+					}
+					<?php
+				}
+				?>
 				.rbfw-faq-content-wrapper-main .rbfw_faq_desc2{
 					margin-top: 20px;
 				}
@@ -490,6 +437,13 @@
 					display: flex;
 					justify-content: flex-end;
 				}
+				.rbfw_faq_slide_footer .rbfw_faq_slide_actionlinks{
+					justify-content: flex-start;
+				}
+				.rbfw_faq_slide_footer{
+					display: block;
+    				margin-top: 20px;
+				}
 				.rbfw_faq_slide_actionlinks .faq_notice{
 					line-height: 35px;
 					margin-right: 10px;
@@ -515,7 +469,7 @@
 					right: 0;
 					position: absolute;
 					display: none;
-					padding-top: 60px;
+					padding-top: 30px;
 					padding-bottom: 40px;
 				}
 				div.rbfw_remove_area{
@@ -569,13 +523,16 @@
 					position: relative;
 					width: 100px;
 					margin-right: 10px;
+					overflow:hidden;
 				}
 				.rbfw_save_faq_content_btn i{
 					position: absolute;
-					right: 15px;
+					right: -4px;
 					margin-right: 0;
 					display: none;
-					top: 11px;
+					top: -41px;
+					background: rgb(70 69 68 / 38%);
+					padding: 50px 50px;
 				}
 
 				#rbfw_add_meta_box input[type=text].rbfw_faq_title_input,
