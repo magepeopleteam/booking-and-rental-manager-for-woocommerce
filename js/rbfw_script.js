@@ -4,24 +4,11 @@
         const service_id = $('.rbfw-single-container').attr('data-service-id');
         // DatePicker
         let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
-        let wp_date_format = jQuery('#wp_date_format').val();
 
-       // alert(wp_date_format);
-
-        if(wp_date_format=='F j, Y'){
-            wp_date_format = 'dd M yy';
-        }else if(wp_date_format=='m/d/Y'){
-            wp_date_format = 'mm/dd/yy';
-        }else if(wp_date_format=='d/m/Y'){
-            wp_date_format = 'dd/mm/yy';
-        }else{
-            wp_date_format = 'yy-mm-dd';
-        }
-       // wp_date_format = 'yy-mm-dd';
 
         $('body').on('focusin', '.pickup_date', function(e) {
             $(this).datepicker({
-                dateFormat: wp_date_format,
+                dateFormat: js_date_format,
                 minDate: 0,
                 beforeShowDay: function(date)
                 {
@@ -42,7 +29,7 @@
             jQuery(".dropoff_date").datepicker("destroy");
 
             jQuery('.dropoff_date').datepicker({
-                dateFormat: wp_date_format,
+                dateFormat: js_date_format,
                 minDate: new Date(gYear,  gMonth - 1, gDay),
                 onSelect: function (dateString, data) {
                     let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -88,7 +75,6 @@
 
         $('.dropoff_date').change(function(e) {
             $(".pickup_time").trigger("change");
-
         });
 
 

@@ -36,6 +36,7 @@ require_once RBFW_PLUGIN_DIR . '/support/elementor/elementor-support.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
 
 add_action('wp_head', 'rbfw_php_variable_to_js');
+add_action('admin_head', 'rbfw_php_variable_to_js');
 
 function rbfw_php_variable_to_js()
 {
@@ -56,7 +57,6 @@ function rbfw_php_variable_to_js()
         }else{
             js_date_format = 'yy-mm-dd';
         }
-
     </script>
 
     <?php

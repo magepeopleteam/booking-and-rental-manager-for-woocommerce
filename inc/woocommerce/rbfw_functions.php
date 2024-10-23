@@ -232,8 +232,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $duration_price = $duration_price_info['duration_price'] * $rbfw_item_quantity;
 
         $total_days = $duration_price_info['total_days'];
-        $actual_days = $duration_price_info['actual_days'];
-        $hours = $duration_price_info['hours'];
+
 
         /* service price start for multiple days */
 
