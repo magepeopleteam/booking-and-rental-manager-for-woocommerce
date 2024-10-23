@@ -62,7 +62,7 @@ if (!class_exists('RBFWOrderPage')) {
                             <td><?php echo esc_html(get_the_date( 'F j, Y' )).' '.esc_html(get_the_time()); ?></td>
                             <td><?php echo $rbfw_start_datetime; ?></td>
                             <td><span class="rbfw_order_status <?php echo $status; ?>"><?php echo esc_html($status); ?></span></td>
-                            <td><?php echo rbfw_mps_price($total_price); ?></td>
+                            <td><?php echo wc_price($total_price); ?></td>
                             <td><a href="<?php echo esc_url(admin_url('post.php?post='.$post_id.'&action=edit')); ?>" class="rbfw_order_edit_btn"><i class="fa-solid fa-pen-to-square"></i> <?php esc_html_e('Edit','booking-and-rental-manager-for-woocommerce'); ?></a></td>
                         </tr>
                     <?php
