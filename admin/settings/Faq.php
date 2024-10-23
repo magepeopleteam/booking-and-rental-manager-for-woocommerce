@@ -24,6 +24,7 @@
 
 			public function get_rbfw_add_faq_content() {
 				$id = RBFW_Function::data_sanitize( $_POST['id'] );
+				$id = 'id_'.uniqid();
 				$count = RBFW_Function::data_sanitize( $_POST['count'] );
 				$count = (int)$count;
 				echo $this->rbfw_repeated_item_addnew($id, 'mep_event_faq', [], $count);
@@ -196,6 +197,7 @@
 							</div>
 							<div class="rbfw_faq_slide_body">
 								<div class="rbfw_faq_header_title2">
+									<label><?php esc_html_e( 'Title', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 									<input type="text" class="formControl rbfw_faq_title_input" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
 								</div>
 								<div class="rbfw_multi_image_area">
@@ -237,6 +239,7 @@
 									</div>
 								</div>
 								<div class="rbfw_faq_desc2">
+									<label><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 									<?php
 										$settings = array(
 											'wpautop'       => false,
@@ -324,6 +327,7 @@
 							</div>
 							<div class="rbfw_faq_slide_body">
 								<div class="rbfw_faq_header_title2">
+									<label><?php esc_html_e( 'Title', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 									<input type="text" class="formControl rbfw_faq_title_input" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
 								</div>
 								<div class="rbfw_multi_image_area">
@@ -365,6 +369,7 @@
 									</div>
 								</div>
 								<div class="rbfw_faq_desc2">
+									<label><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 									<?php
 										$settings = array(
 											'wpautop'       => false,
@@ -436,6 +441,14 @@
 				</div>
 			</div>
 			<style>
+				.rbfw-faq-content-wrapper-main .rbfw_faq_desc2{
+					margin-top: 20px;
+				}
+				#rbfw_add_meta_box .rbfw-faq-content-wrapper-main .rbfw_faq_desc2 label{
+					margin-bottom: -20px;
+					font-weight: 500;
+
+				}
 				.rbfw_upload_img_icon{
 					font-size:20px;
 				}
@@ -455,8 +468,10 @@
 					padding: 10px;
 					border: 3px dashed #bdbdbd;
 				}
+
 				.rbfw_faq_slide_body div.rbfw_multi_image_item{
 					width: 141.70px;
+					
 				}
 				.rbfw_faq_slide_body{
 					padding: 25px;
@@ -574,6 +589,10 @@
 				}
 				.rbfw-faq-content-wrapper-main .rbfw_faq_header_title2{
 					width: 100%;
+				}
+				#rbfw_add_meta_box .rbfw-faq-content-wrapper-main .rbfw_faq_header_title2 label{
+					font-weight: 500;
+    				margin-bottom: 5px;
 				}
 				.rbfw-faq-content-wrapper-main div.rbfw_remove_area .rbfw_item_remove,.rbfw-faq-content-wrapper-main .rbfw_faq_item_edit{
 					height: 30px;
