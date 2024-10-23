@@ -130,9 +130,10 @@
                     },
                     success: function(response) {
                         jQuery('.rbfw_save_faq_content_btn i').hide();
-                        $('.rbfw_faq_slide_actionlinks').prepend('<span class="faq_notice">Saved!</span>');
+
                         getThisParent.find('.rbfw_faq_desc').html(getThisContent);
                         getThisParent.find('.rbfw_faq_header').find('.rbfw_faq_header_title').html(getThisTitle);
+                        $('.rbfw_faq_slide_close').trigger('click');
                     },
                 });
             });
@@ -184,7 +185,8 @@
                 success: function(data) {
                     $('.rbfw-faq-content-wrapper-main').append(data);
                     let getID = jQuery('.rbfw_faq_item[data-id=' + i + '] textarea[name="rbfw_faq_content[]"]').attr('id');
-                    tinymce.execCommand('mceAddEditor', true, getID);
+
+                    tinymce.init({ selector: '#' + getID });
                     rbfw_faq_actions_func();
                     theLoader.hide();
                     $('.rbfw_faq_item_edit[data-id=' + i + ']').trigger('click');
