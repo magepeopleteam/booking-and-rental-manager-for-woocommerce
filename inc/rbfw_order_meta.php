@@ -16,6 +16,7 @@ function rbfw_order_meta_box() {
 }
 
 
+
 add_action('wp_ajax_fetch_order_details', 'fetch_order_details_callback');
 
 function fetch_order_details_callback() {
@@ -29,13 +30,16 @@ function fetch_order_details_callback() {
         $rbfw_return_note = get_post_meta($post_id, 'rbfw_return_note', true);
         $rbfw_return_security_deposit_amount = get_post_meta($post_id, 'rbfw_return_security_deposit_amount', true);
         $ticket_infos = maybe_unserialize(get_post_meta($post_id, 'rbfw_ticket_info', true));
+        $current_status = get_post_meta($post_id, 'rbfw_order_status', true);
+        
         ob_start();
         ?>
         <div class="rbfw_order_meta_box_wrap">
             <div class="rbfw_order_meta_box_body">
                 <h2><?php esc_html_e('Order Details', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
-                <table class="wp-list-table widefat fixed striped table-view-list">
+                <table class="">
                     <tbody>
+                        
                         <?php if ($billing_name) : ?>
                             <tr>
                                 <td><strong><?php esc_html_e('Billing Name:', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
@@ -95,7 +99,7 @@ function fetch_order_details_callback() {
                         }
                     }
                     if (!empty($unique_services)) {
-                        echo '<table class="wp-list-table widefat fixed striped table-view-list">';
+                        echo '<table class="">';
                         echo '<thead><tr><th>' . esc_html__('Service Name', 'booking-and-rental-manager-for-woocommerce') . '</th><th>' . esc_html__('Quantity', 'booking-and-rental-manager-for-woocommerce') . '</th></tr></thead>';
                         echo '<tbody>';
                         foreach ($unique_services as $service_key => $service_value) {
@@ -109,7 +113,7 @@ function fetch_order_details_callback() {
                     ?>
 
                     <h2><?php esc_html_e('Ticket Information', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
-                    <table class="wp-list-table widefat fixed striped table-view-list">
+                    <table class="">
                         <thead>
                             <tr>
                                 <?php
@@ -141,18 +145,18 @@ function fetch_order_details_callback() {
                             <?php
                             $unique_tickets = [];
                             foreach ($ticket_infos as $ticket_info) {
-                                $ticket_identifier = $ticket_info['ticket_name'] . '|' . 
-                                                     $ticket_info['rbfw_pickup_point'] . '|' . 
-                                                     $ticket_info['rbfw_dropoff_point'] . '|' . 
-                                                     $ticket_info['rbfw_resort_package'] . '|' . 
-                                                     $ticket_info['discount_type'] . '|' . 
-                                                     $ticket_info['duration_cost'] . '|' . 
-                                                     $ticket_info['service_cost'] . '|' . 
-                                                     $ticket_info['rbfw_mps_tax'] . '|' . 
-                                                     $ticket_info['discount_amount'] . '|' . 
-                                                     $ticket_info['security_deposit_amount'] . '|' . 
-                                                     $ticket_info['ticket_price'] . '|' . 
-                                                     $ticket_info['rbfw_rent_type'];
+                               $ticket_identifier = (isset($ticket_info['ticket_name']) ? $ticket_info['ticket_name'] : '') . '|' . 
+                     (isset($ticket_info['rbfw_pickup_point']) ? $ticket_info['rbfw_pickup_point'] : '') . '|' . 
+                     (isset($ticket_info['rbfw_dropoff_point']) ? $ticket_info['rbfw_dropoff_point'] : '') . '|' . 
+                     (isset($ticket_info['rbfw_resort_package']) ? $ticket_info['rbfw_resort_package'] : '') . '|' . 
+                     (isset($ticket_info['discount_type']) ? $ticket_info['discount_type'] : '') . '|' . 
+                     (isset($ticket_info['duration_cost']) ? $ticket_info['duration_cost'] : '') . '|' . 
+                     (isset($ticket_info['service_cost']) ? $ticket_info['service_cost'] : '') . '|' . 
+                     (isset($ticket_info['rbfw_mps_tax']) ? $ticket_info['rbfw_mps_tax'] : '') . '|' . 
+                     (isset($ticket_info['discount_amount']) ? $ticket_info['discount_amount'] : '') . '|' . 
+                     (isset($ticket_info['security_deposit_amount']) ? $ticket_info['security_deposit_amount'] : '') . '|' . 
+                     (isset($ticket_info['ticket_price']) ? $ticket_info['ticket_price'] : '') . '|' . 
+                     (isset($ticket_info['rbfw_rent_type']) ? $ticket_info['rbfw_rent_type'] : '');
                                 if (!isset($unique_tickets[$ticket_identifier])) {
                                     $unique_tickets[$ticket_identifier] = $ticket_info; 
                                 }
@@ -261,7 +265,6 @@ function rbfw_order_meta_box_callback(){
                         <td><strong><?php esc_html_e( 'Return Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
                         <td><input type="number" value="<?php echo $rbfw_return_security_deposit_amount ?>" name="rbfw_return_security_deposit_amount" placeholder="Return Security Deposit"></td>
                     </tr>
-
                     <?php if($rbfw_pickup_note){ ?>
                         <tr>
                             <td><strong><?php esc_html_e( 'Pick Up Note', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
@@ -301,7 +304,7 @@ function rbfw_order_meta_box_callback(){
                     </tr>                     
                 </tbody>
             </table>
-            <table class="wp-list-table widefat fixed striped table-view-list">
+            <table class="wp-list-table widefat fixed striped table-view-list" style="display: none">
                 <thead>
                     <tr>
                         <th colspan="2"><?php rbfw_string('rbfw_text_billing_information',__('Billing Information','booking-and-rental-manager-for-woocommerce')); ?></th>
@@ -381,7 +384,7 @@ function rbfw_order_meta_box_callback(){
 
                 /* End  loop*/
                     ?>
-                    <table class="wp-list-table widefat fixed striped table-view-list">
+                    <table class="wp-list-table widefat fixed striped table-view-list" style="display: none">
                         <thead>
                             <tr>
                                 <th colspan="2"><?php rbfw_string('rbfw_text_item_information',__('Item Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></th>
@@ -660,7 +663,7 @@ function rbfw_order_meta_box_callback(){
             }
             ?>
 
-            <table class="wp-list-table widefat fixed striped table-view-list">
+            <table class="wp-list-table widefat fixed striped table-view-list" style="display: none">
                 <thead>
                     <tr>
                         <th colspan="2"><?php rbfw_string('rbfw_text_total',__('Summary','booking-and-rental-manager-for-woocommerce')); ?></th>

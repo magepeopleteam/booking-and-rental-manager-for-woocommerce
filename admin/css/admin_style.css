@@ -1792,7 +1792,7 @@ input#rbfw_features_search_icon {
 }
 
 .rbfw_order_meta_box_wrap table thead th {
-    background: #d3d3d3;
+    background: white;
     font-weight: bold;
 }
 
@@ -4228,10 +4228,7 @@ input#rbfw_features_search_icon {
     margin-bottom: 20px;
 }
 
-.rbfw_order_meta_box_wrap table thead th {
-    background: #d3d3d3;
-    font-weight: bold;
-}
+
 
 .mps_alert_warning {
     color: #842029;
@@ -4872,26 +4869,14 @@ input.rbfw_time_slot_edit_slot_label {
 .mp_tab_item div.updated{
     display: none;
 }
-  /* Overall Page Styling */
-  .rbfw_order_page_wrap {
+
+/* Overall Page Styling */
+.rbfw_order_page_wrap {
     background-color: #ffffff;
     padding: 40px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    
     margin: auto;
-    transition: background-color 0.3s ease;
-    animation: fadeIn 0.8s ease-in-out;
-}
-
-/* Animation for fade-in effect */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
 }
 
 /* Page Header Styling */
@@ -4902,19 +4887,6 @@ input.rbfw_time_slot_edit_slot_label {
     margin-bottom: 30px;
     font-weight: 500;
     letter-spacing: 0.5px;
-    animation: slideInDown 0.8s ease;
-}
-
-/* Header Slide-In Animation */
-@keyframes slideInDown {
-    from {
-        transform: translateY(-50%);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 /* Table Styling */
@@ -4930,7 +4902,6 @@ input.rbfw_time_slot_edit_slot_label {
     text-align: left;
     font-size: 16px;
     color: #555;
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
 .rbfw_order_page_table th {
     background-color: #6200ea; /* Material purple */
@@ -4944,9 +4915,7 @@ input.rbfw_time_slot_edit_slot_label {
 }
 .rbfw_order_page_table tr:hover {
     background-color: #e0e0e0; /* Slightly darker gray on hover */
-    transform: scale(1.01);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, background-color 0.3s ease;
 }
 .rbfw_order_page_table td {
     color: #333;
@@ -4959,18 +4928,6 @@ input.rbfw_time_slot_edit_slot_label {
     font-size: 14px;
     font-weight: 500;
     display: inline-block;
-    animation: fadeInBadge 1s ease;
-}
-
-@keyframes fadeInBadge {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .rbfw_order_status.completed {
@@ -4985,6 +4942,161 @@ input.rbfw_time_slot_edit_slot_label {
     background-color: #f44336; /* Red */
     color: #ffffff;
 }
+.rbfw_order_page_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.rbfw_order_page_table th, 
+.rbfw_order_page_table td {
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+    font-size: 16px;
+    color: #555;
+}
+
+.rbfw_order_page_table th {
+    background-color: #6200ea; /* Header background */
+    color: #ffffff;
+    text-transform: uppercase;
+}
+
+.rbfw_order_page_table tr:nth-child(even) {
+    background-color: #f5f5f5; /* Light gray for even rows */
+}
+
+.rbfw_order_page_table tr:nth-child(odd) {
+    background-color: #ffffff; /* White for odd rows */
+}
+
+.rbfw_order_page_table tr:hover {
+    background-color: #e0e0e0; /* Slightly darker gray on hover */
+}
+
+.rbfw_order_status {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.rbfw_order_status.completed {
+    background-color: #4caf50; /* Green */
+    color: #ffffff;
+}
+
+.rbfw_order_status.pending {
+    background-color: #ff9800; /* Orange */
+    color: #ffffff;
+}
+
+.rbfw_order_status.cancelled {
+    background-color: #f44336; /* Red */
+    color: #ffffff;
+}
+
+.rbfw_order_edit_btn {
+    padding: 8px 16px;
+    background-color: #6200ea; /* Button background */
+    color: #ffffff;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.rbfw_order_edit_btn:hover {
+    background-color: #3700b3; /* Darker background on hover */
+    color: white; /* Text color on hover */
+}
+.rbfw_order_meta_box_wrap {
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.rbfw_order_meta_box_wrap:hover {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.15);
+}
+
+.rbfw_order_meta_box_body h2 {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    color: #0056b3; /* Darker blue for better contrast */
+}
+
+/* Custom CSS for the Order Details Table */
+.rbfw_order_meta_box_wrap table {
+    width: 100%; /* Make the table take full width */
+    border-collapse: collapse; /* Ensure proper spacing between borders */
+    margin-bottom: 20px; /* Space out the table from other elements */
+}
+
+.rbfw_order_meta_box_wrap th, 
+.rbfw_order_meta_box_wrap td {
+    border: 1px solid #ddd; /* Light border around each cell */
+    padding: 8px; /* Padding inside each cell */
+    text-align: left; /* Align text to the left */
+}
+
+.rbfw_order_meta_box_wrap th {
+    background-color: #f4f4f4; /* Light background color for table headers */
+    font-weight: bold; /* Bold the headers */
+    color: black;
+}
+
+
+
+.rbfw_order_meta_box_wrap td {
+    color: #333; /* Text color for table content */
+    font-size: 14px; /* Set a custom font size */
+}
+
+/* Custom styling for the table heading */
+.rbfw_order_meta_box_wrap h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #444;
+}
+
+
+/* Icon styles for details section */
+.rbfw_order_meta_box_body i {
+    margin-right: 5px; /* Space between icon and text */
+    color: #0073aa; /* Match icon color with theme */
+}
+
+/* Improve visibility of the service info section */
+.service-info-table {
+    margin-top: 20px;
+}
+
+.service-info-table th {
+    background-color: #28a745; /* Green for service headers */
+}
+
+.service-info-table tr:hover {
+    background-color: #d1e7dd; /* Light green hover effect */
+}
+
+/* Additional responsive styling */
+@media (max-width: 600px) {
+    th, td {
+        font-size: 12px; /* Smaller font on mobile */
+        padding: 10px; /* Adjust padding for smaller screens */
+    }
+
+    .rbfw_order_meta_box_wrap {
+        padding: 15px; /* Less padding on smaller screens */
+    }
+}
+
 
 /* Search Input Styling */
 .search-input {
@@ -4994,26 +5106,12 @@ input.rbfw_time_slot_edit_slot_label {
     border: 1px solid #6200ea; /* Material purple */
     border-radius: 4px;
     font-size: 16px;
-    transition: border-color 0.3s, box-shadow 0.3s;
     display: block;
     margin-left: auto;
     margin-right: auto;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: #ffffff;
-    animation: bounceIn 0.8s ease-in-out;
-}
-
-@keyframes bounceIn {
-    0%, 20%, 50%, 80%, 100% {
-        transform: translateY(0);
-    }
-    40% {
-        transform: translateY(-10px);
-    }
-    60% {
-        transform: translateY(-5px);
-    }
 }
 
 .search-input:focus {
@@ -5032,22 +5130,10 @@ input.rbfw_time_slot_edit_slot_label {
     font-size: 14px;
     transition: background-color 0.3s ease, transform 0.3s ease;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    animation: popIn 0.5s ease;
-}
-
-@keyframes popIn {
-    from {
-        transform: scale(0.5);
-        opacity: 0;
-    }
-    to {
-        transform: scale(1);
-        opacity: 1;
-    }
 }
 
 .rbfw_order_edit_btn:hover {
-    background-color: #3700b3; /* Darker purple on hover */
+    background-color: #ff0000; /* Darker purple on hover */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -5074,10 +5160,10 @@ input.rbfw_time_slot_edit_slot_label {
         font-size: 12px;
     }
 }
-  /* Styles for the posts per page section */
-  #posts-per-page {
+
+/* Styles for the posts per page section */
+#posts-per-page {
     margin-left: 10px; /* Space between label and dropdown */
-   
     font-size: 14px; /* Increase font size for better readability */
     border: 1px solid #ccc; /* Border styling */
     border-radius: 4px; /* Rounded corners */
@@ -5106,7 +5192,6 @@ input.rbfw_time_slot_edit_slot_label {
     text-align: left; /* Align text to the left */
     border-bottom: 1px solid #ddd; /* Light border for rows */
 }
-
 
 .pagination {
     margin-top: 20px; /* Space above pagination */
@@ -5139,10 +5224,11 @@ input.rbfw_time_slot_edit_slot_label {
 
 #loader {
     position: fixed;
-    top: 0;
+    top: 100px;
     left: 0;
     right: 0;
     bottom: 0;
+    height: 600px !important;
     background: rgba(255, 255, 255, 0.7);
     display: flex;
     align-items: center;
@@ -5156,8 +5242,9 @@ input.rbfw_time_slot_edit_slot_label {
     border-radius: 50%;
     width: 60px;
     height: 60px;
-    animation: spin 2s linear infinite;
+    /* Animation removed */
 }
+
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
