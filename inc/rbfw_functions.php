@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-/*add_action('wp', 'rbfw_hide_hidden_product_from_single', 90);
+add_action('wp', 'rbfw_hide_hidden_product_from_single', 90);
 
 if (!function_exists('rbfw_hide_hidden_product_from_single')) {
     function rbfw_hide_hidden_product_from_single() {
@@ -24,7 +24,7 @@ if (!function_exists('rbfw_hide_hidden_product_from_single')) {
             }
         }
     }
-}*/
+}
 
 
 // Language Load
@@ -168,53 +168,6 @@ function rbfw_get_extra_price_arr( $ticket_type, $rbfw_id ) {
     return $price;
 }
 
-function rbfw_cart_event_extra_service( $type, $total_price, $product_id ) {
-    global $rbfw;
-    $t_price = $total_price;
-
-    $rbfw_pickup_start_date = isset( $_POST['rbfw_pickup_start_date'] ) ? rbfw_array_strip( $_POST['rbfw_pickup_start_date'] ) : current_time( 'Y-m-d' );
-    $rbfw_pickup_start_time = isset( $_POST['rbfw_pickup_start_time'] ) ? rbfw_array_strip( $_POST['rbfw_pickup_start_time'] ) : '';
-    $rbfw_pickup_end_date   = isset( $_POST['rbfw_pickup_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_pickup_end_date'] ) : current_time( 'Y-m-d' );
-    $rbfw_pickup_end_time   = isset( $_POST['rbfw_pickup_end_time'] ) ? rbfw_array_strip( $_POST['rbfw_pickup_end_time'] ) : '';
-    $start_datetime = date( 'Y-m-d H:i', strtotime( $rbfw_pickup_start_date . ' ' . $rbfw_pickup_start_time ) );
-    $end_datetime   = date( 'Y-m-d H:i', strtotime( $rbfw_pickup_end_date . ' ' . $rbfw_pickup_end_time ) );
-    $extra_service_name  = isset( $_POST['service_name'] ) ? rbfw_array_strip( $_POST['service_name'] ) : array();
-    $extra_service_qty   = isset( $_POST['service_qty'] ) ? rbfw_array_strip( $_POST['service_qty'] ) : array();
-    $extra_service_price = 0;
-    $extra_service_price = rbfw_get_extra_price_arr( $extra_service_qty, $product_id );
-    $rbfw_extra          = [];
-
-    if ( ! empty($extra_service_name) ) {
-
-        for ( $i = 0; $i < count( $extra_service_name ); $i ++ ) {
-
-            if(! empty($extra_service_qty[ $i ])):
-
-                if($extra_service_qty[ $i ] == $extra_service_name[ $i ]){
-                    $exp_qty = explode( "*", $extra_service_qty[ $i ] );
-                    $rbfw_extra[ $i ]['service_name']   = ! empty( $exp_qty[0] ) ? stripslashes( strip_tags( $exp_qty[0] ) ) : '';
-                    $rbfw_extra[ $i ]['service_price']  = ! empty( $extra_service_price[ $i ] ) ? stripslashes( strip_tags( $extra_service_price[ $i ] ) ) : '';
-                    //$rbfw_extra[ $i ]['service_qty']    = ! empty( $exp_qty[0] ) ? stripslashes( strip_tags( $exp_qty[0] ) ) : 1;
-                    $rbfw_extra[ $i ]['service_qty']    = 1;
-                    $rbfw_extra[ $i ]['start_datetime'] = $start_datetime;
-                    $rbfw_extra[ $i ]['end_datetime']   = $end_datetime;
-                    //$extprice                           = ( (int)$extra_service_price[ $i ] * (int)$extra_service_qty[ $i ] );
-                    $extprice                           = ((float)$extra_service_price[ $i ]);
-                    $t_price                        	+= $extprice;
-                }
-            endif;
-
-        }
-    }
-
-    if ( $type == 'ticket_price' ) {
-        return $t_price;
-        //return $extprice;
-    } else {
-        return $rbfw_extra;
-    }
-
-}
 
 if ( ! function_exists( 'mep_get_date_diff' ) ) {
     function mep_get_date_diff( $start_datetime, $end_datetime ) {

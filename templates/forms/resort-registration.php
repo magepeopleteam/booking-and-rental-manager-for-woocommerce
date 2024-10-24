@@ -78,11 +78,12 @@
                     </div>
                 </div>
 
-                    <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $post_id; ?>">
-                    <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
-                    <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
 
-                    <div class="item">
+                <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $post_id; ?>">
+                <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
+                <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
+
+                <div class="item">
                         <div class="rbfw-single-right-heading mb-08"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_checkin_checkout_date', 'rbfw_basic_translation_settings', __('Check-In & Check-Out Date','booking-and-rental-manager-for-woocommerce'))); ?></div>
                         <div class="item-content rbfw-datetime">
                             <div class="left date">
@@ -98,20 +99,20 @@
                         </div>
                     </div>
 
-                    <div class="item">
+                <div class="item">
                         <a class="rbfw_chk_availability_btn">
                             <?php echo esc_html($rbfw->get_option_trans('rbfw_text_check_availability', 'rbfw_basic_translation_settings', __('Check Availability','booking-and-rental-manager-for-woocommerce'))); ?>
                         </a>
                     </div>
-                    <div class="rbfw-availability-loader">
-                        <i class="fas fa-spinner fa-spin"></i>
-                    </div>
-                    <div class="rbfw-availability-result">
-                        <div class="rbfw_room_price_category_tabs"></div>
-                        <div class="rbfw_room_price_category_details_loader"><i class="fas fa-spinner fa-spin"></i></div>
-                        <div class="rbfw_room_price_category_details"></div>
-                    </div>
+                <div class="rbfw-availability-loader">
+                    <i class="fas fa-spinner fa-spin"></i>
                 </div>
+                <div class="rbfw-availability-result">
+                    <div class="rbfw_room_price_category_tabs"></div>
+                    <div class="rbfw_room_price_category_details_loader"><i class="fas fa-spinner fa-spin"></i></div>
+                    <div class="rbfw_room_price_category_details"></div>
+                </div>
+
                 <div class="rbfw-resort-result-wrap">
                     <div class="rbfw-resort-result-loader"></div>
                     <div class="rbfw-resort-result"></div>

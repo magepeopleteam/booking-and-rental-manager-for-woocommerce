@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if (!class_exists('RBFWOrderPage')) {
 
+
 	class RBFWOrderPage {
 
 		private $posts_per_page = 10;
@@ -70,7 +71,8 @@ if (!class_exists('RBFWOrderPage')) {
                 <td><?php echo esc_html( !empty($rbfw_start_datetime) ? date_i18n('F j, Y g:i a', strtotime($rbfw_start_datetime)) : ''); ?></td>
                <td><?php echo esc_html( !empty($rbfw_end_datetime) ? date_i18n('F j, Y g:i a', strtotime($rbfw_end_datetime)) : ''); ?></td>
                 <td><span class="rbfw_order_status <?php echo esc_attr($status); ?>"><?php echo esc_html($status); ?></span></td>
-                <td><?php echo rbfw_mps_price($total_price); ?></td>
+                 <td><?php echo wc_price($total_price); ?></td>
+              
                 <?php
 if (function_exists('rbfw_pro_tab_menu_list')) {
     ?>
@@ -111,8 +113,6 @@ if (function_exists('rbfw_pro_tab_menu_list')) {
     <?php
 }
 ?>
-
-
 
                 
             </tr>
