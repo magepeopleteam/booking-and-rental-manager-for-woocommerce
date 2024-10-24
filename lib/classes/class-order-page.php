@@ -29,13 +29,14 @@ if (!class_exists('RBFWOrderPage')) {
 			?>
 
 			<div class="rbfw_order_page_wrap wrap">
-				<h1><?php esc_html_e('Order List', 'booking-and-rental-manager-for-woocommerce'); ?></h1>
-				<input type="text" id="search" class="search-input" placeholder="<?php esc_attr_e('Search by order id or customer name..', 'booking-and-rental-manager-for-woocommerce'); ?>" />
+            <h1 class="awesome-heading"><?php esc_html_e('Order List', 'booking-and-rental-manager-for-woocommerce'); ?></h1>
+<input type="text" id="search" class="search-input awesome-search" placeholder="<?php esc_attr_e('Search by order id or customer name..', 'booking-and-rental-manager-for-woocommerce'); ?>" />
 
 				<table class="rbfw_order_page_table">
     <thead>
         <tr>
             <th><?php esc_html_e('Order', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+            <th><?php esc_html_e('Billing Name', 'booking-and-rental-manager-for-woocommerce'); ?></th>
             <th><?php esc_html_e('Order Created Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
             <th><?php esc_html_e('Booking Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
             <th><?php esc_html_e('Booking End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
@@ -48,6 +49,7 @@ if (!class_exists('RBFWOrderPage')) {
         <?php if ($query->have_posts()) : while ($query->have_posts()) : $query->the_post();
             global $post;
             $post_id = $post->ID;
+            $billing_name = get_post_meta($post_id, 'rbfw_billing_name', true);
             $status = get_post_meta($post_id, 'rbfw_order_status', true);
             $total_price = get_post_meta($post_id, 'rbfw_ticket_total_price', true);
             $ticket_infos = get_post_meta($post_id, 'rbfw_ticket_info', true);
@@ -62,7 +64,8 @@ if (!class_exists('RBFWOrderPage')) {
             }
         ?>
             <tr class="order-row">
-                <td><a href="<?php echo esc_url(admin_url('post.php?post=' . $post_id . '&action=edit')); ?>" class="rbfw_order_title"><?php echo esc_html(get_the_title()); ?></a></td>
+                <td><?php echo esc_html($post_id); ?></td>
+                <td><?php echo esc_html($billing_name); ?></td>
                 <td><?php echo esc_html(get_the_date('F j, Y') . ' ' . get_the_time()); ?></td>
                 <td><?php echo esc_html($rbfw_start_datetime); ?></td>
                 <td><?php echo esc_html($rbfw_end_datetime); ?></td>
@@ -72,7 +75,7 @@ if (!class_exists('RBFWOrderPage')) {
 if (function_exists('rbfw_pro_tab_menu_list')) {
     ?>
     <td>
-        <a href="javascript:void(0);" class="rbfw_order_edit_btn" data-post-id="<?php echo esc_attr($post_id); ?>">
+        <a href="javascript:void(0);" class="rbfw_order_view_btn" data-post-id="<?php echo esc_attr($post_id); ?>">
             <i class="fa-solid fa-pen-to-square"></i> 
             <?php esc_html_e('View Details', 'booking-and-rental-manager-for-woocommerce'); ?>
         </a>
@@ -84,15 +87,31 @@ if (function_exists('rbfw_pro_tab_menu_list')) {
     <?php
 } else {
     ?>
-    <td colspan="2" style="color: red; font-weight: bold;">
-        <?php esc_html_e('Pro features. ', 'booking-and-rental-manager-for-woocommerce'); ?>
-        <a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/" target="_blank" style="text-decoration: underline; color: blue;">
-            <?php esc_html_e('Buy Pro Version', 'booking-and-rental-manager-for-woocommerce'); ?>
+    <td>
+        <a href="javascript:void(0);" class="rbfw_order_view_btn pro-overlay">
+            <i class="fa-solid fa-pen-to-square"></i> 
+            <?php esc_html_e('View Details', 'booking-and-rental-manager-for-woocommerce'); ?>
+        </a>
+        <a href="javascript:void(0);" class="rbfw_order_edit_btn pro-overlay">
+            <i class="fa-solid fa-pen-to-square"></i> 
+            <?php esc_html_e('Order status changes', 'booking-and-rental-manager-for-woocommerce'); ?>
         </a>
     </td>
+    <script>
+        document.querySelectorAll('.pro-overlay').forEach(function(button) {
+            button.replaceWith(button.cloneNode(true)); 
+        });
+        document.querySelectorAll('.pro-overlay').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default link behavior
+                window.open('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/', '_blank');
+            });
+        });
+    </script>
     <?php
 }
 ?>
+
 
 
                 
@@ -170,17 +189,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     document.getElementById('search').addEventListener('keyup', function () {
-        const filter = this.value.toLowerCase();
-        const filteredRows = Array.from(rows).filter(row => {
-            const title = row.cells[0].textContent.toLowerCase();
-            return title.includes(filter);
-        });
-
-        // Reset pagination and display filtered rows
-        currentPage = 1;
-        setupPagination(filteredRows);
-        displayRows(currentPage, filteredRows);
+    const filter = this.value.toLowerCase();
+    const filteredRows = Array.from(rows).filter(row => {
+        const orderId = row.cells[0].textContent.toLowerCase(); // Order ID
+        const billingName = row.cells[1].textContent.toLowerCase(); // Billing Name
+        return orderId.includes(filter) || billingName.includes(filter); // Match either Order ID or Billing Name
     });
+
+    // Reset pagination and display filtered rows
+    currentPage = 1;
+    setupPagination(filteredRows);
+    displayRows(currentPage, filteredRows);
+});
+
 
     // Dropdown change event
     rowsPerPageSelect.addEventListener('change', function () {
