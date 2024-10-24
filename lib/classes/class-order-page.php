@@ -67,8 +67,8 @@ if (!class_exists('RBFWOrderPage')) {
                 <td><?php echo esc_html($post_id); ?></td>
                 <td><?php echo esc_html($billing_name); ?></td>
                 <td><?php echo esc_html(get_the_date('F j, Y') . ' ' . get_the_time()); ?></td>
-                <td><?php echo esc_html($rbfw_start_datetime); ?></td>
-                <td><?php echo esc_html($rbfw_end_datetime); ?></td>
+                <td><?php echo esc_html( !empty($rbfw_start_datetime) ? date_i18n('F j, Y g:i a', strtotime($rbfw_start_datetime)) : ''); ?></td>
+               <td><?php echo esc_html( !empty($rbfw_end_datetime) ? date_i18n('F j, Y g:i a', strtotime($rbfw_end_datetime)) : ''); ?></td>
                 <td><span class="rbfw_order_status <?php echo esc_attr($status); ?>"><?php echo esc_html($status); ?></span></td>
                 <td><?php echo rbfw_mps_price($total_price); ?></td>
                 <?php
