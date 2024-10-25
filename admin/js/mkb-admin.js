@@ -75,17 +75,22 @@
                 let dataId = $(this).parents('.rbfw_faq_item').data('id');
                 let parent = $('.rbfw_faq_item[data-id=' + dataId + ']');
 
+
                 parent.find(".rbfw_faq_slide_overlay").hide("slide", { direction: "right" }, 1000);
                 setTimeout(function() {
                     parent.find(".rbfw_faq_slide_wrap").fadeOut();
                     jQuery("body").css("overflow", "visible");
                 }, 900);
-                $('.rbfw_faq_slide_actionlinks .faq_notice').remove();
+
+                if (parent.data('status') != 'saved') {
+                    parent.remove();
+                    return false;
+                }
             });
 
             jQuery('.rbfw_faq_header').click(function(e) {
                 e.preventDefault();
-                let parent = $(this).parent('.rbfw_faq_item');
+                let parent = $(this).parents('.rbfw_faq_item');
                 parent.find('.rbfw_faq_content_wrapper').slideToggle();
                 parent.find('.rbfw_faq_accordion_icon i').toggleClass('fa-plus fa-minus');
             });
@@ -103,7 +108,10 @@
                 let getThisTitle = getThisParent.find('[name="rbfw_faq_title[]"]').val();
                 let getThisContent = tinymce.get(getThisTextID).getContent();
 
-
+                if (getThisTitle == '') {
+                    alert('Title is required!');
+                    return false;
+                }
                 for (let i = 0; i < count; i++) {
                     let rbfw_faq_title = $('.rbfw_faq_item[data-id=' + i + '] [name="rbfw_faq_title[]"]').val();
                     let rbfw_faq_img = $('.rbfw_faq_item[data-id=' + i + '] [name="rbfw_faq_img[]"]').val();
@@ -133,7 +141,10 @@
 
                         getThisParent.find('.rbfw_faq_desc').html(getThisContent);
                         getThisParent.find('.rbfw_faq_header').find('.rbfw_faq_header_title').html(getThisTitle);
+                        getThisParent.find('.rbfw_faq_new_accordion_wrapper').show();
+                        getThisParent.attr('data-status', 'saved');
                         $('.rbfw_faq_slide_close').trigger('click');
+
                     },
                 });
             });
