@@ -4953,14 +4953,12 @@ input.rbfw_time_slot_edit_slot_label {
     padding: 16px;
     border: 1px solid #e0e0e0;
     text-align: left;
-    font-size: 16px;
     color: #555;
 }
 
 .rbfw_order_page_table th {
     background-color: #f1f1f1; /* Material purple */
     color: #1c1717;
-    text-transform: uppercase;
 }
 
 .rbfw_order_page_table tr:nth-child(even) {
