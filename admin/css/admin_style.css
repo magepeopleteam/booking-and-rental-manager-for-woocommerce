@@ -5205,7 +5205,7 @@ input.rbfw_time_slot_edit_slot_label {
 
 .rbfw_order_page_table th,
 .rbfw_order_page_table td {
-    padding: 10px; /* Padding for table cells */
+    padding: 5px; /* Padding for table cells */
     text-align: left; /* Align text to the left */
     border-bottom: 1px solid #ddd; /* Light border for rows */
     text-transform: capitalize;
