@@ -42,12 +42,9 @@ function rbfw_php_variable_to_js()
 {
     ?>
     <script>
-
         let wp_date_format = "<?php echo  get_option('date_format') ?>";
         let wp_time_format = "<?php echo  get_option('time_format') ?>";
-
         let js_date_format = 'yy-mm-dd';
-
         if(wp_date_format=='F j, Y'){
             js_date_format = 'dd M yy';
         }else if(wp_date_format=='m/d/Y'){
