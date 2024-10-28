@@ -11,10 +11,10 @@ add_filter('woocommerce_get_item_data', 'rbfw_show_cart_items', 90, 2);
 /*after place order*/
 add_action('woocommerce_after_checkout_validation', 'rbfw_validation_before_checkout');
 add_action('woocommerce_checkout_create_order_line_item', 'rbfw_add_order_item_data', 90, 4);
-//add_action( 'woocommerce_before_thankyou', 'rbfw_booking_management', 10 );
-add_action('woocommerce_checkout_order_processed', 'rbfw_booking_management', 90);
+add_action( 'woocommerce_before_thankyou', 'rbfw_booking_management', 10 );
+//add_action('woocommerce_checkout_order_processed', 'rbfw_booking_management', 90);
 //   add_action('__experimental_woocommerce_blocks_checkout_order_processed', 'mep_event_booking_management', 90);
-add_action('woocommerce_store_api_checkout_order_processed', 'rbfw_booking_management', 90);
+//add_action('woocommerce_store_api_checkout_order_processed', 'rbfw_booking_management', 90);
 
 
 /*order status change from woocommerse order or rbfw order list*/
@@ -440,7 +440,7 @@ function rbfw_add_order_item_data($item, $cart_item_key, $values, $order)
 {
     global $rbfw;
     $rbfw_id = array_key_exists('rbfw_id', $values) ? $values['rbfw_id'] : 0;
-    if (get_post_type($rbfw_id) == $rbfw->get_cpt_name()) {
+    if (get_post_type($rbfw_id) == $rbfw->get_cpt_name()) { 
         rbfw_validate_add_order_item_func($values,$item, $rbfw_id);
     }
 }
@@ -689,16 +689,20 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $rbfw_ticket_info = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
 
 
-        if ($values['rbfw_start_time'] && $values['rbfw_end_time']) {
-            $start_datetime = rbfw_get_datetime($values['rbfw_start_datetime'], 'date-time-text');
-            $end_datetime = rbfw_get_datetime($values['rbfw_end_datetime'], 'date-time-text');
-        } else {
-            $start_datetime = $values['rbfw_start_datetime'] ? rbfw_get_datetime($values['rbfw_start_datetime'], 'date-text') : '';
-            $end_datetime = $values['rbfw_end_datetime'] ? rbfw_get_datetime($values['rbfw_end_datetime'], 'date-text') : '';
-        }
+
+        $start_datetime = rbfw_get_datetime($values['rbfw_start_datetime'], 'date-time-text');
+        $end_datetime = rbfw_get_datetime($values['rbfw_end_datetime'], 'date-time-text');
+        $start_date = rbfw_get_datetime($values['rbfw_start_date'], 'date-time-text');
+        $end_date = rbfw_get_datetime($values['rbfw_end_date'], 'date-time-text');
 
 
-        $total_days = $values['total_days'] ? $values['total_days'] : '';
+       $max_available_qty = rbfw_get_multiple_date_available_qty($rbfw_id, $start_date, $end_date,'',$start_datetime,$end_datetime);
+
+
+
+
+
+       $total_days = $values['total_days'] ? $values['total_days'] : '';
 
         $pickup_location = $values['rbfw_pickup_point'] ? $values['rbfw_pickup_point'] : '';
         $dropoff_location = $values['rbfw_dropoff_point'] ? $values['rbfw_dropoff_point'] : '';
