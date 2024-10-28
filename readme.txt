@@ -2,7 +2,7 @@
 Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: booking calendar, Woocommerce Reservation Booking, Rental Booking, Woocommerce Rental Booking, Rental Plugin 
-Requires at least: 5.3
+Requires at least: 5.4
 Stable tag: trunk
 Tested up to: 6.5.3
 Requires PHP: 7.0
@@ -94,15 +94,15 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 
 ➡  [Buy Pro](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
 
-➡  [View All PRO Version Demo](https://booking.mage-people.com/)
-➡  [Bike/Car Rent Service for Single Day PRO Version Demo](https://booking.mage-people.com/rent/bike-car-for-single-day/)
-➡  [Bike/Car Rent for Multiple Day PRO Version Demo](https://booking.mage-people.com/rent/bike-car-for-multiple-day/)
+➡  [View All PRO Version Demo](https://www.wprently.com/bike/)
+➡  [Bike/Car Rent Service for Single Day PRO Version Demo](https://www.wprently.com/bike/)
+➡  [Bike/Car Rent for Multiple Day PRO Version Demo](https://www.wprently.com/car/)
 ➡  [Doctor Appointment PRO Version Demo](https://booking.mage-people.com/rent/doctor-appointment/)
 ➡  [Dress Rent System PRO Version Demo](https://booking.mage-people.com/rent/dress/)
-➡  [Equipment Rent Service PRO Version Demo](https://booking.mage-people.com/rent/equipement/)
+➡  [Equipment Rent Service PRO Version Demo](https://www.wprently.com/equipment/)
 ➡  [Resort Rent or Resort Booking PRO Version Demo](https://booking.mage-people.com/rent/resort/)
-➡  [Rental Items List PRO Version Demo](https://booking.mage-people.com/rents-list-style/)
-➡  [Rental Items Grid Style List PRO Version Demo](https://booking.mage-people.com/rents-grid-style/)
+➡  [Rental Items List PRO Version Demo](https://www.wprently.com/rents-list-style/)
+➡  [Rental Items Grid Style List PRO Version Demo](https://www.wprently.com/rents-grid-style/)
 
 
 ### Shortcodes included with Booking and Rental Manager:
