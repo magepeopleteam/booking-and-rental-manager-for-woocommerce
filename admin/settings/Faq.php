@@ -74,38 +74,40 @@
 				$content       = array_key_exists( $content_name, $data ) ? html_entity_decode( $data[ $content_name ] ) : '';
 
 				?>
-				<div class='rbfw_remove_area rbfw_faq_item' data-id="<?php echo esc_attr($i); ?>">
-					<div class="rbfw_faq_header">
-						<div class="rbfw_faq_accordion_icon"><i class="fas fa-plus"></i></div> 
-						<div class="rbfw_faq_header_title">
-							<?php echo esc_html( $title_value ); ?>
-						</div>
+				<div class='rbfw_remove_area rbfw_faq_item' data-id="<?php echo esc_attr($i); ?>" data-status="">
+					<div class="rbfw_faq_new_accordion_wrapper">
+						<div class="rbfw_faq_header">
+							<div class="rbfw_faq_accordion_icon"><i class="fas fa-plus"></i></div> 
+							<div class="rbfw_faq_header_title">
+								<?php echo esc_html( $title_value ); ?>
+							</div>
 
-						<div class="rbfw_faq_action_btns">
-							<span class="rbfw_faq_item_edit" data-id="<?php echo esc_attr($i); ?>"><i class='far fa-edit'></i></span>
-							<span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
+							<div class="rbfw_faq_action_btns">
+								<span class="rbfw_faq_item_edit" data-id="<?php echo esc_attr($i); ?>"><i class='far fa-edit'></i></span>
+								<span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
+							</div>
 						</div>
-					</div>
-					<div class="rbfw_faq_content_wrapper">
-						<div class="rbfw_multi_image_area">
-							<div class="rbfw_multi_image rbfw_faq_img">
-								<?php
-									$all_images = explode( ',', $images );
-									if ( $images && sizeof( $all_images ) > 0 ) {
-										foreach ( $all_images as $image ) {
-											?>
-											<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
-												<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
-											</div>
-											<?php
+						<div class="rbfw_faq_content_wrapper">
+							<div class="rbfw_multi_image_area">
+								<div class="rbfw_multi_image rbfw_faq_img">
+									<?php
+										$all_images = explode( ',', $images );
+										if ( $images && sizeof( $all_images ) > 0 ) {
+											foreach ( $all_images as $image ) {
+												?>
+												<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
+													<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
+												</div>
+												<?php
+											}
 										}
-									}
-								?>
+									?>
+								</div>
 							</div>
+								<div class="rbfw_faq_desc">
+									<?php echo $content; ?>
+								</div>
 						</div>
-							<div class="rbfw_faq_desc">
-								<?php echo $content; ?>
-							</div>
 					</div>
 					<div class="rbfw_faq_slide_wrap">
 						<div class="rbfw_faq_slide_overlay">
@@ -189,9 +191,6 @@
 				</div>
 				<?php
 				$temp = ob_get_clean();
-				//$temp .= \_WP_Editors::enqueue_scripts();
-				//$temp .= print_footer_scripts();
-				//	$temp .= \_WP_Editors::editor_js();
 
 				return $temp;
 			}
@@ -212,7 +211,7 @@
 				$content       = array_key_exists( $content_name, $data ) ? html_entity_decode( $data[ $content_name ] ) : '';
 
 				?>
-				<div class='rbfw_remove_area rbfw_faq_item' data-id="<?php echo esc_attr($i); ?>">
+				<div class='rbfw_remove_area rbfw_faq_item' data-id="<?php echo esc_attr($i); ?>" data-status="saved">
 					<div class="rbfw_faq_header">
 						<div class="rbfw_faq_accordion_icon"><i class="fas fa-plus"></i></div> 
 						<div class="rbfw_faq_header_title">
@@ -376,6 +375,9 @@
 				</div>
 			</div>
 			<style>
+				.rbfw_faq_new_accordion_wrapper{
+					display: none;
+				}
 				<?php 
 				if(use_block_editor_for_post_type('rbfw_item')){
 					?>
