@@ -1810,6 +1810,7 @@ input#rbfw_features_search_icon {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid #b0b0b0;
+    margin-bottom:15px;
 }
 
 .rbfw_inventory_page_table {
