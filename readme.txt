@@ -2,7 +2,7 @@
 Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: booking calendar, Woocommerce Reservation Booking, Rental Booking, Woocommerce Rental Booking, Rental Plugin 
-Requires at least: 5.4
+Requires at least: 5.3
 Stable tag: trunk
 Tested up to: 6.5.3
 Requires PHP: 7.0
