@@ -11,7 +11,12 @@ add_filter('woocommerce_get_item_data', 'rbfw_show_cart_items', 90, 2);
 /*after place order*/
 add_action('woocommerce_after_checkout_validation', 'rbfw_validation_before_checkout');
 add_action('woocommerce_checkout_create_order_line_item', 'rbfw_add_order_item_data', 90, 4);
-add_action( 'woocommerce_before_thankyou', 'rbfw_booking_management', 10 );
+//add_action( 'woocommerce_before_thankyou', 'rbfw_booking_management', 10 );
+add_action('woocommerce_checkout_order_processed', 'rbfw_booking_management', 90);
+//   add_action('__experimental_woocommerce_blocks_checkout_order_processed', 'mep_event_booking_management', 90);
+add_action('woocommerce_store_api_checkout_order_processed', 'rbfw_booking_management', 90);
+
+
 /*order status change from woocommerse order or rbfw order list*/
 add_action( 'rbfw_wc_order_status_change', 'rbfw_change_user_order_status_on_order_status_change', 10, 3 );
 
@@ -208,8 +213,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
     }else {
 
-        $start_date = ($_POST['wp_date_format']=='d/m/Y')?str_replace('/', '-', $_POST['rbfw_pickup_start_date']):$_POST['rbfw_pickup_start_date'];
-        $end_date = ($_POST['wp_date_format']=='d/m/Y')?str_replace('/', '-', $_POST['rbfw_pickup_end_date']):$_POST['rbfw_pickup_end_date'];
+        $start_date = isset($_POST['rbfw_pickup_start_date'])?$_POST['rbfw_pickup_start_date']:'';
+        $end_date = isset($_POST['rbfw_pickup_end_date'])?$_POST['rbfw_pickup_end_date']:'';
         $start_time = isset($_POST['rbfw_pickup_start_time'])?$_POST['rbfw_pickup_start_time']:'00:00:00';
         $end_time = isset($_POST['rbfw_pickup_end_time'])?$_POST['rbfw_pickup_end_time']:rbfw_end_time();
 

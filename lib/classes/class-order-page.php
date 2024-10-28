@@ -117,11 +117,11 @@ if (function_exists('rbfw_pro_tab_menu_list')) {
                 
             </tr>
             <tr id="order-details-<?php echo $post_id; ?>" class="order-details" style="display: none;">
-                <td colspan="7"><div class="order-details-content"></div></td>
+                <td colspan="12"><div class="order-details-content"></div></td>
             </tr>
             <?php endwhile; else : ?>
             <tr>
-                <td colspan="7"><?php esc_html_e('Sorry, No data found!', 'booking-and-rental-manager-for-woocommerce'); ?></td>
+                <td colspan="12"><?php esc_html_e('Sorry, No data found!', 'booking-and-rental-manager-for-woocommerce'); ?></td>
             </tr>
         <?php endif; wp_reset_postdata(); ?>
     </tbody>
@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.rbfw_order_edit_btn').forEach(function (button) {
+    document.querySelectorAll('.rbfw_order_view_btn').forEach(function (button) {
         button.addEventListener('click', function () {
             const postId = this.getAttribute('data-post-id');
             const orderDetailsRow = document.getElementById(`order-details-${postId}`);
