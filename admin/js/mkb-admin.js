@@ -63,8 +63,9 @@
                 let all_img_ids = parent.find('.rbfw_multi_image_value').val();
                 jQuery("body").css("overflow", "hidden");
                 $('.rbfw_faq_slide_actionlinks .faq_notice').remove();
-                parent.find(".rbfw_faq_slide_wrap").fadeIn(500);
-                parent.find(".rbfw_faq_slide_overlay").show("slide", { direction: "right" }, 1000);
+                $('.interface-interface-skeleton__sidebar .interface-complementary-area__fill').remove();
+                parent.find(".rbfw_faq_slide_wrap").fadeIn();
+                parent.find(".rbfw_faq_slide_overlay").show("slide", { direction: "right" }, 0);
                 if (all_img_ids == '') {
                     parent.find('.rbfw_upload_img_notice').show();
                 }
@@ -90,7 +91,7 @@
 
             jQuery('.rbfw_faq_header').click(function(e) {
                 e.preventDefault();
-                let parent = $(this).parents('.rbfw_faq_item');
+                let parent = $(this).parent('.rbfw_faq_item');
                 parent.find('.rbfw_faq_content_wrapper').slideToggle();
                 parent.find('.rbfw_faq_accordion_icon i').toggleClass('fa-plus fa-minus');
             });
@@ -185,6 +186,7 @@
             let theID = 'rbfw_faq_content_' + i;
             let theLoader = jQuery('.rbfw_add_faq_content i');
             $('.rbfw_faq_slide_actionlinks .faq_notice').remove();
+            $('.interface-interface-skeleton__sidebar .interface-complementary-area__fill').remove();
             $.ajax({
                 type: 'POST',
                 url: rbfw_ajax_url,
