@@ -456,8 +456,8 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
     /* Type: Resort */
     if($rbfw_rent_type == 'resort'){
 
-        $item->add_meta_data( 'start_date', $values['start_date'] );
-        $item->add_meta_data( 'end_date', $values['end_date']);
+       // $item->add_meta_data( 'start_date', $values['start_date'] );
+       // $item->add_meta_data( 'end_date', $values['end_date']);
         $rbfw_start_datetime = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
         $rbfw_end_datetime = $values['rbfw_end_datetime'] ? $values['rbfw_end_datetime'] : '';
         $rbfw_room_price_category = $values['rbfw_room_price_category'] ? $values['rbfw_room_price_category'] : '';
@@ -569,16 +569,16 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $item->add_meta_data($rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')), wc_price($discount_amount));
 
         $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
-        $item->add_meta_data( '_rbfw_type_info', $resort_type_arr );
-        $item->add_meta_data( '_rbfw_resort_package', $rbfw_room_price_category );
-        $item->add_meta_data( '_rbfw_service_info', $resort_service_arr );
-        $item->add_meta_data( '_rbfw_duration_cost', $rbfw_room_duration_price );
-        $item->add_meta_data( '_rbfw_service_cost', $rbfw_room_service_price );
-        $item->add_meta_data( '_rbfw_discount_type', $discount_type );
-        $item->add_meta_data( '_rbfw_discount_amount', $discount_amount );
+        //$item->add_meta_data( '_rbfw_type_info', $resort_type_arr );
+       // $item->add_meta_data( '_rbfw_resort_package', $rbfw_room_price_category );
+       // $item->add_meta_data( '_rbfw_service_info', $resort_service_arr );
+       // $item->add_meta_data( '_rbfw_duration_cost', $rbfw_room_duration_price );
+       // $item->add_meta_data( '_rbfw_service_cost', $rbfw_room_service_price );
+      //  $item->add_meta_data( '_rbfw_discount_type', $discount_type );
+      //  $item->add_meta_data( '_rbfw_discount_amount', $discount_amount );
 
         if($values['security_deposit_desc']){
-            $item->add_meta_data( (!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit'), $values['security_deposit_desc']);
+           // $item->add_meta_data( (!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit'), $values['security_deposit_desc']);
         }
         /* End Type: Resort */
 
@@ -715,8 +715,8 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
 
     } else {
 
-        $item->add_meta_data( 'start_date', $values['start_date'] );
-        $item->add_meta_data( 'end_date', $values['end_date']);
+       // $item->add_meta_data( 'start_date', $values['start_date'] );
+      //  $item->add_meta_data( 'end_date', $values['end_date']);
 
         $rbfw_extra_service_data 	= get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
 
@@ -835,18 +835,18 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $item->add_meta_data($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')), wc_price($rbfw_service_price));
         $item->add_meta_data($rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')), wc_price($discount_amount));
 
-        $item->add_meta_data( '_rbfw_start_datetime', $start_date_raw );
-        $item->add_meta_data( '_rbfw_end_datetime', $end_date_raw );
-        $item->add_meta_data( '_rbfw_pickup_point', $pickup_location );
-        $item->add_meta_data( '_rbfw_dropoff_point', $dropoff_location );
-        $item->add_meta_data( '_rbfw_variation_info', $variation_info );
-        $item->add_meta_data( '_rbfw_item_quantity', $rbfw_item_quantity );
-        $item->add_meta_data( '_rbfw_service_info', $bikecarmd_service_arr );
+       // $item->add_meta_data( '_rbfw_start_datetime', $start_date_raw );
+       // $item->add_meta_data( '_rbfw_end_datetime', $end_date_raw );
+      //  $item->add_meta_data( '_rbfw_pickup_point', $pickup_location );
+      //  $item->add_meta_data( '_rbfw_dropoff_point', $dropoff_location );
+       // $item->add_meta_data( '_rbfw_variation_info', $variation_info );
+      //  $item->add_meta_data( '_rbfw_item_quantity', $rbfw_item_quantity );
+      //  $item->add_meta_data( '_rbfw_service_info', $bikecarmd_service_arr );
         $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
-        $item->add_meta_data( '_rbfw_duration_cost', $rbfw_duration_price );
-        $item->add_meta_data( '_rbfw_service_cost', $rbfw_service_price );
-        $item->add_meta_data( '_rbfw_discount_type', $discount_type );
-        $item->add_meta_data( '_rbfw_discount_amount', $discount_amount );
+      //  $item->add_meta_data( '_rbfw_duration_cost', $rbfw_duration_price );
+     //   $item->add_meta_data( '_rbfw_service_cost', $rbfw_service_price );
+     //   $item->add_meta_data( '_rbfw_discount_type', $discount_type );
+    //    $item->add_meta_data( '_rbfw_discount_amount', $discount_amount );
 
         if($values['security_deposit_desc']){
             $item->add_meta_data( (!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit'), $values['security_deposit_desc']);
@@ -1090,6 +1090,7 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
 
 
     foreach ( $ticket_info as $_ticket ) {
+
 
 
 

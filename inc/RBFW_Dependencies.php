@@ -59,8 +59,9 @@
                 wp_enqueue_style( 'rbfw_calendar', RBFW_PLUGIN_URL . '/css/calendar.css', array(), '1.0.1' );
 
                 wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
-				
-			}
+
+                do_action('rbfw_frontend_enqueue_scripts');
+            }
 
 			public function frontend_script(){
 
@@ -179,7 +180,7 @@
 //                wp_enqueue_script( 'my-plugin-flatpickr-init', plugin_dir_url(__FILE__) . 'js/flatpickr-init.js', array('flatpickr-js'), null, true );
 
 
-                do_action('rbfw_frontend_enqueue_scripts');
+
 				
 			}			
 		}

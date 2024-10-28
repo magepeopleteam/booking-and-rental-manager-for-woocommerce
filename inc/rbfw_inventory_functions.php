@@ -2,11 +2,10 @@
 
 function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) {
 
-    //echo '<pre>';print_r($meta_data);echo '<pre>';exit;
 
     global $rbfw;
     $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-    $title = $meta_data['rbfw_billing_name'];
+    $title = 'hhh';//$meta_data['rbfw_billing_name'];
     $cpt_name = 'rbfw_order_meta';
 
     if($rbfw_payment_system == 'wps'){
