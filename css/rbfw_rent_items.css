@@ -283,6 +283,10 @@ p {
         padding: 12px 6px;
         color: #5e5e5e;
     }
+    .rbfw_rent_item_search-item_date input.fa-chevron-down:before {
+        content: none;
+    }
+
     input.rbfw_rent_item_search_submit{
         cursor: pointer;
         background-color: var(--rbfw_color_primary);
