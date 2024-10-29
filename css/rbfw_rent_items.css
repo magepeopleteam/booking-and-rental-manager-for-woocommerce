@@ -255,13 +255,7 @@ p {
         width: 100%;
         position: relative;
     }
-    .rbfw_rent_item_search-item_date i{
-        position: absolute;
-        top: 50%;
-        right: 10px;
-        transform: translateY(-50%);
-        font-size: 10px;
-    }
+    
 
     .rbfw_rent_item_search_button_holder{
         width: 100%;
@@ -277,6 +271,16 @@ p {
     }
     .rbfw_rent_item_search_dateButtonHolder input{
         padding: 8px 10px;
+    }
+
+    #rbfw_rent_item_search_pickup_date,.rbfw_rent_item_search-item_date i{
+        display: none;
+    }
+    .rbfw_rent_item_search_dateButtonHolder .flatpickr-mobile{
+        font-size: 12px;
+        font-weight: normal;
+        padding: 12px 6px;
+        color: #5e5e5e;
     }
     input.rbfw_rent_item_search_submit{
         cursor: pointer;
@@ -303,4 +307,16 @@ p {
         width: 50%;
     }
 
+    .rbfw_rent_item_search-item_date i{
+        display: block;
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        font-size: 10px;
+    }
+
+    #rbfw_rent_item_search_pickup_date{
+        display: block;
+    }
 }
