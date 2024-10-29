@@ -314,8 +314,7 @@ ul.rbfw_popup_fearure_lists li{
 #rbfw_popup_content{
     display: flex;
     margin-top: 10px;
-
-    overflow: scroll;
+    overflow-y: auto;
     height: 80vh;
 }
 
