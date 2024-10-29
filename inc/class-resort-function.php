@@ -161,6 +161,10 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     $room_types = array();
                 endif;
 
+             //   echo print_r($room_types);exit;
+
+
+
                 $rbfw_extra_service_data = get_post_meta( $product_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $product_id, 'rbfw_extra_service_data', true ) : '';
                 if(! empty($rbfw_extra_service_data)):
                     $extra_services = array_column($rbfw_extra_service_data,'service_price','service_name');
@@ -173,8 +177,9 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     if(array_key_exists($room_type, $room_types)){ // if Type1 exist in array
                         $room_price += (float)$room_types[$room_type] * (float)$value; // addup price
                     }
+                    endforeach;
 
-                endforeach;
+
 
 
                 if($room_price > 0 && $total_days > 0):
@@ -182,6 +187,8 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 else:
                     $total_room_price = (float)$room_price;
                 endif;
+
+
 
                 foreach ($rbfw_service_info as $key => $value):
                     $service_name = $key; //Service1
@@ -198,38 +205,22 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     $subtotal_price = (float)$total_room_price + (float)$total_service_price;
                 endif;
 
+
+
                 if($subtotal_price > 0):
                     $total_price = (float)$subtotal_price;
                 endif;
 
                 $security_deposit = rbfw_security_deposit($product_id,$total_price);
                 $total_price = $total_price + $security_deposit['security_deposit_amount'];
-
-                /* Start Tax Calculations */
-                $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-                $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-                $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
-                $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $percent = 0;
-                $tax_status = '';
-
-                if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage)){
-                    //Convert our percentage value into a decimal.
-                    $percentInDecimal = $mps_tax_percentage / 100;
-                    //Get the result.
-                    $percent = $percentInDecimal * $total_price;
-                    $total_price = $total_price + $percent;
-                }
-
 
                 if(function_exists('rbfw_get_discount_array')){
-
-                    $discount_arr = rbfw_get_discount_array($post_id, $start_date, $end_date, $total_price);
-
+                    $discount_arr = rbfw_get_discount_array($post_id, $total_days, $total_price);
                 } else {
-
                     $discount_arr = [];
                 }
+
                 $discount_type = '';
                 $discount_amount = 0;
                 if(!empty($discount_arr)){
@@ -299,9 +290,9 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
             if( !empty($product_id) && !empty($checkin_date) && !empty($checkout_date) && !empty($rbfw_room_info) ):
 
+
                 $origin             = date_create($checkin_date);
                 $target             = date_create($checkout_date);
-
                 $interval           = date_diff($origin, $target);
                 $total_days         = $interval->format('%a');
                 $room_price         = 0;
@@ -326,13 +317,19 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                     $extra_services = array();
                 endif;
 
+               // echo '<pre>';print_r($rbfw_room_info);echo '<pre>';exit;
+
+
+
                 foreach ($rbfw_room_info as $key => $value):
                     $room_type = $key; //Type1
                     if(array_key_exists($room_type, $room_types)){ // if Type1 exist in array
                         $room_price += (float)$room_types[$room_type] * (float)$value; // addup price
                     }
-
                 endforeach;
+
+
+
 
 
                 if($room_price > 0 && $total_days > 0):

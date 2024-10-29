@@ -1,29 +1,29 @@
 let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
-let rbfw_enable_resort_daylong_price = jQuery('#rbfw_enable_resort_daylong_price').val();
-
 let room_prices_arr = {};
 let service_prices_arr = {};
 
-jQuery('#checkin_date').datepicker({
-    dateFormat: js_date_format,
-    minDate: 0,
-    beforeShowDay: function(date)
-    {
-        return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-    },
-    onSelect: function (dateString, data) {
-        let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-        jQuery('input[name="rbfw_start_datetime"]').val(date_ymd_drop).trigger('change');
-    },
+jQuery('body').on('focusin', '#checkin_date', function(e) {
+    jQuery(this).datepicker({
+        dateFormat: js_date_format,
+        minDate: 0,
+        beforeShowDay: function(date)
+        {
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+        },
+        onSelect: function (dateString, data) {
+            let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+            jQuery('input[name="rbfw_start_datetime"]').val(date_ymd_drop).trigger('change');
+        },
+    });
 });
 
-jQuery('#hidden_checkin_date').change(function(e) {
-
+jQuery('body').on('change', '#hidden_checkin_date', function(e) {
     let selected_date = jQuery(this).val();
     const [gYear, gMonth, gDay] = selected_date.split('-');
+    let rbfw_enable_resort_daylong_price = jQuery('#rbfw_enable_resort_daylong_price').val();
 
     if(rbfw_enable_resort_daylong_price=='no'){
-         var extra_day = 1;
+        var extra_day = 1;
     }else {
         var extra_day = 0;
     }
@@ -44,6 +44,7 @@ jQuery('#hidden_checkin_date').change(function(e) {
         },
     });
 });
+
 
 // end check-in date picker
 

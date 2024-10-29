@@ -29,7 +29,6 @@ if (!class_exists('MageRBFWClass')) {
 
     function rbfw_hide_hidden_wc_products_in_list_page($query) {
         global $pagenow;
-        $taxonomy = 'product_visibility';
         $q_vars = &$query->query_vars;
         if ($pagenow == 'edit.php' && isset($q_vars['post_type']) && $q_vars['post_type'] == 'product') {
             $tax_query = array(
@@ -37,12 +36,6 @@ if (!class_exists('MageRBFWClass')) {
                     'taxonomy' => 'product_visibility',
                     'field' => 'slug',
                     'terms' => 'exclude-from-catalog',
-                    'operator' => 'NOT IN',
-                ],
-                [
-                    'taxonomy' => 'product_cat',
-                    'field' => 'slug',
-                    'terms' => 'uncategorized	',
                     'operator' => 'NOT IN',
                 ]
             );
@@ -788,6 +781,9 @@ if (!class_exists('MageRBFWClass')) {
                     'post_type' => 'product'  //'post',page' or use a custom post type if you want to
                 );
 
+
+
+
                 $pid = wp_insert_post($new_post);
 
 
@@ -820,6 +816,8 @@ if (!class_exists('MageRBFWClass')) {
         }
 
         function run_link_product_on_save($post_id) {
+
+
 
             if (get_post_type($post_id) == $this->get_cpt_name()) {
 

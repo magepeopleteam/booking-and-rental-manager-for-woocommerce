@@ -2494,7 +2494,7 @@ table.rbfw_bikecarsd_price_table tbody td {
     border: 0;
     padding: 5px;
     padding-left: 10px;
-   
+
 }
 
 table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n + 1) {
@@ -4467,7 +4467,7 @@ span {
     border: 0 !important;
     background: #fff;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    padding: 3px !important;
+    padding: 3px;
 }
 
 .ui-datepicker table {
@@ -6817,7 +6817,7 @@ ul, li {
     justify-content: center;
     text-transform: uppercase;
     font-weight: 500;
-    
+
 }
 a.rbfw_rent_list_btn{
     text-decoration: none;

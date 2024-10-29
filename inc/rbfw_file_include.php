@@ -21,6 +21,7 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-welcome-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-sd-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_currency.php';
 
+
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-order-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_order_meta.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-md-function.php';
@@ -35,17 +36,15 @@ require_once RBFW_PLUGIN_DIR . '/support/elementor/elementor-support.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
 
 add_action('wp_head', 'rbfw_php_variable_to_js');
+add_action('admin_head', 'rbfw_php_variable_to_js');
 
 function rbfw_php_variable_to_js()
 {
     ?>
     <script>
-
         let wp_date_format = "<?php echo  get_option('date_format') ?>";
         let wp_time_format = "<?php echo  get_option('time_format') ?>";
-
         let js_date_format = 'yy-mm-dd';
-
         if(wp_date_format=='F j, Y'){
             js_date_format = 'dd M yy';
         }else if(wp_date_format=='m/d/Y'){
@@ -55,7 +54,6 @@ function rbfw_php_variable_to_js()
         }else{
             js_date_format = 'yy-mm-dd';
         }
-
     </script>
 
     <?php
