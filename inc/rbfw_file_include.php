@@ -42,6 +42,7 @@ function rbfw_php_variable_to_js()
 {
     ?>
     <script>
+        let start_of_week = "<?php echo  get_option('start_of_week') ?>";
         let wp_date_format = "<?php echo  get_option('date_format') ?>";
         let wp_time_format = "<?php echo  get_option('time_format') ?>";
         let js_date_format = 'yy-mm-dd';
@@ -54,6 +55,7 @@ function rbfw_php_variable_to_js()
         }else{
             js_date_format = 'yy-mm-dd';
         }
+        console.log('start_of_week',start_of_week);
     </script>
 
     <?php

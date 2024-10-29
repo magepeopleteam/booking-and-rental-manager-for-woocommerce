@@ -5,8 +5,11 @@ let bikecarsd_price_arr = {};
 let service_price_arr = {};
 jQuery(function(){
 
+    weekday_start = weekday_convert(start_of_week,'convert_day');
+
     var rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
 
+    //powerfull calendar
     var defaultConfig = {
         weekDayLength: 1,
         onClickDate: onclick_cal_date,
@@ -14,6 +17,15 @@ jQuery(function(){
         startOnMonday: true,
         showTodayButton: false,
         highlightSelectedWeekday: false,
+        alternateDayMap: {
+            1:weekday_convert(weekday_start,'next_day',0),
+            2:weekday_convert(weekday_start,'next_day',1),
+            3:weekday_convert(weekday_start,'next_day',2),
+            4:weekday_convert(weekday_start,'next_day',3),
+            5:weekday_convert(weekday_start,'next_day',4),
+            6:weekday_convert(weekday_start,'next_day',5),
+            7:weekday_convert(weekday_start,'next_day',6),
+        },
         highlightSelectedWeek: false,
         prevButton: '<i class="fa-solid fa-chevron-left"></i>',
         nextButton: '<i class="fa-solid fa-chevron-right"></i>',
@@ -75,9 +87,6 @@ jQuery(function(){
 });
 
 function onclick_cal_date(date) {
-
-
-
 
     jQuery('#rbfw-bikecarsd-calendar').updateCalendarOptions({
         date: date
@@ -159,6 +168,19 @@ function onclick_cal_date(date) {
                 }, 100);
             }
         });
+}
+
+function weekday_convert(first_arg,type,neddle=null){
+    var weekdays = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+    if(type=='convert_day'){
+        return weekdays[first_arg];
+    }else{
+      let  position = weekdays.indexOf(first_arg) + neddle;
+      if(position>=7){
+          position = position -7;
+      }
+      return weekdays[position];
+    }
 }
 
 jQuery(document).on('click','.rbfw_back_step_btn',function (e) {
