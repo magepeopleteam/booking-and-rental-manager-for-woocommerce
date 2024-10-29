@@ -430,18 +430,11 @@ function rbfw_rent_search_shortcode( $attr = null ){
                         </div>
                         <div class="rbfw_rent_item_search_dateButtonHolder">
                             <div class="rbfw_rent_item_search-item_date">
-                                <div class="rbfw_rent_item_date_picker">
-                                    <div class="rbfw_rent_item_search_item">
-                                        <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
-                                        <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
-                                    </div>
-                                </div>
-
+                                <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
+                                <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
                             </div>
                             <div class="rbfw_rent_item_search_button_holder">
-                                <div class="rbfw_rent_item_search_button">
-                                    <button type="submit" class="rbfw_rent_item_search_submit">Search</button>
-                                </div>
+                                <input type="submit" class="rbfw_rent_item_search_submit" value="Search">
                             </div>
                         </div>
                     </div>

@@ -157,5 +157,7 @@
 			public static function get_cpt_name(): string {
 				return 'rbfw_item';
 			}
+
+			//****************feture lists***********//
 		}
 	}
