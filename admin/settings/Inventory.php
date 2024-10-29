@@ -61,7 +61,7 @@
                                 <div class="rbfw_variations_table_row" data-key="<?php echo esc_attr($i); ?>">
 
                                 <header>
-                                    <label for="">Field Label</label>
+                                    <label for=""><?php esc_html_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                     <div>
                                         <input type="text" name="rbfw_variations_data[<?php echo esc_attr($i); ?>][field_label]" value="<?php echo esc_attr( $value['field_label'] ); ?>" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                         <input type="hidden" name="rbfw_variations_data[<?php echo esc_attr($i); ?>][field_id]" value="rbfw_variation_id_<?php echo esc_attr($i); ?>">
@@ -123,7 +123,7 @@
                             ?>
                             <div class="rbfw_variations_table_row" data-key="0">
                                 <header>
-                                    <label for="">Field Label</label>
+                                    <label for=""><?php esc_html_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                     <div>
                                         <input type="text" name="rbfw_variations_data[0][field_label]" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                         <input type="hidden" name="rbfw_variations_data[0][field_id]" value="rbfw_variation_id_0">

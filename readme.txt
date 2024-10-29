@@ -207,6 +207,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.1.9 =
+* Date calendar weekday start as "Week Starts On" settings
+
+
 = 2.1.5 =
 * Single day discount problem solved.
 * Resort date problem solved.
