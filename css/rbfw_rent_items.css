@@ -230,7 +230,8 @@ p {
 /*Search Short Code*/
 @media (min-width:0px) {
     .rbfw_rent_item_searchContentHolder{
-        background-color: #ccc;
+        box-shadow: 0 0 0 0px #dfdfdf;
+        background-color: #F8F8F8;
         padding: 10px;
         display: flex;
         justify-content: space-between;

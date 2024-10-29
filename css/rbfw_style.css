@@ -6745,6 +6745,7 @@ ul, li {
     text-transform: capitalize;
     color: var(--rbfw_color_primary);
     line-height: 1;
+    margin: 0;
 }
 
 .rbfw_rent_list_info {
