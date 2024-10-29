@@ -1044,10 +1044,8 @@ ul.rbfw-feature-lists li {
 }
 
 ul.rbfw-feature-lists li i {
-    font-size: 20px;
     color: var(--rbfw_color_primary);
     margin-right: 8px;
-    min-width: 22px;
 }
 
 @media (min-width: 640px) {
@@ -3319,7 +3317,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .owl-carousel .owl-item img {
     display: block;
     object-fit: cover;
-    height: 200px;
     object-position: top center;
 }
 
@@ -6748,6 +6745,7 @@ ul, li {
     text-transform: capitalize;
     color: var(--rbfw_color_primary);
     line-height: 1;
+    margin: 0;
 }
 
 .rbfw_rent_list_info {
