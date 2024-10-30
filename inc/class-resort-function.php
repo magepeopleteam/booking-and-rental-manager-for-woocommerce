@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
     class RBFW_Resort_Function {
         public function __construct(){
-            add_action('wp_footer', array($this, 'rbfw_resort_frontend_scripts'));
+
             add_action('wp_ajax_rbfw_check_resort_availibility', array($this, 'rbfw_check_resort_availibility'));
             add_action('wp_ajax_nopriv_rbfw_check_resort_availibility', array($this,'rbfw_check_resort_availibility'));
             add_action('wp_ajax_rbfw_get_active_price_table', array($this, 'rbfw_get_active_price_table'));
@@ -21,10 +21,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             add_action('wp_ajax_nopriv_rbfw_room_price_calculation', array($this,'rbfw_room_price_calculation'));
         }
 
-        public function rbfw_resort_frontend_scripts()
-        {
-            wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
-        }
+
 
         public function rbfw_get_resort_room_array_reorder($product_id, $room_info){
 

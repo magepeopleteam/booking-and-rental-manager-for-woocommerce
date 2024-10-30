@@ -221,6 +221,8 @@ if($rbfw_enable_start_end_date=='no'){
                         </div>
                     </div>
 
+                    <div class="pickup_date "></div>
+
                     <?php if ($location_switch == 'yes' && !empty($pickup_location)) : ?>
                         <div class="item">
                             <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_location', 'rbfw_basic_translation_settings', __('Pickup Location','booking-and-rental-manager-for-woocommerce'))); ?></div>

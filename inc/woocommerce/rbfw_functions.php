@@ -154,7 +154,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
 
         $rbfw_bikecarsd = new RBFW_BikeCarSd_Function();
-        $rbfw_bikecarsd_selected_date = isset($_POST['rbfw_bikecarsd_selected_date']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_selected_date']) : '';
+        $rbfw_bikecarsd_selected_date = isset($_POST['selected_date']) ? rbfw_array_strip($_POST['selected_date']) : '';
         $bikecarsd_selected_date = isset($_POST['rbfw_bikecarsd_selected_date']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_selected_date']) : '';
         $rbfw_bikecarsd_selected_time = isset($_POST['rbfw_bikecarsd_selected_time']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_selected_time']) : '';
 

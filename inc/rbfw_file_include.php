@@ -55,7 +55,22 @@ function rbfw_php_variable_to_js()
         }else{
             js_date_format = 'yy-mm-dd';
         }
-        console.log('start_of_week',start_of_week);
+
+        jQuery('body').on('focusin', '.single_day_date', function(e) {  alert(123);
+            jQuery(this).datepicker({
+                dateFormat: js_date_format,
+                minDate: 0,
+                beforeShowDay: function(date)
+                {
+                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+                },
+                onSelect: function (dateString, data) {
+                    let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+                    jQuery('input[name="selected_date"]').val(date_ymd).trigger('change');
+                },
+            });
+        });
+
     </script>
 
     <?php

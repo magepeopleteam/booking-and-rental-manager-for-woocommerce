@@ -357,11 +357,7 @@ function rbfw_add_to_cart_shortcode_func($atts){
 
     }
     elseif($rbfw_item_type == 'resort'){
-
         include(  RBFW_TEMPLATE_PATH . 'forms/resort-registration.php' );
-
-        $Resortclass = new RBFW_Resort_Function();
-        $Resortclass->rbfw_resort_frontend_scripts($post_id);
     }
 
     if(!$backend){
