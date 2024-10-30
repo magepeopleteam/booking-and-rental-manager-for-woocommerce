@@ -6,86 +6,6 @@
         let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
 
 
-        $('body').on('focusin', '.pickup_date', function(e) {
-            $(this).datepicker({
-                dateFormat: js_date_format,
-                minDate: 0,
-                beforeShowDay: function(date)
-                {
-                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-                },
-                onSelect: function (dateString, data) {
-                    let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-                    $('input[name="rbfw_pickup_start_date"]').val(date_ymd).trigger('change');
-                },
-            });
-        });
-
-        jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {
-
-            let selected_date = jQuery(this).val();
-            const [gYear, gMonth, gDay] = selected_date.split('-');
-
-            jQuery(".dropoff_date").datepicker("destroy");
-
-            jQuery('.dropoff_date').datepicker({
-                dateFormat: js_date_format,
-                minDate: new Date(gYear,  gMonth - 1, gDay),
-                onSelect: function (dateString, data) {
-                    let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-                    $('input[name="rbfw_pickup_end_date"]').val(date_ymd_drop).trigger('change');
-                },
-                beforeShowDay: function(date)
-                {
-                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-                }
-            });
-        });
-
-        $('.pickup_time').change(function(e) {
-            let pickup_date = $('.pickup_date').val();
-            let dropoff_date = $('.dropoff_date').val();
-
-            if (pickup_date == dropoff_date) {
-                let selected_time = $(this).val();
-                selected_time = rbfw_convertTo24HrsFormat(selected_time);
-                $(".dropoff_time").val("").trigger("change");
-
-                $("#dropoff_time option").each(function() {
-                    var thisOptionValue = $(this).val();
-                    thisOptionValue = rbfw_convertTo24HrsFormat(thisOptionValue);
-                    if ((thisOptionValue == selected_time) || (thisOptionValue < selected_time)) {
-                        $(this).attr('disabled', true);
-                    } else {
-                        $(this).attr('disabled', false);
-                    }
-                });
-
-            } else {
-                $("#dropoff_time option").each(function() {
-                    var thisOptionValue = $(this).val();
-                    if (thisOptionValue != '') {
-                        $(this).attr('disabled', false);
-                    } else {
-                        $(this).attr('disabled', true);
-                    }
-                });
-            }
-        });
-
-        $('.dropoff_date').change(function(e) {
-            $(".pickup_time").trigger("change");
-        });
-
-
-        $('.dropoff_date').click(function(e) {
-            let pickup_date = $('.pickup_date').val();
-            if (pickup_date == '') {
-                alert('Please select the pickup date!');
-            }
-        });
-
-
         $('#rbfw-bikecarsd-calendar').datepicker({
             dateFormat: js_date_format,
             minDate: 0,
@@ -96,17 +16,17 @@
             },
             onSelect: function (dateString, data) {
                 let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-                $('input[name="selected_date"]').val(date_ymd).trigger('change');
+                $('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
             },
         });
 
-        jQuery('body').on('change', 'input[name="selected_date"]', function(e) {
+        jQuery('body').on('change', 'input[name="rbfw_bikecarsd_selected_date"]', function(e) {
 
             let post_id = jQuery('#rbfw_post_id').val();
             let is_muffin_template = jQuery('.rbfw_muffin_template').length;
 
             var time_slot_switch = jQuery('#time_slot_switch').val();
-            var selected_date = jQuery('[name="selected_date"]').val();
+            var selected_date = jQuery(this).val();
 
             if(is_muffin_template > 0){
                 is_muffin_template = '1';

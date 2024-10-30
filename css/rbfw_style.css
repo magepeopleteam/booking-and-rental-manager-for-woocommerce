@@ -6974,3 +6974,11 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     font-size: 12px;
 }
 
+#rbfw-bikecarsd-calendar .ui-datepicker {
+    min-width: 100%;
+    min-height: auto;
+}
+#rbfw-bikecarsd-calendar .ui-datepicker td a, #rbfw-bikecarsd-calendar .ui-datepicker td span {
+    padding: 10px 1px;
+}
+

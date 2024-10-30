@@ -58,7 +58,7 @@
                         </div>
                     </div>
                 <?php endif; ?>
-                <input name="selected_date" type="hidden">
+
 				<div class="item rbfw-bikecarsd-step" data-step="1">
 
 					<div id="rbfw-bikecarsd-calendar">

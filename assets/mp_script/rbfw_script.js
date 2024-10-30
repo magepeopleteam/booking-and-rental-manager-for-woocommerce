@@ -207,7 +207,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
         jQuery(this).addClass('selected');
         let gTime = jQuery(this).attr('data-time');
         jQuery('#rbfw_bikecarsd_selected_time').val(gTime);
-        let selected_date = jQuery('[name="selected_date"]').val();
+        let selected_date = jQuery('[name="rbfw_bikecarsd_selected_date"]').val();
         let post_id = jQuery('#rbfw_post_id').val();
         let rent_type = jQuery('#rbfw_rent_type').val();
         let is_muffin_template = jQuery('.rbfw_muffin_template').length;
