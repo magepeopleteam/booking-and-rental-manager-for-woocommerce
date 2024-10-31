@@ -36,7 +36,7 @@ $post_id = get_the_id();
 $frontend = 'yes';
 $submit_name = 'add-to-cart';
 
-/*$rbfw_inventory = get_post_meta($post_id,'rbfw_inventory',true);
+/*$rbfw_inventory = get_post_meta(632,'rbfw_ticket_info',true);
 echo '<pre>';
 print_r($rbfw_inventory);
 echo '<pre>';exit;*/
