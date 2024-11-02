@@ -52,7 +52,6 @@
         return false;
     });
     //*********Add F.A.Q Item************//
-
     jQuery(document).ready(function() {
 
         function rbfw_faq_actions_func() {
@@ -63,7 +62,8 @@
                 let all_img_ids = parent.find('.rbfw_multi_image_value').val();
                 jQuery("body").css("overflow", "hidden");
                 $('.rbfw_faq_slide_actionlinks .faq_notice').remove();
-                $('.interface-interface-skeleton__sidebar .interface-complementary-area__fill').remove();
+                $('.interface-interface-skeleton__sidebar .interface-complementary-area__fill').css('width', '0');
+                $('.components-button').removeClass('is-pressed').attr('aria-expanded', 'false');
                 parent.find(".rbfw_faq_slide_wrap").fadeIn();
                 parent.find(".rbfw_faq_slide_overlay").show("slide", { direction: "right" }, 0);
                 if (all_img_ids == '') {
@@ -77,23 +77,16 @@
                 let parent = $('.rbfw_faq_item[data-id=' + dataId + ']');
 
 
-                parent.find(".rbfw_faq_slide_overlay").hide("slide", { direction: "right" }, 1000);
+                parent.find(".rbfw_faq_slide_overlay").hide("slide", { direction: "right" }, 0);
                 setTimeout(function() {
                     parent.find(".rbfw_faq_slide_wrap").fadeOut();
                     jQuery("body").css("overflow", "visible");
-                }, 900);
+                }, 0);
 
                 if (parent.data('status') != 'saved') {
                     parent.remove();
                     return false;
                 }
-            });
-
-            jQuery('.rbfw_faq_header').click(function(e) {
-                e.preventDefault();
-                let parent = $(this).parent('.rbfw_faq_item');
-                parent.find('.rbfw_faq_content_wrapper').slideToggle();
-                parent.find('.rbfw_faq_accordion_icon i').toggleClass('fa-plus fa-minus');
             });
 
             $('.rbfw_save_faq_content_btn').click(function(e) {
@@ -113,13 +106,17 @@
                     alert('Title is required!');
                     return false;
                 }
-                for (let i = 0; i < count; i++) {
-                    let rbfw_faq_title = $('.rbfw_faq_item[data-id=' + i + '] [name="rbfw_faq_title[]"]').val();
-                    let rbfw_faq_img = $('.rbfw_faq_item[data-id=' + i + '] [name="rbfw_faq_img[]"]').val();
+                let rbfw_faq_title = '';
+                let rbfw_faq_img = '';
+                let getID = '';
+                let rbfw_faq_content = '';
+                for (let i = 1; i <= count; i++) {
+                    rbfw_faq_title = $('.rbfw_faq_item:nth-child(' + i + ') [name="rbfw_faq_title[]"]').val();
+                    rbfw_faq_img = $('.rbfw_faq_item:nth-child(' + i + ') [name="rbfw_faq_img[]"]').val();
 
-                    let getID = jQuery('.rbfw_faq_item[data-id=' + i + '] textarea[name="rbfw_faq_content[]"]').attr('id');
+                    getID = jQuery('.rbfw_faq_item:nth-child(' + i + ') textarea[name="rbfw_faq_content[]"]').attr('id');
 
-                    let rbfw_faq_content = tinymce.get(getID).getContent();
+                    rbfw_faq_content = tinymce.get(getID).getContent();
 
                     theDataArr.push({ rbfw_faq_title: rbfw_faq_title, rbfw_faq_img: rbfw_faq_img, rbfw_faq_content: rbfw_faq_content });
                 }
@@ -144,7 +141,7 @@
                         getThisParent.find('.rbfw_faq_header').find('.rbfw_faq_header_title').html(getThisTitle);
                         getThisParent.find('.rbfw_faq_new_accordion_wrapper').show();
                         getThisParent.attr('data-status', 'saved');
-                        $('.rbfw_faq_slide_close').trigger('click');
+                        getThisParent.find('.rbfw_faq_slide_close').trigger('click');
 
                     },
                 });
@@ -154,22 +151,77 @@
                 var status = jQuery(this).val();
                 if (status == 'yes') {
                     jQuery(this).val('no');
-                    jQuery('.rbfw-faq-content').slideUp().removeClass('show').addClass('hide');
+                    jQuery('.rbfw-faq-content-wrapper-main,.rbfw_faq_content_btn_wrap').slideUp().removeClass('show').addClass('hide');
                 }
                 if (status == 'no') {
                     jQuery(this).val('yes');
-                    jQuery('.rbfw-faq-content').slideDown().removeClass('hide').addClass('show');
+                    jQuery('.rbfw-faq-content-wrapper-main,.rbfw_faq_content_btn_wrap').slideDown().removeClass('hide').addClass('show');
                 }
             });
 
         }
         rbfw_faq_actions_func();
 
+        jQuery(document).on('click', '.rbfw_faq_accordion_icon', function(e) {
+            e.preventDefault();
+            let dataID = jQuery(this).closest('.rbfw_faq_item').data('id');
+            let theParent = jQuery('.rbfw-faq-content-wrapper-main .rbfw_faq_item[data-id=' + dataID + ']');
+
+            if (theParent.hasClass("active")) {
+                theParent.removeClass('active');
+                theParent.find('.rbfw_faq_content_wrapper').hide();
+            } else {
+                theParent.addClass('active');
+                theParent.find('.rbfw_faq_content_wrapper').show();
+            }
+
+            theParent.find('.rbfw_faq_accordion_icon i').toggleClass('fa-plus fa-minus');
+        });
+
         jQuery(document).on('click', '.rbfw-faq-content-wrapper-main .rbfw_item_remove', function() {
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            if (confirm('Are you sure you want to delete this item? You will not be able to undo this action. \n\n 1. Ok : To Delete . \n 2. Cancel : To Cancel .')) {
                 jQuery(this).closest('.rbfw_remove_area').slideUp(250, function() {
                     jQuery(this).remove();
-                    $('.rbfw_save_faq_content_btn').trigger('click');
+                    let count = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item').length;
+                    let theDataArr = [];
+                    let postID = $('#post_ID').val();
+                    let rbfw_faq_title = '';
+                    let rbfw_faq_img = '';
+                    let getID = '';
+                    let rbfw_faq_content = '';
+
+                    for (let i = 1; i <= count; i++) {
+
+                        if ($('.rbfw_faq_item:nth-child(' + i + ')').length) {
+                            rbfw_faq_title = $('.rbfw_faq_item:nth-child(' + i + ') [name="rbfw_faq_title[]"]').val();
+                            rbfw_faq_img = $('.rbfw_faq_item:nth-child(' + i + ') [name="rbfw_faq_img[]"]').val();
+
+                            getID = jQuery('.rbfw_faq_item:nth-child(' + i + ') textarea[name="rbfw_faq_content[]"]').attr('id');
+
+                            rbfw_faq_content = tinymce.get(getID).getContent();
+
+                            theDataArr.push({ rbfw_faq_title: rbfw_faq_title, rbfw_faq_img: rbfw_faq_img, rbfw_faq_content: rbfw_faq_content });
+
+                        }
+                    }
+
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: ajaxurl,
+                        data: {
+                            'action': 'rbfw_save_faq_data',
+                            'data': JSON.stringify(theDataArr),
+                            'postID': postID
+                        },
+                        beforeSend: function() {
+                            jQuery('button.rbfw_add_faq_content').addClass('rbfw-pointer-not-allowed');
+                        },
+                        success: function(response) {
+                            alert('FAQ item has been removed!');
+                            jQuery('button.rbfw_add_faq_content').removeClass('rbfw-pointer-not-allowed');
+                        },
+                    });
+
                 });
             } else {
                 return false;
@@ -177,23 +229,25 @@
         });
 
         jQuery(document).on('click', '.rbfw_add_faq_content', function() {
-            let $this = jQuery(this);
-            let parent = $this.closest('.tabsItem');
-            let dt = new Date();
-            let time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
             let theCount = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item').length;
-            let i = parseInt(theCount);
+            let lastDataID = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item:last-child').data('id');
+            if (lastDataID === undefined) {
+                lastDataID = 0;
+            }
+            let i = parseInt(lastDataID) + 1;
             let theID = 'rbfw_faq_content_' + i;
             let theLoader = jQuery('.rbfw_add_faq_content i');
             $('.rbfw_faq_slide_actionlinks .faq_notice').remove();
-            $('.interface-interface-skeleton__sidebar .interface-complementary-area__fill').remove();
+
+            $('.interface-interface-skeleton__sidebar .interface-complementary-area__fill').css('width', '0');
+            $('.components-button').removeClass('is-pressed').attr('aria-expanded', 'false');
             $.ajax({
                 type: 'POST',
                 url: rbfw_ajax_url,
-                data: { "action": "get_rbfw_add_faq_content", "id": theID, 'count': theCount },
+                data: { "action": "get_rbfw_add_faq_content", "id": theID, 'count': lastDataID },
                 beforeSend: function() {
 
-                    theLoader.show();
+                    theLoader.css('display', 'inline-block');
                 },
                 success: function(data) {
                     $('.rbfw-faq-content-wrapper-main').append(data);
@@ -212,10 +266,7 @@
             return false;
         });
     });
-
-
-
-
+    //*********End F.A.Q Item************//
     jQuery(window).load(function() {
         jQuery('.mp_tab_menu').each(function() {
             jQuery(this).find('ul li:first-child').trigger('click');
@@ -779,6 +830,94 @@
                 jQuery('.rbfw_return_security_deposit_amount').hide();
             }
 
+
+        });
+
+        let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
+
+
+        $('#rbfw-bikecarsd-calendar').datepicker({
+            dateFormat: js_date_format,
+            minDate: 0,
+            firstDay: start_of_week,
+            beforeShowDay: function(date) {
+                return rbfw_off_day_dates(date, 'md', rbfw_today_booking_enable);
+            },
+            onSelect: function(dateString, data) {
+                let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+                $('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
+            },
+        });
+
+        jQuery('body').on('change', 'input[name="rbfw_bikecarsd_selected_date"]', function(e) {
+
+            let post_id = jQuery('#rbfw_post_id').val();
+            let is_muffin_template = jQuery('.rbfw_muffin_template').length;
+
+            var time_slot_switch = jQuery('#time_slot_switch').val();
+            var selected_date = jQuery(this).val();
+
+            if (is_muffin_template > 0) {
+                is_muffin_template = '1';
+            } else {
+                is_muffin_template = '0';
+            }
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax.rbfw_ajaxurl,
+                data: {
+                    'action': 'rbfw_bikecarsd_time_table',
+                    'post_id': post_id,
+                    'selected_date': selected_date,
+                    'is_muffin_template': is_muffin_template,
+                    'time_slot_switch': time_slot_switch,
+                },
+                beforeSend: function() {
+                    jQuery('.rbfw-bikecarsd-result').empty();
+                    jQuery('.rbfw_bikecarsd_time_table_container').remove();
+                    jQuery('.rbfw-bikecarsd-step[data-step="1"]').addClass('rbfw_loader_in');
+                    jQuery('.rbfw-bikecarsd-step[data-step="1"]').append('<i class="fas fa-spinner fa-spin"></i>');
+                    var rent_type = jQuery('#rbfw_rent_type').val();
+                    // Start: Calendar script
+                    if (rent_type == 'appointment') {
+                        let rbfw_date_element_arr = [];
+                        let rbfw_date_element = jQuery('.rbfw-date-element');
+                        let rbfw_calendar_weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                        let appointment_days = jQuery('#appointment_days').val();
+                        jQuery(rbfw_date_element).each(function($i) {
+                            let this_data = jQuery(this);
+                            let this_date_data = jQuery(this).attr('data-date');
+                            let this_calendar_date = new Date(this_date_data);
+                            let this_calendar_day_name = rbfw_calendar_weekday[this_calendar_date.getDay()];
+                            if (appointment_days.indexOf(this_calendar_day_name) < 0) {
+                                this_data.attr('disabled', true);
+                            }
+                        });
+                    }
+                    /* End Calendar Script */
+                },
+                success: function(response) {
+
+                    jQuery('.rbfw-bikecarsd-step[data-step="1"]').hide();
+                    jQuery('.rbfw-bikecarsd-step[data-step="1"]').removeClass('rbfw_loader_in');
+                    jQuery('.rbfw-bikecarsd-step[data-step="1"] i.fa-spinner').remove();
+                    jQuery('.rbfw-bikecarsd-result').append(response);
+                    var time_slot_switch = jQuery('#time_slot_switch').val();
+
+
+                    if (time_slot_switch != 'on') {
+                        rbfw_bikecarsd_without_time_func();
+                    }
+
+
+                },
+                complete: function(data) {
+                    jQuery('html, body').animate({
+                        scrollTop: jQuery(".rbfw-bikecarsd-calendar-header").offset().top
+                    }, 100);
+                }
+            });
 
         });
 
