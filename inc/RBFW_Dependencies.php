@@ -11,7 +11,6 @@
 			public function __construct() {
 				add_action('wp_enqueue_scripts', array( $this, 'common_enqueue' ), 90 );
 				add_action('admin_enqueue_scripts', array( $this, 'common_enqueue' ), 90 );
-
 				add_action('wp_enqueue_scripts', array( $this, 'frontend_script' ), 90 );
 				add_action('admin_head', array( $this, 'rbfw_ajax_url' ), 5 );
 				add_action('wp_head', array( $this, 'rbfw_ajax_url' ), 5 );
@@ -26,6 +25,10 @@
 
 				//flaticon
 //				wp_enqueue_style('flaticon', RBFW_PLUGIN_URL . '/assets/fonts/flaticon/flaticon.css');
+
+                wp_enqueue_script('jquery-ui-core');
+                wp_enqueue_script('jquery-ui-datepicker');
+                wp_enqueue_script('jquery-ui-accordion');
 			
 				//mp style
 				wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
@@ -52,15 +55,17 @@
 
 
                 wp_enqueue_script( 'rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true );
-                wp_enqueue_script( 'md_script', RBFW_PLUGIN_URL . '/assets/mp_script/md_script.js', array(), time(), true );
 
-                wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), time(), true);
+                wp_enqueue_script( 'md_script', RBFW_PLUGIN_URL . '/assets/mp_script/md_script.js', array(), time(), true );
+                wp_enqueue_script( 'sd_script', RBFW_PLUGIN_URL . '/assets/mp_script/sd_script.js', array(), time(), true );
+                wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
+
 
                 wp_enqueue_style( 'rbfw_calendar', RBFW_PLUGIN_URL . '/css/calendar.css', array(), '1.0.1' );
-
                 wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
-				
-			}
+
+                do_action('rbfw_frontend_enqueue_scripts');
+            }
 
 			public function frontend_script(){
 
@@ -91,9 +96,10 @@
 					$default_language = explode( '_', $default_language )[0];
 				}
 
-
 				wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
-				wp_localize_script( 'rbfw_calendar', 'rbfw_calendar_object',
+                wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), time(), true);
+
+                wp_localize_script( 'rbfw_calendar', 'rbfw_calendar_object',
 					array( 
 						'default_timezone' => $default_timezone,
 						'default_language' => $default_language,
@@ -145,14 +151,7 @@
 				wp_enqueue_script('rbfw-script', plugins_url('admin/js/mkb-admin.js', __DIR__), array('jquery', 'jquery-ui-datepicker','wp-tinymce'), time(), false);
 				wp_localize_script('jquery', 'rbfw_ajax', array( 'rbfw_ajaxurl' => admin_url( 'admin-ajax.php')));
 				wp_enqueue_script('smartWizard', plugins_url('admin/js/jquery.smartWizard.min.js', __DIR__), array('jquery'), '6.0.6', false);
-
-
-                wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
-
-
-
                 do_action('rbfw_admin_enqueue_scripts');
-			  
 			}
 			
 			
@@ -164,9 +163,7 @@
 				$hide_more_offers_btn_text = $rbfw->get_option_trans('rbfw_text_hide_more_offers', 'rbfw_basic_translation_settings', __('Hide More Offers','booking-and-rental-manager-for-woocommerce'));
 				$version = time(); // Time() function will prevent cache
 				wp_enqueue_script('jquery');
-				wp_enqueue_script('jquery-ui-core');
-				wp_enqueue_script('jquery-ui-datepicker');
-				wp_enqueue_script('jquery-ui-accordion');
+
 				wp_enqueue_style('dashicons');
 				wp_enqueue_style('rbfw-jquery-ui-style', plugin_dir_url(__DIR__) . 'css/jquery-ui.css', array());
 
@@ -181,7 +178,7 @@
 //                wp_enqueue_script( 'my-plugin-flatpickr-init', plugin_dir_url(__FILE__) . 'js/flatpickr-init.js', array('flatpickr-js'), null, true );
 
 
-                do_action('rbfw_frontend_enqueue_scripts');
+
 				
 			}			
 		}
