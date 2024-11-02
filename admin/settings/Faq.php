@@ -25,7 +25,7 @@
 			public function get_rbfw_add_faq_content() {
 				$id = 'id'.uniqid();
 				$count = RBFW_Function::data_sanitize( $_POST['count'] );
-				$count = (int)$count;
+				$count = (int)$count + 1;
 				echo $this->rbfw_repeated_item_addnew($id, 'mep_event_faq', [], $count);
 				wp_die();
 			}
@@ -367,14 +367,19 @@
 							}
 						?>
 				</div>
-				<div class="rbfw_faq_content_btn_wrap">
+				<div class="rbfw_faq_content_btn_wrap <?php echo esc_attr(($rbfw_enable_faq_content=='yes')?'show':'hide'); ?>">
 					<button type="button" class="rbfw_add_faq_content ppof-button">
 						<?php esc_html_e( 'Add FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?>
-						<i class="fa-solid fa-circle-notch fa-spin"></i>
+						<i class="fas fa-spinner fa-pulse"></i>
 					</button>
 				</div>
 			</div>
 			<style>
+				.rbfw-pointer-not-allowed{
+					cursor: not-allowed;
+					pointer-events: none;
+					opacity: 0.7;
+				}
 				.rbfw_faq_new_accordion_wrapper{
 					display: none;
 				}
@@ -541,9 +546,19 @@
 				div.mpStyle .formControl.rbfw_faq_title_input{
 					width: 100%;
 				}
-
+				.rbfw-faq-content-wrapper-main .rbfw_item_drag{
+					cursor: pointer;
+					background-color: var(--mage-primary);
+					color: #fff;
+					border-radius: 0px;
+					height: 30px;
+					width: 30px;
+					text-align: center;
+					line-height: 30px;
+					display: inline-block;
+				}
 				.rbfw-faq-content-wrapper-main .rbfw_faq_header_title{
-					width:85%;
+					width:84%;
 					padding-right: 10px;
 				}
 				.rbfw-faq-content-wrapper-main .rbfw_faq_header_title2{
