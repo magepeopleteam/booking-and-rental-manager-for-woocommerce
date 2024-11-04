@@ -154,7 +154,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
 
         $rbfw_bikecarsd = new RBFW_BikeCarSd_Function();
-        $rbfw_bikecarsd_selected_date = isset($_POST['selected_date']) ? rbfw_array_strip($_POST['selected_date']) : '';
+        $rbfw_bikecarsd_selected_date = isset($_POST['rbfw_bikecarsd_selected_date']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_selected_date']) : '';
         $bikecarsd_selected_date = isset($_POST['rbfw_bikecarsd_selected_date']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_selected_date']) : '';
         $rbfw_bikecarsd_selected_time = isset($_POST['rbfw_bikecarsd_selected_time']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_selected_time']) : '';
 
@@ -164,7 +164,6 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $rbfw_type_info_all = isset($_POST['rbfw_bikecarsd_info']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_info']) : [];
         $rbfw_type_info = array();
 
-        $date_to_string = new DateTime($rbfw_bikecarsd_selected_date);
 
 
         $a = 1;
@@ -568,7 +567,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $rbfw_bikecarsd_duration_price 	= $values['rbfw_bikecarsd_duration_price'] ? $values['rbfw_bikecarsd_duration_price'] : '';
         $rbfw_bikecarsd_service_price 	= $values['rbfw_bikecarsd_service_price'] ? $values['rbfw_bikecarsd_service_price'] : '';
 
-        $item->add_meta_data($rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', __('Start Date and Time','booking-and-rental-manager-for-woocommerce')), rbfw_date_format($rbfw_start_datetime).' '.$rbfw_start_time);
+        $item->add_meta_data($rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', __('Start Date and Time','booking-and-rental-manager-for-woocommerce')), rbfw_date_format($rbfw_start_datetime).' '.date(get_option('time_format'), strtotime($rbfw_start_time)) );
 
         if ( ! empty( $pickup_location ) ) {
             $item->add_meta_data(rbfw_string_return('rbfw_text_pickup_location',__('Pickup Location','rbfw-pro')), $pickup_location );

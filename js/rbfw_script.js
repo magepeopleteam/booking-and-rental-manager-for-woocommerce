@@ -34,6 +34,7 @@
                 is_muffin_template = '0';
             }
 
+
             jQuery.ajax({
                 type: 'POST',
                 url: rbfw_ajax.rbfw_ajaxurl,

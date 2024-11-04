@@ -84,51 +84,6 @@
                     }, 100);
                 }
             });
-
         });
-
-
-
-
-        function rbfw_convertTo24HrsFormat(time) {
-            const slicedTime = time.split(/(PM|AM)/gm)[0];
-
-            let [hours, minutes] = slicedTime.split(':');
-
-            if (hours === '12') {
-                hours = '00';
-            }
-
-            let updateHourAndMin;
-
-            function addition(hoursOrMin = '') {
-                updateHourAndMin =
-                    hoursOrMin.length < 2 ?
-                        (hoursOrMin = `${0}${hoursOrMin}`) :
-                        hoursOrMin;
-
-                return updateHourAndMin;
-            }
-
-            if (time.endsWith('PM')) {
-                hours = parseInt(hours, 10) + 12;
-            }
-
-            return `${addition(hours)}:${addition(minutes)}`;
-        }
-
-        // Toggle Action
-        $(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',function() {
-            const $this = $(this);
-            const target = $('.price-item-container');
-            if (target.hasClass('open')) {
-                target.removeClass('open').slideUp();
-                $this.find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
-            } else {
-                target.addClass('open').slideDown();
-                $this.find('i').removeClass('fa-angle-down').addClass('fa-angle-up');
-            }
-        });
-
     });
-    });
+});

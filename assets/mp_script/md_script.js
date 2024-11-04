@@ -34,28 +34,31 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
     });
 });
 
-jQuery('.pickup_time').change(function(e) {
-    let pickup_date = jQuery('.pickup_date').val();
-    let dropoff_date = jQuery('.dropoff_date').val();
+jQuery('.pickup_time_dd').change(function(e) {
+    let pickup_date = jQuery('[name="rbfw_pickup_start_date"]').val();
+    let dropoff_date = jQuery('[name="rbfw_pickup_end_date"]').val();
+
+    console.log('pickup_date',pickup_date);
+    console.log('dropoff_date',dropoff_date);
 
     if (pickup_date == dropoff_date) {
-        let selected_time = $(this).val();
-        selected_time = rbfw_convertTo24HrsFormat(selected_time);
+        let selected_time = jQuery(this).val();
+       // selected_time = strtotime (selected_time);
         jQuery(".dropoff_time").val("").trigger("change");
 
         jQuery("#dropoff_time option").each(function() {
-            var thisOptionValue = $(this).val();
-            thisOptionValue = rbfw_convertTo24HrsFormat(thisOptionValue);
-            if ((thisOptionValue == selected_time) || (thisOptionValue < selected_time)) {
-                $(this).attr('disabled', true);
+            var thisOptionValue = jQuery(this).val();
+            //thisOptionValue = strtotime(thisOptionValue);
+            if (thisOptionValue <= selected_time) {
+                jQuery(this).attr('disabled', true);
             } else {
-                $(this).attr('disabled', false);
+                jQuery(this).attr('disabled', false);
             }
         });
 
     } else {
         jQuery("#dropoff_time option").each(function() {
-            var thisOptionValue = $(this).val();
+            var thisOptionValue = jQuery(this).val();
             if (thisOptionValue != '') {
                 jQuery(this).attr('disabled', false);
             } else {
@@ -71,7 +74,7 @@ jQuery('.dropoff_date').change(function(e) {
 
 
 jQuery('.dropoff_date').click(function(e) {
-    let pickup_date = $('.pickup_date').val();
+    let pickup_date = jQuery('[name="rbfw_pickup_start_date"]').val();
     if (pickup_date == '') {
         alert('Please select the pickup date!');
     }
@@ -314,6 +317,8 @@ function rbfw_es_service_price_calculation(total_days){
     jQuery('#rbfw_es_service_price').val(total);
     rbfw_bikecarmd_ajax_price_calculation();
 }
+
+
 
 
 
