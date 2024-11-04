@@ -15,9 +15,9 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
 jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {
 
+
     let selected_date = jQuery(this).val();
     const [gYear, gMonth, gDay] = selected_date.split('-');
-
     jQuery(".dropoff_date").datepicker("destroy");
 
     jQuery('.dropoff_date').datepicker({
@@ -35,8 +35,8 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
 });
 
 jQuery('.pickup_time').change(function(e) {
-    let pickup_date = $('.pickup_date').val();
-    let dropoff_date = $('.dropoff_date').val();
+    let pickup_date = jQuery('.pickup_date').val();
+    let dropoff_date = jQuery('.dropoff_date').val();
 
     if (pickup_date == dropoff_date) {
         let selected_time = $(this).val();

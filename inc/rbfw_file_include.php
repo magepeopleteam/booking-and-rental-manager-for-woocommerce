@@ -40,6 +40,7 @@ add_action('admin_head', 'rbfw_php_variable_to_js');
 
 function rbfw_php_variable_to_js()
 {
+    echo get_option('time_format')
     ?>
     <script>
         let start_of_week = "<?php echo  get_option('start_of_week') ?>";
