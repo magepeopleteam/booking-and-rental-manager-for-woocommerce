@@ -4382,17 +4382,6 @@ span {
     display: none;
 }
 
-.rbfw_single_default_template
-.ui-state-default,
-.rbfw_single_default_template .ui-widget-content .ui-state-default,
-.rbfw_single_default_template .ui-widget-header .ui-state-default {
-    background: inherit;
-    background-color: var(--rbfw_color_primary);
-    color: #fff;
-    text-align: center;
-    border: none;
-}
-
 .rbfw_single_muffin_template
 .ui-state-default,
 .rbfw_single_muffin_template .ui-widget-content .ui-state-default,
@@ -4413,12 +4402,6 @@ span {
     color: #fff;
     text-align: center;
     border: none;
-}
-
-.ui-state-default:hover,
-.ui-widget-content .ui-state-default:hover,
-.ui-widget-header .ui-state-default:hover {
-    background-color: var(--rbfw_single_page_secondary_color);
 }
 
 .rbfw_single_muffin_template .ui-state-default:hover,
@@ -4442,12 +4425,6 @@ span {
     background-color: var(--rbfw_single_page_secondary_color);
 }
 
-.ui-widget-header {
-    background: none;
-    background-color: var(--rbfw_color_primary);
-    color: #fff;
-}
-
 .rbfw_single_donut_template .ui-widget-header {
     background: none;
     background-color: var(--rbfw_color_primary);
@@ -4461,13 +4438,83 @@ span {
     border: 0;
 }
 
-.ui-widget-content {
-    color: #0a0a0a;
-    border-radius: 0 !important;
-    border: 0 !important;
-    background: #fff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    padding: 3px;
+/* ========default template calendar======== */
+.rbfw_item-template-default .ui-datepicker .ui-datepicker-header{
+    background: none;
+    background-color: var(--rbfw_color_primary);
+    color: #fff;
+    border: 0;
+    padding: .7em 0;
+    position: relative;
+}
+.rbfw_item-template-default .ui-datepicker .ui-datepicker-title{
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 16px;
+}
+.rbfw_item-template-default .ui-datepicker .ui-datepicker-next{
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    width: 1.8em;
+    height: 1.8em;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #fff;
+}
+.rbfw_item-template-default .ui-datepicker .ui-datepicker-next::before{
+    font-size: 25px;
+}
+
+.rbfw_item-template-default .ui-datepicker .ui-datepicker-prev{
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    width: 1.8em;
+    height: 1.8em;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #fff;
+}
+
+.rbfw_item-template-default .ui-datepicker .ui-datepicker-prev::before{
+    font-size: 25px;
+}
+
+.rbfw_item-template-default .ui-datepicker table{
+    border-collapse: collapse;
+}
+
+.rbfw_item-template-default .ui-datepicker table thead:first-child tr:first-child th{
+    border-block-start:0
+}
+
+.rbfw_item-template-default .ui-datepicker table thead{
+    background-color:#ddd;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 120%;
+}
+
+.rbfw_item-template-default .ui-datepicker table td{
+    border: 0;
+    padding: 5px;
+}
+
+.rbfw_item-template-default  .ui-widget-content {
+    border-radius: 0;
+    border: 0;
+    padding: 0;
+}
+
+.rbfw_single_default_template .ui-state-default,
+.rbfw_single_default_template .ui-widget-content .ui-state-default{
+    background: var(--rbfw_color_primary);
+    color: #fff;
+    text-align: center;
+    border: 0;
+    padding: 10px;
 }
 
 .ui-datepicker table {
@@ -4491,26 +4538,6 @@ span {
     font-family: 'Font Awesome 5 Free';
 }
 
-.ui-datepicker .ui-datepicker-header {
-    position: relative;
-    padding: .5em 0 !important;
-}
-
-.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
-    top: 6px;
-}
-
-.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
-    top: 10px !important;
-}
-
-.ui-datepicker .ui-datepicker-next {
-    right: 4px !important;
-}
-
-.ui-datepicker .ui-datepicker-prev {
-    left: 4px !important;
-}
 
 .ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
     border-radius: 0 !important;
@@ -6976,9 +7003,6 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 #rbfw-bikecarsd-calendar .ui-datepicker {
     min-width: 100%;
     min-height: auto;
-}
-#rbfw-bikecarsd-calendar .ui-datepicker td a, #rbfw-bikecarsd-calendar .ui-datepicker td span {
-    padding: 10px 1px;
 }
 
 
