@@ -61,7 +61,7 @@
 
 				<div class="item rbfw-bikecarsd-step" data-step="1">
 
-					<div id="rbfw-bikecarsd-calendar">
+					<div id="rbfw-bikecarsd-calendarjjjj" class="rbfw-bikecarsd-calendar">
                     </div>
 
 					<div class="rbfw-bikecarsd-calendar-footer">

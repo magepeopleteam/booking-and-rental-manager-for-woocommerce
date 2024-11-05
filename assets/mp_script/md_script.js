@@ -1,3 +1,18 @@
+
+// Toggle Action
+jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',function() {
+    const $this = jQuery(this);
+    const target = jQuery('.price-item-container');
+    if (target.hasClass('open')) {
+        target.removeClass('open').slideUp();
+        $this.find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
+    } else {
+        target.addClass('open').slideDown();
+        $this.find('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+    }
+});
+
+
 jQuery('body').on('focusin', '.pickup_date', function(e) {
     jQuery(this).datepicker({
         dateFormat: js_date_format,
@@ -15,9 +30,9 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
 jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {
 
+
     let selected_date = jQuery(this).val();
     const [gYear, gMonth, gDay] = selected_date.split('-');
-
     jQuery(".dropoff_date").datepicker("destroy");
 
     jQuery('.dropoff_date').datepicker({
@@ -34,28 +49,29 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
     });
 });
 
-jQuery('.pickup_time').change(function(e) {
-    let pickup_date = $('.pickup_date').val();
-    let dropoff_date = $('.dropoff_date').val();
+jQuery('body').on('change', '.pickup_time, #hidden_dropoff_date', function(e) {
+    let pickup_date = jQuery('#hidden_pickup_date').val();
+    let dropoff_date = jQuery('#hidden_dropoff_date').val();
+
 
     if (pickup_date == dropoff_date) {
-        let selected_time = $(this).val();
-        selected_time = rbfw_convertTo24HrsFormat(selected_time);
+        let selected_time = jQuery('.pickup_time').val();
+        selected_time = new Date (pickup_date +' '+ selected_time);
         jQuery(".dropoff_time").val("").trigger("change");
 
         jQuery("#dropoff_time option").each(function() {
-            var thisOptionValue = $(this).val();
-            thisOptionValue = rbfw_convertTo24HrsFormat(thisOptionValue);
-            if ((thisOptionValue == selected_time) || (thisOptionValue < selected_time)) {
-                $(this).attr('disabled', true);
+            var thisOptionValue = jQuery(this).val();
+            thisOptionValue = new Date(pickup_date +' '+ thisOptionValue);
+            if (thisOptionValue <= selected_time) {
+                jQuery(this).attr('disabled', true);
             } else {
-                $(this).attr('disabled', false);
+                jQuery(this).attr('disabled', false);
             }
         });
 
     } else {
         jQuery("#dropoff_time option").each(function() {
-            var thisOptionValue = $(this).val();
+            var thisOptionValue = jQuery(this).val();
             if (thisOptionValue != '') {
                 jQuery(this).attr('disabled', false);
             } else {
@@ -71,7 +87,7 @@ jQuery('.dropoff_date').change(function(e) {
 
 
 jQuery('.dropoff_date').click(function(e) {
-    let pickup_date = $('.pickup_date').val();
+    let pickup_date = jQuery('[name="rbfw_pickup_start_date"]').val();
     if (pickup_date == '') {
         alert('Please select the pickup date!');
     }
@@ -314,6 +330,8 @@ function rbfw_es_service_price_calculation(total_days){
     jQuery('#rbfw_es_service_price').val(total);
     rbfw_bikecarmd_ajax_price_calculation();
 }
+
+
 
 
 
