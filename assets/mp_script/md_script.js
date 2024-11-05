@@ -43,12 +43,12 @@ jQuery('body').on('change', '.pickup_time, #hidden_dropoff_date', function(e) {
 
     if (pickup_date == dropoff_date) {
         let selected_time = jQuery('.pickup_time').val();
-       // selected_time = strtotime (selected_time);
+        selected_time = new Date (pickup_date +' '+ selected_time);
         jQuery(".dropoff_time").val("").trigger("change");
 
         jQuery("#dropoff_time option").each(function() {
             var thisOptionValue = jQuery(this).val();
-            //thisOptionValue = strtotime(thisOptionValue);
+            thisOptionValue = new Date(pickup_date +' '+ thisOptionValue);
             if (thisOptionValue <= selected_time) {
                 jQuery(this).attr('disabled', true);
             } else {

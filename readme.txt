@@ -208,7 +208,8 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 == Changelog ==
 
 = 2.1.9 =
-* Date calendar weekday start as "Week Starts On" settings
+* Date calendar weekday start as "Week Starts On" settings.
+* Time format fixed.
 
 
 = 2.1.5 =
