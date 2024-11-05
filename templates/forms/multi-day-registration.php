@@ -276,13 +276,13 @@ if($rbfw_enable_start_end_date=='no'){
                                             <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                         </div>
                                         <div class="rbfw-p-relative">
-                                                    <span class="clock">
-                                                        <i class="fa-regular fa-clock"></i>
-                                                    </span>
+                                            <span class="clock">
+                                                <i class="fa-regular fa-clock"></i>
+                                            </span>
                                             <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_pickup_start_time" id="pickup_time" required>
                                                 <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup time','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                                 <?php foreach ($availabe_time as $key => $time) : ?>
-                                                    <option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html(date('h:i A', strtotime($time))); ?></option>
+                                                    <option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html(date(get_option('time_format'), strtotime($time))); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                             <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
@@ -313,7 +313,7 @@ if($rbfw_enable_start_end_date=='no'){
                                             <select class="rbfw-select rbfw-time-price dropoff_time" name="rbfw_pickup_end_time" id="dropoff_time" required>
                                                 <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_time', 'rbfw_basic_translation_settings', __('Return time','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                                 <?php foreach ($availabe_time as $key => $time) : ?>
-                                                    <option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html(date('h:i A', strtotime($time))); ?></option>
+                                                    <option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html(date(get_option('time_format'), strtotime($time))); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                             <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>

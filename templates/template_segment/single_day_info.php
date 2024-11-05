@@ -57,8 +57,14 @@ if(isset($_POST['post_id'])){
 
     <?php if($is_muffin_template == 1){ ?>
         <div class="rbfw_step_selected_date rbfw_muff_selected_date" step="3">
-            <div class="rbfw_muff_selected_date_col"><label><i class="fa-regular fa-calendar-days"></i> <?php echo rbfw_string_return('rbfw_text_date',__('Date','booking-and-rental-manager-for-woocommerce')) ?></label><span class="rbfw_muff_selected_date_value"><?php echo $result ?></span></div>
-            <div class="rbfw_muff_selected_date_col"><label><i class="fa-regular fa-clock"></i> <?php echo rbfw_string_return('rbfw_text_time',__('Time','booking-and-rental-manager-for-woocommerce')) ?></label><span class="rbfw_muff_selected_date_value"><?php echo $selected_time ?></span></div>
+            <div class="rbfw_muff_selected_date_col">
+                <label><i class="fa-regular fa-calendar-days"></i> <?php echo rbfw_string_return('rbfw_text_date',__('Date','booking-and-rental-manager-for-woocommerce')) ?></label>
+                <span class="rbfw_muff_selected_date_value"><?php echo $result ?></span>
+            </div>
+            <div class="rbfw_muff_selected_date_col">
+                <label><i class="fa-regular fa-clock"></i> <?php echo rbfw_string_return('rbfw_text_time',__('Time','booking-and-rental-manager-for-woocommerce')) ?></label>
+                <span class="rbfw_muff_selected_date_value"><?php echo date(get_option('time_format'), strtotime($selected_time))  ?></span>
+            </div>
         </div>
     <?php } ?>
 
