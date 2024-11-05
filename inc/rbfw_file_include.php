@@ -35,47 +35,7 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-time-slots-page.php';
 require_once RBFW_PLUGIN_DIR . '/support/elementor/elementor-support.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
 
-add_action('wp_head', 'rbfw_php_variable_to_js');
-add_action('admin_head', 'rbfw_php_variable_to_js');
 
-function rbfw_php_variable_to_js()
-{
-
-    ?>
-    <script>
-        let start_of_week = "<?php echo  get_option('start_of_week') ?>";
-        let wp_date_format = "<?php echo  get_option('date_format') ?>";
-        let wp_time_format = "<?php echo  get_option('time_format') ?>";
-        let js_date_format = 'yy-mm-dd';
-        if(wp_date_format=='F j, Y'){
-            js_date_format = 'dd M yy';
-        }else if(wp_date_format=='m/d/Y'){
-            js_date_format = 'mm/dd/yy';
-        }else if(wp_date_format=='d/m/Y'){
-            js_date_format = 'dd/mm/yy';
-        }else{
-            js_date_format = 'yy-mm-dd';
-        }
-
-        jQuery('body').on('focusin', '.single_day_date', function(e) {  alert(123);
-            jQuery(this).datepicker({
-                dateFormat: js_date_format,
-                minDate: 0,
-                beforeShowDay: function(date)
-                {
-                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-                },
-                onSelect: function (dateString, data) {
-                    let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-                    jQuery('input[name="selected_date"]').val(date_ymd).trigger('change');
-                },
-            });
-        });
-
-    </script>
-
-    <?php
-}
 
 
 add_action('init', 'rbfw_category_update');
