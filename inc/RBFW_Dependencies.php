@@ -140,13 +140,15 @@
 				wp_enqueue_script('jquery-ui-core');
 				wp_enqueue_script('jquery-ui-sortable');
 				wp_enqueue_script('jquery-ui-datepicker');
+				wp_enqueue_script('jquery-effects-slide');
+				wp_enqueue_script('jquery-effects-fade');
 				wp_enqueue_style('wp-color-picker');
 				wp_enqueue_script('wp-color-picker');
 				wp_enqueue_script('rbfw-options-framework', plugins_url('admin/js/mage-options-framework.js', __DIR__), array('jquery', 'wp-color-picker', 'jquery-ui-sortable'));
 				wp_localize_script('PickpluginsOptionsFramework', 'PickpluginsOptionsFramework_ajax', array('PickpluginsOptionsFramework_ajaxurl' => admin_url('admin-ajax.php')));
 				wp_enqueue_script('select2.min', plugins_url('admin/js/select2.min.js', __DIR__), array('jquery'));
 				wp_enqueue_script('form-field-dependency', plugins_url('admin/js/form-field-dependency.js', __DIR__), array('jquery'), null, false);
-				wp_enqueue_script('rbfw-script', plugins_url('admin/js/mkb-admin.js', __DIR__), array('jquery', 'jquery-ui-datepicker'), time(), false);
+				wp_enqueue_script('rbfw-script', plugins_url('admin/js/mkb-admin.js', __DIR__), array('jquery', 'jquery-ui-datepicker','wp-tinymce'), time(), false);
 				wp_localize_script('jquery', 'rbfw_ajax', array( 'rbfw_ajaxurl' => admin_url( 'admin-ajax.php')));
 				wp_enqueue_script('smartWizard', plugins_url('admin/js/jquery.smartWizard.min.js', __DIR__), array('jquery'), '6.0.6', false);
                 do_action('rbfw_admin_enqueue_scripts');
