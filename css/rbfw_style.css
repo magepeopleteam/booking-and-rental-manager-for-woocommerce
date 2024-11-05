@@ -512,14 +512,16 @@ CSS for Single Page Template
     margin-top: 20px;
 }
 
-.mp_right_section button.rbfw-book-now-btn[disabled] {
+button.rbfw-book-now-btn[disabled] {
     background: var(--rbfw_color_primary);
     color: #fff;
     cursor: not-allowed;
+    opacity: .3;
+    margin-top: 20px;
 }
 
-.mp_right_section button.rbfw-book-now-btn:hover,
-.mp_right_section button.rbfw-book-now-btn:focus {
+button.rbfw-book-now-btn:hover,
+button.rbfw-book-now-btn:focus {
     background: var(--rbfw_single_page_secondary_color);
     color: #fff;
 }
@@ -3725,7 +3727,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_muff_registration_wrapper .rbfw-costing {
     background-color: transparent;
     padding: 0;
-    margin-bottom: 50px;
 }
 
 .rbfw_muff_registration_wrapper .rbfw-costing li.total .price-figure {
