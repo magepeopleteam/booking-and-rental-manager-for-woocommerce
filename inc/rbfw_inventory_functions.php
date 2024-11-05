@@ -2,7 +2,6 @@
 
 function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) {
 
-    //echo '<pre>';print_r($meta_data);echo '<pre>';exit;
 
     global $rbfw;
     $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
@@ -229,8 +228,6 @@ function rbfw_update_inventory($order_id, $current_status = null){
 }
 
 function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null){
-
-
 
 
     if (empty($post_id) || empty($start_date) || empty($end_date)) {

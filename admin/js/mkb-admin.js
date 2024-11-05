@@ -844,6 +844,7 @@
                 return rbfw_off_day_dates(date, 'md', rbfw_today_booking_enable);
             },
             onSelect: function(dateString, data) {
+
                 let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
                 $('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
             },
@@ -858,6 +859,7 @@
             var selected_date = jQuery(this).val();
 
             if (is_muffin_template > 0) {
+
                 is_muffin_template = '1';
             } else {
                 is_muffin_template = '0';
@@ -868,6 +870,7 @@
                 url: rbfw_ajax.rbfw_ajaxurl,
                 data: {
                     'action': 'rbfw_bikecarsd_time_table',
+
                     'post_id': post_id,
                     'selected_date': selected_date,
                     'is_muffin_template': is_muffin_template,
@@ -886,6 +889,7 @@
                         let rbfw_calendar_weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                         let appointment_days = jQuery('#appointment_days').val();
                         jQuery(rbfw_date_element).each(function($i) {
+
                             let this_data = jQuery(this);
                             let this_date_data = jQuery(this).attr('data-date');
                             let this_calendar_date = new Date(this_date_data);
@@ -897,7 +901,9 @@
                     }
                     /* End Calendar Script */
                 },
+
                 success: function(response) {
+
 
                     jQuery('.rbfw-bikecarsd-step[data-step="1"]').hide();
                     jQuery('.rbfw-bikecarsd-step[data-step="1"]').removeClass('rbfw_loader_in');
@@ -905,14 +911,15 @@
                     jQuery('.rbfw-bikecarsd-result').append(response);
                     var time_slot_switch = jQuery('#time_slot_switch').val();
 
-
                     if (time_slot_switch != 'on') {
+
                         rbfw_bikecarsd_without_time_func();
                     }
 
 
                 },
                 complete: function(data) {
+
                     jQuery('html, body').animate({
                         scrollTop: jQuery(".rbfw-bikecarsd-calendar-header").offset().top
                     }, 100);

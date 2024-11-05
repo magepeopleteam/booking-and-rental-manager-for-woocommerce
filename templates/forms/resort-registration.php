@@ -38,71 +38,81 @@
                                     <?php echo $rbfw->get_option_trans('rbfw_text_pricing_info', 'rbfw_basic_translation_settings', __('Pricing Info','booking-and-rental-manager-for-woocommerce')); ?>
                                 </div>
                             </div>
-                            <?php $rbfw_pricing_info_display = rbfw_get_option('rbfw_pricing_info_display','rbfw_basic_gen_settings'); ?>
-                            <div class="price-item-container <?php echo ($rbfw_pricing_info_display=='yes')?'open':'' ?>" style="display: <?php echo ($rbfw_pricing_info_display=='yes')?'block':'none' ?>">
-                                <table class="price-item-container-table">
+                        </div>
+                        <?php $rbfw_pricing_info_display = rbfw_get_option('rbfw_pricing_info_display','rbfw_basic_gen_settings'); ?>
+                        <div class="price-item-container pricing-content_dh  mpStyle  <?php echo ($rbfw_pricing_info_display=='yes')?'open':'' ?>" style="display: <?php echo ($rbfw_pricing_info_display=='yes')?'block':'none' ?>">
+                            <div class="rbfw_day_wise_price">
+                                <table>
+                                    <tbody>
                                     <tr>
-                                        <th><?php rbfw_string('rbfw_text_room_type',__('Room Type','booking-and-rental-manager-for-woocommerce')); ?></th>
-                                        <th style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;"><?php rbfw_string('rbfw_text_daylong_price',__('Day-long price','booking-and-rental-manager-for-woocommerce')); ?></th>
-                                        <th><?php rbfw_string('rbfw_text_daynight_price',__('Day-night price','booking-and-rental-manager-for-woocommerce')); ?></th>
+                                        <td><strong><?php rbfw_string('rbfw_text_room_type',__('Room Type','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
+                                        <td style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>"><?php rbfw_string('rbfw_text_daylong_price',__('Day-long price','booking-and-rental-manager-for-woocommerce')); ?></td>
+                                        <td><strong><?php rbfw_string('rbfw_text_daynight_price',__('Day-night price','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
                                     </tr>
+
                                     <?php
                                     if(! empty($rbfw_resort_room_data)) :
-                                    $i = 0;
-                                    foreach ($rbfw_resort_room_data as $key => $value):
-                                        if(!empty($value['room_type'])){
-                                        ?>
-                                        <tr>
-                                            <td><?php echo esc_attr($value['room_type']); ?></td>
+                                        $i = 0;
+                                        foreach ($rbfw_resort_room_data as $key => $value):
+                                            if(!empty($value['room_type'])){
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo esc_attr($value['room_type']); ?></td>
 
-                                            <?php if(!empty($value['rbfw_room_daylong_rate'])){ ?>
-                                                <td style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;"><?php echo rbfw_mps_price( $value['rbfw_room_daylong_rate'] ); ?></td>
-                                            <?php } ?>
+                                                    <?php if(!empty($value['rbfw_room_daylong_rate'])){ ?>
+                                                        <td style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;"><?php echo rbfw_mps_price( $value['rbfw_room_daylong_rate'] ); ?></td>
+                                                    <?php } ?>
 
-                                            <td><?php echo rbfw_mps_price( $value['rbfw_room_daynight_rate'] ); ?></td>
-                                        </tr>
-                                        <?php
-                                        }
-                                    endforeach;
+                                                    <td><?php echo rbfw_mps_price( $value['rbfw_room_daynight_rate'] ); ?></td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        endforeach;
                                     endif;
                                     ?>
+
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $post_id; ?>">
-                    <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
-                    <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
 
-                    <div class="item">
+                <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $post_id; ?>">
+                <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
+                <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
+
+                <div class="item">
                         <div class="rbfw-single-right-heading mb-08"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_checkin_checkout_date', 'rbfw_basic_translation_settings', __('Check-In & Check-Out Date','booking-and-rental-manager-for-woocommerce'))); ?></div>
                         <div class="item-content rbfw-datetime">
                             <div class="left date">
                                 <span class="calendar"><i class="fas fa-calendar-alt"></i></span>
-                                <input class="rbfw-input rbfw-time-price" type="text" name="rbfw_start_datetime" id="checkin_date" placeholder="<?php echo esc_html($rbfw->get_option_trans('rbfw_text_checkin_date', 'rbfw_basic_translation_settings', __('Check-In Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly>
+                                <input type="hidden" name="rbfw_start_datetime" id="hidden_checkin_date">
+                                <input class="rbfw-input rbfw-time-price" type="text" name="rbfw_start" id="checkin_date" placeholder="<?php echo esc_html($rbfw->get_option_trans('rbfw_text_checkin_date', 'rbfw_basic_translation_settings', __('Check-In Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly>
                             </div>
                             <div class="right date">
                                 <span class="calendar"><i class="fas fa-calendar-alt"></i></span>
-                                <input class="rbfw-input rbfw-time-price" type="text" name="rbfw_end_datetime" id="checkout_date" placeholder="<?php echo esc_html($rbfw->get_option_trans('rbfw_text_checkout_date', 'rbfw_basic_translation_settings', __('Check-Out Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly>
+                                <input type="hidden" name="rbfw_end_datetime" id="hidden_checkout_date">
+                                <input class="rbfw-input rbfw-time-price" type="text" name="rbfw_end" id="checkout_date" placeholder="<?php echo esc_html($rbfw->get_option_trans('rbfw_text_checkout_date', 'rbfw_basic_translation_settings', __('Check-Out Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly>
                             </div>
                         </div>
                     </div>
 
-                    <div class="item">
+                <div class="item">
                         <a class="rbfw_chk_availability_btn">
-                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_check_availability', 'rbfw_basic_translation_settings', __('Check Availability','booking-and-rental-manager-for-woocommerce'))); ?>
+                            <?php echo esc_html($rbfw->get_option_trans('rbfw_text_check_availability', 'rbfw_basic_translation_settings', __('Check Availability','booking-and-rental-manager-for-woocommerce'))); ?>
                         </a>
                     </div>
-
-                    <div class="rbfw-availability-loader"><i class="fas fa-spinner fa-spin"></i>
-                    </div>
-                    <div class="rbfw-availability-result">
-                        <div class="rbfw_room_price_category_tabs"></div>
-                        <div class="rbfw_room_price_category_details_loader"><i class="fas fa-spinner fa-spin"></i></div>
-                        <div class="rbfw_room_price_category_details"></div>
-                    </div>
+                <div class="rbfw-availability-loader">
+                    <i class="fas fa-spinner fa-spin"></i>
                 </div>
+                <div class="rbfw-availability-result">
+                    <div class="rbfw_room_price_category_tabs"></div>
+                    <div class="rbfw_room_price_category_details_loader"><i class="fas fa-spinner fa-spin"></i></div>
+                    <div class="rbfw_room_price_category_details"></div>
+                </div>
+
                 <div class="rbfw-resort-result-wrap">
                     <div class="rbfw-resort-result-loader"></div>
                     <div class="rbfw-resort-result"></div>

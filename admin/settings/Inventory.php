@@ -51,18 +51,17 @@
             ?>
                 <section class="rbfw_variations_table_wrap <?php echo esc_attr(($rbfw_enable_variations == 'yes')? 'show':'hide'); ?>">
                     <div class="form-table rbfw_variations_table">
-
                         <tbody class="rbfw_variations_table_body ui-sortable">
                         <?php
-                        if(! empty($rbfw_variations_data)) :
-                        $i = 0;
-                        foreach ($rbfw_variations_data as $key => $value):
-                            $selected_value = !empty($value['selected_value']) ? $value['selected_value'] : '';
-                        ?>
-                            <div class="rbfw_variations_table_row" data-key="<?php echo esc_attr($i); ?>">
+                        if(! empty($rbfw_variations_data)) {
+                            $i = 0;
+                            foreach ($rbfw_variations_data as $key => $value) {
+                                $selected_value = !empty($value['selected_value']) ? $value['selected_value'] : '';
+                                ?>
+                                <div class="rbfw_variations_table_row" data-key="<?php echo esc_attr($i); ?>">
 
                                 <header>
-                                    <label for="">Field Label</label>
+                                    <label for=""><?php esc_html_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                     <div>
                                         <input type="text" name="rbfw_variations_data[<?php echo esc_attr($i); ?>][field_label]" value="<?php echo esc_attr( $value['field_label'] ); ?>" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                         <input type="hidden" name="rbfw_variations_data[<?php echo esc_attr($i); ?>][field_id]" value="rbfw_variation_id_<?php echo esc_attr($i); ?>">
@@ -117,14 +116,14 @@
                                     <!-- <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div> -->
                                 </div>
                             </div>
-                        <?php
-                        $i++;
-                        endforeach;
-                        else:
-                        ?>
+                                <?php
+                                $i++;
+                            }
+                        }else{
+                            ?>
                             <div class="rbfw_variations_table_row" data-key="0">
                                 <header>
-                                    <label for="">Field Label</label>
+                                    <label for=""><?php esc_html_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                     <div>
                                         <input type="text" name="rbfw_variations_data[0][field_label]" placeholder="<?php esc_attr_e( 'Field Label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                                         <input type="hidden" name="rbfw_variations_data[0][field_id]" value="rbfw_variation_id_0">
@@ -170,7 +169,7 @@
                                     <!-- <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div> -->
                                 </div>
                             </div>
-                        <?php endif; ?>
+                        <?php } ?>
                         </tbody>
                     </div>
                     <button id="add-new-variation" class="ppof-button"><i class="fa-solid fa-circle-plus"></i><?php esc_html_e( 'Add New Variation', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
@@ -218,7 +217,7 @@
 				$rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
             ?>
                 
-                <section >
+                <section>
 					<div>
 						<label><?php _e( 'Item variation', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 						<span><?php  _e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.','booking-and-rental-manager-for-woocommerce' ); ?></span>
@@ -246,14 +245,14 @@
 
                     jQuery('input[name=rbfw_enable_variations]').click(function(){
 						var status = jQuery(this).val();
-						
+
 						if(status == 'yes') {
 							jQuery(this).val('no');
                             jQuery('.rbfw_variations_table_wrap').slideUp().removeClass('show').addClass('hide');
                             jQuery('.item_stock_quantity input').removeAttr("disabled");
-						}  
+						}
 						if(status == 'no') {
-							jQuery(this).val('yes'); 
+							jQuery(this).val('yes');
                             jQuery('.rbfw_variations_table_wrap').slideDown().removeClass('hide').addClass('show');
                             jQuery('.item_stock_quantity input').attr("disabled", true);
 						}
@@ -261,12 +260,12 @@
 
                     jQuery('input[name=rbfw_enable_md_type_item_qty]').click(function(){
 						var status = jQuery(this).val();
-						
+
 						if(status == 'yes') {
 							jQuery(this).val('no');
-						}  
+						}
 						if(status == 'no') {
-							jQuery(this).val('yes'); 
+							jQuery(this).val('yes');
 						}
 					});
 
@@ -394,7 +393,9 @@
 					$rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? $_POST['rbfw_item_stock_quantity']  : '';
 					$rbfw_enable_md_type_item_qty  = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? $_POST['rbfw_enable_md_type_item_qty'] : 'no';
                     $rbfw_variations_data 	 = isset( $_POST['rbfw_variations_data'] ) ? rbfw_array_strip( $_POST['rbfw_variations_data'] ) : [];
-					
+
+                    //echo '<pre>';print_r($_POST['rbfw_variations_data']);echo '<pre>';exit;
+
                     update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );				
 					update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
 					update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
