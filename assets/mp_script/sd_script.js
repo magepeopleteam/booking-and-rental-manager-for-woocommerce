@@ -1,30 +1,17 @@
 (function($) {
     $(document).ready(function() {
 
-        const service_id = $('.rbfw-single-container').attr('data-service-id');
-        // DatePicker
+        let rbfw_today_booking_enable = $('.rbfw_today_booking_enable').val();
 
-        $('#rbfw-bikecarsd-calendar').datepicker({
-            dateFormat: js_date_format,
-            minDate: 0,
-            firstDay : start_of_week,
-            beforeShowDay: function(date)
-            {
-                return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-            },
-            onSelect: function (dateString, data) {
-                let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-                $('input[name="selected_date"]').val(date_ymd).trigger('change');
-            },
-        });
+        datepicker_inline();
 
-        jQuery('body').on('change', 'input[name="selected_date"]', function(e) {
+        jQuery('body').on('change', 'input[name="rbfw_bikecarsd_selected_date"]', function(e) {
 
             let post_id = jQuery('#rbfw_post_id').val();
             let is_muffin_template = jQuery('.rbfw_muffin_template').length;
 
             var time_slot_switch = jQuery('#time_slot_switch').val();
-            var selected_date = jQuery('[name="selected_date"]').val();
+            var selected_date = jQuery(this).val();
 
             if(is_muffin_template > 0){
                 is_muffin_template = '1';
@@ -73,10 +60,11 @@
                     jQuery('.rbfw-bikecarsd-step[data-step="1"] i.fa-spinner').remove();
                     jQuery('.rbfw-bikecarsd-result').append(response);
                     var time_slot_switch = jQuery('#time_slot_switch').val();
-                    
+
                     if(time_slot_switch != 'on'){
                         rbfw_bikecarsd_without_time_func();
                     }
+
                 },
                 complete:function(data) {
                     jQuery('html, body').animate({
@@ -84,6 +72,24 @@
                     }, 100);
                 }
             });
+
         });
     });
-});
+})(jQuery)
+
+
+function datepicker_inline(){  
+    jQuery('.rbfw-bikecarsd-calendar').datepicker({
+        dateFormat: js_date_format,
+        minDate: 0,
+        firstDay : start_of_week,
+        beforeShowDay: function(date)
+        {
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+        },
+        onSelect: function (dateString, data) {
+            let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+            jQuery('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
+        },
+    });
+}

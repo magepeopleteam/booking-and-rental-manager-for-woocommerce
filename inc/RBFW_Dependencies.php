@@ -62,6 +62,7 @@
                 wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
 
 
+
                 //  wp_enqueue_style( 'rbfw_calendar', RBFW_PLUGIN_URL . '/css/calendar.css', array(), '1.0.1' );
                 // wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
 
@@ -136,9 +137,10 @@
                 wp_enqueue_script( 'rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true );
 
                 wp_enqueue_script( 'md_script', RBFW_PLUGIN_URL . '/assets/mp_script/md_script.js', array(), time(), true );
-                wp_enqueue_script( 'sd_script', RBFW_PLUGIN_URL . '/assets/mp_script/sd_script.js', array(), time(), true );
-                wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
 
+                wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
+                wp_enqueue_script( 'sd_script', RBFW_PLUGIN_URL . '/assets/mp_script/sd_script.js', array(), time(), true );
+                wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), time(), true);
 
                 do_action('rbfw_frontend_enqueue_scripts');
 
@@ -160,7 +162,6 @@
                 }
 
                 //wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
-                wp_enqueue_script('rbfw_custom_script', plugin_dir_url(__DIR__) . 'js/rbfw_script.js', array('jquery'), time(), true);
 
                 wp_localize_script( 'rbfw_calendar', 'rbfw_calendar_object',
                     array(
@@ -210,21 +211,6 @@
                     }else{
                         js_date_format = 'yy-mm-dd';
                     }
-
-                    jQuery('body').on('focusin', '.single_day_date', function(e) {  alert(123);
-                        jQuery(this).datepicker({
-                            dateFormat: js_date_format,
-                            minDate: 0,
-                            beforeShowDay: function(date)
-                            {
-                                return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-                            },
-                            onSelect: function (dateString, data) {
-                                let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-                                jQuery('input[name="selected_date"]').val(date_ymd).trigger('change');
-                            },
-                        });
-                    });
 
                 </script>
 

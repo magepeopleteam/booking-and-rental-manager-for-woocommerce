@@ -1,3 +1,18 @@
+
+// Toggle Action
+jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',function() {
+    const $this = jQuery(this);
+    const target = jQuery('.price-item-container');
+    if (target.hasClass('open')) {
+        target.removeClass('open').slideUp();
+        $this.find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
+    } else {
+        target.addClass('open').slideDown();
+        $this.find('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+    }
+});
+
+
 jQuery('body').on('focusin', '.pickup_date', function(e) {
     jQuery(this).datepicker({
         dateFormat: js_date_format,
@@ -38,8 +53,6 @@ jQuery('body').on('change', '.pickup_time, #hidden_dropoff_date', function(e) {
     let pickup_date = jQuery('#hidden_pickup_date').val();
     let dropoff_date = jQuery('#hidden_dropoff_date').val();
 
-    /*console.log('pickup_date',pickup_date);
-    console.log('dropoff_date',dropoff_date);*/
 
     if (pickup_date == dropoff_date) {
         let selected_time = jQuery('.pickup_time').val();
