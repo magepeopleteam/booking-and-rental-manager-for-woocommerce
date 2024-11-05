@@ -162,7 +162,7 @@
         }
         rbfw_faq_actions_func();
 
-        jQuery(document).on('click', '.rbfw_faq_accordion_icon', function(e) {
+        jQuery(document).on('click', '.rbfw_faq_accordion_icon,.rbfw_faq_header_title', function(e) {
             e.preventDefault();
             let dataID = jQuery(this).closest('.rbfw_faq_item').data('id');
             let theParent = jQuery('.rbfw-faq-content-wrapper-main .rbfw_faq_item[data-id=' + dataID + ']');
