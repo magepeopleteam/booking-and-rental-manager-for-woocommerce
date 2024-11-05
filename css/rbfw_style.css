@@ -1305,7 +1305,7 @@ table.rbfw_room_price_table tbody td img {
 .rbfw_qty_input a {
     outline: none;
     -webkit-appearance: none;
-    background-color: #ddd;
+    background-color: var(--rbfw_color_primary);
     border: none;
     align-items: center;
     justify-content: center;
@@ -1317,18 +1317,18 @@ table.rbfw_room_price_table tbody td img {
     vertical-align: middle;
     display: table-cell;
     text-align: center;
-    color: #000;
+    
 }
 
 .rbfw_qty_input a:hover {
-    background: var(--rbfw_single_page_base_color4);
-    color: #fff;
+    background: var(--rbfw_single_page_secondary_color);
     transition: 0.2s;
     opacity: 1;
 }
 
 .rbfw_qty_input a i {
     font-size: 12px;
+    color: #fff;
 }
 
 .rbfw_qty_input input[type="number"] {
@@ -4438,7 +4438,7 @@ span {
     border: 0;
 }
 
-/* ========default template calendar======== */
+/* =======================Default template calendar=========================== */
 .rbfw_item-template-default .ui-datepicker .ui-datepicker-header{
     background: none;
     background-color: var(--rbfw_color_primary);
@@ -4457,8 +4457,8 @@ span {
     position: absolute;
     top: 50%;
     right: 4px;
-    width: 1.8em;
-    height: 1.8em;
+    width: 36px;
+    height: 36px;
     transform: translateY(-50%);
     cursor: pointer;
     color: #fff;
@@ -4471,8 +4471,8 @@ span {
     position: absolute;
     top: 50%;
     left: 4px;
-    width: 1.8em;
-    height: 1.8em;
+    width: 36px;
+    height: 36px;
     transform: translateY(-50%);
     cursor: pointer;
     color: #fff;
@@ -4488,6 +4488,10 @@ span {
 
 .rbfw_item-template-default .ui-datepicker table thead:first-child tr:first-child th{
     border-block-start:0
+}
+
+.rbfw_item-template-default thead th.ui-datepicker-week-end{
+    color: var(--rbfw_color_primary);
 }
 
 .rbfw_item-template-default .ui-datepicker table thead{
@@ -4511,6 +4515,20 @@ span {
 .rbfw_single_default_template .ui-state-default,
 .rbfw_single_default_template .ui-widget-content .ui-state-default{
     background: var(--rbfw_color_primary);
+    color: #fff;
+    text-align: center;
+    border: 0;
+    padding: 10px;
+}
+
+.rbfw_single_default_template .ui-state-disabled .ui-state-default, .rbfw_single_default_template .ui-widget-content .ui-state-disabled .ui-state-default{
+background-color: #000;
+}
+
+.rbfw_single_default_template .ui-state-hover:hover, 
+.rbfw_single_default_template .ui-state-default.ui-state-active,
+.rbfw_single_default_template .ui-state-highlight{
+    background:var(--rbfw_single_page_secondary_color);
     color: #fff;
     text-align: center;
     border: 0;
@@ -4543,16 +4561,7 @@ span {
     border-radius: 0 !important;
 }
 
-.ui-state-hover,
-.ui-widget-content .ui-state-hover,
-.ui-widget-header .ui-state-hover,
-.ui-state-focus,
-.ui-widget-content .ui-state-focus,
-.ui-widget-header .ui-state-focus {
-    border: 0 !important;
-    background: #fff !important;
-    color: var(--rbfw_color_primary) !important;
-}
+
 
 .ui-datepicker-header .ui-datepicker-prev .ui-icon, .ui-datepicker-header .ui-datepicker-next .ui-icon {
     display: none;
