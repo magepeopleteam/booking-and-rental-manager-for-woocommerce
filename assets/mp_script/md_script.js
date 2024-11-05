@@ -34,15 +34,15 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
     });
 });
 
-jQuery('.pickup_time_dd').change(function(e) {
-    let pickup_date = jQuery('[name="rbfw_pickup_start_date"]').val();
-    let dropoff_date = jQuery('[name="rbfw_pickup_end_date"]').val();
+jQuery('body').on('change', '.pickup_time, #hidden_dropoff_date', function(e) {
+    let pickup_date = jQuery('#hidden_pickup_date').val();
+    let dropoff_date = jQuery('#hidden_dropoff_date').val();
 
-    console.log('pickup_date',pickup_date);
-    console.log('dropoff_date',dropoff_date);
+    /*console.log('pickup_date',pickup_date);
+    console.log('dropoff_date',dropoff_date);*/
 
     if (pickup_date == dropoff_date) {
-        let selected_time = jQuery(this).val();
+        let selected_time = jQuery('.pickup_time').val();
        // selected_time = strtotime (selected_time);
         jQuery(".dropoff_time").val("").trigger("change");
 
