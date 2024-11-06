@@ -28,13 +28,13 @@ if(isset($post_id) && isset($active_tab)){
 
     ?>
 
-    <!-- <div class="rbfw-single-right-heading">
+    <div class="rbfw-single-right-heading">
         <?php if($active_tab=='daylong'){ ?>
-            <p> Daylong</p>
+            <p><?php esc_html_e('Daylong','booking-and-rental-manager-for-woocommerce'); ?> </p>
         <?php } if($active_tab=='daynight'){  ?>
-            <p> Daynight</p>
+            <p><?php esc_html_e('Daynight','booking-and-rental-manager-for-woocommerce'); ?> </p>
         <?php } ?>
-    </div> -->
+    </div>
 
 <input type="hidden" name="rbfw_room_price_category" value="<?php echo $active_tab ?>"/>
 <div class="rbfw_resort_rt_price_table_container">
