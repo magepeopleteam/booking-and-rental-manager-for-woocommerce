@@ -5,19 +5,13 @@ add_action('wp_ajax_rbfw_get_stock_by_filter', 'rbfw_get_stock_by_filter');
 
 
 function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) {
-
-
     global $rbfw;
     $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
     $title = $meta_data['rbfw_billing_name'];
     $cpt_name = 'rbfw_order_meta';
-
     if($rbfw_payment_system == 'wps'){
-
         $wc_order_id = $meta_data['rbfw_order_id'];
         $ticket_info = $meta_data['rbfw_ticket_info'];
-
-
         $order_tax = !empty(get_post_meta($wc_order_id, '_order_tax', true)) ? get_post_meta($wc_order_id, '_order_tax', true) : 0;
         $total_cost = get_post_meta($wc_order_id, '_order_total', true);
         $rbfw_link_order_id = get_post_meta($wc_order_id, '_rbfw_link_order_id', true);
@@ -30,9 +24,7 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
             'post_status' => 'publish',
             'post_type' => $cpt_name
         );
-
         $post_id = wp_insert_post($args);
-
         if (sizeof($meta_data) > 0) {
             foreach ($meta_data as $key => $value) {
                 if($key != 'rbfw_ticket_info'){
@@ -41,7 +33,6 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
             }
             if(!empty($ticket_info)){
                 foreach ($ticket_info as $key =>$item) {
-
                     $rbfw_id = $item['rbfw_id'];
                     foreach ($item as $key => $value) {
                         if ($key == 'rbfw_start_date' || $key == 'rbfw_end_date') {
@@ -568,19 +559,13 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                 $rbfw_item_stock_quantity = 0;
 
                 if ($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
-
                     foreach ($rbfw_bike_car_sd_data as $key => $bike_car_sd_data) {
-
                         $rbfw_item_stock_quantity += !empty($bike_car_sd_data['qty']) ? $bike_car_sd_data['qty'] : 0;
                     }
-
                 } elseif ($rent_type == 'resort'){
-
                     foreach ($rbfw_resort_room_data as $key => $resort_room_data) {
-
                         $rbfw_item_stock_quantity += !empty($resort_room_data['rbfw_room_available_qty']) ? $resort_room_data['rbfw_room_available_qty'] : 0;
                     }
-
                 } else {
 
                     if($rbfw_enable_variations=='yes'){
@@ -601,11 +586,8 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                 }
 
                 if ( !empty($date) ){
-
                     $current_date = $date;
-
                 } else {
-
                     $current_date = date_i18n('d-m-Y');
                 }
 
@@ -793,7 +775,7 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                         }
                     }
                 }else{
-                    $rbfw_item_stock_quantity = !empty(get_post_meta($post_id, 'rbfw_item_stock_quantity', true)) ? get_post_meta($post_id, 'rbfw_item_stock_quantity', true) : 0;
+                    $rbfw_item_stock_quantity = !empty(get_post_meta($data_id, 'rbfw_item_stock_quantity', true)) ? get_post_meta($data_id, 'rbfw_item_stock_quantity', true) : 0;
                 }
             }
 
