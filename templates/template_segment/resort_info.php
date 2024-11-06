@@ -30,9 +30,9 @@ if(isset($post_id) && isset($active_tab)){
 
     <div class="rbfw-single-right-heading">
         <?php if($active_tab=='daylong'){ ?>
-            <p><?php esc_html_e('Daylong','booking-and-rental-manager-for-woocommerce'); ?> </p>
+            <p><?php esc_html_e('Daylong only day stay','booking-and-rental-manager-for-woocommerce'); ?> </p>
         <?php } if($active_tab=='daynight'){  ?>
-            <p><?php esc_html_e('Daynight','booking-and-rental-manager-for-woocommerce'); ?> </p>
+            <p><?php esc_html_e('Day night stay','booking-and-rental-manager-for-woocommerce'); ?> </p>
         <?php } ?>
     </div>
 
