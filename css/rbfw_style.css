@@ -384,6 +384,9 @@ CSS for Single Page Template
     box-sizing: border-box;
     background-color: #fff;
 }
+.rbfw_muff_registration_wrapper .item-content.rbfw-resource {
+    background: #fff;
+}
 
 .rbfw-datetime .date {
     width: 100%;
