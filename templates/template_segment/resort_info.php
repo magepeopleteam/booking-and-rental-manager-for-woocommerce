@@ -28,22 +28,13 @@ if(isset($post_id) && isset($active_tab)){
 
     ?>
 
-    <br>
-    <div class="rbfw_room_price_category_tabs" data-active="daynight">
-
-        <div class="rbfw_room_price_category_tabs_label" data-days="1">
-            <?php if($active_tab=='daylong'){ ?>
-            <label for="rbfw_room_daylong_price" class="rbfw_room_price_label">
-                <input type="radio" name="rbfw_room_price_category" value="daylong" class="rbfw_room_price_category" id="rbfw_room_daylong_price">Daylong<small>9 AM to 6 PM</small>
-            </label>
+    <!-- <div class="rbfw-single-right-heading">
+        <?php if($active_tab=='daylong'){ ?>
+            <p> Daylong</p>
         <?php } if($active_tab=='daynight'){  ?>
-            <label for="rbfw_room_daynight_price" class="rbfw_room_price_label active">
-                <input type="radio" name="rbfw_room_price_category" value="daynight" class="rbfw_room_price_category" id="rbfw_room_daynight_price"">Daynight<small>Day &amp; Night Stay</small>
-
-            </label>
+            <p> Daynight</p>
         <?php } ?>
-        </div>
-    </div>
+    </div> -->
 
 <input type="hidden" name="rbfw_room_price_category" value="<?php echo $active_tab ?>"/>
 <div class="rbfw_resort_rt_price_table_container">

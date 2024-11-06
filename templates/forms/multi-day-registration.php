@@ -261,7 +261,7 @@ if($rbfw_enable_start_end_date=='no'){
                             <div class="item-content rbfw-datetime">
                                 <div class="<?php echo ($enable_hourly_rate == 'yes' && !empty($availabe_time))?'left':'' ?> date">
                                     <div class="rbfw-single-right-heading">
-                                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Date','booking-and-rental-manager-for-woocommerce'))); ?>
+                                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                     </div>
                                     <div class="rbfw-p-relative">
                                         <span class="calendar"><i class="fa-solid fa-calendar-days"></i></span>
@@ -273,7 +273,7 @@ if($rbfw_enable_start_end_date=='no'){
                                 <?php if($enable_hourly_rate == 'yes' && !empty($availabe_time)){ ?>
                                     <div class="right time">
                                         <div class="rbfw-single-right-heading">
-                                            <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Time','booking-and-rental-manager-for-woocommerce'))); ?>
+                                            <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                         </div>
                                         <div class="rbfw-p-relative">
                                             <span class="clock">
@@ -296,7 +296,7 @@ if($rbfw_enable_start_end_date=='no'){
                         <div class="item">
                             <div class="item-content rbfw-datetime">
                                 <div class="<?php if($enable_hourly_rate == 'yes' && !empty($availabe_time)){ echo 'left'; }?> date">
-                                    <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_date', 'rbfw_basic_translation_settings', __('Return Date','booking-and-rental-manager-for-woocommerce'))); ?></div>
+                                    <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_date', 'rbfw_basic_translation_settings')); ?></div>
                                     <div class="rbfw-p-relative">
                                         <span class="calendar"><i class="fa-solid fa-calendar-days"></i></span>
                                         <input type="hidden" id="hidden_dropoff_date" name="rbfw_pickup_end_date">
@@ -307,7 +307,7 @@ if($rbfw_enable_start_end_date=='no'){
                                 <?php if($enable_hourly_rate == 'yes' && !empty($availabe_time)){ ?>
                                     <input name="rbfw_available_time"  id="rbfw_available_time" value="yes" type="hidden">
                                     <div class="right time">
-                                        <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_time', 'rbfw_basic_translation_settings', __('Return Time','booking-and-rental-manager-for-woocommerce'))); ?></div>
+                                        <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_time', 'rbfw_basic_translation_settings')); ?></div>
                                         <div class="rbfw-p-relative">
                                             <span class="clock"><i class="fa-regular fa-clock"></i></span>
                                             <select class="rbfw-select rbfw-time-price dropoff_time" name="rbfw_pickup_end_time" id="dropoff_time" required>

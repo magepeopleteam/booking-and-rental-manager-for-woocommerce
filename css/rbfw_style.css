@@ -512,14 +512,16 @@ CSS for Single Page Template
     margin-top: 20px;
 }
 
-.mp_right_section button.rbfw-book-now-btn[disabled] {
+button.rbfw-book-now-btn[disabled] {
     background: var(--rbfw_color_primary);
     color: #fff;
     cursor: not-allowed;
+    opacity: .3;
+    margin-top: 20px;
 }
 
-.mp_right_section button.rbfw-book-now-btn:hover,
-.mp_right_section button.rbfw-book-now-btn:focus {
+button.rbfw-book-now-btn:hover,
+button.rbfw-book-now-btn:focus {
     background: var(--rbfw_single_page_secondary_color);
     color: #fff;
 }
@@ -527,9 +529,7 @@ CSS for Single Page Template
 .rbfw-duration {
     display: none;
 }
-.rbfw_bikecarsd_book_now_btn_wrap button.rbfw_disabled_button{
-    background: #918180 !important;
-}
+
 
 .rbfw-duration .item-content {
     background: #f5f5f5;
@@ -1114,7 +1114,7 @@ ul.rbfw-feature-lists li i {
     margin-bottom: 8px !important;
 }
 
-.rbfw_chk_availability_btn {
+.single-rbfw_item a.rbfw_chk_availability_btn {
     text-decoration: none;
     background: var(--rbfw_color_primary);
     text-align: center;
@@ -1125,9 +1125,10 @@ ul.rbfw-feature-lists li i {
     border: none;
     transition: 0.2s;
     cursor: pointer;
+    margin-top: 10px;
 }
 
-.rbfw_chk_availability_btn:hover {
+.single-rbfw_item a.rbfw_chk_availability_btn:hover {
     background: var(--rbfw_single_page_secondary_color);
     color: #fff;
     transition: 0.2s;
@@ -1189,16 +1190,12 @@ p.rbfw_alert_warning {
 }
 
 .rbfw_room_price_label.active {
-    background-color: var(--rbfw_single_page_base_color4);
+    background-color: var(--rbfw_single_page_secondary_color);
     transition: 0.2s;
 }
 
 .rbfw_room_price_label.disabled {
     cursor: not-allowed;
-}
-
-.rbfw_room_price_label small {
-    display: block;
 }
 
 .rbfw_room_price_category_details_loader {
@@ -1213,15 +1210,11 @@ p.rbfw_alert_warning {
 
 table.rbfw_room_price_table {
     border: 1px solid #f5f5f5;
-    margin-top: 20px;
+    margin-top: 10px;
     margin-bottom: 0;
     width: 100%;
 }
 
-table.rbfw_room_price_table thead {
-    border-bottom: 2px solid #ddd;
-    background-color: #efefef;
-}
 
 table.rbfw_room_price_table thead th {
     font-size: 16px;
@@ -1305,7 +1298,7 @@ table.rbfw_room_price_table tbody td img {
 .rbfw_qty_input a {
     outline: none;
     -webkit-appearance: none;
-    background-color: #ddd;
+    background-color: var(--rbfw_color_primary);
     border: none;
     align-items: center;
     justify-content: center;
@@ -1317,18 +1310,18 @@ table.rbfw_room_price_table tbody td img {
     vertical-align: middle;
     display: table-cell;
     text-align: center;
-    color: #000;
+    
 }
 
 .rbfw_qty_input a:hover {
-    background: var(--rbfw_single_page_base_color4);
-    color: #fff;
+    background: var(--rbfw_single_page_secondary_color);
     transition: 0.2s;
     opacity: 1;
 }
 
 .rbfw_qty_input a i {
     font-size: 12px;
+    color: #fff;
 }
 
 .rbfw_qty_input input[type="number"] {
@@ -1407,14 +1400,6 @@ table.rbfw_room_cart_table th span {
 
 .mage_modal {
     display: none;
-}
-
-.rbfw_room_price_label:first-child {
-    border-right: 2px solid #fff;
-}
-
-.rbfw_room_price_label:last-child {
-    border-left: 2px solid #fff;
 }
 
 .rbfw_room_price_label:not(.disabled):hover {
@@ -3727,7 +3712,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_muff_registration_wrapper .rbfw-costing {
     background-color: transparent;
     padding: 0;
-    margin-bottom: 50px;
 }
 
 .rbfw_muff_registration_wrapper .rbfw-costing li.total .price-figure {
@@ -3752,14 +3736,14 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_minus {
-    background-color: var(--rbfw_dt_color5);
-    color: var(--rbfw_dt_color8);
+    background-color: var(--rbfw_color_primary);
+    color: #fff;
 
 }
 
 .rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_plus {
-    background-color: var(--rbfw_dt_color5);
-    color: var(--rbfw_dt_color8);
+    background-color: var(--rbfw_color_primary);
+    color: #fff;
 
 }
 
@@ -4382,107 +4366,43 @@ span {
     display: none;
 }
 
-.rbfw_single_default_template
-.ui-state-default,
-.rbfw_single_default_template .ui-widget-content .ui-state-default,
-.rbfw_single_default_template .ui-widget-header .ui-state-default {
-    background: inherit;
-    background-color: var(--rbfw_color_primary);
-    color: #fff;
-    text-align: center;
-    border: none;
-}
 
-.rbfw_single_muffin_template
-.ui-state-default,
-.rbfw_single_muffin_template .ui-widget-content .ui-state-default,
-.rbfw_single_muffin_template .ui-widget-header .ui-state-default {
-    background: inherit;
-    background-color: var(--rbfw_color_primary);
-    color: #fff;
-    text-align: center;
-    border: none;
-}
-
-.rbfw_single_donut_template
-.ui-state-default,
-.rbfw_single_donut_template .ui-widget-content .ui-state-default,
-.rbfw_single_donut_template .ui-widget-header .ui-state-default {
-    background: inherit;
-    background-color: var(--rbfw_color_primary);
-    color: #fff;
-    text-align: center;
-    border: none;
-}
-
-.ui-state-default:hover,
-.ui-widget-content .ui-state-default:hover,
-.ui-widget-header .ui-state-default:hover {
-    background-color: var(--rbfw_single_page_secondary_color);
-}
-
-.rbfw_single_muffin_template .ui-state-default:hover,
-.rbfw_single_muffin_template .ui-widget-content .ui-state-default:hover,
-.rbfw_single_muffin_template .ui-widget-header .ui-state-default:hover {
-    background-color: var(--rbfw_single_page_secondary_color);
-}
-
-.ui-state-highlight,
-.ui-widget-content .ui-state-highlight,
-.ui-widget-header .ui-state-highlight {
-    background: inherit;
-    background-color: var(--rbfw_muff_color7);
-}
-
-.ui-state-active,
-.ui-widget-content .ui-state-active,
-.ui-widget-header .ui-state-active {
-    font-weight: 600;
-    color: #fff;
-    background-color: var(--rbfw_single_page_secondary_color);
-}
-
-.ui-widget-header {
+/* =======================Single day booking calendar=========================== */
+.single-rbfw_item .ui-datepicker .ui-datepicker-header{
     background: none;
     background-color: var(--rbfw_color_primary);
     color: #fff;
+    border: 0;
+    padding: .7em 0;
+    position: relative;
+    border-radius: 0;
 }
 
-.rbfw_single_donut_template .ui-widget-header {
-    background: none;
-    background-color: var(--rbfw_color_primary);
-    color: #fff;
+.single-rbfw_item .ui-datepicker .ui-datepicker-title{
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 16px;
 }
 
-.rbfw_single_muffin_template .ui-widget-header {
-    background: var(--rbfw_color_primary);
+.single-rbfw_item .ui-datepicker .ui-datepicker-next span,.single-rbfw_item .ui-datepicker .ui-datepicker-prev span{
+    display: none;
+}
+
+.single-rbfw_item .ui-datepicker .ui-datepicker-next{
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    width: 36px;
+    height: 36px;
+    transform: translateY(-50%);
+    cursor: pointer;
     color: #fff;
     border-radius: 0;
-    border: 0;
 }
-
-.ui-widget-content {
-    color: #0a0a0a;
-    border-radius: 0 !important;
-    border: 0 !important;
-    background: #fff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    padding: 3px;
-}
-
-.ui-datepicker table {
-    margin-bottom: 0 !important;
-}
-
-.ui-datepicker-header .ui-datepicker-prev:before {
-    content: "\f053";
-}
-
-.ui-datepicker-header .ui-datepicker-next:before {
+.single-rbfw_item .ui-datepicker .ui-datepicker-next::before{
+    font-size: 25px;
     content: "\f054";
-}
-
-.ui-datepicker-header .ui-datepicker-prev:before , .ui-datepicker-header .ui-datepicker-next:before  {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -4491,46 +4411,91 @@ span {
     font-family: 'Font Awesome 5 Free';
 }
 
-.ui-datepicker .ui-datepicker-header {
-    position: relative;
-    padding: .5em 0 !important;
+.single-rbfw_item .ui-datepicker .ui-datepicker-prev{
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    width: 36px;
+    height: 36px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #fff;
+    border-radius: 0;
 }
 
-.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
-    top: 6px;
+.single-rbfw_item .ui-datepicker .ui-datepicker-prev::before{
+    font-size: 25px;
+    content: "\f053";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 900;
+    font-family: 'Font Awesome 5 Free';
 }
 
-.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
-    top: 10px !important;
+.single-rbfw_item .ui-datepicker table{
+    border-collapse: collapse;
 }
 
-.ui-datepicker .ui-datepicker-next {
-    right: 4px !important;
+.single-rbfw_item .ui-datepicker table thead:first-child tr:first-child th{
+    border-block-start:0
 }
 
-.ui-datepicker .ui-datepicker-prev {
-    left: 4px !important;
+.single-rbfw_item thead th.ui-datepicker-week-end{
+    color: var(--rbfw_color_primary);
 }
 
-.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
-    border-radius: 0 !important;
+.single-rbfw_item .ui-datepicker table thead{
+    background-color:#ddd;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 120%;
 }
 
-.ui-state-hover,
-.ui-widget-content .ui-state-hover,
-.ui-widget-header .ui-state-hover,
-.ui-state-focus,
-.ui-widget-content .ui-state-focus,
-.ui-widget-header .ui-state-focus {
-    border: 0 !important;
-    background: #fff !important;
-    color: var(--rbfw_color_primary) !important;
+.single-rbfw_item .ui-datepicker table td{
+    border: 0;
+    padding: 5px;
 }
 
-.ui-datepicker-header .ui-datepicker-prev .ui-icon, .ui-datepicker-header .ui-datepicker-next .ui-icon {
-    display: none;
+.single-rbfw_item  .ui-widget-content {
+    border-radius: 0;
+    border: 0;
+    padding: 0;
 }
 
+.single-rbfw_item .ui-state-default,
+.single-rbfw_item .ui-widget-content .ui-state-default{
+    background: var(--rbfw_color_primary);
+    color: #fff;
+    text-align: center;
+    border: 0;
+    padding: 10px;
+}
+
+.single-rbfw_item .ui-state-disabled .ui-state-default, .single-rbfw_item .ui-widget-content .ui-state-disabled .ui-state-default{
+background-color: #000;
+}
+
+.single-rbfw_item .ui-state-hover:hover, 
+.single-rbfw_item .ui-state-default.ui-state-active,
+.single-rbfw_item .ui-state-highlight{
+    background:var(--rbfw_single_page_secondary_color);
+    color: #fff;
+    text-align: center;
+    border: 0;
+    padding: 10px;
+}
+
+.single-rbfw_item .rbfw_bikecarsd_book_now_btn_wrap button.mp_rbfw_book_now_submit.rbfw_disabled_button{
+    background: var(--rbfw_color_primary);
+    opacity: .35;
+}
+
+.single-rbfw_item .ui-widget{
+    width: auto;
+}
+/* =======================Single day booking calendar=========================== */
 .rbfw_aig_img_wrap {
     height: 150px;
     background-size: cover;
@@ -4927,19 +4892,10 @@ tr:nth-child(2n + 1) {
     font-weight: bold;
 }
 
-.rbfw_muffin_template .rbfw_room_price_label {
-    border-radius: 5px;
-}
-
-.rbfw_muffin_template .rbfw_room_price_label.active {
-    background-color: var(--rbfw_color_primary);
-    box-shadow: 0px 8.40727px 15.7636px rgba(250, 66, 54, 0.3);
-}
-
-.rbfw_muffin_template .rbfw_room_price_table thead {
-    background-color: #242424;
-    color: #fff;
-    text-transform: uppercase;
+.rbfw_room_price_table thead {
+    background-color: #ddd;
+    color: #333;
+    text-transform: capitalize;
 }
 
 .rbfw_muffin_template table.rbfw_room_price_table tbody tr:nth-child(odd) {
@@ -6221,7 +6177,7 @@ span:not(.week .day[disabled="disabled"] span):hover {
 .mp_default_theme #checkin_date,
 .mp_default_theme #checkout_date,
 .mp_default_theme .pricing-content {
-    border-left: 5px solid var(--rbfw_color_primary);
+    /* border-left: 5px solid var(--rbfw_color_primary); */
 }
 
 .mp_default_theme .rbfw-datetime .date .calendar,
@@ -6976,9 +6932,6 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 #rbfw-bikecarsd-calendar .ui-datepicker {
     min-width: 100%;
     min-height: auto;
-}
-#rbfw-bikecarsd-calendar .ui-datepicker td a, #rbfw-bikecarsd-calendar .ui-datepicker td span {
-    padding: 10px 1px;
 }
 
 
