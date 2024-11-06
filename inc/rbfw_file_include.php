@@ -30,7 +30,7 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-account-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-search-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_import_demo.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-rating-notice.php';
-require_once RBFW_PLUGIN_DIR . '/lib/classes/class-inventory-page.php';
+
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-time-slots-page.php';
 require_once RBFW_PLUGIN_DIR . '/support/elementor/elementor-support.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';

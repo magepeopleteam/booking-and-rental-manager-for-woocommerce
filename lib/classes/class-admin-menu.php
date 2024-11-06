@@ -83,8 +83,7 @@ if (!class_exists('MageRBFWClass')) {
         }
 
         public function rbfw_inventory_list(){
-            $inventory_page = new RBFWInventoryPage();
-            echo $inventory_page->rbfw_inventory_page();
+            rbfw_inventory_page();
         }
 
         public function get_cpt_name() {

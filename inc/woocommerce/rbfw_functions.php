@@ -1011,13 +1011,7 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
     $payment_method = isset( $order_meta['_payment_method_title'][0] ) ? $order_meta['_payment_method_title'][0] : '';
     $user_id        = isset( $order_meta['_customer_user'][0] ) ? $order_meta['_customer_user'][0] : '';
 
-
-
     foreach ( $ticket_info as $_ticket ) {
-
-
-
-
         $qty = 1;
         for ( $key = 0; $key < $qty; $key ++ ) {
 
@@ -1050,7 +1044,6 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
                 update_post_meta($order_id, 'rbfw_order_status', $order_status);
                 update_post_meta($order_meta_id, 'rbfw_order_status', $order_status);
             }
-
         }
     }
 
