@@ -306,7 +306,7 @@ CSS for Single Page Template
 }
 
 .rbfw-variations-content-wrapper .rbfw-single-right-heading {
-    margin-bottom: 8px;
+    margin: 5px 0px;
 }
 
 .pricing-content {
@@ -382,7 +382,15 @@ CSS for Single Page Template
     height: 50px;
     margin-bottom: 0;
     box-sizing: border-box;
-    /* background-color: #fff; */
+    background-color: #fff !important;
+}
+.rbfw_muff_registration_wrapper .item-content.rbfw-resource {
+    background: #fff;
+}
+.rbfw_muff_registration_wrapper .rbfw_bikecarmd_price_result {
+    background: #fff;
+    padding: 10px;
+    margin: 10px 0px;
 }
 
 .rbfw-datetime .date {
@@ -533,8 +541,7 @@ button.rbfw-book-now-btn:focus {
 
 .rbfw-duration .item-content {
     background: #f5f5f5;
-    text-transform: uppercase;
-    padding: 15px;
+    padding: 10px;
     color: #000;
 }
 
@@ -2361,7 +2368,7 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time span.rbfw_bikecarsd_time_span {
     display: block;
     padding: 10px;
-    text-transform: capitalize;
+    text-transform: none;
     border: 1px solid #e1e1e1;
     color: #000;
     font-size: 1rem;
@@ -3695,6 +3702,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_muff_registration_wrapper .rbfw-datetime select {
     padding-left: 45px;
     box-sizing: border-box;
+    background-color: #fff;
 }
 
 .rbfw_muff_registration_wrapper .rbfw-bikecarsd-calendar-header,

@@ -210,6 +210,8 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 = 2.1.9 =
 * Date calendar weekday start as "Week Starts On" settings.
 * Time format fixed.
+* Single Day Inventory problem solved.
+* Multi Day Inventory problem solved.
 
 
 = 2.1.5 =
