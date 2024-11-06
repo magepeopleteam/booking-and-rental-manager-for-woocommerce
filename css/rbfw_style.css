@@ -541,8 +541,7 @@ button.rbfw-book-now-btn:focus {
 
 .rbfw-duration .item-content {
     background: #f5f5f5;
-    text-transform: uppercase;
-    padding: 15px;
+    padding: 10px;
     color: #000;
 }
 
