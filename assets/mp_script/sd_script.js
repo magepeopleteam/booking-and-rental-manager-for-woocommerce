@@ -7,7 +7,7 @@
 
         jQuery('body').on('change', 'input[name="rbfw_bikecarsd_selected_date"]', function(e) {
 
-            let post_id = jQuery('#rbfw_post_id').val();
+            let post_id = jQuery('.rbfw_post_id').val();
             let is_muffin_template = jQuery('.rbfw_muffin_template').length;
 
             var time_slot_switch = jQuery('#time_slot_switch').val();
