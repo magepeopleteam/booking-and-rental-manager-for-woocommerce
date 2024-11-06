@@ -84,7 +84,7 @@
                 <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
 
                 <div class="item">
-                        <div class="rbfw-single-right-heading mb-08"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_checkin_checkout_date', 'rbfw_basic_translation_settings', __('Check-In & Check-Out Date','booking-and-rental-manager-for-woocommerce'))); ?></div>
+                        <div class="rbfw-single-right-heading mb-08"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_checkin_checkout_date', 'rbfw_basic_translation_settings')); ?></div>
                         <div class="item-content rbfw-datetime">
                             <div class="left date">
                                 <span class="calendar"><i class="fas fa-calendar-alt"></i></span>

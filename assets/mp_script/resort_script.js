@@ -106,34 +106,6 @@ jQuery(document).on('click','.rbfw_chk_availability_btn',function(e) {
         });
 });
 
-
-
-jQuery(document).on('click','.rbfw_room_price_label',function (e) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    let active_value = jQuery('.rbfw_room_price_category_tabs .rbfw_room_price_label.active .rbfw_room_price_category').val();
-    jQuery('.rbfw_room_price_category_tabs').attr('data-active',active_value);
-    tippy('.rbfw_room_price_label.disabled', {content: 'Not Available!',theme: 'blue',placement: 'top'});
-    let target_label = jQuery(this);
-    let target_value = jQuery(this).find('.rbfw_room_price_category').val();
-    if(jQuery(target_label).hasClass('disabled')){
-        return false;
-    }
-    jQuery('.rbfw_room_price_category_tabs .rbfw_room_price_label').removeClass('active');
-    jQuery('.rbfw_room_price_category_tabs .rbfw_room_price_label .rbfw_room_price_category').prop('checked',false);
-    jQuery(this).addClass('active');
-    jQuery('.rbfw_room_price_category_tabs .rbfw_room_price_label i').remove();
-    jQuery(this).append('<i class="fa-solid fa-check"></i>');
-    jQuery(this).find('.rbfw_room_price_category').prop('checked',true);
-    jQuery('.rbfw_room_price_category_tabs').attr('data-active',target_value);
-    rbfw_resort_get_price_table();
-});
-    // end onclick resort price button
-
-
-
-
-
 function rbfw_resort_get_price_table(){
     let active_tab_value = jQuery('.rbfw_room_price_category_tabs').attr('data-active');
     let post_id 		 = jQuery('#rbfw_post_id').val();
