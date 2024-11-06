@@ -12,6 +12,8 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
 
         $wc_order_id = $meta_data['rbfw_order_id'];
         $ticket_info = $meta_data['rbfw_ticket_info'];
+
+
         $order_tax = !empty(get_post_meta($wc_order_id, '_order_tax', true)) ? get_post_meta($wc_order_id, '_order_tax', true) : 0;
         $total_cost = get_post_meta($wc_order_id, '_order_total', true);
         $rbfw_link_order_id = get_post_meta($wc_order_id, '_rbfw_link_order_id', true);
@@ -46,6 +48,10 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
                         }
                         update_post_meta($post_id, $key, $value);
                     }
+
+
+
+
                     rbfw_create_inventory_meta($item, $rbfw_id, $wc_order_id);
                 }
             }
@@ -54,7 +60,9 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
 
         update_post_meta($post_id, 'rbfw_pin', $rbfw_pin);
 
-        if(!empty($order_tax)){ update_post_meta($post_id, 'rbfw_order_tax', $order_tax); }
+        if(!empty($order_tax)){
+            update_post_meta($post_id, 'rbfw_order_tax', $order_tax);
+        }
 
         update_post_meta($post_id, 'rbfw_ticket_total_price', $total_cost);
         update_post_meta($post_id, 'rbfw_link_order_id', $wc_order_id);
@@ -69,30 +77,26 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
 
 function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
-    //echo '<pre>';print_r($ticket_info);echo '<pre>';exit;
-
     global $rbfw;
-    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
     $rbfw_item_type = !empty(get_post_meta($rbfw_id, 'rbfw_item_type', true)) ? get_post_meta($rbfw_id, 'rbfw_item_type', true) : '';
     $rbfw_inventory_info = !empty(get_post_meta($rbfw_id, 'rbfw_inventory', true)) ? get_post_meta($rbfw_id, 'rbfw_inventory', true) : [];
 
-    if($rbfw_payment_system == 'wps'){
-        $order = wc_get_order( $order_id );
-        $rbfw_order_status = $order->get_status();
-    } else {
-        $rbfw_order_status = !empty(get_post_meta($order_id, 'rbfw_order_status', true)) ? get_post_meta($order_id, 'rbfw_order_status', true) : '';
-    }
+    $order = wc_get_order( $order_id );
+    $rbfw_order_status = $order->get_status();
 
     $start_date = !empty($ticket_info['rbfw_start_date']) ? $ticket_info['rbfw_start_date'] : '';
     $end_date = !empty($ticket_info['rbfw_end_date']) ? $ticket_info['rbfw_end_date'] : '';
     $start_time = !empty($ticket_info['rbfw_start_time']) ? $ticket_info['rbfw_start_time'] : '';
     $end_time = !empty($ticket_info['rbfw_end_time']) ? $ticket_info['rbfw_end_time'] : '';
+
     $rbfw_item_quantity = !empty($ticket_info['rbfw_item_quantity']) ? $ticket_info['rbfw_item_quantity'] : 0;
     $rbfw_type_info = !empty($ticket_info['rbfw_type_info']) ? $ticket_info['rbfw_type_info'] : [];
     $rbfw_variation_info = !empty($ticket_info['rbfw_variation_info']) ? $ticket_info['rbfw_variation_info'] : [];
     $rbfw_service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
     $rbfw_service_infos = !empty($ticket_info['rbfw_service_infos']) ? $ticket_info['rbfw_service_infos'] : [];
     $date_range = [];
+
+
 
 
 
@@ -147,7 +151,9 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
         }
         // End: Date Time Calculation
 
-    } else {
+    } elseif($rbfw_item_type=='bike_car_sd'){
+        $date_range = array('0'=>date('d-m-Y', strtotime($start_date)) );
+    } else{
 
         $start_date = strtotime($start_date);
         $end_date = strtotime($end_date);
@@ -172,59 +178,32 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
     $rbfw_inventory_info[$order_id] = $order_array;
 
 
+
+
     update_post_meta($rbfw_id, 'rbfw_inventory', $rbfw_inventory_info);
 
     return true;
 }
 
 function rbfw_update_inventory($order_id, $current_status = null){
-    global $rbfw;
-    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-
-    /* get order meta data from wp_postmeta table */
     global $wpdb;
     $order_items_table = $wpdb->prefix . 'woocommerce_order_items';
     $order = $wpdb->get_results("SELECT * FROM `$order_items_table` WHERE order_id = ".$order_id."");
 
+    foreach( $order as $item ) {
+        $order_itemmeta_table = $wpdb->prefix . 'woocommerce_order_itemmeta';
+        $item_id = $item->order_item_id;
+        $item_meta_data = $wpdb->get_results("SELECT * FROM `$order_itemmeta_table` WHERE order_item_id = ".$item_id." AND meta_key = '_rbfw_id' ");
 
-
-    if($rbfw_payment_system == 'wps'){
-
-        foreach( $order as $item ) {
-            $order_itemmeta_table = $wpdb->prefix . 'woocommerce_order_itemmeta';
-            $item_id = $item->order_item_id;
-            $item_meta_data = $wpdb->get_results("SELECT * FROM `$order_itemmeta_table` WHERE order_item_id = ".$item_id." AND meta_key = '_rbfw_id' ");
-
-            foreach ($item_meta_data as $meta_data) {
-                $rbfw_id = $meta_data->meta_value;
-                $inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
-
-                if (!empty($inventory) && array_key_exists($order_id, $inventory)){
-
-                    $inventory[$order_id]['rbfw_order_status'] = $current_status;
-
-
-                    update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
-                }
+        foreach ($item_meta_data as $meta_data) {
+            $rbfw_id = $meta_data->meta_value;
+            $inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
+            if (!empty($inventory) && array_key_exists($order_id, $inventory)){
+                $inventory[$order_id]['rbfw_order_status'] = $current_status;
+                update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
             }
-
-        }
-
-    } else {
-
-        $rbfw_id = get_post_meta($order_id, 'rbfw_id', true);
-        $inventory = get_post_meta($rbfw_id,'rbfw_inventory', true);
-
-        if (!empty($inventory) && array_key_exists($order_id, $inventory)){
-
-            $inventory[$order_id]['rbfw_order_status'] = $current_status;
-
-            update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
         }
     }
-
-
-
 }
 
 function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null){
