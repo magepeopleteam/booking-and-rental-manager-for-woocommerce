@@ -28,7 +28,7 @@ if(isset($post_id) && isset($active_tab)){
 
     ?>
 
-    <div class="rbfw-single-right-heading">
+    <div class="rbfw-single-right-heading" style="margin-top: 10px;margin-bottom:0;text-align:center;background:#eeeeee;padding:10px">
         <?php if($active_tab=='daylong'){ ?>
             <p><?php esc_html_e('Daylong only day stay','booking-and-rental-manager-for-woocommerce'); ?> </p>
         <?php } if($active_tab=='daynight'){  ?>

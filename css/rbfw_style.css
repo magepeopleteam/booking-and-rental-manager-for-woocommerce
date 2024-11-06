@@ -4444,6 +4444,7 @@ span {
 
 .single-rbfw_item .ui-datepicker table{
     border-collapse: collapse;
+    margin: 0;
 }
 
 .single-rbfw_item .ui-datepicker table thead:first-child tr:first-child th{
@@ -4468,7 +4469,7 @@ span {
 
 .single-rbfw_item  .ui-widget-content {
     border-radius: 0;
-    border: 0;
+    border: 1px solid var(--rbfw_color_primary);
     padding: 0;
 }
 
