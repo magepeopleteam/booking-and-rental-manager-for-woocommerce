@@ -382,7 +382,7 @@ CSS for Single Page Template
     height: 50px;
     margin-bottom: 0;
     box-sizing: border-box;
-    /* background-color: #fff; */
+    background-color: #fff;
 }
 
 .rbfw-datetime .date {
