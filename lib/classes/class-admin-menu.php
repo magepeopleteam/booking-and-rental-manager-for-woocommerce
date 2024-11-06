@@ -83,8 +83,7 @@ if (!class_exists('MageRBFWClass')) {
         }
 
         public function rbfw_inventory_list(){
-            $inventory_page = new RBFWInventoryPage();
-            echo $inventory_page->rbfw_inventory_page();
+            rbfw_inventory_page();
         }
 
         public function get_cpt_name() {
@@ -466,6 +465,7 @@ if (!class_exists('MageRBFWClass')) {
 
         function rbfw_add_order_data($meta_data = array(), $ticket_info = array(),$rbfw_service_price_data_actual = array()) {
 
+
             global $rbfw;
             $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
             $title = $meta_data['rbfw_billing_name'];
@@ -476,7 +476,7 @@ if (!class_exists('MageRBFWClass')) {
 
                 $rbfw_id = $meta_data['rbfw_id'];
                 $wc_order_id = $meta_data['rbfw_order_id'];
-                $ticket_info = $meta_data['rbfw_ticket_info'];
+
                 $duration_cost = $meta_data['rbfw_duration_cost'];
                 $service_cost = $meta_data['rbfw_service_cost'];
                 $order_tax = !empty(get_post_meta($wc_order_id, '_order_tax', true)) ? get_post_meta($wc_order_id, '_order_tax', true) : 0;
@@ -596,72 +596,7 @@ if (!class_exists('MageRBFWClass')) {
 
 
 
-        function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) {
 
-
-
-            global $rbfw;
-            $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-            $title = $meta_data['rbfw_billing_name'];
-            $cpt_name = 'rbfw_order_meta';
-
-            if($rbfw_payment_system == 'wps'){
-
-                $wc_order_id = $meta_data['rbfw_order_id'];
-                $ticket_info = $meta_data['rbfw_ticket_info'];
-                $order_tax = !empty(get_post_meta($wc_order_id, '_order_tax', true)) ? get_post_meta($wc_order_id, '_order_tax', true) : 0;
-                $total_cost = get_post_meta($wc_order_id, '_order_total', true);
-                $rbfw_link_order_id = get_post_meta($wc_order_id, '_rbfw_link_order_id', true);
-                $rbfw_pin = get_post_meta($rbfw_link_order_id, 'rbfw_pin', true);
-
-                /* If Order not exist, create the order */
-                $args = array(
-                    'post_title' => $title,
-                    'post_content' => '',
-                    'post_status' => 'publish',
-                    'post_type' => $cpt_name
-                );
-
-                $post_id = wp_insert_post($args);
-
-                if (sizeof($meta_data) > 0) {
-                    foreach ($meta_data as $key => $value) {
-                        if($key != 'rbfw_ticket_info'){
-                            update_post_meta($post_id, $key, $value);
-                        }
-                    }
-                    if(!empty($ticket_info)){
-                        foreach ($ticket_info as $key =>$item) {
-
-                            $rbfw_id = $item['rbfw_id'];
-                            foreach ($item as $key => $value) {
-                                if ($key == 'rbfw_start_date' || $key == 'rbfw_end_date') {
-                                    $value = date('Y-m-d', strtotime($value));
-                                }
-                                if ($key == 'rbfw_start_datetime' || $key == 'rbfw_end_datetime') {
-                                    $value = date('Y-m-d h:i A', strtotime($value));
-                                }
-                                update_post_meta($post_id, $key, $value);
-                            }
-                            rbfw_create_inventory_meta($item, $rbfw_id, $wc_order_id);
-                        }
-                    }
-                    wp_update_post(array('ID' => $post_id, 'post_title' => '#'.$wc_order_id.' '.$title));
-                }
-
-                update_post_meta($post_id, 'rbfw_pin', $rbfw_pin);
-
-                if(!empty($order_tax)){ update_post_meta($post_id, 'rbfw_order_tax', $order_tax); }
-
-                update_post_meta($post_id, 'rbfw_ticket_total_price', $total_cost);
-                update_post_meta($post_id, 'rbfw_link_order_id', $wc_order_id);
-                /* End */
-
-                rbfw_update_inventory( $wc_order_id, 'processing');
-            }
-
-            return $post_id;
-        }
 
         function get_qyery_loop($post_type) {
             $args = array(

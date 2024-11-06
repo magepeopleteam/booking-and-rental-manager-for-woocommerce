@@ -794,26 +794,16 @@
             target.find('input').removeAttr('checked');
             $this.addClass('active');
             $this.find('input').prop('checked', true);
-
         });
-
-
-
-
-
 
         $('.category2').select2({
             placeholder: 'This is my placeholder',
             allowClear: true
         });
 
-
         jQuery('[name="rbfw_order_status"]').change(function(e) {
-
             let selected_status = jQuery(this).val();
-
             console.log('selected_status', selected_status);
-
             if (selected_status == 'picked') {
                 jQuery('.rbfw_return_note').hide();
                 jQuery('.rbfw_return_security_deposit_amount').hide();
@@ -829,10 +819,115 @@
                 jQuery('.rbfw_return_note').hide();
                 jQuery('.rbfw_return_security_deposit_amount').hide();
             }
-
-
         });
 
 
+      /* start inventory filter and view details */
+
+        jQuery('.rbfw_inventory_filter_btn').click(function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            let selected_date = jQuery('.rbfw_inventory_filter_date').val();
+            let start_date = jQuery('#rbfw_inventory_event_start_time').val();
+            let end_date = jQuery('#rbfw_inventory_event_end_time').val();
+            let placeholder_loader = jQuery('.rbfw-inventory-page-ph').clone();
+
+            if(selected_date == ''){
+                alert('Please select the date');
+                return;
+            }
+            if(start_date && !end_date){
+                alert('Please select the end time');
+                return;
+            }
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                data: {
+                    'action' : 'rbfw_get_stock_by_filter',
+                    'selected_date' : selected_date,
+                    'start_date' : start_date,
+                    'end_date' : end_date,
+                },
+                beforeSend: function() {
+                    jQuery('.rbfw_inventory_page_table_wrap').empty();
+                    jQuery('.rbfw_inventory_page_table_wrap').html(placeholder_loader);
+                    jQuery('.rbfw_inventory_page_table_wrap .rbfw-inventory-page-ph').show();
+                },
+                success: function (response) {
+                    jQuery('.rbfw_inventory_page_table_wrap').html(response);
+                }
+            });
+        });
+
+        jQuery('.rbfw_inventory_reset_btn').click(function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            jQuery('.rbfw_inventory_filter_date').val('');
+            jQuery('#rbfw_inventory_event_start_time').val('');
+            jQuery('#rbfw_inventory_event_end_time').val('');
+            let selected_date = '';
+            let placeholder_loader = jQuery('.rbfw-inventory-page-ph').clone();
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                data: {
+                    'action' : 'rbfw_get_stock_by_filter',
+                    'selected_date' : selected_date,
+                },
+                beforeSend: function() {
+                    jQuery('.rbfw_inventory_page_table_wrap').empty();
+                    jQuery('.rbfw_inventory_page_table_wrap').html(placeholder_loader);
+                    jQuery('.rbfw_inventory_page_table_wrap .rbfw-inventory-page-ph').show();
+                },
+                success: function (response) {
+                    jQuery('.rbfw_inventory_page_table_wrap').html(response);
+                }
+            });
+        });
+
+        jQuery('.rbfw_inventory_refresh_btn').click(function (e) {
+            window.location.reload();
+        });
+
+        jQuery(document).on('click','.rbfw_stock_view_details',function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            jQuery("#rbfw_stock_view_result_wrap").mage_modal({
+                escapeClose: false,
+                clickClose: false,
+                showClose: true
+            });
+
+            let data_request = jQuery(this).attr('data-request');
+            let data_date = jQuery(this).attr('data-date');
+            let data_id = jQuery(this).attr('data-id');
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                data: {
+                    'action' : 'rbfw_get_stock_details',
+                    'data_request' : data_request,
+                    'data_date' : data_date,
+                    'data_id' : data_id,
+                },
+                beforeSend: function() {
+                    jQuery('#rbfw_stock_view_result_inner_wrap').empty();
+                    jQuery('#rbfw_stock_view_result_inner_wrap').html('<i class="fas fa-spinner fa-spin rbfw_rp_loader"></i>');
+                },
+                success: function (response) {
+                    jQuery('#rbfw_stock_view_result_inner_wrap').html(response);
+                }
+            });
+        });
+
+        /* end inventory filter and view details */
+
     });
 }(jQuery));
+
+
+
