@@ -3702,6 +3702,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_muff_registration_wrapper .rbfw-datetime select {
     padding-left: 45px;
     box-sizing: border-box;
+    background-color: #fff;
 }
 
 .rbfw_muff_registration_wrapper .rbfw-bikecarsd-calendar-header,
