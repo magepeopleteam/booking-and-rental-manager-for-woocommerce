@@ -387,6 +387,11 @@ CSS for Single Page Template
 .rbfw_muff_registration_wrapper .item-content.rbfw-resource {
     background: #fff;
 }
+.rbfw_muff_registration_wrapper .rbfw_bikecarmd_price_result {
+    background: #fff;
+    padding: 10px;
+    margin: 10px 0px;
+}
 
 .rbfw-datetime .date {
     width: 100%;
