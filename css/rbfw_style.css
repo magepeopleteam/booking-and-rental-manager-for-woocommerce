@@ -2368,7 +2368,7 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time span.rbfw_bikecarsd_time_span {
     display: block;
     padding: 10px;
-    text-transform: capitalize;
+    text-transform: none;
     border: 1px solid #e1e1e1;
     color: #000;
     font-size: 1rem;
