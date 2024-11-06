@@ -83,6 +83,8 @@ function datepicker_inline(){
         dateFormat: js_date_format,
         minDate: 0,
         firstDay : start_of_week,
+        showOtherMonths: true,
+        selectOtherMonths: true,
         beforeShowDay: function(date)
         {
             return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
