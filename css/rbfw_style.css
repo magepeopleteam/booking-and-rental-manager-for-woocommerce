@@ -300,12 +300,11 @@ CSS for Single Page Template
 }
 
 .rbfw-single-right-container .item:first-child .rbfw-single-right-heading {
-    margin-bottom: 0px;
     width: 100%;
 }
 
 .rbfw-variations-content-wrapper .rbfw-single-right-heading {
-    margin: 5px 0px;
+    margin: 10px 0px;
 }
 
 .pricing-content {
