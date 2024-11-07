@@ -1260,7 +1260,7 @@ table.rbfw_room_price_table tbody .room_type_title {
 
 table.rbfw_room_price_table tbody small.rbfw_room_desc {
     display: inline-block;
-    font-size: 12px;
+    font-size: 11px;
     padding-top: 5px;
     padding-bottom: 5px;
     color: #4f4f4f;
@@ -4905,9 +4905,11 @@ tr:nth-child(2n + 1) {
 }
 
 .rbfw_room_price_table thead {
-    background-color: #ddd;
+    background-color: #f9f4f4;
     color: #333;
-    text-transform: capitalize;
+    text-transform: none;
+    font-size: 12px;
+    text-transform: none;
 }
 
 .rbfw_muffin_template table.rbfw_room_price_table tbody tr:nth-child(odd) {
