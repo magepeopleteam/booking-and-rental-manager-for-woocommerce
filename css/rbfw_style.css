@@ -305,7 +305,7 @@ CSS for Single Page Template
     border: 1px solid #d5b1b1;
     margin:10px 0px 0px 0px;
 }
-.rbfw-single-right-container .rbfw-location{margin-bottom{
+.rbfw-single-right-container .rbfw-location{
     margin-bottom:10px;
 }
 
@@ -6956,6 +6956,3 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     min-width: 100%;
     min-height: auto;
 }
-
-
-
