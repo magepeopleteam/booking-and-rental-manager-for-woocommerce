@@ -4929,9 +4929,9 @@ tr:nth-child(2n + 1) {
 }
 
 .rbfw_muffin_template table.rbfw_room_price_table tbody td img {
-    width: 120px;
+    width: 70px;
     max-width: inherit;
-    height: 80px;
+    height: 60px;
     border-radius: 5px;
 }
 
