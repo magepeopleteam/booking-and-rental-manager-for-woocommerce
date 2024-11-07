@@ -79,7 +79,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 
 function rbfw_bikecarsd_without_time_func(){
 
-    let selected_date = jQuery('[name="selected_date"]').val();
+    let selected_date = jQuery('[name="rbfw_bikecarsd_selected_date"]').val();
     let post_id = jQuery('#rbfw_post_id').val();
 
     jQuery.ajax({

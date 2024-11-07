@@ -2604,59 +2604,56 @@ function rbfw_the_faq_style_two_func($post_id){
 
     if(! empty($rbfw_faq_arr)){
 
-        $rbfw_faq_title 	= array_column($rbfw_faq_arr, 'rbfw_faq_title');
-        $rbfw_faq_img 		= array_column($rbfw_faq_arr, 'rbfw_faq_img');
-        $rbfw_faq_content 	= array_column($rbfw_faq_arr, 'rbfw_faq_content');
+
         $count_faq_arr 		= count($rbfw_faq_arr);
         ?>
-        <div id="rbfw_faq_accordion_style_two">
-
-            <?php for ($x = 0; $x < $count_faq_arr; $x++) { ?>
-                <div class="rbfw_faq_accordion_wrapper <?php if($x == 0){ echo 'active'; }?>">
-                    <?php if(! empty($rbfw_faq_title[$x])): ?>
-                        <div class="rbfw_faq_heading_wrapper">
-                            <h3 class="rbfw_faq_heading">
-                                <span class="rbfw_faq_heading_collapsed"><?php echo esc_html($rbfw_faq_title[$x]); ?></span>
-                            </h3>
-                        </div>
+        <div id="rbfw_faq_accordion" class="rbfw_faq_accordion_donut">
+            <?php foreach ($rbfw_faq_arr as $faq) { ?>
+                <div class="rbfw_faq_item">
+                    <?php if (!empty($faq['rbfw_faq_title'])): ?>
+                        <h3 class="rbfw_faq_header"><?php echo esc_html($faq['rbfw_faq_title']); ?> <i class="fas fa-plus"></i></h3>
                     <?php endif; ?>
                     <div class="rbfw_faq_content_wrapper">
-                        <div class="rbfw_faq_content">
-                            <div class="rbfw_faq_img">
-                                <?php
-                                if(! empty($rbfw_faq_img[$x])):
-                                    $rbfw_img_id_arr = explode (",", $rbfw_faq_img[$x]);
-                                    foreach ($rbfw_img_id_arr as $attachment_id) {
-                                        $url = wp_get_attachment_url( $attachment_id );
-                                        echo '<img src="'.esc_url($url).'"/>';
-                                    }
-                                endif;
-                                ?>
-                            </div>
-                            <p class="rbfw_faq_desc">
-
-                                <?php
-                                if(! empty($rbfw_faq_content[$x])):
-                                    echo esc_html($rbfw_faq_content[$x]);
-                                endif;
-                                ?>
-                            </p>
+                        <div class="rbfw_faq_img">
+                            <?php
+                            if (!empty($faq['rbfw_faq_img'])):
+                                $rbfw_img_id_arr = explode(",", $faq['rbfw_faq_img']);
+                                foreach ($rbfw_img_id_arr as $attachment_id) {
+                                    $url = wp_get_attachment_url($attachment_id);
+                                    echo '<img src="' . esc_url($url) . '"/>';
+                                }
+                            endif;
+                            ?>
                         </div>
+                        <p class="rbfw_faq_desc">
+                            <?php
+                            if (!empty($faq['rbfw_faq_content'])):
+                                echo esc_html($faq['rbfw_faq_content']);
+                            endif;
+                            ?>
+                        </p>
                     </div>
                 </div>
             <?php } ?>
         </div>
         <script>
-            jQuery(document).ready(function(){
-                jQuery('#rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper').click(function (e) {
-                    jQuery(this).toggleClass("active");
+            jQuery(document).ready(function($){
+                $('#rbfw_faq_accordion .rbfw_faq_content_wrapper').first().slideDown();
+                $('#rbfw_faq_accordion .rbfw_faq_header').first().find('i').removeClass('fa-plus').addClass('fa-minus');
 
+                $('.rbfw_faq_header').click(function(e){
+                    e.preventDefault();
+                    $(this).next('.rbfw_faq_content_wrapper').slideToggle();
+                    $(this).find('i').toggleClass('fa-plus fa-minus');
                 });
             });
         </script>
         <?php
     }
 }
+
+
+
 
 /************************
  * GET Donut Testimonial Content
@@ -3191,6 +3188,8 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
         if(($hours) || ($total_days  && $rbfw_enable_hourly_rate=='yes' && $rbfw_enable_daily_rate=='no')){
             $total_days = $total_days + 1;
         }
+        $total_days = ($total_days==0)?1:$total_days;
+
         for ($i = 0; $i < $total_days; $i++) {
 
             $day = strtolower(date('D', strtotime("+$i day", strtotime($start_date))));
