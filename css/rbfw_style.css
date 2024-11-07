@@ -298,6 +298,12 @@ CSS for Single Page Template
     margin: 10px;
     color: #0a0a0a;
 }
+.rbfw_room_price_category_tabs .rbfw-single-right-heading{
+    text-align: center;
+    background: #ffeeee;
+    padding: 10px;
+    border: 1px solid #d5b1b1;
+}
 
 .rbfw-single-right-container .item:first-child .rbfw-single-right-heading {
     width: 100%;
