@@ -4,7 +4,7 @@ if(isset($_POST['post_id'])){
     $id = $_POST['post_id'];
 
     $selected_time = !empty($_POST['selected_time']) ? $_POST['selected_time'] : '';
-    $is_muffin_template = $_POST['is_muffin_template'];
+    $is_muffin_template = isset($_POST['is_muffin_template'])?$_POST['is_muffin_template']:'';
     $rbfw_bike_car_sd_data = get_post_meta($id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($id, 'rbfw_bike_car_sd_data', true) : [];
     $rbfw_extra_service_data = get_post_meta( $id, 'rbfw_extra_service_data', true ) ? get_post_meta( $id, 'rbfw_extra_service_data', true ) : [];
 
@@ -12,7 +12,7 @@ if(isset($_POST['post_id'])){
 
     $rbfw_product_id = get_post_meta( $id, "link_wc_product", true ) ? get_post_meta( $id, "link_wc_product", true ) : $id;
 
-    $selected_date = $_POST['selected_date'];
+    $selected_date = isset($_POST['selected_date'])?$_POST['selected_date']:'';
     $available_times = rbfw_get_available_times($id);
     $default_timezone = wp_timezone_string();
     $date = new DateTime("now", new DateTimeZone($default_timezone) );
