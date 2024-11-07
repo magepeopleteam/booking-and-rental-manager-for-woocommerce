@@ -47,12 +47,13 @@
 				?>
 				<?php $this->panel_header('Price Settings','Price Settings'); ?>
 				<section>
-					<div>
+                    <div>
 						<label for="">
 							<?php _e('Rent Types', 'booking-and-rental-manager-for-woocommerce' ); ?>
 						</label>
 						<span><?php _e('Price will be changed based on this type selection', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 					</div>
+
 					<?php  $rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : 'bike_car_sd'; ?>
 					<?php $item_type = [
 						'bike_car_sd' => 'Rent item for single day',
@@ -423,7 +424,7 @@
 									</thead>
 									<tbody class="rbfw_bike_car_sd_price_table_body">
 									<?php
-									
+
 									if(! empty($rbfw_bike_car_sd_data)) :
 									$i = 0;
 									foreach ($rbfw_bike_car_sd_data as $key => $value):
@@ -481,7 +482,88 @@
 			<?php
 			}
 
-			public function extra_service_table($post_id){
+
+            public function bike_car_single_day_duration($post_id){
+                $rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : 'bike_car_sd';
+                $rbfw_bike_car_sd_data_duration 	 = get_post_meta($post_id, 'rbfw_bike_car_sd_data_duration', true) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data_duration', true) : [];
+                ?>
+                <div class="rbfw_bike_car_sd_wrapper <?php  echo esc_attr($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' )?'show':'hide'; ?>" >
+                    <section>
+                        <div class="w-100">
+                            <div style="overflow-x: auto;">
+                                <table class='form-table rbfw_bike_car_sd_price_table_duration'>
+                                    <thead>
+                                    <tr>
+                                        <th><?php _e( 'Type', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                        <th><?php _e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                        <th><?php _e( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                        <th class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
+                                            <?php _e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
+                                        </th>
+                                        <th class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
+                                            <?php _e( 'Duration Type', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
+                                        </th>
+                                        <th class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>><?php _e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="rbfw_bike_car_sd_price_table_body">
+
+                                    <?php
+
+                                    if(! empty($rbfw_bike_car_sd_data_duration)) {
+                                        $i = 0;
+                                        foreach ($rbfw_bike_car_sd_data_duration as $key => $value) {
+                                            ?>
+                                            <tr class="rbfw_bike_car_sd_price_table_row" data-key="<?php echo mep_esc_html($i); ?>">
+                                                <td><input type="text" name="rbfw_bike_car_sd_data_duration[<?php echo mep_esc_html($i); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+                                                <td><input type="text" name="rbfw_bike_car_sd_data_duration[<?php echo mep_esc_html($i); ?>][short_desc]" value="<?php echo esc_attr( $value['short_desc'] ); ?>" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+                                                <td><input type="number" name="rbfw_bike_car_sd_data_duration[<?php echo mep_esc_html($i); ?>][price]" step=".01" value="<?php echo esc_attr( $value['price'] ); ?>" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+                                                <td class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>><input class="medium" type="number" name="rbfw_bike_car_sd_data_duration[<?php echo mep_esc_html($i); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+                                                <td class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
+                                                    <select name="rbfw_bike_car_sd_data_duration[<?php echo mep_esc_html($i); ?>][d_type]"><option>Hours</option><option>Days</option><option>Weeks</option></select>
+                                                </td>
+                                                <td class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
+                                                    <div class="mp_event_remove_move">
+                                                        <button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <?php $i++;
+                                        }
+                                    }else{
+                                        ?>
+                                        <tr class="rbfw_bike_car_sd_price_table_row" data-key="0">
+                                            <td><input type="text" name="rbfw_bike_car_sd_data_duration[0][rent_type]" value="" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+                                            <td><input type="text" name="rbfw_bike_car_sd_data_duration[0][short_desc]" value="" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+                                            <td><input type="number" name="rbfw_bike_car_sd_data_duration[0][price]" step=".01" value="" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+                                            <td class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?> ><input class="medium" type="number" name="rbfw_bike_car_sd_data_duration[0][qty]" value="" placeholder="<?php esc_html_e( '(Quantity/Stock)/Day', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+                                            <td class="rbfw_bike_car_sd_price_table_action_column" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
+                                                <select name="rbfw_bike_car_sd_data_duration[<?php echo mep_esc_html($i); ?>][d_type]"><option>Hours</option><option>Days</option><option>Weeks</option></select>
+                                            </td>
+                                            <td class="rbfw_bike_car_sd_price_table_action_column"<?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>>
+                                                <div class="mp_event_remove_move">
+                                                    <button class="button remove-row"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="mt-2 <?php echo esc_attr($rbfw_item_type == 'appointment'? 'show':'show'); ?>" >
+                                <button id="add-bike-car-sd-type-row-duration" class="ppof-button" <?php if($rbfw_item_type == 'appointment'){ echo 'style="display:none"'; } ?>><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                            </p>
+                        </div>
+                    </section>
+
+
+
+                </div>
+                <?php
+            }
+
+
+            public function extra_service_table($post_id){
 				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : 'bike_car_sd';
 				$rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 				$rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
@@ -889,6 +971,7 @@
 					<?php $this->rent_type($post_id); ?>
 					<?php $this->appointment($post_id); ?>
 					<?php $this->bike_car_single_day($post_id); ?>
+					<?php $this->bike_car_single_day_duration($post_id); ?>
 					<?php $this->general_price_config($post_id); ?>
 					<?php $this->resort_price_config($post_id); ?>
 					<?php $this->category_service_price($post_id); ?>
@@ -954,6 +1037,48 @@
 						});
 
 						jQuery( ".rbfw_bike_car_sd_price_table_body" ).sortable();
+
+
+                        jQuery('#add-bike-car-sd-type-row-duration').click(function (e) {
+                            e.preventDefault();
+                            let current_time = jQuery.now();
+                            if(jQuery('.rbfw_bike_car_sd_price_table_duration .rbfw_bike_car_sd_price_table_row').length){
+                                let bike_car_sd_type_last_row = jQuery('.rbfw_bike_car_sd_price_table_duration .rbfw_bike_car_sd_price_table_row:last-child()');
+                                let bike_car_sd_type_type_last_data_key = parseInt(bike_car_sd_type_last_row.attr('data-key'));
+                                let bike_car_sd_type_type_new_data_key = bike_car_sd_type_type_last_data_key + 1;
+                                let bike_car_sd_type_type_row = '<tr class="rbfw_bike_car_sd_price_table_row" data-key="'+bike_car_sd_type_type_new_data_key+'">';
+                                bike_car_sd_type_type_row += '<td><input type="text" name="rbfw_bike_car_sd_data_duration['+bike_car_sd_type_type_new_data_key+'][rent_type]" value="" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>';
+                                bike_car_sd_type_type_row += '<td><input type="text" name="rbfw_bike_car_sd_data_duration['+bike_car_sd_type_type_new_data_key+'][short_desc]" value="" step=".01" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>';
+                                bike_car_sd_type_type_row += '<td><input type="number" name="rbfw_bike_car_sd_data_duration['+bike_car_sd_type_type_new_data_key+'][price]" step=".01"  value="" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>';
+                                bike_car_sd_type_type_row += '<td><input class="medium"  type="number" name="rbfw_bike_car_sd_data_duration['+bike_car_sd_type_type_new_data_key+'][qty]" value="" placeholder="<?php esc_html_e( '(Quantity/Stock)/Day', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>';
+                                bike_car_sd_type_type_row += '<td><select name="rbfw_bike_car_sd_data_duration['+bike_car_sd_type_type_new_data_key+'][d_type]"><option>Hours</option><option>Days</option><option>Weeks</option></select></td>';
+                                bike_car_sd_type_type_row += '<td><div class="mp_event_remove_move"><button class="button remove-row '+current_time+'"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>';
+                                bike_car_sd_type_type_row += '</tr>';
+                               jQuery('.rbfw_bike_car_sd_price_table_duration').append(bike_car_sd_type_type_row);
+                            }
+                            else{
+                                let bike_car_sd_type_type_new_data_key = 0;
+                                let bike_car_sd_type_type_row = '<tr class="rbfw_bike_car_sd_price_table_row" data-key="'+bike_car_sd_type_type_new_data_key+'"><td><input type="text" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][rent_type]" value="" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>';
+                                bike_car_sd_type_type_row += '<td><input type="text" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][short_desc]" value="" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><input type="number" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][price]" step=".01" value="" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><input class="medium"  type="number" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][qty]" value="" placeholder="<?php esc_html_e( 'Available Quantity/Stock Quantity Per Day', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><div class="mp_event_remove_move"><button class="button remove-row '+current_time+'"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>';
+                                bike_car_sd_type_type_row += '<td><input type="text" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][short_desc]" value="" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><input type="number" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][price]" step=".01" value="" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><input class="medium"  type="number" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][qty]" value="" placeholder="<?php esc_html_e( 'Available Quantity/Stock Quantity Per Day', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><div class="mp_event_remove_move"><button class="button remove-row '+current_time+'"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>';
+                                bike_car_sd_type_type_row += '</tr>';
+                               jQuery('.rbfw_bike_car_sd_price_table_duration').append(bike_car_sd_type_type_row);
+                            }
+                            jQuery('.remove-row.'+current_time+'').on('click', function () {
+                                e.preventDefault();
+                                e.stopImmediatePropagation();
+                                if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+                                    jQuery(this).parents('tr').remove();
+                                } else {
+                                    return false;
+                                }
+                            });
+
+                            jQuery( ".rbfw_bike_car_sd_price_table_body" ).sortable();
+
+                        });
+
+
 
 					});
 
@@ -1143,6 +1268,7 @@
 					$rbfw_enable_category_service_price      = isset( $_POST['rbfw_enable_category_service_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_category_service_price'] ) : 'off';
 					$rbfw_service_category_price      = isset( $_POST['rbfw_service_category_price'] ) ? rbfw_array_strip( $_POST['rbfw_service_category_price'] ) : [];
 					$rbfw_bike_car_sd_data 	 = isset( $_POST['rbfw_bike_car_sd_data'] ) ? rbfw_array_strip( $_POST['rbfw_bike_car_sd_data'] ) : 0;
+                    $rbfw_bike_car_sd_data_duration 	 = isset( $_POST['rbfw_bike_car_sd_data_duration'] ) ? rbfw_array_strip( $_POST['rbfw_bike_car_sd_data_duration'] ) : 0;
 					$rbfw_enable_resort_daylong_price  = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_resort_daylong_price'] ) : 'no';
 					
 					$rbfw_resort_room_data 	 = isset( $_POST['rbfw_resort_room_data'] ) ? rbfw_array_strip( $_POST['rbfw_resort_room_data'] ) : 0;
@@ -1162,6 +1288,7 @@
 					update_post_meta( $post_id, 'rbfw_hourly_rate', $hourly_rate );
 					update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
 					update_post_meta( $post_id, 'rbfw_bike_car_sd_data', $rbfw_bike_car_sd_data );
+					update_post_meta( $post_id, 'rbfw_bike_car_sd_data_duration', $rbfw_bike_car_sd_data_duration );
 					update_post_meta( $post_id, 'rbfw_resort_room_data', $rbfw_resort_room_data );
 					update_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', $rbfw_enable_resort_daylong_price );
 					update_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', $rbfw_sd_appointment_max_qty_per_session );
