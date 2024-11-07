@@ -376,7 +376,7 @@ CSS for Single Page Template
 #pickup_date,
 #dropoff_date {
     cursor: pointer;
-    padding: 0 0 0 45px;
+    padding: 0 0 0 35px;
     height: 50px;
     margin-bottom: 0;
     box-sizing: border-box;
