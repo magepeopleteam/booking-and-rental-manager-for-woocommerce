@@ -305,6 +305,9 @@ CSS for Single Page Template
     border: 1px solid #d5b1b1;
     margin:10px 0px 0px 0px;
 }
+.rbfw-single-right-container .rbfw-location{margin-bottom{
+    margin-bottom:10px;
+}
 
 .rbfw-single-right-container .item:first-child .rbfw-single-right-heading {
     width: 100%;
