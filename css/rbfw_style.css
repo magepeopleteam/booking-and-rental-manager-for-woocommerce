@@ -303,6 +303,7 @@ CSS for Single Page Template
     background: #ffeeee;
     padding: 10px;
     border: 1px solid #d5b1b1;
+    margin:10px 0px 0px 0px;
 }
 
 .rbfw-single-right-container .item:first-child .rbfw-single-right-heading {
