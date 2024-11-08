@@ -24,8 +24,6 @@
                 //font awesome
                 wp_enqueue_style('fontawesome.v6', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
 
-                //flaticon
-//				wp_enqueue_style('flaticon', RBFW_PLUGIN_URL . '/assets/fonts/flaticon/flaticon.css');
 
                 wp_enqueue_script('jquery-ui-core');
                 wp_enqueue_script('jquery-ui-datepicker');
@@ -62,10 +60,6 @@
                 wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
 
 
-
-                //  wp_enqueue_style( 'rbfw_calendar', RBFW_PLUGIN_URL . '/css/calendar.css', array(), '1.0.1' );
-                // wp_enqueue_script('rbfw_calendar', RBFW_PLUGIN_URL . '/js/calendar.min.js', array('jquery'), '1.0.2', false);
-
                 do_action('rbfw_frontend_enqueue_scripts');
 
 			   /**************************
@@ -85,9 +79,9 @@
 				/**************************
 				* Enqueue Admin Scripts
 				*************************/
-				wp_enqueue_script('jquery-ui-core');
+				//wp_enqueue_script('jquery-ui-core');
 				wp_enqueue_script('jquery-ui-sortable');
-				wp_enqueue_script('jquery-ui-datepicker');
+				//wp_enqueue_script('jquery-ui-datepicker');
 				wp_enqueue_script('jquery-effects-slide');
 				wp_enqueue_script('jquery-effects-fade');
 				wp_enqueue_style('wp-color-picker');
@@ -99,6 +93,7 @@
 				wp_enqueue_script('rbfw-script', plugins_url('admin/js/mkb-admin.js', __DIR__), array('jquery', 'jquery-ui-datepicker','wp-tinymce'), time(), false);
 				wp_localize_script('jquery', 'rbfw_ajax', array( 'rbfw_ajaxurl' => admin_url( 'admin-ajax.php')));
 				wp_enqueue_script('smartWizard', plugins_url('admin/js/jquery.smartWizard.min.js', __DIR__), array('jquery'), '6.0.6', false);
+				wp_enqueue_script('rbfw-admin-input', plugins_url('admin/js/rbfw-admin-input.js', __DIR__), array('jquery'), time(), false);
                 do_action('rbfw_admin_enqueue_scripts');
 			}
 			
