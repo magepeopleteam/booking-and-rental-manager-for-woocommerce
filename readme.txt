@@ -212,6 +212,8 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 * Time format fixed.
 * Single Day Inventory problem solved.
 * Multi Day Inventory problem solved.
+* Single day sold out problem solved for without time slot.
+* Multiday minimum day count 1 instead of 0.
 
 
 = 2.1.5 =

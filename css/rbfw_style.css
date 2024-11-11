@@ -210,7 +210,7 @@ CSS for Single Page Template
 .rbfw-sub-heading, .rbfw-related-product-heading {
     font-size: 20px;
     border-bottom: 1px solid #e1e1e1;
-    padding: 10px 0px;
+    padding: 10px;
     margin-bottom: 10px;
     font-weight: 600;
 }
@@ -295,23 +295,31 @@ CSS for Single Page Template
 
 .rbfw-single-right-heading {
     font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 8px;
+    margin: 10px;
     color: #0a0a0a;
+}
+.rbfw_room_price_category_tabs .rbfw-single-right-heading{
+    text-align: center;
+    background: #ffeeee;
+    padding: 10px;
+    border: 1px solid #d5b1b1;
+    margin:10px 0px 0px 0px;
+}
+.rbfw-single-right-container .rbfw-location{
+    margin-bottom:10px;
 }
 
 .rbfw-single-right-container .item:first-child .rbfw-single-right-heading {
-    margin-bottom: 0px;
     width: 100%;
 }
 
 .rbfw-variations-content-wrapper .rbfw-single-right-heading {
-    margin: 5px 0px;
+    margin: 10px;
 }
 
 .pricing-content {
     background-color: #f5f5f5;
-    padding: 15px;
+    padding: 10px 0px;
     position: relative;
 }
 .pricing-content::after{
@@ -372,17 +380,16 @@ CSS for Single Page Template
     height: 50px;
     border-radius: 0;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 12px;
 }
 
 #pickup_date,
 #dropoff_date {
     cursor: pointer;
-    padding: 0 0 0 45px;
+    padding: 0 0 0 35px;
     height: 50px;
     margin-bottom: 0;
     box-sizing: border-box;
-    background-color: #fff !important;
 }
 .rbfw_muff_registration_wrapper .item-content.rbfw-resource {
     background: #fff;
@@ -1224,11 +1231,12 @@ table.rbfw_room_price_table {
 
 
 table.rbfw_room_price_table thead th {
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 12px;
+    font-weight: 600;
     border: 0;
     padding: 8px;
     text-align: left;
+    text-transform: none;
 }
 
 table.rbfw_room_price_table thead th.w_30_pc {
@@ -1236,7 +1244,7 @@ table.rbfw_room_price_table thead th.w_30_pc {
 }
 
 table.rbfw_room_price_table tbody td {
-    font-size: 16px;
+    font-size: 13px;
     font-weight: normal;
     border: 0;
     padding: 8px;
@@ -1256,7 +1264,7 @@ table.rbfw_room_price_table tbody .room_type_title {
 
 table.rbfw_room_price_table tbody small.rbfw_room_desc {
     display: inline-block;
-    font-size: 12px;
+    font-size: 11px;
     padding-top: 5px;
     padding-bottom: 5px;
     color: #4f4f4f;
@@ -4901,9 +4909,11 @@ tr:nth-child(2n + 1) {
 }
 
 .rbfw_room_price_table thead {
-    background-color: #ddd;
+    background-color: #f9f4f4;
     color: #333;
-    text-transform: capitalize;
+    text-transform: none;
+    font-size: 12px;
+    text-transform: none;
 }
 
 .rbfw_muffin_template table.rbfw_room_price_table tbody tr:nth-child(odd) {
@@ -4922,9 +4932,9 @@ tr:nth-child(2n + 1) {
 }
 
 .rbfw_muffin_template table.rbfw_room_price_table tbody td img {
-    width: 120px;
+    width: 70px;
     max-width: inherit;
-    height: 80px;
+    height: 60px;
     border-radius: 5px;
 }
 
@@ -5671,19 +5681,24 @@ span.rbfw_bikecarsd_time_span {
     color: #fff;
 }
 
-#rbfw_faq_accordion_style_two .rbfw_faq_heading_wrapper::before {
+#rbfw_faq_accordion_style_two .rbfw_faq_heading_wrapper::before, .rbfw_faq_accordion_donut .rbfw_faq_header::before {
     content: "";
     width: 40px;
     height: 100%;
-    background: var(--rbfw_dt_color7);
+    background: var(--rbfw_color_primary);
     position: absolute;
     top: 0;
     left: 0;
     z-index: 1;
 }
 
-#rbfw_faq_accordion_style_two .rbfw_faq_heading_wrapper {
+.rbfw_faq_accordion_donut .rbfw_faq_header {
     position: relative;
+}
+
+#rbfw_faq_accordion.rbfw_faq_accordion_donut h3.rbfw_faq_header{
+    padding-left: 55px;
+    background: #e9e9e9;
 }
 
 #rbfw_faq_accordion_style_two
@@ -6941,6 +6956,3 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     min-width: 100%;
     min-height: auto;
 }
-
-
-

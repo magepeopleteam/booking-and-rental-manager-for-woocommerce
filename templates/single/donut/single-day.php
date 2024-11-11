@@ -162,6 +162,8 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 	</div>
 	<?php endif; ?>
 
+
+
 	<?php if(!empty($rbfw_related_post_arr)): ?>
 	<div class="rbfw_dt_row_related_item">
 		<div class="rbfw_dt_heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings', __('You May Also Like','booking-and-rental-manager-for-woocommerce'))); ?></div>
