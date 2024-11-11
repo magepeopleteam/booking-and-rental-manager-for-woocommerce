@@ -6,17 +6,17 @@
 	$rbfw_id = $post_id ? $post_id : get_the_ID();
 	$rbfw_rent_type = !empty(get_post_meta( $rbfw_id, 'rbfw_item_type', true )) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 	$rbfw_product_id = get_post_meta( $rbfw_id, "link_wc_product", true ) ? get_post_meta( $rbfw_id, "link_wc_product", true ) : $rbfw_id;
-	$rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
-	if($rbfw_payment_system == 'mps'){
-        $rbfw_payment_system = 'mps_enabled';
-    }else{
-        $rbfw_payment_system = 'wps_enabled';
-	}
     $location_switch = !empty(get_post_meta($rbfw_id, 'rbfw_enable_pick_point', true)) ? get_post_meta($rbfw_id, 'rbfw_enable_pick_point', true) : '';
     $pickup_location = get_post_meta($rbfw_id, 'rbfw_pickup_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_pickup_data', true)) : [];
     $dropoff_location = get_post_meta($rbfw_id, 'rbfw_dropoff_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_dropoff_data', true)) : [];
-?>
+    $manage_inventory_as_timely =  get_post_meta($rbfw_id, 'manage_inventory_as_timely', true) ? get_post_meta($rbfw_id, 'manage_inventory_as_timely', true) : 'off';
+
+    $item_stock_quantity = !empty(get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true)) ? get_post_meta($rbfw_id,'rbfw_item_stock_quantity',true) : 0;
+
+    echo $item_stock_quantity;exit;
+
+    ?>
 
 	<!--    Main Layout-->
 	<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
@@ -59,19 +59,78 @@
                     </div>
                 <?php endif; ?>
 
-				<div class="item rbfw-bikecarsd-step" data-step="1">
 
-					<div id="rbfw-bikecarsd-calendarjjjj" class="rbfw-bikecarsd-calendar">
+                <?php  if($manage_inventory_as_timely !='on'){ ?>
+                    <div class="item rbfw-bikecarsd-step" data-step="1">
+                        <div id="rbfw-bikecarsd-calendarjjjj" class="rbfw-bikecarsd-calendar">
+                        </div>
+                        <div class="rbfw-bikecarsd-calendar-footer">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <?php rbfw_string('rbfw_text_click_date_to_browse_availability',__('Click a date to browse availability','booking-and-rental-manager-for-woocommerce')); ?>
+                        </div>
+                    </div>
+                <?php } else{ ?>
+
+                <?php
+                $rbfw_bike_car_sd_data = get_post_meta($rbfw_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($rbfw_id, 'rbfw_bike_car_sd_data', true) : [];
+                ?>
+                    <div class="item">
+                        <div class="item-content rbfw-datetime">
+                            <div class="date">
+                                <div class="rbfw-single-right-heading">
+                                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
+                                </div>
+                                <div class="rbfw-p-relative">
+                                    <span class="calendar"><i class="fa-solid fa-calendar-days"></i></span>
+                                    <input type="hidden" id="hidden_pickup_date" name="rbfw_pickup_start_date">
+                                    <input class="rbfw-input rbfw-time-price pickup_date" type="text"  id="pickup_date" placeholder="<?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" style="background-position: 95% center">
+                                    <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-					<div class="rbfw-bikecarsd-calendar-footer">
-                        <i class="fa-solid fa-circle-info"></i>
-                        <?php rbfw_string('rbfw_text_click_date_to_browse_availability',__('Click a date to browse availability','booking-and-rental-manager-for-woocommerce')); ?>
+                    <div class="radio-group">
+                        <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
+                            <label>
+                                <input type="radio" name="option" class="radio-input">
+                                <span class="radio-button"><?php echo $value['rent_type'] ?></span>
+                            </label>
+                        <?php } ?>
                     </div>
-				</div>
-				<!-- ITEM END -->
+
+                    <script>
+                        // JavaScript to handle the text-based button style dynamically
+                        const radioButtons = document.querySelectorAll('.radio-input');
+                        radioButtons.forEach(button => {
+                            button.addEventListener('change', () => {
+                                // Remove selected class from all buttons
+                                document.querySelectorAll('.radio-button').forEach(item => {
+                                    item.classList.remove('selected');
+                                });
+                                // Add selected class to the clicked button
+                                const selectedLabel = button.nextElementSibling;
+                                selectedLabel.classList.add('selected');
+                            });
+                        });
+                    </script>
+
+                    <div class="item rbfw_quantity_md">
+                        <div class="rbfw-single-right-heading">
+                            <?php echo esc_html($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce'))); ?>
+                        </div>
+                        <div class="item-content rbfw-quantity">
+                            <select class="rbfw-select" name="rbfw_item_quantity" id="rbfw_item_quantity">
+                                <option value="0"><?php rbfw_string('rbfw_text_choose_number_of_qty',__('Choose number of quantity','booking-and-rental-manager-for-woocommerce')); ?></option>
+                                <?php for ($qty = 1; $qty <= $item_stock_quantity; $qty++) { ?>
+                                    <option value="<?php echo mep_esc_html($qty); ?>" <?php if($qty == 1){ echo 'selected'; } ?>><?php echo mep_esc_html($qty); ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
 
 
+                <?php } ?>
 
 				<div class="rbfw-bikecarsd-result-wrap">
 					<div class="rbfw-bikecarsd-result-loader"></div>
@@ -83,10 +142,10 @@
 				<!-- Button -->
 				
 				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
-					<button type="submit" name="add-to-cart" value="<?php echo $rbfw_product_id; ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn rbfw_disabled_button <?php echo $rbfw_payment_system; ?>" disabled>
+					<button type="submit" name="add-to-cart" value="<?php echo $rbfw_product_id; ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn rbfw_disabled_button" disabled>
 					<?php
 						echo $rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));
-					?>	
+					?>
 					</button>
 				</div>
 
