@@ -2150,3 +2150,7 @@ div.item_hover_effect a:hover {
         min-width: calc(100% - 14px) !important;
     }
 }
+
+.rbfw_hide{
+    display: none;
+}

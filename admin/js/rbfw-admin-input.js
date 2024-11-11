@@ -1,42 +1,52 @@
 (function($) {
     "use strict";
-    jQuery('#add-bike-car-sd-type-row-duration').click(function (e) {
+
+
+    jQuery(document).on('click','input[name=manage_inventory_as_timely]',function(){
+        var status = jQuery(this).val();
+        if(status == 'on') {
+            jQuery(this).val('off');
+            jQuery('.rbfw_without_time_inventory').hide();
+            jQuery('.rbfw_time_inventory').show();
+           // jQuery('.available-time-slot').slideUp().removeClass('show').addClass('hide');
+        }
+        if(status == 'off') {
+            jQuery(this).val('on');
+            jQuery('.rbfw_without_time_inventory').show();
+            jQuery('.rbfw_time_inventory').hide();
+           // jQuery('.available-time-slot').slideDown().removeClass('hide').addClass('show');
+        }
+    });
+
+
+    let current_time = jQuery.now();
+    jQuery(document).on('click','#add-bike-car-sd-type-row',function (e) {
+        let manage_inventory_as_timely = jQuery('input[name=manage_inventory_as_timely]').val();
         e.preventDefault();
-        let current_time = jQuery.now();
-        if(jQuery('.rbfw_bike_car_sd_price_table_duration .rbfw_bike_car_sd_price_table_row').length){
-            let bike_car_sd_type_last_row = jQuery('.rbfw_bike_car_sd_price_table_duration .rbfw_bike_car_sd_price_table_row:last-child()');
-            let bike_car_sd_type_type_last_data_key = parseInt(bike_car_sd_type_last_row.attr('data-key'));
-            let bike_car_sd_type_type_new_data_key = bike_car_sd_type_type_last_data_key + 1;
-            let bike_car_sd_type_type_row = '<tr class="rbfw_bike_car_sd_price_table_row" data-key="'+bike_car_sd_type_type_new_data_key+'">';
-            bike_car_sd_type_type_row += '<td><input type="text" name="rbfw_bike_car_sd_data_duration['+bike_car_sd_type_type_new_data_key+'][rent_type]" value="" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>';
-            bike_car_sd_type_type_row += '<td><input type="text" name="rbfw_bike_car_sd_data_duration['+bike_car_sd_type_type_new_data_key+'][short_desc]" value="" step=".01" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>';
-            bike_car_sd_type_type_row += '<td><input type="number" name="rbfw_bike_car_sd_data_duration['+bike_car_sd_type_type_new_data_key+'][price]" step=".01"  value="" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>';
-            bike_car_sd_type_type_row += '<td><input class="medium"  type="number" name="rbfw_bike_car_sd_data_duration['+bike_car_sd_type_type_new_data_key+'][qty]" value="" placeholder="<?php esc_html_e( '(Quantity/Stock)/Day', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>';
-            bike_car_sd_type_type_row += '<td><select name="rbfw_bike_car_sd_data_duration['+bike_car_sd_type_type_new_data_key+'][d_type]"><option>Hours</option><option>Days</option><option>Weeks</option></select></td>';
-            bike_car_sd_type_type_row += '<td><div class="mp_event_remove_move"><button class="button remove-row '+current_time+'"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>';
-            bike_car_sd_type_type_row += '</tr>';
-            jQuery('.rbfw_bike_car_sd_price_table_duration').append(bike_car_sd_type_type_row);
-        }
-        else{
-            let bike_car_sd_type_type_new_data_key = 0;
-            let bike_car_sd_type_type_row = '<tr class="rbfw_bike_car_sd_price_table_row" data-key="'+bike_car_sd_type_type_new_data_key+'"><td><input type="text" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][rent_type]" value="" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>';
-            bike_car_sd_type_type_row += '<td><input type="text" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][short_desc]" value="" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><input type="number" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][price]" step=".01" value="" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><input class="medium"  type="number" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][qty]" value="" placeholder="<?php esc_html_e( 'Available Quantity/Stock Quantity Per Day', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><div class="mp_event_remove_move"><button class="button remove-row '+current_time+'"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>';
-            bike_car_sd_type_type_row += '<td><input type="text" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][short_desc]" value="" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><input type="number" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][price]" step=".01" value="" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><input class="medium"  type="number" name="rbfw_bike_car_sd_data['+bike_car_sd_type_type_new_data_key+'][qty]" value="" placeholder="<?php esc_html_e( 'Available Quantity/Stock Quantity Per Day', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td><td><div class="mp_event_remove_move"><button class="button remove-row '+current_time+'"><i class="fa-solid fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>';
-            bike_car_sd_type_type_row += '</tr>';
-            jQuery('.rbfw_bike_car_sd_price_table_duration').append(bike_car_sd_type_type_row);
-        }
-        jQuery('.remove-row.'+current_time+'').on('click', function () {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
-                jQuery(this).parents('tr').remove();
-            } else {
-                return false;
-            }
+        jQuery.ajax({
+            type: 'POST',
+            url: ajaxurl,
+            data: {
+                'action': 'rbfw_load_duration_form',
+                'manage_inventory_as_timely': manage_inventory_as_timely
+            },
+            success: function(response) {
+                jQuery('.rbfw_bike_car_sd_price_table').append(response);
+            },
         });
-
         jQuery( ".rbfw_bike_car_sd_price_table_body" ).sortable();
+    })
 
+    jQuery( ".rbfw_bike_car_sd_price_table_body" ).sortable();
+
+    jQuery(document).on('click','.remove-row', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            jQuery(this).parents('tr').remove();
+        } else {
+            return false;
+        }
     });
 
 }(jQuery));
