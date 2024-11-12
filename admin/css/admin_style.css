@@ -1158,9 +1158,10 @@ div.mpStyle [class*="_bgColor_1"] i {
     margin-bottom: 10px;
 }
 
-#rbfw_add_meta_box .select2-container--default .select2-selection--multiple {
+#rbfw_add_meta_box .select2-container--default .select2-selection--multiple  {
     border-color: #ddd;
     background-color: #fefefe;
+    width: 436px;
 }
 
 #rbfw_add_meta_box .item-title {
@@ -3599,6 +3600,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 #rbfw_add_meta_box .select2-container--default .select2-selection--multiple {
     border-color: #ddd;
     background-color: #fefefe;
+    width: 436px;
 }
 
 #rbfw_add_meta_box .item-title {
@@ -5356,3 +5358,155 @@ input.rbfw_time_slot_edit_slot_label {
         padding: 8px 15px;
     }
 }
+.ss {
+    margin-top: 1% !important;
+}
+.time-slots-section {
+    margin-top: 2%;
+}
+.time-slot-item{
+    margin-top: 2%;
+}
+
+/* Container for the Particular Dates section */
+.particular-dates-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Styling the individual date items */
+.particular-date-list .date-item {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling the date input fields */
+.particular-date-list .date-item input[type="date"] {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.particular-date-list .date-item input[type="date"]:focus {
+    border-color: #5c6bc0;
+    outline: none;
+}
+
+/* Styling the time slot input fields */
+.particular-date-list .date-item .time-slots .time-slot-item input[type="time"] {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    width: 48%;
+    margin-right: 4%;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.particular-date-list .date-item .time-slots .time-slot-item input[type="time"]:focus {
+    border-color: #5c6bc0;
+    outline: none;
+}
+
+.particular-date-list .date-item .time-slots .time-slot-item button {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.particular-date-list .date-item .time-slots .time-slot-item button:hover {
+    background-color: #d32f2f;
+}
+
+/* Add time slot and date buttons */
+.particular-date-list .date-item .add-time-slot {
+    background-color: #4caf50 !important;
+
+}
+
+.particular-date-list .date-item .add-time-slot:hover {
+    background-color: black !important;
+}
+
+/* Styling for Add Another Date button */
+.add-particular-date {
+    padding: 6px 30px !important;
+    font-size: 20px !important;
+    margin-top: 2% !important;
+}
+
+.add-particular-date:hover {
+    background-color: black !important;
+}
+
+.title-particular{
+    font-size: 16px;
+        padding: 12px;
+        background: #2f809f4d;
+        margin-top: 0px !important;
+        margin-bottom: 0px;
+        color: black;
+}
+
+/* Styling for remove date button */
+.remove-date {
+    background-color: #f44336;
+    color: white;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.remove-date:hover {
+    background-color: #d32f2f;
+}
+
+/* Styling for remove time slot button */
+.remove-time-slot {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    margin-top: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.remove-time-slot:hover {
+    background-color: #d32f2f;
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    .particular-date-list .date-item .time-slots .time-slot-item input[type="time"] {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .particular-date-list .date-item .add-time-slot,
+    .particular-date-list .date-item .remove-date {
+        width: 100%;
+    }
+}
+

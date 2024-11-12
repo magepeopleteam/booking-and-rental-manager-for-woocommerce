@@ -11,6 +11,7 @@
             public function __construct() {
                 add_action( 'rbfw_meta_box_tab_name', [$this,'add_tab_menu'] );
                 add_action( 'rbfw_meta_box_tab_content', [$this,'add_tabs_content'] );
+                add_action( 'rbfw_meta_box_tab_content', [$this,'add_particular_tabs_content'] );
                 add_action('save_post', array($this, 'settings_save'), 99, 1);
 			}
 
@@ -165,9 +166,8 @@
                 </div>
                 <?php
             }
-
 			public function add_tabs_content( $post_id ) {
-            ?>
+                ?>
 				<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_date_settings_meta_boxes">
 					<?php $this->section_header(); ?>
                     <?php $this->panel_header('Date & Time Settings','Here you can set Date & Time'); ?>
@@ -204,114 +204,7 @@
 					</div>
 
 
-                    <!--<section class="rbfw_variations_table_wrap" style="display: none">
-                        <?php
-/*
-                        $rbfw_variations_data = get_post_meta( $post_id, 'available_time_slot_for_sp_day', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];
-
-                        if(! empty($rbfw_variations_data)) {
-                            $i = 0;
-                            foreach ($rbfw_variations_data as $key => $value) {
-                                $selected_value = !empty($value['selected_value']) ? $value['selected_value'] : '';
-                                */?>
-                                <div class="rbfw_variations_table_row" data-key="<?php /*echo esc_attr($i); */?>">
-                                    <header>
-                                        <label for=""><?php /*esc_html_e( 'Available Time Slot for specific day', 'booking-and-rental-manager-for-woocommerce' ); */?> </label>
-                                    </header>
-                                    <div class=variations-inner-table>
-                                        <table class="rbfw_variations_value_table">
-                                            <thead>
-                                            <th><?php /*_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); */?></th>
-                                            <th><?php /*_e( 'Stock Quantity <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); */?></th>
-                                            <th>
-                                                <?php /*_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); */?>
-                                                <div class="rbfw_tooltip"><i class="fa-solid fa-circle-info"></i>
-                                                    <span class="rbfw_tooltiptext"><?php /*esc_html_e( 'The selected value will be set as a default value in the front end.', 'booking-and-rental-manager-for-woocommerce' ); */?></span>
-                                                </div>
-                                            </th>
-                                            <th><?php /*_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); */?></th>
-                                            </thead>
-                                            <tbody class="rbfw_variations_value_table_tbody">
-                                            <?php
-/*                                            $c = 0;
-                                            foreach ($rbfw_variations_data[$i]['value'] as $key => $value):
-                                                */?>
-                                                <tr class="rbfw_variations_value_table_row" data-key="<?php /*echo esc_attr($c); */?>">
-                                                    <td>
-                                                        <input type="text" name="rbfw_variations_data[<?php /*echo esc_attr($i); */?>][value][<?php /*echo esc_attr($c); */?>][name]" value="<?php /*echo esc_attr($value['name']); */?>" placeholder="<?php /*esc_attr_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); */?>" class="rbfw_variation_value">
-                                                    </td>
-                                                    <td>
-                                                        <input type="number" name="rbfw_variations_data[<?php /*echo esc_attr($i); */?>][value][<?php /*echo esc_attr($c); */?>][quantity]" value="<?php /*echo esc_attr($value['quantity']); */?>" placeholder="<?php /*esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); */?>">
-                                                    </td>
-                                                    <td>
-                                                        <input type="checkbox" name="rbfw_variations_data[<?php /*echo esc_attr($i); */?>][selected_value]" value="<?php /*echo esc_attr($value['name']); */?>" class="rbfw_variation_selected_value" <?php /*if($value['name'] == $selected_value){ echo 'checked'; } */?>>
-                                                    </td>
-                                                    <td>
-                                                        <div class="mp_event_remove_move">
-                                                            <button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button>
-                                                            <div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <?php
-/*                                                $c++;
-                                            endforeach;
-                                            */?>
-                                            </tbody>
-                                        </table>
-                                        <hr>
-                                        <button class="add-new-variation-value ppof-button"><i class="fa-solid fa-circle-plus"></i><?php /*esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); */?></button>
-                                    </div>
-
-                                </div>
-                                <?php
-/*                                $i++;
-                            }
-                            }
-                            */?>
-
-                        <div class="rbfw_variations_table_row" data-key="0">
-                            <header>
-                                <label for=""><?php /*esc_html_e( 'Available Time Slot for specific day', 'booking-and-rental-manager-for-woocommerce' ); */?> </label>
-                            </header>
-
-                            <div class="variations-inner-table">
-                                <table class="rbfw_variations_value_table">
-                                    <thead>
-                                    <th><?php /*esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); */?></th>
-                                    <th><?php /*_e( 'Stock Quantity <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); */?></th>
-                                    <th>
-                                        <?php /*esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); */?>
-                                        <div class="rbfw_tooltip"><i class="fa-solid fa-circle-info"></i>
-                                            <span class="rbfw_tooltiptext"><?php /*esc_html_e( 'The selected value will be set as a default value in the front end.', 'booking-and-rental-manager-for-woocommerce' ); */?></span>
-                                        </div>
-                                    </th>
-                                    <th><?php /*esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); */?></th>
-                                    </thead>
-                                    <tbody class="rbfw_variations_value_table_tbody">
-                                    <tr class="rbfw_variations_value_table_row" data-key="0">
-                                        <td>
-                                            <input type="text" name="rbfw_variations_data[0][value][0][name]" placeholder="<?php /*esc_attr_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); */?>" class="rbfw_variation_value">
-                                        </td>
-                                        <td>
-                                            <input type="number" name="rbfw_variations_data[0][value][0][quantity]" placeholder="<?php /*esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); */?>">
-                                        </td>
-                                        <td>
-                                            <input type="checkbox" name="rbfw_variations_data[0][selected_value]"  class="rbfw_variation_selected_value">
-                                        </td>
-                                        <td>
-                                            <div class="mp_event_remove_move">
-                                                <button class="button remove-rbfw_variations_value_table_row" type="button"><i class="fa-solid fa-trash-can"></i></button>
-                                                <div class="button rbfw_variations_value_table_row_sortable"><i class="fas fa-arrows-alt"></i></div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <button class="add-new-variation-value ppof-button mt-2"><i class="fa-solid fa-circle-plus"></i><?php /*esc_html_e( 'Add New Value', 'booking-and-rental-manager-for-woocommerce' ); */?></button>
-                            </div>
-                        </div>
-                    </section>-->
+                   
 			 	</div>
 				<script>
                     jQuery('input[name=rbfw_time_slot_switch]').click(function(){
@@ -339,8 +232,166 @@
                         }
                     });
 				</script>
-			<?php
+			    <?php
 			}
+
+
+            public function multiple_particular_select($post_id, $index = 'new', $selected_times = []) {
+                $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+                global $RBFW_Timeslots_Page;
+                $rbfw_time_slots = $RBFW_Timeslots_Page->rbfw_format_time_slot($rbfw_time_slots);
+                asort($rbfw_time_slots);
+                ?>
+                <div id="field-wrapper-rdfw_available_time" class="field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
+                    <select name="rbfw_particulars[<?php echo esc_attr($index); ?>][available_time][]" multiple class="select2-hidden-accessible">
+                        <?php foreach ($rbfw_time_slots as $key => $value): ?>
+                            <option value="<?php echo esc_attr($value); ?>" <?php echo in_array($value, $selected_times) ? 'selected' : ''; ?>>
+                                <?php echo esc_html($key); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <?php
+            }
+
+
+
+        public function add_particular_tabs_content($post_id) {
+            $particulars_data = get_post_meta($post_id, 'rbfw_particulars_data', true);
+            $particulars_data = !empty($particulars_data) && is_array($particulars_data) ? $particulars_data : [[]];
+            ?>
+            <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_date_settings_meta_boxes">
+                <?php $this->panel_header('Particular Settings', 'Here you can set Particulars'); ?>
+
+                <section>
+                    <div>
+                        <label>
+                            <?php echo esc_html__('Particular date time slots', 'booking-and-rental-manager-for-woocommerce'); ?>
+                        </label>
+                        <span><?php echo esc_html__('It enables/disables the particulars for selection.', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                    </div>
+
+                    <?php $rbfw_particular_switch = get_post_meta($post_id, 'rbfw_particular_switch', true) ? get_post_meta($post_id, 'rbfw_particular_switch', true) : 'off'; ?>
+                    <label class="switch">
+                    <input type="checkbox" name="rbfw_particular_switch" value="<?php echo esc_attr(($rbfw_particular_switch=='on')?$rbfw_particular_switch:'off'); ?>" <?php echo esc_attr(($rbfw_particular_switch=='on')?'checked':''); ?>>
+                        <span class="slider round"></span>
+                    </label>
+                </section>
+
+                <!-- Multiple Particular Section -->
+                <div class="available-particular <?php echo esc_attr(($rbfw_particular_switch == 'on') ? 'show' : 'hide'); ?>">
+            <section>
+                <table class="form-table" id="particulars-table">
+                    <tr>
+                        <th><?php _e('Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                        <th><?php _e('End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                        <th><?php _e('Available Time Slots', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                        <th><?php _e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                    </tr>
+                    <?php foreach ($particulars_data as $index => $particular): ?>
+                        
+                    <tr class="particular-row">
+                        <td>
+                            <input type="text" name="rbfw_particulars[<?php echo $index; ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr($particular['start_date'] ?? ''); ?>">
+                        </td>
+                        <td>
+                            <input type="text" name="rbfw_particulars[<?php echo $index; ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr($particular['end_date'] ?? ''); ?>">
+                        </td>
+                        <td>
+                            <div class="w-100">
+                                <?php 
+                                // Render the select box with selected available time slots
+                                $available_times = isset($particular['available_time']) ? $particular['available_time'] : [];
+                                $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+                                asort($rbfw_time_slots);
+                                ?>
+                                <select name="rbfw_particulars[<?php echo $index; ?>][available_time][]" multiple class="select2-hidden-accessible">
+                                    <?php foreach ($rbfw_time_slots as $time_slot): ?>
+                                        <option value="<?php echo esc_attr($time_slot); ?>" <?php echo in_array($time_slot, $available_times) ? 'selected' : ''; ?>>
+                                            <?php echo esc_html($time_slot); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                        <button type="button" class="remove-row button" ><?php echo esc_html__('Remove', 'booking-and-rental-manager-for-woocommerce'); ?></button>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </table>
+                
+            </section>
+            <button type="button" id="add-particular-row" class="button ss" ><?php echo esc_html__('Add Another', 'booking-and-rental-manager-for-woocommerce'); ?></button>
+            </div>
+            </div>
+
+            <script>
+                jQuery(document).ready(function($) {
+                        // Initialize select2 for existing select elements
+                        $(".select2-hidden-accessible").select2();
+
+                        $(".rbfw_days_range").datepicker({
+                            dateFormat: 'dd-mm-yy',
+                            minDate: 0 
+                        });
+
+                        $('#add-particular-row').click(function() {
+                            var availableTimeSlots = '<?php
+                                $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+                                asort($rbfw_time_slots);
+                                $options = '';
+                                foreach ($rbfw_time_slots as $key => $value) {
+                                    $options .= '<option value="' . esc_attr($value) . '">' . esc_html($key) . '</option>';
+                                }
+                                echo addslashes($options);
+                            ?>';
+                            
+                            var newRow = `
+                                <tr class="particular-row">
+                                    <td><input type="text" name="rbfw_particulars[new][start_date]" class="rbfw_days_range" value=""></td>
+                                    <td><input type="text" name="rbfw_particulars[new][end_date]" class="rbfw_days_range" value=""></td>
+                                    <td>
+                                        <div class="w-100">
+                                            <select name="rbfw_particulars[new][available_time][]" multiple class="select2-hidden-accessible">
+                                                ${availableTimeSlots}
+                                            </select>
+                                        </div>
+                                    </td>
+                                    <td><button type="button" class="remove-row button">Remove</button></td>
+                                </tr>`;
+
+                            $('#particulars-table').append(newRow);
+
+                            $(".rbfw_days_range").datepicker({
+                                dateFormat: 'dd-mm-yy',
+                                minDate: 0 
+                            });
+
+                            $('#particulars-table').find('tr:last select').select2();
+                        });
+
+                        $(document).on('click', '.remove-row', function() {
+                            $(this).closest('.particular-row').remove();
+                        });
+
+                        $('input[name=rbfw_particular_switch]').click(function() {
+                            var status = $(this).val();
+                            if (status == 'on') {
+                                $(this).val('off');
+                                $('.available-particular').slideUp().removeClass('show').addClass('hide');
+                            } 
+                            if(status == 'off') {
+                                $(this).val('on'); 
+                                $('.available-particular').slideDown().removeClass('hide').addClass('show');
+                            }
+                        });
+                    });
+
+            </script>
+            <?php
+}
+
 
 			public function settings_save($post_id) {
                 
@@ -361,12 +412,7 @@
 
                     $rdfw_available_time = isset( $_POST['rdfw_available_time'] ) ? rbfw_array_strip( $_POST['rdfw_available_time'] ) : [];
 
-            /*        $rbfw_enable_start_end_date = 'yes';
-                    if(isset( $_POST['rbfw_enable_start_end_date'] )){
-                          if(rbfw_array_strip( $_POST['rbfw_enable_start_end_date'])=='yes'){
-                              $rbfw_enable_start_end_date = 'no';
-                          }
-                    }*/
+         
 
                     $rbfw_enable_start_end_date  = isset( $_POST['rbfw_enable_start_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_enable_start_end_date'] ) : 'yes';
 
@@ -375,7 +421,22 @@
        	 			$rbfw_event_start_time  = isset( $_POST['rbfw_event_start_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_time'] ) : '';
 					$rbfw_event_end_date  = isset( $_POST['rbfw_event_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_date'] ) : '';
 					$rbfw_event_end_time  = isset( $_POST['rbfw_event_end_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_time'] ) : '';
-				
+
+                    $rbfw_particular_switch = isset($_POST['rbfw_particular_switch']) ? sanitize_text_field($_POST['rbfw_particular_switch']) : 'off';
+                    $particulars_data = isset($_POST['rbfw_particulars']) ? $_POST['rbfw_particulars'] : [];
+
+                        $clean_particulars_data = [];
+                        foreach ($particulars_data as $index => $particular) {
+                            $clean_particulars_data[] = [
+                                'start_date' => sanitize_text_field($particular['start_date']),
+                                'end_date' => sanitize_text_field($particular['end_date']),
+                                'available_time' => array_map('sanitize_text_field', $particular['available_time'] ?? []),
+                            ];
+                        }
+
+                        update_post_meta($post_id, 'rbfw_particular_switch', $rbfw_particular_switch);
+                        update_post_meta($post_id, 'rbfw_particulars_data', $clean_particulars_data);
+                    
 					update_post_meta( $post_id, 'rbfw_time_slot_switch', $rbfw_time_slot );
                     update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
 					update_post_meta( $post_id, 'rbfw_enable_start_end_date', $rbfw_enable_start_end_date );
