@@ -156,6 +156,8 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus, 
 
     jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus,.rbfw_servicesd_qty_minus,.rbfw_servicesd_qty_plus',function (e) {
 
+
+
         let data_cat = jQuery(this).siblings('input[type=number]').attr('data-cat');
         let post_id = jQuery('#rbfw_post_id').val();
         if(data_cat == 'bikecarsd'){

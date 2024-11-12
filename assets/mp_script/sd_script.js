@@ -106,6 +106,7 @@
 
             let post_id = jQuery('.rbfw_post_id').val();
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
+            let rbfw_item_quantity = jQuery('#rbfw_item_quantity').val();
             let service_price = jQuery(this).data('price');
 
 
@@ -115,6 +116,7 @@
                 data: {
                     'action'  : 'rbfw_timely_variation_price_calculation',
                     'post_id': post_id,
+                    'rbfw_item_quantity': rbfw_item_quantity,
                     'rbfw_bikecarsd_selected_date': rbfw_bikecarsd_selected_date,
                     'service_price': service_price
                 },
@@ -134,8 +136,59 @@
         })
 
 
+        let es_service_price = 0;
+
+        jQuery('body').on('click','.rbfw_timely_es_qty_plus',function (e) {
+
+            e.preventDefault();
+            var service_quantity = parseInt(jQuery(this).prev('input').val());
+            var max_value = parseInt(jQuery(this).prev('input').attr('max'));
+
+            if(max_value > service_quantity){
+                let actual_quantity = service_quantity + 1
+                jQuery(this).prev('input').val(actual_quantity );
+                es_service_price = jQuery(this).prev('input').data('price') * actual_quantity;
+
+                rbfw_timely_price_calculation(es_service_price);
 
 
+            }
+        });
+
+        jQuery('body').on('click','.rbfw_timely_es_qty_minus',function (e) {
+
+            e.preventDefault();
+            var service_quantity = parseInt(jQuery(this).next('input').val());
+            var max_value = parseInt(jQuery(this).next('input').attr('max'));
+
+            if(max_value >= service_quantity && service_quantity > 0 ){
+                let actual_quantity = service_quantity - 1
+                jQuery(this).next('input').val(actual_quantity);
+                es_service_price = jQuery(this).next('input').data('price') * actual_quantity;
+
+                rbfw_timely_price_calculation(es_service_price);
+            }
+
+        });
+
+
+
+
+        jQuery('body').on('change','.rbfw_timely_es_qty',function (e) {
+
+            e.preventDefault();
+            let service_quantity = parseInt(jQuery(this).val());
+            let max_value = parseInt(jQuery(this).attr('max'));
+
+            if(service_quantity > max_value){
+                jQuery(this).val(max_value);
+                service_quantity = max_value;
+            }
+            es_service_price =  jQuery(this).data('price') * service_quantity;
+
+            rbfw_timely_price_calculation(es_service_price);
+
+        });
 
 
     });
@@ -158,5 +211,34 @@ function datepicker_inline(){
             jQuery('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
         },
     });
+}
+
+
+function rbfw_timely_price_calculation(es_service_price){
+    let post_id = jQuery('.rbfw_post_id').val();
+    let duration_price = jQuery('.radio-button.selected').data('price') * jQuery('#rbfw_item_quantity').val();
+
+    jQuery.ajax({
+        type: 'POST',
+        url: rbfw_ajax.rbfw_ajaxurl,
+        data: {
+            'action'  : 'rbfw_timely_price_calculation',
+            'post_id': post_id,
+            'es_service_price': es_service_price,
+            'duration_price': duration_price,
+        },
+        beforeSend: function() {
+            jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
+            jQuery('.rbfw_bikecarsd_pricing_table_wrap').addClass('rbfw_loader_in');
+            jQuery('.rbfw_bikecarsd_pricing_table_wrap').append('<i class="fas fa-spinner fa-spin"></i>');
+        },
+        success: function (response) {
+            jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
+            jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
+            jQuery('.rbfw_bikecarsd_price_summary_only').html(response);
+
+        }
+    });
+
 }
 

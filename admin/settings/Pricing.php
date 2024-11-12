@@ -489,7 +489,7 @@
                                             <td class="rbfw_without_time_inventory <?php echo ($manage_inventory_as_timely=='on')?'rbfw_hide':'' ?>""><input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($i); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
 
                                             <td class="rbfw_time_inventory <?php echo ($manage_inventory_as_timely=='no')?'rbfw_hide':''  ?>">
-                                                <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($i); ?>][duration]" value="<?php echo esc_attr( $value['duration'] ); ?>" placeholder="<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
+                                                <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($i); ?>][duration]" value="<?php echo esc_attr( $value['duration'] ); ?>" placeholder="<?php esc_html_e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
                                             </td>
                                             <td class="rbfw_time_inventory <?php echo ($manage_inventory_as_timely=='no')?'rbfw_hide':''  ?>">
                                                 <select name="rbfw_bike_car_sd_data[<?php echo mep_esc_html($i); ?>][d_type]">
