@@ -419,6 +419,7 @@
 				$rbfw_item_type =  get_post_meta($post_id, 'rbfw_item_type', true) ? get_post_meta($post_id, 'rbfw_item_type', true) : 'bike_car_sd';
 				$rbfw_bike_car_sd_data 	 = get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
 				$manage_inventory_as_timely 	 = get_post_meta($post_id, 'manage_inventory_as_timely', true) ? get_post_meta($post_id, 'manage_inventory_as_timely', true) : 'off';
+				$rbfw_item_stock_quantity_timely 	 = get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true) ? get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true) : 'off';
 			?>
 				<div class="rbfw_bike_car_sd_wrapper <?php  echo esc_attr($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' )?'show':'hide'; ?>" >
                     <section>
@@ -443,7 +444,7 @@
                                 <span>Add stock quantity</span>
                             </div>
                             <div class="item_stock_quantity">
-                                <input type="number" name="rbfw_item_stock_quantity" id="rbfw_item_stock_quantity" value="">
+                                <input type="number" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity_timely) ?>">
                             </div>
                         </section>
                     </div>
@@ -491,7 +492,7 @@
                                                 <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($i); ?>][duration]" value="<?php echo esc_attr( $value['duration'] ); ?>" placeholder="<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
                                             </td>
                                             <td class="rbfw_time_inventory <?php echo ($manage_inventory_as_timely=='no')?'rbfw_hide':''  ?>">
-                                                <select name="rbfw_bike_car_sd_data_duration[<?php echo mep_esc_html($i); ?>][d_type]">
+                                                <select name="rbfw_bike_car_sd_data[<?php echo mep_esc_html($i); ?>][d_type]">
                                                     <option <?php echo ( isset($value['d_type']) && $value['d_type'] =='Hours')?'selected':''; ?> value="Hours">Hours</option>
                                                     <option <?php echo (isset($value['d_type']) && $value['d_type'] =='Days')?'selected':''; ?> value="Days">Days</option>
                                                     <option <?php echo (isset($value['d_type']) && $value['d_type'] =='Weeks')?'selected':''; ?> value="Weeks">Weeks</option>
@@ -1214,9 +1215,12 @@
 					$rbfw_sd_appointment_max_qty_per_session 	 = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ?  $_POST['rbfw_sd_appointment_max_qty_per_session'] : '';
 					$rbfw_sd_appointment_ondays = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? rbfw_array_strip( $_POST['rbfw_sd_appointment_ondays'] ) : [];
 					$rbfw_enable_extra_service_qty  = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? $_POST['rbfw_enable_extra_service_qty']  : 'no';
-					$rbfw_item_stock_quantity  = isset( $_POST['rbfw_item_stock_quantity'] ) ? $_POST['rbfw_item_stock_quantity']  : 1;
+					$rbfw_item_stock_quantity_timely  = isset( $_POST['rbfw_item_stock_quantity_timely'] ) ? $_POST['rbfw_item_stock_quantity_timely']  : 1;
 
-					
+
+
+
+
 
 					update_post_meta( $post_id, 'rbfw_enable_category_service_price', $rbfw_enable_category_service_price );
 					update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
@@ -1297,7 +1301,7 @@
 					update_post_meta( $post_id, 'rbfw_sat_daily_rate', $daily_rate_sat );
 					update_post_meta( $post_id, 'rbfw_enable_sat_day', $enabled_sat );
 					update_post_meta( $post_id, 'manage_inventory_as_timely', $manage_inventory_as_timely );
-					update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity );
+					update_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', $rbfw_item_stock_quantity_timely );
 
 					// save extra service data==========================================
 					$old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];

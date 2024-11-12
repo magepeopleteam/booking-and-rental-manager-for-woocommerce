@@ -20,6 +20,9 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
             add_action('wp_ajax_rbfw_bikecarsd_ajax_price_calculation', array($this, 'rbfw_bikecarsd_ajax_price_calculation'));
             add_action('wp_ajax_nopriv_rbfw_bikecarsd_ajax_price_calculation', array($this,'rbfw_bikecarsd_ajax_price_calculation'));
 
+            add_action('wp_ajax_rbfw_timely_variation_price_calculation', array($this, 'rbfw_timely_variation_price_calculation'));
+            add_action('wp_ajax_nopriv_rbfw_timely_variation_price_calculation', array($this,'rbfw_timely_variation_price_calculation'));
+
 
         }
 
@@ -593,6 +596,12 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 echo $content;
        
+            wp_die();
+        }
+
+
+        public function rbfw_timely_variation_price_calculation(){
+            include( RBFW_Function::get_template_path( 'template_segment/timely_info.php' ) );
             wp_die();
         }
 

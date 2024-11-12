@@ -7,6 +7,14 @@
 
         jQuery('body').on('change', 'input[name="rbfw_bikecarsd_selected_date"]', function(e) {
 
+            let manage_inventory_as_timely = $('#manage_inventory_as_timely').val();
+
+            if(manage_inventory_as_timely=='on'){
+                return;
+            }
+
+
+
             let post_id = jQuery('.rbfw_post_id').val();
             let is_muffin_template = jQuery('.rbfw_muffin_template').length;
 
@@ -74,6 +82,62 @@
             });
 
         });
+
+
+        jQuery('body').on('focusin', '.pickup_date_timely', function(e) {
+            jQuery(this).datepicker({
+                dateFormat: js_date_format,
+                minDate: 0,
+                beforeShowDay: function(date)
+                {
+                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+                },
+                onSelect: function (dateString, data) {
+                    let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+                    jQuery('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
+                },
+            });
+        });
+
+
+        jQuery('body').on('click', '.radio-button', function(e) {
+            bikecarsd_price_arr = {};
+            service_price_arr = {};
+
+            let post_id = jQuery('.rbfw_post_id').val();
+            let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
+            let service_price = jQuery(this).data('price');
+
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax.rbfw_ajaxurl,
+                data: {
+                    'action'  : 'rbfw_timely_variation_price_calculation',
+                    'post_id': post_id,
+                    'rbfw_bikecarsd_selected_date': rbfw_bikecarsd_selected_date,
+                    'service_price': service_price
+                },
+                beforeSend: function() {
+                    jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap').addClass('rbfw_loader_in');
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap').append('<i class="fas fa-spinner fa-spin"></i>');
+                },
+                success: function (response) {
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
+                    jQuery('.rbfw_bikecarsd_price_summary').html(response);
+
+                }
+            });
+
+        })
+
+
+
+
+
+
     });
 })(jQuery)
 
