@@ -109,171 +109,55 @@
                         </div>
                     </section>
                     <?php $this->panel_header('Off Date Settings','Off Date Settings'); ?> 
-                    <?php $this->rbfw_off_days_config( $post_id ); ?> 
-                    <?php  $this->panel_header('Particular Dates with Time Slots Off Booking', 'Add specific dates and their time slots.'); ?> 
-                    <?php $this->add_particular_time_slots_section($post_id); ?>             
+                    <?php $this->rbfw_off_days_config( $post_id ); ?>               
                 </div>
                 
             <?php
             }
 
-            public function add_particular_time_slots_section($post_id) {
-    $particular_dates = get_post_meta($post_id, 'rbfw_particular_dates', true) ?: [];
-
-    ?>
-     <div class="particular-dates-section">
-        <h3><?php esc_html_e('Particular Dates with Time Slots Off Booking', 'booking-and-rental-manager-for-woocommerce'); ?></h3>
-        <table class="widefat striped">
-            <thead>
-                <tr>
-                    <th><?php esc_html_e('Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                    <th><?php esc_html_e('Start & End Time', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                    
-                    <th><?php esc_html_e('Action', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                </tr>
-            </thead>
-            <tbody class="particular-date-list">
-                <?php foreach ($particular_dates as $index => $date_data) { ?>
-                    <tr class="date-item">
-                        <td>
-                            <input type="date" name="particular_dates[<?php echo $index; ?>][date]" value="<?php echo esc_attr($date_data['date']); ?>" required>
-                        </td>
-                        <td>
-                            <div class="time-slots">
-                                <?php foreach ($date_data['time_slots'] as $time_index => $slot) { ?>
-                                    <div class="time-slot-item">
-                                        <input type="time" name="particular_dates[<?php echo $index; ?>][time_slots][<?php echo $time_index; ?>][start]" value="<?php echo esc_attr($slot['start']); ?>" required>
-                                        <input type="time" name="particular_dates[<?php echo $index; ?>][time_slots][<?php echo $time_index; ?>][end]" value="<?php echo esc_attr($slot['end']); ?>" required>
-                                        <button class="button remove-time-slot"><?php esc_html_e('Remove', 'booking-and-rental-manager-for-woocommerce'); ?></button>
-                                    </div>
-                                <?php } ?>
-                            </div>
-                        </td>
-                        <td>
-                        <button class="button add-time-slot"><?php esc_html_e('Add Time Slot', 'booking-and-rental-manager-for-woocommerce'); ?></button>
-                            <button class="button remove-date"><?php esc_html_e('Remove Date', 'booking-and-rental-manager-for-woocommerce'); ?></button>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-        <button class="button add-particular-date"><?php esc_html_e('Add', 'booking-and-rental-manager-for-woocommerce'); ?></button>
-    </div>
-    
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const dateListContainer = document.querySelector('.particular-date-list');
-        const addParticularDateButton = document.querySelector('.add-particular-date');
-
-        addParticularDateButton.addEventListener('click', function (e) {
-            e.preventDefault();
-            const newIndex = dateListContainer.children.length; // Use the children length to index
-            const newDateHTML = `
-                <div class="date-item">
-                    <input type="date" name="particular_dates[${newIndex}][date]" required>
-                    <div class="time-slots">
-                        <div class="time-slot-item">
-                            <input type="time" name="particular_dates[${newIndex}][time_slots][0][start]" required>
-                            <input type="time" name="particular_dates[${newIndex}][time_slots][0][end]" required>
-                            <button class="button remove-time-slot"><?php esc_html_e('Remove Time Slot', 'booking-and-rental-manager-for-woocommerce'); ?></button>
-                        </div>
-                    </div>
-                    <button class="button add-time-slot">Add Time Slot</button>
-                    <button class="button remove-date">Remove Date</button>
-                </div>
-            `;
-            dateListContainer.insertAdjacentHTML('beforeend', newDateHTML);
-        });
-
-        dateListContainer.addEventListener('click', function (e) {
-            if (e.target.classList.contains('add-time-slot')) {
-                e.preventDefault();
-                const dateItem = e.target.closest('.date-item');
-                const timeSlotsContainer = dateItem.querySelector('.time-slots');
-                const timeSlotsCount = timeSlotsContainer.children.length; // Get current number of time slots per date
-                const newTimeSlotHTML = `
-                    <div class="time-slot-item">
-                        <input type="time" name="particular_dates[${Array.from(dateListContainer.children).indexOf(dateItem)}][time_slots][${timeSlotsCount}][start]" required>
-                        <input type="time" name="particular_dates[${Array.from(dateListContainer.children).indexOf(dateItem)}][time_slots][${timeSlotsCount}][end]" required>
-                        <button class="button remove-time-slot"><?php esc_html_e('Remove Time Slot', 'booking-and-rental-manager-for-woocommerce'); ?></button>
-                    </div>
-                `;
-                timeSlotsContainer.insertAdjacentHTML('beforeend', newTimeSlotHTML);
-            }
-
-            if (e.target.classList.contains('remove-time-slot')) {
-                e.target.closest('.time-slot-item').remove();
-            }
-
-            if (e.target.classList.contains('remove-date')) {
-                e.target.closest('.date-item').remove();
-            }
-        });
-    });
-</script>
-
-    <?php 
-}
-
-
-public function settings_save($post_id) {
-    if (!isset($_POST['rbfw_ticket_type_nonce']) || !wp_verify_nonce($_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce')) {
-        return;
-    }
-
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return;
-    }
-
-    if (!current_user_can('edit_post', $post_id)) {
-        return;
-    }
-
-    if (get_post_type($post_id) == 'rbfw_item') {
-        // Saving off days
-        $rbfw_off_days = isset($_POST['rbfw_off_days']) ? rbfw_array_strip($_POST['rbfw_off_days']) : '';
-        update_post_meta($post_id, 'rbfw_off_days', $rbfw_off_days);
-
-        // Saving the off day range
-        $off_days_start = isset($_POST['off_days_start']) ? rbfw_array_strip($_POST['off_days_start']) : [];
-        $off_days_end = isset($_POST['off_days_end']) ? rbfw_array_strip($_POST['off_days_end']) : [];
-        
-        // prepare the off day schedule
-        $off_schedules = [];
-        foreach ($off_days_start as $key => $from_date) {
-            if ($from_date && isset($off_days_end[$key])) {
-                $off_schedules[] = [
-                    'from_date' => $from_date,
-                    'to_date' => $off_days_end[$key],
-                ];
-            }
-        }
-        update_post_meta($post_id, 'rbfw_offday_range', $off_schedules);
-
-        // Saving particular dates with time slots
-        $particular_dates = isset($_POST['particular_dates']) ? $_POST['particular_dates'] : [];
-        $formatted_dates = [];
-        
-        foreach ($particular_dates as $date_data) {
-            $date = isset($date_data['date']) ? sanitize_text_field($date_data['date']) : '';
-            if ($date) {
-                $time_slots = array_map(function($slot) {
-                    return [
-                        'start' => sanitize_text_field($slot['start']),
-                        'end' => sanitize_text_field($slot['end']),
-                    ];
-                }, $date_data['time_slots'] ?? []);
+            public function settings_save($post_id) {
                 
-                $formatted_dates[] = [
-                    'date' => $date,
-                    'time_slots' => $time_slots,
-                ];
+                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
+                    return;
+                }
+
+                if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+                    return;
+                }
+
+                if ( ! current_user_can( 'edit_post', $post_id ) ) {
+                    return;
+                }
+
+                if ( get_post_type( $post_id ) == 'rbfw_item' ) {
+                    $rbfw_off_days 	 = isset( $_POST['rbfw_off_days'] ) ? rbfw_array_strip( $_POST['rbfw_off_days'] ) : '';
+                    $off_days_start	 = isset( $_POST['off_days_start'] ) ? rbfw_array_strip( $_POST['off_days_start'] ) : '';
+                    $off_days_end 	 = isset( $_POST['off_days_end'] ) ? rbfw_array_strip( $_POST['off_days_end'] ) : '';
+
+                    update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
+
+                    $off_schedules = [];
+                    $from_dates = $off_days_start;
+                    $to_dates = $off_days_end;
+
+                    if(is_countable($from_dates)){
+                        if ( sizeof($from_dates) > 0) {
+                            foreach ($from_dates as $key => $from_date) {
+                                if ($from_date && $to_dates[$key]) {
+                                    $off_schedules[] = [
+                                        'from_date' => $from_date,
+                                        'to_date' => $to_dates[$key],
+                                    ];
+                                }
+                            }
+                        }
+                        else{
+                            $from_dates = [];
+                        }
+                    }
+                    update_post_meta($post_id, 'rbfw_offday_range', $off_schedules);
+                }
             }
-        }
-        
-        update_post_meta($post_id, 'rbfw_particular_dates', $formatted_dates);
-    }
-}
         }
         new RBFW_Off_Day();
     }
