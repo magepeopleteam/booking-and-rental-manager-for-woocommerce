@@ -235,27 +235,6 @@
 			    <?php
 			}
 
-
-            public function multiple_particular_select($post_id, $index = 'new', $selected_times = []) {
-                $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
-                global $RBFW_Timeslots_Page;
-                $rbfw_time_slots = $RBFW_Timeslots_Page->rbfw_format_time_slot($rbfw_time_slots);
-                asort($rbfw_time_slots);
-                ?>
-                <div id="field-wrapper-rdfw_available_time" class="field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
-                    <select name="rbfw_particulars[<?php echo esc_attr($index); ?>][available_time][]" multiple class="select2-hidden-accessible">
-                        <?php foreach ($rbfw_time_slots as $key => $value): ?>
-                            <option value="<?php echo esc_attr($value); ?>" <?php echo in_array($value, $selected_times) ? 'selected' : ''; ?>>
-                                <?php echo esc_html($key); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <?php
-            }
-
-
-
         public function add_particular_tabs_content($post_id) {
             $particulars_data = get_post_meta($post_id, 'rbfw_particulars_data', true);
             $particulars_data = !empty($particulars_data) && is_array($particulars_data) ? $particulars_data : [[]];
@@ -303,7 +282,6 @@
                                 // Render the select box with selected available time slots
                                 $available_times = isset($particular['available_time']) ? $particular['available_time'] : [];
                                 $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
-                                asort($rbfw_time_slots);
                                 ?>
                                 <select name="rbfw_particulars[<?php echo $index; ?>][available_time][]" multiple class="select2-hidden-accessible">
                                     <?php foreach ($rbfw_time_slots as $time_slot): ?>
@@ -327,68 +305,77 @@
             </div>
 
             <script>
-                jQuery(document).ready(function($) {
-                        // Initialize select2 for existing select elements
-                        $(".select2-hidden-accessible").select2();
+    jQuery(document).ready(function($) {
+        $(".select2-hidden-accessible").select2();
+        function initializeDatepickers() {
+            $(".rbfw_days_range").each(function() {
+                var isEndDate = $(this).attr('name').includes('[end_date]');
 
-                        $(".rbfw_days_range").datepicker({
-                            dateFormat: 'dd-mm-yy',
-                            minDate: 0 
-                        });
+                $(this).datepicker({
+                    dateFormat: 'dd-mm-yy',
+                    minDate: isEndDate ? null : 0, 
+                    onSelect: function(selectedDate) {
+                        if (!isEndDate) {
+                            var startDate = $(this).datepicker("getDate");
+                            $(this).closest('tr').find('input[name*="[end_date]"]').datepicker("option", "minDate", startDate || 0);
+                        }
+                    }
+                }).attr('required', true);
+            });
+        }
 
-                        $('#add-particular-row').click(function() {
-                            var availableTimeSlots = '<?php
-                                $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
-                                asort($rbfw_time_slots);
-                                $options = '';
-                                foreach ($rbfw_time_slots as $key => $value) {
-                                    $options .= '<option value="' . esc_attr($value) . '">' . esc_html($key) . '</option>';
-                                }
-                                echo addslashes($options);
-                            ?>';
-                            
-                            var newRow = `
-                                <tr class="particular-row">
-                                    <td><input type="text" name="rbfw_particulars[new][start_date]" class="rbfw_days_range" value=""></td>
-                                    <td><input type="text" name="rbfw_particulars[new][end_date]" class="rbfw_days_range" value=""></td>
-                                    <td>
-                                        <div class="w-100">
-                                            <select name="rbfw_particulars[new][available_time][]" multiple class="select2-hidden-accessible">
-                                                ${availableTimeSlots}
-                                            </select>
-                                        </div>
-                                    </td>
-                                    <td><button type="button" class="remove-row button">Remove</button></td>
-                                </tr>`;
+        initializeDatepickers();
+        $('#add-particular-row').click(function() {
+            var availableTimeSlots = '<?php
+                $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+                $options = '';
+                foreach ($rbfw_time_slots as $key => $value) {
+                    $options .= '<option value="' . esc_attr($value) . '">' . esc_html($key) . '</option>';
+                }
+                echo addslashes($options);
+            ?>';
+            
+            var newRow = `
+                <tr class="particular-row">
+                    <td><input type="text" name="rbfw_particulars[new][start_date]" class="rbfw_days_range" required></td>
+                    <td><input type="text" name="rbfw_particulars[new][end_date]" class="rbfw_days_range" required></td>
+                    <td>
+                        <div class="w-100">
+                            <select name="rbfw_particulars[new][available_time][]" multiple class="select2-hidden-accessible" required>
+                                ${availableTimeSlots}
+                            </select>
+                        </div>
+                    </td>
+                    <td><button type="button" class="remove-row button">Remove</button></td>
+                </tr>`;
 
-                            $('#particulars-table').append(newRow);
+            $('#particulars-table').append(newRow);
 
-                            $(".rbfw_days_range").datepicker({
-                                dateFormat: 'dd-mm-yy',
-                                minDate: 0 
-                            });
+            // Reinitialize datepickers and select2 for new row
+            initializeDatepickers();
+            $('#particulars-table').find('tr:last select').select2();
+        });
 
-                            $('#particulars-table').find('tr:last select').select2();
-                        });
+        // Remove row
+        $(document).on('click', '.remove-row', function() {
+            $(this).closest('.particular-row').remove();
+        });
 
-                        $(document).on('click', '.remove-row', function() {
-                            $(this).closest('.particular-row').remove();
-                        });
+        // Toggle available-particular section
+        $('input[name=rbfw_particular_switch]').click(function() {
+            var status = $(this).val();
+            if (status == 'on') {
+                $(this).val('off');
+                $('.available-particular').slideUp().removeClass('show').addClass('hide');
+            } 
+            if(status == 'off') {
+                $(this).val('on'); 
+                $('.available-particular').slideDown().removeClass('hide').addClass('show');
+            }
+        });
+    });
+</script>
 
-                        $('input[name=rbfw_particular_switch]').click(function() {
-                            var status = $(this).val();
-                            if (status == 'on') {
-                                $(this).val('off');
-                                $('.available-particular').slideUp().removeClass('show').addClass('hide');
-                            } 
-                            if(status == 'off') {
-                                $(this).val('on'); 
-                                $('.available-particular').slideDown().removeClass('hide').addClass('show');
-                            }
-                        });
-                    });
-
-            </script>
             <?php
 }
 
