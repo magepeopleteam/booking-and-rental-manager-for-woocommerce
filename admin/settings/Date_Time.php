@@ -320,28 +320,28 @@
                             $(this).closest('tr').find('input[name*="[end_date]"]').datepicker("option", "minDate", startDate || 0);
                         }
                     }
-                }).attr('required', true);
+                }); // Removed .attr('required', true);
             });
         }
 
         initializeDatepickers();
         $('#add-particular-row').click(function() {
             var availableTimeSlots = '<?php
-                $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
-                $options = '';
-                foreach ($rbfw_time_slots as $key => $value) {
-                    $options .= '<option value="' . esc_attr($value) . '">' . esc_html($key) . '</option>';
-                }
-                echo addslashes($options);
-            ?>';
+        $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+        $options = '';
+        foreach ($rbfw_time_slots as $time_slot) {
+            $options .= '<option value="' . esc_attr($time_slot) . '">' . esc_html($time_slot) . '</option>';
+        }
+        echo addslashes($options);
+    ?>';
             
             var newRow = `
                 <tr class="particular-row">
-                    <td><input type="text" name="rbfw_particulars[new][start_date]" class="rbfw_days_range" required></td>
-                    <td><input type="text" name="rbfw_particulars[new][end_date]" class="rbfw_days_range" required></td>
+                    <td><input type="text" name="rbfw_particulars[new][start_date]" class="rbfw_days_range"></td>
+                    <td><input type="text" name="rbfw_particulars[new][end_date]" class="rbfw_days_range"></td>
                     <td>
                         <div class="w-100">
-                            <select name="rbfw_particulars[new][available_time][]" multiple class="select2-hidden-accessible" required>
+                            <select name="rbfw_particulars[new][available_time][]" multiple class="select2-hidden-accessible">
                                 ${availableTimeSlots}
                             </select>
                         </div>
@@ -375,6 +375,7 @@
         });
     });
 </script>
+
 
             <?php
 }
