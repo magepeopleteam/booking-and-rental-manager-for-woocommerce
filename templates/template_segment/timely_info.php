@@ -34,6 +34,7 @@ if(isset($_POST['post_id'])){
 
     <input type="hidden" name="end_date" value="<?php echo $end_date ?>">
     <input type="hidden" name="end_time" value="<?php echo $end_time ?>">
+    <input type="hidden" name="service_type" value="<?php echo $service_type ?>">
     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step">
         <div class="rbfw_bikecarsd_pricing_table_wrap">
             <?php if(!empty($rbfw_extra_service_data)){ ?>

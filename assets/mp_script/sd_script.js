@@ -164,6 +164,8 @@
                     jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
                     jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
                     jQuery('.rbfw_bikecarsd_price_summary').html(response);
+                    jQuery('button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
+                    jQuery(' button.rbfw_bikecarsd_book_now_btn').removeClass('rbfw_disabled_button');
 
                 }
             });
