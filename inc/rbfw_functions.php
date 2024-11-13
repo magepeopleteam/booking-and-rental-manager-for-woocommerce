@@ -2988,18 +2988,42 @@ function rbfw_exist_page_by_slug( $slug ) {
 function rbfw_get_available_times($rbfw_id){
     $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
     $rdfw_available_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
-
     $the_array = [];
-
     foreach ($rbfw_time_slots as $rts_key => $rts_value) {
         foreach ($rdfw_available_time as $rat_key => $rat_value) {
             if($rts_value == $rat_value){
-                $the_array[$rts_value] = $rts_key;
+                $the_array[date(get_option('time_format'), strtotime($rts_value))] = $rts_key;
             }
         }
     }
     return $the_array;
 }
+
+function rbfw_get_available_times_particulars($rbfw_id,$selected_date){
+    $particulars_data = get_post_meta($rbfw_id, 'rbfw_particulars_data', true);
+    $the_array = [];
+    $particular_date = 'no';
+    foreach ($particulars_data as $single){
+        $pd_dates_array = getAllDates($single['start_date'], $single['end_date']);
+        if (in_array($selected_date, $pd_dates_array)) {
+            $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+            $rdfw_available_time = $single['available_time'];
+            foreach ($rbfw_time_slots as $rts_key => $rts_value) {
+                foreach ($rdfw_available_time as $rat_key => $rat_value) {
+                    if($rts_value == $rat_value){
+                        $the_array[date(get_option('time_format'), strtotime($rts_value))] = $rts_key;
+                    }
+                }
+            }
+            $particular_date = 'yes';
+            return $the_array;
+        }
+    }
+    return rbfw_get_available_times($rbfw_id);
+}
+
+
+
 
 /* UPDATE: Inventory order status */
 add_action('wp_loaded', 'rbfw_update_inventory_order_status');

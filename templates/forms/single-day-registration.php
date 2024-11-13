@@ -77,11 +77,14 @@
                 <?php } else{ ?>
 
                 <?php
+
                 $rbfw_bike_car_sd_data = get_post_meta($rbfw_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($rbfw_id, 'rbfw_bike_car_sd_data', true) : [];
+                $available_times = rbfw_get_available_times($rbfw_id);
+
                 ?>
                     <div class="item">
                         <div class="item-content rbfw-datetime">
-                            <div class="date">
+                            <div class="<?php echo (!empty($available_times))?'left':'' ?> date">
                                 <div class="rbfw-single-right-heading">
                                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                 </div>
@@ -91,8 +94,31 @@
                                     <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                 </div>
                             </div>
+
+                            <?php if(!empty($available_times)){ ?>
+                                <div class="right time">
+                                    <div class="rbfw-single-right-heading">
+                                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
+                                    </div>
+                                    <div class="rbfw-p-relative">
+                                            <span class="clock">
+                                                <i class="fa-regular fa-clock"></i>
+                                            </span>
+                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_pickup_start_time" id="pickup_time" required>
+                                            <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup time','booking-and-rental-manager-for-woocommerce'))); ?></option>
+                                            <?php foreach ($available_times as $key => $time) : ?>
+                                                <option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html(date(get_option('time_format'), strtotime($time))); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
+                                    </div>
+                                </div>
+                            <?php } ?>
+
                         </div>
                     </div>
+
+
 
                     <div class="radio-group">
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
