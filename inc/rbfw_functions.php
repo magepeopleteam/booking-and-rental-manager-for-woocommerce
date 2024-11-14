@@ -1667,6 +1667,40 @@ function rbfw_get_bike_car_sd_es_available_qty($post_id, $selected_date, $name){
     return $remaining_stock;
 }
 
+function rbfw_timely_available_quantity($post_id, $selected_date, $name){
+
+    if (empty($post_id) || empty($selected_date) || empty($name)) {
+        return;
+    }
+
+    $rbfw_item_stock_quantity_timely  = get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true);
+
+
+
+    $selected_date = date('d-m-Y', strtotime($selected_date));
+    $total_qty = 0;
+
+    $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
+
+    if (!empty($rbfw_inventory)) {
+        foreach ($rbfw_inventory as $key => $inventory) {
+            $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
+            $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
+            if ( in_array($selected_date, $booked_dates) ) {
+                foreach ($rbfw_type_info as $type_name => $type_qty) {
+                    if ($type_name == $name) {
+                        $total_qty += $type_qty;
+                    }
+                }
+            }
+        }
+    }
+    return $rbfw_item_stock_quantity_timely - $total_qty;
+}
+
+
+
+
 /****************************************************
  * Resort/Multiple Rent:
  * Get Types Available Quantity

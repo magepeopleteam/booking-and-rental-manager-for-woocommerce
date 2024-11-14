@@ -164,7 +164,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         }
 
         $rbfw_start_datetime = $rbfw_bikecarsd_selected_date;
-        $rbfw_end_datetime = $rbfw_bikecarsd_selected_date;
+        $rbfw_end_datetime = $end_date;
         $rbfw_type_info_all = isset($_POST['rbfw_bikecarsd_info']) ? rbfw_array_strip($_POST['rbfw_bikecarsd_info']) : [];
 
         $rbfw_type_info = array();
@@ -192,6 +192,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $rbfw_pickup_point = isset($_POST['rbfw_pickup_point']) ? $_POST['rbfw_pickup_point'] : '';
         $rbfw_dropoff_point = isset($_POST['rbfw_dropoff_point']) ? $_POST['rbfw_dropoff_point'] : '';
         $rbfw_bikecarsd_ticket_info = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info($rbfw_id, $rbfw_start_datetime, $rbfw_end_datetime, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info,$rbfw_pickup_point,$rbfw_dropoff_point);
+
 
 
         $base_price = $rbfw_bikecarsd_total_price;
