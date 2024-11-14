@@ -10,7 +10,13 @@ if(isset($_POST['post_id'])){
     $duration = $_POST['duration'];
     $d_type = $_POST['d_type'];
 
-    $date = new DateTime($rbfw_bikecarsd_selected_date.' '.$pickup_time); // Original date and time
+    if(isset($_POST['pickup_time']) && $_POST['pickup_time']){
+        $date = new DateTime($rbfw_bikecarsd_selected_date.' '.$pickup_time); // Original date and time
+    }else{
+        $date = new DateTime($rbfw_bikecarsd_selected_date); // Original date and time
+    }
+
+
 
     if($d_type=='Hours'){
         $date->modify("+$duration hours");
@@ -49,7 +55,7 @@ if(isset($_POST['post_id'])){
                 </select>
             </div>
             <div class="right" style="vertical-align: middle;line-height: 50px;padding-left: 10px;">
-                * <?php echo wc_price($service_price) ?>
+                X <?php echo wc_price($service_price) ?>
             </div>
         </div>
     </div>

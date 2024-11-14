@@ -121,7 +121,7 @@
 
 
                     <div class="rbfw-single-right-heading">
-                        <?php esc_html_e('Service Type', 'booking-and-rental-manager-for-woocommerce'); ?>
+                        <?php esc_html_e('Choose Duration', 'booking-and-rental-manager-for-woocommerce'); ?>
                     </div>
 
                     <div class="radio-group">
