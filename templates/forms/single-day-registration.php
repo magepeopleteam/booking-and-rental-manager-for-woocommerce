@@ -13,6 +13,7 @@
     $manage_inventory_as_timely =  get_post_meta($rbfw_id, 'manage_inventory_as_timely', true) ? get_post_meta($rbfw_id, 'manage_inventory_as_timely', true) : 'off';
 
     $rbfw_item_stock_quantity_timely = !empty(get_post_meta($rbfw_id,'rbfw_item_stock_quantity_timely',true)) ? get_post_meta($rbfw_id,'rbfw_item_stock_quantity_timely',true) : 0;
+    $rbfw_time_slot_switch = !empty(get_post_meta($rbfw_id,'rbfw_time_slot_switch',true)) ? get_post_meta($rbfw_id,'rbfw_time_slot_switch',true) : 'off';
 
     ?>
 
@@ -84,7 +85,7 @@
                 ?>
                     <div class="item">
                         <div class="item-content rbfw-datetime">
-                            <div class="<?php echo (!empty($available_times))?'left':'' ?> date">
+                            <div class="<?php echo ($rbfw_time_slot_switch == 'on' && !empty($available_times))?'left':'' ?> date">
                                 <div class="rbfw-single-right-heading">
                                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                 </div>
@@ -95,7 +96,7 @@
                                 </div>
                             </div>
 
-                            <?php if(!empty($available_times)){ ?>
+                            <?php if(!empty($rbfw_time_slot_switch == 'on' && $available_times)){ ?>
                                 <div class="right time">
                                     <div class="rbfw-single-right-heading">
                                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
@@ -119,6 +120,9 @@
                     </div>
 
 
+                    <div class="rbfw-single-right-heading">
+                        <?php esc_html_e('Service Type', 'booking-and-rental-manager-for-woocommerce'); ?>
+                    </div>
 
                     <div class="radio-group">
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
@@ -168,7 +172,7 @@
                             <ul class="rbfw-ul">
                                 <li class="duration-costing rbfw-cond">
                                     <?php echo $rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')) ?>
-                                    <?php echo wc_price(4) ?>
+                                    <?php echo wc_price(0) ?>
                                 </li>
                                 <?php if(!empty($rbfw_extra_service_data)){ ?>
                                     <li class="resource-costing rbfw-cond">
@@ -222,6 +226,7 @@
                 $appointment_days = json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true));
                 ?>
 
+                <input type="hidden" name="rbfw_time_slot_switch" id="rbfw_time_slot_switch" value="<?php echo esc_attr($rbfw_time_slot_switch); ?>">
                 <input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price">
                 <input type="hidden" name="manage_inventory_as_timely" id="manage_inventory_as_timely" value="<?php echo esc_attr($manage_inventory_as_timely); ?>">

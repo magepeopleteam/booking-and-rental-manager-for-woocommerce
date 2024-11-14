@@ -135,12 +135,15 @@
             let post_id = jQuery('.rbfw_post_id').val();
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
             let pickup_time = jQuery('.rbfw-select.rbfw-time-price.pickup_time').val();
+            let rbfw_time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
+
+
 
             if(rbfw_bikecarsd_selected_date==''){
                 alert("please enter pickup date");
                 return;
             }
-            if(pickup_time==null){
+            if(pickup_time==null && rbfw_time_slot_switch=='on'){
                 alert("please enter pickup time");
                 return;
             }
