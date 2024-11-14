@@ -6956,3 +6956,6 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     min-width: 100%;
     min-height: auto;
 }
+.price-item-container.pricing-content_dh.mpStyle.open {
+    background: #fff;
+}
