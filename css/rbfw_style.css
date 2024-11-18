@@ -3487,6 +3487,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     .mpStyle.style_1 div.superSlider .sliderShowcaseItem [data-bg-image] {
         height: 100px !important;
     }
+    div.superSlider [data-bg-image] {
+        border-radius: 10px;
+    }
 
     .mpStyle.style_1 .dFlex {
         display: block;
