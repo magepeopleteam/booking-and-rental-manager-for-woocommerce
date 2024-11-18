@@ -1746,31 +1746,13 @@ function rbfw_timely_available_quantity($post_id, $start_date, $end_date, $type 
                         $inventory_start_time = $inventory['rbfw_start_time'];
                         $inventory_end_time = $inventory['rbfw_end_time'];
 
-                        $inventory_start_datetime = date('Y-m-d H:i', strtotime($inventory_start_date . ' ' . $inventory_start_time));
-                        $inventory_end_datetime = date('Y-m-d H:i', strtotime($inventory_end_date . ' ' . $inventory_end_time));
+                        $date1Start  = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
+                        $date1End  = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
 
-                       // $inventory_start_datetime = strtotime($inventory_start_date . ' ' . $inventory_start_time);
-                        //$inventory_end_datetime = strtotime($inventory_end_date . ' ' . $inventory_end_time);
+                        $date2Start = $pickup_datetime;
+                        $date2End = $dropoff_datetime;
 
-
-                        $pickup_datetime = date('Y-m-d H:i',strtotime($pickup_datetime->format('Y-m-d H:i')));
-                        $dropoff_datetime = date('Y-m-d H:i', strtotime($dropoff_datetime->format('Y-m-d H:i')));
-
-
-                        echo $pickup_datetime.' '.$dropoff_datetime;
-                        echo $inventory_start_datetime.' '.$inventory_end_datetime;
-
-
-
-                        if($key1==0){
-                            if($inventory_end_datetime>$pickup_datetime){
-                                $total_qty += $rbfw_item_quantity;
-                            }
-                        }elseif($key1==(count($date_range)-1)){
-                            if($inventory_start_datetime<$dropoff_datetime){
-                                $total_qty += $rbfw_item_quantity;
-                            }
-                        }else{
+                        if ($date1Start <= $date2End && $date2Start <= $date1End) {
                             $total_qty += $rbfw_item_quantity;
                         }
 
@@ -3223,15 +3205,19 @@ function rbfw_exist_page_by_slug( $slug ) {
 
 function rbfw_get_available_times($rbfw_id){
     $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+    //echo '<pre>';print_r($rbfw_time_slots);echo '<pre>';
     $rdfw_available_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
+
+    //echo '<pre>';print_r($rdfw_available_time);echo '<pre>';
     $the_array = [];
     foreach ($rbfw_time_slots as $rts_key => $rts_value) {
         foreach ($rdfw_available_time as $rat_key => $rat_value) {
-            if($rts_value == $rat_value){
-                $the_array[date(get_option('time_format'), strtotime($rts_value))] = $rts_key;
+            if(date("g:i a", strtotime($rts_value)) == date("g:i a", strtotime($rat_value))){
+                $the_array[$rts_value] = $rts_key;
             }
         }
     }
+
     return $the_array;
 }
 
