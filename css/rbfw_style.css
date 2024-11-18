@@ -1043,6 +1043,7 @@ ul.rbfw-feature-lists {
     flex-wrap: wrap;
     flex-direction: column;
     gap: 10px;
+    padding: 5px 10px;
 }
 
 ul.rbfw-feature-lists li {
@@ -1052,6 +1053,7 @@ ul.rbfw-feature-lists li {
     justify-content: start;
     margin-bottom: 0;
 }
+h2.rbfw-post-title{padding-left:10px;}
 
 .rbfw-single-left-information ul.rbfw-feature-lists li {
     color: #0a0a0a;
