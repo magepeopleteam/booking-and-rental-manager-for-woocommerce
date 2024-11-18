@@ -130,7 +130,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
             return $main_array;
         }
 
-        public function rbfw_bikecarsd_ticket_info($product_id, $rbfw_start_datetime = null, $rbfw_end_datetime=null, $rbfw_type_info = array(), $rbfw_service_info = array(), $selected_time = null, $rbfw_regf_info = array(),$rbfw_pickup_point=null,$rbfw_dropoff_point=null){
+        public function rbfw_bikecarsd_ticket_info($product_id, $rbfw_start_datetime = null, $rbfw_end_datetime=null, $rbfw_type_info = array(), $rbfw_service_info = array(), $selected_time = null, $rbfw_regf_info = array(),$rbfw_pickup_point=null,$rbfw_dropoff_point=null,$end_time=null,$rbfw_item_quantity=null){
             global $rbfw;
             if( !empty($product_id) && !empty($rbfw_type_info) ):
                 $rent_price         = 0;
@@ -224,12 +224,15 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $main_array[0]['rbfw_start_date'] = $rbfw_start_datetime;
                 $main_array[0]['rbfw_start_time'] = $selected_time;
                 $main_array[0]['rbfw_end_date'] = $rbfw_end_datetime;
+                $main_array[0]['rbfw_end_time'] = $end_time;
                 $main_array[0]['rbfw_start_datetime'] = $rbfw_start_datetime.' '.$selected_time;
 
                 $main_array[0]['rbfw_type_info'] = $rbfw_type_info;
                 $main_array[0]['rbfw_service_info'] = $rbfw_service_info;
                 $main_array[0]['rbfw_rent_type'] = $rbfw_rent_type;
                 $main_array[0]['rbfw_id'] = $product_id;
+                $main_array[0]['rbfw_item_quantity'] = $rbfw_item_quantity;
+
                 if(!empty($rbfw_type_info)) {
                     foreach ($rbfw_type_info as $key => $value) {
                         $rent_type = $key;

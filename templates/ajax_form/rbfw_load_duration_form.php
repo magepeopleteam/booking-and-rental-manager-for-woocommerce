@@ -4,7 +4,7 @@ $total_row = $total_row??'';
 ?>
 
 <tr class="rbfw_bike_car_sd_price_table_row" data-key="">
-    <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo $total_row ?>][rent_type]" value="" placeholder="Type name"></td>
+    <td><?php echo $manage_inventory_as_timely ?><input type="text" name="rbfw_bike_car_sd_data[<?php echo $total_row ?>][rent_type]" value="" placeholder="Type name"></td>
     <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo $total_row ?>][short_desc]" value="" step=".01" placeholder="Short Description"></td>
     <td><input type="number" name="rbfw_bike_car_sd_data[<?php echo $total_row ?>][price]" step=".01" value="" placeholder="Price"></td>
     <td class="rbfw_without_time_inventory <?php echo ($manage_inventory_as_timely=='on')?'rbfw_hide':'' ?>">

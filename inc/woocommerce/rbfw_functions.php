@@ -53,9 +53,9 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         foreach ($rbfw_service_info_all as $key => $value) {
             $service_name = !empty($_POST['rbfw_service_info'][$c]['service_name']) ? $_POST['rbfw_service_info'][$c]['service_name'] : '';
             $service_qty = !empty($_POST['rbfw_service_info'][$c]['service_qty']) ? $_POST['rbfw_service_info'][$c]['service_qty'] : 0;
-            if ($rbfw_item_quantity > 1 && $service_qty == 1 && $rbfw_enable_extra_service_qty != 'yes') {
+          /*  if ($rbfw_item_quantity > 1 && $service_qty == 1 && $rbfw_enable_extra_service_qty != 'yes') {
                 $service_qty = $rbfw_item_quantity;
-            }
+            }*/
             if ($service_qty > 0) {
                 $rbfw_service_info[$service_name] = $service_qty;
             }
@@ -191,7 +191,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $rbfw_bikecarsd_total_price = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation($rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_total_price');
         $rbfw_pickup_point = isset($_POST['rbfw_pickup_point']) ? $_POST['rbfw_pickup_point'] : '';
         $rbfw_dropoff_point = isset($_POST['rbfw_dropoff_point']) ? $_POST['rbfw_dropoff_point'] : '';
-        $rbfw_bikecarsd_ticket_info = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info($rbfw_id, $rbfw_start_datetime, $rbfw_end_datetime, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info,$rbfw_pickup_point,$rbfw_dropoff_point);
+        $rbfw_bikecarsd_ticket_info = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info($rbfw_id, $rbfw_start_datetime, $rbfw_end_datetime, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info,$rbfw_pickup_point,$rbfw_dropoff_point,$end_time,$rbfw_item_quantity);
 
 
 
@@ -200,6 +200,9 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $security_deposit = rbfw_security_deposit($rbfw_id,$total_price);
         $total_price = $total_price + $security_deposit['security_deposit_amount'];
 
+
+
+        $cart_item_data['rbfw_item_quantity'] = $rbfw_item_quantity;
 
         $cart_item_data['rbfw_pickup_point'] = $rbfw_pickup_point;
         $cart_item_data['rbfw_dropoff_point'] = $rbfw_dropoff_point;
