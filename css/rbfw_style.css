@@ -380,7 +380,7 @@ CSS for Single Page Template
     height: 50px;
     border-radius: 0;
     font-weight: 400;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 #pickup_date,
@@ -550,6 +550,7 @@ button.rbfw-book-now-btn:focus {
     background: #f5f5f5;
     padding: 10px;
     color: #000;
+    font-size:14px;
 }
 
 /*********************************/
@@ -1043,6 +1044,7 @@ ul.rbfw-feature-lists {
     flex-wrap: wrap;
     flex-direction: column;
     gap: 10px;
+    padding: 5px 10px;
 }
 
 ul.rbfw-feature-lists li {
@@ -1052,7 +1054,8 @@ ul.rbfw-feature-lists li {
     justify-content: start;
     margin-bottom: 0;
 }
-
+h2.rbfw-post-title{padding-left:10px;}
+.rbfw-single-left-information .description p{padding-left:10px;}
 .rbfw-single-left-information ul.rbfw-feature-lists li {
     color: #0a0a0a;
 }
@@ -2470,7 +2473,7 @@ a.rbfw_back_step_btn i {
 table.rbfw_bikecarsd_price_table {
     border: 1px solid #f5f5f5;
     margin-top: 20px;
-    margin-bottom: 0;
+    margin-bottom: 20px;
     box-shadow: none;
 }
 
@@ -2487,8 +2490,9 @@ table.rbfw_bikecarsd_price_table thead th {
     font-weight: 500;
     border: 0;
     text-align: left;
-    padding: 10px;
+    padding: 5px 10px;
     text-transform: capitalize;
+    background:#e9e9e9;
 }
 
 table.rbfw_bikecarsd_price_table tbody td {
@@ -2500,7 +2504,7 @@ table.rbfw_bikecarsd_price_table tbody td {
 
 }
 
-table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n + 1) {
+table.rbfw_bikecarsd_price_table tbody tr:nth-child(2n + 2) {
     background-color: rgba(128, 128, 128, 0.075);
 }
 
@@ -2518,7 +2522,6 @@ table.rbfw_bikecarsd_price_table tbody small.rbfw_bikecarsd_type_desc {
 table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_title,
 table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     font-size: 14px;
-    font-weight: 500;
     line-height: 16px;
     display: block;
 }
@@ -3490,6 +3493,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
     .mpStyle.style_1 div.superSlider .sliderShowcaseItem [data-bg-image] {
         height: 100px !important;
+    }
+    div.superSlider [data-bg-image] {
+        border-radius: 10px;
     }
 
     .mpStyle.style_1 .dFlex {
@@ -7014,6 +7020,10 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     border-radius: 5px;
 }
 
-.timely_quqntity_table .rbfw_regf_group{
+
+.timely_quqntity_table .rbfw_regf_group {
     margin-bottom: inherit;
+}
+.price-item-container.pricing-content_dh.mpStyle.open {
+    background: #fff;
 }
