@@ -1281,6 +1281,9 @@ table.rbfw_room_price_table tbody td img {
 .w_30_pc {
     width: 30%;
 }
+.w_40_pc {
+    width: 40%;
+}
 
 .rbfw_room_price_category_details .rbfw-costing .rbfw-cond {
     display: flex;
@@ -2657,6 +2660,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 .w_50_pc {
     width: 50%;
+}
+.w_40_pc {
+    width: 40%;
 }
 
 .w_30_pc {
@@ -6964,7 +6970,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 }
 
 /* Container to hold radio buttons inline */
-.radio-group {
+.rbfw_service_type {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
@@ -6973,7 +6979,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 }
 
 /* Base style for the text radio button */
-.radio-button {
+.rbfw_service_type .radio-button {
     cursor: pointer;
     font-size: 16px;
     font-weight: 600;
@@ -6986,34 +6992,38 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 }
 
 /* Hover effect */
-.radio-button:hover {
+.rbfw_service_type .radio-button:hover {
     background-color: #e0e0e0;
     border-radius: 5px;
 }
 
 /* Selected state for the radio button */
-.radio-button.selected {
+.rbfw_service_type .radio-button.selected {
     background-color: #007bff;
     color: white;
     border-radius: 5px;
 }
 
 /* Label styles (when selected or hovered) */
-.radio-button:hover, .radio-button.selected {
+.rbfw_service_type .radio-button:hover, .rbfw_service_type .radio-button.selected {
     color: white;
 }
 
 /* Make it easier to click and select by using the label */
-input[type="radio"] {
+.rbfw_service_type input[type="radio"] {
     display: none;
 }
 
-input[type="radio"]:checked + .radio-label {
+.rbfw_service_type input[type="radio"]:checked + .rbfw_service_type .radio-label {
     background-color: #007bff;
     color: white;
     border-radius: 5px;
 }
+
+
+.timely_quqntity_table .rbfw_regf_group {
+    margin-bottom: inherit;
+}
 .price-item-container.pricing-content_dh.mpStyle.open {
     background: #fff;
-
 }

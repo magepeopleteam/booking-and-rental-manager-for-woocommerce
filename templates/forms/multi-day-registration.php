@@ -540,7 +540,6 @@ if($rbfw_enable_start_end_date=='no'){
 
                             <li class="discount" style="display:none;">
                                 <?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')) ?>
-
                                 <span></span>
                             </li>
                             <li class="security_deposit" style="display:none;">
