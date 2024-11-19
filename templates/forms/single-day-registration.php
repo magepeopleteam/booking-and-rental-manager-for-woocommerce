@@ -20,7 +20,7 @@
 	<!--    Main Layout-->
 	<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
         <!--    Right Side-->
-		<div class="rbfw-single-right-container">
+		<div class="rbfw-single-right-container rbfw_bikecarsd_pricing_table_wrap">
 			<form action="" method='post' class="mp_rbfw_ticket_form">
                 <!-- Header -->
 				<div class="rbfw-bikecarsd-calendar-header">
@@ -72,10 +72,13 @@
                     <div class="rbfw-bikecarsd-result-wrap">
                         <div class="rbfw-bikecarsd-result-loader"></div>
                         <div class="rbfw-bikecarsd-result"></div>
-                        <div class="rbfw-bikecarsd-result-order-details"></div>
+                        <div class="rbfw-bikecarsd-result-order-details">
+
+                        </div>
                     </div>
 
                 <?php } else{ ?>
+
 
                 <?php
 
@@ -115,16 +118,14 @@
                                     </div>
                                 </div>
                             <?php } ?>
-
                         </div>
                     </div>
-
 
                     <div class="rbfw-single-right-heading">
                         <?php esc_html_e('Choose Duration', 'booking-and-rental-manager-for-woocommerce'); ?>
                     </div>
 
-                    <div class="radio-group">
+                    <div class="rbfw_service_type">
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
                             <label>
                                 <input type="radio" name="option" class="radio-input">
@@ -150,24 +151,6 @@
                     </script>
 
                     <div class="item rbfw_bikecarsd_price_summary">
-
-                    <div class="item rbfw_quantity_md">
-                        <div class="rbfw-single-right-heading">
-                            <?php echo esc_html($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce'))); ?>
-                        </div>
-                        <div class="item-content rbfw-quantity">
-                            <select class="rbfw-select" name="rbfw_item_quantity" id="rbfw_item_quantity">
-                                <option value="0"><?php rbfw_string('rbfw_text_choose_number_of_qty',__('Choose number of quantity','booking-and-rental-manager-for-woocommerce')); ?></option>
-                                <?php for ($qty = 1; $qty <= $rbfw_item_stock_quantity_timely; $qty++) { ?>
-                                    <option value="<?php echo mep_esc_html($qty); ?>" <?php if($qty == 1){ echo 'selected'; } ?>><?php echo mep_esc_html($qty); ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
-
-                        <br>
-
-
                         <div class="item-content rbfw-costing">
                             <ul class="rbfw-ul">
                                 <li class="duration-costing rbfw-cond">
@@ -192,8 +175,6 @@
                             <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
                         </div>
                     </div>
-
-
                 <?php } ?>
 
 
