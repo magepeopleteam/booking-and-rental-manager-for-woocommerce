@@ -2518,7 +2518,6 @@ table.rbfw_bikecarsd_price_table tbody small.rbfw_bikecarsd_type_desc {
 table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_title,
 table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     font-size: 14px;
-    font-weight: 500;
     line-height: 16px;
     display: block;
 }
