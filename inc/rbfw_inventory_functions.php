@@ -114,14 +114,12 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
             if ( ($hours > 0)  || ($start_time == '00:00:00' && $end_time == rbfw_end_time()) ) {
 
-
                 $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+
                 if($rbfw_count_extra_day_enable=='on'){
                     for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
-
                         $date = date('d-m-Y', $currentDate);
                         $date_range[] = $date;
-
                     }
                 }else{
                     for ($currentDate = $start_date; $currentDate < $end_date; $currentDate += (86400)) {
@@ -129,10 +127,8 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
                         $date_range[] = $date;
                     }
                 }
-
-
-
             } else {
+
                 for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
                     $date = date('d-m-Y', $currentDate);
                     $date_range[] = $date;
@@ -143,7 +139,12 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
         // End: Date Time Calculation
 
     } elseif($rbfw_item_type=='bike_car_sd'){
-        $date_range = array('0'=>date('d-m-Y', strtotime($start_date)) );
+        $start_date = strtotime($start_date);
+        $end_date = strtotime($end_date);
+        for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
+            $date = date('d-m-Y', $currentDate);
+            $date_range[] = $date;
+        }
     } else{
 
         $start_date = strtotime($start_date);
@@ -167,8 +168,6 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
     $order_array['rbfw_order_status'] = $rbfw_order_status;
 
     $rbfw_inventory_info[$order_id] = $order_array;
-
-
 
 
     update_post_meta($rbfw_id, 'rbfw_inventory', $rbfw_inventory_info);

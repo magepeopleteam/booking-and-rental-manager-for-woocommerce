@@ -6961,6 +6961,58 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     min-width: 100%;
     min-height: auto;
 }
+
+/* Container to hold radio buttons inline */
+.radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+/* Base style for the text radio button */
+.radio-button {
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    padding: 10px 20px;
+    transition: all 0.3s ease;
+    user-select: none;
+    background-color: #eee;
+    border-radius: 5px;
+}
+
+/* Hover effect */
+.radio-button:hover {
+    background-color: #e0e0e0;
+    border-radius: 5px;
+}
+
+/* Selected state for the radio button */
+.radio-button.selected {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+/* Label styles (when selected or hovered) */
+.radio-button:hover, .radio-button.selected {
+    color: white;
+}
+
+/* Make it easier to click and select by using the label */
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"]:checked + .radio-label {
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+}
 .price-item-container.pricing-content_dh.mpStyle.open {
     background: #fff;
+
 }

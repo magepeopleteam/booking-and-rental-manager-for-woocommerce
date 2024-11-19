@@ -312,7 +312,7 @@
                 var isEndDate = $(this).attr('name').includes('[end_date]');
 
                 $(this).datepicker({
-                    dateFormat: 'dd-mm-yy',
+                    dateFormat: 'yy-mm-dd',
                     minDate: isEndDate ? null : 0, 
                     onSelect: function(selectedDate) {
                         if (!isEndDate) {
