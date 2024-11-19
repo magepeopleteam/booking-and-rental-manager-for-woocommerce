@@ -166,7 +166,20 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                         <h2 class="rbfw_muff_post_content_headline">
                             <?php echo esc_html($rbfw->get_option_trans('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?>
                         </h2>
-                        <?php echo $post_content; ?>
+                        <?php 
+                            $readmore = __('See More','booking-and-rental-manager-for-woocommerce');
+                            $readLess = __('Less','booking-and-rental-manager-for-woocommerce');
+                            $post_content = get_the_content();
+                            $trimmed_content = wp_trim_words( $post_content, 100, '... <a href="#" class="rbfw-read-more">'.$readmore.'</a>' );
+                            $full_content = apply_filters( 'the_content', $post_content );
+                            $full_content .= '<a href="#" class="rbfw-read-more">'.$readLess.'</a>';
+                        ?>
+                        <div class="trimmed-content">
+                            <?php echo $trimmed_content; ?>
+                        </div>
+                        <div class="full-content" style="display: none;">
+                            <?php echo $full_content; ?>
+                        </div>
                     </div>
                     <?php if($additional_gallary_status=='on'): ?>
                         <?php if(!empty($gallery_images_additional)) { ?>

@@ -1,125 +1,5 @@
 (function($) {
     $(document).ready(function() {
-        const service_id = $('.rbfw-single-container').attr('data-service-id');
-        // DatePicker
-        let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
-
-        $('body').on('focusin', '.pickup_date', function(e) {
-            $(this).datepicker({
-                dateFormat: 'yy-mm-dd',
-                minDate: 0,
-                beforeShowDay: function(date)
-                {
-                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-                }
-            });
-        });
-
-
-
-        jQuery('body').on('change', '.pickup_date', function(e) {
-
-            let selected_date = jQuery(this).val();
-            const [gYear, gMonth, gDay] = selected_date.split('-');
-
-            jQuery(".dropoff_date").datepicker("destroy");
-
-
-
-            jQuery('.dropoff_date').datepicker({
-                dateFormat: 'yy-mm-dd',
-                minDate: new Date(gYear, gMonth - 1, gDay),
-                beforeShowDay: function(date)
-                {
-                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-                }
-            });
-        });
-
-        $('.pickup_time').change(function(e) {
-            let pickup_date = $('.pickup_date').val();
-            let dropoff_date = $('.dropoff_date').val();
-
-            if (pickup_date == dropoff_date) {
-                let selected_time = $(this).val();
-                selected_time = rbfw_convertTo24HrsFormat(selected_time);
-                $(".dropoff_time").val("").trigger("change");
-
-                $("#dropoff_time option").each(function() {
-                    var thisOptionValue = $(this).val();
-                    thisOptionValue = rbfw_convertTo24HrsFormat(thisOptionValue);
-                    if ((thisOptionValue == selected_time) || (thisOptionValue < selected_time)) {
-                        $(this).attr('disabled', true);
-                    } else {
-                        $(this).attr('disabled', false);
-                    }
-                });
-
-            } else {
-                $("#dropoff_time option").each(function() {
-                    var thisOptionValue = $(this).val();
-                    if (thisOptionValue != '') {
-                        $(this).attr('disabled', false);
-                    } else {
-                        $(this).attr('disabled', true);
-                    }
-                });
-            }
-        });
-
-        $('.dropoff_date').change(function(e) {
-            $(".pickup_time").trigger("change");
-
-        });
-
-
-        $('.dropoff_date').click(function(e) {
-            let pickup_date = $('.pickup_date').val();
-            if (pickup_date == '') {
-                alert('Please select the pickup date!');
-            }
-        });
-
-
-        function rbfw_convertTo24HrsFormat(time) {
-            const slicedTime = time.split(/(PM|AM)/gm)[0];
-
-            let [hours, minutes] = slicedTime.split(':');
-
-            if (hours === '12') {
-                hours = '00';
-            }
-
-            let updateHourAndMin;
-
-            function addition(hoursOrMin = '') {
-                updateHourAndMin =
-                    hoursOrMin.length < 2 ?
-                    (hoursOrMin = `${0}${hoursOrMin}`) :
-                    hoursOrMin;
-
-                return updateHourAndMin;
-            }
-
-            if (time.endsWith('PM')) {
-                hours = parseInt(hours, 10) + 12;
-            }
-
-            return `${addition(hours)}:${addition(minutes)}`;
-        }
-
-        // Toggle Action
-        $(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',function() {
-            const $this = $(this);
-            const target = $('.price-item-container');
-            if (target.hasClass('open')) {
-                target.removeClass('open').slideUp();
-                $this.find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
-            } else {
-                target.addClass('open').slideDown();
-                $this.find('i').removeClass('fa-angle-down').addClass('fa-angle-up');
-            }
-        });
 
         // rbfw TAB
         $('.rbfw-tab-a').click(function(e) {
@@ -344,7 +224,7 @@
         });
 
 //Left Filtering
-        $('.rbfw_toggle-content').hide();
+        $('.rbfw_toggle-content').show();
         $('.rbfw_toggle-header').on('click', function() {
             var content = $(this).next('.rbfw_toggle-content');
             content.slideToggle();
@@ -358,6 +238,7 @@
         function get_left_filter_data( filter_date ){
 
             $("#rbfw_left_filter_clearButton").show();
+            $("#rbfw_left_filter_cover").show();
 
             if ($('#rbfw_rent_list_wrapper').hasClass('rbfw_rent_list_style_grid')) {
                 var rbfw_item_style = 'grid';
@@ -365,8 +246,6 @@
                 rbfw_item_style = 'list';
             }
             $(".rbfw_left_filter_button").text('Filtering...');
-            $(".rbfw_left_filter_button").css('background-color', '#c3b9bd');
-            // $('#rbfw_rent_list_wrapper').html('<div class="rbfw_filter_item_loadeing_text">Loading Data ...</div>');
             $('#rbfw_rent_list_pagination').hide();
             jQuery.ajax({
                 type: 'POST',
@@ -380,10 +259,11 @@
                 success: function (response) {
                     if( response.success ){
                         let text_display = response.data.show_text;
+
+                        $("#rbfw_left_filter_cover").hide();
                         $('#rbfw_rent_list_wrapper').html( response.data.display_date );
                         $('#rbfw_shoe_result_text').html('<span >'+text_display+'</span>');
                         $(".rbfw_left_filter_button").text('Filter');
-                        $(".rbfw_left_filter_button").css('background-color', '#e71d73');
                     }else{
                         $('#rbfw_shoe_result_text').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
                     }
@@ -534,6 +414,7 @@
                 type: [],
                 price: { start: 0, end: 0 },
                 title_text: '',
+
             };
             get_left_filter_data(clear_get_filters);
             $("#rbfw_left_filter_clearButton").hide();
@@ -589,3 +470,14 @@ function rbfw_aig_showSlides(n) {
     captionText.innerHTML = dots[slideIndex - 1].alt;
 }
 /* End: Additional Gallary Images */
+// using muffin tempalte descriptoin show hide 
+jQuery(document).ready(function($) {
+    $('.rbfw-read-more').on('click', function(e) {
+        e.preventDefault();
+        var $this = $(this);
+        var $postContent = $this.closest('.rbfw_muff_post_content');
+        $postContent.find('.trimmed-content').toggle();
+        $postContent.find('.full-content').toggle();
+        
+    });
+});

@@ -1,7 +1,7 @@
 (function($) {
     "use strict";
     //=========Remove Setting Item ==============//
-    jQuery(document).on('click', '.rbfw_item_remove', function() {
+    jQuery(document).on('click', '.rbfw_item_remove:not(.rbfw-faq-content-wrapper-main .rbfw_item_remove)', function() {
         if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
             jQuery(this).closest('.rbfw_remove_area').slideUp(250, function() {
                 jQuery(this).remove();
@@ -14,22 +14,36 @@
         let parent = jQuery(this).closest('.rbfw_multi_image_area');
         let current_parent = jQuery(this).closest('.rbfw_multi_image_item');
         let img_id = current_parent.data('image-id');
-        current_parent.remove();
+        let grandParent = jQuery(this).parents('.rbfw_faq_item');
+        jQuery('.rbfw_multi_image_item[data-image-id=' + img_id + ']').remove();
         let all_img_ids = parent.find('.rbfw_multi_image_value').val();
         all_img_ids = all_img_ids.replace(',' + img_id, '')
         all_img_ids = all_img_ids.replace(img_id + ',', '')
         all_img_ids = all_img_ids.replace(img_id, '')
         parent.find('.rbfw_multi_image_value').val(all_img_ids);
+        if (all_img_ids == '') {
+            grandParent.find('.rbfw_upload_img_notice').show();
+        }
+
     });
-    jQuery(document).on('click', '.add_multi_image', function() {
+    jQuery(document).on('click', '.add_multi_image,.rbfw_upload_img_notice', function() {
         let parent = jQuery(this).closest('.rbfw_multi_image_area');
+        let grandParent = jQuery(this).parents('.rbfw_faq_item');
         wp.media.editor.send.attachment = function(props, attachment) {
             let attachment_id = attachment.id;
             let attachment_url = attachment.url;
             let html = '<div class="rbfw_multi_image_item" data-image-id="' + attachment_id + '"><span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>';
             html += '<img src="' + attachment_url + '" alt="' + attachment_id + '"/>';
             html += '</div>';
+
+
+            if (attachment_id != '') {
+                grandParent.find('.rbfw_upload_img_notice').hide();
+            }
+
             parent.find('.rbfw_multi_image').append(html);
+            grandParent.find('.rbfw_faq_content_wrapper .rbfw_multi_image').append(html);
+            grandParent.find('.rbfw_faq_content_wrapper .rbfw_multi_image .rbfw_close_multi_image_item').remove();
             let value = parent.find('.rbfw_multi_image_value').val();
             value = value ? value + ',' + attachment_id : attachment_id;
             parent.find('.rbfw_multi_image_value').val(value);
@@ -38,30 +52,221 @@
         return false;
     });
     //*********Add F.A.Q Item************//
-    jQuery(document).on('click', '.rbfw_add_faq_content', function() {
-        let $this = jQuery(this);
-        let parent = $this.closest('.tabsItem');
-        let dt = new Date();
-        let time = dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
-        $.ajax({
-            type: 'POST',
-            url: rbfw_ajax_url,
-            data: { "action": "get_rbfw_add_faq_content", "id": time },
-            beforeSend: function() {
-                dLoader(parent);
-            },
-            success: function(data) {
-                $this.before(data);
-                tinymce.execCommand('mceAddEditor', true, time);
-                dLoaderRemove(parent);
-            },
-            error: function(response) {
-                console.log(response);
+    jQuery(document).ready(function() {
+
+        function rbfw_faq_actions_func() {
+            jQuery('.rbfw_faq_item_edit').click(function(e) {
+                e.preventDefault();
+                let dataId = $(this).data('id');
+                let parent = $('.rbfw_faq_item[data-id=' + dataId + ']');
+                let all_img_ids = parent.find('.rbfw_multi_image_value').val();
+                jQuery("body").css("overflow", "hidden");
+                $('.rbfw_faq_slide_actionlinks .faq_notice').remove();
+                $('.interface-interface-skeleton__sidebar .interface-complementary-area__fill').css('width', '0');
+                $('.components-button').removeClass('is-pressed').attr('aria-expanded', 'false');
+                parent.find(".rbfw_faq_slide_wrap").fadeIn();
+                parent.find(".rbfw_faq_slide_overlay").show("slide", { direction: "right" }, 0);
+                if (all_img_ids == '') {
+                    parent.find('.rbfw_upload_img_notice').show();
+                }
+
+            });
+            $('.rbfw_faq_slide_close').click(function(e) {
+                e.preventDefault();
+                let dataId = $(this).parents('.rbfw_faq_item').data('id');
+                let parent = $('.rbfw_faq_item[data-id=' + dataId + ']');
+
+
+                parent.find(".rbfw_faq_slide_overlay").hide("slide", { direction: "right" }, 0);
+                setTimeout(function() {
+                    parent.find(".rbfw_faq_slide_wrap").fadeOut();
+                    jQuery("body").css("overflow", "visible");
+                }, 0);
+
+                if (parent.data('status') != 'saved') {
+                    parent.remove();
+                    return false;
+                }
+            });
+
+            $('.rbfw_save_faq_content_btn').click(function(e) {
+                e.preventDefault();
+                let count = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item').length;
+                let theDataArr = [];
+                let postID = $('#post_ID').val();
+                let getThisParent = jQuery(this).parents('.rbfw_faq_item');
+                let getThisDataID = getThisParent.data('id');
+                let getThisTextID = jQuery('.rbfw_faq_item[data-id=' + getThisDataID + '] textarea[name="rbfw_faq_content[]"]').attr('id');
+
+                tinyMCE.triggerSave();
+                let getThisTitle = getThisParent.find('[name="rbfw_faq_title[]"]').val();
+                let getThisContent = tinymce.get(getThisTextID).getContent();
+
+                if (getThisTitle == '') {
+                    alert('Title is required!');
+                    return false;
+                }
+                let rbfw_faq_title = '';
+                let rbfw_faq_img = '';
+                let getID = '';
+                let rbfw_faq_content = '';
+                for (let i = 1; i <= count; i++) {
+                    rbfw_faq_title = $('.rbfw_faq_item:nth-child(' + i + ') [name="rbfw_faq_title[]"]').val();
+                    rbfw_faq_img = $('.rbfw_faq_item:nth-child(' + i + ') [name="rbfw_faq_img[]"]').val();
+
+                    getID = jQuery('.rbfw_faq_item:nth-child(' + i + ') textarea[name="rbfw_faq_content[]"]').attr('id');
+
+                    rbfw_faq_content = tinymce.get(getID).getContent();
+
+                    theDataArr.push({ rbfw_faq_title: rbfw_faq_title, rbfw_faq_img: rbfw_faq_img, rbfw_faq_content: rbfw_faq_content });
+                }
+
+
+                jQuery.ajax({
+                    type: 'POST',
+                    url: ajaxurl,
+                    data: {
+                        'action': 'rbfw_save_faq_data',
+                        'data': JSON.stringify(theDataArr),
+                        'postID': postID
+                    },
+                    beforeSend: function() {
+                        jQuery('.rbfw_save_faq_content_btn i').show();
+                        $('.rbfw_faq_slide_actionlinks .faq_notice').remove();
+                    },
+                    success: function(response) {
+                        jQuery('.rbfw_save_faq_content_btn i').hide();
+
+                        getThisParent.find('.rbfw_faq_desc').html(getThisContent);
+                        getThisParent.find('.rbfw_faq_header').find('.rbfw_faq_header_title').html(getThisTitle);
+                        getThisParent.find('.rbfw_faq_new_accordion_wrapper').show();
+                        getThisParent.attr('data-status', 'saved');
+                        getThisParent.find('.rbfw_faq_slide_close').trigger('click');
+
+                    },
+                });
+            });
+
+            jQuery('input[name=rbfw_enable_faq_content]').click(function() {
+                var status = jQuery(this).val();
+                if (status == 'yes') {
+                    jQuery(this).val('no');
+                    jQuery('.rbfw-faq-content-wrapper-main,.rbfw_faq_content_btn_wrap').slideUp().removeClass('show').addClass('hide');
+                }
+                if (status == 'no') {
+                    jQuery(this).val('yes');
+                    jQuery('.rbfw-faq-content-wrapper-main,.rbfw_faq_content_btn_wrap').slideDown().removeClass('hide').addClass('show');
+                }
+            });
+
+        }
+        rbfw_faq_actions_func();
+
+        jQuery(document).on('click', '.rbfw_faq_accordion_icon,.rbfw_faq_header_title', function(e) {
+            e.preventDefault();
+            let dataID = jQuery(this).closest('.rbfw_faq_item').data('id');
+            let theParent = jQuery('.rbfw-faq-content-wrapper-main .rbfw_faq_item[data-id=' + dataID + ']');
+
+            if (theParent.hasClass("active")) {
+                theParent.removeClass('active');
+                theParent.find('.rbfw_faq_content_wrapper').hide();
+            } else {
+                theParent.addClass('active');
+                theParent.find('.rbfw_faq_content_wrapper').show();
+            }
+
+            theParent.find('.rbfw_faq_accordion_icon i').toggleClass('fa-plus fa-minus');
+        });
+
+        jQuery(document).on('click', '.rbfw-faq-content-wrapper-main .rbfw_item_remove', function() {
+            if (confirm('Are you sure you want to delete this item? You will not be able to undo this action. \n\n 1. Ok : To Delete . \n 2. Cancel : To Cancel .')) {
+                jQuery(this).closest('.rbfw_remove_area').slideUp(250, function() {
+                    jQuery(this).remove();
+                    let count = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item').length;
+                    let theDataArr = [];
+                    let postID = $('#post_ID').val();
+                    let rbfw_faq_title = '';
+                    let rbfw_faq_img = '';
+                    let getID = '';
+                    let rbfw_faq_content = '';
+
+                    for (let i = 1; i <= count; i++) {
+
+                        if ($('.rbfw_faq_item:nth-child(' + i + ')').length) {
+                            rbfw_faq_title = $('.rbfw_faq_item:nth-child(' + i + ') [name="rbfw_faq_title[]"]').val();
+                            rbfw_faq_img = $('.rbfw_faq_item:nth-child(' + i + ') [name="rbfw_faq_img[]"]').val();
+
+                            getID = jQuery('.rbfw_faq_item:nth-child(' + i + ') textarea[name="rbfw_faq_content[]"]').attr('id');
+
+                            rbfw_faq_content = tinymce.get(getID).getContent();
+
+                            theDataArr.push({ rbfw_faq_title: rbfw_faq_title, rbfw_faq_img: rbfw_faq_img, rbfw_faq_content: rbfw_faq_content });
+
+                        }
+                    }
+
+                    jQuery.ajax({
+                        type: 'POST',
+                        url: ajaxurl,
+                        data: {
+                            'action': 'rbfw_save_faq_data',
+                            'data': JSON.stringify(theDataArr),
+                            'postID': postID
+                        },
+                        beforeSend: function() {
+                            jQuery('button.rbfw_add_faq_content').addClass('rbfw-pointer-not-allowed');
+                        },
+                        success: function(response) {
+                            alert('FAQ item has been removed!');
+                            jQuery('button.rbfw_add_faq_content').removeClass('rbfw-pointer-not-allowed');
+                        },
+                    });
+
+                });
+            } else {
+                return false;
             }
         });
-        return false;
+
+        jQuery(document).on('click', '.rbfw_add_faq_content', function() {
+            let theCount = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item').length;
+            let lastDataID = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item:last-child').data('id');
+            if (lastDataID === undefined) {
+                lastDataID = 0;
+            }
+            let i = parseInt(lastDataID) + 1;
+            let theID = 'rbfw_faq_content_' + i;
+            let theLoader = jQuery('.rbfw_add_faq_content i');
+            $('.rbfw_faq_slide_actionlinks .faq_notice').remove();
+
+            $('.interface-interface-skeleton__sidebar .interface-complementary-area__fill').css('width', '0');
+            $('.components-button').removeClass('is-pressed').attr('aria-expanded', 'false');
+            $.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                data: { "action": "get_rbfw_add_faq_content", "id": theID, 'count': lastDataID },
+                beforeSend: function() {
+
+                    theLoader.css('display', 'inline-block');
+                },
+                success: function(data) {
+                    $('.rbfw-faq-content-wrapper-main').append(data);
+                    let getID = jQuery('.rbfw_faq_item[data-id=' + i + '] textarea[name="rbfw_faq_content[]"]').attr('id');
+
+                    tinymce.init({ selector: '#' + getID });
+                    rbfw_faq_actions_func();
+                    theLoader.hide();
+                    $('.rbfw_faq_item_edit[data-id=' + i + ']').trigger('click');
+                },
+                error: function(response) {
+                    console.log(response);
+                }
+            });
+
+            return false;
+        });
     });
-    
+    //*********End F.A.Q Item************//
     jQuery(window).load(function() {
         jQuery('.mp_tab_menu').each(function() {
             jQuery(this).find('ul li:first-child').trigger('click');
@@ -589,46 +794,140 @@
             target.find('input').removeAttr('checked');
             $this.addClass('active');
             $this.find('input').prop('checked', true);
-
         });
-
-
-
-
-
 
         $('.category2').select2({
             placeholder: 'This is my placeholder',
             allowClear: true
         });
 
-
         jQuery('[name="rbfw_order_status"]').change(function(e) {
-
             let selected_status = jQuery(this).val();
-
-           console.log('selected_status',selected_status);
-
-            if(selected_status=='picked'){
+            console.log('selected_status', selected_status);
+            if (selected_status == 'picked') {
                 jQuery('.rbfw_return_note').hide();
                 jQuery('.rbfw_return_security_deposit_amount').hide();
                 jQuery('.rbfw_pickup_note').show();
                 console.log('oooooo');
 
-            }else if(selected_status=='returned'){
+            } else if (selected_status == 'returned') {
                 jQuery('.rbfw_pickup_note').hide();
                 jQuery('.rbfw_return_note').show();
                 jQuery('.rbfw_return_security_deposit_amount').show();
-            }else{
+            } else {
                 jQuery('.rbfw_pickup_note').hide();
                 jQuery('.rbfw_return_note').hide();
                 jQuery('.rbfw_return_security_deposit_amount').hide();
             }
-
-
         });
 
 
+      /* start inventory filter and view details */
+
+        jQuery('.rbfw_inventory_filter_btn').click(function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            let selected_date = jQuery('.rbfw_inventory_filter_date').val();
+            let start_date = jQuery('#rbfw_inventory_event_start_time').val();
+            let end_date = jQuery('#rbfw_inventory_event_end_time').val();
+            let placeholder_loader = jQuery('.rbfw-inventory-page-ph').clone();
+
+            if(selected_date == ''){
+                alert('Please select the date');
+                return;
+            }
+            if(start_date && !end_date){
+                alert('Please select the end time');
+                return;
+            }
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                data: {
+                    'action' : 'rbfw_get_stock_by_filter',
+                    'selected_date' : selected_date,
+                    'start_date' : start_date,
+                    'end_date' : end_date,
+                },
+                beforeSend: function() {
+                    jQuery('.rbfw_inventory_page_table_wrap').empty();
+                    jQuery('.rbfw_inventory_page_table_wrap').html(placeholder_loader);
+                    jQuery('.rbfw_inventory_page_table_wrap .rbfw-inventory-page-ph').show();
+                },
+                success: function (response) {
+                    jQuery('.rbfw_inventory_page_table_wrap').html(response);
+                }
+            });
+        });
+
+        jQuery('.rbfw_inventory_reset_btn').click(function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            jQuery('.rbfw_inventory_filter_date').val('');
+            jQuery('#rbfw_inventory_event_start_time').val('');
+            jQuery('#rbfw_inventory_event_end_time').val('');
+            let selected_date = '';
+            let placeholder_loader = jQuery('.rbfw-inventory-page-ph').clone();
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                data: {
+                    'action' : 'rbfw_get_stock_by_filter',
+                    'selected_date' : selected_date,
+                },
+                beforeSend: function() {
+                    jQuery('.rbfw_inventory_page_table_wrap').empty();
+                    jQuery('.rbfw_inventory_page_table_wrap').html(placeholder_loader);
+                    jQuery('.rbfw_inventory_page_table_wrap .rbfw-inventory-page-ph').show();
+                },
+                success: function (response) {
+                    jQuery('.rbfw_inventory_page_table_wrap').html(response);
+                }
+            });
+        });
+
+        jQuery('.rbfw_inventory_refresh_btn').click(function (e) {
+            window.location.reload();
+        });
+
+        jQuery(document).on('click','.rbfw_stock_view_details',function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            jQuery("#rbfw_stock_view_result_wrap").mage_modal({
+                escapeClose: false,
+                clickClose: false,
+                showClose: true
+            });
+
+            let data_request = jQuery(this).attr('data-request');
+            let data_date = jQuery(this).attr('data-date');
+            let data_id = jQuery(this).attr('data-id');
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                data: {
+                    'action' : 'rbfw_get_stock_details',
+                    'data_request' : data_request,
+                    'data_date' : data_date,
+                    'data_id' : data_id,
+                },
+                beforeSend: function() {
+                    jQuery('#rbfw_stock_view_result_inner_wrap').empty();
+                    jQuery('#rbfw_stock_view_result_inner_wrap').html('<i class="fas fa-spinner fa-spin rbfw_rp_loader"></i>');
+                },
+                success: function (response) {
+                    jQuery('#rbfw_stock_view_result_inner_wrap').html(response);
+                }
+            });
+        });
+
+        /* end inventory filter and view details */
 
     });
 }(jQuery));
+
+
+

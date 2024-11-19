@@ -247,7 +247,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                         $category_query = '';
                     }
 
-                    $posts_per_page = 20;
+                    $posts_per_page = 100;
                     $number_of_page = 1;
 
                     $args = array(

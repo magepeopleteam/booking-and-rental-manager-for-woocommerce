@@ -20,7 +20,8 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-pro-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-welcome-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-sd-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_currency.php';
-require_once RBFW_PLUGIN_DIR . '/inc/rbfw_mps_function.php';
+
+
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-order-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_order_meta.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-md-function.php';
@@ -29,10 +30,12 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-account-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-search-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_import_demo.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-rating-notice.php';
-require_once RBFW_PLUGIN_DIR . '/lib/classes/class-inventory-page.php';
+
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-time-slots-page.php';
 require_once RBFW_PLUGIN_DIR . '/support/elementor/elementor-support.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
+
+
 
 
 add_action('init', 'rbfw_category_update');
@@ -71,29 +74,17 @@ function rbfw_free_woocommerce_integrate(){
     $rbfw_payment_system = get_option("rbfw_basic_payment_settings");
 
     if(!empty($rbfw_payment_system)){
-
         $rbfw_payment_system = $rbfw_payment_system['rbfw_payment_system'];
-
         $wc_folder_exist = rbfw_free_chk_plugin_folder_exist('booking-and-rental-manager-for-woocommerce-pro/inc/woocommerce');
-
         if(rbfw_check_pro_active() === true && $wc_folder_exist === true){
-
             // do nothing
-
-        } else {
-
+        }else {
             if($rbfw_payment_system == 'wps'){
-
                 require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_wc_notice.php");
                 require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_functions.php");
                 require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-status.php");
                 require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-meta.php");
                 require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_cart_price_function.php");
-                //require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_add_cart_function.php");
-                //require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_show_cart_function.php");
-                //require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_after_checkout_function.php");
-                //require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_order_meta_function.php");
-
             }
         }
     }

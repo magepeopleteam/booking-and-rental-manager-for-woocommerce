@@ -1774,6 +1774,9 @@ div.item_hover_effect a:hover {
 }
 
 
+
+
+
 /******Responsive*******/
 
 @media only screen and (max-width: 1199px) {
@@ -2146,4 +2149,8 @@ div.item_hover_effect a:hover {
     div.column_style {
         min-width: calc(100% - 14px) !important;
     }
+}
+
+.rbfw_hide{
+    display: none;
 }

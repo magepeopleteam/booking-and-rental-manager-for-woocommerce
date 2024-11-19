@@ -48,39 +48,8 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 									</ul> -->
 								</div><!--end of tab-menu-->
 
-                                <section class="rbfw-features" data-id="features">
-									<div class="rbfw-single-left-information-item">
-                                        <?php if ( $rbfw_feature_category ) {
-                                            foreach ( $rbfw_feature_category as $value ) {
-                                                $cat_title = $value['cat_title'];
-                                                $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
-												if($cat_title):
-                                                ?>
-                                                <h3 class="rbfw-sub-heading"><?php echo esc_html($cat_title); ?></h3>
-												<?php endif; ?>
-                                                <ul class="rbfw-feature-lists">
-                                                    <?php
-                                                    if(!empty($cat_features)){
-                                                        
-                                                        foreach ($cat_features as $features){
-                                                            $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
-                                                            $title = $features['title'];
-                                                            if($title){ ?>
-                                                                <li>
-                                                                    <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_esc_html($title); ?></span>
-                                                                </li>
-                                                                <?php
-                                                            }
-                                                        }
-                                                    }
-                                                    ?>
-                                                </ul>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-                                    </div>
-                                </section>
+                                <!-- Fiture lists with icon will be shown here -->
+								<?php do_action( 'rbfw_product_feature_lists', $post_id ); ?>
 
 								<div class="description" data-id="description">
 									<h3 class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?></h3>

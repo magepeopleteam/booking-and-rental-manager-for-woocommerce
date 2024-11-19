@@ -111,7 +111,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 $category_name=isset(get_term($cat)->name) ? get_term($cat)->name : '';
                 $args['meta_query'][] = array(
                     'key' => 'rbfw_categories',
-                    'value' => $category_name,
+                    'value' => serialize($category_name),
                     'compare' => 'LIKE'
                 );
             }
@@ -121,7 +121,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             $search_category_name=$search_category;
             $args['meta_query'][] = array(
                 'key' => 'rbfw_categories',
-                'value' => $search_category_name,
+                'value' => serialize($search_category_name),
                 'compare' => 'LIKE'
             );
         endif;
@@ -370,11 +370,7 @@ function rbfw_add_to_cart_shortcode_func($atts){
 
     }
     elseif($rbfw_item_type == 'resort'){
-
         include(  RBFW_TEMPLATE_PATH . 'forms/resort-registration.php' );
-
-        $Resortclass = new RBFW_Resort_Function();
-        $Resortclass->rbfw_resort_frontend_scripts($post_id);
     }
 
     if(!$backend){
@@ -443,18 +439,11 @@ function rbfw_rent_search_shortcode( $attr = null ){
                         </div>
                         <div class="rbfw_rent_item_search_dateButtonHolder">
                             <div class="rbfw_rent_item_search-item_date">
-                                <div class="rbfw_rent_item_date_picker">
-                                    <div class="rbfw_rent_item_search_item">
-                                        <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
-                                        <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
-                                    </div>
-                                </div>
-
+                                <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
+                                <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
                             </div>
                             <div class="rbfw_rent_item_search_button_holder">
-                                <div class="rbfw_rent_item_search_button">
-                                    <button type="submit" class="rbfw_rent_item_search_submit">Search</button>
-                                </div>
+                                <input type="submit" class="rbfw_rent_item_search_submit" value="Search">
                             </div>
                         </div>
                     </div>
@@ -481,9 +470,10 @@ function rbfw_rent_left_filter( $attr = null ){
 
     ob_start();
     ?>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">-->
 
     <div class="rbfw_filter_sidebar">
+        <div class="rbfw_left_filter_cover" id="rbfw_left_filter_cover"></div>
         <div class="rbfw_popup_wrapper" id="rbfw_left_filter_popup_wrapper">
             <div class="rbfw_rent_cat_info_popup">
                 <span class="rbfw_popup_close_btn" id="rbfw_left_filter_popup_close_btn">&times;</span>
@@ -503,8 +493,8 @@ function rbfw_rent_left_filter( $attr = null ){
             <div class="rbfw_left_filter_search_btn">Filter</div>
         </div>
         <div class="rbfw_price-range">
-            <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">+</span></h5>
-            <div class="rbfw_toggle-content" style="display: none">
+            <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">-</span></h5>
+            <div class="rbfw_toggle-content" style="display: block">
                 <p>
                     <label for="price">Price range:</label>
                     <input type="text" id="price" readonly style="border:0; color:#f6931f; font-weight:bold;">
@@ -513,8 +503,8 @@ function rbfw_rent_left_filter( $attr = null ){
             </div>
         </div>
         <div class="rbfw_filter_sidebar_locations">
-            <h5 class="rbfw_toggle-header">Pickup Location<span class="rbfw_toggle-icon">+</span></h5>
-            <div class="rbfw_toggle-content" style="display: none">
+            <h5 class="rbfw_toggle-header">Pickup Location<span class="rbfw_toggle-icon">-</span></h5>
+            <div class="rbfw_toggle-content" style="display: block">
                 <?php
                 if( is_array( $rbfw_locations ) ){
                     $total_location = count( $rbfw_locations );
@@ -536,8 +526,8 @@ function rbfw_rent_left_filter( $attr = null ){
             </div>
         </div>
         <div class="rbfw_filter_sidebar_category">
-            <h5 class="rbfw_toggle-header">Item Category <span class="rbfw_toggle-icon">+</span></h5>
-            <div class="rbfw_toggle-content" style="display: none">
+            <h5 class="rbfw_toggle-header">Item Category <span class="rbfw_toggle-icon">-</span></h5>
+            <div class="rbfw_toggle-content" style="display: block">
                 <?php
                 if( is_array( $rbfw_categorys ) ){
                 $total_category = count( $rbfw_categorys );
@@ -558,7 +548,7 @@ function rbfw_rent_left_filter( $attr = null ){
             </div>
         </div>
         <div class="rbfw_filter_sidebar_product-type">
-            <h5 class="rbfw_toggle-header">Item Type <span class="rbfw_toggle-icon">+</span></h5>
+            <h5 class="rbfw_toggle-header">Item Type <span class="rbfw_toggle-icon">-</span></h5>
             <div class="rbfw_toggle-content" style="display: block">
                 <?php foreach ( $rbfw_rent_types as $item ) { ?>
                     <label><input type="checkbox" class="rbfw_rent_type" value="<?php echo esc_attr( $item )?>"> <?php echo esc_attr( $item )?> </label>
@@ -566,18 +556,22 @@ function rbfw_rent_left_filter( $attr = null ){
             </div>
         </div>
         <div class="rbfw_rent_item_fearture_holder">
-                <h5 class="rbfw_toggle-header">Item Features<span class="rbfw_toggle-icon">+</span></h5>
-                <div class="rbfw_toggle-content" style="display: none">
+                <h5 class="rbfw_toggle-header">Item Features<span class="rbfw_toggle-icon">-</span></h5>
+                <div class="rbfw_toggle-content" style="display: block">
                     <?php
                     $total_feature = count( $rbfw_features_category );
                     $feature_start = 1;
 
                     foreach ( $rbfw_features_category as $features ) {
-                        if( $feature_start <= $type_display ){ ?>
+                        if( $feature_start <= $type_display ){
+                            if( !empty( $features['title'] ) ){
+                            ?>
                             <label><input type="checkbox" class="rbfw_rent_feature" value="<?php echo esc_attr( $features['title'] )?>"> <?php echo esc_attr( $features['title'] )?> </label>
-                    <?php }
-                        $feature_start ++;
-                    }
+                        <?php
+                                    $feature_start ++;
+                                }
+                            }
+                        }
                     if( $total_feature > $type_display ){ ?>
                         <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_feature">More +</div>
                     <?php }?>
@@ -587,8 +581,8 @@ function rbfw_rent_left_filter( $attr = null ){
     </div>
 
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
 
     <script>
 

@@ -8,7 +8,8 @@ $post_title = get_the_title();
 
 $gallery_images = get_post_meta(get_the_ID(),'rbfw_gallery_images',true);
 
-if(isset($gallery_images)){
+if(! empty($gallery_images)){
+
     $gallery_image = wp_get_attachment_url($gallery_images[0]);
 }
 else{
@@ -262,7 +263,7 @@ if (!$continue) {
                                                 $rand_number = rand();
                                                 if ($title) {
                                                     ?>
-                                                    <li class=" bfw_rent_list_items title <?php echo $rand_number ?>"><span class="bfw_rent_list_items_icon"><i class="<?php echo mep_esc_html($icon) ?>"></i></span> <?php echo mep_trim_string(mep_esc_html($title),38); ?></li>
+                                                    <li class=" bfw_rent_list_items title <?php echo $rand_number ?>"><span class="bfw_rent_list_items_icon"><i class="<?php echo mep_esc_html($icon) ?>"></i></span> <?php echo mep_trim_string(mep_esc_html($title),32); ?></li>
                                                     <?php
                                                 }
                                             }

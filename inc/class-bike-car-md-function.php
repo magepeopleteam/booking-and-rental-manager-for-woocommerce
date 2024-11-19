@@ -15,9 +15,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             add_action('wp_footer', array($this, 'rbfw_bike_car_md_frontend_scripts'));
             add_action('wp_ajax_rbfw_bikecarmd_ajax_price_calculation', array($this, 'rbfw_md_duration_price_calculation_ajax'));
             add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_price_calculation', array($this,'rbfw_md_duration_price_calculation_ajax'));
-
-            add_action('wp_ajax_rbfw_total_day_calcilation', array($this, 'rbfw_total_day_calcilation'));
-            add_action('wp_ajax_nopriv_rbfw_total_day_calcilation', array($this,'rbfw_total_day_calcilation'));
         }
 
 
@@ -44,76 +41,46 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
         }
 
-        function rbfw_total_day_calcilation(){
 
-            $start_date = $_POST['pickup_date'];
-            $end_date = $_POST['dropoff_date'];
-            $star_time = (isset($_POST['pickup_time']) && $_POST['pickup_time'])?$_POST['pickup_time']:'00:00:00';
-            $end_time = (isset($_POST['dropoff_time']) && $_POST['dropoff_time'])?$_POST['dropoff_time']:rbfw_end_time();
-
-            $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
-            $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
-
-
-            $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
-            $total_days = $diff->days;
-            $total_hours = $diff->h;
-            $countable_time = 'yes';
-            if(!($total_days || $total_hours)){
-                $total_days = 1;
-            }
-
-            echo json_encode( array(
-                'total_days' => $total_days,
-                'countable_time' => $countable_time,
-            ));
-
-            wp_die();
-        }
 
         function rbfw_md_duration_price_calculation_ajax(){
 
             $post_id = $_POST['post_id'];
+
             $start_date = $_POST['pickup_date'];
             $end_date = $_POST['dropoff_date'];
             $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'00:00:00';
             $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:rbfw_end_time();
+
+            $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
+            $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
+
             $item_quantity = $_POST['item_quantity'];
             $rbfw_enable_variations = $_POST['rbfw_enable_variations'];
             $rbfw_available_time = $_POST['rbfw_available_time']??'no';
             $rbfw_service_price = $_POST['rbfw_service_price'] * $item_quantity;
 
 
-            $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
-            $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
-
             $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime);
-
             $duration_price_info = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$star_time,$end_time,$rbfw_available_time);
 
-            $duration_price = $duration_price_info['duration_price']*$item_quantity;
+            $duration_price = $duration_price_info['duration_price'] * $item_quantity;
             $total_days = $duration_price_info['total_days'];
             $actual_days = $duration_price_info['actual_days'];
             $hours = $duration_price_info['hours'];
 
-            $rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
             $service_cost = $_POST['rbfw_es_service_price'];
 
             $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_service_price;
             $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
 
+
             $discount_amount = 0;
-            $discount_desc = 0;
             if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
                 if(function_exists('rbfw_get_discount_array')){
                     $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price);
-                } else {
-                    $discount_arr = [];
-                }
-                if(!empty($discount_arr)){
-                    $discount_amount = $discount_arr['discount_amount'];
-                    $discount_desc = $discount_arr['discount_desc'];
+                    $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
                 }
             }
 
@@ -126,6 +93,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $duration .= $hours > 1 ? $hours.' '.rbfw_string_return('rbfw_text_hours',__('Hours','booking-and-rental-manager-for-woocommerce')) : $hours.' '.rbfw_string_return('rbfw_text_hour',__('Hour','booking-and-rental-manager-for-woocommerce'));
             }
 
+            if($actual_days == 0 && $hours == 0){
+                $actual_days =1;
+                $duration .= $actual_days > 1 ? $actual_days.' '.rbfw_string_return('rbfw_text_days',__('Days','booking-and-rental-manager-for-woocommerce')).' ' : $actual_days.' '.rbfw_string_return('rbfw_text_day',__('Day','booking-and-rental-manager-for-woocommerce')).' ';
+            }
+
             echo json_encode( array(
                 'duration_price' => $duration_price,
                 'duration_price_html' => wc_price($duration_price),
@@ -134,11 +106,12 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'service_cost' => $service_cost+$rbfw_service_price,
                 'service_cost_html' => wc_price($service_cost+$rbfw_service_price),
                 'sub_total_price_html' => wc_price($sub_total_price),
-                'discount' => $discount_desc,
+                'discount' => $discount_amount,
+                'discount_html' => wc_price((float)$discount_amount),
                 'security_deposit_desc' => $security_deposit['security_deposit_desc'],
                 'security_deposit_amount' => $security_deposit['security_deposit_amount'],
-                'total_price' => $sub_total_price+$security_deposit['security_deposit_amount']-$discount_amount,
-                'total_price_html' => wc_price($sub_total_price+$security_deposit['security_deposit_amount']-$discount_amount),
+                'total_price' => (float)$sub_total_price + (float)$security_deposit['security_deposit_amount'] - (float)$discount_amount,
+                'total_price_html' => wc_price((float)$sub_total_price + (float)$security_deposit['security_deposit_amount'] -  (float)$discount_amount),
                 'max_available_qty' => $max_available_qty,
                 'total_days' => $total_days,
                 'total_duration' => $duration,

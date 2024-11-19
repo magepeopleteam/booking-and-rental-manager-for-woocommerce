@@ -94,15 +94,15 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 
 ➡  [Buy Pro](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
 
-➡  [View All PRO Version Demo](https://booking.mage-people.com/)
-➡  [Bike/Car Rent Service for Single Day PRO Version Demo](https://booking.mage-people.com/rent/bike-car-for-single-day/)
-➡  [Bike/Car Rent for Multiple Day PRO Version Demo](https://booking.mage-people.com/rent/bike-car-for-multiple-day/)
+➡  [View All PRO Version Demo](https://www.wprently.com/bike/)
+➡  [Bike/Car Rent Service for Single Day PRO Version Demo](https://www.wprently.com/bike/)
+➡  [Bike/Car Rent for Multiple Day PRO Version Demo](https://www.wprently.com/car/)
 ➡  [Doctor Appointment PRO Version Demo](https://booking.mage-people.com/rent/doctor-appointment/)
 ➡  [Dress Rent System PRO Version Demo](https://booking.mage-people.com/rent/dress/)
-➡  [Equipment Rent Service PRO Version Demo](https://booking.mage-people.com/rent/equipement/)
+➡  [Equipment Rent Service PRO Version Demo](https://www.wprently.com/equipment/)
 ➡  [Resort Rent or Resort Booking PRO Version Demo](https://booking.mage-people.com/rent/resort/)
-➡  [Rental Items List PRO Version Demo](https://booking.mage-people.com/rents-list-style/)
-➡  [Rental Items Grid Style List PRO Version Demo](https://booking.mage-people.com/rents-grid-style/)
+➡  [Rental Items List PRO Version Demo](https://www.wprently.com/rents-list-style/)
+➡  [Rental Items Grid Style List PRO Version Demo](https://www.wprently.com/rents-grid-style/)
 
 
 ### Shortcodes included with Booking and Rental Manager:
@@ -206,6 +206,31 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
+
+= 2.1.9 =
+* Date calendar weekday start as "Week Starts On" settings.
+* Time format fixed.
+* Single Day Inventory problem solved.
+* Multi Day Inventory problem solved.
+* Single day sold out problem solved for without time slot.
+* Multiday minimum day count 1 instead of 0.
+
+
+= 2.1.5 =
+* Single day discount problem solved.
+* Resort date problem solved.
+* Order list modifications.
+* Language wise datepicker and price problem solved.
+* Price info in multi day, daywise and seasonal price added.
+
+
+= 2.1.4 =
+* Resort discount and checkout problem solved.
+* Discount price displaying convert to amount instead of percentage.
+* Code updated.
+* Multiday cart page pricing solved.
+
+
 = 2.1.3 =
 * pricing fixed on cart and thankyou page.
 
