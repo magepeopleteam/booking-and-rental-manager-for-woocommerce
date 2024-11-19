@@ -964,7 +964,7 @@
 					<?php $this->rent_type($post_id); ?>
 					<?php $this->appointment($post_id); ?>
 					<?php $this->bike_car_single_day($post_id); ?>
-					<?php //$this->bike_car_single_day_duration($post_id); ?>
+					<?php $this->rbfw_appointment($post_id); ?>
 					<?php $this->general_price_config($post_id); ?>
 					<?php $this->resort_price_config($post_id); ?>
 					<?php $this->category_service_price($post_id); ?>
