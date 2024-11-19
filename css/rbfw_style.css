@@ -1043,6 +1043,7 @@ ul.rbfw-feature-lists {
     flex-wrap: wrap;
     flex-direction: column;
     gap: 10px;
+    padding: 5px 10px;
 }
 
 ul.rbfw-feature-lists li {
@@ -1052,7 +1053,8 @@ ul.rbfw-feature-lists li {
     justify-content: start;
     margin-bottom: 0;
 }
-
+h2.rbfw-post-title{padding-left:10px;}
+.rbfw-single-left-information .description p{padding-left:10px;}
 .rbfw-single-left-information ul.rbfw-feature-lists li {
     color: #0a0a0a;
 }
@@ -3484,6 +3486,9 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
     .mpStyle.style_1 div.superSlider .sliderShowcaseItem [data-bg-image] {
         height: 100px !important;
+    }
+    div.superSlider [data-bg-image] {
+        border-radius: 10px;
     }
 
     .mpStyle.style_1 .dFlex {
@@ -7006,4 +7011,8 @@ input[type="radio"]:checked + .radio-label {
     background-color: #007bff;
     color: white;
     border-radius: 5px;
+}
+.price-item-container.pricing-content_dh.mpStyle.open {
+    background: #fff;
+
 }
