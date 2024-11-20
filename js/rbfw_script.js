@@ -247,6 +247,7 @@
             }
             $(".rbfw_left_filter_button").text('Filtering...');
             $('#rbfw_rent_list_pagination').hide();
+
             jQuery.ajax({
                 type: 'POST',
                 url: rbfw_ajax.rbfw_ajaxurl,
@@ -258,13 +259,20 @@
                 },
                 success: function (response) {
                     if( response.success ){
+
                         let text_display = response.data.show_text;
 
                         $("#rbfw_left_filter_cover").hide();
-                        $('#rbfw_rent_list_wrapper').html( response.data.display_date );
+
+                        // $('#rbfw_rent_list_wrapper').html( response.data.display_date );
+                        $('#rbfw_rent_list_wrapper').fadeOut(200, function () {
+                            $(this).html(response.data.display_date).fadeIn(300);
+                        });
+
                         $('#rbfw_shoe_result_text').html('<span >'+text_display+'</span>');
                         $(".rbfw_left_filter_button").text('Filter');
                     }else{
+                        alert('ok');
                         $('#rbfw_shoe_result_text').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
                     }
 
@@ -356,7 +364,7 @@
             max: 10000,
             values: [0, 0], // Default values
             slide: function(event, ui) {
-                $("#price").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                $("#rbfw_left_filter_price").val("" + ui.values[0] + " - " + ui.values[1]);
             },
             stop: function(event, ui) {
                 start_val = ui.values[0];
@@ -369,7 +377,7 @@
             }
         });
 
-        $("#price").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
+        $("#rbfw_left_filter_price").val("" + $("#slider-range").slider("values", 0) + " - " + $("#slider-range").slider("values", 1));
         get_filters.price.start = $("#slider-range").slider("values", 0);
         get_filters.price.end = $("#slider-range").slider("values", 1);
 
@@ -387,22 +395,33 @@
 
             e.preventDefault();
             let filter_type = $(this).attr('id');
+            // alert( filter_type );
             $("#rbfw_left_filter_popup_wrapper").show();
-            $("#rbfw_left_filter_popup_content").html('<div class="rbfw_loader">Loading....</div>');
 
             let category = 'feature';
-            jQuery.ajax({
-                type: 'POST',
-                url: rbfw_ajax.rbfw_ajaxurl,
-                data: {
-                    'action' : 'rbfw_get_rent_item_left_filter_more_data_popup',
-                    'filter_type': filter_type,
-                    'rbfw_nonce': rbfw_vars.rbfw_nonce,
-                },
-                success: function (response) {
-                    $('#rbfw_left_filter_popup_content').html( response.data );
-                },
-            });
+
+            let appendId = filter_type+'_popup_content';
+            $('#'+appendId).siblings().hide();
+            $('#'+appendId).show();
+
+            if ($('#' + appendId + ' input[type="checkbox"]').length > 0) {
+                $('.rbfw_loader').hide();
+            } else {
+                $("#"+appendId).append('<div class="rbfw_loader" id="rbfw_left_filter_loader">Loading....</div>');
+                jQuery.ajax({
+                    type: 'POST',
+                    url: rbfw_ajax.rbfw_ajaxurl,
+                    data: {
+                        'action': 'rbfw_get_rent_item_left_filter_more_data_popup',
+                        'filter_type': filter_type,
+                        'rbfw_nonce': rbfw_vars.rbfw_nonce,
+                    },
+                    success: function (response) {
+                        $('#' + appendId).append(response.data);
+                        $('.rbfw_loader').hide();
+                    },
+                });
+            }
 
         });
 

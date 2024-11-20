@@ -449,9 +449,10 @@ p {
     z-index: 10;
 }
 .rbfw_popup_fearure_title{
+    color: #ffffff;
     font-size: 18px;
     font-weight: 600;
-    color: #333333;
+    /*color: #333333;*/
     margin: 10px 0;
 }
 ul.rbfw_popup_fearure_lists{
@@ -461,6 +462,7 @@ ul.rbfw_popup_fearure_lists{
 }
 
 ul.rbfw_popup_fearure_lists li{
+    color: #fff;
     margin: 5px 0;
     padding: 5px 0;
     border-bottom: 1px solid #ebebeb;
@@ -473,7 +475,7 @@ ul.rbfw_popup_fearure_lists li{
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgb(0 0 0 / 41%);
+    background: #ffffff9c;
     justify-content: center;
     align-items: center;
     z-index: 9999;
@@ -481,7 +483,8 @@ ul.rbfw_popup_fearure_lists li{
 
 /* Styles for the popup */
 .rbfw_rent_cat_info_popup {
-    background-color: #fff;
+    background-color:#0a0a0ab0;
+    color: #F3F3F3;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -489,29 +492,32 @@ ul.rbfw_popup_fearure_lists li{
     width: 400px;
     max-width: 90%;
     text-align: left;
-    top: 60px;
+    top: 75px;
     margin: auto;
-    height: 85vh;
-    overflow: hidden;
+    height: 75vh;
+    overflow: auto;
 }
 
 /* Close button styles */
 .rbfw_popup_close_btn {
     position: absolute;
-    top: 3px;
+    top: 0px;
     padding: 3px 8px;
-    right: 2px;
-    font-size: 24px;
+    right: 0px;
+    font-size: 28px;
     cursor: pointer;
-    color: #000;
+    color: #ddd7d7;
+}
+.rbfw_popup_close_btn:hover{
+    color: #990000;
 }
 
 /* Popup content styles */
 #rbfw_popup_content{
     display: flex;
     margin-top: 10px;
-    overflow-y: auto;
-    height: 80vh;
+    /*overflow-y: auto;*/
+    height: auto;
 }
 .rbfw_toggle-content{
     font-size: 14px;
@@ -519,7 +525,7 @@ ul.rbfw_popup_fearure_lists li{
     word-wrap: break-word;
 }
 .rbfw_types{
-    display: block;
+    display: flex;
     float: left;
     position: relative;
     width: 173px;
@@ -739,7 +745,11 @@ ul.rbfw_show_all_cat_features li:last-child {
     margin-bottom: 5px;
 }
 .rbfw_filter_sidebar input[type="checkbox"] {
+    height: 15px;
     margin-right: 5px;
+}
+.rbfw_rent_item_feature_des_text{
+    font-size: 14px;
 }
 
 .rbfw_filter_sidebar .rbfw_price-range {
@@ -765,6 +775,10 @@ ul.rbfw_show_all_cat_features li:last-child {
 .rbfw_toggle-header {
     cursor: pointer;
     user-select: none;
+}
+.rbfw_white_color{
+    color: #ffffff;
+    text-align: center;
 }
 
 .rbfw_toggle-icon {

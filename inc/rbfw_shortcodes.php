@@ -466,7 +466,7 @@ function rbfw_rent_left_filter( $attr = null ){
     $rbfw_locations = get_rbfw_pickup_data_wp_query();
     $rbfw_rent_types =get_rbfw_item_type_wp_query();
     $rbfw_features_category =  get_rbfw_post_features_from_meta();
-    $type_display = 5;
+    $type_display = 10;
 
     ob_start();
     ?>
@@ -477,9 +477,12 @@ function rbfw_rent_left_filter( $attr = null ){
         <div class="rbfw_popup_wrapper" id="rbfw_left_filter_popup_wrapper">
             <div class="rbfw_rent_cat_info_popup">
                 <span class="rbfw_popup_close_btn" id="rbfw_left_filter_popup_close_btn">&times;</span>
-                <div id="rbfw_left_filter_popup_content">
-
+                <div class="rbfw_display_item_teatures">
+                    <div id="rbfw_left_filter_location_popup_content"></div>
+                    <div id="rbfw_left_filter_feature_popup_content"></div>
+                    <div id="rbfw_left_filter_category_popup_content"></div>
                 </div>
+
             </div>
         </div>
         <div class="rbfw_title_text">
@@ -497,7 +500,7 @@ function rbfw_rent_left_filter( $attr = null ){
             <div class="rbfw_toggle-content" style="display: block">
                 <p>
                     <label for="price">Price range:</label>
-                    <input type="text" id="price" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                    <input type="text" id="rbfw_left_filter_price" readonly style="border:0; color:#f6931f; font-weight:bold;">
                 </p>
                 <div id="slider-range"></div>
             </div>
@@ -579,14 +582,6 @@ function rbfw_rent_left_filter( $attr = null ){
             </div>
         <div class="rbfw_left_filter_button">Filter</div>
     </div>
-
-
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>-->
-<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>-->
-
-    <script>
-
-    </script>
 
     <?php
     $left_filter = ob_get_clean();

@@ -656,23 +656,30 @@ if (!class_exists('Rbfw_Search_Page')) {
                     ob_start();
                     ?>
                     <div class="rbfw_rent_item_fearture_holder">
-                        <h5 class="rbfw_toggle-header"><?php echo $type_text?></h5>
+                        <h5 class="rbfw_toggle-header rbfw_white_color"><?php echo $type_text?></h5>
                         <div class="rbfw_toggle-content rbfw_toggle_container">
                     <?php
                     if( $filter_type === 'rbfw_left_filter_feature'){
-                        foreach ( $rbfw_features as $features){ ?>
-                            <div class="rbfw_types"><input type="checkbox" class="<?php echo esc_attr( $check_box_class )?>" value="<?php echo esc_attr( $features['title'] )?>"> <?php echo esc_attr( $features['title'] )?> </div>
-                        <?php }
+                        foreach ( $rbfw_features as $features){
+                            if( !empty( $features['title'] ) ){
+                            ?>
+                            <div class="rbfw_types">
+                                <input type="checkbox" class="<?php echo esc_attr( $check_box_class )?>" value="<?php echo esc_attr( $features['title'] )?>"><span class="rbfw_rent_item_feature_des_text"> <?php echo esc_attr( $features['title'] )?></span> </div>
+                        <?php } }
                     }else if( $filter_type === 'rbfw_left_filter_category' ){
                         foreach ( $rbfw_features as $category ) {
+                            if( !empty( $category ) ){
                         ?>
-                        <label><input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>"> <?php echo esc_attr( $category )?></label>
-                            <?php }
+                        <div class="rbfw_types">
+                           <input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>"> <?php echo esc_attr( $category )?>
+                        </div>
+                            <?php } }
                         }else if( $filter_type === 'rbfw_left_filter_location' ){
                         foreach ( $rbfw_features as $key => $location ){
-                        ?>
-                        <label><input type="checkbox" class="rbfw_location" value="<?php echo esc_attr( $key )?>"> <?php echo esc_attr( $location )?></label>
-                            <?php }
+                            if( !empty( $location ) ){
+                            ?>
+                        <div class="rbfw_types"><input type="checkbox" class="rbfw_location" value="<?php echo esc_attr( $key )?>"> <?php echo esc_attr( $location )?></div>
+                            <?php } }
                         }
                     ?>
 
