@@ -55,7 +55,7 @@ if(isset($_POST['post_id'])){
 
 
 
-    <div class="rbfw_bikecarsd_pricing_table_wrap">
+    <div class="">
        <?php
 
             if(($enable_service_price_sd=='on')){

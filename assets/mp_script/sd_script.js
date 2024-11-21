@@ -5,6 +5,26 @@
 
         datepicker_inline();
 
+        function datepicker_inline(){
+            jQuery('.rbfw-bikecarsd-calendar').datepicker({
+                dateFormat: js_date_format,
+                minDate: 0,
+                firstDay : start_of_week,
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                beforeShowDay: function(date)
+                {
+                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+                },
+                onSelect: function (dateString, data) {
+                    let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+                    jQuery('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
+                },
+            });
+        }
+
+
+
         jQuery('body').on('change', 'input[name="rbfw_bikecarsd_selected_date"]', function(e) {
 
             let manage_inventory_as_timely = $('#manage_inventory_as_timely').val();
@@ -13,13 +33,12 @@
                 return;
             }
 
-
-
             let post_id = jQuery('.rbfw_post_id').val();
             let is_muffin_template = jQuery('.rbfw_muffin_template').length;
 
             var time_slot_switch = jQuery('#time_slot_switch').val();
             var selected_date = jQuery(this).val();
+
 
             if(is_muffin_template > 0){
                 is_muffin_template = '1';
@@ -40,8 +59,10 @@
                 beforeSend: function() {
                     jQuery('.rbfw-bikecarsd-result').empty();
                     jQuery('.rbfw_bikecarsd_time_table_container').remove();
-                    jQuery('.rbfw-bikecarsd-step[data-step="1"]').addClass('rbfw_loader_in');
-                    jQuery('.rbfw-bikecarsd-step[data-step="1"]').append('<i class="fas fa-spinner fa-spin"></i>');
+
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap').addClass('rbfw_loader_in');
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap').append('<i class="fas fa-spinner fa-spin"></i>');
+
                     var rent_type = jQuery('#rbfw_rent_type').val();
                     // Start: Calendar script
                     if(rent_type == 'appointment'){
@@ -64,14 +85,18 @@
                 success: function (response) {
 
                     jQuery('.rbfw-bikecarsd-step[data-step="1"]').hide();
-                    jQuery('.rbfw-bikecarsd-step[data-step="1"]').removeClass('rbfw_loader_in');
-                    jQuery('.rbfw-bikecarsd-step[data-step="1"] i.fa-spinner').remove();
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
+                    jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
+
                     jQuery('.rbfw-bikecarsd-result').append(response);
                     var time_slot_switch = jQuery('#time_slot_switch').val();
 
                     if(time_slot_switch != 'on'){
-                        rbfw_bikecarsd_without_time_func();
+                        rbfw_mps_book_now_btn_action();
+                        jQuery('.rbfw_back_step_btn').attr('back-step','1');
+                        jQuery('.rbfw_muff_registration_wrapper .rbfw_regf_wrap').show();
                     }
+
 
                 },
                 complete:function(data) {
@@ -82,6 +107,10 @@
             });
 
         });
+
+
+        /*start single day hourly inventory managed*/
+
 
 
         jQuery('body').on('focusin', '.pickup_date_timely', function(e) {
@@ -118,7 +147,7 @@
                             var quantity_options = "<option value=''>Pickup Time</option>";
 
                             $.each(response, function(i, item) {
-                                quantity_options += "<option  value="+i+">"+i+"</option>";
+                                quantity_options += "<option  value="+i+">"+item+"</option>";
                             });
                             jQuery('.rbfw-select.rbfw-time-price.pickup_time').html(quantity_options);
                         }
@@ -136,7 +165,6 @@
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
             let pickup_time = jQuery('.rbfw-select.rbfw-time-price.pickup_time').val();
             let rbfw_time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
-
             let service_price = jQuery(this).data('price');
             let duration = jQuery(this).data('duration');
             let d_type = jQuery(this).data('d_type');
@@ -274,6 +302,8 @@
             let d_type = jQuery('.radio-button.selected').data('d_type');
             let service_type = jQuery('.radio-button.selected').text();
 
+            jQuery('#rbfw_start_time').val(pickup_time);
+
 
             if(rbfw_bikecarsd_selected_date==''){
                 alert("please enter pickup date");
@@ -286,7 +316,6 @@
                     return;
                 }
             }
-
             if(!service_price){
                 return;
             }
@@ -326,23 +355,6 @@
 })(jQuery)
 
 
-function datepicker_inline(){  
-    jQuery('.rbfw-bikecarsd-calendar').datepicker({
-        dateFormat: js_date_format,
-        minDate: 0,
-        firstDay : start_of_week,
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        beforeShowDay: function(date)
-        {
-            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-        },
-        onSelect: function (dateString, data) {
-            let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-            jQuery('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
-        },
-    });
-}
 
 
 function rbfw_timely_price_calculation(){

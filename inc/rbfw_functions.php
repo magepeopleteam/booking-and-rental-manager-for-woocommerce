@@ -3130,7 +3130,11 @@ function rbfw_get_available_times_particulars($rbfw_id,$selected_date){
             return $the_array;
         }
     }
-    return rbfw_get_available_times($rbfw_id);
+    $rdfw_available_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
+    foreach ($rdfw_available_time as $single){
+        $the_array[$single] = date(get_option('time_format'), strtotime($single));
+    }
+    return $the_array;
 }
 
 

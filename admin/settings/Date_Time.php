@@ -143,11 +143,7 @@
                 $rdfw_available_time_update = [];
 
                 foreach ($rdfw_available_time as $single){
-                    if(strlen($single)==7){
-                        $rdfw_available_time_update[] = '0'.$single;
-                    }else{
-                        $rdfw_available_time_update[] = $single;
-                    }
+                    $rdfw_available_time_update[] = date('H:i', strtotime($single));
                 }
 
 
@@ -156,9 +152,9 @@
                     <select name="rdfw_available_time[]" id="rdfw_available_time" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
                         <?php foreach($rbfw_time_slots as $key => $value): ?>
                             <?php if(get_the_title( $post_id ) == 'Auto Draft'){ ?>
-                                <option selected value="<?php echo date('h:i A', strtotime($value)); ?>"> <?php echo $key; ?> </option>
+                                <option selected value="<?php echo date('H:i', strtotime($value)); ?>"> <?php echo $key; ?> </option>
                             <?php }else{ ?>
-                                <option <?php echo (in_array(date('h:i A', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo date('h:i A', strtotime($value)); ?>"> <?php echo $key; ?> </option>
+                                <option <?php echo (in_array(date('H:i', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo date('H:i', strtotime($value)); ?>"> <?php echo date('H:i', strtotime($value)); ?> </option>
                             <?php } ?>
 
                         <?php endforeach; ?>
