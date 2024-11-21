@@ -421,8 +421,8 @@
 				$manage_inventory_as_timely 	 = get_post_meta($post_id, 'manage_inventory_as_timely', true) ? get_post_meta($post_id, 'manage_inventory_as_timely', true) : 'off';
 				$rbfw_item_stock_quantity_timely 	 = get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true) ? get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true) : 'off';
 			?>
-				<div class="rbfw_bike_car_sd_wrapper <?php  echo esc_attr($rbfw_item_type == 'bike_car_sd' )?'show':'hide'; ?>" >
-                    <section>
+				<div class="rbfw_bike_car_sd_wrapper <?php  echo esc_attr($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'  )?'show':'hide'; ?>" >
+                    <section class="manage_inventory_as_timely ">
                         <div>
                             <label>
                                 <?php esc_html_e(' Manage Inventor as hourly','booking-and-rental-manager-for-woocommerce'); ?>
@@ -437,7 +437,7 @@
                     </section>
 
 
-                    <div class="rbfw_time_inventory <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':''  ?>">
+                    <div class="rbfw_time_inventory rbfw_item_stock_quantity<?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':''  ?>">
                         <section>
                             <div>
                                 <label><?php _e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
@@ -1048,7 +1048,7 @@
 					<?php $this->rent_type($post_id); ?>
 					<?php $this->appointment($post_id); ?>
 					<?php $this->bike_car_single_day($post_id); ?>
-					<?php $this->rbfw_appointment($post_id); ?>
+					<?php //$this->rbfw_appointment($post_id); ?>
 					<?php $this->general_price_config($post_id); ?>
 					<?php $this->resort_price_config($post_id); ?>
 					<?php $this->category_service_price($post_id); ?>
@@ -1304,6 +1304,8 @@
 					$rbfw_service_category_price     = isset( $_POST['rbfw_service_category_price'] ) ? rbfw_array_strip( $_POST['rbfw_service_category_price'] ) : [];
 					$rbfw_bike_car_sd_data 	 = isset( $_POST['rbfw_bike_car_sd_data'] ) ? rbfw_array_strip( $_POST['rbfw_bike_car_sd_data'] ) : 0;
 
+
+                   // echo '<pre>';print_r($rbfw_bike_car_sd_data );echo '<pre>';exit;
 
                     $rbfw_enable_resort_daylong_price  = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_resort_daylong_price'] ) : 'no';
 					

@@ -157,9 +157,17 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
 
     $order_array = [];
+
+    $order_array['rbfw_start_date_ymd'] = !empty($ticket_info['rbfw_start_date']) ? $ticket_info['rbfw_start_date'] : '';
+    $order_array['rbfw_end_date_ymd'] = !empty($ticket_info['rbfw_end_date']) ? $ticket_info['rbfw_end_date'] : '';
+    $order_array['rbfw_start_time_24'] = !empty($ticket_info['rbfw_start_time']) ? $ticket_info['rbfw_start_time'] : '';
+    $order_array['rbfw_end_time_24'] = !empty($ticket_info['rbfw_end_time']) ? $ticket_info['rbfw_end_time'] : '';
+
+
     $order_array['booked_dates'] = $date_range;
     $order_array['rbfw_start_time'] = $start_time;
     $order_array['rbfw_end_time'] = $end_time;
+
     $order_array['rbfw_type_info'] = $rbfw_type_info;
     $order_array['rbfw_variation_info'] = $rbfw_variation_info;
     $order_array['rbfw_service_info'] = $rbfw_service_info;

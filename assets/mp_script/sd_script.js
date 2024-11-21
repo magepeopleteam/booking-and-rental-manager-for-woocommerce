@@ -147,7 +147,7 @@
                             var quantity_options = "<option value=''>Pickup Time</option>";
 
                             $.each(response, function(i, item) {
-                                quantity_options += "<option  value="+i+">"+i+"</option>";
+                                quantity_options += "<option  value="+i+">"+item+"</option>";
                             });
                             jQuery('.rbfw-select.rbfw-time-price.pickup_time').html(quantity_options);
                         }
@@ -165,7 +165,6 @@
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
             let pickup_time = jQuery('.rbfw-select.rbfw-time-price.pickup_time').val();
             let rbfw_time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
-
             let service_price = jQuery(this).data('price');
             let duration = jQuery(this).data('duration');
             let d_type = jQuery(this).data('d_type');
@@ -303,6 +302,8 @@
             let d_type = jQuery('.radio-button.selected').data('d_type');
             let service_type = jQuery('.radio-button.selected').text();
 
+            jQuery('#rbfw_start_time').val(pickup_time);
+
 
             if(rbfw_bikecarsd_selected_date==''){
                 alert("please enter pickup date");
@@ -315,7 +316,6 @@
                     return;
                 }
             }
-
             if(!service_price){
                 return;
             }

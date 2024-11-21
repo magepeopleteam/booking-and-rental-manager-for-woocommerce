@@ -83,7 +83,11 @@
                 <?php
 
                 $rbfw_bike_car_sd_data = get_post_meta($rbfw_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($rbfw_id, 'rbfw_bike_car_sd_data', true) : [];
-                $available_times = rbfw_get_available_times($rbfw_id);
+               // $available_times = rbfw_get_available_times($rbfw_id);
+
+                $available_times = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
+
+               // echo '<pre>';print_r($available_times);echo '<pre>';
 
                 ?>
                     <div class="item">
@@ -105,13 +109,13 @@
                                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                     </div>
                                     <div class="rbfw-p-relative">
-                                            <span class="clock">
-                                                <i class="fa-regular fa-clock"></i>
-                                            </span>
-                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_bikecarsd_selected_time" id="pickup_time" required>
+                                        <span class="clock">
+                                            <i class="fa-regular fa-clock"></i>
+                                        </span>
+                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time" required>
                                             <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup time','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                             <?php foreach ($available_times as $key => $time) : ?>
-                                                <option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html(date(get_option('time_format'), strtotime($time))); ?></option>
+                                                <option value="<?php echo $time; ?>"><?php echo date(get_option('time_format'), strtotime($time)); ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                         <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
@@ -209,6 +213,7 @@
 
                 <input type="hidden" name="rbfw_time_slot_switch" id="rbfw_time_slot_switch" value="<?php echo esc_attr($rbfw_time_slot_switch); ?>">
                 <input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
+                <input type="hidden" name="rbfw_start_time" id="rbfw_start_time">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price">
                 <input type="hidden" name="manage_inventory_as_timely" id="manage_inventory_as_timely" value="<?php echo esc_attr($manage_inventory_as_timely); ?>">
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
