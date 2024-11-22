@@ -16,7 +16,7 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 jQuery('body').on('focusin', '.pickup_date', function(e) {
     jQuery(this).datepicker({
         dateFormat: js_date_format,
-        minDate: 0,
+        minDate: '',
         beforeShowDay: function(date)
         {
             return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
@@ -60,14 +60,27 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
 jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {
 
+    let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
+    let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
+
+    if(rbfw_maximum_booking_day){
+        rbfw_maximum_booking_day = '+'+rbfw_maximum_booking_day+'d';
+    }else{
+        rbfw_maximum_booking_day = null;
+    }
 
     let selected_date = jQuery(this).val();
     const [gYear, gMonth, gDay] = selected_date.split('-');
+    var cDate = new Date(gYear,  gMonth - 1, gDay );
+    cDate.setDate(cDate.getDate() + rbfw_minimum_booking_day);
     jQuery(".dropoff_date").datepicker("destroy");
+
 
     jQuery('.dropoff_date').datepicker({
         dateFormat: js_date_format,
-        minDate: new Date(gYear,  gMonth - 1, gDay),
+        minDate: cDate,
+        maxDate : rbfw_maximum_booking_day,
+
         onSelect: function (dateString, data) {
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
             jQuery('input[name="rbfw_pickup_end_date"]').val(date_ymd_drop).trigger('change');

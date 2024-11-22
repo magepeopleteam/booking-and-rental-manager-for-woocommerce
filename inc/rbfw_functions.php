@@ -1766,13 +1766,16 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $end_date
                     $inventory_start_time = $inventory['rbfw_start_time'];
                     $inventory_end_time = $inventory['rbfw_end_time'];
 
-                    $date1Start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
-                    $date1End = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
+                    $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
+                    $date_inventory_end = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
 
-                    $date2Start = $pickup_datetime;
-                    $date2End = $dropoff_datetime;
+                    $date_pickup = $pickup_datetime;
+                    $date_dropoff = $dropoff_datetime;
 
-                    if ($date1Start <= $date2End && $date2Start <= $date1End) {
+                   // print_r($date_inventory_start) ;
+                   // print_r($date_pickup) ;exit;
+
+                    if ($date_inventory_start <= $date_dropoff && $date_pickup <= $date_inventory_end) {
                         $total_booked += $rbfw_item_quantity;
                     }
                 }
