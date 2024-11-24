@@ -25,6 +25,12 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'cat_ids' => '',
         'columns' => '',
         'left-filter' => '',
+        'title-filter-shown' => 'on',
+        'price-filter-shown' => 'on',
+        'location-filter-shown' => 'on',
+        'category-filter-shown' => 'on',
+        'type-filter-shown' => 'on',
+        'feature-filter-shown' => 'on',
     ), $atts );
 
     $style  = $attributes['style'];
@@ -38,6 +44,16 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $cat_ids   = $attributes['cat_ids'];
     $columns   = $attributes['columns'];
     $left_filter   = $attributes['left-filter'];
+    $left_filter_control = array(
+            'title_filter_shown'    => $attributes['title-filter-shown'],
+            'price_filter_shown'    => $attributes['price-filter-shown'],
+            'location_filter_shown' => $attributes['location-filter-shown'],
+            'category_filter_shown' => $attributes['category-filter-shown'],
+            'type_filter_shown'     => $attributes['type-filter-shown'],
+            'feature_filter_shown'  => $attributes['feature-filter-shown'],
+    );
+
+//    [rent-list style='grid' left-filter='yes' title-filter-shown='on' price-filter-shown='on' location-filter-shown='on' category-filter-shown='on' type-filter-shown='on' feature-filter-shown='on']
 
     if(!$category){
         $category  = $cat_ids;
@@ -227,7 +243,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         <?php
         if( $left_filter === 'yes' ){
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper_with_left_filter';
-            echo rbfw_rent_left_filter();
+            echo rbfw_rent_left_filter( $left_filter_control );
         }else{
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper';
         }
@@ -460,7 +476,7 @@ function rbfw_rent_search_shortcode( $attr = null ){
 }
 
 add_shortcode('rbfw_left_filter', 'rbfw_rent_left_filter' );
-function rbfw_rent_left_filter( $attr = null ){
+function rbfw_rent_left_filter( $left_filter_control = null ){
 
     $rbfw_categorys = get_rbfw_post_categories_from_meta();
     $rbfw_locations = get_rbfw_pickup_data_wp_query();
@@ -470,7 +486,6 @@ function rbfw_rent_left_filter( $attr = null ){
 
     ob_start();
     ?>
-<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css">-->
 
     <div class="rbfw_filter_sidebar">
         <div class="rbfw_left_filter_cover" id="rbfw_left_filter_cover"></div>
@@ -485,17 +500,23 @@ function rbfw_rent_left_filter( $attr = null ){
 
             </div>
         </div>
+
         <div class="rbfw_title_text">
             <button id="rbfw_left_filter_clearButton" class="rbfw_left_filter_clearButton" style="display: none">Clear All</button>
             <h4 data-placeholder=""><span class="rbfw_filter_icon mR_xs fas fa-filter"></span>Filters</h4>
         </div>
-        <div class="rbfw_left_filter_text_Search_holder">
+
+        <?php if( $left_filter_control['title_filter_shown'] === 'on' ){?>
+            <div class="rbfw_left_filter_text_Search_holder">
             <div class="rbfw_left_filter_search_text_input">
                 <input name="rbfw_search_by_title" class="rbfw_search_by_title" placeholder="Title search">
             </div>
             <div class="rbfw_left_filter_search_btn">Filter</div>
         </div>
-        <div class="rbfw_price-range">
+        <?php }?>
+
+        <?php if( $left_filter_control['price_filter_shown'] === 'on' ){?>
+            <div class="rbfw_price-range">
             <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">-</span></h5>
             <div class="rbfw_toggle-content" style="display: block">
                 <p>
@@ -505,7 +526,10 @@ function rbfw_rent_left_filter( $attr = null ){
                 <div id="slider-range"></div>
             </div>
         </div>
-        <div class="rbfw_filter_sidebar_locations">
+        <?php }?>
+
+        <?php if( $left_filter_control['location_filter_shown'] === 'on' ){?>
+            <div class="rbfw_filter_sidebar_locations">
             <h5 class="rbfw_toggle-header">Pickup Location<span class="rbfw_toggle-icon">-</span></h5>
             <div class="rbfw_toggle-content" style="display: block">
                 <?php
@@ -528,7 +552,10 @@ function rbfw_rent_left_filter( $attr = null ){
                 ?>
             </div>
         </div>
-        <div class="rbfw_filter_sidebar_category">
+        <?php }?>
+
+        <?php if( $left_filter_control['category_filter_shown'] === 'on' ){?>
+            <div class="rbfw_filter_sidebar_category">
             <h5 class="rbfw_toggle-header">Item Category <span class="rbfw_toggle-icon">-</span></h5>
             <div class="rbfw_toggle-content" style="display: block">
                 <?php
@@ -550,14 +577,20 @@ function rbfw_rent_left_filter( $attr = null ){
                 ?>
             </div>
         </div>
-        <div class="rbfw_filter_sidebar_product-type">
+        <?php }?>
+
+        <?php if( $left_filter_control['type_filter_shown'] === 'on' ){?>
+            <div class="rbfw_filter_sidebar_product-type">
             <h5 class="rbfw_toggle-header">Item Type <span class="rbfw_toggle-icon">-</span></h5>
             <div class="rbfw_toggle-content" style="display: block">
-                <?php foreach ( $rbfw_rent_types as $item ) { ?>
-                    <label><input type="checkbox" class="rbfw_rent_type" value="<?php echo esc_attr( $item )?>"> <?php echo esc_attr( $item )?> </label>
+                <?php foreach ( $rbfw_rent_types as $key => $item ) { ?>
+                    <label><input type="checkbox" class="rbfw_rent_type" value="<?php echo esc_attr( $key )?>"> <?php echo esc_attr( $item )?> </label>
                 <?php } ?>
             </div>
         </div>
+        <?php }?>
+
+        <?php if( $left_filter_control['feature_filter_shown'] === 'on' ){?>
         <div class="rbfw_rent_item_fearture_holder">
                 <h5 class="rbfw_toggle-header">Item Features<span class="rbfw_toggle-icon">-</span></h5>
                 <div class="rbfw_toggle-content" style="display: block">
@@ -580,6 +613,8 @@ function rbfw_rent_left_filter( $attr = null ){
                     <?php }?>
                 </div>
             </div>
+        <?php }?>
+
         <div class="rbfw_left_filter_button">Filter</div>
     </div>
 

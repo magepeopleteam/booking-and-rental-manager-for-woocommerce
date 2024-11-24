@@ -3758,7 +3758,14 @@ function get_rbfw_item_type_wp_query() {
         $query->the_post();
         $item_type = get_post_meta(get_the_ID(), 'rbfw_item_type', true);
         if ( !empty( $item_type ) ) {
-            $item_types[] = $item_type;
+            if( $item_type === 'bike_car_sd' ){
+                $item_type_val = 'Bike car single day';
+            }elseif ($item_type === 'bike_car_md' ){
+                $item_type_val = 'Bike car multiple day';
+            }else{
+                $item_type_val = ucfirst( $item_type );
+            }
+            $item_types[$item_type] = $item_type_val;
         }
     }
 
