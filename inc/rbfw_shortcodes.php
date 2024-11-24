@@ -25,12 +25,12 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'cat_ids' => '',
         'columns' => '',
         'left-filter' => '',
-        'title-filter-shown' => 'on',
-        'price-filter-shown' => 'on',
-        'location-filter-shown' => 'on',
-        'category-filter-shown' => 'on',
-        'type-filter-shown' => 'on',
-        'feature-filter-shown' => 'on',
+        'left-title-filter' => 'on',
+        'left-price-filter' => 'on',
+        'left-location-filter' => 'on',
+        'left-category-filter' => 'on',
+        'left-type-filter' => 'on',
+        'left-feature-filter' => 'on',
     ), $atts );
 
     $style  = $attributes['style'];
@@ -45,15 +45,15 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $columns   = $attributes['columns'];
     $left_filter   = $attributes['left-filter'];
     $left_filter_control = array(
-            'title_filter_shown'    => $attributes['title-filter-shown'],
-            'price_filter_shown'    => $attributes['price-filter-shown'],
-            'location_filter_shown' => $attributes['location-filter-shown'],
-            'category_filter_shown' => $attributes['category-filter-shown'],
-            'type_filter_shown'     => $attributes['type-filter-shown'],
-            'feature_filter_shown'  => $attributes['feature-filter-shown'],
+            'title_filter_shown'    => $attributes['left-title-filter'],
+            'price_filter_shown'    => $attributes['left-price-filter'],
+            'location_filter_shown' => $attributes['left-location-filter'],
+            'category_filter_shown' => $attributes['left-category-filter'],
+            'type_filter_shown'     => $attributes['left-type-filter'],
+            'feature_filter_shown'  => $attributes['left-feature-filter'],
     );
 
-//    [rent-list style='grid' left-filter='yes' title-filter-shown='on' price-filter-shown='on' location-filter-shown='on' category-filter-shown='on' type-filter-shown='on' feature-filter-shown='on']
+//    [rent-list style='grid' left-filter='yes' left-title-filter='on' left-price-filter='on' left-location-filter='on' left-category-filter='off' left-type-filter='on' left-feature-filter='off']
 
     if(!$category){
         $category  = $cat_ids;
@@ -528,66 +528,79 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
         </div>
         <?php }?>
 
-        <?php if( $left_filter_control['location_filter_shown'] === 'on' ){?>
-            <div class="rbfw_filter_sidebar_locations">
-            <h5 class="rbfw_toggle-header">Pickup Location<span class="rbfw_toggle-icon">-</span></h5>
-            <div class="rbfw_toggle-content" style="display: block">
-                <?php
-                if( is_array( $rbfw_locations ) ){
-                    $total_location = count( $rbfw_locations );
-                    $count_location_display = 1;
-                    foreach ( $rbfw_locations as $key => $location ) {
-                        if( $count_location_display <= $type_display ){
+        <?php if( $left_filter_control['location_filter_shown'] === 'on' ){
+            if( is_array( $rbfw_locations ) && count( $rbfw_locations ) > 0 ){
+                ?>
+                <div class="rbfw_filter_sidebar_locations">
+                <h5 class="rbfw_toggle-header">Pickup Location<span class="rbfw_toggle-icon">-</span></h5>
+                <div class="rbfw_toggle-content" style="display: block">
+                    <?php
+
+                        $total_location = count( $rbfw_locations );
+                        $count_location_display = 1;
+                        foreach ( $rbfw_locations as $key => $location ) {
+                            if( $count_location_display <= $type_display ){
+                            ?>
+                            <div class="rbfw_rent_item_left_feature_title">
+                                <input type="checkbox" class="rbfw_location" value="<?php echo esc_attr( $key )?>">
+                                <span><?php echo esc_attr( $location )?></span>
+                            </div>
+                        <?php
+                            }
+                            $count_location_display++;
+                        }
+                        if( $total_location > $type_display ){ ?>
+                            <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_location">More +</div>
+                        <?php }
+    //                }
+
+                    ?>
+                </div>
+            </div>
+        <?php }
+        }
+        ?>
+
+        <?php if( $left_filter_control['category_filter_shown'] === 'on' &&  is_array( $rbfw_categorys ) && count( $rbfw_categorys ) > 0 ){?>
+            <div class="rbfw_filter_sidebar_category">
+                <h5 class="rbfw_toggle-header">Item Category <span class="rbfw_toggle-icon">-</span></h5>
+                <div class="rbfw_toggle-content" style="display: block">
+                    <?php
+
+                    $total_category = count( $rbfw_categorys );
+                    $category_display_count = 1;
+                    foreach ( $rbfw_categorys as $category ) {
+                        if( $category_display_count <= $type_display ){
                         ?>
-                        <label><input type="checkbox" class="rbfw_location" value="<?php echo esc_attr( $key )?>"> <?php echo esc_attr( $location )?></label>
+                        <div class="rbfw_rent_item_left_feature_title">
+                            <input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>">
+                            <span><?php echo esc_attr( $category )?></span>
+                        </div>
                     <?php
                         }
-                        $count_location_display++;
+                        $category_display_count++;
                     }
-                    if( $total_location > $type_display ){ ?>
-                        <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_location">More +</div>
+                    if( $total_category > $type_display ){ ?>
+                        <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_category">More +</div>
                     <?php }
-                }
-
-                ?>
-            </div>
-        </div>
-        <?php }?>
-
-        <?php if( $left_filter_control['category_filter_shown'] === 'on' ){?>
-            <div class="rbfw_filter_sidebar_category">
-            <h5 class="rbfw_toggle-header">Item Category <span class="rbfw_toggle-icon">-</span></h5>
-            <div class="rbfw_toggle-content" style="display: block">
-                <?php
-                if( is_array( $rbfw_categorys ) ){
-                $total_category = count( $rbfw_categorys );
-                $category_display_count = 1;
-                foreach ( $rbfw_categorys as $category ) {
-                    if( $category_display_count <= $type_display ){
+//                    }
                     ?>
-                    <label><input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>"> <?php echo esc_attr( $category )?></label>
-                <?php
-                    }
-                    $category_display_count++;
-                }
-                if( $total_category > $type_display ){ ?>
-                    <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_category">More +</div>
-                <?php }
-                }
-                ?>
+                </div>
             </div>
-        </div>
         <?php }?>
 
-        <?php if( $left_filter_control['type_filter_shown'] === 'on' ){?>
+        <?php if( $left_filter_control['type_filter_shown'] === 'on' && is_array( $rbfw_rent_types ) && count( $rbfw_rent_types ) > 0 ){?>
             <div class="rbfw_filter_sidebar_product-type">
-            <h5 class="rbfw_toggle-header">Item Type <span class="rbfw_toggle-icon">-</span></h5>
-            <div class="rbfw_toggle-content" style="display: block">
-                <?php foreach ( $rbfw_rent_types as $key => $item ) { ?>
-                    <label><input type="checkbox" class="rbfw_rent_type" value="<?php echo esc_attr( $key )?>"> <?php echo esc_attr( $item )?> </label>
-                <?php } ?>
+                <h5 class="rbfw_toggle-header">Item Type <span class="rbfw_toggle-icon">-</span></h5>
+                <div class="rbfw_toggle-content" style="display: block">
+                    <?php foreach ( $rbfw_rent_types as $key => $item ) { ?>
+                        <div class="rbfw_rent_item_left_feature_title">
+                            <input type="checkbox" class="rbfw_rent_type" value="<?php echo esc_attr( $key )?>">
+                            <span><?php echo esc_attr( $item )?> </span>
+                        </div>
+                    <?php } ?>
+                </div>
             </div>
-        </div>
         <?php }?>
 
         <?php if( $left_filter_control['feature_filter_shown'] === 'on' ){?>
@@ -602,7 +615,10 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
                         if( $feature_start <= $type_display ){
                             if( !empty( $features['title'] ) ){
                             ?>
-                            <label><input type="checkbox" class="rbfw_rent_feature" value="<?php echo esc_attr( $features['title'] )?>"> <?php echo esc_attr( $features['title'] )?> </label>
+                            <div class="rbfw_rent_item_left_feature_title">
+                                <input type="checkbox" class="rbfw_rent_feature" value="<?php echo esc_attr( $features['title'] )?>">
+                                <span><?php echo esc_attr( $features['title'] )?></span>
+                            </div>
                         <?php
                                     $feature_start ++;
                                 }
@@ -614,10 +630,7 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
                 </div>
             </div>
         <?php }?>
-
-        <div class="rbfw_left_filter_button">Filter</div>
     </div>
-
     <?php
     $left_filter = ob_get_clean();
 

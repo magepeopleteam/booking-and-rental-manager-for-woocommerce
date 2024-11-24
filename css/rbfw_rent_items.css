@@ -775,10 +775,17 @@ ul.rbfw_show_all_cat_features li:last-child {
 .rbfw_toggle-header {
     cursor: pointer;
     user-select: none;
+    margin-block-start: 2px;
+    margin-block-end: 7px;
 }
+
 .rbfw_white_color{
     color: #ffffff;
     text-align: center;
+}
+.rbfw_rent_item_left_feature_title{
+    display: flex;
+    padding: 1px 1px;
 }
 
 .rbfw_toggle-icon {

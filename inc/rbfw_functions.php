@@ -3805,7 +3805,7 @@ function get_rbfw_pickup_data_wp_query() {
         foreach ($locations as $locations_group) {
             foreach ($locations_group as $location) {
                 if (!empty($location['loc_pickup_name'])) {
-                    $all_locations[$location['loc_pickup_name']] = $location['loc_pickup_name'];
+                    $all_locations[$location['loc_pickup_name']] = ucfirst( $location['loc_pickup_name'] );
                 }
             }
         }
