@@ -6996,8 +6996,9 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     padding: 10px 20px;
     transition: all 0.3s ease;
     user-select: none;
-    background-color: #eee;
+    background-color: #fff;
     border-radius: 5px;
+    border:1px solid #dedede;
 }
 
 /* Hover effect */
