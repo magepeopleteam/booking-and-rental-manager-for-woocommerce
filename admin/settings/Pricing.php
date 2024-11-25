@@ -1028,6 +1028,9 @@
 					</table>
 				</section>
 
+                <br>
+                <?php echo do_action('rbfw_after_rent_item_type_table_row'); ?>
+
 				<?php do_action( 'rbfw_after_general_price_table_row' ); ?>
 				
 				<?php do_action( 'rbfw_after_general_price_table' ); ?>

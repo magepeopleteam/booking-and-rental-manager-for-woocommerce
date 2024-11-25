@@ -16,7 +16,6 @@ if(isset($_POST['post_id'])){
     }else{
         $start_date_time = new DateTime($rbfw_bikecarsd_selected_date);
     }
-
     $for_end_date_time = $start_date_time;
 
     if($d_type=='Hours'){

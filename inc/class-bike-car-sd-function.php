@@ -29,6 +29,12 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
             add_action('wp_ajax_particular_time_date_dependent', array($this, 'particular_time_date_dependent'));
             add_action('wp_ajax_nopriv_particular_time_date_dependent', array($this,'particular_time_date_dependent'));
 
+            add_action('wp_ajax_rbfw_service_type_timely_stock', array($this, 'rbfw_service_type_timely_stock'));
+            add_action('wp_ajax_nopriv_rbfw_service_type_timely_stock', array($this,'rbfw_service_type_timely_stock'));
+
+
+
+
 
 
 
@@ -638,10 +644,74 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
             $selected_date = $_POST['selected_date'];
             $times_particulars = rbfw_get_available_times_particulars($post_id,$selected_date);
 
-
             echo json_encode($times_particulars);
             wp_die();
         }
+
+        public function rbfw_service_type_timely_stock(){
+            $post_id = $_POST['post_id'];
+
+            $start_date = $_POST['rbfw_bikecarsd_selected_date'];
+            $start_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'';
+
+            if(isset($_POST['pickup_time']) && $_POST['pickup_time']){
+                $start_date_time = new DateTime($start_date.' '.$start_time);
+            }else{
+                $start_date_time = new DateTime($start_date);
+            }
+            $for_end_date_time = $start_date_time;
+
+
+
+
+            $rbfw_bike_car_sd_data = get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
+            $content= '';
+             foreach ($rbfw_bike_car_sd_data as $value) {
+
+                 $d_type = $value['d_type'];
+                 $duration = $value['duration'];
+
+                 if($d_type=='Hours'){
+                     $for_end_date_time->modify("+$duration hours");
+                     $end_date = $for_end_date_time->format('Y-m-d');
+                     $end_time = $for_end_date_time->format('H:i');
+                 }elseif ($d_type=='Days'){
+                     $for_end_date_time->modify("+$duration days");
+                     $end_date = $for_end_date_time->format('Y-m-d');
+                     $end_time = $for_end_date_time->format('H:i');
+                 }else{
+                     $for_end_date_time->modify("+$duration weeks");
+                     $end_date = $for_end_date_time->format('Y-m-d');
+                     $end_time = $for_end_date_time->format('H:i:s');
+                 }
+
+                 if(isset($_POST['pickup_time']) && $_POST['pickup_time']){
+                     $start_date_time = new DateTime($start_date.' '.$start_time); // Original date and time
+                 }else{
+                     $start_date_time = new DateTime($start_time); // Original date and time
+                 }
+
+                 $end_date_time = new DateTime($end_date.' '.$end_time);
+
+                 $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated($post_id, $start_date, $end_date,'',$start_date_time,$end_date_time);
+
+
+                 $content .=    '<label><input type="radio" name="option" class="radio-input">';
+                 if($rbfw_timely_available_quantity){
+                     $content .=    '<span data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" class="radio-button single-type-timely">'. $value['rent_type'] .'</span>';
+
+                 }else{
+                     $content .=    '<span style="text-decoration: line-through;cursor:text" data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" class="radio-button">'. $value['rent_type'] .'</span>';
+                 }
+                 $content .=    ' </label>';
+             }
+
+            echo $content;
+
+            wp_die();
+        }
+
+
 
 
 

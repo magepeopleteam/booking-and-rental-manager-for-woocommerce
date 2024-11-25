@@ -551,6 +551,18 @@ if($rbfw_enable_start_end_date=='no'){
                     </div>
                 </div>
 
+                <?php
+
+                $rbfw_minimum_booking_day = 0;
+                $rbfw_maximum_booking_day = 0;
+                if(rbfw_check_min_max_booking_day_active()){
+                    $rbfw_minimum_booking_day = get_post_meta($post_id, 'rbfw_minimum_booking_day', true);
+                    $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';
+                }
+
+
+                ?>
+
 
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price"  value="0">
@@ -560,8 +572,9 @@ if($rbfw_enable_start_end_date=='no'){
                 <input type="hidden" name="rbfw_input_stock_quantity" id="rbfw_input_stock_quantity"  value="<?php echo $input_stock_quantity ?>">
                 <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo !empty(get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true) : 'on'; ?>">
                 <input type="hidden" name="total_days" value="0">
-                <input type="hidden" name="wp_date_format" id="wp_date_format" value="<?php echo get_option('date_format') ?>">
-                <input type="hidden" name="wp_time_format" id="wp_time_format" value="<?php echo get_option('time_format') ?>">
+                <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo $rbfw_minimum_booking_day ?>">
+                <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo $rbfw_maximum_booking_day ?>">
+
 
 
 
