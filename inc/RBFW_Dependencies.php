@@ -188,6 +188,13 @@
 
                 wp_enqueue_style( 'flatpickr-css', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css', array(), null );
                 wp_enqueue_script( 'flatpickr-js', 'https://cdn.jsdelivr.net/npm/flatpickr', array('jquery'), null, true );
+                wp_enqueue_script(
+                    'jquery-ui-cdn',
+                    'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
+                    array('jquery'), // Ensures jQuery is loaded as a dependency
+                    '1.12.1',
+                    true // Load in the footer
+                );
 
 			}
 
@@ -213,6 +220,9 @@
 
                 <script type="text/javascript">
                     let rbfw_ajax_url = "<?php echo admin_url( 'admin-ajax.php' ); ?>";
+                    let rbfw_vars  = {
+                        rbfw_nonce :  "<?php echo wp_create_nonce( 'rbfw_nonce' ) ?>"
+                    };
                 </script>
                 <?php
                 global $rbfw;

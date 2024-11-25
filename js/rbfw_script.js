@@ -170,27 +170,20 @@
             let today = new Date();
             let tomorrow = new Date();
             tomorrow.setDate(today.getDate() + 1); // Add 1 day to get tomorrow
-
-            // Format the dates as "m-d-Y"
             let todayFormatted = flatpickr.formatDate(today, "d-m-Y");
-
-            // Initialize Flatpickr with range mode, showing 2 months, blocking previous days, and defaulting to today & tomorrow
             let calendar = flatpickr("#rbfw_rent_item_search_calendar_icon", {
-                dateFormat: "d-m-Y",  // Display format in the calendar
-                defaultDate: todayFormatted,  // Preselect today
-                minDate: "today",  // Block previous days
-                showMonths: 1,  // Show current and next month
+                dateFormat: "d-m-Y",
+                defaultDate: todayFormatted,
+                minDate: "today",
+                showMonths: 1,
                 onChange: function(selectedDates, dateStr, instance) {
-                    // Update the input field with the selected single date
                     if (selectedDates.length === 1) {
-                        // Format the selected date as 'January 10, 2024'
                         let selectedDate = flatpickr.formatDate(selectedDates[0], "F j, Y");
                         $("#rbfw_rent_item_search_pickup_date").val(selectedDate);  // Set the input value to the formatted date
                     }
                 }
             });
 
-            // Open the calendar when the calendar icon is clicked
             $('#rbfw_rent_item_search_calendar_icon').on('click', function() {
                 calendar.open(); // Trigger the calendar to open
             });
@@ -201,21 +194,13 @@
         }
         rbfw_pick_date_from_flatpicker();
 
-        /*$('.rbfw_see_more_category').hover(
-            function() {
-                let hoverId = $(this).attr('id')
-                let idNumber = hoverId.split('-').pop();
-                $('#rbfw_show_all_cat_features-'+idNumber).show();
-            },
-            function() {
-                let hoverId = $(this).attr('id');
-                let idNumber = hoverId.split('-').pop();
-                $('#rbfw_show_all_cat_features-'+idNumber).hide();
-            }
-        );*/
         $('#rbfw_popup_close_btn').on('click', function() {
             $('#rbfw_popup_wrapper').hide();
             $('#rbfw_popup_content').empty(); // Clear the content when closed
+        });
+        $('#rbfw_left_filter_popup_close_btn').on('click', function() {
+            $('#rbfw_left_filter_popup_wrapper').hide();
+            $('#rbfw_left_filter_popup_content').empty(); // Clear the content when closed
         });
 
         $('body').on( 'click', '.rbfw_see_more_category', function(e){
@@ -236,6 +221,225 @@
                     $('#rbfw_popup_content').html( response.data );
                 },
             });
+        });
+
+//Left Filtering
+        $('.rbfw_toggle-content').show();
+        $('.rbfw_toggle-header').on('click', function() {
+            var content = $(this).next('.rbfw_toggle-content');
+            content.slideToggle();
+            var icon = $(this).find('.rbfw_toggle-icon');
+            if (icon.text() === '+') {
+                icon.text('−');
+            } else {
+                icon.text('+');
+            }
+        });
+        function get_left_filter_data( filter_date ){
+
+            $("#rbfw_left_filter_clearButton").show();
+            $("#rbfw_left_filter_cover").show();
+
+            if ($('#rbfw_rent_list_wrapper').hasClass('rbfw_rent_list_style_grid')) {
+                var rbfw_item_style = 'grid';
+            } else {
+                rbfw_item_style = 'list';
+            }
+            $(".rbfw_left_filter_button").text('Filtering...');
+            $('#rbfw_rent_list_pagination').hide();
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax.rbfw_ajaxurl,
+                data: {
+                    'action' : 'rbfw_get_left_side_filter_data',
+                    'filter_date': filter_date,
+                    'rbfw_nomce': rbfw_vars.rbfw_nonce,
+                    'rbfw_item_style': rbfw_item_style,
+                },
+                success: function (response) {
+                    if( response.success ){
+
+                        let text_display = response.data.show_text;
+
+                        $("#rbfw_left_filter_cover").hide();
+
+                        // $('#rbfw_rent_list_wrapper').html( response.data.display_date );
+                        $('#rbfw_rent_list_wrapper').fadeOut(200, function () {
+                            $(this).html(response.data.display_date).fadeIn(300);
+                        });
+
+                        $('#rbfw_shoe_result_text').html('<span >'+text_display+'</span>');
+                        $(".rbfw_left_filter_button").text('Filter');
+                    }else{
+                        alert('ok');
+                        $('#rbfw_shoe_result_text').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
+                    }
+
+                },
+            });
+        }
+
+        var selectedLocation = [];
+        var selectedcategory = [];
+        var selectedType = [];
+        var selectedFeatures = [];
+        var get_filters = {
+            location: [],
+            category: [],
+            type: [],
+            price: { start: 0, end: 0 },
+            title_text: '',
+        };
+        $(document).on('change', '.rbfw_location', function() {
+            var value = $(this).val();
+            if ($(this).is(':checked')) {
+                if (!selectedLocation.includes(value)) {
+                    selectedLocation.push(value);
+                }
+            } else {
+                selectedLocation = selectedLocation.filter(function(item) {
+                    return item !== value;
+                });
+            }
+            get_filters.location = selectedLocation;
+
+            get_left_filter_data(get_filters);
+        });
+
+        $(document).on('change', '.rbfw_category', function() {
+            var value = $(this).val();
+            if ($(this).is(':checked')) {
+                if (!selectedcategory.includes(value)) {
+                    selectedcategory.push(value);
+                }
+            } else {
+                selectedcategory = selectedcategory.filter(function(item) {
+                    return item !== value;
+                });
+            }
+            get_filters.category = selectedcategory;
+
+            get_left_filter_data(get_filters);
+        });
+
+        $(document).on('change', '.rbfw_rent_type', function() {
+            var value = $(this).val();
+            if ($(this).is(':checked')) {
+                if (!selectedType.includes(value)) {
+                    selectedType.push(value);
+                }
+            } else {
+                selectedType = selectedType.filter(function(item) {
+                    return item !== value;
+                });
+            }
+            get_filters.type = selectedType;
+
+            get_left_filter_data(get_filters);
+        });
+
+        $(document).on('change', '.rbfw_rent_feature', function() {
+            var value = $(this).val();
+            if ($(this).is(':checked')) {
+                if (!selectedFeatures.includes(value)) {
+                    selectedFeatures.push(value);
+                }
+            } else {
+                selectedFeatures = selectedFeatures.filter(function(item) {
+                    return item !== value;
+                });
+            }
+            get_filters.feature = selectedFeatures;
+
+            get_left_filter_data(get_filters);
+        });
+
+        // Price slider handling
+        if ($('#slider-range').length > 0) {
+            var start_val = 0;
+            var end_val = 0;
+            $("#slider-range").slider({
+                range: true,
+                min: 0,
+                max: 10000,
+                values: [0, 0], // Default values
+                slide: function(event, ui) {
+                    $("#rbfw_left_filter_price").val("" + ui.values[0] + " - " + ui.values[1]);
+                },
+                stop: function(event, ui) {
+                    start_val = ui.values[0];
+                    end_val = ui.values[1];
+
+                    get_filters.price.start = start_val;
+                    get_filters.price.end = end_val;
+
+                    get_left_filter_data(get_filters);
+                }
+            });
+
+            $("#rbfw_left_filter_price").val("" + $("#slider-range").slider("values", 0) + " - " + $("#slider-range").slider("values", 1));
+            get_filters.price.start = $("#slider-range").slider("values", 0);
+            get_filters.price.end = $("#slider-range").slider("values", 1);
+        }
+
+
+
+        $(document).on('click', '.rbfw_left_filter_search_btn', function() {
+
+            let filter_title_text = $("input[name='rbfw_search_by_title']").val();
+            get_filters.title_text = filter_title_text.trim();
+            get_left_filter_data(get_filters);
+
+        });
+
+
+        $(document).on('click', '.rbfw_left_filter_more_feature_loaders', function(e) {
+
+            e.preventDefault();
+            let filter_type = $(this).attr('id');
+            // alert( filter_type );
+            $("#rbfw_left_filter_popup_wrapper").show();
+
+            let category = 'feature';
+
+            let appendId = filter_type+'_popup_content';
+            $('#'+appendId).siblings().hide();
+            $('#'+appendId).show();
+
+            if ($('#' + appendId + ' input[type="checkbox"]').length > 0) {
+                $('.rbfw_loader').hide();
+            } else {
+                $("#"+appendId).append('<div class="rbfw_loader" id="rbfw_left_filter_loader">Loading....</div>');
+                jQuery.ajax({
+                    type: 'POST',
+                    url: rbfw_ajax.rbfw_ajaxurl,
+                    data: {
+                        'action': 'rbfw_get_rent_item_left_filter_more_data_popup',
+                        'filter_type': filter_type,
+                        'rbfw_nonce': rbfw_vars.rbfw_nonce,
+                    },
+                    success: function (response) {
+                        $('#' + appendId).append(response.data);
+                        $('.rbfw_loader').hide();
+                    },
+                });
+            }
+
+        });
+
+        $(document).on('click', '.rbfw_left_filter_clearButton',function() {
+            $('.rbfw_location, .rbfw_category, .rbfw_rent_type, .rbfw_rent_feature').prop('checked', false);
+            let clear_get_filters = {
+                location: [],
+                category: [],
+                type: [],
+                price: { start: 0, end: 0 },
+                title_text: '',
+
+            };
+            get_left_filter_data(clear_get_filters);
+            $("#rbfw_left_filter_clearButton").hide();
         });
 
     });

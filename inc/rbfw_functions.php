@@ -3578,12 +3578,97 @@ function get_rbfw_post_categories_from_meta() {
     return array_unique( $all_categories );
 }
 
+function get_rbfw_post_features_from_meta() {
+    $args = array(
+        'post_type'      => 'any',
+        'meta_key'       => 'rbfw_feature_category',
+        'meta_compare'   => 'EXISTS',
+        'posts_per_page' => -1,
+        'orderby'        => 'meta_id',
+        'order'          => 'DESC',
+    );
+
+    $query = new WP_Query($args);
+    if (!$query->have_posts()) {
+        return false;
+    }
+    $all_categories = [];
+
+    while ($query->have_posts()) {
+        $query->the_post();
+        $meta_value = get_post_meta(get_the_ID(), 'rbfw_feature_category', true);
+        $meta_value = maybe_unserialize($meta_value);
+        if ( is_array($meta_value) && count($meta_value) > 0) {
+            $all_categories = array_merge($all_categories, $meta_value);
+        }
+    }
+    wp_reset_postdata();
+
+    $all_feature = [];
+    foreach ( $all_categories as $features ){
+        if( is_array( $features ) ){
+            foreach ( $features['cat_features'] as $feature ){
+                $all_feature[] = array(
+                    'icon' => $feature['icon'],
+                    'title' => $feature['title'],
+                );
+            }
+        }
+    }
+
+    $serialized_features = array_map( function( $feature ) {
+        return serialize($feature['icon'] . $feature['title']);
+    }, $all_feature);
+
+    $unique_serialized_features = array_unique($serialized_features);
+    $unique_features = array_intersect_key($all_feature, $unique_serialized_features);
+    $unique_features = array_values($unique_features);
+
+    return  $unique_features ;
+}
+
 
 /**
  * Get location data from wp_postmeta table using meta_key 'rbfw_pickup_data'.
  *
  * @return array|false Array of location data or false on failure.
  */
+function get_rbfw_item_type_wp_query() {
+    $args = array(
+        'post_type'      => 'any',
+        'meta_key'       => 'rbfw_item_type',
+        'meta_compare'   => 'EXISTS',
+        'orderby'        => 'meta_id',
+        'order'          => 'DESC',
+        'posts_per_page' => -1,
+    );
+    $query = new WP_Query($args);
+
+    if (!$query->have_posts()) {
+        return false;
+    }
+
+    $item_types = [];
+
+    while ($query->have_posts()) {
+        $query->the_post();
+        $item_type = get_post_meta(get_the_ID(), 'rbfw_item_type', true);
+        if ( !empty( $item_type ) ) {
+            if( $item_type === 'bike_car_sd' ){
+                $item_type_val = 'Bike car single day';
+            }elseif ($item_type === 'bike_car_md' ){
+                $item_type_val = 'Bike car multiple day';
+            }else{
+                $item_type_val = ucfirst( $item_type );
+            }
+            $item_types[$item_type] = $item_type_val;
+        }
+    }
+
+    wp_reset_postdata();
+
+    return array_unique( $item_types );
+}
 function get_rbfw_pickup_data_wp_query() {
     $args = array(
         'post_type'      => 'any',
@@ -3616,7 +3701,7 @@ function get_rbfw_pickup_data_wp_query() {
         foreach ($locations as $locations_group) {
             foreach ($locations_group as $location) {
                 if (!empty($location['loc_pickup_name'])) {
-                    $all_locations[$location['loc_pickup_name']] = $location['loc_pickup_name'];
+                    $all_locations[$location['loc_pickup_name']] = ucfirst( $location['loc_pickup_name'] );
                 }
             }
         }
