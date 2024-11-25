@@ -129,29 +129,40 @@
                         <?php esc_html_e('Choose Duration', 'booking-and-rental-manager-for-woocommerce'); ?>
                     </div>
 
-                    <div class="rbfw_service_type">
+                    <div class="rbfw_service_type rbfw_service_type_timely">
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
                             <label>
                                 <input type="radio" name="option" class="radio-input">
-                                <span data-duration="<?php echo $value['duration'] ?>" data-price="<?php echo $value['price'] ?>" data-d_type="<?php echo $value['d_type'] ?>" class="radio-button"><?php echo $value['rent_type'] ?></span>
+                                <span data-duration="<?php echo $value['duration'] ?>" data-price="<?php echo $value['price'] ?>" data-d_type="<?php echo $value['d_type'] ?>" class="radio-button single-type-timely"><?php echo $value['rent_type'] ?></span>
                             </label>
                         <?php } ?>
                     </div>
 
                     <script>
-                        // JavaScript to handle the text-based button style dynamically
-                        const radioButtons = document.querySelectorAll('.radio-input');
-                        radioButtons.forEach(button => {
-                            button.addEventListener('change', () => {
-                                // Remove selected class from all buttons
-                                document.querySelectorAll('.radio-button').forEach(item => {
-                                    item.classList.remove('selected');
-                                });
-                                // Add selected class to the clicked button
-                                const selectedLabel = button.nextElementSibling;
-                                selectedLabel.classList.add('selected');
+                        jQuery(document).on('click','.single-type-timely',function (){
+
+                            jQuery('.single-type-timely').each(function(index, element) {
+                                jQuery('.single-type-timely').removeClass('selected');
                             });
-                        });
+
+                            jQuery(this).addClass('selected');
+
+                            // JavaScript to handle the text-based button style dynamically
+                          /*  const radioButtons = document.querySelectorAll('.single-type-timely');
+                            radioButtons.forEach(button => {
+                                button.addEventListener('change', () => {
+                                    // Remove selected class from all buttons
+                                    document.querySelectorAll('.single-type-timely').forEach(item => {
+                                        item.classList.remove('selected');
+                                    });
+                                    // Add selected class to the clicked button
+                                    const selectedLabel = button.nextElementSibling;
+                                    console.log(selectedLabel);
+                                    selectedLabel.classList.add('selected');
+                                });
+                            });*/
+                        })
+
                     </script>
 
                     <div class="item rbfw_bikecarsd_price_summary">
