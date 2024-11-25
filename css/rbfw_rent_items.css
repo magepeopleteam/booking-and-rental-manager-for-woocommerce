@@ -708,7 +708,7 @@ ul.rbfw_show_all_cat_features li:last-child {
 
 /*Filter Css */
 .rbfw_filter_sidebar {
-    width: 190px;
+    width: 220px;
     position: absolute;
     margin: 1px;
     z-index: 111;
@@ -719,8 +719,8 @@ ul.rbfw_show_all_cat_features li:last-child {
 }
 
 .rbfw_rent_list_wrapper_with_left_filter{
-    width: calc( 100% - 180px );
-    margin-left: 220px;
+    width: calc( 100% - 260px );
+    margin-left: 260px;
 }
 .rbfw_rent_list_wrapper{
     width: 100%;
