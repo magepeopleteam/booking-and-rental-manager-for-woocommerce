@@ -356,30 +356,33 @@
         });
 
         // Price slider handling
-        var start_val = 0;
-        var end_val = 0;
-        $("#slider-range").slider({
-            range: true,
-            min: 0,
-            max: 10000,
-            values: [0, 0], // Default values
-            slide: function(event, ui) {
-                $("#rbfw_left_filter_price").val("" + ui.values[0] + " - " + ui.values[1]);
-            },
-            stop: function(event, ui) {
-                start_val = ui.values[0];
-                end_val = ui.values[1];
+        if ($('#slider-range').length > 0) {
+            var start_val = 0;
+            var end_val = 0;
+            $("#slider-range").slider({
+                range: true,
+                min: 0,
+                max: 10000,
+                values: [0, 0], // Default values
+                slide: function(event, ui) {
+                    $("#rbfw_left_filter_price").val("" + ui.values[0] + " - " + ui.values[1]);
+                },
+                stop: function(event, ui) {
+                    start_val = ui.values[0];
+                    end_val = ui.values[1];
 
-                get_filters.price.start = start_val;
-                get_filters.price.end = end_val;
+                    get_filters.price.start = start_val;
+                    get_filters.price.end = end_val;
 
-                get_left_filter_data(get_filters);
-            }
-        });
+                    get_left_filter_data(get_filters);
+                }
+            });
 
-        $("#rbfw_left_filter_price").val("" + $("#slider-range").slider("values", 0) + " - " + $("#slider-range").slider("values", 1));
-        get_filters.price.start = $("#slider-range").slider("values", 0);
-        get_filters.price.end = $("#slider-range").slider("values", 1);
+            $("#rbfw_left_filter_price").val("" + $("#slider-range").slider("values", 0) + " - " + $("#slider-range").slider("values", 1));
+            get_filters.price.start = $("#slider-range").slider("values", 0);
+            get_filters.price.end = $("#slider-range").slider("values", 1);
+        }
+
 
 
         $(document).on('click', '.rbfw_left_filter_search_btn', function() {
