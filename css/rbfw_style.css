@@ -381,6 +381,7 @@ CSS for Single Page Template
     border-radius: 0;
     font-weight: 400;
     font-size: 14px;
+    border: 1px solid #dbd5d5;
 }
 
 #pickup_date,
