@@ -2,13 +2,13 @@
 global $rbfw;
 if(isset($_POST['post_id'])){
     $id = $_POST['post_id'];
-    $rbfw_item_quantity = $_POST['rbfw_item_quantity'];
     $rbfw_bikecarsd_selected_date = $_POST['rbfw_bikecarsd_selected_date'];
     $service_price = $_POST['service_price'];
     $pickup_time = $_POST['pickup_time'];
     $service_type = $_POST['service_type'];
     $duration = $_POST['duration'];
     $d_type = $_POST['d_type'];
+    $available_quantity = $_POST['available_quantity'];
 
 
     if(isset($_POST['pickup_time']) && $_POST['pickup_time']){
@@ -40,13 +40,12 @@ if(isset($_POST['post_id'])){
 
     $end_date_time = new DateTime($end_date.' '.$end_time);
 
-    $duration_cost = $service_price * $rbfw_item_quantity;
+    $duration_cost = $service_price;
 
     $rbfw_extra_service_data = get_post_meta( $id, 'rbfw_extra_service_data', true ) ? get_post_meta( $id, 'rbfw_extra_service_data', true ) : [];
     $available_qty_info_switch = get_post_meta($id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($id, 'rbfw_available_qty_info_switch', true) : 'no';
 
 
-    $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated($id, $rbfw_bikecarsd_selected_date, $end_date,'',$start_date_time,$end_date_time);
 
 
     ?>
@@ -66,7 +65,7 @@ if(isset($_POST['post_id'])){
                     <td class="w_30_pc">
                         <div class="rbfw_regf_group">
                             <select name="rbfw_item_quantity" id="rbfw_item_quantity">
-                                <?php for ($qty = 1; $qty <= $rbfw_timely_available_quantity; $qty++) { ?>
+                                <?php for ($qty = 1; $qty <= $available_quantity; $qty++) { ?>
                                     <option value="<?php echo mep_esc_html($qty); ?>">
                                         <?php echo mep_esc_html($qty); ?>
                                     </option>

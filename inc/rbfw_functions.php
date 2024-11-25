@@ -1772,10 +1772,7 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $end_date
                     $date_pickup = $pickup_datetime;
                     $date_dropoff = $dropoff_datetime;
 
-                   // print_r($date_inventory_start);
-                   // print_r($date_pickup) ;exit;
-
-                    if ($date_inventory_start <= $date_dropoff && $date_pickup <= $date_inventory_end) {
+                    if ($date_inventory_start < $date_dropoff && $date_pickup < $date_inventory_end) {
                         $total_booked += $rbfw_item_quantity;
                     }
                 }
