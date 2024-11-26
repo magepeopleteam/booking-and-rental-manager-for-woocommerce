@@ -650,17 +650,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
         public function rbfw_service_type_timely_stock(){
             $post_id = $_POST['post_id'];
-
             $start_date = $_POST['rbfw_bikecarsd_selected_date'];
             $start_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'';
-
-            if(isset($_POST['pickup_time']) && $_POST['pickup_time']){
-                $start_date_time = new DateTime($start_date.' '.$start_time);
-            }else{
-                $start_date_time = new DateTime($start_date);
-            }
-            $for_end_date_time = $start_date_time;
-
 
             $rbfw_bike_car_sd_data = get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
 
@@ -670,19 +661,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                  $d_type = $value['d_type'];
                  $duration = $value['duration'];
-                 $total_hours = ($d_type=='Hours' ? $duration : ($d_type=='Days' ? $duration*24 : $duration*24*7));
-                 $for_end_date_time->modify("+$total_hours hours");
-                 $end_date = $for_end_date_time->format('Y-m-d');
-                 $end_time = $for_end_date_time->format('H:i:s');
 
-                 if(isset($_POST['pickup_time']) && $_POST['pickup_time']){
-                     $start_date_time = new DateTime($start_date.' '.$start_time); // Original date and time
-                 }else{
-                     $start_date_time = new DateTime($start_time); // Original date and time
-                 }
-
-                 $end_date_time = new DateTime($end_date.' '.$end_time);
-                 $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated($post_id, $start_date, $end_date,'',$start_date_time,$end_date_time);
+                $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated($post_id, $start_date, $start_time,$d_type,$duration);
 
                  $content .=    '<label><input type="radio" name="option" class="radio-input">';
                  if($rbfw_timely_available_quantity){

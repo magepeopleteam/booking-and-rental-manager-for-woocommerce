@@ -1741,11 +1741,32 @@ function rbfw_timely_available_quantity($post_id, $start_date, $end_date, $type 
 }*/
 
 
-function rbfw_timely_available_quantity_updated($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null)
+//function rbfw_timely_available_quantity_updated($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null)
+function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_time,$d_type,$duration)
 {
 
-    if (empty($post_id) || empty($start_date) || empty($end_date)) {
+    if (empty($post_id)) {
         return;
+    }
+
+    if($start_time){
+        $start_date_time = new DateTime($start_date.' '.$start_time);
+    }else{
+        $start_date_time = new DateTime($start_date);
+    }
+    $for_end_date_time = $start_date_time;
+
+    $total_hours = ($d_type=='Hours' ? $duration : ($d_type=='Days' ? $duration*24 : $duration*24*7));
+    $for_end_date_time->modify("+$total_hours hours");
+    $end_date = $for_end_date_time->format('Y-m-d');
+    $end_time = $for_end_date_time->format('H:i:s');
+
+    $end_date_time = new DateTime($end_date.' '.$end_time);
+
+    if(isset($_POST['pickup_time']) && $_POST['pickup_time']){
+        $start_date_time = new DateTime($start_date.' '.$start_time); // Original date and time
+    }else{
+        $start_date_time = new DateTime($start_time); // Original date and time
     }
 
     $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
@@ -1769,8 +1790,8 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $end_date
                     $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
                     $date_inventory_end = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
 
-                    $date_pickup = $pickup_datetime;
-                    $date_dropoff = $dropoff_datetime;
+                    $date_pickup = $start_date_time;
+                    $date_dropoff = $end_date_time;
 
                     if ($date_inventory_start < $date_dropoff && $date_pickup < $date_inventory_end) {
                         $total_booked += $rbfw_item_quantity;
