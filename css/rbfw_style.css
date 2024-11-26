@@ -6843,7 +6843,7 @@ a.rbfw_rent_list_btn:hover{
 }
 
 .rbfw_rent_list_btn .button-icon svg path {
-    stroke: #0a0a0a;
+    stroke: #fff;
     transition: all 0.3s ease-in-out;
 }
 

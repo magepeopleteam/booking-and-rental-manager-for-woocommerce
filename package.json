@@ -9,7 +9,8 @@
   "main": "rent-manager.php",
   "scripts": {
     "start": "sass --watch sass/main.scss assets/admin/css/admin.css",
-    "build": "sass --watch --style compressed sass/main.scss assets/admin/css/admin.css"
+    "build": "sass --watch --style compressed sass/main.scss assets/admin/css/admin.css",
+    "browsersync": "browser-sync start --config bs-config.js"
   },
   "author": "mage-people",
   "license": "ISC"
