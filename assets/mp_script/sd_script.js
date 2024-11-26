@@ -160,7 +160,6 @@
 
         jQuery('body').on('click', '.rbfw_service_type .single-type-timely', function(e) {
 
-            let rbfw_item_quantity = 1;
             let post_id = jQuery('.rbfw_post_id').val();
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
             let pickup_time = jQuery('.rbfw-select.rbfw-time-price.pickup_time').val();
@@ -168,6 +167,7 @@
             let service_price = jQuery(this).data('price');
             let duration = jQuery(this).data('duration');
             let d_type = jQuery(this).data('d_type');
+            let available_quantity = jQuery(this).data('available_quantity');
             let service_type = jQuery(this).text();
 
             if(rbfw_bikecarsd_selected_date==''){
@@ -189,12 +189,12 @@
                 data: {
                     'action'  : 'rbfw_timely_variation_price_calculation',
                     'post_id': post_id,
-                    'rbfw_item_quantity': rbfw_item_quantity,
                     'rbfw_bikecarsd_selected_date': rbfw_bikecarsd_selected_date,
                     'pickup_time': pickup_time,
                     'service_price': service_price,
                     'duration': duration,
                     'd_type': d_type,
+                    'available_quantity': available_quantity,
                     'service_type': service_type,
                 },
                 beforeSend: function() {

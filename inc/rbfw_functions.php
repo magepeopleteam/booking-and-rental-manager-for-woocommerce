@@ -1772,10 +1772,7 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $end_date
                     $date_pickup = $pickup_datetime;
                     $date_dropoff = $dropoff_datetime;
 
-                   // print_r($date_inventory_start);
-                   // print_r($date_pickup) ;exit;
-
-                    if ($date_inventory_start <= $date_dropoff && $date_pickup <= $date_inventory_end) {
+                    if ($date_inventory_start < $date_dropoff && $date_pickup < $date_inventory_end) {
                         $total_booked += $rbfw_item_quantity;
                     }
                 }
@@ -3120,14 +3117,9 @@ function rbfw_get_available_times_particulars($rbfw_id,$selected_date){
     foreach ($particulars_data as $single){
         $pd_dates_array = getAllDates($single['start_date'], $single['end_date']);
         if (in_array($selected_date, $pd_dates_array)) {
-            $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
             $rdfw_available_time = $single['available_time'];
-            foreach ($rbfw_time_slots as $rts_key => $rts_value) {
-                foreach ($rdfw_available_time as $rat_key => $rat_value) {
-                    if($rts_value == $rat_value){
-                        $the_array[date(get_option('time_format'), strtotime($rts_value))] = $rts_key;
-                    }
-                }
+            foreach ($rdfw_available_time as $single){
+                $the_array[$single] = date(get_option('time_format'), strtotime($single));
             }
             $particular_date = 'yes';
             return $the_array;

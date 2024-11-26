@@ -162,6 +162,38 @@
                 </div>
                 <?php
             }
+
+            public function multiple_time_slot_select_for_particular_date($rbfw_time_slots,$available_times,$index,$post_id){
+
+                global  $RBFW_Timeslots_Page;
+                $rbfw_time_slots = $RBFW_Timeslots_Page->rbfw_format_time_slot($rbfw_time_slots);
+                asort($rbfw_time_slots);
+
+
+
+                $rdfw_available_time_update = [];
+
+                foreach ($available_times as $single){
+                    $rdfw_available_time_update[] = date('H:i', strtotime($single));
+                }
+
+
+                ?>
+
+                <select name="rbfw_particulars[<?php echo $index; ?>][available_time][]" multiple class="select2-hidden-accessible">
+                    <?php foreach($rbfw_time_slots as $key => $value): ?>
+                        <?php if(get_the_title( $post_id ) == 'Auto Draft'){ ?>
+                            <option selected value="<?php echo date('H:i', strtotime($value)); ?>"> <?php echo $key; ?> </option>
+                        <?php }else{ ?>
+                            <option <?php echo (in_array(date('H:i', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo date('H:i', strtotime($value)); ?>"> <?php echo date('H:i', strtotime($value)); ?> </option>
+                        <?php } ?>
+                    <?php endforeach; ?>
+                </select>
+                <?php
+            }
+
+
+
 			public function add_tabs_content( $post_id ) {
                 ?>
 				<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_date_settings_meta_boxes">
@@ -191,8 +223,6 @@
 								</label>
 								<span><?php _e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
 							</div>
-
-
 							<div class="w-70">
 								<?php $this->multiple_time_slot_select($post_id); ?>
 							</div>
@@ -200,7 +230,7 @@
 					</div>
 
 
-                   
+
 			 	</div>
 				<script>
                     jQuery('input[name=rbfw_time_slot_switch]').click(function(){
@@ -235,7 +265,9 @@
             $particulars_data = get_post_meta($post_id, 'rbfw_particulars_data', true);
             $particulars_data = !empty($particulars_data) && is_array($particulars_data) ? $particulars_data : [[]];
             ?>
+
             <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_date_settings_meta_boxes">
+
                 <?php $this->panel_header('Particular Settings', 'Here you can set Particulars'); ?>
 
                 <section>
@@ -247,16 +279,17 @@
                     </div>
 
                     <?php $rbfw_particular_switch = get_post_meta($post_id, 'rbfw_particular_switch', true) ? get_post_meta($post_id, 'rbfw_particular_switch', true) : 'off'; ?>
+
                     <label class="switch">
-                    <input type="checkbox" name="rbfw_particular_switch" value="<?php echo esc_attr(($rbfw_particular_switch=='on')?$rbfw_particular_switch:'off'); ?>" <?php echo esc_attr(($rbfw_particular_switch=='on')?'checked':''); ?>>
+                        <input type="checkbox" name="rbfw_particular_switch" value="<?php echo esc_attr(($rbfw_particular_switch=='on')?$rbfw_particular_switch:'off'); ?>" <?php echo esc_attr(($rbfw_particular_switch=='on')?'checked':''); ?>>
                         <span class="slider round"></span>
                     </label>
                 </section>
 
                 <!-- Multiple Particular Section -->
                 <div class="available-particular <?php echo esc_attr(($rbfw_particular_switch == 'on') ? 'show' : 'hide'); ?>">
-            <section>
-                <table class="form-table" id="particulars-table">
+                    <section>
+                        <table class="form-table" id="particulars-table">
                     <tr>
                         <th><?php _e('Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                         <th><?php _e('End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
@@ -264,7 +297,7 @@
                         <th><?php _e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                     </tr>
                     <?php foreach ($particulars_data as $index => $particular): ?>
-                        
+
                     <tr class="particular-row">
                         <td>
                             <input type="text" name="rbfw_particulars[<?php echo $index; ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr($particular['start_date'] ?? ''); ?>">
@@ -274,18 +307,12 @@
                         </td>
                         <td>
                             <div class="w-100">
-                                <?php 
-                                // Render the select box with selected available time slots
+                                <?php
                                 $available_times = isset($particular['available_time']) ? $particular['available_time'] : [];
                                 $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+                                $this->multiple_time_slot_select_for_particular_date($rbfw_time_slots, $available_times, $index, $post_id);
                                 ?>
-                                <select name="rbfw_particulars[<?php echo $index; ?>][available_time][]" multiple class="select2-hidden-accessible">
-                                    <?php foreach ($rbfw_time_slots as $time_slot): ?>
-                                        <option value="<?php echo esc_attr($time_slot); ?>" <?php echo in_array($time_slot, $available_times) ? 'selected' : ''; ?>>
-                                            <?php echo esc_html($time_slot); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
+
                             </div>
                         </td>
                         <td>
@@ -294,7 +321,7 @@
                     </tr>
                     <?php endforeach; ?>
                 </table>
-                
+
             </section>
             <button type="button" id="add-particular-row" class="button ss" ><?php echo esc_html__('Add Another', 'booking-and-rental-manager-for-woocommerce'); ?></button>
             </div>
@@ -323,13 +350,18 @@
         initializeDatepickers();
         $('#add-particular-row').click(function() {
             var availableTimeSlots = '<?php
-        $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
-        $options = '';
-        foreach ($rbfw_time_slots as $time_slot) {
-            $options .= '<option value="' . esc_attr($time_slot) . '">' . esc_html($time_slot) . '</option>';
-        }
-        echo addslashes($options);
-    ?>';
+                $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+
+                global  $RBFW_Timeslots_Page;
+                $rbfw_time_slots = $RBFW_Timeslots_Page->rbfw_format_time_slot($rbfw_time_slots);
+                asort($rbfw_time_slots);
+
+                $options = '';
+                foreach ($rbfw_time_slots as $key=>$time_slot) {
+                    $options .= '<option  value="'. date('H:i', strtotime($time_slot)).'">' . date('H:i', strtotime($time_slot)) .'</option>';
+                }
+                echo addslashes($options);
+                ?>';
             
             var newRow = `
                 <tr class="particular-row">
