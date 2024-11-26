@@ -158,6 +158,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
     $start_datetime = $cart_item['rbfw_start_date'] ? $cart_item['rbfw_start_date'] : '';
     $start_time = $cart_item['rbfw_start_time'] ? $cart_item['rbfw_start_time'] : '';
+
     $end_datetime = $cart_item['rbfw_end_date'] ? $cart_item['rbfw_end_date'] : '';
     $end_time = $cart_item['rbfw_end_time'] ? $cart_item['rbfw_end_time'] : '';
     $rbfw_start_datetime = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
@@ -169,8 +170,8 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $rbfw_bikecarsd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : array();
     $rbfw_extra_service_data = get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
 
-    $rbfw_pickup_point  = $cart_item['rbfw_pickup_point'] ? $cart_item['rbfw_pickup_point'] : '';
-    $rbfw_dropoff_point = $cart_item['rbfw_dropoff_point'] ? $cart_item['rbfw_dropoff_point'] : '';
+    $rbfw_pickup_point  = isset($cart_item['rbfw_pickup_point']) ? $cart_item['rbfw_pickup_point'] : '';
+    $rbfw_dropoff_point = isset($cart_item['rbfw_dropoff_point']) ? $cart_item['rbfw_dropoff_point'] : '';
 
     $rbfw_item_quantity = 1;
 

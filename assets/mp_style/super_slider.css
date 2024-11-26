@@ -61,7 +61,7 @@ div.superSlider .sliderMoreItem {
 	right: 0;
 	bottom: 0;
 	-webkit-border-radius: 5px;
-	border-radius: 0;
+	border-radius: 10px;
 	background-color: #000B;
 	font-size: 18px;
 	color: #FFF;
@@ -86,8 +86,8 @@ div.superSlider .iconIndicator {
 	transform: translateY(-50%);
 }
 div.superSlider .iconIndicator:hover {color: #FFF;}
-div.superSlider .iconIndicator.prevItem {left: 20px;}
-div.superSlider .iconIndicator.nextItem {right: 20px;}
+div.superSlider .iconIndicator.prevItem {left: 20px; border-radius:30px; }
+div.superSlider .iconIndicator.nextItem {right: 20px; border-radius:30px;}
 /*************popup slider***************/
 [data-target-popup] {cursor: pointer;}
 div.superSlider .sliderPopup div.superSlider {

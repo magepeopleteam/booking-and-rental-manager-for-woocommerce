@@ -132,7 +132,9 @@ if(!class_exists('RBFW_Quick_Setup')){
 
             if(isset($_POST['rbfw_sz_cpt_label']) && !empty($_POST['rbfw_sz_cpt_label'])){
                 $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings',true);
+                $rbfw_basic_gen_settings=is_array($rbfw_basic_gen_settings)?$rbfw_basic_gen_settings:[];
                 $rbfw_basic_gen_settings['rbfw_rent_label'] =  sanitize_text_field($_POST['rbfw_sz_cpt_label']);
+                $rbfw_basic_gen_settings['rbfw_gutenburg_switch'] =  'Off';
                 update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
             }
 

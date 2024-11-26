@@ -1666,16 +1666,123 @@ function rbfw_get_bike_car_sd_es_available_qty($post_id, $selected_date, $name){
 
     return $remaining_stock;
 }
+/*
+function rbfw_timely_available_quantity($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null)
+{
 
-/****************************************************
- * Resort/Multiple Rent:
- * Get Types Available Quantity
- ****************************************************/
+    if (empty($post_id) || empty($start_date) || empty($end_date)) {
+        return;
+    }
+
+    $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
+    $type_stock = 0;
+
+    // Start: Get Date Range
+    $date_range = [];
+    $start_date = strtotime($start_date);
+    $end_date = strtotime($end_date);
+
+    for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
+        $date = date('d-m-Y', $currentDate);
+        $date_range[] = $date;
+    }
+
+    $type_stock += (int)get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true);
+
+    $inventory_based_on_return = rbfw_get_option('inventory_based_on_return', 'rbfw_basic_gen_settings');
 
 
+    if (!empty($rbfw_inventory)) {
+
+        $total_qty = 0;
+        $qty_array = [];
+
+        foreach ($date_range as $key1 => $range_date) {
+            foreach ($rbfw_inventory as $key => $inventory) {
+
+                $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
+                $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
+
+                if (in_array($range_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || (($inventory_based_on_return == 'yes') ? $inventory['rbfw_order_status'] == 'returned' : ''))) {
+
+                        $inventory_start_date = $booked_dates[0];
+                        $inventory_end_date = end($booked_dates);
+                        $inventory_start_time = $inventory['rbfw_start_time'];
+                        $inventory_end_time = $inventory['rbfw_end_time'];
+
+                        $date1Start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
+                        $date1End = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
+
+                        $date2Start = $pickup_datetime;
+                        $date2End = $dropoff_datetime;
+
+                        if ($date1Start <= $date2End && $date2Start <= $date1End) {
+                            $total_qty += $rbfw_item_quantity;
+                        }
+                }
+
+            }
+
+            $remaining_stock = $type_stock - $total_qty;
+            $remaining_stock = max(0, $remaining_stock);
+            $qty_array[] = $remaining_stock;
+            $total_qty = 0;
+        }
+    }
+
+    if (empty($qty_array)) {
+        $remaining_stock = $type_stock;
+    } else {
+        $remaining_stock = min($qty_array);
+    }
+
+    return $remaining_stock;
+
+}*/
 
 
+function rbfw_timely_available_quantity_updated($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null)
+{
 
+    if (empty($post_id) || empty($start_date) || empty($end_date)) {
+        return;
+    }
+
+    $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
+    $total_stock = (int)get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true);
+    $total_booked = 0;
+
+
+    if (!empty($rbfw_inventory)) {
+
+            foreach ($rbfw_inventory as $key => $inventory) {
+                $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
+                $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
+                $inventory_based_on_return = rbfw_get_option('inventory_based_on_return', 'rbfw_basic_gen_settings');
+
+                if ( ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || (($inventory_based_on_return == 'yes') ? $inventory['rbfw_order_status'] == 'returned' : ''))) {
+                    $inventory_start_date = $booked_dates[0];
+                    $inventory_end_date = end($booked_dates);
+                    $inventory_start_time = $inventory['rbfw_start_time'];
+                    $inventory_end_time = $inventory['rbfw_end_time'];
+
+                    $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
+                    $date_inventory_end = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
+
+                    $date_pickup = $pickup_datetime;
+                    $date_dropoff = $dropoff_datetime;
+
+                    if ($date_inventory_start < $date_dropoff && $date_pickup < $date_inventory_end) {
+                        $total_booked += $rbfw_item_quantity;
+                    }
+                }
+
+            }
+    }
+
+    return $total_stock - $total_booked;
+
+}
 
 
 
@@ -2604,59 +2711,56 @@ function rbfw_the_faq_style_two_func($post_id){
 
     if(! empty($rbfw_faq_arr)){
 
-        $rbfw_faq_title 	= array_column($rbfw_faq_arr, 'rbfw_faq_title');
-        $rbfw_faq_img 		= array_column($rbfw_faq_arr, 'rbfw_faq_img');
-        $rbfw_faq_content 	= array_column($rbfw_faq_arr, 'rbfw_faq_content');
+
         $count_faq_arr 		= count($rbfw_faq_arr);
         ?>
-        <div id="rbfw_faq_accordion_style_two">
-
-            <?php for ($x = 0; $x < $count_faq_arr; $x++) { ?>
-                <div class="rbfw_faq_accordion_wrapper <?php if($x == 0){ echo 'active'; }?>">
-                    <?php if(! empty($rbfw_faq_title[$x])): ?>
-                        <div class="rbfw_faq_heading_wrapper">
-                            <h3 class="rbfw_faq_heading">
-                                <span class="rbfw_faq_heading_collapsed"><?php echo esc_html($rbfw_faq_title[$x]); ?></span>
-                            </h3>
-                        </div>
+        <div id="rbfw_faq_accordion" class="rbfw_faq_accordion_donut">
+            <?php foreach ($rbfw_faq_arr as $faq) { ?>
+                <div class="rbfw_faq_item">
+                    <?php if (!empty($faq['rbfw_faq_title'])): ?>
+                        <h3 class="rbfw_faq_header"><?php echo esc_html($faq['rbfw_faq_title']); ?> <i class="fas fa-plus"></i></h3>
                     <?php endif; ?>
                     <div class="rbfw_faq_content_wrapper">
-                        <div class="rbfw_faq_content">
-                            <div class="rbfw_faq_img">
-                                <?php
-                                if(! empty($rbfw_faq_img[$x])):
-                                    $rbfw_img_id_arr = explode (",", $rbfw_faq_img[$x]);
-                                    foreach ($rbfw_img_id_arr as $attachment_id) {
-                                        $url = wp_get_attachment_url( $attachment_id );
-                                        echo '<img src="'.esc_url($url).'"/>';
-                                    }
-                                endif;
-                                ?>
-                            </div>
-                            <p class="rbfw_faq_desc">
-
-                                <?php
-                                if(! empty($rbfw_faq_content[$x])):
-                                    echo esc_html($rbfw_faq_content[$x]);
-                                endif;
-                                ?>
-                            </p>
+                        <div class="rbfw_faq_img">
+                            <?php
+                            if (!empty($faq['rbfw_faq_img'])):
+                                $rbfw_img_id_arr = explode(",", $faq['rbfw_faq_img']);
+                                foreach ($rbfw_img_id_arr as $attachment_id) {
+                                    $url = wp_get_attachment_url($attachment_id);
+                                    echo '<img src="' . esc_url($url) . '"/>';
+                                }
+                            endif;
+                            ?>
                         </div>
+                        <p class="rbfw_faq_desc">
+                            <?php
+                            if (!empty($faq['rbfw_faq_content'])):
+                                echo esc_html($faq['rbfw_faq_content']);
+                            endif;
+                            ?>
+                        </p>
                     </div>
                 </div>
             <?php } ?>
         </div>
         <script>
-            jQuery(document).ready(function(){
-                jQuery('#rbfw_faq_accordion_style_two .rbfw_faq_accordion_wrapper').click(function (e) {
-                    jQuery(this).toggleClass("active");
+            jQuery(document).ready(function($){
+                $('#rbfw_faq_accordion .rbfw_faq_content_wrapper').first().slideDown();
+                $('#rbfw_faq_accordion .rbfw_faq_header').first().find('i').removeClass('fa-plus').addClass('fa-minus');
 
+                $('.rbfw_faq_header').click(function(e){
+                    e.preventDefault();
+                    $(this).next('.rbfw_faq_content_wrapper').slideToggle();
+                    $(this).find('i').toggleClass('fa-plus fa-minus');
                 });
             });
         </script>
         <?php
     }
 }
+
+
+
 
 /************************
  * GET Donut Testimonial Content
@@ -2990,19 +3094,46 @@ function rbfw_exist_page_by_slug( $slug ) {
 
 function rbfw_get_available_times($rbfw_id){
     $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+    //echo '<pre>';print_r($rbfw_time_slots);echo '<pre>';
     $rdfw_available_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
 
+    //echo '<pre>';print_r($rdfw_available_time);echo '<pre>';
     $the_array = [];
-
     foreach ($rbfw_time_slots as $rts_key => $rts_value) {
         foreach ($rdfw_available_time as $rat_key => $rat_value) {
-            if($rts_value == $rat_value){
+            if(date("g:i a", strtotime($rts_value)) == date("g:i a", strtotime($rat_value))){
                 $the_array[$rts_value] = $rts_key;
             }
         }
     }
+
     return $the_array;
 }
+
+function rbfw_get_available_times_particulars($rbfw_id,$selected_date){
+    $particulars_data = get_post_meta($rbfw_id, 'rbfw_particulars_data', true);
+    $the_array = [];
+    $particular_date = 'no';
+    foreach ($particulars_data as $single){
+        $pd_dates_array = getAllDates($single['start_date'], $single['end_date']);
+        if (in_array($selected_date, $pd_dates_array)) {
+            $rdfw_available_time = $single['available_time'];
+            foreach ($rdfw_available_time as $single){
+                $the_array[$single] = date(get_option('time_format'), strtotime($single));
+            }
+            $particular_date = 'yes';
+            return $the_array;
+        }
+    }
+    $rdfw_available_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
+    foreach ($rdfw_available_time as $single){
+        $the_array[$single] = date(get_option('time_format'), strtotime($single));
+    }
+    return $the_array;
+}
+
+
+
 
 /* UPDATE: Inventory order status */
 add_action('wp_loaded', 'rbfw_update_inventory_order_status');
@@ -3191,6 +3322,8 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
         if(($hours) || ($total_days  && $rbfw_enable_hourly_rate=='yes' && $rbfw_enable_daily_rate=='no')){
             $total_days = $total_days + 1;
         }
+        $total_days = ($total_days==0)?1:$total_days;
+
         for ($i = 0; $i < $total_days; $i++) {
 
             $day = strtolower(date('D', strtotime("+$i day", strtotime($start_date))));
@@ -3437,12 +3570,97 @@ function get_rbfw_post_categories_from_meta() {
     return array_unique( $all_categories );
 }
 
+function get_rbfw_post_features_from_meta() {
+    $args = array(
+        'post_type'      => 'any',
+        'meta_key'       => 'rbfw_feature_category',
+        'meta_compare'   => 'EXISTS',
+        'posts_per_page' => -1,
+        'orderby'        => 'meta_id',
+        'order'          => 'DESC',
+    );
+
+    $query = new WP_Query($args);
+    if (!$query->have_posts()) {
+        return false;
+    }
+    $all_categories = [];
+
+    while ($query->have_posts()) {
+        $query->the_post();
+        $meta_value = get_post_meta(get_the_ID(), 'rbfw_feature_category', true);
+        $meta_value = maybe_unserialize($meta_value);
+        if ( is_array($meta_value) && count($meta_value) > 0) {
+            $all_categories = array_merge($all_categories, $meta_value);
+        }
+    }
+    wp_reset_postdata();
+
+    $all_feature = [];
+    foreach ( $all_categories as $features ){
+        if( is_array( $features ) ){
+            foreach ( $features['cat_features'] as $feature ){
+                $all_feature[] = array(
+                    'icon' => $feature['icon'],
+                    'title' => $feature['title'],
+                );
+            }
+        }
+    }
+
+    $serialized_features = array_map( function( $feature ) {
+        return serialize($feature['icon'] . $feature['title']);
+    }, $all_feature);
+
+    $unique_serialized_features = array_unique($serialized_features);
+    $unique_features = array_intersect_key($all_feature, $unique_serialized_features);
+    $unique_features = array_values($unique_features);
+
+    return  $unique_features ;
+}
+
 
 /**
  * Get location data from wp_postmeta table using meta_key 'rbfw_pickup_data'.
  *
  * @return array|false Array of location data or false on failure.
  */
+function get_rbfw_item_type_wp_query() {
+    $args = array(
+        'post_type'      => 'any',
+        'meta_key'       => 'rbfw_item_type',
+        'meta_compare'   => 'EXISTS',
+        'orderby'        => 'meta_id',
+        'order'          => 'DESC',
+        'posts_per_page' => -1,
+    );
+    $query = new WP_Query($args);
+
+    if (!$query->have_posts()) {
+        return false;
+    }
+
+    $item_types = [];
+
+    while ($query->have_posts()) {
+        $query->the_post();
+        $item_type = get_post_meta(get_the_ID(), 'rbfw_item_type', true);
+        if ( !empty( $item_type ) ) {
+            if( $item_type === 'bike_car_sd' ){
+                $item_type_val = 'Bike car single day';
+            }elseif ($item_type === 'bike_car_md' ){
+                $item_type_val = 'Bike car multiple day';
+            }else{
+                $item_type_val = ucfirst( $item_type );
+            }
+            $item_types[$item_type] = $item_type_val;
+        }
+    }
+
+    wp_reset_postdata();
+
+    return array_unique( $item_types );
+}
 function get_rbfw_pickup_data_wp_query() {
     $args = array(
         'post_type'      => 'any',
@@ -3475,7 +3693,7 @@ function get_rbfw_pickup_data_wp_query() {
         foreach ($locations as $locations_group) {
             foreach ($locations_group as $location) {
                 if (!empty($location['loc_pickup_name'])) {
-                    $all_locations[$location['loc_pickup_name']] = $location['loc_pickup_name'];
+                    $all_locations[$location['loc_pickup_name']] = ucfirst( $location['loc_pickup_name'] );
                 }
             }
         }

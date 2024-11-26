@@ -104,7 +104,7 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                             ?>
                             <tr>
                                 <td><?php echo $key; ?></td>
-                                <td><?php echo date('h:i A', strtotime($value)); ?></td>
+                                <td><?php echo $value; ?></td>
                                 <td style="text-align:right">
                                     <a href="#" class="rbfw_time_slot_edit_btn" data-label="<?php echo esc_attr($key); ?>"><i class="fa-solid fa-pen-to-square"></i> <?php esc_html_e('Edit','booking-and-rental-manager-for-woocommerce'); ?></a>
                                     <a href="#" class="rbfw_time_slot_remove_btn" data-time="<?php echo esc_attr($value); ?>" data-label="<?php echo esc_attr($key); ?>"><i class="fa-solid fa-trash-can"></i></a>
@@ -141,29 +141,22 @@ if (!class_exists('RBFW_Timeslots_Page')) {
         public function rbfw_insert_time_slot(){
             
             if(isset($_POST['ts_label']) && isset($_POST['ts_time'])){
-
                 $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
                 $ts_label = $_POST['ts_label'];
                 $ts_time = $_POST['ts_time'];
-                $ts_time = date('h:i A', strtotime($ts_time));
+                $ts_time = date('H:i', strtotime($ts_time));
 
                 if( ! array_key_exists($ts_label, $rbfw_time_slots) ){
-
                     $rbfw_time_slots[$ts_label] = $ts_time;
                     update_option('rbfw_time_slots', $rbfw_time_slots);
                     $status = 'inserted';
-
                 } else {
-
                     $status = 'exist';
                 }
-
                 echo json_encode( array(
                     'status'   => $status,
-                ) );
-                
+                ));
             }
-            
             wp_die();
         }
 

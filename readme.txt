@@ -207,11 +207,18 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.2.0 =
+* Day wise time slot option added.
+* Manage inventory as hourly option added.
+
+
 = 2.1.9 =
 * Date calendar weekday start as "Week Starts On" settings.
 * Time format fixed.
 * Single Day Inventory problem solved.
 * Multi Day Inventory problem solved.
+* Single day sold out problem solved for without time slot.
+* Multiday minimum day count 1 instead of 0.
 
 
 = 2.1.5 =

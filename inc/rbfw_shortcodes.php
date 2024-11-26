@@ -24,6 +24,13 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'category' => '',
         'cat_ids' => '',
         'columns' => '',
+        'left-filter' => '',
+        'left-title-filter' => 'on',
+        'left-price-filter' => 'on',
+        'left-location-filter' => 'on',
+        'left-category-filter' => 'on',
+        'left-type-filter' => 'on',
+        'left-feature-filter' => 'on',
     ), $atts );
 
     $style  = $attributes['style'];
@@ -36,6 +43,17 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $category   = $attributes['category'];
     $cat_ids   = $attributes['cat_ids'];
     $columns   = $attributes['columns'];
+    $left_filter   = $attributes['left-filter'];
+    $left_filter_control = array(
+            'title_filter_shown'    => $attributes['left-title-filter'],
+            'price_filter_shown'    => $attributes['left-price-filter'],
+            'location_filter_shown' => $attributes['left-location-filter'],
+            'category_filter_shown' => $attributes['left-category-filter'],
+            'type_filter_shown'     => $attributes['left-type-filter'],
+            'feature_filter_shown'  => $attributes['left-feature-filter'],
+    );
+
+//    [rent-list style='grid' left-filter='yes' left-title-filter='on' left-price-filter='on' left-location-filter='on' left-category-filter='off' left-type-filter='on' left-feature-filter='off']
 
     if(!$category){
         $category  = $cat_ids;
@@ -205,7 +223,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             </div>
         </div>
 
-        <div class="shoe_result_text">
+        <div class="rbfw_shoe_result_text" id="rbfw_shoe_result_text">
             <span> <?php echo esc_attr( $shoe_result );?></span>
         </div>
         <div class="rbfw_rent_list_grid_icon_holder">
@@ -221,70 +239,81 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             </div>
         </div>
     </div>
-    <div class="rbfw_rent_list_wrapper <?php echo $grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>" id="rbfw_rent_list_wrapper">
-
+    <div class="rbfw_rent_item_with_left_filter">
         <?php
-        $d = 1;
-        if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
-            $the_content = get_the_content();
+        if( $left_filter === 'yes' ){
+            $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper_with_left_filter';
+            echo rbfw_rent_left_filter( $left_filter_control );
+        }else{
+            $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper';
+        }
+        ?>
+        <div class=" <?php echo $rent_list_wrapper_cls.' '.$grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>" id="rbfw_rent_list_wrapper">
 
-            $rbfw_id = get_the_id();
+            <?php
+            $d = 1;
+            if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
+                $the_content = get_the_content();
 
-            $expire = 'no';
-            $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) : 'yes';
+                $rbfw_id = get_the_id();
 
-            if($rbfw_enable_start_end_date=='no'){
-                $rbfw_event_end_date  = get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) : '';
-                $rbfw_event_end_time  = get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) : '';
-                $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
-                $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
-                $rbfw_event_last_date = strtotime(date_i18n('Y-m-d h:i a', strtotime($rbfw_event_end_date.' '.$rbfw_event_end_time)));
-                $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
-                if($rbfw_event_last_date<$rbfw_todays_date){
-                    $expire = 'yes';
+                $expire = 'no';
+                $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) : 'yes';
+
+                if($rbfw_enable_start_end_date=='no'){
+                    $rbfw_event_end_date  = get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) : '';
+                    $rbfw_event_end_time  = get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) : '';
+                    $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
+                    $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
+                    $rbfw_event_last_date = strtotime(date_i18n('Y-m-d h:i a', strtotime($rbfw_event_end_date.' '.$rbfw_event_end_time)));
+                    $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
+                    if($rbfw_event_last_date<$rbfw_todays_date){
+                        $expire = 'yes';
+                    }
                 }
-            }
-            // load c
-            if($expire == 'no'){
+                // load c
+                if($expire == 'no'){
 //                $grid=RBFW_Function::get_template_path('archive/grid.php');
-                $grid=RBFW_Function::get_template_path('archive/grid_new.php');
+                    $grid=RBFW_Function::get_template_path('archive/grid_new.php');
 //                $list=RBFW_Function::get_template_path('archive/list.php');
-                $list=RBFW_Function::get_template_path('archive/list_new.php');
+                    $list=RBFW_Function::get_template_path('archive/list_new.php');
 
-                if($style == 'grid'){
-                    include($grid);
+                    if($style == 'grid'){
+                        include($grid);
+                    }
+                    elseif($style == 'list'){
+                        include($list);
+                    }
+                    else{
+                        include( $list );
+                    }
                 }
-                elseif($style == 'list'){
-                    include($list);
-                }
-                else{
-                    include( $list );
-                }
-            }
-            $d++;
-            $j++;
-        endwhile;
-        else:
-            ?>
-            <div class="rbfw-lsn-new-message-box">
-                <div class="rbfw-lsn-new-message-box-info">
-                    <div class="rbfw-lsn-info-tab rbfw-lsn-tip-icon-info" title="error"><i></i></div>
-                    <div class="rbfw-lsn-tip-box-info">
-                        <p><?php rbfw_string('rbfw_text_nodatafound',__('Sorry, no data found!','booking-and-rental-manager-for-woocommerce')); ?></p>
+                $d++;
+                $j++;
+            endwhile;
+            else:
+                ?>
+                <div class="rbfw-lsn-new-message-box">
+                    <div class="rbfw-lsn-new-message-box-info">
+                        <div class="rbfw-lsn-info-tab rbfw-lsn-tip-icon-info" title="error"><i></i></div>
+                        <div class="rbfw-lsn-tip-box-info">
+                            <p><?php rbfw_string('rbfw_text_nodatafound',__('Sorry, no data found!','booking-and-rental-manager-for-woocommerce')); ?></p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        <?php
-        endif;
+            <?php
+            endif;
 
-        wp_reset_query();
-        ?>
+            wp_reset_query();
+            ?>
+        </div>
     </div>
+
     <?php
     $content = ob_get_clean();
 
     if( isset( $atts['pagination'] ) && $atts['pagination'] == 'yes') {
-        $content .= '<div class="pagination rbfw_pagination">';
+        $content .= '<div class="pagination rbfw_pagination" id="rbfw_rent_list_pagination">';
         $content .= paginate_links(array(
             'total' => $query->max_num_pages,
             'prev_text' => __('« '), // Optional: Add previous and next text
@@ -444,6 +473,169 @@ function rbfw_rent_search_shortcode( $attr = null ){
 
     return $search_content;
 //    ob_get_clean(); }
+}
+
+add_shortcode('rbfw_left_filter', 'rbfw_rent_left_filter' );
+function rbfw_rent_left_filter( $left_filter_control = null ){
+
+    $rbfw_categorys = get_rbfw_post_categories_from_meta();
+    $rbfw_locations = get_rbfw_pickup_data_wp_query();
+    $rbfw_rent_types =get_rbfw_item_type_wp_query();
+    $rbfw_features_category =  get_rbfw_post_features_from_meta();
+    $type_display = 10;
+
+    ob_start();
+    ?>
+
+    <div class="rbfw_filter_sidebar">
+        <div class="rbfw_left_filter_cover" id="rbfw_left_filter_cover"></div>
+        <div class="rbfw_popup_wrapper" id="rbfw_left_filter_popup_wrapper">
+            <div class="rbfw_rent_cat_info_popup">
+                <span class="rbfw_popup_close_btn" id="rbfw_left_filter_popup_close_btn">&times;</span>
+                <div class="rbfw_display_item_teatures">
+                    <div id="rbfw_left_filter_location_popup_content"></div>
+                    <div id="rbfw_left_filter_feature_popup_content"></div>
+                    <div id="rbfw_left_filter_category_popup_content"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="rbfw_title_text">
+            <button id="rbfw_left_filter_clearButton" class="rbfw_left_filter_clearButton" style="display: none">Clear All</button>
+            <h4 data-placeholder=""><span class="rbfw_filter_icon mR_xs fas fa-filter"></span>Filters</h4>
+        </div>
+
+        <?php if( $left_filter_control['title_filter_shown'] === 'on' ){?>
+            <div class="rbfw_left_filter_text_Search_holder">
+            <div class="rbfw_left_filter_search_text_input">
+                <input name="rbfw_search_by_title" class="rbfw_search_by_title" placeholder="Title search">
+            </div>
+            <div class="rbfw_left_filter_search_btn">Filter</div>
+        </div>
+        <?php }?>
+
+        <?php if( $left_filter_control['price_filter_shown'] === 'on' ){?>
+            <div class="rbfw_price-range">
+            <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">-</span></h5>
+            <div class="rbfw_toggle-content" style="display: block">
+                <p>
+                    <label for="price">Price range:</label>
+                    <input type="text" id="rbfw_left_filter_price" readonly style="border:0; color:#f6931f; font-weight:bold;">
+                </p>
+                <div id="slider-range"></div>
+            </div>
+        </div>
+        <?php }?>
+
+        <?php if( $left_filter_control['location_filter_shown'] === 'on' ){
+            if( is_array( $rbfw_locations ) && count( $rbfw_locations ) > 0 ){
+                ?>
+                <div class="rbfw_filter_sidebar_locations">
+                <h5 class="rbfw_toggle-header">Pickup Location<span class="rbfw_toggle-icon">-</span></h5>
+                <div class="rbfw_toggle-content" style="display: block">
+                    <?php
+
+                        $total_location = count( $rbfw_locations );
+                        $count_location_display = 1;
+                        foreach ( $rbfw_locations as $key => $location ) {
+                            if( $count_location_display <= $type_display ){
+                            ?>
+                            <div class="rbfw_rent_item_left_feature_title">
+                                <input type="checkbox" class="rbfw_location" value="<?php echo esc_attr( $key )?>">
+                                <span><?php echo esc_attr( $location )?></span>
+                            </div>
+                        <?php
+                            }
+                            $count_location_display++;
+                        }
+                        if( $total_location > $type_display ){ ?>
+                            <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_location">More +</div>
+                        <?php }
+    //                }
+
+                    ?>
+                </div>
+            </div>
+        <?php }
+        }
+        ?>
+
+        <?php if( $left_filter_control['category_filter_shown'] === 'on' &&  is_array( $rbfw_categorys ) && count( $rbfw_categorys ) > 0 ){?>
+            <div class="rbfw_filter_sidebar_category">
+                <h5 class="rbfw_toggle-header">Item Category <span class="rbfw_toggle-icon">-</span></h5>
+                <div class="rbfw_toggle-content" style="display: block">
+                    <?php
+
+                    $total_category = count( $rbfw_categorys );
+                    $category_display_count = 1;
+                    foreach ( $rbfw_categorys as $category ) {
+                        if( $category_display_count <= $type_display ){
+                        ?>
+                        <div class="rbfw_rent_item_left_feature_title">
+                            <input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>">
+                            <span><?php echo esc_attr( $category )?></span>
+                        </div>
+                    <?php
+                        }
+                        $category_display_count++;
+                    }
+                    if( $total_category > $type_display ){ ?>
+                        <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_category">More +</div>
+                    <?php }
+//                    }
+                    ?>
+                </div>
+            </div>
+        <?php }?>
+
+        <?php if( $left_filter_control['type_filter_shown'] === 'on' && is_array( $rbfw_rent_types ) && count( $rbfw_rent_types ) > 0 ){?>
+            <div class="rbfw_filter_sidebar_product-type">
+                <h5 class="rbfw_toggle-header">Item Type <span class="rbfw_toggle-icon">-</span></h5>
+                <div class="rbfw_toggle-content" style="display: block">
+                    <?php foreach ( $rbfw_rent_types as $key => $item ) { ?>
+                        <div class="rbfw_rent_item_left_feature_title">
+                            <input type="checkbox" class="rbfw_rent_type" value="<?php echo esc_attr( $key )?>">
+                            <span><?php echo esc_attr( $item )?> </span>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
+        <?php }?>
+
+        <?php if( $left_filter_control['feature_filter_shown'] === 'on' ){?>
+        <div class="rbfw_rent_item_fearture_holder">
+                <h5 class="rbfw_toggle-header">Item Features<span class="rbfw_toggle-icon">-</span></h5>
+                <div class="rbfw_toggle-content" style="display: block">
+                    <?php
+                    $total_feature = count( $rbfw_features_category );
+                    $feature_start = 1;
+
+                    foreach ( $rbfw_features_category as $features ) {
+                        if( $feature_start <= $type_display ){
+                            if( !empty( $features['title'] ) ){
+                            ?>
+                            <div class="rbfw_rent_item_left_feature_title">
+                                <input type="checkbox" class="rbfw_rent_feature" value="<?php echo esc_attr( $features['title'] )?>">
+                                <span><?php echo esc_attr( $features['title'] )?></span>
+                            </div>
+                        <?php
+                                    $feature_start ++;
+                                }
+                            }
+                        }
+                    if( $total_feature > $type_display ){ ?>
+                        <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_feature">More +</div>
+                    <?php }?>
+                </div>
+            </div>
+        <?php }?>
+    </div>
+    <?php
+    $left_filter = ob_get_clean();
+
+    return $left_filter;
+
 }
 
 ?>
