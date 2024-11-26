@@ -665,7 +665,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated($post_id, $start_date, $start_time,$d_type,$duration);
 
                  $content .=    '<label><input type="radio" name="option" class="radio-input">';
-                 if($rbfw_timely_available_quantity){
+                 if($rbfw_timely_available_quantity > 0){
                      $content .=    '<span data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" data-available_quantity="'. $rbfw_timely_available_quantity .'" class="radio-button single-type-timely">'. $value['rent_type'] .'</span>';
                  }else{
                      $content .=    '<span style="text-decoration: line-through;cursor:text" data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" class="radio-button">'. $value['rent_type'] .'</span>';
