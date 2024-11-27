@@ -651,7 +651,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
         public function rbfw_service_type_timely_stock(){
             $post_id = $_POST['post_id'];
             $start_date = $_POST['rbfw_bikecarsd_selected_date'];
-            $start_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'';
+            $start_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'00:00';
 
             $rbfw_bike_car_sd_data = get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
 

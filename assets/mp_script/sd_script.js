@@ -215,7 +215,7 @@
             });
         })
 
-        jQuery('body').on('change', '#pickup_time',function (e) {
+        jQuery('body').on('change',  '#rbfw_bikecarsd_selected_date, #pickup_time',function (e) {
 
             let post_id = jQuery('.rbfw_post_id').val();
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
