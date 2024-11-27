@@ -2488,7 +2488,7 @@ table.rbfw_bikecarsd_price_table thead {
 }
 
 table.rbfw_bikecarsd_price_table thead th {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     border: 0;
     text-align: left;
@@ -2498,7 +2498,7 @@ table.rbfw_bikecarsd_price_table thead th {
 }
 
 table.rbfw_bikecarsd_price_table tbody td {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: normal;
     border: 0;
     padding: 5px;
@@ -6639,7 +6639,8 @@ ul, li {
 .rbfw_rent_list_grid_view_top_img img {
     width: 100%;
     height: 100%;
-    /*object-fit: cover;*/
+    max-height:280px;
+    object-fit: contain;
     display: block;
     transition: all 0.5s ease-in-out;
 }
