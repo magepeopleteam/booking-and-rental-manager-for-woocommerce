@@ -48,7 +48,7 @@
     padding: 10px;
     background-color: #f9f9f9;
     gap: 15px;
-    margin-bottom: 0;
+    margin-bottom: 20px;
 }
 
 .rbfw_shoe_result_text {
@@ -462,7 +462,7 @@ ul.rbfw_popup_fearure_lists{
 }
 
 ul.rbfw_popup_fearure_lists li{
-    color: #fff;
+    color: #333;
     margin: 5px 0;
     padding: 5px 0;
     border-bottom: 1px solid #ebebeb;
@@ -475,7 +475,7 @@ ul.rbfw_popup_fearure_lists li{
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: #ffffff9c;
+    background: #0000009c;
     justify-content: center;
     align-items: center;
     z-index: 9999;
@@ -483,8 +483,8 @@ ul.rbfw_popup_fearure_lists li{
 
 /* Styles for the popup */
 .rbfw_rent_cat_info_popup {
-    background-color:#0a0a0ab0;
-    color: #F3F3F3;
+    background-color:#fff;
+    color: #333;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
@@ -521,7 +521,8 @@ ul.rbfw_popup_fearure_lists li{
 }
 .rbfw_toggle-content{
     font-size: 14px;
-    max-width: 200px;
+    width: 100%;
+    max-width: 400px;
     word-wrap: break-word;
 }
 .rbfw_types{
@@ -547,15 +548,16 @@ ul.rbfw_show_all_cat_features {
     position: absolute;
     right: 5px;
     margin-top: 4px;
+    background-color: #fff;
     border: 1px solid #dbd6d6;
-    padding: 5px 6px;
+    padding:5px 10px;
     border-radius: 3px;
-    color: #d52020;
+    color: var(--rbfw_color_primary);
     font-size: 11px;
 }
 .rbfw_left_filter_clearButton:hover{
-    background-color: #d52020;
-    color: #f6f6f6;
+    background-color: var(--rbfw_single_page_secondary_color);
+    color: var(--rbfw_color_primary);
     cursor: pointer;
 }
 
@@ -708,19 +710,31 @@ ul.rbfw_show_all_cat_features li:last-child {
 
 /*Filter Css */
 .rbfw_filter_sidebar {
-    width: 220px;
+    width: 280px;
     position: absolute;
     margin: 1px;
     z-index: 111;
     display: block;
-    padding: 20px 10px 20px 10px;
     background-color: #FFFFFF;
     border: 1px solid #ddd;
 }
+.rbfw_filter_area{
+    padding: 10px;
+}
+
+.rbfw_title_text.title{
+    padding: 10px;
+    background-color: var(--rbfw_color_primary);
+    color: #fff;
+}
+
+.rbfw_title_text.title h4{
+    margin: 0;
+}
 
 .rbfw_rent_list_wrapper_with_left_filter{
-    width: calc( 100% - 260px );
-    margin-left: 260px;
+    width: calc( 100% - 200px );
+    margin-left: 300px;
 }
 .rbfw_rent_list_wrapper{
     width: 100%;
@@ -754,6 +768,7 @@ ul.rbfw_show_all_cat_features li:last-child {
 
 .rbfw_filter_sidebar .rbfw_price-range {
     margin-bottom: 20px;
+    
 }
 
 .rbfw_filter_sidebar .rbfw_price-range p {
@@ -777,6 +792,10 @@ ul.rbfw_show_all_cat_features li:last-child {
     user-select: none;
     margin-block-start: 2px;
     margin-block-end: 7px;
+    font-size: 18px;
+    font-weight: normal;
+    border-bottom: 1px dotted #d0d7de;
+    padding: 10px 0;
 }
 
 .rbfw_white_color{
@@ -786,12 +805,71 @@ ul.rbfw_show_all_cat_features li:last-child {
 .rbfw_rent_item_left_feature_title{
     display: flex;
     padding: 1px 1px;
+    align-items: center;
 }
 
 .rbfw_toggle-icon {
     float: right;
     font-size: 1.2em;
+    color: var(--rbfw_color_primary);
 }
+
+/* ==============range========= */
+.rbfw_toggle-content .price-range{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin:10px 0px;
+}
+.rbfw_toggle-content .price-range label{
+    width: 100%;
+}
+.rbfw_toggle-content #slider-range {
+    position: relative;
+    margin: 6px;
+    height: 10px;
+    background: #e4e4e4;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.rbfw_toggle-content #slider-range .ui-slider-range {
+    background: var(--rbfw_color_primary); /* Orange color for the range */
+    border-radius: 5px;
+}
+
+.rbfw_toggle-content #slider-range .ui-slider-handle {
+    position: absolute;
+    top: -6px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border: 2px solid var(--rbfw_color_primary);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.rbfw_toggle-content #slider-range .ui-slider-handle:hover {
+    background: var(--rbfw_single_page_secondary_color);
+}
+
+.rbfw_toggle-content #slider-range .ui-slider-handle.ui-state-focus {
+    outline: none;
+    border-color: var(--rbfw_single_page_secondary_color);
+}
+/* ============range============ */
+#rbfw_left_filter_price {
+    font-size: 14px;
+    text-align: right;
+    margin-bottom: 0px;
+    display: inline-block;
+    background: none;
+    padding: 0;
+    border: 0;
+    color: var(--rbfw_color_primary);
+}
+
 
 .rbfw_rent_item_fearture_holder{
     margin-bottom: 0px;
@@ -834,36 +912,44 @@ ul.rbfw_show_all_cat_features li:last-child {
     width: 100%;
     margin-bottom: 20px;
     display: flex;
-    gap: 10px;
+    gap: 0px;
 }
-.rbfw_left_filter_search_text_input{
-    width: calc(100% - 50px);
-}
+
 .rbfw_search_by_title{
-    width: calc(100% - 8px);
+    width: calc(100% - 2px);
     padding: 8px 6px;
     border: 1px solid #ddd9d9;
 }
 .rbfw_left_filter_search_btn{
-    padding: 3px 5px;
-    border: 1px solid #c1bcbc;
-    color: #222;
+    display: flex;
+    padding:9px 10px;
+    border: 1px solid var(--rbfw_color_primary);
+    background-color: var(--rbfw_color_primary);
+    color: #fff;
     cursor: pointer;
     font-size: 14px;
 }
+.rbfw_left_filter_search_btn:hover{
+    background-color: var(--rbfw_single_page_secondary_color);
+    border: 1px solid var(--rbfw_single_page_secondary_color);
+}
+
 .rbfw_left_filter_more_feature_loaders{
-    background-color: #4d4a4a;
-    width: 50px;
+    background-color: var(--rbfw_color_primary);
     text-align: center;
     margin: auto;
     font-size: 12px;
     padding: 4px 10px;
     cursor: pointer;
-    border: 1px solid #ada5a5;
-    color: #F6F6F6;
+    border: 1px solid var(--rbfw_color_primary);
+    color: #fff;
+    margin-top: 10px;
 }
 .rbfw_left_filter_more_feature_loaders:hover{
-    text-decoration: underline;
+    text-decoration: none;
+    background-color: var(--rbfw_single_page_secondary_color);
+    border: 1px solid var(--rbfw_single_page_secondary_color);
+    
 }
 @media (max-width: 550px) {
     .rbfw_rent_list_wrapper_with_left_filter  {

@@ -486,8 +486,12 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
 
     ob_start();
     ?>
-
-    <div class="rbfw_filter_sidebar">
+<div class="rbfw_filter_sidebar">
+    <div class="rbfw_title_text title">
+        <button id="rbfw_left_filter_clearButton" class="rbfw_left_filter_clearButton" style="display: none">Clear All</button>
+        <h4 data-placeholder=""><span class="rbfw_filter_icon mR_xs fas fa-filter"></span>Filters</h4>
+    </div>
+    <div class="rbfw_filter_area">
         <div class="rbfw_left_filter_cover" id="rbfw_left_filter_cover"></div>
         <div class="rbfw_popup_wrapper" id="rbfw_left_filter_popup_wrapper">
             <div class="rbfw_rent_cat_info_popup">
@@ -501,10 +505,7 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
             </div>
         </div>
 
-        <div class="rbfw_title_text">
-            <button id="rbfw_left_filter_clearButton" class="rbfw_left_filter_clearButton" style="display: none">Clear All</button>
-            <h4 data-placeholder=""><span class="rbfw_filter_icon mR_xs fas fa-filter"></span>Filters</h4>
-        </div>
+        
 
         <?php if( $left_filter_control['title_filter_shown'] === 'on' ){?>
             <div class="rbfw_left_filter_text_Search_holder">
@@ -519,10 +520,10 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
             <div class="rbfw_price-range">
             <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">-</span></h5>
             <div class="rbfw_toggle-content" style="display: block">
-                <p>
+                <div class="price-range">
                     <label for="price">Price range:</label>
-                    <input type="text" id="rbfw_left_filter_price" readonly style="border:0; color:#f6931f; font-weight:bold;">
-                </p>
+                    <input type="text" id="rbfw_left_filter_price" readonly>
+                </div>
                 <div id="slider-range"></div>
             </div>
         </div>
@@ -630,6 +631,7 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
                 </div>
             </div>
         <?php }?>
+    </div>
     </div>
     <?php
     $left_filter = ob_get_clean();
