@@ -556,6 +556,7 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                 $rbfw_variations_data = !empty(get_post_meta($post_id, 'rbfw_variations_data', true)) ? get_post_meta($post_id, 'rbfw_variations_data', true) : [];
                 $rbfw_resort_room_data = !empty(get_post_meta($post_id, 'rbfw_resort_room_data', true)) ? get_post_meta($post_id, 'rbfw_resort_room_data', true) : [];
                 $rbfw_bike_car_sd_data = !empty(get_post_meta($post_id, 'rbfw_bike_car_sd_data', true)) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
+                $manage_inventory_as_timely = !empty(get_post_meta($post_id, 'manage_inventory_as_timely', true)) ? get_post_meta($post_id, 'manage_inventory_as_timely', true) : [];
 
                 $rbfw_extra_service_data = !empty(get_post_meta($post_id, 'rbfw_extra_service_data', true)) ? get_post_meta($post_id, 'rbfw_extra_service_data', true) : [];
                 $total_es_qty = 0;
@@ -566,9 +567,14 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                 $rbfw_item_stock_quantity = 0;
 
                 if ($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
-                    foreach ($rbfw_bike_car_sd_data as $key => $bike_car_sd_data) {
-                        $rbfw_item_stock_quantity += !empty($bike_car_sd_data['qty']) ? $bike_car_sd_data['qty'] : 0;
+                    if($manage_inventory_as_timely=='on'){
+                        $rbfw_item_stock_quantity = !empty(get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true)) ? get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true) : 0;
+                    }else{
+                        foreach ($rbfw_bike_car_sd_data as $key => $bike_car_sd_data) {
+                            $rbfw_item_stock_quantity += !empty($bike_car_sd_data['qty']) ? $bike_car_sd_data['qty'] : 0;
+                        }
                     }
+
                 } elseif ($rent_type == 'resort'){
                     foreach ($rbfw_resort_room_data as $key => $resort_room_data) {
                         $rbfw_item_stock_quantity += !empty($resort_room_data['rbfw_room_available_qty']) ? $resort_room_data['rbfw_room_available_qty'] : 0;

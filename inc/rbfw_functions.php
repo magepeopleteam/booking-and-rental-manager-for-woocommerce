@@ -1749,11 +1749,8 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_ti
         return;
     }
 
-    if($start_time){
-        $start_date_time = new DateTime($start_date.' '.$start_time);
-    }else{
-        $start_date_time = new DateTime($start_date);
-    }
+    $start_date_time = new DateTime($start_date.' '.$start_time);
+
     $for_end_date_time = $start_date_time;
 
     $total_hours = ($d_type=='Hours' ? $duration : ($d_type=='Days' ? $duration*24 : $duration*24*7));
@@ -1763,11 +1760,11 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_ti
 
     $end_date_time = new DateTime($end_date.' '.$end_time);
 
-    if(isset($_POST['pickup_time']) && $_POST['pickup_time']){
-        $start_date_time = new DateTime($start_date.' '.$start_time); // Original date and time
-    }else{
-        $start_date_time = new DateTime($start_time); // Original date and time
-    }
+
+
+
+    $start_date_time = new DateTime($start_date.' '.$start_time); // Original date and time
+
 
 
     $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
