@@ -706,6 +706,8 @@ ul.rbfw_show_all_cat_features li:last-child {
 .rbfw_rent_item_with_left_filter{
     display: flex;
     gap: 20px;
+    min-height: 1200px;
+    /*background-color: #990000;*/
 }
 
 /*Filter Css */
