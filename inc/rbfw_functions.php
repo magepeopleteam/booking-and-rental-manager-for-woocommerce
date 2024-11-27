@@ -1768,13 +1768,13 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_ti
     }else{
         $start_date_time = new DateTime($start_time); // Original date and time
     }
-    //echo '<pre>';print_r($start_date_time);echo '<pre>';
+
 
     $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
     $total_stock = (int)get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true);
     $total_booked = 0;
 
-    $i = 1;
+
 
     if (!empty($rbfw_inventory)) {
 
@@ -1795,18 +1795,11 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_ti
                     $date_pickup = $start_date_time;
                     $date_dropoff = $end_date_time;
 
-                    //echo '<pre>';print_r($start_date_time);echo '<pre>';
-                    //echo '<pre>';print_r($end_date_time);echo '<pre>';
-
-                    //echo '<pre>';print_r($date_inventory_start);echo '<pre>';
-                   // echo '<pre>';print_r($date_inventory_end);echo '<pre>';exit;
 
                     if ($date_inventory_start < $date_dropoff && $date_pickup < $date_inventory_end) {
-                        echo $i;
                         $total_booked += $rbfw_item_quantity;
                     }
                 }
-                $i++;
 
             }
     }
