@@ -150,7 +150,7 @@
                                 var quantity_options = "<option value=''>Pickup Time</option>";
 
                                 $.each(response, function(i, item) {
-                                    quantity_options += "<option  value="+i+">"+item+"</option>";
+                                    quantity_options += "<option "+ item[0] +" value="+i+">"+item[1]+"</option>";
                                 });
                                 jQuery('.rbfw-select.rbfw-time-price.pickup_time').html(quantity_options);
                             }
