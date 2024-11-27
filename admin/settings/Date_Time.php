@@ -290,35 +290,34 @@
                 <div class="available-particular <?php echo esc_attr(($rbfw_particular_switch == 'on') ? 'show' : 'hide'); ?>">
                     <section>
                         <table class="form-table" id="particulars-table">
-                    <tr>
-                        <th><?php _e('Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                        <th><?php _e('End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                        <th><?php _e('Available Time Slots', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                        <th><?php _e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                    </tr>
-                    <?php foreach ($particulars_data as $index => $particular): ?>
+                            <tr>
+                                <th><?php _e('Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php _e('End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php _e('Available Time Slots', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php _e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                            </tr>
+                            <?php foreach ($particulars_data as $index => $particular): ?>
+                                <tr class="particular-row">
+                                    <td>
+                                    <input type="text" name="rbfw_particulars[<?php echo $index; ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr($particular['start_date'] ?? ''); ?>">
+                                </td>
+                                <td>
+                                    <input type="text" name="rbfw_particulars[<?php echo $index; ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr($particular['end_date'] ?? ''); ?>">
+                                </td>
+                                <td>
+                                    <div class="w-100">
+                                        <?php
+                                        $available_times = isset($particular['available_time']) ? $particular['available_time'] : [];
+                                        $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+                                        $this->multiple_time_slot_select_for_particular_date($rbfw_time_slots, $available_times, $index, $post_id);
+                                        ?>
 
-                    <tr class="particular-row">
-                        <td>
-                            <input type="text" name="rbfw_particulars[<?php echo $index; ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr($particular['start_date'] ?? ''); ?>">
-                        </td>
-                        <td>
-                            <input type="text" name="rbfw_particulars[<?php echo $index; ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr($particular['end_date'] ?? ''); ?>">
-                        </td>
-                        <td>
-                            <div class="w-100">
-                                <?php
-                                $available_times = isset($particular['available_time']) ? $particular['available_time'] : [];
-                                $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
-                                $this->multiple_time_slot_select_for_particular_date($rbfw_time_slots, $available_times, $index, $post_id);
-                                ?>
-
-                            </div>
-                        </td>
-                        <td>
-                        <button type="button" class="remove-row button" ><?php echo esc_html__('Remove', 'booking-and-rental-manager-for-woocommerce'); ?></button>
-                        </td>
-                    </tr>
+                                    </div>
+                                </td>
+                                <td>
+                                <button type="button" class="remove-row button" ><?php echo esc_html__('Remove', 'booking-and-rental-manager-for-woocommerce'); ?></button>
+                                </td>
+                            </tr>
                     <?php endforeach; ?>
                 </table>
 
