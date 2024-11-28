@@ -1658,7 +1658,9 @@ function rbfw_get_bike_car_sd_es_available_qty($post_id, $selected_date, $name){
 }
 
 
+
 function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_time,$d_type,$duration,$md='')
+
 {
 
     if (empty($post_id)) {
