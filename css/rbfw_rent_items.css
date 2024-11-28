@@ -706,11 +706,13 @@ ul.rbfw_show_all_cat_features li:last-child {
 .rbfw_rent_item_with_left_filter{
     display: flex;
     gap: 20px;
+    min-height: 1200px;
+    /*background-color: #990000;*/
 }
 
 /*Filter Css */
 .rbfw_filter_sidebar {
-    width: 280px;
+    width: 230px;
     position: absolute;
     margin: 1px;
     z-index: 111;
@@ -720,6 +722,7 @@ ul.rbfw_show_all_cat_features li:last-child {
 }
 .rbfw_filter_area{
     padding: 10px;
+    min-height:1100px;
 }
 
 .rbfw_title_text.title{
@@ -730,11 +733,13 @@ ul.rbfw_show_all_cat_features li:last-child {
 
 .rbfw_title_text.title h4{
     margin: 0;
+    font-weight:normal;
+    color:#fff;
 }
 
 .rbfw_rent_list_wrapper_with_left_filter{
-    width: calc( 100% - 200px );
-    margin-left: 300px;
+    width: calc( 100% - 230px );
+    margin-left: 250px;
 }
 .rbfw_rent_list_wrapper{
     width: 100%;

@@ -1664,11 +1664,10 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_ti
     if (empty($post_id)) {
         return;
     }
-    if($start_time){
-        $start_date_time = new DateTime($start_date.' '.$start_time);
-    }else{
-        $start_date_time = new DateTime($start_date);
-    }
+
+
+    $start_date_time = new DateTime($start_date.' '.$start_time);
+
 
     $for_end_date_time = $start_date_time;
 
@@ -1679,11 +1678,11 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_ti
 
     $end_date_time = new DateTime($end_date.' '.$end_time);
 
-    if(isset($_POST['pickup_time']) && $_POST['pickup_time']){
-        $start_date_time = new DateTime($start_date.' '.$start_time); // Original date and time
-    }else{
-        $start_date_time = new DateTime($start_time); // Original date and time
-    }
+
+
+
+    $start_date_time = new DateTime($start_date.' '.$start_time); // Original date and time
+
 
     $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
     $total_stock = (int)get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true);
@@ -1717,7 +1716,7 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_ti
         }
     }
 
-    return $total_stock ;
+    return $total_stock - $total_booked;
 
 }
 
@@ -3082,12 +3081,12 @@ function rbfw_time_enable_disable($rbfw_id, $start_date, $start_time)
         $duration = $value['duration'];
 
         $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated($rbfw_id, $start_date, $start_time, $d_type, $duration);
-        return $rbfw_timely_available_quantity;
+
         if ($rbfw_timely_available_quantity > 0) {
-            echo 'ggg';
+            return;
         }
     }
-    //return 'disabled';
+    return 'disabled';
 }
 
 

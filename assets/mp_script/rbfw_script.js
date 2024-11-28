@@ -327,7 +327,6 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
 
     if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || (date <  date_today) ){
 
-        var dayrates = [100];
         if(type=='md'){
             return [false, "notav", 'Off'];
         }else{
