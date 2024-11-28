@@ -42,6 +42,7 @@
                         </div>
                     </div>
                 <?php endif; ?>
+
                 <?php if ($location_switch == 'yes' && !empty($dropoff_location)) : ?>
                     <div class="item">
                         <div class="rbfw-single-right-heading">
@@ -138,32 +139,6 @@
                         <?php } ?>
                     </div>
 
-                    <script>
-                        jQuery(document).on('click','.single-type-timely',function (){
-
-                            jQuery('.single-type-timely').each(function(index, element) {
-                                jQuery('.single-type-timely').removeClass('selected');
-                            });
-
-                            jQuery(this).addClass('selected');
-
-                            // JavaScript to handle the text-based button style dynamically
-                          /*  const radioButtons = document.querySelectorAll('.single-type-timely');
-                            radioButtons.forEach(button => {
-                                button.addEventListener('change', () => {
-                                    // Remove selected class from all buttons
-                                    document.querySelectorAll('.single-type-timely').forEach(item => {
-                                        item.classList.remove('selected');
-                                    });
-                                    // Add selected class to the clicked button
-                                    const selectedLabel = button.nextElementSibling;
-                                    console.log(selectedLabel);
-                                    selectedLabel.classList.add('selected');
-                                });
-                            });*/
-                        })
-
-                    </script>
 
                     <div class="item rbfw_bikecarsd_price_summary">
                         <div class="item-content rbfw-costing">
@@ -224,7 +199,7 @@
 
                 <input type="hidden" name="rbfw_time_slot_switch" id="rbfw_time_slot_switch" value="<?php echo esc_attr($rbfw_time_slot_switch); ?>">
                 <input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
-                <input type="hidden" name="rbfw_start_time" id="rbfw_start_time">
+                <input type="hidden" name="rbfw_start_time" id="rbfw_start_time" value="00:00">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price">
                 <input type="hidden" name="manage_inventory_as_timely" id="manage_inventory_as_timely" value="<?php echo esc_attr($manage_inventory_as_timely); ?>">
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">

@@ -425,12 +425,11 @@
                     <section class="manage_inventory_as_timely ">
                         <div>
                             <label>
-                                <?php esc_html_e(' Manage Inventor as hourly','booking-and-rental-manager-for-woocommerce'); ?>
+                                <?php esc_html_e(' Manage Inventory as hourly','booking-and-rental-manager-for-woocommerce'); ?>
                             </label>
                             <span></span>
                         </div>
                         <label class="switch">
-
                             <input type="checkbox" name="manage_inventory_as_timely" value="<?php echo esc_attr(($manage_inventory_as_timely=='on')?$manage_inventory_as_timely:'off'); ?>" <?php echo esc_attr(($manage_inventory_as_timely=='on')?'checked':''); ?>>
                             <span class="slider round"></span>
                         </label>
@@ -453,8 +452,7 @@
                     <section>
 						<div class="w-100">
 							<div style="overflow-x: auto;">
-
-								<table class='form-table rbfw_bike_car_sd_price_table'>
+                                <table class='form-table rbfw_bike_car_sd_price_table'>
 									<thead>
 										<tr>
 											<th><?php _e( 'Type', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
@@ -480,8 +478,8 @@
 									$i = 0;
 									foreach ($rbfw_bike_car_sd_data as $key => $value):
 									?>
-										<tr class="rbfw_bike_car_sd_price_table_row" data-key="<?php echo mep_esc_html($i); ?>">
-											<td><input type="text" name="rbfw_bike_car_sd_data[<?php echo mep_esc_html($i); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+                                        <tr class="rbfw_bike_car_sd_price_table_row" data-key="<?php echo mep_esc_html($i); ?>">
+                                            <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo mep_esc_html($i); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
 
 											<td><input type="text" name="rbfw_bike_car_sd_data[<?php echo mep_esc_html($i); ?>][short_desc]" value="<?php echo esc_attr( $value['short_desc'] ); ?>" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
 
