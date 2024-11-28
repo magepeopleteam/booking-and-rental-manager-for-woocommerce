@@ -224,7 +224,7 @@
 
                 <input type="hidden" name="rbfw_time_slot_switch" id="rbfw_time_slot_switch" value="<?php echo esc_attr($rbfw_time_slot_switch); ?>">
                 <input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
-                <input type="hidden" name="rbfw_start_time" id="rbfw_start_time">
+                <input type="hidden" name="rbfw_start_time" id="rbfw_start_time" value="00:00">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price">
                 <input type="hidden" name="manage_inventory_as_timely" id="manage_inventory_as_timely" value="<?php echo esc_attr($manage_inventory_as_timely); ?>">
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
