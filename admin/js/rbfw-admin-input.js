@@ -8,11 +8,36 @@
             jQuery(this).val('off');
             jQuery('.rbfw_without_time_inventory').show('slow');
             jQuery('.rbfw_time_inventory').hide('slow');
+
+            if(jQuery('.enable_specific_duration').val()=='on'){ 
+                jQuery('.rbfw_time_inventory_enable.durstion_disable').hide('slow')
+            }else{
+                jQuery('.rbfw_time_inventory_enable.durstion_disable').show('slow')
+            }
         }
         if(status == 'off') {
             jQuery(this).val('on');
             jQuery('.rbfw_without_time_inventory').hide('slow');
             jQuery('.rbfw_time_inventory').show('slow');
+
+            if(jQuery('.enable_specific_duration').val()=='off'){
+                jQuery('.rbfw_time_inventory_enable.durstion_disable').show('slow')
+            }else{
+                jQuery('.rbfw_time_inventory_enable.durstion_disable').hide('slow')
+            }
+        }
+
+
+    });
+
+    jQuery(document).on('click','input[name=enable_specific_duration]',function(){
+        var status = jQuery(this).val();
+        console.log(status);
+        if(status == 'on') {
+            jQuery(this).val('off');
+        }
+        if(status == 'off') {
+            jQuery(this).val('on');
         }
     });
 

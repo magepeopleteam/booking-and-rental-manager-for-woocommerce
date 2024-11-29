@@ -62,7 +62,7 @@
 
                 <?php  if($manage_inventory_as_timely !='on'){ ?>
                     <div class="item rbfw-bikecarsd-step" data-step="1">
-                        <div id="rbfw-bikecarsd-calendarjjjj" class="rbfw-bikecarsd-calendar">
+                        <div id="rbfw-bikecarsd-calendar" class="rbfw-bikecarsd-calendar">
                         </div>
                         <div class="rbfw-bikecarsd-calendar-footer">
                             <i class="fa-solid fa-circle-info"></i>
