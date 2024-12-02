@@ -1659,7 +1659,7 @@ function rbfw_get_bike_car_sd_es_available_qty($post_id, $selected_date, $name){
 
 
 
-function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_time,$d_type,$duration,$md='')
+function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_time,$d_type,$duration,$enable_specific_duration='')
 
 {
 
@@ -1670,18 +1670,19 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_ti
 
     $start_date_time = new DateTime($start_date.' '.$start_time);
 
-
     $for_end_date_time = $start_date_time;
 
-    $total_hours = ($d_type=='Hours' ? $duration : ($d_type=='Days' ? $duration*24 : $duration*24*7));
-    $for_end_date_time->modify("+$total_hours hours");
-    $end_date = $for_end_date_time->format('Y-m-d');
-    $end_time = $for_end_date_time->format('H:i:s');
+    if($enable_specific_duration=='on'){
+        $end_date = $start_date;
+        $end_time = $d_type;
+    }else{
+        $total_hours = ($d_type=='Hours' ? $duration : ($d_type=='Days' ? $duration*24 : $duration*24*7));
+        $for_end_date_time->modify("+$total_hours hours");
+        $end_date = $for_end_date_time->format('Y-m-d');
+        $end_time = $for_end_date_time->format('H:i:s');
+    }
 
     $end_date_time = new DateTime($end_date.' '.$end_time);
-
-
-
 
     $start_date_time = new DateTime($start_date.' '.$start_time); // Original date and time
 
@@ -3688,5 +3689,22 @@ function rbfw_get_dropdown_new( $name, $saved_value , $class , $dropdown_for ) {
     $option .= "</select>";
 
     echo $option;
+}
+
+function rbfw_time_slot_select($date_type,$iidex,$selected_time){
+    $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+    global  $RBFW_Timeslots_Page;
+    $rbfw_time_slots = $RBFW_Timeslots_Page->rbfw_format_time_slot($rbfw_time_slots);
+    asort($rbfw_time_slots);
+    ?>
+    <div id="field-wrapper-rdfw_available_time" class="">
+        <select name="rbfw_bike_car_sd_data[<?php echo $iidex ?>][<?php echo $date_type ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
+            <option value="">Select Time</option>
+            <?php foreach($rbfw_time_slots as $key => $value): ?>
+                <option <?php echo (date('H:i', strtotime($value))==$selected_time)?'selected':'' ?>  value="<?php echo date('H:i', strtotime($value)); ?>"> <?php echo date('H:i', strtotime($value)); ?> </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <?php
 }
 

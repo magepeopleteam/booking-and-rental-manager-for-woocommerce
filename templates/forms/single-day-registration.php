@@ -10,10 +10,20 @@
     $location_switch = !empty(get_post_meta($rbfw_id, 'rbfw_enable_pick_point', true)) ? get_post_meta($rbfw_id, 'rbfw_enable_pick_point', true) : '';
     $pickup_location = get_post_meta($rbfw_id, 'rbfw_pickup_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_pickup_data', true)) : [];
     $dropoff_location = get_post_meta($rbfw_id, 'rbfw_dropoff_data', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rbfw_dropoff_data', true)) : [];
+
     $manage_inventory_as_timely =  get_post_meta($rbfw_id, 'manage_inventory_as_timely', true) ? get_post_meta($rbfw_id, 'manage_inventory_as_timely', true) : 'off';
+    $enable_specific_duration =  get_post_meta($rbfw_id, 'enable_specific_duration', true) ? get_post_meta($rbfw_id, 'enable_specific_duration', true) : 'off';
 
     $rbfw_item_stock_quantity_timely = !empty(get_post_meta($rbfw_id,'rbfw_item_stock_quantity_timely',true)) ? get_post_meta($rbfw_id,'rbfw_item_stock_quantity_timely',true) : 0;
     $rbfw_time_slot_switch = !empty(get_post_meta($rbfw_id,'rbfw_time_slot_switch',true)) ? get_post_meta($rbfw_id,'rbfw_time_slot_switch',true) : 'off';
+
+    $available_times = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
+
+    $pickup_time = 'off';
+
+    if($rbfw_time_slot_switch == 'on' && !empty($available_times) && ($manage_inventory_as_timely=='on' && $enable_specific_duration =='off') ){
+        $pickup_time = 'on';
+    }
 
     ?>
 
@@ -86,14 +96,12 @@
                 $rbfw_bike_car_sd_data = get_post_meta($rbfw_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($rbfw_id, 'rbfw_bike_car_sd_data', true) : [];
                // $available_times = rbfw_get_available_times($rbfw_id);
 
-                $available_times = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
-
                // echo '<pre>';print_r($available_times);echo '<pre>';
 
                 ?>
                     <div class="item">
                         <div class="item-content rbfw-datetime">
-                            <div class="<?php echo ($rbfw_time_slot_switch == 'on' && !empty($available_times))?'left':'' ?> date">
+                            <div class="<?php echo ($pickup_time == 'on' )?'left':'' ?> date">
                                 <div class="rbfw-single-right-heading">
                                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                 </div>
@@ -104,7 +112,7 @@
                                 </div>
                             </div>
 
-                            <?php if(!empty($rbfw_time_slot_switch == 'on' && $available_times)){ ?>
+                            <?php if($pickup_time == 'on'){ ?>
                                 <div class="right time">
                                     <div class="rbfw-single-right-heading">
                                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
@@ -134,7 +142,9 @@
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
                             <label>
                                 <input type="radio" name="option" class="radio-input">
-                                <span data-duration="<?php echo $value['duration'] ?>" data-price="<?php echo $value['price'] ?>" data-d_type="<?php echo $value['d_type'] ?>" class="radio-button single-type-timely"><?php echo $value['rent_type'] ?></span>
+                                <span data-duration="<?php echo $value['duration'] ?>" data-price="<?php echo $value['price'] ?>" data-d_type="<?php echo $value['d_type'] ?>" data-start_time="<?php echo $value['start_time']??'' ?>" data-end_time="<?php echo $value['end_time']??'' ?>" class="radio-button single-type-timely">
+                                    <?php echo $value['rent_type'] ?>
+                                </span>
                             </label>
                         <?php } ?>
                     </div>
@@ -197,8 +207,9 @@
                 $appointment_days = json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true));
                 ?>
 
-                <input type="hidden" name="rbfw_time_slot_switch" id="rbfw_time_slot_switch" value="<?php echo esc_attr($rbfw_time_slot_switch); ?>">
+                <input type="hidden" name="rbfw_time_slot_switch" id="rbfw_time_slot_switch" value="<?php echo esc_attr($pickup_time); ?>">
                 <input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
+                <input type="hidden" name="enable_specific_duration" id="enable_specific_duration" value="<?php echo esc_attr($enable_specific_duration); ?>">
                 <input type="hidden" name="rbfw_start_time" id="rbfw_start_time" value="00:00">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price">
                 <input type="hidden" name="manage_inventory_as_timely" id="manage_inventory_as_timely" value="<?php echo esc_attr($manage_inventory_as_timely); ?>">

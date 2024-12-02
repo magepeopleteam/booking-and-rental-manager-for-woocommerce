@@ -299,14 +299,25 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 else:
                     $extra_services = array();
                 endif;
+
+
+
+                echo '<pre>';print_r($rbfw_bikecarsd_info);echo '<pre>';exit;
+
                
                 foreach ($rbfw_bikecarsd_info as $key => $value):
+
+
+
+
                     $rent_type = $key; //Type1
-                    if(array_key_exists($rent_type, $rent_types)){ // if Type1 exist in array
+                    if(array_key_exists($rent_type, $rent_types)){
+                        // if Type1 exist in array
                         $rent_price += (float)$rent_types[$rent_type] * (float)$value; // addup price
                     }
-             
                 endforeach;
+
+
 
                 
                 if($rent_price > 0):
