@@ -89,20 +89,11 @@
 			}
 
 			public static function get_image_url( $post_id = '', $image_id = '', $size = 'full' ) {
-				if ( $post_id ) {
-					$image_id = self::get_post_info( $post_id, 'rbfw_list_thumbnail' );
-					$image_id = $image_id ?: get_post_thumbnail_id( $post_id );
+				if ($post_id) {
+					$image_id = get_post_thumbnail_id($post_id);
+					$image_id = $image_id ?: self::get_post_info($post_id, 'rbfw_list_thumbnail');
 				}
-				$url = wp_get_attachment_image_url( $image_id, $size );
-				if ( ! $url ) {
-					$url = RBFW_PLUGIN_URL . '/assets/images/no_image.png';
-				} else {
-					if ( function_exists( 'fopen' ) && ini_get( 'allow_url_fopen' ) && ! @getimagesize( $url ) ) {
-						$url = RBFW_PLUGIN_URL . '/assets/images/no_image.png';
-					}
-				}
-
-				return $url;
+				return wp_get_attachment_image_url($image_id, $size);
 			}
 
 			//*******************************//
