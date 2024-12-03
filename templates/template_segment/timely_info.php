@@ -24,7 +24,6 @@ if(isset($_POST['post_id'])){
         $start_date_time->modify("+$total_hours hours");
         $end_date = $start_date_time->format('Y-m-d');
         $end_time = $start_date_time->format('H:i:s');
-
     }
 
 
@@ -79,7 +78,7 @@ if(isset($_POST['post_id'])){
 
     <input type="hidden" name="end_date" value="<?php echo $end_date ?>">
     <input type="hidden" name="end_time" value="<?php echo $end_time ?>">
-    <input type="hidden" name="service_type" value="<?php echo $service_type ?>">
+    <input type="hidden" name="service_type" value="<?php echo esc_attr($service_type) ?>">
     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step">
         <div class="">
             <?php if(!empty($rbfw_extra_service_data)){ ?>
