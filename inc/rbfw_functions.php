@@ -1667,6 +1667,9 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_ti
         return;
     }
 
+    if($enable_specific_duration=='on'){
+        $start_time = $d_type;
+    }
 
     $start_date_time = new DateTime($start_date.' '.$start_time);
 
@@ -1674,7 +1677,7 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_ti
 
     if($enable_specific_duration=='on'){
         $end_date = $start_date;
-        $end_time = $d_type;
+        $end_time = $duration;
     }else{
         $total_hours = ($d_type=='Hours' ? $duration : ($d_type=='Days' ? $duration*24 : $duration*24*7));
         $for_end_date_time->modify("+$total_hours hours");

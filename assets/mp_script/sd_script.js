@@ -49,13 +49,14 @@
 
             let post_id = jQuery('.rbfw_post_id').val();
             let manage_inventory_as_timely = $('#manage_inventory_as_timely').val();
-            let time_slot_switch = jQuery('#time_slot_switch').val();
+            let enable_specific_duration = $('#enable_specific_duration').val();
+            let time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
             let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
             let is_muffin_template = jQuery('.rbfw_muffin_template').length;
 
             if(manage_inventory_as_timely=='on'){
-                if(time_slot_switch!='on'){
-                    rbfw_service_type_timely_stock_ajax(post_id,start_date);
+                if(time_slot_switch=='off'){
+                    rbfw_service_type_timely_stock_ajax(post_id,start_date,'',enable_specific_duration);
                 }
             }else{
                 if(is_muffin_template > 0){
@@ -314,7 +315,7 @@ jQuery(document).on('click','.single-type-timely',function (){
     jQuery(this).addClass('selected');
 })
 
-function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time=''){
+function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',enable_specific_duration = 'off'){
     jQuery.ajax({
         type: 'POST',
         url: rbfw_ajax.rbfw_ajaxurl,
@@ -323,6 +324,7 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time=''){
             'post_id': post_id,
             'rbfw_bikecarsd_selected_date': start_date,
             'pickup_time': start_time,
+            'enable_specific_duration': enable_specific_duration,
         },
         beforeSend: function() {
             jQuery('.rbfw_bikecarsd_price_summary').addClass('old');

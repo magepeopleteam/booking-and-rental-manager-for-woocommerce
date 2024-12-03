@@ -23,6 +23,8 @@
 
     if($rbfw_time_slot_switch == 'on' && !empty($available_times) && ($manage_inventory_as_timely=='on' && $enable_specific_duration =='off') ){
         $pickup_time = 'on';
+    }elseif ($rbfw_time_slot_switch == 'on' && !empty($available_times) && $manage_inventory_as_timely=='off'){
+        $pickup_time = 'on';
     }
 
     ?>
@@ -213,7 +215,6 @@
                 <input type="hidden" name="manage_inventory_as_timely" id="manage_inventory_as_timely" value="<?php echo esc_attr($manage_inventory_as_timely); ?>">
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
                 <input type="hidden" name="rbfw_regf_info" id="rbfw_regf_info"  value='<?php echo json_encode($rbfw_regf_info); ?>'>
-                <input type="hidden" name="time_slot_switch" id="time_slot_switch"  value='<?php echo $time_slot_switch; ?>'>
                 <input type="hidden" name="appointment_days" id="appointment_days"  value='<?php echo $appointment_days; ?>'>
                 <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
                 <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range" class="llll"  value='<?php echo rbfw_off_dates($post_id); ?>'>

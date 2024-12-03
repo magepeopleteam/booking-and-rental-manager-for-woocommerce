@@ -482,18 +482,18 @@
                                                 <?php _e( 'Stock/Day <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                             </th>
 
-                                            <th class="rbfw_time_inventory_enable duration_enable <?php echo ($enable_specific_duration=='off')?'rbfw_hide':''  ?>">
+                                            <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='off')?'rbfw_hide':'')  ?>">
                                                 <?php _e( 'Start Time', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                             </th>
 
-                                            <th class="rbfw_time_inventory_enable duration_enable <?php echo ($enable_specific_duration=='off')?'rbfw_hide':''  ?>">
+                                            <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='off')?'rbfw_hide':'')  ?>">
                                                 <?php _e( 'End Time', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                             </th>
 
-                                            <th class="rbfw_time_inventory_enable duration_disable <?php echo ($enable_specific_duration=='on')?'rbfw_hide':''  ?>">
+                                            <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='on')?'rbfw_hide':'')  ?>">
                                                 <?php _e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                             </th>
-                                            <th class="rbfw_time_inventory_enable duration_disable <?php echo ($enable_specific_duration=='on')?'rbfw_hide':''  ?>">
+                                            <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='on')?'rbfw_hide':'')  ?>">
                                                 <?php _e( 'Duration Type', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                             </th>
 
@@ -520,18 +520,18 @@
                                                 <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($i); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
                                             </td>
 
-                                            <td class="rbfw_time_inventory_enable duration_enable <?php echo ($enable_specific_duration=='off')?'rbfw_hide':''  ?>">
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='off')?'rbfw_hide':'')  ?>">
                                                 <?php rbfw_time_slot_select('start_time',$i,isset($value['start_time'])?$value['start_time']:'' ); ?>
                                             </td>
 
-                                            <td class="rbfw_time_inventory_enable duration_enable <?php echo ($enable_specific_duration=='off')?'rbfw_hide':''  ?>">
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='off')?'rbfw_hide':'')  ?>">
                                                 <?php rbfw_time_slot_select('end_time',$i, isset($value['end_time'])?$value['end_time']:''); ?>
                                             </td>
 
-                                            <td class="rbfw_time_inventory_enable duration_disable <?php echo ($enable_specific_duration=='on')?'rbfw_hide':''  ?>">
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='on')?'rbfw_hide':'')  ?>">
                                                 <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($i); ?>][duration]" value="<?php echo esc_attr( isset($value['duration'])?$value['duration']:''); ?>" placeholder="<?php esc_html_e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
                                             </td>
-                                            <td class="rbfw_time_inventory_enable duration_disable <?php echo ($enable_specific_duration=='on')?'rbfw_hide':''  ?>">
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='on')?'rbfw_hide':'')  ?>">
                                                 <select name="rbfw_bike_car_sd_data[<?php echo mep_esc_html($i); ?>][d_type]">
                                                     <option <?php echo ( isset($value['d_type']) && $value['d_type'] =='Hours')?'selected':''; ?> value="Hours">Hours</option>
                                                     <option <?php echo (isset($value['d_type']) && $value['d_type'] =='Days')?'selected':''; ?> value="Days">Days</option>

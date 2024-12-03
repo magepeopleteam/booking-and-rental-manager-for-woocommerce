@@ -11,21 +11,14 @@ if(isset($_POST['post_id'])){
     $duration = $_POST['duration'];
     $d_type = $_POST['d_type'];
     $available_quantity = $_POST['available_quantity'];
-    $enable_specific_duration = $_POST['enable_specific_duration'];
 
     $start_date_time = new DateTime($start_date.' '.$start_time);
 
-    if($enable_specific_duration=='on'){
-        $end_date = $start_date;
-        $end_time = $d_type;
-        $available_quantity = rbfw_timely_available_quantity_updated($id, $start_date, $start_time,$d_type,$duration,$enable_specific_duration);
-    }else{
-        $total_hours = ($d_type=='Hours' ? $duration : ($d_type=='Days' ? $duration*24 : $duration*24*7));
-        $start_date_time->modify("+$total_hours hours");
-        $end_date = $start_date_time->format('Y-m-d');
-        $end_time = $start_date_time->format('H:i:s');
-    }
 
+    $total_hours = ($d_type=='Hours' ? $duration : ($d_type=='Days' ? $duration*24 : $duration*24*7));
+    $start_date_time->modify("+$total_hours hours");
+    $end_date = $start_date_time->format('Y-m-d');
+    $end_time = $start_date_time->format('H:i:s');
 
 
 
@@ -104,7 +97,7 @@ if(isset($_POST['post_id'])){
                             $img = '';
                         }
 
-                        $max_es_available_qty = rbfw_get_bike_car_sd_es_available_qty($id, $rbfw_bikecarsd_selected_date, $value['service_name']);
+                        $max_es_available_qty = rbfw_get_bike_car_sd_es_available_qty($id, $start_date, $value['service_name']);
 
                         if($value['service_qty'] > 0){
                             ?>
