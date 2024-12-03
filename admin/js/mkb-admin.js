@@ -532,7 +532,6 @@
                 }
 
 
-
             } else if (item_type == 'appointment') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
                 jQuery('.rbfw_general_price_config_wrapper').addClass('rbfw-d-none');

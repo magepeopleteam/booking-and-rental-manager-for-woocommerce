@@ -5507,4 +5507,6 @@ input.rbfw_time_slot_edit_slot_label {
         width: 100%;
     }
 }
-
+section.rbfw_item_quantiry_duration{
+    gap: 30px;
+}

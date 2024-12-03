@@ -7042,6 +7042,9 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 .price-item-container.pricing-content_dh.mpStyle.open {
     background: #fff;
 }
+select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
+    text-decoration: line-through;
+}
 
 /*.ui-datepicker td span, .ui-datepicker td a {
     padding-bottom: 1em;

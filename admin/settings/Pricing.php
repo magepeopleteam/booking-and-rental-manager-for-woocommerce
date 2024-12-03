@@ -26,6 +26,7 @@
             public function rbfw_load_duration_form()
             {
                 $manage_inventory_as_timely = $_POST['manage_inventory_as_timely'];
+                $enable_specific_duration = $_POST['enable_specific_duration'];
                 $total_row = $_POST['total_row'];
                 include( RBFW_Function::get_template_path( 'ajax_form/rbfw_load_duration_form.php' ) );
                 wp_die();
@@ -55,7 +56,7 @@
 
 
 			public function rent_type($post_id){
-				?>
+                ?>
 				<?php $this->panel_header('Price Settings','Price Settings'); ?>
 				<section>
                     <div>
@@ -420,6 +421,7 @@
 				$rbfw_bike_car_sd_data 	 = get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
 				$manage_inventory_as_timely 	 = get_post_meta($post_id, 'manage_inventory_as_timely', true) ? get_post_meta($post_id, 'manage_inventory_as_timely', true) : 'off';
 				$rbfw_item_stock_quantity_timely 	 = get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true) ? get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true) : 'off';
+				$enable_specific_duration 	 = get_post_meta($post_id, 'enable_specific_duration', true) ? get_post_meta($post_id, 'enable_specific_duration', true) : 'off';
 			?>
 				<div class="rbfw_bike_car_sd_wrapper <?php  echo esc_attr($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'  )?'show':'hide'; ?>" >
                     <section class="manage_inventory_as_timely ">
@@ -436,14 +438,26 @@
                     </section>
 
 
-                    <div class="rbfw_time_inventory rbfw_item_stock_quantity<?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':''  ?>">
-                        <section>
-                            <div>
-                                <label><?php _e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                <span><?php _e( 'Add stock quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                    <div class="rbfw_time_inventory rbfw_item_stock_quantity <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':''  ?>">
+                        <section class="rbfw_item_quantiry_duration">
+                            <div class="w-50 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <label><?php _e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                    <span><?php _e( 'Add stock quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                </div>
+                                <div class="item_stock_quantity">
+                                    <input type="number" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity_timely) ?>">
+                                </div>
                             </div>
-                            <div class="item_stock_quantity">
-                                <input type="number" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity_timely) ?>">
+                            <div class="w-50 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <label><?php _e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                    <span><?php _e( 'If want to add specific time duration then enable it', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" class="enable_specific_duration" name="enable_specific_duration" value="<?php echo esc_attr(($enable_specific_duration=='on')?$enable_specific_duration:'off'); ?>" <?php echo esc_attr(($enable_specific_duration=='on')?'checked':''); ?>>
+                                    <span class="slider round"></span>
+                                </label>
                             </div>
                         </section>
                     </div>
@@ -455,26 +469,43 @@
                                 <table class='form-table rbfw_bike_car_sd_price_table'>
 									<thead>
 										<tr>
-											<th><?php _e( 'Type', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-											<th><?php _e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-											<th><?php _e( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+											<th>
+                                                <?php _e( 'Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                            </th>
+											<th>
+                                                <?php _e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                            </th>
+											<th>
+                                                <?php _e( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                            </th>
 											<th class="rbfw_without_time_inventory <?php echo ($manage_inventory_as_timely=='on')?'rbfw_hide':'' ?>">
                                                 <?php _e( 'Stock/Day <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                             </th>
 
-                                            <th class="rbfw_time_inventory <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':''  ?>">
+                                            <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='off')?'rbfw_hide':'')  ?>">
+                                                <?php _e( 'Start Time', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
+                                            </th>
+
+                                            <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='off')?'rbfw_hide':'')  ?>">
+                                                <?php _e( 'End Time', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
+                                            </th>
+
+                                            <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='on')?'rbfw_hide':'')  ?>">
                                                 <?php _e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                             </th>
-                                            <th class="rbfw_time_inventory <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':''  ?>">
+                                            <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='on')?'rbfw_hide':'')  ?>">
                                                 <?php _e( 'Duration Type', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                             </th>
-											<th class="rbfw_bike_car_sd_price_table_action_column"><?php _e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+
+											<th class="rbfw_bike_car_sd_price_table_action_column">
+                                                <?php _e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                            </th>
 										</tr>
 									</thead>
-									<tbody class="rbfw_bike_car_sd_price_table_body">
-									<?php
+                                    <tbody class="rbfw_bike_car_sd_price_table_body">
+                                    <?php
 
-									if(! empty($rbfw_bike_car_sd_data)) :
+                                    if(! empty($rbfw_bike_car_sd_data)) :
 									$i = 0;
 									foreach ($rbfw_bike_car_sd_data as $key => $value):
 									?>
@@ -485,12 +516,22 @@
 
                                             <td><input type="number" name="rbfw_bike_car_sd_data[<?php echo mep_esc_html($i); ?>][price]" step=".01" value="<?php echo esc_attr( $value['price'] ); ?>" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
 
-                                            <td class="rbfw_without_time_inventory <?php echo ($manage_inventory_as_timely=='on')?'rbfw_hide':'' ?>""><input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($i); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" /></td>
+                                            <td class="rbfw_without_time_inventory <?php echo ($manage_inventory_as_timely=='on')?'rbfw_hide':'' ?>">
+                                                <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($i); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
+                                            </td>
 
-                                            <td class="rbfw_time_inventory <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':''  ?>">
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='off')?'rbfw_hide':'')  ?>">
+                                                <?php rbfw_time_slot_select('start_time',$i,isset($value['start_time'])?$value['start_time']:'' ); ?>
+                                            </td>
+
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='off')?'rbfw_hide':'')  ?>">
+                                                <?php rbfw_time_slot_select('end_time',$i, isset($value['end_time'])?$value['end_time']:''); ?>
+                                            </td>
+
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='on')?'rbfw_hide':'')  ?>">
                                                 <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($i); ?>][duration]" value="<?php echo esc_attr( isset($value['duration'])?$value['duration']:''); ?>" placeholder="<?php esc_html_e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
                                             </td>
-                                            <td class="rbfw_time_inventory <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':''  ?>">
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='on')?'rbfw_hide':'')  ?>">
                                                 <select name="rbfw_bike_car_sd_data[<?php echo mep_esc_html($i); ?>][d_type]">
                                                     <option <?php echo ( isset($value['d_type']) && $value['d_type'] =='Hours')?'selected':''; ?> value="Hours">Hours</option>
                                                     <option <?php echo (isset($value['d_type']) && $value['d_type'] =='Days')?'selected':''; ?> value="Days">Days</option>
@@ -633,9 +674,6 @@
                 <?php
 
             }
-
-
-
 
 
             public function extra_service_table($post_id){
@@ -1317,11 +1355,42 @@
 					$rbfw_item_stock_quantity_timely  = isset( $_POST['rbfw_item_stock_quantity_timely'] ) ? $_POST['rbfw_item_stock_quantity_timely']  : 1;
 
 
+                    // daywise configureation============================
+                    //sun
+                    $hourly_rate_sun = isset( $_POST['rbfw_sun_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sun_hourly_rate'] ) : '';
+                    $daily_rate_sun  = isset( $_POST['rbfw_sun_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sun_daily_rate'] ) : '';
+                    $enabled_sun     = isset( $_POST['rbfw_enable_sun_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sun_day'] ) : 'no';
+                    //mon
+                    $hourly_rate_mon = isset( $_POST['rbfw_mon_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_mon_hourly_rate'] ) : '';
+                    $daily_rate_mon  = isset( $_POST['rbfw_mon_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_mon_daily_rate'] ) : '';
+                    $enabled_mon     = isset( $_POST['rbfw_enable_mon_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_mon_day'] ) : 'no';
+                    //tue
+                    $hourly_rate_tue = isset( $_POST['rbfw_tue_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_tue_hourly_rate'] ) : '';
+                    $daily_rate_tue  = isset( $_POST['rbfw_tue_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_tue_daily_rate'] ) : '';
+                    $enabled_tue     = isset( $_POST['rbfw_enable_tue_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_tue_day'] ) : 'no';
+                    //wed
+                    $hourly_rate_wed = isset( $_POST['rbfw_wed_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_wed_hourly_rate'] ) : '';
+                    $daily_rate_wed  = isset( $_POST['rbfw_wed_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_wed_daily_rate'] ) : '';
+                    $enabled_wed     = isset( $_POST['rbfw_enable_wed_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_wed_day'] ) : 'no';
+                    //thu
+                    $hourly_rate_thu = isset( $_POST['rbfw_thu_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_thu_hourly_rate'] ) : '';
+                    $daily_rate_thu  = isset( $_POST['rbfw_thu_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_thu_daily_rate'] ) : '';
+                    $enabled_thu     = isset( $_POST['rbfw_enable_thu_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_thu_day'] ) : 'no';
+                    //fri
+                    $hourly_rate_fri = isset( $_POST['rbfw_fri_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_fri_hourly_rate'] ) : '';
+                    $daily_rate_fri  = isset( $_POST['rbfw_fri_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_fri_daily_rate'] ) : '';
+                    $enabled_fri     = isset( $_POST['rbfw_enable_fri_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_fri_day'] ) : 'no';
+                    //sat
+                    $hourly_rate_sat         = isset( $_POST['rbfw_sat_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_hourly_rate'] ) : '';
+                    $daily_rate_sat          = isset( $_POST['rbfw_sat_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_daily_rate'] ) : '';
+                    $enabled_sat             = isset( $_POST['rbfw_enable_sat_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sat_day'] ) : 'no';
+                    $manage_inventory_as_timely             = isset( $_POST['manage_inventory_as_timely'] ) ? rbfw_array_strip( $_POST['manage_inventory_as_timely'] ) : 'off';
+                    $enable_specific_duration  = isset( $_POST['enable_specific_duration'] ) ? $_POST['enable_specific_duration']  : 'off';
 
 
 
 
-					update_post_meta( $post_id, 'rbfw_enable_category_service_price', $rbfw_enable_category_service_price );
+                    update_post_meta( $post_id, 'rbfw_enable_category_service_price', $rbfw_enable_category_service_price );
 					update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
 					
 					update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
@@ -1336,42 +1405,12 @@
 					update_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', $rbfw_sd_appointment_max_qty_per_session );
 					update_post_meta( $post_id, 'rbfw_sd_appointment_ondays', $rbfw_sd_appointment_ondays );
 					update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
-					// daywise configureation============================
-					//sun
-					$hourly_rate_sun = isset( $_POST['rbfw_sun_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sun_hourly_rate'] ) : '';
-					$daily_rate_sun  = isset( $_POST['rbfw_sun_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sun_daily_rate'] ) : '';
-					$enabled_sun     = isset( $_POST['rbfw_enable_sun_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sun_day'] ) : 'no';
-					//mon
-					$hourly_rate_mon = isset( $_POST['rbfw_mon_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_mon_hourly_rate'] ) : '';
-					$daily_rate_mon  = isset( $_POST['rbfw_mon_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_mon_daily_rate'] ) : '';
-					$enabled_mon     = isset( $_POST['rbfw_enable_mon_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_mon_day'] ) : 'no';
-					//tue
-					$hourly_rate_tue = isset( $_POST['rbfw_tue_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_tue_hourly_rate'] ) : '';
-					$daily_rate_tue  = isset( $_POST['rbfw_tue_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_tue_daily_rate'] ) : '';
-					$enabled_tue     = isset( $_POST['rbfw_enable_tue_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_tue_day'] ) : 'no';
-					//wed
-					$hourly_rate_wed = isset( $_POST['rbfw_wed_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_wed_hourly_rate'] ) : '';
-					$daily_rate_wed  = isset( $_POST['rbfw_wed_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_wed_daily_rate'] ) : '';
-					$enabled_wed     = isset( $_POST['rbfw_enable_wed_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_wed_day'] ) : 'no';
-					//thu
-					$hourly_rate_thu = isset( $_POST['rbfw_thu_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_thu_hourly_rate'] ) : '';
-					$daily_rate_thu  = isset( $_POST['rbfw_thu_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_thu_daily_rate'] ) : '';
-					$enabled_thu     = isset( $_POST['rbfw_enable_thu_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_thu_day'] ) : 'no';
-					//fri
-					$hourly_rate_fri = isset( $_POST['rbfw_fri_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_fri_hourly_rate'] ) : '';
-					$daily_rate_fri  = isset( $_POST['rbfw_fri_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_fri_daily_rate'] ) : '';
-					$enabled_fri     = isset( $_POST['rbfw_enable_fri_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_fri_day'] ) : 'no';
-					//sat
-					$hourly_rate_sat         = isset( $_POST['rbfw_sat_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_hourly_rate'] ) : '';
-					$daily_rate_sat          = isset( $_POST['rbfw_sat_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_daily_rate'] ) : '';
-					$enabled_sat             = isset( $_POST['rbfw_enable_sat_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sat_day'] ) : 'no';
-					$manage_inventory_as_timely             = isset( $_POST['manage_inventory_as_timely'] ) ? rbfw_array_strip( $_POST['manage_inventory_as_timely'] ) : 'off';
 
 
 
 
 
-					// sun
+                    // sun
 					update_post_meta( $post_id, 'rbfw_sun_hourly_rate', $hourly_rate_sun );
 					update_post_meta( $post_id, 'rbfw_sun_daily_rate', $daily_rate_sun );
 					update_post_meta( $post_id, 'rbfw_enable_sun_day', $enabled_sun );
@@ -1401,6 +1440,7 @@
 					update_post_meta( $post_id, 'rbfw_enable_sat_day', $enabled_sat );
 					update_post_meta( $post_id, 'manage_inventory_as_timely', $manage_inventory_as_timely );
 					update_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', $rbfw_item_stock_quantity_timely );
+					update_post_meta( $post_id, 'enable_specific_duration', $enable_specific_duration );
 
 					// save extra service data==========================================
 					$old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];

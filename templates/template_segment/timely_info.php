@@ -2,48 +2,32 @@
 global $rbfw;
 if(isset($_POST['post_id'])){
     $id = $_POST['post_id'];
-    $rbfw_bikecarsd_selected_date = $_POST['rbfw_bikecarsd_selected_date'];
     $service_price = $_POST['service_price'];
-    $pickup_time = $_POST['pickup_time'];
+
+    $start_date = $_POST['rbfw_bikecarsd_selected_date'];
+    $start_time = $_POST['pickup_time'];
+
     $service_type = $_POST['service_type'];
     $duration = $_POST['duration'];
     $d_type = $_POST['d_type'];
     $available_quantity = $_POST['available_quantity'];
 
+    $start_date_time = new DateTime($start_date.' '.$start_time);
 
-    if(isset($_POST['pickup_time']) && $_POST['pickup_time']){
-        $start_date_time = new DateTime($rbfw_bikecarsd_selected_date.' '.$pickup_time);
-    }else{
-        $start_date_time = new DateTime($rbfw_bikecarsd_selected_date);
-    }
-    $for_end_date_time = $start_date_time;
 
-    if($d_type=='Hours'){
-        $for_end_date_time->modify("+$duration hours");
-        $end_date = $for_end_date_time->format('Y-m-d');
-        $end_time = $for_end_date_time->format('H:i');
-    }elseif ($d_type=='Days'){
-        $for_end_date_time->modify("+$duration days");
-        $end_date = $for_end_date_time->format('Y-m-d');
-        $end_time = $for_end_date_time->format('H:i');
-    }else{
-        $for_end_date_time->modify("+$duration weeks");
-        $end_date = $for_end_date_time->format('Y-m-d');
-        $end_time = $for_end_date_time->format('H:i:s');
-    }
+    $total_hours = ($d_type=='Hours' ? $duration : ($d_type=='Days' ? $duration*24 : $duration*24*7));
+    $start_date_time->modify("+$total_hours hours");
+    $end_date = $start_date_time->format('Y-m-d');
+    $end_time = $start_date_time->format('H:i:s');
 
-    if(isset($_POST['pickup_time']) && $_POST['pickup_time']){
-        $start_date_time = new DateTime($rbfw_bikecarsd_selected_date.' '.$pickup_time); // Original date and time
-    }else{
-        $start_date_time = new DateTime($rbfw_bikecarsd_selected_date); // Original date and time
-    }
 
-    $end_date_time = new DateTime($end_date.' '.$end_time);
 
     $duration_cost = $service_price;
 
     $rbfw_extra_service_data = get_post_meta( $id, 'rbfw_extra_service_data', true ) ? get_post_meta( $id, 'rbfw_extra_service_data', true ) : [];
     $available_qty_info_switch = get_post_meta($id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($id, 'rbfw_available_qty_info_switch', true) : 'no';
+
+
 
 
 
@@ -87,7 +71,7 @@ if(isset($_POST['post_id'])){
 
     <input type="hidden" name="end_date" value="<?php echo $end_date ?>">
     <input type="hidden" name="end_time" value="<?php echo $end_time ?>">
-    <input type="hidden" name="service_type" value="<?php echo $service_type ?>">
+    <input type="hidden" name="service_type" value="<?php echo esc_attr($service_type) ?>">
     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step">
         <div class="">
             <?php if(!empty($rbfw_extra_service_data)){ ?>
@@ -113,7 +97,7 @@ if(isset($_POST['post_id'])){
                             $img = '';
                         }
 
-                        $max_es_available_qty = rbfw_get_bike_car_sd_es_available_qty($id, $rbfw_bikecarsd_selected_date, $value['service_name']);
+                        $max_es_available_qty = rbfw_get_bike_car_sd_es_available_qty($id, $start_date, $value['service_name']);
 
                         if($value['service_qty'] > 0){
                             ?>

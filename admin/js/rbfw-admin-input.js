@@ -8,11 +8,42 @@
             jQuery(this).val('off');
             jQuery('.rbfw_without_time_inventory').show('slow');
             jQuery('.rbfw_time_inventory').hide('slow');
+
+            /*if(jQuery('.enable_specific_duration').val()=='on'){
+                jQuery('.rbfw_time_inventory_enable.durstion_disable').hide('slow');
+                jQuery('.rbfw_time_inventory_enable.duration_enable').show('slow');
+            }else{
+                jQuery('.rbfw_time_inventory_enable.durstion_disable').show('slow');
+                jQuery('.rbfw_time_inventory_enable.duration_enable').hide('slow')
+            }*/
         }
         if(status == 'off') {
             jQuery(this).val('on');
             jQuery('.rbfw_without_time_inventory').hide('slow');
             jQuery('.rbfw_time_inventory').show('slow');
+
+            if(jQuery('.enable_specific_duration').val()=='off'){
+                jQuery('.rbfw_time_inventory_enable.duration_disable').show('slow');
+                jQuery('.rbfw_time_inventory_enable.duration_enable').hide('slow');
+            }else{
+                jQuery('.rbfw_time_inventory_enable.duration_disable').hide('slow');
+                jQuery('.rbfw_time_inventory_enable.duration_enable').show('slow');
+            }
+        }
+    });
+
+    jQuery(document).on('click','input[name=enable_specific_duration]',function(){
+        var status = jQuery(this).val();
+        console.log('status',status);
+        if(status == 'on') {
+            jQuery(this).val('off');
+            jQuery('.rbfw_time_inventory_enable.duration_disable').show('slow');
+            jQuery('.rbfw_time_inventory_enable.duration_enable').hide('slow');
+        }
+        if(status == 'off') {
+            jQuery(this).val('on');
+            jQuery('.rbfw_time_inventory_enable.duration_disable').hide('slow');
+            jQuery('.rbfw_time_inventory_enable.duration_enable').show('slow');
         }
     });
 
@@ -20,6 +51,7 @@
     let current_time = jQuery.now();
     jQuery(document).on('click','#add-bike-car-sd-type-row',function (e) {
         let manage_inventory_as_timely = jQuery('input[name=manage_inventory_as_timely]').val();
+        let enable_specific_duration = jQuery('input[name=enable_specific_duration]').val();
         let total_row = $('.rbfw_bike_car_sd_price_table_row').length;
         e.preventDefault();
         jQuery.ajax({
@@ -28,6 +60,7 @@
             data: {
                 'action': 'rbfw_load_duration_form',
                 'manage_inventory_as_timely': manage_inventory_as_timely,
+                'enable_specific_duration': enable_specific_duration,
                 'total_row': total_row
             },
             success: function(response) {

@@ -299,14 +299,18 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 else:
                     $extra_services = array();
                 endif;
+
+
                
                 foreach ($rbfw_bikecarsd_info as $key => $value):
                     $rent_type = $key; //Type1
-                    if(array_key_exists($rent_type, $rent_types)){ // if Type1 exist in array
+                    if(array_key_exists($rent_type, $rent_types)){
+                        // if Type1 exist in array
                         $rent_price += (float)$rent_types[$rent_type] * (float)$value; // addup price
                     }
-             
                 endforeach;
+
+
 
                 
                 if($rent_price > 0):
@@ -648,6 +652,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
         public function rbfw_service_type_timely_stock(){
             $post_id = $_POST['post_id'];
             $start_date = $_POST['rbfw_bikecarsd_selected_date'];
+            $enable_specific_duration = $_POST['enable_specific_duration'];
+
             $start_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'00:00';
 
             $rbfw_bike_car_sd_data = get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
@@ -656,10 +662,17 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
             foreach ($rbfw_bike_car_sd_data as $value) {
 
-                 $d_type = $value['d_type'];
-                 $duration = $value['duration'];
+                if($enable_specific_duration=='on'){
+                    $d_type = $value['start_time'];
+                    $duration = $value['end_time'];
+                }else{
+                    $d_type = $value['d_type'];
+                    $duration = $value['duration'];
+                }
 
-                $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated($post_id, $start_date, $start_time,$d_type,$duration);
+
+
+                $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated($post_id, $start_date, $start_time,$d_type,$duration,$enable_specific_duration);
 
                  $content .=    '<label><input type="radio" name="option" class="radio-input">';
                  if($rbfw_timely_available_quantity > 0){
