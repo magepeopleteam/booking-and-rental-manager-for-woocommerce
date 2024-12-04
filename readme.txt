@@ -4,7 +4,7 @@ Plugin link: https://mage-people.com/
 Tags: booking calendar, Woocommerce Reservation Booking, Rental Booking, Woocommerce Rental Booking, Rental Plugin 
 Requires at least: 5.3
 Stable tag: trunk
-Tested up to: 6.5.3
+Tested up to: 6.7.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
