@@ -409,8 +409,12 @@ function rbfw_order_meta_box_callback(){
                         <td><textarea name="rbfw_return_note" placeholder="Return Note" cols="50" rows="3"><?php echo $rbfw_return_note ?></textarea></td>
                     </tr>
                     <tr class="rbfw_return_security_deposit_amount" style="display: none">
-                        <td><strong><?php esc_html_e( 'Return Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                        <td><input type="number" value="<?php echo $rbfw_return_security_deposit_amount ?>" name="rbfw_return_security_deposit_amount" placeholder="Return Security Deposit"></td>
+                        <td>
+                            <strong><?php esc_html_e( 'Return Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+                        </td>
+                        <td>
+                            <input type="number" value="<?php echo $rbfw_return_security_deposit_amount ?>" name="rbfw_return_security_deposit_amount" placeholder="Return Security Deposit">
+                        </td>
                     </tr>
                     <?php if($rbfw_pickup_note){ ?>
                         <tr>
