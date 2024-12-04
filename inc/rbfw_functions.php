@@ -1704,13 +1704,16 @@ function rbfw_timely_available_quantity_updated($post_id, $start_date, $start_ti
                 if($inventory['rbfw_start_date_ymd'] && $inventory['rbfw_end_date_ymd']){
                     $inventory_start_date = $inventory['rbfw_start_date_ymd'];
                     $inventory_end_date = $inventory['rbfw_end_date_ymd'];
+                    $inventory_start_time = $inventory['rbfw_start_time_24'];
+                    $inventory_end_time = $inventory['rbfw_end_time_24'];
                 }else{
                     $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
                     $inventory_start_date = $booked_dates[0];
                     $inventory_end_date = end($booked_dates);
+                    $inventory_start_time = $inventory['rbfw_start_time'];
+                    $inventory_end_time = $inventory['rbfw_end_time'];
                 }
-                $inventory_start_time = $inventory['rbfw_start_time'];
-                $inventory_end_time = $inventory['rbfw_end_time'];
+
 
                 $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
                 $date_inventory_end = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
@@ -3048,7 +3051,7 @@ function rbfw_get_available_times($rbfw_id){
     return $the_array;
 }
 
-function rbfw_get_available_times_particulars($rbfw_id,$start_date){
+function rbfw_get_available_times_particulars($rbfw_id,$start_date,$type='',$selector=''){
     $particulars_data = get_post_meta($rbfw_id, 'rbfw_particulars_data', true);
     $the_array = [];
     $particular_date = 'no';
@@ -3056,11 +3059,14 @@ function rbfw_get_available_times_particulars($rbfw_id,$start_date){
         $pd_dates_array = getAllDates($single['start_date'], $single['end_date']);
         if (in_array($start_date, $pd_dates_array)) {
             $rdfw_available_time = $single['available_time'];
-            foreach ($rdfw_available_time as $single){
+            foreach ($rdfw_available_time as $start_time){
 
-                $the_array[$single] = array('disabled',date(get_option('time_format'), strtotime($single)));
-
-
+                if($type=='time_enable'){
+                    $time_status = '';
+                }else{
+                    $time_status =  rbfw_time_enable_disable($rbfw_id, $start_date, $start_time);
+                }
+                $the_array[$single] = array($time_status,date(get_option('time_format'), strtotime($start_time)),$selector);
             }
             $particular_date = 'yes';
             return $the_array;
@@ -3068,15 +3074,15 @@ function rbfw_get_available_times_particulars($rbfw_id,$start_date){
     }
     $rdfw_available_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
     foreach ($rdfw_available_time as $start_time){
-
-        $time_status =  rbfw_time_enable_disable($rbfw_id, $start_date, $start_time);
-
-
-
+        if($type=='time_enable'){
+            $time_status = '';
+        }else{
+            $time_status =  rbfw_time_enable_disable($rbfw_id, $start_date, $start_time);
+        }
         $the_array[$start_time] = array($time_status,date(get_option('time_format'), strtotime($start_time))) ;
     }
-    //echo '<pre>';print_r($the_array);echo '<pre>';
-    return $the_array;
+
+    return array($the_array,$selector);
 }
 
 function rbfw_time_enable_disable($rbfw_id, $start_date, $start_time)

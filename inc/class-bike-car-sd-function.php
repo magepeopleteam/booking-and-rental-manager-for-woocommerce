@@ -32,51 +32,9 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
             add_action('wp_ajax_rbfw_service_type_timely_stock', array($this, 'rbfw_service_type_timely_stock'));
             add_action('wp_ajax_nopriv_rbfw_service_type_timely_stock', array($this,'rbfw_service_type_timely_stock'));
 
-
-
-
-
-
-
-
         }
 
 
-        public function rbfw_get_bikecarsd_rent_array_reorder($product_id, $rent_info){
-            
-            $main_array = [];
-
-            if(!empty($rent_info)){
-                $rent_info = array_column($rent_info,'qty','rent_type');
-                $i = 0;
-                foreach ($rent_info as $key => $value):
-                    $type = $key;
-                    $qty = $value;
-                    if($qty > 0){
-                        $main_array[$i][$type] = $qty;
-                    }
-                    $i++;
-                endforeach;
-            }
-            return $main_array;
-        }
-
-        public function rbfw_get_bikecarsd_service_array_reorder($product_id, $service_info){
-            $main_array = [];
-            if(!empty($service_info)){
-                $service_info = array_column($service_info,'service_qty','service_name');
-                $i = 0;
-                foreach ($service_info as $key => $value):
-                    $type = $key;
-                    $qty = $value;
-                    if($qty > 0){
-                        $main_array[$i][$type] = $qty;
-                    }
-                    $i++;
-                    endforeach;
-            }
-            return $main_array;
-        }
 
         public function rbfw_get_bikecarsd_rent_info($product_id, $rent_info){
             $rent_price   = 0;
@@ -643,7 +601,10 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
         public function particular_time_date_dependent(){
             $post_id = $_POST['post_id'];
             $selected_date = $_POST['selected_date'];
-            $times_particulars = rbfw_get_available_times_particulars($post_id,$selected_date);
+            $type = $_POST['type'];
+            $selector = (isset($_POST['selector']) && $_POST['selector'])?$_POST['selector']:'.rbfw-select.rbfw-time-price.pickup_time';
+
+            $times_particulars = rbfw_get_available_times_particulars($post_id,$selected_date,$type,$selector);
 
             echo json_encode($times_particulars);
             wp_die();
@@ -670,19 +631,16 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     $duration = $value['duration'];
                 }
 
-
-
                 $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated($post_id, $start_date, $start_time,$d_type,$duration,$enable_specific_duration);
 
-                 $content .=    '<label><input type="radio" name="option" class="radio-input">';
-                 if($rbfw_timely_available_quantity > 0){
-                     $content .=    '<span data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" data-available_quantity="'. $rbfw_timely_available_quantity .'" class="radio-button single-type-timely">'. $value['rent_type'] .'</span>';
-                 }else{
-                     $content .=    '<span style="text-decoration: line-through;cursor:text" data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" class="radio-button">'. $value['rent_type'] .'</span>';
-                 }
-                 $content .=    ' </label>';
-             }
-
+                $content .=    '<label><input type="radio" name="option" class="radio-input">';
+                if($rbfw_timely_available_quantity > 0){
+                    $content .=    '<span title="'.$value['short_desc'].'" data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" data-start_time="'.$value['start_time'] .'" data-end_time="'.$value['end_time'] .'" data-available_quantity="'. $rbfw_timely_available_quantity .'" class="radio-button single-type-timely">'. $value['rent_type'] .'</span>';
+                }else{
+                    $content .=    '<span style="text-decoration: line-through;cursor:text" title="'.$value['short_desc'].'" data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" class="radio-button">'. $value['rent_type'] .'</span>';
+                }
+                $content .=    ' </label>';
+            }
             echo $content;
 
             wp_die();

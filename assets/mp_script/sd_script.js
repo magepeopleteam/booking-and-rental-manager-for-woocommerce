@@ -128,7 +128,7 @@
         /*start single day hourly inventory managed*/
 
 
-        jQuery('body').on('change',  '#pickup_time',function (e) {
+        jQuery('body').on('change',  '.rbfw_bikecarsd_pricing_table_wrap #pickup_time',function (e) {
 
             let post_id = jQuery('.rbfw_post_id').val();
             let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
@@ -157,22 +157,24 @@
 
             let post_id = jQuery('.rbfw_post_id').val();
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
-            let pickup_time = jQuery('.rbfw-select.rbfw-time-price.pickup_time').val();
             let rbfw_time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
             let enable_specific_duration = jQuery('#enable_specific_duration').val();
 
 
             let service_price = jQuery(this).data('price');
 
-
             if(enable_specific_duration=='on'){
-                var duration = jQuery(this).data('start_time');
-                var d_type = jQuery(this).data('end_time');
-                jQuery('#rbfw_start_time').val(duration);
+                var start_time = jQuery(this).data('start_time');
             }else{
-                var duration = jQuery(this).data('duration');
-                var d_type = jQuery(this).data('d_type');
+                var start_time = jQuery('.rbfw-select.rbfw-time-price.pickup_time').val();
             }
+
+            var end_time = jQuery(this).data('end_time');
+            jQuery('#rbfw_start_time').val(start_time);
+
+            var duration = jQuery(this).data('duration');
+            var d_type = jQuery(this).data('d_type');
+
 
             let available_quantity = jQuery(this).data('available_quantity');
             let service_type = jQuery(this).text();
@@ -197,9 +199,10 @@
                     'action'  : 'rbfw_timely_variation_price_calculation',
                     'post_id': post_id,
                     'rbfw_bikecarsd_selected_date': rbfw_bikecarsd_selected_date,
-                    'pickup_time': pickup_time,
+                    'start_time': start_time,
                     'service_price': service_price,
                     'enable_specific_duration': enable_specific_duration,
+                    'end_time': end_time,
                     'duration': duration,
                     'd_type': d_type,
                     'available_quantity': available_quantity,

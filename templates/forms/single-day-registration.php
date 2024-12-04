@@ -96,9 +96,7 @@
                 <?php
 
                 $rbfw_bike_car_sd_data = get_post_meta($rbfw_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($rbfw_id, 'rbfw_bike_car_sd_data', true) : [];
-               // $available_times = rbfw_get_available_times($rbfw_id);
 
-               // echo '<pre>';print_r($available_times);echo '<pre>';
 
                 ?>
                     <div class="item">
@@ -144,7 +142,7 @@
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
                             <label>
                                 <input type="radio" name="option" class="radio-input">
-                                <span data-duration="<?php echo $value['duration'] ?>" data-price="<?php echo $value['price'] ?>" data-d_type="<?php echo $value['d_type'] ?>" data-start_time="<?php echo $value['start_time']??'' ?>" data-end_time="<?php echo $value['end_time']??'' ?>" class="radio-button single-type-timely"><?php echo $value['rent_type'] ?></span>
+                                <span title="<?php echo $value['short_desc'] ?>" data-duration="<?php echo $value['duration'] ?>" data-price="<?php echo $value['price'] ?>" data-d_type="<?php echo $value['d_type'] ?>" data-start_time="<?php echo $value['start_time']??'' ?>" data-end_time="<?php echo $value['end_time']??'' ?>" class="radio-button single-type-timely"><?php echo $value['rent_type'] ?></span>
                             </label>
                         <?php } ?>
                     </div>
