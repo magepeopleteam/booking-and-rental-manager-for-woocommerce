@@ -106,43 +106,49 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
         </div>
 
         <div class="rbfw_muff_row_slider rbfw_muff_row_slider_content">
-            <div class="rbfw_muff_content_col1">
-                <div class="rbfw_muff_slider mpStyle <?php echo $slide_style; ?>">
-                    <?php do_action( 'add_super_slider', $post_id ,'rbfw_gallery_images'); ?>
-                </div>
-            </div>
-            <div class="rbfw_muff_content_col2">
-                <div class="rbfw_muff_highlighted_features">
-                    <?php if ( $rbfw_feature_category ) :?>
-                        <ul class="muff_features_item">
-                        <?php foreach ( $rbfw_feature_category as $value ) :
-                            $cat_title = $value['cat_title'];
-                            $cat_features = $value['cat_features'] ? $value['cat_features'] : [];
-                            ?>
-                            <?php
-                            if(!empty($cat_features)):
-                                $i = 1;
-                                foreach ($cat_features as $features):
-                                    $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
-                                    $title = $features['title'];
-                                    if($i<5):?>
-                                        <li title="<?php echo mep_esc_html($title); ?>">
-                                            <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_trim_string(mep_esc_html($title),22); ?></span>
-                                        </li>
-                                    <?php
-                                    endif;
-                                    $i++;
-                                endforeach;
-                            endif;
-                            ?>
-                            
-                        <?php  endforeach;?>
-                        </ul>
-                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo $post_id?>">See more</div>
-                    <?php  endif; ?>
-                </div>
-            </div>
+    <div class="rbfw_muff_content_col1">
+        <div class="rbfw_muff_slider mpStyle <?php echo $slide_style; ?>">
+            <?php do_action('add_super_slider', $post_id, 'rbfw_gallery_images'); ?>
         </div>
+    </div>
+    <div class="rbfw_muff_content_col2 ">
+    <div class="rbfw_muff_highlighted_features ">
+        <?php if ($rbfw_feature_category) : ?>
+            <ul class="muff_features_item">
+                <?php 
+                $total_features = 0;
+                foreach ($rbfw_feature_category as $value) :
+                    $cat_title = $value['cat_title'];
+                    $cat_features = !empty($value['cat_features']) ? $value['cat_features'] : [];
+
+                    if (!empty($cat_features)):
+                        foreach ($cat_features as $index => $features):
+                            $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
+                            $title = $features['title'];
+
+                            if ($total_features < 10): ?>
+                                <li title="<?php echo mep_esc_html($title); ?>">
+                                    <i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i>
+                                    <span><?php echo mep_trim_string(mep_esc_html($title), 22); ?></span>
+                                </li>
+                                <?php 
+                                $total_features++;
+                            endif;
+                        endforeach;
+                    endif;
+                endforeach;
+                ?>
+            </ul>
+
+            <?php if ($total_features >= 10) : ?>
+                <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo $post_id; ?>">See more</div>
+            <?php endif; ?>
+            
+        <?php endif; ?>
+    </div>
+</div>
+
+</div>
          <!-- popup content will show here -->
          <div class="rbfw_popup_wrapper" id="rbfw_popup_wrapper">
             <div class="rbfw_rent_cat_info_popup">
@@ -161,7 +167,7 @@ $review_system = rbfw_get_option('rbfw_review_system', 'rbfw_basic_review_settin
                     <?php include( RBFW_Function::get_template_path( 'forms/multi-day-registration.php' ) ); ?>
                 </div>
             </div>
-            <div class="rbfw_muff_content_col2">
+            <div class="rbfw_muff_content_col2 <?php echo $total_features < 10 ? 'rbfw_muff_content_wrapper' : ''; ?>">
                 <div class="rbfw_muff_content_wrapper">
                     <div class="rbfw_muff_post_content">
                         <h2 class="rbfw_muff_post_content_headline">
