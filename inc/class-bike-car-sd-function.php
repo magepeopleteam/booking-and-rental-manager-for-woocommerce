@@ -635,9 +635,9 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 $content .=    '<label><input type="radio" name="option" class="radio-input">';
                 if($rbfw_timely_available_quantity > 0){
-                    $content .=    '<span data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" data-start_time="'.$value['start_time'] .'" data-end_time="'.$value['end_time'] .'" data-available_quantity="'. $rbfw_timely_available_quantity .'" class="radio-button single-type-timely">'. $value['rent_type'] .'</span>';
+                    $content .=    '<span title="'.$value['short_desc'].'" data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" data-start_time="'.$value['start_time'] .'" data-end_time="'.$value['end_time'] .'" data-available_quantity="'. $rbfw_timely_available_quantity .'" class="radio-button single-type-timely">'. $value['rent_type'] .'</span>';
                 }else{
-                    $content .=    '<span style="text-decoration: line-through;cursor:text" data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" class="radio-button">'. $value['rent_type'] .'</span>';
+                    $content .=    '<span style="text-decoration: line-through;cursor:text" title="'.$value['short_desc'].'" data-duration="'.$value['duration'] .'" data-price="'.$value['price'] .'" data-d_type="'. $value['d_type'] .'" class="radio-button">'. $value['rent_type'] .'</span>';
                 }
                 $content .=    ' </label>';
             }
