@@ -108,7 +108,7 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 ### Shortcodes included with Booking and Rental Manager:
 
 `
-[rent-list type='' style='grid' show='' columns='' category='' order='DESC']
+[rent-list type='' style='grid' show='' columns='' left-filter='yes/no' category='' order='DESC']
 `
 
 ### Shortcode to show only bike/car for single-day type rent list:
@@ -120,12 +120,12 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 ### Shortcode to show grid-style rent list:
 
 `
-[rent-list style='grid']
+[rent-list style='grid' left-filter='yes/no']
 `
 ### Shortcode to show list style rent list:
 
 `
-[rent-list style='list']
+[rent-list style='list' left-filter='yes/no']
 `
 
 ### Shortcode to show only six items in the rent list:
