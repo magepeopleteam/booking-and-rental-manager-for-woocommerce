@@ -427,9 +427,9 @@
                     <section class="manage_inventory_as_timely ">
                         <div>
                             <label>
-                                <?php esc_html_e(' Manage Inventory as hourly','booking-and-rental-manager-for-woocommerce'); ?>
+                                <?php esc_html_e('Manage a single-item inventory on an hourly basis.','booking-and-rental-manager-for-woocommerce'); ?>
                             </label>
-                            <span></span>
+                            <span><?php _e( 'Enabling this allows you to manage a shared inventory for rental items.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="manage_inventory_as_timely" value="<?php echo esc_attr(($manage_inventory_as_timely=='on')?$manage_inventory_as_timely:'off'); ?>" <?php echo esc_attr(($manage_inventory_as_timely=='on')?'checked':''); ?>>
@@ -440,25 +440,23 @@
 
                     <div class="rbfw_time_inventory rbfw_item_stock_quantity <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':''  ?>">
                         <section class="rbfw_item_quantiry_duration">
-                            <div class="w-50 d-flex justify-content-between align-items-center">
-                                <div>
-                                    <label><?php _e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                    <span><?php _e( 'Add stock quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                </div>
-                                <div class="item_stock_quantity">
-                                    <input type="number" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity_timely) ?>">
-                                </div>
+                            <div>
+                                <label><?php _e( 'Rent Item Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                <span><?php _e( 'Add stock quantity that you want allow to rent', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
-                            <div class="w-50 d-flex justify-content-between align-items-center">
-                                <div>
-                                    <label><?php _e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                    <span><?php _e( 'If want to add specific time duration then enable it', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                </div>
-                                <label class="switch">
-                                    <input type="checkbox" class="enable_specific_duration" name="enable_specific_duration" value="<?php echo esc_attr(($enable_specific_duration=='on')?$enable_specific_duration:'off'); ?>" <?php echo esc_attr(($enable_specific_duration=='on')?'checked':''); ?>>
-                                    <span class="slider round"></span>
-                                </label>
+                            <div class="item_stock_quantity">
+                                <input type="number" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity_timely) ?>">
                             </div>
+                        </section>
+                        <section class="rbfw_item_quantiry_duration">
+                            <div>
+                                <label><?php _e( 'Enable duration-based rental items.', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                                <span><?php _e( 'Enable this option to set a specific time duration.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" class="enable_specific_duration" name="enable_specific_duration" value="<?php echo esc_attr(($enable_specific_duration=='on')?$enable_specific_duration:'off'); ?>" <?php echo esc_attr(($enable_specific_duration=='on')?'checked':''); ?>>
+                                <span class="slider round"></span>
+                            </label>
                         </section>
                     </div>
 
