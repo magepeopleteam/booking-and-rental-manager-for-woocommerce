@@ -956,7 +956,7 @@ ul.rbfw_show_all_cat_features li:last-child {
 }
 .rbfw_left_filter_search_btn{
     display: flex;
-    padding:9px 10px;
+    padding:4px 10px;
     border: 1px solid var(--rbfw_color_primary);
     background-color: var(--rbfw_color_primary);
     color: #fff;
