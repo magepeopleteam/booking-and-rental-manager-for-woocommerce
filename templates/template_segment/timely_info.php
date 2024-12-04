@@ -1,24 +1,28 @@
 <?php
 global $rbfw;
 if(isset($_POST['post_id'])){
+
     $id = $_POST['post_id'];
     $service_price = $_POST['service_price'];
-
     $start_date = $_POST['rbfw_bikecarsd_selected_date'];
-    $start_time = $_POST['pickup_time'];
-
+    $start_time = $_POST['start_time'];
     $service_type = $_POST['service_type'];
     $duration = $_POST['duration'];
     $d_type = $_POST['d_type'];
     $available_quantity = $_POST['available_quantity'];
+    $enable_specific_duration = $_POST['enable_specific_duration'];
 
     $start_date_time = new DateTime($start_date.' '.$start_time);
 
-
-    $total_hours = ($d_type=='Hours' ? $duration : ($d_type=='Days' ? $duration*24 : $duration*24*7));
-    $start_date_time->modify("+$total_hours hours");
-    $end_date = $start_date_time->format('Y-m-d');
-    $end_time = $start_date_time->format('H:i:s');
+    if($enable_specific_duration=='on'){
+        $end_date = $start_date;
+        $end_time = $_POST['end_time'];
+    }else{
+        $total_hours = ($d_type=='Hours' ? $duration : ($d_type=='Days' ? $duration*24 : $duration*24*7));
+        $start_date_time->modify("+$total_hours hours");
+        $end_date = $start_date_time->format('Y-m-d');
+        $end_time = $start_date_time->format('H:i:s');
+    }
 
 
 
@@ -27,9 +31,7 @@ if(isset($_POST['post_id'])){
     $rbfw_extra_service_data = get_post_meta( $id, 'rbfw_extra_service_data', true ) ? get_post_meta( $id, 'rbfw_extra_service_data', true ) : [];
     $available_qty_info_switch = get_post_meta($id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($id, 'rbfw_available_qty_info_switch', true) : 'no';
 
-
-
-
+    
 
 
     ?>

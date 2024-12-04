@@ -134,7 +134,6 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
                     $date_range[] = $date;
                 }
             }
-
         }
         // End: Date Time Calculation
 
@@ -442,9 +441,11 @@ function total_variant_quantity($field_label,$variation,$date,$inventory,$invent
 
     $total_single_service = 0;
     foreach($inventory as $item){
-        foreach ($item['rbfw_variation_info'] as $key=>$single){
-            if(in_array($date,$item['booked_dates']) && in_array($variation,$single) && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'')  )){
-                $total_single_service += $item['rbfw_item_quantity'];
+        if(!empty($item['rbfw_variation_info'])){
+            foreach ($item['rbfw_variation_info'] as $key=>$single){
+                if(in_array($date,$item['booked_dates']) && in_array($variation,$single) && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'')  )){
+                    $total_single_service += $item['rbfw_item_quantity'];
+                }
             }
         }
     }

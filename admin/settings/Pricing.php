@@ -481,22 +481,18 @@
 											<th class="rbfw_without_time_inventory <?php echo ($manage_inventory_as_timely=='on')?'rbfw_hide':'' ?>">
                                                 <?php _e( 'Stock/Day <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                             </th>
-
                                             <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='off')?'rbfw_hide':'')  ?>">
                                                 <?php _e( 'Start Time', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                             </th>
-
                                             <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='off')?'rbfw_hide':'')  ?>">
                                                 <?php _e( 'End Time', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                             </th>
-
                                             <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='on')?'rbfw_hide':'')  ?>">
                                                 <?php _e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                             </th>
                                             <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo ($manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='on')?'rbfw_hide':'')  ?>">
                                                 <?php _e( 'Duration Type', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                             </th>
-
 											<th class="rbfw_bike_car_sd_price_table_action_column">
                                                 <?php _e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                             </th>

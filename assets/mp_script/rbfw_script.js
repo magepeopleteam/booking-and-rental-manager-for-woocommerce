@@ -342,7 +342,7 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
     }
 }
 
-function particular_time_date_dependent_ajax(post_id,date_ymd){
+function particular_time_date_dependent_ajax(post_id,date_ymd,type='',selector=''){
     jQuery.ajax({
         type: 'POST',
         dataType:'json',
@@ -351,6 +351,8 @@ function particular_time_date_dependent_ajax(post_id,date_ymd){
             'action'  : 'particular_time_date_dependent',
             'post_id': post_id,
             'selected_date': date_ymd,
+            'type': type,
+            'selector': selector,
         },
         beforeSend: function() {
             jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
@@ -363,10 +365,10 @@ function particular_time_date_dependent_ajax(post_id,date_ymd){
 
             var quantity_options = "<option value=''>Pickup Time</option>";
 
-            jQuery.each(response, function(i, item) {
+            jQuery.each(response[0], function(i, item) {
                 quantity_options += "<option "+ item[0] +" value="+i+">"+item[1]+"</option>";
             });
-            jQuery('.rbfw-select.rbfw-time-price.pickup_time').html(quantity_options);
+            jQuery(response[1]).html(quantity_options);
         }
     });
 }
