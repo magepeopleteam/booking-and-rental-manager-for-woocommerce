@@ -425,8 +425,12 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 $time_slot_switch = $_POST['time_slot_switch'];
 
+
+
                 if($time_slot_switch=='on'){
                     $available_times = rbfw_get_available_times_particulars($id,$selected_date);
+
+
 
                     $default_timezone = wp_timezone_string();
                     $date = new DateTime("now", new DateTimeZone($default_timezone));
@@ -455,8 +459,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                     $content .= '<div class="rbfw_bikecarsd_time_table_wrap">';
 
-                    if(!empty($available_times)){
-                        foreach ($available_times as $value) {
+                    if(!empty($available_times[0])){
+                        foreach ($available_times[0] as $value) {
                             $converted_time =  date(get_option('time_format'), strtotime($value[1]));
                             $ts_time = $this->rbfw_get_time_slot_by_label($value[1]);
 
