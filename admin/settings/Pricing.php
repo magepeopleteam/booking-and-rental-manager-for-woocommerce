@@ -560,11 +560,19 @@
                                                 <input class="medium" type="number" name="rbfw_bike_car_sd_data[0][qty]"  placeholder="<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
                                             </td>
 
-                                            <td class="rbfw_time_inventory rbfw_hide">
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable rbfw_hide">
+                                                <?php rbfw_time_slot_select('start_time',0,isset($value['start_time'])?$value['start_time']:'' ); ?>
+                                            </td>
+
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable rbfw_hide">
+                                                <?php rbfw_time_slot_select('end_time',0, isset($value['end_time'])?$value['end_time']:''); ?>
+                                            </td>
+
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable rbfw_hide">
                                                 <input class="medium" type="number" name="rbfw_bike_car_sd_data[0][duration]" " placeholder="<?php esc_html_e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
                                             </td>
 
-                                            <td class="rbfw_time_inventory rbfw_hide">
+                                            <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable rbfw_hide">
                                                 <select class="medium" name="rbfw_bike_car_sd_data[0][d_type]">
                                                     <option  value="Hours">Hours</option>
                                                     <option  value="Days">Days</option>
