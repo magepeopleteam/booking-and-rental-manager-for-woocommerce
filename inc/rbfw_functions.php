@@ -3707,7 +3707,7 @@ function rbfw_time_slot_select($date_type,$iidex,$selected_time){
     asort($rbfw_time_slots);
     ?>
     <div id="field-wrapper-rdfw_available_time" class="">
-        <select name="rbfw_bike_car_sd_data[<?php echo $iidex ?>][<?php echo $date_type ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
+        <select class="medium" name="rbfw_bike_car_sd_data[<?php echo $iidex ?>][<?php echo $date_type ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
             <option value="">Select Time</option>
             <?php foreach($rbfw_time_slots as $key => $value): ?>
                 <option <?php echo (date('H:i', strtotime($value))==$selected_time)?'selected':'' ?>  value="<?php echo date('H:i', strtotime($value)); ?>"> <?php echo date('H:i', strtotime($value)); ?> </option>
