@@ -6996,7 +6996,6 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 .rbfw_service_type .radio-button {
     cursor: pointer;
     font-size: 16px;
-    font-weight: 600;
     color: #333;
     padding: 10px 20px;
     transition: all 0.3s ease;
