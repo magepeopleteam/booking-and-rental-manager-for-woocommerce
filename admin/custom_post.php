@@ -60,6 +60,7 @@ if( ! class_exists('RBFW_Custom_Post')){
 
         public function rbfw_cpt_sortable_columns($columns){
             $columns['rbfw_item_type']='rbfw_item_type';
+            $columns['rbfw_categories']='rbfw_categories';
             $columns['author']='author';
             return $columns;
         }
