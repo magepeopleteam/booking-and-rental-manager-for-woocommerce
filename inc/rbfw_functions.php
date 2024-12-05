@@ -3062,14 +3062,14 @@ function rbfw_get_available_times_particulars($rbfw_id,$start_date,$type='',$sel
             foreach ($rdfw_available_time as $start_time){
 
                 if($type=='time_enable'){
-                    $time_status = '';
+                    $time_status = ''; 
                 }else{
                     $time_status =  rbfw_time_enable_disable($rbfw_id, $start_date, $start_time);
                 }
-                $the_array[$single] = array($time_status,date(get_option('time_format'), strtotime($start_time)),$selector);
+                $the_array[$start_time] = array($time_status,date(get_option('time_format'), strtotime($start_time)));
             }
             $particular_date = 'yes';
-            return $the_array;
+            return array($the_array,$selector);
         }
     }
     $rdfw_available_time = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
