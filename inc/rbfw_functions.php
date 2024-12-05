@@ -3054,7 +3054,7 @@ function rbfw_get_available_times($rbfw_id){
 function rbfw_get_available_times_particulars($rbfw_id,$start_date,$type='',$selector=''){
     $particulars_data = get_post_meta($rbfw_id, 'rbfw_particulars_data', true);
     $the_array = [];
-    $particular_date = 'no';
+
     foreach ($particulars_data as $single){
         $pd_dates_array = getAllDates($single['start_date'], $single['end_date']);
         if (in_array($start_date, $pd_dates_array)) {
@@ -3062,13 +3062,13 @@ function rbfw_get_available_times_particulars($rbfw_id,$start_date,$type='',$sel
             foreach ($rdfw_available_time as $start_time){
 
                 if($type=='time_enable'){
-                    $time_status = ''; 
+                    $time_status = '';
                 }else{
                     $time_status =  rbfw_time_enable_disable($rbfw_id, $start_date, $start_time);
                 }
                 $the_array[$start_time] = array($time_status,date(get_option('time_format'), strtotime($start_time)));
             }
-            $particular_date = 'yes';
+
             return array($the_array,$selector);
         }
     }
