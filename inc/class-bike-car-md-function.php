@@ -50,7 +50,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $start_date = $_POST['pickup_date'];
             $end_date = $_POST['dropoff_date'];
             $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'00:00:00';
-            $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:rbfw_end_time();
+            $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:rbfw_end_time($start_date,$end_date);
 
             $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
             $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
@@ -60,14 +60,25 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $rbfw_available_time = $_POST['rbfw_available_time']??'no';
             $rbfw_service_price = $_POST['rbfw_service_price'] * $item_quantity;
 
+            $rbfw_enable_time_slot = $_POST['rbfw_enable_time_slot']??'off';
 
-            $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime);
-            $duration_price_info = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$star_time,$end_time,$rbfw_available_time);
+
+
+            $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime,$rbfw_enable_time_slot);
+            $duration_price_info = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$star_time,$end_time,$rbfw_enable_time_slot);
 
             $duration_price = $duration_price_info['duration_price'] * $item_quantity;
             $total_days = $duration_price_info['total_days'];
             $actual_days = $duration_price_info['actual_days'];
             $hours = $duration_price_info['hours'];
+
+            if($rbfw_enable_time_slot=='off'){
+                $hours = ceil($hours);
+                if($hours==24){
+                    $actual_days = $actual_days + 1;
+                }
+                $hours = 0;
+            }
 
 
             $service_cost = $_POST['rbfw_es_service_price'];
@@ -94,7 +105,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             }
 
             if($actual_days == 0 && $hours == 0){
-                $actual_days =1;
+                $actual_days = 1;
                 $duration .= $actual_days > 1 ? $actual_days.' '.rbfw_string_return('rbfw_text_days',__('Days','booking-and-rental-manager-for-woocommerce')).' ' : $actual_days.' '.rbfw_string_return('rbfw_text_day',__('Day','booking-and-rental-manager-for-woocommerce')).' ';
             }
 

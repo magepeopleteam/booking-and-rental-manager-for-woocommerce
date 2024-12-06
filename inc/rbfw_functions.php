@@ -108,13 +108,17 @@ function rbfw_get_option( $option, $section, $default = '' ) {
     return $rbfw->get_option_trans( $option, $section, $default );
 }
 
-function rbfw_end_time(){
+function rbfw_end_time($start_date=null,$end_date=null){
     global $rbfw;
     $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
     if($rbfw_count_extra_day_enable=='on'){
-        return '24:00:00';
+        return '23:59:59';
     }else{
-        return '00:00:00';
+        if($start_date && $end_date && ($start_date == $end_date)){
+            return '23:59:59';
+        }else{
+            return '00:00:00';
+        }
     }
 }
 
@@ -3054,7 +3058,7 @@ function rbfw_get_available_times($rbfw_id){
 function rbfw_get_available_times_particulars($rbfw_id,$start_date,$type='',$selector=''){
     $particulars_data = get_post_meta($rbfw_id, 'rbfw_particulars_data', true);
     $the_array = [];
-    $particular_date = 'no';
+
     foreach ($particulars_data as $single){
         $pd_dates_array = getAllDates($single['start_date'], $single['end_date']);
         if (in_array($start_date, $pd_dates_array)) {
@@ -3062,13 +3066,13 @@ function rbfw_get_available_times_particulars($rbfw_id,$start_date,$type='',$sel
             foreach ($rdfw_available_time as $start_time){
 
                 if($type=='time_enable'){
-                    $time_status = ''; 
+                    $time_status = '';
                 }else{
                     $time_status =  rbfw_time_enable_disable($rbfw_id, $start_date, $start_time);
                 }
                 $the_array[$start_time] = array($time_status,date(get_option('time_format'), strtotime($start_time)));
             }
-            $particular_date = 'yes';
+
             return array($the_array,$selector);
         }
     }
@@ -3263,7 +3267,7 @@ function rbfw_off_dates($post_id){
 
 
 
-function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropoff_datetime=0,$start_date='',$end_date='', $star_time='',$end_time='')
+function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropoff_datetime=0,$start_date='',$end_date='', $star_time='',$end_time='',$rbfw_enable_time_slot='')
 
 {
 
@@ -3288,10 +3292,19 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
         $total_days = $diff->days;
         $actual_days = $diff->days;
         $hours = $diff->h + ($diff->i / 60);
-        if(($hours) || ($total_days  && $rbfw_enable_hourly_rate=='yes' && $rbfw_enable_daily_rate=='no')){
+
+        if($rbfw_enable_time_slot=='off'){
             $total_days = $total_days + 1;
+        }else{
+            if(($hours) || ($total_days  && $rbfw_enable_hourly_rate=='yes' && $rbfw_enable_daily_rate=='no')){
+                $total_days = $total_days + 1;
+            }
+            $total_days = ($total_days==0)?1:$total_days;
         }
-        $total_days = ($total_days==0)?1:$total_days;
+
+
+
+
 
         for ($i = 0; $i < $total_days; $i++) {
 
@@ -3310,6 +3323,10 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                             $duration_price = ($rbfw_hourly_rate * $hours + $duration_price);
                         }
                     }elseif($total_days == 1) {
+
+
+
+
                         $first_diff = date_diff(new DateTime($pickup_datetime), new DateTime($start_date. ' ' . '24:00:00'));
                         $f_hours = $first_diff->h + ($first_diff->i / 60);;
 
@@ -3326,8 +3343,6 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                         $last_diff = date_diff(new DateTime($end_date. ' ' . '00:00:00'), new DateTime($dropoff_datetime));
                         $l_hours = $last_diff->h + ($last_diff->i / 60);
 
-
-
                         if(isset($rbfw_sp_prices) && $rbfw_sp_prices && ($sp_price = check_seasonal_price($Book_dates_array[$i],$rbfw_sp_prices,$l_hours))!='not_found'){
                             $duration_price = $sp_price + $duration_price;
                         } else {
@@ -3337,6 +3352,9 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
                                 $duration_price = ($rbfw_hourly_rate * $l_hours + $duration_price);
                             }
                         }
+
+
+
                     }else{
 
                         $first_diff = date_diff(new DateTime($pickup_datetime), new DateTime($start_date. ' ' . '24:00:00'));

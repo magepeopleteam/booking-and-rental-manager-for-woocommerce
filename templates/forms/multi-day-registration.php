@@ -64,18 +64,29 @@ $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
 $rbfw_event_last_date = strtotime(date_i18n('Y-m-d h:i a', strtotime($rbfw_event_end_date.' '.$rbfw_event_end_time)));
 $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
 
+
+$rbfw_time_slot_switch = get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true) ? get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true) : 'off';
+
 $expire = 'no';
 if($rbfw_enable_start_end_date=='no'){
     if($rbfw_event_last_date<$rbfw_todays_date){
         $expire = 'yes';
     }
 }
+
+$time_picker = 'off';
+if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_rate == 'yes' ){
+    $time_picker = 'on';
+}
+
+
+
 ?>
 
 <?php if($expire == 'yes'){ ?>
     <h3><?php esc_html_e( 'Date Expired !', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
-
-    <?php die; } ?>
+    <?php die;  ?>
+<?php } ?>
 
 <div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
     <div class="rbfw-single-right-container">
@@ -252,7 +263,7 @@ if($rbfw_enable_start_end_date=='no'){
                     <?php if($rbfw_enable_start_end_date == 'yes'){ ?>
                         <div class="item">
                             <div class="item-content rbfw-datetime">
-                                <div class="<?php echo ($enable_hourly_rate == 'yes' && !empty($availabe_time))?'left':'' ?> date">
+                                <div class="<?php echo ($time_picker == 'on')?'left':'' ?> date">
                                     <div class="rbfw-single-right-heading">
                                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                     </div>
@@ -263,7 +274,7 @@ if($rbfw_enable_start_end_date=='no'){
                                         <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                     </div>
                                 </div>
-                                <?php if($enable_hourly_rate == 'yes' && !empty($availabe_time)){ ?>
+                                <?php if($time_picker == 'on'){ ?>
                                     <div class="right time">
                                         <div class="rbfw-single-right-heading">
                                             <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
@@ -288,7 +299,7 @@ if($rbfw_enable_start_end_date=='no'){
 
                         <div class="item">
                             <div class="item-content rbfw-datetime">
-                                <div class="<?php if($enable_hourly_rate == 'yes' && !empty($availabe_time)){ echo 'left'; }?> date">
+                                <div class="<?php echo ($time_picker == 'on')?'left':'' ?> date">
                                     <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_date', 'rbfw_basic_translation_settings')); ?></div>
                                     <div class="rbfw-p-relative">
                                         <span class="calendar"><i class="fa-solid fa-calendar-days"></i></span>
@@ -297,7 +308,7 @@ if($rbfw_enable_start_end_date=='no'){
                                         <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                     </div>
                                 </div>
-                                <?php if($enable_hourly_rate == 'yes' && !empty($availabe_time)){ ?>
+                                <?php if($time_picker == 'on'){ ?>
                                     <input name="rbfw_available_time"  id="rbfw_available_time" value="yes" type="hidden">
                                     <div class="right time">
                                         <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_time', 'rbfw_basic_translation_settings')); ?></div>
@@ -556,10 +567,11 @@ if($rbfw_enable_start_end_date=='no'){
                 $rbfw_minimum_booking_day = 0;
                 $rbfw_maximum_booking_day = 0;
                 if(rbfw_check_min_max_booking_day_active()){
-                    $rbfw_minimum_booking_day = get_post_meta($post_id, 'rbfw_minimum_booking_day', true);
-                    $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';
+                    $rbfw_minimum_booking_day = (int)get_post_meta($post_id, 'rbfw_minimum_booking_day', true);
+                    if(get_post_meta($post_id, 'rbfw_maximum_booking_day', true)){
+                        $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';
+                    }
                 }
-
 
                 ?>
 
@@ -570,7 +582,7 @@ if($rbfw_enable_start_end_date=='no'){
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $rbfw_id; ?>">
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo $rbfw_enable_variations; ?>">
                 <input type="hidden" name="rbfw_input_stock_quantity" id="rbfw_input_stock_quantity"  value="<?php echo $input_stock_quantity ?>">
-                <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo !empty(get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true) : 'on'; ?>">
+                <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo $time_picker ?>">
                 <input type="hidden" name="total_days" value="0">
                 <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo $rbfw_minimum_booking_day ?>">
                 <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo $rbfw_maximum_booking_day ?>">
