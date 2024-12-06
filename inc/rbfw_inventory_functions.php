@@ -203,7 +203,7 @@ function rbfw_update_inventory($order_id, $current_status = null){
     }
 }
 
-function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null){
+function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null,$rbfw_enable_time_slot='off'){
 
 
     if (empty($post_id) || empty($start_date) || empty($end_date)) {
@@ -217,12 +217,10 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
     $total_stock = 0;
 
-    // Start: Get Date Range
-    $date_range = [];
-    $start_date = strtotime($start_date);
-    $end_date = strtotime($end_date);
 
-    for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
+    $date_range = [];
+
+    for ($currentDate = strtotime($start_date); $currentDate <= strtotime($end_date); $currentDate += (86400)) {
         $date = date('d-m-Y', $currentDate);
         $date_range[] = $date;
     }
@@ -276,7 +274,8 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
             if ($rent_type == 'resort') {
                 $start_date_time = new DateTime( $start_date );
                 $end_date_time = new DateTime( $end_date );
-                if ($date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end) {
+
+                if ($date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end) {
                     $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
                     foreach ($rbfw_type_info as $type_name => $type_qty) {
                         if ($type_name == $type) {
@@ -287,10 +286,15 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
             }else{
                 $start_date_time = new DateTime( $pickup_datetime );
                 $end_date_time = new DateTime( $dropoff_datetime );
-                if ($date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end) {
-                    $total_booked += $rbfw_item_quantity;
+                if($rbfw_enable_time_slot=='on'){
+                    if ($date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end) {
+                        $total_booked += $rbfw_item_quantity;
+                    }
+                }else{
+                    if ($date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end) {
+                        $total_booked += $rbfw_item_quantity;
+                    }
                 }
-
             }
         }
     }
@@ -367,9 +371,6 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                     foreach($date_range as $date){
                         $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return));
                     }
-
-                    //echo '<pre>';print_r($service_q);echo '<pre>';
-
                     $service_stock[] = (int)$single['stock_quantity'] - max(array_column($service_q, $single['title']));
                 }
             }

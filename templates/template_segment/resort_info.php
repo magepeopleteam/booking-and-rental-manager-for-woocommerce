@@ -52,7 +52,7 @@ if(isset($post_id) && isset($active_tab)){
     <?php
     $i = 0;
 
-    foreach ($rbfw_resort_room_data as $key => $value):
+    foreach ($rbfw_resort_room_data as $key => $value) {
         $img_url    = wp_get_attachment_url($value['rbfw_room_image']);
         $uniq_id    = rand();
         if($img_url) {
@@ -107,8 +107,8 @@ if(isset($post_id) && isset($active_tab)){
         <?php
         }
         $i++;
-        endforeach;
-        ?>
+    }
+    ?>
         </tbody>
         </table>
 
