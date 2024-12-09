@@ -6989,7 +6989,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    margin-top: 20px;
+    margin-top: 30px;
     margin-bottom: 20px;
 }
 
