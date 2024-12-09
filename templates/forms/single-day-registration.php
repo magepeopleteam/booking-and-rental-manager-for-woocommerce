@@ -127,7 +127,7 @@
                                                 <option value="<?php echo $time; ?>"><?php echo date(get_option('time_format'), strtotime($time)); ?></option>
                                             <?php endforeach; ?>
                                         </select>
-                                        <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
+                                        <span class="input-picker-icon"></span>
                                     </div>
                                 </div>
                             <?php } ?>

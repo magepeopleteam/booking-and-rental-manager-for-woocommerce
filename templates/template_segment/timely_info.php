@@ -57,10 +57,8 @@ if(isset($_POST['post_id'])){
                                     </option>
                                 <?php } ?>
                             </select>
+                            <?php echo __('x','booking-and-rental-manager-for-woocommerce') . wc_price($service_price) ?>
                         </div>
-                    </td>
-                    <td class="w_40_pc">
-                        x <?php echo wc_price($service_price) ?>
                     </td>
 
                 </tr>

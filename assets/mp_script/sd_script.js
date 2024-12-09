@@ -1,4 +1,5 @@
 (function($) {
+    
     $(document).ready(function() {
 
         let rbfw_today_booking_enable = $('.rbfw_today_booking_enable').val();
@@ -317,6 +318,24 @@ jQuery(document).on('click','.single-type-timely',function (){
     });
     jQuery(this).addClass('selected');
 })
+
+function datepicker_inline(){
+    jQuery('.rbfw-bikecarsd-calendar').datepicker({
+        dateFormat: js_date_format,
+        minDate: 0,
+        firstDay : start_of_week,
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        beforeShowDay: function(date)
+        {
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+        },
+        onSelect: function (dateString, data) {
+            let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+            jQuery('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
+        },
+    });
+}
 
 function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',enable_specific_duration = 'off'){
     jQuery.ajax({

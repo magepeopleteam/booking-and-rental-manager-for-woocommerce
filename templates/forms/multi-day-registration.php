@@ -289,7 +289,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                     <option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html(date(get_option('time_format'), strtotime($time))); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
-                                            <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
+                                            <span class="input-picker-icon"></span>
                                         </div>
                                     </div>
                                 <?php } ?>
@@ -320,7 +320,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                     <option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html(date(get_option('time_format'), strtotime($time))); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
-                                            <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
+                                            <span class="input-picker-icon"></span>
                                         </div>
                                     </div>
                                 <?php } ?>
