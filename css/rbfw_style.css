@@ -295,7 +295,7 @@ CSS for Single Page Template
 
 .rbfw-single-right-heading {
     font-size: 16px;
-    margin: 10px 2px;
+    margin: 20px 0px;
     font-weight:600;
     color: #0a0a0a;
 }
@@ -4494,7 +4494,7 @@ span {
 
 .single-rbfw_item  .ui-widget-content {
     border-radius: 0;
-    border: 1px solid var(--rbfw_color_primary);
+    border: 1px solid #dfdedd;
     padding: 0;
 }
 
@@ -6989,7 +6989,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    margin-top: 20px;
+    margin-top: 30px;
     margin-bottom: 20px;
 }
 
