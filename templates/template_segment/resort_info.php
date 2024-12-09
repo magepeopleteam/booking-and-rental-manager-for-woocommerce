@@ -116,7 +116,7 @@ if(isset($post_id) && isset($active_tab)){
 
     <?php if(!empty($rbfw_extra_service_data)) {  ?>
             <div class="rbfw_resort_es_price_table">
-                <h5 style="padding-top: 10px"><?php esc_html_e('Additional Services You may like.','booking-and-rental-manager-for-woocommerce'); ?></h5>
+                <div class="rbfw-single-right-heading"><?php esc_html_e('Additional Services You may like.','booking-and-rental-manager-for-woocommerce'); ?></h5>
                 <table class="rbfw_room_price_table">
                     <thead>
                     <tr>
