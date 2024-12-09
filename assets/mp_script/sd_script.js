@@ -5,23 +5,7 @@
 
         datepicker_inline();
 
-        function datepicker_inline(){
-            jQuery('.rbfw-bikecarsd-calendar').datepicker({
-                dateFormat: js_date_format,
-                minDate: 0,
-                firstDay : start_of_week,
-                showOtherMonths: true,
-                selectOtherMonths: true,
-                beforeShowDay: function(date)
-                {
-                    return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
-                },
-                onSelect: function (dateString, data) {
-                    let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-                    jQuery('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
-                },
-            });
-        }
+
 
         jQuery('body').on('focusin', '.pickup_date_timely', function(e) {
             jQuery(this).datepicker({
@@ -309,7 +293,23 @@
     });
 })(jQuery)
 
-
+function datepicker_inline(){
+    jQuery('.rbfw-bikecarsd-calendar').datepicker({
+        dateFormat: js_date_format,
+        minDate: 0,
+        firstDay : start_of_week,
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        beforeShowDay: function(date)
+        {
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+        },
+        onSelect: function (dateString, data) {
+            let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+            jQuery('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
+        },
+    });
+}
 
 jQuery(document).on('click','.single-type-timely',function (){
     jQuery('.single-type-timely').each(function(index, element) {
