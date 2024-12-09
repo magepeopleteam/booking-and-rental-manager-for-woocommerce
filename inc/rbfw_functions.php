@@ -3295,6 +3295,7 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
 
         if($rbfw_enable_time_slot=='off'){
             $total_days = $total_days + 1;
+            $hours = 0;
         }else{
             if(($hours) || ($total_days  && $rbfw_enable_hourly_rate=='yes' && $rbfw_enable_daily_rate=='no')){
                 $total_days = $total_days + 1;

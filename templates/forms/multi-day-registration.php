@@ -471,9 +471,10 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                     <?php if(!empty($extra_service_list)){ ?>
                         <div class="item rbfw_resourse_md" style="display: none">
                             <div class="rbfw-single-right-heading">
-                                <?php echo esc_html($rbfw->get_option_trans('rbfw_text_resources', 'rbfw_basic_translation_settings', __('Resources','booking-and-rental-manager-for-woocommerce'))); ?>
+                                <?php esc_html_e('Additional Services You may like.','booking-and-rental-manager-for-woocommerce'); ?>
                             </div>
                             <div class="item-content rbfw-resource">
+
                                 <table class="rbfw_bikecarmd_es_table">
                                     <tbody>
                                     <?php

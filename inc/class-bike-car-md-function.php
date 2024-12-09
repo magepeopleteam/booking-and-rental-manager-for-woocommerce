@@ -73,10 +73,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $hours = $duration_price_info['hours'];
 
             if($rbfw_enable_time_slot=='off'){
-                $hours = ceil($hours);
-                if($hours==24){
-                    $actual_days = $actual_days + 1;
-                }
+                $actual_days = $actual_days + 1;
                 $hours = 0;
             }
 
