@@ -278,7 +278,7 @@ if($rbfw_enable_start_end_date=='no'){
                                                     <option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html(date(get_option('time_format'), strtotime($time))); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
-                                            <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
+                                            <span class="input-picker-icon"></span>
                                         </div>
                                     </div>
                                 <?php } ?>
@@ -309,7 +309,7 @@ if($rbfw_enable_start_end_date=='no'){
                                                     <option value="<?php echo mep_esc_html($time); ?>"><?php echo mep_esc_html(date(get_option('time_format'), strtotime($time))); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
-                                            <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
+                                            <span class="input-picker-icon"></span>
                                         </div>
                                     </div>
                                 <?php } ?>
