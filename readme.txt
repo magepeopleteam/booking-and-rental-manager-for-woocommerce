@@ -207,6 +207,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.2.1 =
+* Multi date inventory problem solved.
+* Code updated.
+
 = 2.2.0 =
 * Day wise time slot option added.
 * Manage inventory as hourly option added.
