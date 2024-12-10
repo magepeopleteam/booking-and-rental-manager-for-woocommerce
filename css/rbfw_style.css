@@ -1974,7 +1974,7 @@ li.rbfw-visibility-hidden {
 .rbfw_pricing_info_heading {
     width: 100%;
 }
-.rbfw_muffin_template .rbfw_pricing_info_heading{padding-left:20px}
+.rbfw-single-right-heading.rbfw_pricing_info_heading .rbfw_pricing_info_heading{padding-left:20px}
 
 .rbfw_rent_list_button_wrap a.rbfw_rent_list_btn:hover {
     background: var(--rbfw_single_page_base_color4);
