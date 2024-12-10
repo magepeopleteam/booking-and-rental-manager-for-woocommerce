@@ -122,7 +122,7 @@
             jQuery('#rbfw_start_time').val(start_time);
 
             if(rbfw_time_slot_switch == 'on'){
-                if(start_date=='' || start_time==null){
+                if(start_date=='' || start_time==''){
                     alert("please enter date");
                     return;
                 }
@@ -169,8 +169,7 @@
             }
 
             if(rbfw_time_slot_switch == 'on'){
-                console.log('pickup_time',pickup_time);
-                if(!pickup_time){
+                if(start_time==''){
                     alert("please enter pickup time");
                     return;
                 }
