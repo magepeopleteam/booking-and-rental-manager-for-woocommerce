@@ -2,26 +2,26 @@
 global $rbfw;
 if(isset($_POST['post_id'])) {
     $id = $_POST['post_id'];
-    $es_service_price = $_POST['es_service_price'];
-    $duration_cost = $_POST['duration_price'];
-    $sub_total_price = (int)$duration_cost + (int)$es_service_price;
+    $es_service_price = floatval($_POST['es_service_price']);
+    $duration_cost = floatval($_POST['duration_price']);
+    $sub_total_price = $duration_cost + $es_service_price;
 }
 ?>
 <div class="item-content rbfw-costing">
     <ul class="rbfw-ul">
         <li class="duration-costing rbfw-cond">
             <?php echo $rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')) ?>
-            <?php echo wc_price((int)$duration_cost) ?>
+            <?php echo wc_price($duration_cost) ?>
         </li>
 
         <li class="resource-costing rbfw-cond">
             <?php echo $rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')) ?>
-            <?php echo wc_price((int)$es_service_price) ?>
+            <?php echo wc_price($es_service_price) ?>
         </li>
 
         <li class="subtotal">
             <?php echo $rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce')) ?>
-            <?php echo wc_price((int)$duration_cost + (int)$es_service_price) ?>
+            <?php echo wc_price($duration_cost + $es_service_price) ?>
         </li>
 
         <?php
@@ -32,7 +32,7 @@ if(isset($_POST['post_id'])) {
                 <?php echo wc_price($security_deposit['security_deposit_amount']) ?>
             </li>
         <?php }
-        $total_price = (int)$duration_cost + (int)$es_service_price + $security_deposit['security_deposit_amount'];
+        $total_price = $duration_cost + $es_service_price + $security_deposit['security_deposit_amount'];
         ?>
         <li class="total">
             <strong><?php echo $rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce')) ?></strong>
