@@ -233,8 +233,12 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
         $rbfw_pickup_point = isset($_POST['rbfw_pickup_point']) ? $_POST['rbfw_pickup_point'] : '';
         $rbfw_dropoff_point = isset($_POST['rbfw_dropoff_point']) ? $_POST['rbfw_dropoff_point'] : '';
+        $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot']) ? $_POST['rbfw_enable_time_slot'] : 'off';
 
-        $duration_price_info = rbfw_md_duration_price_calculation($rbfw_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$start_time,$end_time);
+
+
+
+        $duration_price_info = rbfw_md_duration_price_calculation($rbfw_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$start_time,$end_time,$rbfw_enable_time_slot);
 
         $duration_price_individual = $duration_price_info['duration_price'];
 
