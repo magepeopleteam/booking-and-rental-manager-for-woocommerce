@@ -45,6 +45,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
         function rbfw_md_duration_price_calculation_ajax(){
 
+            global $rbfw;
+
             $post_id = $_POST['post_id'];
 
             $start_date = $_POST['pickup_date'];
@@ -73,7 +75,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $hours = $duration_price_info['hours'];
 
             if($rbfw_enable_time_slot=='off'){
-                $actual_days = $actual_days + 1;
+                $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+                if($rbfw_count_extra_day_enable=='on'){
+                    $actual_days = $actual_days + 1;
+                }
                 $hours = 0;
             }
 
