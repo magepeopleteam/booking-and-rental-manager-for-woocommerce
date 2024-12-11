@@ -3270,6 +3270,7 @@ function rbfw_off_dates($post_id){
 function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropoff_datetime=0,$start_date='',$end_date='', $star_time='',$end_time='',$rbfw_enable_time_slot='')
 
 {
+    global $rbfw;
 
     $Book_dates_array = getAllDates($pickup_datetime, $dropoff_datetime);
 
@@ -3290,12 +3291,20 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
     if ($diff) {
 
         $total_days = $diff->days;
+
+
+
+
         $actual_days = $diff->days;
         $hours = $diff->h + ($diff->i / 60);
 
         if($rbfw_enable_time_slot=='off'){
-            $total_days = $total_days + 1;
-            $hours = 0;
+            $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+            if($rbfw_count_extra_day_enable=='on' || $total_days==0){
+                $total_days = $total_days + 1;
+                $hours = 0;
+            }
+
         }else{
             if(($hours) || ($total_days  && $rbfw_enable_hourly_rate=='yes' && $rbfw_enable_daily_rate=='no')){
                 $total_days = $total_days + 1;
