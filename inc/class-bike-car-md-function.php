@@ -55,10 +55,10 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
             $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
-            $item_quantity = $_POST['item_quantity'];
+            $item_quantity = (int)$_POST['item_quantity'];
             $rbfw_enable_variations = $_POST['rbfw_enable_variations'];
             $rbfw_available_time = $_POST['rbfw_available_time']??'no';
-            $rbfw_service_price = $_POST['rbfw_service_price'] * $item_quantity;
+            $rbfw_service_price = floatval($_POST['rbfw_service_price']) * $item_quantity;
 
             $rbfw_enable_time_slot = $_POST['rbfw_enable_time_slot']??'off';
 
