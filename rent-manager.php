@@ -36,12 +36,14 @@ if(! class_exists('RBFW_Rent_Manager')){
             add_action( 'save_post', [$this,'flush_rules_on_save_posts'], 20, 2);
             add_action('admin_init', [$this,'activation_redirect'], 90);
             add_action('admin_init', [$this,'get_plugin_data']);
+
         }
 
         public function define_contstants(){
             define( 'RBFW_PLUGIN_DIR', dirname( __FILE__ ) );
             define( 'RBFW_TEMPLATE_PATH', plugin_dir_path(__FILE__).'templates/' );
             define( 'RBFW_PLUGIN_URL', plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) );
+
         }
 
         public function init_tracker() {

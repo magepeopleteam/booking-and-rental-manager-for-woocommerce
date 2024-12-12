@@ -29,6 +29,10 @@
                 wp_enqueue_script('jquery-ui-datepicker');
                 wp_enqueue_script('jquery-ui-accordion');
 
+                wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style.css', array(), time(), 'all' );
+                wp_enqueue_style( 'mp_admin_settings', RBFW_PLUGIN_URL . '/assets/mp_admin_settings.css', array(), time(), 'all' );
+                wp_enqueue_script( 'mp_plugin_global_rbfw', RBFW_PLUGIN_URL . '/assets/mp_script.js', array(), time(), true );
+
                 //mp style
                 wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
                 wp_enqueue_script( 'mp_plugin_global_rbfw', RBFW_PLUGIN_URL . '/assets/mp_style/mp_script.js', array(), time(), true );
