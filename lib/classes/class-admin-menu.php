@@ -174,6 +174,11 @@ if (!class_exists('MageRBFWClass')) {
                 <div class=_dShadow_6_adminLayout">
                     <form method="post" action="">
                         <?php wp_nonce_field('rbfw_quick_setup_nonce', 'rbfw_quick_setup'); ?>
+
+                        <?php wp_nonce_field('my_custom_action', 'my_nonce_field'); ?>
+
+
+
                         <div class="mpTabsNext">
                             <div class="tabListsNext _max_700_mAuto">
                                 <div data-tabs-target-next="#ttbm_qs_welcome" class="tabItemNext" data-open-text="1" data-close-text=" " data-open-icon="" data-close-icon="fas fa-check" data-add-class="success">
