@@ -508,6 +508,7 @@ if (!class_exists('MageRBFWClass')) {
                 if($query->have_posts()){
 
                     while ($query->have_posts()){
+
                         $query->the_post();
                         global $post;
                         $post_id = $post->ID;
@@ -540,10 +541,14 @@ if (!class_exists('MageRBFWClass')) {
                         update_post_meta($post_id, 'rbfw_duration_cost', $merged_duration_cost);
                         update_post_meta($post_id, 'rbfw_service_cost', $merged_service_cost);
                         update_post_meta($post_id, 'rbfw_ticket_total_price', $total_price);
-                        if(!empty($order_tax)){ update_post_meta($post_id, 'rbfw_order_tax', $order_tax); }
+                        if(!empty($order_tax)){
+                            update_post_meta($post_id, 'rbfw_order_tax', $order_tax);
+                        }
                     }
 
                 }else{
+
+
                     /* If Order not exist, create the order */
                     $args = array(
                         'post_title' => $title,
@@ -553,10 +558,7 @@ if (!class_exists('MageRBFWClass')) {
                     );
 
                     $post_id = wp_insert_post($args);
-
-
-                    //echo '<pre>';print_r($meta_data);echo '<pre>';
-
+                    
 
                     if (sizeof($meta_data) > 0) {
                         foreach ($meta_data as $key => $value) {

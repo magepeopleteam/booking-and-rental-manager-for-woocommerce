@@ -139,46 +139,54 @@ if (!class_exists('RBFW_Timeslots_Page')) {
         }
 
         public function rbfw_insert_time_slot(){
-            
-            if(isset($_POST['ts_label']) && isset($_POST['ts_time'])){
-                $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
-                $ts_label = $_POST['ts_label'];
-                $ts_time = $_POST['ts_time'];
-                $ts_time = date('H:i', strtotime($ts_time));
 
-                if( ! array_key_exists($ts_label, $rbfw_time_slots) ){
-                    $rbfw_time_slots[$ts_label] = $ts_time;
-                    update_option('rbfw_time_slots', $rbfw_time_slots);
-                    $status = 'inserted';
-                } else {
-                    $status = 'exist';
+            $status = '';
+            if (isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'rbfw_ajax_action')) {
+                if(isset($_POST['ts_label']) && isset($_POST['ts_time'])){
+                    $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+                    $ts_label = $_POST['ts_label'];
+                    $ts_time = $_POST['ts_time'];
+                    $ts_time = date('H:i', strtotime($ts_time));
+
+                    if( ! array_key_exists($ts_label, $rbfw_time_slots) ){
+                        $rbfw_time_slots[$ts_label] = $ts_time;
+                        update_option('rbfw_time_slots', $rbfw_time_slots);
+                        $status = 'inserted';
+                    } else {
+                        $status = 'exist';
+                    }
                 }
-                echo json_encode( array(
-                    'status'   => $status,
-                ));
             }
+            echo json_encode( array(
+                'status'   => $status,
+            ));
             wp_die();
         }
 
         public function rbfw_delete_time_slot(){
 
-            if(isset($_POST['ts_time']) && isset($_POST['ts_label'])){
+            $status = '';
 
-                $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
-                $ts_time = $_POST['ts_time'];
-                $ts_label = $_POST['ts_label'];
-                $status = '';
+            if (isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'rbfw_ajax_action')) {
+                if(isset($_POST['ts_time']) && isset($_POST['ts_label'])){
 
-                if ( array_key_exists($ts_label, $rbfw_time_slots) ) {
-                    unset($rbfw_time_slots[$ts_label]);
-                    update_option('rbfw_time_slots', $rbfw_time_slots);
-                    $status = 'deleted';
+                    $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
+                    $ts_time = $_POST['ts_time'];
+                    $ts_label = $_POST['ts_label'];
+
+
+                    if ( array_key_exists($ts_label, $rbfw_time_slots) ) {
+                        unset($rbfw_time_slots[$ts_label]);
+                        update_option('rbfw_time_slots', $rbfw_time_slots);
+                        $status = 'deleted';
+                    }
+
                 }
-
-                echo json_encode( array(
-                    'status'   => $status,
-                ) );
             }
+
+            echo json_encode( array(
+                'status'   => $status,
+            ) );
 
             wp_die();
         }
@@ -234,11 +242,12 @@ if (!class_exists('RBFW_Timeslots_Page')) {
 
                         jQuery.ajax({
                             type: 'POST',
-                            url: rbfw_ajax_url,
+                            url: rbfw_ajax.rbfw_ajaxurl,
                             data: {
                                 'action' : 'rbfw_insert_time_slot',
                                 'ts_label' : ts_label,
-                                'ts_time' : ts_time
+                                'ts_time' : ts_time,
+                                'nonce' : rbfw_ajax.nonce
                             },
                             beforeSend: function() {
                                 jQuery('.rbfw_time_slot_add_btn').append('<i class="fas fa-spinner fa-spin"></i>');
@@ -286,11 +295,12 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                         if (confirm('Are you sure? You won\'t be able to revert this!')) {
                             jQuery.ajax({
                                 type: 'POST',
-                                url: rbfw_ajax_url,
+                                url: rbfw_ajax.rbfw_ajaxurl,
                                 data: {
                                     'action' : 'rbfw_delete_time_slot',
                                     'ts_time' : ts_time,
-                                    'ts_label' : ts_label
+                                    'ts_label' : ts_label,
+                                    'nonce' : rbfw_ajax.nonce
                                 },
                                 beforeSend: function() {
                                     this_btn.append('<i class="fas fa-spinner fa-spin"></i>');
