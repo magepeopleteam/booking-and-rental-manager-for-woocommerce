@@ -1,11 +1,5 @@
 <?php
 
-
-/**
- * @author Shahadat <raselsha@gmail.com>
- * @version 1.3.4
- */
-
 if (!defined('ABSPATH')) { die; } // Cannot access pages directly.
 
 if( ! class_exists('RBFW_Custom_Post')){

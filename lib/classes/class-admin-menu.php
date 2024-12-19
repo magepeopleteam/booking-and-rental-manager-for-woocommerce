@@ -62,7 +62,6 @@ if (!class_exists('MageRBFWClass')) {
 
             add_submenu_page('edit.php?post_type=rbfw_item', __('Settings', 'booking-and-rental-manager-for-woocommerce'), __('Settings', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_settings_page', array($this, 'plugin_page'));
 
-            add_submenu_page('edit.php?post_type=rbfw_item', __('Quick Setup', 'booking-and-rental-manager-for-woocommerce'), __('Quick Setup', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_setup_wizard', array($this, 'rbfw_setup_wizard'));
 
             do_action('rbfw_admin_menu_after_settings');
 

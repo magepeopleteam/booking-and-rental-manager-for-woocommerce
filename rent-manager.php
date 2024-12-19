@@ -27,17 +27,34 @@ if(! class_exists('RBFW_Rent_Manager')){
     final class RBFW_Rent_Manager{
         public function __construct() {
             $this->define_contstants();
-            $this->include_plugin_files(); 
-            add_action('init', [$this, 'init_tracker']);
-            add_filter( 'plugin_action_links', [$this,'plugin_action_link'],10, 2);
-            add_filter( 'plugin_row_meta', [$this,'plugin_row_meta'], 10, 2 );
-            add_filter('post_row_actions', [$this,'duplicate_post_link'], 10, 2);
-            add_filter('body_class', [$this,'add_body_class']);
-            add_action( 'save_post', [$this,'flush_rules_on_save_posts'], 20, 2);
+            $this->include_plugin_files();
+            $this->load_rbfw_plugin();
+        }
+
+
+        private function load_rbfw_plugin() {
+
+            require_once RBFW_PLUGIN_DIR . '/functions.php';
+            if (rbfw_woo_install_check() == 'Yes') {
+
+                require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
+                add_action('init', [$this, 'init_tracker']);
+                add_filter( 'plugin_action_links', [$this,'plugin_action_link'],10, 2);
+                add_filter( 'plugin_row_meta', [$this,'plugin_row_meta'], 10, 2 );
+                add_filter('post_row_actions', [$this,'duplicate_post_link'], 10, 2);
+                add_filter('body_class', [$this,'add_body_class']);
+                add_action( 'save_post', [$this,'flush_rules_on_save_posts'], 20, 2);
+                add_action('admin_init', [$this,'get_plugin_data']);
+            }
+            require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Quick_Setup.php';
+
+
             add_action('admin_init', [$this,'activation_redirect'], 90);
-            add_action('admin_init', [$this,'get_plugin_data']);
 
         }
+
+
+
 
         public function define_contstants(){
             define( 'RBFW_PLUGIN_DIR', dirname( __FILE__ ) );
@@ -161,4 +178,4 @@ if(class_exists('RBFW_Rent_Manager')){
     new RBFW_Rent_Manager();
 }
 // this include file can't added inside class method due to fatal error. need to fix.
-require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
+

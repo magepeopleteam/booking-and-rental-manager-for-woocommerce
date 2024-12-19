@@ -172,33 +172,34 @@
                         'rent_type' => $rent_type,
                     )
                 );
+                if (rbfw_woo_install_check() == 'Yes') {
+
+                    $view_more_feature_btn_text = $rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Hide More', 'booking-and-rental-manager-for-woocommerce'));
+                    $hide_more_feature_btn_text = $rbfw->get_option_trans('rbfw_text_hide_more_features', 'rbfw_basic_translation_settings', __('Load More', 'booking-and-rental-manager-for-woocommerce'));
+                    $view_more_offers_btn_text = $rbfw->get_option_trans('rbfw_text_view_more_offers', 'rbfw_basic_translation_settings', __('View More Offers', 'booking-and-rental-manager-for-woocommerce'));
+                    $hide_more_offers_btn_text = $rbfw->get_option_trans('rbfw_text_hide_more_offers', 'rbfw_basic_translation_settings', __('Hide More Offers', 'booking-and-rental-manager-for-woocommerce'));
+                    $version = time(); // Time() function will prevent cache
+                    wp_enqueue_script('jquery');
+
+                    wp_enqueue_style('dashicons');
+                    wp_enqueue_style('rbfw-jquery-ui-style', plugin_dir_url(__DIR__) . 'css/jquery-ui.css', array());
 
 
-				$view_more_feature_btn_text = $rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Hide More','booking-and-rental-manager-for-woocommerce'));
-				$hide_more_feature_btn_text = $rbfw->get_option_trans('rbfw_text_hide_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce'));
-				$view_more_offers_btn_text = $rbfw->get_option_trans('rbfw_text_view_more_offers', 'rbfw_basic_translation_settings', __('View More Offers','booking-and-rental-manager-for-woocommerce'));
-				$hide_more_offers_btn_text = $rbfw->get_option_trans('rbfw_text_hide_more_offers', 'rbfw_basic_translation_settings', __('Hide More Offers','booking-and-rental-manager-for-woocommerce'));
-				$version = time(); // Time() function will prevent cache
-				wp_enqueue_script('jquery');
+                    wp_localize_script('rbfw_custom_script', 'rbfw_ajaxurl', array('rbfw_ajaxurl' => admin_url('admin-ajax.php'), 'view_more_feature_btn_text' => $view_more_feature_btn_text, 'hide_more_feature_btn_text' => $hide_more_feature_btn_text, 'view_more_offers_btn_text' => $view_more_offers_btn_text, 'hide_more_offers_btn_text' => $hide_more_offers_btn_text));
+                    wp_localize_script('jquery', 'rbfw_ajax', array('rbfw_ajaxurl' => admin_url('admin-ajax.php')));
+                    //font awesome
+                    wp_enqueue_style('fontawesome.v6', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
 
-				wp_enqueue_style('dashicons');
-				wp_enqueue_style('rbfw-jquery-ui-style', plugin_dir_url(__DIR__) . 'css/jquery-ui.css', array());
-
-
-				wp_localize_script( 'rbfw_custom_script', 'rbfw_ajaxurl', array('rbfw_ajaxurl' => admin_url('admin-ajax.php'), 'view_more_feature_btn_text' => $view_more_feature_btn_text, 'hide_more_feature_btn_text' => $hide_more_feature_btn_text, 'view_more_offers_btn_text' => $view_more_offers_btn_text, 'hide_more_offers_btn_text' => $hide_more_offers_btn_text));
-				wp_localize_script('jquery', 'rbfw_ajax', array('rbfw_ajaxurl' => admin_url('admin-ajax.php')));
-				//font awesome
-				wp_enqueue_style('fontawesome.v6',  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
-
-                wp_enqueue_style( 'flatpickr-css', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css', array(), null );
-                wp_enqueue_script( 'flatpickr-js', 'https://cdn.jsdelivr.net/npm/flatpickr', array('jquery'), null, true );
-                wp_enqueue_script(
-                    'jquery-ui-cdn',
-                    'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
-                    array('jquery'), // Ensures jQuery is loaded as a dependency
-                    '1.12.1',
-                    true // Load in the footer
-                );
+                    wp_enqueue_style('flatpickr-css', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css', array(), null);
+                    wp_enqueue_script('flatpickr-js', 'https://cdn.jsdelivr.net/npm/flatpickr', array('jquery'), null, true);
+                    wp_enqueue_script(
+                        'jquery-ui-cdn',
+                        'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
+                        array('jquery'), // Ensures jQuery is loaded as a dependency
+                        '1.12.1',
+                        true // Load in the footer
+                    );
+                }
 
 			}
 
@@ -228,7 +229,9 @@
                         rbfw_nonce :  "<?php echo wp_create_nonce( 'rbfw_nonce' ) ?>"
                     };
                 </script>
+
                 <?php
+                if (rbfw_woo_install_check() == 'Yes') {
                 global $rbfw;
                 $custom_cost = $rbfw->get_option_trans('rbfw_custom_css', 'rbfw_custom_style_settings');
                 ?>
@@ -236,6 +239,7 @@
                     <?php echo $custom_cost; ?>
                 </style>
                 <?php
+                }
             }
 
 
