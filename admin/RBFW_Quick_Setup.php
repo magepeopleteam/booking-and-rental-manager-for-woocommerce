@@ -47,8 +47,9 @@ if (!class_exists('TTBM_Quick_Setup')) {
                         dLoaderBody();
                     </script>
                     <?php
+
                     activate_plugin('woocommerce/woocommerce.php');
-                    TTBM_Woocommerce_Plugin::on_activation_page_create();
+
                     ?>
                     <script>
                         (function ($) {
