@@ -995,20 +995,20 @@ function rbfw_booking_management( $order_id ) {
             if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
 
                 $ticket_info  = wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ? maybe_unserialize( wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ) : [];
-                $user_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ) : [];
-                $type_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ) : [];
-                $service_info = rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ) : [];
-                $rbfw_duration_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) : '';
-                $rbfw_service_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) : '';
+                //$user_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ) : [];
+                //$type_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ) : [];
+                //$service_info = rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ) : [];
+                //$rbfw_duration_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) : '';
+                //$rbfw_service_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) : '';
 
-                rbfw_prepar_and_add_user_data( $ticket_info, $user_info, $rbfw_id, $order_id, $service_info, $rbfw_duration_cost, $rbfw_service_cost, $type_info,$start_date,$end_date,$rbfw_service_price_data_actual);
+                rbfw_prepar_and_add_user_data( $ticket_info, $rbfw_id, $order_id,$start_date,$end_date,$rbfw_service_price_data_actual);
             }
         }
     }
 }
 
 
-function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $order_id, $service_info = array(), $rbfw_duration_cost = null, $rbfw_service_cost = null, $type_info = array(), $start_date=null,$end_date=null,$rbfw_service_price_data_actual=array()) {
+function rbfw_prepar_and_add_user_data($ticket_info, $rbfw_id, $order_id, $start_date=null,$end_date=null,$rbfw_service_price_data_actual=array()) {
 
 
 
@@ -1034,9 +1034,6 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
 
             $zdata[ $key ]['rbfw_ticket_total_price'] = ((float)$_ticket['ticket_price'] * (int)$_ticket['ticket_qty']);
             $zdata[ $key ]['rbfw_ticket_qty']         = $_ticket['ticket_qty'];
-            $zdata[ $key ]['rbfw_ticket_info']        = $ticket_info;
-            $zdata[ $key ]['rbfw_duration_cost']      = $rbfw_duration_cost;
-            $zdata[ $key ]['rbfw_service_cost']       = $rbfw_service_cost;
             $zdata[ $key ]['discount_amount']         = isset($_ticket['discount_amount'])?$_ticket['discount_amount']:0;
             $zdata[ $key ]['rbfw_order_id']           = $order_id;
             $zdata[ $key ]['rbfw_order_status']       = $order_status;
@@ -1049,8 +1046,9 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
             $zdata[ $key ]['start_date']              = $start_date;
             $zdata[ $key ]['end_date']                = $end_date;
             $zdata[ $key ]['rbfw_id']                 = $rbfw_id;
+            $zdata[ $key ]['rbfw_ticket_info']        = $ticket_info;
 
-            $meta_data = array_merge($zdata[ $key ], $ticket_info, $user_info);
+            $meta_data = array_merge($zdata[ $key ]);
 
             /*rbfw_order add*/
             $order_id = $rbfw->rbfw_add_order_data($meta_data, $ticket_info,$rbfw_service_price_data_actual );

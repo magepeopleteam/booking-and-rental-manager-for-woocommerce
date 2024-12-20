@@ -466,6 +466,7 @@ if (!class_exists('MageRBFWClass')) {
         function rbfw_add_order_data($meta_data = array(), $ticket_info = array(),$rbfw_service_price_data_actual = array()) {
 
 
+
             global $rbfw;
             $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
             $title = $meta_data['rbfw_billing_name'];
@@ -477,8 +478,10 @@ if (!class_exists('MageRBFWClass')) {
                 $rbfw_id = $meta_data['rbfw_id'];
                 $wc_order_id = $meta_data['rbfw_order_id'];
 
-                $duration_cost = $meta_data['rbfw_duration_cost'];
-                $service_cost = $meta_data['rbfw_service_cost'];
+
+                $duration_cost = $meta_data['rbfw_ticket_info'][0]['duration_cost'];
+                $service_cost = $meta_data['rbfw_ticket_info'][0]['service_cost'];
+
                 $order_tax = !empty(get_post_meta($wc_order_id, '_order_tax', true)) ? get_post_meta($wc_order_id, '_order_tax', true) : 0;
                 $is_tax_inclusive = get_option('woocommerce_prices_include_tax', true);
 
@@ -508,6 +511,7 @@ if (!class_exists('MageRBFWClass')) {
                 if($query->have_posts()){
 
                     while ($query->have_posts()){
+
                         $query->the_post();
                         global $post;
                         $post_id = $post->ID;
@@ -515,18 +519,13 @@ if (!class_exists('MageRBFWClass')) {
                         $current_ticket_info = get_post_meta($post_id, 'rbfw_ticket_info', true);
                         $merged_ticket_info = array_merge($ticket_info, $current_ticket_info);
 
-                        $current_duration_cost = get_post_meta($post_id, 'rbfw_duration_cost', true);
-                        $merged_duration_cost = (float)$current_duration_cost + (float)$duration_cost;
+                        $rbfw_ticket_total_price = get_post_meta($post_id, 'rbfw_ticket_total_price', true);
 
-                        $current_service_cost = get_post_meta($post_id, 'rbfw_service_cost', true);
-                        $merged_service_cost = (float)$current_service_cost + (float)$service_cost;
-
-                        //$total_price = $merged_duration_cost + $merged_service_cost + $order_tax;
 
                         if($is_tax_inclusive == 'yes'){
-                            $total_price = $merged_duration_cost + $merged_service_cost;
+                            $total_price = $rbfw_ticket_total_price + $duration_cost + $service_cost;
                         } else{
-                            $total_price = $merged_duration_cost + $merged_service_cost + $order_tax;
+                            $total_price = $rbfw_ticket_total_price + $duration_cost + $service_cost + $order_tax;
                         }
 
                         if (sizeof($meta_data) > 0) {
@@ -537,13 +536,12 @@ if (!class_exists('MageRBFWClass')) {
                         }
 
                         update_post_meta($post_id, 'rbfw_ticket_info', $merged_ticket_info);
-                        update_post_meta($post_id, 'rbfw_duration_cost', $merged_duration_cost);
-                        update_post_meta($post_id, 'rbfw_service_cost', $merged_service_cost);
                         update_post_meta($post_id, 'rbfw_ticket_total_price', $total_price);
                         if(!empty($order_tax)){ update_post_meta($post_id, 'rbfw_order_tax', $order_tax); }
                     }
 
                 }else{
+
                     /* If Order not exist, create the order */
                     $args = array(
                         'post_title' => $title,
@@ -571,16 +569,15 @@ if (!class_exists('MageRBFWClass')) {
                     update_post_meta($wc_order_id, '_rbfw_link_order_id', $post_id);
 
                     if(!empty($order_tax)){ update_post_meta($post_id, 'rbfw_order_tax', $order_tax); }
-                    $total_price = $meta_data['rbfw_ticket_total_price'];
-                    //$total_price = $total_price + $order_tax;
+                    $total_price = $duration_cost + $service_cost;
 
-                    if($is_tax_inclusive == 'yes'){
-                        $total_price = $total_price;
-                    } else{
+                    if($is_tax_inclusive != 'yes') {
                         $total_price = $total_price + $order_tax;
                     }
+                    
 
                     update_post_meta($post_id, 'ticket_name', $wc_order_id);
+
                     update_post_meta($post_id, 'rbfw_ticket_total_price', $total_price);
                     update_post_meta($post_id, 'rbfw_link_order_id', $wc_order_id);
 
