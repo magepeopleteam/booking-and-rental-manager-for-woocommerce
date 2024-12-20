@@ -3212,24 +3212,26 @@ function rbfw_update_order_status($order_id){
 add_action('admin_init', 'rbfw_duplicate_post');
 function rbfw_duplicate_post() {
 
-    if(isset($_GET['rbfw_duplicate'])){
-        $post_id = $_GET['rbfw_duplicate'];
-        $title   = get_the_title($post_id);
-        $oldpost = get_post($post_id);
-        $post    = array(
-            'post_title' => $title,
-            'post_status' => 'draft',
-            'post_type' => $oldpost->post_type,
-        );
-        $new_post_id = wp_insert_post($post);
+    if (isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'duplicate_post_action')) {
+        if(isset($_GET['rbfw_duplicate'])){
+            $post_id = $_GET['rbfw_duplicate'];
+            $title   = get_the_title($post_id);
+            $oldpost = get_post($post_id);
+            $post    = array(
+                'post_title' => $title,
+                'post_status' => 'draft',
+                'post_type' => $oldpost->post_type,
+            );
+            $new_post_id = wp_insert_post($post);
 
-        // Copy meta fields.
-        $post_meta = get_post_custom( $post_id );
-        if( $post_meta ) {
-            foreach ( $post_meta as $meta_key => $meta_values ) {
-                update_post_meta( $new_post_id, $meta_key,  maybe_unserialize($meta_values[0]) );
+            // Copy meta fields.
+            $post_meta = get_post_custom( $post_id );
+            if( $post_meta ) {
+                foreach ( $post_meta as $meta_key => $meta_values ) {
+                    update_post_meta( $new_post_id, $meta_key,  maybe_unserialize($meta_values[0]) );
+                }
+                update_post_meta($new_post_id, 'rbfw_inventory', '');
             }
-            update_post_meta($new_post_id, 'rbfw_inventory', '');
         }
     }
 }
@@ -3270,6 +3272,7 @@ function rbfw_off_dates($post_id){
 function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropoff_datetime=0,$start_date='',$end_date='', $star_time='',$end_time='',$rbfw_enable_time_slot='')
 
 {
+    global $rbfw;
 
     $Book_dates_array = getAllDates($pickup_datetime, $dropoff_datetime);
 
@@ -3290,11 +3293,20 @@ function rbfw_md_duration_price_calculation($post_id=0,$pickup_datetime=0,$dropo
     if ($diff) {
 
         $total_days = $diff->days;
+
+
+
+
         $actual_days = $diff->days;
         $hours = $diff->h + ($diff->i / 60);
 
         if($rbfw_enable_time_slot=='off'){
-            $total_days = $total_days + 1;
+            $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+            if($rbfw_count_extra_day_enable=='on' || $total_days==0){
+                $total_days = $total_days + 1;
+                $hours = 0;
+            }
+
         }else{
             if(($hours) || ($total_days  && $rbfw_enable_hourly_rate=='yes' && $rbfw_enable_daily_rate=='no')){
                 $total_days = $total_days + 1;

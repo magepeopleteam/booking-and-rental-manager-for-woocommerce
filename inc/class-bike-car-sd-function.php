@@ -428,8 +428,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
 
                 if($time_slot_switch=='on'){
-                    $available_times = rbfw_get_available_times_particulars($id,$selected_date);
-
+                    $available_times = rbfw_get_available_times_particulars($id,$selected_date,'time_enable','');
 
 
                     $default_timezone = wp_timezone_string();

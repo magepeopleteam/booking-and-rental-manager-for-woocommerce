@@ -77,6 +77,7 @@ if(isset($_POST['post_id'])){
     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step">
         <div class="">
             <?php if(!empty($rbfw_extra_service_data)){ ?>
+                    <div class="rbfw-single-right-heading"><?php esc_html_e('Additional Services You may like.','booking-and-rental-manager-for-woocommerce'); ?></div>
                 <table class="rbfw_bikecarsd_price_table">
                     <thead>
                     <tr>

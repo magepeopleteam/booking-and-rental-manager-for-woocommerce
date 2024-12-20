@@ -3,7 +3,7 @@
  * Plugin Name: Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Equipment - WpRently
  * Plugin URI: https://mage-people.com
  * Description: A complete booking & rental solution for WordPress.
- * Version: 2.2.0
+ * Version: 2.2.1
  * Author: MagePeople Team
  * Author URI: https://www.mage-people.com/
  * Text Domain: booking-and-rental-manager-for-woocommerce
@@ -65,7 +65,8 @@ if(! class_exists('RBFW_Rent_Manager')){
         {
             if ($post->post_type=='rbfw_item')
             {
-                $actions['rbfw_duplicate'] = '<a href="'.esc_url(admin_url()).'edit.php?post_type=rbfw_item&rbfw_duplicate='.$post->ID.'" title="" rel="permalink">'.esc_html__('Duplicate','booking-and-rental-manager-for-woocommerce').'</a>';
+                $nonce = wp_create_nonce('duplicate_post_action');
+                $actions['rbfw_duplicate'] = '<a href="'.esc_url(admin_url()).'edit.php?post_type=rbfw_item&rbfw_duplicate='.$post->ID.'&nonce=' . $nonce . '" title="" rel="permalink">'.esc_html__('Duplicate','booking-and-rental-manager-for-woocommerce').'</a>';
             }
             return $actions;
         }

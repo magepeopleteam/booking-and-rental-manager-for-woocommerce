@@ -28,24 +28,22 @@ if (!class_exists('RBFWOrderPage')) {
 			$query = new WP_Query($args);
 			$total_posts = $query->post_count;
 			?>
-
-			<div class="rbfw_order_page_wrap wrap">
-            <h1 class="awesome-heading"><?php esc_html_e('Order List', 'booking-and-rental-manager-for-woocommerce'); ?></h1>
-<input type="text" id="search" class="search-input awesome-search" placeholder="<?php esc_attr_e('Search by order id or customer name..', 'booking-and-rental-manager-for-woocommerce'); ?>" />
-
-				<table class="rbfw_order_page_table">
-    <thead>
-        <tr>
-            <th><?php esc_html_e('Order', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-            <th><?php esc_html_e('Billing Name', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-            <th><?php esc_html_e('Order Created Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-            <th><?php esc_html_e('Booking Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-            <th><?php esc_html_e('Booking End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-            <th><?php esc_html_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-            <th><?php esc_html_e('Total', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-            <th><?php esc_html_e('Action', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-        </tr>
-    </thead>
+            <div class="rbfw_order_page_wrap wrap">
+                <h1 class="awesome-heading"><?php esc_html_e('Order List', 'booking-and-rental-manager-for-woocommerce'); ?></h1>
+                <input type="text" id="search" class="search-input awesome-search" placeholder="<?php esc_attr_e('Search by order id or customer name..', 'booking-and-rental-manager-for-woocommerce'); ?>" />
+                <table class="rbfw_order_page_table">
+                    <thead>
+                        <tr>
+                            <th><?php esc_html_e('Order', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th><?php esc_html_e('Billing Name', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th><?php esc_html_e('Order Created Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th><?php esc_html_e('Booking Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th><?php esc_html_e('Booking End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th><?php esc_html_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th><?php esc_html_e('Total', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                            <th><?php esc_html_e('Action', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                        </tr>
+                    </thead>
     <tbody id="order-list">
         <?php if ($query->have_posts()) : while ($query->have_posts()) : $query->the_post();
             global $post;
@@ -55,6 +53,7 @@ if (!class_exists('RBFWOrderPage')) {
             $total_price = get_post_meta($post_id, 'rbfw_ticket_total_price', true);
             $ticket_infos = get_post_meta($post_id, 'rbfw_ticket_info', true);
             $ticket_info_array = maybe_unserialize($ticket_infos);
+
             $rbfw_start_datetime = '';
             $rbfw_end_datetime = '';
             if (!empty($ticket_info_array) && is_array($ticket_info_array)) {
@@ -71,50 +70,46 @@ if (!class_exists('RBFWOrderPage')) {
                 <td><?php echo esc_html( !empty($rbfw_start_datetime) ? date_i18n('F j, Y g:i a', strtotime($rbfw_start_datetime)) : ''); ?></td>
                <td><?php echo esc_html( !empty($rbfw_end_datetime) ? date_i18n('F j, Y g:i a', strtotime($rbfw_end_datetime)) : ''); ?></td>
                 <td><span class="rbfw_order_status <?php echo esc_attr($status); ?>"><?php echo esc_html($status); ?></span></td>
-                 <td><?php echo wc_price($total_price); ?></td>
-              
+                <td><?php echo wc_price($total_price); ?></td>
+                <?php if (function_exists('rbfw_pro_tab_menu_list')) { ?>
+                    <td>
+                        <a href="javascript:void(0);" class="rbfw_order_view_btn" data-post-id="<?php echo esc_attr($post_id); ?>">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <?php esc_html_e('View Details', 'booking-and-rental-manager-for-woocommerce'); ?>
+                        </a>
+                        <a href="<?php echo esc_url(admin_url('post.php?post=' . $post_id . '&action=edit')); ?>" class="rbfw_order_edit_btn">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <?php esc_html_e('Order status changes', 'booking-and-rental-manager-for-woocommerce'); ?>
+                        </a>
+                    </td>
                 <?php
-if (function_exists('rbfw_pro_tab_menu_list')) {
-    ?>
-    <td>
-        <a href="javascript:void(0);" class="rbfw_order_view_btn" data-post-id="<?php echo esc_attr($post_id); ?>">
-            <i class="fa-solid fa-pen-to-square"></i> 
-            <?php esc_html_e('View Details', 'booking-and-rental-manager-for-woocommerce'); ?>
-        </a>
-        <a href="<?php echo esc_url(admin_url('post.php?post=' . $post_id . '&action=edit')); ?>" class="rbfw_order_edit_btn">
-            <i class="fa-solid fa-pen-to-square"></i> 
-            <?php esc_html_e('Order status changes', 'booking-and-rental-manager-for-woocommerce'); ?>
-        </a>
-    </td>
-    <?php
-} else {
-    ?>
-    <td>
-        <a href="javascript:void(0);" class="rbfw_order_view_btn pro-overlay">
-            <i class="fa-solid fa-pen-to-square"></i> 
-            <?php esc_html_e('View Details', 'booking-and-rental-manager-for-woocommerce'); ?>
-        </a>
-        <a href="javascript:void(0);" class="rbfw_order_edit_btn pro-overlay">
-            <i class="fa-solid fa-pen-to-square"></i> 
-            <?php esc_html_e('Order status changes', 'booking-and-rental-manager-for-woocommerce'); ?>
-        </a>
-    </td>
-    <script>
-        document.querySelectorAll('.pro-overlay').forEach(function(button) {
-            button.replaceWith(button.cloneNode(true)); 
-        });
-        document.querySelectorAll('.pro-overlay').forEach(function(button) {
-            button.addEventListener('click', function(event) {
-                event.preventDefault(); // Prevent default link behavior
-                window.open('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/', '_blank');
-            });
-        });
-    </script>
-    <?php
-}
-?>
+                } else {
+                    ?>
 
-                
+                    <td>
+                        <a href="javascript:void(0);" class="rbfw_order_view_btn pro-overlay">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <?php esc_html_e('View Details', 'booking-and-rental-manager-for-woocommerce'); ?>
+                        </a>
+                        <a href="javascript:void(0);" class="rbfw_order_edit_btn pro-overlay">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            <?php esc_html_e('Order status changes', 'booking-and-rental-manager-for-woocommerce'); ?>
+                        </a>
+                    </td>
+                    <script>
+                        document.querySelectorAll('.pro-overlay').forEach(function(button) {
+                            button.replaceWith(button.cloneNode(true));
+                        });
+                        document.querySelectorAll('.pro-overlay').forEach(function(button) {
+                            button.addEventListener('click', function(event) {
+                                event.preventDefault(); // Prevent default link behavior
+                                window.open('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/', '_blank');
+                            });
+                        });
+                    </script>
+                    <?php
+                }
+                ?>
             </tr>
             <tr id="order-details-<?php echo $post_id; ?>" class="order-details" style="display: none;">
                 <td colspan="12"><div class="order-details-content"></div></td>

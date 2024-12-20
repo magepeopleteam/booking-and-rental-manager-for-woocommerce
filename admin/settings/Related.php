@@ -48,6 +48,7 @@ if( ! class_exists('RBFW_Related')){
                                 $releted_post_id = get_post_meta($post_id,'rbfw_releted_rbfw',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_releted_rbfw', true)) : [];
                                 $the_query = new WP_Query( array(
                                     'post_type' => 'rbfw_item',
+                                    'posts_per_page' => -1,
                                 ) );
                             ?>
                             <?php while ( $the_query->have_posts() ) : $the_query->the_post();?>

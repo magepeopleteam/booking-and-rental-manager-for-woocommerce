@@ -366,9 +366,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                         <br>
                         <span>
                             <?php
-                            if($rbfw_enable_start_end_date != 'no'){
-                                echo rbfw_day_diff_status( $start_datetime, $end_datetime );
-                            }
+                            echo $cart_item['total_days'].' '.(($cart_item['total_days']==1)?'Day':'Days');
                             ?>
                         </span>
                     </th>
