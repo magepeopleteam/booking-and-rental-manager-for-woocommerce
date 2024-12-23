@@ -137,7 +137,12 @@ if(! class_exists('RBFW_Rent_Manager')){
         }
 
         public function activation_redirect( $plugin ) {
-            if(get_option('rbfw_sz_form_submit') === false){
+
+
+            $rbfw_quick_setup_done = get_option('rbfw_quick_setup_done') ? get_option('rbfw_quick_setup_done') : 'no';
+
+
+            if($rbfw_quick_setup_done == 'no'){
                 if(isset($_REQUEST['page']) && $_REQUEST['page'] == 'rbfw_quick_setup'){
                     return null;
                 }else{

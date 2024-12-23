@@ -13,6 +13,7 @@ function rbfw_quick_setup_exit(){
 
 if (!class_exists('TTBM_Quick_Setup')) {
     class TTBM_Quick_Setup {
+
         public function __construct() {
             if (!class_exists('TTBM_Dependencies')) {
                 add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'), 10, 1);
@@ -25,14 +26,15 @@ if (!class_exists('TTBM_Quick_Setup')) {
         public function quick_setup_menu() {
             $status = rbfw_woo_install_check();;
             if ($status == 'Yes') {
-                add_submenu_page('edit.php?post_type=rbfw_tour', __('Quick Setup', 'tour-booking-manager'), '<span style="color:#10dd10">' . esc_html__('Quick Setup', 'tour-booking-manager') . '</span>', 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
-                add_submenu_page('rbfw_tour', esc_html__('Quick Setup', 'tour-booking-manager'), '<span style="color:#10dd10">' . esc_html__('Quick Setup', 'tour-booking-manager') . '</span>', 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
+                add_submenu_page('edit.php?post_type=rbfw_item', __('Quick Setup', 'tour-booking-manager'), '<span style="color:#10dd10">' . esc_html__('Quick Setup', 'tour-booking-manager') . '</span>', 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
+                add_submenu_page('rbfw_item', esc_html__('Quick Setup', 'tour-booking-manager'), '<span style="color:#10dd10">' . esc_html__('Quick Setup', 'tour-booking-manager') . '</span>', 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
             }
             else {
-                add_menu_page( __('Quick Setup', 'booking-and-rental-manager-for-woocommerce'), __('Quick Setup', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
+                add_menu_page( __('Rent', 'booking-and-rental-manager-for-woocommerce'), __('Rent', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
             }
         }
         public function quick_setup() {
+
 
 
 
@@ -56,9 +58,9 @@ if (!class_exists('TTBM_Quick_Setup')) {
                             "use strict";
                             $(document).ready(function () {
                                 let ttbm_admin_location = window.location.href;
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=ttbm_tour&page=rbfw_quick_setup', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=ttbm_tour', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_item', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
                                 window.location.href = ttbm_admin_location;
                             });
                         }(jQuery));
@@ -125,8 +127,8 @@ if (!class_exists('TTBM_Quick_Setup')) {
 
 
                     update_option('ttbm_basic_gen_settings', $new_general_settings_data);
-                    update_option('ttbm_quick_setup_done', 'yes');
-                    wp_redirect(admin_url('edit.php?post_type=ttbm_tour'));
+                    update_option('rbfw_quick_setup_done', 'yes');
+                    wp_redirect(admin_url('edit.php?post_type=rbfw_item'));
                 }
             }
 
@@ -222,7 +224,7 @@ if (!class_exists('TTBM_Quick_Setup')) {
                 </div>
                 <?php if ($woo_status != 'Yes') { ?>
                     <div class='mep_seup_exit_sec'>
-                        <button style='margin:10px auto;' class="warningButton" type="submit" name="ttbm_skip_quick_setup"><?php _e('Skip, Go to Dashboard') ?></button>
+                        <button style='margin:10px auto;' class="warningButton" type="submit" name="rbfw_skip_quick_setup"><?php _e('Skip, Go to Dashboard') ?></button>
                     </div>
                 <?php } ?>
             </div>
