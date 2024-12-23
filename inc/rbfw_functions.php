@@ -1078,7 +1078,7 @@ function rbfw_footer_admin_scripts(){
 add_action( 'wp_ajax_rbfw_load_more_icons', 'rbfw_load_more_icons_func' );
 
 function rbfw_load_more_icons_func() {
-    $data_loaded = $_POST['data_loaded'];
+    $data_loaded = sanitize_text_field($_POST['data_loaded']);
     $icon_library = new rbfw_icon_library();
     $icon_library_list = $icon_library->rbfw_fontawesome_icons();
 

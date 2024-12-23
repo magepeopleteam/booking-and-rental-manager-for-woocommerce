@@ -144,8 +144,8 @@ if (!class_exists('RBFW_Timeslots_Page')) {
             if (isset($_POST['nonce']) && wp_verify_nonce($_POST['nonce'], 'rbfw_ajax_action')) {
                 if(isset($_POST['ts_label']) && isset($_POST['ts_time'])){
                     $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
-                    $ts_label = $_POST['ts_label'];
-                    $ts_time = $_POST['ts_time'];
+                    $ts_label = sanitize_text_field($_POST['ts_label']);
+                    $ts_time = sanitize_text_field($_POST['ts_time']);
                     $ts_time = date('H:i', strtotime($ts_time));
 
                     if( ! array_key_exists($ts_label, $rbfw_time_slots) ){
@@ -171,8 +171,8 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                 if(isset($_POST['ts_time']) && isset($_POST['ts_label'])){
 
                     $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
-                    $ts_time = $_POST['ts_time'];
-                    $ts_label = $_POST['ts_label'];
+                    $ts_time = sanitize_text_field($_POST['ts_time']);
+                    $ts_label = sanitize_text_field($_POST['ts_label']);
 
 
                     if ( array_key_exists($ts_label, $rbfw_time_slots) ) {
@@ -205,8 +205,8 @@ if (!class_exists('RBFW_Timeslots_Page')) {
             if(isset($_POST['new_ts_label']) && isset($_POST['current_ts_label'])){
 
                 $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
-                $new_ts_label = $_POST['new_ts_label'];
-                $current_ts_label = $_POST['current_ts_label'];
+                $new_ts_label = sanitize_text_field($_POST['new_ts_label']);
+                $current_ts_label = sanitize_text_field($_POST['current_ts_label']);
                 $status = '';
 
                 if( array_key_exists($current_ts_label, $rbfw_time_slots) ){

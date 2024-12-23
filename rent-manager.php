@@ -114,7 +114,7 @@ if(! class_exists('RBFW_Rent_Manager')){
         }
 
         public function flush_rules_on_save_posts( $post_id ) {
-            if ( ! empty( $_POST['post_type'] ) && $_POST['post_type'] != 'rbfw_item' ) {
+            if ( ! empty( $_POST['post_type'] ) && sanitize_text_field($_POST['post_type']) != 'rbfw_item' ) {
                 return;
             }
             flush_rewrite_rules();

@@ -33,12 +33,6 @@
 				return $data;
 			}
 
-			public static function submit_sanitize( $key, $default = '' ) {
-				$data = $_POST[ $key ] ?? $default;
-				$data = stripslashes( strip_tags( $data ) );
-
-				return self::data_sanitize( $data );
-			}
 
 			public static function get_submit_info( $key, $default = '' ) {
 				$data = $_POST[ $key ] ?? $default;
