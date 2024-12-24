@@ -712,7 +712,7 @@ class License {
      */
     private function formActionUrl() {
         $url = add_query_arg(
-            $_GET,
+            rbfw_array_strip($_GET),
             admin_url( basename( $_SERVER['SCRIPT_NAME'] ) )
         );
 

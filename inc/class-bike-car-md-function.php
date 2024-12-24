@@ -47,22 +47,24 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             global $rbfw;
 
-            $post_id = $_POST['post_id'];
+            $post_id = absint($_POST['post_id']);
 
-            $start_date = $_POST['pickup_date'];
-            $end_date = $_POST['dropoff_date'];
-            $star_time = isset($_POST['pickup_time'])?$_POST['pickup_time']:'00:00:00';
-            $end_time = isset($_POST['dropoff_time'])?$_POST['dropoff_time']:rbfw_end_time($start_date,$end_date);
+            $start_date = sanitize_text_field($_POST['pickup_date']);
+            $end_date = sanitize_text_field($_POST['dropoff_date']);
+            $star_time = isset($_POST['pickup_time'])?sanitize_text_field($_POST['pickup_time']):'00:00:00';
+            $end_time = isset($_POST['dropoff_time'])?sanitize_text_field($_POST['dropoff_time']):rbfw_end_time($start_date,$end_date);
 
             $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
             $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
-            $item_quantity = (int)$_POST['item_quantity'];
-            $rbfw_enable_variations = $_POST['rbfw_enable_variations'];
-            $rbfw_available_time = $_POST['rbfw_available_time']??'no';
-            $rbfw_service_price = floatval($_POST['rbfw_service_price']) * $item_quantity;
+            $item_quantity = absint($_POST['item_quantity']);
+            $rbfw_enable_variations = sanitize_text_field($_POST['rbfw_enable_variations']);
+            $rbfw_available_time = sanitize_text_field($_POST['rbfw_available_time'])??'no';
+            $rbfw_service_price = floatval(sanitize_text_field($_POST['rbfw_service_price'])) * $item_quantity;
 
-            $rbfw_enable_time_slot = $_POST['rbfw_enable_time_slot']??'off';
+
+
+            $rbfw_enable_time_slot = sanitize_text_field($_POST['rbfw_enable_time_slot'])??'off';
 
 
 
@@ -83,7 +85,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             }
 
 
-            $service_cost = $_POST['rbfw_es_service_price'];
+            $service_cost = floatval(sanitize_text_field($_POST['rbfw_es_service_price']));
 
             $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_service_price;
             $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);

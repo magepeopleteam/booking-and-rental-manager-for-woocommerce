@@ -391,8 +391,8 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
         public function rbfw_check_resort_availibility(){
 
-            $start_date = $_POST['checkin_date'];
-            $end_date = $_POST['checkout_date'];
+            $start_date = sanitize_text_field($_POST['checkin_date']);
+            $end_date = sanitize_text_field($_POST['checkout_date']);
 
             $origin             = date_create($start_date);
             $target             = date_create($end_date);
@@ -404,7 +404,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             }else{
                 $price_type = 'daylong';
             }
-            $this->rbfw_get_active_price_table($_POST['post_id'],$price_type,strip_tags($_POST['checkin_date']),strip_tags($_POST['checkout_date']));
+            $this->rbfw_get_active_price_table(intval(sanitize_text_field($_POST['post_id'])),$price_type,sanitize_text_field($_POST['checkin_date']),sanitize_text_field($_POST['checkout_date']));
         }
 
         public function rbfw_get_active_price_table($post_id=0,$active_tab='',$checkin_date='',$checkout_date=''){
@@ -418,15 +418,15 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                 global $rbfw;
                 $content = '';
-                $checkin_date = $_POST['checkin_date'];
-                $checkout_date =  $_POST['checkout_date'];
-                $post_id = strip_tags($_POST['post_id']);
+                $checkin_date = sanitize_text_field($_POST['checkin_date']);
+                $checkout_date =  sanitize_text_field($_POST['checkout_date']);
+                $post_id = intval(sanitize_text_field($_POST['post_id']));
                 $origin = date_create($checkin_date);
                 $target = date_create($checkout_date);
                 $interval = date_diff($origin, $target);
                 $total_days = $interval->format('%a');
-                $room_price_arr = $_POST['room_price_arr'];
-                $service_price_arr = !empty($_POST['service_price_arr']) ? $_POST['service_price_arr'] : [];
+                $room_price_arr = RBFW_Function::data_sanitize($_POST['room_price_arr']);
+                $service_price_arr = !empty($_POST['service_price_arr']) ? RBFW_Function::data_sanitize($_POST['service_price_arr']) : [];
                 $room_price = 0;
                 $service_price = 0;
                 $total_room_price = 0;

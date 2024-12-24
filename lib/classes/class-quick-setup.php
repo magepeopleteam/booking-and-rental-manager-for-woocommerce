@@ -202,7 +202,7 @@ if(!class_exists('RBFW_Quick_Setup')){
         }
 
         public function rbfw_quick_setup_admin_head(){
-            if(isset($_GET['post_type']) && $_GET['post_type'] == 'rbfw_item' && isset($_GET['page']) && $_GET['page'] == 'rbfw_quick_setup'){
+            if(isset($_GET['post_type']) && sanitize_text_field($_GET['post_type']) == 'rbfw_item' && isset($_GET['page']) && sanitize_text_field($_GET['page']) == 'rbfw_quick_setup'){
                 ?>
                 <script>
                     jQuery(document).ready(function(){

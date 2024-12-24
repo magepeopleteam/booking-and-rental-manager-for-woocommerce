@@ -65,7 +65,8 @@ if(! class_exists('RBFW_Rent_Manager')){
         {
             if ($post->post_type=='rbfw_item')
             {
-                $actions['rbfw_duplicate'] = '<a href="'.esc_url(admin_url()).'edit.php?post_type=rbfw_item&rbfw_duplicate='.$post->ID.'" title="" rel="permalink">'.esc_html__('Duplicate','booking-and-rental-manager-for-woocommerce').'</a>';
+                $nonce = wp_create_nonce('duplicate_post_action');
+                $actions['rbfw_duplicate'] = '<a href="'.esc_url(admin_url()).'edit.php?post_type=rbfw_item&rbfw_duplicate='.$post->ID.'&nonce=' . $nonce . '" title="" rel="permalink">'.esc_html__('Duplicate','booking-and-rental-manager-for-woocommerce').'</a>';
             }
             return $actions;
         }
@@ -113,7 +114,7 @@ if(! class_exists('RBFW_Rent_Manager')){
         }
 
         public function flush_rules_on_save_posts( $post_id ) {
-            if ( ! empty( $_POST['post_type'] ) && $_POST['post_type'] != 'rbfw_item' ) {
+            if ( ! empty( $_POST['post_type'] ) && sanitize_text_field($_POST['post_type']) != 'rbfw_item' ) {
                 return;
             }
             flush_rewrite_rules();
@@ -121,7 +122,7 @@ if(! class_exists('RBFW_Rent_Manager')){
 
         public function activation_redirect( $plugin ) {
             if(get_option('rbfw_sz_form_submit') === false){
-                if(isset($_REQUEST['page']) && $_REQUEST['page'] == 'rbfw_quick_setup'){
+                if(isset($_REQUEST['page']) && sanitize_text_field($_REQUEST['page']) == 'rbfw_quick_setup'){
                     return null;
                 }else{
                     exit( wp_redirect( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup' ) ) );

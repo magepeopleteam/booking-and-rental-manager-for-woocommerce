@@ -16,7 +16,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
 ?>
 
-<?php /* Type: Resort */ ?>
+<?php /* Type: Resort */ ?>j 
 <?php if($rbfw_rent_type == 'resort'){
 
     $start_datetime    = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
