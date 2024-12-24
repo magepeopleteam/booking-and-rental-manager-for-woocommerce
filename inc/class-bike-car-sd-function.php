@@ -507,8 +507,8 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 global $rbfw;
                 $content            = '';          
-                $bikecarsd_price_arr     = !empty($_POST['bikecarsd_price_arr']) ? sanitize_text_field($_POST['bikecarsd_price_arr']) : [];
-                $service_price_arr  = !empty($_POST['service_price_arr']) ? sanitize_text_field($_POST['service_price_arr']) : [];
+                $bikecarsd_price_arr     = !empty($_POST['bikecarsd_price_arr']) ? rbfw_array_strip($_POST['bikecarsd_price_arr']) : [];
+                $service_price_arr  = !empty($_POST['service_price_arr']) ? rbfw_array_strip($_POST['service_price_arr']) : [];
                 $post_id = !empty($_POST['post_id']) ? sanitize_text_field($_POST['post_id']) : '';
                 $bikecarsd_price         = 0;
                 $service_price      = 0;

@@ -62,6 +62,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $rbfw_available_time = sanitize_text_field($_POST['rbfw_available_time'])??'no';
             $rbfw_service_price = floatval(sanitize_text_field($_POST['rbfw_service_price'])) * $item_quantity;
 
+
+
             $rbfw_enable_time_slot = sanitize_text_field($_POST['rbfw_enable_time_slot'])??'off';
 
 
