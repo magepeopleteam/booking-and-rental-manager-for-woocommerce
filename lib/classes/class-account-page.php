@@ -454,7 +454,7 @@ if (!class_exists('Rbfw_Account_Page')) {
             $current_user_email = $current_user->user_email;
 
             if(isset($_GET['view_order'])){
-                $order_id = $_GET['view_order'];
+                $order_id = sanitize_text_field($_GET['view_order']);
                 $billing_email = get_post_meta($order_id, 'rbfw_billing_email', true);
 
                 if($current_user_email != $billing_email){

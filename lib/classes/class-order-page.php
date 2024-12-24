@@ -18,7 +18,7 @@ if (!class_exists('RBFWOrderPage')) {
 		private $posts_per_page = 10;
 
 		public function rbfw_order_page() {
-			$this->posts_per_page = isset($_GET['posts_per_page']) ? intval($_GET['posts_per_page']) : $this->posts_per_page;
+			$this->posts_per_page = isset($_GET['posts_per_page']) ? intval(sanitize_text_field($_GET['posts_per_page'])) : $this->posts_per_page;
 
 			$args = array(
 				'post_type' => 'rbfw_order',

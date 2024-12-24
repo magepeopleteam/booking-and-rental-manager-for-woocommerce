@@ -1507,7 +1507,7 @@ function rbfw_trash_order( $order_id = '' ) {
         }
         // Verify if is trashing multiple posts
         if ( isset( $_GET['post'] ) && is_array( $_GET['post'] ) ) {
-            foreach ( $_GET['post'] as $post_id ) {
+            foreach ( rbfw_array_strip($_GET['post']) as $post_id ) {
                 rbfw_update_inventory( $post_id, 'cancelled' );
             }
         } else {
@@ -3214,7 +3214,7 @@ function rbfw_duplicate_post() {
 
     if (isset($_GET['nonce']) && wp_verify_nonce($_GET['nonce'], 'duplicate_post_action')) {
         if(isset($_GET['rbfw_duplicate'])){
-            $post_id = $_GET['rbfw_duplicate'];
+            $post_id = sanitize_text_field($_GET['rbfw_duplicate']);
             $title   = get_the_title($post_id);
             $oldpost = get_post($post_id);
             $post    = array(
