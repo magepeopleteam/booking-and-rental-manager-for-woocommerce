@@ -36,6 +36,7 @@ if(! class_exists('RBFW_Rent_Manager')){
 
             require_once RBFW_PLUGIN_DIR . '/functions.php';
             if (rbfw_woo_install_check() == 'Yes') {
+                require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
                 add_action('init', [$this, 'init_tracker']);
                 add_filter( 'plugin_action_links', [$this,'plugin_action_link'],10, 2);
                 add_filter( 'plugin_row_meta', [$this,'plugin_row_meta'], 10, 2 );
@@ -180,9 +181,7 @@ if(class_exists('RBFW_Rent_Manager')){
     register_uninstall_hook( __FILE__, array( 'RBFW_Rent_Manager','uninstall' ) );
     new RBFW_Rent_Manager();
 }
-if (rbfw_woo_install_check() == 'Yes') {
-    require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
-}
+
 
 // this include file can't added inside class method due to fatal error. need to fix.
 

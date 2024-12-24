@@ -2945,29 +2945,9 @@ function rbfw_hex2rgba( $color, $opacity = false ) {
 
 }
 
-function rbfw_exist_page_by_title( $title ) {
-    global $wpdb;
-    $posts_table = $wpdb->prefix.'posts';
-    $return = $wpdb->get_row( "SELECT ID FROM $posts_table WHERE post_title = '" . $title . "' && post_status = 'publish' && post_type = 'page' ", 'ARRAY_N' );
 
-    if( empty( $return ) ) {
-        return false;
-    } else {
-        return true;
-    }
-}
 
-function rbfw_exist_page_by_slug( $slug ) {
-    global $wpdb;
-    $posts_table = $wpdb->prefix.'posts';
-    $return = $wpdb->get_row( "SELECT ID FROM $posts_table WHERE post_name = '" . $slug . "' && post_status = 'publish' && post_type = 'page' ", 'ARRAY_N' );
 
-    if( empty( $return ) ) {
-        return false;
-    } else {
-        return true;
-    }
-}
 
 function rbfw_get_available_times($rbfw_id){
     $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
