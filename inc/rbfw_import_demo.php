@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'RbfwImportDemo' ) ) {
     class RbfwImportDemo {
         public function __construct(){
-            
+
             add_action('rbfw_after_register_activation', array($this, 'rbfw_import_demo_function'));
 
         }

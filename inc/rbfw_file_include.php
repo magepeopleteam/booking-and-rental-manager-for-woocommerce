@@ -28,7 +28,7 @@ require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-md-function.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-thankyou-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-account-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-search-page.php';
-require_once RBFW_PLUGIN_DIR . '/inc/rbfw_import_demo.php';
+
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-rating-notice.php';
 
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-time-slots-page.php';

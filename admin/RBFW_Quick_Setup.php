@@ -12,7 +12,7 @@ function rbfw_quick_setup_exit(){
 }
 
 if (!class_exists('TTBM_Quick_Setup')) {
-    class TTBM_Quick_Setup {
+    class RBFW_Quick_Setup {
 
         public function __construct() {
             if (!class_exists('TTBM_Dependencies')) {
@@ -26,11 +26,10 @@ if (!class_exists('TTBM_Quick_Setup')) {
         public function quick_setup_menu() {
             $status = rbfw_woo_install_check();;
             if ($status == 'Yes') {
-                add_submenu_page('edit.php?post_type=rbfw_item', __('Quick Setup', 'tour-booking-manager'), '<span style="color:#10dd10">' . esc_html__('Quick Setup', 'tour-booking-manager') . '</span>', 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
-                add_submenu_page('rbfw_item', esc_html__('Quick Setup', 'tour-booking-manager'), '<span style="color:#10dd10">' . esc_html__('Quick Setup', 'tour-booking-manager') . '</span>', 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
+                add_submenu_page('edit.php?post_type=rbfw_item', __('Quick Setup', 'booking-and-rental-manager-for-woocommerce'), '<span style="color:#10dd10">' . esc_html__('Quick Setup', 'booking-and-rental-manager-for-woocommerce') . '</span>', 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
             }
             else {
-                add_menu_page( __('Rent', 'booking-and-rental-manager-for-woocommerce'), __('Rent', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
+                add_menu_page( __('Rent Item', 'booking-and-rental-manager-for-woocommerce'), __('Rent Item', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'),'dashicons-clipboard',25);
             }
         }
         public function quick_setup() {
@@ -58,7 +57,7 @@ if (!class_exists('TTBM_Quick_Setup')) {
                             "use strict";
                             $(document).ready(function () {
                                 let ttbm_admin_location = window.location.href;
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
                                 ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_item', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
                                 ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
                                 window.location.href = ttbm_admin_location;
@@ -97,7 +96,7 @@ if (!class_exists('TTBM_Quick_Setup')) {
                     $woocommerce_plugin = new Plugin_Upgrader(new Plugin_Installer_Skin(compact('title', 'url', 'nonce', 'plugin', 'api')));
                     $woocommerce_plugin->install($api->download_link);
                     activate_plugin('woocommerce/woocommerce.php');
-                    TTBM_Woocommerce_Plugin::on_activation_page_create();
+                    //TTBM_Woocommerce_Plugin::on_activation_page_create();
                     echo '</div>';
                     ?>
                     <script>
@@ -105,9 +104,9 @@ if (!class_exists('TTBM_Quick_Setup')) {
                             "use strict";
                             $(document).ready(function () {
                                 let ttbm_admin_location = window.location.href;
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=ttbm_tour&page=rbfw_quick_setup', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=ttbm_tour', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_item', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
                                 window.location.href = ttbm_admin_location;
                             });
                         }(jQuery));
@@ -115,18 +114,21 @@ if (!class_exists('TTBM_Quick_Setup')) {
                     <?php
                 }
                 if (isset($_POST['finish_quick_setup'])) {
-                    $label = isset($_POST['ttbm_travel_label']) ? sanitize_text_field($_POST['ttbm_travel_label']) : 'Tour';
-                    $slug = isset($_POST['ttbm_travel_slug']) ? sanitize_text_field($_POST['ttbm_travel_slug']) : 'Tour';
-                    $general_settings_data = get_option('ttbm_basic_gen_settings');
-                    $update_general_settings_arr = [
-                        'ttbm_travel_label' => $label,
-                        'ttbm_travel_slug' => $slug
-                    ];
-                    $new_general_settings_data = is_array($general_settings_data) ? array_replace($general_settings_data, $update_general_settings_arr) : $update_general_settings_arr;
 
+                    if(isset($_POST['rbfw_rent_label']) && !empty($_POST['rbfw_rent_label'])){
+                        $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings',true);
+                        $rbfw_basic_gen_settings=is_array($rbfw_basic_gen_settings)?$rbfw_basic_gen_settings:[];
+                        $rbfw_basic_gen_settings['rbfw_rent_label'] =  sanitize_text_field($_POST['rbfw_rent_label']);
+                        $rbfw_basic_gen_settings['rbfw_gutenburg_switch'] =  'Off';
+                        update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
+                    }
 
+                    if(isset($_POST['rbfw_rent_slug']) && !empty($_POST['rbfw_rent_slug'])){
+                        $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings',true);
+                        $rbfw_basic_gen_settings['rbfw_rent_slug'] = sanitize_text_field($_POST['rbfw_rent_slug']);
+                        update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
+                    }
 
-                    update_option('ttbm_basic_gen_settings', $new_general_settings_data);
                     update_option('rbfw_quick_setup_done', 'yes');
                     wp_redirect(admin_url('edit.php?post_type=rbfw_item'));
                 }
@@ -149,21 +151,21 @@ if (!class_exists('TTBM_Quick_Setup')) {
                                         <span class="mp_zero" data-icon></span>
                                         <span class="mp_zero" data-text>1</span>
                                     </h4>
-                                    <h6 class="circleTitle" data-class><?php esc_html_e('Welcome', 'tour-booking-manager'); ?></h6>
+                                    <h6 class="circleTitle" data-class><?php esc_html_e('Welcome', 'booking-and-rental-manager-for-woocommerce'); ?></h6>
                                 </div>
                                 <div data-tabs-target-next="#ttbm_qs_general" class="tabItemNext" data-open-text="2" data-close-text="" data-open-icon="" data-close-icon="fas fa-check" data-add-class="success">
                                     <h4 class="circleIcon" data-class>
                                         <span class="mp_zero" data-icon></span>
                                         <span class="mp_zero" data-text>2</span>
                                     </h4>
-                                    <h6 class="circleTitle" data-class><?php esc_html_e('General', 'tour-booking-manager'); ?></h6>
+                                    <h6 class="circleTitle" data-class><?php esc_html_e('General', 'booking-and-rental-manager-for-woocommerce'); ?></h6>
                                 </div>
                                 <div data-tabs-target-next="#ttbm_qs_done" class="tabItemNext" data-open-text="3" data-close-text="" data-open-icon="" data-close-icon="fas fa-check" data-add-class="success">
                                     <h4 class="circleIcon" data-class>
                                         <span class="mp_zero" data-icon></span>
                                         <span class="mp_zero" data-text>3</span>
                                     </h4>
-                                    <h6 class="circleTitle" data-class><?php esc_html_e('Done', 'tour-booking-manager'); ?></h6>
+                                    <h6 class="circleTitle" data-class><?php esc_html_e('Done', 'booking-and-rental-manager-for-woocommerce'); ?></h6>
                                 </div>
                             </div>
                             <div class="tabsContentNext _infoLayout_mT">
@@ -176,11 +178,11 @@ if (!class_exists('TTBM_Quick_Setup')) {
                             <?php if ($woo_status == 'Yes') { ?>
                                 <div class="justifyBetween">
                                     <button type="button" class="mpBtn nextTab_prev">
-                                        <span>&longleftarrow;<?php esc_html_e('Previous', 'tour-booking-manager'); ?></span>
+                                        <span>&longleftarrow;<?php esc_html_e('Previous', 'booking-and-rental-manager-for-woocommerce'); ?></span>
                                     </button>
                                     <div></div>
                                     <button type="button" class="themeButton nextTab_next">
-                                        <span><?php esc_html_e('Next', 'tour-booking-manager'); ?>&longrightarrow;</span>
+                                        <span><?php esc_html_e('Next', 'booking-and-rental-manager-for-woocommerce'); ?>&longrightarrow;</span>
                                     </button>
                                 </div>
                             <?php } ?>
@@ -198,18 +200,18 @@ if (!class_exists('TTBM_Quick_Setup')) {
             $woo_status = rbfw_woo_install_check();
             ?>
             <div data-tabs-next="#ttbm_qs_welcome">
-                <h2><?php esc_html_e('Tour Booking Manager For Woocommerce Plugin', 'tour-booking-manager'); ?></h2>
-                <p class="mTB_xs"><?php esc_html_e('Thanks for choosing Tour Booking Manager Plugin for WooCommerce for your site, Please go step by step and choose some options to get started.', 'tour-booking-manager'); ?></p>
+                <h2><?php esc_html_e('Booking and Rental Manager For Woocommerce Plugin', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
+                <p class="mTB_xs"><?php esc_html_e('Thanks for choosing Booking and Rental Manager Manager Plugin for WooCommerce for your site, Please go step by step and choose some options to get started.', 'booking-and-rental-manager-for-woocommerce'); ?></p>
                 <div class="_dLayout_mT_alignCenter justifyBetween">
                     <h5>
                         <?php if ($woo_status == 'Yes') {
-                            esc_html_e('Woocommerce already installed and activated', 'tour-booking-manager');
+                            esc_html_e('Woocommerce already installed and activated', 'booking-and-rental-manager-for-woocommerce');
                         }
                         elseif ($woo_status == 'No') {
-                            esc_html_e('Woocommerce need to install and active', 'tour-booking-manager');
+                            esc_html_e('Woocommerce need to install and active', 'booking-and-rental-manager-for-woocommerce');
                         }
                         else {
-                            esc_html_e('Woocommerce already install , please activate it', 'tour-booking-manager');
+                            esc_html_e('Woocommerce already install , please activate it', 'booking-and-rental-manager-for-woocommerce');
                         } ?>
                     </h5>
                     <?php if ($woo_status == 'Yes') { ?>
@@ -217,9 +219,9 @@ if (!class_exists('TTBM_Quick_Setup')) {
                             <span class="fas fa-check-circle textSuccess"></span>
                         </h5>
                     <?php } elseif ($woo_status == 'No') { ?>
-                        <button class="warningButton" type="submit" name="install_and_active_woo_btn"><?php esc_html_e('Install & Active Now', 'tour-booking-manager'); ?></button>
+                        <button class="warningButton" type="submit" name="install_and_active_woo_btn"><?php esc_html_e('Install & Active Now', 'booking-and-rental-manager-for-woocommerce'); ?></button>
                     <?php } else { ?>
-                        <button class="themeButton" type="submit" name="active_woo_btn"><?php esc_html_e('Active Now', 'tour-booking-manager'); ?></button>
+                        <button class="themeButton" type="submit" name="active_woo_btn"><?php esc_html_e('Active Now', 'booking-and-rental-manager-for-woocommerce'); ?></button>
                     <?php } ?>
                 </div>
                 <?php if ($woo_status != 'Yes') { ?>
@@ -231,30 +233,32 @@ if (!class_exists('TTBM_Quick_Setup')) {
             <?php
         }
         public function setup_general_content() {
-            $label = 'Rent Item';
-            $slug = 'rbfw_item';
+            $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings')?get_option('rbfw_basic_gen_settings'):[];
+
+            $label = isset($rbfw_basic_gen_settings['rbfw_rent_label']) ? $rbfw_basic_gen_settings['rbfw_rent_label'] : 'Rent Item';
+            $slug = isset($rbfw_basic_gen_settings['rbfw_rent_slug']) ? $rbfw_basic_gen_settings['rbfw_rent_slug'] : 'rbfw_item';
             ?>
             <div data-tabs-next="#ttbm_qs_general">
                 <div class="section">
-                    <h2><?php esc_html_e('General settings', 'tour-booking-manager'); ?></h2>
-                    <p class="mTB_xs"><?php esc_html_e('Choose some general option.', 'tour-booking-manager'); ?></p>
+                    <h2><?php esc_html_e('General settings', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
+                    <p class="mTB_xs"><?php esc_html_e('Choose some general option.', 'booking-and-rental-manager-for-woocommerce'); ?></p>
                     <div class="_dLayout_mT">
                         <label class="fullWidth">
-                            <span class="min_200"><?php esc_html_e('Tour Label:', 'tour-booking-manager'); ?></span>
-                            <input type="text" class="formControl" name="ttbm_travel_label" value='<?php echo esc_attr($label); ?>'/>
+                            <span class="min_200"><?php esc_html_e('Rent Label:', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                            <input type="text" class="formControl" name="rbfw_rent_label" value='<?php echo esc_attr($label); ?>'/>
                         </label>
                         <i class="info_text">
                             <span class="fas fa-info-circle"></span>
-                            <?php esc_html_e('It will change the Tour post type label on the entire plugin.', 'tour-booking-manager'); ?>
+                            <?php esc_html_e('It will change the Rent post type label on the entire plugin.', 'booking-and-rental-manager-for-woocommerce'); ?>
                         </i>
                         <div class="divider"></div>
                         <label class="fullWidth">
-                            <span class="min_200"><?php esc_html_e('Tour Slug:', 'tour-booking-manager'); ?></span>
-                            <input type="text" class="formControl" name="ttbm_travel_slug" value='<?php echo esc_attr($slug); ?>'/>
+                            <span class="min_200"><?php esc_html_e('Rent Slug:', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                            <input type="text" class="formControl" name="rbfw_rent_slug" value='<?php echo esc_attr($slug); ?>'/>
                         </label>
                         <i class="info_text">
                             <span class="fas fa-info-circle"></span>
-                            <?php esc_html_e('It will change the Tour slug on the entire plugin. Remember after changing this slug you need to flush permalinks. Just go to Settings->Permalinks hit the Save Settings button', 'tour-booking-manager'); ?>
+                            <?php esc_html_e('It will change the Rent slug on the entire plugin. Remember after changing this slug you need to flush permalinks. Just go to Settings->Permalinks hit the Save Settings button', 'booking-and-rental-manager-for-woocommerce'); ?>
                         </i>
                     </div>
                 </div>
@@ -264,10 +268,10 @@ if (!class_exists('TTBM_Quick_Setup')) {
         public function setup_content_done() {
             ?>
             <div data-tabs-next="#ttbm_qs_done">
-                <h2><?php esc_html_e('Finalize Setup', 'tour-booking-manager'); ?></h2>
-                <p class="mTB_xs"><?php esc_html_e('You are about to Finish & Save Tour Booking Manager For Woocommerce Plugin setup process', 'tour-booking-manager'); ?></p>
+                <h2><?php esc_html_e('Finalize Setup', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
+                <p class="mTB_xs"><?php esc_html_e('You are about to Finish & Save Tour Booking Manager For Woocommerce Plugin setup process', 'booking-and-rental-manager-for-woocommerce'); ?></p>
                 <div class="mT allCenter">
-                    <button type="submit" name="finish_quick_setup" class="themeButton"><?php esc_html_e('Finish & Save', 'tour-booking-manager'); ?></button>
+                    <button type="submit" name="finish_quick_setup" class="themeButton"><?php esc_html_e('Finish & Save', 'booking-and-rental-manager-for-woocommerce'); ?></button>
                 </div>
             </div>
             <?php
@@ -277,5 +281,5 @@ if (!class_exists('TTBM_Quick_Setup')) {
 
 
     }
-    new TTBM_Quick_Setup();
+    new RBFW_Quick_Setup();
 }

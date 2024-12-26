@@ -16,8 +16,8 @@
 	}
 	/******/
 	.mpStyle {
-		font-size: var(--fs);
-		font-weight: var(--fw);
+		font-size: 16px;
+		font-weight: normal;
 		color: var(--d_color);
 		line-height: 1.5;
 		width: 100%;
@@ -31,7 +31,7 @@
 		display:block;
 	}
 	.mpStyle p:not(.mp_wp_editor p) {
-		color: var(--mpl-secondary);
+		color: #1d2327;
 		margin: 0;
 		margin-bottom: 0px;
 		font-size: 16px;
@@ -194,8 +194,8 @@
 	}
 	div.mpStyle h2,
 	div.mpStyle [class*="_fs_h2"] {
-		font-size: var(--fs_h2);
-		font-weight: var(--fw-bold);
+		font-size: 30px;
+		font-weight: bold;
 	}
 	div.mpStyle h3,
 	div.mpStyle [class*="_fs_h3"] {
@@ -445,8 +445,8 @@
 	.mpStyle [class*="dLayout"],
 	.mpStyle .groupContent,
 	.mpStyle [class*="_dBR"] {
-		-webkit-border-radius: var(--dbr);
-		border-radius: var(--dbr);
+		-webkit-border-radius: 5px;
+		border-radius: 5px;
 	}
 	.mpStyle div.mp_input_select .formControl:focus,
 	.mpStyle [class*="_dBR_T"] {
@@ -525,19 +525,19 @@
 	.mpStyle button:focus {
 		text-decoration: none;
 		opacity: 0.8;
-		background-color: var(--color_theme);
-		color: var(--color_white);
+		background-color: #6b35e8;
+		color: #FFFFFF;
 	}
 	.mpStyle button:hover span,
 	.mpStyle button:focus span {
-		color: var(--color_white);
+		color: #FFFFFF;
 	}
 	.mpStyle .mpBtn,
 	.mpStyle [class*="_mpBtn"] {
-		padding: var(--dmp_xs) var(--dmp);
-		color: var(--d_color);
+		padding: 10px 20px;
+		color: #303030;
 		background-color: transparent;
-		border: 1px solid var(--color_border);
+		border: 1px solid #DDD;
 	}
 	.mpStyle .mpBtn_xs,
 	.mpStyle [class*="_mpBtn_xs"] {
@@ -584,24 +584,24 @@
 	/***/
 	.mpStyle .themeButton,
 	.mpStyle [class*="_themeButton"] {
-		background-color: var(--color_theme);
-		color: var(--color_theme_alter);
-		padding: var(--dmp_xs) var(--dmp);
-		border: 1px solid var(--color_theme);
+		background-color: #6b35e8;
+		color: #fff;
+		padding: 10px 20px;
+		border: 1px solid #6b35e8;
 	}
 	.mpStyle .themeButton span,
 	.mpStyle [class*="_themeButton"] span {
-		color: var(--color_theme_alter);
+		color: #fff;
 	}
 	.mpStyle .themeButton:hover,
 	.mpStyle [class*="_themeButton"]:hover {
-		background-color: var(--color_theme);
-		color: var(--color_theme_alter);
-		border-color: var(--color_theme);
+		background-color: #6b35e8;
+		color: #fff;
+		border-color: #6b35e8;
 	}
 	.mpStyle .themeButton:hover span,
 	.mpStyle [class*="_themeButton"]:hover span {
-		color: var(--color_theme_alter);
+		color: #fff;
 	}
 	/****/
 	.mpStyle .warningButton,
@@ -1652,15 +1652,15 @@
 	/**************Default************************/
 	.mpStyle .dLayout,
 	.mpStyle [class*="_dLayout"] {
-		padding: var(--dmp);
-		background-color: var(--color_white);
-		border: 1px solid var(--color_border);
+		padding: 20px;
+		background-color: #ffffff;
+		border: 1px solid #DDD;
 		margin-top: -1px;
 		border-radius: 0;
 	}
 	.mpStyle .dLayout:last-child,
 	.mpStyle [class*="_dLayout"]:last-child {
-		border-bottom: 1px solid var(--color_border);
+		border-bottom: 1px solid #DDD;
 	}
 
 	.mpStyle .dLayout_xs,
@@ -1672,9 +1672,9 @@
 	/***********info***********/
 	.mpStyle .infoLayout,
 	.mpStyle [class*="_infoLayout"] {
-		padding: var(--dmp);
-		background-color: var(--color_light);
-		margin-bottom: var(--dmp);
+		padding: 20px;
+		background-color: #f2f2f2;
+		margin-bottom: 20px;
 	}
 	.mpStyle .infoLayout_xs,
 	.mpStyle [class*="_infoLayout_xs"] {
@@ -1905,9 +1905,9 @@ div.mpStyle form {
 div.mpStyle .formControl {
     width: 100%;
     max-width: inherit;
-    border: 1px solid var(--color_border);
+    border: 1px solid #DDD;
     font-size: var(--fs);
-    color: var(--d_color);
+    color: #303030;
     background-color: #fff;
     padding: 10px 15px;
     font-weight: 500;
@@ -2656,8 +2656,8 @@ div.mpStyle .groupContent input[type="radio"]:checked::after {
 		flex: 1;
 	}
 	.mpTabsNext .tabItemNext [class*="circleIcon"] {
-		background-color: var(--color_light);
-		color: var(--d_color);
+		background-color: #f2f2f2;
+		color: #303030;
 		margin: 0;
 		z-index: 1;
 	}
@@ -2671,11 +2671,11 @@ div.mpStyle .groupContent input[type="radio"]:checked::after {
 		text-align: center;
 	}
 	.mpTabsNext .tabItemNext.active [class*="circleIcon"] {
-		background-color: var(--color_theme);
-		color: var(--color_theme_alter);
+		background-color: #6b35e8;
+		color: #fff;
 	}
 	.mpTabsNext .tabItemNext.active [class*="circleIcon"].success {
-		background-color: var(--color_success);
+		background-color: #00a656;
 	}
 	.mpTabsNext .tabItemNext.active .circleTitle {
 		color: var(--color_theme_aa);
@@ -2689,12 +2689,12 @@ div.mpStyle .groupContent input[type="radio"]:checked::after {
 		left: calc(50% + 20px);
 		top: 20px;
 		position: absolute;
-		border-bottom: 1px solid var(--color_border);
+		border-bottom: 1px solid #ddd;
 		z-index: -1;
 		width: 100%;
 	}
 	.mpTabsNext .tabItemNext.active [class*="circleIcon"]::after {
-		border-color: var(--color_theme);
+		border-color: #6b35e8;
 	}
 	.mpTabsNext .tabItemNext:last-child [class*="circleIcon"]::after {
 		border: none;
@@ -2703,7 +2703,7 @@ div.mpStyle .groupContent input[type="radio"]:checked::after {
 	.mpStyle .tabsContentNext {
 		position: relative;
 		width: 100%;
-		padding: var(--dmp);
+		padding: 20px;
 	}
 	.tabsContentNext [data-tabs-next] {
 		display: none;

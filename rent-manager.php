@@ -36,7 +36,6 @@ if(! class_exists('RBFW_Rent_Manager')){
 
             require_once RBFW_PLUGIN_DIR . '/functions.php';
             if (rbfw_woo_install_check() == 'Yes') {
-                require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
                 add_action('init', [$this, 'init_tracker']);
                 add_filter( 'plugin_action_links', [$this,'plugin_action_link'],10, 2);
                 add_filter( 'plugin_row_meta', [$this,'plugin_row_meta'], 10, 2 );
@@ -46,7 +45,7 @@ if(! class_exists('RBFW_Rent_Manager')){
                 add_action('admin_init', [$this,'get_plugin_data']);
             }
             require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Quick_Setup.php';
-
+            require_once RBFW_PLUGIN_DIR . '/inc/rbfw_import_demo.php';
 
             add_action('admin_init', [$this,'activation_redirect'], 90);
 
@@ -139,10 +138,7 @@ if(! class_exists('RBFW_Rent_Manager')){
 
         public function activation_redirect( $plugin ) {
 
-
             $rbfw_quick_setup_done = get_option('rbfw_quick_setup_done') ? get_option('rbfw_quick_setup_done') : 'no';
-
-
             if($rbfw_quick_setup_done == 'no'){
                 if(isset($_REQUEST['page']) && $_REQUEST['page'] == 'rbfw_quick_setup'){
                     return null;
@@ -180,6 +176,10 @@ if(class_exists('RBFW_Rent_Manager')){
     register_deactivation_hook( __FILE__, array( 'RBFW_Rent_Manager','deactivate' ) );
     register_uninstall_hook( __FILE__, array( 'RBFW_Rent_Manager','uninstall' ) );
     new RBFW_Rent_Manager();
+}
+
+if (rbfw_woo_install_check() == 'Yes') {
+    require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
 }
 
 
