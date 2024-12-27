@@ -251,9 +251,10 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
     foreach ($rbfw_inventory as $key => $inventory) {
         $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
-        $inventory_based_on_return = rbfw_get_option('inventory_based_on_return', 'rbfw_basic_gen_settings');
 
-        if ( ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || (($inventory_based_on_return == 'yes') ? $inventory['rbfw_order_status'] == 'returned' : ''))) {
+
+
+        if ( ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned'))) {
 
             if($inventory['rbfw_start_date_ymd'] && $inventory['rbfw_end_date_ymd']){
                 $inventory_start_date = $inventory['rbfw_start_date_ymd'];

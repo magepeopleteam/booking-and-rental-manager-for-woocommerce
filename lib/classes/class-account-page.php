@@ -217,13 +217,13 @@ if (!class_exists('Rbfw_Account_Page')) {
         public function rbfw_ba_user_signin_signup_form_submit(){
             check_ajax_referer( 'rbfw_ba_user_submit_request', 'rbfw_ba_user_submit_request_nonce' );
         
-            $request = isset($_POST['rbfw_ba_user_submit_request']) ? strip_tags($_POST['rbfw_ba_user_submit_request']) : '';
-            $username = isset($_POST['rbfw_ba_user_username']) ? strip_tags($_POST['rbfw_ba_user_username']) : '';
-            $email = isset($_POST['rbfw_ba_user_email']) ? filter_var($_POST['rbfw_ba_user_email'], FILTER_SANITIZE_EMAIL) : '';
+            $request = isset($_POST['rbfw_ba_user_submit_request']) ? sanitize_text_field($_POST['rbfw_ba_user_submit_request']) : '';
+            $username = isset($_POST['rbfw_ba_user_username']) ? sanitize_text_field($_POST['rbfw_ba_user_username']) : '';
+            $email = isset($_POST['rbfw_ba_user_email']) ? sanitize_email($_POST['rbfw_ba_user_email']) : '';
             $password = isset($_POST['rbfw_ba_user_password']) ? strip_tags($_POST['rbfw_ba_user_password']) : '';
-            $confirm_password = isset($_POST['rbfw_ba_user_cpassword']) ? strip_tags($_POST['rbfw_ba_user_cpassword']) : '';
-            $first_name = isset($_POST['rbfw_ba_user_fname']) ? strip_tags($_POST['rbfw_ba_user_fname']) : '';
-            $last_name = isset($_POST['rbfw_ba_user_lname']) ? strip_tags($_POST['rbfw_ba_user_lname']) : '';
+            $confirm_password = isset($_POST['rbfw_ba_user_cpassword']) ? sanitize_text_field($_POST['rbfw_ba_user_cpassword']) : '';
+            $first_name = isset($_POST['rbfw_ba_user_fname']) ? sanitize_text_field($_POST['rbfw_ba_user_fname']) : '';
+            $last_name = isset($_POST['rbfw_ba_user_lname']) ? sanitize_text_field($_POST['rbfw_ba_user_lname']) : '';
         
             if($request == 'signin'){
                 
@@ -454,7 +454,7 @@ if (!class_exists('Rbfw_Account_Page')) {
             $current_user_email = $current_user->user_email;
 
             if(isset($_GET['view_order'])){
-                $order_id = $_GET['view_order'];
+                $order_id = sanitize_text_field($_GET['view_order']);
                 $billing_email = get_post_meta($order_id, 'rbfw_billing_email', true);
 
                 if($current_user_email != $billing_email){

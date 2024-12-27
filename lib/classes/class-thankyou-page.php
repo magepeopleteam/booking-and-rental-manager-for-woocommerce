@@ -118,8 +118,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
             // For Paypal and stripe Payment
             if(isset($_GET['paymentId'])){
 
-                $payment_id = $_GET['paymentId'];
-                $payer_id = !empty($_GET['PayerID']) ? $_GET['PayerID'] : '';
+                $payment_id = sanitize_text_field($_GET['paymentId']);
+                $payer_id = !empty($_GET['PayerID']) ? sanitize_text_field($_GET['PayerID']) : '';
 
                 $args = array(
                     'post_type' => 'rbfw_order',
@@ -179,7 +179,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
 
                         $paymentStatus = '';
                         if(!empty($_GET['paymentStatus']) && empty(get_post_meta($order_id,'rbfw_payment_status',true))) {
-                            $paymentStatus = $_GET['paymentStatus'];
+                            $paymentStatus = sanitize_text_field($_GET['paymentStatus']);
                         }else{
                             $paymentStatus = get_post_meta($order_id,'rbfw_payment_status',true);
                         }
@@ -456,8 +456,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
             // For Offline Payment
             if(!empty($_GET['order_id']) && !empty($_GET['token'])){
 
-                $order_id = $_GET['order_id'];
-                $current_token = $_GET['token'];
+                $order_id = sanitize_text_field($_GET['order_id']);
+                $current_token = sanitize_text_field($_GET['token']);
                 $origin_token = get_post_meta($order_id, 'rbfw_token', true);
 
                 if($current_token != $origin_token){
