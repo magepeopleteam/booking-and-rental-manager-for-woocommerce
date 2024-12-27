@@ -27,21 +27,38 @@ if(! class_exists('RBFW_Rent_Manager')){
     final class RBFW_Rent_Manager{
         public function __construct() {
             $this->define_contstants();
-            $this->include_plugin_files(); 
-            add_action('init', [$this, 'init_tracker']);
-            add_filter( 'plugin_action_links', [$this,'plugin_action_link'],10, 2);
-            add_filter( 'plugin_row_meta', [$this,'plugin_row_meta'], 10, 2 );
-            add_filter('post_row_actions', [$this,'duplicate_post_link'], 10, 2);
-            add_filter('body_class', [$this,'add_body_class']);
-            add_action( 'save_post', [$this,'flush_rules_on_save_posts'], 20, 2);
-            add_action('admin_init', [$this,'activation_redirect'], 90);
-            add_action('admin_init', [$this,'get_plugin_data']);
+            $this->include_plugin_files();
+            $this->load_rbfw_plugin();
         }
+
+
+        private function load_rbfw_plugin() {
+
+            require_once RBFW_PLUGIN_DIR . '/functions.php';
+            if (rbfw_woo_install_check() == 'Yes') {
+                add_action('init', [$this, 'init_tracker']);
+                add_filter( 'plugin_action_links', [$this,'plugin_action_link'],10, 2);
+                add_filter( 'plugin_row_meta', [$this,'plugin_row_meta'], 10, 2 );
+                add_filter('post_row_actions', [$this,'duplicate_post_link'], 10, 2);
+                add_filter('body_class', [$this,'add_body_class']);
+                add_action( 'save_post', [$this,'flush_rules_on_save_posts'], 20, 2);
+                add_action('admin_init', [$this,'get_plugin_data']);
+            }
+            require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Quick_Setup.php';
+            require_once RBFW_PLUGIN_DIR . '/inc/rbfw_import_demo.php';
+
+            add_action('admin_init', [$this,'activation_redirect'], 90);
+
+        }
+
+
+
 
         public function define_contstants(){
             define( 'RBFW_PLUGIN_DIR', dirname( __FILE__ ) );
             define( 'RBFW_TEMPLATE_PATH', plugin_dir_path(__FILE__).'templates/' );
             define( 'RBFW_PLUGIN_URL', plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) );
+
         }
 
         public function init_tracker() {
@@ -121,8 +138,10 @@ if(! class_exists('RBFW_Rent_Manager')){
         }
 
         public function activation_redirect( $plugin ) {
-            if(get_option('rbfw_sz_form_submit') === false){
-                if(isset($_REQUEST['page']) && sanitize_text_field($_REQUEST['page']) == 'rbfw_quick_setup'){
+
+            $rbfw_quick_setup_done = get_option('rbfw_quick_setup_done') ? get_option('rbfw_quick_setup_done') : 'no';
+            if($rbfw_quick_setup_done == 'no'){
+                if(isset($_REQUEST['page']) && $_REQUEST['page'] == 'rbfw_quick_setup'){
                     return null;
                 }else{
                     exit( wp_redirect( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup' ) ) );
@@ -159,5 +178,11 @@ if(class_exists('RBFW_Rent_Manager')){
     register_uninstall_hook( __FILE__, array( 'RBFW_Rent_Manager','uninstall' ) );
     new RBFW_Rent_Manager();
 }
+
+if (rbfw_woo_install_check() == 'Yes') {
+    require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
+}
+
+
 // this include file can't added inside class method due to fatal error. need to fix.
-require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
+

@@ -72,7 +72,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
         <?php endif; ?>
 
         <?php if ( ! empty( $rbfw_room_price_category ) ): ?>
-            <tr>
+            <tr class="rbfw-package">
                 <th><?php echo $rbfw->get_option_trans('rbfw_text_package', 'rbfw_basic_translation_settings', __('Package','booking-and-rental-manager-for-woocommerce')); ?>:</th>
                 <td><?php echo $rbfw_room_price_category; ?></td>
             </tr>

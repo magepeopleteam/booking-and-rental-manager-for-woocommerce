@@ -610,7 +610,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                     </tr>
                     <?php } ?>
                     <?php if($rent_type == 'resort'){ ?>
-                    <tr>
+                    <tr class="rbfw-package">
                         <td><strong><?php esc_html_e( 'Package:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
                         <td><?php echo esc_html($package); ?></td>
                     </tr>
