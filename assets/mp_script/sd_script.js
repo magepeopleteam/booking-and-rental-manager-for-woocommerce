@@ -6,8 +6,6 @@
 
         datepicker_inline();
 
-
-
         jQuery('body').on('focusin', '.pickup_date_timely', function(e) {
             jQuery(this).datepicker({
                 dateFormat: js_date_format,
@@ -34,12 +32,13 @@
 
             let post_id = jQuery('.rbfw_post_id').val();
             let manage_inventory_as_timely = $('#manage_inventory_as_timely').val();
+            let rbfw_rent_type = $('#rbfw_rent_type').val();
             let enable_specific_duration = $('#enable_specific_duration').val();
             let time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
             let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
             let is_muffin_template = jQuery('.rbfw_muffin_template').length;
 
-            if(manage_inventory_as_timely=='on'){
+            if(manage_inventory_as_timely=='on' && rbfw_rent_type=='bike_car_sd'){
                 if(time_slot_switch=='off'){
                     rbfw_service_type_timely_stock_ajax(post_id,start_date,'',enable_specific_duration);
                 }
