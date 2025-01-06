@@ -1,7 +1,6 @@
 <?php
 /*
 * Author 	:	MagePeople Team
-* Developer :   Ariful
 * Version	:	1.0.0
 */
 
@@ -13,11 +12,15 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
     class RbfwImportDemo {
         public function __construct(){
 
-            add_action('rbfw_after_register_activation', array($this, 'rbfw_import_demo_function'));
+            $sample_rent_items = get_option('rbfw_sample_rent_items');
+            if($sample_rent_items != 'imported'){
+                $this->rbfw_import_demo_function();
+            }
 
         }
 
         public function rbfw_import_demo_function(){
+
             // Disable a time limit
 	        set_time_limit(0);
 
@@ -26,11 +29,7 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
             $json_string = json_encode($xml);    
             $xml_array = json_decode($json_string, TRUE);
 
-            $sample_rent_items = get_option('rbfw_sample_rent_items');
-           
-            if($sample_rent_items == 'imported'){
-                return;
-            }
+
 
             $xml_array = !empty($xml_array['item']) ? $xml_array['item'] : [];
 
@@ -92,7 +91,7 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
                             update_post_meta( $rent_post_id, '_thumbnail_id', $thumb_id );
 
 
-                           /* $wc_product_args = array(
+                            $wc_product_args = array(
 
                                 'post_type' 	=> 'product',
                                 'post_title' 	=> $title,
@@ -112,7 +111,7 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
                                 $terms = array('exclude-from-catalog', 'exclude-from-search');
                                 wp_set_object_terms($wc_product_id, $terms, 'product_visibility');
                                 update_post_meta($rent_post_id, 'check_if_run_once', true);
-                            }*/
+                            }
                         }   
                     }
                     $i++;

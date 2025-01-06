@@ -606,10 +606,10 @@
 	/****/
 	.mpStyle .warningButton,
 	.mpStyle [class*="_warningButton"] {
-		background-color: var(--color_2);
-		color: var(--color_theme);
-		padding: var(--dmp_xs) var(--dmp);
-		border: 1px solid var(--color_2);
+		background-color: #caf0ffcc;
+		color: #6b35e8;
+		padding: 10px 20px;
+		border: 1px solid #caf0ffcc;
 	}
 	.mpStyle .warningButton span,
 	.mpStyle [class*="_warningButton"] span {

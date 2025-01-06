@@ -207,6 +207,13 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.2.2 =
+* Setup wizard updated.
+* Vurnalable issue fixed.
+* Appointmanet problem solved.
+* Multiple cart problem solved.
+* Bug fixed.
+
 = 2.2.1 =
 * Multi date inventory problem solved.
 * Code updated.
