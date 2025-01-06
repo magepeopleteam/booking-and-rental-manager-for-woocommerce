@@ -158,7 +158,6 @@ if(! class_exists('RBFW_Rent_Manager')){
             update_option('rewrite_rules','');
             rbfw_update_settings();
             rbfw_page_create();
-            do_action('rbfw_after_register_activation');
         }
 
         public static function deactivate(){
@@ -177,7 +176,7 @@ if(class_exists('RBFW_Rent_Manager')){
     register_uninstall_hook( __FILE__, array( 'RBFW_Rent_Manager','uninstall' ) );
     new RBFW_Rent_Manager();
 }
-
+$rbfw_quick_setup_done = get_option('rbfw_quick_setup_done') ? get_option('rbfw_quick_setup_done') : 'no';
 if (rbfw_woo_install_check() == 'Yes') {
     require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
 }

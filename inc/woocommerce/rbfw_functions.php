@@ -698,8 +698,6 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $start_date = rbfw_get_datetime($values['rbfw_start_date'], 'date-time-text');
         $end_date = rbfw_get_datetime($values['rbfw_end_date'], 'date-time-text');
 
-        $max_available_qty = rbfw_get_multiple_date_available_qty($rbfw_id, $start_date, $end_date,'',$start_datetime,$end_datetime);
-
 
         $total_days = $values['total_days'] ? $values['total_days'] : '';
 
