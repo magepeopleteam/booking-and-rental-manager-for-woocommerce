@@ -104,7 +104,7 @@ if (!class_exists('Rbfw_Search_Page')) {
 
             if(isset($_GET['rbfw_search_submit']) && !empty($_GET['rbfw_search_location'])){
 
-                $location = strip_tags($_GET['rbfw_search_location']);
+                $location = sanitize_text_field($_GET['rbfw_search_location']);
 
                 $atts = array(
                     'location' => $location

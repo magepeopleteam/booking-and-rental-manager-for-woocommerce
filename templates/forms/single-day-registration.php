@@ -72,7 +72,7 @@
                 <?php endif; ?>
 
 
-                <?php  if($manage_inventory_as_timely !='on'){ ?>
+                <?php  if($manage_inventory_as_timely !='on' || $rbfw_rent_type =='appointment'){ ?>
                     <div class="item rbfw-bikecarsd-step" data-step="1">
                         <div id="rbfw-bikecarsd-calendar" class="rbfw-bikecarsd-calendar">
                         </div>

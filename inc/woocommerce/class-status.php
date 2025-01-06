@@ -137,7 +137,7 @@ if (!class_exists('RBFW_Status')) {
 
         public function rbfw_plugin_activate(){
             if(isset($_GET['rbfw_plugin_activate']) && !is_plugin_active( $_GET['rbfw_plugin_activate'] )){
-                $slug = $_GET['rbfw_plugin_activate'];
+                $slug = sanitize_text_field($_GET['rbfw_plugin_activate']);
                 $activate = activate_plugin( $slug );
                 $url = admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_import' );
                 echo '<script>
@@ -153,7 +153,7 @@ if (!class_exists('RBFW_Status')) {
         public function rbfw_plugin_install(){
 
             if(isset($_GET['rbfw_plugin_install']) && $this->rbfw_free_chk_plugin_folder_exist($_GET['rbfw_plugin_install']) == false){
-                $slug = $_GET['rbfw_plugin_install'];
+                $slug = sanitize_text_field($_GET['rbfw_plugin_install']);
                 if($slug == 'woocommerce'){
                     $action = 'install-plugin';
                     $url = wp_nonce_url(

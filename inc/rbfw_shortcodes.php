@@ -59,14 +59,14 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $category  = $cat_ids;
     }
 
-    $location = !empty( $_GET['rbfw_search_location'] ) ? strip_tags( $_GET['rbfw_search_location'] ) : $location;
+    $location = !empty( $_GET['rbfw_search_location'] ) ? sanitize_text_field( $_GET['rbfw_search_location'] ) : $location;
     if( $category ){
-        $category = !empty( $_GET['rbfw_search_type'] ) ? strip_tags( trim( $_GET['rbfw_search_type'] ) ) : $category ;
+        $category = !empty( $_GET['rbfw_search_type'] ) ? sanitize_text_field( trim( $_GET['rbfw_search_type'] ) ) : $category ;
     }else{
-        $search_category = !empty( $_GET['rbfw_search_type'] ) ? strip_tags( trim( $_GET['rbfw_search_type'] ) ) : '' ;
+        $search_category = !empty( $_GET['rbfw_search_type'] ) ? sanitize_text_field( trim( $_GET['rbfw_search_type'] ) ) : '' ;
     }
 
-    $pickup_date = !empty( $_GET['rbfw-pickup-date'] ) ? strip_tags( trim( $_GET['rbfw-pickup-date'] ) ) : '';
+    $pickup_date = !empty( $_GET['rbfw-pickup-date'] ) ? sanitize_text_field( trim( $_GET['rbfw-pickup-date'] ) ) : '';
     if( $pickup_date !== 'Pickup date' && !empty( $pickup_date )) {
         $date = DateTime::createFromFormat('F j, Y', $pickup_date );
         $pickup_date = $date->format('d-m-Y');
@@ -405,7 +405,7 @@ function rbfw_rent_search_shortcode_func() {
     $search_page_id = rbfw_get_option('rbfw_search_page','rbfw_basic_gen_settings');
     $search_page_link = get_page_link($search_page_id);
     $location_arr = rbfw_get_location_arr();
-    $location = !empty($_GET['rbfw_search_location']) ? strip_tags($_GET['rbfw_search_location']) : '';
+    $location = !empty($_GET['rbfw_search_location']) ? sanitize_text_field($_GET['rbfw_search_location']) : '';
     ?>
     <div class="rbfw_search_form_wrap">
         <form class="rbfw_search_form" action="<?php echo esc_url($search_page_link); ?>" method="GET">
@@ -431,9 +431,9 @@ function rbfw_rent_search_shortcode( $attr = null ){
 
     $search_page_id = rbfw_get_option('search-item-list','rbfw_basic_gen_settings');
     $search_page_link = get_page_link($search_page_id);
-    $location = !empty($_GET['rbfw_search_location']) ? strip_tags($_GET['rbfw_search_location']) : '';
-    $type = !empty($_GET['rbfw_search_type']) ? strip_tags($_GET['rbfw_search_type']) : '';
-    $pickup_date = !empty($_GET['rbfw-pickup-date']) ? strip_tags($_GET['rbfw-pickup-date']) : 'Pickup date';
+    $location = !empty($_GET['rbfw_search_location']) ? sanitize_text_field($_GET['rbfw_search_location']) : '';
+    $type = !empty($_GET['rbfw_search_type']) ? sanitize_text_field($_GET['rbfw_search_type']) : '';
+    $pickup_date = !empty($_GET['rbfw-pickup-date']) ? sanitize_text_field($_GET['rbfw-pickup-date']) : 'Pickup date';
 
     ob_start();
     ?>

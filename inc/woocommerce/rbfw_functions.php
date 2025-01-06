@@ -43,26 +43,22 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 {
 
     $rbfw_rent_type = get_post_meta($rbfw_id, 'rbfw_item_type', true);
-    $rbfw_item_quantity = isset($_POST['rbfw_item_quantity']) ? $_POST['rbfw_item_quantity'] : 1;
+    $rbfw_item_quantity = isset($_POST['rbfw_item_quantity']) ? intval(sanitize_text_field($_POST['rbfw_item_quantity'])) : 1;
     $rbfw_service_info_all = isset($_POST['rbfw_service_info']) ? rbfw_array_strip($_POST['rbfw_service_info']) : [];
 
-    $rbfw_service_info = array();
     $rbfw_enable_extra_service_qty = get_post_meta($rbfw_id, 'rbfw_enable_extra_service_qty', true) ? get_post_meta($rbfw_id, 'rbfw_enable_extra_service_qty', true) : 'no';
-    $c = 0;
+
+    $rbfw_service_info = array();
+
     if (!empty($rbfw_service_info_all)) {
         foreach ($rbfw_service_info_all as $key => $value) {
-            $service_name = !empty($_POST['rbfw_service_info'][$c]['service_name']) ? $_POST['rbfw_service_info'][$c]['service_name'] : '';
-            $service_qty = !empty($_POST['rbfw_service_info'][$c]['service_qty']) ? $_POST['rbfw_service_info'][$c]['service_qty'] : 0;
-          /*  if ($rbfw_item_quantity > 1 && $service_qty == 1 && $rbfw_enable_extra_service_qty != 'yes') {
-                $service_qty = $rbfw_item_quantity;
-            }*/
+            $service_name = !empty($value['service_name']) ? $value['service_name'] : '';
+            $service_qty = !empty($value['service_qty']) ? $value['service_qty'] : 0;
             if ($service_qty > 0) {
                 $rbfw_service_info[$service_name] = $service_qty;
             }
-            $c++;
         }
     }
-
 
     $discount_type = '';
     $discount_amount = 0;
@@ -74,9 +70,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
     }
 
 
-
     $cart_item_data['rbfw_id'] = $rbfw_id;
-
 
     if($rbfw_rent_type == 'resort') {
 
@@ -169,7 +163,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
         $rbfw_type_info = array();
 
-        if((isset($_POST['service_type']) && $_POST['service_type'])){
+        if((isset($_POST['service_type']) && sanitize_text_field($_POST['service_type']))){
             $rbfw_type_info[$_POST['service_type']] = $rbfw_item_quantity;
         }else{
             $a = 1;
@@ -189,8 +183,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $rbfw_bikecarsd_duration_price = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation($rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_duration_price');
         $rbfw_bikecarsd_service_price = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation($rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_service_price');
         $rbfw_bikecarsd_total_price = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation($rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_total_price');
-        $rbfw_pickup_point = isset($_POST['rbfw_pickup_point']) ? $_POST['rbfw_pickup_point'] : '';
-        $rbfw_dropoff_point = isset($_POST['rbfw_dropoff_point']) ? $_POST['rbfw_dropoff_point'] : '';
+        $rbfw_pickup_point = isset($_POST['rbfw_pickup_point']) ? sanitize_text_field($_POST['rbfw_pickup_point']) : '';
+        $rbfw_dropoff_point = isset($_POST['rbfw_dropoff_point']) ? sanitize_text_field($_POST['rbfw_dropoff_point']) : '';
 
         $rbfw_bikecarsd_ticket_info = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info($rbfw_id, $rbfw_start_datetime, $rbfw_end_datetime, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info,$rbfw_pickup_point,$rbfw_dropoff_point,$end_time,$rbfw_item_quantity);
 
@@ -223,17 +217,17 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 
     }else {
 
-        $start_date = isset($_POST['rbfw_pickup_start_date'])?$_POST['rbfw_pickup_start_date']:'';
-        $end_date = isset($_POST['rbfw_pickup_end_date'])?$_POST['rbfw_pickup_end_date']:'';
-        $start_time = isset($_POST['rbfw_pickup_start_time'])?$_POST['rbfw_pickup_start_time']:'00:00:00';
-        $end_time = isset($_POST['rbfw_pickup_end_time'])?$_POST['rbfw_pickup_end_time']:rbfw_end_time();
+        $start_date = isset($_POST['rbfw_pickup_start_date'])?sanitize_text_field($_POST['rbfw_pickup_start_date']):'';
+        $end_date = isset($_POST['rbfw_pickup_end_date'])?sanitize_text_field($_POST['rbfw_pickup_end_date']):'';
+        $start_time = isset($_POST['rbfw_pickup_start_time'])?sanitize_text_field($_POST['rbfw_pickup_start_time']):'00:00:00';
+        $end_time = isset($_POST['rbfw_pickup_end_time'])?sanitize_text_field($_POST['rbfw_pickup_end_time']):rbfw_end_time();
 
         $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $start_time));
         $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
-        $rbfw_pickup_point = isset($_POST['rbfw_pickup_point']) ? $_POST['rbfw_pickup_point'] : '';
-        $rbfw_dropoff_point = isset($_POST['rbfw_dropoff_point']) ? $_POST['rbfw_dropoff_point'] : '';
-        $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot']) ? $_POST['rbfw_enable_time_slot'] : 'off';
+        $rbfw_pickup_point = isset($_POST['rbfw_pickup_point']) ? sanitize_text_field($_POST['rbfw_pickup_point']) : '';
+        $rbfw_dropoff_point = isset($_POST['rbfw_dropoff_point']) ? sanitize_text_field($_POST['rbfw_dropoff_point']) : '';
+        $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot']) ? sanitize_text_field($_POST['rbfw_enable_time_slot']) : 'off';
 
 
 
@@ -252,7 +246,7 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $rbfw_service_price = 0;
         $rbfw_service_infos_post = isset($_POST['rbfw_service_price_data']) ? rbfw_array_strip($_POST['rbfw_service_price_data']) : [];
 
-        //echo '<pre>';print_r($rbfw_service_infos_post);echo '<pre>';exit;
+
 
         $rbfw_service_infos = [];
         if (!empty($rbfw_service_infos_post)) {
@@ -997,20 +991,20 @@ function rbfw_booking_management( $order_id ) {
             if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
 
                 $ticket_info  = wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ? maybe_unserialize( wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ) : [];
-                $user_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ) : [];
-                $type_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ) : [];
-                $service_info = rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ) : [];
-                $rbfw_duration_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) : '';
-                $rbfw_service_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) : '';
+                //$user_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ) : [];
+                //$type_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ) : [];
+                //$service_info = rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ) : [];
+                //$rbfw_duration_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) : '';
+                //$rbfw_service_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) : '';
 
-                rbfw_prepar_and_add_user_data( $ticket_info, $user_info, $rbfw_id, $order_id, $service_info, $rbfw_duration_cost, $rbfw_service_cost, $type_info,$start_date,$end_date,$rbfw_service_price_data_actual);
+                rbfw_prepar_and_add_user_data( $ticket_info, $rbfw_id, $order_id,$start_date,$end_date,$rbfw_service_price_data_actual);
             }
         }
     }
 }
 
 
-function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $order_id, $service_info = array(), $rbfw_duration_cost = null, $rbfw_service_cost = null, $type_info = array(), $start_date=null,$end_date=null,$rbfw_service_price_data_actual=array()) {
+function rbfw_prepar_and_add_user_data($ticket_info, $rbfw_id, $order_id, $start_date=null,$end_date=null,$rbfw_service_price_data_actual=array()) {
 
 
 
@@ -1036,9 +1030,6 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
 
             $zdata[ $key ]['rbfw_ticket_total_price'] = ((float)$_ticket['ticket_price'] * (int)$_ticket['ticket_qty']);
             $zdata[ $key ]['rbfw_ticket_qty']         = $_ticket['ticket_qty'];
-            $zdata[ $key ]['rbfw_ticket_info']        = $ticket_info;
-            $zdata[ $key ]['rbfw_duration_cost']      = $rbfw_duration_cost;
-            $zdata[ $key ]['rbfw_service_cost']       = $rbfw_service_cost;
             $zdata[ $key ]['discount_amount']         = isset($_ticket['discount_amount'])?$_ticket['discount_amount']:0;
             $zdata[ $key ]['rbfw_order_id']           = $order_id;
             $zdata[ $key ]['rbfw_order_status']       = $order_status;
@@ -1051,8 +1042,9 @@ function rbfw_prepar_and_add_user_data($ticket_info, $user_info, $rbfw_id, $orde
             $zdata[ $key ]['start_date']              = $start_date;
             $zdata[ $key ]['end_date']                = $end_date;
             $zdata[ $key ]['rbfw_id']                 = $rbfw_id;
+            $zdata[ $key ]['rbfw_ticket_info']        = $ticket_info;
 
-            $meta_data = array_merge($zdata[ $key ], $ticket_info, $user_info);
+            $meta_data = array_merge($zdata[ $key ]);
 
             /*rbfw_order add*/
             $order_id = $rbfw->rbfw_add_order_data($meta_data, $ticket_info,$rbfw_service_price_data_actual );
