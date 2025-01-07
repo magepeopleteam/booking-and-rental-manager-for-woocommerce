@@ -112,7 +112,7 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
 
 
-            if ( ($hours > 0)  || ($start_time == '00:00:00' && $end_time == rbfw_end_time()) ) {
+            if ( ($hours > 0)  || ($start_time == '' && $end_time == '') ) {
 
                 $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
 

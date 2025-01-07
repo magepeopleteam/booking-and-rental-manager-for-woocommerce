@@ -16,7 +16,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
 ?>
 
-<?php /* Type: Resort */ ?>j 
+<?php /* Type: Resort */ ?>
 <?php if($rbfw_rent_type == 'resort'){
 
     $start_datetime    = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
@@ -159,6 +159,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $start_datetime = $cart_item['rbfw_start_date'] ? $cart_item['rbfw_start_date'] : '';
     $start_time = $cart_item['rbfw_start_time'] ? $cart_item['rbfw_start_time'] : '';
 
+
     $end_datetime = $cart_item['rbfw_end_date'] ? $cart_item['rbfw_end_date'] : '';
     $end_time = $cart_item['rbfw_end_time'] ? $cart_item['rbfw_end_time'] : '';
     $rbfw_start_datetime = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
@@ -206,8 +207,19 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
         <?php if ( ! empty( $start_datetime )): ?>
             <tr>
-                <th><?php echo $rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', __('Start Date and Time','booking-and-rental-manager-for-woocommerce'));?>:</th>
-                <td><?php echo rbfw_date_format($start_datetime); if(!empty($start_time)){ echo ' @'.date(get_option('time_format'), strtotime($start_time)); } ?></td>
+                <th>
+                    <?php if(($start_time != '00:00')){ ?>
+                        <?php echo $rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', __('Start Date and Time','booking-and-rental-manager-for-woocommerce'));?>:
+                    <?php } else{ ?>
+                        <?php echo $rbfw->get_option_trans('rbfw_text_start_date', 'rbfw_basic_translation_settings', __('Start Date','booking-and-rental-manager-for-woocommerce'));?>:
+                    <?php } ?>
+                </th>
+                <td>
+                    <?php echo rbfw_date_format($start_datetime); ?>
+                    <?php if(($start_time != '00:00')){
+                        echo ' @'.date(get_option('time_format'), strtotime($start_time));
+                    } ?>
+                </td>
             </tr>
         <?php endif; ?>
 
@@ -337,15 +349,15 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 <?php echo $rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Date & Time','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $start_datetime, 'date-time-text' ); ?>
             </li>
         <?php else: ?>
-            <li><?php echo $rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Date & Time','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $start_datetime, 'date-text' ); ?></li>
+            <li><?php echo $rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup Date','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $start_datetime, 'date-text' ); ?></li>
         <?php endif; ?>
 
 
 
         <?php if (!empty($end_datetime) && !empty($end_time)): ?>
-            <li><?php echo $rbfw->get_option_trans('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time gg','booking-and-rental-manager-for-woocommerce'));  echo ': ' . rbfw_get_datetime( $end_datetime, 'date-time-text' ); ?></li>
+            <li><?php echo $rbfw->get_option_trans('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time','booking-and-rental-manager-for-woocommerce'));  echo ': ' . rbfw_get_datetime( $end_datetime, 'date-time-text' ); ?></li>
         <?php else: ?>
-            <li><?php echo $rbfw->get_option_trans('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time hh','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $end_datetime, 'date-text' ); ?></li>
+            <li><?php echo $rbfw->get_option_trans('rbfw_text_dropoff_date', 'rbfw_basic_translation_settings', __('Drop-off Date','booking-and-rental-manager-for-woocommerce')); echo ': ' . rbfw_get_datetime( $end_datetime, 'date-text' ); ?></li>
         <?php endif; ?>
 
         <?php if(!empty($variation_info)){
