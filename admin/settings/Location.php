@@ -46,15 +46,23 @@
 					'taxonomy'   => 'rbfw_item_location',
 					'hide_empty' => false,
 				) );
-				$arr   = array(
-					'' => rbfw_string_return('rbfw_text_pls_select_location',__('Select a Location','booking-and-rental-manager-for-woocommerce'))
-				);
+				$arr   = array();
 				foreach ( $terms as $_terms ) {
 					$arr[ $_terms->name ] = $_terms->name;
 				}
 		
 				return $arr;
 			}
+
+            public function searchForId($id, $array) {
+                foreach ($array as $key => $val) {
+                    if($val['loc_pickup_name']==$id){
+                        echo true;
+                    }else{
+                        echo false;
+                    }
+                }
+            }
 
 			public function rbfw_get_location_dropdown( $name, $saved_value = '', $class = '' ){
 				$location_arr = $this->rbfw_get_location_arr();
@@ -68,7 +76,6 @@
 			public function pickup_location_config($post_id){
 				$rbfw_enable_pick_point  = get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) ? get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) : 'no';
 				$rbfw_pickup_data        = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
-				
 			?>
 			<section >
 				<div>
@@ -80,88 +87,52 @@
 					<span class="slider round"></span>
 				</label>
 			</section>
+                <?php $location_arr = $this->rbfw_get_location_arr(); ?>
 			<section class="rbfw-pickup-location <?php echo esc_attr(($rbfw_enable_pick_point=='yes')?'show':'hide'); ?>" >
 				<div class="rbfw-pickup-locations">
-					<?php
-						if ( sizeof( $rbfw_pickup_data ) > 0 ) :
-							foreach ( $rbfw_pickup_data as $field ) {
-								$location_name = array_key_exists( 'loc_pickup_name', $field ) ? esc_attr( $field['loc_pickup_name'] ) : '';
-								?>
-								<section class="rbfw-pickup">
-									<label for=""><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-									<?php $this->rbfw_get_location_dropdown( 'loc_pickup_name[]' , $location_name ); ?>
-									<div class="mp_event_remove_move">
-										<button onclick="jQuery(this).parent().parent().remove()" class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
-										
-									</div>
-								</section>
-								<?php
-							}
-						else :
-						endif;
-					?>
-					<section class="rbfw-pickup-clone">
-						<label for=""><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-						<?php $this->rbfw_get_location_dropdown( 'loc_pickup_name[]' ); ?>
-						<div class="mp_event_remove_move">
-							<button onclick="jQuery(this).parent().parent().remove()" class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
-						</div>
-					</section>					
-				</div>
-				<div class="d-flex justify-content-center mt-2">
-					<div class="ppof-button add-item" onclick="createPickupLocation()"><i class="fa-solid fa-circle-plus"></i> Add New Pick-up Location</d>
-				</div>
-			</section>
+
+                    <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
+                        <select name="loc_pickup_name[]" id="rdfw_pickup_location" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
+                            <?php $i=0; foreach($location_arr as $key => $value) { if(isset($rbfw_pickup_data[$i]) && in_array($value,$rbfw_pickup_data[$i]) ){ ?>
+                                <option <?php echo 'selected' ?>   value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
+                            <?php $i++; } else{ ?>
+                                <option value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
+                            <?php } } ?>
+                        </select>
+                    </div>
+                </div>
+            </section>
 			<?php
 			}
 
 			public function drop_off_location_config($post_id){
 				$rbfw_enable_dropoff_point  = get_post_meta( $post_id, 'rbfw_enable_dropoff_point', true ) ? get_post_meta( $post_id, 'rbfw_enable_dropoff_point', true ) : 'no';
 				$rbfw_dropoff_data        = get_post_meta( $post_id, 'rbfw_dropoff_data', true ) ? get_post_meta( $post_id, 'rbfw_dropoff_data', true ) : [];
-				
-			?>
-				<section >
-				<div>
-					<label><?php _e( 'Drop-Off Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-					<span><?php esc_html_e( 'Turn drop off Location On/Off', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-				</div>
-				<label class="switch">
-					<input type="checkbox" name="rbfw_enable_dropoff_point" value="<?php echo esc_attr($rbfw_enable_dropoff_point); ?>" <?php echo esc_attr(($rbfw_enable_dropoff_point=='yes')?'checked':''); ?>>
-					<span class="slider round"></span>
-				</label>
-			</section>
-			<section class="rbfw-drop-off-location <?php echo esc_attr(($rbfw_enable_dropoff_point=='yes')?'show':'hide'); ?>" >
-				<div class="rbfw-drop-off-locations">
-					<?php
-						if ( sizeof( $rbfw_dropoff_data ) > 0 ) :
-							foreach ( $rbfw_dropoff_data as $field ) {
-								$location_name = array_key_exists( 'loc_dropoff_name', $field ) ? esc_attr( $field['loc_dropoff_name'] ) : '';
-								?>
-								<section class="rbfw-pickup">
-									<label for=""><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-									<?php $this->rbfw_get_location_dropdown( 'loc_dropoff_name[]' , $location_name ); ?>
-									<div class="mp_event_remove_move">
-										<button onclick="jQuery(this).parent().parent().remove()" class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
-										
-									</div>
-								</section>
-								<?php
-							}
-						else :
-						endif;
-					?>
-					<section class="rbfw-drop-off-clone">
-						<label for=""><?php esc_html_e( 'Location Name', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-						<?php $this->rbfw_get_location_dropdown( 'loc_dropoff_name[]' ); ?>
-						<div class="mp_event_remove_move">
-							<button onclick="jQuery(this).parent().parent().remove()" class="button remove-row"><i class="fa-solid fa-trash-can"></i></button>
-						</div>
-					</section>					
-				</div>
-				<div class="d-flex justify-content-center mt-2">
-					<div class="ppof-button add-item" onclick="createDropOffLocation()"><i class="fa-solid fa-circle-plus"></i> Add New Pick-up Location</d>
-				</div>
-			</section>
+                $location_arr = $this->rbfw_get_location_arr();
+                ?>
+                <section>
+                    <div>
+                        <label><?php _e( 'Drop-Off Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                        <span><?php esc_html_e( 'Turn drop off Location On/Off', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="rbfw_enable_dropoff_point" value="<?php echo esc_attr($rbfw_enable_dropoff_point); ?>" <?php echo esc_attr(($rbfw_enable_dropoff_point=='yes')?'checked':''); ?>>
+                        <span class="slider round"></span>
+                    </label>
+                </section>
+                <section class="rbfw-drop-off-location <?php echo esc_attr(($rbfw_enable_dropoff_point=='yes')?'show':'hide'); ?>" >
+                    <div class="rbfw-drop-off-locations">
+                        <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
+                            <select name="loc_dropoff_name[]" id="rdfw_dropoff_location" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
+                                <?php $i=0; foreach($location_arr as $key => $value) { if(isset($rbfw_dropoff_data[$i]) && in_array($value,$rbfw_dropoff_data[$i]) ){ ?>
+                                    <option <?php echo 'selected' ?>   value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
+                                    <?php $i++; } else{ ?>
+                                    <option value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
+                                <?php } } ?>
+                            </select>
+                        </div>
+                    </div>
+                </section>
 			<?php
 			}
 

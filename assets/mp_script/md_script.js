@@ -13,6 +13,8 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 });
 
 
+
+
 jQuery('body').on('focusin', '.pickup_date', function(e) {
     jQuery(this).datepicker({
         dateFormat: js_date_format,
