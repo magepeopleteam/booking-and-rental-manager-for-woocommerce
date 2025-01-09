@@ -365,8 +365,10 @@ function particular_time_date_dependent_ajax(post_id,date_ymd,type='',selector='
 
             var quantity_options = "<option value=''>Pickup Time</option>";
 
-            jQuery.each(response[0], function(i, item) {
-                quantity_options += "<option "+ item[0] +" value="+i+">"+item[1]+"</option>";
+            console.log('dddddddddd',response[0]);
+
+            jQuery.each(response[0], function(twelve_h, item) {
+                quantity_options += "<option "+ item[0] +" value="+twelve_h+">"+item[1]+"</option>";
             });
             jQuery(response[1]).html(quantity_options);
         }
