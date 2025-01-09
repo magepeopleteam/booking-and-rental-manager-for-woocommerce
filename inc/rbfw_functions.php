@@ -6,8 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 
-add_action('admin_init', 'get_dummy_wc_products',99);
-function get_dummy_wc_products(){
+add_action('admin_init', 'rbfw_get_dummy_wc_products',99);
+function rbfw_get_dummy_wc_products(){
 			
     $rbfw_hide_dummy_wc = get_option('rbfw_hide_dummy_wc') ? get_option('rbfw_hide_dummy_wc') : 'no';
     if($rbfw_hide_dummy_wc == 'no'){
@@ -27,7 +27,6 @@ function get_dummy_wc_products(){
         );
         $loop = new WP_Query($args);
         foreach ($loop->posts as $product) {
-            // echo $product->ID;
             rbfw_hide_product_from_catalog($product->ID);
         }
         update_option('rbfw_hide_dummy_wc', 'yes');
