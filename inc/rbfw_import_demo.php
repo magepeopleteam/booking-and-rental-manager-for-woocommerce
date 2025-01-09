@@ -134,10 +134,14 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
                     $i++;
                 }
                 $this->rbfw_update_related_products();
+				$this->flush_rewrite();
                 update_option('rbfw_sample_rent_items', 'imported');
+
             }
         }
-
+		public function flush_rewrite() {
+			flush_rewrite_rules();
+		}
         public function rbfw_update_related_products(){
 
             $args = array('fields' => 'ids', 'post_type' => 'rbfw_item', 'numberposts' => -1, 'post_status' => 'publish');
