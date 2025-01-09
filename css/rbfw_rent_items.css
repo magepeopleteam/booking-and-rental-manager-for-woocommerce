@@ -19,6 +19,58 @@
 .rbfw_rent_list_lists_info {
     width: 67%;
 }
+/* Targeting iPads specifically */
+
+
+@media (min-width: 600px) and (max-width: 1024px) {
+    #rbfw_rent_item_search_calendar_icon {
+        right: 31% !important;
+                top: 1px !important;
+    }
+
+    .elementor-kit-8869 button,
+    .elementor-kit-8869 input[type="button"],
+    .elementor-kit-8869 input[type="submit"],
+    .elementor-kit-8869 .elementor-button {
+        padding: 10px 15px !important;
+        width: 60% !important;
+        position: relative !important;
+        left: -10% !important;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .rbfw_rent_item_search_button_holder {
+        display: block !important;
+		align-items: auto !important;
+        width: 50% !important;
+        justify-content: center !important;
+    }
+
+    .rbfw_rent_item_searchContentHolder {
+		display: block !important;
+        box-shadow: 0 0 0 0px #dfdfdf !important;
+        background-color: #F8F8F8 !important;
+        padding: 10px !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 5px !important;
+    }
+	#rbfw_rent_item_search_pickup_date {
+		width: 100% !important;
+		
+	}
+	.rbfw_rent_item_searchTypeLocationHolders, .rbfw_rent_item_search_dateButtonHolder {
+		position: relative !important;
+                top: 10px !important;
+	}
+	#rbfw_rent_item_search_calendar_icon {
+		        right: 1% !important;
+        top: 4px !important;
+	}
+	
+	
+}
 
 @media(max-width: 991px) {
     .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper {
@@ -330,13 +382,13 @@ p {
 
 #rbfw_rent_item_search_calendar_icon{
     position: absolute;
-    right:6px;
-    top: 30px;
+    right: 8%;
+    top: 25px;
     width: 100%;
     height: 100%;
     display: block;
     padding-top: 13px;
-    font-size: 9px;
+    font-size: 12px;
     text-align: right;
 }
 
@@ -352,7 +404,7 @@ p {
     cursor: pointer;
     border: 1px solid #dddddd;
     border-radius: 0;
-    padding: 10px;
+    padding: 7px;
 }
 
 .rbfw_rent_item_search_type_location {
