@@ -12,12 +12,20 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
     class RbfwImportDemo {
         public function __construct(){
 
-            $sample_rent_items = get_option('rbfw_sample_rent_items');
-            if($sample_rent_items != 'imported'){
-                $this->rbfw_import_demo_function();
-            }
+				$sample_rent_items = get_option('rbfw_sample_rent_items');
+				if($sample_rent_items != 'imported'){
+					add_action('admin_init', [$this,'rbfw_import_demo_function'],90);
+					
+				}
+				
+			}
 
-        }
+
+
+
+
+
+
 
         public function rbfw_import_demo_function(){
 
@@ -35,7 +43,7 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
 
 	        if($xml !== FALSE && !empty($xml_array)){
 
-                $counter = count($xml_array);
+            	$counter = count($xml_array);
 
                 $i = 1;
 
@@ -95,7 +103,7 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
 
                                 'post_type' 	=> 'product',
                                 'post_title' 	=> $title,
-                                'post_name' => uniqid(),
+                                'post_name' 	=> uniqid(),
                                 'post_status' 	=> 'publish',
                             );
     
@@ -108,9 +116,18 @@ if ( ! class_exists( 'RbfwImportDemo' ) ) {
                                 update_post_meta($wc_product_id, '_price', 0.01);
                                 update_post_meta($wc_product_id, '_sold_individually', 'yes');
                                 update_post_meta($wc_product_id, '_virtual', $product_type);
+								update_post_meta($wc_product_id, '_created_in', 'dummy_import');
                                 $terms = array('exclude-from-catalog', 'exclude-from-search');
                                 wp_set_object_terms($wc_product_id, $terms, 'product_visibility');
+
+
+								// $terms = array('exclude-from-catalog', 'exclude-from-search');
+								// $taxonomy = 'product_visibility'; 
+								// wp_set_post_terms($wc_product_id, $terms, $taxonomy);
+
+
                                 update_post_meta($rent_post_id, 'check_if_run_once', true);
+
                             }
                         }   
                     }

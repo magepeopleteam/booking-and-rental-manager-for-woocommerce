@@ -3,6 +3,50 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+
+
+
+add_action('admin_init', 'get_dummy_wc_products',99);
+function get_dummy_wc_products(){
+			
+    $rbfw_hide_dummy_wc = get_option('rbfw_hide_dummy_wc') ? get_option('rbfw_hide_dummy_wc') : 'no';
+    if($rbfw_hide_dummy_wc == 'no'){
+        $args = array(
+            'post_type' => 'product',
+            'posts_per_page' => -1,
+            'meta_query'  => array(
+                'relation' => 'AND',
+                array(
+                    array(
+                        'key' => '_created_in',
+                        'value' => 'dummy_import',
+                        'compare' => '='
+                    )
+                )
+            )
+        );
+        $loop = new WP_Query($args);
+        foreach ($loop->posts as $product) {
+            // echo $product->ID;
+            rbfw_hide_product_from_catalog($product->ID);
+        }
+        update_option('rbfw_hide_dummy_wc', 'yes');
+    }
+}
+
+
+function rbfw_hide_product_from_catalog($product_id) {
+    // Get the product object
+    $product = wc_get_product($product_id);
+    if ($product) {
+        // Set the catalog visibility to 'hidden'
+        $product->set_catalog_visibility('hidden');        
+        // Save the product
+        $product->save();
+    }
+}
+
+
 add_action('wp', 'rbfw_hide_hidden_product_from_single', 90);
 
 if (!function_exists('rbfw_hide_hidden_product_from_single')) {
