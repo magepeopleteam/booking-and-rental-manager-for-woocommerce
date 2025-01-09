@@ -449,7 +449,7 @@ function rbfw_rent_search_shortcode( $attr = null ){
                             <div class="rbfw_rent_item_search_item">
                                 <?php rbfw_get_dropdown_new( 'rbfw_search_type', $type,  'rbfw_rent_item_search_type_location', 'category' );?>
                             </div>
-                            <div class="rbfw_rent_item_search_item">
+                            <div class="rbfw_rent_item_searchTypeLocationHolder_2">
                                 <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location' );?>
                             </div>
                         </div>

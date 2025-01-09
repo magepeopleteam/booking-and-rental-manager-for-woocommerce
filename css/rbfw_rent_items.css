@@ -272,6 +272,11 @@ p {
     width: 50%;
     gap: 35px;
 }
+.rbfw_rent_item_searchTypeLocationHolders {
+    display: flex;
+    width: 50%;
+    gap: 35px;
+}
 
 .rbfw_rent_item_search_dateButtonHolder {
     display: flex;
@@ -637,6 +642,14 @@ ul.rbfw_show_all_cat_features li:last-child {
         align-items: center;
         gap: 5px;
     }
+    .rbfw_rent_item_searchTypeLocationHolders,.rbfw_rent_item_search_dateButtonHolder{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5px;
+    }
 
     .rbfw_rent_item_search_item{
         width: 100%;
@@ -653,6 +666,14 @@ ul.rbfw_show_all_cat_features li:last-child {
     }
 
     .rbfw_rent_item_searchTypeLocationHolder select,.rbfw_rent_item_search_dateButtonHolder input{
+        display: block;
+        width: 100%;
+        color: #333;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        padding: 10px;
+    }
+    .rbfw_rent_item_searchTypeLocationHolders select,.rbfw_rent_item_search_dateButtonHolder input{
         display: block;
         width: 100%;
         color: #333;
@@ -691,6 +712,10 @@ ul.rbfw_show_all_cat_features li:last-child {
 }
 @media (min-width:1024px) {
     .rbfw_rent_item_searchTypeLocationHolder,.rbfw_rent_item_search_dateButtonHolder{
+        width: 50%;
+        flex-direction: row;
+    }
+    .rbfw_rent_item_searchTypeLocationHolders,.rbfw_rent_item_search_dateButtonHolder{
         width: 50%;
         flex-direction: row;
     }
