@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 if (!class_exists('RBFW_Hidden_Product')) {
     class RBFW_Hidden_Product {
         public function __construct() {
-	        add_action('admin_init', array($this,'rbfw_get_dummy_wc_products'),99);
+
             add_action('wp_insert_post', array($this, 'create_hidden_wc_product_on_publish'), 10, 3);
             add_action('save_post', array($this, 'run_link_product_on_save'), 99);
             add_action('parse_query', array($this, 'hide_wc_hidden_product_from_product_list'));
@@ -15,41 +15,7 @@ if (!class_exists('RBFW_Hidden_Product')) {
             add_action('init', [$this, 'get_all_hidden_product_id']);
             add_filter('wpseo_exclude_from_sitemap_by_post_ids', [$this, 'get_all_hidden_product_id']);
         }
-	    public function rbfw_get_dummy_wc_products(){
 
-		    $rbfw_hide_dummy_wc = get_option('rbfw_hide_dummy_wc') ? get_option('rbfw_hide_dummy_wc') : 'no';
-		    if($rbfw_hide_dummy_wc == 'no'){
-			    $args = array(
-				    'post_type' => 'product',
-				    'posts_per_page' => -1,
-				    'meta_query'  => array(
-					    'relation' => 'AND',
-					    array(
-						    array(
-							    'key' => 'link_rbfw_id'
-						    )
-					    )
-				    )
-			    );
-			    $loop = new WP_Query($args);
-			    foreach ($loop->posts as $product) {
-				    $this->rbfw_hide_product_from_catalog($product->ID);
-			    }
-			    update_option('rbfw_hide_dummy_wc', 'yes');
-		    }
-	    }
-
-
-	   public function rbfw_hide_product_from_catalog($product_id) {
-		    // Get the product object
-		    $product = wc_get_product($product_id);
-		    if ($product) {
-			    // Set the catalog visibility to 'hidden'
-			    $product->set_catalog_visibility('hidden');
-			    // Save the product
-			    $product->save();
-		    }
-	    }
         public function create_hidden_wc_product($post_id, $title) {
 	        $new_post = array(
 		        'post_title'    => $title,
