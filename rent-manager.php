@@ -44,6 +44,7 @@ if(! class_exists('RBFW_Rent_Manager')){
                 add_action( 'save_post', [$this,'flush_rules_on_save_posts'], 20, 2);
                 add_action('admin_init', [$this,'get_plugin_data']);
             }
+	        require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Hidden_Product.php';
             require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Quick_Setup.php';
             require_once RBFW_PLUGIN_DIR . '/inc/rbfw_import_demo.php';
 
