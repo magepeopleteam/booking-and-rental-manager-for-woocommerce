@@ -13,6 +13,7 @@
 				if ( $sample_rent_items != 'imported' ) {
 					$this->rbfw_import_demo_function();
 				}
+
 			}
 
 			public function rbfw_import_demo_function() {
@@ -138,6 +139,7 @@
 				// Success, return attachment ID (int)
 				return (int) $attachment_id;
 			}
+
 		}
 		new RbfwImportDemo();
 	}
