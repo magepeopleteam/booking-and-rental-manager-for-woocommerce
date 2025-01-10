@@ -43,6 +43,7 @@ if(! class_exists('RBFW_Rent_Manager')){
                 add_filter('body_class', [$this,'add_body_class']);
                 add_action( 'save_post', [$this,'flush_rules_on_save_posts'], 20, 2);
                 add_action('admin_init', [$this,'get_plugin_data']);
+                add_action('admin_init', [$this,'flush_rules_rbfw_post_list_page']);
             }
             require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Quick_Setup.php';
             require_once RBFW_PLUGIN_DIR . '/inc/rbfw_import_demo.php';
@@ -136,6 +137,12 @@ if(! class_exists('RBFW_Rent_Manager')){
             }
             flush_rewrite_rules();
         }
+        function flush_rules_rbfw_post_list_page() {
+            if ( isset( $_GET['post_type'] ) && sanitize_text_field($_GET['post_type']) == 'rbfw_item' ) {
+                flush_rewrite_rules();
+            }
+           
+        }
 
         public function activation_redirect( $plugin ) {
 
@@ -159,6 +166,7 @@ if(! class_exists('RBFW_Rent_Manager')){
             update_option('rewrite_rules','');
             rbfw_update_settings();
             rbfw_page_create();
+            // flush_rewrite_rules(); // Flush permalinks
         }
 
         public static function deactivate(){
@@ -183,4 +191,3 @@ if (rbfw_woo_install_check() == 'Yes') {
 
 
 // this include file can't added inside class method due to fatal error. need to fix.
-
