@@ -120,16 +120,19 @@ if (!class_exists('TTBM_Quick_Setup')) {
                         $rbfw_basic_gen_settings=is_array($rbfw_basic_gen_settings)?$rbfw_basic_gen_settings:[];
                         $rbfw_basic_gen_settings['rbfw_rent_label'] =  sanitize_text_field($_POST['rbfw_rent_label']);
                         $rbfw_basic_gen_settings['rbfw_gutenburg_switch'] =  'Off';
+                        flush_rewrite_rules(); // Flush permalinks
                         update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
                     }
 
                     if(isset($_POST['rbfw_rent_slug']) && !empty($_POST['rbfw_rent_slug'])){
                         $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings',true);
                         $rbfw_basic_gen_settings['rbfw_rent_slug'] = sanitize_text_field($_POST['rbfw_rent_slug']);
+                        flush_rewrite_rules(); // Flush permalinks
                         update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
                     }
 
                     update_option('rbfw_quick_setup_done', 'yes');
+                    flush_rewrite_rules(); // Flush permalinks
                     wp_redirect(admin_url('edit.php?post_type=rbfw_item'));
                 }
             }

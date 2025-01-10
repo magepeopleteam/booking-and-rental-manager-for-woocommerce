@@ -28,9 +28,11 @@ function rbfw_get_dummy_wc_products(){
         $loop = new WP_Query($args);
         foreach ($loop->posts as $product) {
             rbfw_hide_product_from_catalog($product->ID);
-        }
+        }       
         update_option('rbfw_hide_dummy_wc', 'yes');
+       
     }
+   
 }
 
 
