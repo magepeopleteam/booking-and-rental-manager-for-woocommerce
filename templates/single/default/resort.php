@@ -20,7 +20,7 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 			<div class="mp_details_page">
                 <?php  if($frontend){ ?>
 				<div class="mp_left_section">
-					<div class="mpStyle <?php echo $slide_style; ?>">
+					<div class="mpStyle <?php echo esc_html($slide_style); ?>">
 						<?php do_action( 'add_super_slider', $post_id ,'rbfw_gallery_images'); ?>
 					</div>
 
@@ -32,7 +32,7 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 								<?php do_action( 'rbfw_product_meta', $post_id ); ?>
 							</div>
 						</div>
-							<div class="rbfw-tab-container <?php echo mep_esc_html($tab_style); ?>">
+							<div class="rbfw-tab-container <?php echo esc_html(mep_esc_html($tab_style)); ?>">
 								<div class="rbfw-tab-menu">
 									<!-- <ul class="rbfw-ul">
 										<li><a href="#" class="rbfw-features rbfw-tab-a active-a"

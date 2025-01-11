@@ -152,7 +152,8 @@ if(! class_exists('RBFW_Rent_Manager')){
                 if(isset($_REQUEST['page']) && $_REQUEST['page'] == 'rbfw_quick_setup'){
                     return null;
                 }else{
-                    exit( wp_redirect( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup' ) ) );
+                    wp_redirect(esc_url_raw(admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup')));
+                    exit();
                 }
             }
         }
