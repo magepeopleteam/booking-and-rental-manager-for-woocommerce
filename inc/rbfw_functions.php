@@ -29,7 +29,7 @@
 			'hide_empty' => false,
 		) );
 		$arr   = array(
-			'' => rbfw_string_return( 'rbfw_text_pls_select_location', __( 'Please Select a Location', 'booking-and-rental-manager-for-woocommerce' ) )
+			'' => rbfw_string_return( 'rbfw_text_pls_select_location', esc_html__( 'Please Select a Location', 'booking-and-rental-manager-for-woocommerce' ) )
 		);
 		foreach ( $terms as $_terms ) {
 			$arr[ $_terms->name ] = $_terms->name;
@@ -43,7 +43,7 @@
 		return $rbfw->get_option_trans( $option, $section, $default );
 	}
 	function rbfw_string( $option_name, $default_string ) {
-		echo rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string );
+		echo esc_html(rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string ));
 	}
 	function rbfw_string_return( $option_name, $default_string ) {
 		return rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string );
@@ -129,7 +129,7 @@
 		if ( $stock_status == 'yes' ) {
 			?>
             <p class='rbfw_availabe_seat_label'><?php echo esc_html( $availabe_type_seat ) . ' ';
-					rbfw_string( 'rbfw_string_availabe', __( 'Availabe', 'booking-and-rental-manager-for-woocommerce' ) ); ?></p>
+					rbfw_string( 'rbfw_string_availabe', esc_html__( 'Availabe', 'booking-and-rental-manager-for-woocommerce' ) ); ?></p>
 			<?php
 		}
 	}
@@ -139,22 +139,22 @@
 		// unset( $columns['taxonomy-rbfw_item_org'] );
 		unset( $columns['taxonomy-rbfw_item_location'] );
 
-		// $columns['mep_event_date'] = __( 'Event Start Date', 'mage-eventpress' );
+		// $columns['mep_event_date'] = esc_html__( 'Event Start Date', 'mage-eventpress' );
 		return $columns;
 	}
 	function rbfw_create_tag_taxonomy() {
 		$labels = array(
-			'name'              => __( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
-			'singular_name'     => __( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
-			'search_items'      => __( 'Search Tags','booking-and-rental-manager-for-woocommerce'),
-			'all_items'         => __( 'All Tags','booking-and-rental-manager-for-woocommerce' ),
-			'parent_item'       => __( 'Parent Tag','booking-and-rental-manager-for-woocommerce' ),
-			'parent_item_colon' => __( 'Parent Tag:','booking-and-rental-manager-for-woocommerce' ),
-			'edit_item'         => __( 'Edit Tag','booking-and-rental-manager-for-woocommerce' ),
-			'update_item'       => __( 'Update Tag','booking-and-rental-manager-for-woocommerce' ),
-			'add_new_item'      => __( 'Add New Tag','booking-and-rental-manager-for-woocommerce' ),
-			'new_item_name'     => __( 'New Tag Name','booking-and-rental-manager-for-woocommerce' ),
-			'menu_name'         => __( 'Tags','booking-and-rental-manager-for-woocommerce' ),
+			'name'              => esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
+			'singular_name'     => esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
+			'search_items'      => esc_html__( 'Search Tags','booking-and-rental-manager-for-woocommerce'),
+			'all_items'         => esc_html__( 'All Tags','booking-and-rental-manager-for-woocommerce' ),
+			'parent_item'       => esc_html__( 'Parent Tag','booking-and-rental-manager-for-woocommerce' ),
+			'parent_item_colon' => esc_html__( 'Parent Tag:','booking-and-rental-manager-for-woocommerce' ),
+			'edit_item'         => esc_html__( 'Edit Tag','booking-and-rental-manager-for-woocommerce' ),
+			'update_item'       => esc_html__( 'Update Tag','booking-and-rental-manager-for-woocommerce' ),
+			'add_new_item'      => esc_html__( 'Add New Tag','booking-and-rental-manager-for-woocommerce' ),
+			'new_item_name'     => esc_html__( 'New Tag Name','booking-and-rental-manager-for-woocommerce' ),
+			'menu_name'         => esc_html__( 'Tags','booking-and-rental-manager-for-woocommerce' ),
 		);
 // 		register_taxonomy( 'rbfw_item_tag', array( 'rbfw_item' ), array(
 // 			'hierarchical'      => false,
@@ -516,12 +516,12 @@
 		}
 		global $rbfw;
 		$rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ) : array();
-		$hourly_rate_label     = $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ) );
-		$prices_start_at       = $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ) );
+		$hourly_rate_label     = $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', esc_html__( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ) );
+		$prices_start_at       = $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', esc_html__( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ) );
 		if ( isset( $rbfw_related_post_arr ) && ! empty( $rbfw_related_post_arr ) ) {
 			?>
             <h3 class="rbfw-related-product-heading">
-				<?php rbfw_string( 'rbfw_text_related_items', __( 'Related Items', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
+				<?php rbfw_string( 'rbfw_text_related_items', esc_html__( 'Related Items', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
             </h3>
             <div class="owl-carousel rbfw-related-product">
 				<?php foreach ( $rbfw_related_post_arr as $rbfw_related_post_id ) {
@@ -534,15 +534,15 @@
 					}
 					$thumb_url               = ! empty( get_the_post_thumbnail_url( $rbfw_related_post_id, 'full' ) ) ? get_the_post_thumbnail_url( $rbfw_related_post_id, 'full' ) : $gallery_image;
 					$title                   = get_the_title( $rbfw_related_post_id );
-					$hourly_rate_label       = $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ) );
-					$daily_rate_label        = $rbfw->get_option_trans( 'rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __( 'Daily rate', 'booking-and-rental-manager-for-woocommerce' ) );
+					$hourly_rate_label       = $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', esc_html__( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ) );
+					$daily_rate_label        = $rbfw->get_option_trans( 'rbfw_text_daily_rate', 'rbfw_basic_translation_settings', esc_html__( 'Daily rate', 'booking-and-rental-manager-for-woocommerce' ) );
 					$rbfw_enable_hourly_rate = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
 					if ( $rbfw_enable_hourly_rate == 'no' ) {
 						$the_price_label = $daily_rate_label;
 					} else {
 						$the_price_label = $hourly_rate_label;
 					}
-					$prices_start_at = $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ) );
+					$prices_start_at = $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', esc_html__( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ) );
 					$rbfw_rent_type  = get_post_meta( $rbfw_related_post_id, 'rbfw_item_type', true );
 					if ( $rbfw_enable_hourly_rate == 'yes' ) {
 						$price     = get_post_meta( $rbfw_related_post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_hourly_rate', true ) : 0;
@@ -670,20 +670,20 @@
                                         <a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $title ); ?></a>
                                     </h3>
 									<?php if ( $rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment' ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <?php echo rbfw_mps_price( $price ); ?></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <?php echo esc_html( $price ); ?></div>
 									<?php endif; ?>
 
 									<?php if ( $rbfw_rent_type == 'resort' && ! empty( $rbfw_room_data ) ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <?php echo rbfw_mps_price( $price ); ?></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <?php echo esc_html( $price ); ?></div>
 									<?php endif; ?>
 
 									<?php if ( ( $rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment' ) && ! empty( $rbfw_bike_car_sd_data ) ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <?php echo rbfw_mps_price( $price ); ?></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <?php echo esc_html( $price ); ?></div>
 									<?php endif; ?>
                                 </div>
                                 <div class="rbfw-related-product-btn-wrap">
                                     <a href="<?php echo esc_url( $permalink ); ?>" class="rbfw-related-product-btn">
-										<?php rbfw_string( 'rbfw_text_read_more', __( 'Read More', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
+										<?php rbfw_string( 'rbfw_text_read_more', esc_html__( 'Read More', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
                                     </a>
                                 </div>
                             </div>
@@ -732,10 +732,10 @@
             <script>
                 jQuery(document).ready(function () {
                     // tab tooltip
-                    let highlighted_features = "<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_hightlighted_features', 'rbfw_basic_translation_settings', __( 'Highlighted Features', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>";
-                    let description = "<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_description', 'rbfw_basic_translation_settings', __( 'Description', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>";
-                    let faq = "<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_faq', 'rbfw_basic_translation_settings', __( 'Frequently Asked Questions', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>";
-                    let reviews = "<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_reviews', 'rbfw_basic_translation_settings', __( 'Reviews', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>";
+                    let highlighted_features = "<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_hightlighted_features', 'rbfw_basic_translation_settings', esc_html__( 'Highlighted Features', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>";
+                    let description = "<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_description', 'rbfw_basic_translation_settings', esc_html__( 'Description', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>";
+                    let faq = "<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_faq', 'rbfw_basic_translation_settings', esc_html__( 'Frequently Asked Questions', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>";
+                    let reviews = "<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_reviews', 'rbfw_basic_translation_settings', esc_html__( 'Reviews', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>";
                     // tippy('.rbfw-features', {content: highlighted_features,theme: 'blue',placement: 'right'});
                     // tippy('.rbfw-description', {content: description,theme: 'blue',placement: 'right'});
                     // tippy('.rbfw-faq', {content: faq,theme: 'blue',placement: 'right'});
@@ -850,9 +850,9 @@
 						if ( $i <= 100 ) {
 							$input_id = str_replace( ' ', '', $key );
 							?>
-                            <label for="<?php echo $input_id; ?>" data-id="<?php echo $value; ?>">
-                                <input type="radio" name="rbfw_icon" id="<?php echo $input_id; ?>" value="<?php echo $key; ?>">
-                                <i class="<?php echo $key; ?>"></i>
+                            <label for="<?php echo esc_attr($input_id); ?>" data-id="<?php echo esc_attr($value); ?>">
+                                <input type="radio" name="rbfw_icon" id="<?php echo esc_attr($input_id); ?>" value="<?php echo esc_attr($key); ?>">
+                                <i class="<?php echo esc_attr($key); ?>"></i>
                             </label>
 							<?php
 						}
@@ -884,9 +884,9 @@
 			if ( ( $i > $data_loaded ) && ( $i <= $target ) ) {
 				$input_id = str_replace( ' ', '', $key );
 				?>
-                <label for="<?php echo $input_id; ?>" data-id="<?php echo $value; ?>">
-                    <input type="radio" name="rbfw_icon" id="<?php echo $input_id; ?>" value="<?php echo $key; ?>">
-                    <i class="<?php echo $key; ?>"></i>
+                <label for="<?php echo esc_attr($input_id); ?>" data-id="<?php echo esc_attr($value); ?>">
+                    <input type="radio" name="rbfw_icon" id="<?php echo esc_attr($input_id); ?>" value="<?php echo esc_attr($key); ?>">
+                    <i class="<?php echo esc_attr($key); ?>"></i>
                 </label>
 				<?php
 			}
@@ -1023,7 +1023,7 @@
 	function rbfw_get_pages_arr() {
 		$pages = get_pages();
 		$arr   = array(
-			'' => __( 'Please Select a Page', 'booking-and-rental-manager-for-woocommerce' )
+			'' => esc_html__( 'Please Select a Page', 'booking-and-rental-manager-for-woocommerce' )
 		);
 		foreach ( $pages as $page ) {
 			$arr[ $page->ID ] = $page->post_title;
@@ -1036,8 +1036,8 @@
 		$settings_fields['rbfw_basic_payment_settings'] = array(
 			array(
 				'name'    => 'rbfw_payment_system',
-				'label'   => __( 'Payment System', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'Desc', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => esc_html__( 'Payment System', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( 'Desc', 'booking-and-rental-manager-for-woocommerce' ),
 				'class'   => 'rbfw_payment_system',
 				'type'    => 'select',
 				'default' => 'wps',
@@ -1045,16 +1045,16 @@
 			),
 			array(
 				'name'    => 'rbfw_mps_currency',
-				'label'   => __( 'Currency', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'Please choose the currency if mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => esc_html__( 'Currency', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( 'Please choose the currency if mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'select',
 				'default' => 'USD',
 				'options' => rbfw_mps_currency_list(),
 			),
 			array(
 				'name'    => 'rbfw_mps_currency_position',
-				'label'   => __( 'Currency position', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'This controls the position of the currency symbol if mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => esc_html__( 'Currency position', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( 'This controls the position of the currency symbol if mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'select',
 				'default' => 'left',
 				'options' => array(
@@ -1066,8 +1066,8 @@
 			),
 			array(
 				'name'      => 'rbfw_mps_currency_thousand_seperator',
-				'label'     => __( 'Thousand separator', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'      => __( 'This sets the thousand seperator of displayed prices.', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'     => esc_html__( 'Thousand separator', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'      => esc_html__( 'This sets the thousand seperator of displayed prices.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'      => 'text',
 				'default'   => ',',
 				'maxlength' => '1',
@@ -1075,8 +1075,8 @@
 			),
 			array(
 				'name'      => 'rbfw_mps_currency_decimal_seperator',
-				'label'     => __( 'Decimal separator', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'      => __( 'This sets the decimal seperator of displayed prices.', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'     => esc_html__( 'Decimal separator', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'      => esc_html__( 'This sets the decimal seperator of displayed prices.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'      => 'text',
 				'default'   => '.',
 				'maxlength' => '1',
@@ -1084,48 +1084,48 @@
 			),
 			array(
 				'name'    => 'rbfw_mps_currency_decimal_number',
-				'label'   => __( 'Number of decimals', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'This sets the number of decimal points shown in displayed prices. It will work if mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => esc_html__( 'Number of decimals', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( 'This sets the number of decimal points shown in displayed prices. It will work if mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'number',
 				'default' => '2',
 			),
 			array(
 				'name'    => 'rbfw_mps_tax_switch',
-				'label'   => __( 'Enable taxes', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( ' Enable tax rates and calculations. Rates will be configurable and taxes will be calculated during checkout.', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => esc_html__( 'Enable taxes', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( ' Enable tax rates and calculations. Rates will be configurable and taxes will be calculated during checkout.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'checkbox',
 				'default' => 'off',
 			),
 			array(
 				'name'    => 'rbfw_mps_tax_format',
-				'label'   => __( 'Display prices during checkout', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'Please select the tax format.', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => esc_html__( 'Display prices during checkout', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( 'Please select the tax format.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'select',
 				'default' => 'excluding_tax',
 				'options' => array(
-					'excluding_tax' => __( 'Excluding tax', 'booking-and-rental-manager-for-woocommerce' ),
-					'including_tax' => __( 'Including tax', 'booking-and-rental-manager-for-woocommerce' ),
+					'excluding_tax' => esc_html__( 'Excluding tax', 'booking-and-rental-manager-for-woocommerce' ),
+					'including_tax' => esc_html__( 'Including tax', 'booking-and-rental-manager-for-woocommerce' ),
 				),
 			),
 			array(
 				'name'    => 'rbfw_mps_checkout_account',
-				'label'   => __( 'Account creation', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'Allow customers to create an account during checkout.', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => esc_html__( 'Account creation', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( 'Allow customers to create an account during checkout.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'checkbox',
 				'default' => 'on',
 			),
 			array(
 				'name'    => 'rbfw_mps_payment_gateway',
-				'label'   => __( 'Payment Gateway', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => esc_html__( 'Payment Gateway', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'multicheck',
 				'default' => 'offline',
 				'options' => rbfw_get_payment_gateways()
 			),
 			array(
 				'name'    => 'rbfw_wps_add_to_cart_redirect',
-				'label'   => __( 'Added to cart redirect to', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => esc_html__( 'Added to cart redirect to', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'select',
 				'default' => 'checkout',
 				'options' => array(
@@ -1478,54 +1478,54 @@
 	add_action( 'admin_init', 'rbfw_import_dummy_time_slots' );
 	function rbfw_import_dummy_time_slots() {
 		$import_time_slot_array = array(
-			'12:00 AM' => __( '12:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'12:30 AM' => __( '12:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'01:00 AM' => __( '1:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'01:30 AM' => __( '1:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'02:00 AM' => __( '2:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'02:30 AM' => __( '2:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'03:00 AM' => __( '3:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'03:30 AM' => __( '3:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'04:00 AM' => __( '4:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'04:30 AM' => __( '4:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'05:00 AM' => __( '5:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'05:30 AM' => __( '5:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'06:00 AM' => __( '6:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'06:30 AM' => __( '6:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'00:00 AM' => __( '7:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'07:30 AM' => __( '7:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'08:00 AM' => __( '8:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'08:30 AM' => __( '8:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'09:00 AM' => __( '9:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'09:30 AM' => __( '9:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'10:00 AM' => __( '10:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'10:30 AM' => __( '10:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'11:00 AM' => __( '11:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'11:30 AM' => __( '11:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
-			'12:00 PM' => __( '12:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'12:30 PM' => __( '12:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'01:00 PM' => __( '1:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'01:30 PM' => __( '1:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'02:00 PM' => __( '2:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'02:30 PM' => __( '2:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'03:00 PM' => __( '3:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'03:30 PM' => __( '3:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'04:00 PM' => __( '4:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'04:30 PM' => __( '4:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'05:00 PM' => __( '5:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'05:30 PM' => __( '5:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'06:00 PM' => __( '6:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'06:30 PM' => __( '6:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'07:00 PM' => __( '7:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'07:30 PM' => __( '7:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'08:00 PM' => __( '8:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'08:30 PM' => __( '8:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'09:00 PM' => __( '9:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'09:30 PM' => __( '9:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'10:00 PM' => __( '10:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'10:30 PM' => __( '10:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'11:00 PM' => __( '11:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
-			'11:30 PM' => __( '11:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'12:00 AM' => esc_html__( '12:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'12:30 AM' => esc_html__( '12:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'01:00 AM' => esc_html__( '1:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'01:30 AM' => esc_html__( '1:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'02:00 AM' => esc_html__( '2:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'02:30 AM' => esc_html__( '2:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'03:00 AM' => esc_html__( '3:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'03:30 AM' => esc_html__( '3:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'04:00 AM' => esc_html__( '4:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'04:30 AM' => esc_html__( '4:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'05:00 AM' => esc_html__( '5:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'05:30 AM' => esc_html__( '5:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'06:00 AM' => esc_html__( '6:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'06:30 AM' => esc_html__( '6:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'00:00 AM' => esc_html__( '7:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'07:30 AM' => esc_html__( '7:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'08:00 AM' => esc_html__( '8:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'08:30 AM' => esc_html__( '8:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'09:00 AM' => esc_html__( '9:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'09:30 AM' => esc_html__( '9:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'10:00 AM' => esc_html__( '10:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'10:30 AM' => esc_html__( '10:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'11:00 AM' => esc_html__( '11:00 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'11:30 AM' => esc_html__( '11:30 AM', 'booking-and-rental-manager-for-woocommerce' ),
+			'12:00 PM' => esc_html__( '12:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'12:30 PM' => esc_html__( '12:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'01:00 PM' => esc_html__( '1:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'01:30 PM' => esc_html__( '1:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'02:00 PM' => esc_html__( '2:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'02:30 PM' => esc_html__( '2:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'03:00 PM' => esc_html__( '3:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'03:30 PM' => esc_html__( '3:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'04:00 PM' => esc_html__( '4:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'04:30 PM' => esc_html__( '4:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'05:00 PM' => esc_html__( '5:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'05:30 PM' => esc_html__( '5:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'06:00 PM' => esc_html__( '6:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'06:30 PM' => esc_html__( '6:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'07:00 PM' => esc_html__( '7:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'07:30 PM' => esc_html__( '7:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'08:00 PM' => esc_html__( '8:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'08:30 PM' => esc_html__( '8:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'09:00 PM' => esc_html__( '9:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'09:30 PM' => esc_html__( '9:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'10:00 PM' => esc_html__( '10:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'10:30 PM' => esc_html__( '10:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'11:00 PM' => esc_html__( '11:00 PM', 'booking-and-rental-manager-for-woocommerce' ),
+			'11:30 PM' => esc_html__( '11:30 PM', 'booking-and-rental-manager-for-woocommerce' ),
 		);
 		if ( get_option( 'rbfw_time_slots' ) === false ) {
 			update_option( 'rbfw_time_slots', $import_time_slot_array );
@@ -1651,8 +1651,8 @@
 		}
 		global $rbfw;
 		$rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ) : array();
-		$hourly_rate_label     = $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ) );
-		$prices_start_at       = $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ) );
+		$hourly_rate_label     = $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', esc_html__( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ) );
+		$prices_start_at       = $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', esc_html__( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ) );
 		if ( ! empty( $rbfw_related_post_arr ) ) {
 			echo '<div class="owl-carousel owl-theme t_carousel">';
 			foreach ( $rbfw_related_post_arr as $rbfw_related_post_id ) {
@@ -1778,15 +1778,15 @@
                         <div class="rbfw-related-product-bottom-card">
                             <div class="rbfw-related-product-bottom-card-pricing-box">
 								<?php if ( $rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment' ): ?>
-                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $hourly_rate_label ); ?>: <?php echo rbfw_mps_price( $price ); ?></div>
+                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $hourly_rate_label ); ?>: <?php echo esc_html( $price ); ?></div>
 								<?php endif; ?>
 
 								<?php if ( $rbfw_rent_type == 'resort' && ! empty( $rbfw_room_data ) ): ?>
-                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <?php echo rbfw_mps_price( $price ); ?></div>
+                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <?php echo esc_html( $price ); ?></div>
 								<?php endif; ?>
 
 								<?php if ( ( $rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment' ) && ! empty( $rbfw_bike_car_sd_data ) ): ?>
-                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <?php echo rbfw_mps_price( $price ); ?></div>
+                                    <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <?php echo esc_html( $price ); ?></div>
 								<?php endif; ?>
                             </div>
                             <h3 class="rbfw-related-product-title-wrap"><a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $title ); ?></a></h3>
@@ -1824,7 +1824,7 @@
                                 </div>
 							<?php endif; ?>
                         </div>
-                        <div class="rbfw-related-product-btn-wrap"><a href="<?php echo esc_url( $permalink ); ?>" class="rbfw-related-product-btn"><?php rbfw_string( 'rbfw_text_book_it', __( 'Book It', 'booking-and-rental-manager-for-woocommerce' ) ); ?></a></div>
+                        <div class="rbfw-related-product-btn-wrap"><a href="<?php echo esc_url( $permalink ); ?>" class="rbfw-related-product-btn"><?php rbfw_string( 'rbfw_text_book_it', esc_html__( 'Book It', 'booking-and-rental-manager-for-woocommerce' ) ); ?></a></div>
                     </div>
                 </div>
 				<?php
@@ -1870,9 +1870,9 @@
 		}
 		global $rbfw;
 		$rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ) : array();
-		$hourly_rate_label     = $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ) );
-		$prices_start_at       = $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ) );
-		$reviews_label         = $rbfw->get_option_trans( 'rbfw_text_reviews', 'rbfw_basic_translation_settings', __( 'Reviews', 'booking-and-rental-manager-for-woocommerce' ) );
+		$hourly_rate_label     = $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', esc_html__( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ) );
+		$prices_start_at       = $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', esc_html__( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ) );
+		$reviews_label         = $rbfw->get_option_trans( 'rbfw_text_reviews', 'rbfw_basic_translation_settings', esc_html__( 'Reviews', 'booking-and-rental-manager-for-woocommerce' ) );
 		if ( ! empty( $rbfw_related_post_arr ) ) {
 			echo '<div class="owl-carousel owl-theme t_carousel">';
 			foreach ( $rbfw_related_post_arr as $rbfw_related_post_id ) {
@@ -1885,15 +1885,15 @@
 				$rbfw_rent_type          = get_post_meta( $rbfw_related_post_id, 'rbfw_item_type', true );
 				$thumb_url               = ! empty( get_the_post_thumbnail_url( $rbfw_related_post_id, 'full' ) ) ? get_the_post_thumbnail_url( $rbfw_related_post_id, 'full' ) : $gallery_image;
 				$title                   = get_the_title( $rbfw_related_post_id );
-				$hourly_rate_label       = $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ) );
-				$daily_rate_label        = $rbfw->get_option_trans( 'rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __( 'Daily rate', 'booking-and-rental-manager-for-woocommerce' ) );
+				$hourly_rate_label       = $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', esc_html__( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ) );
+				$daily_rate_label        = $rbfw->get_option_trans( 'rbfw_text_daily_rate', 'rbfw_basic_translation_settings', esc_html__( 'Daily rate', 'booking-and-rental-manager-for-woocommerce' ) );
 				$rbfw_enable_hourly_rate = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
 				if ( $rbfw_enable_hourly_rate == 'no' ) {
 					$the_price_label = $daily_rate_label;
 				} else {
 					$the_price_label = $hourly_rate_label;
 				}
-				$prices_start_at = $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ) );
+				$prices_start_at = $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', esc_html__( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' ) );
 				$rbfw_rent_type  = get_post_meta( $rbfw_related_post_id, 'rbfw_item_type', true );
 				if ( $rbfw_enable_hourly_rate == 'yes' ) {
 					$price     = get_post_meta( $rbfw_related_post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_hourly_rate', true ) : 0;
@@ -2179,7 +2179,7 @@
 		$testimonials = array_column( $testimonials, 'rbfw_dt_sidebar_testimonial_text' );
 		?>
         <div class="rbfw_dt_testimonial">
-            <h4><?php rbfw_string( 'rbfw_text_testimonials', __( 'Testimonials', 'booking-and-rental-manager-for-woocommerce' ) ); ?></h4>
+            <h4><?php rbfw_string( 'rbfw_text_testimonials', esc_html__( 'Testimonials', 'booking-and-rental-manager-for-woocommerce' ) ); ?></h4>
             <div class="owl-carousel owl-theme">
 				<?php
 					foreach ( $testimonials as $value ) {
@@ -2980,10 +2980,10 @@
 	}
 	function rbfw_get_dropdown_new( $name, $saved_value, $class, $dropdown_for ) {
 		if ( $dropdown_for === 'category' ) {
-			$title        = __( 'Rental Type', 'booking-and-rental-manager-for-woocommerce' );
+			$title        = esc_html__( 'Rental Type', 'booking-and-rental-manager-for-woocommerce' );
 			$category_arr = get_rbfw_post_categories_from_meta();
 		} elseif ( $dropdown_for === 'location' ) {
-			$title        = __( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' );
+			$title        = esc_html__( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' );
 			$category_arr = get_rbfw_pickup_data_wp_query();
 		} else {
 			$title        = '';
@@ -3011,7 +3011,7 @@
             <select class="medium" name="rbfw_bike_car_sd_data[<?php echo $iidex ?>][<?php echo $date_type ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
                 <option value="">Select Time</option>
 				<?php foreach ( $rbfw_time_slots as $key => $value ): ?>
-                    <option <?php echo ( date( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo date( 'H:i', strtotime( $value ) ); ?>"> <?php echo date( 'H:i', strtotime( $value ) ); ?> </option>
+                    <option <?php echo esc_html(  date( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo date( 'H:i', strtotime( $value ) ); ?>"> <?php echo date( 'H:i', strtotime( $value ) ); ?> </option>
 				<?php endforeach; ?>
             </select>
         </div>

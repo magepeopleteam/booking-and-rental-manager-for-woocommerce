@@ -21,7 +21,7 @@
 				$sections = array(
 					array(
 						'id'    => 'super_slider_settings',
-						'title' => '<i class="fa-solid fa-sliders"></i>'.__( 'Super Slider Settings', 'booking-and-rental-manager-for-woocommerce' )
+						'title' => '<i class="fa-solid fa-sliders"></i>'.esc_html__( 'Super Slider Settings', 'booking-and-rental-manager-for-woocommerce' )
 					)
 				);
 				return array_merge( $default_sec, $sections );

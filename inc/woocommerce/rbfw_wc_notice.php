@@ -23,7 +23,7 @@ if (!class_exists('Rbfw_Wc_Notice')) {
             $wc_btn = $status->rbfw_wc_btn();
             ?>
             <div class="notice notice-error is-dismissible">
-                <p><strong><?php _e('Please install or activate the WooCommerce plugin. ', 'booking-and-rental-manager-for-woocommerce'); ?></strong><?php echo $wc_btn; ?></p>
+                <p><strong><?php esc_html_e('Please install or activate the WooCommerce plugin. ', 'booking-and-rental-manager-for-woocommerce'); ?></strong><?php echo $wc_btn; ?></p>
             </div>
             <?php
         }

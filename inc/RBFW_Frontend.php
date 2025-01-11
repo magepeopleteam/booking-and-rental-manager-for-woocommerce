@@ -89,7 +89,7 @@
 											$title = $features['title'];
 											if($title){ ?>
 												<li>
-													<span><i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><?php echo mep_esc_html($title); ?></span>
+													<span><i class="<?php echo esc_attr(esc_attr($icon)); ?>"></i><?php echo esc_html($title); ?></span>
 												</li>
 												<?php
 											}

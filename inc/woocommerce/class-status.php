@@ -21,7 +21,7 @@ if (!class_exists('RBFW_Status')) {
 
         public function rbfw_status_submenu(){
 
-            add_submenu_page('edit.php?post_type=rbfw_item', __('Status', 'booking-and-rental-manager-for-woocommerce'), '<span style="color:#13df13">'.__('Status', 'booking-and-rental-manager-for-woocommerce').'</span>', 'manage_options', 'rbfw-status', array($this, 'rbfw_status_page'));
+            add_submenu_page('edit.php?post_type=rbfw_item', esc_html__('Status', 'booking-and-rental-manager-for-woocommerce'), '<span style="color:#13df13">'.esc_html__('Status', 'booking-and-rental-manager-for-woocommerce').'</span>', 'manage_options', 'rbfw-status', array($this, 'rbfw_status_page'));
         }
 
         public function rbfw_wc_btn(){

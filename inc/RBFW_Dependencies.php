@@ -131,10 +131,10 @@
 					)
 				);
 				if ( rbfw_woo_install_check() == 'Yes' ) {
-					$view_more_feature_btn_text = $rbfw->get_option_trans( 'rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __( 'Hide More', 'booking-and-rental-manager-for-woocommerce' ) );
-					$hide_more_feature_btn_text = $rbfw->get_option_trans( 'rbfw_text_hide_more_features', 'rbfw_basic_translation_settings', __( 'Load More', 'booking-and-rental-manager-for-woocommerce' ) );
-					$view_more_offers_btn_text  = $rbfw->get_option_trans( 'rbfw_text_view_more_offers', 'rbfw_basic_translation_settings', __( 'View More Offers', 'booking-and-rental-manager-for-woocommerce' ) );
-					$hide_more_offers_btn_text  = $rbfw->get_option_trans( 'rbfw_text_hide_more_offers', 'rbfw_basic_translation_settings', __( 'Hide More Offers', 'booking-and-rental-manager-for-woocommerce' ) );
+					$view_more_feature_btn_text = $rbfw->get_option_trans( 'rbfw_text_view_more_features', 'rbfw_basic_translation_settings', esc_html__( 'Hide More', 'booking-and-rental-manager-for-woocommerce' ) );
+					$hide_more_feature_btn_text = $rbfw->get_option_trans( 'rbfw_text_hide_more_features', 'rbfw_basic_translation_settings', esc_html__( 'Load More', 'booking-and-rental-manager-for-woocommerce' ) );
+					$view_more_offers_btn_text  = $rbfw->get_option_trans( 'rbfw_text_view_more_offers', 'rbfw_basic_translation_settings', esc_html__( 'View More Offers', 'booking-and-rental-manager-for-woocommerce' ) );
+					$hide_more_offers_btn_text  = $rbfw->get_option_trans( 'rbfw_text_hide_more_offers', 'rbfw_basic_translation_settings', esc_html__( 'Hide More Offers', 'booking-and-rental-manager-for-woocommerce' ) );
 					$version                    = time(); // Time() function will prevent cache
 					wp_enqueue_script( 'jquery' );
 					wp_enqueue_style( 'dashicons' );
@@ -158,9 +158,9 @@
 			public function included_header_script() {
 				?>
                 <script>
-                    let start_of_week = "<?php echo get_option( 'start_of_week' ) ?>";
-                    let wp_date_format = "<?php echo get_option( 'date_format' ) ?>";
-                    let wp_time_format = "<?php echo get_option( 'time_format' ) ?>";
+                    let start_of_week = "<?php echo esc_html((get_option( 'start_of_week' ))) ?>";
+                    let wp_date_format = "<?php echo esc_html(get_option( 'date_format' )) ?>";
+                    let wp_time_format = "<?php echo esc_html(get_option( 'time_format' )) ?>";
                     let js_date_format = 'yy-mm-dd';
                     if (wp_date_format == 'F j, Y') {
                         js_date_format = 'dd M yy';
@@ -173,9 +173,9 @@
                     }
                 </script>
                 <script type="text/javascript">
-                    let rbfw_ajax_url = "<?php echo admin_url( 'admin-ajax.php' ); ?>";
+                    let rbfw_ajax_url = "<?php echo esc_url_raw(admin_url( 'admin-ajax.php' )); ?>";
                     let rbfw_vars = {
-                        rbfw_nonce: "<?php echo wp_create_nonce( 'rbfw_nonce' ) ?>"
+                        rbfw_nonce: "<?php echo esc_html(wp_create_nonce( 'rbfw_nonce' )) ?>"
                     };
                 </script>
 				<?php
@@ -184,7 +184,7 @@
 					$custom_cost = $rbfw->get_option_trans( 'rbfw_custom_css', 'rbfw_custom_style_settings' );
 					?>
                     <style>
-                        <?php echo $custom_cost; ?>
+                        <?php echo esc_html($custom_cost); ?>
                     </style>
 					<?php
 				}

@@ -135,7 +135,7 @@
 
 			public static function translation_settings( $key, $default = '' ) {
 				$options = get_option( 'rbfw_basic_translation_settings' );
-				echo mep_esc_html( self::settings( $options, $key, $default ) );
+				echo esc_html( self::settings( $options, $key, $default ) );
 			}
 
 			//***************************//

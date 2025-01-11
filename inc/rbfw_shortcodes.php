@@ -297,7 +297,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                     <div class="rbfw-lsn-new-message-box-info">
                         <div class="rbfw-lsn-info-tab rbfw-lsn-tip-icon-info" title="error"><i></i></div>
                         <div class="rbfw-lsn-tip-box-info">
-                            <p><?php rbfw_string('rbfw_text_nodatafound',__('Sorry, no data found!','booking-and-rental-manager-for-woocommerce')); ?></p>
+                            <p><?php rbfw_string('rbfw_text_nodatafound',esc_html__('Sorry, no data found!','booking-and-rental-manager-for-woocommerce')); ?></p>
                         </div>
                     </div>
                 </div>
@@ -316,8 +316,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $content .= '<div class="pagination rbfw_pagination" id="rbfw_rent_list_pagination">';
         $content .= paginate_links(array(
             'total' => $query->max_num_pages,
-            'prev_text' => __('« ','booking-and-rental-manager-for-woocommerce'), // Optional: Add previous and next text
-            'next_text' => __(' »','booking-and-rental-manager-for-woocommerce'),
+            'prev_text' => esc_html__('« ','booking-and-rental-manager-for-woocommerce'), // Optional: Add previous and next text
+            'next_text' => esc_html__(' »','booking-and-rental-manager-for-woocommerce'),
         ));
         $content .= '</div>';
     }
@@ -410,7 +410,7 @@ function rbfw_rent_search_shortcode_func() {
     <div class="rbfw_search_form_wrap">
         <form class="rbfw_search_form" action="<?php echo esc_url($search_page_link); ?>" method="GET">
             <div class="rbfw_search_form_col">
-                <label><?php rbfw_string('rbfw_text_pickup_location',__('Pickup Location','booking-and-rental-manager-for-woocommerce')); ?></label>
+                <label><?php rbfw_string('rbfw_text_pickup_location',esc_html__('Pickup Location','booking-and-rental-manager-for-woocommerce')); ?></label>
                 <select name="rbfw_search_location">
                     <?php foreach ( $location_arr as $key => $value ) { ?>
                         <option value="<?php echo esc_attr($key); ?>" <?php if($location == $key){ echo 'selected'; }?>><?php echo esc_html($value); ?></option>
@@ -419,7 +419,7 @@ function rbfw_rent_search_shortcode_func() {
             </div>
             <div class="rbfw_search_form_col">
                 <label></label>
-                <button type="submit" name="rbfw_search_submit" class="rbfw_search_submit"><?php rbfw_string('rbfw_text_search',__('Search','booking-and-rental-manager-for-woocommerce')); ?></button>
+                <button type="submit" name="rbfw_search_submit" class="rbfw_search_submit"><?php rbfw_string('rbfw_text_search',esc_html__('Search','booking-and-rental-manager-for-woocommerce')); ?></button>
             </div>
         </form>
     </div>
