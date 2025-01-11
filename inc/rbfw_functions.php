@@ -144,17 +144,17 @@
 	}
 	function rbfw_create_tag_taxonomy() {
 		$labels = array(
-			'name'              => _x( 'Tags', 'dora' ),
-			'singular_name'     => _x( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
-			'search_items'      => __( 'Search Tags' ),
-			'all_items'         => __( 'All Tags' ),
-			'parent_item'       => __( 'Parent Tag' ),
-			'parent_item_colon' => __( 'Parent Tag:' ),
-			'edit_item'         => __( 'Edit Tag' ),
-			'update_item'       => __( 'Update Tag' ),
-			'add_new_item'      => __( 'Add New Tag' ),
-			'new_item_name'     => __( 'New Tag Name' ),
-			'menu_name'         => __( 'Tags' ),
+			'name'              => __( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
+			'singular_name'     => __( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
+			'search_items'      => __( 'Search Tags','booking-and-rental-manager-for-woocommerce'),
+			'all_items'         => __( 'All Tags','booking-and-rental-manager-for-woocommerce' ),
+			'parent_item'       => __( 'Parent Tag','booking-and-rental-manager-for-woocommerce' ),
+			'parent_item_colon' => __( 'Parent Tag:','booking-and-rental-manager-for-woocommerce' ),
+			'edit_item'         => __( 'Edit Tag','booking-and-rental-manager-for-woocommerce' ),
+			'update_item'       => __( 'Update Tag','booking-and-rental-manager-for-woocommerce' ),
+			'add_new_item'      => __( 'Add New Tag','booking-and-rental-manager-for-woocommerce' ),
+			'new_item_name'     => __( 'New Tag Name','booking-and-rental-manager-for-woocommerce' ),
+			'menu_name'         => __( 'Tags','booking-and-rental-manager-for-woocommerce' ),
 		);
 // 		register_taxonomy( 'rbfw_item_tag', array( 'rbfw_item' ), array(
 // 			'hierarchical'      => false,
@@ -1037,7 +1037,7 @@
 			array(
 				'name'    => 'rbfw_payment_system',
 				'label'   => __( 'Payment System', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'Desc', 'booking-and-rental-manager-for-woocommerce' ),
 				'class'   => 'rbfw_payment_system',
 				'type'    => 'select',
 				'default' => 'wps',
@@ -1117,7 +1117,7 @@
 			array(
 				'name'    => 'rbfw_mps_payment_gateway',
 				'label'   => __( 'Payment Gateway', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'multicheck',
 				'default' => 'offline',
 				'options' => rbfw_get_payment_gateways()
@@ -1125,7 +1125,7 @@
 			array(
 				'name'    => 'rbfw_wps_add_to_cart_redirect',
 				'label'   => __( 'Added to cart redirect to', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => __( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'select',
 				'default' => 'checkout',
 				'options' => array(
@@ -1140,7 +1140,7 @@
 // Update Settings On Register the Plugin
 // Check pro plugin active
 	function rbfw_check_pro_active() {
-		if ( is_plugin_active( 'booking-and-rental-manager-for-woocommerce-pro/rent-pro.php' ) ) {
+		if ( is_plugin_active( 'booking-and-rental-manager-for-woocommerce/rent-pro.php' ) ) {
 			return true;
 		} else {
 			return false;

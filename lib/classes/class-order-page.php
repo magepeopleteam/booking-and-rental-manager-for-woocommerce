@@ -104,7 +104,7 @@ if (!class_exists('RBFWOrderPage')) {
                         document.querySelectorAll('.pro-overlay').forEach(function(button) {
                             button.addEventListener('click', function(event) {
                                 event.preventDefault(); // Prevent default link behavior
-                                window.open('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/', '_blank');
+                                window.open('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/', '_blank');
                             });
                         });
                     </script>

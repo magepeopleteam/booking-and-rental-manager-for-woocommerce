@@ -97,19 +97,19 @@
 
     function mp_rbfw_form_place(parentTr, qty) {
         let target_tr = parentTr.next('tr');
-        let target_form = target_tr.find('.rbfw-pro-user-reg-form');
+        let target_form = target_tr.find('.booking-and-rental-manager-for-woocommerce-user-reg-form');
         let formLength=target_form.length;
         if (qty > 0) {
             if (formLength !== qty) {
                 let ticket_type = parentTr.find('[data-ticket-type-name]').attr('data-ticket-type-name');
                 if (formLength > qty) {
                     for (let i=formLength;i>qty;i--) {
-                        target_tr.find('.rbfw-pro-user-reg-form:last-child').slideUp(250).remove();
+                        target_tr.find('.booking-and-rental-manager-for-woocommerce-user-reg-form:last-child').slideUp(250).remove();
                     }
                 } else {
                     let form_copy = $('[data-form-type="' + ticket_type + '"]').html();
                     for (let i=formLength;i<qty;i++) {
-                        target_tr.find('td').append(form_copy).find('.rbfw-pro-user-reg-form:last-child').slideDown(250).find('h5.rbfw_default_widget_title strong').html(i+1);
+                        target_tr.find('td').append(form_copy).find('.booking-and-rental-manager-for-woocommerce-user-reg-form:last-child').slideDown(250).find('h5.rbfw_default_widget_title strong').html(i+1);
                     }
                 }
             }

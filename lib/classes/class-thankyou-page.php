@@ -291,8 +291,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                                 foreach ($rent_info as $key => $value) {
                                                     ?>
                                                     <tr>
-                                                        <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                        <td><?php echo $value;?></td>
+                                                        <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                        <td><?php echo esc_html($value);?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -312,8 +312,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                                 foreach ($rent_info as $key => $value) {
                                                     ?>
                                                     <tr>
-                                                        <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                        <td><?php echo $value; ?></td>
+                                                        <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                        <td><?php echo esc_html($value); ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -333,8 +333,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                                 foreach ($service_info as $key => $value) {
                                                     ?>
                                                     <tr>
-                                                        <td><strong><?php echo $key; ?></strong></td>
-                                                        <td><?php echo $value; ?></td>
+                                                        <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                        <td><?php echo esc_html($value); ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -345,8 +345,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                                 foreach ($service_info as $key => $value) {
                                                     ?>
                                                     <tr>
-                                                        <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                        <td><?php echo $value; ?></td>
+                                                        <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                        <td><?php echo esc_html($value); ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -357,8 +357,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                                 foreach ($service_info as $key => $value) {
                                                     ?>
                                                     <tr>
-                                                        <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                        <td><?php echo $value; ?></td>
+                                                        <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                        <td><?php echo esc_html($value); ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -384,7 +384,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                                 $value = '<a href="'.esc_url($value).'" target="_blank" style="text-decoration:underline">'.esc_html__('View File','booking-and-rental-manager-for-woocommerce').'</a>';
                                             }
                                             ?>
-                                            <li><?php echo $label; ?>: <?php echo $value; ?></li>
+                                            <li><?php echo esc_html($label); ?>: <?php echo esc_html($value); ?></li>
                                             <?php
                                         }
                                         ?>
@@ -413,28 +413,28 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                 <?php if(!empty($item_quantity)){ ?>
                                 <tr>
                                     <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
-                                    <td><?php echo $item_quantity; ?></td>
+                                    <td><?php echo esc_html($item_quantity); ?></td>
                                 </tr>
                                 <?php } ?>
                                 <tr>
                                     <td><strong><?php rbfw_string('rbfw_text_duration_cost',__('Duration Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                                    <td><?php echo $duration_cost; ?></td>
+                                    <td><?php echo esc_html($duration_cost); ?></td>
                                 </tr>
                                 <tr>
                                     <td><strong><?php rbfw_string('rbfw_text_resource_cost',__('Resource Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                                    <td><?php echo $service_cost; ?></td>
+                                    <td><?php echo esc_html($service_cost); ?></td>
                                 </tr>
                                 <?php if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($tax)){ ?>
                                 <tr>
                                     <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
-                                    <td><?php echo $tax; ?></td>
+                                    <td><?php echo esc_html($tax); ?></td>
                                 </tr>
                                 <?php } ?>
 
                                 <?php if(!empty($discount_amount)){ ?>
                                 <tr>
                                     <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
-                                    <td><?php echo $discount_amount; ?></td>
+                                    <td><?php echo esc_html($discount_amount); ?></td>
                                 </tr>
                                 <?php } ?>
 
@@ -602,8 +602,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                         foreach ($rent_info as $key => $value) {
                                             ?>
                                             <tr>
-                                                <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                <td><?php echo $value;?></td>
+                                                <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                <td><?php echo esc_html($value);?></td>
                                             </tr>
                                             <?php
                                         }
@@ -623,8 +623,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                         foreach ($rent_info as $key => $value) {
                                             ?>
                                             <tr>
-                                                <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                <td><?php echo $value; ?></td>
+                                                <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                <td><?php echo esc_html($value); ?></td>
                                             </tr>
                                             <?php
                                         }
@@ -644,8 +644,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                         foreach ($service_info as $key => $value) {
                                             ?>
                                             <tr>
-                                                <td><strong><?php echo $key; ?></strong></td>
-                                                <td><?php echo $value; ?></td>
+                                                <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                <td><?php echo esc_html($value); ?></td>
                                             </tr>
                                             <?php
                                         }
@@ -656,8 +656,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                         foreach ($service_info as $key => $value) {
                                             ?>
                                             <tr>
-                                                <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                <td><?php echo $value; ?></td>
+                                                <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                <td><?php echo esc_html($value); ?></td>
                                             </tr>
                                             <?php
                                         }
@@ -668,8 +668,8 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                         foreach ($service_info as $key => $value) {
                                             ?>
                                             <tr>
-                                                <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                <td><?php echo $value; ?></td>
+                                                <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                <td><?php echo esc_html($value); ?></td>
                                             </tr>
                                             <?php
                                         }
@@ -695,7 +695,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                                         $value = '<a href="'.esc_url($value).'" target="_blank" style="text-decoration:underline">'.esc_html__('View File','booking-and-rental-manager-for-woocommerce').'</a>';
                                     }
                                     ?>
-                                    <li><?php echo $label; ?>: <?php echo $value; ?></li>
+                                    <li><?php echo esc_html($label); ?>: <?php echo esc_html($value); ?></li>
                                     <?php
                                 }
                                 ?>
@@ -724,18 +724,18 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         <?php if(!empty($item_quantity)){ ?>
                         <tr>
                             <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
-                            <td><?php echo $item_quantity; ?></td>
+                            <td><?php echo esc_html($item_quantity); ?></td>
                         </tr>
                         <?php } ?>
 
 
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_duration_cost',__('Duration Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                            <td><?php echo $duration_cost; ?></td>
+                            <td><?php echo esc_html($duration_cost); ?></td>
                         </tr>
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_resource_cost',__('Resource Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                            <td><?php echo $service_cost; ?></td>
+                            <td><?php echo esc_html($service_cost); ?></td>
                         </tr>
                         <?php if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($tax)){ ?>
                         <tr>
@@ -746,12 +746,12 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         <?php if(!empty($discount_amount)){ ?>
                         <tr>
                             <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
-                            <td><?php echo $discount_amount; ?></td>
+                            <td><?php echo esc_html($discount_amount); ?></td>
                         </tr>
                         <?php } ?>
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_total_cost',__('Total Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                            <td><?php echo $total_cost.' '.$tax_status; ?></td>
+                            <td><?php echo esc_html($total_cost.' '.$tax_status); ?></td>
                         </tr>
                     </tbody>
                 </table>

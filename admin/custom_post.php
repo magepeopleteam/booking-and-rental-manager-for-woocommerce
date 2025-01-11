@@ -24,7 +24,7 @@ if( ! class_exists('RBFW_Custom_Post')){
         public function rbfw_cpt_custom_column($columns,$post_id){
             switch($columns){
                 case 'rbfw_item_type':
-                    $rbfw_item_type = esc_html__(get_post_meta($post_id,'rbfw_item_type',true));
+                    $rbfw_item_type = get_post_meta($post_id,'rbfw_item_type',true);
                     $item_type = [
 						'bike_car_sd' => 'Bike/Car for single day',
 						'bike_car_md' => 'Bike/Car for multiple day',
@@ -35,16 +35,16 @@ if( ! class_exists('RBFW_Custom_Post')){
 						'others' => 'Others',
 					];
                     foreach($item_type as $kay => $value):
-                        echo __(($kay==$rbfw_item_type)?$value:'');
+                        echo $kay==$rbfw_item_type ? esc_html($value) : '';
                     endforeach;
                 break;
                 case 'rbfw_categories':
                     $cats = get_post_meta($post_id,'rbfw_categories',true);
                     if ( ! empty($cats) ) {
                         foreach ($cats as $key => $cat) {
-                            echo __("<a href='edit.php?post_type=rbfw_item&rbfw_categories=".$cat."'>".$cat."</a>");
+                            echo "<a href='edit.php?post_type=rbfw_item&rbfw_categories=".esc_attr($cat)."'>".esc_html($cat)."</a>";
                             if ($key !== count($cats) - 1) {
-                                echo __(', ');
+                                echo ', ';
                             }
                         }
                     }
@@ -71,33 +71,33 @@ if( ! class_exists('RBFW_Custom_Post')){
                 $editor = false;
             }
             $labels = array(
-                        'name'                  => __($cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'singular_name'         => __($cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'menu_name'             => __($cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'name_admin_bar'        => __($cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'archives'              => __($cpt_label . ' List', 'booking-and-rental-manager-for-woocommerce'),
-                        'attributes'            => __($cpt_label . ' List', 'booking-and-rental-manager-for-woocommerce'),
-                        'parent_item_colon'     => __($cpt_label . ' Item:', 'booking-and-rental-manager-for-woocommerce'),
-                        'all_items'             => __('All Items', 'booking-and-rental-manager-for-woocommerce'),
-                        'add_new_item'          => __('Add New Item', 'booking-and-rental-manager-for-woocommerce'),
-                        'add_new'               => __('Add New Item', 'booking-and-rental-manager-for-woocommerce'),
-                        'new_item'              => __('New Item' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'edit_item'             => __('Edit ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'update_item'           => __('Update ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'view_item'             => __('View ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'view_items'            => __('View ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'search_items'          => __('Search ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'not_found'             => __($cpt_label . ' Not found', 'booking-and-rental-manager-for-woocommerce'),
-                        'not_found_in_trash'    => __($cpt_label . ' Not found in Trash', 'booking-and-rental-manager-for-woocommerce'),
-                        'featured_image'        => __($cpt_label . ' Featured Image', 'booking-and-rental-manager-for-woocommerce'),
-                        'set_featured_image'    => __('Set ' . $cpt_label . ' featured image', 'booking-and-rental-manager-for-woocommerce'),
-                        'remove_featured_image' => __('Remove ' . $cpt_label . ' featured image', 'booking-and-rental-manager-for-woocommerce'),
-                        'use_featured_image'    => __('Use as ' . $cpt_label . ' featured image', 'booking-and-rental-manager-for-woocommerce'),
-                        'insert_into_item'      => __('Insert into ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'uploaded_to_this_item' => __('Uploaded to this ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'items_list'            => __($cpt_label . ' list', 'booking-and-rental-manager-for-woocommerce'),
-                        'items_list_navigation' => __($cpt_label . ' list navigation', 'booking-and-rental-manager-for-woocommerce'),
-                        'filter_items_list'     => __('Filter ' . $cpt_label . ' list', 'booking-and-rental-manager-for-woocommerce'),
+                        'name'                  => $cpt_label,
+                        'singular_name'         => $cpt_label,
+                        'menu_name'             => $cpt_label,
+                        'name_admin_bar'        => $cpt_label,
+                        'archives'              => $cpt_label . esc_html__(' List', 'booking-and-rental-manager-for-woocommerce'),
+                        'attributes'            => $cpt_label . esc_html__(' List', 'booking-and-rental-manager-for-woocommerce'),
+                        'parent_item_colon'     => $cpt_label . esc_html__(' Item:', 'booking-and-rental-manager-for-woocommerce'),
+                        'all_items'             => esc_html__('All Items', 'booking-and-rental-manager-for-woocommerce'),
+                        'add_new_item'          => esc_html__('Add New Item', 'booking-and-rental-manager-for-woocommerce'),
+                        'add_new'               => esc_html__('Add New Item', 'booking-and-rental-manager-for-woocommerce'),
+                        'new_item'              => esc_html__('New Item ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'edit_item'             => esc_html__('Edit ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'update_item'           => esc_html__('Update ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'view_item'             => esc_html__('View ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'view_items'            => esc_html__('View ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'search_items'          => esc_html__('Search ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'not_found'             => $cpt_label . esc_html__(' Not found', 'booking-and-rental-manager-for-woocommerce'),
+                        'not_found_in_trash'    => $cpt_label . esc_html__(' Not found in Trash', 'booking-and-rental-manager-for-woocommerce'),
+                        'featured_image'        => $cpt_label . esc_html__(' Featured Image', 'booking-and-rental-manager-for-woocommerce'),
+                        'set_featured_image'    => esc_html__('Set ','booking-and-rental-manager-for-woocommerce'). $cpt_label . esc_html__(' featured image', 'booking-and-rental-manager-for-woocommerce'),
+                        'remove_featured_image' => esc_html__('Remove ','booking-and-rental-manager-for-woocommerce') . $cpt_label . esc_html__(' featured image', 'booking-and-rental-manager-for-woocommerce'),
+                        'use_featured_image'    => esc_html__('Use as ','booking-and-rental-manager-for-woocommerce'). $cpt_label . esc_html__(' featured image', 'booking-and-rental-manager-for-woocommerce'),
+                        'insert_into_item'      => esc_html__('Insert into ','booking-and-rental-manager-for-woocommerce') . $cpt_label,
+                        'uploaded_to_this_item' => esc_html__('Uploaded to this ','booking-and-rental-manager-for-woocommerce') . $cpt_label,
+                        'items_list'            => $cpt_label . esc_html__(' list', 'booking-and-rental-manager-for-woocommerce'),
+                        'items_list_navigation' => $cpt_label . esc_html__(' list navigation', 'booking-and-rental-manager-for-woocommerce'),
+                        'filter_items_list'     => esc_html__('Filter ','booking-and-rental-manager-for-woocommerce') . $cpt_label . esc_html__(' list', 'booking-and-rental-manager-for-woocommerce'),
                     );
 
                 $args = array(
@@ -114,33 +114,33 @@ if( ! class_exists('RBFW_Custom_Post')){
 
 
                 $labels = array(
-                    'name'                  => __('Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'singular_name'         => __('Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'menu_name'             => __('Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'name_admin_bar'        => __('Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'archives'              => __('Order List', 'booking-and-rental-manager-for-woocommerce'),
-                    'attributes'            => __('Order List', 'booking-and-rental-manager-for-woocommerce'),
-                    'parent_item_colon'     => __('Order Item:', 'booking-and-rental-manager-for-woocommerce'),
-                    'all_items'             => __('All Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'add_new_item'          => __('Add New Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'add_new'               => __('Add New Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'new_item'              => __('New Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'edit_item'             => __('Edit Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'update_item'           => __('Update Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'view_item'             => __('View Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'view_items'            => __('View Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'search_items'          => __('Search Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'not_found'             => __('Order Not found', 'booking-and-rental-manager-for-woocommerce'),
-                    'not_found_in_trash'    => __('Order Not found in Trash', 'booking-and-rental-manager-for-woocommerce'),
-                    'featured_image'        => __('Order Feature Image', 'booking-and-rental-manager-for-woocommerce'),
-                    'set_featured_image'    => __('Set Order featured image', 'booking-and-rental-manager-for-woocommerce'),
-                    'remove_featured_image' => __('Remove Order eatured image', 'booking-and-rental-manager-for-woocommerce'),
-                    'use_featured_image'    => __('Use as Order featured image', 'booking-and-rental-manager-for-woocommerce'),
-                    'insert_into_item'      => __('Insert into Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'uploaded_to_this_item' => __('Uploaded to this Order', 'booking-and-rental-manager-for-woocommerce'),
-                    'items_list'            => __('Order list', 'booking-and-rental-manager-for-woocommerce'),
-                    'items_list_navigation' => __('Order list navigation', 'booking-and-rental-manager-for-woocommerce'),
-                    'filter_items_list'     => __('Filter Order list', 'booking-and-rental-manager-for-woocommerce'),
+                    'name'                  => esc_html__('Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'singular_name'         => esc_html__('Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'menu_name'             => esc_html__('Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'name_admin_bar'        => esc_html__('Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'archives'              => esc_html__('Order List', 'booking-and-rental-manager-for-woocommerce'),
+                    'attributes'            => esc_html__('Order List', 'booking-and-rental-manager-for-woocommerce'),
+                    'parent_item_colon'     => esc_html__('Order Item:', 'booking-and-rental-manager-for-woocommerce'),
+                    'all_items'             => esc_html__('All Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'add_new_item'          => esc_html__('Add New Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'add_new'               => esc_html__('Add New Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'new_item'              => esc_html__('New Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'edit_item'             => esc_html__('Edit Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'update_item'           => esc_html__('Update Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'view_item'             => esc_html__('View Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'view_items'            => esc_html__('View Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'search_items'          => esc_html__('Search Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'not_found'             => esc_html__('Order Not found', 'booking-and-rental-manager-for-woocommerce'),
+                    'not_found_in_trash'    => esc_html__('Order Not found in Trash', 'booking-and-rental-manager-for-woocommerce'),
+                    'featured_image'        => esc_html__('Order Feature Image', 'booking-and-rental-manager-for-woocommerce'),
+                    'set_featured_image'    => esc_html__('Set Order featured image', 'booking-and-rental-manager-for-woocommerce'),
+                    'remove_featured_image' => esc_html__('Remove Order eatured image', 'booking-and-rental-manager-for-woocommerce'),
+                    'use_featured_image'    => esc_html__('Use as Order featured image', 'booking-and-rental-manager-for-woocommerce'),
+                    'insert_into_item'      => esc_html__('Insert into Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'uploaded_to_this_item' => esc_html__('Uploaded to this Order', 'booking-and-rental-manager-for-woocommerce'),
+                    'items_list'            => esc_html__('Order list', 'booking-and-rental-manager-for-woocommerce'),
+                    'items_list_navigation' => esc_html__('Order list navigation', 'booking-and-rental-manager-for-woocommerce'),
+                    'filter_items_list'     => esc_html__('Filter Order list', 'booking-and-rental-manager-for-woocommerce'),
                 );
                 
                 $args = array(
@@ -161,33 +161,33 @@ if( ! class_exists('RBFW_Custom_Post')){
                 register_post_type('rbfw_order', $args);    
 
                 $labels = array(
-                    'name'                  => __('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'singular_name'         => __('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'menu_name'             => __('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'name_admin_bar'        => __('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'archives'              => __('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'attributes'            => __('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'parent_item_colon'     => __('Order Meta Item:', 'booking-and-rental-manager-for-woocommerce'),
-                    'all_items'             => __('All Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'add_new_item'          => __('Add New Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'add_new'               => __('Add New Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'new_item'              => __('New Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'edit_item'             => __('Edit Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'update_item'           => __('Update Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'view_item'             => __('View Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'view_items'            => __('View Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'search_items'          => __('Search Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'not_found'             => __('Order Meta Not found', 'booking-and-rental-manager-for-woocommerce'),
-                    'not_found_in_trash'    => __('Order Meta Not found in Trash', 'booking-and-rental-manager-for-woocommerce'),
-                    'featured_image'        => __('Order Meta Featured Image', 'booking-and-rental-manager-for-woocommerce'),
-                    'set_featured_image'    => __('Set Order Meta featured image', 'booking-and-rental-manager-for-woocommerce'),
-                    'remove_featured_image' => __('Remove Order Meta featured image', 'booking-and-rental-manager-for-woocommerce'),
-                    'use_featured_image'    => __('Use as Order Meta featured image', 'booking-and-rental-manager-for-woocommerce'),
-                    'insert_into_item'      => __('Insert into Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'uploaded_to_this_item' => __('Uploaded to this Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'items_list'            => __('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
-                    'items_list_navigation' => __('Order Meta navigation', 'booking-and-rental-manager-for-woocommerce'),
-                    'filter_items_list'     => __('Filter Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'name'                  => esc_html__('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'singular_name'         => esc_html__('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'menu_name'             => esc_html__('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'name_admin_bar'        => esc_html__('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'archives'              => esc_html__('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'attributes'            => esc_html__('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'parent_item_colon'     => esc_html__('Order Meta Item:', 'booking-and-rental-manager-for-woocommerce'),
+                    'all_items'             => esc_html__('All Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'add_new_item'          => esc_html__('Add New Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'add_new'               => esc_html__('Add New Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'new_item'              => esc_html__('New Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'edit_item'             => esc_html__('Edit Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'update_item'           => esc_html__('Update Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'view_item'             => esc_html__('View Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'view_items'            => esc_html__('View Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'search_items'          => esc_html__('Search Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'not_found'             => esc_html__('Order Meta Not found', 'booking-and-rental-manager-for-woocommerce'),
+                    'not_found_in_trash'    => esc_html__('Order Meta Not found in Trash', 'booking-and-rental-manager-for-woocommerce'),
+                    'featured_image'        => esc_html__('Order Meta Featured Image', 'booking-and-rental-manager-for-woocommerce'),
+                    'set_featured_image'    => esc_html__('Set Order Meta featured image', 'booking-and-rental-manager-for-woocommerce'),
+                    'remove_featured_image' => esc_html__('Remove Order Meta featured image', 'booking-and-rental-manager-for-woocommerce'),
+                    'use_featured_image'    => esc_html__('Use as Order Meta featured image', 'booking-and-rental-manager-for-woocommerce'),
+                    'insert_into_item'      => esc_html__('Insert into Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'uploaded_to_this_item' => esc_html__('Uploaded to this Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'items_list'            => esc_html__('Order Meta', 'booking-and-rental-manager-for-woocommerce'),
+                    'items_list_navigation' => esc_html__('Order Meta navigation', 'booking-and-rental-manager-for-woocommerce'),
+                    'filter_items_list'     => esc_html__('Filter Order Meta', 'booking-and-rental-manager-for-woocommerce'),
                 );
                 
                 $args = array(

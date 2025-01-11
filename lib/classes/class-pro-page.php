@@ -29,7 +29,7 @@ if (!class_exists('RBFWProPage')) {
                             <li><span class="dashicons dashicons-saved"></span><?php esc_html_e('Export Reports as CSV Format.','booking-and-rental-manager-for-woocommerce'); ?></li>
                             <li><span class="dashicons dashicons-saved"></span><?php esc_html_e('Booking Calender.','booking-and-rental-manager-for-woocommerce'); ?></li>
                         </ul>
-                        <a href="<?php echo esc_url('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/'); ?>" class="rbfw_go_pro_btn1"><?php esc_html_e('Buy Pro','booking-and-rental-manager-for-woocommerce'); ?></a>
+                        <a href="<?php echo esc_url('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/'); ?>" class="rbfw_go_pro_btn1"><?php esc_html_e('Buy Pro','booking-and-rental-manager-for-woocommerce'); ?></a>
                         <a href="<?php echo esc_url('https://booking.mage-people.com/'); ?>" class="rbfw_go_pro_btn2"><?php esc_html_e('View Demo','booking-and-rental-manager-for-woocommerce'); ?></a>
                         <a href="<?php echo esc_url('https://docs.mage-people.com/rent-and-booking-manager/'); ?>" class="rbfw_go_pro_btn3"><?php esc_html_e('Documentation','booking-and-rental-manager-for-woocommerce'); ?></a>
                     </div>
@@ -75,7 +75,7 @@ if (!class_exists('RBFWProPage')) {
                         </div>
                     </div>
                     <div class="rbfw_go_pro_review_row">
-                        <a href="<?php echo esc_url('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/'); ?>" class="rbfw_go_pro_btn1"><?php esc_html_e('Download PRO Version Now','booking-and-rental-manager-for-woocommerce'); ?></a>
+                        <a href="<?php echo esc_url('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/'); ?>" class="rbfw_go_pro_btn1"><?php esc_html_e('Download PRO Version Now','booking-and-rental-manager-for-woocommerce'); ?></a>
                     </div>
                    
                 </div>

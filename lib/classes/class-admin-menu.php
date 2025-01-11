@@ -37,7 +37,7 @@
 				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ), __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_settings_page', array( $this, 'plugin_page' ) );
 				do_action( 'rbfw_admin_menu_after_settings' );
 				// If PRO plugin is activated
-				if ( ! is_plugin_active( 'booking-and-rental-manager-for-woocommerce-pro/rent-pro.php' ) ) {
+				if ( ! is_plugin_active( 'booking-and-rental-manager-for-woocommerce/rent-pro.php' ) ) {
 					/* Add Pro Submenu */
 					add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Get PRO', 'booking-and-rental-manager-for-woocommerce' ), '<span class="rbfw_plugin_pro_menu">' . __( 'Get PRO', 'booking-and-rental-manager-for-woocommerce' ) . '</span>', 'manage_options', 'rbfw_go_pro_page', array( $this, 'rbfw_go_pro_page' ) );
 				}
@@ -145,21 +145,21 @@
                                             <span class="mp_zero" data-icon></span>
                                             <span class="mp_zero" data-text>1</span>
                                         </h4>
-                                        <h6 class="circleTitle" data-class><?php esc_html_e( 'Welcome', 'tour-booking-manager' ); ?></h6>
+                                        <h6 class="circleTitle" data-class><?php esc_html_e( 'Welcome', 'booking-and-rental-manager-for-woocommerce' ); ?></h6>
                                     </div>
                                     <div data-tabs-target-next="#ttbm_qs_general" class="tabItemNext" data-open-text="2" data-close-text="" data-open-icon="" data-close-icon="fas fa-check" data-add-class="success">
                                         <h4 class="circleIcon" data-class>
                                             <span class="mp_zero" data-icon></span>
                                             <span class="mp_zero" data-text>2</span>
                                         </h4>
-                                        <h6 class="circleTitle" data-class><?php esc_html_e( 'General', 'tour-booking-manager' ); ?></h6>
+                                        <h6 class="circleTitle" data-class><?php esc_html_e( 'General', 'booking-and-rental-manager-for-woocommerce' ); ?></h6>
                                     </div>
                                     <div data-tabs-target-next="#ttbm_qs_done" class="tabItemNext" data-open-text="3" data-close-text="" data-open-icon="" data-close-icon="fas fa-check" data-add-class="success">
                                         <h4 class="circleIcon" data-class>
                                             <span class="mp_zero" data-icon></span>
                                             <span class="mp_zero" data-text>3</span>
                                         </h4>
-                                        <h6 class="circleTitle" data-class><?php esc_html_e( 'Done', 'tour-booking-manager' ); ?></h6>
+                                        <h6 class="circleTitle" data-class><?php esc_html_e( 'Done', 'booking-and-rental-manager-for-woocommerce' ); ?></h6>
                                     </div>
                                 </div>
                                 <div class="tabsContentNext _infoLayout_mT">
@@ -172,11 +172,11 @@
 								<?php if ( $woo_status == 'Yes' ) { ?>
                                     <div class="justifyBetween">
                                         <button type="button" class="mpBtn nextTab_prev">
-                                            <span>&longleftarrow;<?php esc_html_e( 'Previous', 'tour-booking-manager' ); ?></span>
+                                            <span>&longleftarrow;<?php esc_html_e( 'Previous', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                         </button>
                                         <div></div>
                                         <button type="button" class="themeButton nextTab_next">
-                                            <span><?php esc_html_e( 'Next', 'tour-booking-manager' ); ?>&longrightarrow;</span>
+                                            <span><?php esc_html_e( 'Next', 'booking-and-rental-manager-for-woocommerce' ); ?>&longrightarrow;</span>
                                         </button>
                                     </div>
 								<?php } ?>
@@ -191,16 +191,16 @@
 				$woo_status = rbfw_woo_install_check();
 				?>
                 <div data-tabs-next="#ttbm_qs_welcome">
-                    <h2><?php esc_html_e( 'Tour Booking Manager For Woocommerce Plugin', 'tour-booking-manager' ); ?></h2>
-                    <p class="mTB_xs"><?php esc_html_e( 'Thanks for choosing Tour Booking Manager Plugin for WooCommerce for your site, Please go step by step and choose some options to get started.', 'tour-booking-manager' ); ?></p>
+                    <h2><?php esc_html_e( 'Tour Booking Manager For Woocommerce Plugin', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                    <p class="mTB_xs"><?php esc_html_e( 'Thanks for choosing Tour Booking Manager Plugin for WooCommerce for your site, Please go step by step and choose some options to get started.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     <div class="_dLayout_mT_alignCenter justifyBetween">
                         <h5>
 							<?php if ( $woo_status == 'Yes' ) {
-								esc_html_e( 'Woocommerce already installed and activated', 'tour-booking-manager' );
+								esc_html_e( 'Woocommerce already installed and activated', 'booking-and-rental-manager-for-woocommerce' );
 							} elseif ( $woo_status == 'No' ) {
-								esc_html_e( 'Woocommerce need to install and active', 'tour-booking-manager' );
+								esc_html_e( 'Woocommerce need to install and active', 'booking-and-rental-manager-for-woocommerce' );
 							} else {
-								esc_html_e( 'Woocommerce already install , please activate it', 'tour-booking-manager' );
+								esc_html_e( 'Woocommerce already install , please activate it', 'booking-and-rental-manager-for-woocommerce' );
 							} ?>
                         </h5>
 						<?php if ( $woo_status == 'Yes' ) { ?>
@@ -208,14 +208,14 @@
                                 <span class="fas fa-check-circle textSuccess"></span>
                             </h5>
 						<?php } elseif ( $woo_status == 'No' ) { ?>
-                            <button class="warningButton" type="submit" name="install_and_active_woo_btn"><?php esc_html_e( 'Install & Active Now', 'tour-booking-manager' ); ?></button>
+                            <button class="warningButton" type="submit" name="install_and_active_woo_btn"><?php esc_html_e( 'Install & Active Now', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 						<?php } else { ?>
-                            <button class="themeButton" type="submit" name="active_woo_btn"><?php esc_html_e( 'Active Now', 'tour-booking-manager' ); ?></button>
+                            <button class="themeButton" type="submit" name="active_woo_btn"><?php esc_html_e( 'Active Now', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 						<?php } ?>
                     </div>
 					<?php if ( $woo_status != 'Yes' ) { ?>
                         <div class='mep_seup_exit_sec'>
-                            <button style='margin:10px auto;' class="warningButton" type="submit" name="ttbm_skip_quick_setup"><?php _e( 'Skip, Go to Dashboard' ) ?></button>
+                            <button style='margin:10px auto;' class="warningButton" type="submit" name="ttbm_skip_quick_setup"><?php _e( 'Skip, Go to Dashboard','booking-and-rental-manager-for-woocommerce') ?></button>
                         </div>
 					<?php } ?>
                 </div>
@@ -228,25 +228,25 @@
 				?>
                 <div data-tabs-next="#ttbm_qs_general">
                     <div class="section">
-                        <h2><?php esc_html_e( 'General settings', 'tour-booking-manager' ); ?></h2>
-                        <p class="mTB_xs"><?php esc_html_e( 'Choose some general option.', 'tour-booking-manager' ); ?></p>
+                        <h2><?php esc_html_e( 'General settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                        <p class="mTB_xs"><?php esc_html_e( 'Choose some general option.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         <div class="_dLayout_mT">
                             <label class="fullWidth">
-                                <span class="min_200"><?php esc_html_e( 'Tour Label:', 'tour-booking-manager' ); ?></span>
+                                <span class="min_200"><?php esc_html_e( 'Tour Label:', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                 <input type="text" class="formControl" name="ttbm_travel_label" value='<?php echo esc_attr( $label ); ?>'/>
                             </label>
                             <i class="info_text">
                                 <span class="fas fa-info-circle"></span>
-								<?php esc_html_e( 'It will change the Tour post type label on the entire plugin.', 'tour-booking-manager' ); ?>
+								<?php esc_html_e( 'It will change the Tour post type label on the entire plugin.', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </i>
                             <div class="divider"></div>
                             <label class="fullWidth">
-                                <span class="min_200"><?php esc_html_e( 'Tour Slug:', 'tour-booking-manager' ); ?></span>
+                                <span class="min_200"><?php esc_html_e( 'Tour Slug:', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                 <input type="text" class="formControl" name="ttbm_travel_slug" value='<?php echo esc_attr( $slug ); ?>'/>
                             </label>
                             <i class="info_text">
                                 <span class="fas fa-info-circle"></span>
-								<?php esc_html_e( 'It will change the Tour slug on the entire plugin. Remember after changing this slug you need to flush permalinks. Just go to Settings->Permalinks hit the Save Settings button', 'tour-booking-manager' ); ?>
+								<?php esc_html_e( 'It will change the Tour slug on the entire plugin. Remember after changing this slug you need to flush permalinks. Just go to Settings->Permalinks hit the Save Settings button', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </i>
                         </div>
                     </div>
@@ -257,10 +257,10 @@
 			public function setup_content_done() {
 				?>
                 <div data-tabs-next="#ttbm_qs_done">
-                    <h2><?php esc_html_e( 'Finalize Setup', 'tour-booking-manager' ); ?></h2>
-                    <p class="mTB_xs"><?php esc_html_e( 'You are about to Finish & Save Tour Booking Manager For Woocommerce Plugin setup process', 'tour-booking-manager' ); ?></p>
+                    <h2><?php esc_html_e( 'Finalize Setup', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                    <p class="mTB_xs"><?php esc_html_e( 'You are about to Finish & Save Tour Booking Manager For Woocommerce Plugin setup process', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     <div class="mT allCenter">
-                        <button type="submit" name="finish_quick_setup" class="themeButton"><?php esc_html_e( 'Finish & Save', 'tour-booking-manager' ); ?></button>
+                        <button type="submit" name="finish_quick_setup" class="themeButton"><?php esc_html_e( 'Finish & Save', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                     </div>
                 </div>
 				<?php
@@ -462,7 +462,7 @@
 
 			public function add_meta_box_func() {
 				$cpt_label = $this->get_option_trans( 'rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent' );
-				add_meta_box( 'rbfw_add_meta_box', __( $cpt_label . ' Settings : ', 'booking-and-rental-manager-for-woocommerce' ) . get_the_title( get_the_id() ), array( $this, 'mp_event_all_in_tab' ), 'rbfw_item', 'normal', 'high' );
+				add_meta_box( 'rbfw_add_meta_box', $cpt_label.__( " Settings : ", 'booking-and-rental-manager-for-woocommerce' ) . get_the_title( get_the_id() ), array( $this, 'mp_event_all_in_tab' ), 'rbfw_item', 'normal', 'high' );
 			}
 
 			public function mp_event_all_in_tab() {

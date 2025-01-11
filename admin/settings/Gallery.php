@@ -33,9 +33,9 @@
                     <section class="bg-light mt-5">
                         <div>
                             <label>
-                                <?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $title ); ?>
+                                <?php echo esc_html($title); ?>
                             </label>
-                            <span><?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $description ); ?></span>
+                            <span><?php echo esc_html($description); ?></span>
                         </div>
                     </section>
                 <?php
@@ -49,10 +49,10 @@
 					<section>
 					<div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
 						<div class='button upload' id='media_upload_<?php echo esc_attr($post_id); ?>'>
-								<?php echo __('Upload','pickplugins-options-framework');?>
+								<?php echo esc_html__('Upload','booking-and-rental-manager-for-woocommerce');?>
 							</div>
-							<div class='button clear' id='media_clear_<?php echo $post_id; ?>'>
-								<?php echo __('Clear','pickplugins-options-framework');?>
+							<div class='button clear' id='media_clear_<?php echo esc_attr($post_id); ?>'>
+								<?php echo esc_html__('Clear','booking-and-rental-manager-for-woocommerce');?>
 							</div>
 							<div class="gallery-images media-list-<?php echo esc_attr($post_id); ?> ">
 								<?php

@@ -7,7 +7,9 @@ add_action('admin_init','rbfw_quick_setup_exit',99);
 function rbfw_quick_setup_exit(){
     if(isset($_REQUEST['rbfw_skip_quick_setup'])){
         update_option('rbfw_quick_setup_done', 'exit');
-        exit(wp_redirect(admin_url('index.php')));
+        $redirect_url = esc_url_raw(admin_url('index.php'));
+        wp_redirect($redirect_url);
+        exit;
     }
 }
 
@@ -26,10 +28,10 @@ if (!class_exists('TTBM_Quick_Setup')) {
         public function quick_setup_menu() {
             $status = rbfw_woo_install_check();;
             if ($status == 'Yes') {
-                add_submenu_page('edit.php?post_type=rbfw_item', __('Quick Setup', 'booking-and-rental-manager-for-woocommerce'), '<span style="color:#10dd10">' . esc_html__('Quick Setup', 'booking-and-rental-manager-for-woocommerce') . '</span>', 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
+                add_submenu_page('edit.php?post_type=rbfw_item', esc_html__('Quick Setup', 'booking-and-rental-manager-for-woocommerce'), '<span style="color:#10dd10">' . esc_html__('Quick Setup', 'booking-and-rental-manager-for-woocommerce') . '</span>', 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
             }
             else {
-                add_menu_page( __('Rent Item', 'booking-and-rental-manager-for-woocommerce'), __('Rent Item', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'),'dashicons-clipboard',25);
+                add_menu_page( esc_html__('Rent Item', 'booking-and-rental-manager-for-woocommerce'), esc_html__('Rent Item', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'),'dashicons-clipboard',25);
             }
         }
         public function quick_setup() {
@@ -226,7 +228,7 @@ if (!class_exists('TTBM_Quick_Setup')) {
                 </div>
                 <?php if ($woo_status != 'Yes') { ?>
                     <div class='mep_seup_exit_sec'>
-                        <button style='margin:10px auto;' class="warningButton" type="submit" name="rbfw_skip_quick_setup"><?php _e('Skip, Go to Dashboard') ?></button>
+                        <button style='margin:10px auto;' class="warningButton" type="submit" name="rbfw_skip_quick_setup"><?php esc_attr_e('Skip, Go to Dashboard','booking-and-rental-manager-for-woocommerce') ?></button>
                     </div>
                 <?php } ?>
             </div>

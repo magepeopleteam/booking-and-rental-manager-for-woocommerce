@@ -588,11 +588,11 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         }
 
         if ( ! empty( $pickup_location ) ) {
-            $item->add_meta_data(rbfw_string_return('rbfw_text_pickup_location',__('Pickup Location','rbfw-pro')), $pickup_location );
+            $item->add_meta_data(rbfw_string_return('rbfw_text_pickup_location',__('Pickup Location','booking-and-rental-manager-for-woocommerce')), $pickup_location );
         }
 
         if ( ! empty( $dropoff_location ) ) {
-            $item->add_meta_data(rbfw_string_return('rbfw_text_dropoff_location',__('Drop-off Location','rbfw-pro')), $dropoff_location );
+            $item->add_meta_data(rbfw_string_return('rbfw_text_dropoff_location',__('Drop-off Location','booking-and-rental-manager-for-woocommerce')), $dropoff_location );
         }
 
         if ( ! empty( $rbfw_type_info ) ):
@@ -621,7 +621,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
                     $rent_content .= '</tr>';
                     $rent_content .= '</table>';
                     if($rent_qty > 0):
-                        $item->add_meta_data(rbfw_string_return('rbfw_text_rent_information',__('Rent Information','rbfw-pro')), $rent_content );
+                        $item->add_meta_data(rbfw_string_return('rbfw_text_rent_information',__('Rent Information','booking-and-rental-manager-for-woocommerce')), $rent_content );
                     endif;
                 }
 
@@ -653,7 +653,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
                     $rent_service_content .= '</table>';
 
                     if($service_qty > 0):
-                        $item->add_meta_data(rbfw_string_return('rbfw_text_extra_service_information',__('Extra Service Information','rbfw-pro')), $rent_service_content );
+                        $item->add_meta_data(rbfw_string_return('rbfw_text_extra_service_information',__('Extra Service Information','booking-and-rental-manager-for-woocommerce')), $rent_service_content );
                     endif;
                 }
 
@@ -707,15 +707,15 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $rbfw_service_price = $values['rbfw_service_price'] ? $values['rbfw_service_price'] : '';
         $discount_amount = $values['discount_amount'] ? $values['discount_amount'] : '';
 
-        $item->add_meta_data(rbfw_string_return('rbfw_text_start_date_and_time', __('Start Date and Time', 'rbfw-pro')), $start_datetime);
-        $item->add_meta_data(rbfw_string_return('rbfw_text_end_date_and_time', __('End Date and Time', 'rbfw-pro')), $end_datetime);
+        $item->add_meta_data(rbfw_string_return('rbfw_text_start_date_and_time', __('Start Date and Time', 'booking-and-rental-manager-for-woocommerce')), $start_datetime);
+        $item->add_meta_data(rbfw_string_return('rbfw_text_end_date_and_time', __('End Date and Time', 'booking-and-rental-manager-for-woocommerce')), $end_datetime);
 
         if (!empty($pickup_location)) {
-            $item->add_meta_data(rbfw_string_return('rbfw_text_pickup_location', __('Pickup Location', 'rbfw-pro')), $pickup_location);
+            $item->add_meta_data(rbfw_string_return('rbfw_text_pickup_location', __('Pickup Location', 'booking-and-rental-manager-for-woocommerce')), $pickup_location);
         }
 
         if (!empty($dropoff_location)) {
-            $item->add_meta_data(rbfw_string_return('rbfw_text_dropoff_location', __('Drop-off Location', 'rbfw-pro')), $dropoff_location);
+            $item->add_meta_data(rbfw_string_return('rbfw_text_dropoff_location', __('Drop-off Location', 'booking-and-rental-manager-for-woocommerce')), $dropoff_location);
         }
 
         if (!empty($variation_info)) {
@@ -729,10 +729,10 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
             }
 
             $variation_content .= '</table>';
-            $item->add_meta_data(rbfw_string_return('rbfw_text_variation_information', __('Variation Information', 'rbfw-pro')), $variation_content);
+            $item->add_meta_data(rbfw_string_return('rbfw_text_variation_information', __('Variation Information', 'booking-and-rental-manager-for-woocommerce')), $variation_content);
         }
 
-        $item->add_meta_data(rbfw_string_return('rbfw_text_item_quantity', __('Item Quantity', 'rbfw-pro')), $rbfw_item_quantity);
+        $item->add_meta_data(rbfw_string_return('rbfw_text_item_quantity', __('Item Quantity', 'booking-and-rental-manager-for-woocommerce')), $rbfw_item_quantity);
 
         $rbfw_service_infos_order = '';
 
@@ -775,7 +775,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
                     $rent_service_content .= '</tr>';
                     $rent_service_content .= '</table>';
                     if ($service_qty > 0):
-                        $item->add_meta_data(rbfw_string_return('rbfw_text_extra_service_information', __('Extra Service Information', 'rbfw-pro')), $rent_service_content);
+                        $item->add_meta_data(rbfw_string_return('rbfw_text_extra_service_information', __('Extra Service Information', 'booking-and-rental-manager-for-woocommerce')), $rent_service_content);
                     endif;
                 }
             }
