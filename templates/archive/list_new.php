@@ -212,7 +212,7 @@ if (!$continue) {
 
     ?>
 
-    <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo $d; ?>">
+    <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo esc_html($d); ?>">
         <div class="rbfw_rent_list_inner_wrapper">
             <div class="<?php echo esc_attr($image_holder) ?>">
                 <a class="rbfw_rent_list_grid_view_top_img" href="<?php echo esc_url($post_link); ?>">
@@ -227,7 +227,7 @@ if (!$continue) {
                         </h2>
 
                         <div class="rbfw_rent_list_grid_row rbfw_pricing-box">
-                            <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo rbfw_mps_price($price); ?></span></p>
+                            <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo esc_html(rbfw_mps_price($price)); ?></span></p>
                             <span class="rbfw_rent_list_row_price_level">/ <?php echo esc_html($price_level); ?></span>
                         </div>
                     </div>
@@ -263,7 +263,7 @@ if (!$continue) {
                                                 $rand_number = rand();
                                                 if ($title) {
                                                     ?>
-                                                    <li class=" bfw_rent_list_items title <?php echo $rand_number ?>"><span class="bfw_rent_list_items_icon"><i class="<?php echo mep_esc_html($icon) ?>"></i></span> <?php echo mep_trim_string(mep_esc_html($title),32); ?></li>
+                                                    <li class=" bfw_rent_list_items title <?php echo esc_html($rand_number); ?>"><span class="bfw_rent_list_items_icon"><i class="<?php echo esc_html($icon) ?>"></i></span> <?php echo esc_html(mep_trim_string(mep_esc_html($title),32)); ?></li>
                                                     <?php
                                                 }
                                             }
@@ -272,7 +272,7 @@ if (!$continue) {
                                     }
                                     ?>
                                     <?php  if( count( $cat_features ) > $display_cat_features ){?>
-                                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo $post_id?>">See more</div>
+                                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_html($post_id); ?>">See more</div>
                                     <?php }?>
                                 </ul>
                                 <?php

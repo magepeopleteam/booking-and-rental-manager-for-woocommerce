@@ -391,18 +391,18 @@ class Insights {
         $notice .= 'We are using Appsero to collect your data. <a href="' . $policy_url . '">Learn more</a> about how Appsero collects and handle your data.</p>';
 
         echo '<div class="updated"><p>';
-            echo mep_esc_html($notice);
+            echo esc_html($notice);
             echo '</p><p class="submit">';
-            echo '&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary button-large">' . $this->client->__trans( 'Allow' ) . '</a>';
-            echo '&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary button-large">' . $this->client->__trans( 'No thanks' ) . '</a>';
+            echo esc_html('&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary button-large">' . $this->client->__trans( 'Allow' ) . '</a>');
+            echo esc_html('&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary button-large">' . $this->client->__trans( 'No thanks' ) . '</a>');
         echo '</p></div>';
 
-        echo "<script type='text/javascript'>jQuery('." . $this->client->slug . "-insights-data-we-collect').on('click', function(e) {
+        echo esc_html("<script type='text/javascript'>jQuery('." . $this->client->slug . "-insights-data-we-collect').on('click', function(e) {
                 e.preventDefault();
                 jQuery(this).parents('.updated').find('p.description').slideToggle('fast');
             });
             </script>
-        ";
+        ");
     }
 
     /**
@@ -768,7 +768,7 @@ class Insights {
                             <li data-placeholder="<?php echo esc_attr( $reason['placeholder'] ); ?>">
                                 <label>
                                     <input type="radio" name="selected-reason" value="<?php echo esc_attr($reason['id']); ?>">
-                                    <div class="wd-de-reason-icon"><?php echo mep_esc_html($reason['icon']); ?></div>
+                                    <div class="wd-de-reason-icon"><?php echo esc_html($reason['icon']); ?></div>
                                     <div class="wd-de-reason-text"><?php echo esc_html($reason['text']); ?></div>
                                 </label>
                             </li>
@@ -780,7 +780,7 @@ class Insights {
                             <li data-placeholder="<?php echo esc_attr( $reason['placeholder'] ); ?>" data-customreason="true">
                                 <label>
                                     <input type="radio" name="selected-reason" value="<?php echo esc_attr($reason['id']); ?>">
-                                    <div class="wd-de-reason-icon"><?php echo mep_esc_html($reason['icon']); ?></div>
+                                    <div class="wd-de-reason-icon"><?php echo esc_html($reason['icon']); ?></div>
                                     <div class="wd-de-reason-text"><?php echo esc_html($reason['text']); ?></div>
                                 </label>
                             </li>
@@ -790,11 +790,11 @@ class Insights {
                     <div class="wd-dr-modal-reason-input"><textarea></textarea></div>
                     <p class="wd-dr-modal-reasons-bottom">
                        <?php
-                       echo sprintf(
+                       echo esc_html(sprintf(
 	                       $this->client->__trans( 'We share your data with <a href="%1$s" target="_blank">Appsero</a> to troubleshoot problems &amp; make product improvements. <a href="%2$s" target="_blank">Learn more</a> about how Appsero handles your data.'),
 	                       esc_url( 'https://appsero.com/' ),
                            esc_url( 'https://appsero.com/privacy-policy' )
-                       );
+                       ));
                        ?>
                     </p>
                 </div>

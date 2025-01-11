@@ -25,7 +25,7 @@
     $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 ?>
 	<!--    Main Layout-->
-	<div class="rbfw-single-container" data-service-id="<?php echo mep_esc_html($rbfw_id); ?>">
+	<div class="rbfw-single-container" data-service-id="<?php echo esc_html($rbfw_id); ?>">
 
 		<div class="rbfw-single-right-container">
 			<form action="" method='post' class="mp_rbfw_ticket_form">
@@ -35,7 +35,7 @@
                         <div class="item-content pricing-content">
                             <div class="section-header">
                                 <div class="rbfw-single-right-heading rbfw_pricing_info_heading">
-                                    <?php echo $rbfw->get_option_trans('rbfw_text_pricing_info', 'rbfw_basic_translation_settings', __('Pricing Info','booking-and-rental-manager-for-woocommerce')); ?>
+                                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pricing_info', 'rbfw_basic_translation_settings', __('Pricing Info','booking-and-rental-manager-for-woocommerce'))); ?>
                                 </div>
                             </div>
                         </div>
@@ -60,10 +60,10 @@
                                                     <td><?php echo esc_attr($value['room_type']); ?></td>
 
                                                     <?php if(!empty($value['rbfw_room_daylong_rate'])){ ?>
-                                                        <td style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;"><?php echo rbfw_mps_price( $value['rbfw_room_daylong_rate'] ); ?></td>
+                                                        <td style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;"><?php echo esc_html(rbfw_mps_price( $value['rbfw_room_daylong_rate'] )); ?></td>
                                                     <?php } ?>
 
-                                                    <td><?php echo rbfw_mps_price( $value['rbfw_room_daynight_rate'] ); ?></td>
+                                                    <td><?php echo esc_html(rbfw_mps_price( $value['rbfw_room_daynight_rate'] )); ?></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -79,9 +79,9 @@
                 </div>
 
 
-                <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo $post_id; ?>">
-                <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo rbfw_off_days($post_id); ?>'>
-                <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo rbfw_off_dates($post_id); ?>'>
+                <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_html($post_id); ?>">
+                <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_html(rbfw_off_days($post_id)); ?>'>
+                <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_html(rbfw_off_dates($post_id)); ?>'>
 
                 <div class="item">
                         <div class="rbfw-single-right-heading mb-08"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_checkin_checkout_date', 'rbfw_basic_translation_settings')); ?></div>
@@ -118,7 +118,7 @@
                     <div class="rbfw-resort-result"></div>
                 </div>
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="resort">
-				<input type="hidden" name="rbfw_enable_resort_daylong_price" id="rbfw_enable_resort_daylong_price"  value="<?php echo $rbfw_enable_resort_daylong_price; ?>">
+				<input type="hidden" name="rbfw_enable_resort_daylong_price" id="rbfw_enable_resort_daylong_price"  value="<?php echo esc_html($rbfw_enable_resort_daylong_price); ?>">
 			</form>
 		</div>
     </div>
