@@ -99,11 +99,11 @@
                     <?php $this->panel_header('Off Day Settings','Off Day Settings'); ?> 
                     <section class="rbfw_off_days justify-content-center">
                         <div class="groupCheckBox">
-                            <input type="hidden" name="rbfw_off_days" value="<?php echo $rbfw_off_days ?>">
+                            <input type="hidden" name="rbfw_off_days" value="<?php echo esc_attr($rbfw_off_days) ?>">
                             <?php foreach ($days as $day){ ?>
                                 <label class="customCheckboxLabel ">
-                                    <input type="checkbox" <?php echo in_array($day,$off_day_array)?'checked':'' ?>  data-checked="<?php echo $day ?>">
-                                    <span class="customCheckbox"><?php echo ucfirst($day) ?></span>
+                                    <input type="checkbox" <?php echo esc_attr(in_array($day,$off_day_array)?'checked':'') ?>  data-checked="<?php echo esc_html($day) ?>">
+                                    <span class="customCheckbox"><?php echo esc_html(ucfirst($day)) ?></span>
                                 </label>
                             <?php } ?>
                         </div>

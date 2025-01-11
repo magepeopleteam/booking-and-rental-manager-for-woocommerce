@@ -5,9 +5,9 @@ function rbfw_taxonomy_register(){
     global $rbfw;
     $label = $rbfw->get_name();
     $labelso = array(
-        'name'                       => __( 'Category','booking-and-rental-manager-for-woocommerce' ),
-        'singular_name'              => __( 'Category','booking-and-rental-manager-for-woocommerce' ),
-        'menu_name'                  =>  $label.__( ' Type', 'booking-and-rental-manager-for-woocommerce' ),
+        'name'                       => esc_html__( 'Category','booking-and-rental-manager-for-woocommerce' ),
+        'singular_name'              => esc_html__( 'Category','booking-and-rental-manager-for-woocommerce' ),
+        'menu_name'                  =>  $label.esc_html__( ' Type', 'booking-and-rental-manager-for-woocommerce' ),
     );
 
     $argso = array(
@@ -27,9 +27,9 @@ function rbfw_taxonomy_register(){
 
 
     $labelso = array(
-        'name'                       => __( 'Location','booking-and-rental-manager-for-woocommerce' ),
-        'singular_name'              => __( 'Location','booking-and-rental-manager-for-woocommerce' ),
-        'menu_name'                  => __( 'Location', 'booking-and-rental-manager-for-woocommerce' ),
+        'name'                       => esc_html__( 'Location','booking-and-rental-manager-for-woocommerce' ),
+        'singular_name'              => esc_html__( 'Location','booking-and-rental-manager-for-woocommerce' ),
+        'menu_name'                  => esc_html__( 'Location', 'booking-and-rental-manager-for-woocommerce' ),
     );
     $argso = array(
         'hierarchical'          => true,

@@ -18,13 +18,13 @@ function rbfw_custom_tables(){
         if ( $column_name == 'Categories' ) {
             $categories = implode(', ', get_post_meta($post_id,'rbfw_categories',true));
             if($categories){
-                echo $categories;
+                echo esc_html($categories);
             }else{
                 echo '-';
             }
         }
         if ( $column_name == 'Type' ) {
-            echo get_post_meta($post_id,'rbfw_item_type',true);
+            echo esc_html(get_post_meta($post_id,'rbfw_item_type',true));
         }
     }, 10, 2 );
 

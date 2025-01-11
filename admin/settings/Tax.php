@@ -103,7 +103,7 @@
                             <?php }else{ ?>
 
                             <section >
-                                <p><?php _e('To enable automated tax calculation, first ensure that “enable taxes and tax calculations” is checked on WooCommerce &gt; Settings &gt; General. ','booking-and-rental-manager-for-woocommerce')?><a href="<?php esc_attr('https://woocommerce.com/document/woocommerce-shipping-and-tax/woocommerce-tax/') ?>"><?php _e('View Documentation','booking-and-rental-manager-for-woocommerce'); ?></a></p>
+                                <p><?php esc_html_e('To enable automated tax calculation, first ensure that “enable taxes and tax calculations” is checked on WooCommerce &gt; Settings &gt; General. ','booking-and-rental-manager-for-woocommerce')?><a href="<?php esc_attr('https://woocommerce.com/document/woocommerce-shipping-and-tax/woocommerce-tax/') ?>"><?php esc_html_e('View Documentation','booking-and-rental-manager-for-woocommerce'); ?></a></p>
                             </section>
                             <?php } ?>
 

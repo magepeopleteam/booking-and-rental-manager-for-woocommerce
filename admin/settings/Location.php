@@ -66,10 +66,10 @@
 
 			public function rbfw_get_location_dropdown( $name, $saved_value = '', $class = '' ){
 				$location_arr = $this->rbfw_get_location_arr();
-				echo "<select name=$name class=$class>";
+				echo esc_html("<select name=$name class=$class>");
 				foreach ( $location_arr as $key => $value ) {
 					$selected_text = ! empty( $saved_value ) && $saved_value == $key ? 'Selected' : '';
-					echo "<option value='$key' $selected_text>" . esc_html( $value ) . "</option>";
+					echo esc_html("<option value='$key' $selected_text>" . esc_html( $value ) . "</option>");
 				}
 				echo "</select>";
 			}
@@ -79,7 +79,7 @@
 			?>
 			<section >
 				<div>
-					<label><?php _e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+					<label><?php esc_html_e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 					<span><?php esc_html_e( 'Turn Pick-up Location On/Off', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 				</div>
 				<label class="switch">
@@ -94,9 +94,9 @@
                     <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
                         <select name="loc_pickup_name[]" id="rdfw_pickup_location" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
                             <?php $i=0; foreach($location_arr as $key => $value) { if(isset($rbfw_pickup_data[$i]) && in_array($value,$rbfw_pickup_data[$i]) ){ ?>
-                                <option <?php echo 'selected' ?>   value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
+                                <option <?php echo 'selected' ?>   value="<?php echo esc_attr($value); ?>"> <?php echo esc_html($key); ?> </option>
                             <?php $i++; } else{ ?>
-                                <option value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
+                                <option value="<?php echo esc_attr($value); ?>"> <?php echo esc_html($key); ?> </option>
                             <?php } } ?>
                         </select>
                     </div>
@@ -112,7 +112,7 @@
                 ?>
                 <section>
                     <div>
-                        <label><?php _e( 'Drop-Off Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                        <label><?php esc_html_e( 'Drop-Off Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                         <span><?php esc_html_e( 'Turn drop off Location On/Off', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                     </div>
                     <label class="switch">
@@ -125,9 +125,9 @@
                         <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
                             <select name="loc_dropoff_name[]" id="rdfw_dropoff_location" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
                                 <?php $i=0; foreach($location_arr as $key => $value) { if(isset($rbfw_dropoff_data[$i]) && in_array($value,$rbfw_dropoff_data[$i]) ){ ?>
-                                    <option <?php echo 'selected' ?>   value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
+                                    <option <?php echo 'selected' ?>   value="<?php echo esc_attr($value); ?>"> <?php echo esc_html($key); ?> </option>
                                     <?php $i++; } else{ ?>
-                                    <option value="<?php echo $value; ?>"> <?php echo $key; ?> </option>
+                                    <option value="<?php echo esc_attr($value); ?>"> <?php echo esc_html($key); ?> </option>
                                 <?php } } ?>
                             </select>
                         </div>

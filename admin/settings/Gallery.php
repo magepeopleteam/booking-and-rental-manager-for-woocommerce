@@ -49,10 +49,10 @@
 					<section>
 					<div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
 						<div class='button upload' id='media_upload_<?php echo esc_attr($post_id); ?>'>
-								<?php echo __('Upload','booking-and-rental-manager-for-woocommerce');?>
+								<?php echo esc_html__('Upload','booking-and-rental-manager-for-woocommerce');?>
 							</div>
-							<div class='button clear' id='media_clear_<?php echo $post_id; ?>'>
-								<?php echo __('Clear','booking-and-rental-manager-for-woocommerce');?>
+							<div class='button clear' id='media_clear_<?php echo esc_attr($post_id); ?>'>
+								<?php echo esc_html__('Clear','booking-and-rental-manager-for-woocommerce');?>
 							</div>
 							<div class="gallery-images media-list-<?php echo esc_attr($post_id); ?> ">
 								<?php

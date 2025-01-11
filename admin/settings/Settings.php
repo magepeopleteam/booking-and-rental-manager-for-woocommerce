@@ -22,8 +22,8 @@
 
             public function section_header(){
                 ?>
-                    <h2 class="mp_tab_item_title"><?php _e('Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-                    <p class="mp_tab_item_description"><?php _e('Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    <h2 class="mp_tab_item_title"><?php esc_html_e('Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                    <p class="mp_tab_item_description"><?php esc_html_e('Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         
                 <?php
             }
@@ -63,8 +63,8 @@
                 ?>
                 <section >
 					<div>
-						<label><?php _e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-						<span><?php  _e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						<label><?php esc_html_e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<span><?php  esc_html_e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 					</div>
 					<label class="switch">
 						<input type="checkbox" name="rbfw_available_qty_info_switch" value="<?php echo esc_attr($rbfw_available_qty_info_switch); ?>" <?php echo esc_attr(($rbfw_available_qty_info_switch=='yes')?'checked':''); ?>>
@@ -82,7 +82,7 @@
                             </label>
                             <span><?php echo esc_html__('This short code you can put anywhere in your content.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                         </div>
-                        <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $post_id; ?>']</code>
+                        <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo esc_attr($post_id); ?>']</code>
                     </section>
                 <?php
             }

@@ -69,7 +69,7 @@
 						<?php $the_template = RBFW_Function::get_all_template(); ?>
 						<select name="rbfw_single_template" id="rbfw_single_template">
 							<?php foreach($the_template as $kay => $value): ?>
-								<option <?php echo ($kay==$template)?'selected':'' ?> value="<?php echo $kay; ?>"> <?php echo $value; ?> </option>
+								<option <?php echo esc_html( $kay==$template)?'selected':'' ?> value="<?php echo esc_attr($kay); ?>"> <?php echo esc_html($value); ?> </option>
 							<?php endforeach; ?>
 						</select>
 					</section>
@@ -88,7 +88,7 @@
                                     foreach($sidebar_testimonials as $key => $data): ?>
                                     <div class="testimonial">
                                         <button onclick="jQuery(this).parent().remove()"> <i class="fas fa-trash"></i></button>
-                                        <textarea class="testimonial-field" name="rbfw_dt_sidebar_testimonials[<?php echo  $key; ?>]['rbfw_dt_sidebar_testimonial_text']" cols="30" rows="10"><?php echo esc_html(current($data)); ?></textarea>
+                                        <textarea class="testimonial-field" name="rbfw_dt_sidebar_testimonials[<?php echo  esc_attr($key); ?>]['rbfw_dt_sidebar_testimonial_text']" cols="30" rows="10"><?php echo esc_html(current($data)); ?></textarea>
                                     </div>
                                 <?php endforeach; ?>
 
@@ -98,7 +98,7 @@
                                 </div>
                             </div>
                         
-                            <div class="ppof-button add-item" onclick="createTestimonial()"><i class="fas fa-plus-square"></i><?php _e('Add New Testimonial','booking-and-rental-manager-for-woocommerce'); ?></div>
+                            <div class="ppof-button add-item" onclick="createTestimonial()"><i class="fas fa-plus-square"></i><?php esc_html_e('Add New Testimonial','booking-and-rental-manager-for-woocommerce'); ?></div>
                         </div>
                     </section>
                 </div>
@@ -139,8 +139,8 @@
                     <?php $this->panel_header('Additional Gallery','Please upload gallary images size in ratio 4:3. Ex: Image size width=1200px and height=900px. gallery and feature image should be in same size.'); ?>
                     <section >
                         <div>
-                            <label><?php _e( 'Enable Additional Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                            <span><?php  _e( 'Enable/Disable Additional Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <label><?php esc_html_e( 'Enable Additional Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                            <span><?php  esc_html_e( 'Enable/Disable Additional Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="rbfw_enable_additional_gallary" value="<?php echo esc_attr($additional_gallary); ?>" <?php echo esc_attr(($additional_gallary=='on')?'checked':''); ?>>
@@ -150,10 +150,10 @@
                     <section  class="additional-gallary-image <?php echo $additional_gallary=='on'?'show':'hide' ?>">
                         <div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
                             <div class='button upload' id='rbfw_gallery_images_additional_<?php echo esc_attr($post_id); ?>'>
-                                <?php echo __('Upload','booking-and-rental-manager-for-woocommerce');?>
+                                <?php echo esc_html__('Upload','booking-and-rental-manager-for-woocommerce');?>
                             </div>
-                            <div class='button clear' id='media_clear_additional_<?php echo $post_id; ?>'>
-                                <?php echo __('Clear','booking-and-rental-manager-for-woocommerce');?>
+                            <div class='button clear' id='media_clear_additional_<?php echo esc_attr($post_id); ?>'>
+                                <?php echo esc_html__('Clear','booking-and-rental-manager-for-woocommerce');?>
                             </div>
                             <div class="gallery-images media-list-additional-<?php echo esc_attr($post_id); ?> ">
                                 <?php
