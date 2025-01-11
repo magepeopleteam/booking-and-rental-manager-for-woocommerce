@@ -790,11 +790,11 @@ class Insights {
                     <div class="wd-dr-modal-reason-input"><textarea></textarea></div>
                     <p class="wd-dr-modal-reasons-bottom">
                        <?php
-                       echo sprintf(
+                       echo esc_html(sprintf(
 	                       $this->client->__trans( 'We share your data with <a href="%1$s" target="_blank">Appsero</a> to troubleshoot problems &amp; make product improvements. <a href="%2$s" target="_blank">Learn more</a> about how Appsero handles your data.'),
 	                       esc_url( 'https://appsero.com/' ),
                            esc_url( 'https://appsero.com/privacy-policy' )
-                       );
+                       ));
                        ?>
                     </p>
                 </div>
