@@ -65,7 +65,7 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 			<div class="rbfw_dt_rating">
 				<?php if(!empty($post_review_rating)): ?>
 				<div class="rbfw_rent_list_average_rating">
-					<?php echo $post_review_rating; ?>
+					<?php echo esc_html($post_review_rating); ?>
 				</div>
 				<?php endif; ?>
 			</div>
@@ -76,15 +76,15 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 		<div class="rbfw_dt_header_col2">
 			<div class="rbfw_dt_pricing">
 				<div class="rbfw_dt_pricing_card">
-					<div class="rbfw_dt_pricing_card_col1"><?php echo $currency_symbol; ?></div>
+					<div class="rbfw_dt_pricing_card_col1"><?php echo esc_html($currency_symbol); ?></div>
 					<div class="rbfw_dt_pricing_card_col2">
 
 						<?php if (!empty($rbfw_daylong_rate_smallest_price)) : ?>
-						<div class="rbfw_dt_pricing_card_price"><?php echo $rbfw_daylong_rate_smallest_price; ?><span> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_daylong', 'rbfw_basic_translation_settings', __('DAYLONG','booking-and-rental-manager-for-woocommerce'))); ?></span></div>
+						<div class="rbfw_dt_pricing_card_price"><?php echo esc_html($rbfw_daylong_rate_smallest_price); ?><span> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_daylong', 'rbfw_basic_translation_settings', __('DAYLONG','booking-and-rental-manager-for-woocommerce'))); ?></span></div>
 						<?php endif; ?>
 
 						<?php if (!empty($rbfw_daynight_rate_smallest_price)) : ?>
-						<div class="rbfw_dt_pricing_card_price"><?php echo $rbfw_daynight_rate_smallest_price; ?><span> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_daynight', 'rbfw_basic_translation_settings', __('DAYNIGHT','booking-and-rental-manager-for-woocommerce'))); ?></span></div>
+						<div class="rbfw_dt_pricing_card_price"><?php echo esc_html($rbfw_daynight_rate_smallest_price); ?><span> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_daynight', 'rbfw_basic_translation_settings', __('DAYNIGHT','booking-and-rental-manager-for-woocommerce'))); ?></span></div>
 						<?php endif; ?>
 
 					</div>
@@ -97,13 +97,13 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 
 	<div class="rbfw_dt_row_content">
 		<div class="rbfw_dt_content_col1">
-			<div class="rbfw_dt_slider mpStyle <?php echo $slide_style; ?>">
+			<div class="rbfw_dt_slider mpStyle <?php echo esc_html($slide_style); ?>">
                 <?php do_action( 'add_super_slider', $post_id ,'rbfw_gallery_images'); ?>
             </div>
 		</div>
 		<div class="rbfw_dt_content_col2">
 			<div class="rbfw_dt_post_content">
-				<?php echo $post_content; ?>
+				<?php echo esc_html($post_content); ?>
 			</div>
 			<div class="rbfw_dt_highlighted_features">
 			<?php if ( $rbfw_feature_category ) :
@@ -121,7 +121,7 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 						$title = $features['title'];
 						if($title):?>
 							<li style="<?php echo ($i > 4)?'display:none':''?>" data-status="<?php echo ($i > 4)?'extra':''?>">
-								<i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo mep_esc_html($title); ?></span>
+								<i class="<?php echo esc_attr(mep_esc_html($icon)); ?>"></i><span><?php echo esc_html($title); ?></span>
 							</li>
 						<?php
 						endif;
@@ -131,7 +131,7 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 				?>
 				<li style="width:100%">
 					<a class="rbfw_muff_lmf_btn">
-						<?php echo $rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce')); ?>
+						<?php echo esc_html($rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __('Load More','booking-and-rental-manager-for-woocommerce'))); ?>
 					</a>
 				</li>
 			</ul>
@@ -148,8 +148,8 @@ $rbfw_dt_sidebar_content = get_post_meta( $post_id, 'rbfw_dt_sidebar_content', t
 	<div class="rbfw_dt_row_registration <?php if($rbfw_dt_sidebar_switch == 'on'){ echo 'rbfw_dt_sidebar_enabled'; } ?>">
 		<?php if($rbfw_dt_sidebar_switch == 'on'): ?>
 		<div class="rbfw_dt_registration_col1">
-			<?php echo do_action('rbfw_dt_testimonial', $post_id); ?>
-			<?php echo html_entity_decode($rbfw_dt_sidebar_content); ?>
+			<?php echo esc_html(do_action('rbfw_dt_testimonial', $post_id)); ?>
+			<?php echo esc_html(html_entity_decode($rbfw_dt_sidebar_content)); ?>
 		</div>
 		<?php endif; ?>
 		<div class="rbfw_dt_registration_col2">
