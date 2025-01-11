@@ -26,7 +26,7 @@
 				$id = 'id'.uniqid();
 				$count = RBFW_Function::data_sanitize( $_POST['count'] );
 				$count = (int)$count + 1;
-				echo $this->rbfw_repeated_item_addnew($id, 'mep_event_faq', [], $count);
+				echo esc_html($this->rbfw_repeated_item_addnew($id, 'mep_event_faq', [], $count));
 				wp_die();
 			}
 
@@ -38,8 +38,8 @@
 
             public function section_header(){
                 ?>
-                    <h2 class="mp_tab_item_title"><?php _e('Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-                    <p class="mp_tab_item_description"><?php _e('Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    <h2 class="mp_tab_item_title"><?php esc_html_e('Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                    <p class="mp_tab_item_description"><?php esc_html_e('Front-end Display Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         
                 <?php
             }
@@ -49,9 +49,9 @@
                     <section class="bg-light mt-5">
                         <div>
                             <label>
-                                <?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $title ); ?>
+                                <?php echo esc_html($title); ?>
                             </label>
-                            <span><?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $description ); ?></span>
+                            <span><?php echo esc_html($description); ?></span>
                         </div>
                     </section>
                 <?php
@@ -95,8 +95,8 @@
 										if ( $images && sizeof( $all_images ) > 0 ) {
 											foreach ( $all_images as $image ) {
 												?>
-												<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
-													<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
+												<div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
+													<img src="<?php echo esc_attr(wp_get_attachment_image_url( $image, 'medium' )) ?>" alt="<?php echo esc_attr( $image ); ?>'"/>
 												</div>
 												<?php
 											}
@@ -105,7 +105,7 @@
 								</div>
 							</div>
 								<div class="rbfw_faq_desc">
-									<?php echo $content; ?>
+									<?php echo wp_kses_post($content); ?>
 								</div>
 						</div>
 					</div>
@@ -122,16 +122,16 @@
 									<input type="text" class="formControl rbfw_faq_title_input" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
 								</div>
 								<div class="rbfw_multi_image_area">
-									<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
+									<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php echo esc_attr( $images ); ?>"/>
 									<div class="rbfw_multi_image rbfw_faq_img">
 										<?php
 											$all_images = explode( ',', $images );
 											if ( $images && sizeof( $all_images ) > 0 ) {
 												foreach ( $all_images as $image ) {
 													?>
-													<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
+													<div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
 														<span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>
-														<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
+														<img src="<?php echo esc_attr(wp_get_attachment_image_url( $image, 'medium' )) ?>" alt="<?php echo esc_attr( $image ); ?>'"/>
 													</div>
 
 													<?php
@@ -231,8 +231,8 @@
 									if ( $images && sizeof( $all_images ) > 0 ) {
 										foreach ( $all_images as $image ) {
 											?>
-											<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
-												<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
+											<div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
+												<img src="<?php echo esc_attr(wp_get_attachment_image_url( $image, 'medium' )) ?>" alt="<?php echo esc_attr( $image ); ?>'"/>
 											</div>
 											<?php
 										}
@@ -241,7 +241,7 @@
 							</div>
 						</div>
 							<div class="rbfw_faq_desc">
-								<?php echo $content; ?>
+								<?php echo wp_kses_post($content); ?>
 							</div>
 					</div>
 					<div class="rbfw_faq_slide_wrap">
@@ -257,16 +257,16 @@
 									<input type="text" class="formControl rbfw_faq_title_input" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
 								</div>
 								<div class="rbfw_multi_image_area">
-									<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php esc_attr_e( $images ); ?>"/>
+									<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php echo esc_attr( $images ); ?>"/>
 									<div class="rbfw_multi_image rbfw_faq_img">
 										<?php
 											$all_images = explode( ',', $images );
 											if ( $images && sizeof( $all_images ) > 0 ) {
 												foreach ( $all_images as $image ) {
 													?>
-													<div class="rbfw_multi_image_item" data-image-id="<?php esc_attr_e( $image ); ?>">
+													<div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
 														<span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>
-														<img src="<?php echo wp_get_attachment_image_url( $image, 'medium' ) ?>" alt="<?php esc_attr_e( $image ); ?>'"/>
+														<img src="<?php echo esc_html(wp_get_attachment_image_url( $image, 'medium' )) ?>" alt="<?php echo esc_attr( $image ); ?>'"/>
 													</div>
 
 													<?php
@@ -345,8 +345,8 @@
 				<?php $this->panel_header('FAQ Settings','FAQ Settings'); ?>
 				<section >
 					<div>
-						<label><?php _e( 'FAQ Content', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-						<span><?php  _e( 'FAQ Content turn on/off', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						<label><?php esc_html_e( 'FAQ Content', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<span><?php  esc_html_e( 'FAQ Content turn on/off', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 					</div>
 					<label class="switch">
 						<input type="checkbox" name="rbfw_enable_faq_content" value="<?php echo esc_attr($rbfw_enable_faq_content); ?>" <?php echo esc_attr(($rbfw_enable_faq_content=='yes')?'checked':''); ?>>
@@ -361,7 +361,7 @@
 								$i = 0;
 								foreach ( $faqs as $faq ) {
 									$id = 'rbfw_faq_content_' . $i;
-									echo $this->rbfw_repeated_item_accordion( $id, 'mep_event_faq', $faq, $i );
+									echo esc_html($this->rbfw_repeated_item_accordion( $id, 'mep_event_faq', $faq, $i ));
 									$i++;
 								}
 							}

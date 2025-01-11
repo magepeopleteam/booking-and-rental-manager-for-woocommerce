@@ -45,6 +45,7 @@ if(! class_exists('RBFW_Rent_Manager')){
                 add_action('admin_init', [$this,'get_plugin_data']);
                 add_action('admin_init', [$this,'flush_rules_rbfw_post_list_page']);
             }
+	        require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Hidden_Product.php';
             require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Quick_Setup.php';
             require_once RBFW_PLUGIN_DIR . '/inc/rbfw_import_demo.php';
 
@@ -93,7 +94,7 @@ if(! class_exists('RBFW_Rent_Manager')){
 
             if( strpos( $plugin_file_name, basename(__FILE__) ) ) {
 
-                if(!is_plugin_active( 'booking-and-rental-manager-for-woocommerce-pro/rent-pro.php')){
+                if(!is_plugin_active( 'booking-and-rental-manager-for-woocommerce/rent-pro.php')){
                     $rbfw_links = array(
                         'docs' => '<a href="'.esc_url("https://docs.mage-people.com/rent-and-booking-manager/").'" target="_blank">'.__('Docs','booking-and-rental-manager-for-woocommerce').'</a>',
                         'support' => '<a href="'.esc_url("https://mage-people.com/my-account").'" target="_blank">'.__('Support','booking-and-rental-manager-for-woocommerce').'</a>',
@@ -113,11 +114,11 @@ if(! class_exists('RBFW_Rent_Manager')){
         public function plugin_action_link($links_array, $plugin_file_name ) {
             if( strpos( $plugin_file_name, basename(__FILE__) ) ) {
 
-                if(!is_plugin_active( 'booking-and-rental-manager-for-woocommerce-pro/rent-pro.php')){
+                if(!is_plugin_active( 'booking-and-rental-manager-for-woocommerce/rent-pro.php')){
         
                     array_unshift( $links_array, '<a href="'.esc_url(admin_url()).'edit.php?post_type=rbfw_item&page=rbfw_settings_page">'.__('Settings','booking-and-rental-manager-for-woocommerce').'</a>');
         
-                    array_unshift( $links_array, '<a href="'.esc_url("https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/").'" target="_blank" class="rbfw_plugin_pro_meta_link">'.__('Get Booking and Rental Manager Pro','booking-and-rental-manager-for-woocommerce').'</a>');
+                    array_unshift( $links_array, '<a href="'.esc_url("https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/").'" target="_blank" class="rbfw_plugin_pro_meta_link">'.__('Get Booking and Rental Manager Pro','booking-and-rental-manager-for-woocommerce').'</a>');
         
                 }else{
                     array_unshift( $links_array, '<a href="'.esc_url(admin_url()).'edit.php?post_type=rbfw_item&page=rbfw_settings_page">'.__('Settings','booking-and-rental-manager-for-woocommerce').'</a>');

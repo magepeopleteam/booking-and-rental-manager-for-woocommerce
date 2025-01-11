@@ -75,7 +75,7 @@ function rbfw_free_woocommerce_integrate(){
 
     if(!empty($rbfw_payment_system)){
         $rbfw_payment_system = $rbfw_payment_system['rbfw_payment_system'];
-        $wc_folder_exist = rbfw_free_chk_plugin_folder_exist('booking-and-rental-manager-for-woocommerce-pro/inc/woocommerce');
+        $wc_folder_exist = rbfw_free_chk_plugin_folder_exist('booking-and-rental-manager-for-woocommerce/inc/woocommerce');
         if(rbfw_check_pro_active() === true && $wc_folder_exist === true){
             // do nothing
         }else {

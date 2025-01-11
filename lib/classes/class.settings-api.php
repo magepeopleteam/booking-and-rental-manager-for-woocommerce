@@ -276,7 +276,7 @@ class RBFW_Setting_API {
 		echo "<div class='media_preview'>";
 
 		if( "audio/mpeg" == $media_type ){
-			esc_html_e('Audio/Video format not supported.','rbfw-pro');
+			esc_html_e('Audio/Video format not supported.','booking-and-rental-manager-for-woocommerce');
 		}
 		else {
 			echo "<img id='media_preview_$id' src='$media_url'/>";
@@ -284,8 +284,8 @@ class RBFW_Setting_API {
 
 		echo "</div>";
         echo sprintf( '<input type="hidden" id="media_input_%1$s" name="%2$s[%1$s]" value="%3$s"/>', $id, $args['section'], $value);
-		echo "<div class='rbfw_green_btn' id='media_upload_$id' style='margin-right:5px'>".__('Upload','rbfw-pro')."</div>";
-		echo "<div class='rbfw_red_btn' id='media_remove_$id'>".__('Remove','rbfw-pro')."</div>";
+		echo "<div class='rbfw_green_btn' id='media_upload_$id' style='margin-right:5px'>".__('Upload','booking-and-rental-manager-for-woocommerce')."</div>";
+		echo "<div class='rbfw_red_btn' id='media_remove_$id'>".__('Remove','booking-and-rental-manager-for-woocommerce')."</div>";
 
 		echo "<script>jQuery(document).ready(function($){
 		jQuery('#media_upload_$id').click(function() {
@@ -450,7 +450,7 @@ class RBFW_Setting_API {
         $value = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
         $size  = isset( $args['size'] ) && !is_null( $args['size'] ) ? $args['size'] : 'regular';
         $id    = $args['section']  . '[' . $args['id'] . ']';
-        $label = isset( $args['options']['button_label'] ) ? $args['options']['button_label'] : __( 'Choose File' );
+        $label = isset( $args['options']['button_label'] ) ? $args['options']['button_label'] : __( 'Choose File','booking-and-rental-manager-for-woocommerce' );
 
         $html  = sprintf( '<input type="text" class="%1$s-text wpsa-url" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
         $html  .= '<input type="button" class="button wpsa-browse" value="' . $label . '" />';

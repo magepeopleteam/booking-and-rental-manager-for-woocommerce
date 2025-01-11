@@ -33,9 +33,9 @@
                     <section class="bg-light mt-5">
                         <div>
                             <label>
-                                <?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $title ); ?>
+                                <?php echo esc_html($title); ?>
                             </label>
-                            <span><?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $description ); ?></span>
+                            <span><?php echo esc_html($description); ?></span>
                         </div>
                     </section>
                 <?php
@@ -103,7 +103,7 @@
                             <?php }else{ ?>
 
                             <section >
-                                <p><?php _e('To enable automated tax calculation, first ensure that “enable taxes and tax calculations” is checked on WooCommerce &gt; Settings &gt; General. ','booking-and-rental-manager-for-woocommerce')?><a href="<?php esc_attr('https://woocommerce.com/document/woocommerce-shipping-and-tax/woocommerce-tax/') ?>"><?php _e('View Documentation','booking-and-rental-manager-for-woocommerce'); ?></a></p>
+                                <p><?php esc_html_e('To enable automated tax calculation, first ensure that “enable taxes and tax calculations” is checked on WooCommerce &gt; Settings &gt; General. ','booking-and-rental-manager-for-woocommerce')?><a href="<?php esc_attr('https://woocommerce.com/document/woocommerce-shipping-and-tax/woocommerce-tax/') ?>"><?php esc_html_e('View Documentation','booking-and-rental-manager-for-woocommerce'); ?></a></p>
                             </section>
                             <?php } ?>
 

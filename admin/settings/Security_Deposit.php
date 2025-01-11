@@ -65,7 +65,7 @@ if( ! class_exists('RBFW_Security_Deposit')){
                             <tr>
                                 <section>
                                     <label for="">Security Deposit Label</label>
-                                    <input type="text" name="rbfw_security_deposit_label" value="<?php echo get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) : 'Security Deposit' ?>" placeholder="">
+                                    <input type="text" name="rbfw_security_deposit_label" value="<?php echo esc_attr(get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) : 'Security Deposit') ?>" placeholder="">
                                 </section>
                             </tr>
 

@@ -625,8 +625,8 @@ if (!class_exists('Rbfw_Account_Page')) {
                                     foreach ($rent_info as $key => $value) {
                                         ?>
                                         <tr>
-                                            <td><strong><?php esc_html_e($key); ?></strong></td>
-                                            <td><?php echo $value;?></td>
+                                            <td><strong><?php echo esc_html($key); ?></strong></td>
+                                            <td><?php echo esc_html($value);?></td>
                                         </tr>
                                         <?php
                                     }
@@ -646,8 +646,8 @@ if (!class_exists('Rbfw_Account_Page')) {
                                     foreach ($rent_info as $key => $value) {
                                         ?>
                                         <tr>
-                                            <td><strong><?php esc_html_e($key); ?></strong></td>
-                                            <td><?php echo $value; ?></td>
+                                            <td><strong><?php echo esc_html($key); ?></strong></td>
+                                            <td><?php echo esc_html($value); ?></td>
                                         </tr>
                                         <?php
                                     }
@@ -667,8 +667,8 @@ if (!class_exists('Rbfw_Account_Page')) {
                                     foreach ($service_info as $key => $value) {
                                         ?>
                                         <tr>
-                                            <td><strong><?php echo $key; ?></strong></td>
-                                            <td><?php echo $value; ?></td>
+                                            <td><strong><?php echo esc_html($key); ?></strong></td>
+                                            <td><?php echo esc_html($value); ?></td>
                                         </tr>
                                         <?php
                                     }
@@ -679,8 +679,8 @@ if (!class_exists('Rbfw_Account_Page')) {
                                     foreach ($service_info as $key => $value) {
                                         ?>
                                         <tr>
-                                            <td><strong><?php esc_html_e($key); ?></strong></td>
-                                            <td><?php echo $value; ?></td>
+                                            <td><strong><?php echo esc_html($key); ?></strong></td>
+                                            <td><?php echo esc_html($value); ?></td>
                                         </tr>
                                         <?php
                                     }
@@ -691,8 +691,8 @@ if (!class_exists('Rbfw_Account_Page')) {
                                     foreach ($service_info as $key => $value) {
                                         ?>
                                         <tr>
-                                            <td><strong><?php esc_html_e($key); ?></strong></td>
-                                            <td><?php echo $value; ?></td>
+                                            <td><strong><?php echo esc_html($key); ?></strong></td>
+                                            <td><?php echo esc_html($value); ?></td>
                                         </tr>
                                         <?php
                                     }
@@ -727,7 +727,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                     <?php } ?>    
                     <tr>
                         <td><strong><?php esc_html_e( 'Total Cost:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                        <td><?php echo $total_cost.' '.$tax_status; ?></td>
+                        <td><?php echo esc_html($total_cost.' '.$tax_status); ?></td>
                     </tr>
                 </tbody>
             </table>

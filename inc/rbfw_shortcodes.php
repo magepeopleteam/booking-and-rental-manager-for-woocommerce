@@ -316,8 +316,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $content .= '<div class="pagination rbfw_pagination" id="rbfw_rent_list_pagination">';
         $content .= paginate_links(array(
             'total' => $query->max_num_pages,
-            'prev_text' => __('« '), // Optional: Add previous and next text
-            'next_text' => __(' »'),
+            'prev_text' => __('« ','booking-and-rental-manager-for-woocommerce'), // Optional: Add previous and next text
+            'next_text' => __(' »','booking-and-rental-manager-for-woocommerce'),
         ));
         $content .= '</div>';
     }

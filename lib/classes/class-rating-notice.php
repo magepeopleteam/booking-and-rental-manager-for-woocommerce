@@ -72,7 +72,7 @@ if ( ! class_exists( 'Mage_Rating' ) ) {
 
         public function text_domain() {
 
-            $this->text_domain = RBFW_Rent_Manager::get_plugin_data('TextDomain');
+            $this->text_domain = RBFW_Rent_Manager::get_plugin_data('booking-and-rental-manager-for-woocommerce');
             return $this;
     
         }
@@ -187,22 +187,22 @@ if ( ! class_exists( 'Mage_Rating' ) ) {
                 This would boost our motivation and help other users make a comfortable decision while choosing the <strong>".esc_html($this->plugin_name)."</strong>.</p>";
                 $message .='<div class="mage-rating-button-container">
                             <a id="'.esc_attr($this->text_domain).'_btn_deserved" href="'.esc_url($this->rating_url).'" class="mage-rating-notice-button button-primary" target="_blank">
-                                '.esc_html__('Ok, you deserved it',$this->text_domain).'
+                                '.esc_html__('Ok, you deserved it','booking-and-rental-manager-for-woocommerce').'
                             </a>
                             
                             <a id="'.esc_attr($this->text_domain).'_btn_already_did" href="#" class="mage-rating-notice-button button-default">
                                 <i class="fa-regular fa-face-smile"></i>
-                                '.esc_html__('I already did',$this->text_domain).'
+                                '.esc_html__('I already did','booking-and-rental-manager-for-woocommerce').'
                             </a>
                             
                             <a id="#" href="'.esc_url($this->support_url).'" class="mage-rating-notice-button button-default" target="_blank">
                                 <i class="fa-solid fa-headset"></i>
-                                '.esc_html__('I need support',$this->text_domain).'
+                                '.esc_html__('I need support','booking-and-rental-manager-for-woocommerce').'
                             </a>
                             
                             <a id="'.esc_attr($this->text_domain).$not_good_enough_btn_id.'" href="#" class="mage-rating-notice-button button-default">
                                 <i class="fa-regular fa-thumbs-down"></i>
-                                '.esc_html__('No, not good enough',$this->text_domain).'
+                                '.esc_html__('No, not good enough','booking-and-rental-manager-for-woocommerce').'
                             </a>
                         </div>';
                 $message .= '</div>';
