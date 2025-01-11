@@ -226,7 +226,7 @@ if (!class_exists('TTBM_Quick_Setup')) {
                 </div>
                 <?php if ($woo_status != 'Yes') { ?>
                     <div class='mep_seup_exit_sec'>
-                        <button style='margin:10px auto;' class="warningButton" type="submit" name="rbfw_skip_quick_setup"><?php _e('Skip, Go to Dashboard') ?></button>
+                        <button style='margin:10px auto;' class="warningButton" type="submit" name="rbfw_skip_quick_setup"><?php _e('Skip, Go to Dashboard','booking-and-rental-manager-for-woocommerce') ?></button>
                     </div>
                 <?php } ?>
             </div>

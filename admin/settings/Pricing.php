@@ -45,10 +45,8 @@
                 ?>
                     <section class="bg-light mt-5">
                         <div>
-                            <label>
-                                <?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $title ); ?>
-                            </label>
-                            <span><?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $description ); ?></span>
+                            <label><?php echo esc_html($title); ?></label>
+                            <span><?php echo esc_html($description); ?></span>
                         </div>
                     </section>
                 <?php
@@ -78,7 +76,7 @@
 					]; ?>
 					<select name="rbfw_item_type" id="rbfw_item_type">
 						<?php foreach($item_type as $kay => $value): ?>
-							<option <?php echo ($kay==$rbfw_item_type)?'selected':'' ?> value="<?php echo $kay; ?>"> <?php echo $value; ?> </option>
+							<option <?php echo ($kay==$rbfw_item_type)?'selected':'' ?> value="<?php echo esc_html($kay); ?>"> <?php echo esc_html($value); ?> </option>
 						<?php endforeach; ?>
 					</select>
 				</section>
@@ -922,9 +920,9 @@
 				$enable      = !empty(get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true )) ? get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) : '';
 				?>
 				<tr>
-					<th><?php esc_html_e( $day_name, '' ); ?></th>
-					<td><input type="number" name='rbfw_<?php echo mep_esc_html($day_slug); ?>_hourly_rate' value="<?php echo esc_html( $hourly_rate ); ?>" placeholder="<?php esc_html_e( 'Hourly Price', '' ); ?>"></td>
-					<td><input type="number" name='rbfw_<?php echo mep_esc_html($day_slug); ?>_daily_rate' value="<?php echo esc_html( $daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', '' ); ?>"></td>
+					<th><?php echo esc_html($day_name); ?></th>
+					<td><input type="number" name='rbfw_<?php echo mep_esc_html($day_slug); ?>_hourly_rate' value="<?php echo esc_html( $hourly_rate ); ?>" placeholder="<?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
+					<td><input type="number" name='rbfw_<?php echo mep_esc_html($day_slug); ?>_daily_rate' value="<?php echo esc_html( $daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
 					<td><input type="checkbox" name='rbfw_enable_<?php echo mep_esc_html($day_slug); ?>_day' value='yes' <?php if ( $enable == 'yes' ) {
 							echo 'checked';
 						} ?> ></td>
@@ -1011,7 +1009,7 @@
 							<span class="slider round"></span>
 						</label>
 						<span class="rbfw_daily_rate_input ms-2" >
-							<input type="number" name='rbfw_daily_rate' step="0.01" value="<?php echo esc_html( $rbfw_daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', '' ); ?>" <?php echo ( $rbfw_enable_daily_rate == 'no' ) ? 'disabled':''; ?>>
+							<input type="number" name='rbfw_daily_rate' step="0.01" value="<?php echo esc_html( $rbfw_daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo ( $rbfw_enable_daily_rate == 'no' ) ? 'disabled':''; ?>>
 						</span>
 					</div>
 				</section>
@@ -1027,7 +1025,7 @@
 							<span class="slider round"></span>
 						</label>
 						<span class="rbfw_hourly_rate ms-2" >
-							<input type="number" name='rbfw_hourly_rate' step="0.01" value="<?php echo esc_html( $rbfw_hourly_rate ); ?>" placeholder="<?php esc_html_e( 'Hourly Price', '' ); ?>" <?php echo ( $rbfw_enable_hourly_rate == 'no' ) ? 'disabled':''; ?>>
+							<input type="number" name='rbfw_hourly_rate' step="0.01" value="<?php echo esc_html( $rbfw_hourly_rate ); ?>" placeholder="<?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo ( $rbfw_enable_hourly_rate == 'no' ) ? 'disabled':''; ?>>
 						</span>
 					</div>
 				</section>

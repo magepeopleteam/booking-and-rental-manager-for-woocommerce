@@ -145,7 +145,7 @@ function fetch_order_details_callback() {
                                 }
                                 foreach ($show_columns as $column_key => $show) {
                                     if ($show) {
-                                        echo '<th>' . esc_html__(ucwords(str_replace('_', ' ', $column_key)), 'booking-and-rental-manager-for-woocommerce') . '</th>';
+                                        echo '<th>' . esc_html(ucwords(str_replace('_', ' ', $column_key))) . '</th>';
                                     }
                                 }
                                 ?>
@@ -374,7 +374,7 @@ function rbfw_order_meta_box_callback(){
     ?>
     <div class="rbfw_order_meta_box_wrap">
         <div class="rbfw_order_meta_box_head">
-            <h1><?php esc_html_e( 'Order #' .$order_no. ' Details', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
+            <h1><?php echo esc_html( 'Order #' .$order_no. ' Details'); ?></h1>
         </div>
         <div class="rbfw_order_meta_box_body">
             <table class="wp-list-table widefat fixed striped table-view-list">
@@ -590,8 +590,8 @@ function rbfw_order_meta_box_callback(){
                                                 foreach ($rent_info as $key => $value) {
                                                     ?>
                                                     <tr>
-                                                        <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                        <td><?php echo $value;?></td>
+                                                        <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                        <td><?php echo esc_html($value);?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -613,8 +613,8 @@ function rbfw_order_meta_box_callback(){
                                                 foreach ($rent_info as $key => $value) {
                                                     ?>
                                                     <tr>
-                                                        <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                        <td><?php echo $value; ?></td>
+                                                        <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                        <td><?php echo esc_html($value); ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -638,8 +638,8 @@ function rbfw_order_meta_box_callback(){
                                                     foreach ($service_info as $key => $value) {
                                                         ?>
                                                         <tr>
-                                                            <td><strong><?php echo $key; ?></strong></td>
-                                                            <td><?php echo $value; ?></td>
+                                                            <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                            <td><?php echo esc_html($value); ?></td>
                                                         </tr>
                                                         <?php
                                                     }
@@ -649,8 +649,8 @@ function rbfw_order_meta_box_callback(){
                                                     foreach ($service_info as $key => $value) {
                                                         ?>
                                                         <tr>
-                                                            <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                            <td><?php echo $value; ?></td>
+                                                            <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                            <td><?php echo esc_html($value); ?></td>
                                                         </tr>
                                                         <?php
                                                     }
@@ -660,8 +660,8 @@ function rbfw_order_meta_box_callback(){
                                                     foreach ($service_info as $key => $value) {
                                                         ?>
                                                         <tr>
-                                                            <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                            <td><?php echo $value; ?></td>
+                                                            <td><strong><?php echo esc_html($key); ?></strong></td>
+                                                            <td><?php echo esc_html($value); ?></td>
                                                         </tr>
                                                         <?php
                                                     }
@@ -692,7 +692,7 @@ function rbfw_order_meta_box_callback(){
                                                     <?php foreach ($value as $key1=>$item){ ?>
                                                         
                                                         <tr>
-                                                            <td><?php echo $item['name'] ?></td>
+                                                            <td><?php echo esc_html($item['name']); ?></td>
                                                             <td>
                                                                 <?php
                                                                 if($item['service_price_type']=='day_wise'){

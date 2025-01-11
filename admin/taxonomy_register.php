@@ -5,8 +5,8 @@ function rbfw_taxonomy_register(){
     global $rbfw;
     $label = $rbfw->get_name();
     $labelso = array(
-        'name'                       => _x( 'Category','booking-and-rental-manager-for-woocommerce' ),
-        'singular_name'              => _x( 'Category','booking-and-rental-manager-for-woocommerce' ),
+        'name'                       => __( 'Category','booking-and-rental-manager-for-woocommerce' ),
+        'singular_name'              => __( 'Category','booking-and-rental-manager-for-woocommerce' ),
         'menu_name'                  =>  $label.__( ' Type', 'booking-and-rental-manager-for-woocommerce' ),
     );
 
@@ -27,8 +27,8 @@ function rbfw_taxonomy_register(){
 
 
     $labelso = array(
-        'name'                       => _x( 'Location','booking-and-rental-manager-for-woocommerce' ),
-        'singular_name'              => _x( 'Location','booking-and-rental-manager-for-woocommerce' ),
+        'name'                       => __( 'Location','booking-and-rental-manager-for-woocommerce' ),
+        'singular_name'              => __( 'Location','booking-and-rental-manager-for-woocommerce' ),
         'menu_name'                  => __( 'Location', 'booking-and-rental-manager-for-woocommerce' ),
     );
     $argso = array(

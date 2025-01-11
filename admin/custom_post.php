@@ -24,7 +24,7 @@ if( ! class_exists('RBFW_Custom_Post')){
         public function rbfw_cpt_custom_column($columns,$post_id){
             switch($columns){
                 case 'rbfw_item_type':
-                    $rbfw_item_type = esc_html__(get_post_meta($post_id,'rbfw_item_type',true));
+                    $rbfw_item_type = get_post_meta($post_id,'rbfw_item_type',true);
                     $item_type = [
 						'bike_car_sd' => 'Bike/Car for single day',
 						'bike_car_md' => 'Bike/Car for multiple day',
@@ -35,16 +35,16 @@ if( ! class_exists('RBFW_Custom_Post')){
 						'others' => 'Others',
 					];
                     foreach($item_type as $kay => $value):
-                        echo __(($kay==$rbfw_item_type)?$value:'');
+                        echo $kay==$rbfw_item_type ? $value : '';
                     endforeach;
                 break;
                 case 'rbfw_categories':
                     $cats = get_post_meta($post_id,'rbfw_categories',true);
                     if ( ! empty($cats) ) {
                         foreach ($cats as $key => $cat) {
-                            echo __("<a href='edit.php?post_type=rbfw_item&rbfw_categories=".$cat."'>".$cat."</a>");
+                            echo "<a href='edit.php?post_type=rbfw_item&rbfw_categories=".$cat."'>".$cat."</a>";
                             if ($key !== count($cats) - 1) {
-                                echo __(', ');
+                                echo ', ';
                             }
                         }
                     }
@@ -71,33 +71,33 @@ if( ! class_exists('RBFW_Custom_Post')){
                 $editor = false;
             }
             $labels = array(
-                        'name'                  => __($cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'singular_name'         => __($cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'menu_name'             => __($cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'name_admin_bar'        => __($cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'archives'              => __($cpt_label . ' List', 'booking-and-rental-manager-for-woocommerce'),
-                        'attributes'            => __($cpt_label . ' List', 'booking-and-rental-manager-for-woocommerce'),
-                        'parent_item_colon'     => __($cpt_label . ' Item:', 'booking-and-rental-manager-for-woocommerce'),
+                        'name'                  => $cpt_label,
+                        'singular_name'         => $cpt_label,
+                        'menu_name'             => $cpt_label,
+                        'name_admin_bar'        => $cpt_label,
+                        'archives'              => $cpt_label . __(' List', 'booking-and-rental-manager-for-woocommerce'),
+                        'attributes'            => $cpt_label . __(' List', 'booking-and-rental-manager-for-woocommerce'),
+                        'parent_item_colon'     => $cpt_label . __(' Item:', 'booking-and-rental-manager-for-woocommerce'),
                         'all_items'             => __('All Items', 'booking-and-rental-manager-for-woocommerce'),
                         'add_new_item'          => __('Add New Item', 'booking-and-rental-manager-for-woocommerce'),
                         'add_new'               => __('Add New Item', 'booking-and-rental-manager-for-woocommerce'),
-                        'new_item'              => __('New Item' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'edit_item'             => __('Edit ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'update_item'           => __('Update ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'view_item'             => __('View ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'view_items'            => __('View ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'search_items'          => __('Search ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'not_found'             => __($cpt_label . ' Not found', 'booking-and-rental-manager-for-woocommerce'),
-                        'not_found_in_trash'    => __($cpt_label . ' Not found in Trash', 'booking-and-rental-manager-for-woocommerce'),
-                        'featured_image'        => __($cpt_label . ' Featured Image', 'booking-and-rental-manager-for-woocommerce'),
-                        'set_featured_image'    => __('Set ' . $cpt_label . ' featured image', 'booking-and-rental-manager-for-woocommerce'),
-                        'remove_featured_image' => __('Remove ' . $cpt_label . ' featured image', 'booking-and-rental-manager-for-woocommerce'),
-                        'use_featured_image'    => __('Use as ' . $cpt_label . ' featured image', 'booking-and-rental-manager-for-woocommerce'),
-                        'insert_into_item'      => __('Insert into ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'uploaded_to_this_item' => __('Uploaded to this ' . $cpt_label, 'booking-and-rental-manager-for-woocommerce'),
-                        'items_list'            => __($cpt_label . ' list', 'booking-and-rental-manager-for-woocommerce'),
-                        'items_list_navigation' => __($cpt_label . ' list navigation', 'booking-and-rental-manager-for-woocommerce'),
-                        'filter_items_list'     => __('Filter ' . $cpt_label . ' list', 'booking-and-rental-manager-for-woocommerce'),
+                        'new_item'              => __('New Item ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'edit_item'             => __('Edit ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'update_item'           => __('Update ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'view_item'             => __('View ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'view_items'            => __('View ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'search_items'          => __('Search ', 'booking-and-rental-manager-for-woocommerce').$cpt_label,
+                        'not_found'             => $cpt_label . __(' Not found', 'booking-and-rental-manager-for-woocommerce'),
+                        'not_found_in_trash'    => $cpt_label . __(' Not found in Trash', 'booking-and-rental-manager-for-woocommerce'),
+                        'featured_image'        => $cpt_label . __(' Featured Image', 'booking-and-rental-manager-for-woocommerce'),
+                        'set_featured_image'    => __('Set ','booking-and-rental-manager-for-woocommerce'). $cpt_label . __(' featured image', 'booking-and-rental-manager-for-woocommerce'),
+                        'remove_featured_image' => __('Remove ','booking-and-rental-manager-for-woocommerce') . $cpt_label . __(' featured image', 'booking-and-rental-manager-for-woocommerce'),
+                        'use_featured_image'    => __('Use as ','booking-and-rental-manager-for-woocommerce'). $cpt_label . __(' featured image', 'booking-and-rental-manager-for-woocommerce'),
+                        'insert_into_item'      => __('Insert into ','booking-and-rental-manager-for-woocommerce') . $cpt_label,
+                        'uploaded_to_this_item' => __('Uploaded to this ','booking-and-rental-manager-for-woocommerce') . $cpt_label,
+                        'items_list'            => $cpt_label . __(' list', 'booking-and-rental-manager-for-woocommerce'),
+                        'items_list_navigation' => $cpt_label . __(' list navigation', 'booking-and-rental-manager-for-woocommerce'),
+                        'filter_items_list'     => __('Filter ','booking-and-rental-manager-for-woocommerce') . $cpt_label . __(' list', 'booking-and-rental-manager-for-woocommerce'),
                     );
 
                 $args = array(

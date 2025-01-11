@@ -33,10 +33,8 @@
                 ?>
                     <section class="bg-light mt-5">
                         <div>
-                            <label>
-                                <?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $title ); ?>
-                            </label>
-                            <span><?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $description ); ?></span>
+                            <label><?php echo esc_html($title); ?></label>
+                            <span><?php echo esc_html($description); ?></span>
                         </div>
                     </section>
                 <?php
@@ -152,10 +150,10 @@
                     <section  class="additional-gallary-image <?php echo $additional_gallary=='on'?'show':'hide' ?>">
                         <div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
                             <div class='button upload' id='rbfw_gallery_images_additional_<?php echo esc_attr($post_id); ?>'>
-                                <?php echo __('Upload','pickplugins-options-framework');?>
+                                <?php echo __('Upload','booking-and-rental-manager-for-woocommerce');?>
                             </div>
                             <div class='button clear' id='media_clear_additional_<?php echo $post_id; ?>'>
-                                <?php echo __('Clear','pickplugins-options-framework');?>
+                                <?php echo __('Clear','booking-and-rental-manager-for-woocommerce');?>
                             </div>
                             <div class="gallery-images media-list-additional-<?php echo esc_attr($post_id); ?> ">
                                 <?php

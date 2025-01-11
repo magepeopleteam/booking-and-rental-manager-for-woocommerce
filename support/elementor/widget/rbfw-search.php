@@ -36,7 +36,7 @@ class RBFWSearchWidget extends Widget_Base {
 		$this->start_controls_section(
 			'rbfw_search_style_section',
 			[
-				'label' => esc_html__( 'Style', 'textdomain' ),
+				'label' => esc_html__( 'Style', 'booking-and-rental-manager-for-woocommerce' ),
 				'tab' => \Elementor\Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -44,7 +44,7 @@ class RBFWSearchWidget extends Widget_Base {
 		$this->add_control(
 			'rbfw_search_bg_color',
 			[
-				'label' => esc_html__( 'Background Color', 'textdomain' ),
+				'label' => esc_html__( 'Background Color', 'booking-and-rental-manager-for-woocommerce' ),
 				'type' => \Elementor\Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .rbfw_search_form' => 'background-color: {{VALUE}}',
@@ -55,7 +55,7 @@ class RBFWSearchWidget extends Widget_Base {
         $this->add_control(
             'rbfw_search_label_color',
             [
-                'label' => esc_html__( 'Label Color', 'textdomain' ),
+                'label' => esc_html__( 'Label Color', 'booking-and-rental-manager-for-woocommerce' ),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rbfw_search_form label' => 'color: {{VALUE}}',
@@ -66,7 +66,7 @@ class RBFWSearchWidget extends Widget_Base {
         $this->add_control(
             'rbfw_search_button_bg_color',
             [
-                'label' => esc_html__( 'Button Background Color', 'textdomain' ),
+                'label' => esc_html__( 'Button Background Color', 'booking-and-rental-manager-for-woocommerce' ),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rbfw_search_form button' => 'background-color: {{VALUE}}',
@@ -77,7 +77,7 @@ class RBFWSearchWidget extends Widget_Base {
         $this->add_control(
             'rbfw_search_button_text_color',
             [
-                'label' => esc_html__( 'Button Text Color', 'textdomain' ),
+                'label' => esc_html__( 'Button Text Color', 'booking-and-rental-manager-for-woocommerce' ),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
                     '{{WRAPPER}} .rbfw_search_form button' => 'color: {{VALUE}}',

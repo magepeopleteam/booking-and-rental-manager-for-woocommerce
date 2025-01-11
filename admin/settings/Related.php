@@ -29,10 +29,8 @@ if( ! class_exists('RBFW_Related')){
             ?>
                 <section class="bg-light mt-5">
                     <div>
-                        <label>
-                            <?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $title ); ?>
-                        </label>
-                        <span><?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $description ); ?></span>
+                        <label><?php echo esc_html($title); ?></label>
+                        <span><?php echo esc_html($description); ?></span>
                     </div>
                 </section>
             <?php
