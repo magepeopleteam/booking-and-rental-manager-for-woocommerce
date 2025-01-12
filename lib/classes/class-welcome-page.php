@@ -37,60 +37,60 @@ class RBFW_Welcome
     ?>
     <div class="wrap rbfw_welcome_wrap">
     <?php settings_errors(); ?>
-        <h1><?php _e( 'Welcome to Booking and Rental Manager', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
+        <h1><?php esc_html_e( 'Welcome to Booking and Rental Manager', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
             <ul class="tabs">
-                <li class="tab-link current" data-tab="tab-1"><?php _e( 'Welcome', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
-                <li class="tab-link" data-tab="tab-3"><?php _e( 'Shortcodes', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li class="tab-link current" data-tab="tab-1"><?php esc_html_e( 'Welcome', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li class="tab-link" data-tab="tab-3"><?php esc_html_e( 'Shortcodes', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
             </ul>
             <!-- Start Tab One Content -->
             <div id="tab-1" class="tab-content current">
-            <h1><?php _e( 'Welcome to Booking and Rental Manager Plugin Guideline', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
+            <h1><?php esc_html_e( 'Welcome to Booking and Rental Manager Plugin Guideline', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
             <p><?php echo wp_kses('A complete rental & booking solution for your business. It is perfect to offer all types of rental and booking services.', $arr); ?></p>
             <a href="<?php echo esc_url('https://booking.mage-people.com/'); ?>" class="rbfw_go_pro_btn2"><?php esc_html_e('View Demo','booking-and-rental-manager-for-woocommerce'); ?></a>
             <a href="<?php echo esc_url('https://docs.mage-people.com/rent-and-booking-manager/'); ?>" class="rbfw_go_pro_btn3"><?php esc_html_e('Documentation','booking-and-rental-manager-for-woocommerce'); ?></a>
 
-            <h2><?php _e( 'Video Tutorial: How to create a <b>Bike/Car for Single Day</b> booking or rental item?', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-            <p class="rbfw_alert_success"><i class="fa-solid fa-circle-info"></i> <?php _e( 'Video tutorial comming soon. Please follow the online <a href="https://docs.mage-people.com/rent-and-booking-manager/" target="_blank">documentation</a>.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+            <h2><?php echo wp_kses( 'Video Tutorial: How to create a <b>Bike/Car for Single Day</b> booking or rental item?', array( 'b' => array() ) ); ?></h2>
+            <p class="rbfw_alert_success"><i class="fa-solid fa-circle-info"></i> <?php echo wp_kses( 'Video tutorial comming soon. Please follow the online <a href="https://docs.mage-people.com/rent-and-booking-manager/" target="_blank">documentation</a>.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 
-            <h2><?php _e( 'Video Tutorial: How to create a <b>resort</b> booking or rental item?', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-            <p class="rbfw_alert_success"><i class="fa-solid fa-circle-info"></i> <?php _e( 'Video tutorial comming soon. Please follow the online <a href="https://docs.mage-people.com/rent-and-booking-manager/" target="_blank">documentation</a>.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+            <h2><?php echo wp_kses( 'Video Tutorial: How to create a <b>resort</b> booking or rental item?', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+            <p class="rbfw_alert_success"><i class="fa-solid fa-circle-info"></i> <?php echo wp_kses( 'Video tutorial comming soon. Please follow the online <a href="https://docs.mage-people.com/rent-and-booking-manager/" target="_blank">documentation</a>.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 
             </div>
              <!-- End Start Tab One Content -->
 
              <!-- Start Tab Three Content --> 
             <div id="tab-3" class="tab-content">
-            <h1><?php _e( 'All Shortcode list', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
+            <h1><?php esc_html_e( 'All Shortcode list', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
             <div class="rbfw_shortcode_table_wrapper">
                 <table class="rbfw_shortcode_table">
                     <thead>
                         <tr>
-                            <th><?php _e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php _e( 'Shortcode', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php _e( 'Parameter Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                            <th><?php _e( 'Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                            <th><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                            <th><?php esc_html_e( 'Shortcode', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                            <th><?php esc_html_e( 'Parameter Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                            <th><?php esc_html_e( 'Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><?php _e( 'Rents – List Style', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
+                            <td><?php esc_html_e( 'Rents – List Style', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
                             <td><code>[rent-list style="list" show="8"]</code></td>
                             <td><p><code>style</code>grid or list | Default: <strong>grid</strong> <code>show</code>Number of items show  (integer number only)   |  Default:  <strong>-1</strong> to show all</p></td>
-                            <td><a href="https://booking.mage-people.com/rents-list-style/" target="_blank" class="rbfw_go_pro_btn3"><?php _e( 'View Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></a></td>
+                            <td><a href="https://booking.mage-people.com/rents-list-style/" target="_blank" class="rbfw_go_pro_btn3"><?php esc_html_e( 'View Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></a></td>
                         </tr>
 
                         <tr>
-                            <td><?php _e( 'Rents – Grid Style', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
+                            <td><?php esc_html_e( 'Rents – Grid Style', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
                             <td><code>[rent-list style="grid" show="8"]</code></td>
                             <td><p><code>style</code>grid or list | Default: <strong>grid</strong> <code>show</code>Number of items show  (integer number only)   |  Default:  <strong>-1</strong> to show all</p></td>
-                            <td><a href="https://booking.mage-people.com/rents-grid-style/" target="_blank" class="rbfw_go_pro_btn3"><?php _e( 'View Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></a></td>
+                            <td><a href="https://booking.mage-people.com/rents-grid-style/" target="_blank" class="rbfw_go_pro_btn3"><?php esc_html_e( 'View Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></a></td>
                         </tr>
 
                         <tr>
-                            <td><?php _e( 'Bike List – Grid Style', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
+                            <td><?php esc_html_e( 'Bike List – Grid Style', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
                             <td><code>[rent-list style="grid" type="bike_car_sd"]</code></td>
                             <td><p><code>style</code>grid or list | Default: <strong>grid</strong> <code>type</code><strong>bike_car_sd</strong> or <strong>bike_car_md</strong> or <strong>resort</strong> or <strong>equipment</strong> or <strong>dress</strong> or <strong>others</strong> |  Default: show all</p></td>
-                            <td><a href="https://booking.mage-people.com/" target="_blank" class="rbfw_go_pro_btn3"><?php _e( 'View Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></a></td>
+                            <td><a href="https://booking.mage-people.com/" target="_blank" class="rbfw_go_pro_btn3"><?php esc_html_e( 'View Demo', 'booking-and-rental-manager-for-woocommerce' ); ?></a></td>
                         </tr>                 
                     </tbody>
                 </table>
@@ -99,7 +99,7 @@ class RBFW_Welcome
             <!-- End Tab Three Content -->
             <?php if(!is_plugin_active( 'booking-and-rental-manager-for-woocommerce/rent-pro.php')){ ?>
             <div class="rbfw_welcome_footer">
-                <div class="rbfw_welcome_footer_col"><?php _e( 'Get Pro and Other Available Addons to get all features.', 'booking-and-rental-manager-for-woocommerce' ); ?> <a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/" target="_blank" class="rbfw_go_pro_btn1"><?php _e( 'Buy Pro', 'booking-and-rental-manager-for-woocommerce' ); ?></a></div>
+                <div class="rbfw_welcome_footer_col"><?php esc_html_e( 'Get Pro and Other Available Addons to get all features.', 'booking-and-rental-manager-for-woocommerce' ); ?> <a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/" target="_blank" class="rbfw_go_pro_btn1"><?php esc_html_e( 'Buy Pro', 'booking-and-rental-manager-for-woocommerce' ); ?></a></div>
             </div>
             <?php } ?>
     </div>

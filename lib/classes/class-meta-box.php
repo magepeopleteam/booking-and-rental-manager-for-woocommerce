@@ -72,7 +72,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 		{
             ?>
             <li data-target-tabs="#<?php echo esc_attr($this->get_meta_box_id()); ?>">
-				<?php echo mep_esc_html($this->get_meta_box_title()); ?>
+				<?php echo esc_html($this->get_meta_box_title()); ?>
 			</li>
 			<?php
         }
@@ -94,13 +94,13 @@ if (!class_exists('RMFWAddMetaBox')) {
 								
 								<div data-title="<?php echo esc_html($section['title']); ?>">
 									<?php foreach ($section['options'] as $option) : ?>
-										<section class="component d-flex  justify-content-between align-items-start mb-2" data-row="<?php echo $option['id']; ?>">
+										<section class="component d-flex  justify-content-between align-items-start mb-2" data-row="<?php echo esc_attr($option['id']); ?>">
 											<label scope="row" class="h6 w-30">
 												<?php 
 													echo esc_html($option['title']); 
 													$details = isset($option['details']) ? $option['details'] : "";
 													if (!empty($details)) {
-														echo  '<i class="fas fa-question-circle tool-tips"><span>'.mep_esc_html($details).'</span></i>';
+														echo  '<i class="fas fa-question-circle tool-tips"><span>'.esc_html($details).'</span></i>';
 													}
 												?>
 											</label>
@@ -114,7 +114,7 @@ if (!class_exists('RMFWAddMetaBox')) {
 												$option['value'] = $option_value;
 												$this->field_generator($option);
 												if ($option['id']=='tax_notice') {
-													printf('<p>'.mep_esc_html($details).'<p>');
+													printf('<p>'.esc_html($details).'<p>');
 												}
 												?>
 											</div>
@@ -166,12 +166,12 @@ if (!class_exists('RMFWAddMetaBox')) {
 				endif;
 
 				if (sizeof($option) > 0 && isset($option['type'])) {
-					echo rbfw_field_generator($option['type'], $option);
-					do_action("wp_theme_settings_field_$type", $option);
+					$output = rbfw_field_generator($option['type'], $option);
+					echo wp_kses_post($output); 
+					do_action("wp_theme_settings_field_{$option['type']}", $option);
 				}
-
 				// if (!empty($details)) {
-				// 	echo "<p class='description'>" . mep_esc_html($details) . "</p>";
+				// 	echo "<p class='description'>" . esc_html($details) . "</p>";
 				// }
 			}
 

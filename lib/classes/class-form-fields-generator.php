@@ -226,7 +226,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             $post_id = $post->ID;
             ob_start();
             ?>
-            <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $post_id; ?>']</code>
+            <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart id='<?php echo esc_attr( $post_id ); ?>']</code>
 
             <?php
             return ob_get_clean();
@@ -253,7 +253,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             ) );
                             foreach ( $terms as $key => $value ) {
                                 ?>
-                                <option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
+                             <option <?php echo (in_array($value->name, $rbfw_categories)) ? 'selected' : ''; ?> value="<?php echo esc_attr($value->name); ?>"> <?php echo esc_html($value->name); ?> </option>
                                 <?php
                             }
                             ?>
@@ -3497,7 +3497,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             ?>
             <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?>
                     id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-textarea-wrapper field-textarea-wrapper-<?php echo esc_attr($field_id); ?>">
-                <textarea name='<?php echo esc_attr($field_name); ?>' id='<?php echo esc_attr($field_id); ?>' cols='40' rows='5' placeholder='<?php echo esc_attr($placeholder); ?>'><?php echo mep_esc_html($__value); ?></textarea>
+                <textarea name='<?php echo esc_attr($field_name); ?>' id='<?php echo esc_attr($field_id); ?>' cols='40' rows='5' placeholder='<?php echo esc_attr($placeholder); ?>'><?php echo esc_html($__value); ?></textarea>
                 <div class="error-mgs"></div>
             </div>
 
@@ -8242,7 +8242,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             $media_title= get_the_title( $value );
                             ?>
                             <div class="item m-1">
-                                <span class="remove" onclick="jQuery(this).parent().remove()"><?php echo mep_esc_html($remove_text); ?></span>
+                                <span class="remove" onclick="jQuery(this).parent().remove()"><?php echo esc_html($remove_text); ?></span>
                                 <span class="sort" ><i class="fa-solid fa-grip"></i></span>
                                 <img id='media_preview_<?php echo esc_attr($id); ?>' src='<?php echo esc_attr($media_url); ?>' style='width:100%'/>
                                 <div class="item-title"><?php // echo esc_html($media_title); ?></div>
@@ -8579,7 +8579,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                         html += '<span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
                         <?php endif; ?>
 						html += '<span class="button remove " ' +
-                            'onclick="jQuery(this).parent().parent().remove()"><?php echo mep_esc_html($remove_text); ?></span>';
+                            'onclick="jQuery(this).parent().parent().remove()"><?php echo esc_html($remove_text); ?></span>';
                         html += '</div>';
                         // html += ' <span  class="title-text">#'+now+'</span></div>';
                         fields_arr.forEach(function(element) {
@@ -8686,7 +8686,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                         <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
                                     <?php endif; ?>
 
-                                    <span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo mep_esc_html($remove_text); ?></span>
+                                    <span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo esc_html($remove_text); ?></span>
 
                                 </div>
 
@@ -8756,7 +8756,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                 $_value     = !empty($val[$item_id]) ? $val[$item_id] : $default;
                                                 $__value    = str_replace('<br />', PHP_EOL, html_entity_decode($_value));;
                                                 ?>
-                                                <textarea name="<?php echo esc_attr($field_name); ?>[<?php echo esc_attr($index); ?>][<?php echo esc_attr($item_id); ?>]"><?php echo mep_esc_html($__value); ?></textarea>
+                                                <textarea name="<?php echo esc_attr($field_name); ?>[<?php echo esc_attr($index); ?>][<?php echo esc_attr($item_id); ?>]"><?php echo esc_html($__value); ?></textarea>
                                             <?php elseif($type == 'select'):
                                                 $args = isset($field['args']) ? $field['args'] : array();
                                                 $default = isset($field['default']) ? $field['default'] : '';

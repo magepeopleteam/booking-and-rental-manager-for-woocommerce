@@ -34,17 +34,18 @@ if (!class_exists('RBFWProPage')) {
                         <a href="<?php echo esc_url('https://docs.mage-people.com/rent-and-booking-manager/'); ?>" class="rbfw_go_pro_btn3"><?php esc_html_e('Documentation','booking-and-rental-manager-for-woocommerce'); ?></a>
                     </div>
                     <div class="rbfw_go_pro_intro_col_2">
-                        <img src="<?php echo RBFW_PLUGIN_URL . '/css/images/4529264-ai.png'?>" alt="<?php esc_attr_e('Booking and Rental Manager for WooCommerce Pro','booking-and-rental-manager-for-woocommerce'); ?>">
+                        <img src="<?php echo esc_url(RBFW_PLUGIN_URL . '/css/images/4529264-ai.png'); ?>" alt="<?php esc_attr_e('Booking and Rental Manager for WooCommerce Pro','booking-and-rental-manager-for-woocommerce'); ?>">
                     </div>
+
                 </div>
                 <div class="rbfw_go_pro_intro_sec rbfw_seasonal_price_addon">
                     <div class="rbfw_go_pro_intro_col_1">
-                        <h1><?php _e('Booking and Rental Manager for WooCommerce <span>Addon: Seasonal Pricing</span>','booking-and-rental-manager-for-woocommerce'); ?></h1>
+                        <h1><?php esc_html_e('Booking and Rental Manager for WooCommerce <span>Addon: Seasonal Pricing</span>','booking-and-rental-manager-for-woocommerce'); ?></h1>
                         <p><?php esc_html_e('Addon: Seasonal Pricing extends the date-wise pricing features.','booking-and-rental-manager-for-woocommerce'); ?></p>
                         <a href="<?php echo esc_url('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-addon-seasonal-pricing/'); ?>" class="rbfw_go_pro_btn1"><?php esc_html_e('Buy Seasonal Pricing Addon','booking-and-rental-manager-for-woocommerce'); ?></a>
                     </div>
                     <div class="rbfw_go_pro_intro_col_2">
-                        <img src="<?php echo RBFW_PLUGIN_URL . '/css/images/seasonal-pricing-img.jpg'?>" alt="<?php esc_attr_e('Booking and Rental Manager for WooCommerce Pro','booking-and-rental-manager-for-woocommerce'); ?>">
+                        <img src="<?php echo esc_url(RBFW_PLUGIN_URL . '/css/images/seasonal-pricing-img.jpg'); ?>" alt="<?php esc_attr_e('Booking and Rental Manager for WooCommerce Pro','booking-and-rental-manager-for-woocommerce'); ?>">
                     </div>
                 </div> 
                 <div class="rbfw_go_pro_review_sec">
@@ -53,7 +54,7 @@ if (!class_exists('RBFWProPage')) {
                 </h1>
                     
                     <div class="rbfw_go_pro_review_row">
-                        <img src="<?php echo RBFW_PLUGIN_URL . '/css/images/rent-pro-features.png'?>" alt="<?php esc_attr_e('Booking and Rental Manager for WooCommerce Pro Features','booking-and-rental-manager-for-woocommerce'); ?>">
+                        <img src="<?php echo esc_url(RBFW_PLUGIN_URL . '/css/images/rent-pro-features.png'); ?>" alt="<?php esc_attr_e('Booking and Rental Manager for WooCommerce Pro Features','booking-and-rental-manager-for-woocommerce'); ?>">
                     </div>
                     <h1><?php esc_html_e('What User Says About Our Plugin','booking-and-rental-manager-for-woocommerce'); ?><span class="rbfw_go_pro_divider"></span></h1>
                     <div class="rbfw_go_pro_review_row">

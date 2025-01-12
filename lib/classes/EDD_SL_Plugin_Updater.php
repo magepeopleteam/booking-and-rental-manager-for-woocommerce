@@ -239,7 +239,7 @@ class EDD_SL_Plugin_Updater {
 			// build a plugin list row, with update notification
 			$wp_list_table = _get_list_table( 'WP_Plugins_List_Table' );
 			# <tr class="plugin-update-tr"><td colspan="' . $wp_list_table->get_column_count() . '" class="plugin-update colspanchange">
-			echo '<tr class="plugin-update-tr" id="' . $this->slug . '-update" data-slug="' . $this->slug . '" data-plugin="' . $this->slug . '/' . $file . '">';
+			echo '<tr class="plugin-update-tr" id="' . esc_attr($this->slug) . '-update" data-slug="' . esc_attr($this->slug) . '" data-plugin="' . esc_attr($this->slug) . '/' . esc_attr($file) . '">';
 			echo '<td colspan="3" class="plugin-update colspanchange">';
 			echo '<div class="update-message notice inline notice-warning notice-alt">';
 
@@ -247,7 +247,7 @@ class EDD_SL_Plugin_Updater {
 
 			if ( empty( $version_info->download_link ) ) {
 				printf(
-					__( 'There is a new version of available. View version.', 'booking-and-rental-manager-for-woocommerce' ),
+					esc_html__( 'There is a new version of available. View version.', 'booking-and-rental-manager-for-woocommerce' ),
 					esc_html( $version_info->name ),
 					'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
 					esc_html( $version_info->new_version ),
@@ -255,7 +255,7 @@ class EDD_SL_Plugin_Updater {
 				);
 			} else {
 				printf(
-					__( 'There is a new version of available version  details or.', 'booking-and-rental-manager-for-woocommerce' ),
+					esc_html__( 'There is a new version of available version  details or.', 'booking-and-rental-manager-for-woocommerce' ),
 					esc_html( $version_info->name ),
 					'<a target="_blank" class="thickbox" href="' . esc_url( $changelog_link ) . '">',
 					esc_html( $version_info->new_version ),
@@ -498,9 +498,14 @@ class EDD_SL_Plugin_Updater {
 			return;
 		}
 
-		if( ! current_user_can( 'update_plugins' ) ) {
-			wp_die( __( 'You do not have permission to install plugin updates', 'booking-and-rental-manager-for-woocommerce' ), __( 'Error', 'booking-and-rental-manager-for-woocommerce' ), array( 'response' => 403 ) );
-		}
+		if ( ! current_user_can( 'update_plugins' ) ) {
+    wp_die(
+        esc_html__( 'You do not have permission to install plugin updates', 'booking-and-rental-manager-for-woocommerce' ),
+        esc_html__( 'Error', 'booking-and-rental-manager-for-woocommerce' ),
+        array( 'response' => 403 )
+    );
+}
+
 
 		$data         = $edd_plugin_data[ mage_array_strip($_REQUEST['slug']) ];
 		$version_info = $this->get_cached_version_info();

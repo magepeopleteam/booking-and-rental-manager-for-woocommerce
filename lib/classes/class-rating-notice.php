@@ -208,7 +208,7 @@ if ( ! class_exists( 'Mage_Rating' ) ) {
                 $message .= '</div>';
                 $message .= '</div>';
 
-                echo $message;
+                echo wp_kses_post($message);
                 }
             }
         }
