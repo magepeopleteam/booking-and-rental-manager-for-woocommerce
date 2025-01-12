@@ -20,17 +20,22 @@
 				add_action( 'wp_ajax_rbfw_save_faq_data', [$this,'rbfw_save_faq_data'] );
 				add_action( 'wp_ajax_nopriv_rbfw_save_faq_data', [$this,'rbfw_save_faq_data']);
 			}
-
-
-			public function get_rbfw_add_faq_content() {
-				$id = 'id'.uniqid();
-				$count = RBFW_Function::data_sanitize( $_POST['count'] );
-				$count = (int)$count + 1;
-				echo esc_html($this->rbfw_repeated_item_addnew($id, 'mep_event_faq', [], $count));
-				wp_die();
-			}
-
-            public function add_tab_menu() {
+	        
+	        
+	        public function get_rbfw_add_faq_content() {
+		        check_ajax_referer( 'rbfw_add_faq_nonce', 'security' );
+		        
+		        if ( isset( $_POST['count'] ) ) {
+			        $count = absint( wp_unslash( $_POST['count'] ) );
+			        $count = $count + 1;
+			        $id = 'id' . uniqid();
+			        echo esc_html( $this->rbfw_repeated_item_addnew( $id, 'mep_event_faq', [], $count ) );
+		        } else {
+			        wp_send_json_error( 'Missing count parameter' );
+		        }
+		        wp_die();
+	        }
+	        public function add_tab_menu() {
             ?>
                 <li data-target-tabs="#rbfw_faq"><i class="fa-solid fa-circle-question"></i><?php esc_html_e( ' FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
             <?php
@@ -328,14 +333,17 @@
 				<?php
 				return ob_get_clean();
 			}
-			public function rbfw_save_faq_data(){
-				$postID = $_POST['postID'];
-				$jsObj = !empty($_POST['data']) ? $_POST['data'] : [];
-				$jsObj = json_decode(stripslashes($jsObj),TRUE);
-				update_post_meta($postID,'mep_event_faq',$jsObj);
-				wp_die();
-			}
-			public function add_tabs_content_accordion( $post_id ) {
+	        public function rbfw_save_faq_data(){
+		        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_save_faq_data_nonce' ) ) {
+			        die( 'Permission denied' );
+		        }
+		        $postID = isset( $_POST['postID'] ) ? sanitize_text_field( wp_unslash($_POST['postID'] )) : 0;
+		        $jsObj = isset( $_POST['data'] ) ? json_decode( sanitize_textarea_field( wp_unslash( $_POST['data'] ) ), true ) : [];
+		        update_post_meta( $postID, 'mep_event_faq', $jsObj );
+		        wp_die();
+	        }
+	        
+	        public function add_tabs_content_accordion( $post_id ) {
 				$rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
 			?>
 			<div class="mpStyle mp_tab_item" data-tab-item="#rbfw_faq">
@@ -656,12 +664,12 @@
 				}
 			
 			public function settings_save($post_id) {
-                
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
-                    return;
-                }
-
-                if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+				
+				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
+					return;
+				}
+				
+				if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
                     return;
                 }
 
@@ -701,7 +709,7 @@
 								delete_post_meta( $post_id, $meta_key, $old_data );
 							}
 						}
-						$rbfw_enable_faq_content  = isset( $_POST['rbfw_enable_faq_content'] ) ? rbfw_array_strip( $_POST['rbfw_enable_faq_content'] ) : 'no';
+						$rbfw_enable_faq_content  = isset( $_POST['rbfw_enable_faq_content'] ) ? rbfw_array_strip( sanitize_text_field( wp_unslash( $_POST['rbfw_enable_faq_content'] ))) : 'no';
 						update_post_meta( $post_id, 'rbfw_enable_faq_content', $rbfw_enable_faq_content );
 					}
  

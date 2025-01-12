@@ -105,11 +105,11 @@
             <?php 
             }
             public function settings_save($post_id) {
-                
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
-                    return;
-                }
-                if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+	            
+	            if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
+		            return;
+	            }
+	            if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
                     return;
                 }
                 if ( ! current_user_can( 'edit_post', $post_id ) ) {
@@ -118,9 +118,9 @@
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
 					//$gallery_images = get_post_meta( $post_id, 'rbfw_gallery_images', true ) ? get_post_meta( $post_id, 'rbfw_gallery_images', true ) : [];
-					$gallery_images = isset( $_POST['rbfw_gallery_images'] ) ? rbfw_array_strip( $_POST['rbfw_gallery_images'] ) : [];
-					
-					update_post_meta($post_id, 'rbfw_gallery_images', $gallery_images);
+	                $gallery_images = isset( $_POST['rbfw_gallery_images'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_gallery_images'] ) ) : [];
+	                
+	                update_post_meta($post_id, 'rbfw_gallery_images', $gallery_images);
 
 					
 
