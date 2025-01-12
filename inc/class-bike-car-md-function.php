@@ -54,8 +54,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $star_time = isset($_POST['pickup_time'])?sanitize_text_field($_POST['pickup_time']):'';
             $end_time = isset($_POST['dropoff_time'])?sanitize_text_field($_POST['dropoff_time']):'';
 
-            $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
-            $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
+            $pickup_datetime = gmdate('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
+            $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
             $item_quantity = absint($_POST['item_quantity']);
             $rbfw_enable_variations = sanitize_text_field($_POST['rbfw_enable_variations']);
@@ -111,7 +111,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $duration .= $actual_days > 1 ? $actual_days.' '.rbfw_string_return('rbfw_text_days',esc_html__('Days','booking-and-rental-manager-for-woocommerce')).' ' : $actual_days.' '.rbfw_string_return('rbfw_text_day',esc_html__('Day','booking-and-rental-manager-for-woocommerce')).' ';
             }
 
-            echo json_encode( array(
+            echo wp_json_encode( array(
                 'duration_price' => $duration_price,
                 'duration_price_html' => wc_price($duration_price),
                 'rbfw_service_price' => $rbfw_service_price,
@@ -175,7 +175,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
                 $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
                 $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
-                $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
+                $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? wp_strip_all_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $percent = 0;
                 $tax_status = '';
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage)){

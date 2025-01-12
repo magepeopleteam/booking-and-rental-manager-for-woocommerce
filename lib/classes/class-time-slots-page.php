@@ -71,7 +71,7 @@ if (!class_exists('RBFW_Timeslots_Page')) {
 
             foreach ($time_slots_arr as $key => $value) {
 
-                $arr[$key] = date('H:i', strtotime($value));
+                $arr[$key] = gmdate('H:i', strtotime($value));
             }
 
             return $arr;
@@ -103,8 +103,8 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                         foreach ($rbfw_time_slots as $key => $value) {
                             ?>
                             <tr>
-                                <td><?php echo $key; ?></td>
-                                <td><?php echo $value; ?></td>
+                            <td><?php echo esc_html($key); ?></td>
+                            <td><?php echo esc_html(wp_strip_all_tags($value)); ?></td>
                                 <td style="text-align:right">
                                     <a href="#" class="rbfw_time_slot_edit_btn" data-label="<?php echo esc_attr($key); ?>"><i class="fa-solid fa-pen-to-square"></i> <?php esc_html_e('Edit','booking-and-rental-manager-for-woocommerce'); ?></a>
                                     <a href="#" class="rbfw_time_slot_remove_btn" data-time="<?php echo esc_attr($value); ?>" data-label="<?php echo esc_attr($key); ?>"><i class="fa-solid fa-trash-can"></i></a>
@@ -146,7 +146,7 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                     $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
                     $ts_label = sanitize_text_field($_POST['ts_label']);
                     $ts_time = sanitize_text_field($_POST['ts_time']);
-                    $ts_time = date('H:i', strtotime($ts_time));
+                    $ts_time = gmdate('H:i', strtotime($ts_time));
 
                     if( ! array_key_exists($ts_label, $rbfw_time_slots) ){
                         $rbfw_time_slots[$ts_label] = $ts_time;
@@ -157,7 +157,7 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                     }
                 }
             }
-            echo json_encode( array(
+            echo wp_json_encode( array(
                 'status'   => $status,
             ));
             wp_die();
@@ -184,7 +184,7 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                 }
             }
 
-            echo json_encode( array(
+            echo wp_json_encode( array(
                 'status'   => $status,
             ) );
 
@@ -215,7 +215,7 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                     update_option('rbfw_time_slots', $rbfw_time_slots);
                     $status = 'updated';
 
-                    echo json_encode( array(
+                    echo wp_json_encode( array(
                         'status'   => $status,
                     ) );
                 }

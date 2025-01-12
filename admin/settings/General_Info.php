@@ -99,7 +99,7 @@
     
                 ob_start();
                 ?>
-    
+
                 <div id="field-wrapper-<?php echo esc_attr($id); ?>" class="field-wrapper field-text-multi-wrapper field-text-multi-wrapper-<?php echo esc_attr($field_id); ?>">
                     <section>  
                         <div class="w-100">
@@ -313,7 +313,7 @@
                         );
                         $option_value         = get_post_meta($post_id, $options['id'], true);
                         $options['value']      = is_serialized($option_value) ? unserialize($option_value) : $option_value;
-                        echo esc_html($this->field_feature_category($options));
+                        echo wp_kses_post($this->field_feature_category($options));
                     ?>
                 <?php
             }

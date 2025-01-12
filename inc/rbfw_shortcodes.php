@@ -243,12 +243,12 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         <?php
         if( $left_filter === 'yes' ){
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper_with_left_filter';
-            echo rbfw_rent_left_filter( $left_filter_control );
+            echo esc_html(rbfw_rent_left_filter( $left_filter_control ));
         }else{
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper';
         }
         ?>
-        <div class=" <?php echo $rent_list_wrapper_cls.' '.$grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>" id="rbfw_rent_list_wrapper">
+        <div class=" <?php echo esc_html($rent_list_wrapper_cls).' '.esc_html($grid_class) ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>" id="rbfw_rent_list_wrapper">
 
             <?php
             $d = 1;
@@ -263,8 +263,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 if($rbfw_enable_start_end_date=='no'){
                     $rbfw_event_end_date  = get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) : '';
                     $rbfw_event_end_time  = get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) : '';
-                    $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
-                    $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
+                    $rbfw_event_end_time  = gmdate('h:i a', strtotime($rbfw_event_end_time));
+                    $rbfw_event_end_time  = gmdate('h:i a', strtotime($rbfw_event_end_time));
                     $rbfw_event_last_date = strtotime(date_i18n('Y-m-d h:i a', strtotime($rbfw_event_end_date.' '.$rbfw_event_end_time)));
                     $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                     if($rbfw_event_last_date<$rbfw_todays_date){
@@ -304,7 +304,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             <?php
             endif;
 
-            wp_reset_query();
+            wp_reset_postdata();
             ?>
         </div>
     </div>
@@ -441,7 +441,7 @@ function rbfw_rent_search_shortcode( $attr = null ){
     <section class="rbfw_rent_item_search_elementor_section">
         <div class="rbfw_rent_item_search_elementor_container">
 <!--            <form class="rbfw_search_form_new" action="--><?php //echo esc_url($search_page_link); ?><!--" method="GET">-->
-            <form class="rbfw_search_form_new" action="<?php echo get_home_url() . '/search-item-list/';  ?>" method="GET">
+            <form class="rbfw_search_form_new" action="<?php echo esc_html(get_home_url() . '/search-item-list/');  ?>" method="GET">
                 <div class="rbfw_rent_item_search_container">
 
                     <div class="rbfw_rent_item_searchContentHolder">

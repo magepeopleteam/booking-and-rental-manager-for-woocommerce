@@ -112,7 +112,7 @@ if (!class_exists('Rbfw_Search_Page')) {
 
                 rbfw_rent_search_shortcode_func();
 
-                echo rbfw_rent_list_shortcode_func($atts);
+                echo wp_kses_post(rbfw_rent_list_shortcode_func($atts));
 
             }else{
 
@@ -144,9 +144,9 @@ if (!class_exists('Rbfw_Search_Page')) {
                         foreach ($cat_features as $features) {
                             $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                             $title = $features['title'];
-                            $rand_number = rand();
+                            $rand_number = wp_rand();
                             if ($title) {
-                                $icom = mep_esc_html($icon);
+                                $icom = esc_html($icon);
                                 $all_cat_features .= "<li class='bfw_rent_list_items title  $rand_number '><span class='bfw_rent_list_items_icon'><i class='$icom'></i></span>  $title </li>";
                             }
                         }
@@ -382,7 +382,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                 $enabled_fri = get_post_meta($post_id, 'rbfw_enable_fri_day', true) ? get_post_meta($post_id, 'rbfw_enable_fri_day', true) : 'yes';
                 $enabled_sat = get_post_meta($post_id, 'rbfw_enable_sat_day', true) ? get_post_meta($post_id, 'rbfw_enable_sat_day', true) : 'yes';
 
-                $current_day = date('D');
+                $current_day = gmdate('D');
 
                 if ($current_day == 'Sun' && $enabled_sun == 'yes') {
                     $price = (float)$price_sun;
@@ -402,7 +402,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                     $price = (float)$price;
                 }
 
-                $current_date = date('Y-m-d');
+                $current_date = gmdate('Y-m-d');
                 $rbfw_sp_prices = get_post_meta($post_id, 'rbfw_seasonal_prices', true);
                 if (!empty($rbfw_sp_prices)) {
                     $sp_array = [];
@@ -530,7 +530,7 @@ if (!class_exists('Rbfw_Search_Page')) {
             }
             ob_start()
                 ?>
-                <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo $d; ?>">
+                <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo esc_attr($d); ?>">
                     <div class="rbfw_rent_list_inner_wrapper">
                         <div class="<?php echo esc_attr($image_holder) ?>">
                             <a class="rbfw_rent_list_grid_view_top_img" href="<?php echo esc_url($post_link); ?>">
@@ -545,7 +545,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                                     </h2>
 
                                     <div class="rbfw_rent_list_grid_row rbfw_pricing-box">
-                                        <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo rbfw_mps_price($price); ?></span></p>
+                                    <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo wp_kses_post(rbfw_mps_price($price)); ?></span></p>
                                         <span class="rbfw_rent_list_row_price_level">/ <?php echo esc_html($price_level); ?></span>
                                     </div>
                                 </div>
@@ -579,12 +579,10 @@ if (!class_exists('Rbfw_Search_Page')) {
                                                         if ($i <= $display_cat_features ) {
                                                             $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                                                             $title = $features['title'];
-                                                            $rand_number = rand();
+                                                            $rand_number = wp_rand();
                                                             if ($title) {
                                                                 ?>
-                                                                <li class=" bfw_rent_list_items title <?php echo $rand_number ?>"><span
-                                                                            class="bfw_rent_list_items_icon"><i
-                                                                                class="<?php echo mep_esc_html($icon) ?>"></i></span> <?php echo $title ?></li>
+                                                                <li class="bfw_rent_list_items title <?php echo esc_attr($rand_number); ?>"><span class="bfw_rent_list_items_icon"><i class="<?php echo esc_html($icon); ?>"></i></span> <?php echo esc_html($title); ?></li>
                                                                 <?php
                                                             }
                                                         }
@@ -593,7 +591,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                                                 }
                                                 ?>
                                                 <?php  if( count( $cat_features ) > $display_cat_features ){?>
-                                                    <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo $post_id?>">See more</div>
+                                                    <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr($post_id); ?>">See more</div>
                                                 <?php }?>
                                             </ul>
                                             <?php
@@ -656,7 +654,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                     ob_start();
                     ?>
                     <div class="rbfw_rent_item_fearture_holder">
-                        <h5 class="rbfw_toggle-header rbfw_white_color"><?php echo $type_text?></h5>
+                    <h5 class="rbfw_toggle-header rbfw_white_color"><?php echo esc_html($type_text); ?></h5>
                         <div class="rbfw_toggle-content rbfw_toggle_container">
                     <?php
                     if( $filter_type === 'rbfw_left_filter_feature'){

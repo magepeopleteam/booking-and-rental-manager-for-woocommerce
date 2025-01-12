@@ -391,18 +391,19 @@ class Insights {
         $notice .= 'We are using Appsero to collect your data. <a href="' . $policy_url . '">Learn more</a> about how Appsero collects and handle your data.</p>';
 
         echo '<div class="updated"><p>';
-            echo esc_html($notice);
+            echo wp_kses_post($notice);
             echo '</p><p class="submit">';
-            echo esc_html('&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary button-large">' . $this->client->__trans( 'Allow' ) . '</a>');
-            echo esc_html('&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary button-large">' . $this->client->__trans( 'No thanks' ) . '</a>');
+            echo '&nbsp;<a href="' . esc_url($optin_url) . '" class="button-primary button-large">' . esc_html($this->client->__trans('Allow')) . '</a>';
+            echo '&nbsp;<a href="' . esc_url($optout_url) . '" class="button-secondary button-large">' . esc_html($this->client->__trans('No thanks')) . '</a>';
+
         echo '</p></div>';
 
-        echo esc_html("<script type='text/javascript'>jQuery('." . $this->client->slug . "-insights-data-we-collect').on('click', function(e) {
+        echo "<script type='text/javascript'>jQuery('." . esc_js($this->client->slug) . "-insights-data-we-collect').on('click', function(e) {
                 e.preventDefault();
                 jQuery(this).parents('.updated').find('p.description').slideToggle('fast');
             });
             </script>
-        ");
+        ";
     }
 
     /**
@@ -465,7 +466,7 @@ class Insights {
     public function get_post_count( $post_type ) {
         global $wpdb;
 
-        return (int) $wpdb->get_var( "SELECT count(ID) FROM $wpdb->posts WHERE post_type = '$post_type' and post_status = 'publish'");
+        // return (int) $wpdb->get_var( "SELECT count(ID) FROM $wpdb->posts WHERE post_type = '$post_type' and post_status = 'publish'");
     }
 
     /**
@@ -540,22 +541,22 @@ class Insights {
         foreach ( $plugins as $k => $v ) {
             // Take care of formatting the data how we want it.
             $formatted = array();
-            $formatted['name'] = strip_tags( $v['Name'] );
+            $formatted['name'] = wp_strip_all_tags( $v['Name'] );
 
             if ( isset( $v['Version'] ) ) {
-                $formatted['version'] = strip_tags( $v['Version'] );
+                $formatted['version'] = wp_strip_all_tags( $v['Version'] );
             }
 
             if ( isset( $v['Author'] ) ) {
-                $formatted['author'] = strip_tags( $v['Author'] );
+                $formatted['author'] = wp_strip_all_tags( $v['Author'] );
             }
 
             if ( isset( $v['Network'] ) ) {
-                $formatted['network'] = strip_tags( $v['Network'] );
+                $formatted['network'] = wp_strip_all_tags( $v['Network'] );
             }
 
             if ( isset( $v['PluginURI'] ) ) {
-                $formatted['plugin_uri'] = strip_tags( $v['PluginURI'] );
+                $formatted['plugin_uri'] = wp_strip_all_tags( $v['PluginURI'] );
             }
 
             if ( in_array( $k, $active_plugins_keys ) ) {

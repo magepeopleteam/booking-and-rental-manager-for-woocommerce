@@ -67,7 +67,7 @@ if (!class_exists('RBFW_Status')) {
                     <tbody>
                         <tr>
                             <td><?php esc_html_e( 'WooCommerce', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
-                            <td><?php echo $button_wc; ?></td>
+                            <td><?php echo esc_html($button_wc); ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -140,10 +140,10 @@ if (!class_exists('RBFW_Status')) {
                 $slug = sanitize_text_field($_GET['rbfw_plugin_activate']);
                 $activate = activate_plugin( $slug );
                 $url = admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_import' );
-                echo '<script>
+                echo wp_kses_post('<script>
                 var url = "'.$url.'";
                 window.location.replace(url);
-                </script>';
+                </script>');
             }
             else{
                 return false;
@@ -167,11 +167,11 @@ if (!class_exists('RBFW_Status')) {
                         $action.'_'.$slug
                     );
                     if(isset($url)){
-                        echo '<script>
+                        echo wp_kses_post('<script>
                             str = "'.$url.'";
                             var url = str.replace(/&amp;/g, "&");
                             window.location.replace(url);
-                            </script>';
+                            </script>');
                     }
 
 

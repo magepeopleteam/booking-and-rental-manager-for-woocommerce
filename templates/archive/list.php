@@ -87,7 +87,7 @@ $enabled_fri = get_post_meta($post_id, 'rbfw_enable_fri_day', true) ? get_post_m
 $price_sat = get_post_meta($post_id, 'rbfw_sat_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_sat_hourly_rate', true) : 0;
 $enabled_sat = get_post_meta($post_id, 'rbfw_enable_sat_day', true) ? get_post_meta($post_id, 'rbfw_enable_sat_day', true) : 'yes';
 
-$current_day = date('D');
+$current_day = gmdate('D');
 
 if ($current_day == 'Sun' && $enabled_sun == 'yes') {
     $price = (float) $price_sun;
@@ -107,7 +107,7 @@ if ($current_day == 'Sun' && $enabled_sun == 'yes') {
     $price = (float) $price;
 }
 
-$current_date = date('Y-m-d');
+$current_date = gmdate('Y-m-d');
 $rbfw_sp_prices = get_post_meta($post_id, 'rbfw_seasonal_prices', true);
 if (!empty($rbfw_sp_prices)) {
     $sp_array = [];
@@ -255,7 +255,7 @@ echo '<pre>';*/
 
                                         $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                                         $title = $features['title'];
-                                        $rand_number = rand();
+                                        $rand_number = wp_rand();
                                         if ($title):
 
                                             echo esc_attr('<li title="'.$title.'" class="title'.$rand_number.'" ');

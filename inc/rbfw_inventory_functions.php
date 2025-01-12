@@ -10,7 +10,7 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
     $title = $meta_data['rbfw_billing_name'];
     $cpt_name = 'rbfw_order_meta';
     if($rbfw_payment_system == 'wps'){
-        $wc_order_id = $meta_data['rbfw_order_id'];
+        $wc_order_id = intval($meta_data['rbfw_order_id']);
         $ticket_info = $meta_data['rbfw_ticket_info'];
         $order_tax = !empty(get_post_meta($wc_order_id, '_order_tax', true)) ? get_post_meta($wc_order_id, '_order_tax', true) : 0;
         $total_cost = get_post_meta($wc_order_id, '_order_total', true);
@@ -36,10 +36,10 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
                     $rbfw_id = $item['rbfw_id'];
                     foreach ($item as $key => $value) {
                         if ($key == 'rbfw_start_date' || $key == 'rbfw_end_date') {
-                            $value = date('Y-m-d', strtotime($value));
+                            $value = gmdate('Y-m-d', strtotime($value));
                         }
                         if ($key == 'rbfw_start_datetime' || $key == 'rbfw_end_datetime') {
-                            $value = date('Y-m-d h:i A', strtotime($value));
+                            $value = gmdate('Y-m-d h:i A', strtotime($value));
                         }
                         update_post_meta($post_id, $key, $value);
                     }
@@ -94,8 +94,8 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
     if( ($rbfw_item_type == 'bike_car_md') || ($rbfw_item_type == 'dress') || ($rbfw_item_type == 'equipment') || ($rbfw_item_type == 'others') ){
 
         // Start: Date Time Calculation
-        $start_datetime  = date( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
-        $end_datetime = date( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
+        $start_datetime  = gmdate( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
+        $end_datetime = gmdate( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
         $start_datetime  = new DateTime( $start_datetime );
         $end_datetime = new DateTime( $end_datetime );
 
@@ -118,19 +118,19 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
                 if($rbfw_count_extra_day_enable=='on'){
                     for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
-                        $date = date('d-m-Y', $currentDate);
+                        $date = gmdate('d-m-Y', $currentDate);
                         $date_range[] = $date;
                     }
                 }else{
                     for ($currentDate = $start_date; $currentDate < $end_date; $currentDate += (86400)) {
-                        $date = date('d-m-Y', $currentDate);
+                        $date = gmdate('d-m-Y', $currentDate);
                         $date_range[] = $date;
                     }
                 }
             } else {
 
                 for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
-                    $date = date('d-m-Y', $currentDate);
+                    $date = gmdate('d-m-Y', $currentDate);
                     $date_range[] = $date;
                 }
             }
@@ -141,7 +141,7 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
         $start_date = strtotime($start_date);
         $end_date = strtotime($end_date);
         for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
-            $date = date('d-m-Y', $currentDate);
+            $date = gmdate('d-m-Y', $currentDate);
             $date_range[] = $date;
         }
     } else{
@@ -149,7 +149,7 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
         $start_date = strtotime($start_date);
         $end_date = strtotime($end_date);
         for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
-            $date = date('d-m-Y', $currentDate);
+            $date = gmdate('d-m-Y', $currentDate);
             $date_range[] = $date;
         }
     }
@@ -182,15 +182,52 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
     return true;
 }
 
-function rbfw_update_inventory($order_id, $current_status = null){
+
+function rbfw_update_inventory($order_id, $current_status = null) {
     global $wpdb;
-    $order_items_table = $wpdb->prefix . 'woocommerce_order_items';
-    $order = $wpdb->get_results("SELECT * FROM `$order_items_table` WHERE order_id = ".$order_id."");
+
+    // Retrieve the WooCommerce order object.
+    $order = wc_get_order($order_id);
+
+    if (!$order) {
+        return; // Exit if the order doesn't exist.
+    }
+
+    // Loop through each item in the order.
+    foreach ($order->get_items() as $item_id => $item) {
+        // Get the custom meta '_rbfw_id' for the order item.
+        $rbfw_id = $item->get_meta('_rbfw_id', true);
+
+        if ($rbfw_id) {
+            // Retrieve the inventory data for the associated product.
+            $inventory = get_post_meta($rbfw_id, 'rbfw_inventory', true);
+
+            // Check if the inventory exists and contains the order ID.
+            if (!empty($inventory) && is_array($inventory) && array_key_exists($order_id, $inventory)) {
+                // Update the order status in the inventory data.
+                $inventory[$order_id]['rbfw_order_status'] = $current_status;
+
+                // Save the updated inventory back to the post meta.
+                update_post_meta($rbfw_id, 'rbfw_inventory', $inventory);
+            }
+        }
+    }
+}
+
+/*
+function rbfw_update_inventory($order_id, $current_status = null){
+
+    $order = wc_get_order($order_id);
+
 
     foreach( $order as $item ) {
         $order_itemmeta_table = $wpdb->prefix . 'woocommerce_order_itemmeta';
         $item_id = $item->order_item_id;
-        $item_meta_data = $wpdb->get_results("SELECT * FROM `$order_itemmeta_table` WHERE order_item_id = ".$item_id." AND meta_key = '_rbfw_id' ");
+        $item_meta_data = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM `$order_itemmeta_table` WHERE order_item_id = %d AND meta_key = %s",
+            $item_id,
+            '_rbfw_id'
+        ));
 
         foreach ($item_meta_data as $meta_data) {
             $rbfw_id = $meta_data->meta_value;
@@ -201,7 +238,7 @@ function rbfw_update_inventory($order_id, $current_status = null){
             }
         }
     }
-}
+}*/
 
 function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null,$rbfw_enable_time_slot='off'){
 
@@ -221,7 +258,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     $date_range = [];
 
     for ($currentDate = strtotime($start_date); $currentDate <= strtotime($end_date); $currentDate += (86400)) {
-        $date = date('d-m-Y', $currentDate);
+        $date = gmdate('d-m-Y', $currentDate);
         $date_range[] = $date;
     }
     // End: Get Date Range
@@ -331,8 +368,8 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                         $inventory_start_time = $inventory['rbfw_start_time'];
                         $inventory_end_time = $inventory['rbfw_end_time'];
 
-                        $inventory_start_datetime = date('Y-m-d H:i', strtotime($inventory_start_date . ' ' . $inventory_start_time));
-                        $inventory_end_datetime = date('Y-m-d H:i', strtotime($inventory_end_date . ' ' . $inventory_end_time));
+                        $inventory_start_datetime = gmdate('Y-m-d H:i', strtotime($inventory_start_date . ' ' . $inventory_start_time));
+                        $inventory_end_datetime = gmdate('Y-m-d H:i', strtotime($inventory_end_date . ' ' . $inventory_end_time));
                         if($key1==0){
                              if($inventory_end_datetime>$pickup_datetime){
                                  $total_qty += $rbfw_item_quantity;
@@ -545,7 +582,7 @@ function rbfw_inventory_page(){
             </div>
         </div>
         <div class="rbfw_inventory_page_table_wrap">
-            <?php echo rbfw_inventory_page_table($query); ?>
+            <?php echo esc_html(rbfw_inventory_page_table($query)); ?>
         </div>
     </div>
     <div id="rbfw_stock_view_result_wrap">
@@ -724,7 +761,7 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                         $service_q = [];
                         foreach ($item1['cat_services'] as $key1=>$single){
                             if($single['title']){
-                                $service_quantity[] = $single['stock_quantity'];
+                                $service_quantity[] = esc_html($single['stock_quantity']);
                                 $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return,$start_time , $end_time ));
                                 $service_stock[] = $single['stock_quantity'] - max(array_column($service_q, $single['title']));
                             }
@@ -735,17 +772,17 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
                 ?>
                 <tr>
-                    <td><?php echo date(get_option('date_format'),strtotime($current_date)); ?></td>
+                    <td><?php echo esc_html(gmdate(get_option('date_format'),strtotime($current_date))); ?></td>
 
                     <td><a href="<?php echo esc_url(admin_url('post.php?post='.$post_id.'&action=edit')); ?>" class="rbfw_item_title"><?php echo esc_html(get_the_title()); ?></a></td>
 
-                    <td class="rbfw_text_center"><span class="rbfw_s_qty_span"><?php echo $remaining_item_stock; ?>/<?php echo $rbfw_item_stock_quantity; ?></span> <a class="rbfw_stock_view_details" data-request="closing" data-date="<?php echo $current_date; ?>" data-id="<?php echo get_the_ID(); ?>"><?php esc_attr_e('View Details','booking-and-rental-manager-for-woocommerce'); ?></a></td>
+                    <td class="rbfw_text_center"><span class="rbfw_s_qty_span"><?php echo esc_html($remaining_item_stock); ?>/<?php echo esc_html($rbfw_item_stock_quantity); ?></span> <a class="rbfw_stock_view_details" data-request="closing" data-date="<?php echo esc_html($current_date); ?>" data-id="<?php echo esc_html(get_the_ID()); ?>"><?php esc_attr_e('View Details','booking-and-rental-manager-for-woocommerce'); ?></a></td>
 
-                    <td class="rbfw_text_center"><?php  echo $sold_item_qty; ?></td>
-                    <td class="rbfw_text_center"><?php echo $remaining_es_stock; ?>/<?php echo $total_es_qty; ?></td>
-                    <td class="rbfw_text_center"><?php echo $sold_es_qty; ?></td>
-                    <td class="rbfw_text_center"><?php echo array_sum($service_stock); ?>/<?php echo array_sum($service_quantity); ?></td>
-                    <td class="rbfw_text_center"><?php echo array_sum($service_quantity)-array_sum($service_stock); ?></td>
+                    <td class="rbfw_text_center"><?php  echo esc_html($sold_item_qty); ?></td>
+                    <td class="rbfw_text_center"><?php echo esc_html($remaining_es_stock); ?>/<?php echo esc_html($total_es_qty); ?></td>
+                    <td class="rbfw_text_center"><?php echo esc_html($sold_es_qty); ?></td>
+                    <td class="rbfw_text_center"><?php echo esc_html(array_sum($service_stock)); ?>/<?php echo esc_html(array_sum($service_quantity)); ?></td>
+                    <td class="rbfw_text_center"><?php echo esc_html(array_sum($service_quantity)-array_sum($service_stock)); ?></td>
                 </tr>
                 <?php
             }
@@ -767,32 +804,30 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
 
 
-         function rbfw_get_stock_by_filter(){
+function rbfw_get_stock_by_filter(){
 
-            $selected_date = strip_tags($_POST['selected_date']);
-            $start_date = strip_tags($_POST['start_date']);
-            $end_date = strip_tags($_POST['end_date']);
+    if (isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field($_POST['nonce']), 'rbfw_ajax_action')) {
+        $selected_date = sanitize_text_field($_POST['selected_date']);
+        $start_date = sanitize_text_field($_POST['start_date']);
+        $end_date = sanitize_text_field($_POST['end_date']);
 
-            $args = array(
+        $args = array(
                 'post_type' => 'rbfw_item',
-                'order' => 'DESC',
-                'posts_per_page' => -1
-            );
+            'order' => 'DESC',
+            'posts_per_page' => -1
+        );
+        $query = new WP_Query( $args );
+        $content = rbfw_inventory_page_table($query, $selected_date,$start_date,$end_date);
+        echo esc_html($content);
+        wp_die();
+    }
+}
 
-            $query = new WP_Query( $args );
+function rbfw_get_stock_details(){
 
-            $content = rbfw_inventory_page_table($query, $selected_date,$start_date,$end_date);
-
-            echo $content;
-
-            wp_die();
-        }
-
-         function rbfw_get_stock_details(){
-
-            $data_request = strip_tags($_POST['data_request']);
-            $data_date = strip_tags($_POST['data_date']);
-            $data_id = strip_tags($_POST['data_id']);
+            $data_request = wp_strip_all_tags($_POST['data_request']);
+            $data_date = wp_strip_all_tags($_POST['data_date']);
+            $data_id = wp_strip_all_tags($_POST['data_id']);
             $inventory_based_on_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
             $rent_type = !empty(get_post_meta($data_id, 'rbfw_item_type', true)) ? get_post_meta($data_id, 'rbfw_item_type', true) : '';
             $rbfw_enable_variations = !empty(get_post_meta($data_id, 'rbfw_enable_variations', true)) ? get_post_meta($data_id, 'rbfw_enable_variations', true) : 'no';
@@ -980,8 +1015,8 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                     <tbody>
                         <?php foreach ($rbfw_resort_room_data as $resort_room_data) { ?>
                         <tr>
-                            <td><?php echo $resort_room_data['room_type']; ?></td>
-                            <td><?php echo $resort_room_data['rbfw_room_available_qty']; ?></td>
+                            <td><?php echo esc_html($resort_room_data['room_type']); ?></td>
+                            <td><?php echo esc_html($resort_room_data['rbfw_room_available_qty']); ?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
@@ -1000,8 +1035,8 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                     <tbody>
                         <?php foreach ($rbfw_bike_car_sd_data as $bike_car_sd_data) { ?>
                         <tr>
-                            <td><?php echo $bike_car_sd_data['rent_type']; ?></td>
-                            <td><?php echo $bike_car_sd_data['qty']; ?></td>
+                            <td><?php echo esc_html($bike_car_sd_data['rent_type']); ?></td>
+                            <td><?php echo esc_html($bike_car_sd_data['qty']); ?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
@@ -1031,7 +1066,7 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
                                        <tr>
                                             <th class="rbfw_inventory_page_inner_vf_th">
                                                 <div class="rbfw_inventory_vf_label">
-                                                   <?php echo $_variations_data['field_label'].':' ?>
+                                                   <?php echo esc_html($_variations_data['field_label']).':' ?>
                                                 </div>
                                                 <?php if(!empty($_variations_data['value'])){ ?>
                                                     <table class="rbfw_inventory_page_inner_table">
@@ -1050,10 +1085,10 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
                                                         <tbody>
                                                             <tr>
                                                                 <td>
-                                                                   <?php echo $value['name']; ?>
+                                                                   <?php echo esc_html($value['name']); ?>
                                                                 </td>
                                                                 <td data-status="<?php if(empty($value['quantity']) || $value['quantity'] <= 0){ echo "empty"; }?>">
-                                                                    <?php echo $value['quantity']; ?>
+                                                                    <?php echo esc_html($value['quantity']); ?>
                                                                </td>
                                                             </tr>
                                                         </tbody>
@@ -1083,8 +1118,8 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
                     <tbody>
                         <?php foreach ($rbfw_extra_service_data as $extra_service_data) { ?>
                         <tr>
-                            <td><?php echo $extra_service_data['service_name']; ?></td>
-                            <td><?php echo $extra_service_data['service_qty']; ?></td>
+                            <td><?php echo esc_html($extra_service_data['service_name']); ?></td>
+                            <td><?php echo esc_html($extra_service_data['service_qty']); ?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
@@ -1102,7 +1137,7 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
                 foreach($rbfw_service_category_price as $key=>$item1){
                     $cat_title = $item1['cat_title'];
                     ?>
-                    <tr><th colspan="2" class="rbfw_inventory_vf_label"> <?php echo $cat_title; ?></th></tr>
+                    <tr><th colspan="2" class="rbfw_inventory_vf_label"> <?php echo esc_html($cat_title); ?></th></tr>
 
                     <?php
                     $service_q = [];
@@ -1110,12 +1145,12 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
                         if($single['title']){
                             ?>
                             <tr>
-                            <td><?php echo $single['title']; ?></td>
+                            <td><?php echo esc_html($single['title']); ?></td>
                             <?php
                             $service_q[] = array('date'=>$data_date,$single['title']=>total_service_quantity($cat_title,$single['title'],$data_date,$rbfw_inventory,$inventory_based_on_return));
                             ?>
                             <td>
-                            <?php echo $single['stock_quantity'] - max(array_column($service_q, $single['title'])); ?>
+                            <?php echo esc_html($single['stock_quantity'] - max(array_column($service_q, $single['title']))); ?>
                             </td>
                             </tr>
                            <?php

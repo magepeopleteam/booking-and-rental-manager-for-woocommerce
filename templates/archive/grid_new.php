@@ -95,7 +95,7 @@ if (!$continue) {
     $enabled_fri = get_post_meta($post_id, 'rbfw_enable_fri_day', true) ? get_post_meta($post_id, 'rbfw_enable_fri_day', true) : 'yes';
     $enabled_sat = get_post_meta($post_id, 'rbfw_enable_sat_day', true) ? get_post_meta($post_id, 'rbfw_enable_sat_day', true) : 'yes';
 
-    $current_day = date('D');
+    $current_day = gmdate('D');
 
     if ($current_day == 'Sun' && $enabled_sun == 'yes') {
         $price = (float) $price_sun;
@@ -115,7 +115,7 @@ if (!$continue) {
         $price = (float) $price;
     }
 
-    $current_date = date('Y-m-d');
+    $current_date = gmdate('Y-m-d');
     $rbfw_sp_prices = get_post_meta($post_id, 'rbfw_seasonal_prices', true);
     if (!empty($rbfw_sp_prices)) {
         $sp_array = [];
@@ -259,7 +259,7 @@ if (!$continue) {
                                             if ($i <= $display_cat_features ) {
                                                 $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                                                 $title = $features['title'];
-                                                $rand_number = rand();
+                                                $rand_number = wp_rand();
                                                 if ($title) {
                                                     ?>
                                                     <li class=" bfw_rent_list_items title <?php echo esc_html($rand_number);  ?>"><span

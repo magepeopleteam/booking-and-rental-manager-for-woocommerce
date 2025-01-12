@@ -21,7 +21,7 @@
 				set_time_limit( 0 );
 				$xml_url     = RBFW_PLUGIN_URL . '/assets/sample-rent-items.xml';
 				$xml         = simplexml_load_file( $xml_url );
-				$json_string = json_encode( $xml );
+				$json_string = wp_json_encode( $xml );
 				$xml_array   = json_decode( $json_string, true );
 				$xml_array = ! empty( $xml_array['item'] ) ? $xml_array['item'] : [];
 				if ( $xml !== false && ! empty( $xml_array ) ) {
@@ -117,7 +117,7 @@
 						$extension = $mime_extensions[ $mime ];
 					} else {
 						// Could not identify extension
-						@unlink( $tmp );
+						wp_delete_file( $tmp );
 
 						return false;
 					}
@@ -130,7 +130,7 @@
 				// Do the upload
 				$attachment_id = media_handle_sideload( $args, 0, $title );
 				// Cleanup temp file
-				@unlink( $tmp );
+				wp_delete_file( $tmp );
 				// Error uploading
 				if ( is_wp_error( $attachment_id ) ) {
 					return false;

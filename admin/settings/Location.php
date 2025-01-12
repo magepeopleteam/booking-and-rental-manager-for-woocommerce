@@ -219,7 +219,7 @@
 					$count                = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
 						if ( $names[ $i ] != '' ) :
-							$new_rbfw_pickup_data[ $i ]['loc_pickup_name'] = stripslashes( strip_tags( $names[ $i ] ) );
+							$new_rbfw_pickup_data[ $i ]['loc_pickup_name'] = stripslashes( wp_strip_all_tags( $names[ $i ] ) );
 						endif;
 					}
 					$pickup_data_arr = apply_filters( 'rbfw_pickup_arr_save', $new_rbfw_pickup_data );
@@ -236,7 +236,7 @@
 					$count                 = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
 						if ( $names[ $i ] != '' ) :
-							$new_rbfw_dropoff_data[ $i ]['loc_dropoff_name'] = stripslashes( strip_tags( $names[ $i ] ) );
+							$new_rbfw_dropoff_data[ $i ]['loc_dropoff_name'] = stripslashes( wp_strip_all_tags( $names[ $i ] ) );
 						endif;
 					}
 					$dropoff_data_arr = apply_filters( 'rbfw_dropoff_arr_save', $new_rbfw_dropoff_data );

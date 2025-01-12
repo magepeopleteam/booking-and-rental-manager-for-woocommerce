@@ -162,7 +162,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 /* Start Tax Calculations */
                 $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
                 $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-                $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
+                $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? wp_strip_all_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $percent = 0;
                
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage)){
@@ -297,7 +297,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 /* Start Tax Calculations */
                 $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
                 $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-                $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
+                $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? wp_strip_all_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $percent = 0;
       
 
@@ -368,7 +368,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 $currentDate += (86400)) {
                                                 
-                $date = date('d-m-Y', $currentDate);
+                $date = gmdate('d-m-Y', $currentDate);
 
                 $date_range[] = $date;
 
@@ -460,7 +460,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                     if(!empty($available_times[0])){
                         foreach ($available_times[0] as $value) {
-                            $converted_time =  date(get_option('time_format'), strtotime($value[1]));
+                            $converted_time =  gmdate(get_option('time_format'), strtotime($value[1]));
                             $ts_time = $this->rbfw_get_time_slot_by_label($value[1]);
 
                             $is_booked = $this->rbfw_get_time_booking_status($id, $selected_date, $ts_time);
@@ -470,7 +470,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             if((($nowDate == $selected_date) && ($converted_time < $nowTime)) || ($is_booked === true)){
                                 $disabled = 'disabled';
                             }
-                            $content .= '<a data-time="'.date('H:i',strtotime($value[1])).'" class="rbfw_bikecarsd_time '.$disabled.'"><span class="rbfw_bikecarsd_time_span">'.$converted_time.'</span>';
+                            $content .= '<a data-time="'.gmdate('H:i',strtotime($value[1])).'" class="rbfw_bikecarsd_time '.$disabled.'"><span class="rbfw_bikecarsd_time_span">'.$converted_time.'</span>';
 
                             if($is_booked === true){
                                 $content .= '<span class="rbfw_bikecarsd_time_booked">'.rbfw_string_return('rbfw_text_booked',esc_html__('Booked','booking-and-rental-manager-for-woocommerce')).'</span>';
@@ -546,7 +546,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
                 $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
                 $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
-                $mps_tax_percentage = !empty(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) : '';
+                $mps_tax_percentage = !empty(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) ? wp_strip_all_tags(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $percent = 0;
                 $tax_status = '';
 
@@ -609,7 +609,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
             $times_particulars = rbfw_get_available_times_particulars($post_id,$selected_date,$type,$selector);
 
-            echo json_encode($times_particulars);
+            echo wp_json_encode($times_particulars);
             wp_die();
         }
 

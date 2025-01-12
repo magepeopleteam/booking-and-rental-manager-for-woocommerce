@@ -53,22 +53,16 @@
 
 		return $rbfw->get_datetime( $date, $type );
 	}
-	function rbfw_get_order_item_meta( $item_id, $key ) {
-		global $rbfw;
-
-		return $rbfw->get_order_meta( $item_id, $key );
-	}
 	function rbfw_check_product_exists( $id ) {
 		return is_string( get_post_status( $id ) );
 	}
 	if ( ! function_exists( 'mep_get_date_diff' ) ) {
 		function mep_get_date_diff( $start_datetime, $end_datetime ) {
-			$current   = date( 'Y-m-d H:i', strtotime( $start_datetime ) );
-			$newformat = date( 'Y-m-d H:i', strtotime( $end_datetime ) );
+			$current   = gmdate( 'Y-m-d H:i', strtotime( $start_datetime ) );
+			$newformat = gmdate( 'Y-m-d H:i', strtotime( $end_datetime ) );
 			$datetime1 = new DateTime( $newformat );
 			$datetime2 = new DateTime( $current );
 			$interval  = date_diff( $datetime2, $datetime1 );
-			$arr       = [];
 			if ( $start_datetime == $end_datetime ) {
 				$days = 1;
 			} else {
@@ -91,8 +85,8 @@
 // Getting event exprie date & time
 	if ( ! function_exists( 'rbfw_day_diff_status' ) ) {
 		function rbfw_day_diff_status( $start_datetime, $end_datetime ) {
-			$current   = date( 'Y-m-d H:i', strtotime( $start_datetime ) );
-			$newformat = date( 'Y-m-d H:i', strtotime( $end_datetime ) );
+			$current   = gmdate( 'Y-m-d H:i', strtotime( $start_datetime ) );
+			$newformat = gmdate( 'Y-m-d H:i', strtotime( $end_datetime ) );
 			$datetime1 = new DateTime( $newformat );
 			$datetime2 = new DateTime( $current );
 			$interval  = date_diff( $datetime2, $datetime1 );
@@ -571,7 +565,7 @@
 					$enabled_thu = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_thu_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_thu_day', true ) : 'yes';
 					$enabled_fri = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_fri_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_fri_day', true ) : 'yes';
 					$enabled_sat = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) : 'yes';
-					$current_day = date( 'D' );
+					$current_day = gmdate( 'D' );
 					if ( $current_day == 'Sun' && $enabled_sun == 'yes' ) {
 						$price = (float) $price_sun;
 					} elseif ( $current_day == 'Mon' && $enabled_mon == 'yes' ) {
@@ -589,7 +583,7 @@
 					} else {
 						$price = (float) $price;
 					}
-					$current_date   = date( 'Y-m-d' );
+					$current_date   = gmdate( 'Y-m-d' );
 					$rbfw_sp_prices = get_post_meta( $rbfw_related_post_id, 'rbfw_seasonal_prices', true );
 					if ( ! empty( $rbfw_sp_prices ) ) {
 						$sp_array = [];
@@ -893,7 +887,7 @@
 			$i ++;
 		}
 		$content = ob_get_clean();
-		echo $content;
+		echo esc_html($content);
 		wp_die();
 	}
 	/*******************************************
@@ -915,7 +909,7 @@
 			$currentDate = $startDate; $currentDate <= $endDate;
 			$currentDate += ( 86400 )
 		) {
-			$date        = date( 'Y-m-d', $currentDate );
+			$date        = gmdate( 'Y-m-d', $currentDate );
 			$rangArray[] = $date;
 		}
 
@@ -1230,7 +1224,7 @@
 		if ( empty( $post_id ) || empty( $selected_date ) || empty( $type ) ) {
 			return;
 		}
-		$selected_date                   = date( 'd-m-Y', strtotime( $selected_date ) );
+		$selected_date                   = gmdate( 'd-m-Y', strtotime( $selected_date ) );
 		$total_qty                       = 0;
 		$type_stock                      = 0;
 		$rbfw_inventory                  = get_post_meta( $post_id, 'rbfw_inventory', true );
@@ -1284,7 +1278,7 @@
 		if ( empty( $post_id ) || empty( $selected_date ) || empty( $name ) ) {
 			return;
 		}
-		$selected_date           = date( 'd-m-Y', strtotime( $selected_date ) );
+		$selected_date           = gmdate( 'd-m-Y', strtotime( $selected_date ) );
 		$total_qty               = 0;
 		$service_stock           = 0;
 		$rbfw_inventory          = get_post_meta( $post_id, 'rbfw_inventory', true );
@@ -1383,7 +1377,7 @@
 			$currentDate = $start_date; $currentDate <= $end_date;
 			$currentDate += ( 86400 )
 		) {
-			$date         = date( 'd-m-Y', $currentDate );
+			$date         = gmdate( 'd-m-Y', $currentDate );
 			$date_range[] = $date;
 		}
 		// End: Get Date Range
@@ -1588,7 +1582,7 @@
 		$hourly_rate_sat = get_post_meta( $rbfw_id, 'rbfw_sat_hourly_rate', true ) ? get_post_meta( $rbfw_id, 'rbfw_sat_hourly_rate', true ) : 0;
 		$daily_rate_sat  = get_post_meta( $rbfw_id, 'rbfw_sat_daily_rate', true ) ? get_post_meta( $rbfw_id, 'rbfw_sat_daily_rate', true ) : 0;
 		$enabled_sat     = get_post_meta( $rbfw_id, 'rbfw_enable_sat_day', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_sat_day', true ) : 'yes';
-		$current_day     = date( 'D' );
+		$current_day     = gmdate( 'D' );
 		if ( $current_day == 'Sun' && $enabled_sun == 'yes' ) {
 			$hourly_rate = $hourly_rate_sun;
 			$daily_rate  = $daily_rate_sun;
@@ -1614,7 +1608,7 @@
 			$hourly_rate = $hourly_rate;
 			$daily_rate  = $daily_rate;
 		}
-		$current_date   = date( 'Y-m-d' );
+		$current_date   = gmdate( 'Y-m-d' );
 		$rbfw_sp_prices = get_post_meta( $rbfw_id, 'rbfw_seasonal_prices', true );
 		if ( ! empty( $rbfw_sp_prices ) ) {
 			$sp_array = [];
@@ -1688,7 +1682,7 @@
 				// saturday rate
 				$price_sat   = get_post_meta( $rbfw_related_post_id, 'rbfw_sat_hourly_rate', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_sat_hourly_rate', true ) : 0;
 				$enabled_sat = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) : 'yes';
-				$current_day = date( 'D' );
+				$current_day = gmdate( 'D' );
 				if ( $current_day == 'Sun' && $enabled_sun == 'yes' ) {
 					$price = (float) $price_sun;
 				} elseif ( $current_day == 'Mon' && $enabled_mon == 'yes' ) {
@@ -1706,7 +1700,7 @@
 				} else {
 					$price = (float) $price;
 				}
-				$current_date   = date( 'Y-m-d' );
+				$current_date   = gmdate( 'Y-m-d' );
 				$rbfw_sp_prices = get_post_meta( $rbfw_related_post_id, 'rbfw_seasonal_prices', true );
 				if ( ! empty( $rbfw_sp_prices ) ) {
 					$sp_array = [];
@@ -1804,13 +1798,13 @@
 															$icon = 'fas fa-arrow-right';
 														endif;
 														if ( $feature['title'] ):
-															$rand_number = rand();
-															echo '<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>';
+															$rand_number = wp_rand();
+															echo esc_html('<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>');
 															?>
                                                             <script>
                                                                 jQuery(document).ready(function () {
-                                                                    let content<?php echo $rand_number; ?> = '<?php echo $feature['title']; ?>';
-                                                                    tippy('.title' +<?php echo $rand_number; ?>, {content: content<?php echo $rand_number; ?>, theme: 'blue', placement: 'top'});
+                                                                    let content<?php echo esc_html($rand_number); ?> = '<?php echo esc_html($feature['title']); ?>';
+                                                                    tippy('.title' +<?php echo esc_html($rand_number); ?>, {content: content<?php echo esc_html($rand_number); ?>, theme: 'blue', placement: 'top'});
                                                                 });
                                                             </script>
 														<?php
@@ -1922,7 +1916,7 @@
 				$enabled_thu = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_thu_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_thu_day', true ) : 'yes';
 				$enabled_fri = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_fri_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_fri_day', true ) : 'yes';
 				$enabled_sat = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) : 'yes';
-				$current_day = date( 'D' );
+				$current_day = gmdate( 'D' );
 				if ( $current_day == 'Sun' && $enabled_sun == 'yes' ) {
 					$price = (float) $price_sun;
 				} elseif ( $current_day == 'Mon' && $enabled_mon == 'yes' ) {
@@ -1940,7 +1934,7 @@
 				} else {
 					$price = (float) $price;
 				}
-				$current_date   = date( 'Y-m-d' );
+				$current_date   = gmdate( 'Y-m-d' );
 				$rbfw_sp_prices = get_post_meta( $rbfw_related_post_id, 'rbfw_seasonal_prices', true );
 				if ( ! empty( $rbfw_sp_prices ) ) {
 					$sp_array = [];
@@ -2017,8 +2011,8 @@
                             </a></div>
 						<?php if ( $review_count > 0 ) { ?>
                             <div class="rbfw-related-product-review-badge-wrap">
-                                <div class="rbfw-related-product-review-badge-1"><?php echo $review_count . ' ' . $reviews_label; ?></div>
-                                <div class="rbfw-related-product-review-badge-2"><?php echo $average_review; ?></div>
+                                <div class="rbfw-related-product-review-badge-1"><?php echo esc_html($review_count . ' ' . $reviews_label); ?></div>
+                                <div class="rbfw-related-product-review-badge-2"><?php echo esc_html($average_review); ?></div>
                             </div>
 						<?php } ?>
                         <div class="rbfw-related-product-inner-content-wrap">
@@ -2026,15 +2020,15 @@
                             <div class="rbfw-related-product-bottom-card">
                                 <div class="rbfw-related-product-bottom-card-pricing-box">
 									<?php if ( $rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment' && $price ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $the_price_label ); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price( $price ); ?></span></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $the_price_label ); ?>: <span class="rbfw-related-product-price-badge"><?php echo esc_html( $price ); ?></span></div>
 									<?php endif; ?>
 
 									<?php if ( $rbfw_rent_type == 'resort' && ! empty( $rbfw_room_data ) && $price ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price( $price ); ?></span></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo esc_html( $price ); ?></span></div>
 									<?php endif; ?>
 
 									<?php if ( ( $rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment' ) && ! empty( $rbfw_bike_car_sd_data ) && $price ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price( $price ); ?></span></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo esc_html( $price ); ?></span></div>
 									<?php endif; ?>
                                 </div>
 								<?php if ( ! empty( $highlited_features ) ): ?>
@@ -2051,13 +2045,13 @@
 																$icon = 'fas fa-arrow-right';
 															endif;
 															if ( $feature['title'] ):
-																$rand_number = rand();
-																echo '<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>';
+																$rand_number = wp_rand();
+																echo esc_html('<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>');
 																?>
                                                                 <script>
                                                                     jQuery(document).ready(function () {
-                                                                        let content<?php echo $rand_number; ?> = '<?php echo $feature['title']; ?>';
-                                                                        tippy('.title' +<?php echo $rand_number; ?>, {content: content<?php echo $rand_number; ?>, theme: 'blue', placement: 'top'});
+                                                                        let content<?php echo esc_html($rand_number); ?> = '<?php echo esc_html($feature['title']); ?>';
+                                                                        tippy('.title' +<?php echo esc_html($rand_number); ?>, {content: content<?php echo esc_html($rand_number); ?>, theme: 'blue', placement: 'top'});
                                                                     });
                                                                 </script>
 															<?php
@@ -2261,9 +2255,9 @@
                                     <div class="rbfw_additional_image_gallary_col" <?php if ( $i > $show ) {
 										echo 'style="display:none;"';
 									} ?>>
-                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
+                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
 										<?php if ( $i == $show ) { ?>
-                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 										<?php } ?>
                                     </div>
 									<?php
@@ -2282,9 +2276,9 @@
                                     <div class="rbfw_additional_image_gallary_col" <?php if ( $d > $show ) {
 										echo 'style="display:none;"';
 									} ?>>
-                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $d; ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
+                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
 										<?php if ( $d == $show ) { ?>
-                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $d; ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 										<?php } ?>
                                     </div>
 									<?php
@@ -2304,7 +2298,7 @@
 								$image_url = wp_get_attachment_url( $img_id );
 								?>
                                 <div class="rbfw_aig_slides">
-                                    <div class="rbfw_aig_numbertext"><?php echo $c; ?> / <?php echo $count_images; ?></div>
+                                    <div class="rbfw_aig_numbertext"><?php echo esc_html($c); ?> / <?php echo esc_html($count_images); ?></div>
                                     <img src="<?php echo esc_url( $image_url ); ?>">
                                 </div>
 								<?php
@@ -2323,7 +2317,7 @@
 								foreach ( $gallery_images_ids as $img_id ) {
 									$image_url = wp_get_attachment_url( $img_id );
 									?>
-                                    <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo $d; ?>)" alt="<?php echo $d; ?>"></div>
+                                    <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)" alt="<?php echo esc_attr($d); ?>"></div>
 									<?php
 									$d ++;
 								}
@@ -2343,9 +2337,9 @@
                             <div class="rbfw_additional_image_gallary_col" <?php if ( $i > $show ) {
 								echo 'style="display:none;"';
 							} ?>>
-                                <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
+                                <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
 								<?php if ( $i == $show ) { ?>
-                                    <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+                                    <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 								<?php } ?>
                             </div>
 							<?php
@@ -2362,7 +2356,7 @@
 									$image_url = wp_get_attachment_url( $img_id );
 									?>
                                     <div class="rbfw_aig_slides">
-                                        <div class="rbfw_aig_numbertext"><?php echo $c; ?> / <?php echo $count_images; ?></div>
+                                        <div class="rbfw_aig_numbertext"><?php echo esc_html($c); ?> / <?php echo esc_html($count_images); ?></div>
                                         <img src="<?php echo esc_url( $image_url ); ?>">
                                     </div>
 									<?php
@@ -2381,7 +2375,7 @@
 									foreach ( $gallery_images_ids as $img_id ) {
 										$image_url = wp_get_attachment_url( $img_id );
 										?>
-                                        <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo $d; ?>)" alt="<?php echo $d; ?>"></div>
+                                        <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)" alt="<?php echo esc_attr($d); ?>"></div>
 										<?php
 										$d ++;
 									}
@@ -2439,7 +2433,7 @@
 		$the_array           = [];
 		foreach ( $rbfw_time_slots as $rts_key => $rts_value ) {
 			foreach ( $rdfw_available_time as $rat_key => $rat_value ) {
-				if ( date( "g:i a", strtotime( $rts_value ) ) == date( "g:i a", strtotime( $rat_value ) ) ) {
+				if ( gmdate( "g:i a", strtotime( $rts_value ) ) == gmdate( "g:i a", strtotime( $rat_value ) ) ) {
 					$the_array[ $rts_value ] = $rts_key;
 				}
 			}
@@ -2460,7 +2454,7 @@
 					} else {
 						$time_status = rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time );
 					}
-					$the_array[ $start_time ] = array( $time_status, date( get_option( 'time_format' ), strtotime( $start_time ) ) );
+					$the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
 				}
 
 				return array( $the_array, $selector );
@@ -2473,7 +2467,7 @@
 			} else {
 				$time_status = rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time );
 			}
-			$the_array[ $start_time ] = array( $time_status, date( get_option( 'time_format' ), strtotime( $start_time ) ) );
+			$the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
 		}
 
 		return array( $the_array, $selector );
@@ -2601,7 +2595,7 @@
 			}
 		}
 
-		return json_encode( $off_days );
+		return wp_json_encode( $off_days );
 	}
 	function rbfw_off_dates( $post_id ) {
 		$off_dates       = [];
@@ -2613,13 +2607,13 @@
 				$date2   = strtotime( $off_date_range['to_date'] );
 				$stepVal = '+1 day';
 				while ( $current <= $date2 ) {
-					$off_dates[] = date( $format, $current );
+					$off_dates[] = gmdate( $format, $current );
 					$current     = strtotime( $stepVal, $current );
 				}
 			}
 		}
 
-		return json_encode( $off_dates );
+		return wp_json_encode( $off_dates );
 	}
 	function rbfw_md_duration_price_calculation( $post_id = 0, $pickup_datetime = 0, $dropoff_datetime = 0, $start_date = '', $end_date = '', $star_time = '', $end_time = '', $rbfw_enable_time_slot = '' ) {
 		global $rbfw;
@@ -2631,7 +2625,7 @@
 		$rbfw_enable_hourly_rate = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true );
 		$rbfw_hourly_rate        = get_post_meta( $post_id, 'rbfw_hourly_rate', true );
 		$rbfw_daily_rate         = get_post_meta( $post_id, 'rbfw_daily_rate', true );
-		$endday                  = strtolower( date( 'D', strtotime( $end_date ) ) );
+		$endday                  = strtolower( gmdate( 'D', strtotime( $end_date ) ) );
 		$duration_price          = 0;
 		$diff                    = date_diff( new DateTime( $pickup_datetime ), new DateTime( $dropoff_datetime ) );
 		if ( $diff ) {
@@ -2651,7 +2645,7 @@
 				$total_days = ( $total_days == 0 ) ? 1 : $total_days;
 			}
 			for ( $i = 0; $i < $total_days; $i ++ ) {
-				$day = strtolower( date( 'D', strtotime( "+$i day", strtotime( $start_date ) ) ) );
+				$day = strtolower( gmdate( 'D', strtotime( "+$i day", strtotime( $start_date ) ) ) );
 				if ( $rbfw_enable_daily_rate == 'no' && $rbfw_enable_hourly_rate == 'yes' ) {
 					if ( $i == 0 ) {
 						if ( $start_date == $end_date ) {
@@ -2783,7 +2777,7 @@
 		$startingDate = strtotime( $startingDate );
 		$endingDate   = strtotime( $endingDate );
 		for ( $currentDate = $startingDate; $currentDate <= $endingDate; $currentDate += ( 86400 ) ) {
-			$date         = date( 'Y-m-d', $currentDate );
+			$date         = gmdate( 'Y-m-d', $currentDate );
 			$datesArray[] = $date;
 		}
 
@@ -2999,7 +2993,7 @@
 			}
 		}
 		$option .= "</select>";
-		echo $option;
+		echo esc_html($option);
 	}
 	function rbfw_time_slot_select( $date_type, $iidex, $selected_time ) {
 		$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
@@ -3008,10 +3002,10 @@
 		asort( $rbfw_time_slots );
 		?>
         <div id="field-wrapper-rdfw_available_time" class="">
-            <select class="medium" name="rbfw_bike_car_sd_data[<?php echo $iidex ?>][<?php echo $date_type ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
+            <select class="medium" name="rbfw_bike_car_sd_data[<?php echo esc_attr($iidex) ?>][<?php echo esc_attr($date_type) ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
                 <option value="">Select Time</option>
 				<?php foreach ( $rbfw_time_slots as $key => $value ): ?>
-                    <option <?php echo esc_html(  date( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo date( 'H:i', strtotime( $value ) ); ?>"> <?php echo date( 'H:i', strtotime( $value ) ); ?> </option>
+                    <option <?php echo esc_html(  gmdate( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo esc_html(gmdate( 'H:i', strtotime( $value ) )); ?>"> <?php echo esc_html(gmdate( 'H:i', strtotime( $value ) )); ?> </option>
 				<?php endforeach; ?>
             </select>
         </div>

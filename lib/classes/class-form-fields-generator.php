@@ -1,5 +1,5 @@
 <?php
-if ( ! defined('ABSPATH')) exit;  // if direct access
+if ( ! defined('ABSPATH')) exit;  // if direct access 
 
 
 /*Input fields
@@ -75,9 +75,9 @@ if ( ! defined('ABSPATH')) exit;  // if direct access
 
 
 
-if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
+if( ! class_exists( 'FormFieldsGenerator' ) ) {
 
-    class RbfwFormFieldsGenerator {
+    class FormFieldsGenerator {
 
 
 
@@ -215,54 +215,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                 <div class="error-mgs"></div>
 
             </div>
-            <?php
-            return ob_get_clean();
-        }
-
-
-
-        public function field_add_to_cart_shortcode( $option ){
-            global $post;
-            $post_id = $post->ID;
-            ob_start();
-            ?>
-            <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart  id='<?php echo $post_id; ?>']</code>
-
-            <?php
-            return ob_get_clean();
-        }
-
-        public function field_rbfw_add_category( $option ){
-            global $post;
-            $post_id = $post->ID;
-            ob_start();
-            ?>
-            <section class="d-flex justify-content-between w-50">
-                <div class="d-flex justify-content-between align-items-center">
-
-                    <div class="d-flex justify-content-between align-items-center" style="width: 700px">
-                        <?php
-                        $rbfw_categories = get_post_meta($post_id,'rbfw_categories',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_categories', true)) : [];
-                        ?>
-
-                        <select name="rbfw_categories[]" multiple class="category2">
-                            <?php
-                            $terms = get_terms( array(
-                                'taxonomy'   => 'rbfw_item_caregory',
-                                'hide_empty' => false,
-                            ) );
-                            foreach ( $terms as $key => $value ) {
-                                ?>
-                                <option <?php echo (in_array($value->name,$rbfw_categories))?'selected':'' ?> value="<?php echo $value->name ?>"> <?php echo $value->name ?> </option>
-                                <?php
-                            }
-                            ?>
-                        </select>
-                    </div>
-
-                </div>
-            </section>
-
             <?php
             return ob_get_clean();
         }
@@ -2979,304 +2931,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
 
 
-        
-
-
-
-
-        public function field_service_price( $option ){
-
-          
-
-            $id 			= isset( $option['id'] ) ? $option['id'] : "";
-            if(empty($id)) return;
-
-            $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
-            $conditions 	= isset( $option['conditions'] ) ? $option['conditions'] : array();
-            $placeholder 	= isset( $option['placeholder'] ) ? $option['placeholder'] : "";
-            $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fa-solid fa-trash-can"></i>';
-            $sortable 	    = isset( $option['sortable'] ) ? $option['sortable'] : true;
-            $default 	    = isset( $option['default'] ) ? $option['default'] : array();
-
-            $values 	    = isset( $option['value'] ) ? $option['value'] : array();
-            $values         = !empty($values) ? $values : $default;
-            $limit 	        = !empty( $option['limit'] ) ? $option['limit'] : '';
-
-
-
-            $field_id       = $id;
-            $field_name     = !empty( $field_name ) ? $field_name : $id;
-
-            ob_start();
-            ?>
-
-            <div id="field-wrapper-<?php echo esc_attr($id); ?>" class="field-wrapper field-text-multi-wrapper field-text-multi-wrapper-<?php echo esc_attr($field_id); ?>">
-                <table class="form-table rbfw_service_category_table">
-                    <tbody class="sortable_tr">
-                    <?php
-                    if(!empty($values)):
-                        $i = 0;
-                    foreach ($values as $value):?>
-                        <tr data-cat="<?php echo $i; ?>">
-                            <td>
-                                <div class="services_category_wrapper">
-                                    <div class="field-list <?php echo esc_attr($field_id); ?>">
-                                        <div class="service_category_inner_wrap">
-                                            <div class="service_category_title">
-                                                <label class=" mb-1">
-                                                    <?php echo esc_html__('Service Category Title','booking-and-rental-manager-for-woocommerce'); ?>
-                                                </label>
-                                                <input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_service_category_price[<?php echo $i; ?>][cat_title]" data-key="<?php echo $i; ?>" placeholder="<?php echo esc_attr__('Service Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
-                                            </div>
-                                            <div class="service_category_inner_item_wrap sortable">
-
-
-
-
-
-                                                <?php
-                                                if(!empty($value['cat_services'])){
-                                                    $c = 0;
-                                                    foreach ($value['cat_services'] as $service) {
-                                                        $icon = $service['icon'];
-                                                        $title = $service['title'];
-                                                        $price = $service['price'];
-                                                        $stock_quantity = $service['stock_quantity'];
-                                                        $service_price_type = $service['service_price_type'];
-                                                        ?>
-                                                            <div class="item">
-                                                                <a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="<?php echo $c; ?>"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>
-                                                                <div class="rbfw_service_icon_preview p-1" data-key="<?php echo $c; ?>"><?php if($icon){ echo '<i class="'.$icon.'"></i>'; } ?></div>
-
-                                                                <input type='hidden' name='rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php echo esc_attr($icon); ?>' data-key="<?php echo $c; ?>" class="rbfw_service_icon"/>
-                                                                <input type='text' name='rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][title]'  placeholder='<?php echo esc_attr($placeholder); ?>' value="<?php  echo esc_attr($title); ?>" data-key="<?php echo $c; ?>"/>
-
-                                                                <input type='text' name='rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][price]'  placeholder='<?php echo __('Price','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php  echo esc_attr($price); ?>'  data-key="0"/>
-
-                                                                <input type='text' name='rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][stock_quantity]'  placeholder='<?php echo __('Stock','booking-and-rental-manager-for-woocommerce'); ?>' value='<?php  echo esc_attr($stock_quantity); ?>'  data-key="0"/>
-
-                                                                <label class="" for="rbfw_dt_sidebar_switch-on">
-                                                                    <input name="rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][service_price_type]" type="radio" <?php echo ($service_price_type=='one_time')?'checked':''  ?> id="rbfw_dt_sidebar_switch-on" value="one_time">
-                                                                    <span class="sw-button"><?php echo esc_html__('One Time','booking-and-rental-manager-for-woocommerce'); ?> </span>
-                                                                </label>
-                                                                <label class="checked" for="rbfw_dt_sidebar_switch-off">
-                                                                    <input name="rbfw_service_category_price[<?php echo $i; ?>][cat_services][<?php echo $c; ?>][service_price_type]" type="radio" <?php echo ($service_price_type=='day_wise')?'checked':''  ?> id="rbfw_dt_sidebar_switch-off" value="day_wise">
-                                                                    <span class="sw-button"><?php echo esc_html__('Day Wise','booking-and-rental-manager-for-woocommerce'); ?> </span>
-                                                                </label>
-
-                                                                <?php if($sortable):?>
-                                                                    <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
-                                                                <?php endif; ?>
-                                                                <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span>
-                                                            </div>
-                                                            <?php
-                                                            $c++;
-                                                        }
-                                                    }
-                                                    ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <span class="ppof-button add-new-service">
-                                            <i class="fa-solid fa-circle-plus"></i>
-                                            <?php echo __('Add New Service','booking-and-rental-manager-for-woocommerce'); ?>
-                                        </span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <?php if($sortable):?>
-                                        <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
-                                    <?php endif; ?>
-                                    <span class="button tr_remove" onclick="jQuery(this).parent('tr').remove()"><?php echo ($remove_text); ?></span>
-                                </td>
-                            </tr>
-                            <?php
-                            $i++;
-                        endforeach;
-                    else:
-                        ?>
-
-                        <tr data-cat="0">
-                            <td>
-                                <div class="services_category_wrapper">
-                                    <div class="field-list <?php echo esc_attr($field_id); ?>">
-                                        <div class="service_category_inner_wrap">
-                                            <div class="service_category_title">
-                                                <label>
-                                                    <?php echo esc_html__('Service Category Title','booking-and-rental-manager-for-woocommerce'); ?>
-                                                </label>
-                                                <input type="text" name="rbfw_service_category_price[0][cat_title]" data-key="0" placeholder="<?php echo esc_attr__('Service Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
-                                            </div>
-                                            <div class="service_category_inner_item_wrap sortable">
-
-                                                <div class="item">
-
-                                                    <a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="0">
-                                                        <i class="fa-solid fa-circle-plus"></i>
-                                                        <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?>
-                                                    </a>
-                                                    <div class="rbfw_service_icon_preview p-1" data-key="0"></div>
-                                                    <input type='hidden' name='rbfw_service_category_price[0][cat_services][0][icon]' placeholder='<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>' data-key="0" class="rbfw_service_icon"/>
-                                                    <input type='text' name='rbfw_service_category_price[0][cat_services][0][title]'  placeholder='<?php echo esc_attr($placeholder); ?>' value='' data-key="0"/>
-
-                                                    <input type='text' name='rbfw_service_category_price[0][cat_services][0][price]'  placeholder='<?php echo __('Price','booking-and-rental-manager-for-woocommerce'); ?>' value='' data-key="0"/>
-
-                                                    <input type='text' name='rbfw_service_category_price[0][cat_services][0][stock_quantity]'  placeholder='<?php echo __('Stock','booking-and-rental-manager-for-woocommerce'); ?>' value=''  data-key="0"/>
-
-                                                    <label class="" for="rbfw_dt_sidebar_switch-on">
-                                                        <input name="rbfw_service_category_price[0][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time">
-                                                        <span class="sw-button"><?php echo esc_html__('One Time','booking-and-rental-manager-for-woocommerce'); ?> </span>
-                                                    </label>
-                                                    <label class="checked" for="rbfw_dt_sidebar_switch-off">
-                                                        <input name="rbfw_service_category_price[0][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked="">
-                                                        <span class="sw-button"><?php echo esc_html__('Day Wise','booking-and-rental-manager-for-woocommerce'); ?> </span>
-                                                    </label>
-
-                                                    <?php if($sortable):?>
-                                                        <span class="button sort">
-                                                            <i class="fas fa-arrows-alt"></i>
-                                                        </span>
-                                                    <?php endif; ?>
-                                                    <span class="button remove" onclick="jQuery(this).parent().remove()">
-                                                        <?php echo ($remove_text); ?>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <span class="ppof-button add-new-service">
-                                        <i class="fa-solid fa-circle-plus"></i>
-                                        <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?>
-                                    </span>
-                                </div>
-                            </td>
-                            <td>
-                                <?php if($sortable):?>
-                                    <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span>
-                                <?php endif; ?>
-                                <span class="button tr_remove" onclick="jQuery(this).parent('tr').remove()">
-                                    <?php echo ($remove_text); ?>
-                                </span>
-                            </td>
-                        </tr>
-                    <?php endif; ?>
-                    </tbody>
-                </table>
-                <span class="ppof-button add-service-category mt-1">
-                    <i class="fa-solid fa-circle-plus"></i>
-                    <?php echo __('Add New Service Category','booking-and-rental-manager-for-woocommerce'); ?>
-                </span>
-            </div>
-            <script>
-                jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
-                jQuery('.tr_remove').click(function (e) {
-                    jQuery(this).closest("tr").remove();
-                });
-
-                jQuery(document).on('click', '.add-service-category',function(e){
-                    e.stopImmediatePropagation();
-                    let dataCat = jQuery('.rbfw_service_category_table tbody tr:last-child').attr('data-cat');
-                    let nextCat = parseInt(dataCat) + 1;
-                    let html = '<tr data-cat="'+nextCat+'"><td><div class="services_category_wrapper"><div class="field-list rbfw_service_category_price"><div class="service_category_inner_wrap"><div class="service_category_title"><label><?php echo esc_html__('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_service_category_title" name="rbfw_service_category_price['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></div>';
-                    html +='<div class="service_category_inner_item_wrap sortable"><div class="item"><a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a><div class="rbfw_service_icon_preview p-1" data-key="0"></div><input type="hidden" name="rbfw_service_category_price['+nextCat+'][cat_services][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_service_icon">';
-                    html +='<input type="text" name="rbfw_service_category_price['+nextCat+'][cat_services][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0">';
-                    html +='<input type="text" name="rbfw_service_category_price['+nextCat+'][cat_services][0][price]" placeholder="Price" value="" data-key="0">';
-                    html +='<input type="text" name="rbfw_service_category_price['+nextCat+'][cat_services][0][stock_quantity]" placeholder="Stock" value="" data-key="0">';
-                    html += '<label class="" for="rbfw_dt_sidebar_switch-on"> <input name="rbfw_service_category_price['+ nextCat +'][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time"> <span class="sw-button"><?php echo esc_html__('One Time','booking-and-rental-manager-for-woocommerce'); ?> </span> </label>';
-                    html += '<label class="checked" for="rbfw_dt_sidebar_switch-off"> <input name="rbfw_service_category_price['+ nextCat +'][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked=""> <span class="sw-button"><?php echo esc_html__('Day Wise','booking-and-rental-manager-for-woocommerce'); ?> </span> </label>';
-
-                    html +='<?php if($sortable):?><span class="button sort"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button remove" onclick="jQuery(this).parent().remove()"><?php echo ($remove_text); ?></span></div></div></div></div><span class="ppof-button add-new-service"><i class="fa-solid fa-circle-plus"></i> <?php echo __('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo ($remove_text); ?></span></td></tr>';
-                    jQuery('.rbfw_service_category_table tbody').append(html);
-                    jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
-                    jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
-                });
-
-                jQuery(document).on('click', '.add-new-service',function(e){
-                    e.stopImmediatePropagation();
-                    let data_key = jQuery(this).siblings(".rbfw_service_category_price").find("div.item:last-child input").attr('data-key');
-                    let i = parseInt(data_key);
-                    let c = i + 1;
-                    let theTarget = jQuery(this).siblings('.rbfw_service_category_price').find('.service_category_inner_wrap .service_category_inner_item_wrap');
-                    jQuery( ".sortable" ).sortable({ handle: '.sort' });
-                    let dataCat = jQuery(this).closest('tr').attr('data-cat');
-
-                    html = '<div class="item">';
-
-                    html += '<a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="'+ c +'"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>';
-                    html += '<div class="rbfw_service_icon_preview p-1" data-key="'+ c +'"></div>';
-                    html += '<input type="hidden" name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][icon]" placeholder="<?php echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="'+ c +'" class="rbfw_service_icon"/>';
-
-                    html += '<input type="text" name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][title]" placeholder="<?php echo esc_attr($placeholder); ?>" data-key="'+ c +'"/>';
-                    html += '<input type="text" name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][price]" placeholder="Price" data-key="'+ c +'"/>';
-                    html += '<input type="text" name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][stock_quantity]" placeholder="Stock" data-key="'+ c +'"/>';
-
-                    html += '<label class="" for="rbfw_dt_sidebar_switch-on"> <input name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time"> <span class="sw-button"><?php echo esc_html__('One Time','booking-and-rental-manager-for-woocommerce'); ?> </span> </label>';
-                    html += '<label class="checked" for="rbfw_dt_sidebar_switch-off"> <input name="rbfw_service_category_price['+ dataCat +'][cat_services]['+ c +'][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked=""> <span class="sw-button"><?php echo esc_html__('Day Wise','booking-and-rental-manager-for-woocommerce'); ?> </span> </label>';
-
-                    <?php if($sortable):?>
-                    html += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
-                    <?php endif; ?>
-
-                    html += '<span class="button remove" onclick="jQuery(this).parent().remove()' + '"><?php echo ($remove_text); ?></span>';
-                    html += '</div>';
-
-                    theTarget.append(html);
-                });
-
-                // Features Icon Popup
-                jQuery(document).on('click', '.rbfw_service_icon_btn',function(e){
-                    e.stopImmediatePropagation();
-                    let remove_exist_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").removeAttr('data-key');
-                    let remove_active_label 	= jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-                    let data_key 				= jQuery(this).attr('data-key');
-                    let data_cat 				= jQuery(this).parents('tr').attr('data-cat');
-
-
-
-                    jQuery('#rbfw_services_search_icon').val('');
-                    jQuery('.rbfw_services_icon_list_body label').show();
-                    jQuery("#rbfw_features_icon_list_wrapper").attr('data-key', data_key);
-                    jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat', data_cat);
-                    jQuery("#rbfw_features_icon_list_wrapper").mage_modal({
-                        escapeClose: false,
-                        clickClose: false,
-                        showClose: false
-                    });
-
-                    // Selected Feature Icon Action
-                    jQuery(document).on('click', '.ggggg label',function(e){
-                        e.stopImmediatePropagation();
-                        let selected_label 		= jQuery(this);
-                        let selected_val 		= jQuery('input', this).val();
-                        let selected_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
-                        let selected_data_cat 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
-
-                        console.log('selected_val',selected_val);
-                        console.log('selected_label',selected_label);
-                        console.log('selected_data_key',selected_data_key);
-                        console.log('selected_data_cat',selected_data_cat);
-
-                        jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-
-                        jQuery('.rbfw_service_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_service_icon_preview[data-key="'+selected_data_key+'"]').empty();
-                        jQuery(selected_label).addClass('selected');
-                        jQuery('.rbfw_service_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_service_icon[data-key="'+selected_data_key+'"]').val(selected_val);
-                        jQuery('.rbfw_service_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_service_icon_preview[data-key="'+selected_data_key+'"]').append('<i class="'+selected_val+'"></i>');
-                    });
-
-                    // Icon Filter
-                    jQuery('#rbfw_services_search_icon').keyup(function (e) {
-                        let value = jQuery(this).val().toLowerCase();
-                        jQuery(".rbfw_services_icon_list_body label[data-id]").show().filter(function() {
-                            jQuery(this).toggle(jQuery(this).attr('data-id').toLowerCase().indexOf(value) > -1)
-                        }).hide();
-                    });
-                });
-
-            </script>
-            <?php
-            return ob_get_clean();
-        }
 
         public function field_text_multi( $option ){
 
@@ -3286,7 +2940,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
             $conditions 	= isset( $option['conditions'] ) ? $option['conditions'] : array();
             $placeholder 	= isset( $option['placeholder'] ) ? $option['placeholder'] : "";
-            $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fa-solid fa-trash-can"></i>';
+            $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fas fa-trash"></i>';
             $sortable 	    = isset( $option['sortable'] ) ? $option['sortable'] : true;
             $default 	    = isset( $option['default'] ) ? $option['default'] : array();
 
@@ -3296,6 +2950,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
             $field_id       = $id;
             $field_name     = !empty( $field_name ) ? $field_name : $id;
+
 
 
             if(!empty($conditions)):
@@ -3378,11 +3033,118 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                 $depends .= '}}';
 
             endif;
+
+
+
             ob_start();
             ?>
             <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-text-multi-wrapper
             field-text-multi-wrapper-<?php echo esc_attr($field_id); ?>">
-            <div class="field-list <?php if($sortable){ echo 'sortable'; }?>" id="<?php echo esc_attr($field_id); ?>"></div>
+                <span class="ppof-button add-item"><?php esc_html_e('Add','booking-and-rental-manager-for-woocommerce'); ?></span>
+                <div class="field-list <?php if($sortable){ echo 'sortable'; }?>" id="<?php echo esc_attr($field_id); ?>">
+                    <?php
+                    if(!empty($values)):
+                        foreach ($values as $value):
+                            ?>
+                            <div class="item">
+                                <input type='text' name='<?php echo esc_attr($field_name); ?>[]'  placeholder='<?php
+                                echo esc_attr($placeholder); ?>' value="<?php echo esc_attr($value); ?>" />
+
+                                <span class="ppof-button clone"><i class="far fa-clone"></i></span>
+
+                                <?php if($sortable):?>
+                                <span class="ppof-button sort"><i class="fas fa-arrows-alt"></i></span>
+                                <?php endif; ?>
+
+                                <span class="ppof-button remove" onclick="jQuery(this).parent().remove()"><?php echo wp_kses_post($remove_text); ?></span>
+                            </div>
+                        <?php
+                        endforeach;
+                    else:
+                        ?>
+                        <div class="item">
+                            <input type='text' name='<?php echo esc_attr($field_name); ?>[]'  placeholder='<?php echo
+                            esc_attr($placeholder); ?>'
+                                   value='' /><span class="button remove" onclick="jQuery(this).parent().remove()
+"><?php echo wp_kses_post($remove_text); ?></span>
+                            <?php if($sortable):?>
+                                <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
+                            <?php endif; ?>
+                            <span class="button clone"><i class="far fa-clone"></i></span>
+                        </div>
+                    <?php
+                    endif;
+                    ?>
+                </div>
+                <div class="error-mgs"></div>
+                <script>
+                    jQuery(document).ready(function($) {
+                        jQuery(document).on('click', '.field-text-multi-wrapper-<?php echo esc_attr($id); ?> .clone',function(){
+
+
+                            <?php
+                            if(!empty($limit)):
+                            ?>
+                            var limit = <?php  echo esc_attr($limit); ?>;
+                            var node_count = $( ".field-text-multi-wrapper-<?php echo esc_attr($id); ?> .field-list .item" ).size();
+                            if(limit > node_count){
+                                $( this ).parent().clone().appendTo('.field-text-multi-wrapper-<?php echo esc_attr($id); ?> .field-list' );
+                            }else{
+                                jQuery('.field-text-multi-wrapper-<?php echo esc_attr($id); ?> .error-mgs').html('Sorry! you can add max '+limit+' item').stop().fadeIn(400).delay(3000).fadeOut(400);
+                            }
+                            <?php
+                            else:
+                            ?>
+                            $( this ).parent().clone().appendTo('.field-text-multi-wrapper-<?php echo esc_attr($id); ?> .field-list' );
+                            <?php
+                            endif;
+                            ?>
+
+                            //$( this ).parent().appendTo( '.field-text-multi-wrapper-<?php echo esc_attr($id); ?> .field-list' );
+
+
+                        })
+                    jQuery(document).on('click', '.field-text-multi-wrapper-<?php echo esc_attr($id); ?> .add-item',function(){
+
+
+                        html_<?php echo esc_attr($id); ?> = '<div class="item">';
+                        html_<?php echo esc_attr($id); ?> += '<input type="text" name="<?php echo esc_attr($field_name); ?>[]" placeholder="<?php
+                            echo esc_attr($placeholder); ?>" />';
+                        html_<?php echo esc_attr($id); ?> += '<span class="button remove" onclick="jQuery(this).parent().remove()' +
+                            '"><?php echo wp_kses_post($remove_text); ?></span>';
+                        html_<?php echo esc_attr($id); ?> += '<span class="button clone"><i class="far fa-clone"></i></span>';
+                        <?php if($sortable):?>
+                        html_<?php echo esc_attr($id); ?> += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
+                        <?php endif; ?>
+                        html_<?php echo esc_attr($id); ?> += '</div>';
+
+
+                        <?php
+                        if(!empty($limit)):
+                            ?>
+                            var limit = <?php  echo esc_attr($limit); ?>;
+                            var node_count = $( ".field-text-multi-wrapper-<?php echo esc_attr($id); ?> .field-list .item" ).size();
+                            if(limit > node_count){
+                                jQuery('.field-text-multi-wrapper-<?php echo esc_attr($id); ?> .field-list').append(html_<?php echo esc_attr($id); ?>);
+                            }else{
+                                jQuery('.field-text-multi-wrapper-<?php echo esc_attr($id); ?> .error-mgs').html('Sorry! you can add max '+limit+' item').stop().fadeIn(400).delay(3000).fadeOut(400);
+                            }
+                            <?php
+                        else:
+                            ?>
+                            jQuery('.field-text-multi-wrapper-<?php echo esc_attr($id); ?> .field-list').append(html_<?php echo esc_attr($id); ?>);
+                            <?php
+                        endif;
+                        ?>
+
+
+
+
+                    })
+
+                })
+                </script>
+
             </div>
             <?php
             return ob_get_clean();
@@ -3404,7 +3166,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             $value 	        = isset( $option['value'] ) ? $option['value'] : "";
             $_value         = !empty($value) ? $value : $default;
             $__value        = str_replace('<br />', PHP_EOL, html_entity_decode($_value));
-
+                  
             $field_id       = $id;
             $field_name     = !empty( $field_name ) ? $field_name : $id;
 
@@ -3497,7 +3259,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             ?>
             <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?>
                     id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-textarea-wrapper field-textarea-wrapper-<?php echo esc_attr($field_id); ?>">
-                <textarea name='<?php echo esc_attr($field_name); ?>' id='<?php echo esc_attr($field_id); ?>' cols='40' rows='5' placeholder='<?php echo esc_attr($placeholder); ?>'><?php echo mep_esc_html($__value); ?></textarea>
+                <textarea name='<?php echo esc_attr($field_name); ?>' id='<?php echo esc_attr($field_id); ?>' cols='40' rows='5' placeholder='<?php echo esc_attr($placeholder); ?>'><?php echo wp_kses_post($__value); ?></textarea>
                 <div class="error-mgs"></div>
             </div>
 
@@ -3655,17 +3417,17 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
                 $depends = '';
 
-                $field      = isset($conditions['field']) ? $conditions['field'] :'';
+                $field = isset($conditions['field']) ? $conditions['field'] :'';
                 $cond_value = isset($conditions['value']) ? $conditions['value']: '';
-                $type       = isset($conditions['type']) ? $conditions['type'] : '';
-                $pattern    = isset($conditions['pattern']) ? $conditions['pattern'] : '';
-                $modifier   = isset($conditions['modifier']) ? $conditions['modifier'] : '';
-                $like       = isset($conditions['like']) ? $conditions['like'] : '';
-                $strict     = isset($conditions['strict']) ? $conditions['strict'] : '';
-                $empty      = isset($conditions['empty']) ? $conditions['empty'] : '';
-                $sign       = isset($conditions['sign']) ? $conditions['sign'] : '';
-                $min        = isset($conditions['min']) ? $conditions['min'] : '';
-                $max        = isset($conditions['max']) ? $conditions['max'] : '';
+                $type = isset($conditions['type']) ? $conditions['type'] : '';
+                $pattern = isset($conditions['pattern']) ? $conditions['pattern'] : '';
+                $modifier = isset($conditions['modifier']) ? $conditions['modifier'] : '';
+                $like = isset($conditions['like']) ? $conditions['like'] : '';
+                $strict = isset($conditions['strict']) ? $conditions['strict'] : '';
+                $empty = isset($conditions['empty']) ? $conditions['empty'] : '';
+                $sign = isset($conditions['sign']) ? $conditions['sign'] : '';
+                $min = isset($conditions['min']) ? $conditions['min'] : '';
+                $max = isset($conditions['max']) ? $conditions['max'] : '';
 
                 $depends .= "{'[name=".$field."]':";
                 $depends .= '{';
@@ -3740,13 +3502,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             field-checkbox-wrapper-<?php echo esc_attr($id); ?>">
                 <?php
                 foreach( $args as $key => $argName ):
-
-                    if(!empty($value) && is_array($value)){
-                        $checked =   in_array($key,$value) ? "checked" : "";
-                    }else{
-                        $checked =  $key == $value  ? "checked" : "";
-                    }
-
+                    $checked = (  $key == $value ) ? "checked" : "";
                     ?>
                     <label for='<?php echo esc_attr($field_id); ?>'><input class="<?php echo esc_attr($field_id); ?>" name='<?php echo esc_attr($field_name); ?>' type='checkbox' id='<?php echo esc_attr($field_id); ?>' value='<?php echo esc_attr($key); ?>' <?php echo esc_attr($checked); ?>><?php echo esc_html($argName); ?></label><br>
                 <?php
@@ -4007,7 +3763,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
         public function field_select( $option ){
 
-
             $id 	    = isset( $option['id'] ) ? $option['id'] : "";
             if(empty($id)) return;
             $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
@@ -4049,6 +3804,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                 ?>
                 </select>
 
+
                 <div class="error-mgs"></div>
 
             </div>
@@ -4072,7 +3828,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             //console.log(node_count);
                             if(limit >= node_count){
 
-                                //jQuery('.<?php echo 'field-select-wrapper-'.$id; ?> .field-list').append(html);
                             }else{
                                 $(".field-select-wrapper-<?php echo esc_attr($id); ?> select option[value='"+last_value+"']").prop("selected", false);
                                 jQuery('.field-select-wrapper-<?php echo esc_attr($id); ?> .error-mgs').html('Sorry! you can select max '+limit+' item').stop().fadeIn(400).delay(3000).fadeOut(400);
@@ -4080,9 +3835,20 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
                         })
                         <?php
+
                     endif;
                     ?>
+
+
+
+
+
                 })
+
+
+
+
+
 
             </script>
             <?php
@@ -4422,19 +4188,22 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
             endif;
 
+
+
             ob_start();
             ?>
-            <div <?php if(!empty($depends)) { ?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-switch-wrapper
+            <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-switch-wrapper
             field-switch-wrapper-<?php echo esc_attr($id); ?>">
                 <?php
                 foreach( $args as $key => $argName ):
                     $checked = ( $key == $value ) ? "checked" : "";
                     ?><label class="<?php echo esc_attr($checked); ?>" for='<?php echo esc_attr($id); ?>-<?php echo esc_attr($key); ?>'><input name='<?php echo esc_attr($field_name); ?>' type='radio' id='<?php echo esc_attr($id); ?>-<?php echo esc_attr($key); ?>' value='<?php echo esc_attr($key); ?>' <?php echo esc_attr($checked); ?>><span class="sw-button"><?php echo esc_html($argName); ?></span></label><?php
-
                 endforeach;
                 ?>
                 <div class="error-mgs"></div>
             </div>
+
+
             <?php
             return ob_get_clean();
         }
@@ -4544,8 +4313,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             ob_start();
             ?>
             <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-switch-multi-wrapper
-            field-switch-multi-wrapper-<?php echo
-            $id; ?>">
+            field-switch-multi-wrapper-<?php echo esc_html($id); ?>">
                 <?php
                 foreach( $args as $key => $argName ):
                     $checked = is_array( $value ) && in_array( $key, $value ) ? "checked" : "";
@@ -4798,7 +4566,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             ?>
                             <div class="format" datavalue="<?php echo esc_attr($item); ?>">
                                 <label><input type="radio" <?php echo esc_attr($checked); ?> name="preset_<?php echo esc_attr($id); ?>" value="<?php echo esc_attr($item); ?>">
-                                    <span class="name"><?php echo date($item); ?></span></label>
+                                    <span class="name"><?php echo esc_html(gmdate($item)); ?></span></label>
                                 <span class="format"><code><?php echo esc_attr($item); ?></code></span>
                             </div>
                         <?php
@@ -4806,7 +4574,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                         ?>
                         <div class="format-value">
                             <span class="format"><input value="<?php echo esc_attr($value); ?>" name="<?php echo esc_attr($field_name); ?>"></span>
-                            <div class="">Preview: <?php echo date($value); ?></div>
+                            <div class="">Preview: <?php echo esc_html(gmdate($value)); ?></div>
                         </div>
                     <?php
                     endif;
@@ -4933,7 +4701,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             $checked = ($item == $value) ? 'checked':false;
                             ?>
                             <div class="format" datavalue="<?php echo esc_attr($item); ?>">
-                                <label><input type="radio" <?php echo esc_attr($checked); ?> name="preset_<?php echo esc_attr($id); ?>" value="<?php echo esc_attr($item); ?>"><span class="name"><?php echo date($item); ?></span></label>
+                                <label><input type="radio" <?php echo esc_attr($checked); ?> name="preset_<?php echo esc_attr($id); ?>" value="<?php echo esc_attr($item); ?>"><span class="name"><?php echo esc_html(gmdate($item)); ?></span></label>
                                 <span class="format"><code><?php echo esc_html($item); ?></code></span>
                             </div>
                             <?php
@@ -4941,7 +4709,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                         ?>
                         <div class="format-value">
                             <span class="format"><input value="<?php echo esc_attr($value); ?>" name="<?php echo esc_attr($field_name); ?>"></span>
-                            <div class="">Preview: <?php echo date($value); ?></div>
+                            <div class="">Preview: <?php echo esc_html(gmdate($value)); ?></div>
                         </div>
                     <?php
                     endif;
@@ -5063,7 +4831,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             </div>
             <script>
                 jQuery(document).ready(function($) {
-                    jQuery('#<?php echo esc_attr($field_id); ?>').datepicker({dateFormat : '<?php echo esc_attr($date_format); ?>'})});
+                    $('#<?php echo esc_attr($field_id); ?>').datepicker({dateFormat : '<?php echo esc_attr($date_format); ?>'})});
             </script>
 
             <?php
@@ -5294,7 +5062,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                 <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-colorpicker-multi-wrapper
                 field-colorpicker-multi-wrapper-<?php echo esc_attr($id);
                 ?>">
-                    <div class="ppof-button add"><?php echo __('Add','booking-and-rental-manager-for-woocommerce'); ?></div>
+                    <div class="ppof-button add"><?php echo esc_html_e('Add','booking-and-rental-manager-for-woocommerce'); ?></div>
                     <div class="item-list">
                         <?php
                         foreach ($values as $value):
@@ -5606,8 +5374,8 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                     endif; ?>
                 </div>
                 <div class="user-list">
-                    <div class="ppof-button select-user" ><?php echo __('Choose User','booking-and-rental-manager-for-woocommerce');?></div>
-                    <div class="search-user" ><input class="" type="text" placeholder="<?php echo __('Start typing...','booking-and-rental-manager-for-woocommerce');?>"></div>
+                    <div class="ppof-button select-user" ><?php echo esc_html_e('Choose User','booking-and-rental-manager-for-woocommerce');?></div>
+                    <div class="search-user" ><input class="" type="text" placeholder="<?php echo esc_html_e('Start typing...','booking-and-rental-manager-for-woocommerce');?>"></div>
                     <ul>
                         <?php
                         if(!empty($icons)):
@@ -5617,8 +5385,8 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                 ?>
                                 <li title="<?php echo esc_attr($user_data->display_name); ?>(#<?php echo esc_attr($user_id); ?>)"
                                     userSrc="<?php echo
-                                $get_avatar_url; ?>"
-                                    iconData="<?php echo esc_attr($user_id); ?>"><img src="<?php echo esc_attr($get_avatar_url); ?>" />
+                                esc_url($get_avatar_url); ?>"
+                                    iconData="<?php echo esc_attr($user_id); ?>"><img src="<?php echo esc_url($get_avatar_url); ?>" />
                                 </li>
                             <?php
                             endforeach;
@@ -5780,8 +5548,8 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                     <input type="hidden" name="<?php echo esc_attr($field_name); ?>" value="<?php echo esc_attr($value); ?>">
                 </div>
                 <div class="icon-list">
-                    <div class="ppof-button select-icon" ><?php echo __('Choose Icon','booking-and-rental-manager-for-woocommerce'); ?></div>
-                    <div class="search-icon" ><input class="" type="text" placeholder="<?php echo __('Start typing...','booking-and-rental-manager-for-woocommerce'); ?>"></div>
+                    <div class="ppof-button select-icon" ><?php echo esc_html_e('Choose Icon','booking-and-rental-manager-for-woocommerce'); ?></div>
+                    <div class="search-icon" ><input class="" type="text" placeholder="<?php echo esc_html_e('Start typing...','booking-and-rental-manager-for-woocommerce'); ?>"></div>
                     <ul>
                         <?php
                         if(!empty($icons)):
@@ -5916,8 +5684,8 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                     endif; ?>
                 </div>
                 <div class="icon-list">
-                    <div class="ppof-button select-icon" ><?php echo __('Choose Icon','booking-and-rental-manager-for-woocommerce'); ?></div>
-                    <div class="search-icon" ><input class="" type="text" placeholder="<?php echo __('Start typing...','booking-and-rental-manager-for-woocommerce'); ?>"></div>
+                    <div class="ppof-button select-icon" ><?php echo esc_html_e('Choose Icon','booking-and-rental-manager-for-woocommerce'); ?></div>
+                    <div class="search-icon" ><input class="" type="text" placeholder="<?php echo esc_html_e('Start typing...','booking-and-rental-manager-for-woocommerce'); ?>"></div>
                     <ul>
                         <?php
                         if(!empty($icons)):
@@ -6127,7 +5895,12 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             $value 			= isset( $option['value'] ) ? $option['value'] : "";
             $value          = !empty($value) ? $value : $default;
             $field_id       = $id;
+            
+            
+            // $value = preg_replace('#^<\/p>|<p>&nbsp;$#', '', $value);
+// $value = preg_replace('/^[ \t]*[\r\n]+/m', '', $value);
 
+            
             if(!empty($conditions)):
 
                 $depends = '';
@@ -6216,20 +5989,18 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-wp_editor-wrapper
             field-wp_editor-wrapper-<?php echo esc_attr($id); ?>">
                 <?php
-                wp_editor( html_entity_decode(nl2br($value)), $id, $settings = $editor_settings);
+                wp_editor( htmlspecialchars_decode($value), $id, $settings = $editor_settings);
                 ?>
                 <div class="error-mgs"></div>
             </div>
-
             <?php
             return ob_get_clean();
         }
 
 
 
+
         public function field_select2( $option ){
-
-
 
             $id 	    = isset( $option['id'] ) ? $option['id'] : "";
             if(empty($id)) return;
@@ -6368,144 +6139,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
         }
 
-        public function field_time_slot( $option ){
-
-
-
-            $id 	    = isset( $option['id'] ) ? $option['id'] : "";
-            if(empty($id)) return;
-            $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
-            $conditions 	= isset( $option['conditions'] ) ? $option['conditions'] : array();
-
-            $args 	        = isset( $option['args'] ) ? $option['args'] : "";
-            $args	    = is_array( $args ) ? $args : $this->args_from_string( $args );
-            $default    = isset( $option['default'] ) ? $option['default'] : "";
-            $multiple 	= isset( $option['multiple'] ) ? $option['multiple'] : false;
-
-            $value		= isset( $option['value'] ) ? $option['value'] : '';
-            $value      = !empty($value) ?  $value : $default;
-
-            $field_id       = $id;
-            $field_name     = !empty( $field_name ) ? $field_name : $id;
-
-            if($multiple):
-                $value = !empty($value) ? $value : array();
-            endif;
-
-
-            if(!empty($conditions)):
-
-                $depends = '';
-
-                $field = isset($conditions['field']) ? $conditions['field'] :'';
-                $cond_value = isset($conditions['value']) ? $conditions['value']: '';
-                $type = isset($conditions['type']) ? $conditions['type'] : '';
-                $pattern = isset($conditions['pattern']) ? $conditions['pattern'] : '';
-                $modifier = isset($conditions['modifier']) ? $conditions['modifier'] : '';
-                $like = isset($conditions['like']) ? $conditions['like'] : '';
-                $strict = isset($conditions['strict']) ? $conditions['strict'] : '';
-                $empty = isset($conditions['empty']) ? $conditions['empty'] : '';
-                $sign = isset($conditions['sign']) ? $conditions['sign'] : '';
-                $min = isset($conditions['min']) ? $conditions['min'] : '';
-                $max = isset($conditions['max']) ? $conditions['max'] : '';
-
-                $depends .= "{'[name=".$field."]':";
-                $depends .= '{';
-
-                if(!empty($type)):
-                    $depends .= "'type':";
-                    $depends .= "'".$type."'";
-                endif;
-
-                if(!empty($modifier)):
-                    $depends .= ",'modifier':";
-                    $depends .= "'".$modifier."'";
-                endif;
-
-                if(!empty($like)):
-                    $depends .= ",'like':";
-                    $depends .= "'".$like."'";
-                endif;
-
-                if(!empty($strict)):
-                    $depends .= ",'strict':";
-                    $depends .= "'".$strict."'";
-                endif;
-
-                if(!empty($empty)):
-                    $depends .= ",'empty':";
-                    $depends .= "'".$empty."'";
-                endif;
-
-                if(!empty($sign)):
-                    $depends .= ",'sign':";
-                    $depends .= "'".$sign."'";
-                endif;
-
-                if(!empty($min)):
-                    $depends .= ",'min':";
-                    $depends .= "'".$min."'";
-                endif;
-
-                if(!empty($max)):
-                    $depends .= ",'max':";
-                    $depends .= "'".$max."'";
-                endif;
-                if(!empty($cond_value)):
-                    $depends .= ",'value':";
-                    if(is_array($cond_value)):
-                        $count= count($cond_value);
-                        $i = 1;
-                        $depends .= "[";
-                        foreach ($cond_value as $val):
-                            $depends .= "'".$val."'";
-                            if($i<$count)
-                                $depends .= ",";
-                            $i++;
-                        endforeach;
-                        $depends .= "]";
-                    else:
-                        $depends .= "[";
-                        $depends .= "'".$cond_value."'";
-                        $depends .= "]";
-                    endif;
-                endif;
-                $depends .= '}}';
-
-            endif;
-
-            ob_start();
-            ?>
-            <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-select2-wrapper
-            field-select2-wrapper-<?php echo esc_attr($id); ?>">
-                <?php
-                if($multiple):
-                    ?>
-                    <select name='<?php echo esc_attr($field_name); ?>[]' id='<?php echo esc_attr($field_id); ?>' multiple>
-                    <?php
-                else:
-                    ?>
-                    <select name='<?php echo esc_attr($field_name); ?>' id='<?php echo esc_attr($field_id); ?>'>
-                    <?php
-                endif;
-                foreach( $args as $key => $name ):
-
-                    if( $multiple ) $selected = in_array( $name, $value ) ? "selected" : "";
-                    else $selected = $value == $name ? "selected" : "";
-                    ?>
-                    <option <?php echo esc_attr($selected); ?> value='<?php echo esc_attr($name); ?>'><?php echo esc_attr($key); ?></option>
-                    <?php
-                endforeach;
-                ?>
-                <div class="error-mgs"></div>
-            </div>
-            </select>
-
-            <?php
-            return ob_get_clean();
-
-        }
-
 
         public function field_option_group( $option ){
 
@@ -6514,7 +6147,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
             $values			= isset( $option['value'] ) ? $option['value'] : '';
             $conditions 	= isset( $option['conditions'] ) ? $option['conditions'] : array();
-            $FormFieldsGenerator = new RbfwFormFieldsGenerator();
+            $FormFieldsGenerator = new FormFieldsGenerator();
 
             $field_id       = $id;
             $field_name     = !empty( $field_name ) ? $field_name : $id;
@@ -6613,7 +6246,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                         <?php
                         if(!empty($options)):
                             ?>
-                            <div class="rbfw-form-table-wrap">
                             <table class="form-table">
                                 <tbody>
 
@@ -6633,9 +6265,9 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                     <tr>
                                         <th scope="row"><?php echo esc_html($option_title); ?></th>
                                         <td>
-                                            <?php
+                                            <?php                                           
                                             if (sizeof($option) > 0 && isset($option['type'])) {
-                                                echo mep_field_generator($option['type'], $option);
+                                                echo wp_kses_post(mep_field_generator($option['type'], $option));
                                                 do_action("wp_theme_settings_field_$type", $option);
                                             }
                                             ?>
@@ -6653,7 +6285,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
                                 </tbody>
                             </table>
-                            </div>
                         <?php
 
                         endif;
@@ -6678,7 +6309,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
             $values			= isset( $option['value'] ) ? $option['value'] : '';
             $conditions 	= isset( $option['conditions'] ) ? $option['conditions'] : array();
-            $FormFieldsGenerator = new RbfwFormFieldsGenerator();
+            $FormFieldsGenerator = new FormFieldsGenerator();
 
             $field_id       = $id;
             $field_name     = !empty( $field_name ) ? $field_name : $id;
@@ -6811,7 +6442,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                 <?php
                                 if(!empty($options)):
                                     ?>
-                                    <div class="rbfw-form-table-wrap">
                                     <table class="form-table">
                                         <tbody>
 
@@ -6832,7 +6462,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                 <td>
                                                     <?php
                                                         if (sizeof($option) > 0 && isset($option['type'])) {
-                                                            echo mep_field_generator($option['type'], $option);
+                                                            echo wp_kses_post(mep_field_generator($option['type'], $option));
                                                             do_action("wp_theme_settings_field_$type", $option);
                                                         }
                                                     ?>
@@ -6850,7 +6480,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
                                         </tbody>
                                     </table>
-                                    </div>
                                 <?php
 
                                 endif;
@@ -6897,7 +6526,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
             $values			= isset( $option['value'] ) ? $option['value'] : '';
             $conditions 	= isset( $option['conditions'] ) ? $option['conditions'] : array();
-            $FormFieldsGenerator = new RbfwFormFieldsGenerator();
+            $FormFieldsGenerator = new FormFieldsGenerator();
 
             $field_id       = $id;
             $field_name     = !empty( $field_name ) ? $field_name : $id;
@@ -7015,7 +6644,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                 <?php
                                 if(!empty($options)):
                                     ?>
-                                    <div class="rbfw-form-table-wrap">
                                     <table class="form-table">
                                         <tbody>
                                         <?php
@@ -7028,7 +6656,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                     <td>
                                                         <?php
                                                             if (sizeof($option) > 0 && isset($option['type'])) {
-                                                                echo mep_field_generator($option['type'], $option);
+                                                                echo wp_kses_post(mep_field_generator($option['type'], $option));
                                                                 do_action("wp_theme_settings_field_$type", $option);
                                                             }
                                                         ?>
@@ -7039,7 +6667,6 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                         ?>
                                         </tbody>
                                     </table>
-                                        </div>
                                     <?php
 
                                 endif;
@@ -7619,7 +7246,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
                 ?>
                 <div class="val-wrap">
-                    <input class="link-val" name='<?php echo esc_attr($field_name); ?>' type="text" value="<?php echo esc_attr($value); ?>"> <span class='ppof-button upload' id='media_upload_<?php echo esc_attr($id); ?>'><?php echo __('Upload','booking-and-rental-manager-for-woocommerce');?></span> <span class="ppof-button clear">Clear</span>
+                    <input class="link-val" name='<?php echo esc_attr($field_name); ?>' type="text" value="<?php echo esc_attr($value); ?>"> <span class='ppof-button upload' id='media_upload_<?php echo esc_attr($id); ?>'><?php echo esc_html_e('Upload','booking-and-rental-manager-for-woocommerce');?></span> <span class="ppof-button clear">Clear</span>
                 </div>
                 <div class="error-mgs"></div>
             </div>
@@ -8093,7 +7720,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                     ?>
                 </div>
                 <input type='hidden' name='<?php echo esc_attr($field_name); ?>' id='media_input_<?php echo esc_attr($id); ?>' value='<?php echo esc_attr($value); ?>' />
-                <div class='ppof-button upload' id='media_upload_<?php echo esc_attr($id); ?>'><?php echo __('Upload','booking-and-rental-manager-for-woocommerce');?></div><div class='ppof-button clear' id='media_clear_<?php echo esc_attr($id); ?>'><?php echo __('Clear','booking-and-rental-manager-for-woocommerce');?></div>
+                <div class='ppof-button upload' id='media_upload_<?php echo esc_attr($id); ?>'><?php echo esc_html_e('Upload','booking-and-rental-manager-for-woocommerce');?></div><div class='ppof-button clear' id='media_clear_<?php echo esc_attr($id); ?>'><?php echo esc_html_e('Clear','booking-and-rental-manager-for-woocommerce');?></div>
                 <div class="error-mgs"></div>
             </div>
 
@@ -8124,13 +7751,12 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
 
         public function field_media_multi( $option ){
-                    
 
             $id			= isset( $option['id'] ) ? $option['id'] : "";
             if(empty($id)) return;
             $field_name 	= isset( $option['field_name'] ) ? $option['field_name'] : $id;
             $conditions 	= isset( $option['conditions'] ) ? $option['conditions'] : array();
-            $remove_text			= isset( $option['remove_text'] ) ? $option['remove_text'] : 'X';
+            $remove_text			= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fas fa-times"></i>';
             $default			= isset( $option['default'] ) ? $option['default'] : '';
             $values			= isset( $option['value'] ) ? $option['value'] : '';
 
@@ -8227,13 +7853,11 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             ?>
             <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper
             field-media-multi-wrapper-<?php echo esc_attr($id); ?>">
-                <div class='button upload' id='media_upload_<?php echo esc_attr($id); ?>'>
-                    <?php echo __('Upload','booking-and-rental-manager-for-woocommerce');?>
-                </div>
-                <div class='button clear' id='media_clear_<?php echo $id; ?>'>
-                    <?php echo __('Clear','booking-and-rental-manager-for-woocommerce');?>
-                </div>
-                <div class="media-list my-1 media-list-<?php echo esc_attr($id); ?> sortable">
+                <div class='ppof-button upload' id='media_upload_<?php echo esc_attr($id); ?>'><?php echo esc_html_e('Upload','booking-and-rental-manager-for-woocommerce');?></div><div class='ppof-button clear'
+                                                                                          id='media_clear_<?php echo
+                                                                                          esc_attr($id);
+                                                                                          ?>'><?php echo esc_html_e('Clear','booking-and-rental-manager-for-woocommerce');?></div>
+                <div class="media-list media-list-<?php echo esc_attr($id); ?> sortable">
                     <?php
                     if(!empty($values) && is_array($values)):
                         foreach ($values as $value ):
@@ -8241,11 +7865,11 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             $media_type	= get_post_mime_type( $value );
                             $media_title= get_the_title( $value );
                             ?>
-                            <div class="item m-1">
-                                <span class="remove" onclick="jQuery(this).parent().remove()"><?php echo mep_esc_html($remove_text); ?></span>
-                                <span class="sort" ><i class="fa-solid fa-grip"></i></span>
+                            <div class="item">
+                                <span class="remove" onclick="jQuery(this).parent().remove()"><?php echo esc_html($remove_text); ?></span>
+                                <span class="sort" >sort</span>
                                 <img id='media_preview_<?php echo esc_attr($id); ?>' src='<?php echo esc_attr($media_url); ?>' style='width:100%'/>
-                                <div class="item-title"><?php // echo esc_html($media_title); ?></div>
+                                <div class="item-title"><?php echo esc_html($media_title); ?></div>
                                 <input type='hidden' name='<?php echo esc_attr($field_name); ?>[]' value='<?php echo esc_attr($value); ?>' />
                             </div>
                         <?php
@@ -8416,7 +8040,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             $btntext		= isset( $option['btn_text'] ) ? $option['btn_text'] : 'Add';
             $fields 		= isset( $option['fields'] ) ? $option['fields'] : array();
             $title_field 	= isset( $option['title_field'] ) ? $option['title_field'] : '';
-            $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fa-solid fa-trash-can"></i>';
+            $remove_text 	= isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fas fa-times"></i>';
             $limit 	        = isset( $option['limit'] ) ? $option['limit'] : '';
             $args 	        = isset( $option['args'] ) ? $option['args'] : '';
             $args			= is_array( $args ) ? $args : $this->args_from_string( $args );
@@ -8426,8 +8050,8 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
 
             $new_title      =  explode('/',$title_field);
-            $title_field    = $new_title;
-            foreach ($fields as $key => $value) {
+            $title_field    = $new_title;            
+            foreach ($fields as $key => $value) {            
                 # code...
                 $new[$key]['type']      = $fields[$key]['type'];
                 $new[$key]['default']   = $fields[$key]['default'];
@@ -8436,10 +8060,10 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                 if(array_key_exists('args',$value)){
                  $new[$key]['args']      = !is_array($fields[$key]['args']) ? $this->args_from_string($fields[$key]['args']) : $fields[$key]['args'];
                 }
-
+                 
             }
             $fields = $new;
-
+           
 
             if(!empty($conditions)):
 
@@ -8527,12 +8151,8 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                     jQuery(document).on('click', '.field-repeatable-wrapper-<?php echo esc_attr($id); ?> .collapsible .header .title-text', function() {
                         if(jQuery(this).parent().parent().hasClass('active')){
                             jQuery(this).parent().parent().removeClass('active');
-                            jQuery(this).empty();
-                            jQuery(this).html('<i class="fa-solid fa-angles-down"></i> Expand');
                         }else{
                             jQuery(this).parent().parent().addClass('active');
-                            jQuery(this).empty();
-                            jQuery(this).html('<i class="fa-solid fa-angles-up"></i> Collapse');
                         }
                     })
 
@@ -8553,7 +8173,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             $( this ).parent().parent().clone().appendTo('.field-repeatable-wrapper-<?php echo esc_attr($id); ?> .field-list' );
                            // html = $( this ).parent().parent().clone();
                             //var html_new = html.replace(index_id, now);
-                            //jQuery('.<?php echo 'field-repeatable-wrapper-'.$id; ?> .field-list').append(html_new);
+                            //jQuery('.field-list').append(html_new);
                             //console.log(html);
 
                         }else{
@@ -8570,18 +8190,17 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
                     jQuery(document).on('click', '.field-repeatable-wrapper-<?php echo esc_attr($id); ?> .add-item', function() {
                         now = jQuery.now();
-                        fields_arr = <?php echo json_encode($fields); ?>;
-                        html = '<div class="item-wrap collapsible component"><div class="header">';
-                        <?php if($collapsible === true): ?>
-                        html += '<span  class="title-text button"><i class="fa-solid fa-angles-down"></i> Expand</span>';
-                        <?php endif; ?>
+                        fields_arr = <?php echo wp_json_encode($fields); ?>;
+                        html  = '<div class="item-wrap collapsible"><div class="header">';
+                        html += '<span class="button title-text"><i class="fas fa-angle-double-down"></i> Expand</span> ';
+                        html += '<span class="button remove" ' +
+                            'onclick="jQuery(this).parent().parent().remove()"><?php echo wp_kses_post($remove_text); ?></span> ';
+                        
                         <?php if($sortable):?>
-                        html += '<span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
+                        html += '<span class="button sort" ><i class="fas fa-grip-vertical"></i></span>';
                         <?php endif; ?>
-						html += '<span class="button remove " ' +
-                            'onclick="jQuery(this).parent().parent().remove()"><?php echo mep_esc_html($remove_text); ?></span>';
                         html += '</div>';
-                        // html += ' <span  class="title-text">#'+now+'</span></div>';
+                         // html += ' <span  class="title-text">#'+now+'</span></div>';
                         fields_arr.forEach(function(element) {
                             type = element.type;
                             item_id = element.item_id;
@@ -8612,11 +8231,24 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             }else if(type == 'email'){
                                 html+='<input type="email" name="<?php echo esc_attr($field_name); ?>['+now+']['+element.item_id+']"/>';
                             }else if(type == 'textarea'){
-                                html+='<textarea name="<?php echo esc_attr($field_name); ?>['+now+']['+element.item_id+']">'+default_val+'</textarea>';
+
+                                html+='<textarea id="<?php echo esc_attr($field_name); ?>'+now+'" name="<?php echo esc_attr($field_name); ?>['+now+']['+element.item_id+']"></textarea>';
+                               
+                                jQuery(function(){
+                                    tinymce.init({
+                                        selector:"#<?php echo esc_attr($field_name); ?>"+now,
+                                        menubar: true,
+                                        relative_urls : 0,
+                                        remove_script_host : 0,
+                                        toolbar: 'undo redo link formatselect bold italic backcolor alignleft aligncenter alignright alignjustify bullist numlist outdent indent removeformat fullscreen',
+                                                        plugins: 'fullscreen link'
+                                    });
+                                });                          
+                                
                             }else if(type == 'select'){
                                 args = element.args;
                                 html+='<select name="<?php echo esc_attr($field_name); ?>['+now+']['+element.item_id+']">';
-                                for(argKey in args){
+                                for(argKey in args){                                                                       
                                     html+='<option value="'+argKey+'">'+args[argKey]+'</option>';
                                 }
                                 html+='</select>';
@@ -8643,14 +8275,14 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             html+='</div>';
                         });
                         html+='</div>';
-                        
+
                         <?php
                         if(!empty($limit)):
                             ?>
                             var limit = <?php  echo esc_attr($limit); ?>;
                             var node_count = $( ".field-repeatable-wrapper-<?php echo esc_attr($id); ?> .field-list .item-wrap" ).size();
                             if(limit > node_count){
-                                jQuery('.<?php echo 'field-repeatable-wrapper-'.$id; ?> .field-list').append(html);
+                                jQuery('.<?php echo esc_html('field-repeatable-wrapper-'.$id); ?> .field-list').append(html);
                             }else{
                                 jQuery('.field-repeatable-wrapper-<?php echo esc_attr($id); ?> .error-mgs').html('Sorry! you can add max '+limit+' item').stop().fadeIn(400).delay(3000).fadeOut(400);
                             }
@@ -8658,7 +8290,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             <?php
                         else:
                             ?>
-                            jQuery('.<?php echo 'field-repeatable-wrapper-'.$id; ?> .field-list').append(html);
+                            jQuery('.<?php echo esc_attr('field-repeatable-wrapper-'.$id); ?> .field-list').append(html);
                             <?php
                         endif;
                         ?>
@@ -8667,7 +8299,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             </script>
             <div <?php if(!empty($depends)) {?> data-depends="[<?php echo esc_attr($depends); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr($id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-repeatable-wrapper
             field-repeatable-wrapper-<?php echo esc_attr($id); ?>">
-
+                
                 <div class="field-list <?php if($sortable){ echo 'sortable'; }?>" id="<?php echo esc_attr($id); ?>">
                     <?php
                     if(!empty($values)):
@@ -8676,20 +8308,17 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                             $title_field_val = !empty($title_field) ? $this->get_form_title($title_field,$val) : '==> Click to Expand';
                             ?>
                             <div class="item-wrap <?php if($collapsible) echo 'collapsible'; ?>">
-
+                                <?php if($collapsible):?>
                                 <div class="header">
-
-                                    <?php if($collapsible === true): ?>
-                                    <span class="title-text button"><i class="fa-solid fa-angles-down"></i> Expand</span>
-                                    <?php endif; ?>
+                                    <?php endif; ?>                                  
                                     <?php if($sortable):?>
                                         <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
                                     <?php endif; ?>
-
-                                    <span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo mep_esc_html($remove_text); ?></span>
-
+                                    <span class="title-text" style="cursor:pointer;display: inline-block;width: 84%;"><?php echo wp_kses_post($title_field_val); ?></span>
+                                    <span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo wp_kses_post($remove_text); ?></span>
+                                    <?php if($collapsible):?>
                                 </div>
-
+                            <?php endif; ?>
                                 <?php foreach ($fields as $field_index => $field):
                                     $type               = $field['type'];
                                     $item_id            = $field['item_id'];
@@ -8756,19 +8385,34 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                 $_value     = !empty($val[$item_id]) ? $val[$item_id] : $default;
                                                 $__value    = str_replace('<br />', PHP_EOL, html_entity_decode($_value));;
                                                 ?>
-                                                <textarea name="<?php echo esc_attr($field_name); ?>[<?php echo esc_attr($index); ?>][<?php echo esc_attr($item_id); ?>]"><?php echo mep_esc_html($__value); ?></textarea>
+                                                
+                                                <?php $rnd = wp_rand(); ?>
+                                                <textarea id="<?php echo esc_attr($field_name.$rnd); ?>" name="<?php echo esc_attr($field_name); ?>[<?php echo esc_attr($index); ?>][<?php echo esc_attr($item_id); ?>]"><?php echo wp_kses_post($__value); ?></textarea>
+                                                <script>
+                                                jQuery(function(){
+                                                    tinymce.init({
+                                                        selector: "#<?php echo esc_attr($field_name.$rnd); ?>",
+                                                        menubar: true,
+                                                        relative_urls : 0,
+                                                        remove_script_host : 0,                                                        
+                                                        toolbar: 'undo redo link formatselect bold italic backcolor alignleft aligncenter alignright alignjustify bullist numlist outdent indent removeformat fullscreen',
+                                                        plugins: 'fullscreen link'
+                                                    });
+                                                });
+                                                </script>
+                                              
                                             <?php elseif($type == 'select'):
                                                 $args = isset($field['args']) ? $field['args'] : array();
                                                 $default = isset($field['default']) ? $field['default'] : '';
                                                 $value = !empty($val[$item_id]) ? $val[$item_id] : $default;
 
-
+                                               
                                                 ?>
                                                 <select class="" name="<?php echo esc_attr($field_name); ?>[<?php echo esc_attr($index); ?>][<?php echo esc_attr($item_id); ?>]">
-                                                <?php
-                                                   if(!is_array($args)){
+                                                <?php                                                    
+                                                   if(!is_array($args)){                                                   
                                                    $this->args_from_string($args);
-                                                   }else{
+                                                   }else{                                                    
                                                         foreach ($args as $argIndex => $argName):
                                                         $selected = ($argIndex == $value) ? 'selected' : '';
                                                         ?>
@@ -8780,13 +8424,13 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                 $default = isset($field['default']) ? $field['default'] : '';
                                                 $value = !empty($val[$item_id]) ? $val[$item_id] : $default;
                                                 ?>
-                                                <?php
-                                                if(!is_array($args)){
+                                                <?php 
+                                                if(!is_array($args)){                                                   
                                                     $this->args_from_string($args);
-                                                }else{
+                                                }else{                                                  
                                                 foreach ($args as $argIndex => $argName):
                                                 $checked = ($argIndex == $value) ? 'checked' : '';
-
+                                                
                                                 ?>
                                                 <label class="" >
                                                     <input  type="radio" name="<?php echo esc_attr($field_name); ?>[<?php echo esc_attr($index); ?>][<?php echo esc_attr($item_id); ?>]" <?php echo esc_attr($checked); ?>  value="<?php echo esc_attr($argIndex); ?>"><?php echo esc_html($argName); ?></input>
@@ -8797,8 +8441,8 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                                 $default = isset($field['default']) ? $field['default'] : '';
                                                 $value = !empty($val[$item_id]) ? $val[$item_id] : $default;
                                                 ?>
-                                                <?php
-
+                                                <?php 
+                                                
                                                 foreach ($args as $argIndex => $argName):
                                                 $value = is_array($value) ? $value : array();
                                                 // print_r($value);
@@ -8820,7 +8464,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-
+                            
                             <?php
                             //endforeach;
                             $count++;
@@ -8832,12 +8476,11 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
                         ?>
                     <?php
                     endif;
-                    ?>
+                    ?>                    
                 </div>
                 <div class="error-mgs"></div>
-                <div class="ppof-button add-item"><i class="fas fa-plus-square"></i> <?php echo esc_html($btntext); ?></div>
+                <div class="ppof-button add-item"><i class="fas fa-plus-circle"></i> <?php echo esc_html($btntext); ?></div>
             </div>
-
 
             <?php
             return ob_get_clean();
@@ -8845,7 +8488,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
 
         public function get_tax_data($args){
             foreach ($this->get_rep_taxonomies_array( $args ) as $argIndex => $argName):
-            $selected = ($argIndex == $value) ? 'selected' : ''; ?><option <?php echo esc_attr($selected); ?>  value="<?php echo esc_attr($argIndex); ?>"><?php echo esc_html($argName); ?></option> <?php endforeach;
+            $selected = ($argIndex == $argName) ? 'selected' : ''; ?><option <?php echo esc_attr($selected); ?>  value="<?php echo esc_attr($argIndex); ?>"><?php echo esc_html($argName); ?></option> <?php endforeach;
         }
 
 
@@ -8878,7 +8521,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             if( isset( $matches[1][0] ) ) $taxonomy = $matches[1][0];
             else throw new Pick_error('Invalid taxonomy declaration !');
 
-            if( ! taxonomy_exists( $taxonomy ) ) throw new Pick_error("Taxonomy <strong>$taxonomy</strong> doesn't exists !");
+           // if( ! taxonomy_exists( $taxonomy ) ) throw new Pick_error("Taxonomy <strong>$taxonomy</strong> doesn't exists !");
 
             $terms = get_terms( $taxonomy, array(
                 'hide_empty' => false,
@@ -8896,7 +8539,7 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
             preg_match_all( "/\%([^\]]*)\%/", $string, $matches );
             if( isset( $matches[1][0] ) ) $taxonomy = $matches[1][0];
             else throw new Pick_error('Invalid taxonomy declaration !');
-            if( ! taxonomy_exists( $taxonomy ) ) throw new Pick_error("Taxonomy <strong>$taxonomy</strong> doesn't exists !");
+            //if( ! taxonomy_exists( $taxonomy ) ) throw new Pick_error("Taxonomy <strong>$taxonomy</strong> doesn't exists !");
             $terms = get_terms( $taxonomy, array(
                 'hide_empty' => false,
             ) );
@@ -10002,5 +9645,5 @@ if( ! class_exists( 'RbfwFormFieldsGenerator' ) ) {
         }
     }
     global $wbtmcore;
-    $wbtmcore = new RbfwFormFieldsGenerator();
+    $wbtmcore = new FormFieldsGenerator();
 }

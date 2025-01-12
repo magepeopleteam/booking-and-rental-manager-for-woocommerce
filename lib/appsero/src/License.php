@@ -251,12 +251,12 @@ class License {
                 <?php $this->show_license_page_card_header(); ?>
 
                 <div class="appsero-license-details">
-                    <p>
-                        <?php printf( $this->client->__trans( 'Activate <strong>%s</strong> by your license key to get professional support and automatic update from your WordPress dashboard.' ), esc_html($this->client->name) ); ?>
-                    </p>
+                <p>
+                    <?php printf( esc_html( $this->client->__trans( 'Activate <strong>%s</strong> by your license key to get professional support and automatic update from your WordPress dashboard.' ) ), esc_html($this->client->name) ); ?>
+                </p>
                     <form method="post" action="<?php $this->formActionUrl(); ?>" novalidate="novalidate" spellcheck="false">
                         <input type="hidden" name="_action" value="<?php echo esc_attr($action); ?>">
-                        <input type="hidden" name="_nonce" value="<?php echo wp_create_nonce( $this->client->name ); ?>">
+                        <input type="hidden" name="_nonce" value="<?php echo esc_attr( wp_create_nonce( $this->client->name ) ); ?>">
                         <div class="license-input-fields">
                             <div class="license-input-key">
                                 <svg enable-background="new 0 0 512 512" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
@@ -504,20 +504,23 @@ class License {
                     <p><?php $this->client->_etrans( 'Unlimited' ); ?></p>
                 <?php } else { ?>
                     <p class="<?php echo esc_attr($license['remaining'] ? '' : 'occupied'); ?>">
-                        <?php printf( $this->client->__trans( '%1$d out of %2$d' ), $license['remaining'], $license['activation_limit'] ); ?>
-                    </p>
+                    <?php printf( esc_html( $this->client->__trans( '%1$s out of %2$s' ) ), esc_html($license['remaining']), esc_html($license['activation_limit']) ); ?>
+
+</p>
+
                 <?php } ?>
             </div>
             <div class="single-license-info">
-                <h3><?php $this->client->_etrans( 'Expires in' ); ?></h3>
-                <?php
-                    if ( false !== $license['expiry_days'] ) {
-                        $occupied = $license['expiry_days'] > 21 ? '' : 'occupied';
-                        echo '<p class="' . $occupied . '">' . $license['expiry_days'] . ' days</p>';
-                    } else {
-                        echo '<p>' . $this->client->__trans( 'Never' ) . '</p>';
-                    } ?>
-            </div>
+    <h3><?php echo esc_html($this->client->_etrans( 'Expires in' )); ?></h3>
+    <?php
+        if ( false !== $license['expiry_days'] ) {
+            $occupied = $license['expiry_days'] > 21 ? '' : 'occupied';
+            echo '<p class="' . esc_attr($occupied) . '">' . esc_html($license['expiry_days']) . ' days</p>';
+        } else {
+            echo '<p>' . esc_html($this->client->__trans( 'Never' )) . '</p>';
+        } ?>
+</div>
+
         </div>
         <?php
     }
@@ -711,13 +714,15 @@ class License {
      * Form action URL
      */
     private function formActionUrl() {
-        $url = add_query_arg(
-            rbfw_array_strip($_GET),
-            admin_url( basename( $_SERVER['SCRIPT_NAME'] ) )
-        );
+    $url = add_query_arg(
+        rbfw_array_strip($_GET),
+        admin_url( basename( $_SERVER['SCRIPT_NAME'] ) )
+    );
 
-        echo apply_filters( 'appsero_client_license_form_action', $url );
-    }
+    // Apply filters to the URL and then escape it before outputting
+    echo esc_url(apply_filters('appsero_client_license_form_action', $url));
+}
+
 
     /**
      * Get input license key

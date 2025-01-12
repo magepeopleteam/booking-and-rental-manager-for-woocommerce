@@ -472,10 +472,10 @@
                                                 <?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                             </th>
 											<th>
-                                                <?php esc_html_e( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?>
+											<?php echo wp_kses( sprintf( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ), array( 'b' => array( 'class' => array()), ) ); ?>
                                             </th>
 											<th class="rbfw_without_time_inventory <?php echo esc_html( $manage_inventory_as_timely=='on')?'rbfw_hide':'' ?>">
-                                                <?php esc_html_e( 'Stock/Day <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?>
+											<?php $text = sprintf( __('Stock/Day <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce') ); echo wp_kses( $text, array( 'b' => array( 'class' => array(), ), ) ); ?>
                                             </th>
                                             <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo esc_html( $manage_inventory_as_timely=='off')?'rbfw_hide':(($manage_inventory_as_timely=='on' && $enable_specific_duration =='off')?'rbfw_hide':'')  ?>">
                                                 <?php esc_html_e( 'Start Time', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
@@ -702,8 +702,8 @@
 									<th><?php esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									<th><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									<th><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-									<th><?php esc_html_e( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-									<th><?php esc_html_e( 'Stock Quantity <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+									<th><?php echo wp_kses_post( 'Price <b class="required">*</b>'); ?></th>
+									<th><?php echo wp_kses_post( 'Stock Quantity <b class="required">*</b>'); ?></th>
 									<!--<th><?php esc_html_e( 'Qty Box', 'booking-and-rental-manager-for-woocommerce' ); ?></th>-->
 									<th></th>
 								</tr>
@@ -1465,27 +1465,27 @@
 					for ( $i = 0; $i < $count; $i ++ ) {
 			
 						if (!empty($service_img[ $i ])) :
-							$new_extra_service[ $i ]['service_img'] = stripslashes( strip_tags( $service_img[ $i ] ) );
+							$new_extra_service[ $i ]['service_img'] = stripslashes( wp_strip_all_tags( $service_img[ $i ] ) );
 						endif;
 			
 						if ( $names[ $i ] != '' ) :
-							$new_extra_service[ $i ]['service_name'] = stripslashes( strip_tags( $names[ $i ] ) );
+							$new_extra_service[ $i ]['service_name'] = stripslashes( wp_strip_all_tags( $names[ $i ] ) );
 						endif;
 			
 						if ( $urls[ $i ] != '' ) :
-							$new_extra_service[ $i ]['service_price'] = stripslashes( strip_tags( $urls[ $i ] ) );
+							$new_extra_service[ $i ]['service_price'] = stripslashes( wp_strip_all_tags( $urls[ $i ] ) );
 						endif;
 			
 						if ( $service_desc[ $i ] != '' ) :
-							$new_extra_service[ $i ]['service_desc'] = stripslashes( strip_tags( $service_desc[ $i ] ) );
+							$new_extra_service[ $i ]['service_desc'] = stripslashes( wp_strip_all_tags( $service_desc[ $i ] ) );
 						endif;
 			
 						if ( $qty[ $i ] != '' ) :
-							$new_extra_service[ $i ]['service_qty'] = stripslashes( strip_tags( $qty[ $i ] ) );
+							$new_extra_service[ $i ]['service_qty'] = stripslashes( wp_strip_all_tags( $qty[ $i ] ) );
 						endif;
 			
 						if ( !empty($qty_type[ $i ]) && $qty_type[ $i ] != '' ) :
-							$new_extra_service[ $i ]['service_qty_type'] = stripslashes( strip_tags( $qty_type[ $i ] ) );
+							$new_extra_service[ $i ]['service_qty_type'] = stripslashes( wp_strip_all_tags( $qty_type[ $i ] ) );
 						endif;
 					}
 

@@ -140,7 +140,7 @@
                 $rdfw_available_time_update = [];
 
                 foreach ($rdfw_available_time as $single){
-                    $rdfw_available_time_update[] = date('H:i', strtotime($single));
+                    $rdfw_available_time_update[] = gmdate('H:i', strtotime($single));
                 }
 
 
@@ -149,9 +149,9 @@
                     <select name="rdfw_available_time[]" id="rdfw_available_time" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
                         <?php foreach($rbfw_time_slots as $key => $value): ?>
                             <?php if(get_the_title( $post_id ) == 'Auto Draft'){ ?>
-                                <option selected value="<?php echo esc_attr(date('H:i', strtotime($value))); ?>"> <?php echo esc_attr($key); ?> </option>
+                                <option selected value="<?php echo esc_attr(gmdate('H:i', strtotime($value))); ?>"> <?php echo esc_attr($key); ?> </option>
                             <?php }else{ ?>
-                                <option <?php echo esc_attr(in_array(date('H:i', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo esc_attr(date('H:i', strtotime($value))); ?>"> <?php echo esc_attr(date('H:i', strtotime($value))); ?> </option>
+                                <option <?php echo esc_attr(in_array(gmdate('H:i', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo esc_attr(gmdate('H:i', strtotime($value))); ?>"> <?php echo esc_attr(gmdate('H:i', strtotime($value))); ?> </option>
                             <?php } ?>
 
                         <?php endforeach; ?>
@@ -171,7 +171,7 @@
                 $rdfw_available_time_update = [];
 
                 foreach ($available_times as $single){
-                    $rdfw_available_time_update[] = date('H:i', strtotime($single));
+                    $rdfw_available_time_update[] = gmdate('H:i', strtotime($single));
                 }
 
 
@@ -180,9 +180,9 @@
                 <select name="rbfw_particulars[<?php echo esc_attr($index); ?>][available_time][]" multiple class="select2-hidden-accessible">
                     <?php foreach($rbfw_time_slots as $key => $value): ?>
                         <?php if(get_the_title( $post_id ) == 'Auto Draft'){ ?>
-                            <option selected value="<?php echo esc_attr(date('H:i', strtotime($value))); ?>"> <?php echo esc_attr($key); ?> </option>
+                            <option selected value="<?php echo esc_attr(gmdate('H:i', strtotime($value))); ?>"> <?php echo esc_attr($key); ?> </option>
                         <?php }else{ ?>
-                            <option <?php echo esc_attr(in_array(date('H:i', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo esc_attr(date('H:i', strtotime($value))); ?>"> <?php echo esc_html(date('H:i', strtotime($value))); ?> </option>
+                            <option <?php echo esc_attr(in_array(gmdate('H:i', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo esc_attr(gmdate('H:i', strtotime($value))); ?>"> <?php echo esc_html(gmdate('H:i', strtotime($value))); ?> </option>
                         <?php } ?>
                     <?php endforeach; ?>
                 </select>
@@ -216,9 +216,9 @@
 						<section>
 							<div >
 								<label>
-									<?php ese_html_e( 'Available Time Slot', 'booking-and-rental-manager-for-woocommerce' ) ?>
+									<?php esc_html_e( 'Available Time Slot', 'booking-and-rental-manager-for-woocommerce' ) ?>
 								</label>
-								<span><?php ese_html_e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
+								<span><?php esc_html_e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
 							</div>
 							<div class="w-70">
 								<?php $this->multiple_time_slot_select($post_id); ?>
@@ -288,10 +288,10 @@
                     <section>
                         <table class="form-table" id="particulars-table">
                             <tr>
-                                <th><?php ese_html_e('Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                                <th><?php ese_html_e('End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                                <th><?php ese_html_e('Available Time Slots', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                                <th><?php ese_html_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php esc_html_e('Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php esc_html_e('End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php esc_html_e('Available Time Slots', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php esc_html_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                             </tr>
                             <?php foreach ($particulars_data as $index => $particular): ?>
                                 <tr class="particular-row">
@@ -354,7 +354,7 @@
 
                 $options = '';
                 foreach ($rbfw_time_slots as $key=>$time_slot) {
-                    $options .= '<option  value="'. date('H:i', strtotime($time_slot)).'">' . date('H:i', strtotime($time_slot)) .'</option>';
+                    $options .= '<option  value="'. gmdate('H:i', strtotime($time_slot)).'">' . gmdate('H:i', strtotime($time_slot)) .'</option>';
                 }
                 echo esc_html(addslashes($options));
                 ?>';
@@ -407,9 +407,9 @@
 
 			public function settings_save($post_id) {
                 
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
-                    return;
-                }
+                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
+    return;
+}
 
                 if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
                     return;
@@ -421,19 +421,12 @@
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
                     $rbfw_time_slot = isset( $_POST['rbfw_time_slot_switch'] ) ? rbfw_array_strip( $_POST['rbfw_time_slot_switch'] ) : 'off';
-
                     $rdfw_available_time = isset( $_POST['rdfw_available_time'] ) ? rbfw_array_strip( $_POST['rdfw_available_time'] ) : [];
-
-         
-
                     $rbfw_enable_start_end_date  = isset( $_POST['rbfw_enable_start_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_enable_start_end_date'] ) : 'yes';
-
-
                     $rbfw_event_start_date  = isset( $_POST['rbfw_event_start_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_date'] ) : '';
        	 			$rbfw_event_start_time  = isset( $_POST['rbfw_event_start_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_time'] ) : '';
 					$rbfw_event_end_date  = isset( $_POST['rbfw_event_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_date'] ) : '';
 					$rbfw_event_end_time  = isset( $_POST['rbfw_event_end_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_time'] ) : '';
-
                     $rbfw_particular_switch = isset($_POST['rbfw_particular_switch']) ? sanitize_text_field($_POST['rbfw_particular_switch']) : 'off';
                     $particulars_data = isset($_POST['rbfw_particulars']) ? $_POST['rbfw_particulars'] : [];
 
