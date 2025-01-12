@@ -216,9 +216,9 @@
 						<section>
 							<div >
 								<label>
-									<?php ese_html_e( 'Available Time Slot', 'booking-and-rental-manager-for-woocommerce' ) ?>
+									<?php esc_html_e( 'Available Time Slot', 'booking-and-rental-manager-for-woocommerce' ) ?>
 								</label>
-								<span><?php ese_html_e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
+								<span><?php esc_html_e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
 							</div>
 							<div class="w-70">
 								<?php $this->multiple_time_slot_select($post_id); ?>
@@ -288,10 +288,10 @@
                     <section>
                         <table class="form-table" id="particulars-table">
                             <tr>
-                                <th><?php ese_html_e('Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                                <th><?php ese_html_e('End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                                <th><?php ese_html_e('Available Time Slots', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                                <th><?php ese_html_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php esc_html_e('Start Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php esc_html_e('End Date', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php esc_html_e('Available Time Slots', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php esc_html_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                             </tr>
                             <?php foreach ($particulars_data as $index => $particular): ?>
                                 <tr class="particular-row">

@@ -545,7 +545,7 @@ function rbfw_inventory_page(){
             </div>
         </div>
         <div class="rbfw_inventory_page_table_wrap">
-            <?php echo rbfw_inventory_page_table($query); ?>
+            <?php echo esc_html(rbfw_inventory_page_table($query)); ?>
         </div>
     </div>
     <div id="rbfw_stock_view_result_wrap">
@@ -724,7 +724,7 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                         $service_q = [];
                         foreach ($item1['cat_services'] as $key1=>$single){
                             if($single['title']){
-                                $service_quantity[] = $single['stock_quantity'];
+                                $service_quantity[] = esc_html($single['stock_quantity']);
                                 $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return,$start_time , $end_time ));
                                 $service_stock[] = $single['stock_quantity'] - max(array_column($service_q, $single['title']));
                             }
@@ -735,17 +735,17 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
                 ?>
                 <tr>
-                    <td><?php echo date(get_option('date_format'),strtotime($current_date)); ?></td>
+                    <td><?php echo esc_html(date(get_option('date_format'),strtotime($current_date))); ?></td>
 
                     <td><a href="<?php echo esc_url(admin_url('post.php?post='.$post_id.'&action=edit')); ?>" class="rbfw_item_title"><?php echo esc_html(get_the_title()); ?></a></td>
 
-                    <td class="rbfw_text_center"><span class="rbfw_s_qty_span"><?php echo $remaining_item_stock; ?>/<?php echo $rbfw_item_stock_quantity; ?></span> <a class="rbfw_stock_view_details" data-request="closing" data-date="<?php echo $current_date; ?>" data-id="<?php echo get_the_ID(); ?>"><?php esc_attr_e('View Details','booking-and-rental-manager-for-woocommerce'); ?></a></td>
+                    <td class="rbfw_text_center"><span class="rbfw_s_qty_span"><?php echo esc_html($remaining_item_stock); ?>/<?php echo esc_html($rbfw_item_stock_quantity); ?></span> <a class="rbfw_stock_view_details" data-request="closing" data-date="<?php echo esc_html($current_date); ?>" data-id="<?php echo esc_html(get_the_ID()); ?>"><?php esc_attr_e('View Details','booking-and-rental-manager-for-woocommerce'); ?></a></td>
 
-                    <td class="rbfw_text_center"><?php  echo $sold_item_qty; ?></td>
-                    <td class="rbfw_text_center"><?php echo $remaining_es_stock; ?>/<?php echo $total_es_qty; ?></td>
-                    <td class="rbfw_text_center"><?php echo $sold_es_qty; ?></td>
-                    <td class="rbfw_text_center"><?php echo array_sum($service_stock); ?>/<?php echo array_sum($service_quantity); ?></td>
-                    <td class="rbfw_text_center"><?php echo array_sum($service_quantity)-array_sum($service_stock); ?></td>
+                    <td class="rbfw_text_center"><?php  echo esc_html($sold_item_qty); ?></td>
+                    <td class="rbfw_text_center"><?php echo esc_html($remaining_es_stock); ?>/<?php echo esc_html($total_es_qty); ?></td>
+                    <td class="rbfw_text_center"><?php echo esc_html($sold_es_qty); ?></td>
+                    <td class="rbfw_text_center"><?php echo esc_html(array_sum($service_stock)); ?>/<?php echo esc_html(array_sum($service_quantity)); ?></td>
+                    <td class="rbfw_text_center"><?php echo array_sum(esc_html($service_quantity))-array_sum(esc_html($service_stock)); ?></td>
                 </tr>
                 <?php
             }
@@ -783,7 +783,7 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
             $content = rbfw_inventory_page_table($query, $selected_date,$start_date,$end_date);
 
-            echo $content;
+            echo esc_html($content);
 
             wp_die();
         }
@@ -980,8 +980,8 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                     <tbody>
                         <?php foreach ($rbfw_resort_room_data as $resort_room_data) { ?>
                         <tr>
-                            <td><?php echo $resort_room_data['room_type']; ?></td>
-                            <td><?php echo $resort_room_data['rbfw_room_available_qty']; ?></td>
+                            <td><?php echo esc_html($resort_room_data['room_type']); ?></td>
+                            <td><?php echo esc_html($resort_room_data['rbfw_room_available_qty']); ?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
@@ -1000,8 +1000,8 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                     <tbody>
                         <?php foreach ($rbfw_bike_car_sd_data as $bike_car_sd_data) { ?>
                         <tr>
-                            <td><?php echo $bike_car_sd_data['rent_type']; ?></td>
-                            <td><?php echo $bike_car_sd_data['qty']; ?></td>
+                            <td><?php echo esc_html($bike_car_sd_data['rent_type']); ?></td>
+                            <td><?php echo esc_html($bike_car_sd_data['qty']); ?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
@@ -1031,7 +1031,7 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
                                        <tr>
                                             <th class="rbfw_inventory_page_inner_vf_th">
                                                 <div class="rbfw_inventory_vf_label">
-                                                   <?php echo $_variations_data['field_label'].':' ?>
+                                                   <?php echo esc_html($_variations_data['field_label']).':' ?>
                                                 </div>
                                                 <?php if(!empty($_variations_data['value'])){ ?>
                                                     <table class="rbfw_inventory_page_inner_table">
@@ -1050,10 +1050,10 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
                                                         <tbody>
                                                             <tr>
                                                                 <td>
-                                                                   <?php echo $value['name']; ?>
+                                                                   <?php echo esc_html($value['name']); ?>
                                                                 </td>
                                                                 <td data-status="<?php if(empty($value['quantity']) || $value['quantity'] <= 0){ echo "empty"; }?>">
-                                                                    <?php echo $value['quantity']; ?>
+                                                                    <?php echo esc_html($value['quantity']); ?>
                                                                </td>
                                                             </tr>
                                                         </tbody>
@@ -1083,8 +1083,8 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
                     <tbody>
                         <?php foreach ($rbfw_extra_service_data as $extra_service_data) { ?>
                         <tr>
-                            <td><?php echo $extra_service_data['service_name']; ?></td>
-                            <td><?php echo $extra_service_data['service_qty']; ?></td>
+                            <td><?php echo esc_html($extra_service_data['service_name']); ?></td>
+                            <td><?php echo esc_html($extra_service_data['service_qty']); ?></td>
                         </tr>
                         <?php } ?>
                     </tbody>
@@ -1102,7 +1102,7 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
                 foreach($rbfw_service_category_price as $key=>$item1){
                     $cat_title = $item1['cat_title'];
                     ?>
-                    <tr><th colspan="2" class="rbfw_inventory_vf_label"> <?php echo $cat_title; ?></th></tr>
+                    <tr><th colspan="2" class="rbfw_inventory_vf_label"> <?php echo esc_html($cat_title); ?></th></tr>
 
                     <?php
                     $service_q = [];
@@ -1110,12 +1110,12 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
                         if($single['title']){
                             ?>
                             <tr>
-                            <td><?php echo $single['title']; ?></td>
+                            <td><?php echo esc_html($single['title']); ?></td>
                             <?php
                             $service_q[] = array('date'=>$data_date,$single['title']=>total_service_quantity($cat_title,$single['title'],$data_date,$rbfw_inventory,$inventory_based_on_return));
                             ?>
                             <td>
-                            <?php echo $single['stock_quantity'] - max(array_column($service_q, $single['title'])); ?>
+                            <?php echo esc_html($single['stock_quantity'] - max(array_column($service_q, $single['title']))); ?>
                             </td>
                             </tr>
                            <?php

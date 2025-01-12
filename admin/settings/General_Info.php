@@ -199,7 +199,7 @@
                         <span class="ppof-button add-feature-category mt-1"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add New Feature Category','booking-and-rental-manager-for-woocommerce'); ?></span>
                         </div> 
                     </section> 
-                    </div>
+                </div>
     
                 <script>
                     jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
@@ -313,7 +313,7 @@
                         );
                         $option_value         = get_post_meta($post_id, $options['id'], true);
                         $options['value']      = is_serialized($option_value) ? unserialize($option_value) : $option_value;
-                        echo esc_html($this->field_feature_category($options));
+                        echo $this->field_feature_category($options);
                     ?>
                 <?php
             }

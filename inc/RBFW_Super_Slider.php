@@ -21,7 +21,7 @@
 				$sections = array(
 					array(
 						'id'    => 'super_slider_settings',
-						'title' => '<i class="fa-solid fa-sliders"></i>'.__( 'Super Slider Settings', 'booking-and-rental-manager-for-woocommerce' )
+						'title' => '<i class="fa-solid fa-sliders"></i>'.esc_html__( 'Super Slider Settings', 'booking-and-rental-manager-for-woocommerce' )
 					)
 				);
 				return array_merge( $default_sec, $sections );
@@ -195,7 +195,7 @@
                 }
 				if ( $thumbnail ) {
 					?>
-					<div class="superSlider <?php echo $rbfw_image_display ?>">
+					<div class="superSlider <?php echo esc_html($rbfw_image_display) ?>">
 						<div  data-bg-image="<?php echo esc_html( $thumbnail ); ?>"></div>
 					</div>
 					<?php

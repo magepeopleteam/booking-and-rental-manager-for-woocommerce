@@ -442,11 +442,11 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                     ob_start();
                     $content  = '';
                     $content .= '<div class="rbfw_bikecarsd_time_table_container rbfw-bikecarsd-step" data-step="2">';
-                    $content .= '<a class="rbfw_back_step_btn" back-step="1" data-step="2"><i class="fa-solid fa-circle-left"></i> '.rbfw_string_return('rbfw_text_back_to_previous_step',__('Back to Previous Step','booking-and-rental-manager-for-woocommerce')).'</a>';
+                    $content .= '<a class="rbfw_back_step_btn" back-step="1" data-step="2"><i class="fa-solid fa-circle-left"></i> '.rbfw_string_return('rbfw_text_back_to_previous_step',esc_html__('Back to Previous Step','booking-and-rental-manager-for-woocommerce')).'</a>';
 
                     if($is_muffin_template == 0){
-                        $content .= '<div class="rbfw_step_selected_date"><i class="fa-solid fa-calendar-check"></i> '.rbfw_string_return('rbfw_text_you_selected',__('You selected','booking-and-rental-manager-for-woocommerce')).': '.$result.'</div>';
-                        $content .= '<div class="single-day-notice"><i class="fa-solid fa-circle-info"></i> '.__('Please pick up a time','booking-and-rental-manager-for-woocommerce').'</div>';
+                        $content .= '<div class="rbfw_step_selected_date"><i class="fa-solid fa-calendar-check"></i> '.rbfw_string_return('rbfw_text_you_selected',esc_html__('You selected','booking-and-rental-manager-for-woocommerce')).': '.$result.'</div>';
+                        $content .= '<div class="single-day-notice"><i class="fa-solid fa-circle-info"></i> '.esc_html__('Please pick up a time','booking-and-rental-manager-for-woocommerce').'</div>';
                     }
 
                     if($is_muffin_template == 1){
@@ -473,7 +473,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             $content .= '<a data-time="'.date('H:i',strtotime($value[1])).'" class="rbfw_bikecarsd_time '.$disabled.'"><span class="rbfw_bikecarsd_time_span">'.$converted_time.'</span>';
 
                             if($is_booked === true){
-                                $content .= '<span class="rbfw_bikecarsd_time_booked">'.rbfw_string_return('rbfw_text_booked',__('Booked','booking-and-rental-manager-for-woocommerce')).'</span>';
+                                $content .= '<span class="rbfw_bikecarsd_time_booked">'.rbfw_string_return('rbfw_text_booked',esc_html__('Booked','booking-and-rental-manager-for-woocommerce')).'</span>';
                             }
 
                             $content .= '</a>';
@@ -482,9 +482,9 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                     $content .= '</div>';
                     $content .= '</div>';
-                    echo $content;
+                    echo esc_html($content);
                     $output = ob_get_clean();
-                    echo $output;
+                    echo esc_html($output);
                 }else{
                     include( RBFW_Function::get_template_path( 'template_segment/single_day_info.php' ) );
                 }
@@ -556,17 +556,17 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 $content.= '<div class="item rbfw_bikecarsd_price_summary">
                                 <div class="item-content rbfw-costing">
                                     <ul class="rbfw-ul">
-                                        <li class="duration-costing rbfw-cond">'.$rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce')).' <span class="price-figure" data-price="'.$total_bikecarsd_price.'">'.rbfw_mps_price($total_bikecarsd_price).'</span></li>';
+                                        <li class="duration-costing rbfw-cond">'.$rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', esc_html__('Duration Cost','booking-and-rental-manager-for-woocommerce')).' <span class="price-figure" data-price="'.$total_bikecarsd_price.'">'.rbfw_mps_price($total_bikecarsd_price).'</span></li>';
 
                                         if(!empty($service_price_arr)){
-                                            $content.= '<li class="resource-costing rbfw-cond">'.$rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce')).' <span class="price-figure" data-price="'.$total_service_price.'">'.rbfw_mps_price($total_service_price).'</span></li>';
+                                            $content.= '<li class="resource-costing rbfw-cond">'.$rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', esc_html__('Resource Cost','booking-and-rental-manager-for-woocommerce')).' <span class="price-figure" data-price="'.$total_service_price.'">'.rbfw_mps_price($total_service_price).'</span></li>';
                                         }
 
-                                        $content.= '<li class="subtotal">'.$rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce')).'<span class="price-figure" data-price="'.$subtotal_price.'">'.rbfw_mps_price($subtotal_price).'</span></li>';
+                                        $content.= '<li class="subtotal">'.$rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', esc_html__('Subtotal','booking-and-rental-manager-for-woocommerce')).'<span class="price-figure" data-price="'.$subtotal_price.'">'.rbfw_mps_price($subtotal_price).'</span></li>';
 
                                         if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'excluding_tax'){
 
-                                            $content.= '<li class="tax">'.$rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')).'<span class="price-figure" data-price="'.$percent.'">'.rbfw_mps_price($percent).'</span></li>';
+                                            $content.= '<li class="tax">'.$rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', esc_html__('Tax','booking-and-rental-manager-for-woocommerce')).'<span class="price-figure" data-price="'.$percent.'">'.rbfw_mps_price($percent).'</span></li>';
                                         }
 
                                         $security_deposit = rbfw_security_deposit($post_id,$subtotal_price);
@@ -577,7 +577,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                                         $total_price = $total_price + $security_deposit['security_deposit_amount'];
 
-                                        $content.='<li class="total"><strong>'.$rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce')).'</strong> <span class="price-figure" data-price="'.$total_price.'">'.rbfw_mps_price($total_price).' '.$tax_status.'</span></li>
+                                        $content.='<li class="total"><strong>'.$rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', esc_html__('Total','booking-and-rental-manager-for-woocommerce')).'</strong> <span class="price-figure" data-price="'.$total_price.'">'.rbfw_mps_price($total_price).' '.$tax_status.'</span></li>
 
 
                                     </ul>
@@ -585,7 +585,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                                 </div>
                             </div>';
 
-                echo $content;
+                echo esc_html($content);
        
             wp_die();
         }
@@ -644,7 +644,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                 }
                 $content .=    ' </label>';
             }
-            echo $content;
+            echo esc_html($content);
 
             wp_die();
         }
