@@ -745,7 +745,7 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                     <td class="rbfw_text_center"><?php echo esc_html($remaining_es_stock); ?>/<?php echo esc_html($total_es_qty); ?></td>
                     <td class="rbfw_text_center"><?php echo esc_html($sold_es_qty); ?></td>
                     <td class="rbfw_text_center"><?php echo esc_html(array_sum($service_stock)); ?>/<?php echo esc_html(array_sum($service_quantity)); ?></td>
-                    <td class="rbfw_text_center"><?php echo array_sum(esc_html($service_quantity))-array_sum(esc_html($service_stock)); ?></td>
+                    <td class="rbfw_text_center"><?php echo esc_html(array_sum($service_quantity)-array_sum($service_stock)); ?></td>
                 </tr>
                 <?php
             }

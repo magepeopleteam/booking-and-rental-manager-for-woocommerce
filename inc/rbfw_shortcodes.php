@@ -243,7 +243,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         <?php
         if( $left_filter === 'yes' ){
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper_with_left_filter';
-            echo rbfw_rent_left_filter( $left_filter_control );
+            echo esc_html(rbfw_rent_left_filter( $left_filter_control ));
         }else{
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper';
         }
@@ -441,7 +441,7 @@ function rbfw_rent_search_shortcode( $attr = null ){
     <section class="rbfw_rent_item_search_elementor_section">
         <div class="rbfw_rent_item_search_elementor_container">
 <!--            <form class="rbfw_search_form_new" action="--><?php //echo esc_url($search_page_link); ?><!--" method="GET">-->
-            <form class="rbfw_search_form_new" action="<?php echo get_home_url() . '/search-item-list/';  ?>" method="GET">
+            <form class="rbfw_search_form_new" action="<?php echo esc_html(get_home_url() . '/search-item-list/');  ?>" method="GET">
                 <div class="rbfw_rent_item_search_container">
 
                     <div class="rbfw_rent_item_searchContentHolder">
