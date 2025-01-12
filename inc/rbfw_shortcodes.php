@@ -248,7 +248,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper';
         }
         ?>
-        <div class=" <?php echo $rent_list_wrapper_cls.' '.$grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>" id="rbfw_rent_list_wrapper">
+        <div class=" <?php echo esc_html($rent_list_wrapper_cls).' '.esc_html($grid_class) ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>" id="rbfw_rent_list_wrapper">
 
             <?php
             $d = 1;

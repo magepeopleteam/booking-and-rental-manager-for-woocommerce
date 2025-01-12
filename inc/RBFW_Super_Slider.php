@@ -195,7 +195,7 @@
                 }
 				if ( $thumbnail ) {
 					?>
-					<div class="superSlider <?php echo $rbfw_image_display ?>">
+					<div class="superSlider <?php echo esc_html($rbfw_image_display) ?>">
 						<div  data-bg-image="<?php echo esc_html( $thumbnail ); ?>"></div>
 					</div>
 					<?php

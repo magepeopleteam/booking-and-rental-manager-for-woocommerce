@@ -893,7 +893,7 @@
 			$i ++;
 		}
 		$content = ob_get_clean();
-		echo $content;
+		echo esc_html($content);
 		wp_die();
 	}
 	/*******************************************
@@ -1805,12 +1805,12 @@
 														endif;
 														if ( $feature['title'] ):
 															$rand_number = rand();
-															echo '<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>';
+															echo esc_html('<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>');
 															?>
                                                             <script>
                                                                 jQuery(document).ready(function () {
-                                                                    let content<?php echo $rand_number; ?> = '<?php echo $feature['title']; ?>';
-                                                                    tippy('.title' +<?php echo $rand_number; ?>, {content: content<?php echo $rand_number; ?>, theme: 'blue', placement: 'top'});
+                                                                    let content<?php echo esc_html($rand_number); ?> = '<?php echo esc_html($feature['title']); ?>';
+                                                                    tippy('.title' +<?php echo esc_html($rand_number); ?>, {content: content<?php echo esc_html($rand_number); ?>, theme: 'blue', placement: 'top'});
                                                                 });
                                                             </script>
 														<?php
@@ -2017,8 +2017,8 @@
                             </a></div>
 						<?php if ( $review_count > 0 ) { ?>
                             <div class="rbfw-related-product-review-badge-wrap">
-                                <div class="rbfw-related-product-review-badge-1"><?php echo $review_count . ' ' . $reviews_label; ?></div>
-                                <div class="rbfw-related-product-review-badge-2"><?php echo $average_review; ?></div>
+                                <div class="rbfw-related-product-review-badge-1"><?php echo esc_html($review_count . ' ' . $reviews_label); ?></div>
+                                <div class="rbfw-related-product-review-badge-2"><?php echo esc_html($average_review); ?></div>
                             </div>
 						<?php } ?>
                         <div class="rbfw-related-product-inner-content-wrap">
@@ -2026,15 +2026,15 @@
                             <div class="rbfw-related-product-bottom-card">
                                 <div class="rbfw-related-product-bottom-card-pricing-box">
 									<?php if ( $rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment' && $price ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $the_price_label ); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price( $price ); ?></span></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $the_price_label ); ?>: <span class="rbfw-related-product-price-badge"><?php echo esc_html( $price ); ?></span></div>
 									<?php endif; ?>
 
 									<?php if ( $rbfw_rent_type == 'resort' && ! empty( $rbfw_room_data ) && $price ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price( $price ); ?></span></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo esc_html( $price ); ?></span></div>
 									<?php endif; ?>
 
 									<?php if ( ( $rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment' ) && ! empty( $rbfw_bike_car_sd_data ) && $price ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo rbfw_mps_price( $price ); ?></span></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo esc_html( $price ); ?></span></div>
 									<?php endif; ?>
                                 </div>
 								<?php if ( ! empty( $highlited_features ) ): ?>
@@ -2052,12 +2052,12 @@
 															endif;
 															if ( $feature['title'] ):
 																$rand_number = rand();
-																echo '<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>';
+																echo esc_html('<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>');
 																?>
                                                                 <script>
                                                                     jQuery(document).ready(function () {
-                                                                        let content<?php echo $rand_number; ?> = '<?php echo $feature['title']; ?>';
-                                                                        tippy('.title' +<?php echo $rand_number; ?>, {content: content<?php echo $rand_number; ?>, theme: 'blue', placement: 'top'});
+                                                                        let content<?php echo esc_html($rand_number); ?> = '<?php echo esc_html($feature['title']); ?>';
+                                                                        tippy('.title' +<?php echo esc_html($rand_number); ?>, {content: content<?php echo esc_html($rand_number); ?>, theme: 'blue', placement: 'top'});
                                                                     });
                                                                 </script>
 															<?php
@@ -2261,9 +2261,9 @@
                                     <div class="rbfw_additional_image_gallary_col" <?php if ( $i > $show ) {
 										echo 'style="display:none;"';
 									} ?>>
-                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
+                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
 										<?php if ( $i == $show ) { ?>
-                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 										<?php } ?>
                                     </div>
 									<?php
@@ -2282,9 +2282,9 @@
                                     <div class="rbfw_additional_image_gallary_col" <?php if ( $d > $show ) {
 										echo 'style="display:none;"';
 									} ?>>
-                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $d; ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
+                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
 										<?php if ( $d == $show ) { ?>
-                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $d; ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 										<?php } ?>
                                     </div>
 									<?php
@@ -2304,7 +2304,7 @@
 								$image_url = wp_get_attachment_url( $img_id );
 								?>
                                 <div class="rbfw_aig_slides">
-                                    <div class="rbfw_aig_numbertext"><?php echo $c; ?> / <?php echo $count_images; ?></div>
+                                    <div class="rbfw_aig_numbertext"><?php echo esc_html($c); ?> / <?php echo esc_html($count_images); ?></div>
                                     <img src="<?php echo esc_url( $image_url ); ?>">
                                 </div>
 								<?php
@@ -2323,7 +2323,7 @@
 								foreach ( $gallery_images_ids as $img_id ) {
 									$image_url = wp_get_attachment_url( $img_id );
 									?>
-                                    <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo $d; ?>)" alt="<?php echo $d; ?>"></div>
+                                    <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)" alt="<?php echo esc_attr($d); ?>"></div>
 									<?php
 									$d ++;
 								}
@@ -2343,9 +2343,9 @@
                             <div class="rbfw_additional_image_gallary_col" <?php if ( $i > $show ) {
 								echo 'style="display:none;"';
 							} ?>>
-                                <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
+                                <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
 								<?php if ( $i == $show ) { ?>
-                                    <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo $i; ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+                                    <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 								<?php } ?>
                             </div>
 							<?php
@@ -2362,7 +2362,7 @@
 									$image_url = wp_get_attachment_url( $img_id );
 									?>
                                     <div class="rbfw_aig_slides">
-                                        <div class="rbfw_aig_numbertext"><?php echo $c; ?> / <?php echo $count_images; ?></div>
+                                        <div class="rbfw_aig_numbertext"><?php echo esc_html($c); ?> / <?php echo esc_html($count_images); ?></div>
                                         <img src="<?php echo esc_url( $image_url ); ?>">
                                     </div>
 									<?php
@@ -2381,7 +2381,7 @@
 									foreach ( $gallery_images_ids as $img_id ) {
 										$image_url = wp_get_attachment_url( $img_id );
 										?>
-                                        <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo $d; ?>)" alt="<?php echo $d; ?>"></div>
+                                        <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)" alt="<?php echo esc_attr($d); ?>"></div>
 										<?php
 										$d ++;
 									}
@@ -2999,7 +2999,7 @@
 			}
 		}
 		$option .= "</select>";
-		echo $option;
+		echo esc_html($option);
 	}
 	function rbfw_time_slot_select( $date_type, $iidex, $selected_time ) {
 		$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
@@ -3008,10 +3008,10 @@
 		asort( $rbfw_time_slots );
 		?>
         <div id="field-wrapper-rdfw_available_time" class="">
-            <select class="medium" name="rbfw_bike_car_sd_data[<?php echo $iidex ?>][<?php echo $date_type ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
+            <select class="medium" name="rbfw_bike_car_sd_data[<?php echo esc_attr($iidex) ?>][<?php echo esc_attr($date_type) ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
                 <option value="">Select Time</option>
 				<?php foreach ( $rbfw_time_slots as $key => $value ): ?>
-                    <option <?php echo esc_html(  date( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo date( 'H:i', strtotime( $value ) ); ?>"> <?php echo date( 'H:i', strtotime( $value ) ); ?> </option>
+                    <option <?php echo esc_html(  date( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo esc_html(date( 'H:i', strtotime( $value ) )); ?>"> <?php echo esc_html(date( 'H:i', strtotime( $value ) )); ?> </option>
 				<?php endforeach; ?>
             </select>
         </div>
