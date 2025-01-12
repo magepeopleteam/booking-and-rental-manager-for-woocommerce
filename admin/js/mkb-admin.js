@@ -874,6 +874,7 @@
                     'selected_date' : selected_date,
                     'start_date' : start_date,
                     'end_date' : end_date,
+                    'nonce' : rbfw_ajax.nonce
                 },
                 beforeSend: function() {
                     jQuery('.rbfw_inventory_page_table_wrap').empty();
