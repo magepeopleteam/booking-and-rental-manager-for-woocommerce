@@ -407,9 +407,9 @@
 
 			public function settings_save($post_id) {
                 
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
-                    return;
-                }
+                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
+    return;
+}
 
                 if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
                     return;
@@ -421,19 +421,12 @@
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
                     $rbfw_time_slot = isset( $_POST['rbfw_time_slot_switch'] ) ? rbfw_array_strip( $_POST['rbfw_time_slot_switch'] ) : 'off';
-
                     $rdfw_available_time = isset( $_POST['rdfw_available_time'] ) ? rbfw_array_strip( $_POST['rdfw_available_time'] ) : [];
-
-         
-
                     $rbfw_enable_start_end_date  = isset( $_POST['rbfw_enable_start_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_enable_start_end_date'] ) : 'yes';
-
-
                     $rbfw_event_start_date  = isset( $_POST['rbfw_event_start_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_date'] ) : '';
        	 			$rbfw_event_start_time  = isset( $_POST['rbfw_event_start_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_start_time'] ) : '';
 					$rbfw_event_end_date  = isset( $_POST['rbfw_event_end_date'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_date'] ) : '';
 					$rbfw_event_end_time  = isset( $_POST['rbfw_event_end_time'] ) ? rbfw_array_strip( $_POST['rbfw_event_end_time'] ) : '';
-
                     $rbfw_particular_switch = isset($_POST['rbfw_particular_switch']) ? sanitize_text_field($_POST['rbfw_particular_switch']) : 'off';
                     $particulars_data = isset($_POST['rbfw_particulars']) ? $_POST['rbfw_particulars'] : [];
 
