@@ -806,10 +806,10 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
 function rbfw_get_stock_by_filter(){
 
-    if (isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field($_POST['nonce']), 'rbfw_ajax_action')) {
-        $selected_date = sanitize_text_field($_POST['selected_date']);
-        $start_date = sanitize_text_field($_POST['start_date']);
-        $end_date = sanitize_text_field($_POST['end_date']);
+    if (isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action')) {
+        $selected_date = isset($_POST['selected_date'])?sanitize_text_field(wp_unslash($_POST['selected_date'])):'';
+        $start_date = sanitize_text_field(wp_unslash($_POST['start_date']));
+        $end_date = sanitize_text_field(wp_unslash($_POST['end_date']));
 
         $args = array(
                 'post_type' => 'rbfw_item',
