@@ -16,7 +16,7 @@
 				if ( is_array( $value ) ) {
 					$value = rbfw_array_strip( $value );
 				} else {
-					$value = sanitize_text_field( $value );
+					$value = sanitize_text_field(wp_unslash($value) );
 				}
 			}
 		}
@@ -868,7 +868,13 @@
 	}
 	add_action( 'wp_ajax_rbfw_load_more_icons', 'rbfw_load_more_icons_func' );
 	function rbfw_load_more_icons_func() {
-		$data_loaded       = sanitize_text_field( $_POST['data_loaded'] );
+
+
+        if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+            return;
+        }
+
+		$data_loaded       = isset($_POST['data_loaded'])?sanitize_text_field( sanitize_text_field(wp_unslash($_POST['data_loaded'] ))):'';
 		$icon_library      = new rbfw_icon_library();
 		$icon_library_list = $icon_library->rbfw_fontawesome_icons();
 		ob_start();
@@ -1183,6 +1189,11 @@
 	add_action( 'wp_trash_post', 'rbfw_trash_order' );
 	add_action( 'untrashed_post', 'wp_kama_untrashed_post_action', 10, 2 );
 	function rbfw_trash_order( $order_id = '' ) {
+
+        if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+            return;
+        }
+
 		$order = wc_get_order( $order_id );
 		if ( $order ) {
 			$order_status = $order->get_status();
@@ -1192,7 +1203,7 @@
 			}
 			// Verify if is trashing multiple posts
 			if ( isset( $_GET['post'] ) && is_array( $_GET['post'] ) ) {
-				foreach ( rbfw_array_strip( $_GET['post'] ) as $post_id ) {
+				foreach ( rbfw_array_strip( sanitize_text_field(wp_unslash($_GET['post'])) ) as $post_id ) {
 					rbfw_update_inventory( $post_id, 'cancelled' );
 				}
 			} else {

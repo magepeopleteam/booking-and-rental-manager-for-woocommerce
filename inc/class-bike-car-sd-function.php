@@ -417,13 +417,17 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
         public function rbfw_bikecarsd_time_table(){
 
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
+
             if(isset($_POST['post_id'])){
 
-                $id = intval(sanitize_text_field($_POST['post_id']));
-                $selected_date = sanitize_text_field($_POST['selected_date']);
-                $is_muffin_template = sanitize_text_field($_POST['is_muffin_template']);
+                $id = isset($_POST['post_id'])?intval(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
+                $selected_date = isset($_POST['selected_date'])?sanitize_text_field(wp_unslash($_POST['selected_date'])):'';
+                $is_muffin_template = isset($_POST['is_muffin_template'])?sanitize_text_field(wp_unslash($_POST['is_muffin_template'])):'';
 
-                $time_slot_switch = sanitize_text_field($_POST['time_slot_switch']);
+                $time_slot_switch = isset($_POST['time_slot_switch'])?sanitize_text_field(wp_unslash($_POST['time_slot_switch'])):'';
 
 
 
@@ -504,12 +508,16 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
         public function rbfw_bikecarsd_ajax_price_calculation(){
 
 
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
+
 
                 global $rbfw;
                 $content            = '';          
-                $bikecarsd_price_arr     = !empty($_POST['bikecarsd_price_arr']) ? rbfw_array_strip($_POST['bikecarsd_price_arr']) : [];
-                $service_price_arr  = !empty($_POST['service_price_arr']) ? rbfw_array_strip($_POST['service_price_arr']) : [];
-                $post_id = !empty($_POST['post_id']) ? sanitize_text_field($_POST['post_id']) : '';
+                $bikecarsd_price_arr     = isset($_POST['bikecarsd_price_arr']) ? rbfw_array_strip(sanitize_text_field(wp_unslash($_POST['bikecarsd_price_arr']))) : [];
+                $service_price_arr  = isset($_POST['service_price_arr']) ? rbfw_array_strip(sanitize_text_field(wp_unslash($_POST['service_price_arr']))) : [];
+                $post_id = !empty($_POST['post_id']) ? sanitize_text_field(wp_unslash($_POST['post_id'])) : '';
                 $bikecarsd_price         = 0;
                 $service_price      = 0;
                 $total_bikecarsd_price   = 0;
@@ -597,15 +605,22 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
         }
 
         public function rbfw_timely_price_calculation(){
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
             include( RBFW_Function::get_template_path( 'template_segment/rbfw_timely_price_calculation.php' ) );
             wp_die();
         }
 
         public function particular_time_date_dependent(){
-            $post_id = intval(sanitize_text_field($_POST['post_id']));
-            $selected_date = sanitize_text_field($_POST['selected_date']);
-            $type = sanitize_text_field($_POST['type']);
-            $selector = (isset($_POST['selector']) && sanitize_text_field($_POST['selector']))?sanitize_text_field($_POST['selector']):'.rbfw-select.rbfw-time-price.pickup_time';
+
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
+            $post_id = isset($_POST['post_id'])?intval(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
+            $selected_date = isset($_POST['selected_date'])?sanitize_text_field(wp_unslash($_POST['selected_date'])):'';
+            $type = isset($_POST['post_id'])?sanitize_text_field(wp_unslash($_POST['post_id'])):'';
+            $selector = (isset($_POST['selector']) && sanitize_text_field(wp_unslash($_POST['selector'])))?sanitize_text_field(wp_unslash($_POST['selector'])):'.rbfw-select.rbfw-time-price.pickup_time';
 
             $times_particulars = rbfw_get_available_times_particulars($post_id,$selected_date,$type,$selector);
 
@@ -614,11 +629,14 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
         }
 
         public function rbfw_service_type_timely_stock(){
-            $post_id = intval(sanitize_text_field($_POST['post_id']));
-            $start_date = sanitize_text_field($_POST['rbfw_bikecarsd_selected_date']);
-            $enable_specific_duration = sanitize_text_field($_POST['enable_specific_duration']);
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
+            $post_id = isset($_POST['post_id'])?intval(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
+            $start_date = isset($_POST['rbfw_bikecarsd_selected_date'])?sanitize_text_field(wp_unslash($_POST['rbfw_bikecarsd_selected_date'])):'';
+            $enable_specific_duration = isset($_POST['enable_specific_duration'])?sanitize_text_field(wp_unslash($_POST['enable_specific_duration'])):'';
 
-            $start_time = isset($_POST['pickup_time'])?sanitize_text_field($_POST['pickup_time']):'00:00';
+            $start_time = isset($_POST['pickup_time'])?sanitize_text_field(wp_unslash($_POST['pickup_time'])):'00:00';
 
             $rbfw_bike_car_sd_data = get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
 

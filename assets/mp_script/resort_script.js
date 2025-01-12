@@ -88,7 +88,8 @@ jQuery(document).on('click','.rbfw_chk_availability_btn',function(e) {
                 'checkin_date' 	: checkin_date,
                 'checkout_date' : checkout_date,
                 'is_muffin_template': is_muffin_template,
-                'rbfw_enable_resort_daylong_price': rbfw_enable_resort_daylong_price
+                'rbfw_enable_resort_daylong_price': rbfw_enable_resort_daylong_price,
+                'nonce' : rbfw_ajax.nonce
             },
             beforeSend: function() {
                 jQuery('.rbfw_room_price_category_tabs').empty();
@@ -119,7 +120,8 @@ function rbfw_resort_get_price_table(){
             'post_id'       : post_id,
             'active_tab'    : active_tab_value,
             'checkin_date'  : checkin_date,
-            'checkout_date' : checkout_date
+            'checkout_date' : checkout_date,
+            'nonce' : rbfw_ajax.nonce
         },
         beforeSend: function() {
             jQuery('.rbfw_room_price_category_details').empty();
@@ -172,7 +174,8 @@ jQuery(document).on('change','.rbfw_room_qty,.rbfw_service_qty',function (e) {
             'checkin_date'  : checkin_date,
             'checkout_date' : checkout_date,
             'room_price_arr': room_prices_arr,
-            'service_price_arr': service_prices_arr
+            'service_price_arr': service_prices_arr,
+            'nonce' : rbfw_ajax.nonce
         },
         beforeSend: function() {
             jQuery('.rbfw_room_price_summary').empty();
