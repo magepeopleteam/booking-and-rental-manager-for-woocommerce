@@ -22,7 +22,6 @@
 				/* End WooCommerce Action and Filter */
 			}
 
-
 			function admin_init() {
 				$this->settings_api->set_sections( $this->get_settings_sections() );
 				$this->settings_api->set_fields( $this->get_settings_fields() );
@@ -44,236 +43,14 @@
 				// End PRO plugin is activated
 			}
 
-			public function rbfw_setup_wizard() {
-				$woo_status = rbfw_woo_install_check();
-				if ( isset( $_POST['rbfw_quick_setup'] ) && wp_verify_nonce( $_POST['rbfw_quick_setup'], 'rbfw_quick_setup_nonce' ) ) {
-					if ( isset( $_POST['active_woo_btn'] ) ) {
-						?>
-                        <script>
-                            dLoaderBody();
-                        </script>
-						<?php
-						activate_plugin( 'woocommerce/woocommerce.php' );
-						TTBM_Woocommerce_Plugin::on_activation_page_create();
-						?>
-                        <script>
-                            (function ($) {
-                                "use strict";
-                                $(document).ready(function () {
-                                    let ttbm_admin_location = window.location.href;
-                                    ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=ttbm_tour&page=rbfw_quick_setup', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
-                                    ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=ttbm_tour', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
-                                    ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
-                                    window.location.href = ttbm_admin_location;
-                                });
-                            }(jQuery));
-                        </script>
-						<?php
-					}
-					if ( isset( $_POST['install_and_active_woo_btn'] ) ) {
-						echo '<div style="display:none">';
-						include_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
-						include_once( ABSPATH . 'wp-admin/includes/file.php' );
-						include_once( ABSPATH . 'wp-admin/includes/misc.php' );
-						include_once( ABSPATH . 'wp-admin/includes/class-wp-upgrader.php' );
-						$plugin             = 'woocommerce';
-						$api                = plugins_api( 'plugin_information', array(
-							'slug'   => $plugin,
-							'fields' => array(
-								'short_description' => false,
-								'sections'          => false,
-								'requires'          => false,
-								'rating'            => false,
-								'ratings'           => false,
-								'downloaded'        => false,
-								'last_updated'      => false,
-								'added'             => false,
-								'tags'              => false,
-								'compatibility'     => false,
-								'homepage'          => false,
-								'donate_link'       => false,
-							),
-						) );
-						$title              = 'title';
-						$url                = 'url';
-						$nonce              = 'nonce';
-						$woocommerce_plugin = new Plugin_Upgrader( new Plugin_Installer_Skin( compact( 'title', 'url', 'nonce', 'plugin', 'api' ) ) );
-						$woocommerce_plugin->install( $api->download_link );
-						activate_plugin( 'woocommerce/woocommerce.php' );
-						TTBM_Woocommerce_Plugin::on_activation_page_create();
-						echo '</div>';
-						?>
-                        <script>
-                            (function ($) {
-                                "use strict";
-                                $(document).ready(function () {
-                                    let ttbm_admin_location = window.location.href;
-                                    ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=ttbm_tour&page=rbfw_quick_setup', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
-                                    ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=ttbm_tour', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
-                                    ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=ttbm_tour&page=rbfw_quick_setup');
-                                    window.location.href = ttbm_admin_location;
-                                });
-                            }(jQuery));
-                        </script>
-						<?php
-					}
-					if ( isset( $_POST['finish_quick_setup'] ) ) {
-						$label                       = isset( $_POST['ttbm_travel_label'] ) ? sanitize_text_field( $_POST['ttbm_travel_label'] ) : 'Tour';
-						$slug                        = isset( $_POST['ttbm_travel_slug'] ) ? sanitize_text_field( $_POST['ttbm_travel_slug'] ) : 'Tour';
-						$general_settings_data       = get_option( 'ttbm_basic_gen_settings' );
-						$update_general_settings_arr = [
-							'ttbm_travel_label' => $label,
-							'ttbm_travel_slug'  => $slug
-						];
-						$new_general_settings_data   = is_array( $general_settings_data ) ? array_replace( $general_settings_data, $update_general_settings_arr ) : $update_general_settings_arr;
-						update_option( 'ttbm_basic_gen_settings', $new_general_settings_data );
-						update_option( 'ttbm_quick_setup_done', 'yes' );
-						wp_redirect( admin_url( 'edit.php?post_type=ttbm_tour' ) );
-					}
-				}
-				?>
-                <div class="mpStyle">
-                    <div class=_dShadow_6_adminLayout">
-                        <form method="post" action="">
-							<?php wp_nonce_field( 'rbfw_quick_setup_nonce', 'rbfw_quick_setup' ); ?>
-
-							<?php wp_nonce_field( 'my_custom_action', 'my_nonce_field' ); ?>
-                            <div class="mpTabsNext">
-                                <div class="tabListsNext _max_700_mAuto">
-                                    <div data-tabs-target-next="#ttbm_qs_welcome" class="tabItemNext" data-open-text="1" data-close-text=" " data-open-icon="" data-close-icon="fas fa-check" data-add-class="success">
-                                        <h4 class="circleIcon" data-class>
-                                            <span class="mp_zero" data-icon></span>
-                                            <span class="mp_zero" data-text>1</span>
-                                        </h4>
-                                        <h6 class="circleTitle" data-class><?php esc_html_e( 'Welcome', 'booking-and-rental-manager-for-woocommerce' ); ?></h6>
-                                    </div>
-                                    <div data-tabs-target-next="#ttbm_qs_general" class="tabItemNext" data-open-text="2" data-close-text="" data-open-icon="" data-close-icon="fas fa-check" data-add-class="success">
-                                        <h4 class="circleIcon" data-class>
-                                            <span class="mp_zero" data-icon></span>
-                                            <span class="mp_zero" data-text>2</span>
-                                        </h4>
-                                        <h6 class="circleTitle" data-class><?php esc_html_e( 'General', 'booking-and-rental-manager-for-woocommerce' ); ?></h6>
-                                    </div>
-                                    <div data-tabs-target-next="#ttbm_qs_done" class="tabItemNext" data-open-text="3" data-close-text="" data-open-icon="" data-close-icon="fas fa-check" data-add-class="success">
-                                        <h4 class="circleIcon" data-class>
-                                            <span class="mp_zero" data-icon></span>
-                                            <span class="mp_zero" data-text>3</span>
-                                        </h4>
-                                        <h6 class="circleTitle" data-class><?php esc_html_e( 'Done', 'booking-and-rental-manager-for-woocommerce' ); ?></h6>
-                                    </div>
-                                </div>
-                                <div class="tabsContentNext _infoLayout_mT">
-									<?php
-										$this->setup_welcome_content();
-										$this->setup_general_content();
-										$this->setup_content_done();
-									?>
-                                </div>
-								<?php if ( $woo_status == 'Yes' ) { ?>
-                                    <div class="justifyBetween">
-                                        <button type="button" class="mpBtn nextTab_prev">
-                                            <span>&longleftarrow;<?php esc_html_e( 'Previous', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                        </button>
-                                        <div></div>
-                                        <button type="button" class="themeButton nextTab_next">
-                                            <span><?php esc_html_e( 'Next', 'booking-and-rental-manager-for-woocommerce' ); ?>&longrightarrow;</span>
-                                        </button>
-                                    </div>
-								<?php } ?>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-				<?php
-			}
-
-			public function setup_welcome_content() {
-				$woo_status = rbfw_woo_install_check();
-				?>
-                <div data-tabs-next="#ttbm_qs_welcome">
-                    <h2><?php esc_html_e( 'Tour Booking Manager For Woocommerce Plugin', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-                    <p class="mTB_xs"><?php esc_html_e( 'Thanks for choosing Tour Booking Manager Plugin for WooCommerce for your site, Please go step by step and choose some options to get started.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                    <div class="_dLayout_mT_alignCenter justifyBetween">
-                        <h5>
-							<?php if ( $woo_status == 'Yes' ) {
-								esc_html_e( 'Woocommerce already installed and activated', 'booking-and-rental-manager-for-woocommerce' );
-							} elseif ( $woo_status == 'No' ) {
-								esc_html_e( 'Woocommerce need to install and active', 'booking-and-rental-manager-for-woocommerce' );
-							} else {
-								esc_html_e( 'Woocommerce already install , please activate it', 'booking-and-rental-manager-for-woocommerce' );
-							} ?>
-                        </h5>
-						<?php if ( $woo_status == 'Yes' ) { ?>
-                            <h5>
-                                <span class="fas fa-check-circle textSuccess"></span>
-                            </h5>
-						<?php } elseif ( $woo_status == 'No' ) { ?>
-                            <button class="warningButton" type="submit" name="install_and_active_woo_btn"><?php esc_html_e( 'Install & Active Now', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-						<?php } else { ?>
-                            <button class="themeButton" type="submit" name="active_woo_btn"><?php esc_html_e( 'Active Now', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-						<?php } ?>
-                    </div>
-					<?php if ( $woo_status != 'Yes' ) { ?>
-                        <div class='mep_seup_exit_sec'>
-                            <button style='margin:10px auto;' class="warningButton" type="submit" name="ttbm_skip_quick_setup"><?php esc_html_e( 'Skip, Go to Dashboard','booking-and-rental-manager-for-woocommerce') ?></button>
-                        </div>
-					<?php } ?>
-                </div>
-				<?php
-			}
-
-			public function setup_general_content() {
-				$label = 'Rent Item';
-				$slug  = 'rbfw_item';
-				?>
-                <div data-tabs-next="#ttbm_qs_general">
-                    <div class="section">
-                        <h2><?php esc_html_e( 'General settings', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-                        <p class="mTB_xs"><?php esc_html_e( 'Choose some general option.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                        <div class="_dLayout_mT">
-                            <label class="fullWidth">
-                                <span class="min_200"><?php esc_html_e( 'Tour Label:', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <input type="text" class="formControl" name="ttbm_travel_label" value='<?php echo esc_attr( $label ); ?>'/>
-                            </label>
-                            <i class="info_text">
-                                <span class="fas fa-info-circle"></span>
-								<?php esc_html_e( 'It will change the Tour post type label on the entire plugin.', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </i>
-                            <div class="divider"></div>
-                            <label class="fullWidth">
-                                <span class="min_200"><?php esc_html_e( 'Tour Slug:', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <input type="text" class="formControl" name="ttbm_travel_slug" value='<?php echo esc_attr( $slug ); ?>'/>
-                            </label>
-                            <i class="info_text">
-                                <span class="fas fa-info-circle"></span>
-								<?php esc_html_e( 'It will change the Tour slug on the entire plugin. Remember after changing this slug you need to flush permalinks. Just go to Settings->Permalinks hit the Save Settings button', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </i>
-                        </div>
-                    </div>
-                </div>
-				<?php
-			}
-
-			public function setup_content_done() {
-				?>
-                <div data-tabs-next="#ttbm_qs_done">
-                    <h2><?php esc_html_e( 'Finalize Setup', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-                    <p class="mTB_xs"><?php esc_html_e( 'You are about to Finish & Save Tour Booking Manager For Woocommerce Plugin setup process', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                    <div class="mT allCenter">
-                        <button type="submit" name="finish_quick_setup" class="themeButton"><?php esc_html_e( 'Finish & Save', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-                    </div>
-                </div>
-				<?php
-			}
-
 			public function rbfw_time_slots() {
 				$time_slots_page = new RBFW_Timeslots_Page();
-				echo wp_kses_post($time_slots_page->rbfw_time_slots_page());
+				$time_slots_page->rbfw_time_slots_page();
 			}
 
 			public function rbfw_order_list() {
 				$order_page = new RBFWOrderPage();
-				echo wp_kses_post($order_page->rbfw_order_page());
+				$order_page->rbfw_order_page();
 			}
 
 			public function rbfw_inventory_list() {
@@ -293,15 +70,7 @@
 			}
 
 			public function get_icon() {
-				return $this->get_option_trans( 'rbfw_rent_icon', 'rbfw_basic_gen_settings', 'dashicons-clipboard' );;
-			}
-
-			public function get_cat_name() {
-				return $this->get_option_trans( 'rbfw_rent_cat_label', 'rbfw_basic_gen_settings', 'Category' );
-			}
-
-			public function get_cat_slug() {
-				return $this->get_option_trans( 'rbfw_rent_cat_slug', 'rbfw_basic_gen_settings', 'rent-category' );
+				return $this->get_option_trans( 'rbfw_rent_icon', 'rbfw_basic_gen_settings', 'dashicons-clipboard' );
 			}
 
 			function rbfw_go_pro_page() {
@@ -328,8 +97,8 @@
 				echo '<div class="rbfw_settings_wrapper">';
 				echo '<div class="rbfw_settings_inner_wrapper">';
 				echo '<div class="rbfw_settings_panel_header">';
-				echo esc_html(RBFW_Rent_Manager::get_plugin_data('Name'));
-				echo '<small>' . esc_html(RBFW_Rent_Manager::get_plugin_data('Version')) . '</small>';
+				echo esc_html( RBFW_Rent_Manager::get_plugin_data( 'Name' ) );
+				echo '<small>' . esc_html( RBFW_Rent_Manager::get_plugin_data( 'Version' ) ) . '</small>';
 				echo '</div>';
 				echo '<div class="mage_settings_panel_wrap rbfw_settings_panel">';
 				$this->settings_api->show_navigation();
@@ -337,22 +106,6 @@
 				echo '</div>';
 				echo '</div>';
 				echo '</div>';
-			}
-
-			function array_strip( $array_or_string ) {
-				if ( is_string( $array_or_string ) ) {
-					$array_or_string = sanitize_text_field( $array_or_string );
-				} elseif ( is_array( $array_or_string ) ) {
-					foreach ( $array_or_string as $key => &$value ) {
-						if ( is_array( $value ) ) {
-							$value = rbfw_array_strip( $value );
-						} else {
-							$value = sanitize_text_field( $value );
-						}
-					}
-				}
-
-				return $array_or_string;
 			}
 
 			function get_pages() {
@@ -401,12 +154,12 @@
 				$admin_email             = get_option( 'admin_email' );
 				$site_name               = get_option( 'blogname' );
 				$attachments             = array();
-				if ( ! empty( $email_sub ) ) {
-					$email_sub = $email_sub;
-				} elseif ( $global_email_sub ) {
-					$email_sub = $global_email_sub;
-				} else {
-					$email_sub = 'Confirmation Email';
+				if ( empty( $email_sub ) ) {
+					if ( $global_email_sub ) {
+						$email_sub = $global_email_sub;
+					} else {
+						$email_sub = 'Confirmation Email';
+					}
 				}
 				if ( $global_email_form ) {
 					$form_name = $global_email_form;
@@ -420,8 +173,6 @@
 				}
 				if ( ! empty( $content ) ) {
 					$email_body = $content;
-				} elseif ( $event_email_text ) {
-					$email_body = $event_email_text;
 				} else {
 					$email_body = $global_email_text;
 				}
@@ -435,39 +186,13 @@
 				}
 			}
 
-			private function check_page_by_slug( $slug ) {
-				if ( $pages = get_pages() ) {
-					foreach ( $pages as $page ) {
-						if ( $slug === $page->post_name ) {
-							return $page;
-						}
-					}
-				}
-
-				return false;
-			}
-
-			public function page_create( $name, $slug ) {
-				if ( ! $this->check_page_by_slug( $slug ) ) {
-					$create_page = array(
-						'post_type'    => 'page',
-						'post_name'    => $slug,
-						'post_title'   => $name,
-						'post_content' => '',
-						'post_status'  => 'publish',
-					);
-					wp_insert_post( $create_page );
-				}
-			}
-
 			public function add_meta_box_func() {
 				$cpt_label = $this->get_option_trans( 'rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent' );
-				add_meta_box( 'rbfw_add_meta_box', $cpt_label.__( " Settings : ", 'booking-and-rental-manager-for-woocommerce' ) . get_the_title( get_the_id() ), array( $this, 'mp_event_all_in_tab' ), 'rbfw_item', 'normal', 'high' );
+				add_meta_box( 'rbfw_add_meta_box', $cpt_label . __( " Settings : ", 'booking-and-rental-manager-for-woocommerce' ) . get_the_title( get_the_id() ), array( $this, 'mp_event_all_in_tab' ), 'rbfw_item', 'normal', 'high' );
 			}
 
 			public function mp_event_all_in_tab() {
-				$cpt_label = $this->get_option_trans( 'rbfw_rent_label', 'rbfw_basic_gen_settings', 'Rent' );
-				$post_id   = get_the_id();
+				$post_id = get_the_id();
 				wp_nonce_field( 'rbfw_ticket_type_nonce', 'rbfw_ticket_type_nonce' );
 				?>
                 <div class="mp_event_tab_area">
@@ -481,136 +206,6 @@
                     </div>
                 </div>
 				<?php
-			}
-
-			public function create_meta( $options, $rbfw_id ) {
-				echo '<ul>';
-				foreach ( $options as $option ) :
-					$id = $option['id'];
-					echo "<li><label for=" . esc_html( $id ) . ">";
-					echo esc_html( $option['title'] );
-					$option_value = get_post_meta( $rbfw_id, $option['id'], true );
-					if ( is_serialized( $option_value ) ) {
-						$option_value = unserialize( $option_value );
-					}
-					$option['value'] = $option_value;
-					$this->field_generator( $option, $rbfw_id );
-					echo '</label></li>';
-				endforeach;
-				echo '</ul>';
-			}
-
-			public function field_generator( $option, $rbfw_id ) {
-				$id      = isset( $option['id'] ) ? $option['id'] : "";
-				$type    = isset( $option['type'] ) ? $option['type'] : "";
-				$details = isset( $option['details'] ) ? $option['details'] : "";
-				$post_id = $rbfw_id;
-				if ( empty( $id ) ) {
-					return;
-				}
-				$prent_option_name   = '';
-				$FormFieldsGenerator = new RbfwFormFieldsGenerator();
-				if ( ! empty( $prent_option_name ) ) :
-					$field_name           = $prent_option_name . '[' . $id . ']';
-					$option['field_name'] = $field_name;
-					$prent_option_value = get_post_meta( $post_id, $prent_option_name, true );
-					$prent_option_value = is_serialized( $prent_option_value ) ? unserialize( $prent_option_value ) : array();
-					$option['value']    = isset( $prent_option_value[ $id ] ) ? $prent_option_value[ $id ] : '';
-				else :
-					$option['field_name'] = $id;
-					$option_value         = get_post_meta( $post_id, $id, true );
-					$option['value']      = is_serialized( $option_value ) ? unserialize( $option_value ) : $option_value;
-				endif;
-				if ( isset( $option['type'] ) && $option['type'] === 'text' ) {
-					echo esc_html( $FormFieldsGenerator->field_text( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'text_multi' ) {
-					echo esc_html( $FormFieldsGenerator->field_text_multi( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'textarea' ) {
-					echo esc_html( $FormFieldsGenerator->field_textarea( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'checkbox' ) {
-					echo esc_html( $FormFieldsGenerator->field_checkbox( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'checkbox_multi' ) {
-					echo esc_html( $FormFieldsGenerator->field_checkbox_multi( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'radio' ) {
-					echo esc_html( $FormFieldsGenerator->field_radio( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'select' ) {
-					echo esc_html( $FormFieldsGenerator->field_select( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'range' ) {
-					echo esc_html( $FormFieldsGenerator->field_range( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'range_input' ) {
-					echo esc_html( $FormFieldsGenerator->field_range_input( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'switch' ) {
-					echo esc_html( $FormFieldsGenerator->field_switch( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'switch_multi' ) {
-					echo esc_html( $FormFieldsGenerator->field_switch_multi( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'switch_img' ) {
-					echo esc_html( $FormFieldsGenerator->field_switch_img( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'time_format' ) {
-					echo esc_html( $FormFieldsGenerator->field_time_format( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'date_format' ) {
-					echo esc_html( $FormFieldsGenerator->field_date_format( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'datepicker' ) {
-					echo esc_html( $FormFieldsGenerator->field_datepicker( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'color_sets' ) {
-					echo esc_html( $FormFieldsGenerator->field_color_sets( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'colorpicker' ) {
-					echo esc_html( $FormFieldsGenerator->field_colorpicker( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'colorpicker_multi' ) {
-					echo esc_html( $FormFieldsGenerator->field_colorpicker_multi( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'link_color' ) {
-					echo esc_html( $FormFieldsGenerator->field_link_color( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'icon' ) {
-					echo esc_html( $FormFieldsGenerator->field_icon( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'icon_multi' ) {
-					echo esc_html( $FormFieldsGenerator->field_icon_multi( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'dimensions' ) {
-					echo esc_html( $FormFieldsGenerator->field_dimensions( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'wp_editor' ) {
-					echo esc_html( $FormFieldsGenerator->field_wp_editor( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'select2' ) {
-					echo esc_html( $FormFieldsGenerator->field_select2( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'faq' ) {
-					echo esc_html( $FormFieldsGenerator->field_faq( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'grid' ) {
-					echo esc_html( $FormFieldsGenerator->field_grid( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'color_palette' ) {
-					echo esc_html( $FormFieldsGenerator->field_color_palette( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'color_palette_multi' ) {
-					echo esc_html( $FormFieldsGenerator->field_color_palette_multi( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'media' ) {
-					echo esc_html( $FormFieldsGenerator->field_media( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'media_multi' ) {
-					echo esc_html( $FormFieldsGenerator->field_media_multi( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'repeatable' ) {
-					echo esc_html( $FormFieldsGenerator->field_repeatable( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'user' ) {
-					echo esc_html( $FormFieldsGenerator->field_user( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'margin' ) {
-					echo esc_html( $FormFieldsGenerator->field_margin( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'padding' ) {
-					echo esc_html( $FormFieldsGenerator->field_padding( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'border' ) {
-					echo esc_html( $FormFieldsGenerator->field_border( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'switcher' ) {
-					echo esc_html( $FormFieldsGenerator->field_switcher( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'password' ) {
-					echo esc_html( $FormFieldsGenerator->field_password( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'post_objects' ) {
-					echo esc_html( $FormFieldsGenerator->field_post_objects( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'google_map' ) {
-					echo esc_html( $FormFieldsGenerator->field_google_map( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === $type ) {
-					do_action( "wp_theme_settings_field_$type", $option );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'time_slot' ) {
-					echo esc_html( $FormFieldsGenerator->field_time_slot( $option ) );
-				} elseif ( isset( $option['type'] ) && $option['type'] === 'add_to_cart_shortcode' ) {
-					echo esc_html( $FormFieldsGenerator->field_add_to_cart_shortcode( $option ) );
-				} else {
-					echo '';
-				}
-				if ( ! empty( $details ) ) {
-					echo "<p class='description'>" . esc_html( $details ) . "</p>";
-				}
 			}
 
 			function get_datetime( $date, $type ) {
@@ -648,19 +243,19 @@
 				$title               = $meta_data['rbfw_billing_name'];
 				$cpt_name            = 'rbfw_order';
 				if ( $rbfw_payment_system == 'wps' ) {
-					$rbfw_id     = $meta_data['rbfw_id'];
-					$wc_order_id = $meta_data['rbfw_order_id'];
-					$duration_cost = $meta_data['rbfw_ticket_info'][0]['duration_cost'];
-					$service_cost  = $meta_data['rbfw_ticket_info'][0]['service_cost'];
+					$rbfw_id          = $meta_data['rbfw_id'];
+					$wc_order_id      = $meta_data['rbfw_order_id'];
+					$duration_cost    = $meta_data['rbfw_ticket_info'][0]['duration_cost'];
+					$service_cost     = $meta_data['rbfw_ticket_info'][0]['service_cost'];
 					$order_tax        = ! empty( get_post_meta( $wc_order_id, '_order_tax', true ) ) ? get_post_meta( $wc_order_id, '_order_tax', true ) : 0;
 					$is_tax_inclusive = get_option( 'woocommerce_prices_include_tax', true );
-					$args = array(
+					$args             = array(
 						'post_title'   => $title,
 						'post_content' => '',
 						'post_status'  => 'publish',
 						'post_type'    => $cpt_name
 					);
-					$meta_query = array(
+					$meta_query       = array(
 						'meta_query' => array(
 							'meta_value' => array(
 								'key'     => 'rbfw_order_id',
@@ -669,16 +264,16 @@
 							)
 						)
 					);
-					$args = array_merge( $args, $meta_query );
-					$query = new WP_Query( $args );
+					$args             = array_merge( $args, $meta_query );
+					$query            = new WP_Query( $args );
 					/* If Order already created, update the order */
 					if ( $query->have_posts() ) {
 						while ( $query->have_posts() ) {
 							$query->the_post();
 							global $post;
-							$post_id = $post->ID;
-							$current_ticket_info = get_post_meta( $post_id, 'rbfw_ticket_info', true );
-							$merged_ticket_info  = array_merge( $ticket_info, $current_ticket_info );
+							$post_id                 = $post->ID;
+							$current_ticket_info     = get_post_meta( $post_id, 'rbfw_ticket_info', true );
+							$merged_ticket_info      = array_merge( $ticket_info, $current_ticket_info );
 							$rbfw_ticket_total_price = get_post_meta( $post_id, 'rbfw_ticket_total_price', true );
 							if ( $is_tax_inclusive == 'yes' ) {
 								$total_price = $rbfw_ticket_total_price + $duration_cost + $service_cost;
@@ -699,7 +294,7 @@
 						}
 					} else {
 						/* If Order not exist, create the order */
-						$args = array(
+						$args    = array(
 							'post_title'   => $title,
 							'post_content' => '',
 							'post_status'  => 'publish',
@@ -732,36 +327,6 @@
 				return $post_id;
 			}
 
-			function get_qyery_loop( $post_type ) {
-				$args = array(
-					'post_type'      => $post_type,
-					'posts_per_page' => - 1,
-				);
-				$loop = new WP_Query( $args );
-
-				return $loop;
-			}
-
-			function merge_saved_array( $arr1, $arr2 ) {
-				$output = [];
-				for ( $i = 0; $i < count( $arr1 ); $i ++ ) {
-					$output[ $i ] = array_merge( $arr1[ $i ], $arr2[ $i ] );
-				}
-
-				return $output;
-			}
-
-			/**************************************
-			 * WooCommerce Functions Start from here
-			 ***************************************/
-			function get_from_email_address() {
-				return get_option( 'woocommerce_email_from_address' );
-			}
-
-			function get_from_email_name() {
-				return get_option( 'woocommerce_email_from_name' );
-			}
-
 			function email_from_name() {
 				return get_option( 'woocommerce_email_from_name' );
 			}
@@ -770,25 +335,11 @@
 				return get_option( 'woocommerce_email_from_address' );
 			}
 
-			public function get_order_meta( $item_id, $key ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- This query is required for a custom table not managed by WordPress APIs.
-			global $wpdb;
-				$table_name = $wpdb->prefix . "woocommerce_order_itemmeta";
-				$results    = $wpdb->get_results( $wpdb->prepare( "SELECT meta_value FROM $table_name WHERE order_item_id = %d AND meta_key = %s", $item_id, $key ) );
-				foreach ( $results as $result ) {
-					$value = $result->meta_value;
-				}
-				$val = isset( $value ) ? $value : '';
-				return $val;
-			}
-
 			public function rbfw_wc_status_update( $order_id, $from_status, $to_status, $order ) {
 				$order        = wc_get_order( $order_id );
-				$order_meta   = get_post_meta( $order_id );
 				$order_status = $order->get_status();
-				foreach ( $order->get_items() as $item_id => $item_values ) {
-					$item_id = $item_id;
-					$rbfw_id = $this->get_order_meta( $item_id, '_rbfw_id' );
+				foreach ( $order->get_items() as $item_values ) {
+					$rbfw_id = $item_values->get_meta( '_rbfw_id' );
 					if ( get_post_type( $rbfw_id ) == $this->get_cpt_name() ) {
 						if ( $order->has_status( 'processing' ) ) {
 							do_action( 'rbfw_wc_order_status_change', $order_status, $rbfw_id, $order_id );
@@ -815,10 +366,8 @@
 				}
 			}
 
-
-
 			function get_wc_raw_price( $post_id, $price, $args = array() ) {
-				$args = wp_parse_args(
+				$args     = wp_parse_args(
 					$args,
 					array(
 						'qty'   => '',
@@ -827,8 +376,8 @@
 				);
 				$_product = get_post_meta( $post_id, 'link_wc_product', true ) ? get_post_meta( $post_id, 'link_wc_product', true ) : $post_id;
 				// $price = '' !== $args['price'] ? max( 0.0, (float) $args['price'] ) : $product->get_price();
-				$qty = '' !== $args['qty'] ? max( 0.0, (float) $args['qty'] ) : 1;
-				$product = wc_get_product( $_product );
+				$qty            = '' !== $args['qty'] ? max( 0.0, (float) $args['qty'] ) : 1;
+				$product        = wc_get_product( $_product );
 				$tax_with_price = get_option( 'woocommerce_tax_display_shop' );
 				if ( '' === $price ) {
 					return '';
@@ -887,24 +436,18 @@
 			}
 
 			function all_tax_list() {
-				global $wpdb;
-				if ( ! is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
-					return;
-				}
-				$table_name = $wpdb->prefix . 'wc_tax_rate_classes';
-				$result     = $wpdb->get_results( "SELECT * FROM $table_name" );
-				$tax_list   = [];
-				if ( ! empty( $result ) ) {
-					foreach ( $result as $tax ) {
-						$tax_list[ $tax->slug ] = $tax->name;
+				$tax_list = [];
+				if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
+					$tax_classes   = WC_Tax::get_tax_classes();
+					$tax_classes[] = 'Standard';
+					foreach ( $tax_classes as $tax_class ) {
+						$slug              = $tax_class === 'Standard' ? 'standard' : sanitize_title( $tax_class );
+						$tax_list[ $slug ] = $tax_class;
 					}
 				}
 
 				return $tax_list;
 			}
-			/**************************************
-			 * End WooCommerce Functions here
-			 ***************************************/
 		}
 	}
 	$rbfw = new MageRBFWClass();

@@ -980,26 +980,19 @@ function rbfw_booking_management( $order_id ) {
 
         foreach ( $order->get_items() as $item_id => $item_values ) {
 
-            $item_id = $item_id;
 
             $start_date = wc_get_order_item_meta( $item_id, 'start_date', true );
 
             $end_date = wc_get_order_item_meta( $item_id, 'end_date', true );
             $rbfw_service_price_data_actual = wc_get_order_item_meta( $item_id, '_rbfw_service_price_data_actual', true ) ? wc_get_order_item_meta( $item_id, '_rbfw_service_price_data_actual', true ) : [];
 
-
-            $rbfw_id = rbfw_get_order_item_meta( $item_id, '_rbfw_id', true );
+	        $rbfw_id = $item_values->get_meta( '_rbfw_id');
 
 
 
             if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
 
                 $ticket_info  = wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ? maybe_unserialize( wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ) : [];
-                //$user_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_user_info', true ) ) : [];
-                //$type_info    = rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_type_info', true ) ) : [];
-                //$service_info = rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ? maybe_unserialize( rbfw_get_order_item_meta( $item_id, '_rbfw_service_info', true ) ) : [];
-                //$rbfw_duration_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_duration_cost', true ) : '';
-                //$rbfw_service_cost = rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) ? rbfw_get_order_item_meta( $item_id, '_rbfw_service_cost', true ) : '';
 
                 rbfw_prepar_and_add_user_data( $ticket_info, $rbfw_id, $order_id,$start_date,$end_date,$rbfw_service_price_data_actual);
             }

@@ -53,11 +53,6 @@
 
 		return $rbfw->get_datetime( $date, $type );
 	}
-	function rbfw_get_order_item_meta( $item_id, $key ) {
-		global $rbfw;
-
-		return $rbfw->get_order_meta( $item_id, $key );
-	}
 	function rbfw_check_product_exists( $id ) {
 		return is_string( get_post_status( $id ) );
 	}
@@ -68,7 +63,6 @@
 			$datetime1 = new DateTime( $newformat );
 			$datetime2 = new DateTime( $current );
 			$interval  = date_diff( $datetime2, $datetime1 );
-			$arr       = [];
 			if ( $start_datetime == $end_datetime ) {
 				$days = 1;
 			} else {
