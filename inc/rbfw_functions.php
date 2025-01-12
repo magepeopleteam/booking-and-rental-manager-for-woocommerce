@@ -1804,7 +1804,7 @@
 															$icon = 'fas fa-arrow-right';
 														endif;
 														if ( $feature['title'] ):
-															$rand_number = rand();
+															$rand_number = wp_rand();
 															echo esc_html('<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>');
 															?>
                                                             <script>
@@ -2051,7 +2051,7 @@
 																$icon = 'fas fa-arrow-right';
 															endif;
 															if ( $feature['title'] ):
-																$rand_number = rand();
+																$rand_number = wp_rand();
 																echo esc_html('<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>');
 																?>
                                                                 <script>

@@ -4,8 +4,8 @@ if(!($post_id && $active_tab)){
     $post_id = $_POST['post_id'];
     $active_tab = $_POST['active_tab'];
 
-    $checkin_date = strip_tags($_POST['checkin_date']);
-    $checkout_date = strip_tags($_POST['checkout_date']);
+    $checkin_date = wp_strip_all_tags($_POST['checkin_date']);
+    $checkout_date = wp_strip_all_tags($_POST['checkout_date']);
 }
 if(isset($post_id) && isset($active_tab)){
 
@@ -54,7 +54,7 @@ if(isset($post_id) && isset($active_tab)){
 
     foreach ($rbfw_resort_room_data as $key => $value) {
         $img_url    = wp_get_attachment_url($value['rbfw_room_image']);
-        $uniq_id    = rand();
+        $uniq_id    = wp_rand();
         if($img_url) {
             $img = '<a href="#rbfw_room_img_' . $uniq_id . '" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
             $img .= '<div id="rbfw_room_img_' . $uniq_id . '" class="mage_modal"><img src="' . esc_url($img_url) . '"/></div>';
@@ -134,7 +134,7 @@ if(isset($post_id) && isset($active_tab)){
                     foreach ($rbfw_extra_service_data as $key => $value) {
                         $max_es_available_qty = rbfw_get_multiple_date_es_available_qty($post_id, $checkin_date, $checkout_date, $value['service_name']);
                         $img_url = wp_get_attachment_url($value['service_img']);
-                        $uniq_id = rand();
+                        $uniq_id = wp_rand();
                         if ($img_url) {
                             $img = '<a href="#rbfw_room_img_' . $uniq_id . '" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
                             $img .= '<div id="rbfw_room_img_' . $uniq_id . '" class="mage_modal"><img src="' . esc_url($img_url) . '"/></div>';

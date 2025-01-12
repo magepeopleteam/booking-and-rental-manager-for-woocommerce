@@ -8386,7 +8386,7 @@ if( ! class_exists( 'FormFieldsGenerator' ) ) {
                                                 $__value    = str_replace('<br />', PHP_EOL, html_entity_decode($_value));;
                                                 ?>
                                                 
-                                                <?php $rnd = rand(); ?>
+                                                <?php $rnd = wp_rand(); ?>
                                                 <textarea id="<?php echo esc_attr($field_name.$rnd); ?>" name="<?php echo esc_attr($field_name); ?>[<?php echo esc_attr($index); ?>][<?php echo esc_attr($item_id); ?>]"><?php echo wp_kses_post($__value); ?></textarea>
                                                 <script>
                                                 jQuery(function(){

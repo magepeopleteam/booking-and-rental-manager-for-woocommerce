@@ -219,7 +219,7 @@ if (!class_exists('Rbfw_Account_Page')) {
             $request = isset($_POST['rbfw_ba_user_submit_request']) ? sanitize_text_field($_POST['rbfw_ba_user_submit_request']) : '';
             $username = isset($_POST['rbfw_ba_user_username']) ? sanitize_text_field($_POST['rbfw_ba_user_username']) : '';
             $email = isset($_POST['rbfw_ba_user_email']) ? sanitize_email($_POST['rbfw_ba_user_email']) : '';
-            $password = isset($_POST['rbfw_ba_user_password']) ? strip_tags($_POST['rbfw_ba_user_password']) : '';
+            $password = isset($_POST['rbfw_ba_user_password']) ? wp_strip_all_tags($_POST['rbfw_ba_user_password']) : '';
             $confirm_password = isset($_POST['rbfw_ba_user_cpassword']) ? sanitize_text_field($_POST['rbfw_ba_user_cpassword']) : '';
             $first_name = isset($_POST['rbfw_ba_user_fname']) ? sanitize_text_field($_POST['rbfw_ba_user_fname']) : '';
             $last_name = isset($_POST['rbfw_ba_user_lname']) ? sanitize_text_field($_POST['rbfw_ba_user_lname']) : '';
@@ -542,7 +542,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                 }
 
                 $tax = !empty($ticket_info['rbfw_mps_tax']) ? $ticket_info['rbfw_mps_tax'] : 0;
-                $mps_tax_percentage = !empty(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) : '';
+                $mps_tax_percentage = !empty(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) ? wp_strip_all_tags(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $tax_status = '';
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && $mps_tax_format == 'including_tax'){
                     $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($tax).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';

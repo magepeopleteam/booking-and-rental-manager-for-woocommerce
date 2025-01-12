@@ -144,7 +144,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                         foreach ($cat_features as $features) {
                             $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                             $title = $features['title'];
-                            $rand_number = rand();
+                            $rand_number = wp_rand();
                             if ($title) {
                                 $icom = esc_html($icon);
                                 $all_cat_features .= "<li class='bfw_rent_list_items title  $rand_number '><span class='bfw_rent_list_items_icon'><i class='$icom'></i></span>  $title </li>";
@@ -579,7 +579,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                                                         if ($i <= $display_cat_features ) {
                                                             $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                                                             $title = $features['title'];
-                                                            $rand_number = rand();
+                                                            $rand_number = wp_rand();
                                                             if ($title) {
                                                                 ?>
                                                                 <li class="bfw_rent_list_items title <?php echo esc_attr($rand_number); ?>"><span class="bfw_rent_list_items_icon"><i class="<?php echo esc_html($icon); ?>"></i></span> <?php echo esc_html($title); ?></li>
