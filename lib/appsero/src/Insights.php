@@ -391,10 +391,11 @@ class Insights {
         $notice .= 'We are using Appsero to collect your data. <a href="' . $policy_url . '">Learn more</a> about how Appsero collects and handle your data.</p>';
 
         echo '<div class="updated"><p>';
-            echo esc_html($notice);
+            echo wp_kses_post($notice);
             echo '</p><p class="submit">';
-            echo esc_html('&nbsp;<a href="' . esc_url( $optin_url ) . '" class="button-primary button-large">' . $this->client->__trans( 'Allow' ) . '</a>');
-            echo esc_html('&nbsp;<a href="' . esc_url( $optout_url ) . '" class="button-secondary button-large">' . $this->client->__trans( 'No thanks' ) . '</a>');
+            echo '&nbsp;<a href="' . esc_url($optin_url) . '" class="button-primary button-large">' . esc_html($this->client->__trans('Allow')) . '</a>';
+            echo '&nbsp;<a href="' . esc_url($optout_url) . '" class="button-secondary button-large">' . esc_html($this->client->__trans('No thanks')) . '</a>';
+
         echo '</p></div>';
 
         echo "<script type='text/javascript'>jQuery('." . esc_js($this->client->slug) . "-insights-data-we-collect').on('click', function(e) {
