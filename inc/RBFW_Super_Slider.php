@@ -167,7 +167,7 @@
 									?>
 									<div class="abTopLeft">
 										<button type="button" class="_dButton_bgWhite_textDefault" data-target-popup="superSlider" data-slide-index="1">
-											<?php echo esc_html__( 'View All', 'booking-and-rental-manager-for-woocommerce' ) . ' ' . sizeof( $image_ids ) . ' ' . esc_html__( 'Images', 'booking-and-rental-manager-for-woocommerce' ); ?>
+											<?php echo esc_html(__( 'View All', 'booking-and-rental-manager-for-woocommerce' ) . ' ' . sizeof( $image_ids ) . ' ' . __( 'Images', 'booking-and-rental-manager-for-woocommerce' )); ?>
 										</button>
 									</div>
 									<?php
@@ -262,7 +262,7 @@
 							<div data-bg-image="<?php echo esc_html( $image_url ); ?>"></div>
 							<div class="sliderMoreItem">
 								<span class="fas fa-plus"></span>
-								<?php echo sizeof( $image_ids ) - 4; ?>
+								<?php echo esc_html(sizeof( $image_ids )) - 4; ?>
 								<span class="far fa-image"></span>
 							</div>
 						</div>
@@ -325,7 +325,7 @@
 					<div class="sliderPopup" data-popup="superSlider">
 						<div class="superSlider">
 							<div class="popupHeader">
-								<h2><?php echo get_the_title( $post_id ); ?></h2>
+								<h2><?php echo esc_html(get_the_title( $post_id )); ?></h2>
 								<span class="fas fa-times popupClose"></span>
 							</div>
 							<div class="popupBody">
