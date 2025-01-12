@@ -609,7 +609,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
             $times_particulars = rbfw_get_available_times_particulars($post_id,$selected_date,$type,$selector);
 
-            echo json_encode($times_particulars);
+            echo wp_json_encode($times_particulars);
             wp_die();
         }
 
