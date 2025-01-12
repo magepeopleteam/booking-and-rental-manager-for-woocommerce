@@ -702,9 +702,8 @@
 									<th><?php esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									<th><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									<th><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-									<th><?php echo sprintf( esc_html__( 'Price %s', 'booking-and-rental-manager-for-woocommerce' ), '<b class="required">*</b>' ); ?></th>
-<th><?php echo sprintf( esc_html__( 'Stock Quantity %s', 'booking-and-rental-manager-for-woocommerce' ), '<b class="required">*</b>' ); ?></th>
-
+									<th><?php echo wp_kses_post( 'Price <b class="required">*</b>'); ?></th>
+									<th><?php echo wp_kses_post( 'Stock Quantity <b class="required">*</b>'); ?></th>
 									<!--<th><?php esc_html_e( 'Qty Box', 'booking-and-rental-manager-for-woocommerce' ); ?></th>-->
 									<th></th>
 								</tr>
