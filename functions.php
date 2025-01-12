@@ -30,11 +30,16 @@ function rbfw_update_settings(){
 }
 
 function rbfw_exist_page_by_slug( $slug ) {
-    global $wpdb;
-    $posts_table = $wpdb->prefix.'posts';
-    $return = $wpdb->get_row( "SELECT ID FROM $posts_table WHERE post_name = '" . $slug . "' && post_status = 'publish' && post_type = 'page' ", 'ARRAY_N' );
 
-    if( empty( $return ) ) {
+    $query = new WP_Query( array(
+        'name'        => $slug,
+        'post_type'   => 'page', // Specify 'page' if you're looking for pages
+        'post_status' => 'publish', // Only look for published pages
+    ) );
+
+    $result = $query->post_count;
+
+    if(  $result > 0 ) {
         return false;
     } else {
         return true;
@@ -42,11 +47,15 @@ function rbfw_exist_page_by_slug( $slug ) {
 }
 
 function rbfw_exist_page_by_title( $title ) {
-    global $wpdb;
-    $posts_table = $wpdb->prefix.'posts';
-    $return = $wpdb->get_row( "SELECT ID FROM $posts_table WHERE post_title = '" . $title . "' && post_status = 'publish' && post_type = 'page' ", 'ARRAY_N' );
+    $query = new WP_Query( array(
+        'title'        => $title,
+        'post_type'   => 'page', // Specify 'page' if you're looking for pages
+        'post_status' => 'publish', // Only look for published pages
+    ) );
 
-    if( empty( $return ) ) {
+    $result = $query->post_count;
+
+    if(  $result > 0 ) {
         return false;
     } else {
         return true;
