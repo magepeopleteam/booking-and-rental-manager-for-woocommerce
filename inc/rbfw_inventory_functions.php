@@ -36,10 +36,10 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
                     $rbfw_id = $item['rbfw_id'];
                     foreach ($item as $key => $value) {
                         if ($key == 'rbfw_start_date' || $key == 'rbfw_end_date') {
-                            $value = date('Y-m-d', strtotime($value));
+                            $value = gmdate('Y-m-d', strtotime($value));
                         }
                         if ($key == 'rbfw_start_datetime' || $key == 'rbfw_end_datetime') {
-                            $value = date('Y-m-d h:i A', strtotime($value));
+                            $value = gmdate('Y-m-d h:i A', strtotime($value));
                         }
                         update_post_meta($post_id, $key, $value);
                     }
@@ -94,8 +94,8 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
     if( ($rbfw_item_type == 'bike_car_md') || ($rbfw_item_type == 'dress') || ($rbfw_item_type == 'equipment') || ($rbfw_item_type == 'others') ){
 
         // Start: Date Time Calculation
-        $start_datetime  = date( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
-        $end_datetime = date( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
+        $start_datetime  = gmdate( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
+        $end_datetime = gmdate( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
         $start_datetime  = new DateTime( $start_datetime );
         $end_datetime = new DateTime( $end_datetime );
 
@@ -118,19 +118,19 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
                 if($rbfw_count_extra_day_enable=='on'){
                     for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
-                        $date = date('d-m-Y', $currentDate);
+                        $date = gmdate('d-m-Y', $currentDate);
                         $date_range[] = $date;
                     }
                 }else{
                     for ($currentDate = $start_date; $currentDate < $end_date; $currentDate += (86400)) {
-                        $date = date('d-m-Y', $currentDate);
+                        $date = gmdate('d-m-Y', $currentDate);
                         $date_range[] = $date;
                     }
                 }
             } else {
 
                 for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
-                    $date = date('d-m-Y', $currentDate);
+                    $date = gmdate('d-m-Y', $currentDate);
                     $date_range[] = $date;
                 }
             }
@@ -141,7 +141,7 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
         $start_date = strtotime($start_date);
         $end_date = strtotime($end_date);
         for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
-            $date = date('d-m-Y', $currentDate);
+            $date = gmdate('d-m-Y', $currentDate);
             $date_range[] = $date;
         }
     } else{
@@ -149,7 +149,7 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
         $start_date = strtotime($start_date);
         $end_date = strtotime($end_date);
         for ($currentDate = $start_date; $currentDate <= $end_date; $currentDate += (86400)) {
-            $date = date('d-m-Y', $currentDate);
+            $date = gmdate('d-m-Y', $currentDate);
             $date_range[] = $date;
         }
     }
@@ -221,7 +221,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     $date_range = [];
 
     for ($currentDate = strtotime($start_date); $currentDate <= strtotime($end_date); $currentDate += (86400)) {
-        $date = date('d-m-Y', $currentDate);
+        $date = gmdate('d-m-Y', $currentDate);
         $date_range[] = $date;
     }
     // End: Get Date Range
@@ -331,8 +331,8 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                         $inventory_start_time = $inventory['rbfw_start_time'];
                         $inventory_end_time = $inventory['rbfw_end_time'];
 
-                        $inventory_start_datetime = date('Y-m-d H:i', strtotime($inventory_start_date . ' ' . $inventory_start_time));
-                        $inventory_end_datetime = date('Y-m-d H:i', strtotime($inventory_end_date . ' ' . $inventory_end_time));
+                        $inventory_start_datetime = gmdate('Y-m-d H:i', strtotime($inventory_start_date . ' ' . $inventory_start_time));
+                        $inventory_end_datetime = gmdate('Y-m-d H:i', strtotime($inventory_end_date . ' ' . $inventory_end_time));
                         if($key1==0){
                              if($inventory_end_datetime>$pickup_datetime){
                                  $total_qty += $rbfw_item_quantity;
@@ -735,7 +735,7 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
                 ?>
                 <tr>
-                    <td><?php echo esc_html(date(get_option('date_format'),strtotime($current_date))); ?></td>
+                    <td><?php echo esc_html(gmdate(get_option('date_format'),strtotime($current_date))); ?></td>
 
                     <td><a href="<?php echo esc_url(admin_url('post.php?post='.$post_id.'&action=edit')); ?>" class="rbfw_item_title"><?php echo esc_html(get_the_title()); ?></a></td>
 

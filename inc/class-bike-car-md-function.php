@@ -54,8 +54,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $star_time = isset($_POST['pickup_time'])?sanitize_text_field($_POST['pickup_time']):'';
             $end_time = isset($_POST['dropoff_time'])?sanitize_text_field($_POST['dropoff_time']):'';
 
-            $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
-            $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
+            $pickup_datetime = gmdate('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
+            $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
             $item_quantity = absint($_POST['item_quantity']);
             $rbfw_enable_variations = sanitize_text_field($_POST['rbfw_enable_variations']);

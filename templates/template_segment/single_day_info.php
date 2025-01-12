@@ -47,7 +47,7 @@ if(isset($_POST['post_id'])){
             </div>
             <div class="rbfw_muff_selected_date_col">
                 <label><i class="fa-regular fa-clock"></i> <?php echo esc_html(rbfw_string_return('rbfw_text_time',__('Time','booking-and-rental-manager-for-woocommerce'))); ?></label>
-                <span class="rbfw_muff_selected_date_value"><?php echo esc_html(date(get_option('time_format'), strtotime($selected_time)));  ?></span>
+                <span class="rbfw_muff_selected_date_value"><?php echo esc_html(gmdate(get_option('time_format'), strtotime($selected_time)));  ?></span>
             </div>
         </div>
     <?php } ?>

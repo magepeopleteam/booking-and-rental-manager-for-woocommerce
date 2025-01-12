@@ -63,8 +63,8 @@
 	}
 	if ( ! function_exists( 'mep_get_date_diff' ) ) {
 		function mep_get_date_diff( $start_datetime, $end_datetime ) {
-			$current   = date( 'Y-m-d H:i', strtotime( $start_datetime ) );
-			$newformat = date( 'Y-m-d H:i', strtotime( $end_datetime ) );
+			$current   = gmdate( 'Y-m-d H:i', strtotime( $start_datetime ) );
+			$newformat = gmdate( 'Y-m-d H:i', strtotime( $end_datetime ) );
 			$datetime1 = new DateTime( $newformat );
 			$datetime2 = new DateTime( $current );
 			$interval  = date_diff( $datetime2, $datetime1 );
@@ -91,8 +91,8 @@
 // Getting event exprie date & time
 	if ( ! function_exists( 'rbfw_day_diff_status' ) ) {
 		function rbfw_day_diff_status( $start_datetime, $end_datetime ) {
-			$current   = date( 'Y-m-d H:i', strtotime( $start_datetime ) );
-			$newformat = date( 'Y-m-d H:i', strtotime( $end_datetime ) );
+			$current   = gmdate( 'Y-m-d H:i', strtotime( $start_datetime ) );
+			$newformat = gmdate( 'Y-m-d H:i', strtotime( $end_datetime ) );
 			$datetime1 = new DateTime( $newformat );
 			$datetime2 = new DateTime( $current );
 			$interval  = date_diff( $datetime2, $datetime1 );
@@ -571,7 +571,7 @@
 					$enabled_thu = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_thu_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_thu_day', true ) : 'yes';
 					$enabled_fri = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_fri_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_fri_day', true ) : 'yes';
 					$enabled_sat = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) : 'yes';
-					$current_day = date( 'D' );
+					$current_day = gmdate( 'D' );
 					if ( $current_day == 'Sun' && $enabled_sun == 'yes' ) {
 						$price = (float) $price_sun;
 					} elseif ( $current_day == 'Mon' && $enabled_mon == 'yes' ) {
@@ -589,7 +589,7 @@
 					} else {
 						$price = (float) $price;
 					}
-					$current_date   = date( 'Y-m-d' );
+					$current_date   = gmdate( 'Y-m-d' );
 					$rbfw_sp_prices = get_post_meta( $rbfw_related_post_id, 'rbfw_seasonal_prices', true );
 					if ( ! empty( $rbfw_sp_prices ) ) {
 						$sp_array = [];
@@ -915,7 +915,7 @@
 			$currentDate = $startDate; $currentDate <= $endDate;
 			$currentDate += ( 86400 )
 		) {
-			$date        = date( 'Y-m-d', $currentDate );
+			$date        = gmdate( 'Y-m-d', $currentDate );
 			$rangArray[] = $date;
 		}
 
@@ -1230,7 +1230,7 @@
 		if ( empty( $post_id ) || empty( $selected_date ) || empty( $type ) ) {
 			return;
 		}
-		$selected_date                   = date( 'd-m-Y', strtotime( $selected_date ) );
+		$selected_date                   = gmdate( 'd-m-Y', strtotime( $selected_date ) );
 		$total_qty                       = 0;
 		$type_stock                      = 0;
 		$rbfw_inventory                  = get_post_meta( $post_id, 'rbfw_inventory', true );
@@ -1284,7 +1284,7 @@
 		if ( empty( $post_id ) || empty( $selected_date ) || empty( $name ) ) {
 			return;
 		}
-		$selected_date           = date( 'd-m-Y', strtotime( $selected_date ) );
+		$selected_date           = gmdate( 'd-m-Y', strtotime( $selected_date ) );
 		$total_qty               = 0;
 		$service_stock           = 0;
 		$rbfw_inventory          = get_post_meta( $post_id, 'rbfw_inventory', true );
@@ -1383,7 +1383,7 @@
 			$currentDate = $start_date; $currentDate <= $end_date;
 			$currentDate += ( 86400 )
 		) {
-			$date         = date( 'd-m-Y', $currentDate );
+			$date         = gmdate( 'd-m-Y', $currentDate );
 			$date_range[] = $date;
 		}
 		// End: Get Date Range
@@ -1588,7 +1588,7 @@
 		$hourly_rate_sat = get_post_meta( $rbfw_id, 'rbfw_sat_hourly_rate', true ) ? get_post_meta( $rbfw_id, 'rbfw_sat_hourly_rate', true ) : 0;
 		$daily_rate_sat  = get_post_meta( $rbfw_id, 'rbfw_sat_daily_rate', true ) ? get_post_meta( $rbfw_id, 'rbfw_sat_daily_rate', true ) : 0;
 		$enabled_sat     = get_post_meta( $rbfw_id, 'rbfw_enable_sat_day', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_sat_day', true ) : 'yes';
-		$current_day     = date( 'D' );
+		$current_day     = gmdate( 'D' );
 		if ( $current_day == 'Sun' && $enabled_sun == 'yes' ) {
 			$hourly_rate = $hourly_rate_sun;
 			$daily_rate  = $daily_rate_sun;
@@ -1614,7 +1614,7 @@
 			$hourly_rate = $hourly_rate;
 			$daily_rate  = $daily_rate;
 		}
-		$current_date   = date( 'Y-m-d' );
+		$current_date   = gmdate( 'Y-m-d' );
 		$rbfw_sp_prices = get_post_meta( $rbfw_id, 'rbfw_seasonal_prices', true );
 		if ( ! empty( $rbfw_sp_prices ) ) {
 			$sp_array = [];
@@ -1688,7 +1688,7 @@
 				// saturday rate
 				$price_sat   = get_post_meta( $rbfw_related_post_id, 'rbfw_sat_hourly_rate', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_sat_hourly_rate', true ) : 0;
 				$enabled_sat = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) : 'yes';
-				$current_day = date( 'D' );
+				$current_day = gmdate( 'D' );
 				if ( $current_day == 'Sun' && $enabled_sun == 'yes' ) {
 					$price = (float) $price_sun;
 				} elseif ( $current_day == 'Mon' && $enabled_mon == 'yes' ) {
@@ -1706,7 +1706,7 @@
 				} else {
 					$price = (float) $price;
 				}
-				$current_date   = date( 'Y-m-d' );
+				$current_date   = gmdate( 'Y-m-d' );
 				$rbfw_sp_prices = get_post_meta( $rbfw_related_post_id, 'rbfw_seasonal_prices', true );
 				if ( ! empty( $rbfw_sp_prices ) ) {
 					$sp_array = [];
@@ -1922,7 +1922,7 @@
 				$enabled_thu = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_thu_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_thu_day', true ) : 'yes';
 				$enabled_fri = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_fri_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_fri_day', true ) : 'yes';
 				$enabled_sat = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_sat_day', true ) : 'yes';
-				$current_day = date( 'D' );
+				$current_day = gmdate( 'D' );
 				if ( $current_day == 'Sun' && $enabled_sun == 'yes' ) {
 					$price = (float) $price_sun;
 				} elseif ( $current_day == 'Mon' && $enabled_mon == 'yes' ) {
@@ -1940,7 +1940,7 @@
 				} else {
 					$price = (float) $price;
 				}
-				$current_date   = date( 'Y-m-d' );
+				$current_date   = gmdate( 'Y-m-d' );
 				$rbfw_sp_prices = get_post_meta( $rbfw_related_post_id, 'rbfw_seasonal_prices', true );
 				if ( ! empty( $rbfw_sp_prices ) ) {
 					$sp_array = [];
@@ -2439,7 +2439,7 @@
 		$the_array           = [];
 		foreach ( $rbfw_time_slots as $rts_key => $rts_value ) {
 			foreach ( $rdfw_available_time as $rat_key => $rat_value ) {
-				if ( date( "g:i a", strtotime( $rts_value ) ) == date( "g:i a", strtotime( $rat_value ) ) ) {
+				if ( gmdate( "g:i a", strtotime( $rts_value ) ) == gmdate( "g:i a", strtotime( $rat_value ) ) ) {
 					$the_array[ $rts_value ] = $rts_key;
 				}
 			}
@@ -2460,7 +2460,7 @@
 					} else {
 						$time_status = rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time );
 					}
-					$the_array[ $start_time ] = array( $time_status, date( get_option( 'time_format' ), strtotime( $start_time ) ) );
+					$the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
 				}
 
 				return array( $the_array, $selector );
@@ -2473,7 +2473,7 @@
 			} else {
 				$time_status = rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time );
 			}
-			$the_array[ $start_time ] = array( $time_status, date( get_option( 'time_format' ), strtotime( $start_time ) ) );
+			$the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
 		}
 
 		return array( $the_array, $selector );
@@ -2613,7 +2613,7 @@
 				$date2   = strtotime( $off_date_range['to_date'] );
 				$stepVal = '+1 day';
 				while ( $current <= $date2 ) {
-					$off_dates[] = date( $format, $current );
+					$off_dates[] = gmdate( $format, $current );
 					$current     = strtotime( $stepVal, $current );
 				}
 			}
@@ -2631,7 +2631,7 @@
 		$rbfw_enable_hourly_rate = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true );
 		$rbfw_hourly_rate        = get_post_meta( $post_id, 'rbfw_hourly_rate', true );
 		$rbfw_daily_rate         = get_post_meta( $post_id, 'rbfw_daily_rate', true );
-		$endday                  = strtolower( date( 'D', strtotime( $end_date ) ) );
+		$endday                  = strtolower( gmdate( 'D', strtotime( $end_date ) ) );
 		$duration_price          = 0;
 		$diff                    = date_diff( new DateTime( $pickup_datetime ), new DateTime( $dropoff_datetime ) );
 		if ( $diff ) {
@@ -2651,7 +2651,7 @@
 				$total_days = ( $total_days == 0 ) ? 1 : $total_days;
 			}
 			for ( $i = 0; $i < $total_days; $i ++ ) {
-				$day = strtolower( date( 'D', strtotime( "+$i day", strtotime( $start_date ) ) ) );
+				$day = strtolower( gmdate( 'D', strtotime( "+$i day", strtotime( $start_date ) ) ) );
 				if ( $rbfw_enable_daily_rate == 'no' && $rbfw_enable_hourly_rate == 'yes' ) {
 					if ( $i == 0 ) {
 						if ( $start_date == $end_date ) {
@@ -2783,7 +2783,7 @@
 		$startingDate = strtotime( $startingDate );
 		$endingDate   = strtotime( $endingDate );
 		for ( $currentDate = $startingDate; $currentDate <= $endingDate; $currentDate += ( 86400 ) ) {
-			$date         = date( 'Y-m-d', $currentDate );
+			$date         = gmdate( 'Y-m-d', $currentDate );
 			$datesArray[] = $date;
 		}
 
@@ -3011,7 +3011,7 @@
             <select class="medium" name="rbfw_bike_car_sd_data[<?php echo esc_attr($iidex) ?>][<?php echo esc_attr($date_type) ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
                 <option value="">Select Time</option>
 				<?php foreach ( $rbfw_time_slots as $key => $value ): ?>
-                    <option <?php echo esc_html(  date( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo esc_html(date( 'H:i', strtotime( $value ) )); ?>"> <?php echo esc_html(date( 'H:i', strtotime( $value ) )); ?> </option>
+                    <option <?php echo esc_html(  gmdate( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo esc_html(gmdate( 'H:i', strtotime( $value ) )); ?>"> <?php echo esc_html(gmdate( 'H:i', strtotime( $value ) )); ?> </option>
 				<?php endforeach; ?>
             </select>
         </div>

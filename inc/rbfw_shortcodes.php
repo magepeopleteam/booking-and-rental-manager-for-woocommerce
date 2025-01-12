@@ -263,8 +263,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 if($rbfw_enable_start_end_date=='no'){
                     $rbfw_event_end_date  = get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) : '';
                     $rbfw_event_end_time  = get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) : '';
-                    $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
-                    $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
+                    $rbfw_event_end_time  = gmdate('h:i a', strtotime($rbfw_event_end_time));
+                    $rbfw_event_end_time  = gmdate('h:i a', strtotime($rbfw_event_end_time));
                     $rbfw_event_last_date = strtotime(date_i18n('Y-m-d h:i a', strtotime($rbfw_event_end_date.' '.$rbfw_event_end_time)));
                     $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                     if($rbfw_event_last_date<$rbfw_todays_date){
@@ -304,7 +304,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             <?php
             endif;
 
-            wp_reset_query();
+            wp_reset_postdata();
             ?>
         </div>
     </div>

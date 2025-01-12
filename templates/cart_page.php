@@ -217,7 +217,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 <td>
                     <?php echo esc_html(rbfw_date_format($start_datetime)); ?>
                     <?php if(($start_time != '00:00')){
-                        echo esc_html(' @'.date(get_option('time_format'), strtotime($start_time)));
+                        echo esc_html(' @'.gmdate(get_option('time_format'), strtotime($start_time)));
                     } ?>
                 </td>
             </tr>

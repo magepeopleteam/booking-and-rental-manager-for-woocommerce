@@ -140,7 +140,7 @@
                 $rdfw_available_time_update = [];
 
                 foreach ($rdfw_available_time as $single){
-                    $rdfw_available_time_update[] = date('H:i', strtotime($single));
+                    $rdfw_available_time_update[] = gmdate('H:i', strtotime($single));
                 }
 
 
@@ -149,9 +149,9 @@
                     <select name="rdfw_available_time[]" id="rdfw_available_time" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
                         <?php foreach($rbfw_time_slots as $key => $value): ?>
                             <?php if(get_the_title( $post_id ) == 'Auto Draft'){ ?>
-                                <option selected value="<?php echo esc_attr(date('H:i', strtotime($value))); ?>"> <?php echo esc_attr($key); ?> </option>
+                                <option selected value="<?php echo esc_attr(gmdate('H:i', strtotime($value))); ?>"> <?php echo esc_attr($key); ?> </option>
                             <?php }else{ ?>
-                                <option <?php echo esc_attr(in_array(date('H:i', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo esc_attr(date('H:i', strtotime($value))); ?>"> <?php echo esc_attr(date('H:i', strtotime($value))); ?> </option>
+                                <option <?php echo esc_attr(in_array(gmdate('H:i', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo esc_attr(gmdate('H:i', strtotime($value))); ?>"> <?php echo esc_attr(gmdate('H:i', strtotime($value))); ?> </option>
                             <?php } ?>
 
                         <?php endforeach; ?>
@@ -171,7 +171,7 @@
                 $rdfw_available_time_update = [];
 
                 foreach ($available_times as $single){
-                    $rdfw_available_time_update[] = date('H:i', strtotime($single));
+                    $rdfw_available_time_update[] = gmdate('H:i', strtotime($single));
                 }
 
 
@@ -180,9 +180,9 @@
                 <select name="rbfw_particulars[<?php echo esc_attr($index); ?>][available_time][]" multiple class="select2-hidden-accessible">
                     <?php foreach($rbfw_time_slots as $key => $value): ?>
                         <?php if(get_the_title( $post_id ) == 'Auto Draft'){ ?>
-                            <option selected value="<?php echo esc_attr(date('H:i', strtotime($value))); ?>"> <?php echo esc_attr($key); ?> </option>
+                            <option selected value="<?php echo esc_attr(gmdate('H:i', strtotime($value))); ?>"> <?php echo esc_attr($key); ?> </option>
                         <?php }else{ ?>
-                            <option <?php echo esc_attr(in_array(date('H:i', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo esc_attr(date('H:i', strtotime($value))); ?>"> <?php echo esc_html(date('H:i', strtotime($value))); ?> </option>
+                            <option <?php echo esc_attr(in_array(gmdate('H:i', strtotime($value)),$rdfw_available_time_update))?'selected':'' ?> value="<?php echo esc_attr(gmdate('H:i', strtotime($value))); ?>"> <?php echo esc_html(gmdate('H:i', strtotime($value))); ?> </option>
                         <?php } ?>
                     <?php endforeach; ?>
                 </select>
@@ -354,7 +354,7 @@
 
                 $options = '';
                 foreach ($rbfw_time_slots as $key=>$time_slot) {
-                    $options .= '<option  value="'. date('H:i', strtotime($time_slot)).'">' . date('H:i', strtotime($time_slot)) .'</option>';
+                    $options .= '<option  value="'. gmdate('H:i', strtotime($time_slot)).'">' . gmdate('H:i', strtotime($time_slot)) .'</option>';
                 }
                 echo esc_html(addslashes($options));
                 ?>';
