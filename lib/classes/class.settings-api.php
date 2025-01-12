@@ -104,7 +104,7 @@ class RBFW_Setting_API {
             if ( isset($section['desc']) && !empty($section['desc']) ) {
                 $section['desc'] = '<div class="inside">' . $section['desc'] . '</div>';
                 $callback = function() use ( $section ) {
-		    echo str_replace( '"', '\"', esc_html($section['desc']) );
+		    echo esc_html(str_replace( '"', '\"', $section['desc']) );
 		};
             } else if ( isset( $section['callback'] ) ) {
                 $callback = $section['callback'];
@@ -185,7 +185,7 @@ class RBFW_Setting_API {
         $html        = sprintf( '<input type="%1$s" class="%2$s-text" id="%3$s[%4$s]" name="%3$s[%4$s]" value="%5$s" placeholder="%6$s" maxlength="%7$s" size="%8$s"/>', $type, $size, $args['section'], $args['id'], $value, $placeholder, $maxlength, $size_length );
         $html       .= $this->get_field_description( $args );
 
-        echo $html;
+        echo wp_kses_post($html);
     }
 
     /**
@@ -244,7 +244,7 @@ class RBFW_Setting_API {
     function callback_heading( $args ) {
 
         $html  = '';
-        echo $html;
+        echo wp_kses_post($html);
     }
 
     /**
@@ -255,7 +255,7 @@ class RBFW_Setting_API {
     function callback_notice( $args ) {
 
         $html  = $args['desc'];
-        echo $html;
+        echo wp_kses_post($html);
     }
 
     /**
@@ -279,15 +279,15 @@ class RBFW_Setting_API {
 			esc_html_e('Audio/Video format not supported.','booking-and-rental-manager-for-woocommerce');
 		}
 		else {
-			echo "<img id='media_preview_$id' src='$media_url'/>";
+			echo wp_kses_post("<img id='media_preview_$id' src='$media_url'/>");
 		}
 
 		echo "</div>";
-        echo sprintf( '<input type="hidden" id="media_input_%1$s" name="%2$s[%1$s]" value="%3$s"/>', $id, $args['section'], $value);
-		echo "<div class='rbfw_green_btn' id='media_upload_$id' style='margin-right:5px'>".__('Upload','booking-and-rental-manager-for-woocommerce')."</div>";
-		echo "<div class='rbfw_red_btn' id='media_remove_$id'>".__('Remove','booking-and-rental-manager-for-woocommerce')."</div>";
+        echo wp_kses_post( '<input type="hidden" id="media_input_'.$id.'" name="'.$args['section'].'['.$id.']" value="'.$value.'"/>');
+		echo  wp_kses_post("<div class='rbfw_green_btn' id='media_upload_$id' style='margin-right:5px'>".__('Upload','booking-and-rental-manager-for-woocommerce')."</div>");
+		echo  wp_kses_post("<div class='rbfw_red_btn' id='media_remove_$id'>".__('Remove','booking-and-rental-manager-for-woocommerce')."</div>");
 
-		echo "<script>jQuery(document).ready(function($){
+		echo  wp_kses_post("<script>jQuery(document).ready(function($){
 		jQuery('#media_upload_$id').click(function() {
 			var send_attachment_bkp = wp.media.editor.send.attachment;
 			wp.media.editor.send.attachment = function(props, attachment) {
@@ -302,7 +302,7 @@ class RBFW_Setting_API {
             jQuery('#media_preview_$id').attr('src','');
             jQuery('#media_input_$id').val('');
         });
-		});	</script>";
+		});	</script>");
 	}
 
     function callback_multicheck( $args ) {
@@ -491,7 +491,7 @@ class RBFW_Setting_API {
         $html  = '<input type="text" class="'.$size.'-text wp-color-picker-field abc" id="'.$args['section'].'['.$args['id'].']" name="'.$args['section'].'['.$args['id'].']" value="'.$value.'" data-default-color="'.$value.'" />';
         $html  .= $this->get_field_description( $args );
 
-        echo $html;
+        echo  wp_kses_post($html);
 
     }
 
@@ -509,8 +509,8 @@ class RBFW_Setting_API {
             'id'       => $args['section'] . '[' . $args['id'] . ']',
             'echo'     => 0
         );
-        $html = wp_dropdown_pages( $dropdown_args );
-        echo esc_html($html);
+        echo wp_kses_post(wp_dropdown_pages( $dropdown_args ));
+        // echo  wp_kses_post($html);
     }
 
     /**
