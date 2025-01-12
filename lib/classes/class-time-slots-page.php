@@ -103,8 +103,8 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                         foreach ($rbfw_time_slots as $key => $value) {
                             ?>
                             <tr>
-                                <td><?php echo $key; ?></td>
-                                <td><?php echo $value; ?></td>
+                            <td><?php echo esc_html($key); ?></td>
+                            <td><?php echo esc_html(strip_tags($value)); ?></td>
                                 <td style="text-align:right">
                                     <a href="#" class="rbfw_time_slot_edit_btn" data-label="<?php echo esc_attr($key); ?>"><i class="fa-solid fa-pen-to-square"></i> <?php esc_html_e('Edit','booking-and-rental-manager-for-woocommerce'); ?></a>
                                     <a href="#" class="rbfw_time_slot_remove_btn" data-time="<?php echo esc_attr($value); ?>" data-label="<?php echo esc_attr($key); ?>"><i class="fa-solid fa-trash-can"></i></a>

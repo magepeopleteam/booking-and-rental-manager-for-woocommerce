@@ -112,7 +112,7 @@ if (!class_exists('Rbfw_Search_Page')) {
 
                 rbfw_rent_search_shortcode_func();
 
-                echo rbfw_rent_list_shortcode_func($atts);
+                echo wp_kses_post(rbfw_rent_list_shortcode_func($atts));
 
             }else{
 
@@ -146,7 +146,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                             $title = $features['title'];
                             $rand_number = rand();
                             if ($title) {
-                                $icom = mep_esc_html($icon);
+                                $icom = esc_html($icon);
                                 $all_cat_features .= "<li class='bfw_rent_list_items title  $rand_number '><span class='bfw_rent_list_items_icon'><i class='$icom'></i></span>  $title </li>";
                             }
                         }
@@ -530,7 +530,7 @@ if (!class_exists('Rbfw_Search_Page')) {
             }
             ob_start()
                 ?>
-                <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo $d; ?>">
+                <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo esc_attr($d); ?>">
                     <div class="rbfw_rent_list_inner_wrapper">
                         <div class="<?php echo esc_attr($image_holder) ?>">
                             <a class="rbfw_rent_list_grid_view_top_img" href="<?php echo esc_url($post_link); ?>">
@@ -545,7 +545,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                                     </h2>
 
                                     <div class="rbfw_rent_list_grid_row rbfw_pricing-box">
-                                        <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo rbfw_mps_price($price); ?></span></p>
+                                    <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo wp_kses_post(rbfw_mps_price($price)); ?></span></p>
                                         <span class="rbfw_rent_list_row_price_level">/ <?php echo esc_html($price_level); ?></span>
                                     </div>
                                 </div>
@@ -582,9 +582,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                                                             $rand_number = rand();
                                                             if ($title) {
                                                                 ?>
-                                                                <li class=" bfw_rent_list_items title <?php echo $rand_number ?>"><span
-                                                                            class="bfw_rent_list_items_icon"><i
-                                                                                class="<?php echo mep_esc_html($icon) ?>"></i></span> <?php echo $title ?></li>
+                                                                <li class="bfw_rent_list_items title <?php echo esc_attr($rand_number); ?>"><span class="bfw_rent_list_items_icon"><i class="<?php echo esc_html($icon); ?>"></i></span> <?php echo esc_html($title); ?></li>
                                                                 <?php
                                                             }
                                                         }
@@ -593,7 +591,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                                                 }
                                                 ?>
                                                 <?php  if( count( $cat_features ) > $display_cat_features ){?>
-                                                    <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo $post_id?>">See more</div>
+                                                    <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr($post_id); ?>">See more</div>
                                                 <?php }?>
                                             </ul>
                                             <?php
@@ -656,7 +654,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                     ob_start();
                     ?>
                     <div class="rbfw_rent_item_fearture_holder">
-                        <h5 class="rbfw_toggle-header rbfw_white_color"><?php echo $type_text?></h5>
+                    <h5 class="rbfw_toggle-header rbfw_white_color"><?php echo esc_html($type_text); ?></h5>
                         <div class="rbfw_toggle-content rbfw_toggle_container">
                     <?php
                     if( $filter_type === 'rbfw_left_filter_feature'){

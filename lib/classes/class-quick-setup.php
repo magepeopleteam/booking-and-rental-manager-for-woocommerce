@@ -79,14 +79,14 @@ if(!class_exists('RBFW_Quick_Setup')){
                                             <?php esc_html_e('CPT Label', 'booking-and-rental-manager-for-woocommerce'); ?>
                                             <small><?php esc_html_e('It will change the rent post type label on the entire plugin.', 'booking-and-rental-manager-for-woocommerce'); ?></small>
                                         </label>
-                                        <div class="rbfw-sz-form-input"><input type="text" name="rbfw_sz_cpt_label" id="rbfw_sz_cpt_label" value="<?php echo $cpt_label; ?>"/></div>
+                                        <div class="rbfw-sz-form-input"> <input type="text" name="rbfw_sz_cpt_label" id="rbfw_sz_cpt_label" value="<?php echo esc_attr($cpt_label); ?>"/> </div>
                                     </div>
                                     <div class="rbfw-sz-form-group">
                                         <label class="rbfw-sz-form-label" for="rbfw_sz_cpt_slug">
                                             <?php esc_html_e('CPT Slug', 'booking-and-rental-manager-for-woocommerce'); ?>
                                             <small><?php esc_html_e('It will change the rent slug on the entire plugin. Remember after changing this slug you need to flush permalinks. Just go to Settings->Permalinks hit the Save Settings button', 'booking-and-rental-manager-for-woocommerce'); ?></small>
                                         </label>
-                                        <div class="rbfw-sz-form-input"><input type="text" name="rbfw_sz_cpt_slug" id="rbfw_sz_cpt_slug" value="<?php echo $cpt_slug; ?>"/></div>
+                                        <div class="rbfw-sz-form-input"> <input type="text" name="rbfw_sz_cpt_slug" id="rbfw_sz_cpt_slug" value="<?php echo esc_attr($cpt_slug); ?>"/> </div>
                                     </div>
                                 </div>
 
@@ -117,7 +117,7 @@ if(!class_exists('RBFW_Quick_Setup')){
                                 <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </div>
-                        <div class="rbfw-sz-footer"><a href="<?php echo get_admin_url().'edit.php?post_type=rbfw_item'; ?>" class="rbfw-sz-footer-link"><?php esc_html_e('Close and exit the Setup Wizard', 'booking-and-rental-manager-for-woocommerce'); ?></a></div>
+                        <div class="rbfw-sz-footer"> <a href="<?php echo esc_url(get_admin_url() . 'edit.php?post_type=rbfw_item'); ?>" class="rbfw-sz-footer-link"><?php esc_html_e('Close and exit the Setup Wizard', 'booking-and-rental-manager-for-woocommerce'); ?></a> </div>
                         <input type="hidden" name="rbfw_sz_form_submit"/>
                     </form>
                 </main>
@@ -188,9 +188,10 @@ if(!class_exists('RBFW_Quick_Setup')){
 
                 }
                 ?>
-                <script>
-                    window.location.replace("<?php echo get_admin_url().'edit.php?post_type=rbfw_item'; ?>");
-                </script>
+              <script>
+    window.location.replace("<?php echo esc_url(get_admin_url() . 'edit.php?post_type=rbfw_item'); ?>");
+</script>
+
                 <?php
             }
 

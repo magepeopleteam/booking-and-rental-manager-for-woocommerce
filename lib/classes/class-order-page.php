@@ -71,7 +71,7 @@ if (!class_exists('RBFWOrderPage')) {
                 <td><?php echo esc_html( !empty($rbfw_start_datetime) ? date_i18n('F j, Y g:i a', strtotime($rbfw_start_datetime)) : ''); ?></td>
                <td><?php echo esc_html( !empty($rbfw_end_datetime) ? date_i18n('F j, Y g:i a', strtotime($rbfw_end_datetime)) : ''); ?></td>
                 <td><span class="rbfw_order_status <?php echo esc_attr($status); ?>"><?php echo esc_html($status); ?></span></td>
-                <td><?php echo wc_price($total_price); ?></td>
+                <td><?php echo wp_kses_post(wc_price($total_price)); ?></td>
                 <?php if (function_exists('rbfw_pro_tab_menu_list')) { ?>
                     <td>
                         <a href="javascript:void(0);" class="rbfw_order_view_btn" data-post-id="<?php echo esc_attr($post_id); ?>">
@@ -112,9 +112,10 @@ if (!class_exists('RBFWOrderPage')) {
                 }
                 ?>
             </tr>
-            <tr id="order-details-<?php echo $post_id; ?>" class="order-details" style="display: none;">
+            <tr id="order-details-<?php echo esc_attr($post_id); ?>" class="order-details" style="display: none;">
                 <td colspan="12"><div class="order-details-content"></div></td>
             </tr>
+
             <?php endwhile; else : ?>
             <tr>
                 <td colspan="12"><?php esc_html_e('Sorry, No data found!', 'booking-and-rental-manager-for-woocommerce'); ?></td>
