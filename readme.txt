@@ -1,9 +1,9 @@
-=== Rental and Booking Manager for Bike, Car, Dress, Resort with WooCommerce Integration - WpRently | WordPress plugin ===
+=== Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Equipment ===
 Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: booking calendar, Woocommerce Reservation Booking, Rental Booking, Woocommerce Rental Booking, Rental Plugin 
 Requires at least: 5.3
-Stable tag: trunk
+Stable tag: 2.2.2
 Tested up to: 6.7.1
 Requires PHP: 7.0
 License: GPLv2 or later
