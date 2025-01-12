@@ -382,7 +382,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                 $enabled_fri = get_post_meta($post_id, 'rbfw_enable_fri_day', true) ? get_post_meta($post_id, 'rbfw_enable_fri_day', true) : 'yes';
                 $enabled_sat = get_post_meta($post_id, 'rbfw_enable_sat_day', true) ? get_post_meta($post_id, 'rbfw_enable_sat_day', true) : 'yes';
 
-                $current_day = date('D');
+                $current_day = gmdate('D');
 
                 if ($current_day == 'Sun' && $enabled_sun == 'yes') {
                     $price = (float)$price_sun;
@@ -402,7 +402,7 @@ if (!class_exists('Rbfw_Search_Page')) {
                     $price = (float)$price;
                 }
 
-                $current_date = date('Y-m-d');
+                $current_date = gmdate('Y-m-d');
                 $rbfw_sp_prices = get_post_meta($post_id, 'rbfw_seasonal_prices', true);
                 if (!empty($rbfw_sp_prices)) {
                     $sp_array = [];

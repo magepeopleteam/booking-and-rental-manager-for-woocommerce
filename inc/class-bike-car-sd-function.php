@@ -368,7 +368,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                 $currentDate += (86400)) {
                                                 
-                $date = date('d-m-Y', $currentDate);
+                $date = gmdate('d-m-Y', $currentDate);
 
                 $date_range[] = $date;
 
@@ -460,7 +460,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                     if(!empty($available_times[0])){
                         foreach ($available_times[0] as $value) {
-                            $converted_time =  date(get_option('time_format'), strtotime($value[1]));
+                            $converted_time =  gmdate(get_option('time_format'), strtotime($value[1]));
                             $ts_time = $this->rbfw_get_time_slot_by_label($value[1]);
 
                             $is_booked = $this->rbfw_get_time_booking_status($id, $selected_date, $ts_time);
@@ -470,7 +470,7 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
                             if((($nowDate == $selected_date) && ($converted_time < $nowTime)) || ($is_booked === true)){
                                 $disabled = 'disabled';
                             }
-                            $content .= '<a data-time="'.date('H:i',strtotime($value[1])).'" class="rbfw_bikecarsd_time '.$disabled.'"><span class="rbfw_bikecarsd_time_span">'.$converted_time.'</span>';
+                            $content .= '<a data-time="'.gmdate('H:i',strtotime($value[1])).'" class="rbfw_bikecarsd_time '.$disabled.'"><span class="rbfw_bikecarsd_time_span">'.$converted_time.'</span>';
 
                             if($is_booked === true){
                                 $content .= '<span class="rbfw_bikecarsd_time_booked">'.rbfw_string_return('rbfw_text_booked',esc_html__('Booked','booking-and-rental-manager-for-woocommerce')).'</span>';

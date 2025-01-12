@@ -726,7 +726,7 @@
 						update_post_meta( $post_id, 'rbfw_ticket_total_price', $total_price );
 						update_post_meta( $post_id, 'rbfw_link_order_id', $wc_order_id );
 					}
-					wp_reset_query();
+					wp_reset_postdata();
 				}
 
 				return $post_id;

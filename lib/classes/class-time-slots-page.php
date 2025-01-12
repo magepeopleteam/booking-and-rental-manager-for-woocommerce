@@ -71,7 +71,7 @@ if (!class_exists('RBFW_Timeslots_Page')) {
 
             foreach ($time_slots_arr as $key => $value) {
 
-                $arr[$key] = date('H:i', strtotime($value));
+                $arr[$key] = gmdate('H:i', strtotime($value));
             }
 
             return $arr;
@@ -146,7 +146,7 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                     $rbfw_time_slots = !empty(get_option('rbfw_time_slots')) ? get_option('rbfw_time_slots') : [];
                     $ts_label = sanitize_text_field($_POST['ts_label']);
                     $ts_time = sanitize_text_field($_POST['ts_time']);
-                    $ts_time = date('H:i', strtotime($ts_time));
+                    $ts_time = gmdate('H:i', strtotime($ts_time));
 
                     if( ! array_key_exists($ts_label, $rbfw_time_slots) ){
                         $rbfw_time_slots[$ts_label] = $ts_time;

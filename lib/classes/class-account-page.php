@@ -428,7 +428,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                     </tr>            
             <?php            
         endif;
-            wp_reset_query();
+            wp_reset_postdata();
             ?>
                 </tbody>
             </table>

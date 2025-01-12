@@ -124,7 +124,7 @@
                                         <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time" required>
                                             <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup time','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                             <?php foreach ($available_times as $key => $time) : ?>
-                                                <option value="<?php echo esc_html($time); ?>"><?php echo esc_html(date(get_option('time_format'), strtotime($time))); ?></option>
+                                                <option value="<?php echo esc_html($time); ?>"><?php echo esc_html(gmdate(get_option('time_format'), strtotime($time))); ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                         <span class="input-picker-icon"></span>

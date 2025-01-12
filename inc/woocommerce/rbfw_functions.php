@@ -220,8 +220,8 @@ function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
         $start_time = isset($_POST['rbfw_pickup_start_time'])?sanitize_text_field($_POST['rbfw_pickup_start_time']):'';
         $end_time = isset($_POST['rbfw_pickup_end_time'])?sanitize_text_field($_POST['rbfw_pickup_end_time']):'';
 
-        $pickup_datetime = date('Y-m-d H:i', strtotime($start_date . ' ' . $start_time));
-        $dropoff_datetime = date('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
+        $pickup_datetime = gmdate('Y-m-d H:i', strtotime($start_date . ' ' . $start_time));
+        $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
         $rbfw_pickup_point = isset($_POST['rbfw_pickup_point']) ? sanitize_text_field($_POST['rbfw_pickup_point']) : '';
         $rbfw_dropoff_point = isset($_POST['rbfw_dropoff_point']) ? sanitize_text_field($_POST['rbfw_dropoff_point']) : '';
@@ -582,7 +582,7 @@ function rbfw_validate_add_order_item_func( $values, $item, $rbfw_id ) {
         $rbfw_bikecarsd_service_price 	= $values['rbfw_bikecarsd_service_price'] ? $values['rbfw_bikecarsd_service_price'] : '';
 
         if($rbfw_start_time !='00:00'){
-            $item->add_meta_data($rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', esc_html__('Start Date and Time','booking-and-rental-manager-for-woocommerce')), rbfw_date_format($rbfw_start_datetime).' '.date(get_option('time_format'), strtotime($rbfw_start_time)) );
+            $item->add_meta_data($rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', esc_html__('Start Date and Time','booking-and-rental-manager-for-woocommerce')), rbfw_date_format($rbfw_start_datetime).' '.gmdate(get_option('time_format'), strtotime($rbfw_start_time)) );
         }else{
             $item->add_meta_data($rbfw->get_option_trans('rbfw_text_start_date', 'rbfw_basic_translation_settings', esc_html__('Start Date','booking-and-rental-manager-for-woocommerce')), rbfw_date_format($rbfw_start_datetime) );
         }
@@ -856,8 +856,8 @@ function rbfw_cart_ticket_info($product_id, $rbfw_pickup_start_date, $rbfw_picku
     $qty                    = [ 1 ];
     $count                  = count( $names );
     $ticket_type_arr        = [];
-    $start_datetime = date( 'Y-m-d H:i', strtotime( $rbfw_pickup_start_date . ' ' . $rbfw_pickup_start_time ) );
-    $end_datetime   = date( 'Y-m-d H:i', strtotime( $rbfw_pickup_end_date . ' ' . $rbfw_pickup_end_time ) );
+    $start_datetime = gmdate( 'Y-m-d H:i', strtotime( $rbfw_pickup_start_date . ' ' . $rbfw_pickup_start_time ) );
+    $end_datetime   = gmdate( 'Y-m-d H:i', strtotime( $rbfw_pickup_end_date . ' ' . $rbfw_pickup_end_time ) );
 
 
 

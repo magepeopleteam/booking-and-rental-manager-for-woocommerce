@@ -117,7 +117,7 @@
 						$extension = $mime_extensions[ $mime ];
 					} else {
 						// Could not identify extension
-						@unlink( $tmp );
+						wp_delete_file( $tmp );
 
 						return false;
 					}
@@ -130,7 +130,7 @@
 				// Do the upload
 				$attachment_id = media_handle_sideload( $args, 0, $title );
 				// Cleanup temp file
-				@unlink( $tmp );
+				wp_delete_file( $tmp );
 				// Error uploading
 				if ( is_wp_error( $attachment_id ) ) {
 					return false;

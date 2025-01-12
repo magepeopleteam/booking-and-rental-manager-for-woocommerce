@@ -876,11 +876,11 @@ function save_rbfw_order_meta_box( $post_id ) {
     }
     if ( isset( $_POST['rbfw_pickup_note'] ) ) {
         update_post_meta($post_id, 'rbfw_pickup_note', sanitize_text_field($_POST['rbfw_pickup_note']));
-        update_post_meta($post_id, 'rbfw_pickup_date', date('Y-m-d H:i'));
+        update_post_meta($post_id, 'rbfw_pickup_date', gmdate('Y-m-d H:i'));
     }
     if ( isset( $_POST['rbfw_return_note'] ) ) {
         update_post_meta($post_id, 'rbfw_return_note', sanitize_text_field($_POST['rbfw_return_note']));
-        update_post_meta($post_id, 'rbfw_return_date', date('Y-m-d H:i'));
+        update_post_meta($post_id, 'rbfw_return_date', gmdate('Y-m-d H:i'));
     }
     if ( isset( $_POST['rbfw_return_security_deposit_amount'] ) ) {
         update_post_meta($post_id, 'rbfw_return_security_deposit_amount', sanitize_text_field($_POST['rbfw_return_security_deposit_amount']));
