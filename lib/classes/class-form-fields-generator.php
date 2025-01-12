@@ -7877,7 +7877,7 @@ if( ! class_exists( 'FormFieldsGenerator' ) ) {
                     endif;
                     ?>
                 </div>
-                <div class="error-mgs"></div> 
+                <div class="error-mgs"></div>
             </div>
             <script>jQuery(document).ready(function($){
                     $('#media_upload_<?php echo esc_attr($id); ?>').click(function() {

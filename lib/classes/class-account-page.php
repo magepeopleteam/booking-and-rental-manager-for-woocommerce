@@ -85,7 +85,6 @@ if (!class_exists('Rbfw_Account_Page')) {
             ob_start();
             if(!is_user_logged_in()){
                 echo esc_html($this->rbfw_account_signin_signout_form());
-
             }else{
 
                 $ac_page_id = rbfw_get_option('rbfw_account_page','rbfw_basic_gen_settings');
@@ -121,7 +120,7 @@ if (!class_exists('Rbfw_Account_Page')) {
             $content .= '<a href="'.esc_url(wp_logout_url($ac_page_url)).'">'.__('Log-out','booking-and-rental-manager-for-woocommerce').'</a>';
             $content .= '</div>';
 
-            echo wp_kses_post($content);
+            echo wp_kses_post($content); 
         }
 
         public function rbfw_account_signin_signout_form(){
@@ -252,16 +251,16 @@ if (!class_exists('Rbfw_Account_Page')) {
                  
                     if ( is_wp_error( $user ) ) {
                         $msg = '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> '.__('The username or password is incorrect!','booking-and-rental-manager-for-woocommerce').'</p>';
-                        echo esc_html($msg);
+                        echo wp_kses_post($msg);
                     }else{
                         wp_set_current_user($user->ID);
                         wp_set_auth_cookie($user->ID);
                         $msg = '<p class="ba_alert_login_success"><i class="fa-solid fa-circle-check"></i> '.__('Login successful, redirecting...','booking-and-rental-manager-for-woocommerce').'</p>';
-                        echo esc_html($msg);
+                        echo wp_kses_post($msg);
                     }
                 }
                 else{
-                    echo esc_html($errors);
+                    echo wp_kses_post($errors);
                 }
         
             }elseif($request == 'signup'){
@@ -306,7 +305,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                                 $msg .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> '.$v.'</p>';
                             }
                         }
-                        echo esc_html($msg);
+                        echo wp_kses_post($msg);
                     }else{
                         wp_new_user_notification($user_id, 'both');
                         wp_set_current_user($user_id);
@@ -314,11 +313,11 @@ if (!class_exists('Rbfw_Account_Page')) {
                         update_user_meta( $user_id, 'first_name', $first_name );
                         update_user_meta( $user_id, 'last_name', $last_name );
                         $msg = '<p class="ba_alert_login_success"><i class="fa-solid fa-circle-check"></i> '.__('Registration successful, redirecting...','booking-and-rental-manager-for-woocommerce').'</p>';
-                        echo esc_html($msg);
+                        echo wp_kses_post($msg);
                     }
                 }
                 else{
-                    echo esc_html($errors);
+                    echo wp_kses_post($errors);
                 }
                 
             }else{
@@ -411,10 +410,10 @@ if (!class_exists('Rbfw_Account_Page')) {
             $view_order_url = get_page_link($ac_page_id).'?view_order='.$order_id;
             ?>
                     <tr>
-                        <td><?php echo esc_html('#'.$order_id); ?></td>
+                        <td><?php echo esc_html('#' . $order_id); ?></td>
                         <td><?php echo esc_html(get_the_date( 'F j, Y' )).' '.esc_html(get_the_time()); ?></td>
                         <td><?php echo esc_html($status); ?></td>
-                        <td><?php echo esc_html($total_cost); ?></td>
+                        <td><?php echo wp_kses_post($total_cost); ?></td>
                         <td>
                             <a href="<?php echo esc_url($view_order_url); ?>" class="rbfw_order_action_btn"><?php esc_html_e('View','booking-and-rental-manager-for-woocommerce'); ?></a>
                             <?php do_action('rbfw_after_order_action_btn',$order_id); ?>
@@ -597,7 +596,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                     </tr>
                     <tr>
                         <td><strong><?php esc_html_e( 'Item Type:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                        <td><?php echo rbfw_get_type_label($rent_type); ?></td>
+                        <td><?php echo esc_html(rbfw_get_type_label($rent_type)); ?></td>
                     </tr>
                     <?php if($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){ ?>
                     <tr>
@@ -668,7 +667,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                                         ?>
                                         <tr>
                                             <td><strong><?php echo esc_html($key); ?></strong></td>
-                                            <td><?php echo esc_html($value); ?></td>
+                                            <td><?php echo wp_kses_post($value); ?></td>
                                         </tr>
                                         <?php
                                     }
@@ -680,7 +679,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                                         ?>
                                         <tr>
                                             <td><strong><?php echo esc_html($key); ?></strong></td>
-                                            <td><?php echo esc_html($value); ?></td>
+                                            <td><?php echo wp_kses_post($value); ?></td>
                                         </tr>
                                         <?php
                                     }
@@ -692,7 +691,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                                         ?>
                                         <tr>
                                             <td><strong><?php echo esc_html($key); ?></strong></td>
-                                            <td><?php echo esc_html($value); ?></td>
+                                            <td><?php echo wp_kses_post($value); ?></td>
                                         </tr>
                                         <?php
                                     }
@@ -713,21 +712,21 @@ if (!class_exists('Rbfw_Account_Page')) {
 
                     <tr>
                         <td><strong><?php esc_html_e( 'Duration Cost:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                        <td><?php echo $duration_cost; ?></td>
+                        <td><?php echo wp_kses_post($duration_cost); ?></td>
                     </tr>
                     <tr>
                         <td><strong><?php esc_html_e( 'Resource Cost:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                        <td><?php echo $service_cost; ?></td>
+                        <td><?php echo wp_kses_post($service_cost); ?></td>
                     </tr>
                     <?php if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($tax)){ ?>
                     <tr>
-                        <td><strong><?php echo $rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
-                        <td><?php echo rbfw_mps_price($tax); ?></td>
+                    <td><strong><?php echo wp_kses_post($rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax', 'booking-and-rental-manager-for-woocommerce'))); ?></strong></td>
+                    <td><?php echo wp_kses_post (rbfw_mps_price($tax)); ?></td>
                     </tr>
                     <?php } ?>    
                     <tr>
                         <td><strong><?php esc_html_e( 'Total Cost:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                        <td><?php echo esc_html($total_cost.' '.$tax_status); ?></td>
+                        <td><?php echo wp_kses_post($total_cost.' '.$tax_status); ?></td>
                     </tr>
                 </tbody>
             </table>
@@ -736,7 +735,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                 </div>
                 <?php
                 $content = ob_get_clean();
-                echo $content;
+                echo wp_kses_post($content);
             }
         }
 
