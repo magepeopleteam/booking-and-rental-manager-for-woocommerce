@@ -15,7 +15,7 @@
 
 			public function rbfw_add_admin_scripts( $hook ) {
 				//font awesome
-				wp_enqueue_style( 'fontawesome.v6', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css' );
+				wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
 				wp_enqueue_script( 'jquery-ui-core' );
 				wp_enqueue_script( 'jquery-ui-datepicker' );
 				wp_enqueue_script( 'jquery-ui-accordion' );
@@ -31,8 +31,8 @@
 				//loading owl carousel js
 				wp_enqueue_script( 'owl.carousel.min', RBFW_PLUGIN_URL . '/js/owl.carousel.min.js', array( 'jquery' ), '2.3.4', true );
 				//loading tooltip js
-				wp_enqueue_script( 'popper.min', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js', array( 'jquery' ), '2.9.2', true );
-				wp_enqueue_script( 'tippy-bundle.umd.min', 'https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy-bundle.umd.min.js', array( 'jquery' ), '6.3.7', true );
+				wp_enqueue_script( 'popper.min', RBFW_PLUGIN_URL . '/assets/popper.min.js', array( 'jquery' ), '2.9.2', true );
+				wp_enqueue_script( 'tippy-bundle.umd.min',  RBFW_PLUGIN_URL . '/assets/tippy-bundle.umd.min.js', array( 'jquery' ), '6.3.7', true );
 				// loading popup css
 				wp_enqueue_style( 'jquery.modal.min', plugin_dir_url( __DIR__ ) . 'admin/css/jquery.modal.min.css' );
 				// loading popup js
@@ -93,8 +93,8 @@
 				//loading owl carousel js
 				wp_enqueue_script( 'owl.carousel.min', RBFW_PLUGIN_URL . '/js/owl.carousel.min.js', array( 'jquery' ), '2.3.4', true );
 				//loading tooltip js
-				wp_enqueue_script( 'popper.min', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js', array( 'jquery' ), '2.9.2', true );
-				wp_enqueue_script( 'tippy-bundle.umd.min', 'https://cdnjs.cloudflare.com/ajax/libs/tippy.js/6.3.7/tippy-bundle.umd.min.js', array( 'jquery' ), '6.3.7', true );
+				wp_enqueue_script( 'popper.min', RBFW_PLUGIN_URL . '/assets/popper.min.js', array( 'jquery' ), '2.9.2', true );
+				wp_enqueue_script( 'tippy-bundle.umd.min',  RBFW_PLUGIN_URL . '/assets/tippy-bundle.umd.min.js', array( 'jquery' ), '6.3.7', true );
 				// loading popup css
 				wp_enqueue_style( 'jquery.modal.min', plugin_dir_url( __DIR__ ) . 'admin/css/jquery.modal.min.css' );
 				// loading popup js
@@ -142,9 +142,9 @@
 					wp_localize_script( 'rbfw_custom_script', 'rbfw_ajaxurl', array( 'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ), 'view_more_feature_btn_text' => $view_more_feature_btn_text, 'hide_more_feature_btn_text' => $hide_more_feature_btn_text, 'view_more_offers_btn_text' => $view_more_offers_btn_text, 'hide_more_offers_btn_text' => $hide_more_offers_btn_text ) );
 					wp_localize_script( 'jquery', 'rbfw_ajax', array( 'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 					//font awesome
-					wp_enqueue_style( 'fontawesome.v6', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css' );
-					wp_enqueue_style( 'flatpickr-css', 'https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css', array(), null );
-					wp_enqueue_script( 'flatpickr-js', 'https://cdn.jsdelivr.net/npm/flatpickr', array( 'jquery' ), null, true );
+					wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
+					wp_enqueue_style( 'flatpickr-css', RBFW_PLUGIN_URL . '/css/flatpickr.min.css', array(), null );
+					wp_enqueue_script( 'flatpickr-js', RBFW_PLUGIN_URL . '/assets/flatpickr.js',array( 'jquery' ), null, true);
 					wp_enqueue_script(
 						'jquery-ui-cdn',
 						'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
