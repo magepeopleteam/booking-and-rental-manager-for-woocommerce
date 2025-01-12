@@ -84,7 +84,7 @@ if (!class_exists('Rbfw_Account_Page')) {
         public function rbfw_account_shortcode_func(){
             ob_start();
             if(!is_user_logged_in()){
-                echo $this->rbfw_account_signin_signout_form();
+                echo esc_html($this->rbfw_account_signin_signout_form());
 
             }else{
 
@@ -121,7 +121,7 @@ if (!class_exists('Rbfw_Account_Page')) {
             $content .= '<a href="'.esc_url(wp_logout_url($ac_page_url)).'">'.__('Log-out','booking-and-rental-manager-for-woocommerce').'</a>';
             $content .= '</div>';
 
-            echo $content;
+            echo wp_kses_post($content);
         }
 
         public function rbfw_account_signin_signout_form(){
@@ -252,16 +252,16 @@ if (!class_exists('Rbfw_Account_Page')) {
                  
                     if ( is_wp_error( $user ) ) {
                         $msg = '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> '.__('The username or password is incorrect!','booking-and-rental-manager-for-woocommerce').'</p>';
-                        echo $msg;
+                        echo esc_html($msg);
                     }else{
                         wp_set_current_user($user->ID);
                         wp_set_auth_cookie($user->ID);
                         $msg = '<p class="ba_alert_login_success"><i class="fa-solid fa-circle-check"></i> '.__('Login successful, redirecting...','booking-and-rental-manager-for-woocommerce').'</p>';
-                        echo $msg;
+                        echo esc_html($msg);
                     }
                 }
                 else{
-                    echo $errors;
+                    echo esc_html($errors);
                 }
         
             }elseif($request == 'signup'){
@@ -306,7 +306,7 @@ if (!class_exists('Rbfw_Account_Page')) {
                                 $msg .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> '.$v.'</p>';
                             }
                         }
-                        echo $msg;
+                        echo esc_html($msg);
                     }else{
                         wp_new_user_notification($user_id, 'both');
                         wp_set_current_user($user_id);
@@ -314,11 +314,11 @@ if (!class_exists('Rbfw_Account_Page')) {
                         update_user_meta( $user_id, 'first_name', $first_name );
                         update_user_meta( $user_id, 'last_name', $last_name );
                         $msg = '<p class="ba_alert_login_success"><i class="fa-solid fa-circle-check"></i> '.__('Registration successful, redirecting...','booking-and-rental-manager-for-woocommerce').'</p>';
-                        echo $msg;
+                        echo esc_html($msg);
                     }
                 }
                 else{
-                    echo $errors;
+                    echo esc_html($errors);
                 }
                 
             }else{
@@ -411,10 +411,10 @@ if (!class_exists('Rbfw_Account_Page')) {
             $view_order_url = get_page_link($ac_page_id).'?view_order='.$order_id;
             ?>
                     <tr>
-                        <td><?php echo '#'.$order_id; ?></td>
+                        <td><?php echo esc_html('#'.$order_id); ?></td>
                         <td><?php echo esc_html(get_the_date( 'F j, Y' )).' '.esc_html(get_the_time()); ?></td>
                         <td><?php echo esc_html($status); ?></td>
-                        <td><?php echo $total_cost; ?></td>
+                        <td><?php echo esc_html($total_cost); ?></td>
                         <td>
                             <a href="<?php echo esc_url($view_order_url); ?>" class="rbfw_order_action_btn"><?php esc_html_e('View','booking-and-rental-manager-for-woocommerce'); ?></a>
                             <?php do_action('rbfw_after_order_action_btn',$order_id); ?>
@@ -437,7 +437,7 @@ if (!class_exists('Rbfw_Account_Page')) {
             </div>
             <?php
             $content = ob_get_clean();
-            echo $content;
+            echo wp_kses_post($content);
         }
 
         public function rbfw_account_view_order_details(){
