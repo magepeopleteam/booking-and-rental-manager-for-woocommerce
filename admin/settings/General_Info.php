@@ -99,7 +99,7 @@
     
                 ob_start();
                 ?>
-    
+
                 <div id="field-wrapper-<?php echo esc_attr($id); ?>" class="field-wrapper field-text-multi-wrapper field-text-multi-wrapper-<?php echo esc_attr($field_id); ?>">
                     <section>  
                         <div class="w-100">
@@ -199,7 +199,7 @@
                         <span class="ppof-button add-feature-category mt-1"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add New Feature Category','booking-and-rental-manager-for-woocommerce'); ?></span>
                         </div> 
                     </section> 
-                </div>
+                    </div>
     
                 <script>
                     jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
