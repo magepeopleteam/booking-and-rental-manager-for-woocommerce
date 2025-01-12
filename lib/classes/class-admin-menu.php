@@ -771,14 +771,14 @@
 			}
 
 			public function get_order_meta( $item_id, $key ) {
-				global $wpdb;
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- This query is required for a custom table not managed by WordPress APIs.
+			global $wpdb;
 				$table_name = $wpdb->prefix . "woocommerce_order_itemmeta";
 				$results    = $wpdb->get_results( $wpdb->prepare( "SELECT meta_value FROM $table_name WHERE order_item_id = %d AND meta_key = %s", $item_id, $key ) );
 				foreach ( $results as $result ) {
 					$value = $result->meta_value;
 				}
 				$val = isset( $value ) ? $value : '';
-
 				return $val;
 			}
 
