@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Equipment - WpRently
+ * Plugin Name: Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Equipment
  * Plugin URI: https://mage-people.com
  * Description: A complete booking & rental solution for WordPress.
  * Version: 2.2.2
