@@ -259,7 +259,7 @@ if (!$continue) {
                                             if ($i <= $display_cat_features ) {
                                                 $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                                                 $title = $features['title'];
-                                                $rand_number = rand();
+                                                $rand_number = wp_rand();
                                                 if ($title) {
                                                     ?>
                                                     <li class=" bfw_rent_list_items title <?php echo esc_html($rand_number);  ?>"><span

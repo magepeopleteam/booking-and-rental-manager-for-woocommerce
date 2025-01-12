@@ -255,7 +255,7 @@ echo '<pre>';*/
 
                                         $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                                         $title = $features['title'];
-                                        $rand_number = rand();
+                                        $rand_number = wp_rand();
                                         if ($title):
 
                                             echo esc_attr('<li title="'.$title.'" class="title'.$rand_number.'" ');

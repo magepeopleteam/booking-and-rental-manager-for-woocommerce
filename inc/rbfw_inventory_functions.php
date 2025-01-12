@@ -769,9 +769,9 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
          function rbfw_get_stock_by_filter(){
 
-            $selected_date = strip_tags($_POST['selected_date']);
-            $start_date = strip_tags($_POST['start_date']);
-            $end_date = strip_tags($_POST['end_date']);
+            $selected_date = wp_strip_all_tags($_POST['selected_date']);
+            $start_date = wp_strip_all_tags($_POST['start_date']);
+            $end_date = wp_strip_all_tags($_POST['end_date']);
 
             $args = array(
                 'post_type' => 'rbfw_item',
@@ -790,9 +790,9 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
          function rbfw_get_stock_details(){
 
-            $data_request = strip_tags($_POST['data_request']);
-            $data_date = strip_tags($_POST['data_date']);
-            $data_id = strip_tags($_POST['data_id']);
+            $data_request = wp_strip_all_tags($_POST['data_request']);
+            $data_date = wp_strip_all_tags($_POST['data_date']);
+            $data_id = wp_strip_all_tags($_POST['data_id']);
             $inventory_based_on_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
             $rent_type = !empty(get_post_meta($data_id, 'rbfw_item_type', true)) ? get_post_meta($data_id, 'rbfw_item_type', true) : '';
             $rbfw_enable_variations = !empty(get_post_meta($data_id, 'rbfw_enable_variations', true)) ? get_post_meta($data_id, 'rbfw_enable_variations', true) : 'no';

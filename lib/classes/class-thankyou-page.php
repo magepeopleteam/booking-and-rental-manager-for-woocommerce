@@ -171,7 +171,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                         }
 
                         $tax = !empty($ticket_info['rbfw_mps_tax']) ? $ticket_info['rbfw_mps_tax'] : 0;
-                        $mps_tax_percentage = !empty(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) : '';
+                        $mps_tax_percentage = !empty(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) ? wp_strip_all_tags(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) : '';
                         $tax_status = '';
                         if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && $mps_tax_format == 'including_tax'){
                             $tax_status = '('.rbfw_string_return('rbfw_text_includes',__('Includes','booking-and-rental-manager-for-woocommerce')).' '.rbfw_mps_price($tax).' '.rbfw_string_return('rbfw_text_tax',__('Tax','booking-and-rental-manager-for-woocommerce')).')';
@@ -498,7 +498,7 @@ if (!class_exists('Rbfw_Thankyou_Page')) {
                 }
 
                 $tax = !empty($ticket_info['rbfw_mps_tax']) ? $ticket_info['rbfw_mps_tax'] : 0;
-                $mps_tax_percentage = !empty(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) : '';
+                $mps_tax_percentage = !empty(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) ? wp_strip_all_tags(get_post_meta($rbfw_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $tax_status = '';
 
                 if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && $mps_tax_format == 'including_tax'){

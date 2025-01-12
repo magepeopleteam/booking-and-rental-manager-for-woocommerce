@@ -685,9 +685,9 @@
 						if ( $count > 0 ) {
 							for ( $i = 0; $i < $count; $i ++ ) {
 								if ( $title[ $i ] != '' ) {
-										$new_data[ $i ][ $title_name ] = stripslashes( strip_tags( $title[ $i ] ) );
+										$new_data[ $i ][ $title_name ] = stripslashes( wp_strip_all_tags( $title[ $i ] ) );
 									if ( $images[ $i ] != '' ) {
-										$new_data[ $i ][ $image_name ] = stripslashes( strip_tags( $images[ $i ] ) );
+										$new_data[ $i ][ $image_name ] = stripslashes( wp_strip_all_tags( $images[ $i ] ) );
 									}
 									if ( $content[ $i ] != '' ) {
 										$new_data[ $i ][ $content_name ] = htmlentities( $content[ $i ] );

@@ -218,7 +218,7 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
                                 if($i<=5){
                                     $icon = !empty($features['icon']) ? $features['icon'] : 'fas fa-check-circle';
                                     $title = $features['title'];
-                                    $rand_number = rand();
+                                    $rand_number = wp_rand();
                                     if($title) {
                                         ?>
                                         <li class="title <?php echo esc_html($rand_number); ?>"><i class="<?php echo esc_html($icon) ?>"></i><?php echo esc_html($title); ?></li>

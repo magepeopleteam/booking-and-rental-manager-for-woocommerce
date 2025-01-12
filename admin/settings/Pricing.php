@@ -1465,27 +1465,27 @@
 					for ( $i = 0; $i < $count; $i ++ ) {
 			
 						if (!empty($service_img[ $i ])) :
-							$new_extra_service[ $i ]['service_img'] = stripslashes( strip_tags( $service_img[ $i ] ) );
+							$new_extra_service[ $i ]['service_img'] = stripslashes( wp_strip_all_tags( $service_img[ $i ] ) );
 						endif;
 			
 						if ( $names[ $i ] != '' ) :
-							$new_extra_service[ $i ]['service_name'] = stripslashes( strip_tags( $names[ $i ] ) );
+							$new_extra_service[ $i ]['service_name'] = stripslashes( wp_strip_all_tags( $names[ $i ] ) );
 						endif;
 			
 						if ( $urls[ $i ] != '' ) :
-							$new_extra_service[ $i ]['service_price'] = stripslashes( strip_tags( $urls[ $i ] ) );
+							$new_extra_service[ $i ]['service_price'] = stripslashes( wp_strip_all_tags( $urls[ $i ] ) );
 						endif;
 			
 						if ( $service_desc[ $i ] != '' ) :
-							$new_extra_service[ $i ]['service_desc'] = stripslashes( strip_tags( $service_desc[ $i ] ) );
+							$new_extra_service[ $i ]['service_desc'] = stripslashes( wp_strip_all_tags( $service_desc[ $i ] ) );
 						endif;
 			
 						if ( $qty[ $i ] != '' ) :
-							$new_extra_service[ $i ]['service_qty'] = stripslashes( strip_tags( $qty[ $i ] ) );
+							$new_extra_service[ $i ]['service_qty'] = stripslashes( wp_strip_all_tags( $qty[ $i ] ) );
 						endif;
 			
 						if ( !empty($qty_type[ $i ]) && $qty_type[ $i ] != '' ) :
-							$new_extra_service[ $i ]['service_qty_type'] = stripslashes( strip_tags( $qty_type[ $i ] ) );
+							$new_extra_service[ $i ]['service_qty_type'] = stripslashes( wp_strip_all_tags( $qty_type[ $i ] ) );
 						endif;
 					}
 

@@ -211,7 +211,7 @@ if(isset($_POST['post_id'])){
                         $c = 0;
                         foreach ($rbfw_extra_service_data as $value) {
                             $img_url = !empty($value['service_img']) ? wp_get_attachment_url($value['service_img']) : '';
-                            $uniq_id = rand();
+                            $uniq_id = wp_rand();
                             if ($img_url) {
                                 $img = '<a href="#rbfw_service_img_<?php echo $uniq_id ?>" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
                                 $img .= '<div id="rbfw_service_img_' . $uniq_id . '" class="mage_modal"><img src="<?php echo esc_url($img_url) ?>"/></div>';
