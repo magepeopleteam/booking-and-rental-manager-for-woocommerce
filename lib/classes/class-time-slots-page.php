@@ -157,7 +157,7 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                     }
                 }
             }
-            echo json_encode( array(
+            echo wp_json_encode( array(
                 'status'   => $status,
             ));
             wp_die();
@@ -184,7 +184,7 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                 }
             }
 
-            echo json_encode( array(
+            echo wp_json_encode( array(
                 'status'   => $status,
             ) );
 
@@ -215,7 +215,7 @@ if (!class_exists('RBFW_Timeslots_Page')) {
                     update_option('rbfw_time_slots', $rbfw_time_slots);
                     $status = 'updated';
 
-                    echo json_encode( array(
+                    echo wp_json_encode( array(
                         'status'   => $status,
                     ) );
                 }

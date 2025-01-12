@@ -21,7 +21,7 @@
 				set_time_limit( 0 );
 				$xml_url     = RBFW_PLUGIN_URL . '/assets/sample-rent-items.xml';
 				$xml         = simplexml_load_file( $xml_url );
-				$json_string = json_encode( $xml );
+				$json_string = wp_json_encode( $xml );
 				$xml_array   = json_decode( $json_string, true );
 				$xml_array = ! empty( $xml_array['item'] ) ? $xml_array['item'] : [];
 				if ( $xml !== false && ! empty( $xml_array ) ) {

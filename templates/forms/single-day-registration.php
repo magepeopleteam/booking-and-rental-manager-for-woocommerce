@@ -202,7 +202,7 @@
                     $time_slot_switch = 'off';
                 }
 
-                $appointment_days = json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true));
+                $appointment_days = wp_json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true));
                 ?>
 
                 <input type="hidden" name="rbfw_time_slot_switch" id="rbfw_time_slot_switch" value="<?php echo esc_attr($pickup_time); ?>">
@@ -212,7 +212,7 @@
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price">
                 <input type="hidden" name="manage_inventory_as_timely" id="manage_inventory_as_timely" value="<?php echo esc_attr($manage_inventory_as_timely); ?>">
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
-                <input type="hidden" name="rbfw_regf_info" id="rbfw_regf_info"  value='<?php echo json_encode($rbfw_regf_info); ?>'>
+                <input type="hidden" name="rbfw_regf_info" id="rbfw_regf_info"  value='<?php echo wp_json_encode($rbfw_regf_info); ?>'>
                 <input type="hidden" name="appointment_days" id="appointment_days"  value='<?php echo esc_html($appointment_days); ?>'>
                 <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_html(rbfw_off_days($post_id)); ?>'>
                 <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range" class="llll"  value='<?php echo esc_html(rbfw_off_dates($post_id)); ?>'>

@@ -8190,7 +8190,7 @@ if( ! class_exists( 'FormFieldsGenerator' ) ) {
 
                     jQuery(document).on('click', '.field-repeatable-wrapper-<?php echo esc_attr($id); ?> .add-item', function() {
                         now = jQuery.now();
-                        fields_arr = <?php echo json_encode($fields); ?>;
+                        fields_arr = <?php echo wp_json_encode($fields); ?>;
                         html  = '<div class="item-wrap collapsible"><div class="header">';
                         html += '<span class="button title-text"><i class="fas fa-angle-double-down"></i> Expand</span> ';
                         html += '<span class="button remove" ' +

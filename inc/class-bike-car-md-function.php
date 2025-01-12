@@ -111,7 +111,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $duration .= $actual_days > 1 ? $actual_days.' '.rbfw_string_return('rbfw_text_days',esc_html__('Days','booking-and-rental-manager-for-woocommerce')).' ' : $actual_days.' '.rbfw_string_return('rbfw_text_day',esc_html__('Day','booking-and-rental-manager-for-woocommerce')).' ';
             }
 
-            echo json_encode( array(
+            echo wp_json_encode( array(
                 'duration_price' => $duration_price,
                 'duration_price_html' => wc_price($duration_price),
                 'rbfw_service_price' => $rbfw_service_price,

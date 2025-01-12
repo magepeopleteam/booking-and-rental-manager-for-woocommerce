@@ -110,7 +110,7 @@
 				global $post;
 				$post_id = ! empty( $post->ID ) ? $post->ID : '';
 				if ( ! empty( $post_id ) ) {
-					$appointment_days = json_encode( get_post_meta( $post_id, 'rbfw_sd_appointment_ondays', true ) );
+					$appointment_days = wp_json_encode( get_post_meta( $post_id, 'rbfw_sd_appointment_ondays', true ) );
 					$rent_type        = get_post_meta( $post_id, 'rbfw_item_type', true );
 				} else {
 					$appointment_days = [];

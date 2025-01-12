@@ -2601,7 +2601,7 @@
 			}
 		}
 
-		return json_encode( $off_days );
+		return wp_json_encode( $off_days );
 	}
 	function rbfw_off_dates( $post_id ) {
 		$off_dates       = [];
@@ -2619,7 +2619,7 @@
 			}
 		}
 
-		return json_encode( $off_dates );
+		return wp_json_encode( $off_dates );
 	}
 	function rbfw_md_duration_price_calculation( $post_id = 0, $pickup_datetime = 0, $dropoff_datetime = 0, $start_date = '', $end_date = '', $star_time = '', $end_time = '', $rbfw_enable_time_slot = '' ) {
 		global $rbfw;
