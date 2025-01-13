@@ -66,6 +66,12 @@
 			}
 
 			public function rbfw_account_shortcode_func() {
+
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+
+
 				ob_start();
 				if ( ! is_user_logged_in() ) {
 					echo esc_html( $this->rbfw_account_signin_signout_form() );
@@ -363,6 +369,11 @@
 			}
 
 			public function rbfw_account_view_order_details() {
+
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+
 				global $rbfw;
 				if ( ! is_user_logged_in() ) {
 					return;
