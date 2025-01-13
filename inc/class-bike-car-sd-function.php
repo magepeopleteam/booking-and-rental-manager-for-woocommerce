@@ -396,7 +396,7 @@
                         return array_map( 'sanitize_text_field', wp_unslash( $item ) );
                     }, wp_unslash( $_POST['service_price_arr'] ) )
                     : array();
-                
+
 
                 $post_id             = ! empty( $_POST['post_id'] ) ? sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : '';
 				$bikecarsd_price     = 0;
