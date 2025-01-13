@@ -402,6 +402,10 @@ function rbfw_add_to_cart_shortcode_func($atts){
 add_shortcode('rbfw-search1', 'rbfw_rent_search_shortcode_func');
 function rbfw_rent_search_shortcode_func() {
 
+    if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+        return;
+    }
+
     $search_page_id = rbfw_get_option('rbfw_search_page','rbfw_basic_gen_settings');
     $search_page_link = get_page_link($search_page_id);
     $location_arr = rbfw_get_location_arr();
