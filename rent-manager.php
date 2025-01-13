@@ -33,7 +33,6 @@
 			private function load_rbfw_plugin() {
 				require_once RBFW_PLUGIN_DIR . '/functions.php';
 				if ( rbfw_woo_install_check() == 'Yes' ) {
-					add_action( 'init', [ $this, 'init_tracker' ] );
 					add_filter( 'plugin_action_links', [ $this, 'plugin_action_link' ], 10, 2 );
 					add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 2 );
 					add_filter( 'post_row_actions', [ $this, 'duplicate_post_link' ], 10, 2 );
@@ -52,14 +51,6 @@
 				define( 'RBFW_PLUGIN_DIR', dirname( __FILE__ ) );
 				define( 'RBFW_TEMPLATE_PATH', plugin_dir_path( __FILE__ ) . 'templates/' );
 				define( 'RBFW_PLUGIN_URL', plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) );
-			}
-
-			public function init_tracker() {
-				if ( ! class_exists( 'Appsero\Client' ) ) {
-					require_once __DIR__ . '/lib/appsero/src/Client.php';
-				}
-				$client = new Appsero\Client( 'ee4b230e-9589-4bac-a5e0-d61ad547c855', 'Booking and Rental Manager', __FILE__ );
-				$client->insights()->init();
 			}
 
 			public function add_body_class( $classes ) {
