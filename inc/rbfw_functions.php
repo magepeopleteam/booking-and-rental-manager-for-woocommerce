@@ -68,21 +68,6 @@
 		$plugin_dir = basename( dirname( __DIR__ ) ) . "/languages/";
 		load_plugin_textdomain( 'booking-and-rental-manager-for-woocommerce', false, $plugin_dir );
 	}
-	function rbfw_array_strip( $array_or_string ) {
-		if ( is_string( $array_or_string ) ) {
-			$array_or_string = sanitize_text_field( $array_or_string );
-		} elseif ( is_array( $array_or_string ) ) {
-			foreach ( $array_or_string as $key => &$value ) {
-				if ( is_array( $value ) ) {
-					$value = rbfw_array_strip( $value );
-				} else {
-					$value = sanitize_text_field( wp_unslash( $value ) );
-				}
-			}
-		}
-
-		return $array_or_string;
-	}
 	function rbfw_get_location_arr() {
 		$terms = get_terms( array(
 			'taxonomy'   => 'rbfw_item_location',
@@ -221,236 +206,6 @@
 // 		) );
 	}
 	add_action( 'init', 'rbfw_create_tag_taxonomy', 0 );
-	if ( ! function_exists( 'mep_esc_html' ) ) {
-		function mep_esc_html( $string ) {
-			$allow_attr = array(
-				'input'    => array(
-					'br'                 => [],
-					'type'               => [],
-					'class'              => [],
-					'id'                 => [],
-					'name'               => [],
-					'value'              => [],
-					'size'               => [],
-					'placeholder'        => [],
-					'min'                => [],
-					'max'                => [],
-					'checked'            => [],
-					'required'           => [],
-					'disabled'           => [],
-					'readonly'           => [],
-					'step'               => [],
-					'data-default-color' => [],
-				),
-				'p'        => [
-					'class' => []
-				],
-				'img'      => [
-					'class' => [],
-					'id'    => [],
-					'src'   => [],
-					'alt'   => [],
-				],
-				'fieldset' => [
-					'class' => []
-				],
-				'label'    => [
-					'for'   => [],
-					'class' => []
-				],
-				'select'   => [
-					'class' => [],
-					'name'  => [],
-					'id'    => [],
-				],
-				'option'   => [
-					'class'    => [],
-					'value'    => [],
-					'id'       => [],
-					'selected' => [],
-				],
-				'textarea' => [
-					'class' => [],
-					'rows'  => [],
-					'id'    => [],
-					'cols'  => [],
-					'name'  => [],
-				],
-				'h2'       => [ 'class' => [], 'id' => [], ],
-				'a'        => [ 'class' => [], 'id' => [], 'href' => [], ],
-				'div'      => [ 'class' => [], 'id' => [], 'data' => [], ],
-				'span'     => [
-					'class' => [],
-					'id'    => [],
-					'data'  => [],
-				],
-				'i'        => [
-					'class' => [],
-					'id'    => [],
-					'data'  => [],
-				],
-				'table'    => [
-					'class' => [],
-					'id'    => [],
-					'data'  => [],
-				],
-				'tr'       => [
-					'class' => [],
-					'id'    => [],
-					'data'  => [],
-				],
-				'td'       => [
-					'class' => [],
-					'id'    => [],
-					'data'  => [],
-				],
-				'thead'    => [
-					'class' => [],
-					'id'    => [],
-					'data'  => [],
-				],
-				'tbody'    => [
-					'class' => [],
-					'id'    => [],
-					'data'  => [],
-				],
-				'th'       => [
-					'class' => [],
-					'id'    => [],
-					'data'  => [],
-				],
-				'svg'      => [
-					'class'   => [],
-					'id'      => [],
-					'width'   => [],
-					'height'  => [],
-					'viewBox' => [],
-					'xmlns'   => [],
-				],
-				'g'        => [
-					'fill' => [],
-				],
-				'path'     => [
-					'd' => [],
-				],
-				'br'       => array(),
-				'em'       => array(),
-				'strong'   => array(),
-			);
-
-			return wp_kses( $string, $allow_attr );
-		}
-	}
-	if ( ! function_exists( 'mep_trim_string' ) ) {
-		function mep_trim_string( $text, $length = 20 ) {
-			$trimmed_text = substr( $text, 0, $length );
-			if ( strlen( $text ) > $length ) {
-				$trimmed_text .= '...';
-			}
-
-			return $trimmed_text;
-		}
-	}
-	if ( ! function_exists( 'rbfw_field_generator' ) ) {
-		function rbfw_field_generator( $type, $option ) {
-			$FormFieldsGenerator = new RbfwFormFieldsGenerator();
-			if ( $type === 'text' ) {
-				return $FormFieldsGenerator->field_text( $option );
-			} elseif ( $type === 'text_multi' ) {
-				return $FormFieldsGenerator->field_text_multi( $option );
-			} elseif ( $type === 'textarea' ) {
-				return $FormFieldsGenerator->field_textarea( $option );
-			} elseif ( $type === 'checkbox' ) {
-				return $FormFieldsGenerator->field_checkbox( $option );
-			} elseif ( $type === 'checkbox_multi' ) {
-				return $FormFieldsGenerator->field_checkbox_multi( $option );
-			} elseif ( $type === 'radio' ) {
-				return $FormFieldsGenerator->field_radio( $option );
-			} elseif ( $type === 'select' ) {
-				return $FormFieldsGenerator->field_select( $option );
-			} elseif ( $type === 'range' ) {
-				return $FormFieldsGenerator->field_range( $option );
-			} elseif ( $type === 'range_input' ) {
-				return $FormFieldsGenerator->field_range_input( $option );
-			} elseif ( $type === 'switch' ) {
-				return $FormFieldsGenerator->field_switch( $option );
-			} elseif ( $type === 'switch_multi' ) {
-				return $FormFieldsGenerator->field_switch_multi( $option );
-			} elseif ( $type === 'switch_img' ) {
-				return $FormFieldsGenerator->field_switch_img( $option );
-			} elseif ( $type === 'time_format' ) {
-				return $FormFieldsGenerator->field_time_format( $option );
-			} elseif ( $type === 'date_format' ) {
-				return $FormFieldsGenerator->field_date_format( $option );
-			} elseif ( $type === 'datepicker' ) {
-				return $FormFieldsGenerator->field_datepicker( $option );
-			} elseif ( $type === 'color_sets' ) {
-				return $FormFieldsGenerator->field_color_sets( $option );
-			} elseif ( $type === 'colorpicker' ) {
-				return $FormFieldsGenerator->field_colorpicker( $option );
-			} elseif ( $type === 'colorpicker_multi' ) {
-				return $FormFieldsGenerator->field_colorpicker_multi( $option );
-			} elseif ( $type === 'link_color' ) {
-				return $FormFieldsGenerator->field_link_color( $option );
-			} elseif ( $type === 'icon' ) {
-				return $FormFieldsGenerator->field_icon( $option );
-			} elseif ( $type === 'icon_multi' ) {
-				return $FormFieldsGenerator->field_icon_multi( $option );
-			} elseif ( $type === 'dimensions' ) {
-				return $FormFieldsGenerator->field_dimensions( $option );
-			} elseif ( $type === 'wp_editor' ) {
-				return $FormFieldsGenerator->field_wp_editor( $option );
-			} elseif ( $type === 'select2' ) {
-				return $FormFieldsGenerator->field_select2( $option );
-			} elseif ( $type === 'faq' ) {
-				return $FormFieldsGenerator->field_faq( $option );
-			} elseif ( $type === 'grid' ) {
-				return $FormFieldsGenerator->field_grid( $option );
-			} elseif ( $type === 'color_palette' ) {
-				return $FormFieldsGenerator->field_color_palette( $option );
-			} elseif ( $type === 'color_palette_multi' ) {
-				return $FormFieldsGenerator->field_color_palette_multi( $option );
-			} elseif ( $type === 'media' ) {
-				return $FormFieldsGenerator->field_media( $option );
-			} elseif ( $type === 'media_multi' ) {
-				return $FormFieldsGenerator->field_media_multi( $option );
-			} elseif ( $type === 'repeatable' ) {
-				return $FormFieldsGenerator->field_repeatable( $option );
-			} elseif ( $type === 'user' ) {
-				return $FormFieldsGenerator->field_user( $option );
-			} elseif ( $type === 'margin' ) {
-				return $FormFieldsGenerator->field_margin( $option );
-			} elseif ( $type === 'padding' ) {
-				return $FormFieldsGenerator->field_padding( $option );
-			} elseif ( $type === 'border' ) {
-				return $FormFieldsGenerator->field_border( $option );
-			} elseif ( $type === 'switcher' ) {
-				return $FormFieldsGenerator->field_switcher( $option );
-			} elseif ( $type === 'password' ) {
-				return $FormFieldsGenerator->field_password( $option );
-			} elseif ( $type === 'post_objects' ) {
-				return $FormFieldsGenerator->field_post_objects( $option );
-			} elseif ( $type === 'google_map' ) {
-				return $FormFieldsGenerator->field_google_map( $option );
-			} elseif ( $type === 'image_link' ) {
-				return $FormFieldsGenerator->field_image_link( $option );
-			} elseif ( $type === 'number' ) {
-				return $FormFieldsGenerator->field_number( $option );
-			} elseif ( $type === 'time_slot' ) {
-				return $FormFieldsGenerator->field_time_slot( $option );
-			} elseif ( $type === 'add_to_cart_shortcode' ) {
-				return $FormFieldsGenerator->field_add_to_cart_shortcode( $option );
-			} elseif ( $type === 'rbfw_add_category' ) {
-				return $FormFieldsGenerator->field_rbfw_add_category( $option );
-			} elseif ( $type === 'md_service_category_price' ) {
-				return $FormFieldsGenerator->field_service_price( $option );
-			} elseif ( $type === 'time_slot' ) {
-				return $FormFieldsGenerator->field_time_slot( $option );
-			} else {
-				return '';
-			}
-		}
-	}
 	if ( ! function_exists( 'mage_array_strip' ) ) {
 		function mage_array_strip( $array_or_string ) {
 			if ( is_string( $array_or_string ) ) {
@@ -1251,14 +1006,13 @@
 		}
 		$order = wc_get_order( $order_id );
 		if ( $order ) {
-			$order_status = $order->get_status();
 			foreach ( $order->get_items() as $item_id => $item_values ) {
 				$rbfw_id = wc_get_order_item_meta( $item_id, '_rbfw_id', true );
 				rbfw_update_inventory_extra( $rbfw_id, $order_id, 'cancelled' );
 			}
 			// Verify if is trashing multiple posts
 			if ( isset( $_GET['post'] ) && is_array( $_GET['post'] ) ) {
-				foreach ( rbfw_array_strip( sanitize_text_field( wp_unslash( $_GET['post'] ) ) ) as $post_id ) {
+				foreach ( sanitize_text_field( wp_unslash( $_GET['post'] ) ) as $post_id ) {
 					rbfw_update_inventory( $post_id, 'cancelled' );
 				}
 			} else {
@@ -1865,7 +1619,7 @@
 														endif;
 														if ( $feature['title'] ):
 															$rand_number = wp_rand();
-															echo esc_html( '<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>' );
+															echo esc_html( '<li class="title' . $rand_number . '"><i class="' . $icon . '"></i></li>' );
 															?>
                                                             <script>
                                                                 jQuery(document).ready(function () {
@@ -2112,7 +1866,7 @@
 															endif;
 															if ( $feature['title'] ):
 																$rand_number = wp_rand();
-																echo esc_html( '<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>' );
+																echo esc_html( '<li class="title' . $rand_number . '"><i class="' . $icon . '"></i></li>' );
 																?>
                                                                 <script>
                                                                     jQuery(document).ready(function () {
@@ -2528,7 +2282,8 @@
 		}
 		$rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 		foreach ( $rdfw_available_time as $start_time ) {
-            echo esc_html($type);exit;
+			echo esc_html( $type );
+			exit;
 			if ( $type == 'time_enable' ) {
 				$time_status = '';
 			} else {
@@ -2630,29 +2385,28 @@
 	 *************************/
 	add_action( 'admin_init', 'rbfw_duplicate_post' );
 	function rbfw_duplicate_post() {
-    if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'duplicate_post_action' ) ) {
-        if ( isset( $_GET['rbfw_duplicate'] ) ) {
-            $post_id = sanitize_text_field( wp_unslash( $_GET['rbfw_duplicate'] ) );
-            $title   = get_the_title( $post_id );
-            $oldpost = get_post( $post_id );
-            $post    = array(
-                'post_title'  => $title,
-                'post_status' => 'draft',
-                'post_type'   => $oldpost->post_type,
-            );
-            $new_post_id = wp_insert_post( $post );
-            // Copy meta fields.
-            $post_meta = get_post_custom( $post_id );
-            if ( $post_meta ) {
-                foreach ( $post_meta as $meta_key => $meta_values ) {
-                    update_post_meta( $new_post_id, $meta_key, maybe_unserialize( $meta_values[0] ) );
-                }
-                update_post_meta( $new_post_id, 'rbfw_inventory', '' );
-            }
-        }
-    }
-}
-
+		if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'duplicate_post_action' ) ) {
+			if ( isset( $_GET['rbfw_duplicate'] ) ) {
+				$post_id     = sanitize_text_field( wp_unslash( $_GET['rbfw_duplicate'] ) );
+				$title       = get_the_title( $post_id );
+				$oldpost     = get_post( $post_id );
+				$post        = array(
+					'post_title'  => $title,
+					'post_status' => 'draft',
+					'post_type'   => $oldpost->post_type,
+				);
+				$new_post_id = wp_insert_post( $post );
+				// Copy meta fields.
+				$post_meta = get_post_custom( $post_id );
+				if ( $post_meta ) {
+					foreach ( $post_meta as $meta_key => $meta_values ) {
+						update_post_meta( $new_post_id, $meta_key, maybe_unserialize( $meta_values[0] ) );
+					}
+					update_post_meta( $new_post_id, 'rbfw_inventory', '' );
+				}
+			}
+		}
+	}
 	function rbfw_off_days( $post_id ) {
 		$off_days = [];
 		$all_days = get_post_meta( $post_id, 'rbfw_off_days', true );
