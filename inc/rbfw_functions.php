@@ -2536,7 +2536,7 @@ function rbfw_allowed_html(){
 		}
 		$rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 		foreach ( $rdfw_available_time as $start_time ) {
-            echo $type;exit;
+            echo esc_html($type);exit;
 			if ( $type == 'time_enable' ) {
 				$time_status = '';
 			} else {
@@ -2638,28 +2638,29 @@ function rbfw_allowed_html(){
 	 *************************/
 	add_action( 'admin_init', 'rbfw_duplicate_post' );
 	function rbfw_duplicate_post() {
-		if ( isset( $_GET['nonce'] ) && wp_verify_nonce( $_GET['nonce'], 'duplicate_post_action' ) ) {
-			if ( isset( $_GET['rbfw_duplicate'] ) ) {
-				$post_id     = sanitize_text_field( $_GET['rbfw_duplicate'] );
-				$title       = get_the_title( $post_id );
-				$oldpost     = get_post( $post_id );
-				$post        = array(
-					'post_title'  => $title,
-					'post_status' => 'draft',
-					'post_type'   => $oldpost->post_type,
-				);
-				$new_post_id = wp_insert_post( $post );
-				// Copy meta fields.
-				$post_meta = get_post_custom( $post_id );
-				if ( $post_meta ) {
-					foreach ( $post_meta as $meta_key => $meta_values ) {
-						update_post_meta( $new_post_id, $meta_key, maybe_unserialize( $meta_values[0] ) );
-					}
-					update_post_meta( $new_post_id, 'rbfw_inventory', '' );
-				}
-			}
-		}
-	}
+    if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'duplicate_post_action' ) ) {
+        if ( isset( $_GET['rbfw_duplicate'] ) ) {
+            $post_id = sanitize_text_field( wp_unslash( $_GET['rbfw_duplicate'] ) );
+            $title   = get_the_title( $post_id );
+            $oldpost = get_post( $post_id );
+            $post    = array(
+                'post_title'  => $title,
+                'post_status' => 'draft',
+                'post_type'   => $oldpost->post_type,
+            );
+            $new_post_id = wp_insert_post( $post );
+            // Copy meta fields.
+            $post_meta = get_post_custom( $post_id );
+            if ( $post_meta ) {
+                foreach ( $post_meta as $meta_key => $meta_values ) {
+                    update_post_meta( $new_post_id, $meta_key, maybe_unserialize( $meta_values[0] ) );
+                }
+                update_post_meta( $new_post_id, 'rbfw_inventory', '' );
+            }
+        }
+    }
+}
+
 	function rbfw_off_days( $post_id ) {
 		$off_days = [];
 		$all_days = get_post_meta( $post_id, 'rbfw_off_days', true );

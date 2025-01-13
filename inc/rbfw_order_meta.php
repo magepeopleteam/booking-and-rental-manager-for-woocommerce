@@ -20,8 +20,12 @@ function rbfw_order_meta_box() {
 add_action('wp_ajax_fetch_order_details', 'fetch_order_details_callback');
 
 function fetch_order_details_callback() {
+    if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'fetch_order_details_nonce')) {
+        wp_send_json_error('Invalid request.');
+        wp_die();
+    }
     if (isset($_POST['post_id'])) {
-        $post_id = intval(sanitize_text_field($_POST['post_id']));
+        $post_id = intval(sanitize_text_field(wp_unslash($_POST['post_id']))); 
         
         // Fetch order metadata
         $billing_name = get_post_meta($post_id, 'rbfw_billing_name', true);
@@ -869,31 +873,35 @@ function save_rbfw_order_meta_box( $post_id ) {
         return;
     }
 
-    if ( isset( $_POST['post_type'] ) && 'rbfw_order' == sanitize_text_field($_POST['post_type']) ) {
+    if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_nonce_action' ) ) {
+    if ( isset( $_POST['post_type'] ) && 'rbfw_order' == sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) ) {
         if ( ! current_user_can( 'edit_post', $post_id ) ) {
             return;
         }
     }
-    if ( isset( $_POST['rbfw_pickup_note'] ) ) {
-        update_post_meta($post_id, 'rbfw_pickup_note', sanitize_text_field($_POST['rbfw_pickup_note']));
-        update_post_meta($post_id, 'rbfw_pickup_date', gmdate('Y-m-d H:i'));
-    }
-    if ( isset( $_POST['rbfw_return_note'] ) ) {
-        update_post_meta($post_id, 'rbfw_return_note', sanitize_text_field($_POST['rbfw_return_note']));
-        update_post_meta($post_id, 'rbfw_return_date', gmdate('Y-m-d H:i'));
-    }
-    if ( isset( $_POST['rbfw_return_security_deposit_amount'] ) ) {
-        update_post_meta($post_id, 'rbfw_return_security_deposit_amount', sanitize_text_field($_POST['rbfw_return_security_deposit_amount']));
-    }
+}
+
+if ( isset( $_POST['rbfw_pickup_note'] ) ) {
+    update_post_meta( $post_id, 'rbfw_pickup_note', sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_note'] ) ) );
+    update_post_meta( $post_id, 'rbfw_pickup_date', gmdate( 'Y-m-d H:i' ) );
+}
+if ( isset( $_POST['rbfw_return_note'] ) ) {
+    update_post_meta( $post_id, 'rbfw_return_note', sanitize_text_field( wp_unslash( $_POST['rbfw_return_note'] ) ) );
+    update_post_meta( $post_id, 'rbfw_return_date', gmdate( 'Y-m-d H:i' ) );
+}
+if ( isset( $_POST['rbfw_return_security_deposit_amount'] ) ) {
+    update_post_meta( $post_id, 'rbfw_return_security_deposit_amount', sanitize_text_field( wp_unslash( $_POST['rbfw_return_security_deposit_amount'] ) ) );
+}
+
 
 
     if ( isset( $_POST['rbfw_order_status'] ) ) {
-        update_post_meta( $post_id, 'rbfw_order_status', sanitize_text_field($_POST['rbfw_order_status']) );
+        update_post_meta( $post_id, 'rbfw_order_status', sanitize_text_field( wp_unslash( $_POST['rbfw_order_status'] ) ) );
         $current_user = wp_get_current_user();
         $username = $current_user->user_login;
         $modified_date =  current_datetime()->format('F j, Y h:i a');
 
-        $status = 'Status changed to <strong>'.sanitize_text_field($_POST['rbfw_order_status']).'</strong> by '.$username.' on '.$modified_date;
+        $status = 'Status changed to <strong>' . sanitize_text_field( wp_unslash( $_POST['rbfw_order_status'] ) ) . '</strong> by ' . $username . ' on ' . $modified_date;
         $current_status_update = get_post_meta( $post_id, 'rbfw_order_status_revision', true );
 
         $current_status = get_post_meta( $post_id, 'rbfw_order_status', true );
@@ -916,7 +924,7 @@ function save_rbfw_order_meta_box( $post_id ) {
 
             $orderDetail->update_status("wc-".$current_status_wc, $current_status_wc, TRUE);
 
-            update_post_meta( $post_id, 'rbfw_order_status', sanitize_text_field($_POST['rbfw_order_status']) );
+            update_post_meta( $post_id, 'rbfw_order_status', sanitize_text_field( wp_unslash( $_POST['rbfw_order_status'] ) ) );
 
         }else {
             $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_status_id', true );
