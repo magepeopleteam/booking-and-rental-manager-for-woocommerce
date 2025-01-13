@@ -3,69 +3,66 @@
 		exit;
 	}
 // Language Load
+	function rbfw_allowed_html() {
+		$allowed_html = array(
+			'script'  => array(
+				'type'  => true,
+				'src'   => true,
+				'async' => true,
+				'defer' => true,
+			),
+			'div'     => array(
+				'style'   => true, // Allows inline styles
+				'class'   => true,
+				'onclick' => true, // Allows inline JavaScript
+			),
+			'table'   => array(
+				'thead' => true, // Allows inline styles
+				'tbody' => true,
+				'tr'    => true, // Allows inline JavaScript
+				'td'    => true,
+				'div'   => true,
+				'a'     => true
+			),
+			'p'       => array(
+				'style'   => true, // Allows inline styles
+				'class'   => true,
+				'onclick' => true, // Allows inline JavaScript
+			),
+			'i'       => array(
+				'style'   => true, // Allows inline styles
+				'class'   => true,
+				'onclick' => true, // Allows inline JavaScript
+			),
+			'span'    => array(
+				'style'   => true, // Allows inline styles
+				'class'   => true,
+				'onclick' => true, // Allows inline JavaScript
+			),
+			'section' => array(
+				'style'   => true, // Allows inline styles
+				'class'   => true,
+				'onclick' => true, // Allows inline JavaScript
+			),
+			'a'       => array(
+				'style'   => true, // Allows inline styles
+				'class'   => true,
+				'onclick' => true, // Allows inline JavaScript
+			),
+			'input'   => array(
+				'style'       => true, // Allows inline styles
+				'class'       => true,
+				'type'        => true,
+				'name'        => true,
+				'value'       => true,
+				'id'          => true,
+				'data-key'    => true,
+				'placeholder' => true,
+			),
+		);
 
-function rbfw_allowed_html(){
-	$allowed_html = array(
-		'script' => array(
-			'type' => true,
-			'src'  => true,
-			'async' => true,
-			'defer' => true,
-		),
-		'div' => array(
-			'style' => true, // Allows inline styles
-			'class' => true,
-			'onclick' => true, // Allows inline JavaScript
-		),
-		'table' => array(
-			'thead' => true, // Allows inline styles
-			'tbody' => true,
-			'tr' => true, // Allows inline JavaScript
-			'td'=>true,
-			'div'=>true,
-			'a'=>true
-		),
-		'p' => array(
-			'style' => true, // Allows inline styles
-			'class' => true,
-			'onclick' => true, // Allows inline JavaScript
-		),
-		'i' => array(
-			'style' => true, // Allows inline styles
-			'class' => true,
-			'onclick' => true, // Allows inline JavaScript
-		),
-		'span' => array(
-			'style' => true, // Allows inline styles
-			'class' => true,
-			'onclick' => true, // Allows inline JavaScript
-		),
-		'section' => array(
-			'style' => true, // Allows inline styles
-			'class' => true,
-			'onclick' => true, // Allows inline JavaScript
-		),
-		'a' => array(
-			'style' => true, // Allows inline styles
-			'class' => true,
-			'onclick' => true, // Allows inline JavaScript
-		),
-		'input' => array(
-			'style' => true, // Allows inline styles
-			'class' => true,
-			'type' => true, 
-			'name' => true, 
-			'value' => true, 
-			'id' => true, 
-			'data-key' => true, 
-			'placeholder' => true, 
-		),
-		
-	);
-	return $allowed_html; 
-}
-
-
+		return $allowed_html;
+	}
 	add_action( 'init', 'rbfw_language_load' );
 	function rbfw_language_load() {
 		$plugin_dir = basename( dirname( __DIR__ ) ) . "/languages/";
@@ -79,7 +76,7 @@ function rbfw_allowed_html(){
 				if ( is_array( $value ) ) {
 					$value = rbfw_array_strip( $value );
 				} else {
-					$value = sanitize_text_field(wp_unslash($value) );
+					$value = sanitize_text_field( wp_unslash( $value ) );
 				}
 			}
 		}
@@ -106,7 +103,7 @@ function rbfw_allowed_html(){
 		return $rbfw->get_option_trans( $option, $section, $default );
 	}
 	function rbfw_string( $option_name, $default_string ) {
-		echo esc_html(rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string ));
+		echo esc_html( rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string ) );
 	}
 	function rbfw_string_return( $option_name, $default_string ) {
 		return rbfw_get_option( $option_name, 'rbfw_basic_translation_settings', $default_string );
@@ -203,15 +200,15 @@ function rbfw_allowed_html(){
 		$labels = array(
 			'name'              => esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
 			'singular_name'     => esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
-			'search_items'      => esc_html__( 'Search Tags','booking-and-rental-manager-for-woocommerce'),
-			'all_items'         => esc_html__( 'All Tags','booking-and-rental-manager-for-woocommerce' ),
-			'parent_item'       => esc_html__( 'Parent Tag','booking-and-rental-manager-for-woocommerce' ),
-			'parent_item_colon' => esc_html__( 'Parent Tag:','booking-and-rental-manager-for-woocommerce' ),
-			'edit_item'         => esc_html__( 'Edit Tag','booking-and-rental-manager-for-woocommerce' ),
-			'update_item'       => esc_html__( 'Update Tag','booking-and-rental-manager-for-woocommerce' ),
-			'add_new_item'      => esc_html__( 'Add New Tag','booking-and-rental-manager-for-woocommerce' ),
-			'new_item_name'     => esc_html__( 'New Tag Name','booking-and-rental-manager-for-woocommerce' ),
-			'menu_name'         => esc_html__( 'Tags','booking-and-rental-manager-for-woocommerce' ),
+			'search_items'      => esc_html__( 'Search Tags', 'booking-and-rental-manager-for-woocommerce' ),
+			'all_items'         => esc_html__( 'All Tags', 'booking-and-rental-manager-for-woocommerce' ),
+			'parent_item'       => esc_html__( 'Parent Tag', 'booking-and-rental-manager-for-woocommerce' ),
+			'parent_item_colon' => esc_html__( 'Parent Tag:', 'booking-and-rental-manager-for-woocommerce' ),
+			'edit_item'         => esc_html__( 'Edit Tag', 'booking-and-rental-manager-for-woocommerce' ),
+			'update_item'       => esc_html__( 'Update Tag', 'booking-and-rental-manager-for-woocommerce' ),
+			'add_new_item'      => esc_html__( 'Add New Tag', 'booking-and-rental-manager-for-woocommerce' ),
+			'new_item_name'     => esc_html__( 'New Tag Name', 'booking-and-rental-manager-for-woocommerce' ),
+			'menu_name'         => esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
 		);
 // 		register_taxonomy( 'rbfw_item_tag', array( 'rbfw_item' ), array(
 // 			'hierarchical'      => false,
@@ -907,9 +904,9 @@ function rbfw_allowed_html(){
 						if ( $i <= 100 ) {
 							$input_id = str_replace( ' ', '', $key );
 							?>
-                            <label for="<?php echo esc_attr($input_id); ?>" data-id="<?php echo esc_attr($value); ?>">
-                                <input type="radio" name="rbfw_icon" id="<?php echo esc_attr($input_id); ?>" value="<?php echo esc_attr($key); ?>">
-                                <i class="<?php echo esc_attr($key); ?>"></i>
+                            <label for="<?php echo esc_attr( $input_id ); ?>" data-id="<?php echo esc_attr( $value ); ?>">
+                                <input type="radio" name="rbfw_icon" id="<?php echo esc_attr( $input_id ); ?>" value="<?php echo esc_attr( $key ); ?>">
+                                <i class="<?php echo esc_attr( $key ); ?>"></i>
                             </label>
 							<?php
 						}
@@ -931,13 +928,10 @@ function rbfw_allowed_html(){
 	}
 	add_action( 'wp_ajax_rbfw_load_more_icons', 'rbfw_load_more_icons_func' );
 	function rbfw_load_more_icons_func() {
-
-
-        if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
-            return;
-        }
-
-		$data_loaded       = isset($_POST['data_loaded'])?sanitize_text_field( sanitize_text_field(wp_unslash($_POST['data_loaded'] ))):'';
+		if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
+			return;
+		}
+		$data_loaded       = isset( $_POST['data_loaded'] ) ? sanitize_text_field( sanitize_text_field( wp_unslash( $_POST['data_loaded'] ) ) ) : '';
 		$icon_library      = new rbfw_icon_library();
 		$icon_library_list = $icon_library->rbfw_fontawesome_icons();
 		ob_start();
@@ -947,16 +941,16 @@ function rbfw_allowed_html(){
 			if ( ( $i > $data_loaded ) && ( $i <= $target ) ) {
 				$input_id = str_replace( ' ', '', $key );
 				?>
-                <label for="<?php echo esc_attr($input_id); ?>" data-id="<?php echo esc_attr($value); ?>">
-                    <input type="radio" name="rbfw_icon" id="<?php echo esc_attr($input_id); ?>" value="<?php echo esc_attr($key); ?>">
-                    <i class="<?php echo esc_attr($key); ?>"></i>
+                <label for="<?php echo esc_attr( $input_id ); ?>" data-id="<?php echo esc_attr( $value ); ?>">
+                    <input type="radio" name="rbfw_icon" id="<?php echo esc_attr( $input_id ); ?>" value="<?php echo esc_attr( $key ); ?>">
+                    <i class="<?php echo esc_attr( $key ); ?>"></i>
                 </label>
 				<?php
 			}
 			$i ++;
 		}
 		$content = ob_get_clean();
-		echo esc_html($content);
+		echo esc_html( $content );
 		wp_die();
 	}
 	/*******************************************
@@ -1252,11 +1246,9 @@ function rbfw_allowed_html(){
 	add_action( 'wp_trash_post', 'rbfw_trash_order' );
 	add_action( 'untrashed_post', 'wp_kama_untrashed_post_action', 10, 2 );
 	function rbfw_trash_order( $order_id = '' ) {
-
-        if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
-            return;
-        }
-
+		if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
+			return;
+		}
 		$order = wc_get_order( $order_id );
 		if ( $order ) {
 			$order_status = $order->get_status();
@@ -1266,7 +1258,7 @@ function rbfw_allowed_html(){
 			}
 			// Verify if is trashing multiple posts
 			if ( isset( $_GET['post'] ) && is_array( $_GET['post'] ) ) {
-				foreach ( rbfw_array_strip( sanitize_text_field(wp_unslash($_GET['post'])) ) as $post_id ) {
+				foreach ( rbfw_array_strip( sanitize_text_field( wp_unslash( $_GET['post'] ) ) ) as $post_id ) {
 					rbfw_update_inventory( $post_id, 'cancelled' );
 				}
 			} else {
@@ -1873,12 +1865,12 @@ function rbfw_allowed_html(){
 														endif;
 														if ( $feature['title'] ):
 															$rand_number = wp_rand();
-															echo esc_html('<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>');
+															echo esc_html( '<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>' );
 															?>
                                                             <script>
                                                                 jQuery(document).ready(function () {
-                                                                    let content<?php echo esc_html($rand_number); ?> = '<?php echo esc_html($feature['title']); ?>';
-                                                                    tippy('.title' +<?php echo esc_html($rand_number); ?>, {content: content<?php echo esc_html($rand_number); ?>, theme: 'blue', placement: 'top'});
+                                                                    let content<?php echo esc_html( $rand_number ); ?> = '<?php echo esc_html( $feature['title'] ); ?>';
+                                                                    tippy('.title' +<?php echo esc_html( $rand_number ); ?>, {content: content<?php echo esc_html( $rand_number ); ?>, theme: 'blue', placement: 'top'});
                                                                 });
                                                             </script>
 														<?php
@@ -2085,8 +2077,8 @@ function rbfw_allowed_html(){
                             </a></div>
 						<?php if ( $review_count > 0 ) { ?>
                             <div class="rbfw-related-product-review-badge-wrap">
-                                <div class="rbfw-related-product-review-badge-1"><?php echo esc_html($review_count . ' ' . $reviews_label); ?></div>
-                                <div class="rbfw-related-product-review-badge-2"><?php echo esc_html($average_review); ?></div>
+                                <div class="rbfw-related-product-review-badge-1"><?php echo esc_html( $review_count . ' ' . $reviews_label ); ?></div>
+                                <div class="rbfw-related-product-review-badge-2"><?php echo esc_html( $average_review ); ?></div>
                             </div>
 						<?php } ?>
                         <div class="rbfw-related-product-inner-content-wrap">
@@ -2120,12 +2112,12 @@ function rbfw_allowed_html(){
 															endif;
 															if ( $feature['title'] ):
 																$rand_number = wp_rand();
-																echo esc_html('<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>');
+																echo esc_html( '<li class="title' . $rand_number . '"><i class="' . mep_esc_html( $icon ) . '"></i></li>' );
 																?>
                                                                 <script>
                                                                     jQuery(document).ready(function () {
-                                                                        let content<?php echo esc_html($rand_number); ?> = '<?php echo esc_html($feature['title']); ?>';
-                                                                        tippy('.title' +<?php echo esc_html($rand_number); ?>, {content: content<?php echo esc_html($rand_number); ?>, theme: 'blue', placement: 'top'});
+                                                                        let content<?php echo esc_html( $rand_number ); ?> = '<?php echo esc_html( $feature['title'] ); ?>';
+                                                                        tippy('.title' +<?php echo esc_html( $rand_number ); ?>, {content: content<?php echo esc_html( $rand_number ); ?>, theme: 'blue', placement: 'top'});
                                                                     });
                                                                 </script>
 															<?php
@@ -2329,9 +2321,9 @@ function rbfw_allowed_html(){
                                     <div class="rbfw_additional_image_gallary_col" <?php if ( $i > $show ) {
 										echo 'style="display:none;"';
 									} ?>>
-                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
+                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr( $i ); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
 										<?php if ( $i == $show ) { ?>
-                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr( $i ); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 										<?php } ?>
                                     </div>
 									<?php
@@ -2350,9 +2342,9 @@ function rbfw_allowed_html(){
                                     <div class="rbfw_additional_image_gallary_col" <?php if ( $d > $show ) {
 										echo 'style="display:none;"';
 									} ?>>
-                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
+                                        <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr( $d ); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
 										<?php if ( $d == $show ) { ?>
-                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+                                            <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr( $d ); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 										<?php } ?>
                                     </div>
 									<?php
@@ -2372,7 +2364,7 @@ function rbfw_allowed_html(){
 								$image_url = wp_get_attachment_url( $img_id );
 								?>
                                 <div class="rbfw_aig_slides">
-                                    <div class="rbfw_aig_numbertext"><?php echo esc_html($c); ?> / <?php echo esc_html($count_images); ?></div>
+                                    <div class="rbfw_aig_numbertext"><?php echo esc_html( $c ); ?> / <?php echo esc_html( $count_images ); ?></div>
                                     <img src="<?php echo esc_url( $image_url ); ?>">
                                 </div>
 								<?php
@@ -2391,7 +2383,7 @@ function rbfw_allowed_html(){
 								foreach ( $gallery_images_ids as $img_id ) {
 									$image_url = wp_get_attachment_url( $img_id );
 									?>
-                                    <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)" alt="<?php echo esc_attr($d); ?>"></div>
+                                    <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo esc_attr( $d ); ?>)" alt="<?php echo esc_attr( $d ); ?>"></div>
 									<?php
 									$d ++;
 								}
@@ -2411,9 +2403,9 @@ function rbfw_allowed_html(){
                             <div class="rbfw_additional_image_gallary_col" <?php if ( $i > $show ) {
 								echo 'style="display:none;"';
 							} ?>>
-                                <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
+                                <div class="rbfw_aig_img_wrap" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr( $i ); ?>)" class="rbfw_aig_hover-shadow" style="background-image:url(<?php echo esc_url( $image_url ); ?>)"></div>
 								<?php if ( $i == $show ) { ?>
-                                    <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr($i); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+                                    <a class="rbfw_aig_view_more_btn" onclick="rbfw_aig_openModal();rbfw_aig_currentSlide(<?php echo esc_attr( $i ); ?>)"><i class="fa-regular fa-images"></i> <?php esc_html_e( 'View More', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
 								<?php } ?>
                             </div>
 							<?php
@@ -2430,7 +2422,7 @@ function rbfw_allowed_html(){
 									$image_url = wp_get_attachment_url( $img_id );
 									?>
                                     <div class="rbfw_aig_slides">
-                                        <div class="rbfw_aig_numbertext"><?php echo esc_html($c); ?> / <?php echo esc_html($count_images); ?></div>
+                                        <div class="rbfw_aig_numbertext"><?php echo esc_html( $c ); ?> / <?php echo esc_html( $count_images ); ?></div>
                                         <img src="<?php echo esc_url( $image_url ); ?>">
                                     </div>
 									<?php
@@ -2449,7 +2441,7 @@ function rbfw_allowed_html(){
 									foreach ( $gallery_images_ids as $img_id ) {
 										$image_url = wp_get_attachment_url( $img_id );
 										?>
-                                        <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo esc_attr($d); ?>)" alt="<?php echo esc_attr($d); ?>"></div>
+                                        <div class="rbfw_aig_column"><img class="rbfw_aig_img_thumb" src="<?php echo esc_url( $image_url ); ?>" onclick="rbfw_aig_currentSlide(<?php echo esc_attr( $d ); ?>)" alt="<?php echo esc_attr( $d ); ?>"></div>
 										<?php
 										$d ++;
 									}
@@ -2536,9 +2528,7 @@ function rbfw_allowed_html(){
 		}
 		$rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 		foreach ( $rdfw_available_time as $start_time ) {
-
             echo esc_html($type);exit;
-
 			if ( $type == 'time_enable' ) {
 				$time_status = '';
 			} else {
@@ -3071,7 +3061,7 @@ function rbfw_allowed_html(){
 			}
 		}
 		$option .= "</select>";
-		echo esc_html($option);
+		echo esc_html( $option );
 	}
 	function rbfw_time_slot_select( $date_type, $iidex, $selected_time ) {
 		$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
@@ -3080,52 +3070,49 @@ function rbfw_allowed_html(){
 		asort( $rbfw_time_slots );
 		?>
         <div id="field-wrapper-rdfw_available_time" class="">
-            <select class="medium" name="rbfw_bike_car_sd_data[<?php echo esc_attr($iidex) ?>][<?php echo esc_attr($date_type) ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
+            <select class="medium" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $iidex ) ?>][<?php echo esc_attr( $date_type ) ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
                 <option value="">Select Time</option>
 				<?php foreach ( $rbfw_time_slots as $key => $value ): ?>
-                    <option <?php echo esc_html(  gmdate( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo esc_html(gmdate( 'H:i', strtotime( $value ) )); ?>"> <?php echo esc_html(gmdate( 'H:i', strtotime( $value ) )); ?> </option>
+                    <option <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?> </option>
 				<?php endforeach; ?>
             </select>
         </div>
 		<?php
 	}
-	add_action('admin_init', 'rbfw_get_dummy_wc_products',10);
-	 function rbfw_get_dummy_wc_products(){
-
-	$imported = get_option('rbfw_sample_rent_items') ? get_option('rbfw_sample_rent_items') : '';
-	if( $imported == 'imported' ) {
-		$rbfw_hide_dummy_wc = get_option( 'rbfw_hide_dummy_wc' ) ? get_option( 'rbfw_hide_dummy_wc' ) : 'no';
-		if ( $rbfw_hide_dummy_wc == 'no' ) {
-			$args = array(
-				'post_type'      => 'product',
-				'posts_per_page' => - 1,
-				'meta_query'     => array(
-					'relation' => 'AND',
-					array(
+	add_action( 'admin_init', 'rbfw_get_dummy_wc_products', 10 );
+	function rbfw_get_dummy_wc_products() {
+		$imported = get_option( 'rbfw_sample_rent_items' ) ? get_option( 'rbfw_sample_rent_items' ) : '';
+		if ( $imported == 'imported' ) {
+			$rbfw_hide_dummy_wc = get_option( 'rbfw_hide_dummy_wc' ) ? get_option( 'rbfw_hide_dummy_wc' ) : 'no';
+			if ( $rbfw_hide_dummy_wc == 'no' ) {
+				$args = array(
+					'post_type'      => 'product',
+					'posts_per_page' => - 1,
+					'meta_query'     => array(
+						'relation' => 'AND',
 						array(
-							'key' => 'link_rbfw_id'
+							array(
+								'key' => 'link_rbfw_id'
+							)
 						)
 					)
-				)
-			);
-			$loop = new WP_Query( $args );
-			foreach ( $loop->posts as $product ) {
-				rbfw_hide_product_from_catalog( $product->ID );
+				);
+				$loop = new WP_Query( $args );
+				foreach ( $loop->posts as $product ) {
+					rbfw_hide_product_from_catalog( $product->ID );
+				}
+				update_option( 'rbfw_hide_dummy_wc', 'yes' );
 			}
-			update_option( 'rbfw_hide_dummy_wc', 'yes' );
 		}
 	}
-}
-
-
-	 function rbfw_hide_product_from_catalog($product_id) {
-	// Get the product object
-	$product = wc_get_product($product_id);
-	if ($product) {
-		// Set the catalog visibility to 'hidden'
-		$product->set_catalog_visibility('hidden');
-		// Save the product
-		$product->save();
+	function rbfw_hide_product_from_catalog( $product_id ) {
+		// Get the product object
+		$product = wc_get_product( $product_id );
+		if ( $product ) {
+			// Set the catalog visibility to 'hidden'
+			$product->set_catalog_visibility( 'hidden' );
+			// Save the product
+			$product->save();
+		}
 	}
-}
 

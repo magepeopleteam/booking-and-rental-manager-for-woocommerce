@@ -32,7 +32,7 @@
 			public function save_post( $post_id ) {
 				$get_option_name = $this->get_option_name();
 				$post_id         = $this->get_post_id();
-				if ( ! empty( $get_option_name ) ) :
+				if ( isset($_POST[ $get_option_name ]) ) :
 					if (is_string( $_POST[ $get_option_name ]  ) ) {
 						$option_value = sanitize_text_field(wp_unslash($_POST[ $get_option_name ] ) );
                     }else{
@@ -43,14 +43,17 @@
 					foreach ( $this->get_panels() as $panelsIndex => $panel ) :
 						foreach ( $panel['sections'] as $sectionIndex => $section ) :
 							foreach ( $section['options'] as $option ) :
-								if (is_string( $_POST[ $option['id'] ]) ) {
-									$option_value = sanitize_text_field(wp_unslash($_POST[ $option['id']]) );
-								}else{
-									$option_value=array_map('sanitize_text_field',wp_unslash($_POST[ $option['id']]));
+								if ( isset($_POST[ $option['id'] ]) ) {
+									if ( is_string( $_POST[ $option['id'] ] ) ) {
+										$option_value = sanitize_text_field( wp_unslash( $_POST[ $option['id'] ] ) );
+									} else {
+										$option_value = array_map( 'sanitize_text_field', wp_unslash( $_POST[ $option['id'] ] ) );
+									}
 								}
 								if ( ! empty( $option['id'] ) ) {
 									update_post_meta( $post_id, $option['id'], $option_value );
 								}
+
 							endforeach;
 						endforeach;
 					endforeach;

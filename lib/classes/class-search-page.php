@@ -130,7 +130,7 @@
 				$shoe_result = '0 result of total 0';
 				if ( wp_verify_nonce( $nonce, 'rbfw_nonce' ) ) {
 					if ( isset( $_POST['filter_date'] ) ) {
-						$filter_date     = wp_unslash($_POST['filter_date']);
+						$filter_date     = array_map('sanitize_text_field',wp_unslash($_POST['filter_date']));
 						$item_style      = isset( $_POST['rbfw_item_style'] ) ? sanitize_text_field(wp_unslash( $_POST['rbfw_item_style']) ) : '';
 						$text_search     = isset( $filter_date['title_text'] ) ? sanitize_text_field( $filter_date['title_text'] ) : '';
 						$search_by_title = '';
