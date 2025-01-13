@@ -115,7 +115,7 @@
 
             public function settings_save($post_id) {
                 
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
+                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash($_POST['rbfw_ticket_type_nonce'])), 'rbfw_ticket_type_nonce' ) ) {
                     return;
                 }
 
@@ -128,8 +128,14 @@
                 }
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-                    $_tax_class 	 = isset( $_POST['_tax_class'] ) ? rbfw_array_strip( $_POST['_tax_class'] ) : '';
-                    $_tax_status 	 = isset( $_POST['_tax_status'] ) ? rbfw_array_strip( $_POST['_tax_status'] ) : '';
+                    $_tax_class = isset( $_POST['_tax_class'] ) 
+                        ? rbfw_array_strip( sanitize_text_field( wp_unslash( $_POST['_tax_class'] ) ) ) 
+                        : '';
+
+                    $_tax_status = isset( $_POST['_tax_status'] ) 
+                        ? rbfw_array_strip( sanitize_text_field( wp_unslash( $_POST['_tax_status'] ) ) ) 
+                        : '';
+
 
                     update_post_meta( $post_id, '_tax_class', $_tax_class );
                     update_post_meta( $post_id, '_tax_status', $_tax_status );

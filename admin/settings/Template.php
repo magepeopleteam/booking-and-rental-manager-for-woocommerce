@@ -272,7 +272,7 @@
 
 			public function settings_save($post_id) {
                 
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
+                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce(sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'])), 'rbfw_ticket_type_nonce' ) ) {
                     return;
                 }
 
@@ -286,15 +286,15 @@
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
-                    $rbfw_single_template = isset( $_POST['rbfw_single_template'] ) ? rbfw_array_strip( $_POST['rbfw_single_template'] ) : 'Default';
+                    $rbfw_single_template = isset( $_POST['rbfw_single_template'] ) ? rbfw_array_strip( sanitize_text_field( wp_unslash( $_POST['rbfw_single_template'] ) ) ) : 'Default';
                     $rbfw_single_template = is_dir(RBFW_Function::get_template_path('single/'.strtolower($rbfw_single_template)))? $rbfw_single_template : 'Default';
                     
                     
-                    $dt_sidebar_switch 	 = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? rbfw_array_strip($_POST['rbfw_dt_sidebar_switch']) : '';
-                    $testimonials 	 = isset( $_POST['rbfw_dt_sidebar_testimonials'] ) ? rbfw_array_strip( $_POST['rbfw_dt_sidebar_testimonials'] ) : [];
-                    $sidebar_content 	 = isset( $_POST['rbfw_dt_sidebar_content'] ) ? rbfw_array_strip( $_POST['rbfw_dt_sidebar_content'] ) : [];
-                    $additional_gallery_images = isset( $_POST['rbfw_enable_additional_gallary'] ) ? rbfw_array_strip( $_POST['rbfw_enable_additional_gallary'] ) : 'off';
-                    $gallery_images = isset( $_POST['rbfw_gallery_images_additional'] ) ? rbfw_array_strip( $_POST['rbfw_gallery_images_additional'] ) : [];
+                    $dt_sidebar_switch = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? rbfw_array_strip( sanitize_text_field( wp_unslash( $_POST['rbfw_dt_sidebar_switch'] ) ) ) : '';
+                    $testimonials = isset( $_POST['rbfw_dt_sidebar_testimonials'] ) ? rbfw_array_strip( array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_dt_sidebar_testimonials'] ) ) ) : [];
+                    $sidebar_content = isset( $_POST['rbfw_dt_sidebar_content'] ) ? rbfw_array_strip( array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_dt_sidebar_content'] ) ) ) : [];
+                    $additional_gallery_images = isset( $_POST['rbfw_enable_additional_gallary'] ) ? rbfw_array_strip( array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_enable_additional_gallary'] ) ) ) : 'off';
+                    $gallery_images = isset( $_POST['rbfw_gallery_images_additional'] ) ? rbfw_array_strip( array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_gallery_images_additional'] ) ) ) : [];
 
                     
                     update_post_meta( $post_id, 'rbfw_dt_sidebar_switch', $dt_sidebar_switch );

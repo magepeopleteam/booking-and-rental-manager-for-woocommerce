@@ -1348,58 +1348,57 @@
 	                
 	                $rbfw_item_type = isset( $_POST['rbfw_item_type'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_item_type'] ) ) : [];
 	                $rbfw_enable_daily_rate = isset( $_POST['rbfw_enable_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daily_rate'] ) ) : 'no';
-	                $daily_rate  = isset( $_POST['rbfw_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_daily_rate'] ) : 0;
-					$rbfw_enable_hourly_rate = isset( $_POST['rbfw_enable_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_enable_hourly_rate'] ) : 'no';
-					$hourly_rate = isset( $_POST['rbfw_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_hourly_rate'] ) : 0;
-					
-					$rbfw_enable_daywise_price  = isset( $_POST['rbfw_enable_daywise_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_daywise_price'] ) : 'no';
-					$rbfw_enable_category_service_price      = isset( $_POST['rbfw_enable_category_service_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_category_service_price'] ) : 'off';
-					$rbfw_service_category_price     = isset( $_POST['rbfw_service_category_price'] ) ? rbfw_array_strip( $_POST['rbfw_service_category_price'] ) : [];
-					$rbfw_bike_car_sd_data 	 = isset( $_POST['rbfw_bike_car_sd_data'] ) ? rbfw_array_strip( $_POST['rbfw_bike_car_sd_data'] ) : 0;
+	                $daily_rate = isset($_POST['rbfw_daily_rate']) ? rbfw_array_strip(sanitize_text_field(wp_unslash($_POST['rbfw_daily_rate']))) : 0;
+					$rbfw_enable_hourly_rate = isset($_POST['rbfw_enable_hourly_rate']) ? rbfw_array_strip(sanitize_text_field(wp_unslash($_POST['rbfw_enable_hourly_rate']))) : 'no';
+					$hourly_rate = isset($_POST['rbfw_hourly_rate']) ? rbfw_array_strip(sanitize_text_field(wp_unslash($_POST['rbfw_hourly_rate']))) : 0;
+					$rbfw_enable_daywise_price = isset($_POST['rbfw_enable_daywise_price']) ? rbfw_array_strip(sanitize_text_field(wp_unslash($_POST['rbfw_enable_daywise_price']))) : 'no';
+					$rbfw_enable_category_service_price = isset($_POST['rbfw_enable_category_service_price']) ? rbfw_array_strip(sanitize_text_field(wp_unslash($_POST['rbfw_enable_category_service_price']))) : 'off';
+					$rbfw_service_category_price = isset($_POST['rbfw_service_category_price']) ? rbfw_array_strip(array_map('sanitize_text_field', wp_unslash($_POST['rbfw_service_category_price']))) : [];
+					$rbfw_bike_car_sd_data = isset($_POST['rbfw_bike_car_sd_data']) ? rbfw_array_strip(sanitize_text_field(wp_unslash($_POST['rbfw_bike_car_sd_data']))) : 0;
 
 
                    // echo '<pre>';print_r($rbfw_bike_car_sd_data );echo '<pre>';exit;
 
-                    $rbfw_enable_resort_daylong_price  = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_resort_daylong_price'] ) : 'no';
+				   $rbfw_enable_resort_daylong_price = isset($_POST['rbfw_enable_resort_daylong_price']) ? rbfw_array_strip(sanitize_text_field(wp_unslash($_POST['rbfw_enable_resort_daylong_price']))) : 'no';
 					
-					$rbfw_resort_room_data 	 = isset( $_POST['rbfw_resort_room_data'] ) ? rbfw_array_strip( $_POST['rbfw_resort_room_data'] ) : 0;
-					$rbfw_sd_appointment_max_qty_per_session 	 = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ?  $_POST['rbfw_sd_appointment_max_qty_per_session'] : '';
-					$rbfw_sd_appointment_ondays = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? rbfw_array_strip( $_POST['rbfw_sd_appointment_ondays'] ) : [];
-					$rbfw_enable_extra_service_qty  = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? $_POST['rbfw_enable_extra_service_qty']  : 'no';
-					$rbfw_item_stock_quantity_timely  = isset( $_POST['rbfw_item_stock_quantity_timely'] ) ? $_POST['rbfw_item_stock_quantity_timely']  : 1;
+				   $rbfw_resort_room_data = isset($_POST['rbfw_resort_room_data']) ? rbfw_array_strip(sanitize_text_field(wp_unslash($_POST['rbfw_resort_room_data']))) : 0;
+				   $rbfw_sd_appointment_max_qty_per_session = isset($_POST['rbfw_sd_appointment_max_qty_per_session']) ? sanitize_text_field(wp_unslash($_POST['rbfw_sd_appointment_max_qty_per_session'])) : '';
+				   $rbfw_sd_appointment_ondays = isset($_POST['rbfw_sd_appointment_ondays']) ? rbfw_array_strip(array_map('sanitize_text_field', wp_unslash($_POST['rbfw_sd_appointment_ondays']))) : [];
+				   $rbfw_enable_extra_service_qty = isset($_POST['rbfw_enable_extra_service_qty']) ? sanitize_text_field(wp_unslash($_POST['rbfw_enable_extra_service_qty'])) : 'no';
+				   $rbfw_item_stock_quantity_timely = isset($_POST['rbfw_item_stock_quantity_timely']) ? intval(wp_unslash($_POST['rbfw_item_stock_quantity_timely'])) : 1;
 
 
                     // daywise configureation============================
                     //sun
-                    $hourly_rate_sun = isset( $_POST['rbfw_sun_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sun_hourly_rate'] ) : '';
-                    $daily_rate_sun  = isset( $_POST['rbfw_sun_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sun_daily_rate'] ) : '';
-                    $enabled_sun     = isset( $_POST['rbfw_enable_sun_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sun_day'] ) : 'no';
+                    $hourly_rate_sun = isset( $_POST['rbfw_sun_hourly_rate'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_sun_hourly_rate'] ))) : '';
+                    $daily_rate_sun  = isset( $_POST['rbfw_sun_daily_rate'] ) ? rbfw_array_strip( sanitize_text_field(wp_unslash( $_POST['rbfw_sun_daily_rate'] ))) : '';
+                    $enabled_sun     = isset( $_POST['rbfw_enable_sun_day'] ) ? rbfw_array_strip( sanitize_text_field(wp_unslash( $_POST['rbfw_enable_sun_day'] ))) : 'no';
                     //mon
-                    $hourly_rate_mon = isset( $_POST['rbfw_mon_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_mon_hourly_rate'] ) : '';
-                    $daily_rate_mon  = isset( $_POST['rbfw_mon_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_mon_daily_rate'] ) : '';
-                    $enabled_mon     = isset( $_POST['rbfw_enable_mon_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_mon_day'] ) : 'no';
+                    $hourly_rate_mon = isset( $_POST['rbfw_mon_hourly_rate'] ) ? rbfw_array_strip( sanitize_text_field(wp_unslash( $_POST['rbfw_mon_hourly_rate'] ))) : '';
+                    $daily_rate_mon  = isset( $_POST['rbfw_mon_daily_rate'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_mon_daily_rate'] ))) : '';
+                    $enabled_mon     = isset( $_POST['rbfw_enable_mon_day'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_enable_mon_day'] ))) : 'no';
                     //tue
-                    $hourly_rate_tue = isset( $_POST['rbfw_tue_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_tue_hourly_rate'] ) : '';
-                    $daily_rate_tue  = isset( $_POST['rbfw_tue_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_tue_daily_rate'] ) : '';
-                    $enabled_tue     = isset( $_POST['rbfw_enable_tue_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_tue_day'] ) : 'no';
+                    $hourly_rate_tue = isset( $_POST['rbfw_tue_hourly_rate'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_tue_hourly_rate'] ))) : '';
+                    $daily_rate_tue  = isset( $_POST['rbfw_tue_daily_rate'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_tue_daily_rate'] ))) : '';
+                    $enabled_tue     = isset( $_POST['rbfw_enable_tue_day'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_enable_tue_day'] ))) : 'no';
                     //wed
-                    $hourly_rate_wed = isset( $_POST['rbfw_wed_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_wed_hourly_rate'] ) : '';
-                    $daily_rate_wed  = isset( $_POST['rbfw_wed_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_wed_daily_rate'] ) : '';
-                    $enabled_wed     = isset( $_POST['rbfw_enable_wed_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_wed_day'] ) : 'no';
+                    $hourly_rate_wed = isset( $_POST['rbfw_wed_hourly_rate'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_wed_hourly_rate'] ))) : '';
+                    $daily_rate_wed  = isset( $_POST['rbfw_wed_daily_rate'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_wed_daily_rate'] ))) : '';
+                    $enabled_wed     = isset( $_POST['rbfw_enable_wed_day'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_enable_wed_day'] ))) : 'no';
                     //thu
-                    $hourly_rate_thu = isset( $_POST['rbfw_thu_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_thu_hourly_rate'] ) : '';
-                    $daily_rate_thu  = isset( $_POST['rbfw_thu_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_thu_daily_rate'] ) : '';
-                    $enabled_thu     = isset( $_POST['rbfw_enable_thu_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_thu_day'] ) : 'no';
+                    $hourly_rate_thu = isset( $_POST['rbfw_thu_hourly_rate'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_thu_hourly_rate'] ))) : '';
+                    $daily_rate_thu  = isset( $_POST['rbfw_thu_daily_rate'] ) ? rbfw_array_strip( sanitize_text_field(wp_unslash($_POST['rbfw_thu_daily_rate'] ))) : '';
+                    $enabled_thu     = isset( $_POST['rbfw_enable_thu_day'] ) ? rbfw_array_strip( sanitize_text_field(wp_unslash($_POST['rbfw_enable_thu_day'] ))) : 'no';
                     //fri
-                    $hourly_rate_fri = isset( $_POST['rbfw_fri_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_fri_hourly_rate'] ) : '';
-                    $daily_rate_fri  = isset( $_POST['rbfw_fri_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_fri_daily_rate'] ) : '';
-                    $enabled_fri     = isset( $_POST['rbfw_enable_fri_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_fri_day'] ) : 'no';
+                    $hourly_rate_fri = isset( $_POST['rbfw_fri_hourly_rate'] ) ? rbfw_array_strip( sanitize_text_field(wp_unslash($_POST['rbfw_fri_hourly_rate'] ))) : '';
+                    $daily_rate_fri  = isset( $_POST['rbfw_fri_daily_rate'] ) ? rbfw_array_strip( sanitize_text_field(wp_unslash($_POST['rbfw_fri_daily_rate'] ))) : '';
+                    $enabled_fri     = isset( $_POST['rbfw_enable_fri_day'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_enable_fri_day'] ))) : 'no';
                     //sat
-                    $hourly_rate_sat         = isset( $_POST['rbfw_sat_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_hourly_rate'] ) : '';
-                    $daily_rate_sat          = isset( $_POST['rbfw_sat_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_sat_daily_rate'] ) : '';
-                    $enabled_sat             = isset( $_POST['rbfw_enable_sat_day'] ) ? rbfw_array_strip( $_POST['rbfw_enable_sat_day'] ) : 'no';
-                    $manage_inventory_as_timely             = isset( $_POST['manage_inventory_as_timely'] ) ? rbfw_array_strip( $_POST['manage_inventory_as_timely'] ) : 'off';
-                    $enable_specific_duration  = isset( $_POST['enable_specific_duration'] ) ? $_POST['enable_specific_duration']  : 'off';
+                    $hourly_rate_sat         = isset( $_POST['rbfw_sat_hourly_rate'] ) ? rbfw_array_strip( sanitize_text_field(wp_unslash($_POST['rbfw_sat_hourly_rate'] ))) : '';
+                    $daily_rate_sat          = isset( $_POST['rbfw_sat_daily_rate'] ) ? rbfw_array_strip( sanitize_text_field(wp_unslash($_POST['rbfw_sat_daily_rate'] ))) : '';
+                    $enabled_sat             = isset( $_POST['rbfw_enable_sat_day'] ) ? rbfw_array_strip(sanitize_text_field(wp_unslash( $_POST['rbfw_enable_sat_day'] ))) : 'no';
+                    $manage_inventory_as_timely             = isset( $_POST['manage_inventory_as_timely'] ) ? rbfw_array_strip( sanitize_text_field(wp_unslash($_POST['manage_inventory_as_timely'] ))) : 'off';
+					$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : 'off';
 
 
 
@@ -1460,13 +1459,13 @@
 					$old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 					$new_extra_service = array();
 			
-					$service_img     = !empty($_POST['service_img']) ? rbfw_array_strip( $_POST['service_img'] ) : array();
-					$names    = $_POST['service_name'] ? rbfw_array_strip( $_POST['service_name'] ) : array();
-					$urls     = $_POST['service_price'] ? rbfw_array_strip( $_POST['service_price'] ) : array();
-					$service_desc     = $_POST['service_desc'] ? rbfw_array_strip( $_POST['service_desc'] ) : array();
-					$qty      = $_POST['service_qty'] ? rbfw_array_strip( $_POST['service_qty'] ) : array();
+					$service_img = !empty($_POST['service_img']) ? sanitize_text_field(wp_unslash($_POST['service_img'])) : array();
+					$names = isset($_POST['service_name']) ? sanitize_text_field(wp_unslash($_POST['service_name'])) : array();
+					$urls = isset($_POST['service_price']) ? sanitize_text_field(wp_unslash($_POST['service_price'])) : array();
+					$service_desc = isset($_POST['service_desc']) ? sanitize_textarea_field(wp_unslash($_POST['service_desc'])) : array();
+					$qty = isset($_POST['service_qty']) ? sanitize_text_field(wp_unslash($_POST['service_qty'])) : array();
+					$qty_type = !empty($_POST['service_qty_type']) ? sanitize_text_field(wp_unslash($_POST['service_qty_type'])) : array();
 
-					$qty_type = !empty($_POST['service_qty_type']) ? rbfw_array_strip( $_POST['service_qty_type'] ) : array();
 					$count    = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
 			

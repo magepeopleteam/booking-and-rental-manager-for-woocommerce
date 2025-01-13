@@ -116,7 +116,7 @@ if( ! class_exists('RBFW_Security_Deposit')){
 
         public function settings_save($post_id) {
 
-            if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
+            if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash($_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
                 return;
             }
 
@@ -129,10 +129,22 @@ if( ! class_exists('RBFW_Security_Deposit')){
             }
 
             if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-                $rbfw_enable_security_deposit 	 = isset( $_POST['rbfw_enable_security_deposit'] ) ? rbfw_array_strip( $_POST['rbfw_enable_security_deposit'] ) : 'no';
-                $rbfw_security_deposit_type 	 = isset( $_POST['rbfw_security_deposit_type'] ) ? rbfw_array_strip( $_POST['rbfw_security_deposit_type'] ) : 'percentage';
-                $rbfw_security_deposit_amount 	 = isset( $_POST['rbfw_security_deposit_amount'] ) ? rbfw_array_strip( $_POST['rbfw_security_deposit_amount'] ) : 0;
-                $rbfw_security_deposit_label 	 = isset( $_POST['rbfw_security_deposit_label'] ) ? rbfw_array_strip( $_POST['rbfw_security_deposit_label'] ) : 'Security Deposit';
+                            $rbfw_enable_security_deposit = isset( $_POST['rbfw_enable_security_deposit'] ) 
+                ? rbfw_array_strip( sanitize_text_field( wp_unslash( $_POST['rbfw_enable_security_deposit'] ) ) ) 
+                : 'no';
+
+            $rbfw_security_deposit_type = isset( $_POST['rbfw_security_deposit_type'] ) 
+                ? rbfw_array_strip( sanitize_text_field( wp_unslash( $_POST['rbfw_security_deposit_type'] ) ) ) 
+                : 'percentage';
+
+            $rbfw_security_deposit_amount = isset( $_POST['rbfw_security_deposit_amount'] ) 
+                ? rbfw_array_strip( intval( wp_unslash( $_POST['rbfw_security_deposit_amount'] ) ) ) 
+                : 0;
+
+            $rbfw_security_deposit_label = isset( $_POST['rbfw_security_deposit_label'] ) 
+                ? rbfw_array_strip( sanitize_text_field( wp_unslash( $_POST['rbfw_security_deposit_label'] ) ) ) 
+                : 'Security Deposit';
+
                 update_post_meta( $post_id, 'rbfw_enable_security_deposit', $rbfw_enable_security_deposit );
                 update_post_meta( $post_id, 'rbfw_security_deposit_label', $rbfw_security_deposit_label );
                 update_post_meta( $post_id, 'rbfw_security_deposit_type', $rbfw_security_deposit_type );
