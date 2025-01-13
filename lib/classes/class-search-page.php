@@ -38,7 +38,7 @@
 						return; //do nothing
 					}
 				} else {
-					$page_obj = rbfw_exist_page_by_title( 'Rental Search' );
+					$page_obj = rbfw_exist_page_by_title( 'Rental Search jj' );
 					if ( $page_obj === false ) {
 						$args    = array(
 							'post_title'   => 'Rental Search',
@@ -69,6 +69,11 @@
 			}
 
 			public function rbfw_search_shortcode_func() {
+
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+
 				ob_start();
 				$search_page_id  = rbfw_get_option( 'rbfw_search_page', 'rbfw_basic_gen_settings' );
 				$current_page_id = get_queried_object_id();
