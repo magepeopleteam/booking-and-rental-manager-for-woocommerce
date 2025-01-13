@@ -73,6 +73,7 @@
                 'value'       => true,
                 'id'          => true,
             ),
+
             'ul'   => array(
                 'style'       => true, // Allows inline styles
                 'class'       => true,
@@ -83,6 +84,7 @@
                 'class'       => true,
                 'id'          => true,
             ),
+
 		);
 
 		return $allowed_html;
