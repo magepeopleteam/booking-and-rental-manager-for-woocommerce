@@ -1,19 +1,28 @@
 <?php
 global $rbfw;
+
+if ( !isset($_POST['rbfw_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_nonce'])), 'rbfw_ajax_nonce') ) {
+    wp_die('Nonce verification failed.');
+}
+
 if(isset($_POST['post_id'])){
-    $id = $_POST['post_id'];
+    $id = isset($_POST['post_id']) ? sanitize_text_field(wp_unslash($_POST['post_id'])) : '';
 
-    $selected_time = !empty($_POST['selected_time']) ? $_POST['selected_time'] : '';
-    $is_muffin_template = isset($_POST['is_muffin_template'])?$_POST['is_muffin_template']:'';
+    $selected_time = isset($_POST['selected_time']) ? sanitize_text_field(wp_unslash($_POST['selected_time'])) : '';
+
+    $is_muffin_template = isset($_POST['is_muffin_template']) ? sanitize_text_field(wp_unslash($_POST['is_muffin_template'])) : '';
+
     $rbfw_bike_car_sd_data = get_post_meta($id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($id, 'rbfw_bike_car_sd_data', true) : [];
-    $rbfw_extra_service_data = get_post_meta( $id, 'rbfw_extra_service_data', true ) ? get_post_meta( $id, 'rbfw_extra_service_data', true ) : [];
+    $rbfw_extra_service_data = get_post_meta($id, 'rbfw_extra_service_data', true) ? get_post_meta($id, 'rbfw_extra_service_data', true) : [];
 
-    $rbfw_product_id = get_post_meta( $id, "link_wc_product", true ) ? get_post_meta( $id, "link_wc_product", true ) : $id;
+    $rbfw_product_id = get_post_meta($id, 'link_wc_product', true) ? get_post_meta($id, 'link_wc_product', true) : $id;
 
-    $selected_date = isset($_POST['selected_date'])?$_POST['selected_date']:'';
+    $selected_date = isset($_POST['selected_date']) ? sanitize_text_field(wp_unslash($_POST['selected_date'])) : '';
+    
     $available_times = rbfw_get_available_times($id);
+
     $default_timezone = wp_timezone_string();
-    $date = new DateTime("now", new DateTimeZone($default_timezone) );
+    $date = new DateTime("now", new DateTimeZone($default_timezone));
     $nowTime  = $date->format('H:i');
     $nowDate  = $date->format('Y-m-d');
 
@@ -21,10 +30,8 @@ if(isset($_POST['post_id'])){
     $result = $date_to_string->format(get_option('date_format'));
 
     $available_qty_info_switch = get_post_meta($id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($id, 'rbfw_available_qty_info_switch', true) : 'no';
-    $enable_service_price_sd =  get_post_meta($id, 'rbfw_enable_category_service_price_sd', true) ? get_post_meta($id, 'rbfw_enable_category_service_price_sd', true) : 'off';
-
+    $enable_service_price_sd = get_post_meta($id, 'rbfw_enable_category_service_price_sd', true) ? get_post_meta($id, 'rbfw_enable_category_service_price_sd', true) : 'off';
 ?>
-
 
 
 <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step" data-step="3">
