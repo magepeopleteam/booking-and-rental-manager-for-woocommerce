@@ -34,7 +34,7 @@ if ($rbfw_offday_range !== 'no' && !empty($pickup_date)) {
         $checkDateTime = DateTime::createFromFormat('d-m-Y', $check_date);
 
         if ($checkDateTime >= $startDateTime && $checkDateTime <= $endDateTime) {
-            error_log(print_r(['$continue' => $continue], true));
+            //error_log(print_r(['$continue' => $continue], true));
             $continue = true;
         }
     }

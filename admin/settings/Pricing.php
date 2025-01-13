@@ -24,11 +24,9 @@
             }
 	        
 	        public function rbfw_load_duration_form() {
-		        // Nonce verification
-		        $nonce = isset( $_POST['rbfw_nonce'] ) ? sanitize_key( wp_unslash( $_POST['rbfw_nonce'] ) ) : ''; // Unsplash and sanitize the nonce
-		        if ( ! isset( $nonce ) || ! wp_verify_nonce( $nonce, 'rbfw_nonce_action' ) ) {
-			        die( 'Security check failed' );
-		        }
+		        if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
 		        
 		        // Check and sanitize inputs
 		        $manage_inventory_as_timely = isset( $_POST['manage_inventory_as_timely'] ) ? sanitize_text_field( wp_unslash( $_POST['manage_inventory_as_timely'] ) ) : '';
