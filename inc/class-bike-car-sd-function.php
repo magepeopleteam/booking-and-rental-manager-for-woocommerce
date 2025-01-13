@@ -486,9 +486,9 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
 
                     $content .= '</div>';
                     $content .= '</div>';
-                    echo esc_html($content);
+                    echo wp_kses($content,rbfw_allowed_html());
                     $output = ob_get_clean();
-                    echo esc_html($output);
+                    echo wp_kses($output,rbfw_allowed_html());
                 }else{
                     include( RBFW_Function::get_template_path( 'template_segment/single_day_info.php' ) );
                 }

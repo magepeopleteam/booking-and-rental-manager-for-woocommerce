@@ -1,8 +1,8 @@
 <?php
 global $rbfw;
 
-if ( !isset($_POST['rbfw_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_nonce'])), 'rbfw_ajax_nonce') ) {
-    wp_die('Nonce verification failed.');
+if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+    return;
 }
 
 if(isset($_POST['post_id'])){
@@ -18,7 +18,7 @@ if(isset($_POST['post_id'])){
     $rbfw_product_id = get_post_meta($id, 'link_wc_product', true) ? get_post_meta($id, 'link_wc_product', true) : $id;
 
     $selected_date = isset($_POST['selected_date']) ? sanitize_text_field(wp_unslash($_POST['selected_date'])) : '';
-    
+
     $available_times = rbfw_get_available_times($id);
 
     $default_timezone = wp_timezone_string();
@@ -41,7 +41,7 @@ if(isset($_POST['post_id'])){
 
     <?php if($is_muffin_template == 0){ ?>
         <div class="rbfw_step_selected_date" data-time="<?php echo esc_html($selected_time); ?>">
-            <i class="fa-solid fa-calendar-check"></i> 
+            <i class="fa-solid fa-calendar-check"></i>
             <?php echo esc_html(rbfw_string_return('rbfw_text_you_selected',__('You selected','booking-and-rental-manager-for-woocommerce'))) ?>: <?php echo esc_html($result.' '.$selected_time); ?>
         </div>
     <?php } ?>
@@ -116,7 +116,7 @@ if(isset($_POST['post_id'])){
                                                                     <input type="number"  name="rbfw_service_price_data[<?php echo esc_html($cat); ?>][<?php echo esc_html($serkey); ?>][quantity]" min="0"  value="1" class="rbfw_servicesd_qty rbfw_service_info_stock" data-cat="service" data-price="20" data-item="<?php echo esc_html($cat.$serkey); ?>" data-name="ddd" autocomplete="off">
                                                                     <a class="rbfw_service_quantity_plus_sd" data-item="<?php echo esc_html($cat.$serkey); ?>"><i class="fa-solid fa-plus"></i></a>
                                                                 </div>
-                                                                <div class="title"><?php echo esc_html(wc_price($service['price'])); ?></div>
+                                                                <div class="title"><?php echo wp_kses(wc_price($service['price']),rbfw_allowed_html()); ?></div>
                                                             </div>
                                                         </div>
 
@@ -169,7 +169,7 @@ if(isset($_POST['post_id'])){
                                     </td>
 
                                     <td class="w_30_pc">
-                                        <span class="rbfw_bikecarsd_type_price"><?php echo esc_html(rbfw_mps_price($value['price'])); ?></span>
+                                        <span class="rbfw_bikecarsd_type_price"><?php echo wp_kses(rbfw_mps_price($value['price']),rbfw_allowed_html()); ?></span>
                                     </td>
                                     <input type="hidden" name="rbfw_bikecarsd_info[<?php echo esc_html($i); ?>][price]" value="<?php echo esc_html($value['price']); ?>"/>
                                     <td class="w_20_pc">
@@ -247,7 +247,7 @@ if(isset($_POST['post_id'])){
                                         </div>
                                     </td>
                                     <td class="w_30_pc">
-                                        <?php echo esc_html(rbfw_mps_price($value['service_price'])); ?>
+                                        <?php echo wp_kses(rbfw_mps_price($value['service_price']),rbfw_allowed_html()); ?>
                                     </td>
                                     <td class="w_20_pc">
                                         <div class="rbfw_service_price_wrap">
@@ -280,21 +280,21 @@ if(isset($_POST['post_id'])){
                 <ul class="rbfw-ul">
                     <li class="duration-costing rbfw-cond">
                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce'))); ?>
-                        <?php echo esc_html(wc_price(0)); ?>
+                        <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                     </li>
                     <?php if(!empty($rbfw_extra_service_data)){ ?>
                         <li class="resource-costing rbfw-cond">
                             <?php echo esc_html($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce'))); ?>
-                            <?php echo esc_html(wc_price(0)); ?>
+                            <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                         </li>
                     <?php } ?>
                     <li class="subtotal">
                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce'))); ?>
-                        <?php echo esc_html(wc_price(0)); ?>
+                        <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                     </li>
                     <li class="total">
                         <strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce'))); ?></strong>
-                        <?php echo esc_html(wc_price(0)); ?>
+                        <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                     </li>
                 </ul>
                 <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>

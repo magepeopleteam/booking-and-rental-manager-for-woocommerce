@@ -379,10 +379,6 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
     let pickup_date = jQuery('#hidden_pickup_date').val();
     let dropoff_date = jQuery('#hidden_dropoff_date').val();
 
-
-    alert(rbfw_ajax.rbfw_ajaxurl);
-
-
     let rbfw_available_time = jQuery('#rbfw_available_time').val();
 
     let pickup_time = jQuery('.pickup_time').find(':selected').val();

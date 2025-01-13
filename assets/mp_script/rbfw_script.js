@@ -40,7 +40,8 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
                 'post_id': post_id,
                 'selected_time': gTime,
                 'selected_date': selected_date,
-                'is_muffin_template': is_muffin_template
+                'is_muffin_template': is_muffin_template,
+                'nonce' : rbfw_ajax.nonce
             },
             beforeSend: function() {
 
