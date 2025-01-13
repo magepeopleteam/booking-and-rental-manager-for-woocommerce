@@ -38,7 +38,7 @@
 						return; //do nothing
 					}
 				} else {
-					$page_obj = rbfw_exist_page_by_title( 'Rental Search jj' );
+					$page_obj = rbfw_exist_page_by_title( 'Rental Search' );
 					if ( $page_obj === false ) {
 						$args    = array(
 							'post_title'   => 'Rental Search',

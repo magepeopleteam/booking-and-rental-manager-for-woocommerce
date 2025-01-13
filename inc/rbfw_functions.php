@@ -59,6 +59,20 @@
 				'data-key'    => true,
 				'placeholder' => true,
 			),
+            'select'   => array(
+                'style'       => true, // Allows inline styles
+                'class'       => true,
+                'name'        => true,
+                'id'          => true,
+            ),
+            'option'   => array(
+                'style'       => true, // Allows inline styles
+                'class'       => true,
+                'type'        => true,
+                'name'        => true,
+                'value'       => true,
+                'id'          => true,
+            ),
 		);
 
 		return $allowed_html;
@@ -2815,7 +2829,7 @@
 			}
 		}
 		$option .= "</select>";
-		echo esc_html( $option );
+		echo wp_kses( $option , rbfw_allowed_html());
 	}
 	function rbfw_time_slot_select( $date_type, $iidex, $selected_time ) {
 		$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
