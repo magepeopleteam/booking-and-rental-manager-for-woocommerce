@@ -170,7 +170,8 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus,
                 'action'        : 'rbfw_bikecarsd_ajax_price_calculation',
                 'post_id': post_id,
                 'bikecarsd_price_arr': bikecarsd_price_arr,
-                'service_price_arr': service_price_arr
+                'service_price_arr': service_price_arr,
+                'nonce' : rbfw_ajax.nonce
             },
 
             beforeSend: function() {

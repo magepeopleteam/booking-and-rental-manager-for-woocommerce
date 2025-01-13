@@ -73,6 +73,16 @@
                 'value'       => true,
                 'id'          => true,
             ),
+            'ul'   => array(
+                'style'       => true, // Allows inline styles
+                'class'       => true,
+                'id'          => true,
+            ),
+            'li'   => array(
+                'style'       => true, // Allows inline styles
+                'class'       => true,
+                'id'          => true,
+            ),
 		);
 
 		return $allowed_html;
@@ -2296,8 +2306,7 @@
 		}
 		$rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 		foreach ( $rdfw_available_time as $start_time ) {
-			echo esc_html( $type );
-			exit;
+
 			if ( $type == 'time_enable' ) {
 				$time_status = '';
 			} else {
