@@ -439,7 +439,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                             </div>
                                                         </td>
                                                         <td class="w_20">
-                                                            <div class="title"><?php echo esc_html(wc_price($service['price'])); ?></div>
+                                                            <div class="title"><?php echo wp_kses(wc_price($service['price']),rbfw_allowed_html()); ?></div>
                                                             <span class="day-time-wise"><?php echo ($service['service_price_type'] === 'day_wise') ? esc_html__('Day Wise', 'booking-and-rental-manager-for-woocommerce') : esc_html__('One Time', 'booking-and-rental-manager-for-woocommerce'); ?></span>
                                                         </td>
                                                         <td class="rbfw_service_quantity item_<?php echo esc_attr($cat . $serkey); ?>" style="display: none;">
@@ -505,7 +505,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                     <?php echo esc_html($extra['service_name']); ?>
                                                     <i class="resource-qty"><?php esc_html_e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo esc_html('('.$extra['service_qty'].')'); ?></span></i>
                                                 </td>
-                                                <td class="w_20"><?php echo esc_html(rbfw_mps_price($extra['service_price'])); ?></td>
+                                                <td class="w_20"><?php echo wp_kses(rbfw_mps_price($extra['service_price']),rbfw_allowed_html()); ?></td>
                                                 <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>
                                                     <td class="rbfw_bikecarmd_es_input_box" style="display:none">
                                                         <div class="rbfw_qty_input">
