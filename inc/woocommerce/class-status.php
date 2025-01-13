@@ -139,10 +139,10 @@ if (!class_exists('RBFW_Status')) {
             if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                 return;
             }
-
-            if(isset($_GET['rbfw_plugin_activate']) && !is_plugin_active( $_GET['rbfw_plugin_activate'] )){
-                $slug = sanitize_text_field($_GET['rbfw_plugin_activate']);
-                $activate = activate_plugin( $slug );
+	        
+	        if ( isset( $_GET['rbfw_plugin_activate'] ) && !is_plugin_active( sanitize_text_field( wp_unslash( $_GET['rbfw_plugin_activate'] ) ) ) ) {
+		        $slug = sanitize_text_field( wp_unslash( $_GET['rbfw_plugin_activate'] ) );
+		        $activate = activate_plugin( $slug );
                 $url = admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_import' );
                 echo wp_kses_post('<script>
                 var url = "'.$url.'";
@@ -159,10 +159,10 @@ if (!class_exists('RBFW_Status')) {
             if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                 return;
             }
-
-            if(isset($_GET['rbfw_plugin_install']) && $this->rbfw_free_chk_plugin_folder_exist($_GET['rbfw_plugin_install']) == false){
-                $slug = sanitize_text_field($_GET['rbfw_plugin_install']);
-                if($slug == 'woocommerce'){
+	        
+	        if (isset($_GET['rbfw_plugin_install']) && $this->rbfw_free_chk_plugin_folder_exist(sanitize_text_field(wp_unslash($_GET['rbfw_plugin_install']))) == false) {
+		        $slug = sanitize_text_field(wp_unslash($_GET['rbfw_plugin_install']));
+		        if($slug == 'woocommerce'){
                     $action = 'install-plugin';
                     $url = wp_nonce_url(
                         add_query_arg(
