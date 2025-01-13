@@ -149,9 +149,7 @@
 					wp_enqueue_style( 'flatpickr-css', RBFW_PLUGIN_URL . '/css/flatpickr.min.css', array(), null );
 					wp_enqueue_script( 'flatpickr-js', RBFW_PLUGIN_URL . '/assets/flatpickr.js',array( 'jquery' ), null, true);
 					wp_enqueue_script(
-						'jquery-ui-cdn',
-						'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js',
-						array( 'jquery' ), // Ensures jQuery is loaded as a dependency
+						'jquery-ui-cdn', RBFW_PLUGIN_URL . 'admin/js/jquery-ui.min.js', array( 'jquery' ), // Ensures jQuery is loaded as a dependency
 						'1.12.1',
 						true // Load in the footer
 					);
