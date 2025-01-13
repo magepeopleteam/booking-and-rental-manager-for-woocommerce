@@ -3,6 +3,69 @@
 		exit;
 	}
 // Language Load
+
+function rbfw_allowed_html(){
+	$allowed_html = array(
+		'script' => array(
+			'type' => true,
+			'src'  => true,
+			'async' => true,
+			'defer' => true,
+		),
+		'div' => array(
+			'style' => true, // Allows inline styles
+			'class' => true,
+			'onclick' => true, // Allows inline JavaScript
+		),
+		'table' => array(
+			'thead' => true, // Allows inline styles
+			'tbody' => true,
+			'tr' => true, // Allows inline JavaScript
+			'td'=>true,
+			'div'=>true,
+			'a'=>true
+		),
+		'p' => array(
+			'style' => true, // Allows inline styles
+			'class' => true,
+			'onclick' => true, // Allows inline JavaScript
+		),
+		'i' => array(
+			'style' => true, // Allows inline styles
+			'class' => true,
+			'onclick' => true, // Allows inline JavaScript
+		),
+		'span' => array(
+			'style' => true, // Allows inline styles
+			'class' => true,
+			'onclick' => true, // Allows inline JavaScript
+		),
+		'section' => array(
+			'style' => true, // Allows inline styles
+			'class' => true,
+			'onclick' => true, // Allows inline JavaScript
+		),
+		'a' => array(
+			'style' => true, // Allows inline styles
+			'class' => true,
+			'onclick' => true, // Allows inline JavaScript
+		),
+		'input' => array(
+			'style' => true, // Allows inline styles
+			'class' => true,
+			'type' => true, 
+			'name' => true, 
+			'value' => true, 
+			'id' => true, 
+			'data-key' => true, 
+			'placeholder' => true, 
+		),
+		
+	);
+	return $allowed_html; 
+}
+
+
 	add_action( 'init', 'rbfw_language_load' );
 	function rbfw_language_load() {
 		$plugin_dir = basename( dirname( __DIR__ ) ) . "/languages/";
