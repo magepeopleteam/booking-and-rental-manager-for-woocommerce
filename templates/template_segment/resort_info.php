@@ -1,11 +1,15 @@
 <?php
 global $rbfw;
-if(!($post_id && $active_tab)){
-    $post_id = $_POST['post_id'];
-    $active_tab = $_POST['active_tab'];
+if ( !isset($_POST['rbfw_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_nonce'])), 'rbfw_action') ) {
+    wp_die('Nonce verification failed.');
+}
 
-    $checkin_date = wp_strip_all_tags($_POST['checkin_date']);
-    $checkout_date = wp_strip_all_tags($_POST['checkout_date']);
+if ( !($post_id && $active_tab) ) {
+    $post_id = isset($_POST['post_id']) ? sanitize_text_field(wp_unslash($_POST['post_id'])) : '';
+    $active_tab = isset($_POST['active_tab']) ? sanitize_text_field(wp_unslash($_POST['active_tab'])) : '';
+
+    $checkin_date = isset($_POST['checkin_date']) ? sanitize_text_field(wp_unslash($_POST['checkin_date'])) : '';
+    $checkout_date = isset($_POST['checkout_date']) ? sanitize_text_field(wp_unslash($_POST['checkout_date'])) : '';
 }
 if(isset($post_id) && isset($active_tab)){
 
