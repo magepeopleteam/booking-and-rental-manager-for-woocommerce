@@ -390,9 +390,13 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
         }
 
         public function rbfw_check_resort_availibility(){
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
 
-            $start_date = sanitize_text_field($_POST['checkin_date']);
-            $end_date = sanitize_text_field($_POST['checkout_date']);
+            $start_date = isset($_POST['checkin_date'])?sanitize_text_field(wp_unslash($_POST['checkin_date'])):'';
+            $end_date = isset($_POST['checkout_date'])?sanitize_text_field(wp_unslash($_POST['checkout_date'])):'';
+            $post_id = isset($_POST['post_id'])?intval(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
 
             $origin             = date_create($start_date);
             $target             = date_create($end_date);
@@ -404,29 +408,36 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             }else{
                 $price_type = 'daylong';
             }
-            $this->rbfw_get_active_price_table(intval(sanitize_text_field($_POST['post_id'])),$price_type,sanitize_text_field($_POST['checkin_date']),sanitize_text_field($_POST['checkout_date']));
+            $this->rbfw_get_active_price_table($post_id,$price_type,$start_date,$end_date);
         }
 
         public function rbfw_get_active_price_table($post_id=0,$active_tab='',$checkin_date='',$checkout_date=''){
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
             include( RBFW_Function::get_template_path( 'template_segment/resort_info.php' ) );
             wp_die();
         }
 
         public function rbfw_room_price_calculation(){
 
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
+
             if(isset($_POST['checkin_date']) && isset($_POST['checkout_date'])) {
 
                 global $rbfw;
                 $content = '';
-                $checkin_date = sanitize_text_field($_POST['checkin_date']);
-                $checkout_date =  sanitize_text_field($_POST['checkout_date']);
-                $post_id = intval(sanitize_text_field($_POST['post_id']));
+                $checkin_date = isset($_POST['checkin_date'])?sanitize_text_field(wp_unslash($_POST['checkin_date'])):'';
+                $checkout_date =  isset($_POST['checkout_date'])?sanitize_text_field(wp_unslash($_POST['checkout_date'])):'';
+                $post_id = isset($_POST['post_id'])?intval(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
                 $origin = date_create($checkin_date);
                 $target = date_create($checkout_date);
                 $interval = date_diff($origin, $target);
                 $total_days = $interval->format('%a');
-                $room_price_arr = RBFW_Function::data_sanitize($_POST['room_price_arr']);
-                $service_price_arr = !empty($_POST['service_price_arr']) ? RBFW_Function::data_sanitize($_POST['service_price_arr']) : [];
+                $room_price_arr = isset($_POST['room_price_arr'])?RBFW_Function::data_sanitize(sanitize_text_field(wp_unslash($_POST['room_price_arr']))):[];
+                $service_price_arr = isset($_POST['service_price_arr']) ? RBFW_Function::data_sanitize(sanitize_text_field(wp_unslash($_POST['service_price_arr']))) : [];
                 $room_price = 0;
                 $service_price = 0;
                 $total_room_price = 0;

@@ -225,7 +225,8 @@ jQuery(document).on('change','.rbfw_bikecarsd_qty, .rbfw_servicesd_qty',function
                 'action'  : 'rbfw_bikecarsd_ajax_price_calculation',
                 'post_id': post_id,
                 'bikecarsd_price_arr': bikecarsd_price_arr,
-                'service_price_arr': service_price_arr
+                'service_price_arr': service_price_arr,
+                'nonce' : rbfw_ajax.nonce
             },
             beforeSend: function() {
                 jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
@@ -353,6 +354,7 @@ function particular_time_date_dependent_ajax(post_id,date_ymd,type='',selector='
             'selected_date': date_ymd,
             'type': type,
             'selector': selector,
+            'nonce' : rbfw_ajax.nonce
         },
         beforeSend: function() {
             jQuery('.rbfw_bikecarsd_price_summary').addClass('old');

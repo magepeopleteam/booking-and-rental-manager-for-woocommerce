@@ -35,7 +35,12 @@
 
 
 			public static function get_submit_info( $key, $default = '' ) {
-				$data = $_POST[ $key ] ?? $default;
+
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+
+                $data = isset($_POST[ $key ])?sanitize_text_field(wp_unslash($_POST[ $key ])): $default;
 
 				return self::data_sanitize( $data );
 			}

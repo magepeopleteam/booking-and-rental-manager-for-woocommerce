@@ -806,10 +806,10 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
 function rbfw_get_stock_by_filter(){
 
-    if (isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field($_POST['nonce']), 'rbfw_ajax_action')) {
-        $selected_date = sanitize_text_field($_POST['selected_date']);
-        $start_date = sanitize_text_field($_POST['start_date']);
-        $end_date = sanitize_text_field($_POST['end_date']);
+    if (isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action')) {
+        $selected_date = isset($_POST['selected_date'])?sanitize_text_field(wp_unslash($_POST['selected_date'])):'';
+        $start_date = isset($_POST['start_date'])?sanitize_text_field(wp_unslash($_POST['start_date'])):'';
+        $end_date = isset($_POST['end_date'])?sanitize_text_field(wp_unslash($_POST['end_date'])):'';
 
         $args = array(
                 'post_type' => 'rbfw_item',
@@ -825,9 +825,9 @@ function rbfw_get_stock_by_filter(){
 
 function rbfw_get_stock_details(){
 
-            $data_request = wp_strip_all_tags($_POST['data_request']);
-            $data_date = wp_strip_all_tags($_POST['data_date']);
-            $data_id = wp_strip_all_tags($_POST['data_id']);
+            $data_request = isset($_POST['data_request'])?sanitize_text_field(wp_unslash($_POST['data_request'])):'';
+            $data_date = isset($_POST['data_date'])?sanitize_text_field(wp_unslash($_POST['data_date'])):'';
+            $data_id = isset($_POST['data_id'])?sanitize_text_field(wp_unslash($_POST['data_id'])):'';
             $inventory_based_on_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
             $rent_type = !empty(get_post_meta($data_id, 'rbfw_item_type', true)) ? get_post_meta($data_id, 'rbfw_item_type', true) : '';
             $rbfw_enable_variations = !empty(get_post_meta($data_id, 'rbfw_enable_variations', true)) ? get_post_meta($data_id, 'rbfw_enable_variations', true) : 'no';

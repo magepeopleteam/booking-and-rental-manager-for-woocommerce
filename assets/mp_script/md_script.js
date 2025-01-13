@@ -423,7 +423,8 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             'rbfw_enable_variations': rbfw_enable_variations,
             'rbfw_es_service_price': rbfw_es_service_price,
             'rbfw_available_time': rbfw_available_time,
-            'rbfw_enable_time_slot': rbfw_enable_time_slot
+            'rbfw_enable_time_slot': rbfw_enable_time_slot,
+            'nonce' : rbfw_ajax.nonce
 
         },
         beforeSend: function() {

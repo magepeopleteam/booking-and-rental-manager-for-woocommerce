@@ -44,26 +44,27 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
 
         function rbfw_md_duration_price_calculation_ajax(){
-
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
             global $rbfw;
+            $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
 
-            $post_id = absint($_POST['post_id']);
-
-            $start_date = sanitize_text_field($_POST['pickup_date']);
-            $end_date = sanitize_text_field($_POST['dropoff_date']);
-            $star_time = isset($_POST['pickup_time'])?sanitize_text_field($_POST['pickup_time']):'';
-            $end_time = isset($_POST['dropoff_time'])?sanitize_text_field($_POST['dropoff_time']):'';
+            $start_date = isset($_POST['pickup_date'])?sanitize_text_field(wp_unslash($_POST['pickup_date'])):'';
+            $end_date = isset($_POST['dropoff_date'])?sanitize_text_field(wp_unslash($_POST['dropoff_date'])):'';
+            $star_time = isset($_POST['pickup_time'])?sanitize_text_field(wp_unslash($_POST['pickup_time'])):'';
+            $end_time = isset($_POST['dropoff_time'])?sanitize_text_field(wp_unslash($_POST['dropoff_time'])):'';
 
             $pickup_datetime = gmdate('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
             $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
-            $item_quantity = absint($_POST['item_quantity']);
-            $rbfw_enable_variations = sanitize_text_field($_POST['rbfw_enable_variations']);
-            $rbfw_available_time = sanitize_text_field($_POST['rbfw_available_time'])?sanitize_text_field($_POST['rbfw_available_time']):'no';
-            $rbfw_service_price = floatval(sanitize_text_field($_POST['rbfw_service_price'])) * $item_quantity;
+            $item_quantity = isset($_POST['item_quantity'])?absint($_POST['item_quantity']):'';
+            $rbfw_enable_variations = isset($_POST['rbfw_enable_variations'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_variations'])):'';
+            $rbfw_available_time = isset($_POST['rbfw_available_time'])?sanitize_text_field(wp_unslash($_POST['rbfw_available_time'])):'no';
+            $rbfw_service_price = isset($_POST['rbfw_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_price']))):'' * $item_quantity;
 
 
-            $rbfw_enable_time_slot = sanitize_text_field($_POST['rbfw_enable_time_slot'])?sanitize_text_field($_POST['rbfw_enable_time_slot']):'off';
+            $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_time_slot'])):'off';
 
 
             $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime,$rbfw_enable_time_slot);
@@ -83,7 +84,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             }
 
 
-            $service_cost = floatval(sanitize_text_field($_POST['rbfw_es_service_price']));
+            $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):'';
 
             $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_service_price;
             $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
