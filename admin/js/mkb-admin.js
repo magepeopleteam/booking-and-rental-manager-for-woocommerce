@@ -128,7 +128,8 @@
                     data: {
                         'action': 'rbfw_save_faq_data',
                         'data': JSON.stringify(theDataArr),
-                        'postID': postID
+                        'postID': postID,
+                        'nonce': rbfw_save_faq_data_nonce
                     },
                     beforeSend: function() {
                         jQuery('.rbfw_save_faq_content_btn i').show();
@@ -211,7 +212,8 @@
                         data: {
                             'action': 'rbfw_save_faq_data',
                             'data': JSON.stringify(theDataArr),
-                            'postID': postID
+                            'postID': postID,
+                            'nonce': rbfw_ajax.nonce
                         },
                         beforeSend: function() {
                             jQuery('button.rbfw_add_faq_content').addClass('rbfw-pointer-not-allowed');
@@ -244,7 +246,7 @@
             $.ajax({
                 type: 'POST',
                 url: rbfw_ajax_url,
-                data: { "action": "get_rbfw_add_faq_content", "id": theID, 'count': lastDataID },
+                data: { "action": "get_rbfw_add_faq_content", "id": theID, 'count': lastDataID, 'nonce': rbfw_add_faq_nonce },
                 beforeSend: function() {
 
                     theLoader.css('display', 'inline-block');

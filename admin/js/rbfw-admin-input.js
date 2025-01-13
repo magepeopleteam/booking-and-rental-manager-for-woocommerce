@@ -61,7 +61,8 @@
                 'action': 'rbfw_load_duration_form',
                 'manage_inventory_as_timely': manage_inventory_as_timely,
                 'enable_specific_duration': enable_specific_duration,
-                'total_row': total_row
+                'total_row': total_row,
+                'nonce': rbfw_ajax.nonce
             },
             success: function(response) {
                 jQuery('.rbfw_bike_car_sd_price_table tbody').append(response);
