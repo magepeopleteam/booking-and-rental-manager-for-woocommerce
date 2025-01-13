@@ -126,7 +126,7 @@
 
 			public function settings_save($post_id) {
                 
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
+                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash($_POST['rbfw_ticket_type_nonce'])), 'rbfw_ticket_type_nonce' ) ) {
                     return;
                 }
                 if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -136,8 +136,15 @@
                     return;
                 }
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-					$rbfw_available_qty_info_switch = isset( $_POST['rbfw_available_qty_info_switch'] ) ? $_POST['rbfw_available_qty_info_switch']  : 'no';
-                    $shipping_enable 	 = isset( $_POST['shipping_enable'] ) ? rbfw_array_strip( $_POST['shipping_enable'] ) : '';
+                                    $rbfw_available_qty_info_switch = isset( $_POST['rbfw_available_qty_info_switch'] ) 
+                    ? sanitize_text_field( wp_unslash( $_POST['rbfw_available_qty_info_switch'] ) ) 
+                    : 'no';
+
+                    $shipping_enable = isset( $_POST['shipping_enable'] ) 
+                    ? rbfw_array_strip( sanitize_text_field( wp_unslash( $_POST['shipping_enable'] ) ) ) 
+                    : '';
+
+
 					update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
 					update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
 					

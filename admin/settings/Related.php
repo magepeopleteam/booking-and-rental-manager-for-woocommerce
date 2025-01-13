@@ -70,9 +70,11 @@ if( ! class_exists('RBFW_Related')){
 
         public function settings_save($post_id) {
                 
-            if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
-                return;
-            }
+            if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
+                    return;
+                }
+
+
 
             if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
                 return;
@@ -83,9 +85,15 @@ if( ! class_exists('RBFW_Related')){
             }
 
             if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-                $related_categories 	 = isset( $_POST['rbfw_releted_rbfw'] ) ? rbfw_array_strip( $_POST['rbfw_releted_rbfw'] ) : [];
+                // Use wp_unslash to remove slashes and then sanitize array items using rbfw_array_strip
+                $related_categories = isset( $_POST['rbfw_releted_rbfw'] ) 
+                    ? rbfw_array_strip( array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_releted_rbfw'] ) ) ) 
+                    : [];
+                
+                // Update the post meta
                 update_post_meta( $post_id, 'rbfw_releted_rbfw', $related_categories );
             }
+
         }
     }
     new RBFW_Related();
