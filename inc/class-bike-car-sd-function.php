@@ -613,13 +613,12 @@ if ( ! class_exists( 'RBFW_BikeCarSd_Function' ) ) {
         }
 
         public function particular_time_date_dependent(){
-
             if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                 return;
             }
             $post_id = isset($_POST['post_id'])?intval(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
             $selected_date = isset($_POST['selected_date'])?sanitize_text_field(wp_unslash($_POST['selected_date'])):'';
-            $type = isset($_POST['post_id'])?sanitize_text_field(wp_unslash($_POST['post_id'])):'';
+            $type = isset($_POST['type'])?sanitize_text_field(wp_unslash($_POST['type'])):'';
             $selector = (isset($_POST['selector']) && sanitize_text_field(wp_unslash($_POST['selector'])))?sanitize_text_field(wp_unslash($_POST['selector'])):'.rbfw-select.rbfw-time-price.pickup_time';
 
             $times_particulars = rbfw_get_available_times_particulars($post_id,$selected_date,$type,$selector);

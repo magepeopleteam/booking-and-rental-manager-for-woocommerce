@@ -140,7 +140,10 @@
 					wp_enqueue_style( 'dashicons' );
 					wp_enqueue_style( 'rbfw-jquery-ui-style', plugin_dir_url( __DIR__ ) . 'css/jquery-ui.css', array() );
 					wp_localize_script( 'rbfw_custom_script', 'rbfw_ajaxurl', array( 'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ), 'view_more_feature_btn_text' => $view_more_feature_btn_text, 'hide_more_feature_btn_text' => $hide_more_feature_btn_text, 'view_more_offers_btn_text' => $view_more_offers_btn_text, 'hide_more_offers_btn_text' => $hide_more_offers_btn_text ) );
-					wp_localize_script( 'jquery', 'rbfw_ajax', array( 'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+					wp_localize_script( 'jquery', 'rbfw_ajax', array(
+                            'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ) ,
+                            'nonce'        => wp_create_nonce( 'rbfw_ajax_action' )
+                    ) );
 					//font awesome
 					wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
 					wp_enqueue_style( 'flatpickr-css', RBFW_PLUGIN_URL . '/css/flatpickr.min.css', array(), null );
