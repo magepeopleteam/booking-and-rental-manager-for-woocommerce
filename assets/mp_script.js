@@ -80,45 +80,7 @@ function pageScrollTo(target) {
     }, 1000);
 }
 //====================================================Load Date picker==============//
-function mp_load_date_picker(parent = jQuery('.mpStyle')) {
-    parent.find(".date_type.hasDatepicker").each(function () {
-        jQuery(this).removeClass('hasDatepicker').attr('id', '').removeData('datepicker').unbind();
-    }).promise().done(function () {
-        parent.find(".date_type").datepicker({
-            dateFormat: mp_date_format,
-            //showButtonPanel: true,
-            autoSize: true,
-            changeMonth: true,
-            changeYear: true,
-            onSelect: function (dateString, data) {
-                let date = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-                jQuery(this).closest('label').find('input[type="hidden"]').val(date).trigger('change');
-            },
-            // closeText: 'Clear Date',
-            // onClose: function (dateText, inst) {
-            // 	if (jQuery(this).hasClass('ui-datepicker-close')) {
-            // 		document.getElementById(this.id).reset();
-            // 	}
-            // }
-        });
-    });
-    parent.find(".date_type_without_year.hasDatepicker").each(function () {
-        jQuery(this).removeClass('hasDatepicker').attr('id', '').removeData('datepicker').unbind();
-    }).promise().done(function () {
-        parent.find(".date_type_without_year").datepicker({
-            dateFormat: mp_date_format_without_year,
-            //showButtonPanel: true,
-            autoSize: true,
-            changeMonth: true,
-            changeYear: false,
-            onSelect: function (dateString, data) {
-                //console.log(mp_date_format_without_year);
-                let date = ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-                jQuery(this).closest('label').find('input[type="hidden"]').val(date).trigger('change');
-            }
-        });
-    });
-}
+
 //========================================================Alert==============//
 function mp_alert($this, attr = 'alert') {
     alert($this.data(attr));
@@ -127,7 +89,6 @@ function mp_alert($this, attr = 'alert') {
 (function ($) {
     "use strict";
     $(document).ready(function () {
-        mp_load_date_picker();
         $('.mp_select2').select2({});
     });
 }(jQuery));
