@@ -136,6 +136,10 @@ if (!class_exists('RBFW_Status')) {
         }
 
         public function rbfw_plugin_activate(){
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
+
             if(isset($_GET['rbfw_plugin_activate']) && !is_plugin_active( $_GET['rbfw_plugin_activate'] )){
                 $slug = sanitize_text_field($_GET['rbfw_plugin_activate']);
                 $activate = activate_plugin( $slug );
@@ -151,6 +155,10 @@ if (!class_exists('RBFW_Status')) {
         }
 
         public function rbfw_plugin_install(){
+
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
 
             if(isset($_GET['rbfw_plugin_install']) && $this->rbfw_free_chk_plugin_folder_exist($_GET['rbfw_plugin_install']) == false){
                 $slug = sanitize_text_field($_GET['rbfw_plugin_install']);
