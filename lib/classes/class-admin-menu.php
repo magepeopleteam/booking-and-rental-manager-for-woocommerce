@@ -12,6 +12,7 @@
 		class MageRBFWClass {
 			private $settings_api;
 			private $posts_per_page = 10;
+
 			public function __construct() {
 				$this->settings_api = new RBFW_Setting_API;
 				add_action( 'add_meta_boxes', array( $this, 'add_meta_box_func' ) );
@@ -49,13 +50,13 @@
 			}
 
 			public function rbfw_order_list() {
-				$this->posts_per_page = isset( $_GET['posts_per_page'] ) ? intval( sanitize_text_field( wp_unslash($_GET['posts_per_page'] )) ) : $this->posts_per_page;
-				$args        = array(
+				$this->posts_per_page = isset( $_GET['posts_per_page'] ) ? intval( sanitize_text_field( wp_unslash( $_GET['posts_per_page'] ) ) ) : $this->posts_per_page;
+				$args                 = array(
 					'post_type'      => 'rbfw_order',
 					'order'          => 'DESC',
 					'posts_per_page' => - 1
 				);
-				$query       = new WP_Query( $args );
+				$query                = new WP_Query( $args );
 				?>
                 <div class="rbfw_order_page_wrap wrap">
                     <h1 class="awesome-heading"><?php esc_html_e( 'Order List', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
@@ -76,13 +77,13 @@
                         <tbody id="order-list">
 						<?php if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post();
 							global $post;
-							$post_id           = $post->ID;
-							$billing_name      = get_post_meta( $post_id, 'rbfw_billing_name', true );
-							$rbfw_order_id     = get_post_meta( $post_id, 'rbfw_order_id', true );
-							$status            = get_post_meta( $post_id, 'rbfw_order_status', true );
-							$total_price       = get_post_meta( $post_id, 'rbfw_ticket_total_price', true );
-							$ticket_infos      = get_post_meta( $post_id, 'rbfw_ticket_info', true );
-							$ticket_info_array = maybe_unserialize( $ticket_infos );
+							$post_id             = $post->ID;
+							$billing_name        = get_post_meta( $post_id, 'rbfw_billing_name', true );
+							$rbfw_order_id       = get_post_meta( $post_id, 'rbfw_order_id', true );
+							$status              = get_post_meta( $post_id, 'rbfw_order_status', true );
+							$total_price         = get_post_meta( $post_id, 'rbfw_ticket_total_price', true );
+							$ticket_infos        = get_post_meta( $post_id, 'rbfw_ticket_info', true );
+							$ticket_info_array   = maybe_unserialize( $ticket_infos );
 							$rbfw_start_datetime = '';
 							$rbfw_end_datetime   = '';
 							if ( ! empty( $ticket_info_array ) && is_array( $ticket_info_array ) ) {

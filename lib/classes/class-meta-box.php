@@ -32,18 +32,18 @@
 			public function save_post( $post_id ) {
 				$get_option_name = $this->get_option_name();
 				$post_id         = $this->get_post_id();
-				if ( isset($_POST[ $get_option_name ]) ) :
-					if (is_string( $_POST[ $get_option_name ]  ) ) {
-						$option_value = sanitize_text_field(wp_unslash($_POST[ $get_option_name ] ) );
-                    }else{
-						$option_value=array_map('sanitize_text_field',wp_unslash($_POST[ $get_option_name ] ));
-                    }
+				if ( isset( $_POST[ $get_option_name ] ) ) :
+					if ( is_string( $_POST[ $get_option_name ] ) ) {
+						$option_value = sanitize_text_field( wp_unslash( $_POST[ $get_option_name ] ) );
+					} else {
+						$option_value = array_map( 'sanitize_text_field', wp_unslash( $_POST[ $get_option_name ] ) );
+					}
 					update_post_meta( $post_id, $get_option_name, $option_value );
 				else :
 					foreach ( $this->get_panels() as $panelsIndex => $panel ) :
 						foreach ( $panel['sections'] as $sectionIndex => $section ) :
 							foreach ( $section['options'] as $option ) :
-								if ( isset($_POST[ $option['id'] ]) ) {
+								if ( isset( $_POST[ $option['id'] ] ) ) {
 									if ( is_string( $_POST[ $option['id'] ] ) ) {
 										$option_value = sanitize_text_field( wp_unslash( $_POST[ $option['id'] ] ) );
 									} else {
@@ -53,7 +53,6 @@
 								if ( ! empty( $option['id'] ) ) {
 									update_post_meta( $post_id, $option['id'], $option_value );
 								}
-
 							endforeach;
 						endforeach;
 					endforeach;
@@ -122,22 +121,20 @@
 				if ( empty( $id ) ) {
 					return;
 				}
-				$prent_option_name = $this->get_option_name();
+				$prent_option_name   = $this->get_option_name();
 				$FormFieldsGenerator = new RbfwFormFieldsGenerator();
 				if ( ! empty( $prent_option_name ) ) :
 					$field_name           = $prent_option_name . '[' . $id . ']';
 					$option['field_name'] = $field_name;
-					$prent_option_value = get_post_meta( $post_id, $prent_option_name, true );
-					$prent_option_value = is_serialized( $prent_option_value ) ? unserialize( $prent_option_value ) : array();
-					$option['value']    = isset( $prent_option_value[ $id ] ) ? $prent_option_value[ $id ] : '';
+					$prent_option_value   = get_post_meta( $post_id, $prent_option_name, true );
+					$prent_option_value   = is_serialized( $prent_option_value ) ? unserialize( $prent_option_value ) : array();
+					$option['value']      = isset( $prent_option_value[ $id ] ) ? $prent_option_value[ $id ] : '';
 				else :
 					$option['field_name'] = $id;
 					$option_value         = get_post_meta( $post_id, $id, true );
 					$option['value']      = is_serialized( $option_value ) ? unserialize( $option_value ) : $option_value;
 				endif;
 				if ( sizeof( $option ) > 0 && isset( $option['type'] ) ) {
-					$output = rbfw_field_generator( $option['type'], $option );
-					echo wp_kses_post( $output );
 					do_action( "wp_theme_settings_field_{$option['type']}", $option );
 				}
 				// if (!empty($details)) {
