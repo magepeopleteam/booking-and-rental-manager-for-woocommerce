@@ -7,7 +7,9 @@
 	 * Author: MagePeople Team
 	 * Author URI: https://www.mage-people.com/
 	 * Text Domain: booking-and-rental-manager-for-woocommerce
-	 * Domain Path: /languages/
+	 * License: GPL v2 or later
+ 	 * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+	 * Domain Path: /languages/ 
 	 */
 	if ( ! defined( 'ABSPATH' ) ) {
 		die;
@@ -106,14 +108,14 @@
 			}
 
 			public function flush_rules_on_save_posts( $post_id ) {
-				if ( ! empty( $_POST['post_type'] ) && sanitize_text_field( $_POST['post_type'] ) != 'rbfw_item' ) {
+				if ( ! empty( $_POST['post_type'] ) && sanitize_text_field( wp_unslash($_POST['post_type']) ) != 'rbfw_item' ) {
 					return;
 				}
 				flush_rewrite_rules();
 			}
 
 			function flush_rules_rbfw_post_list_page() {
-				if ( isset( $_GET['post_type'] ) && sanitize_text_field( $_GET['post_type'] ) == 'rbfw_item' ) {
+				if ( isset( $_GET['post_type'] ) && sanitize_text_field( wp_unslash($_GET['post_type']) ) == 'rbfw_item' ) {
 					flush_rewrite_rules();
 				}
 			}
@@ -121,7 +123,7 @@
 			public function activation_redirect( $plugin ) {
 				$rbfw_quick_setup_done = get_option( 'rbfw_quick_setup_done' ) ? get_option( 'rbfw_quick_setup_done' ) : 'no';
 				if ( $rbfw_quick_setup_done == 'no' ) {
-					if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] == 'rbfw_quick_setup' ) {
+					if ( isset( $_REQUEST['page'] ) && sanitize_text_field( wp_unslash($_REQUEST['page'])) == 'rbfw_quick_setup' ) {
 						return null;
 					} else {
 						wp_redirect( esc_url_raw( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup' ) ) );
