@@ -21,8 +21,6 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-welcome-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-sd-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_currency.php';
 
-
-require_once RBFW_PLUGIN_DIR . '/lib/classes/class-order-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_order_meta.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-md-function.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-thankyou-page.php';
