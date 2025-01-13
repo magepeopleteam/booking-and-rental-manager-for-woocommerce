@@ -825,6 +825,10 @@ function rbfw_get_stock_by_filter(){
 
 function rbfw_get_stock_details(){
 
+    if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+        return;
+    }
+
             $data_request = isset($_POST['data_request'])?sanitize_text_field(wp_unslash($_POST['data_request'])):'';
             $data_date = isset($_POST['data_date'])?sanitize_text_field(wp_unslash($_POST['data_date'])):'';
             $data_id = isset($_POST['data_id'])?sanitize_text_field(wp_unslash($_POST['data_id'])):'';
