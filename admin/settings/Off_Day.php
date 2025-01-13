@@ -116,12 +116,16 @@
             }
 
             public function settings_save($post_id) {
-                
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
-                    return;
-                }
-
-                if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+	            
+	            if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) ) {
+		            return;
+	            }
+	            $nonce = sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) );
+	            if ( ! wp_verify_nonce( $nonce, 'rbfw_ticket_type_nonce' ) ) {
+		            return;
+	            }
+             
+	            if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
                     return;
                 }
 
@@ -130,11 +134,11 @@
                 }
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-                    $rbfw_off_days 	 = isset( $_POST['rbfw_off_days'] ) ? rbfw_array_strip( $_POST['rbfw_off_days'] ) : '';
-                    $off_days_start	 = isset( $_POST['off_days_start'] ) ? rbfw_array_strip( $_POST['off_days_start'] ) : '';
-                    $off_days_end 	 = isset( $_POST['off_days_end'] ) ? rbfw_array_strip( $_POST['off_days_end'] ) : '';
-
-                    update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
+	                $rbfw_off_days = isset( $_POST['rbfw_off_days'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_off_days'] ) ) : '';
+	                $off_days_start = isset( $_POST['off_days_start'] ) ? sanitize_text_field( wp_unslash( $_POST['off_days_start'] ) ) : '';
+	                $off_days_end = isset( $_POST['off_days_end'] ) ? sanitize_text_field( wp_unslash( $_POST['off_days_end'] ) ) : '';
+	                
+	                update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
 
                     $off_schedules = [];
                     $from_dates = $off_days_start;

@@ -328,12 +328,12 @@
             <?php } 
 
             public function settings_save($post_id) {
-                
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
-                    return;
-                }
-
-                if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+	            
+	            if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
+		            return;
+	            }
+	            
+	            if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
                     return;
                 }
 
@@ -344,17 +344,16 @@
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
                   //  wp_set_object_terms( $post_id, string|int|array $terms, string $taxonomy, bool $append = false )
-
-
-                    $rbfw_categories 	 = isset( $_POST['rbfw_categories'] ) ? rbfw_array_strip( $_POST['rbfw_categories'] ) : [];
-
-
-                    wp_set_object_terms( $post_id, $rbfw_categories,'rbfw_item_caregory');
-
-
-                    $feature_category 	 = isset( $_POST['rbfw_feature_category'] ) ? rbfw_array_strip( $_POST['rbfw_feature_category'] ) : [];
-                    
-                    update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
+	                
+	                
+	                $rbfw_categories = isset( $_POST['rbfw_categories'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_categories'] ) ) : [];
+                 
+	                wp_set_object_terms( $post_id, $rbfw_categories,'rbfw_item_caregory');
+	                
+	                
+	                $feature_category = isset( $_POST['rbfw_feature_category'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_feature_category'] ) ) : [];
+	                
+	                update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
                     
                     update_post_meta( $post_id, 'rbfw_feature_category', $feature_category );
                 }

@@ -22,17 +22,23 @@
                 <li data-target-tabs="#travel_pricing"><i class="fa-solid fa-pager"></i><?php esc_html_e('Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
             <?php
             }
-
-            public function rbfw_load_duration_form()
-            {
-                $manage_inventory_as_timely = $_POST['manage_inventory_as_timely'];
-                $enable_specific_duration = $_POST['enable_specific_duration'];
-                $total_row = $_POST['total_row'];
-                include( RBFW_Function::get_template_path( 'ajax_form/rbfw_load_duration_form.php' ) );
-                wp_die();
-            }
-
-			public function section_header(){
+	        
+	        public function rbfw_load_duration_form() {
+		        // Nonce verification
+		        $nonce = isset( $_POST['rbfw_nonce'] ) ? sanitize_key( wp_unslash( $_POST['rbfw_nonce'] ) ) : ''; // Unsplash and sanitize the nonce
+		        if ( ! isset( $nonce ) || ! wp_verify_nonce( $nonce, 'rbfw_nonce_action' ) ) {
+			        die( 'Security check failed' );
+		        }
+		        
+		        // Check and sanitize inputs
+		        $manage_inventory_as_timely = isset( $_POST['manage_inventory_as_timely'] ) ? sanitize_text_field( wp_unslash( $_POST['manage_inventory_as_timely'] ) ) : '';
+		        $enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : '';
+		        $total_row = isset( $_POST['total_row'] ) ? sanitize_text_field( wp_unslash( $_POST['total_row'] ) ) : '';
+		        
+		        include( RBFW_Function::get_template_path( 'ajax_form/rbfw_load_duration_form.php' ) );
+		        wp_die();
+	        }
+	        	        public function section_header(){
                 ?>
                     <h2 class="mp_tab_item_title"><?php echo esc_html__('Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
                     <p class="mp_tab_item_description"><?php echo esc_html__('Here you can configure price.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
@@ -1325,12 +1331,12 @@
 			}
 
 			public function settings_save($post_id) {
-                
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
-                    return;
-                }
-
-                if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+				
+				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
+					return;
+				}
+				
+				if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
                     return;
                 }
 
@@ -1339,11 +1345,11 @@
                 }
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-                    $rbfw_item_type = isset( $_POST['rbfw_item_type'] ) ? rbfw_array_strip( $_POST['rbfw_item_type'] ) : [];
-					$rbfw_enable_daily_rate  = isset( $_POST['rbfw_enable_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_enable_daily_rate'] ) : 'no';				
-					
-					$daily_rate  = isset( $_POST['rbfw_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_daily_rate'] ) : 0;
-					$rbfw_enable_hourly_rate = isset( $_POST['rbfw_enable_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_enable_hourly_rate'] ) : 'no';					
+	                
+	                $rbfw_item_type = isset( $_POST['rbfw_item_type'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_item_type'] ) ) : [];
+	                $rbfw_enable_daily_rate = isset( $_POST['rbfw_enable_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daily_rate'] ) ) : 'no';
+	                $daily_rate  = isset( $_POST['rbfw_daily_rate'] ) ? rbfw_array_strip( $_POST['rbfw_daily_rate'] ) : 0;
+					$rbfw_enable_hourly_rate = isset( $_POST['rbfw_enable_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_enable_hourly_rate'] ) : 'no';
 					$hourly_rate = isset( $_POST['rbfw_hourly_rate'] ) ? rbfw_array_strip( $_POST['rbfw_hourly_rate'] ) : 0;
 					
 					$rbfw_enable_daywise_price  = isset( $_POST['rbfw_enable_daywise_price'] ) ? rbfw_array_strip( $_POST['rbfw_enable_daywise_price'] ) : 'no';
