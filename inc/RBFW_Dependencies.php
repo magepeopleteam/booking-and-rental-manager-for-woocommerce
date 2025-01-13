@@ -149,8 +149,10 @@
 					wp_enqueue_style( 'flatpickr-css', RBFW_PLUGIN_URL . '/css/flatpickr.min.css', array(), null );
 					wp_enqueue_script( 'flatpickr-js', RBFW_PLUGIN_URL . '/assets/flatpickr.js',array( 'jquery' ), null, true);
 					wp_enqueue_script(
-						'jquery-ui-cdn', RBFW_PLUGIN_URL . 'admin/js/jquery-ui.min.js', array( 'jquery' ), // Ensures jQuery is loaded as a dependency
-						'1.12.1',
+						'jquery-ui-dialog', // WordPress default jQuery UI component (can change based on need, e.g., 'jquery-ui-dialog', 'jquery-ui-datepicker', etc.)
+						false, // No need to specify the source URL since it's included by WordPress
+						array( 'jquery', 'jquery-ui-core' ), // Ensures jQuery and jQuery UI core are loaded as dependencies
+						false, // Version is handled by WordPress
 						true // Load in the footer
 					);
 				}
