@@ -59,6 +59,11 @@
 			}
 
 			public function rbfw_thankyou_shortcode_func() {
+
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+
 				global $rbfw;
 				$t_page_id           = rbfw_get_option( 'rbfw_thankyou_page', 'rbfw_basic_gen_settings' );
 				$current_page_id     = get_queried_object_id();

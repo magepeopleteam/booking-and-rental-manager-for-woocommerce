@@ -22,6 +22,11 @@
 		}
 
 		public function RBFW_welcome_page_callback() {
+
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
+
 			$arr = array( 'strong' => array() );
 			if (  isset( $_GET['page'] ) && sanitize_text_field( wp_unslash( $_GET['page'] ) ) == 'rbfw_import' ) {
 				echo '<script>jQuery(document).ready(function(){

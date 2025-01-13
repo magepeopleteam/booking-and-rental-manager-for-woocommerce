@@ -30,6 +30,10 @@
 			}
 
 			public function save_post( $post_id ) {
+
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
 				$get_option_name = $this->get_option_name();
 				$post_id         = $this->get_post_id();
 				if ( isset($_POST[ $get_option_name ]) ) :

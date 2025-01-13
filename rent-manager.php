@@ -108,19 +108,39 @@
 			}
 
 			public function flush_rules_on_save_posts( $post_id ) {
+
+
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+
+
 				if ( ! empty( $_POST['post_type'] ) && sanitize_text_field( wp_unslash($_POST['post_type']) ) != 'rbfw_item' ) {
+
 					return;
 				}
 				flush_rewrite_rules();
 			}
 
 			function flush_rules_rbfw_post_list_page() {
+
+
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+
 				if ( isset( $_GET['post_type'] ) && sanitize_text_field( wp_unslash($_GET['post_type']) ) == 'rbfw_item' ) {
+
 					flush_rewrite_rules();
 				}
 			}
 
 			public function activation_redirect( $plugin ) {
+
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+
 				$rbfw_quick_setup_done = get_option( 'rbfw_quick_setup_done' ) ? get_option( 'rbfw_quick_setup_done' ) : 'no';
 				if ( $rbfw_quick_setup_done == 'no' ) {
 					if ( isset( $_REQUEST['page'] ) && sanitize_text_field( wp_unslash($_REQUEST['page'])) == 'rbfw_quick_setup' ) {

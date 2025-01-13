@@ -177,6 +177,11 @@
 			}
 
 			public function rbfw_update_time_slot() {
+
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+
 				if ( isset( $_POST['new_ts_label'] ) && isset( $_POST['current_ts_label'] ) ) {
 					$rbfw_time_slots  = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
 					$new_ts_label     = sanitize_text_field( wp_unslash( $_POST['new_ts_label'] ) );

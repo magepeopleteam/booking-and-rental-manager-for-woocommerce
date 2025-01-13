@@ -42,6 +42,10 @@ function rbfw_add_info_to_cart_item($cart_item_data, $product_id, $variation_id)
 function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id )
 {
 
+    if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+        return;
+    }
+
     $rbfw_rent_type = get_post_meta($rbfw_id, 'rbfw_item_type', true);
     $rbfw_item_quantity = isset($_POST['rbfw_item_quantity']) ? intval(sanitize_text_field($_POST['rbfw_item_quantity'])) : 1;
     $rbfw_service_info_all = isset($_POST['rbfw_service_info']) ? rbfw_array_strip($_POST['rbfw_service_info']) : [];
