@@ -383,9 +383,22 @@
 				}
 				global $rbfw;
 				$content             = '';
-				$bikecarsd_price_arr = isset( $_POST['bikecarsd_price_arr'] ) ? sanitize_text_field( wp_unslash( $_POST['bikecarsd_price_arr'] ) ) : [];
-				$service_price_arr   = isset( $_POST['service_price_arr'] ) ? sanitize_text_field( wp_unslash( $_POST['service_price_arr'] ) ) : [];
-				$post_id             = ! empty( $_POST['post_id'] ) ? sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : '';
+				//$bikecarsd_price_arr = isset( $_POST['bikecarsd_price_arr'] ) ? sanitize_text_field( wp_unslash( $_POST['bikecarsd_price_arr'] ) ) : [];
+
+                $bikecarsd_price_arr = isset( $_POST['bikecarsd_price_arr'] ) && is_array( $_POST['bikecarsd_price_arr'] )
+                    ? array_map( function( $item ) {
+                        return array_map( 'sanitize_text_field', wp_unslash( $item ) );
+                    }, wp_unslash( $_POST['bikecarsd_price_arr'] ) )
+                    : array();
+
+                $service_price_arr = isset( $_POST['service_price_arr'] ) && is_array( $_POST['service_price_arr'] )
+                    ? array_map( function( $item ) {
+                        return array_map( 'sanitize_text_field', wp_unslash( $item ) );
+                    }, wp_unslash( $_POST['service_price_arr'] ) )
+                    : array();
+                
+
+                $post_id             = ! empty( $_POST['post_id'] ) ? sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : '';
 				$bikecarsd_price     = 0;
 				$service_price       = 0;
 				$total_service_price = 0;
@@ -420,7 +433,7 @@
 				$content .= '<div class="item rbfw_bikecarsd_price_summary">
                                 <div class="item-content rbfw-costing">
                                     <ul class="rbfw-ul">
-                                        <li class="duration-costing rbfw-cond">' . $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings', esc_html__( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' ) ) . ' <span class="price-figure" data-price="' . $total_bikecarsd_price . '">' . rbfw_mps_price( $total_bikecarsd_price ) . '</span></li>';
+                                        <li class="duration-costing rbfw-cond">' . $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings', esc_html__( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' ) ) . ' <span class="price-figure" data-price="' . $total_bikecarsd_price . '">' . wc_price( $total_bikecarsd_price ) . '</span></li>';
 				if ( ! empty( $service_price_arr ) ) {
 					$content .= '<li class="resource-costing rbfw-cond">' . $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings', esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) ) . ' <span class="price-figure" data-price="' . $total_service_price . '">' . rbfw_mps_price( $total_service_price ) . '</span></li>';
 				}
@@ -440,7 +453,7 @@
                                     <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
                                 </div>
                             </div>';
-				echo esc_html( $content );
+				echo wp_kses( $content , rbfw_allowed_html());
 				wp_die();
 			}
 
