@@ -600,7 +600,7 @@ class RBFW_Setting_API {
         }
         $html .= '</div>';
 
-        echo esc_html($html);
+        echo wp_kses($html,rbfw_allowed_html());
     }
 
     /**

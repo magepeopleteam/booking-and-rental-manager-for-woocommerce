@@ -15,7 +15,7 @@ function rbfw_admin_settings_sec_reg_basic( $default_sec ) {
 	$sections = array(
 		array(
 			'id'    => 'rbfw_basic_gen_settings',
-			'title' => '<i class="fa-solid fa-screwdriver-wrench"></i>'.esc_html__( 'General Settings', 'booking-and-rental-manager-for-woocommerce' )
+			'title' => '<i class="fa-solid fa-screwdriver-wrench"></i>'.__( 'General Settings', 'booking-and-rental-manager-for-woocommerce' )
 		),
 		array(
 			'id'    => 'rbfw_basic_translation_settings',
@@ -33,9 +33,9 @@ function rbfw_admin_settings_sec_reg_basic( $default_sec ) {
 		array(
 			'id'    => 'rbfw_basic_payment_settings',
 			'title' => '<i class="fa-solid fa-money-check-dollar"></i>'.esc_html__( 'Payment Settings', 'booking-and-rental-manager-for-woocommerce' )
-		),			
+		),
 	);
-	
+
 	return array_merge( $default_sec, $sections );
 }
 
@@ -55,7 +55,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 					'on' => 'On',
 					'off'  => 'Off'
 				)
-			),			
+			),
 			array(
 				'name'    => 'rbfw_rent_label',
 				'label'   => esc_html__( 'CPT Label', 'booking-and-rental-manager-for-woocommerce' ),
@@ -196,7 +196,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>You May Also Like.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'You May Also Like'
-			),			
+			),
 			array(
 				'name'    => 'rbfw_text_read_more',
 				'label'   => esc_html__( 'Read More', 'booking-and-rental-manager-for-woocommerce' ),
@@ -231,7 +231,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Day.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Day'
-			),			
+			),
 			array(
 				'name'    => 'rbfw_text_hourly_rate',
 				'label'   => esc_html__( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ),
@@ -252,7 +252,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Hours.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Hours'
-			),			
+			),
 			array(
 				'name'    => 'rbfw_text_pickup_location',
 				'label'   => esc_html__( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' ),
@@ -337,7 +337,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Drop-off point.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Drop-off point'
-			),			
+			),
 			array(
 				'name'    => 'rbfw_text_duration',
 				'label'   => esc_html__( 'Duration', 'booking-and-rental-manager-for-woocommerce' ),
@@ -372,7 +372,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Check-In Date.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Check-In Date'
-			),			
+			),
 			array(
 				'name'    => 'rbfw_text_checkout_date',
 				'label'   => esc_html__( 'Check-Out Date', 'booking-and-rental-manager-for-woocommerce' ),
@@ -407,7 +407,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>9 AM  to 6 PM.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => '9 AM  to 6 PM'
-			),			
+			),
 			array(
 				'name'    => 'rbfw_text_daynight',
 				'label'   => esc_html__( 'Daynight', 'booking-and-rental-manager-for-woocommerce' ),
@@ -421,7 +421,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Day & Night Stay.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Day & Night Stay'
-			),			
+			),
 			array(
 				'name'    => 'rbfw_text_room_type',
 				'label'   => esc_html__( 'Room Type', 'booking-and-rental-manager-for-woocommerce' ),
@@ -435,7 +435,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Room Description.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Room Description'
-			),			
+			),
 			array(
 				'name'    => 'rbfw_text_room_image',
 				'label'   => esc_html__( 'Room Image', 'booking-and-rental-manager-for-woocommerce' ),
@@ -449,7 +449,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Room Price.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Price'
-			),			
+			),
 			array(
 				'name'    => 'rbfw_text_room_qty',
 				'label'   => esc_html__( 'Room Qty', 'booking-and-rental-manager-for-woocommerce' ),
@@ -737,7 +737,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Order Summary.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Order Summary'
-			),	
+			),
 			array(
 				'name'    => 'rbfw_text_start_date',
 				'label'   => esc_html__( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ),
@@ -793,7 +793,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Email Address.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Email Address'
-			),	
+			),
 			array(
 				'name'    => 'rbfw_text_pay_with',
 				'label'   => esc_html__( 'Pay With', 'booking-and-rental-manager-for-woocommerce' ),
@@ -828,7 +828,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Place Order.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Place Order'
-			),	
+			),
 			array(
 				'name'    => 'rbfw_text_sign_in',
 				'label'   => esc_html__( 'Sign In', 'booking-and-rental-manager-for-woocommerce' ),
@@ -842,7 +842,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Sign-Up.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Sign-Up'
-			),			
+			),
 			array(
 				'name'    => 'rbfw_text_password',
 				'label'   => esc_html__( 'Password', 'booking-and-rental-manager-for-woocommerce' ),
@@ -863,21 +863,21 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Log In</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Log In'
-			),	
+			),
 			array(
 				'name'    => 'rbfw_text_registration_information',
 				'label'   => esc_html__( 'Registration Information', 'booking-and-rental-manager-for-woocommerce' ),
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Registration Information.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Registration Information'
-			),	
+			),
 			array(
 				'name'    => 'rbfw_text_already_have_account_with_us',
 				'label'   => esc_html__( 'Do you already have an account with us?', 'booking-and-rental-manager-for-woocommerce' ),
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Do you already have an account with us?</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Do you already have an account with us?'
-			),	
+			),
 			array(
 				'name'    => 'rbfw_text_thankyou_ur_order_received',
 				'label'   => esc_html__( 'Thank you. Your order has been received.', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1017,7 +1017,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Order successful, redirecting...</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Order successful, redirecting...'
-			),	
+			),
 			array(
 				'name'    => 'rbfw_text_booking_information',
 				'label'   => esc_html__( 'Booking Information', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1031,7 +1031,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>PIN</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'PIN'
-			),	
+			),
 			array(
 				'name'    => 'rbfw_text_billing_information',
 				'label'   => esc_html__( 'Billing Information', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1094,7 +1094,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'desc'    => esc_html__( 'Enter the translated text of <strong>Day-night price</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Day-night price'
-			),	
+			),
 			array(
 				'name'    => 'rbfw_text_rent_type',
 				'label'   => esc_html__( 'Rent Type', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1650,8 +1650,8 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'type'    => 'color',
 				'default' => '#6F1E51'
 			),
-			
-			
+
+
 			array(
 				'name'    => 'rbfw_single_page_base_color_6',
 				'label'   => esc_html__( 'Single Page Base Color-6', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1672,4 +1672,4 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 	);
 
 	return apply_filters('rbfw_settings_field', $settings_fields );
-}  
+}
