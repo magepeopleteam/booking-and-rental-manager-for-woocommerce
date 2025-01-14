@@ -382,10 +382,10 @@
 					return;
 				}
 				global $rbfw;
-				$content             = '';
+				$content  = '';
 				//$bikecarsd_price_arr = isset( $_POST['bikecarsd_price_arr'] ) ? sanitize_text_field( wp_unslash( $_POST['bikecarsd_price_arr'] ) ) : [];
 
-                $bikecarsd_price_arr = isset( $_POST['bikecarsd_price_arr'] ) && is_array( $_POST['bikecarsd_price_arr'] )
+         /*       $bikecarsd_price_arr = isset( $_POST['bikecarsd_price_arr'] ) && is_array( $_POST['bikecarsd_price_arr'] )
                     ? array_map( function( $item ) {
                         return array_map( 'sanitize_text_field', wp_unslash( $item ) );
                     }, wp_unslash( $_POST['bikecarsd_price_arr'] ) )
@@ -395,7 +395,21 @@
                     ? array_map( function( $item ) {
                         return array_map( 'sanitize_text_field', wp_unslash( $item ) );
                     }, wp_unslash( $_POST['service_price_arr'] ) )
-                    : array();
+                    : array();*/
+
+
+                $rules = [
+                    'name' => 'sanitize_text_field',
+                    'email' => 'sanitize_email',
+                    'age' => 'absint',
+                    'preferences' => [
+                        'color' => 'sanitize_text_field',
+                        'notifications' => function ($value) {
+                            return $value === 'yes' ? 'yes' : 'no';
+                        }
+                    ]
+                ];
+                $sd_input_data_sabitized = sanitize_post_array($_POST, $rules);
 
 
                 $post_id             = ! empty( $_POST['post_id'] ) ? sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : '';
@@ -404,12 +418,12 @@
 				$total_service_price = 0;
 				$subtotal_price      = 0;
 				$total_price         = 0;
-				foreach ( $bikecarsd_price_arr as $key => $value ):
+				foreach ( $sd_input_data_sabitized['bikecarsd_price_arr'] as $key => $value ):
 					$bikecarsd_price += (float) $value['data_qty'] * (float) $value['data_price'];
 				endforeach;
 				$total_bikecarsd_price = (float) $bikecarsd_price;
-				if ( ! empty( $service_price_arr ) ) {
-					foreach ( $service_price_arr as $key => $value ):
+				if ( ! empty( $sd_input_data_sabitized['service_price_arr'] ) ) {
+					foreach ( $sd_input_data_sabitized['service_price_arr']  as $key => $value ):
 						$service_price += (float) $value['data_qty'] * (float) $value['data_price'];
 					endforeach;
 				}

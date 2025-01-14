@@ -117,6 +117,7 @@
                     <div class="rbfw-resort-result-loader"></div>
                     <div class="rbfw-resort-result"></div>
                 </div>
+                <?php wp_nonce_field('rbfw_ajax_action', 'nonce'); ?>
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="resort">
 				<input type="hidden" name="rbfw_enable_resort_daylong_price" id="rbfw_enable_resort_daylong_price"  value="<?php echo esc_html($rbfw_enable_resort_daylong_price); ?>">
 			</form>
