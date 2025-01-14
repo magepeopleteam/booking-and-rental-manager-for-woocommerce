@@ -30,6 +30,19 @@
                 'class'   => true,
                 'id'   => true,
             ),
+            'tr'     => array(
+                'style'   => true, // Allows inline styles
+                'class'   => true,
+                'id'   => true,
+                'data-cat'   => true,
+            ),
+            'td'     => array(
+                'style'   => true, // Allows inline styles
+                'class'   => true,
+                'id'   => true,
+            ),
+
+
 
 			'p'       => array(
 				'style'   => true, // Allows inline styles
