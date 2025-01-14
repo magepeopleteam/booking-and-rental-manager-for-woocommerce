@@ -50,6 +50,10 @@
 			}
 
 			public function rbfw_order_list() {
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+
 				$this->posts_per_page = isset( $_GET['posts_per_page'] ) ? intval( sanitize_text_field( wp_unslash( $_GET['posts_per_page'] ) ) ) : $this->posts_per_page;
 				$args                 = array(
 					'post_type'      => 'rbfw_order',
