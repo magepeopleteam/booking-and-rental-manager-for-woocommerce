@@ -580,6 +580,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
 
                 ?>
 
+                <?php wp_nonce_field('rbfw_ajax_action', 'nonce'); ?>
 
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price"  value="0">
