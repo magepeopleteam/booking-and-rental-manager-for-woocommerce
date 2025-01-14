@@ -242,7 +242,7 @@
                 ?>
                 <script type="text/javascript">
 
-                    alert(12);
+
                     jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
                     jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
 

@@ -17,6 +17,7 @@
 				'onclick' => true, // Allows inline JavaScript
 			),
 			'table'   => array(
+                'class' => true,
 				'thead' => true, // Allows inline styles
 				'tbody' => true,
 				'tr'    => true, // Allows inline JavaScript
@@ -24,6 +25,12 @@
 				'div'   => true,
 				'a'     => true
 			),
+            'tbody'     => array(
+                'style'   => true, // Allows inline styles
+                'class'   => true,
+                'id'   => true,
+            ),
+
 			'p'       => array(
 				'style'   => true, // Allows inline styles
 				'class'   => true,
