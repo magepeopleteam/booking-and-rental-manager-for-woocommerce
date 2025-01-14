@@ -191,6 +191,7 @@
                     'd_type': d_type,
                     'available_quantity': available_quantity,
                     'service_type': service_type,
+                    'nonce' : rbfw_ajax.nonce
                 },
                 beforeSend: function() {
                     jQuery('.rbfw_bikecarsd_price_summary').addClass('old');

@@ -266,7 +266,8 @@ jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_serv
             'checkin_date'  : checkin_date,
             'checkout_date' : checkout_date,
             'room_price_arr': room_prices_arr,
-            'service_price_arr': service_prices_arr
+            'service_price_arr': service_prices_arr,
+            'nonce' : rbfw_ajax.nonce
         },
         beforeSend: function() {
             jQuery('.rbfw_room_price_summary').empty();
