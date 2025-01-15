@@ -382,37 +382,20 @@
 					return;
 				}
 				global $rbfw;
-				$content  = '';
-				//$bikecarsd_price_arr = isset( $_POST['bikecarsd_price_arr'] ) ? sanitize_text_field( wp_unslash( $_POST['bikecarsd_price_arr'] ) ) : [];
-
-         /*       $bikecarsd_price_arr = isset( $_POST['bikecarsd_price_arr'] ) && is_array( $_POST['bikecarsd_price_arr'] )
-                    ? array_map( function( $item ) {
-                        return array_map( 'sanitize_text_field', wp_unslash( $item ) );
-                    }, wp_unslash( $_POST['bikecarsd_price_arr'] ) )
-                    : array();
-
-                $service_price_arr = isset( $_POST['service_price_arr'] ) && is_array( $_POST['service_price_arr'] )
-                    ? array_map( function( $item ) {
-                        return array_map( 'sanitize_text_field', wp_unslash( $item ) );
-                    }, wp_unslash( $_POST['service_price_arr'] ) )
-                    : array();*/
-
-
-                $rules = [
-                    'name' => 'sanitize_text_field',
-                    'email' => 'sanitize_email',
-                    'age' => 'absint',
-                    'preferences' => [
-                        'color' => 'sanitize_text_field',
-                        'notifications' => function ($value) {
-                            return $value === 'yes' ? 'yes' : 'no';
-                        }
-                    ]
-                ];
-                $sd_input_data_sabitized = sanitize_post_array($_POST, $rules);
-
-
-                $post_id             = ! empty( $_POST['post_id'] ) ? sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : '';
+				$content                 = '';
+				$rules                   = [
+					'name'        => 'sanitize_text_field',
+					'email'       => 'sanitize_email',
+					'age'         => 'absint',
+					'preferences' => [
+						'color'         => 'sanitize_text_field',
+						'notifications' => function ( $value ) {
+							return $value === 'yes' ? 'yes' : 'no';
+						}
+					]
+				];
+				$sd_input_data_sabitized = sanitize_post_array( $_POST, $rules );
+				$post_id             = ! empty( $_POST['post_id'] ) ? sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : '';
 				$bikecarsd_price     = 0;
 				$service_price       = 0;
 				$total_service_price = 0;
@@ -423,7 +406,7 @@
 				endforeach;
 				$total_bikecarsd_price = (float) $bikecarsd_price;
 				if ( ! empty( $sd_input_data_sabitized['service_price_arr'] ) ) {
-					foreach ( $sd_input_data_sabitized['service_price_arr']  as $key => $value ):
+					foreach ( $sd_input_data_sabitized['service_price_arr'] as $key => $value ):
 						$service_price += (float) $value['data_qty'] * (float) $value['data_price'];
 					endforeach;
 				}
@@ -467,7 +450,7 @@
                                     <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
                                 </div>
                             </div>';
-				echo wp_kses( $content , rbfw_allowed_html());
+				echo wp_kses( $content, rbfw_allowed_html() );
 				wp_die();
 			}
 
