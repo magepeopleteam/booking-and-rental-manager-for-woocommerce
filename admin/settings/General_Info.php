@@ -114,7 +114,12 @@
                                         <div class="features_category_wrapper text-center">
                                             <div class="field-list <?php echo esc_attr($field_id); ?>">
                                                 <div class="feature_category_inner_wrap">
-                                                    <div class="feature_category_title"><label class=" mb-1"><?php echo esc_html__('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_feature_category[<?php echo esc_attr($i); ?>][cat_title]" data-key="<?php echo esc_attr($i); ?>" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/></div>
+                                                    <div class="feature_category_title">
+                                                        <label class=" mb-1">
+                                                            <?php echo esc_html__('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?>
+                                                        </label>
+                                                        <input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_feature_category[<?php echo esc_attr($i); ?>][cat_title]" data-key="<?php echo esc_attr($i); ?>" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
+                                                    </div>
                                                     <div class="feature_category_inner_item_wrap sortable">
                                                         <?php
                                                         if(!empty($value['cat_features'])){
@@ -201,103 +206,7 @@
                     </section> 
                     </div>
     
-                <script>
-                    jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
-                    jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
-    
-                    jQuery(document).on('click', '.add-feature-category',function(e){
-                        e.stopImmediatePropagation();
-                        let dataCat = jQuery('.rbfw_feature_category_table tbody tr:last-child').attr('data-cat');
-                        let nextCat = parseInt(dataCat) + 1;
-                        let html = '<tr data-cat="'+nextCat+'"><td><div class="features_category_wrapper text-center"><div class="field-list rbfw_feature_category"><div class="feature_category_inner_wrap"><div class="feature_category_title"><label><?php echo esc_html__('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_feature_category_title" name="rbfw_feature_category['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></div><div class="feature_category_inner_item_wrap sortable"><div class="item"><a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a><div class="rbfw_feature_icon_preview" data-key="0"></div><input type="hidden" name="rbfw_feature_category['+nextCat+'][cat_features][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_feature_icon"> <input type="text" name="rbfw_feature_category['+nextCat+'][cat_features][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0"><div><?php if($sortable):?> <span class="button sort"><i class="fas fa-arrows-alt"></i></span><?php endif; ?><span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo wp_kses_post($remove_text); ?></span></div></div></div></div></div><span class="ppof-button add-new-feature"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo wp_kses_post($remove_text); ?></span></td></tr>';
-                        jQuery('.rbfw_feature_category_table tbody').append(html);
-                        jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
-                        jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
-                    });
-    
-                    jQuery(document).on('click', '.add-new-feature',function(e){
-                        e.stopImmediatePropagation();
-                        let data_key = jQuery(this).siblings(".rbfw_feature_category").find("div.item:last-child input").attr('data-key');
-                        let i = parseInt(data_key);
-                        let c = i + 1;
-                        let theTarget = jQuery(this).siblings('.rbfw_feature_category').find('.feature_category_inner_wrap .feature_category_inner_item_wrap');
-                        jQuery( ".sortable" ).sortable({ handle: '.sort' });
-                        let dataCat = jQuery(this).closest('tr').attr('data-cat');
-    
-                        html = '<div class="item">';
-    
-                        html += '<a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="'+ c +'"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>';
-    
-                        html += '<div class="rbfw_feature_icon_preview" data-key="'+ c +'"></div>';
-    
-                        html += '<input type="hidden" name="rbfw_feature_category['+ dataCat +'][cat_features]['+ c +'][icon]" placeholder="<?php
-                            echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="'+ c +'" class="rbfw_feature_icon"/>';
-    
-                        html += '<input type="text" name="rbfw_feature_category['+ dataCat +'][cat_features]['+ c +'][title]" placeholder="<?php
-                            echo esc_attr($placeholder); ?>" data-key="'+ c +'"/>';
-                        html += '<div>';
-                        <?php if($sortable):?>
-                        html += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
-                        <?php endif; ?>
-    
-                        html += '<span class="button remove" onclick="jQuery(this).parent().parent().remove()' +
-                            '"><?php echo wp_kses_post($remove_text); ?></span>';
-                        html += '</div>';
-                        html += '</div>';
-    
-                        theTarget.append(html);
-                    });
-    
-    
-    
-    
-    
-    
-                    // Features Icon Popup
-                    jQuery(document).on('click', '.rbfw_feature_icon_btn',function(e){
-                        e.stopImmediatePropagation();
-                        let remove_exist_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").removeAttr('data-key');
-                        let remove_active_label 	= jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-                        let data_key 				= jQuery(this).attr('data-key');
-                        let data_cat 				= jQuery(this).parents('tr').attr('data-cat');
-    
-                        jQuery('#rbfw_features_search_icon').val('');
-                        jQuery('.rbfw_features_icon_list_body label').show();
-                        jQuery("#rbfw_features_icon_list_wrapper").attr('data-key', data_key);
-                        jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat', data_cat);
-                        jQuery("#rbfw_features_icon_list_wrapper").mage_modal({
-                            escapeClose: false,
-                            clickClose: false,
-                            showClose: false
-                        });
-    
-                        // Selected Feature Icon Action
-                        jQuery(document).on('click', '.ggggg label',function(e){
-                            e.stopImmediatePropagation();
-                            let selected_label 		= jQuery(this);
-                            let selected_val 		= jQuery('input', this).val();
-                            let selected_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
-                            let selected_data_cat 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
-    
-                            jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-    
-                            jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').empty();
-                            jQuery(selected_label).addClass('selected');
-                            jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon[data-key="'+selected_data_key+'"]').val(selected_val);
-                            jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').append('<i class="'+selected_val+'"></i>');
-                        });
-    
-                        // Icon Filter
-                        jQuery('#rbfw_features_search_icon').keyup(function (e) {
-                            let value = jQuery(this).val().toLowerCase();
-                            jQuery(".rbfw_features_icon_list_body label[data-id]").show().filter(function() {
-                                jQuery(this).toggle(jQuery(this).attr('data-id').toLowerCase().indexOf(value) > -1)
-                            }).hide();
-                        });
-                        // End Icon Filter
-                    });
-                    // End Features Icon Popup
-                </script>
+
                 <?php
                 return ob_get_clean();
             }
@@ -312,11 +221,134 @@
                             'placeholder'        => 'Features Name',
                         );
                         $option_value         = get_post_meta($post_id, $options['id'], true);
-                        $options['value']      = is_serialized($option_value) ? unserialize($option_value) : $option_value;
-                       
-                        echo wp_kses($this->field_feature_category($options),rbfw_allowed_html());
-                    ?>
+                        $options['value']     = is_serialized($option_value) ? unserialize($option_value) : $option_value;
+
+                $id 			= isset( $option['id'] ) ? $option['id'] : "";
+
+
+                $field_name 	= isset( $options['field_name'] ) ? $options['field_name'] : $id;
+                $conditions 	= isset( $options['conditions'] ) ? $options['conditions'] : array();
+                $placeholder 	= isset( $options['placeholder'] ) ? $options['placeholder'] : "";
+                $remove_text 	= isset( $options['remove_text'] ) ? $options['remove_text'] : '<i class="fa-solid fa-trash-can"></i>';
+                $sortable 	    = isset( $options['sortable'] ) ? $options['sortable'] : true;
+                $default 	    = isset( $options['default'] ) ? $options['default'] : array();
+
+                $values 	    = isset( $option['value'] ) ? $option['value'] : array();
+                $values         = !empty($values) ? $values : $default;
+
+
+
+
+                $limit 	        = !empty( $option['limit'] ) ? $option['limit'] : '';
+
+                $field_id       = $id;
+                $field_name     = !empty( $field_name ) ? $field_name : $id;
+
+                ?>
+                <script type="text/javascript">
+
+
+                    jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
+                    jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
+
+                    jQuery(document).on('click', '.add-feature-category',function(e){
+                        e.stopImmediatePropagation();
+                        let dataCat = jQuery('.rbfw_feature_category_table tbody tr:last-child').attr('data-cat');
+                        let nextCat = parseInt(dataCat) + 1;
+                        let html = '<tr data-cat="'+nextCat+'"><td><div class="features_category_wrapper text-center"><div class="field-list rbfw_feature_category"><div class="feature_category_inner_wrap"><div class="feature_category_title"><label><?php echo esc_html__('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" class="rbfw_feature_category_title" name="rbfw_feature_category['+nextCat+'][cat_title]" data-cat="'+nextCat+'" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"></div><div class="feature_category_inner_item_wrap sortable"><div class="item"><a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="0"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a><div class="rbfw_feature_icon_preview" data-key="0"></div><input type="hidden" name="rbfw_feature_category['+nextCat+'][cat_features][0][icon]" placeholder="<?php echo esc_attr__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="0" class="rbfw_feature_icon"> <input type="text" name="rbfw_feature_category['+nextCat+'][cat_features][0][title]" placeholder="<?php echo esc_attr($placeholder); ?>" value="" data-key="0"><div><?php if($sortable):?> <span class="button sort"><i class="fas fa-arrows-alt"></i></span><?php endif; ?><span class="button remove" onclick="jQuery(this).parent().parent().remove()"><?php echo wp_kses_post($remove_text); ?></span></div></div></div></div></div><span class="ppof-button add-new-feature"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add New Feature','booking-and-rental-manager-for-woocommerce'); ?></span></div></td><td> <?php if($sortable):?> <span class="button tr_sort_handler"><i class="fas fa-arrows-alt"></i></span> <?php endif; ?> <span class="button tr_remove"><?php echo wp_kses_post($remove_text); ?></span></td></tr>';
+                        jQuery('.rbfw_feature_category_table tbody').append(html);
+                        jQuery( ".sortable_tr" ).sortable({ handle: '.tr_sort_handler' });
+                        jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
+                    });
+
+                    jQuery(document).on('click', '.add-new-feature',function(e){
+                        e.stopImmediatePropagation();
+                        let data_key = jQuery(this).siblings(".rbfw_feature_category").find("div.item:last-child input").attr('data-key');
+                        let i = parseInt(data_key);
+                        let c = i + 1;
+                        let theTarget = jQuery(this).siblings('.rbfw_feature_category').find('.feature_category_inner_wrap .feature_category_inner_item_wrap');
+                        jQuery( ".sortable" ).sortable({ handle: '.sort' });
+                        let dataCat = jQuery(this).closest('tr').attr('data-cat');
+
+                        html = '<div class="item">';
+
+                        html += '<a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="'+ c +'"><i class="fa-solid fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>';
+
+                        html += '<div class="rbfw_feature_icon_preview" data-key="'+ c +'"></div>';
+
+                        html += '<input type="hidden" name="rbfw_feature_category['+ dataCat +'][cat_features]['+ c +'][icon]" placeholder="<?php
+                            echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="'+ c +'" class="rbfw_feature_icon"/>';
+
+                        html += '<input type="text" name="rbfw_feature_category['+ dataCat +'][cat_features]['+ c +'][title]" placeholder="<?php
+                            echo esc_attr($placeholder); ?>" data-key="'+ c +'"/>';
+                        html += '<div>';
+                        <?php if($sortable):?>
+                        html += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
+                        <?php endif; ?>
+
+                        html += '<span class="button remove" onclick="jQuery(this).parent().parent().remove()' +
+                            '"><?php echo wp_kses_post($remove_text); ?></span>';
+                        html += '</div>';
+                        html += '</div>';
+
+                        theTarget.append(html);
+                    });
+
+
+
+
+
+
+                    // Features Icon Popup
+                    jQuery(document).on('click', '.rbfw_feature_icon_btn',function(e){
+                        e.stopImmediatePropagation();
+                        let remove_exist_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").removeAttr('data-key');
+                        let remove_active_label 	= jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
+                        let data_key 				= jQuery(this).attr('data-key');
+                        let data_cat 				= jQuery(this).parents('tr').attr('data-cat');
+
+                        jQuery('#rbfw_features_search_icon').val('');
+                        jQuery('.rbfw_features_icon_list_body label').show();
+                        jQuery("#rbfw_features_icon_list_wrapper").attr('data-key', data_key);
+                        jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat', data_cat);
+                        jQuery("#rbfw_features_icon_list_wrapper").mage_modal({
+                            escapeClose: false,
+                            clickClose: false,
+                            showClose: false
+                        });
+
+                        // Selected Feature Icon Action
+                        jQuery(document).on('click', '.ggggg label',function(e){
+                            e.stopImmediatePropagation();
+                            let selected_label 		= jQuery(this);
+                            let selected_val 		= jQuery('input', this).val();
+                            let selected_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
+                            let selected_data_cat 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
+
+                            jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
+
+                            jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').empty();
+                            jQuery(selected_label).addClass('selected');
+                            jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon[data-key="'+selected_data_key+'"]').val(selected_val);
+                            jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').append('<i class="'+selected_val+'"></i>');
+                        });
+
+                        // Icon Filter
+                        jQuery('#rbfw_features_search_icon').keyup(function (e) {
+                            let value = jQuery(this).val().toLowerCase();
+                            jQuery(".rbfw_features_icon_list_body label[data-id]").show().filter(function() {
+                                jQuery(this).toggle(jQuery(this).attr('data-id').toLowerCase().indexOf(value) > -1)
+                            }).hide();
+                        });
+                        // End Icon Filter
+                    });
+                    // End Features Icon Popup
+                </script>
+
                 <?php
+                       
+                echo wp_kses($this->field_feature_category($options),rbfw_allowed_html());
+
             }
             public function add_tabs_content( $post_id ) {
                 ?>
@@ -347,12 +379,12 @@
                   //  wp_set_object_terms( $post_id, string|int|array $terms, string $taxonomy, bool $append = false )
 	                
 	                
-	                $rbfw_categories = isset( $_POST['rbfw_categories'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_categories'] ) ) : [];
+	                $rbfw_categories = isset( $_POST['rbfw_categories'] ) ? $_POST['rbfw_categories']  : [];
                  
 	                wp_set_object_terms( $post_id, $rbfw_categories,'rbfw_item_caregory');
 	                
 	                
-	                $feature_category = isset( $_POST['rbfw_feature_category'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_feature_category'] ) ) : [];
+	                $feature_category = isset( $_POST['rbfw_feature_category'] ) ?  $_POST['rbfw_feature_category']  : [];
 	                
 	                update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
                     

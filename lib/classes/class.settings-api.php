@@ -185,7 +185,7 @@ class RBFW_Setting_API {
         $html        = sprintf( '<input type="%1$s" class="%2$s-text" id="%3$s[%4$s]" name="%3$s[%4$s]" value="%5$s" placeholder="%6$s" maxlength="%7$s" size="%8$s"/>', $type, $size, $args['section'], $args['id'], $value, $placeholder, $maxlength, $size_length );
         $html       .= $this->get_field_description( $args );
 
-        echo wp_kses_post($html);
+        echo wp_kses($html,rbfw_allowed_html());
     }
 
     /**
@@ -214,7 +214,7 @@ class RBFW_Setting_API {
         $html        = sprintf( '<input type="%1$s" class="%2$s-number" id="%3$s[%4$s]" name="%3$s[%4$s]" value="%5$s"%6$s%7$s%8$s%9$s/>', $type, $size, $args['section'], $args['id'], $value, $placeholder, $min, $max, $step );
         $html       .= $this->get_field_description( $args );
 
-        echo esc_html($html);
+        echo wp_kses($html,rbfw_allowed_html());
     }
 
     /**
@@ -233,7 +233,7 @@ class RBFW_Setting_API {
         $html  .= sprintf( '%1$s</label>', $args['desc'] );
         $html  .= '</fieldset>';
 
-        echo esc_html($html);
+        echo wp_kses($html,rbfw_allowed_html());
     }
 
         /**
@@ -244,7 +244,7 @@ class RBFW_Setting_API {
     function callback_heading( $args ) {
 
         $html  = '';
-        echo wp_kses_post($html);
+        echo kses_post($html, rbfw_allowed_html());
     }
 
     /**
@@ -320,7 +320,7 @@ class RBFW_Setting_API {
         $html .= $this->get_field_description( $args );
         $html .= '</fieldset>';
 
-        echo esc_html($html);
+        echo esc_html($html,rbfw_allowed_html());
     }
 
     /**
@@ -342,7 +342,7 @@ class RBFW_Setting_API {
         $html .= $this->get_field_description( $args );
         $html .= '</fieldset>';
 
-        echo esc_html($html);
+        echo wp_kses($html , rbfw_allowed_html());
     }
 
     /**
@@ -364,7 +364,7 @@ class RBFW_Setting_API {
         $html .= sprintf( '</select>' );
         $html .= $this->get_field_description( $args );
 
-        echo esc_html($html);
+        echo  wp_kses($html , rbfw_allowed_html());
     }
 
     function callback_generatepage( $args ) {
@@ -381,7 +381,7 @@ class RBFW_Setting_API {
         $html .= sprintf( '</select>' );
         $html .= $this->get_field_description( $args );
 
-        echo esc_html($html);
+        echo wp_kses($html , rbfw_allowed_html());
     }
 
     /**
@@ -398,7 +398,7 @@ class RBFW_Setting_API {
         $html        = sprintf( '<textarea rows="5" cols="55" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]"%4$s>%5$s</textarea>', $size, $args['section'], $args['id'], $placeholder, $value );
         $html        .= $this->get_field_description( $args );
 
-        echo esc_html($html);
+        echo wp_kses($html , rbfw_allowed_html());
     }
 
     /**
@@ -408,7 +408,7 @@ class RBFW_Setting_API {
      * @return string
      */
     function callback_html( $args ) {
-        echo esc_html($this->get_field_description( $args ));
+        echo wp_kses($this->get_field_description( $args ),rbfw_allowed_html());
     }
 
     /**
@@ -456,7 +456,7 @@ class RBFW_Setting_API {
         $html  .= '<input type="button" class="button wpsa-browse" value="' . $label . '" />';
         $html  .= $this->get_field_description( $args );
 
-        echo esc_html($html);
+        echo wp_kses($html , rbfw_allowed_html());
     }
 
     /**
@@ -472,7 +472,7 @@ class RBFW_Setting_API {
         $html  = sprintf( '<input type="password" class="%1$s-text" id="%2$s[%3$s]" name="%2$s[%3$s]" value="%4$s"/>', $size, $args['section'], $args['id'], $value );
         $html  .= $this->get_field_description( $args );
 
-        echo esc_html($html);
+        echo wp_kses($html , rbfw_allowed_html());
     }
 
     /**
@@ -600,7 +600,7 @@ class RBFW_Setting_API {
         }
         $html .= '</div>';
 
-        echo esc_html($html);
+        echo wp_kses($html,rbfw_allowed_html());
     }
 
     /**
