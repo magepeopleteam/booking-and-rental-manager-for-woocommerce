@@ -6835,7 +6835,7 @@
 				} ?> field-wrapper field-custom-html-wrapper
             field-custom-html-wrapper-<?php echo esc_attr( $id ); ?>">
 					<?php
-						echo esc_html( $html );
+                    echo wp_kses( $html,rbfw_allowed_html() );
 					?>
                     <div class="error-mgs"></div>
                 </div>

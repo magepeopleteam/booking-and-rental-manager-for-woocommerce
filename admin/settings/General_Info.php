@@ -114,7 +114,12 @@
                                         <div class="features_category_wrapper text-center">
                                             <div class="field-list <?php echo esc_attr($field_id); ?>">
                                                 <div class="feature_category_inner_wrap">
-                                                    <div class="feature_category_title"><label class=" mb-1"><?php echo esc_html__('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?></label><input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_feature_category[<?php echo esc_attr($i); ?>][cat_title]" data-key="<?php echo esc_attr($i); ?>" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/></div>
+                                                    <div class="feature_category_title">
+                                                        <label class=" mb-1">
+                                                            <?php echo esc_html__('Feature Category Title','booking-and-rental-manager-for-woocommerce'); ?>
+                                                        </label>
+                                                        <input type="text" value="<?php echo esc_attr($value['cat_title']); ?>" name="rbfw_feature_category[<?php echo esc_attr($i); ?>][cat_title]" data-key="<?php echo esc_attr($i); ?>" placeholder="<?php echo esc_attr__('Feature Category Label','booking-and-rental-manager-for-woocommerce'); ?>"/>
+                                                    </div>
                                                     <div class="feature_category_inner_item_wrap sortable">
                                                         <?php
                                                         if(!empty($value['cat_features'])){
@@ -216,7 +221,7 @@
                             'placeholder'        => 'Features Name',
                         );
                         $option_value         = get_post_meta($post_id, $options['id'], true);
-                        $options['value']      = is_serialized($option_value) ? unserialize($option_value) : $option_value;
+                        $options['value']     = is_serialized($option_value) ? unserialize($option_value) : $option_value;
 
                 $id 			= isset( $option['id'] ) ? $option['id'] : "";
 
@@ -342,11 +347,7 @@
 
                 <?php
                        
-                        echo wp_kses($this->field_feature_category($options),rbfw_allowed_html());
-
-
-
-
+                echo wp_kses($this->field_feature_category($options),rbfw_allowed_html());
 
             }
             public function add_tabs_content( $post_id ) {
@@ -378,12 +379,12 @@
                   //  wp_set_object_terms( $post_id, string|int|array $terms, string $taxonomy, bool $append = false )
 	                
 	                
-	                $rbfw_categories = isset( $_POST['rbfw_categories'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_categories'] ) ) : [];
+	                $rbfw_categories = isset( $_POST['rbfw_categories'] ) ? $_POST['rbfw_categories']  : [];
                  
 	                wp_set_object_terms( $post_id, $rbfw_categories,'rbfw_item_caregory');
 	                
 	                
-	                $feature_category = isset( $_POST['rbfw_feature_category'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_feature_category'] ) ) : [];
+	                $feature_category = isset( $_POST['rbfw_feature_category'] ) ?  $_POST['rbfw_feature_category']  : [];
 	                
 	                update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
                     

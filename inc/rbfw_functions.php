@@ -92,6 +92,7 @@
                 'name'        => true,
                 'value'       => true,
                 'id'          => true,
+                'selected'    => true,
             ),
 
             'ul'   => array(

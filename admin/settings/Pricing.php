@@ -1223,8 +1223,10 @@
 					return;
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-					$rbfw_item_type                     = isset( $_POST['rbfw_item_type'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_item_type'] ) ) : [];
-					$rbfw_enable_daily_rate             = isset( $_POST['rbfw_enable_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daily_rate'] ) ) : 'no';
+
+                    $rbfw_item_type                     = isset( $_POST['rbfw_item_type'] ) ?  $_POST['rbfw_item_type']  : [];
+
+                    $rbfw_enable_daily_rate             = isset( $_POST['rbfw_enable_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daily_rate'] ) ) : 'no';
 					$daily_rate                         = isset( $_POST['rbfw_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_daily_rate'] ) ) : 0;
 					$rbfw_enable_hourly_rate            = isset( $_POST['rbfw_enable_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_hourly_rate'] ) ) : 'no';
 					$hourly_rate                        = isset( $_POST['rbfw_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_hourly_rate'] ) ) : 0;
@@ -1234,8 +1236,10 @@
 					$rbfw_bike_car_sd_data              = isset( $_POST['rbfw_bike_car_sd_data'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_bike_car_sd_data'] ) ) : 0;
 					// echo '<pre>';print_r($rbfw_bike_car_sd_data );echo '<pre>';exit;
 					$rbfw_enable_resort_daylong_price        = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_resort_daylong_price'] ) ) : 'no';
-					$rbfw_resort_room_data                   = isset( $_POST['rbfw_resort_room_data'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_resort_room_data'] ) ) : 0;
-					$rbfw_sd_appointment_max_qty_per_session = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ) : '';
+
+                    $rbfw_resort_room_data                   = isset( $_POST['rbfw_resort_room_data'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_resort_room_data'] ) ) : 0;
+
+                    $rbfw_sd_appointment_max_qty_per_session = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ) : '';
 					$rbfw_sd_appointment_ondays              = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_sd_appointment_ondays'] ) ) : [];
 					$rbfw_enable_extra_service_qty           = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_extra_service_qty'] ) ) : 'no';
 					$rbfw_item_stock_quantity_timely         = isset( $_POST['rbfw_item_stock_quantity_timely'] ) ? intval( wp_unslash( $_POST['rbfw_item_stock_quantity_timely'] ) ) : 1;
@@ -1318,13 +1322,14 @@
 					// save extra service data==========================================
 					$old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 					$new_extra_service = array();
-					$service_img       = ! empty( $_POST['service_img'] ) ? sanitize_text_field( wp_unslash( $_POST['service_img'] ) ) : array();
-					$names             = isset( $_POST['service_name'] ) ? sanitize_text_field( wp_unslash( $_POST['service_name'] ) ) : array();
+					$service_img       = ! empty( $_POST['service_img'] ) ? sanitize_text_field( wp_unslash( $_POST['service_img'] ) ) : [];
+					$names             = isset( $_POST['service_name'] ) ?  $_POST['service_name']  : array();
 					$urls              = isset( $_POST['service_price'] ) ? sanitize_text_field( wp_unslash( $_POST['service_price'] ) ) : array();
 					$service_desc      = isset( $_POST['service_desc'] ) ? sanitize_textarea_field( wp_unslash( $_POST['service_desc'] ) ) : array();
 					$qty               = isset( $_POST['service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['service_qty'] ) ) : array();
 					$qty_type          = ! empty( $_POST['service_qty_type'] ) ? sanitize_text_field( wp_unslash( $_POST['service_qty_type'] ) ) : array();
-					$count             = count( $names );
+
+                    $count             = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
 						if ( ! empty( $service_img[ $i ] ) ) :
 							$new_extra_service[ $i ]['service_img'] = stripslashes( wp_strip_all_tags( $service_img[ $i ] ) );

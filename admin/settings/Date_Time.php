@@ -292,7 +292,7 @@
 					$rbfw_event_end_date        = isset( $_POST['rbfw_event_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_event_end_date'] ) ) : '';
 					$rbfw_event_end_time        = isset( $_POST['rbfw_event_end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_event_end_time'] ) ) : '';
 					$rbfw_particular_switch     = isset( $_POST['rbfw_particular_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_particular_switch'] ) ) : 'off';
-					$particulars_data           = isset( $_POST['rbfw_particulars'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_particulars'] ) ) : [];
+					$particulars_data           = isset( $_POST['rbfw_particulars'] ) ?  $_POST['rbfw_particulars']  : [];
 					$clean_particulars_data     = [];
 					foreach ( $particulars_data as $index => $particular ) {
 						$clean_particulars_data[] = [
