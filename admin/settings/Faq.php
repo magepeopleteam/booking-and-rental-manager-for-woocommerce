@@ -23,7 +23,7 @@
 					$count = absint( wp_unslash( $_POST['count'] ) );
 					$count = $count + 1;
 					$id    = 'id' . uniqid();
-					echo esc_html( $this->rbfw_repeated_item_addnew( $id, 'mep_event_faq', [], $count ) );
+					echo wp_kses( $this->rbfw_repeated_item_addnew( $id, 'mep_event_faq', [], $count ), rbfw_allowed_html() );
 				} else {
 					wp_send_json_error( 'Missing count parameter' );
 				}
@@ -50,7 +50,7 @@
                         <label>
 							<?php echo esc_html( $title ); ?>
                         </label>
-                        <span><?php echo esc_html( $description ); ?></span>
+                        <span><?php echo wp_kses( $description ,rbfw_allowed_html() ); ?></span>
                     </div>
                 </section>
 				<?php
@@ -342,7 +342,7 @@
 								$i = 0;
 								foreach ( $faqs as $faq ) {
 									$id = 'rbfw_faq_content_' . $i;
-									echo esc_html( $this->rbfw_repeated_item_accordion( $id, 'mep_event_faq', $faq, $i ) );
+									echo wp_kses( $this->rbfw_repeated_item_accordion( $id, 'mep_event_faq', $faq, $i ) , rbfw_allowed_html() );
 									$i ++;
 								}
 							}
