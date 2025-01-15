@@ -118,7 +118,7 @@
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
 					//$gallery_images = get_post_meta( $post_id, 'rbfw_gallery_images', true ) ? get_post_meta( $post_id, 'rbfw_gallery_images', true ) : [];
-	                $gallery_images = isset( $_POST['rbfw_gallery_images'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_gallery_images'] ) ) : [];
+	                $gallery_images = isset( $_POST['rbfw_gallery_images'] ) ?  $_POST['rbfw_gallery_images']  : [];
 	                
 	                update_post_meta($post_id, 'rbfw_gallery_images', $gallery_images);
 

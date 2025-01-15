@@ -209,11 +209,11 @@
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 	                $rbfw_enable_pick_point = isset( $_POST['rbfw_enable_pick_point'] )
-		                ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_enable_pick_point'] ) )
+		                ?  $_POST['rbfw_enable_pick_point']
 		                : 'no';
 	                
 	                $rbfw_enable_dropoff_point = isset( $_POST['rbfw_enable_dropoff_point'] )
-		                ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_enable_dropoff_point'] ) )
+		                ?  $_POST['rbfw_enable_dropoff_point']
 		                : 'no';
 	                
 	                update_post_meta( $post_id, 'rbfw_enable_pick_point', $rbfw_enable_pick_point );
@@ -222,7 +222,7 @@
 					// Saving Pickup Location Data
 					$old_rbfw_pickup_data = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
 					$new_rbfw_pickup_data = array();
-	                $names = isset( $_POST['loc_pickup_name'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['loc_pickup_name'] ) ) : array();
+	                $names = isset( $_POST['loc_pickup_name'] ) ? $_POST['loc_pickup_name']  : array();
 	                $count                = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
 						if ( $names[ $i ] != '' ) :
@@ -240,7 +240,7 @@
 					$old_rbfw_dropoff_data = get_post_meta( $post_id, 'rbfw_dropoff_data', true ) ? get_post_meta( $post_id, 'rbfw_dropoff_data', true ) : [];
 					$new_rbfw_dropoff_data = array();
 	                $names = isset( $_POST['loc_dropoff_name'] ) ?
-		                array_map( 'sanitize_text_field', wp_unslash( $_POST['loc_dropoff_name'] ) ) : [];
+		                $_POST['loc_dropoff_name']  : [];
 	                $count                 = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
 						if ( $names[ $i ] != '' ) :

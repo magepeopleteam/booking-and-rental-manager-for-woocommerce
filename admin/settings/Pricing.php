@@ -1255,7 +1255,7 @@
 					$hourly_rate                        = isset( $_POST['rbfw_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_hourly_rate'] ) ) : 0;
 					$rbfw_enable_daywise_price          = isset( $_POST['rbfw_enable_daywise_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daywise_price'] ) ) : 'no';
 					$rbfw_enable_category_service_price = isset( $_POST['rbfw_enable_category_service_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_category_service_price'] ) ) : 'off';
-					$rbfw_service_category_price        = isset( $_POST['rbfw_service_category_price'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_service_category_price'] ) ) : [];
+					$rbfw_service_category_price        = isset( $_POST['rbfw_service_category_price'] ) ? $_POST['rbfw_service_category_price']  : [];
 					$rbfw_bike_car_sd_data              = isset( $_POST['rbfw_bike_car_sd_data'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_bike_car_sd_data'] ) ) : 0;
 					// echo '<pre>';print_r($rbfw_bike_car_sd_data );echo '<pre>';exit;
 					$rbfw_enable_resort_daylong_price        = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_resort_daylong_price'] ) ) : 'no';
@@ -1263,7 +1263,7 @@
                     $rbfw_resort_room_data                   = isset( $_POST['rbfw_resort_room_data'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_resort_room_data'] ) ) : 0;
 
                     $rbfw_sd_appointment_max_qty_per_session = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ) : '';
-					$rbfw_sd_appointment_ondays              = isset( $_POST['rbfw_sd_appointment_ondays'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_sd_appointment_ondays'] ) ) : [];
+					$rbfw_sd_appointment_ondays              = isset( $_POST['rbfw_sd_appointment_ondays'] ) ?  $_POST['rbfw_sd_appointment_ondays']  : [];
 					$rbfw_enable_extra_service_qty           = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_extra_service_qty'] ) ) : 'no';
 					$rbfw_item_stock_quantity_timely         = isset( $_POST['rbfw_item_stock_quantity_timely'] ) ? intval( wp_unslash( $_POST['rbfw_item_stock_quantity_timely'] ) ) : 1;
 					// daywise configureation============================

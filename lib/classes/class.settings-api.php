@@ -244,7 +244,7 @@ class RBFW_Setting_API {
     function callback_heading( $args ) {
 
         $html  = '';
-        echo kses_post($html, rbfw_allowed_html());
+        echo wp_kses($html, rbfw_allowed_html());
     }
 
     /**
