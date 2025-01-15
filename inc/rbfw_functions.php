@@ -65,6 +65,7 @@
 				'onclick' => true, // Allows inline JavaScript
 			),
 			'a'       => array(
+                'href' => true,
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
