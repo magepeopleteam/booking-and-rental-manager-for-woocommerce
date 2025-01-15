@@ -389,10 +389,25 @@
                     return;
                 }
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-	                $rbfw_enable_variations = isset( $_POST['rbfw_enable_variations'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_variations'] ) ) : 'no';
+                    $rules = [
+                        'name'        => 'sanitize_text_field',
+                        'email'       => 'sanitize_email',
+                        'age'         => 'absint',
+                        'preferences' => [
+                            'color'         => 'sanitize_text_field',
+                            'notifications' => function ( $value ) {
+                                return $value === 'yes' ? 'yes' : 'no';
+                            }
+                        ]
+                    ];
+                    $input_data_sabitized = sanitize_post_array( $_POST, $rules );
+
+                    $rbfw_enable_variations = isset( $_POST['rbfw_enable_variations'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_variations'] ) ) : 'no';
 	                $rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_stock_quantity'] ) ) : '';
-	                $rbfw_enable_md_type_item_qty  = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_md_type_item_qty'] ) ) : 'no';
-	                $rbfw_variations_data = isset( $_POST['rbfw_variations_data'] ) ?  $_POST['rbfw_variations_data']  : [];
+
+                    $rbfw_enable_md_type_item_qty  = isset( $_POST['rbfw_enable_md_type_item_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_md_type_item_qty'] ) ) : 'no';
+
+                    $rbfw_variations_data = isset( $input_data_sabitized['rbfw_variations_data'] ) ?  $input_data_sabitized['rbfw_variations_data']  : [];
 	                //echo '<pre>';print_r($_POST['rbfw_variations_data']);echo '<pre>';exit;
 
                     update_post_meta( $post_id, 'rbfw_enable_md_type_item_qty', $rbfw_enable_md_type_item_qty );				

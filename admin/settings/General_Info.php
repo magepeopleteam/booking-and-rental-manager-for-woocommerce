@@ -377,14 +377,25 @@
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
                   //  wp_set_object_terms( $post_id, string|int|array $terms, string $taxonomy, bool $append = false )
+                    $rules = [
+                        'name'        => 'sanitize_text_field',
+                        'email'       => 'sanitize_email',
+                        'age'         => 'absint',
+                        'preferences' => [
+                            'color'         => 'sanitize_text_field',
+                            'notifications' => function ( $value ) {
+                                return $value === 'yes' ? 'yes' : 'no';
+                            }
+                        ]
+                    ];
+                    $input_data_sabitized = sanitize_post_array( $_POST, $rules );
 	                
-	                
-	                $rbfw_categories = isset( $_POST['rbfw_categories'] ) ? $_POST['rbfw_categories']  : [];
+	                $rbfw_categories = isset( $input_data_sabitized['rbfw_categories'] ) ? $input_data_sabitized['rbfw_categories']  : [];
                  
 	                wp_set_object_terms( $post_id, $rbfw_categories,'rbfw_item_caregory');
 	                
 	                
-	                $feature_category = isset( $_POST['rbfw_feature_category'] ) ?  $_POST['rbfw_feature_category']  : [];
+	                $feature_category = isset( $input_data_sabitized['rbfw_feature_category'] ) ?  $input_data_sabitized['rbfw_feature_category']  : [];
 	                
 	                update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
                     
