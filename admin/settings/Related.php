@@ -80,7 +80,7 @@
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					// Use wp_unslash to remove slashes and then sanitize array items using rbfw_array_strip
-					$related_categories = isset( $_POST['rbfw_releted_rbfw'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['rbfw_releted_rbfw'] ) ) : [];
+					$related_categories = isset( $_POST['rbfw_releted_rbfw'] ) ?  $_POST['rbfw_releted_rbfw']  : [];
 					// Update the post meta
 					update_post_meta( $post_id, 'rbfw_releted_rbfw', $related_categories );
 				}
