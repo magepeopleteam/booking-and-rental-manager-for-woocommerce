@@ -230,7 +230,7 @@
             }
         });
 
-        jQuery(document).on('click', '.rbfw_add_faq_content', function() {
+        jQuery(document).on('click', '.rbfw_add_faq_content', function() { alert(12);
             let theCount = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item').length;
             let lastDataID = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item:last-child').data('id');
             if (lastDataID === undefined) {
