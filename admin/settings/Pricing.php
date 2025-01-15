@@ -1247,7 +1247,21 @@
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
-                    $rbfw_item_type                     = isset( $_POST['rbfw_item_type'] ) ?  $_POST['rbfw_item_type']  : [];
+                    $rules = [
+                        'name'        => 'sanitize_text_field',
+                        'email'       => 'sanitize_email',
+                        'age'         => 'absint',
+                        'preferences' => [
+                            'color'         => 'sanitize_text_field',
+                            'notifications' => function ( $value ) {
+                                return $value === 'yes' ? 'yes' : 'no';
+                            }
+                        ]
+                    ];
+                    $input_data_sabitized = sanitize_post_array( $_POST, $rules );
+
+
+                    $rbfw_item_type                     = isset( $_POST['rbfw_item_type'] ) ?  sanitize_text_field( wp_unslash($_POST['rbfw_item_type']))  : [];
 
                     $rbfw_enable_daily_rate             = isset( $_POST['rbfw_enable_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daily_rate'] ) ) : 'no';
 					$daily_rate                         = isset( $_POST['rbfw_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_daily_rate'] ) ) : 0;
@@ -1255,7 +1269,7 @@
 					$hourly_rate                        = isset( $_POST['rbfw_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_hourly_rate'] ) ) : 0;
 					$rbfw_enable_daywise_price          = isset( $_POST['rbfw_enable_daywise_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daywise_price'] ) ) : 'no';
 					$rbfw_enable_category_service_price = isset( $_POST['rbfw_enable_category_service_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_category_service_price'] ) ) : 'off';
-					$rbfw_service_category_price        = isset( $_POST['rbfw_service_category_price'] ) ? $_POST['rbfw_service_category_price']  : [];
+					$rbfw_service_category_price        = isset( $input_data_sabitized['rbfw_service_category_price'] ) ? $input_data_sabitized['rbfw_service_category_price']  : [];
 					$rbfw_bike_car_sd_data              = isset( $_POST['rbfw_bike_car_sd_data'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_bike_car_sd_data'] ) ) : 0;
 					// echo '<pre>';print_r($rbfw_bike_car_sd_data );echo '<pre>';exit;
 					$rbfw_enable_resort_daylong_price        = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_resort_daylong_price'] ) ) : 'no';
@@ -1263,7 +1277,7 @@
                     $rbfw_resort_room_data                   = isset( $_POST['rbfw_resort_room_data'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_resort_room_data'] ) ) : 0;
 
                     $rbfw_sd_appointment_max_qty_per_session = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ) : '';
-					$rbfw_sd_appointment_ondays              = isset( $_POST['rbfw_sd_appointment_ondays'] ) ?  $_POST['rbfw_sd_appointment_ondays']  : [];
+					$rbfw_sd_appointment_ondays              = isset( $input_data_sabitized['rbfw_sd_appointment_ondays'] ) ?  $input_data_sabitized['rbfw_sd_appointment_ondays']  : [];
 					$rbfw_enable_extra_service_qty           = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_extra_service_qty'] ) ) : 'no';
 					$rbfw_item_stock_quantity_timely         = isset( $_POST['rbfw_item_stock_quantity_timely'] ) ? intval( wp_unslash( $_POST['rbfw_item_stock_quantity_timely'] ) ) : 1;
 					// daywise configureation============================
@@ -1346,7 +1360,7 @@
 					$old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 					$new_extra_service = array();
 					$service_img       = ! empty( $_POST['service_img'] ) ? sanitize_text_field( wp_unslash( $_POST['service_img'] ) ) : [];
-					$names             = isset( $_POST['service_name'] ) ?  $_POST['service_name']  : array();
+					$names             = isset( $input_data_sabitized['service_name'] ) ?  $input_data_sabitized['service_name']  : array();
 					$urls              = isset( $_POST['service_price'] ) ? sanitize_text_field( wp_unslash( $_POST['service_price'] ) ) : array();
 					$service_desc      = isset( $_POST['service_desc'] ) ? sanitize_textarea_field( wp_unslash( $_POST['service_desc'] ) ) : array();
 					$qty               = isset( $_POST['service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['service_qty'] ) ) : array();

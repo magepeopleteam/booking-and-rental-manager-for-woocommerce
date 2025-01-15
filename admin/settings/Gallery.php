@@ -117,8 +117,21 @@
                 }
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
+                    $rules = [
+                        'name'        => 'sanitize_text_field',
+                        'email'       => 'sanitize_email',
+                        'age'         => 'absint',
+                        'preferences' => [
+                            'color'         => 'sanitize_text_field',
+                            'notifications' => function ( $value ) {
+                                return $value === 'yes' ? 'yes' : 'no';
+                            }
+                        ]
+                    ];
+                    $input_data_sabitized = sanitize_post_array( $_POST, $rules );
+
 					//$gallery_images = get_post_meta( $post_id, 'rbfw_gallery_images', true ) ? get_post_meta( $post_id, 'rbfw_gallery_images', true ) : [];
-	                $gallery_images = isset( $_POST['rbfw_gallery_images'] ) ?  $_POST['rbfw_gallery_images']  : [];
+	                $gallery_images = isset( $input_data_sabitized['rbfw_gallery_images'] ) ?  $input_data_sabitized['rbfw_gallery_images']  : [];
 	                
 	                update_post_meta($post_id, 'rbfw_gallery_images', $gallery_images);
 
