@@ -32,7 +32,7 @@
 				wp_enqueue_script( 'owl.carousel.min', RBFW_PLUGIN_URL . '/js/owl.carousel.min.js', array( 'jquery' ), '2.3.4', true );
 				//loading tooltip js
 				wp_enqueue_script( 'popper.min', RBFW_PLUGIN_URL . '/assets/popper.min.js', array( 'jquery' ), '2.9.2', true );
-				wp_enqueue_script( 'tippy-bundle.umd.min',  RBFW_PLUGIN_URL . '/assets/tippy-bundle.umd.min.js', array( 'jquery' ), '6.3.7', true );
+				wp_enqueue_script( 'tippy-bundle.umd.min', RBFW_PLUGIN_URL . '/assets/tippy-bundle.umd.min.js', array( 'jquery' ), '6.3.7', true );
 				// loading popup css
 				wp_enqueue_style( 'jquery.modal.min', plugin_dir_url( __DIR__ ) . 'admin/css/jquery.modal.min.css' );
 				// loading popup js
@@ -94,7 +94,7 @@
 				wp_enqueue_script( 'owl.carousel.min', RBFW_PLUGIN_URL . '/js/owl.carousel.min.js', array( 'jquery' ), '2.3.4', true );
 				//loading tooltip js
 				wp_enqueue_script( 'popper.min', RBFW_PLUGIN_URL . '/assets/popper.min.js', array( 'jquery' ), '2.9.2', true );
-				wp_enqueue_script( 'tippy-bundle.umd.min',  RBFW_PLUGIN_URL . '/assets/tippy-bundle.umd.min.js', array( 'jquery' ), '6.3.7', true );
+				wp_enqueue_script( 'tippy-bundle.umd.min', RBFW_PLUGIN_URL . '/assets/tippy-bundle.umd.min.js', array( 'jquery' ), '6.3.7', true );
 				// loading popup css
 				wp_enqueue_style( 'jquery.modal.min', plugin_dir_url( __DIR__ ) . 'admin/css/jquery.modal.min.css' );
 				// loading popup js
@@ -141,29 +141,23 @@
 					wp_enqueue_style( 'rbfw-jquery-ui-style', plugin_dir_url( __DIR__ ) . 'css/jquery-ui.css', array() );
 					wp_localize_script( 'rbfw_custom_script', 'rbfw_ajaxurl', array( 'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ), 'view_more_feature_btn_text' => $view_more_feature_btn_text, 'hide_more_feature_btn_text' => $hide_more_feature_btn_text, 'view_more_offers_btn_text' => $view_more_offers_btn_text, 'hide_more_offers_btn_text' => $hide_more_offers_btn_text ) );
 					wp_localize_script( 'jquery', 'rbfw_ajax', array(
-                            'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ) ,
-                            'nonce'        => wp_create_nonce( 'rbfw_ajax_action' )
-                    ) );
+						'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ),
+						'nonce'        => wp_create_nonce( 'rbfw_ajax_action' )
+					) );
 					//font awesome
 					wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
 					wp_enqueue_style( 'flatpickr-css', RBFW_PLUGIN_URL . '/css/flatpickr.min.css', array(), null );
-					wp_enqueue_script( 'flatpickr-js', RBFW_PLUGIN_URL . '/assets/flatpickr.js',array( 'jquery' ), null, true);
-					wp_enqueue_script(
-						'jquery-ui-dialog', // WordPress default jQuery UI component (can change based on need, e.g., 'jquery-ui-dialog', 'jquery-ui-datepicker', etc.)
-						false, // No need to specify the source URL since it's included by WordPress
-						array( 'jquery', 'jquery-ui-core' ), // Ensures jQuery and jQuery UI core are loaded as dependencies
-						false, // Version is handled by WordPress
-						true // Load in the footer
-					);
+					wp_enqueue_script( 'flatpickr-js', RBFW_PLUGIN_URL . '/assets/flatpickr.js', array( 'jquery' ), null, true );
+					wp_enqueue_script( 'jquery-ui-dialog', false, array( 'jquery', 'jquery-ui-core' ), null, true );
 				}
 			}
 
 			public function included_header_script() {
 				?>
                 <script>
-                    let start_of_week = "<?php echo esc_html((get_option( 'start_of_week' ))) ?>";
-                    let wp_date_format = "<?php echo esc_html(get_option( 'date_format' )) ?>";
-                    let wp_time_format = "<?php echo esc_html(get_option( 'time_format' )) ?>";
+                    let start_of_week = "<?php echo esc_html( ( get_option( 'start_of_week' ) ) ) ?>";
+                    let wp_date_format = "<?php echo esc_html( get_option( 'date_format' ) ) ?>";
+                    let wp_time_format = "<?php echo esc_html( get_option( 'time_format' ) ) ?>";
                     let js_date_format = 'yy-mm-dd';
                     if (wp_date_format == 'F j, Y') {
                         js_date_format = 'dd M yy';
@@ -176,9 +170,9 @@
                     }
                 </script>
                 <script type="text/javascript">
-                    let rbfw_ajax_url = "<?php echo esc_url_raw(admin_url( 'admin-ajax.php' )); ?>";
+                    let rbfw_ajax_url = "<?php echo esc_url_raw( admin_url( 'admin-ajax.php' ) ); ?>";
                     let rbfw_vars = {
-                        rbfw_nonce: "<?php echo esc_html(wp_create_nonce( 'rbfw_nonce' )) ?>"
+                        rbfw_nonce: "<?php echo esc_html( wp_create_nonce( 'rbfw_nonce' ) ) ?>"
                     };
                 </script>
 				<?php
