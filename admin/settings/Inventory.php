@@ -71,7 +71,7 @@
                                     <table class="rbfw_variations_value_table">
                                         <thead>
                                             <th><?php esc_html_e( 'Value Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                            <th><?php esc_html_e( 'Stock Quantity <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                            <th><?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?><b class="required">*</b></th>
                                             <th>
                                                 <?php esc_html_e( 'Is Default ', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                                 <div class="rbfw_tooltip"><i class="fa-solid fa-circle-info"></i>
