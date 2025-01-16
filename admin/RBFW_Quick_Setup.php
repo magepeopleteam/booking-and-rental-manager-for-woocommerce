@@ -5,11 +5,13 @@ if (!defined('ABSPATH')) {
 
 add_action('admin_init','rbfw_quick_setup_exit',99);
 function rbfw_quick_setup_exit(){
-    if(isset($_REQUEST['rbfw_skip_quick_setup'])){
-        update_option('rbfw_quick_setup_done', 'exit');
-        $redirect_url = esc_url_raw(admin_url('index.php'));
-        wp_redirect($redirect_url);
-        exit;
+    if (isset($_POST['rbfw_quick_setup']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_quick_setup'])), 'rbfw_quick_setup_nonce')) {
+        if (isset($_REQUEST['rbfw_skip_quick_setup'])) {
+            update_option('rbfw_quick_setup_done', 'exit');
+            $redirect_url = esc_url_raw(admin_url('index.php'));
+            wp_redirect($redirect_url);
+            exit;
+        }
     }
 }
 
@@ -42,7 +44,7 @@ if (!class_exists('TTBM_Quick_Setup')) {
             $woo_status = rbfw_woo_install_check();
 
 
-            if (isset($_POST['rbfw_quick_setup']) && wp_verify_nonce($_POST['rbfw_quick_setup'], 'rbfw_quick_setup_nonce'))
+            if (isset($_POST['rbfw_quick_setup']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_quick_setup'])), 'rbfw_quick_setup_nonce'))
             {
                 if (isset($_POST['active_woo_btn'])) {
                     ?>
@@ -120,14 +122,14 @@ if (!class_exists('TTBM_Quick_Setup')) {
                     if(isset($_POST['rbfw_rent_label']) && !empty($_POST['rbfw_rent_label'])){
                         $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings',true);
                         $rbfw_basic_gen_settings=is_array($rbfw_basic_gen_settings)?$rbfw_basic_gen_settings:[];
-                        $rbfw_basic_gen_settings['rbfw_rent_label'] =  sanitize_text_field($_POST['rbfw_rent_label']);
+                        $rbfw_basic_gen_settings['rbfw_rent_label'] =  sanitize_text_field(wp_unslash($_POST['rbfw_rent_label']));
                         $rbfw_basic_gen_settings['rbfw_gutenburg_switch'] =  'Off';
                         update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
                     }
 
                     if(isset($_POST['rbfw_rent_slug']) && !empty($_POST['rbfw_rent_slug'])){
                         $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings',true);
-                        $rbfw_basic_gen_settings['rbfw_rent_slug'] = sanitize_text_field($_POST['rbfw_rent_slug']);
+                        $rbfw_basic_gen_settings['rbfw_rent_slug'] = sanitize_text_field(wp_unslash($_POST['rbfw_rent_slug']));
                         update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
                     }
 
@@ -141,9 +143,6 @@ if (!class_exists('TTBM_Quick_Setup')) {
                 <div class=_dShadow_6_adminLayout">
                     <form method="post" action="">
                         <?php wp_nonce_field('rbfw_quick_setup_nonce', 'rbfw_quick_setup'); ?>
-
-                        <?php wp_nonce_field('my_custom_action', 'my_nonce_field'); ?>
-
 
 
                         <div class="mpTabsNext">
