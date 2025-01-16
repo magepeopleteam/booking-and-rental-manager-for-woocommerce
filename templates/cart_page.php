@@ -403,9 +403,9 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                                     <?php
                                     if($item['service_price_type']=='day_wise'){
                                         $rbfw_service_price =  (float)$rbfw_service_price+(float)$item['price']*(int)$item['quantity']*(int)$total_days;
-                                        echo wp_kses('('.wc_price($item['price']). 'x'. $item['quantity'] . 'x' .$total_days .'='.wc_price($item['price']*(int)$item['quantity']*$total_days).')',rbfw_allowed_html());
+                                        echo '('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. $item['quantity'] . 'x' .$total_days .'='.wp_kses(wc_price($item['price']*(int)$item['quantity']*$total_days),rbfw_allowed_html()).')';
                                     }else{
-                                        echo wp_kses('('.wc_price($item['price']). 'x'. $item['quantity'] .'='.wc_price($item['price']*$item['quantity']).')',rbfw_allowed_html());
+                                        echo ('('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. $item['quantity'] .'='.wp_kses(wc_price($item['price']*$item['quantity']),rbfw_allowed_html())).')';
                                     }
                                     ?>
                                 </td>
@@ -436,7 +436,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                                 <?php echo esc_html($service_name); ?>:
                             </th>
                             <td>
-                                (<?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?> x <?php echo esc_html($service_qty); ?>) = <?php echo esc_html(wc_price($total_service_price)); ?>
+                                (<?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?> x <?php echo esc_html($service_qty); ?>) = <?php echo wp_kses(wc_price($total_service_price),rbfw_allowed_html()); ?>
                             </td>
                         </tr>
                         <?php
