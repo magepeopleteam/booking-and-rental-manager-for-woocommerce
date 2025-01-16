@@ -484,7 +484,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                     <?php
                                     $c = 0;
                                     foreach ($extra_service_list as $key=>$extra) { ?>
-                                        <?php if($extra['service_qty'] > 0){ ?>
+                                        <?php if(isset($extra['service_qty']) && $extra['service_qty'] > 0){ ?>
                                             <tr>
                                                 <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
                                                     <div style="display: none" class="rbfw-sold-out">
