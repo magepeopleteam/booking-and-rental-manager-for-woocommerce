@@ -267,25 +267,13 @@
 					return;
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-                    $rules = [
-                        'name'        => 'sanitize_text_field',
-                        'email'       => 'sanitize_email',
-                        'age'         => 'absint',
-                        'preferences' => [
-                            'color'         => 'sanitize_text_field',
-                            'notifications' => function ( $value ) {
-                                return $value === 'yes' ? 'yes' : 'no';
-                            }
-                        ]
-                    ];
-                    $input_data_sabitized = sanitize_post_array( $_POST, $rules );
 					$rbfw_single_template = isset( $_POST['rbfw_single_template'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_single_template'] ) ) : 'Default';
 					$rbfw_single_template = is_dir( RBFW_Function::get_template_path( 'single/' . strtolower( $rbfw_single_template ) ) ) ? $rbfw_single_template : 'Default';
 					$dt_sidebar_switch         = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_dt_sidebar_switch'] ) ) : '';
-					$testimonials              = isset( $input_data_sabitized['rbfw_dt_sidebar_testimonials'] ) ?  $input_data_sabitized($_POST['rbfw_dt_sidebar_testimonials'])  : [];
-					$sidebar_content           = isset( $input_data_sabitized['rbfw_dt_sidebar_content'] ) ?  $input_data_sabitized($_POST['rbfw_dt_sidebar_content'])  : [];
-					$additional_gallery_images = isset( $_POST['rbfw_enable_additional_gallary'] ) ?  sanitize_text_field( wp_unslash($_POST['rbfw_enable_additional_gallary'] )) : 'off';
-					$gallery_images            = isset( $_POST['rbfw_gallery_images_additional'] ) ?  $input_data_sabitized($_POST['rbfw_gallery_images_additional'])  : [];
+					$testimonials              = isset( $_POST['rbfw_dt_sidebar_testimonials'] ) ?  $_POST['rbfw_dt_sidebar_testimonials']  : [];
+					$sidebar_content           = isset( $_POST['rbfw_dt_sidebar_content'] ) ?  $_POST['rbfw_dt_sidebar_content']  : [];
+					$additional_gallery_images = isset( $_POST['rbfw_enable_additional_gallary'] ) ?  $_POST['rbfw_enable_additional_gallary']  : 'off';
+					$gallery_images            = isset( $_POST['rbfw_gallery_images_additional'] ) ?  $_POST['rbfw_gallery_images_additional']  : [];
 					update_post_meta( $post_id, 'rbfw_dt_sidebar_switch', $dt_sidebar_switch );
 					update_post_meta( $post_id, 'rbfw_single_template', $rbfw_single_template );
 					update_post_meta( $post_id, 'rbfw_dt_sidebar_testimonials', $testimonials );
