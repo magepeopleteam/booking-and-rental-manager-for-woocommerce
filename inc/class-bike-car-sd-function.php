@@ -381,6 +381,7 @@
 				if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
 					return;
 				}
+
 				global $rbfw;
 				$content                 = '';
 				$rules                   = [

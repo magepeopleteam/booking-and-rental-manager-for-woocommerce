@@ -1361,10 +1361,10 @@
 					$new_extra_service = array();
 					$service_img       = ! empty( $_POST['service_img'] ) ? sanitize_text_field( wp_unslash( $_POST['service_img'] ) ) : [];
 					$names             = isset( $input_data_sabitized['service_name'] ) ?  $input_data_sabitized['service_name']  : array();
-					$urls              = isset( $_POST['service_price'] ) ? sanitize_text_field( wp_unslash( $_POST['service_price'] ) ) : array();
-					$service_desc      = isset( $_POST['service_desc'] ) ? sanitize_textarea_field( wp_unslash( $_POST['service_desc'] ) ) : array();
-					$qty               = isset( $_POST['service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['service_qty'] ) ) : array();
-					$qty_type          = ! empty( $_POST['service_qty_type'] ) ? sanitize_text_field( wp_unslash( $_POST['service_qty_type'] ) ) : array();
+					$urls              = isset( $input_data_sabitized['service_price'] ) ? $input_data_sabitized['service_price']  : array();
+					$service_desc      = isset( $input_data_sabitized['service_desc'] ) ? $input_data_sabitized['service_desc']  : array();
+					$qty               = isset( $input_data_sabitized['service_qty'] ) ? $input_data_sabitized['service_qty'] : array();
+					$qty_type          = ! empty( $input_data_sabitized['service_qty_type'] ) ? $input_data_sabitized['service_qty_type'] : array();
 
                     $count             = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {

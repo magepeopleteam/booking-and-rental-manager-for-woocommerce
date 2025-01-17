@@ -15,6 +15,8 @@ if(isset($_POST['post_id'])){
     $rbfw_bike_car_sd_data = get_post_meta($id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($id, 'rbfw_bike_car_sd_data', true) : [];
     $rbfw_extra_service_data = get_post_meta($id, 'rbfw_extra_service_data', true) ? get_post_meta($id, 'rbfw_extra_service_data', true) : [];
 
+
+
     $rbfw_product_id = get_post_meta($id, 'link_wc_product', true) ? get_post_meta($id, 'link_wc_product', true) : $id;
 
     $selected_date = isset($_POST['selected_date']) ? sanitize_text_field(wp_unslash($_POST['selected_date'])) : '';
@@ -233,7 +235,7 @@ if(isset($_POST['post_id'])){
                                 <tr>
                                     <td class="w_50_pc">
                                         <div>
-                                            <?php echo esc_html($img); ?>
+                                            <?php echo wp_kses($img,rbfw_allowed_html()); ?>
                                         </div>
                                         <div>
                                             <span class="rbfw_bikecarsd_type_title"><?php echo esc_html($value['service_name']); ?></span>
