@@ -122,9 +122,9 @@ if (isset($_POST['post_id']) && check_admin_referer('rbfw_nonce_action', 'rbfw_n
                                         <input type="hidden" name="rbfw_service_info[<?php echo esc_html($c); ?>][service_price]" value="<?php echo esc_html($value['service_price']); ?>"/>
                                         <div class="rbfw_qty_input">
                                             <?php if($max_es_available_qty){ ?>
-                                                <a class="rbfw_qty_minus rbfw_timely_es_qty_minus"><i class="fa-solid fa-minus"></i></a>
+                                                <a class="rbfw_qty_minus rbfw_timely_es_qty_minus"><i class="fas fa-minus"></i></a>
                                                 <input type="number" min="0" max="<?php echo esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo esc_html($c); ?>][service_qty]" class="rbfw_timely_es_qty" data-price="<?php echo esc_html($value['service_price']); ?>" data-type="<?php echo esc_html($value['service_name']); ?>" data-cat="service"/>
-                                                <a class="rbfw_qty_plus rbfw_timely_es_qty_plus"><i class="fa-solid fa-plus"></i></a>
+                                                <a class="rbfw_qty_plus rbfw_timely_es_qty_plus"><i class="fas fa-plus"></i></a>
                                             <?php }else{ ?>
                                                 <div style="width: 120px">Sold Out</div>
                                             <?php } ?>

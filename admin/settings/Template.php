@@ -15,7 +15,7 @@
 
 			public function add_tab_menu() {
 				?>
-                <li data-target-tabs="#rbfw_template_settings_meta_boxes"><i class="fa-solid fa-pager"></i><?php esc_html_e( 'Template', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li data-target-tabs="#rbfw_template_settings_meta_boxes"><i class="fas fa-pager"></i><?php esc_html_e( 'Template', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
 				<?php
 			}
 
@@ -160,7 +160,7 @@
 											$media_url = wp_get_attachment_url( $image );
 											?>
                                             <div class=" gallery-image">
-                                                <span class="remove" onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></span>
+                                                <span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>
                                                 <img id='media_preview_<?php echo esc_attr( $post_id ); ?>' src='<?php echo esc_attr( $media_url ); ?>'/>
                                                 <input type='hidden' name='rbfw_gallery_images_additional[]' value='<?php echo esc_attr( $image ); ?>'/>
                                             </div>
@@ -238,7 +238,7 @@
                                 attachment_id = attachment.id;
                                 attachment_url = attachment.url;
                                 html = '<div class=" gallery-image">';
-                                html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></span>';
+                                html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>';
                                 html += '<img src="' + attachment_url + '" style="width:100%"/>';
                                 html += '<input type="hidden" name="rbfw_gallery_images_additional[]" value="' + attachment_id + '" />';
                                 html += '</div>';

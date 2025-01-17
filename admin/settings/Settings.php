@@ -15,7 +15,7 @@
 
 			public function add_tab_menu() {
 				?>
-                <li data-target-tabs="#rbfw_frontend_display"><i class="fa-solid fa-gear"></i><?php esc_html_e( ' Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li data-target-tabs="#rbfw_frontend_display"><i class="fas fa-gear"></i><?php esc_html_e( ' Settings', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
 				<?php
 			}
 
