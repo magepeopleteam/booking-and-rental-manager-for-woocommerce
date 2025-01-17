@@ -31,10 +31,13 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        > div{
+            display: flex;
+            flex-direction: column;
+        }
         label{
             margin: 0;
             font-size: 14px;
-            font-family: DejaVuSansBold, sans-serif;
             font-weight: 600;
             line-height: 1.2;
             margin-bottom: 8px;

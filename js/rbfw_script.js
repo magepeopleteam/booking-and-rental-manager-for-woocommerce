@@ -31,7 +31,7 @@
         });
 
         //Grid List Auto Height Function
-        rbfw_grid_list_auto_height_func();
+        //rbfw_grid_list_auto_height_func();
 
         function rbfw_grid_list_auto_height_func(extra_height = null) {
             let rbfw_rent_list_height_arr = [];
