@@ -818,7 +818,7 @@ function rbfw_get_stock_by_filter(){
         );
         $query = new WP_Query( $args );
         $content = rbfw_inventory_page_table($query, $selected_date,$start_date,$end_date);
-        echo esc_html($content);
+        echo wp_kses($content,rbfw_allowed_html());
         wp_die();
     }
 }

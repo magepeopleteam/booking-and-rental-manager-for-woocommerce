@@ -345,8 +345,8 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
     }
 }
 
-function particular_time_date_dependent_ajax(post_id,date_ymd,type='',selector){
-    alert(selector);
+function particular_time_date_dependent_ajax(post_id,date_ymd,type='',rbfw_enable_time_slot='',selector){
+
     jQuery.ajax({
         type: 'POST',
         dataType:'json',
