@@ -668,7 +668,7 @@
 #rbfw_add_meta_box .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
+  width: 50px;
   height: 24px;
   margin: 0;
 }
@@ -753,10 +753,13 @@
   justify-content: space-between;
   align-items: center;
 }
+#rbfw_add_meta_box section > div {
+  display: flex;
+  flex-direction: column;
+}
 #rbfw_add_meta_box section label {
   margin: 0;
   font-size: 14px;
-  font-family: DejaVuSansBold, sans-serif;
   font-weight: 600;
   line-height: 1.2;
   margin-bottom: 8px;
