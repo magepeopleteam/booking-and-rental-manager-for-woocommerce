@@ -232,7 +232,7 @@
 								foreach ( $rbfw_time_slots as $key => $time_slot ) {
 									$options .= '<option  value="' . gmdate( 'H:i', strtotime( $time_slot ) ) . '">' . gmdate( 'H:i', strtotime( $time_slot ) ) . '</option>';
 								}
-								echo esc_html( addslashes( $options ) );
+								echo wp_kses( addslashes( $options ) , rbfw_allowed_html());
 								?>';
                             var newRow = `
                 <tr class="particular-row">
