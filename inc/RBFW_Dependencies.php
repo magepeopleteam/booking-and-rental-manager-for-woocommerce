@@ -15,8 +15,9 @@ if ( ! class_exists( 'RBFW_Dependencies' ) ) {
 
         public function rbfw_add_admin_scripts( $hook ) {
             //font awesome
-            wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
-            wp_enqueue_script( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.js', array(), time(), true );
+            wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/assets/fontawesome/css/all.min.css');
+            // wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
+            // wp_enqueue_script( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.js', array(), time(), true );
             wp_enqueue_script( 'jquery-ui-core' );
             wp_enqueue_script( 'jquery-ui-datepicker' );
             wp_enqueue_script( 'jquery-ui-accordion' );
