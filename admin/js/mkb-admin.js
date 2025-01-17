@@ -128,7 +128,8 @@
                     data: {
                         'action': 'rbfw_save_faq_data',
                         'data': JSON.stringify(theDataArr),
-                        'postID': postID
+                        'postID': postID,
+                        'nonce': rbfw_save_faq_data_nonce
                     },
                     beforeSend: function() {
                         jQuery('.rbfw_save_faq_content_btn i').show();
@@ -211,7 +212,8 @@
                         data: {
                             'action': 'rbfw_save_faq_data',
                             'data': JSON.stringify(theDataArr),
-                            'postID': postID
+                            'postID': postID,
+                            'nonce': rbfw_ajax.nonce
                         },
                         beforeSend: function() {
                             jQuery('button.rbfw_add_faq_content').addClass('rbfw-pointer-not-allowed');
@@ -228,7 +230,7 @@
             }
         });
 
-        jQuery(document).on('click', '.rbfw_add_faq_content', function() {
+        jQuery(document).on('click', '.rbfw_add_faq_content', function() { alert(12);
             let theCount = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item').length;
             let lastDataID = $('.rbfw-faq-content-wrapper-main .rbfw_faq_item:last-child').data('id');
             if (lastDataID === undefined) {
@@ -244,7 +246,7 @@
             $.ajax({
                 type: 'POST',
                 url: rbfw_ajax_url,
-                data: { "action": "get_rbfw_add_faq_content", "id": theID, 'count': lastDataID },
+                data: { "action": "get_rbfw_add_faq_content", "id": theID, 'count': lastDataID, 'nonce': rbfw_add_faq_nonce },
                 beforeSend: function() {
 
                     theLoader.css('display', 'inline-block');
@@ -874,6 +876,7 @@
                     'selected_date' : selected_date,
                     'start_date' : start_date,
                     'end_date' : end_date,
+                    'nonce' : rbfw_ajax.nonce
                 },
                 beforeSend: function() {
                     jQuery('.rbfw_inventory_page_table_wrap').empty();

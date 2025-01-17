@@ -358,7 +358,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
                 $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
                 $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
-                $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
+                $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? wp_strip_all_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $percent = 0;
                 $tax_status = '';
 
@@ -390,9 +390,13 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
         }
 
         public function rbfw_check_resort_availibility(){
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
 
-            $start_date = sanitize_text_field($_POST['checkin_date']);
-            $end_date = sanitize_text_field($_POST['checkout_date']);
+            $start_date = isset($_POST['checkin_date'])?sanitize_text_field(wp_unslash($_POST['checkin_date'])):'';
+            $end_date = isset($_POST['checkout_date'])?sanitize_text_field(wp_unslash($_POST['checkout_date'])):'';
+            $post_id = isset($_POST['post_id'])?intval(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
 
             $origin             = date_create($start_date);
             $target             = date_create($end_date);
@@ -404,29 +408,36 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
             }else{
                 $price_type = 'daylong';
             }
-            $this->rbfw_get_active_price_table(intval(sanitize_text_field($_POST['post_id'])),$price_type,sanitize_text_field($_POST['checkin_date']),sanitize_text_field($_POST['checkout_date']));
+            $this->rbfw_get_active_price_table($post_id,$price_type,$start_date,$end_date);
         }
 
         public function rbfw_get_active_price_table($post_id=0,$active_tab='',$checkin_date='',$checkout_date=''){
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
             include( RBFW_Function::get_template_path( 'template_segment/resort_info.php' ) );
             wp_die();
         }
 
         public function rbfw_room_price_calculation(){
 
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
+
             if(isset($_POST['checkin_date']) && isset($_POST['checkout_date'])) {
 
                 global $rbfw;
                 $content = '';
-                $checkin_date = sanitize_text_field($_POST['checkin_date']);
-                $checkout_date =  sanitize_text_field($_POST['checkout_date']);
-                $post_id = intval(sanitize_text_field($_POST['post_id']));
+                $checkin_date = isset($_POST['checkin_date'])?sanitize_text_field(wp_unslash($_POST['checkin_date'])):'';
+                $checkout_date =  isset($_POST['checkout_date'])?sanitize_text_field(wp_unslash($_POST['checkout_date'])):'';
+                $post_id = isset($_POST['post_id'])?intval(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
                 $origin = date_create($checkin_date);
                 $target = date_create($checkout_date);
                 $interval = date_diff($origin, $target);
                 $total_days = $interval->format('%a');
-                $room_price_arr = RBFW_Function::data_sanitize($_POST['room_price_arr']);
-                $service_price_arr = !empty($_POST['service_price_arr']) ? RBFW_Function::data_sanitize($_POST['service_price_arr']) : [];
+                $room_price_arr = isset($_POST['room_price_arr'])?RBFW_Function::data_sanitize(sanitize_text_field(wp_unslash($_POST['room_price_arr']))):[];
+                $service_price_arr = isset($_POST['service_price_arr']) ? RBFW_Function::data_sanitize(sanitize_text_field(wp_unslash($_POST['service_price_arr']))) : [];
                 $room_price = 0;
                 $service_price = 0;
                 $total_room_price = 0;
@@ -471,12 +482,12 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings', 'mps');
                 $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
                 $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
-                $mps_tax_percentage = !empty(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) ? strip_tags(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) : '';
+                $mps_tax_percentage = !empty(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) ? wp_strip_all_tags(get_post_meta($post_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $percent = 0;
                 $tax_status = '';
 
                 if ($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'including_tax') {
-                    $tax_status = '(' . rbfw_string_return('rbfw_text_includes', __('Includes', 'booking-and-rental-manager-for-woocommerce')) . ' ' . rbfw_mps_price($percent) . ' ' . rbfw_string_return('rbfw_text_tax', __('Tax', 'booking-and-rental-manager-for-woocommerce')) . ')';
+                    $tax_status = '(' . rbfw_string_return('rbfw_text_includes', esc_html__('Includes', 'booking-and-rental-manager-for-woocommerce')) . ' ' . rbfw_mps_price($percent) . ' ' . rbfw_string_return('rbfw_text_tax', esc_html__('Tax', 'booking-and-rental-manager-for-woocommerce')) . ')';
                 }
 
                 /* End Tax Calculations */
@@ -485,16 +496,16 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 $content .= '<div class="item rbfw_room_price_summary">
                             <div class="item-content rbfw-costing">
                                 <ul class="rbfw-ul">
-                                    <li class="duration-costing rbfw-cond">' . $rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost', 'booking-and-rental-manager-for-woocommerce')) . ' <span class="price-figure" data-price="' . $total_room_price_org . '">' . rbfw_mps_price($total_room_price_org) . '</span></li>
-                                    <li class="resource-costing rbfw-cond">' . $rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost', 'booking-and-rental-manager-for-woocommerce')) . ' <span class="price-figure" data-price="' . $total_service_price . '">' . rbfw_mps_price($total_service_price) . '</span></li>
-                                    <li class="subtotal">' . $rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal', 'booking-and-rental-manager-for-woocommerce')) . '<span class="price-figure" data-price="' . $subtotal_price . '">' . rbfw_mps_price($subtotal_price) . '</span></li>';
+                                    <li class="duration-costing rbfw-cond">' . $rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', esc_html__('Duration Cost', 'booking-and-rental-manager-for-woocommerce')) . ' <span class="price-figure" data-price="' . $total_room_price_org . '">' . rbfw_mps_price($total_room_price_org) . '</span></li>
+                                    <li class="resource-costing rbfw-cond">' . $rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', esc_html__('Resource Cost', 'booking-and-rental-manager-for-woocommerce')) . ' <span class="price-figure" data-price="' . $total_service_price . '">' . rbfw_mps_price($total_service_price) . '</span></li>
+                                    <li class="subtotal">' . $rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', esc_html__('Subtotal', 'booking-and-rental-manager-for-woocommerce')) . '<span class="price-figure" data-price="' . $subtotal_price . '">' . rbfw_mps_price($subtotal_price) . '</span></li>';
                 $security_deposit = rbfw_security_deposit($post_id, $subtotal_price);
                 if ($security_deposit['security_deposit_amount']) {
                     $content .= '<li class="subtotal">' . (!empty(get_post_meta($post_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($post_id, 'rbfw_security_deposit_label', true) : 'Security Deposit') . '<span class="price-figure" data-price="' . $subtotal_price . '">' . $security_deposit['security_deposit_desc'] . '</span></li>';
                 }
 
                 if ($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage) && $mps_tax_format == 'excluding_tax') {
-                    $content .= '<li class="tax">' . $rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', __('Tax', 'booking-and-rental-manager-for-woocommerce')) . '<span class="price-figure" data-price="' . $percent . '">' . rbfw_mps_price($percent) . '</span></li>';
+                    $content .= '<li class="tax">' . $rbfw->get_option_trans('rbfw_text_tax', 'rbfw_basic_translation_settings', esc_html__('Tax', 'booking-and-rental-manager-for-woocommerce')) . '<span class="price-figure" data-price="' . $percent . '">' . rbfw_mps_price($percent) . '</span></li>';
                 }
 
 
@@ -512,7 +523,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                         $discount_amount = $discount_arr['discount_amount'];
                         $discount_desc = $discount_arr['discount_desc'];
                         $content .= '<li class="discount">';
-                        $content .= $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount', 'booking-and-rental-manager-for-woocommerce'));
+                        $content .= $rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', esc_html__('Discount', 'booking-and-rental-manager-for-woocommerce'));
                         $content .= '<span>' . wc_price($discount_arr['discount_amount']) . '</span>';
                         $content .= '</li>';
                     }
@@ -521,13 +532,13 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
                 /* End Discount Calculations */
 
-                $content .= '<li class="total"><strong>' . $rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total', 'booking-and-rental-manager-for-woocommerce')) . '</strong> <span class="price-figure" data-price="' . ($total_price - $discount_amount + $security_deposit['security_deposit_amount']) . '">' . rbfw_mps_price($total_price - $discount_amount + $security_deposit['security_deposit_amount']) . ' ' . $tax_status . '</span></li>
+                $content .= '<li class="total"><strong>' . $rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', esc_html__('Total', 'booking-and-rental-manager-for-woocommerce')) . '</strong> <span class="price-figure" data-price="' . ($total_price - $discount_amount + $security_deposit['security_deposit_amount']) . '">' . rbfw_mps_price($total_price - $discount_amount + $security_deposit['security_deposit_amount']) . ' ' . $tax_status . '</span></li>
                                 </ul>
                                 <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
                             </div>
                         </div>';
 
-                echo $content;
+                echo esc_html($content);
 
             }else{
                 esc_html_e('Something is wrong! Please try again.','booking-and-rental-manager-for-woocommerce');

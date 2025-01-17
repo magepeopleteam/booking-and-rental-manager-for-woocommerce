@@ -1841,24 +1841,6 @@
     border-radius: 6px;
 }
 
-.mpStyle input:not(.checkbox),
-.mpStyle input:not([type=submit]),
-.mpStyle optgroup,
-.mpStyle select,
-.mpStyle textarea {
-    font-family: inherit;
-    line-height: initial;
-    margin: 0;
-    max-width: inherit;
-    border: 1px solid var(--color_border);
-    font-size: var(--fs);
-    color: var(--d_color);
-    background-color: #fff;
-    padding: 10px 15px;
-    font-weight: 500;
-
-}
-
 .mpStyle .formControl:-webkit-autofill,
 .mpStyle .formControl:-webkit-autofill:hover,
 .mpStyle .formControl:-webkit-autofill:focus,
@@ -2163,17 +2145,8 @@ div.mpStyle .customRadioLabel input[type="radio"] ~ .formControl,
     border-radius: 2px;
 }
 
-.mpStyle .customCheckboxLabel {
-    /*padding: 0 0 10px 0;*/
-    margin-bottom: 10px;
-    cursor: pointer;
-    font-weight: var(--fw-medium);
-}
 
-.mpStyle .customCheckboxLabel input:checked ~ .customCheckbox::before {
-    background: var(--color_theme);
-    border-color: var(--color_theme);
-}
+
 
 /*******************/
 div.mpStyle .selectCheckbox {
@@ -2184,22 +2157,17 @@ div.mpStyle .selectCheckbox {
     cursor: pointer;
 }
 
-div.mpStyle .customCheckboxLabel input[type="checkbox"],
-div.mpStyle .selectCheckbox input[type="checkbox"] {
-    display: none;
-}
+
 
 div.mpStyle .selectCheckbox .customCheckbox::before {
     border: none;
     background-color: transparent;
 }
 
-div.mpStyle .customCheckboxLabel input:focus ~ .customCheckbox::before,
 div.mpStyle .selectCheckbox input:focus ~ .customCheckbox::before {
     outline: 0;
 }
 
-div.mpStyle .customCheckboxLabel input:checked ~ .customCheckbox::after,
 div.mpStyle .selectCheckbox input:checked ~ .customCheckbox::after {
     content: "";
     position: absolute;

@@ -21,8 +21,6 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-welcome-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-sd-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_currency.php';
 
-
-require_once RBFW_PLUGIN_DIR . '/lib/classes/class-order-page.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_order_meta.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-md-function.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-thankyou-page.php';
@@ -75,7 +73,7 @@ function rbfw_free_woocommerce_integrate(){
 
     if(!empty($rbfw_payment_system)){
         $rbfw_payment_system = $rbfw_payment_system['rbfw_payment_system'];
-        $wc_folder_exist = rbfw_free_chk_plugin_folder_exist('booking-and-rental-manager-for-woocommerce-pro/inc/woocommerce');
+        $wc_folder_exist = rbfw_free_chk_plugin_folder_exist('booking-and-rental-manager-for-woocommerce/inc/woocommerce');
         if(rbfw_check_pro_active() === true && $wc_folder_exist === true){
             // do nothing
         }else {

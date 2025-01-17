@@ -216,6 +216,7 @@
                 data: {
                     'action' : 'rbfw_get_rent_item_category_info',
                     'post_id': item_number,
+                    'nonce' : rbfw_ajax.nonce
                 },
                 success: function (response) {
                     $('#rbfw_popup_content').html( response.data );
@@ -256,6 +257,7 @@
                     'filter_date': filter_date,
                     'rbfw_nomce': rbfw_vars.rbfw_nonce,
                     'rbfw_item_style': rbfw_item_style,
+                    'nonce' : rbfw_ajax.nonce
                 },
                 success: function (response) {
                     if( response.success ){
@@ -418,6 +420,7 @@
                         'action': 'rbfw_get_rent_item_left_filter_more_data_popup',
                         'filter_type': filter_type,
                         'rbfw_nonce': rbfw_vars.rbfw_nonce,
+                        'nonce' : rbfw_ajax.nonce
                     },
                     success: function (response) {
                         $('#' + appendId).append(response.data);

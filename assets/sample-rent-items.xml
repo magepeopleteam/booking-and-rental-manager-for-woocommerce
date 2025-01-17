@@ -5,622 +5,625 @@
         <title>Resort - Muffin Template</title>
         <content>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</content>
 
-		<postmeta>
-		<meta_key>rbfw_releted_rbfw</meta_key>
-		<meta_value>a:7:{i:0;s:4:"1420";i:1;s:2:"23";i:2;s:2:"20";i:3;s:2:"17";i:4;s:2:"11";i:5;s:1:"8";i:6;s:1:"5";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_releted_rbfw</meta_key>
+            <meta_value>a:7:{i:0;s:4:"1420";i:1;s:2:"23";i:2;s:2:"20";i:3;s:2:"17";i:4;s:2:"11";i:5;s:1:"8";i:6;s:1:"5";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rdfw_available_time</meta_key>
-		<meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rdfw_available_time</meta_key>
+            <meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_type</meta_key>
-		<meta_value>resort</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_type</meta_key>
+            <meta_value>resort</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_extra_service_data</meta_key>
-		<meta_value>a:3:{i:0;a:4:{s:11:"service_img";s:4:"1340";s:12:"service_name";s:9:"BBQ-party";s:13:"service_price";s:5:"10.99";s:11:"service_qty";s:2:"10";}i:1;a:4:{s:11:"service_img";s:4:"1339";s:12:"service_name";s:12:"Casino Royal";s:13:"service_price";s:5:"10.99";s:11:"service_qty";s:2:"10";}i:2;a:4:{s:11:"service_img";s:4:"1341";s:12:"service_name";s:10:"Spa and Cure";s:13:"service_price";s:5:"10.99";s:11:"service_qty";s:2:"10";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_extra_service_data</meta_key>
+            <meta_value>a:3:{i:0;a:4:{s:11:"service_img";s:4:"1340";s:12:"service_name";s:9:"BBQ-party";s:13:"service_price";s:5:"10.99";s:11:"service_qty";s:2:"10";}i:1;a:4:{s:11:"service_img";s:4:"1339";s:12:"service_name";s:12:"Casino Royal";s:13:"service_price";s:5:"10.99";s:11:"service_qty";s:2:"10";}i:2;a:4:{s:11:"service_img";s:4:"1341";s:12:"service_name";s:10:"Spa and Cure";s:13:"service_price";s:5:"10.99";s:11:"service_qty";s:2:"10";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_resort_room_data</meta_key>
-		<meta_value>a:3:{i:0;a:6:{s:9:"room_type";s:6:"Single";s:15:"rbfw_room_image";s:4:"1335";s:22:"rbfw_room_daylong_rate";s:5:"10.99";s:23:"rbfw_room_daynight_rate";s:5:"40.99";s:14:"rbfw_room_desc";s:14:"Max. person: 2";s:23:"rbfw_room_available_qty";s:2:"10";}i:1;a:6:{s:9:"room_type";s:5:"Delux";s:15:"rbfw_room_image";s:4:"1336";s:22:"rbfw_room_daylong_rate";s:5:"20.99";s:23:"rbfw_room_daynight_rate";s:5:"50.99";s:14:"rbfw_room_desc";s:14:"Max. person: 2";s:23:"rbfw_room_available_qty";s:2:"10";}i:2;a:6:{s:9:"room_type";s:4:"King";s:15:"rbfw_room_image";s:4:"1334";s:22:"rbfw_room_daylong_rate";s:5:"30.99";s:23:"rbfw_room_daynight_rate";s:5:"60.99";s:14:"rbfw_room_desc";s:14:"Max. person: 2";s:23:"rbfw_room_available_qty";s:2:"10";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_resort_room_data</meta_key>
+            <meta_value>a:3:{i:0;a:6:{s:9:"room_type";s:6:"Single";s:15:"rbfw_room_image";s:4:"1335";s:22:"rbfw_room_daylong_rate";s:5:"10.99";s:23:"rbfw_room_daynight_rate";s:5:"40.99";s:14:"rbfw_room_desc";s:14:"Max. person: 2";s:23:"rbfw_room_available_qty";s:2:"10";}i:1;a:6:{s:9:"room_type";s:5:"Delux";s:15:"rbfw_room_image";s:4:"1336";s:22:"rbfw_room_daylong_rate";s:5:"20.99";s:23:"rbfw_room_daynight_rate";s:5:"50.99";s:14:"rbfw_room_desc";s:14:"Max. person: 2";s:23:"rbfw_room_available_qty";s:2:"10";}i:2;a:6:{s:9:"room_type";s:4:"King";s:15:"rbfw_room_image";s:4:"1334";s:22:"rbfw_room_daylong_rate";s:5:"30.99";s:23:"rbfw_room_daynight_rate";s:5:"60.99";s:14:"rbfw_room_desc";s:14:"Max. person: 2";s:23:"rbfw_room_available_qty";s:2:"10";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_faq_content</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_faq_content</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>mep_event_faq</meta_key>
-		<meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>mep_event_faq</meta_key>
+            <meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_dropoff_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_dropoff_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daywise_price</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daywise_price</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bike_car_sd_data</meta_key>
-		<meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:0:"";s:10:"short_desc";s:0:"";s:5:"price";s:0:"";s:3:"qty";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bike_car_sd_data</meta_key>
+            <meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:0:"";s:10:"short_desc";s:0:"";s:5:"price";s:0:"";s:3:"qty";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_format</meta_key>
-		<meta_value>12</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_format</meta_key>
+            <meta_value>12</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_off_dates</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_off_dates</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_hourly_rate</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_hourly_rate</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daily_rate</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daily_rate</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_pick_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_pick_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sun_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sun_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_mon_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_mon_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_tue_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_tue_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_wed_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_wed_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_thu_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_thu_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_fri_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_fri_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sat_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sat_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images</meta_key>
-		<meta_value>a:5:{i:0;s:4:"1282";i:1;s:4:"1286";i:2;s:4:"1287";i:3;s:4:"1288";i:4;s:4:"1308";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images</meta_key>
+            <meta_value>a:5:{i:0;s:4:"1282";i:1;s:4:"1286";i:2;s:4:"1287";i:3;s:4:"1288";i:4;s:4:"1308";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_list_thumbnail</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_list_thumbnail</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_theme_file</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_theme_file</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_feature_category</meta_key>
-		<meta_value>a:2:{i:0;a:2:{s:9:"cat_title";s:13:"Room Services";s:12:"cat_features";a:7:{i:0;a:2:{s:4:"icon";s:15:"fas fa-band-aid";s:5:"title";s:11:"Air Cooling";}i:1;a:2:{s:4:"icon";s:11:"fas fa-wifi";s:5:"title";s:5:"Wi-Fi";}i:2;a:2:{s:4:"icon";s:11:"fas fa-bolt";s:5:"title";s:13:"Smart Ironing";}i:3;a:2:{s:4:"icon";s:16:"fab fa-red-river";s:5:"title";s:18:"24/7 Room Serivice";}i:4;a:2:{s:4:"icon";s:11:"fas fa-tree";s:5:"title";s:14:"Garden Balcony";}i:5;a:2:{s:4:"icon";s:17:"fab fa-blackberry";s:5:"title";s:13:"Swimming Pool";}i:6;a:2:{s:4:"icon";s:13:"fas fa-shower";s:5:"title";s:8:"Bath Tab";}}}i:1;a:2:{s:9:"cat_title";s:14:"Hotel Services";s:12:"cat_features";a:7:{i:0;a:2:{s:4:"icon";s:13:"fas fa-coffee";s:5:"title";s:18:"Breakfast Included";}i:1;a:2:{s:4:"icon";s:17:"fas fa-procedures";s:5:"title";s:10:"Spa Center";}i:2;a:2:{s:4:"icon";s:16:"fab fa-flipboard";s:5:"title";s:9:"Hill View";}i:3;a:2:{s:4:"icon";s:15:"fab fa-mixcloud";s:5:"title";s:8:"BBQ zone";}i:4;a:2:{s:4:"icon";s:10:"fab fa-osi";s:5:"title";s:19:"Large Swimming Poll";}i:5;a:2:{s:4:"icon";s:10:"fas fa-bus";s:5:"title";s:14:"Easy to Travel";}i:6;a:2:{s:4:"icon";s:10:"fas fa-car";s:5:"title";s:7:"Parking";}}}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_feature_category</meta_key>
+            <meta_value>a:2:{i:0;a:2:{s:9:"cat_title";s:13:"Room Services";s:12:"cat_features";a:7:{i:0;a:2:{s:4:"icon";s:15:"fas fa-band-aid";s:5:"title";s:11:"Air Cooling";}i:1;a:2:{s:4:"icon";s:11:"fas fa-wifi";s:5:"title";s:5:"Wi-Fi";}i:2;a:2:{s:4:"icon";s:11:"fas fa-bolt";s:5:"title";s:13:"Smart Ironing";}i:3;a:2:{s:4:"icon";s:16:"fab fa-red-river";s:5:"title";s:18:"24/7 Room Serivice";}i:4;a:2:{s:4:"icon";s:11:"fas fa-tree";s:5:"title";s:14:"Garden Balcony";}i:5;a:2:{s:4:"icon";s:17:"fab fa-blackberry";s:5:"title";s:13:"Swimming Pool";}i:6;a:2:{s:4:"icon";s:13:"fas fa-shower";s:5:"title";s:8:"Bath Tab";}}}i:1;a:2:{s:9:"cat_title";s:14:"Hotel Services";s:12:"cat_features";a:7:{i:0;a:2:{s:4:"icon";s:13:"fas fa-coffee";s:5:"title";s:18:"Breakfast Included";}i:1;a:2:{s:4:"icon";s:17:"fas fa-procedures";s:5:"title";s:10:"Spa Center";}i:2;a:2:{s:4:"icon";s:16:"fab fa-flipboard";s:5:"title";s:9:"Hill View";}i:3;a:2:{s:4:"icon";s:15:"fab fa-mixcloud";s:5:"title";s:8:"BBQ
+                zone";}i:4;a:2:{s:4:"icon";s:10:"fab fa-osi";s:5:"title";s:19:"Large Swimming Poll";}i:5;a:2:{s:4:"icon";s:10:"fas fa-bus";s:5:"title";s:14:"Easy to Travel";}i:6;a:2:{s:4:"icon";s:10:"fas fa-car";s:5:"title";s:7:"Parking";}}}}
+            </meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_single_template</meta_key>
-		<meta_value>Muffin</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_single_template</meta_key>
+            <meta_value>Muffin</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_switch</meta_key>
-		<meta_value>off</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_switch</meta_key>
+            <meta_value>off</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_testimonials</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_testimonials</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_content</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_content</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images_additional</meta_key>
-		<meta_value>a:6:{i:0;s:4:"1315";i:1;s:4:"1314";i:2;s:4:"1311";i:3;s:4:"1312";i:4;s:4:"1313";i:5;s:4:"1316";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images_additional</meta_key>
+            <meta_value>a:6:{i:0;s:4:"1315";i:1;s:4:"1314";i:2;s:4:"1311";i:3;s:4:"1312";i:4;s:4:"1313";i:5;s:4:"1316";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_slot_switch</meta_key>
-		<meta_value>on</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_slot_switch</meta_key>
+            <meta_value>on</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_available_qty_info_switch</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_available_qty_info_switch</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_extra_service_qty</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_extra_service_qty</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_variations</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_variations</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_md_type_item_qty</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_md_type_item_qty</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_stock_quantity</meta_key>
-		<meta_value>0</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_stock_quantity</meta_key>
+            <meta_value>0</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_resort_daylong_price</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_resort_daylong_price</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_variations_data</meta_key>
-		<meta_value>a:1:{i:0;a:4:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}s:14:"selected_value";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_variations_data</meta_key>
+            <meta_value>a:1:{i:0;a:4:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}s:14:"selected_value";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_ondays</meta_key>
-		<meta_value>a:0:{}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_ondays</meta_key>
+            <meta_value>a:0:{}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>_thumbnail_id</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>_thumbnail_id</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
 
-		<postmeta>
-		<meta_key>rbfw_bkp_gallary_imgs</meta_key>
-		<meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort.jpg";i:1;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort6.jpg";i:2;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort7.jpg";i:3;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort8.jpg";i:4;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort9.jpg";i:5;s:71:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort10.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_gallary_imgs</meta_key>
+            <meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort.jpg";i:1;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort6.jpg";i:2;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort7.jpg";i:3;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort8.jpg";i:4;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort9.jpg";i:5;s:71:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort10.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
-		<meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort.jpg";i:1;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort6.jpg";i:2;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort7.jpg";i:3;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort8.jpg";i:4;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort9.jpg";i:5;s:71:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort10.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
+            <meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort.jpg";i:1;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort6.jpg";i:2;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort7.jpg";i:3;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort8.jpg";i:4;s:70:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort9.jpg";i:5;s:71:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort10.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_thumb_img</meta_key>
-		<meta_value>a:1:{i:0;s:71:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort10.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_thumb_img</meta_key>
+            <meta_value>a:1:{i:0;s:71:"https://booking.mage-people.com/wp-content/uploads/2023/04/resort10.jpg";}</meta_value>
+        </postmeta>
     </item>
 
     <item>
         <title>Doctor Appointment - Muffin Template</title>
         <content>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</content>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        </content>
 
-		<postmeta>
-		<meta_key>rbfw_releted_rbfw</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_releted_rbfw</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rdfw_available_time</meta_key>
-		<meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"10:00 PM";i:2;s:8:"10:30 AM";i:3;s:8:"10:30 PM";i:4;s:8:"11:00 AM";i:5;s:8:"11:30 AM";i:6;s:8:"11:30 PM";i:7;s:8:"12:00 PM";i:8;s:8:"12:30 PM";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rdfw_available_time</meta_key>
+            <meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"10:00 PM";i:2;s:8:"10:30 AM";i:3;s:8:"10:30 PM";i:4;s:8:"11:00 AM";i:5;s:8:"11:30 AM";i:6;s:8:"11:30 PM";i:7;s:8:"12:00 PM";i:8;s:8:"12:30 PM";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_type</meta_key>
-		<meta_value>appointment</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_type</meta_key>
+            <meta_value>appointment</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_extra_service_data</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_extra_service_data</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_resort_room_data</meta_key>
-		<meta_value>a:1:{i:0;a:6:{s:9:"room_type";s:0:"";s:15:"rbfw_room_image";s:0:"";s:22:"rbfw_room_daylong_rate";s:0:"";s:23:"rbfw_room_daynight_rate";s:0:"";s:14:"rbfw_room_desc";s:0:"";s:23:"rbfw_room_available_qty";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_resort_room_data</meta_key>
+            <meta_value>a:1:{i:0;a:6:{s:9:"room_type";s:0:"";s:15:"rbfw_room_image";s:0:"";s:22:"rbfw_room_daylong_rate";s:0:"";s:23:"rbfw_room_daynight_rate";s:0:"";s:14:"rbfw_room_desc";s:0:"";s:23:"rbfw_room_available_qty";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_faq_content</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_faq_content</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>mep_event_faq</meta_key>
-		<meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>mep_event_faq</meta_key>
+            <meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_dropoff_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_dropoff_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daywise_price</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daywise_price</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bike_car_sd_data</meta_key>
-		<meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:9:"30 Minute";s:10:"short_desc";s:22:"Consult for 30 minutes";s:5:"price";s:3:"100";s:3:"qty";s:2:"90";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bike_car_sd_data</meta_key>
+            <meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:9:"30 Minute";s:10:"short_desc";s:22:"Consult for 30 minutes";s:5:"price";s:3:"100";s:3:"qty";s:2:"90";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_format</meta_key>
-		<meta_value>12</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_format</meta_key>
+            <meta_value>12</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_off_dates</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_off_dates</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_hourly_rate</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_hourly_rate</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daily_rate</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daily_rate</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_pick_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_pick_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sun_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sun_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_mon_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_mon_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_tue_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_tue_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_wed_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_wed_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_thu_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_thu_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_fri_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_fri_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sat_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sat_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images</meta_key>
-		<meta_value>a:4:{i:0;s:2:"47";i:1;s:2:"48";i:2;s:2:"49";i:3;s:2:"50";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images</meta_key>
+            <meta_value>a:4:{i:0;s:2:"47";i:1;s:2:"48";i:2;s:2:"49";i:3;s:2:"50";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_list_thumbnail</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_list_thumbnail</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_theme_file</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_theme_file</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_available_qty_info_switch</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_available_qty_info_switch</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_single_template</meta_key>
-		<meta_value>Muffin</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_single_template</meta_key>
+            <meta_value>Muffin</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_slot_switch</meta_key>
-		<meta_value>on</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_slot_switch</meta_key>
+            <meta_value>on</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_extra_service_qty</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_extra_service_qty</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_variations</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_variations</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_md_type_item_qty</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_md_type_item_qty</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_stock_quantity</meta_key>
-		<meta_value>0</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_stock_quantity</meta_key>
+            <meta_value>0</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_resort_daylong_price</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_resort_daylong_price</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_variations_data</meta_key>
-		<meta_value>a:1:{i:0;a:4:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}s:14:"selected_value";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_variations_data</meta_key>
+            <meta_value>a:1:{i:0;a:4:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}s:14:"selected_value";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_ondays</meta_key>
-		<meta_value>a:5:{i:0;s:6:"Monday";i:1;s:7:"Tuesday";i:2;s:9:"Wednesday";i:3;s:8:"Thursday";i:4;s:6:"Friday";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_ondays</meta_key>
+            <meta_value>a:5:{i:0;s:6:"Monday";i:1;s:7:"Tuesday";i:2;s:9:"Wednesday";i:3;s:8:"Thursday";i:4;s:6:"Friday";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
-		<meta_value>10</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
+            <meta_value>10</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_feature_category</meta_key>
-		<meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:13:"Bike Features";s:12:"cat_features";a:5:{i:0;a:2:{s:4:"icon";s:14:"fab fa-audible";s:5:"title";s:11:"Disc Brakes";}i:1;a:2:{s:4:"icon";s:22:"fas fa-basketball-ball";s:5:"title";s:15:"Shock Absorbers";}i:2;a:2:{s:4:"icon";s:13:"fas fa-adjust";s:5:"title";s:23:"Headlight and Taillight";}i:3;a:2:{s:4:"icon";s:11:"fas fa-beer";s:5:"title";s:13:"Bottle Holder";}i:4;a:2:{s:4:"icon";s:19:"fas fa-battery-full";s:5:"title";s:13:"Electric Horn";}}}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_feature_category</meta_key>
+            <meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:13:"Bike Features";s:12:"cat_features";a:5:{i:0;a:2:{s:4:"icon";s:14:"fab fa-audible";s:5:"title";s:11:"Disc Brakes";}i:1;a:2:{s:4:"icon";s:22:"fas fa-basketball-ball";s:5:"title";s:15:"Shock Absorbers";}i:2;a:2:{s:4:"icon";s:13:"fas fa-adjust";s:5:"title";s:23:"Headlight and Taillight";}i:3;a:2:{s:4:"icon";s:11:"fas fa-beer";s:5:"title";s:13:"Bottle Holder";}i:4;a:2:{s:4:"icon";s:19:"fas fa-battery-full";s:5:"title";s:13:"Electric Horn";}}}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_switch</meta_key>
-		<meta_value>off</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_switch</meta_key>
+            <meta_value>off</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_testimonials</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_testimonials</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_content</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_content</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images_additional</meta_key>
-		<meta_value>a:2:{i:0;s:2:"49";i:1;s:2:"48";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images_additional</meta_key>
+            <meta_value>a:2:{i:0;s:2:"49";i:1;s:2:"48";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>_thumbnail_id</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>_thumbnail_id</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_gallary_imgs</meta_key>
-		<meta_value>a:4:{i:0;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-4.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-4.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-4.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-4.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_gallary_imgs</meta_key>
+            <meta_value>a:4:{i:0;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-4.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-4.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-4.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-4.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
-		<meta_value>a:4:{i:0;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-4.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-4.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-4.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-4.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
+            <meta_value>a:4:{i:0;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-4.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-4.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-4.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-4.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_thumb_img</meta_key>
-		<meta_value>a:1:{i:0;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-4.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_thumb_img</meta_key>
+            <meta_value>a:1:{i:0;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-4.jpg";}</meta_value>
+        </postmeta>
 
     </item>
 
@@ -628,310 +631,310 @@
         <title>Equipment - Muffin Template</title>
         <content>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</content>
 
-		<postmeta>
-		<meta_key>rbfw_releted_rbfw</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_releted_rbfw</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rdfw_available_time</meta_key>
-		<meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rdfw_available_time</meta_key>
+            <meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_type</meta_key>
-		<meta_value>equipment</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_type</meta_key>
+            <meta_value>equipment</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_extra_service_data</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_extra_service_data</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_resort_room_data</meta_key>
-		<meta_value>a:1:{i:0;a:6:{s:9:"room_type";s:0:"";s:15:"rbfw_room_image";s:0:"";s:22:"rbfw_room_daylong_rate";s:0:"";s:23:"rbfw_room_daynight_rate";s:0:"";s:14:"rbfw_room_desc";s:0:"";s:23:"rbfw_room_available_qty";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_resort_room_data</meta_key>
+            <meta_value>a:1:{i:0;a:6:{s:9:"room_type";s:0:"";s:15:"rbfw_room_image";s:0:"";s:22:"rbfw_room_daylong_rate";s:0:"";s:23:"rbfw_room_daynight_rate";s:0:"";s:14:"rbfw_room_desc";s:0:"";s:23:"rbfw_room_available_qty";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_faq_content</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_faq_content</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>mep_event_faq</meta_key>
-		<meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>mep_event_faq</meta_key>
+            <meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_dropoff_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_dropoff_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daywise_price</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daywise_price</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bike_car_sd_data</meta_key>
-		<meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:9:"30 Minute";s:10:"short_desc";s:22:"Consult for 30 minutes";s:5:"price";s:3:"100";s:3:"qty";s:2:"90";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bike_car_sd_data</meta_key>
+            <meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:9:"30 Minute";s:10:"short_desc";s:22:"Consult for 30 minutes";s:5:"price";s:3:"100";s:3:"qty";s:2:"90";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_format</meta_key>
-		<meta_value>12</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_format</meta_key>
+            <meta_value>12</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_off_dates</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_off_dates</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_hourly_rate</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_hourly_rate</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daily_rate</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daily_rate</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_pick_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_pick_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_hourly_rate</meta_key>
-		<meta_value>10</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_hourly_rate</meta_key>
+            <meta_value>10</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_daily_rate</meta_key>
-		<meta_value>100</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_daily_rate</meta_key>
+            <meta_value>100</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sun_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sun_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_mon_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_mon_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_tue_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_tue_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_wed_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_wed_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_thu_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_thu_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_fri_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_fri_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sat_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sat_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images</meta_key>
-		<meta_value>a:4:{i:0;s:2:"52";i:1;s:2:"51";i:2;s:2:"53";i:3;s:2:"54";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images</meta_key>
+            <meta_value>a:4:{i:0;s:2:"52";i:1;s:2:"51";i:2;s:2:"53";i:3;s:2:"54";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_list_thumbnail</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_list_thumbnail</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_theme_file</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_theme_file</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_available_qty_info_switch</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_available_qty_info_switch</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_single_template</meta_key>
-		<meta_value>Muffin</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_single_template</meta_key>
+            <meta_value>Muffin</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_slot_switch</meta_key>
-		<meta_value>on</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_slot_switch</meta_key>
+            <meta_value>on</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_extra_service_qty</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_extra_service_qty</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_variations</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_variations</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_md_type_item_qty</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_md_type_item_qty</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_stock_quantity</meta_key>
-		<meta_value>10</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_stock_quantity</meta_key>
+            <meta_value>10</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_resort_daylong_price</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_resort_daylong_price</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_variations_data</meta_key>
-		<meta_value>a:1:{i:0;a:4:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}s:14:"selected_value";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_variations_data</meta_key>
+            <meta_value>a:1:{i:0;a:4:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}s:14:"selected_value";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_ondays</meta_key>
-		<meta_value>a:0:{}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_ondays</meta_key>
+            <meta_value>a:0:{}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_feature_category</meta_key>
-		<meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:20:"Highlighted Features";s:12:"cat_features";a:4:{i:0;a:2:{s:4:"icon";s:19:"fas fa-check-circle";s:5:"title";s:12:"Brand: Bosch";}i:1;a:2:{s:4:"icon";s:19:"fas fa-check-circle";s:5:"title";s:29:"Power Source: Corded Electric";}i:2;a:2:{s:4:"icon";s:19:"fas fa-check-circle";s:5:"title";s:43:"Item Dimensions: 39.5 x 12 x 33 Centimeters";}i:3;a:2:{s:4:"icon";s:19:"fas fa-check-circle";s:5:"title";s:21:"Weight: 4.4 Kilograms";}}}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_feature_category</meta_key>
+            <meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:20:"Highlighted Features";s:12:"cat_features";a:4:{i:0;a:2:{s:4:"icon";s:19:"fas fa-check-circle";s:5:"title";s:12:"Brand: Bosch";}i:1;a:2:{s:4:"icon";s:19:"fas fa-check-circle";s:5:"title";s:29:"Power Source: Corded Electric";}i:2;a:2:{s:4:"icon";s:19:"fas fa-check-circle";s:5:"title";s:43:"Item Dimensions: 39.5 x 12 x 33 Centimeters";}i:3;a:2:{s:4:"icon";s:19:"fas fa-check-circle";s:5:"title";s:21:"Weight: 4.4 Kilograms";}}}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_switch</meta_key>
-		<meta_value>off</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_switch</meta_key>
+            <meta_value>off</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_testimonials</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_testimonials</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_content</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_content</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images_additional</meta_key>
-		<meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images_additional</meta_key>
+            <meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>_thumbnail_id</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>_thumbnail_id</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_gallary_imgs</meta_key>
-		<meta_value>a:4:{i:0;s:68:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-1-1.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-1.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-1.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-1.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_gallary_imgs</meta_key>
+            <meta_value>a:4:{i:0;s:68:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-1-1.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-1.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-1.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-1.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
-		<meta_value>a:4:{i:0;s:68:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-1-1.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-1.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-1.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-1.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
+            <meta_value>a:4:{i:0;s:68:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-1-1.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-1.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-1.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-1.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_thumb_img</meta_key>
-		<meta_value>a:1:{i:0;s:68:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-1-1.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_thumb_img</meta_key>
+            <meta_value>a:1:{i:0;s:68:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-1-1.jpg";}</meta_value>
+        </postmeta>
 
     </item>
 
@@ -939,315 +942,315 @@
         <title>Bike/Car For Multiple Day - Muffin Template</title>
         <content>A bike rental or bike hire business rents out bicycles for short periods of time, usually for a few hours. Most rentals are provided by bike shops as a sideline to their main businesses of sales and service, but shops specialize in rentals.</content>
 
-		<postmeta>
-		<meta_key>rbfw_releted_rbfw</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_releted_rbfw</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rdfw_available_time</meta_key>
-		<meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rdfw_available_time</meta_key>
+            <meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_type</meta_key>
-		<meta_value>bike_car_md</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_type</meta_key>
+            <meta_value>bike_car_md</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_start_end_date</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_start_end_date</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_extra_service_data</meta_key>
-		<meta_value>a:4:{i:0;a:3:{s:12:"service_name";s:10:"Extra Tire";s:13:"service_price";s:1:"5";s:11:"service_qty";s:2:"10";}i:1;a:3:{s:12:"service_name";s:6:"Helmet";s:13:"service_price";s:1:"5";s:11:"service_qty";s:2:"10";}i:2;a:3:{s:12:"service_name";s:16:"Extra engine Oil";s:13:"service_price";s:1:"2";s:11:"service_qty";s:2:"10";}i:3;a:3:{s:12:"service_name";s:8:"Tool Box";s:13:"service_price";s:1:"2";s:11:"service_qty";s:2:"10";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_extra_service_data</meta_key>
+            <meta_value>a:4:{i:0;a:3:{s:12:"service_name";s:10:"Extra Tire";s:13:"service_price";s:1:"5";s:11:"service_qty";s:2:"10";}i:1;a:3:{s:12:"service_name";s:6:"Helmet";s:13:"service_price";s:1:"5";s:11:"service_qty";s:2:"10";}i:2;a:3:{s:12:"service_name";s:16:"Extra engine Oil";s:13:"service_price";s:1:"2";s:11:"service_qty";s:2:"10";}i:3;a:3:{s:12:"service_name";s:8:"Tool Box";s:13:"service_price";s:1:"2";s:11:"service_qty";s:2:"10";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_resort_room_data</meta_key>
-		<meta_value>a:1:{i:0;a:6:{s:9:"room_type";s:0:"";s:15:"rbfw_room_image";s:0:"";s:22:"rbfw_room_daylong_rate";s:0:"";s:23:"rbfw_room_daynight_rate";s:0:"";s:14:"rbfw_room_desc";s:0:"";s:23:"rbfw_room_available_qty";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_resort_room_data</meta_key>
+            <meta_value>a:1:{i:0;a:6:{s:9:"room_type";s:0:"";s:15:"rbfw_room_image";s:0:"";s:22:"rbfw_room_daylong_rate";s:0:"";s:23:"rbfw_room_daynight_rate";s:0:"";s:14:"rbfw_room_desc";s:0:"";s:23:"rbfw_room_available_qty";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_faq_content</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_faq_content</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>mep_event_faq</meta_key>
-		<meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>mep_event_faq</meta_key>
+            <meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_dropoff_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_dropoff_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daywise_price</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daywise_price</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bike_car_sd_data</meta_key>
-		<meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:0:"";s:10:"short_desc";s:0:"";s:5:"price";s:0:"";s:3:"qty";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bike_car_sd_data</meta_key>
+            <meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:0:"";s:10:"short_desc";s:0:"";s:5:"price";s:0:"";s:3:"qty";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_format</meta_key>
-		<meta_value>12</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_format</meta_key>
+            <meta_value>12</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_off_dates</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_off_dates</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_hourly_rate</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_hourly_rate</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daily_rate</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daily_rate</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_pick_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_pick_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_hourly_rate</meta_key>
-		<meta_value>10</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_hourly_rate</meta_key>
+            <meta_value>10</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_daily_rate</meta_key>
-		<meta_value>100</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_daily_rate</meta_key>
+            <meta_value>100</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sun_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sun_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_mon_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_mon_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_tue_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_tue_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_wed_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_wed_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_thu_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_thu_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_fri_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_fri_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sat_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sat_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images</meta_key>
-		<meta_value>a:5:{i:0;s:4:"1647";i:1;s:4:"1648";i:2;s:4:"1650";i:3;s:4:"1651";i:4;s:4:"1652";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images</meta_key>
+            <meta_value>a:5:{i:0;s:4:"1647";i:1;s:4:"1648";i:2;s:4:"1650";i:3;s:4:"1651";i:4;s:4:"1652";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_list_thumbnail</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_list_thumbnail</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_theme_file</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_theme_file</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_available_qty_info_switch</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_available_qty_info_switch</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_single_template</meta_key>
-		<meta_value>Muffin</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_single_template</meta_key>
+            <meta_value>Muffin</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_slot_switch</meta_key>
-		<meta_value>on</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_slot_switch</meta_key>
+            <meta_value>on</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_extra_service_qty</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_extra_service_qty</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_variations</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_variations</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_md_type_item_qty</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_md_type_item_qty</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_stock_quantity</meta_key>
-		<meta_value>10</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_stock_quantity</meta_key>
+            <meta_value>10</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_resort_daylong_price</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_resort_daylong_price</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_variations_data</meta_key>
-		<meta_value>a:1:{i:0;a:4:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}s:14:"selected_value";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_variations_data</meta_key>
+            <meta_value>a:1:{i:0;a:4:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}s:14:"selected_value";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_ondays</meta_key>
-		<meta_value>a:0:{}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_ondays</meta_key>
+            <meta_value>a:0:{}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_feature_category</meta_key>
-		<meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:13:"Bike Features";s:12:"cat_features";a:5:{i:0;a:2:{s:4:"icon";s:14:"fab fa-audible";s:5:"title";s:11:"Disc Brakes";}i:1;a:2:{s:4:"icon";s:22:"fas fa-basketball-ball";s:5:"title";s:15:"Shock Absorbers";}i:2;a:2:{s:4:"icon";s:13:"fas fa-adjust";s:5:"title";s:23:"Headlight and Taillight";}i:3;a:2:{s:4:"icon";s:11:"fas fa-beer";s:5:"title";s:13:"Bottle Holder";}i:4;a:2:{s:4:"icon";s:19:"fas fa-battery-full";s:5:"title";s:13:"Electric Horn";}}}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_feature_category</meta_key>
+            <meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:13:"Bike Features";s:12:"cat_features";a:5:{i:0;a:2:{s:4:"icon";s:14:"fab fa-audible";s:5:"title";s:11:"Disc Brakes";}i:1;a:2:{s:4:"icon";s:22:"fas fa-basketball-ball";s:5:"title";s:15:"Shock Absorbers";}i:2;a:2:{s:4:"icon";s:13:"fas fa-adjust";s:5:"title";s:23:"Headlight and Taillight";}i:3;a:2:{s:4:"icon";s:11:"fas fa-beer";s:5:"title";s:13:"Bottle Holder";}i:4;a:2:{s:4:"icon";s:19:"fas fa-battery-full";s:5:"title";s:13:"Electric Horn";}}}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_switch</meta_key>
-		<meta_value>off</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_switch</meta_key>
+            <meta_value>off</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_testimonials</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_testimonials</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_content</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_content</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images_additional</meta_key>
-		<meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images_additional</meta_key>
+            <meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>_thumbnail_id</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>_thumbnail_id</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_gallary_imgs</meta_key>
-		<meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";i:1;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle2.jpg";i:2;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle3.jpg";i:3;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle4.jpg";i:4;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle5.jpg";i:5;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle6.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_gallary_imgs</meta_key>
+            <meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";i:1;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle2.jpg";i:2;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle3.jpg";i:3;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle4.jpg";i:4;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle5.jpg";i:5;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle6.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
-		<meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";i:1;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle2.jpg";i:2;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle3.jpg";i:3;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle4.jpg";i:4;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle5.jpg";i:5;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle6.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
+            <meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";i:1;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle2.jpg";i:2;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle3.jpg";i:3;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle4.jpg";i:4;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle5.jpg";i:5;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle6.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_thumb_img</meta_key>
-		<meta_value>a:1:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_thumb_img</meta_key>
+            <meta_value>a:1:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";}</meta_value>
+        </postmeta>
 
     </item>
 
@@ -1255,310 +1258,310 @@
         <title>Dress - Muffin Template</title>
         <content>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</content>
 
-		<postmeta>
-		<meta_key>rbfw_releted_rbfw</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_releted_rbfw</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rdfw_available_time</meta_key>
-		<meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rdfw_available_time</meta_key>
+            <meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_type</meta_key>
-		<meta_value>dress</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_type</meta_key>
+            <meta_value>dress</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_extra_service_data</meta_key>
-		<meta_value>a:2:{i:0;a:3:{s:12:"service_name";s:3:"Tie";s:13:"service_price";s:2:"10";s:11:"service_qty";s:3:"100";}i:1;a:3:{s:12:"service_name";s:5:"Shoes";s:13:"service_price";s:2:"10";s:11:"service_qty";s:3:"100";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_extra_service_data</meta_key>
+            <meta_value>a:2:{i:0;a:3:{s:12:"service_name";s:3:"Tie";s:13:"service_price";s:2:"10";s:11:"service_qty";s:3:"100";}i:1;a:3:{s:12:"service_name";s:5:"Shoes";s:13:"service_price";s:2:"10";s:11:"service_qty";s:3:"100";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_resort_room_data</meta_key>
-		<meta_value>a:1:{i:0;a:6:{s:9:"room_type";s:0:"";s:15:"rbfw_room_image";s:0:"";s:22:"rbfw_room_daylong_rate";s:0:"";s:23:"rbfw_room_daynight_rate";s:0:"";s:14:"rbfw_room_desc";s:0:"";s:23:"rbfw_room_available_qty";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_resort_room_data</meta_key>
+            <meta_value>a:1:{i:0;a:6:{s:9:"room_type";s:0:"";s:15:"rbfw_room_image";s:0:"";s:22:"rbfw_room_daylong_rate";s:0:"";s:23:"rbfw_room_daynight_rate";s:0:"";s:14:"rbfw_room_desc";s:0:"";s:23:"rbfw_room_available_qty";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_faq_content</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_faq_content</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>mep_event_faq</meta_key>
-		<meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>mep_event_faq</meta_key>
+            <meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_dropoff_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_dropoff_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daywise_price</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daywise_price</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bike_car_sd_data</meta_key>
-		<meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:0:"";s:10:"short_desc";s:0:"";s:5:"price";s:0:"";s:3:"qty";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bike_car_sd_data</meta_key>
+            <meta_value>a:1:{i:0;a:4:{s:9:"rent_type";s:0:"";s:10:"short_desc";s:0:"";s:5:"price";s:0:"";s:3:"qty";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_format</meta_key>
-		<meta_value>12</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_format</meta_key>
+            <meta_value>12</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_off_dates</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_off_dates</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_hourly_rate</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_hourly_rate</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daily_rate</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daily_rate</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_pick_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_pick_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_hourly_rate</meta_key>
-		<meta_value>10</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_hourly_rate</meta_key>
+            <meta_value>10</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_daily_rate</meta_key>
-		<meta_value>100</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_daily_rate</meta_key>
+            <meta_value>100</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sun_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sun_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_mon_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_mon_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_tue_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_tue_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_wed_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_wed_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_thu_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_thu_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_fri_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_fri_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sat_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sat_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images</meta_key>
-		<meta_value>a:5:{i:0;s:4:"1647";i:1;s:4:"1648";i:2;s:4:"1650";i:3;s:4:"1651";i:4;s:4:"1652";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images</meta_key>
+            <meta_value>a:5:{i:0;s:4:"1647";i:1;s:4:"1648";i:2;s:4:"1650";i:3;s:4:"1651";i:4;s:4:"1652";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_list_thumbnail</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_list_thumbnail</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_theme_file</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_theme_file</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_available_qty_info_switch</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_available_qty_info_switch</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_single_template</meta_key>
-		<meta_value>Muffin</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_single_template</meta_key>
+            <meta_value>Muffin</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_slot_switch</meta_key>
-		<meta_value>on</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_slot_switch</meta_key>
+            <meta_value>on</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_extra_service_qty</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_extra_service_qty</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_variations</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_variations</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_md_type_item_qty</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_md_type_item_qty</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_stock_quantity</meta_key>
-		<meta_value>10</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_stock_quantity</meta_key>
+            <meta_value>10</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_resort_daylong_price</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_resort_daylong_price</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_variations_data</meta_key>
-		<meta_value>a:2:{i:0;a:3:{s:11:"field_label";s:5:"Color";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:2:{i:0;a:2:{s:4:"name";s:3:"Red";s:8:"quantity";s:1:"5";}i:1;a:2:{s:4:"name";s:4:"Blue";s:8:"quantity";s:1:"5";}}}i:1;a:3:{s:11:"field_label";s:4:"Size";s:8:"field_id";s:19:"rbfw_variation_id_1";s:5:"value";a:2:{i:0;a:2:{s:4:"name";s:5:"Small";s:8:"quantity";s:1:"5";}i:1;a:2:{s:4:"name";s:6:"Medium";s:8:"quantity";s:1:"5";}}}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_variations_data</meta_key>
+            <meta_value>a:2:{i:0;a:3:{s:11:"field_label";s:5:"Color";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:2:{i:0;a:2:{s:4:"name";s:3:"Red";s:8:"quantity";s:1:"5";}i:1;a:2:{s:4:"name";s:4:"Blue";s:8:"quantity";s:1:"5";}}}i:1;a:3:{s:11:"field_label";s:4:"Size";s:8:"field_id";s:19:"rbfw_variation_id_1";s:5:"value";a:2:{i:0;a:2:{s:4:"name";s:5:"Small";s:8:"quantity";s:1:"5";}i:1;a:2:{s:4:"name";s:6:"Medium";s:8:"quantity";s:1:"5";}}}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_ondays</meta_key>
-		<meta_value>a:0:{}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_ondays</meta_key>
+            <meta_value>a:0:{}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_feature_category</meta_key>
-		<meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:14:"Dress Features";s:12:"cat_features";a:5:{i:0;a:2:{s:4:"icon";s:16:"fab fa-quinscape";s:5:"title";s:25:"Very High Quality Product";}i:1;a:2:{s:4:"icon";s:15:"fas fa-compress";s:5:"title";s:16:"Various Sizeable";}i:2;a:2:{s:4:"icon";s:12:"fab fa-slack";s:5:"title";s:19:"High Quality Fabric";}i:3;a:2:{s:4:"icon";s:15:"fab fa-opencart";s:5:"title";s:17:"Attractive To See";}i:4;a:2:{s:4:"icon";s:14:"fas fa-retweet";s:5:"title";s:12:"Well Fitting";}}}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_feature_category</meta_key>
+            <meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:14:"Dress Features";s:12:"cat_features";a:5:{i:0;a:2:{s:4:"icon";s:16:"fab fa-quinscape";s:5:"title";s:25:"Very High Quality Product";}i:1;a:2:{s:4:"icon";s:15:"fas fa-compress";s:5:"title";s:16:"Various Sizeable";}i:2;a:2:{s:4:"icon";s:12:"fab fa-slack";s:5:"title";s:19:"High Quality Fabric";}i:3;a:2:{s:4:"icon";s:15:"fab fa-opencart";s:5:"title";s:17:"Attractive To See";}i:4;a:2:{s:4:"icon";s:14:"fas fa-retweet";s:5:"title";s:12:"Well Fitting";}}}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_switch</meta_key>
-		<meta_value>off</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_switch</meta_key>
+            <meta_value>off</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_testimonials</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_testimonials</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_content</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_content</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images_additional</meta_key>
-		<meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images_additional</meta_key>
+            <meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>_thumbnail_id</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>_thumbnail_id</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_gallary_imgs</meta_key>
-		<meta_value>a:5:{i:0;s:64:"https://booking.mage-people.com/wp-content/uploads/2023/04/5.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-2.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-2.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-2.jpg";i:4;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-2.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_gallary_imgs</meta_key>
+            <meta_value>a:5:{i:0;s:64:"https://booking.mage-people.com/wp-content/uploads/2023/04/5.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-2.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-2.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-2.jpg";i:4;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-2.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
-		<meta_value>a:5:{i:0;s:64:"https://booking.mage-people.com/wp-content/uploads/2023/04/5.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-2.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-2.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-2.jpg";i:4;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-2.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
+            <meta_value>a:5:{i:0;s:64:"https://booking.mage-people.com/wp-content/uploads/2023/04/5.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-2.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-2.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-2.jpg";i:4;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-2.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_thumb_img</meta_key>
-		<meta_value>a:1:{i:0;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-2.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_thumb_img</meta_key>
+            <meta_value>a:1:{i:0;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-2.jpg";}</meta_value>
+        </postmeta>
 
     </item>
 
@@ -1566,310 +1569,310 @@
         <title>Bike/Car For Single Day - Classic Template</title>
         <content>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</content>
 
-		<postmeta>
-		<meta_key>rbfw_releted_rbfw</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_releted_rbfw</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rdfw_available_time</meta_key>
-		<meta_value>a:21:{i:0;s:8:"10:00 AM";i:1;s:8:"10:00 PM";i:2;s:8:"10:30 AM";i:3;s:8:"10:30 PM";i:4;s:8:"11:30 AM";i:5;s:8:"11:30 PM";i:6;s:8:"12:00 AM";i:7;s:8:"12:00 PM";i:8;s:8:"12:30 AM";i:9;s:8:"12:30 PM";i:10;s:7:"1:00 AM";i:11;s:7:"6:00 AM";i:12;s:7:"6:00 PM";i:13;s:7:"8:00 AM";i:14;s:7:"8:00 PM";i:15;s:7:"8:30 AM";i:16;s:7:"8:30 PM";i:17;s:7:"9:00 AM";i:18;s:7:"9:00 PM";i:19;s:7:"9:30 AM";i:20;s:7:"9:30 PM";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rdfw_available_time</meta_key>
+            <meta_value>a:21:{i:0;s:8:"10:00 AM";i:1;s:8:"10:00 PM";i:2;s:8:"10:30 AM";i:3;s:8:"10:30 PM";i:4;s:8:"11:30 AM";i:5;s:8:"11:30 PM";i:6;s:8:"12:00 AM";i:7;s:8:"12:00 PM";i:8;s:8:"12:30 AM";i:9;s:8:"12:30 PM";i:10;s:7:"1:00 AM";i:11;s:7:"6:00 AM";i:12;s:7:"6:00 PM";i:13;s:7:"8:00 AM";i:14;s:7:"8:00 PM";i:15;s:7:"8:30 AM";i:16;s:7:"8:30 PM";i:17;s:7:"9:00 AM";i:18;s:7:"9:00 PM";i:19;s:7:"9:30 AM";i:20;s:7:"9:30 PM";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_type</meta_key>
-		<meta_value>bike_car_sd</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_type</meta_key>
+            <meta_value>bike_car_sd</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_extra_service_data</meta_key>
-		<meta_value>a:2:{i:0;a:3:{s:12:"service_name";s:3:"Tie";s:13:"service_price";s:2:"10";s:11:"service_qty";s:3:"100";}i:1;a:3:{s:12:"service_name";s:5:"Shoes";s:13:"service_price";s:2:"10";s:11:"service_qty";s:3:"100";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_extra_service_data</meta_key>
+            <meta_value>a:2:{i:0;a:3:{s:12:"service_name";s:3:"Tie";s:13:"service_price";s:2:"10";s:11:"service_qty";s:3:"100";}i:1;a:3:{s:12:"service_name";s:5:"Shoes";s:13:"service_price";s:2:"10";s:11:"service_qty";s:3:"100";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_resort_room_data</meta_key>
-		<meta_value>a:1:{i:0;a:6:{s:9:"room_type";s:0:"";s:15:"rbfw_room_image";s:0:"";s:22:"rbfw_room_daylong_rate";s:0:"";s:23:"rbfw_room_daynight_rate";s:0:"";s:14:"rbfw_room_desc";s:0:"";s:23:"rbfw_room_available_qty";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_resort_room_data</meta_key>
+            <meta_value>a:1:{i:0;a:6:{s:9:"room_type";s:0:"";s:15:"rbfw_room_image";s:0:"";s:22:"rbfw_room_daylong_rate";s:0:"";s:23:"rbfw_room_daynight_rate";s:0:"";s:14:"rbfw_room_desc";s:0:"";s:23:"rbfw_room_available_qty";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_faq_content</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_faq_content</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>mep_event_faq</meta_key>
-		<meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>mep_event_faq</meta_key>
+            <meta_value>a:2:{i:0;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}i:1;a:2:{s:14:"rbfw_faq_title";s:55:"Lorem ipsum dolor sit amet, consectetur adipiscing elit";s:16:"rbfw_faq_content";s:334:"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_dropoff_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_dropoff_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daywise_price</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daywise_price</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bike_car_sd_data</meta_key>
-		<meta_value>a:7:{i:0;a:4:{s:9:"rent_type";s:16:"One Hour Rentals";s:10:"short_desc";s:13:"Up to 1 hours";s:5:"price";s:4:"7.99";s:3:"qty";s:3:"100";}i:1;a:4:{s:9:"rent_type";s:16:"Two Hour Rentals";s:10:"short_desc";s:13:"Up to 2 hours";s:5:"price";s:5:"15.98";s:3:"qty";s:3:"100";}i:2;a:4:{s:9:"rent_type";s:18:"Three Hour Rentals";s:10:"short_desc";s:13:"Up to 3 hours";s:5:"price";s:5:"19.97";s:3:"qty";s:3:"100";}i:3;a:4:{s:9:"rent_type";s:17:"Four Hour Rentals";s:10:"short_desc";s:13:"Up to 4 hours";s:5:"price";s:5:"24.76";s:3:"qty";s:3:"100";}i:4;a:4:{s:9:"rent_type";s:17:"Five Hour Rentals";s:10:"short_desc";s:13:"Up to 5 hours";s:5:"price";s:5:"28.75";s:3:"qty";s:3:"100";}i:5;a:4:{s:9:"rent_type";s:15:"Half Day Rental";s:10:"short_desc";s:13:"Up to 6 hours";s:5:"price";s:5:"29.99";s:3:"qty";s:3:"100";}i:6;a:4:{s:9:"rent_type";s:15:"All Day Rentals";s:10:"short_desc";s:14:"Up to 10 Hours";s:5:"price";s:5:"38.99";s:3:"qty";s:3:"100";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bike_car_sd_data</meta_key>
+            <meta_value>a:7:{i:0;a:4:{s:9:"rent_type";s:16:"One Hour Rentals";s:10:"short_desc";s:13:"Up to 1 hours";s:5:"price";s:4:"7.99";s:3:"qty";s:3:"100";}i:1;a:4:{s:9:"rent_type";s:16:"Two Hour Rentals";s:10:"short_desc";s:13:"Up to 2 hours";s:5:"price";s:5:"15.98";s:3:"qty";s:3:"100";}i:2;a:4:{s:9:"rent_type";s:18:"Three Hour Rentals";s:10:"short_desc";s:13:"Up to 3 hours";s:5:"price";s:5:"19.97";s:3:"qty";s:3:"100";}i:3;a:4:{s:9:"rent_type";s:17:"Four Hour Rentals";s:10:"short_desc";s:13:"Up to 4 hours";s:5:"price";s:5:"24.76";s:3:"qty";s:3:"100";}i:4;a:4:{s:9:"rent_type";s:17:"Five Hour Rentals";s:10:"short_desc";s:13:"Up to 5 hours";s:5:"price";s:5:"28.75";s:3:"qty";s:3:"100";}i:5;a:4:{s:9:"rent_type";s:15:"Half Day Rental";s:10:"short_desc";s:13:"Up to 6 hours";s:5:"price";s:5:"29.99";s:3:"qty";s:3:"100";}i:6;a:4:{s:9:"rent_type";s:15:"All Day Rentals";s:10:"short_desc";s:14:"Up to 10 Hours";s:5:"price";s:5:"38.99";s:3:"qty";s:3:"100";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_format</meta_key>
-		<meta_value>12</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_format</meta_key>
+            <meta_value>12</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_off_dates</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_off_dates</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_hourly_rate</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_hourly_rate</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_daily_rate</meta_key>
-		<meta_value>yes</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_daily_rate</meta_key>
+            <meta_value>yes</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_pick_point</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_pick_point</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_hourly_rate</meta_key>
-		<meta_value>10</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_hourly_rate</meta_key>
+            <meta_value>10</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_daily_rate</meta_key>
-		<meta_value>100</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_daily_rate</meta_key>
+            <meta_value>100</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sun_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sun_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sun_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sun_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_mon_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_mon_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_mon_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_mon_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_tue_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_tue_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_tue_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_tue_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_wed_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_wed_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_wed_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_wed_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_thu_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_thu_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_thu_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_thu_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_fri_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_fri_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_fri_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_fri_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_hourly_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_hourly_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sat_daily_rate</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sat_daily_rate</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_sat_day</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_sat_day</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images</meta_key>
-		<meta_value>a:6:{i:0;s:4:"1652";i:1;s:4:"1651";i:2;s:4:"1650";i:3;s:4:"1649";i:4;s:4:"1648";i:5;s:4:"1647";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images</meta_key>
+            <meta_value>a:6:{i:0;s:4:"1652";i:1;s:4:"1651";i:2;s:4:"1650";i:3;s:4:"1649";i:4;s:4:"1648";i:5;s:4:"1647";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_list_thumbnail</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_list_thumbnail</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_theme_file</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_theme_file</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_available_qty_info_switch</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_available_qty_info_switch</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_single_template</meta_key>
-		<meta_value>Default</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_single_template</meta_key>
+            <meta_value>Default</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_time_slot_switch</meta_key>
-		<meta_value>on</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_time_slot_switch</meta_key>
+            <meta_value>on</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_extra_service_qty</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_extra_service_qty</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_variations</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_variations</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_md_type_item_qty</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_md_type_item_qty</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_item_stock_quantity</meta_key>
-		<meta_value>10</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_item_stock_quantity</meta_key>
+            <meta_value>10</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_enable_resort_daylong_price</meta_key>
-		<meta_value>no</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_enable_resort_daylong_price</meta_key>
+            <meta_value>no</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_variations_data</meta_key>
-		<meta_value>a:1:{i:0;a:4:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}s:14:"selected_value";s:0:"";}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_variations_data</meta_key>
+            <meta_value>a:1:{i:0;a:4:{s:11:"field_label";s:0:"";s:8:"field_id";s:19:"rbfw_variation_id_0";s:5:"value";a:1:{i:0;a:2:{s:4:"name";s:0:"";s:8:"quantity";s:0:"";}}s:14:"selected_value";s:0:"";}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_ondays</meta_key>
-		<meta_value>a:0:{}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_ondays</meta_key>
+            <meta_value>a:0:{}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_sd_appointment_max_qty_per_session</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_feature_category</meta_key>
-		<meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:13:"Bike Features";s:12:"cat_features";a:5:{i:0;a:2:{s:4:"icon";s:14:"fab fa-audible";s:5:"title";s:11:"Disc Brakes";}i:1;a:2:{s:4:"icon";s:22:"fas fa-basketball-ball";s:5:"title";s:15:"Shock Absorbers";}i:2;a:2:{s:4:"icon";s:13:"fas fa-adjust";s:5:"title";s:23:"Headlight and Taillight";}i:3;a:2:{s:4:"icon";s:11:"fas fa-beer";s:5:"title";s:13:"Bottle Holder";}i:4;a:2:{s:4:"icon";s:19:"fas fa-battery-full";s:5:"title";s:13:"Electric Horn";}}}}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_feature_category</meta_key>
+            <meta_value>a:1:{i:0;a:2:{s:9:"cat_title";s:13:"Bike Features";s:12:"cat_features";a:5:{i:0;a:2:{s:4:"icon";s:14:"fab fa-audible";s:5:"title";s:11:"Disc Brakes";}i:1;a:2:{s:4:"icon";s:22:"fas fa-basketball-ball";s:5:"title";s:15:"Shock Absorbers";}i:2;a:2:{s:4:"icon";s:13:"fas fa-adjust";s:5:"title";s:23:"Headlight and Taillight";}i:3;a:2:{s:4:"icon";s:11:"fas fa-beer";s:5:"title";s:13:"Bottle Holder";}i:4;a:2:{s:4:"icon";s:19:"fas fa-battery-full";s:5:"title";s:13:"Electric Horn";}}}}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_switch</meta_key>
-		<meta_value>off</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_switch</meta_key>
+            <meta_value>off</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_testimonials</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_testimonials</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_dt_sidebar_content</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_dt_sidebar_content</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_gallery_images_additional</meta_key>
-		<meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_gallery_images_additional</meta_key>
+            <meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>_thumbnail_id</meta_key>
-		<meta_value></meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>_thumbnail_id</meta_key>
+            <meta_value></meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_gallary_imgs</meta_key>
-		<meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";i:1;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle2.jpg";i:2;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle3.jpg";i:3;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle4.jpg";i:4;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle5.jpg";i:5;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle6.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_gallary_imgs</meta_key>
+            <meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";i:1;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle2.jpg";i:2;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle3.jpg";i:3;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle4.jpg";i:4;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle5.jpg";i:5;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle6.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
-		<meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";i:1;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle2.jpg";i:2;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle3.jpg";i:3;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle4.jpg";i:4;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle5.jpg";i:5;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle6.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
+            <meta_value>a:6:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";i:1;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle2.jpg";i:2;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle3.jpg";i:3;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle4.jpg";i:4;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle5.jpg";i:5;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle6.jpg";}</meta_value>
+        </postmeta>
 
-		<postmeta>
-		<meta_key>rbfw_bkp_thumb_img</meta_key>
-		<meta_value>a:1:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";}</meta_value>
-		</postmeta>
+        <postmeta>
+            <meta_key>rbfw_bkp_thumb_img</meta_key>
+            <meta_value>a:1:{i:0;s:69:"https://booking.mage-people.com/wp-content/uploads/2023/04/cycle1.jpg";}</meta_value>
+        </postmeta>
 
     </item>
 </items>

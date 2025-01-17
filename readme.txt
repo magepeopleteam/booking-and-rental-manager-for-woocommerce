@@ -1,9 +1,9 @@
-=== Rental and Booking Manager for Bike, Car, Dress, Resort with WooCommerce Integration - WpRently | WordPress plugin ===
+=== Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Equipment ===
 Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: booking calendar, Woocommerce Reservation Booking, Rental Booking, Woocommerce Rental Booking, Rental Plugin 
 Requires at least: 5.3
-Stable tag: trunk
+Stable tag: 2.2.2
 Tested up to: 6.7.1
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -12,7 +12,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Woocommerce Rental and Booking Manager for Bike, Car, Resort, Appointment and Equipment. Simplify your reservation system for a memorable journey!
 
 == Description ==
-[Booking & Rental Manager – WpRently](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/) is a complete solution for all booking, rental, and reservation services including Cars, Bikes, Party Dress, Parking, Equipment, and resort. The plugin will help to create your booking management system within your WordPress website with advanced capabilities that can be used to manage and offer bookings on the dates selected by customers.
+[Booking & Rental Manager – WpRently](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/) is a complete solution for all booking, rental, and reservation services including Cars, Bikes, Party Dress, Parking, Equipment, and resort. The plugin will help to create your booking management system within your WordPress website with advanced capabilities that can be used to manage and offer bookings on the dates selected by customers.
 
 ## The #1 Dynamic WordPress Rental And Booking Plugin
 
@@ -92,7 +92,7 @@ Let's dive deeper into the features list to ensure your system is optimized for 
 
 
 
-➡  [Buy Pro](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
+➡  [Buy Pro](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/)
 
 ➡  [View All PRO Version Demo](https://www.wprently.com/bike/)
 ➡  [Bike/Car Rent Service for Single Day PRO Version Demo](https://www.wprently.com/bike/)
@@ -181,8 +181,8 @@ It will be compatible with any standards-compliant wordpress theme.
 = Using FTP =
 
 1. Download booking-and-rental-manager-for-woocommerce.zip
-2. Extract the booking-and-rental-manager-for-woocommerce directory to your computer
-3. Upload the booking-and-rental-manager-for-woocommerce directory to the /wp-content/plugins/ directory
+2. Extract the booking-and-rental-manager-for-woocommercedirectory to your computer
+3. Upload the booking-and-rental-manager-for-woocommercedirectory to the /wp-content/plugins/ directory
 4. Activate the plugin in the Plugin dashboard
 
 == Screenshots ==

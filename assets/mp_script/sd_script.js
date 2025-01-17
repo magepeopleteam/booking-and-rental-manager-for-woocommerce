@@ -58,6 +58,7 @@
                         'selected_date': start_date,
                         'is_muffin_template': is_muffin_template,
                         'time_slot_switch': time_slot_switch,
+                        'nonce' : rbfw_ajax.nonce
                     },
                     beforeSend: function() {
                         jQuery('.rbfw-bikecarsd-result').empty();
@@ -190,6 +191,7 @@
                     'd_type': d_type,
                     'available_quantity': available_quantity,
                     'service_type': service_type,
+                    'nonce' : rbfw_ajax.nonce
                 },
                 beforeSend: function() {
                     jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
@@ -345,6 +347,7 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
             'rbfw_bikecarsd_selected_date': start_date,
             'pickup_time': start_time,
             'enable_specific_duration': enable_specific_duration,
+            'nonce' : rbfw_ajax.nonce
         },
         beforeSend: function() {
             jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
@@ -376,6 +379,7 @@ function rbfw_timely_price_calculation(){
             'post_id': post_id,
             'es_service_price': es_service_price,
             'duration_price': duration_price,
+            'nonce' : rbfw_ajax.nonce
         },
         beforeSend: function() {
             jQuery('.rbfw_bikecarsd_price_summary').addClass('old');

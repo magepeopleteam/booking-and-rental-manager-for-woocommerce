@@ -34,9 +34,9 @@
                     <section class="bg-light mt-5">
                         <div>
                             <label>
-                                <?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $title ); ?>
+                                <?php echo esc_html($title ); ?>
                             </label>
-                            <span><?php echo sprintf(__("%s",'booking-and-rental-manager-for-woocommerce'), $description ); ?></span>
+                            <span><?php echo esc_html($description ); ?></span>
                         </div>
                     </section>
                 <?php
@@ -99,12 +99,13 @@
                     <?php $this->panel_header('Off Day Settings','Off Day Settings'); ?> 
                     <section class="rbfw_off_days justify-content-center">
                         <div class="groupCheckBox">
-                            <input type="hidden" name="rbfw_off_days" value="<?php echo $rbfw_off_days ?>">
+                            <input type="hidden" name="rbfw_off_days" value="<?php echo esc_attr($rbfw_off_days) ?>">
                             <?php foreach ($days as $day){ ?>
-                                <label class="customCheckboxLabel ">
-                                    <input type="checkbox" <?php echo in_array($day,$off_day_array)?'checked':'' ?>  data-checked="<?php echo $day ?>">
-                                    <span class="customCheckbox"><?php echo ucfirst($day) ?></span>
-                                </label>
+                                <label class="customCheckboxLabel">
+    <input type="checkbox" <?php echo in_array($day, $off_day_array) ? 'checked' : ''; ?> data-checked="<?php echo esc_attr($day); ?>">
+    <span class="customCheckbox"><?php echo esc_html(ucfirst($day)); ?></span>
+</label>
+
                             <?php } ?>
                         </div>
                     </section>
@@ -116,12 +117,16 @@
             }
 
             public function settings_save($post_id) {
-                
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( $_POST['rbfw_ticket_type_nonce'], 'rbfw_ticket_type_nonce' ) ) {
-                    return;
-                }
-
-                if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+	            
+	            if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) ) {
+		            return;
+	            }
+	            $nonce = sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) );
+	            if ( ! wp_verify_nonce( $nonce, 'rbfw_ticket_type_nonce' ) ) {
+		            return;
+	            }
+             
+	            if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
                     return;
                 }
 
@@ -130,11 +135,25 @@
                 }
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-                    $rbfw_off_days 	 = isset( $_POST['rbfw_off_days'] ) ? rbfw_array_strip( $_POST['rbfw_off_days'] ) : '';
-                    $off_days_start	 = isset( $_POST['off_days_start'] ) ? rbfw_array_strip( $_POST['off_days_start'] ) : '';
-                    $off_days_end 	 = isset( $_POST['off_days_end'] ) ? rbfw_array_strip( $_POST['off_days_end'] ) : '';
 
-                    update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
+                    $rules = [
+                        'name'        => 'sanitize_text_field',
+                        'email'       => 'sanitize_email',
+                        'age'         => 'absint',
+                        'preferences' => [
+                            'color'         => 'sanitize_text_field',
+                            'notifications' => function ( $value ) {
+                                return $value === 'yes' ? 'yes' : 'no';
+                            }
+                        ]
+                    ];
+                    $input_data_sabitized = sanitize_post_array( $_POST, $rules );
+
+	                $rbfw_off_days = isset( $input_data_sabitized['rbfw_off_days'] ) ? $input_data_sabitized['rbfw_off_days'] : '';
+	                $off_days_start = isset( $input_data_sabitized['off_days_start'] ) ? $input_data_sabitized['off_days_start']  : '';
+	                $off_days_end = isset( $input_data_sabitized['off_days_end'] ) ? $input_data_sabitized['off_days_end'] : '';
+	                
+	                update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
 
                     $off_schedules = [];
                     $from_dates = $off_days_start;

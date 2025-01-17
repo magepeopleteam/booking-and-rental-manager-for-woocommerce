@@ -13,6 +13,10 @@ add_shortcode('rent-list', 'rbfw_rent_list_shortcode_func');
 add_shortcode('search-result', 'rbfw_rent_list_shortcode_func');
 function rbfw_rent_list_shortcode_func($atts = null) {
 
+    if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+        return;
+    }
+
     $attributes = shortcode_atts( array(
         'style' => 'grid',
         'show'  => -1,
@@ -59,14 +63,14 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $category  = $cat_ids;
     }
 
-    $location = !empty( $_GET['rbfw_search_location'] ) ? sanitize_text_field( $_GET['rbfw_search_location'] ) : $location;
+    $location = !empty( $_GET['rbfw_search_location'] ) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_location'])  ) : $location;
     if( $category ){
-        $category = !empty( $_GET['rbfw_search_type'] ) ? sanitize_text_field( trim( $_GET['rbfw_search_type'] ) ) : $category ;
+        $category = !empty( $_GET['rbfw_search_type'] ) ? trim(sanitize_text_field ( wp_unslash($_GET['rbfw_search_type'] )) ) : $category ;
     }else{
-        $search_category = !empty( $_GET['rbfw_search_type'] ) ? sanitize_text_field( trim( $_GET['rbfw_search_type'] ) ) : '' ;
+        $search_category = !empty( $_GET['rbfw_search_type'] ) ? trim(  sanitize_text_field( wp_unslash($_GET['rbfw_search_type'] )) ) : '' ;
     }
 
-    $pickup_date = !empty( $_GET['rbfw-pickup-date'] ) ? sanitize_text_field( trim( $_GET['rbfw-pickup-date'] ) ) : '';
+    $pickup_date = !empty( $_GET['rbfw-pickup-date'] ) ? trim(sanitize_text_field ( wp_unslash($_GET['rbfw-pickup-date'] )) ) : '';
     if( $pickup_date !== 'Pickup date' && !empty( $pickup_date )) {
         $date = DateTime::createFromFormat('F j, Y', $pickup_date );
         $pickup_date = $date->format('d-m-Y');
@@ -150,11 +154,11 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $post_count = $query->post_count;
 
     $j = 1;
-    if(isset($_COOKIE['rbfw_rent_item_list_grid'])) {
-        $rbfw_rent_item_list_grid = $_COOKIE['rbfw_rent_item_list_grid'];
-    }else{
-        $rbfw_rent_item_list_grid = '';
-    }
+
+
+
+    $rbfw_rent_item_list_grid = isset($_COOKIE['rbfw_rent_item_list_grid'])?sanitize_text_field(wp_unslash($_COOKIE['rbfw_rent_item_list_grid'])):'';
+
 
     if( $rbfw_rent_item_list_grid === '' ){
         if( $style == 'grid' ){
@@ -243,12 +247,12 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         <?php
         if( $left_filter === 'yes' ){
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper_with_left_filter';
-            echo rbfw_rent_left_filter( $left_filter_control );
+            echo esc_html(rbfw_rent_left_filter( $left_filter_control ));
         }else{
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper';
         }
         ?>
-        <div class=" <?php echo $rent_list_wrapper_cls.' '.$grid_class ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>" id="rbfw_rent_list_wrapper">
+        <div class=" <?php echo esc_html($rent_list_wrapper_cls).' '.esc_html($grid_class) ?> rbfw_rent_list_style_<?php echo esc_attr($style); ?>" id="rbfw_rent_list_wrapper">
 
             <?php
             $d = 1;
@@ -263,8 +267,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 if($rbfw_enable_start_end_date=='no'){
                     $rbfw_event_end_date  = get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_date', true ) : '';
                     $rbfw_event_end_time  = get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) ? get_post_meta( $rbfw_id, 'rbfw_event_end_time', true ) : '';
-                    $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
-                    $rbfw_event_end_time  = date('h:i a', strtotime($rbfw_event_end_time));
+                    $rbfw_event_end_time  = gmdate('h:i a', strtotime($rbfw_event_end_time));
+                    $rbfw_event_end_time  = gmdate('h:i a', strtotime($rbfw_event_end_time));
                     $rbfw_event_last_date = strtotime(date_i18n('Y-m-d h:i a', strtotime($rbfw_event_end_date.' '.$rbfw_event_end_time)));
                     $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
                     if($rbfw_event_last_date<$rbfw_todays_date){
@@ -297,14 +301,14 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                     <div class="rbfw-lsn-new-message-box-info">
                         <div class="rbfw-lsn-info-tab rbfw-lsn-tip-icon-info" title="error"><i></i></div>
                         <div class="rbfw-lsn-tip-box-info">
-                            <p><?php rbfw_string('rbfw_text_nodatafound',__('Sorry, no data found!','booking-and-rental-manager-for-woocommerce')); ?></p>
+                            <p><?php rbfw_string('rbfw_text_nodatafound',esc_html__('Sorry, no data found!','booking-and-rental-manager-for-woocommerce')); ?></p>
                         </div>
                     </div>
                 </div>
             <?php
             endif;
 
-            wp_reset_query();
+            wp_reset_postdata();
             ?>
         </div>
     </div>
@@ -316,8 +320,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         $content .= '<div class="pagination rbfw_pagination" id="rbfw_rent_list_pagination">';
         $content .= paginate_links(array(
             'total' => $query->max_num_pages,
-            'prev_text' => __('« '), // Optional: Add previous and next text
-            'next_text' => __(' »'),
+            'prev_text' => esc_html__('« ','booking-and-rental-manager-for-woocommerce'), // Optional: Add previous and next text
+            'next_text' => esc_html__(' »','booking-and-rental-manager-for-woocommerce'),
         ));
         $content .= '</div>';
     }
@@ -402,15 +406,19 @@ function rbfw_add_to_cart_shortcode_func($atts){
 add_shortcode('rbfw-search1', 'rbfw_rent_search_shortcode_func');
 function rbfw_rent_search_shortcode_func() {
 
+    if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+        return;
+    }
+
     $search_page_id = rbfw_get_option('rbfw_search_page','rbfw_basic_gen_settings');
     $search_page_link = get_page_link($search_page_id);
     $location_arr = rbfw_get_location_arr();
-    $location = !empty($_GET['rbfw_search_location']) ? sanitize_text_field($_GET['rbfw_search_location']) : '';
+    $location = !empty($_GET['rbfw_search_location']) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_location'])) : '';
     ?>
     <div class="rbfw_search_form_wrap">
         <form class="rbfw_search_form" action="<?php echo esc_url($search_page_link); ?>" method="GET">
             <div class="rbfw_search_form_col">
-                <label><?php rbfw_string('rbfw_text_pickup_location',__('Pickup Location','booking-and-rental-manager-for-woocommerce')); ?></label>
+                <label><?php rbfw_string('rbfw_text_pickup_location',esc_html__('Pickup Location','booking-and-rental-manager-for-woocommerce')); ?></label>
                 <select name="rbfw_search_location">
                     <?php foreach ( $location_arr as $key => $value ) { ?>
                         <option value="<?php echo esc_attr($key); ?>" <?php if($location == $key){ echo 'selected'; }?>><?php echo esc_html($value); ?></option>
@@ -419,7 +427,7 @@ function rbfw_rent_search_shortcode_func() {
             </div>
             <div class="rbfw_search_form_col">
                 <label></label>
-                <button type="submit" name="rbfw_search_submit" class="rbfw_search_submit"><?php rbfw_string('rbfw_text_search',__('Search','booking-and-rental-manager-for-woocommerce')); ?></button>
+                <button type="submit" name="rbfw_search_submit" class="rbfw_search_submit"><?php rbfw_string('rbfw_text_search',esc_html__('Search','booking-and-rental-manager-for-woocommerce')); ?></button>
             </div>
         </form>
     </div>
@@ -429,11 +437,15 @@ function rbfw_rent_search_shortcode_func() {
 add_shortcode('rbfw_search', 'rbfw_rent_search_shortcode' );
 function rbfw_rent_search_shortcode( $attr = null ){
 
+    if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+        return;
+    }
+
     $search_page_id = rbfw_get_option('search-item-list','rbfw_basic_gen_settings');
     $search_page_link = get_page_link($search_page_id);
-    $location = !empty($_GET['rbfw_search_location']) ? sanitize_text_field($_GET['rbfw_search_location']) : '';
-    $type = !empty($_GET['rbfw_search_type']) ? sanitize_text_field($_GET['rbfw_search_type']) : '';
-    $pickup_date = !empty($_GET['rbfw-pickup-date']) ? sanitize_text_field($_GET['rbfw-pickup-date']) : 'Pickup date';
+    $location = !empty($_GET['rbfw_search_location']) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_location'])) : '';
+    $type = !empty($_GET['rbfw_search_type']) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_type'])) : '';
+    $pickup_date = !empty($_GET['rbfw-pickup-date']) ? sanitize_text_field(wp_unslash($_GET['rbfw-pickup-date'])) : 'Pickup date';
 
     ob_start();
     ?>
@@ -441,7 +453,7 @@ function rbfw_rent_search_shortcode( $attr = null ){
     <section class="rbfw_rent_item_search_elementor_section">
         <div class="rbfw_rent_item_search_elementor_container">
 <!--            <form class="rbfw_search_form_new" action="--><?php //echo esc_url($search_page_link); ?><!--" method="GET">-->
-            <form class="rbfw_search_form_new" action="<?php echo get_home_url() . '/search-item-list/';  ?>" method="GET">
+            <form class="rbfw_search_form_new" action="<?php echo esc_html(get_home_url() . '/search-item-list/');  ?>" method="GET">
                 <div class="rbfw_rent_item_search_container">
 
                     <div class="rbfw_rent_item_searchContentHolder">
