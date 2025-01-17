@@ -403,9 +403,9 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                                     <?php
                                     if($item['service_price_type']=='day_wise'){
                                         $rbfw_service_price =  (float)$rbfw_service_price+(float)$item['price']*(int)$item['quantity']*(int)$total_days;
-                                        echo '('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. $item['quantity'] . 'x' .$total_days .'='.wp_kses(wc_price($item['price']*(int)$item['quantity']*$total_days),rbfw_allowed_html()).')';
+                                        echo '('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) . 'x' .esc_html($total_days) .'='.wp_kses(wc_price($item['price']*(int)$item['quantity']*$total_days),rbfw_allowed_html()).')';
                                     }else{
-                                        echo ('('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. $item['quantity'] .'='.wp_kses(wc_price($item['price']*$item['quantity']),rbfw_allowed_html())).')';
+                                        echo ('('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) .'='.wp_kses(wc_price($item['price']*$item['quantity']),rbfw_allowed_html())).')';
                                     }
                                     ?>
                                 </td>
