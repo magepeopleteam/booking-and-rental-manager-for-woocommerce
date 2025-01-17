@@ -15,24 +15,24 @@ function rbfw_admin_settings_sec_reg_basic( $default_sec ) {
 	$sections = array(
 		array(
 			'id'    => 'rbfw_basic_gen_settings',
-			'title' => '<i class="fa-solid fa-screwdriver-wrench"></i>'.__( 'General Settings', 'booking-and-rental-manager-for-woocommerce' )
+			'title' => '<i class="fas fa-screwdriver-wrench"></i>'.__( 'General Settings', 'booking-and-rental-manager-for-woocommerce' )
 		),
 		array(
 			'id'    => 'rbfw_basic_translation_settings',
-			'title' => '<i class="fa-solid fa-language"></i>'.esc_html__( 'Translation Settings', 'booking-and-rental-manager-for-woocommerce' )
+			'title' => '<i class="fas fa-language"></i>'.esc_html__( 'Translation Settings', 'booking-and-rental-manager-for-woocommerce' )
 		),
 		array(
 			'id'    => 'rbfw_basic_style_settings',
-			'title' => '<i class="fa-solid fa-palette"></i>'.esc_html__( 'Style Settings', 'booking-and-rental-manager-for-woocommerce' )
+			'title' => '<i class="fas fa-palette"></i>'.esc_html__( 'Style Settings', 'booking-and-rental-manager-for-woocommerce' )
 		),
         array(
             'id'    => 'rbfw_custom_style_settings',
-            'title' => '<i class="fa-solid fa-palette"></i>'.esc_html__( 'Custom CSS', 'booking-and-rental-manager-for-woocommerce' )
+            'title' => '<i class="fas fa-palette"></i>'.esc_html__( 'Custom CSS', 'booking-and-rental-manager-for-woocommerce' )
         ),
 
 		array(
 			'id'    => 'rbfw_basic_payment_settings',
-			'title' => '<i class="fa-solid fa-money-check-dollar"></i>'.esc_html__( 'Payment Settings', 'booking-and-rental-manager-for-woocommerce' )
+			'title' => '<i class="fas fa-money-check-dollar"></i>'.esc_html__( 'Payment Settings', 'booking-and-rental-manager-for-woocommerce' )
 		),
 	);
 

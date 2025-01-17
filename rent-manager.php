@@ -46,7 +46,7 @@
 				require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Hidden_Product.php';
 				require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Quick_Setup.php';
 				require_once RBFW_PLUGIN_DIR . '/inc/rbfw_import_demo.php';
-				add_action( 'admin_init', [ $this, 'activation_redirect' ], 90 );
+				// add_action( 'admin_init', [ $this, 'activation_redirect' ], 90 );
 			}
 
 			public function define_contstants() {
@@ -130,12 +130,12 @@
 
 				$rbfw_quick_setup_done = get_option( 'rbfw_quick_setup_done' ) ? get_option( 'rbfw_quick_setup_done' ) : 'no';
 				if ( $rbfw_quick_setup_done == 'no' ) {
-					if ( isset( $_REQUEST['page'] ) && sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) == 'rbfw_quick_setup' ) {
-						return null;
-					} else {
+					// if ( isset( $_REQUEST['page'] ) && sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) == 'rbfw_quick_setup' ) {
+					// 	return null;
+					// } else {
 						wp_redirect( esc_url_raw( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup' ) ) );
 						exit();
-					}
+					// }
 				}
 			}
 
@@ -147,9 +147,11 @@
 			}
 
 			public static function activate() {
+				// rbfw_activation_redirect();
 				update_option( 'rewrite_rules', '' );
 				rbfw_update_settings();
 				rbfw_page_create();
+				
 				// flush_rewrite_rules(); // Flush permalinks
 			}
 
@@ -173,3 +175,18 @@
 
 
 	// this include file can't added inside class method due to fatal error. need to fix.
+
+
+
+	function rbfw_activation_redirect() {
+
+		$rbfw_quick_setup_done = get_option( 'rbfw_quick_setup_done' ) ? get_option( 'rbfw_quick_setup_done' ) : 'no';
+		if ( $rbfw_quick_setup_done == 'no' ) {
+			// if ( isset( $_REQUEST['page'] ) && sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) == 'rbfw_quick_setup' ) {
+			// 	return null;
+			// } else {
+				wp_redirect( esc_url_raw( admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup' ) ) );
+				exit();
+			// }
+		}
+	}

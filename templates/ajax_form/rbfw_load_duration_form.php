@@ -41,7 +41,7 @@ $total_row = $total_row??'';
         </select>
     </td>
     <td>
-        <div class="mp_event_remove_move"><button class="button remove-row 1731030574387"><i class="fa-solid fa-trash-can"></i></button>
+        <div class="mp_event_remove_move"><button class="button remove-row 1731030574387"><i class="fas fa-trash-can"></i></button>
             <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
         </div>
     </td>

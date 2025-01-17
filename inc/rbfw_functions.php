@@ -736,7 +736,7 @@
 					}
 				?>
             </div>
-            <a class="ppof-button rbfw_load_more_icons"><i class="fa-solid fa-circle-plus"></i> <?php esc_html_e( 'Load More Icon', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
+            <a class="ppof-button rbfw_load_more_icons"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Load More Icon', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
         </div>
         <style>
 			#rbfw_features_icon_list_wrapper.mage_modal {
@@ -892,7 +892,7 @@
 			?>
             <script>jQuery(document).ready(function () {
                     jQuery(".mp_tab_details .mp_tab_item[data-tab-item=#rbfw_tax_settings_meta_boxes] .form-table").remove();
-                    jQuery(".mp_tab_details .mp_tab_item[data-tab-item=#rbfw_tax_settings_meta_boxes] .description").html("<div class='rbfw_alert_info'><i class='fa-solid fa-circle-info'></i> To enable tax settings, go to Settings->Payment Settings and enable the tax switch.</div>");
+                    jQuery(".mp_tab_details .mp_tab_item[data-tab-item=#rbfw_tax_settings_meta_boxes] .description").html("<div class='rbfw_alert_info'><i class='fas fa-circle-info'></i> To enable tax settings, go to Settings->Payment Settings and enable the tax switch.</div>");
                 });
             </script>
 			<?php

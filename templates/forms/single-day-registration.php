@@ -37,8 +37,8 @@
                 <!-- Header -->
 				<div class="rbfw-bikecarsd-calendar-header">
 					<h3 class="rbfw-bikecarsd-calendar-header-title"><?php rbfw_string('rbfw_text_book_online',__('Book online','booking-and-rental-manager-for-woocommerce')); ?></h3>
-					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fa-solid fa-clock"></i> <?php rbfw_string('rbfw_text_real_time_availability',__('Real-time availability','booking-and-rental-manager-for-woocommerce')); ?></div>
-					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fa-solid fa-bolt"></i> <?php rbfw_string('rbfw_text_instant_confirmation',__('Instant confirmation','booking-and-rental-manager-for-woocommerce')); ?></div>
+					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-clock"></i> <?php rbfw_string('rbfw_text_real_time_availability',__('Real-time availability','booking-and-rental-manager-for-woocommerce')); ?></div>
+					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-bolt"></i> <?php rbfw_string('rbfw_text_instant_confirmation',__('Instant confirmation','booking-and-rental-manager-for-woocommerce')); ?></div>
 				</div>
 
                 <?php if ($location_switch == 'yes' && !empty($pickup_location)) : ?>
@@ -77,7 +77,7 @@
                         <div id="rbfw-bikecarsd-calendar" class="rbfw-bikecarsd-calendar">
                         </div>
                         <div class="rbfw-bikecarsd-calendar-footer">
-                            <i class="fa-solid fa-circle-info"></i>
+                            <i class="fas fa-circle-info"></i>
                             <?php rbfw_string('rbfw_text_click_date_to_browse_availability',__('Click a date to browse availability','booking-and-rental-manager-for-woocommerce')); ?>
                         </div>
                     </div>
@@ -106,7 +106,7 @@
                                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                 </div>
                                 <div class="rbfw-p-relative">
-                                    <span class="calendar"><i class="fa-solid fa-calendar-days"></i></span>
+                                    <span class="calendar"><i class="fas fa-calendar-days"></i></span>
                                     <input class="rbfw-input rbfw-time-price pickup_date_timely" type="text"   placeholder="<?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" style="background-position: 95% center">
                                     <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                 </div>

@@ -187,13 +187,13 @@
 				if ( $request == 'signin' ) {
 					$errors = '';
 					if ( empty( $email ) ):
-						$errors .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . __( 'Email is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+						$errors .= '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . __( 'Email is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 					endif;
 					if ( ! empty( $email ) && ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ):
-						$errors .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . __( 'Email is not valid!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+						$errors .= '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . __( 'Email is not valid!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 					endif;
 					if ( empty( $password ) ):
-						$errors .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . __( 'Password is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+						$errors .= '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . __( 'Password is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 					endif;
 					if ( empty( $errors ) ) {
 						$creds = array(
@@ -203,12 +203,12 @@
 						);
 						$user = wp_signon( $creds, false );
 						if ( is_wp_error( $user ) ) {
-							$msg = '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . __( 'The username or password is incorrect!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+							$msg = '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . __( 'The username or password is incorrect!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 							echo wp_kses_post( $msg );
 						} else {
 							wp_set_current_user( $user->ID );
 							wp_set_auth_cookie( $user->ID );
-							$msg = '<p class="ba_alert_login_success"><i class="fa-solid fa-circle-check"></i> ' . __( 'Login successful, redirecting...', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+							$msg = '<p class="ba_alert_login_success"><i class="fas fa-circle-check"></i> ' . __( 'Login successful, redirecting...', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 							echo wp_kses_post( $msg );
 						}
 					} else {
@@ -217,25 +217,25 @@
 				} elseif ( $request == 'signup' ) {
 					$errors = '';
 					if ( empty( $first_name ) ):
-						$errors .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . __( 'First name is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+						$errors .= '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . __( 'First name is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 					endif;
 					if ( empty( $last_name ) ):
-						$errors .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . __( 'Last name is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+						$errors .= '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . __( 'Last name is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 					endif;
 					if ( empty( $email ) ):
-						$errors .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . __( 'Email is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+						$errors .= '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . __( 'Email is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 					endif;
 					if ( ! empty( $email ) && ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ):
-						$errors .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . __( 'Email is not valid!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+						$errors .= '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . __( 'Email is not valid!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 					endif;
 					if ( empty( $password ) ):
-						$errors .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . __( 'Password is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+						$errors .= '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . __( 'Password is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 					endif;
 					if ( empty( $confirm_password ) ):
-						$errors .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . __( 'Confirm Password is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+						$errors .= '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . __( 'Confirm Password is required!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 					endif;
 					if ( ! empty( $password ) && ! empty( $confirm_password ) && ( $password != $confirm_password ) ):
-						$errors .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . __( 'Password doesn\'t match!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+						$errors .= '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . __( 'Password doesn\'t match!', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 					endif;
 					if ( empty( $errors ) ) {
 						$user_id = wp_create_user( $email, $password, $email );
@@ -243,7 +243,7 @@
 							$msg = '';
 							foreach ( $user_id->errors as $key => $val ) {
 								foreach ( $val as $k => $v ) {
-									$msg .= '<p class="ba_alert_warning"><i class="fa-solid fa-circle-info"></i> ' . $v . '</p>';
+									$msg .= '<p class="ba_alert_warning"><i class="fas fa-circle-info"></i> ' . $v . '</p>';
 								}
 							}
 							echo wp_kses_post( $msg );
@@ -253,7 +253,7 @@
 							wp_set_auth_cookie( $user_id );
 							update_user_meta( $user_id, 'first_name', $first_name );
 							update_user_meta( $user_id, 'last_name', $last_name );
-							$msg = '<p class="ba_alert_login_success"><i class="fa-solid fa-circle-check"></i> ' . __( 'Registration successful, redirecting...', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
+							$msg = '<p class="ba_alert_login_success"><i class="fas fa-circle-check"></i> ' . __( 'Registration successful, redirecting...', 'booking-and-rental-manager-for-woocommerce' ) . '</p>';
 							echo wp_kses_post( $msg );
 						}
 					} else {

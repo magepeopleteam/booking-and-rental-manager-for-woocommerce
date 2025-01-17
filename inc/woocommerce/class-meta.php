@@ -74,7 +74,7 @@ if ( ! class_exists( 'RBFW_WC_Meta' ) ) {
             
             /*$rbfw_tax_meta_boxs_args = array(
                 'meta_box_id'    => 'rbfw_tax_meta_boxes',
-                'meta_box_title' => '<i class="fa-solid fa-file-lines"></i>'. esc_html__( 'Tax', 'booking-and-rental-manager-for-woocommerce' ),
+                'meta_box_title' => '<i class="fas fa-file-lines"></i>'. esc_html__( 'Tax', 'booking-and-rental-manager-for-woocommerce' ),
                 'screen'         => array( 'rbfw_item' ),
                 'context'        => 'normal',
                 'priority'       => 'low',

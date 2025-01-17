@@ -16,7 +16,7 @@
 
 			public function add_tab_menu() {
 				?>
-                <li data-target-tabs="#rbfw_date_settings_meta_boxes"><i class="fa-solid fa-calendar-days"></i><?php esc_html_e( 'Date & Time', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li data-target-tabs="#rbfw_date_settings_meta_boxes"><i class="fas fa-calendar-days"></i><?php esc_html_e( 'Date & Time', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
 				<?php
 			}
 

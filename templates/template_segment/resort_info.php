@@ -101,9 +101,9 @@ if(isset($post_id) && isset($active_tab)){
             <td>
                 <div class="rbfw_service_price_wrap">
                     <div class="rbfw_qty_input">
-                        <a class="rbfw_qty_minus rbfw_room_qty_minus"><i class="fa-solid fa-minus"></i></a>
+                        <a class="rbfw_qty_minus rbfw_room_qty_minus"><i class="fas fa-minus"></i></a>
                         <input type="number" min="0" max="<?php echo esc_attr($max_available_qty) ?>" value="0" name="rbfw_room_info[<?php echo esc_html($i); ?>][room_qty]" class="rbfw_room_qty" data-price="<?php echo esc_html($price); ?>" data-type="<?php echo esc_html($value['room_type']); ?>" data-cat="room"/>
-                        <a class="rbfw_qty_plus rbfw_room_qty_plus"><i class="fa-solid fa-plus"></i></a>
+                        <a class="rbfw_qty_plus rbfw_room_qty_plus"><i class="fas fa-plus"></i></a>
                         </div>
                     </div>
                 </td>
@@ -172,9 +172,9 @@ if(isset($post_id) && isset($active_tab)){
                                 <td>
                                     <div class="rbfw_service_price_wrap">
                                         <div class="rbfw_qty_input">
-                                            <a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fa-solid fa-minus"></i></a>
+                                            <a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fas fa-minus"></i></a>
                                             <input type="number" min="0" max="<?php echo esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo esc_html($c); ?>][service_qty]" class="rbfw_service_qty" data-price="<?php echo esc_html($value['service_price']); ?>" data-type="<?php echo esc_html($value['service_name']); ?>" data-cat="service"/>
-                                            <a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fa-solid fa-plus"></i></a>
+                                            <a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fas fa-plus"></i></a>
                                         </div>
                                     </div>
                                 </td>
@@ -224,7 +224,7 @@ if(class_exists('Rbfw_Reg_Form')){
     </div>
 <?php }else{ ?>
     <div class="rbfw_alert_warning">
-        <i class="fa-solid fa-circle-info"></i>
+        <i class="fas fa-circle-info"></i>
         <?php echo esc_html__("Sorry, the day-night package is not available on the same check-in and check-out date.","booking-and-rental-manager-for-woocommerce") ?>
     </div>
 <?php } ?>
