@@ -333,10 +333,10 @@
 						ob_start();
 						$content = '';
 						$content .= '<div class="rbfw_bikecarsd_time_table_container rbfw-bikecarsd-step" data-step="2">';
-						$content .= '<a class="rbfw_back_step_btn" back-step="1" data-step="2"><i class="fa-solid fa-circle-left"></i> ' . rbfw_string_return( 'rbfw_text_back_to_previous_step', esc_html__( 'Back to Previous Step', 'booking-and-rental-manager-for-woocommerce' ) ) . '</a>';
+						$content .= '<a class="rbfw_back_step_btn" back-step="1" data-step="2"><i class="fas fa-circle-left"></i> ' . rbfw_string_return( 'rbfw_text_back_to_previous_step', esc_html__( 'Back to Previous Step', 'booking-and-rental-manager-for-woocommerce' ) ) . '</a>';
 						if ( $is_muffin_template == 0 ) {
-							$content .= '<div class="rbfw_step_selected_date"><i class="fa-solid fa-calendar-check"></i> ' . rbfw_string_return( 'rbfw_text_you_selected', esc_html__( 'You selected', 'booking-and-rental-manager-for-woocommerce' ) ) . ': ' . $result . '</div>';
-							$content .= '<div class="single-day-notice"><i class="fa-solid fa-circle-info"></i> ' . esc_html__( 'Please pick up a time', 'booking-and-rental-manager-for-woocommerce' ) . '</div>';
+							$content .= '<div class="rbfw_step_selected_date"><i class="fas fa-calendar-check"></i> ' . rbfw_string_return( 'rbfw_text_you_selected', esc_html__( 'You selected', 'booking-and-rental-manager-for-woocommerce' ) ) . ': ' . $result . '</div>';
+							$content .= '<div class="single-day-notice"><i class="fas fa-circle-info"></i> ' . esc_html__( 'Please pick up a time', 'booking-and-rental-manager-for-woocommerce' ) . '</div>';
 						}
 						if ( $is_muffin_template == 1 ) {
 							$content .= '<div class="rbfw_step_selected_date rbfw_muff_selected_date">';

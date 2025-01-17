@@ -16,7 +16,7 @@
 
             public function add_tab_menu() {
             ?>
-                <li data-target-tabs="#rbfw_gallery_images_meta_boxes"><i class="fa-solid fa-images"></i><?php esc_html_e('Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li data-target-tabs="#rbfw_gallery_images_meta_boxes"><i class="fas fa-images"></i><?php esc_html_e('Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
             <?php
             }
 
@@ -66,7 +66,7 @@
 										$media_title= get_the_title( $image );
 										?>
 										<div class=" gallery-image">
-											<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></span>
+											<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>
 											
 											<img id='media_preview_<?php echo esc_attr($post_id); ?>' src='<?php echo esc_attr($media_url); ?>' />
 											<input type='hidden' name='rbfw_gallery_images[]' value='<?php echo esc_attr($image); ?>' />
@@ -86,7 +86,7 @@
 									attachment_id = attachment.id;
 									attachment_url = attachment.url;
 									html = '<div class=" gallery-image">';
-									html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></span>';
+									html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>';
 									html += '<img src="'+attachment_url+'" style="width:100%"/>';
 									html += '<input type="hidden" name="rbfw_gallery_images[]" value="'+attachment_id+'" />';
 									html += '</div>';

@@ -196,7 +196,7 @@ if ( ! class_exists( 'Mage_Rating' ) ) {
                             </a>
                             
                             <a id="#" href="'.esc_url($this->support_url).'" class="mage-rating-notice-button button-default" target="_blank">
-                                <i class="fa-solid fa-headset"></i>
+                                <i class="fas fa-headset"></i>
                                 '.esc_html__('I need support','booking-and-rental-manager-for-woocommerce').'
                             </a>
                             

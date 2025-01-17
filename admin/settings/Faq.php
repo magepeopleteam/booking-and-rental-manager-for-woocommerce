@@ -32,7 +32,7 @@
 
 			public function add_tab_menu() {
 				?>
-                <li data-target-tabs="#rbfw_faq"><i class="fa-solid fa-circle-question"></i><?php esc_html_e( ' FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li data-target-tabs="#rbfw_faq"><i class="fas fa-circle-question"></i><?php esc_html_e( ' FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
 				<?php
 			}
 
@@ -75,7 +75,7 @@
                             </div>
                             <div class="rbfw_faq_action_btns">
                                 <span class="rbfw_faq_item_edit" data-id="<?php echo esc_attr( $i ); ?>"><i class='far fa-edit'></i></span>
-                                <span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
+                                <span class="rbfw_item_remove"><i class="fas fa-trash-can"></i></span>
                             </div>
                         </div>
                         <div class="rbfw_faq_content_wrapper">
@@ -121,7 +121,7 @@
 												foreach ( $all_images as $image ) {
 													?>
                                                     <div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
-                                                        <span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>
+                                                        <span class="rbfw_close_multi_image_item"><i class="fas fa-trash-can"></i></span>
                                                         <img src="<?php echo esc_attr( wp_get_attachment_image_url( $image, 'medium' ) ) ?>" alt="<?php echo esc_attr( $image ); ?>'"/>
                                                     </div>
 													<?php
@@ -144,7 +144,7 @@
                                     </div>
                                     <div class="rbfw_faq_img_add_btn_wrap">
                                         <button type="button" class=" add_multi_image ppof-button">
-                                            <i class="fa-solid fa-circle-plus"></i>
+                                            <i class="fas fa-circle-plus"></i>
 											<?php esc_html_e( 'Add Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                         </button>
                                     </div>
@@ -171,7 +171,7 @@
                                 <div class="rbfw_faq_slide_footer">
                                     <div class="rbfw_faq_slide_actionlinks">
                                         <button type="button" class="rbfw_save_faq_content_btn ppof-button">
-											<?php esc_html_e( 'Save & Close', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fa-solid fa-circle-notch fa-spin"></i>
+											<?php esc_html_e( 'Save & Close', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-circle-notch fa-spin"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -201,7 +201,7 @@
                         </div>
                         <div class="rbfw_faq_action_btns">
                             <span class="rbfw_faq_item_edit" data-id="<?php echo esc_attr( $i ); ?>"><i class='far fa-edit'></i></span>
-                            <span class="rbfw_item_remove"><i class="fa-solid fa-trash-can"></i></span>
+                            <span class="rbfw_item_remove"><i class="fas fa-trash-can"></i></span>
                         </div>
                     </div>
                     <div class="rbfw_faq_content_wrapper">
@@ -246,7 +246,7 @@
 												foreach ( $all_images as $image ) {
 													?>
                                                     <div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
-                                                        <span class="rbfw_close_multi_image_item"><i class="fa-solid fa-trash-can"></i></span>
+                                                        <span class="rbfw_close_multi_image_item"><i class="fas fa-trash-can"></i></span>
                                                         <img src="<?php echo esc_html( wp_get_attachment_image_url( $image, 'medium' ) ) ?>" alt="<?php echo esc_attr( $image ); ?>'"/>
                                                     </div>
 													<?php
@@ -269,7 +269,7 @@
                                     </div>
                                     <div class="rbfw_faq_img_add_btn_wrap">
                                         <button type="button" class=" add_multi_image ppof-button">
-                                            <i class="fa-solid fa-circle-plus"></i>
+                                            <i class="fas fa-circle-plus"></i>
 											<?php esc_html_e( 'Add Image', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                         </button>
                                     </div>
@@ -296,7 +296,7 @@
                                 <div class="rbfw_faq_slide_footer">
                                     <div class="rbfw_faq_slide_actionlinks">
                                         <button type="button" class="rbfw_save_faq_content_btn ppof-button">
-											<?php esc_html_e( 'Save & Close', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fa-solid fa-circle-notch fa-spin"></i>
+											<?php esc_html_e( 'Save & Close', 'booking-and-rental-manager-for-woocommerce' ); ?> <i class="fas fa-circle-notch fa-spin"></i>
                                         </button>
                                     </div>
                                 </div>

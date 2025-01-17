@@ -36,13 +36,13 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 								<div class="rbfw-tab-menu">
 									<!-- <ul class="rbfw-ul">
 										<li><a href="#" class="rbfw-features rbfw-tab-a active-a"
-											data-id="features"><i class="fa-solid fa-list-check"></i></a></li>
+											data-id="features"><i class="fas fa-list-check"></i></a></li>
 										<li><a href="#" class="rbfw-description rbfw-tab-a"
-											data-id="description"><i class="fa-solid fa-circle-info"></i></a>
+											data-id="description"><i class="fas fa-circle-info"></i></a>
 										</li>
 										<?php if(!empty($rbfw_enable_faq_content) && $rbfw_enable_faq_content == 'yes'): ?>
 										<li><a href="#" class="rbfw-faq rbfw-tab-a"
-											data-id="faq"><i class="fa-solid fa-circle-question"></i></a></li>
+											data-id="faq"><i class="fas fa-circle-question"></i></a></li>
 										<?php endif; ?>
 										<?php do_action( 'rbfw_tab_menu_list', $post_id ); ?>
 									</ul> -->

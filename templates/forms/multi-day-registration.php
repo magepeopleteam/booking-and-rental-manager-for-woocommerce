@@ -272,7 +272,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                     </div>
                                     <div class="rbfw-p-relative">
-                                        <span class="calendar"><i class="fa-solid fa-calendar-days"></i></span>
+                                        <span class="calendar"><i class="fas fa-calendar-days"></i></span>
                                         <input type="hidden" id="hidden_pickup_date" name="rbfw_pickup_start_date">
                                         <input class="rbfw-input rbfw-time-price pickup_date" type="text"  id="pickup_date" placeholder="<?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
                                         <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
@@ -306,7 +306,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                 <div class="<?php echo ($time_picker == 'on')?'left':'' ?> date">
                                     <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_date', 'rbfw_basic_translation_settings')); ?></div>
                                     <div class="rbfw-p-relative">
-                                        <span class="calendar"><i class="fa-solid fa-calendar-days"></i></span>
+                                        <span class="calendar"><i class="fas fa-calendar-days"></i></span>
                                         <input type="hidden" id="hidden_dropoff_date" name="rbfw_pickup_end_date">
                                         <input class="rbfw-input rbfw-time-price dropoff_date" type="text" id="dropoff_date" placeholder="<?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_date', 'rbfw_basic_translation_settings', __('Return date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
                                         <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
@@ -445,7 +445,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                         <td class="rbfw_service_quantity item_<?php echo esc_attr($cat . $serkey); ?>" style="display: none;">
                                                             <div class="rbfw_qty_input">
                                                                 <a class="rbfw_service_quantity_minus" data-item="<?php echo esc_attr($cat . $serkey); ?>">
-                                                                    <i class="fa-solid fa-minus"></i>
+                                                                    <i class="fas fa-minus"></i>
                                                                 </a>
                                                                 <input type="number"
                                                                        name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][quantity]"
@@ -457,7 +457,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                                        data-item="<?php echo esc_attr($cat . $serkey); ?>"
                                                                        autocomplete="off">
                                                                 <a class="rbfw_service_quantity_plus" data-item="<?php echo esc_attr($cat . $serkey); ?>">
-                                                                    <i class="fa-solid fa-plus"></i>
+                                                                    <i class="fas fa-plus"></i>
                                                                 </a>
                                                             </div>
                                                         </td>
@@ -509,9 +509,9 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                 <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>
                                                     <td class="rbfw_bikecarmd_es_input_box" style="display:none">
                                                         <div class="rbfw_qty_input">
-                                                            <a class="rbfw_qty_minus rbfw_bikecarmd_es_qty_minus" data-item="<?php echo esc_html($key+1); ?>"><i class="fa-solid fa-minus"></i></a>
+                                                            <a class="rbfw_qty_minus rbfw_bikecarmd_es_qty_minus" data-item="<?php echo esc_html($key+1); ?>"><i class="fas fa-minus"></i></a>
                                                             <input type="number" min="0" max="" value="1" class="rbfw_bikecarmd_es_qty"  data-cat="service" data-item="<?php echo esc_html($key+1); ?>" data-price="<?php echo esc_html($extra['service_price']); ?>" data-name="<?php echo esc_html($extra['service_name']); ?>"/>
-                                                            <a class="rbfw_qty_plus rbfw_bikecarmd_es_qty_plus" data-item="<?php echo esc_html($key+1); ?>"><i class="fa-solid fa-plus"></i></a>
+                                                            <a class="rbfw_qty_plus rbfw_bikecarmd_es_qty_plus" data-item="<?php echo esc_html($key+1); ?>"><i class="fas fa-plus"></i></a>
                                                         </div>
                                                     </td>
                                                 <?php } ?>

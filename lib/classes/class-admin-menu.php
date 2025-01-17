@@ -105,11 +105,11 @@
 								<?php if ( function_exists( 'rbfw_pro_tab_menu_list' ) ) { ?>
                                     <td>
                                         <a href="javascript:void(0);" class="rbfw_order_view_btn" data-post-id="<?php echo esc_attr( $post_id ); ?>">
-                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            <i class="fas fa-pen-to-square"></i>
 											<?php esc_html_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                         </a>
                                         <a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post_id . '&action=edit' ) ); ?>" class="rbfw_order_edit_btn">
-                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            <i class="fas fa-pen-to-square"></i>
 											<?php esc_html_e( 'Order status changes', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                         </a>
                                     </td>
@@ -118,11 +118,11 @@
 								?>
                                     <td>
                                         <a href="javascript:void(0);" class="rbfw_order_view_btn pro-overlay">
-                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            <i class="fas fa-pen-to-square"></i>
 											<?php esc_html_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                         </a>
                                         <a href="javascript:void(0);" class="rbfw_order_edit_btn pro-overlay">
-                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            <i class="fas fa-pen-to-square"></i>
 											<?php esc_html_e( 'Order status changes', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                         </a>
                                     </td>

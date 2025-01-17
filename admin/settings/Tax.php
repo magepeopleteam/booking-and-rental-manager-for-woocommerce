@@ -15,7 +15,7 @@
 
 			public function add_tab_menu() {
 				?>
-                <li data-target-tabs="#rbfw_tax"><i class="fa-solid fa-dollar-sign"></i><?php esc_html_e( 'Tax', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li data-target-tabs="#rbfw_tax"><i class="fas fa-dollar-sign"></i><?php esc_html_e( 'Tax', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
 				<?php
 			}
 
