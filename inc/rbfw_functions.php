@@ -41,6 +41,11 @@
                 'class'   => true,
                 'id'   => true,
             ),
+            'th'     => array(
+                'style'   => true, // Allows inline styles
+                'class'   => true,
+                'id'   => true,
+            ),
 
 
 

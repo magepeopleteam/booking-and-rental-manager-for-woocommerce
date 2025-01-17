@@ -52,7 +52,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             jQuery(".dropoff_date").datepicker("option", "maxDate", rbfw_maximum_booking_day);
 
             if(rbfw_enable_time_slot=='on'){
-                particular_time_date_dependent_ajax(post_id,date_ymd,'time_enable',rbfw_enable_time_slot);
+                particular_time_date_dependent_ajax(post_id,date_ymd,'time_enable',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.pickup_time');
             }
         },
     });
