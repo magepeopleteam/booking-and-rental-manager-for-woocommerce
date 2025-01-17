@@ -72,7 +72,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
             let rbfw_enable_time_slot = jQuery('#rbfw_enable_time_slot').val();
 
             if(rbfw_enable_time_slot=='on'){
-                particular_time_date_dependent_ajax(post_id,date_ymd_drop,'time_enable','.rbfw-select.rbfw-time-price.dropoff_time');
+                particular_time_date_dependent_ajax(post_id,date_ymd_drop,'time_enable',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.dropoff_time');
             }
         },
         beforeShowDay: function(date)
