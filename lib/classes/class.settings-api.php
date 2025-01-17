@@ -491,7 +491,7 @@ class RBFW_Setting_API {
         $html  = '<input type="text" class="'.$size.'-text wp-color-picker-field abc" id="'.$args['section'].'['.$args['id'].']" name="'.$args['section'].'['.$args['id'].']" value="'.$value.'" data-default-color="'.$value.'" />';
         $html  .= $this->get_field_description( $args );
 
-        echo  wp_kses_post($html);
+        echo  wp_kses($html,rbfw_allowed_html());
 
     }
 

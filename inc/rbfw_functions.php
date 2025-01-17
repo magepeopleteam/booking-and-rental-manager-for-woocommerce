@@ -106,6 +106,20 @@
                 'class'       => true,
                 'id'          => true,
             ),
+            'textarea'   => array(
+                'rows'       => true, // Allows inline styles
+                'cols'       => true,
+                'id'          => true,
+                'name'          => true,
+                'autocomplete'          => true,
+            ),
+            'button'   => array(
+                'type'       => true, // Allows inline styles
+                'style'       => true,
+                'id'          => true,
+                'class'          => true,
+                'aria-expanded'          => true,
+            ),
 
 		);
 
