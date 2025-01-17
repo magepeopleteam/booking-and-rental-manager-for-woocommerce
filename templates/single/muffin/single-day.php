@@ -84,7 +84,7 @@
 						<?php if ( ! empty( $price ) ) : ?>
                             <div class="rbfw_muff_pricing_card_price">
                                     <span class="rbfw_muff_pricing_card_price_badge">
-                                        <?php echo esc_html( rbfw_mps_price( $price ) ); ?>
+                                        <?php echo wp_kses( wc_price( $price ) , rbfw_allowed_html()); ?>
                                     </span>
                                 <span> / <?php echo esc_html( $prices_start_at ); ?></span>
                             </div>
@@ -165,10 +165,10 @@
 						$full_content    .= '<a href="#" class="rbfw-read-more">' . $readLess . '</a>';
 					?>
                     <div class="trimmed-content">
-						<?php echo esc_html( $trimmed_content ); ?>
+						<?php echo wp_kses( $trimmed_content, rbfw_allowed_html()); ?>
                     </div>
                     <div class="full-content" style="display: none;">
-						<?php echo esc_html( $full_content ); ?>
+						<?php echo wp_kses( $full_content , rbfw_allowed_html()); ?>
                     </div>
                 </div>
 				<?php if ( $additional_gallary_status == 'on' ): ?>
@@ -177,7 +177,7 @@
                             <h3 class="rbfw_muff_heading">
 								<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_photos', 'rbfw_basic_translation_settings', __( 'Photos', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>
                             </h3>
-							<?php echo esc_html( $gallery_images_additional ); ?>
+							<?php echo wp_kses( $gallery_images_additional , rbfw_allowed_html()); ?>
                         </div>
 					<?php } ?>
 				<?php endif; ?>

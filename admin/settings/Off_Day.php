@@ -135,9 +135,23 @@
                 }
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-	                $rbfw_off_days = isset( $_POST['rbfw_off_days'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_off_days'] ) ) : '';
-	                $off_days_start = isset( $_POST['off_days_start'] ) ? sanitize_text_field( wp_unslash( $_POST['off_days_start'] ) ) : '';
-	                $off_days_end = isset( $_POST['off_days_end'] ) ? sanitize_text_field( wp_unslash( $_POST['off_days_end'] ) ) : '';
+
+                    $rules = [
+                        'name'        => 'sanitize_text_field',
+                        'email'       => 'sanitize_email',
+                        'age'         => 'absint',
+                        'preferences' => [
+                            'color'         => 'sanitize_text_field',
+                            'notifications' => function ( $value ) {
+                                return $value === 'yes' ? 'yes' : 'no';
+                            }
+                        ]
+                    ];
+                    $input_data_sabitized = sanitize_post_array( $_POST, $rules );
+
+	                $rbfw_off_days = isset( $input_data_sabitized['rbfw_off_days'] ) ? $input_data_sabitized['rbfw_off_days'] : '';
+	                $off_days_start = isset( $input_data_sabitized['off_days_start'] ) ? $input_data_sabitized['off_days_start']  : '';
+	                $off_days_end = isset( $input_data_sabitized['off_days_end'] ) ? $input_data_sabitized['off_days_end'] : '';
 	                
 	                update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
 

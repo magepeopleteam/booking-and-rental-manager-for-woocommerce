@@ -582,7 +582,7 @@ function rbfw_inventory_page(){
             </div>
         </div>
         <div class="rbfw_inventory_page_table_wrap">
-            <?php echo esc_html(rbfw_inventory_page_table($query)); ?>
+            <?php echo wp_kses(rbfw_inventory_page_table($query),rbfw_allowed_html()); ?>
         </div>
     </div>
     <div id="rbfw_stock_view_result_wrap">
