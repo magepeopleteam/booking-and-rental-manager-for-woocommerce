@@ -208,6 +208,21 @@
                 }
 
                 if ( get_post_type( $post_id ) == 'rbfw_item' ) {
+
+                    $rules = [
+                        'name'        => 'sanitize_text_field',
+                        'email'       => 'sanitize_email',
+                        'age'         => 'absint',
+                        'preferences' => [
+                            'color'         => 'sanitize_text_field',
+                            'notifications' => function ( $value ) {
+                                return $value === 'yes' ? 'yes' : 'no';
+                            }
+                        ]
+                    ];
+                    $input_data_sabitized = sanitize_post_array( $_POST, $rules );
+
+
 	                $rbfw_enable_pick_point = isset( $_POST['rbfw_enable_pick_point'] ) ?  sanitize_text_field( wp_unslash($_POST['rbfw_enable_pick_point'] )): 'no';
 	                
 	                $rbfw_enable_dropoff_point = isset( $_POST['rbfw_enable_dropoff_point'] ) ?  sanitize_text_field( wp_unslash($_POST['rbfw_enable_dropoff_point'])) : 'no';
@@ -218,8 +233,9 @@
 					// Saving Pickup Location Data
 					$old_rbfw_pickup_data = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
 					$new_rbfw_pickup_data = array();
-	                $names = isset( $_POST['loc_pickup_name'] ) ? sanitize_text_field( wp_unslash($_POST['loc_pickup_name'] )) : array();
-	                $count                = count( $names );
+	                $names = isset( $input_data_sabitized['loc_pickup_name'] ) ? $input_data_sabitized['loc_pickup_name']  : array();
+
+                    $count                = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
 						if ( $names[ $i ] != '' ) :
 							$new_rbfw_pickup_data[ $i ]['loc_pickup_name'] = stripslashes( wp_strip_all_tags( $names[ $i ] ) );
@@ -235,7 +251,7 @@
 					// Saving Dropoff Data
 					$old_rbfw_dropoff_data = get_post_meta( $post_id, 'rbfw_dropoff_data', true ) ? get_post_meta( $post_id, 'rbfw_dropoff_data', true ) : [];
 					$new_rbfw_dropoff_data = array();
-	                $names = isset( $_POST['loc_dropoff_name'] ) ? sanitize_text_field( wp_unslash( $_POST['loc_dropoff_name'] )) : [];
+	                $names = isset( $input_data_sabitized['loc_dropoff_name'] ) ? $input_data_sabitized['loc_dropoff_name']  : [];
 	                $count                 = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
 						if ( $names[ $i ] != '' ) :

@@ -16,6 +16,7 @@ if ( ! class_exists( 'RBFW_Dependencies' ) ) {
         public function rbfw_add_admin_scripts( $hook ) {
             //font awesome
             wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
+            wp_enqueue_script( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.js', array(), time(), true );
             wp_enqueue_script( 'jquery-ui-core' );
             wp_enqueue_script( 'jquery-ui-datepicker' );
             wp_enqueue_script( 'jquery-ui-accordion' );
@@ -84,6 +85,7 @@ if ( ! class_exists( 'RBFW_Dependencies' ) ) {
             wp_enqueue_script( 'jquery-ui-core' );
             wp_enqueue_script( 'jquery-ui-datepicker' );
             wp_enqueue_script( 'jquery-ui-accordion' );
+
             //mp style
             wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
             wp_enqueue_script( 'mp_plugin_global_rbfw', RBFW_PLUGIN_URL . '/assets/mp_style/mp_script.js', array(), time(), true );
@@ -145,8 +147,10 @@ if ( ! class_exists( 'RBFW_Dependencies' ) ) {
                     'nonce'        => wp_create_nonce( 'rbfw_ajax_action' )
                 ) );
                 //font awesome
-                wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
+               // wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
+                //wp_enqueue_style('fontawesome.v6',  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
                 wp_enqueue_style( 'flatpickr-css', RBFW_PLUGIN_URL . '/css/flatpickr.min.css', array(), null );
+                wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/assets/all.min.css', array(), null );
                 wp_enqueue_script( 'flatpickr-js', RBFW_PLUGIN_URL . '/assets/flatpickr.js',array( 'jquery' ), null, true);
                 wp_enqueue_script(
                     'jquery-ui-dialog', // WordPress default jQuery UI component (can change based on need, e.g., 'jquery-ui-dialog', 'jquery-ui-datepicker', etc.)

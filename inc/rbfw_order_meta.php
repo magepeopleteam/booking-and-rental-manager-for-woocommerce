@@ -873,6 +873,7 @@ function save_rbfw_order_meta_box( $post_id ) {
         return;
     }
 
+
     if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_nonce_action' ) ) {
     if ( isset( $_POST['post_type'] ) && 'rbfw_order' == sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) ) {
         if ( ! current_user_can( 'edit_post', $post_id ) ) {
