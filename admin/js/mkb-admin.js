@@ -941,6 +941,7 @@
                     'data_request' : data_request,
                     'data_date' : data_date,
                     'data_id' : data_id,
+                    'nonce' : rbfw_ajax.nonce
                 },
                 beforeSend: function() {
                     jQuery('#rbfw_stock_view_result_inner_wrap').empty();

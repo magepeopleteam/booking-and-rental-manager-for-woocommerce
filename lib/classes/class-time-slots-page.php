@@ -124,6 +124,13 @@
 			}
 
 			public function rbfw_insert_time_slot() {
+
+                if (!current_user_can('manage_options')) {
+                    wp_send_json_error(['message' => 'Unauthorized access'], 403);
+                    wp_die();
+                }
+
+
 				$status = '';
 				if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
 					if ( isset( $_POST['ts_label'] ) && isset( $_POST['ts_time'] ) ) {
@@ -147,6 +154,10 @@
 			}
 
 			public function rbfw_delete_time_slot() {
+                if (!current_user_can('manage_options')) {
+                    wp_send_json_error(['message' => 'Unauthorized access'], 403);
+                    wp_die();
+                }
 				$status = '';
 				if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
 					if ( isset( $_POST['ts_time'] ) && isset( $_POST['ts_label'] ) ) {
@@ -177,6 +188,11 @@
 			}
 
 			public function rbfw_update_time_slot() {
+
+                if (!current_user_can('manage_options')) {
+                    wp_send_json_error(['message' => 'Unauthorized access'], 403);
+                    wp_die();
+                }
 
                 if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                     return;
@@ -299,7 +315,8 @@
                                 data: {
                                     'action': 'rbfw_update_time_slot',
                                     'new_ts_label': new_ts_label,
-                                    'current_ts_label': current_ts_label
+                                    'current_ts_label': current_ts_label,
+                                    'nonce': rbfw_ajax.nonce
                                 },
                                 beforeSend: function () {
                                     jQuery('.rbfw_time_slot_edit_form_save').append('<i class="fas fa-spinner fa-spin"></i>');
