@@ -1686,7 +1686,7 @@
 														endif;
 														if ( $feature['title'] ):
 															$rand_number = wp_rand();
-															echo esc_html( '<li class="title' . $rand_number . '"><i class="' . $icon . '"></i></li>' );
+															echo '<li class="title' . esc_attr($rand_number) . '"><i class="' . esc_attr($icon) . '"></i></li>';
 															?>
                                                             <script>
                                                                 jQuery(document).ready(function () {
@@ -1933,7 +1933,7 @@
 															endif;
 															if ( $feature['title'] ):
 																$rand_number = wp_rand();
-																echo esc_html( '<li class="title' . $rand_number . '"><i class="' . $icon . '"></i></li>' );
+																echo '<li class="title' . esc_attr($rand_number) . '"><i class="' . esc_attr($icon) . '"></i></li>';
 																?>
                                                                 <script>
                                                                     jQuery(document).ready(function () {

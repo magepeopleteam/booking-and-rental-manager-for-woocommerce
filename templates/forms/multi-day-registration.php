@@ -503,7 +503,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                 </td>
                                                 <td class="resource-title-qty">
                                                     <?php echo esc_html($extra['service_name']); ?>
-                                                    <i class="resource-qty"><?php esc_html_e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo esc_html('('.$extra['service_qty'].')'); ?></span></i>
+                                                    <i class="resource-qty"><?php esc_html_e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo '('.esc_html($extra['service_qty']).')'; ?></span></i>
                                                 </td>
                                                 <td class="w_20"><?php echo wp_kses(rbfw_mps_price($extra['service_price']),rbfw_allowed_html()); ?></td>
                                                 <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>
@@ -622,7 +622,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                 <?php } ?>
 
                 <?php if($rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date) {
-                    echo esc_html('<div class="mps_alert_warning">'.rbfw_string_return('rbfw_text_booking_expired',__('Booking Time Expired!','booking-and-rental-manager-for-woocommerce')).'</div>');
+                    echo '<div class="mps_alert_warning">'.esc_html(rbfw_string_return('rbfw_text_booking_expired',__('Booking Time Expired!','booking-and-rental-manager-for-woocommerce'))).'</div>';
                 } ?>
             </div>
 

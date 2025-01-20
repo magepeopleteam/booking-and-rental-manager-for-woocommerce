@@ -7083,7 +7083,7 @@
                             var limit = <?php  echo esc_attr( $limit ); ?>;
                             var node_count = $(".field-repeatable-wrapper-<?php echo esc_attr( $id ); ?> .field-list .item-wrap").size();
                             if (limit > node_count) {
-                                jQuery('.<?php echo esc_html( 'field-repeatable-wrapper-' . $id ); ?> .field-list').append(html);
+                                jQuery('.<?php echo  'field-repeatable-wrapper-' .esc_html( $id ); ?> .field-list').append(html);
                             } else {
                                 jQuery('.field-repeatable-wrapper-<?php echo esc_attr( $id ); ?> .error-mgs').html('Sorry! you can add max ' + limit + ' item').stop().fadeIn(400).delay(3000).fadeOut(400);
                             }
