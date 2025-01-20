@@ -309,6 +309,12 @@
 			}
 
 			public function rbfw_save_faq_data() {
+
+                if (!current_user_can('manage_options')) {
+                    wp_send_json_error(['message' => 'Unauthorized access'], 403);
+                    wp_die();
+                }
+
 				if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_save_faq_data_nonce' ) ) {
 					die( 'Permission denied' );
 				}
