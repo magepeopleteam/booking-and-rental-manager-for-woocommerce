@@ -53,7 +53,7 @@ if (isset($_POST['post_id']) && check_admin_referer('rbfw_nonce_action', 'rbfw_n
                                     </option>
                                 <?php } ?>
                             </select>
-                            <?php echo esc_html_e('x','booking-and-rental-manager-for-woocommerce') . esc_html(wc_price($service_price)); ?>
+                            <?php echo esc_html_e('x','booking-and-rental-manager-for-woocommerce') . wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
                         </div>
                     </td>
 
@@ -115,7 +115,7 @@ if (isset($_POST['post_id']) && check_admin_referer('rbfw_nonce_action', 'rbfw_n
                                     </div>
                                 </td>
                                 <td class="w_30_pc">
-                                    <?php echo esc_html(rbfw_mps_price($value['service_price'])); ?>
+                                    <?php echo wp_kses(wc_price($value['service_price']) , rbfw_allowed_html()); ?>
                                 </td>
                                 <td class="w_20_pc">
                                     <div class="rbfw_service_price_wrap">
@@ -145,17 +145,17 @@ if (isset($_POST['post_id']) && check_admin_referer('rbfw_nonce_action', 'rbfw_n
                     <ul class="rbfw-ul">
                         <li class="duration-costing rbfw-cond">
                             <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce'))) ?>
-                            <?php echo esc_html(wc_price($duration_cost)); ?>
+                            <?php echo wp_kses(wc_price($duration_cost), rbfw_allowed_html()); ?>
                         </li>
                         <?php if(!empty($rbfw_extra_service_data)){ ?>
                             <li class="resource-costing rbfw-cond">
                                 <?php echo esc_html($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce'))); ?>
-                                <?php echo esc_html(wc_price(0)); ?>
+                                <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
                             </li>
                         <?php } ?>
                         <li class="subtotal">
                             <?php echo esc_html($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce'))); ?>
-                            <?php echo esc_html(wc_price($duration_cost)); ?>
+                            <?php echo wp_kses(wc_price($duration_cost) , rbfw_allowed_html()); ?>
                         </li>
                         <?php
                         $security_deposit = rbfw_security_deposit($id,$duration_cost);
@@ -163,7 +163,7 @@ if (isset($_POST['post_id']) && check_admin_referer('rbfw_nonce_action', 'rbfw_n
                         if($security_deposit['security_deposit_desc']){ ?>
                             <li class="subtotal">
                                 <?php echo esc_html((!empty(get_post_meta($id, 'rbfw_security_deposit_label', true)) ? get_post_meta($id, 'rbfw_security_deposit_label', true) : 'Security Deposit')); ?>
-                                <?php echo esc_html(wc_price($security_deposit['security_deposit_amount'])); ?>
+                                <?php echo wp_kses(wc_price($security_deposit['security_deposit_amount']) , rbfw_allowed_html()); ?>
                             </li>
                         <?php }
 
@@ -172,7 +172,7 @@ if (isset($_POST['post_id']) && check_admin_referer('rbfw_nonce_action', 'rbfw_n
                         ?>
                         <li class="total">
                             <strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce'))); ?></strong>
-                            <?php echo esc_html(wc_price($total_price)); ?>
+                            <?php echo wp_kses(wc_price($total_price) , rbfw_allowed_html()); ?>
                         </li>
                     </ul>
                     <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>

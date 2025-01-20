@@ -95,7 +95,7 @@ if(isset($post_id) && isset($active_tab)){
         </td>
             <td><?php echo esc_html($img); ?></td>
             <td>
-                <?php echo esc_html(rbfw_mps_price($price)); ?>
+                <?php echo wp_kses(wc_price($price) , rbfw_allowed_html()); ?>
                 <input type="hidden" name="rbfw_room_info[<?php echo esc_html($i); ?>][room_price]" value="<?php echo esc_html($price); ?>"/>
               </td>
             <td>
@@ -166,7 +166,7 @@ if(isset($post_id) && isset($active_tab)){
                                     <?php echo esc_html($img); ?>
                                 </td>
                                 <td>
-                                    <?php echo esc_html(rbfw_mps_price($value['service_price'])); ?>
+                                    <?php echo wp_kses(wc_price($value['service_price']) , rbfw_allowed_html()); ?>
                                     <input type="hidden" name="rbfw_service_info[<?php echo  esc_html($c); ?>][service_price]" value="<?php echo esc_html($value['service_price']); ?>"/>
                                 </td>
                                 <td>

@@ -538,7 +538,7 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                             </div>
                         </div>';
 
-                echo esc_html($content);
+                echo wp_kses($content, rbfw_allowed_html());
 
             }else{
                 esc_html_e('Something is wrong! Please try again.','booking-and-rental-manager-for-woocommerce');

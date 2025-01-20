@@ -178,7 +178,7 @@
                                 <a href="<?php echo esc_url( $post_link ); ?>"><?php echo esc_html( $post_title ); ?></a>
                             </h2>
                             <div class="rbfw_rent_list_grid_row rbfw_pricing-box">
-                                <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo esc_html( rbfw_mps_price( $price ) ); ?></span></p>
+                                <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo wp_kses( wc_price( $price ) , rbfw_allowed_html()); ?></span></p>
                                 <span class="rbfw_rent_list_row_price_level">/ <?php echo esc_html( $price_level ); ?></span>
                             </div>
                         </div>

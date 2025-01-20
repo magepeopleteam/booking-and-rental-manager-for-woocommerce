@@ -171,7 +171,7 @@ if(isset($_POST['post_id'])){
                                     </td>
 
                                     <td class="w_30_pc">
-                                        <span class="rbfw_bikecarsd_type_price"><?php echo wp_kses(rbfw_mps_price($value['price']),rbfw_allowed_html()); ?></span>
+                                        <span class="rbfw_bikecarsd_type_price"><?php echo wp_kses(wc_price($value['price']),rbfw_allowed_html()); ?></span>
                                     </td>
                                     <input type="hidden" name="rbfw_bikecarsd_info[<?php echo esc_html($i); ?>][price]" value="<?php echo esc_html($value['price']); ?>"/>
                                     <td class="w_20_pc">
@@ -249,7 +249,7 @@ if(isset($_POST['post_id'])){
                                         </div>
                                     </td>
                                     <td class="w_30_pc">
-                                        <?php echo wp_kses(rbfw_mps_price($value['service_price']),rbfw_allowed_html()); ?>
+                                        <?php echo wp_kses(wc_price($value['service_price']),rbfw_allowed_html()); ?>
                                     </td>
                                     <td class="w_20_pc">
                                         <div class="rbfw_service_price_wrap">

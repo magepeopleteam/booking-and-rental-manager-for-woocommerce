@@ -477,7 +477,7 @@
 										<?php
 											// Trim the content to 14 words
 											$post_content = wp_trim_words( $post_content, 14, '...' );
-											echo esc_html( $post_content )
+											echo wp_kses_post( $post_content )
 										?>
                                     </p>
                                 </div>
