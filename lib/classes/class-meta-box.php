@@ -73,7 +73,7 @@
 
 			public function meta_box_callback( $post_id = null ) {
 				?>
-                <div class="mp_tab_item" data-tab-item="#<?php echo esc_html( $this->get_meta_box_id() ); ?>">
+                <div class="mp_tab_item" data-tab-item="#<?php echo esc_attr( $this->get_meta_box_id() ); ?>">
                     <div class='wrap ppof-settings ppof-metabox'>
 						<?php
 							foreach ( $this->get_panels() as $panelsIndex => $panel ) :

@@ -106,7 +106,7 @@
 		<?php if ( $rbfw_dt_sidebar_switch == 'on' ): ?>
             <div class="rbfw_dt_registration_col1">
 				<?php do_action( 'rbfw_dt_testimonial', $post_id ); ?>
-				<?php echo esc_html( html_entity_decode( $rbfw_dt_sidebar_content ) ); ?>
+				<?php echo wp_kses( html_entity_decode( $rbfw_dt_sidebar_content ) , rbfw_allowed_html()); ?>
             </div>
 		<?php endif; ?>
         <div class="rbfw_dt_registration_col2">

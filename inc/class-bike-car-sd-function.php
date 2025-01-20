@@ -508,7 +508,7 @@
 					}
 					$content .= ' </label>';
 				}
-				echo esc_html( $content );
+				echo wp_kses( $content , rbfw_allowed_html());
 				wp_die();
 			}
 

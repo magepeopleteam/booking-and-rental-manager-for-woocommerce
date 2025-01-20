@@ -48,7 +48,7 @@ exit;*/
 
 do_action('rbfw_single_page_before_wrapper');
 if ( post_password_required() ) {
-    echo esc_html(get_the_password_form()); // WPCS: XSS ok.
+    echo wp_kses(get_the_password_form(),rbfw_allowed_html()); // WPCS: XSS ok.
 } else {
     do_action( 'woocommerce_before_single_product' );
     //include_once( RBFW_Function::get_template($post_id) );

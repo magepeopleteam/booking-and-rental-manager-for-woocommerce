@@ -32,7 +32,7 @@
                 <section class="bg-light mt-5">
                     <div>
                         <label><?php echo esc_html( $title ); ?></label>
-                        <span><?php echo esc_html( $description ); ?></span>
+                        <span><?php echo wp_kses_post( $description ); ?></span>
                     </div>
                 </section>
 				<?php

@@ -60,10 +60,10 @@
                                                     <td><?php echo esc_attr($value['room_type']); ?></td>
 
                                                     <?php if(!empty($value['rbfw_room_daylong_rate'])){ ?>
-                                                        <td style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;"><?php echo esc_html(rbfw_mps_price( $value['rbfw_room_daylong_rate'] )); ?></td>
+                                                        <td style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;"><?php echo wp_kses(wc_price( $value['rbfw_room_daylong_rate'] ),rbfw_allowed_html()); ?></td>
                                                     <?php } ?>
 
-                                                    <td><?php echo esc_html(rbfw_mps_price( $value['rbfw_room_daynight_rate'] )); ?></td>
+                                                    <td><?php echo wp_kses(wc_price( $value['rbfw_room_daynight_rate'] ),rbfw_allowed_html()); ?></td>
                                                 </tr>
                                                 <?php
                                             }

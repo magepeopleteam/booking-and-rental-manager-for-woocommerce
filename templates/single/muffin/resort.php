@@ -86,7 +86,7 @@
 						<?php if ( ! empty( $price ) ) : ?>
                             <div class="rbfw_muff_pricing_card_price">
                                     <span class="rbfw_muff_pricing_card_price_badge">
-                                        <?php echo esc_html( rbfw_mps_price( $price ) ); ?>
+                                        <?php echo wp_kses( wc_price( $price ) , rbfw_allowed_html()); ?>
                                     </span>
                                 <span> / <?php echo esc_html( $prices_start_at ); ?></span>
                             </div>

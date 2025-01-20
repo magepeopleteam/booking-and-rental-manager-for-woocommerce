@@ -91,7 +91,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                     <tr>
                         <th>
                             <?php echo esc_html($room_type); ?>:
-                            <span><?php echo esc_html($room_description); ?></span>
+                            <span><?php echo wp_kses($room_description,rbfw_allowed_html()); ?></span>
                         </th>
                         <td>(<?php echo wp_kses(wc_price($room_price),rbfw_allowed_html()); ?> x <?php echo esc_html($room_qty); ?>) = <?php echo wp_kses(wc_price($total_price),rbfw_allowed_html()); ?></td>
                     </tr>

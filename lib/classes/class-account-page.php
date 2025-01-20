@@ -74,7 +74,7 @@
 
 				ob_start();
 				if ( ! is_user_logged_in() ) {
-					echo esc_html( $this->rbfw_account_signin_signout_form() );
+					echo wp_kses( $this->rbfw_account_signin_signout_form() , rbfw_allowed_html());
 				} else {
 					$ac_page_id      = rbfw_get_option( 'rbfw_account_page', 'rbfw_basic_gen_settings' );
 					$current_page_id = get_queried_object_id();
