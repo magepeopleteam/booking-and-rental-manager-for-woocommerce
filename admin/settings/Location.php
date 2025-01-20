@@ -66,10 +66,10 @@
 
 			public function rbfw_get_location_dropdown( $name, $saved_value = '', $class = '' ){
 				$location_arr = $this->rbfw_get_location_arr();
-				echo esc_html("<select name=$name class=$class>");
+				echo "<select name=".esc_attr($name)." class=".esc_attr($class).">";
 				foreach ( $location_arr as $key => $value ) {
 					$selected_text = ! empty( $saved_value ) && $saved_value == $key ? 'Selected' : '';
-					echo esc_html("<option value='$key' $selected_text>" . esc_html( $value ) . "</option>");
+					echo "<option value=".esc_attr($key) . esc_attr($selected_text).">" . esc_html( $value ) . "</option>";
 				}
 				echo "</select>";
 			}

@@ -339,7 +339,7 @@
 								$view_order_url = get_page_link( $ac_page_id ) . '?view_order=' . $order_id;
 								?>
                                 <tr>
-                                    <td><?php echo esc_html( '#' . $order_id ); ?></td>
+                                    <td><?php echo '#' . esc_html($order_id ); ?></td>
                                     <td><?php echo esc_html( get_the_date( 'F j, Y' ) ) . ' ' . esc_html( get_the_time() ); ?></td>
                                     <td><?php echo esc_html( $status ); ?></td>
                                     <td><?php echo wp_kses_post( $total_cost ); ?></td>

@@ -258,9 +258,9 @@ function fetch_order_details_callback() {
                                         echo '<tr>';
                                         echo '<td>' . esc_html($item['name']) . '</td>';
                                         if ($item['service_price_type'] == 'day_wise') {
-                                            echo esc_html('<td>(' . wc_price(($item['price'])) . ' x ' . $item['quantity'] . ' x ' . $ticket_info['total_days'] . ' = ' . wc_price($item['price'] * $item['quantity'] * $ticket_info['total_days']) . ')</td>');
+                                            echo '<td>(' . wp_kses(wc_price($item['price']),rbfw_allowed_html()) . ' x ' . esc_html($item['quantity']) . ' x ' . esc_html($ticket_info['total_days']) . ' = ' . wp_kses(wc_price($item['price'] * $item['quantity'] * $ticket_info['total_days']),rbfw_allowed_html()) . ')</td>';
                                         } else {
-                                            echo esc_html('<td>(' . wc_price(esc_html($item['price'])) . ' x ' . esc_html($item['quantity']) . ' = ' . wc_price($item['price'] * $item['quantity']) . ')</td>');
+                                            echo '<td>(' . wp_kses(wc_price($item['price'])) . ' x ' . esc_html($item['quantity']) . ' = ' . wp_kses(wc_price($item['price'] * $item['quantity']),rbfw_allowed_html()) . ')</td>';
                                         }
                                         echo '</tr>';
                                     }
@@ -378,7 +378,7 @@ function rbfw_order_meta_box_callback(){
     ?>
     <div class="rbfw_order_meta_box_wrap">
         <div class="rbfw_order_meta_box_head">
-            <h1><?php echo esc_html( 'Order #' .$order_no. ' Details'); ?></h1>
+            <h1><?php echo 'Order #' .esc_html($order_no). ' Details'; ?></h1>
         </div>
         <div class="rbfw_order_meta_box_body">
             <table class="wp-list-table widefat fixed striped table-view-list">
@@ -700,9 +700,9 @@ function rbfw_order_meta_box_callback(){
                                                             <td>
                                                                 <?php
                                                                 if($item['service_price_type']=='day_wise'){
-                                                                    echo esc_html('('.wc_price($item['price']). 'x'. $item['quantity'] . 'x' .$total_days .'='.wc_price($item['price'] * $item['quantity'] * $total_days).')');
+                                                                    echo '('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) . 'x' .esc_html($total_days) .'='.wp_kses(wc_price($item['price'] * $item['quantity'] * $total_days),rbfw_allowed_html()).')';
                                                                 }else{
-                                                                    echo esc_html('('.wc_price(esc_html($item['price'])). 'x'. esc_html($item['quantity']) .'='.wc_price($item['price']*$item['quantity']).')');
+                                                                    echo '('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) .'='.wp_kses(wc_price($item['price'] * $item['quantity']),rbfw_allowed_html()).')';
                                                                 }
                                                                 ?>
                                                             </td>
