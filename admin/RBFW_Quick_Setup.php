@@ -15,7 +15,7 @@ function rbfw_quick_setup_exit(){
     }
 }
 
-if (!class_exists('TTBM_Quick_Setup')) {
+if (!class_exists('RBFW_Quick_Setup')) {
     class RBFW_Quick_Setup {
 
         public function __construct() {
@@ -270,7 +270,7 @@ if (!class_exists('TTBM_Quick_Setup')) {
             ?>
             <div data-tabs-next="#ttbm_qs_done">
                 <h2><?php esc_html_e('Finalize Setup', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
-                <p class="mTB_xs"><?php esc_html_e('You are about to Finish & Save Tour Booking Manager For Woocommerce Plugin setup process', 'booking-and-rental-manager-for-woocommerce'); ?></p>
+                <p class="mTB_xs"><?php esc_html_e('You are about to Finish & Save Booking and Reantal Manager For Woocommerce Plugin setup process', 'booking-and-rental-manager-for-woocommerce'); ?></p>
                 <div class="mT allCenter">
                     <button type="submit" name="finish_quick_setup" class="themeButton"><?php esc_html_e('Finish & Save', 'booking-and-rental-manager-for-woocommerce'); ?></button>
                 </div>
