@@ -1,5 +1,6 @@
 #{$main-selector}{
     .mep-faq-section{
+        display: block;
         .mep-faq-items{
             margin-bottom: 20px;
             .faq-header{
@@ -16,8 +17,8 @@
                     z-index:1;
                     span{
                         padding: 5px 10px;
-                        background-color: var(--mpev-light);
-                        color: var(--mpev-primary);
+                        background-color: var(--mage-light);
+                        color: var(--mage-primary);
                         border-radius: 2px;
                     }
                 }

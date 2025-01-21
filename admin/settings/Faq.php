@@ -48,10 +48,10 @@ if( ! class_exists('RBFW_Faq_Settings')){
         }
         
         public function faq_tab_content($post_id) {
-            $faq_description = get_post_meta($post_id,'mep_faq_description',true);
-            $faq_description = $faq_description?$faq_description:'';
+            $enable_faq = get_post_meta($post_id,'rbfw_enable_faq_content',true);
+            $enable_faq = $enable_faq?$enable_faq:'yes';
             ?>
-            <div class="mp_tab_item" data-tab-item="#rbfw_event_faq_meta">
+            <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_event_faq_meta">
                 
                 <h2 class="mp_tab_item_title"><?php esc_html_e('FAQ Settings', 'mage-eventpress'); ?></h2>
                 <p class="mp_tab_item_description"><?php esc_html_e('FAQ Settings will be here.', 'mage-eventpress'); ?></p>
@@ -61,7 +61,16 @@ if( ! class_exists('RBFW_Faq_Settings')){
                         <span><?php esc_html_e('FAQ Settings', 'mage-eventpress'); ?></span>
                     </div>
                 </section>
-
+                <section>
+                    <div>
+                        <label><?php esc_html_e('FAQ Settings Enable', 'mage-eventpress'); ?></label>
+                        <span><?php esc_html_e('FAQ Settings Enable', 'mage-eventpress'); ?></span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" name="rbfw_enable_faq_content" value="<?php echo esc_attr( ( $enable_faq == 'yes' ) ? $enable_faq : 'no' ); ?>" <?php echo esc_attr( ( $enable_faq == 'yes' ) ? 'checked' : '' ); ?>>
+                        <span class="slider round"></span>
+                    </label>
+                </section>
                 <section class="mep-faq-section">
                     <div class="mep-faq-items mB">
                         <?php 
@@ -113,23 +122,23 @@ if( ! class_exists('RBFW_Faq_Settings')){
         }
 
         public function show_faq_data($post_id){
-            $mep_faq = get_post_meta($post_id,'rbfw_faq',true);
+            $mep_faq = get_post_meta($post_id,'mep_event_faq',true);
             if( ! empty($mep_faq)):
                 foreach ($mep_faq as $key => $value) : 
                     ?>
                         <div class="mep-faq-item" data-id="<?php echo esc_attr($key); ?>">
                             <section class="faq-header" data-collapse-target="#faq-content-<?php echo esc_attr($key); ?>">
-                                <label class="label">
-                                    <p><?php echo esc_html($value['mep_faq_title']); ?></p>
+                                <div>
+                                    <p><?php echo esc_html($value['rbfw_faq_title']); ?></p>
                                     <div class="faq-action">
                                         <span class="" ><i class="fas fa-eye"></i></span>
                                         <span class="mep-faq-item-edit" data-modal="mep-faq-item-new" ><i class="fas fa-edit"></i></span>
                                         <span class="mep-faq-item-delete"><i class="fas fa-trash"></i></span>
                                     </div>
-                                </label>
+                                </div>
                             </section>
                             <section class="faq-content mB" data-collapse="#faq-content-<?php echo esc_attr($key); ?>">
-                                <?php echo wpautop(wp_kses_post($value['mep_faq_content'])); ?>
+                                <?php echo wpautop(wp_kses_post($value['rbfw_faq_content'])); ?>
                             </section>
                         </div>
                     <?php

@@ -16,6 +16,9 @@
   --mage-red:#d91e1e;
 }
 
+#rbfw_add_meta_box .mep-faq-section {
+  display: block;
+}
 #rbfw_add_meta_box .mep-faq-section .mep-faq-items {
   margin-bottom: 20px;
 }
@@ -35,8 +38,8 @@
 }
 #rbfw_add_meta_box .mep-faq-section .mep-faq-items .faq-header .faq-action span {
   padding: 5px 10px;
-  background-color: var(--mpev-light);
-  color: var(--mpev-primary);
+  background-color: var(--mage-light);
+  color: var(--mage-primary);
   border-radius: 2px;
 }
 #rbfw_add_meta_box .mep-faq-section .mep-faq-items .faq-content {

@@ -152,11 +152,11 @@
                 var status = jQuery(this).val();
                 if (status == 'yes') {
                     jQuery(this).val('no');
-                    jQuery('.rbfw-faq-content-wrapper-main,.rbfw_faq_content_btn_wrap').slideUp().removeClass('show').addClass('hide');
+                    jQuery('.mep-faq-section').slideUp().removeClass('show').addClass('hide');
                 }
                 if (status == 'no') {
                     jQuery(this).val('yes');
-                    jQuery('.rbfw-faq-content-wrapper-main,.rbfw_faq_content_btn_wrap').slideDown().removeClass('hide').addClass('show');
+                    jQuery('.mep-faq-section').slideDown().removeClass('hide').addClass('show');
                 }
             });
 
