@@ -63,6 +63,7 @@
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
+				'data-price' => true, // Allows inline JavaScript
 			),
 			'section' => array(
 				'style'   => true, // Allows inline styles
