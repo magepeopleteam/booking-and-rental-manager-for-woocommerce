@@ -1,6 +1,6 @@
 <?php
 global $rbfw;
-if ( !isset($_POST['rbfw_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_nonce'])), 'rbfw_action') ) {
+if ( !isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action') ) {
     wp_die('Nonce verification failed.');
 }
 

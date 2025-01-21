@@ -427,6 +427,19 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
 
             if(isset($_POST['checkin_date']) && isset($_POST['checkout_date'])) {
 
+                $rules = [
+                    'name'        => 'sanitize_text_field',
+                    'email'       => 'sanitize_email',
+                    'age'         => 'absint',
+                    'preferences' => [
+                        'color'         => 'sanitize_text_field',
+                        'notifications' => function ( $value ) {
+                            return $value === 'yes' ? 'yes' : 'no';
+                        }
+                    ]
+                ];
+                $input_data_sabitized = sanitize_post_array( $_POST, $rules );
+
                 global $rbfw;
                 $content = '';
                 $checkin_date = isset($_POST['checkin_date'])?sanitize_text_field(wp_unslash($_POST['checkin_date'])):'';
@@ -436,8 +449,8 @@ if ( ! class_exists( 'RBFW_Resort_Function' ) ) {
                 $target = date_create($checkout_date);
                 $interval = date_diff($origin, $target);
                 $total_days = $interval->format('%a');
-                $room_price_arr = isset($_POST['room_price_arr'])?RBFW_Function::data_sanitize(sanitize_text_field(wp_unslash($_POST['room_price_arr']))):[];
-                $service_price_arr = isset($_POST['service_price_arr']) ? RBFW_Function::data_sanitize(sanitize_text_field(wp_unslash($_POST['service_price_arr']))) : [];
+                $room_price_arr = isset($input_data_sabitized['room_price_arr'])? $input_data_sabitized['room_price_arr']:[];
+                $service_price_arr = isset($input_data_sabitized['service_price_arr']) ? $input_data_sabitized['service_price_arr'] : [];
                 $room_price = 0;
                 $service_price = 0;
                 $total_room_price = 0;

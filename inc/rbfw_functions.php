@@ -15,6 +15,7 @@
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
+				'data-step' => true, // Allows inline JavaScript
 			),
 			'table'   => array(
                 'class' => true,
@@ -63,6 +64,7 @@
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
+				'data-price' => true, // Allows inline JavaScript
 			),
 			'section' => array(
 				'style'   => true, // Allows inline styles
@@ -74,6 +76,9 @@
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
+				'data-request' => true, // Allows inline JavaScript
+				'data-date' => true, // Allows inline JavaScript
+				'data-id' => true, // Allows inline JavaScript
 			),
 			'input'   => array(
 				'style'       => true, // Allows inline styles
