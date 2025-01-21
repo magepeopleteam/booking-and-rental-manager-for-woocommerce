@@ -1,7 +1,9 @@
 <?php
 global $rbfw;
-
-if (isset($_POST['post_id']) && check_admin_referer('rbfw_nonce_action', 'rbfw_nonce_field')) { // Nonce verification
+if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
+    return;
+}
+ // Nonce verification
     $id = isset($_POST['post_id']) ? intval(wp_unslash($_POST['post_id'])) : 0;
     $service_price = isset($_POST['service_price']) ? sanitize_text_field(wp_unslash($_POST['service_price'])) : '';
     $start_date = isset($_POST['rbfw_bikecarsd_selected_date']) ? sanitize_text_field(wp_unslash($_POST['rbfw_bikecarsd_selected_date'])) : '';
@@ -189,4 +191,3 @@ if (isset($_POST['post_id']) && check_admin_referer('rbfw_nonce_action', 'rbfw_n
         ?>
     </div>
     
-<?php } ?>

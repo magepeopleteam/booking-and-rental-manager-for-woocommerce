@@ -491,7 +491,7 @@ function rbfw_order_meta_box_callback(){
                     $rent_type = $ticket_info['rbfw_rent_type'];
 
                     $rbfw_start_datetime = rbfw_get_datetime($ticket_info['rbfw_start_datetime'], 'date-time-text');
-                    $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-time-text');
+                    $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime']??'', 'date-time-text');
 
                     $tax = !empty($ticket_info['rbfw_mps_tax']) ? $ticket_info['rbfw_mps_tax'] : 0;
                     $tax_status = '';
