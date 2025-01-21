@@ -125,7 +125,7 @@
 																	$title              = $service['title'];
 																	$price              = $service['price'];
 																	$stock_quantity     = isset( $service['stock_quantity'] ) ? $service['stock_quantity'] : '';
-																	$service_price_type = $service['service_price_type'];
+																	$service_price_type = $service['service_price_type']??'';
 																	?>
                                                                     <div class="item">
                                                                         <a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="<?php echo esc_attr( $c ); ?>"><i class="fas fa-circle-plus"></i> <?php echo esc_html__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
