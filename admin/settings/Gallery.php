@@ -47,60 +47,80 @@
                     <?php $this->section_header(); ?>
                     <?php $this->panel_header('Gallery ','Please upload gallary images size in ratio 4:3. Ex: Image size width=1200px and height=900px. gallery and feature image should be in same size.'); ?>
 					<section>
-					<div  id="field-wrapper-<?php echo esc_attr($post_id); ?>" class="<?php if(!empty($depends)) echo 'dependency-field'; ?> field-wrapper field-media-multi-wrapper field-media-multi-wrapper-<?php echo esc_attr($post_id); ?>">
-						<div class='button upload' id='media_upload_<?php echo esc_attr($post_id); ?>'>
-								<?php echo esc_html__('Upload','booking-and-rental-manager-for-woocommerce');?>
-							</div>
-							<div class='button clear' id='media_clear_<?php echo esc_attr($post_id); ?>'>
-								<?php echo esc_html__('Clear','booking-and-rental-manager-for-woocommerce');?>
-							</div>
-							<div class="gallery-images media-list-<?php echo esc_attr($post_id); ?> ">
-								<?php
-								$gallery_images = get_post_meta($post_id,'rbfw_gallery_images',true);
-								$gallery_images = $gallery_images ? $gallery_images : [];
+							<div 
+								id="field-wrapper-<?php echo esc_attr( $post_id ); ?>" 
+								class="<?php echo !empty( $depends ) ? esc_attr( 'dependency-field ' ) : ''; ?>field-wrapper field-media-multi-wrapper field-media-multi-wrapper-<?php echo esc_attr( $post_id ); ?>">
 								
-								if(!empty($gallery_images) && is_array($gallery_images)):
-									foreach ($gallery_images as $image ):
-										$media_url	= wp_get_attachment_url( $image );
-										$media_type	= get_post_mime_type( $image );
-										$media_title= get_the_title( $image );
-										?>
-										<div class=" gallery-image">
-											<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>
-											
-											<img id='media_preview_<?php echo esc_attr($post_id); ?>' src='<?php echo esc_attr($media_url); ?>' />
-											<input type='hidden' name='rbfw_gallery_images[]' value='<?php echo esc_attr($image); ?>' />
-										</div>
+								<div class='button upload' id='media_upload_<?php echo esc_attr( $post_id ); ?>'>
+									<?php echo esc_html__( 'Upload', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								</div>
+								<div class='button clear' id='media_clear_<?php echo esc_attr( $post_id ); ?>'>
+									<?php echo esc_html__( 'Clear', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								</div>
+								
+								<div class="gallery-images media-list-<?php echo esc_attr( $post_id ); ?>">
 									<?php
-									endforeach;
-								endif;
-								?>
+									$gallery_images = get_post_meta( $post_id, 'rbfw_gallery_images', true );
+									$gallery_images = $gallery_images ? $gallery_images : [];
+
+									if ( !empty( $gallery_images ) && is_array( $gallery_images ) ) :
+										foreach ( $gallery_images as $image ) :
+											$media_url  = wp_get_attachment_url( $image );
+											$media_type = get_post_mime_type( $image );
+											$media_title = get_the_title( $image );
+											?>
+											<div class="gallery-image">
+												<span 
+													class="remove" 
+													onclick="<?php echo esc_js( 'jQuery(this).parent().remove()' ); ?>">
+													<i class="fas fa-trash-can"></i>
+												</span>
+												
+												<img 
+													id="media_preview_<?php echo esc_attr( $post_id ); ?>" 
+													src="<?php echo esc_url( $media_url ); ?>" 
+													alt="<?php echo esc_attr( $media_title ); ?>" />
+												
+												<input 
+													type="hidden" 
+													name="rbfw_gallery_images[]" 
+													value="<?php echo esc_attr( $image ); ?>" />
+											</div>
+											<?php
+										endforeach;
+									endif;
+									?>
+								</div>
 							</div>
-						</div>
-					</section>
-					<script>
-						jQuery(document).ready(function($){
-							$('#media_upload_<?php echo esc_attr($post_id); ?>').click(function() {
-								//var send_attachment_bkp = wp.media.editor.send.attachment;
-								wp.media.editor.send.attachment = function(props, attachment) {
-									attachment_id = attachment.id;
-									attachment_url = attachment.url;
-									html = '<div class=" gallery-image">';
-									html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>';
-									html += '<img src="'+attachment_url+'" style="width:100%"/>';
-									html += '<input type="hidden" name="rbfw_gallery_images[]" value="'+attachment_id+'" />';
-									html += '</div>';
-									$('.media-list-<?php echo esc_attr($post_id); ?>').append(html);
-									//wp.media.editor.send.attachment = send_attachment_bkp;
-								}
-								wp.media.editor.open($(this));
-								return false;
-							});
-							$('#media_clear_<?php echo esc_attr($post_id); ?>').click(function() {
-								$('.media-list-<?php echo esc_attr($post_id); ?> .gallery-image').remove();
-							})
-						});
-					</script>
+						</section>
+						<script>
+								jQuery(document).ready(function($) {
+									$('#media_upload_<?php echo esc_attr($post_id); ?>').click(function() {
+										wp.media.editor.send.attachment = function(props, attachment) {
+											var attachment_id = '<?php echo absint($image_id); ?>'; // Ensure this is sanitized in PHP
+											var attachment_url = '<?php echo esc_url($attachment_url); ?>'; // Ensure this is sanitized in PHP
+
+											var html = '<div class="gallery-image">';
+											html += '<span class="remove"><i class="fas fa-trash-can"></i></span>';
+											html += '<img src="' + attachment_url + '" style="width:100%"/>';
+											html += '<input type="hidden" name="rbfw_gallery_images[]" value="' + attachment_id + '" />';
+											html += '</div>';
+											$('.media-list-<?php echo esc_attr($post_id); ?>').append(html);
+										};
+										wp.media.editor.open($(this));
+										return false;
+									});
+
+									$('#media_clear_<?php echo esc_attr($post_id); ?>').click(function() {
+										$('.media-list-<?php echo esc_attr($post_id); ?> .gallery-image').remove();
+									});
+
+									// Delegated click handler for dynamically added remove buttons
+									$('.media-list-<?php echo esc_attr($post_id); ?>').on('click', '.remove', function() {
+										$(this).parent().remove();
+									});
+								});
+							</script>
                 </div>
             <?php 
             }

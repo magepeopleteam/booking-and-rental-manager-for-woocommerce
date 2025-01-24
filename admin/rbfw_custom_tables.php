@@ -14,19 +14,28 @@ function rbfw_custom_tables(){
         return $defaults;
     } );
     // Handle the value for each of the new columns.
-    add_action( "manage_{$post_type}_posts_custom_column", function ( $column_name, $post_id ) {
-        if ( $column_name == 'Categories' ) {
-            $categories = implode(', ', get_post_meta($post_id,'rbfw_categories',true));
-            if($categories){
-                echo esc_html($categories);
-            }else{
-                echo '-';
+    add_action("manage_{$post_type}_posts_custom_column", function ($column_name, $post_id) {
+        if ($column_name == 'Categories') {
+            $categories = get_post_meta($post_id, 'rbfw_categories', true);
+
+            // Ensure $categories is an array before processing
+            if (is_array($categories)) {
+                $categories = implode(', ', $categories);
+            } else {
+                $categories = ''; // Fallback if not an array
             }
+
+            // Output the escaped value or fallback
+            echo !empty($categories) ? esc_html($categories) : '-';
         }
-        if ( $column_name == 'Type' ) {
-            echo esc_html(get_post_meta($post_id,'rbfw_item_type',true));
+
+        if ($column_name == 'Type') {
+            $item_type = get_post_meta($post_id, 'rbfw_item_type', true);
+
+            // Ensure $item_type is a string and output it
+            echo !empty($item_type) ? esc_html($item_type) : '-';
         }
-    }, 10, 2 );
+    }, 10, 2);
 
 }
 

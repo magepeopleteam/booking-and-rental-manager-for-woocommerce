@@ -32,7 +32,7 @@
                 <section class="bg-light mt-5">
                     <div>
                         <label><?php echo esc_html( $title ); ?></label>
-                        <span><?php echo wp_kses_post( $description ); ?></span>
+                        <span><?php echo esc_html( $description ); ?></span>
                     </div>
                 </section>
 				<?php
@@ -53,9 +53,15 @@
                     <select name="rdfw_available_time[]" id="rdfw_available_time" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
 						<?php foreach ( $rbfw_time_slots as $key => $value ): ?>
 							<?php if ( get_the_title( $post_id ) == 'Auto Draft' ) { ?>
-                                <option selected value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_attr( $key ); ?> </option>
+                                <option selected value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> 
+                                    <?php echo esc_html( $key ); ?> 
+                                </option>
+
 							<?php } else { ?>
-                                <option <?php echo esc_attr( in_array( gmdate( 'H:i', strtotime( $value ) ), $rdfw_available_time_update ) ) ? 'selected' : '' ?> value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?> </option>
+                                <option <?php echo esc_attr( in_array( gmdate( 'H:i', strtotime( $value ) ), $rdfw_available_time_update ) ) ? 'selected' : ''; ?> 
+                                        value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> 
+                                    <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?> 
+                                </option>
 							<?php } ?>
 						<?php endforeach; ?>
                     </select>
@@ -73,13 +79,18 @@
 				}
 				?>
                 <select name="rbfw_particulars[<?php echo esc_attr( $index ); ?>][available_time][]" multiple class="select2-hidden-accessible">
-					<?php foreach ( $rbfw_time_slots as $key => $value ): ?>
-						<?php if ( get_the_title( $post_id ) == 'Auto Draft' ) { ?>
-                            <option selected value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_attr( $key ); ?> </option>
-						<?php } else { ?>
-                            <option <?php echo esc_attr( in_array( gmdate( 'H:i', strtotime( $value ) ), $rdfw_available_time_update ) ) ? 'selected' : '' ?> value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?> </option>
-						<?php } ?>
-					<?php endforeach; ?>
+                    <?php foreach ( $rbfw_time_slots as $key => $value ): ?>
+                        <?php if ( get_the_title( $post_id ) == 'Auto Draft' ) { ?>
+                            <option selected value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> 
+                                <?php echo esc_html( $key ); ?> 
+                            </option>
+                        <?php } else { ?>
+                            <option <?php echo esc_attr( in_array( gmdate( 'H:i', strtotime( $value ) ), $rdfw_available_time_update ) ) ? 'selected' : ''; ?> 
+                                    value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> 
+                                <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?> 
+                            </option>
+                        <?php } ?>
+                    <?php endforeach; ?>
                 </select>
 				<?php
 			}
@@ -90,12 +101,14 @@
 					<?php $this->section_header(); ?>
 					<?php $this->panel_header( 'Date & Time Settings', 'Here you can set Date & Time' ); ?>
                     <section>
-                        <div>
-                            <label>
-								<?php echo esc_html__( 'Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </label>
-                            <span><?php echo esc_html__( 'It enables/disables the time slot for Bike/Car Single Day and Appointment rent type.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                        </div>
+                    <div>
+                        <label>
+                            <?php echo esc_html__( 'Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </label>
+                        <span>
+                            <?php echo esc_html__( 'It enables/disables the time slot for Bike/Car Single Day and Appointment rent type.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </span>
+                    </div>
 						<?php $rbfw_time_slot_switch = get_post_meta( $post_id, 'rbfw_time_slot_switch', true ) ? get_post_meta( $post_id, 'rbfw_time_slot_switch', true ) : 'off'; ?>
                         <label class="switch">
                             <input type="checkbox" name="rbfw_time_slot_switch" value="<?php echo esc_attr( ( $rbfw_time_slot_switch == 'on' ) ? $rbfw_time_slot_switch : 'off' ); ?>" <?php echo esc_attr( ( $rbfw_time_slot_switch == 'on' ) ? 'checked' : '' ); ?>>
@@ -107,12 +120,12 @@
                         <section>
                             <div>
                                 <label>
-									<?php esc_html_e( 'Available Time Slot', 'booking-and-rental-manager-for-woocommerce' ) ?>
+                                    <?php esc_html_e( 'Available Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </label>
-                                <span><?php esc_html_e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
+                                <span><?php esc_html_e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
                             <div class="w-70">
-								<?php $this->multiple_time_slot_select( $post_id ); ?>
+                                <?php $this->multiple_time_slot_select( $post_id ); ?>
                             </div>
                         </section>
                     </div>
@@ -154,11 +167,15 @@
                     <section>
                         <div>
                             <label>
-								<?php echo esc_html__( 'Particular date time slots', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                <?php echo esc_html__( 'Particular date time slots', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
                             <span><?php echo esc_html__( 'It enables/disables the particulars for selection.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                         </div>
-						<?php $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off'; ?>
+                        <?php 
+                            // Sanitizing the value to ensure only 'on' or 'off' are used
+                            $rbfw_particular_switch = sanitize_text_field( get_post_meta( $post_id, 'rbfw_particular_switch', true ) );
+                            $rbfw_particular_switch = ( $rbfw_particular_switch === 'on' ) ? 'on' : 'off'; 
+                        ?>
                         <label class="switch">
                             <input type="checkbox" name="rbfw_particular_switch" value="<?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? $rbfw_particular_switch : 'off' ); ?>" <?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'checked' : '' ); ?>>
                             <span class="slider round"></span>
@@ -166,40 +183,40 @@
                     </section>
                     <!-- Multiple Particular Section -->
                     <div class="available-particular <?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'show' : 'hide' ); ?>">
-                        <section>
-                            <table class="form-table" id="particulars-table">
-                                <tr>
-                                    <th><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                    <th><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                    <th><?php esc_html_e( 'Available Time Slots', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                    <th><?php esc_html_e( 'Actions', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                </tr>
-								<?php foreach ( $particulars_data as $index => $particular ): ?>
-                                    <tr class="particular-row">
-                                        <td>
-                                            <input type="text" name="rbfw_particulars[<?php echo esc_attr( $index ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
-                                        </td>
-                                        <td>
-                                            <input type="text" name="rbfw_particulars[<?php echo esc_attr( $index ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
-                                        </td>
-                                        <td>
-                                            <div class="w-100">
-												<?php
-													$available_times = isset( $particular['available_time'] ) ? $particular['available_time'] : [];
-													$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
-													$this->multiple_time_slot_select_for_particular_date( $rbfw_time_slots, $available_times, $index, $post_id );
-												?>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <button type="button" class="remove-row button"><?php echo esc_html__( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-                                        </td>
+                            <section>
+                                <table class="form-table" id="particulars-table">
+                                    <tr>
+                                        <th><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                        <th><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                        <th><?php esc_html_e( 'Available Time Slots', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                        <th><?php esc_html_e( 'Actions', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                     </tr>
-								<?php endforeach; ?>
-                            </table>
-                        </section>
-                        <button type="button" id="add-particular-row" class="button ss"><?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-                    </div>
+                                    <?php foreach ( $particulars_data as $index => $particular ): ?>
+                                        <tr class="particular-row">
+                                            <td>
+                                                <input type="text" name="rbfw_particulars[<?php echo esc_attr( $index ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
+                                            </td>
+                                            <td>
+                                                <input type="text" name="rbfw_particulars[<?php echo esc_attr( $index ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
+                                            </td>
+                                            <td>
+                                                <div class="w-100">
+                                                    <?php
+                                                        $available_times = isset( $particular['available_time'] ) ? $particular['available_time'] : [];
+                                                        $rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
+                                                        $this->multiple_time_slot_select_for_particular_date( $rbfw_time_slots, $available_times, $index, $post_id );
+                                                    ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="remove-row button"><?php echo esc_html__( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </table>
+                            </section>
+                            <button type="button" id="add-particular-row" class="button ss"><?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                        </div>
                 </div>
                 <script>
                     jQuery(document).ready(function ($) {

@@ -39,10 +39,13 @@ if( ! class_exists('RBFW_Custom_Post')){
                     endforeach;
                 break;
                 case 'rbfw_categories':
-                    $cats = get_post_meta($post_id,'rbfw_categories',true);
-                    if ( ! empty($cats) ) {
+                    $cats = get_post_meta($post_id, 'rbfw_categories', true);
+                    $cats = is_array($cats) ? $cats : [];
+
+                    if (!empty($cats)) {
                         foreach ($cats as $key => $cat) {
-                            echo "<a href='edit.php?post_type=rbfw_item&rbfw_categories=".esc_attr($cat)."'>".esc_html($cat)."</a>";
+                            $url = esc_url("edit.php?post_type=rbfw_item&rbfw_categories=$cat");
+                            echo "<a href='{$url}'>" . esc_html($cat) . "</a>";
                             if ($key !== count($cats) - 1) {
                                 echo ', ';
                             }

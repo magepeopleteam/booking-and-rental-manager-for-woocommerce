@@ -87,8 +87,8 @@
 											foreach ( $all_images as $image ) {
 												?>
                                                 <div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
-                                                    <img src="<?php echo esc_attr( wp_get_attachment_image_url( $image, 'medium' ) ) ?>" alt="<?php echo esc_attr( $image ); ?>'"/>
-                                                </div>
+													<img src="<?php echo esc_url( wp_get_attachment_image_url( $image, 'medium' ) ); ?>" alt="<?php echo esc_attr( get_the_title( $image ) ); ?>" />
+												</div>
 												<?php
 											}
 										}
@@ -113,7 +113,7 @@
                                     <input type="text" class="formControl rbfw_faq_title_input" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
                                 </div>
                                 <div class="rbfw_multi_image_area">
-                                    <input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php echo esc_attr( $images ); ?>"/>
+								<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php echo esc_attr( $images ); ?>"/>
                                     <div class="rbfw_multi_image rbfw_faq_img">
 										<?php
 											$all_images = explode( ',', $images );
@@ -121,9 +121,9 @@
 												foreach ( $all_images as $image ) {
 													?>
                                                     <div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
-                                                        <span class="rbfw_close_multi_image_item"><i class="fas fa-trash-can"></i></span>
-                                                        <img src="<?php echo esc_attr( wp_get_attachment_image_url( $image, 'medium' ) ) ?>" alt="<?php echo esc_attr( $image ); ?>'"/>
-                                                    </div>
+														<span class="rbfw_close_multi_image_item"><i class="fas fa-trash-can"></i></span>
+														<img src="<?php echo esc_url( wp_get_attachment_image_url( $image, 'medium' ) ); ?>" alt="<?php echo esc_attr( $image ); ?>"/>
+													</div>
 													<?php
 												}
 												?>
@@ -213,8 +213,8 @@
 										foreach ( $all_images as $image ) {
 											?>
                                             <div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
-                                                <img src="<?php echo esc_attr( wp_get_attachment_image_url( $image, 'medium' ) ) ?>" alt="<?php echo esc_attr( $image ); ?>'"/>
-                                            </div>
+												<img src="<?php echo esc_attr( wp_get_attachment_image_url( $image, 'medium' ) ); ?>" alt="<?php echo esc_attr( get_the_title( $image ) ); ?>"/>
+											</div>
 											<?php
 										}
 									}
@@ -238,35 +238,35 @@
                                     <input type="text" class="formControl rbfw_faq_title_input" name="<?php echo esc_attr( $title_name ); ?>[]" value="<?php echo esc_attr( $title_value ); ?>"/>
                                 </div>
                                 <div class="rbfw_multi_image_area">
-                                    <input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php echo esc_attr( $images ); ?>"/>
-                                    <div class="rbfw_multi_image rbfw_faq_img">
-										<?php
-											$all_images = explode( ',', $images );
-											if ( $images && sizeof( $all_images ) > 0 ) {
-												foreach ( $all_images as $image ) {
-													?>
-                                                    <div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
-                                                        <span class="rbfw_close_multi_image_item"><i class="fas fa-trash-can"></i></span>
-                                                        <img src="<?php echo esc_html( wp_get_attachment_image_url( $image, 'medium' ) ) ?>" alt="<?php echo esc_attr( $image ); ?>'"/>
-                                                    </div>
-													<?php
-												}
-												?>
-                                                <div class="rbfw_upload_img_notice">
-                                                    <span class="rbfw_upload_img_icon"><i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
-                                                    <span class="rbfw_upload_img_text"><?php esc_html_e( 'Upload your images here', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                                </div>
-												<?php
-											} else {
-												?>
-                                                <div class="rbfw_upload_img_notice">
-                                                    <span class="rbfw_upload_img_icon"><i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
-                                                    <span class="rbfw_upload_img_text"><?php esc_html_e( 'Upload your images here', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                                </div>
-												<?php
-											}
+								<input type="hidden" class="rbfw_multi_image_value" name="<?php echo esc_attr( $image_name ); ?>[]" value="<?php echo esc_attr( $images ); ?>"/>
+								<div class="rbfw_multi_image rbfw_faq_img">
+									<?php
+									$all_images = explode( ',', $images );
+									if ( $images && sizeof( $all_images ) > 0 ) {
+										foreach ( $all_images as $image ) {
+											?>
+											<div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
+												<span class="rbfw_close_multi_image_item"><i class="fas fa-trash-can"></i></span>
+												<img src="<?php echo esc_url( wp_get_attachment_image_url( $image, 'medium' ) ); ?>" alt="<?php echo esc_attr( get_the_title( $image ) ); ?>" />
+											</div>
+											<?php
+										}
 										?>
-                                    </div>
+										<div class="rbfw_upload_img_notice">
+											<span class="rbfw_upload_img_icon"><i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
+											<span class="rbfw_upload_img_text"><?php esc_html_e( 'Upload your images here', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+										</div>
+										<?php
+									} else {
+										?>
+										<div class="rbfw_upload_img_notice">
+											<span class="rbfw_upload_img_icon"><i class="fa fa-cloud-upload" aria-hidden="true"></i></span>
+											<span class="rbfw_upload_img_text"><?php esc_html_e( 'Upload your images here', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+										</div>
+										<?php
+									}
+									?>
+								</div>
                                     <div class="rbfw_faq_img_add_btn_wrap">
                                         <button type="button" class=" add_multi_image ppof-button">
                                             <i class="fas fa-circle-plus"></i>
@@ -355,11 +355,11 @@
 						?>
                     </div>
                     <div class="rbfw_faq_content_btn_wrap <?php echo esc_attr( ( $rbfw_enable_faq_content == 'yes' ) ? 'show' : 'hide' ); ?>">
-                        <button type="button" class="rbfw_add_faq_content ppof-button">
+						<button type="button" class="rbfw_add_faq_content ppof-button">
 							<?php esc_html_e( 'Add FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            <i class="fas fa-spinner fa-pulse"></i>
-                        </button>
-                    </div>
+							<i class="fas fa-spinner fa-pulse"></i>
+						</button>
+					</div>
                 </div>
                 <style>
 					.rbfw-pointer-not-allowed {

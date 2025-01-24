@@ -70,15 +70,23 @@ if (!class_exists('RBFW_Quick_Setup')) {
                     </script>
                     <?php
                 }
-                if (isset($_POST['install_and_active_woo_btn'])) {
+                if (isset($_POST['install_and_active_woo_btn']) && check_admin_referer('install_activate_woo_nonce')) { // Validate nonce
                     echo '<div style="display:none">';
-                    include_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
-                    include_once(ABSPATH . 'wp-admin/includes/file.php');
-                    include_once(ABSPATH . 'wp-admin/includes/misc.php');
-                    include_once(ABSPATH . 'wp-admin/includes/class-wp-upgrader.php');
+                
+                    // Safely include required WordPress files
+                    if (!function_exists('plugins_api')) {
+                        include_once(ABSPATH . 'wp-admin/includes/plugin-install.php');
+                    }
+                    if (!function_exists('get_plugins')) {
+                        include_once(ABSPATH . 'wp-admin/includes/plugin.php');
+                    }
+                    if (!class_exists('Plugin_Upgrader')) {
+                        include_once(ABSPATH . 'wp-admin/includes/class-wp-upgrader.php');
+                    }
+                
                     $plugin = 'woocommerce';
                     $api = plugins_api('plugin_information', array(
-                        'slug' => $plugin,
+                        'slug' => sanitize_key($plugin), // Sanitize slug
                         'fields' => array(
                             'short_description' => false,
                             'sections' => false,
@@ -94,13 +102,31 @@ if (!class_exists('RBFW_Quick_Setup')) {
                             'donate_link' => false,
                         ),
                     ));
-                    $title = 'title';
-                    $url = 'url';
-                    $nonce = 'nonce';
-                    $woocommerce_plugin = new Plugin_Upgrader(new Plugin_Installer_Skin(compact('title', 'url', 'nonce', 'plugin', 'api')));
-                    $woocommerce_plugin->install($api->download_link);
-                    activate_plugin('woocommerce/woocommerce.php');
-                    //TTBM_Woocommerce_Plugin::on_activation_page_create();
+                
+                    if (is_wp_error($api)) {
+                        // Display error message if the API call fails
+                        echo '<p>' . esc_html__('Failed to fetch WooCommerce plugin details.', 'your-text-domain') . '</p>';
+                    } else {
+                        // Prepare details for the Plugin Installer
+                        $title = esc_html__('Install WooCommerce', 'your-text-domain'); // Escaped static text
+                        $url = esc_url(admin_url('plugins.php')); // Escape the admin URL
+                        $nonce = wp_create_nonce('install-plugin_woocommerce'); // Generate nonce securely
+                    
+                        // Check if the download link exists
+                        if (!empty($api->download_link)) {
+                            $woocommerce_plugin = new Plugin_Upgrader(new Plugin_Installer_Skin(compact('title', 'url', 'nonce', 'plugin', 'api')));
+                            $woocommerce_plugin->install(esc_url_raw($api->download_link)); // Escape download URL before use
+                    
+                            // Activate the WooCommerce plugin if not already active
+                            if (!is_plugin_active('woocommerce/woocommerce.php')) {
+                                activate_plugin('woocommerce/woocommerce.php'); // Safe to use with a static plugin path
+                            }
+                        } else {
+                            echo '<p>' . esc_html__('Download link not found for the WooCommerce plugin.', 'your-text-domain') . '</p>';
+                        }
+                    }
+                    
+                    // Close the wrapper div
                     echo '</div>';
                     ?>
                     <script>
@@ -108,10 +134,21 @@ if (!class_exists('RBFW_Quick_Setup')) {
                             "use strict";
                             $(document).ready(function () {
                                 let ttbm_admin_location = window.location.href;
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_item', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
-                                window.location.href = ttbm_admin_location;
+                
+                                // Use relative, sanitized replacements
+                                ttbm_admin_location = ttbm_admin_location.replace(
+                                    'admin.php?post_type=rbfw_item&page=rbfw_quick_setup',
+                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
+                                );
+                                ttbm_admin_location = ttbm_admin_location.replace(
+                                    'admin.php?page=rbfw_item',
+                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
+                                );
+                                ttbm_admin_location = ttbm_admin_location.replace(
+                                    'admin.php?page=rbfw_quick_setup',
+                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
+                                );
+                                window.location.href = ttbm_admin_location; // Redirect to the sanitized URL
                             });
                         }(jQuery));
                     </script>
@@ -246,7 +283,11 @@ if (!class_exists('RBFW_Quick_Setup')) {
                     <div class="_dLayout_mT">
                         <label class="fullWidth">
                             <span class="min_200"><?php esc_html_e('Rent Label:', 'booking-and-rental-manager-for-woocommerce'); ?></span>
-                            <input type="text" class="formControl" name="rbfw_rent_label" value='<?php echo esc_attr($label); ?>'/>
+                            <?php
+                            // Sanitize $label when retrieving it from the source (if not already sanitized)
+                            $label = isset($label) ? sanitize_text_field($label) : '';
+                            ?>
+                            <input type="text" class="formControl" name="rbfw_rent_label" value="<?php echo esc_attr($label); ?>" />
                         </label>
                         <i class="info_text">
                             <span class="fas fa-info-circle"></span>
@@ -255,7 +296,11 @@ if (!class_exists('RBFW_Quick_Setup')) {
                         <div class="divider"></div>
                         <label class="fullWidth">
                             <span class="min_200"><?php esc_html_e('Rent Slug:', 'booking-and-rental-manager-for-woocommerce'); ?></span>
-                            <input type="text" class="formControl" name="rbfw_rent_slug" value='<?php echo esc_attr($slug); ?>'/>
+                            <?php
+                            // Sanitize $slug when retrieving it from the source (if not already sanitized)
+                            $slug = isset($slug) ? sanitize_text_field($slug) : '';
+                            ?>
+                            <input type="text" class="formControl" name="rbfw_rent_slug" value="<?php echo esc_attr($slug); ?>" />
                         </label>
                         <i class="info_text">
                             <span class="fas fa-info-circle"></span>
