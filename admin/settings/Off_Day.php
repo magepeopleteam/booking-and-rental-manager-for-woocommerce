@@ -20,25 +20,30 @@
             <?php
             }
 
-			public function section_header(){
+			public function section_header() {
+                // Translate and escape strings
+                $title = esc_html__('Off Day Configuration', 'booking-and-rental-manager-for-woocommerce');
+                $description = esc_html__('Here you can configure off day settings.', 'booking-and-rental-manager-for-woocommerce');
                 ?>
-                    <h2 class="mp_tab_item_title"><?php echo esc_html__('Off Day Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-                    <p class="mp_tab_item_description"><?php echo esc_html__('Here you can configure off day Settings.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                        
+                <h2 class="mp_tab_item_title"><?php echo $title; // Output escaped title ?></h2>
+                <p class="mp_tab_item_description"><?php echo $description; // Output escaped description ?></p>
                 <?php
-            }
+            }           
 
-
-			public function panel_header($title,$description){
+			public function panel_header($title, $description) {
+                $escaped_title = esc_html($title);
+                $escaped_description = esc_html($description);
                 ?>
-                    <section class="bg-light mt-5">
-                        <div>
-                            <label>
-                                <?php echo esc_html($title ); ?>
-                            </label>
-                            <span><?php echo esc_html($description ); ?></span>
-                        </div>
-                    </section>
+                <section class="bg-light mt-5">
+                    <div>
+                        <label>
+                            <?php echo $escaped_title; ?>
+                        </label>
+                        <span>
+                            <?php echo $escaped_description; ?>
+                        </span>
+                    </div>
+                </section>
                 <?php
             }
 
@@ -88,32 +93,37 @@
             }
 
 			public function add_tabs_content( $post_id ) {
-                $days = array('monday','tuesday','wednesday','thursday','friday','saturday','sunday');
-                $rbfw_off_days  = get_post_meta( $post_id, 'rbfw_off_days', true ) ? get_post_meta( $post_id, 'rbfw_off_days', true ) : '';
-                $rbfw_item_type = get_post_meta( get_the_id(), 'rbfw_item_type', true ) ? get_post_meta( get_the_id(), 'rbfw_item_type', true ) : 'bike_car_sd'; 
-                $off_day_array = $rbfw_off_days?explode(',', $rbfw_off_days):[];    
-            ?>
+                $days = array( 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday' );
+                $rbfw_off_days = esc_attr( get_post_meta( $post_id, 'rbfw_off_days', true ) ?: '' );
+                $rbfw_item_type = esc_attr( get_post_meta( $post_id, 'rbfw_item_type', true ) ?: 'bike_car_sd' );
+                $off_day_array = $rbfw_off_days ? explode( ',', $rbfw_off_days ) : [];
+                ?>
                 <div class="mpStyle mp_tab_item" data-tab-item="#travel_off_days">
                     <?php $this->section_header(); ?>
-
-                    <?php $this->panel_header('Off Day Settings','Off Day Settings'); ?> 
+            
+                    <?php $this->panel_header( esc_html__( 'Off Day Settings', 'booking-and-rental-manager-for-woocommerce' ), esc_html__( 'Off Day Settings', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
+            
                     <section class="rbfw_off_days justify-content-center">
                         <div class="groupCheckBox">
-                            <input type="hidden" name="rbfw_off_days" value="<?php echo esc_attr($rbfw_off_days) ?>">
-                            <?php foreach ($days as $day){ ?>
+                            <input type="hidden" name="rbfw_off_days" value="<?php echo esc_attr( $rbfw_off_days ); ?>">
+                            <?php foreach ( $days as $day ) : ?>
                                 <label class="customCheckboxLabel">
-    <input type="checkbox" <?php echo in_array($day, $off_day_array) ? 'checked' : ''; ?> data-checked="<?php echo esc_attr($day); ?>">
-    <span class="customCheckbox"><?php echo esc_html(ucfirst($day)); ?></span>
-</label>
-
-                            <?php } ?>
+                                    <input type="checkbox" 
+                                           name="rbfw_off_days_array[]" 
+                                           value="<?php echo esc_attr( $day ); ?>" 
+                                           <?php checked( in_array( $day, $off_day_array ) ); ?> 
+                                           data-checked="<?php echo esc_attr( $day ); ?>">
+                                    <span class="customCheckbox"><?php echo esc_html( ucfirst( $day ) ); ?></span>
+                                </label>
+                            <?php endforeach; ?>
                         </div>
                     </section>
-                    <?php $this->panel_header('Off Date Settings','Off Date Settings'); ?> 
-                    <?php $this->rbfw_off_days_config( $post_id ); ?>               
+            
+                    <?php $this->panel_header( esc_html__( 'Off Date Settings', 'booking-and-rental-manager-for-woocommerce' ), esc_html__( 'Off Date Settings', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
+            
+                    <?php $this->rbfw_off_days_config( $post_id ); ?>
                 </div>
-                
-            <?php
+                <?php
             }
 
             public function settings_save($post_id) {
