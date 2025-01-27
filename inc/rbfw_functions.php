@@ -2512,15 +2512,7 @@
 		global $rbfw;
 		$Book_dates_array = getAllDates( $pickup_datetime, $dropoff_datetime );
 		if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
-
-
             $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true );
-
-
-
-
-
-
         }
 		$rbfw_enable_daily_rate  = get_post_meta( $post_id, 'rbfw_enable_daily_rate', true );
 		$rbfw_enable_hourly_rate = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true );
@@ -2545,6 +2537,16 @@
             if ( is_plugin_active( 'booking-and-rental-manager-additional-day-price/additional-day-price.php' ) ) {
 
                // $duration_price = get_post_meta( $post_id, 'rbfw_daily_rate', true );
+
+
+                    $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+                    if($rbfw_count_extra_day_enable=='on'){
+                        $total_days = $total_days + 1;
+                    }
+                    $hours = 0;
+
+
+
 
                 for ( $i = 1; $i < $total_days+1; $i ++ ) {
 

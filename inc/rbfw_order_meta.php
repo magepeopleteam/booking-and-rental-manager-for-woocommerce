@@ -348,7 +348,7 @@ function fetch_order_details_callback() {
         </div>
         <?php
         $output = ob_get_clean();
-        echo esc_html($output);
+        echo wp_kses($output , rbfw_allowed_html());
     }
     wp_die();
 }
