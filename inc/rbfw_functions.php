@@ -15,6 +15,7 @@
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
+				'data-step' => true, // Allows inline JavaScript
 			),
 			'table'   => array(
                 'class' => true,
@@ -63,6 +64,7 @@
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
+				'data-price' => true, // Allows inline JavaScript
 			),
 			'section' => array(
 				'style'   => true, // Allows inline styles
@@ -74,6 +76,9 @@
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
+				'data-request' => true, // Allows inline JavaScript
+				'data-date' => true, // Allows inline JavaScript
+				'data-id' => true, // Allows inline JavaScript
 			),
 			'input'   => array(
 				'style'       => true, // Allows inline styles
@@ -2935,6 +2940,22 @@
 			$product->save();
 		}
 	}
+
+function rbfw_array_strip( $array_or_string ) {
+    if ( is_string( $array_or_string ) ) {
+        $array_or_string = sanitize_text_field( $array_or_string );
+    } elseif ( is_array( $array_or_string ) ) {
+        foreach ( $array_or_string as $key => &$value ) {
+            if ( is_array( $value ) ) {
+                $value = rbfw_array_strip( $value );
+            } else {
+                $value = sanitize_text_field( $value );
+            }
+        }
+    }
+
+    return $array_or_string;
+}
 
 function sanitize_post_array($data, $rules) {
     $sanitized_data = [];

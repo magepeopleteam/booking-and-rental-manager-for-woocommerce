@@ -20,7 +20,7 @@ function rbfw_order_meta_box() {
 add_action('wp_ajax_fetch_order_details', 'fetch_order_details_callback');
 
 function fetch_order_details_callback() {
-    if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'fetch_order_details_nonce')) {
+    if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action')) {
         wp_send_json_error('Invalid request.');
         wp_die();
     }
@@ -491,7 +491,7 @@ function rbfw_order_meta_box_callback(){
                     $rent_type = $ticket_info['rbfw_rent_type'];
 
                     $rbfw_start_datetime = rbfw_get_datetime($ticket_info['rbfw_start_datetime'], 'date-time-text');
-                    $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-time-text');
+                    $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime']??'', 'date-time-text');
 
                     $tax = !empty($ticket_info['rbfw_mps_tax']) ? $ticket_info['rbfw_mps_tax'] : 0;
                     $tax_status = '';

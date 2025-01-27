@@ -2,30 +2,31 @@
 global $rbfw;
 
 // Verify nonce before processing the data
-if ( isset( $_POST['rbfw_nonce_field'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_nonce_field'] ) ), 'rbfw_nonce_action' ) ) {
-    
+if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
+    return;
+}
     // Sanitize input values
     $id = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : 0;
     $es_service_price = isset( $_POST['es_service_price'] ) ? floatval( $_POST['es_service_price'] ) : 0;
     $duration_cost = isset( $_POST['duration_price'] ) ? floatval( $_POST['duration_price'] ) : 0;
     $sub_total_price = $duration_cost + $es_service_price;
-}
+
 ?>
 <div class="item-content rbfw-costing">
     <ul class="rbfw-ul">
         <li class="duration-costing rbfw-cond">
             <?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce') ) ); ?>
-            <?php echo esc_html( wc_price( $duration_cost ) ); ?>
+            <?php echo wp_kses( wc_price( $duration_cost ) , rbfw_allowed_html()); ?>
         </li>
 
         <li class="resource-costing rbfw-cond">
             <?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce') ) ); ?>
-            <?php echo esc_html( wc_price( $es_service_price ) ); ?>
+            <?php echo wp_kses( wc_price( $es_service_price ) , rbfw_allowed_html()); ?>
         </li>
 
         <li class="subtotal">
             <?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce') ) ); ?>
-            <?php echo esc_html( wc_price( $duration_cost + $es_service_price ) ); ?>
+            <?php echo wp_kses( wc_price( $duration_cost + $es_service_price )  , rbfw_allowed_html()); ?>
         </li>
 
         <?php
@@ -34,7 +35,7 @@ if ( isset( $_POST['rbfw_nonce_field'] ) && wp_verify_nonce( sanitize_text_field
         if ( $security_deposit['security_deposit_desc'] ) { ?>
             <li class="subtotal">
                 <?php echo esc_html( ( ! empty( get_post_meta( $id, 'rbfw_security_deposit_label', true ) ) ? get_post_meta( $id, 'rbfw_security_deposit_label', true ) : 'Security Deposit' ) ); ?>
-                <?php echo esc_html( wc_price( $security_deposit['security_deposit_amount'] ) ); ?>
+                <?php echo wp_kses( wc_price( $security_deposit['security_deposit_amount'] ) , rbfw_allowed_html()); ?>
             </li>
         <?php }
         
@@ -44,7 +45,7 @@ if ( isset( $_POST['rbfw_nonce_field'] ) && wp_verify_nonce( sanitize_text_field
         
         <li class="total">
             <strong><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce') ) ); ?></strong>
-            <?php echo esc_html( wc_price( $total_price ) ); ?>
+            <?php echo wp_kses( wc_price( $total_price )  , rbfw_allowed_html()); ?>
         </li>
     </ul>
     <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
