@@ -332,15 +332,15 @@ function fetch_order_details_callback() {
                     <tbody>
                         <tr>
                             <td><strong><?php esc_html_e('Subtotal:', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
-                            <td><?php echo esc_html($subtotal); ?></td>
+                            <td><?php echo wp_kses($subtotal , rbfw_allowed_html()); ?></td>
                         </tr>
                         <tr>
                             <td><strong><?php esc_html_e('Tax:', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
-                            <td><?php echo esc_html($rbfw_order_tax); ?></td>
+                            <td><?php echo wp_kses($rbfw_order_tax , rbfw_allowed_html()); ?></td>
                         </tr>
                         <tr>
                             <td><strong><?php esc_html_e('Total Cost:', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
-                            <td><?php echo esc_html($grand_total); ?></td>
+                            <td><?php echo wp_kses($grand_total , rbfw_allowed_html()); ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -902,7 +902,10 @@ if ( isset( $_POST['rbfw_return_security_deposit_amount'] ) ) {
         $username = $current_user->user_login;
         $modified_date =  current_datetime()->format('F j, Y h:i a');
 
-        $status = 'Status changed to <strong>' . sanitize_text_field( wp_unslash( $_POST['rbfw_order_status'] ) ) . '</strong> by ' . $username . ' on ' . $modified_date;
+
+
+
+        $status = 'Status changed to '. wp_kses('<strong>' . sanitize_text_field( wp_unslash( $_POST['rbfw_order_status'] ) ) . '</strong>' , rbfw_allowed_html()). ' by ' . $username . ' on ' . $modified_date;
         $current_status_update = get_post_meta( $post_id, 'rbfw_order_status_revision', true );
 
         $current_status = get_post_meta( $post_id, 'rbfw_order_status', true );

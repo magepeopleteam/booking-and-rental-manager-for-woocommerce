@@ -2532,28 +2532,23 @@
             $total_days  = $diff->days;
             $actual_days = $diff->days;
 
+            $rbfw_additional_day_prices = get_post_meta( $post_id, 'rbfw_additional_day_prices', true );
 
 
-            if ( is_plugin_active( 'booking-and-rental-manager-additional-day-price/additional-day-price.php' ) ) {
 
-               // $duration_price = get_post_meta( $post_id, 'rbfw_daily_rate', true );
+            if ( is_plugin_active( 'booking-and-rental-manager-additional-day-price/additional-day-price.php' ) && (!(empty($rbfw_additional_day_prices))) ) {
 
-
-                    $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
-                    if($rbfw_count_extra_day_enable=='on'){
-                        $total_days = $total_days + 1;
-                    }
-                    $hours = 0;
-
-
+                $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+                if($rbfw_count_extra_day_enable=='on'){
+                    $total_days = $total_days + 1;
+                }
+                $hours = 0;
 
 
                 for ( $i = 1; $i < $total_days+1; $i ++ ) {
 
 
 
-
-                    $rbfw_additional_day_prices = get_post_meta( $post_id, 'rbfw_additional_day_prices', true );
 
                     foreach ( $rbfw_additional_day_prices as $rbfw_additional_day_price ) {
                         $rbfw_start_day = $rbfw_additional_day_price['rbfw_start_day'];
@@ -2572,8 +2567,6 @@
                     }
                     $duration_price = $duration_price + $daily_rate;
                 }
-
-
 
 
             }else{
