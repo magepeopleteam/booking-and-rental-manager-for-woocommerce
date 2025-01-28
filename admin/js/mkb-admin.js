@@ -759,7 +759,7 @@
 		var postID  = $('input[name="rbfw_post_id"]');
 		var itemId = $('input[name="rbfw_faq_item_id"]');
 		$.ajax({
-			url: mp_ajax_url,
+			url: rbfw_ajax_url,
 			type: 'POST',
 			data: {
 				action: 'rbfw_faq_data_update',
@@ -789,7 +789,7 @@
 		var content = tinyMCE.get('rbfw_faq_content').getContent();
 		var postID  = $('input[name="rbfw_post_id"]');
 		$.ajax({
-			url: mp_ajax_url,
+			url: rbfw_ajax_url,
 			type: 'POST',
 			data: {
 				action: 'rbfw_faq_data_save',
@@ -812,7 +812,7 @@
 	function delete_faq_item(itemId){
 		var postID  = $('input[name="rbfw_post_id"]');
 		$.ajax({
-			url: mp_ajax_url,
+			url: rbfw_ajax_url,
 			type: 'POST',
 			data: {
 				action: 'rbfw_faq_delete_item',

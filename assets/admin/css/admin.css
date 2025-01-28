@@ -71,6 +71,14 @@
 .rbfw-modal-container .rbfw-modal-content .title {
   padding: 0 40px;
 }
+.rbfw-modal-container .rbfw-modal-content .title #rbfw-modal-title {
+  font-size: 18px;
+  padding: 0;
+  margin: 5px 0;
+  margin-bottom: 30px;
+  background-color: transparent;
+  color: #333;
+}
 .rbfw-modal-container .rbfw-modal-content .rbfw-modal-close {
   position: absolute;
   top: 40px;

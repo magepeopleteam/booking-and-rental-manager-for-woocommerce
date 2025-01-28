@@ -20,6 +20,14 @@
         padding: 70px 0px;
         .title{
             padding:0 40px;
+            #rbfw-modal-title{
+                font-size: 18px;
+                padding: 0;
+                margin: 5px 0;
+                margin-bottom: 30px;
+                background-color: transparent;
+                color: #333;
+            }
         }
         .rbfw-modal-close{
             position:absolute;

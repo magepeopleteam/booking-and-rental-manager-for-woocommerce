@@ -84,7 +84,7 @@ if( ! class_exists('RBFW_Faq_Settings')){
                     <div class="rbfw-modal-content">
                         <span class="rbfw-modal-close"><i class="fas fa-times"></i></span>
                         <div class="title">
-                            <h3><?php _e('Add F.A.Q.','booking-and-rental-manager-for-woocommerce'); ?></h3>
+                            <h3 id="rbfw-modal-title"><?php _e('Add F.A.Q.','booking-and-rental-manager-for-woocommerce'); ?></h3>
                             <div id="rbfw-faq-msg"></div>
                         </div>
                         <div class="content">
@@ -148,7 +148,7 @@ if( ! class_exists('RBFW_Faq_Settings')){
 
         public function faq_data_update() {
             $post_id = intval($_POST['rbfw_faq_postID']);
-            $rbfw_faq = get_post_meta($post_id, 'rbfw_event_faq', true);
+            $rbfw_faq = get_post_meta($post_id, 'mep_event_faq', true);
             $rbfw_faq = is_array($rbfw_faq) ? $rbfw_faq : [];
             $new_data = [
                 'rbfw_faq_title' => sanitize_text_field($_POST['rbfw_faq_title']),
@@ -159,9 +159,9 @@ if( ! class_exists('RBFW_Faq_Settings')){
                     $rbfw_faq[$_POST['rbfw_faq_itemID']]=$new_data;
                 }
             }
-            update_post_meta($post_id, 'rbfw_event_faq', $rbfw_faq);
+            update_post_meta($post_id, 'mep_event_faq', $rbfw_faq);
             ob_start();
-            $resultMessage = __('Data Updated Successfully', 'mptbm_plugin_pro');
+            $resultMessage = __('Data Updated Successfully', 'booking-and-rental-manager-for-woocommerce');
             $this->show_faq_data($post_id);
             $html_output = ob_get_clean();
             wp_send_json_success([
@@ -173,17 +173,17 @@ if( ! class_exists('RBFW_Faq_Settings')){
 
         public function save_faq_data_settings() {
             $post_id = intval($_POST['rbfw_faq_postID']);
-            $rbfw_faq = get_post_meta($post_id, 'rbfw_event_faq', true);
+            $rbfw_faq = get_post_meta($post_id, 'mep_event_faq', true);
             $rbfw_faq = is_array($rbfw_faq) ? $rbfw_faq : [];
             $new_data = [
                 'rbfw_faq_title' => sanitize_text_field($_POST['rbfw_faq_title']),
                 'rbfw_faq_content' => wp_kses_post($_POST['rbfw_faq_content'])
             ];
             array_push($rbfw_faq,$new_data);
-            $result = update_post_meta($post_id, 'rbfw_event_faq', $rbfw_faq);
+            $result = update_post_meta($post_id, 'mep_event_faq', $rbfw_faq);
             if($result){
                 ob_start();
-                $resultMessage = __('Data Added Successfully', 'mptbm_plugin_pro');
+                $resultMessage = __('Data Added Successfully', 'booking-and-rental-manager-for-woocommerce');
                 $this->show_faq_data($post_id);
                 $html_output = ob_get_clean();
                 wp_send_json_success([
@@ -202,7 +202,7 @@ if( ! class_exists('RBFW_Faq_Settings')){
 
         public function faq_delete_item(){
             $post_id = intval($_POST['rbfw_faq_postID']);
-            $rbfw_faq = get_post_meta($post_id,'rbfw_event_faq',true);
+            $rbfw_faq = get_post_meta($post_id,'mep_event_faq',true);
             $rbfw_faq =  is_array($rbfw_faq) ? $rbfw_faq : [];
             if( ! empty($rbfw_faq)){
                 if(isset($_POST['itemId'])){
@@ -210,10 +210,10 @@ if( ! class_exists('RBFW_Faq_Settings')){
                     $rbfw_faq = array_values($rbfw_faq);
                 }
             }
-            $result = update_post_meta($post_id, 'rbfw_event_faq', $rbfw_faq);
+            $result = update_post_meta($post_id, 'mep_event_faq', $rbfw_faq);
             if($result){
                 ob_start();
-                $resultMessage = __('Data Deleted Successfully', 'mptbm_plugin_pro');
+                $resultMessage = __('Data Deleted Successfully', 'booking-and-rental-manager-for-woocommerce');
                 $this->show_faq_data($post_id);
                 $html_output = ob_get_clean();
                 wp_send_json_success([
