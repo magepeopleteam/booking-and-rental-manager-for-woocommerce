@@ -1,4 +1,4 @@
-.mep-modal-container{
+.rbfw-modal-container{
     position: fixed;
     right: -100%; /* Initially hidden off-screen */
     top: 0;
@@ -10,7 +10,7 @@
     &.open {
         right: 0; /* Slide in */
     }
-    .mep-modal-content{
+    .rbfw-modal-content{
         background-color: #fff;
         width: 800px;
         height: 100%;
@@ -21,7 +21,7 @@
         .title{
             padding:0 40px;
         }
-        .mep-modal-close{
+        .rbfw-modal-close{
             position:absolute;
             top: 40px;
             right: 15px;
