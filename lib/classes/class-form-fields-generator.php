@@ -426,19 +426,19 @@
 						?>
                         <div id="map-<?php echo esc_attr( $field_id ); ?>"></div>
                         <script>
-                            function initMap() {
-                                var myLatLng = {lat: <?php echo esc_html( $lat ); ?>, lng: <?php echo esc_html( $lng ); ?>};
-                                var map = new google.maps.Map(document.getElementById('map-<?php echo esc_html( $field_id ); ?>'), {
-                                    zoom: <?php echo esc_html( $zoom ); ?>,
-                                    center: myLatLng
-                                });
-                                var marker = new google.maps.Marker({
-                                    position: myLatLng,
-                                    map: map,
-                                    title: '<?php echo esc_html( $title ); ?>'
-                                });
-                            }
-                        </script>
+							function initMap() {
+								var myLatLng = {lat: <?php echo esc_js( $lat ); ?>, lng: <?php echo esc_js( $lng ); ?>};
+								var map = new google.maps.Map(document.getElementById('map-<?php echo esc_js( $field_id ); ?>'), {
+									zoom: <?php echo esc_js( $zoom ); ?>,
+									center: myLatLng
+								});
+								var marker = new google.maps.Marker({
+									position: myLatLng,
+									map: map,
+									title: '<?php echo esc_attr( $title ); ?>'
+								});
+							}
+						</script>
                         <script async defer
                                 src="https://maps.googleapis.com/maps/api/js?key=<?php echo esc_html( $apikey ); ?>&callback=initMap">
                         </script>
@@ -3704,10 +3704,7 @@
 				endif;
 				ob_start();
 				?>
-                <div <?php if ( ! empty( $depends ) ) { ?> data-depends="[<?php echo esc_attr( $depends ); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr( $id ); ?>" class="<?php if ( ! empty( $depends ) ) {
-					echo 'dependency-field';
-				} ?> field-wrapper field-switch-multi-wrapper
-            field-switch-multi-wrapper-<?php echo esc_html( $id ); ?>">
+                <div <?php if ( ! empty( $depends ) ) { ?> data-depends="[<?php echo esc_attr( $depends ); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr( $id ); ?>" class="<?php if ( ! empty( $depends ) ) { echo 'dependency-field'; } ?> field-wrapper field-switch-multi-wrapper field-switch-multi-wrapper-<?php echo esc_attr( $id ); ?>">
 					<?php
 						foreach ( $args as $key => $argName ):
 							$checked = is_array( $value ) && in_array( $key, $value ) ? "checked" : "";
@@ -4365,39 +4362,30 @@
 				endif;
 				?>
                 <script>
-                    jQuery(document).ready(function ($) {
-                        jQuery(document).on('click', '.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list .remove', function () {
-                            jQuery(this).parent().remove();
-                        })
-                        jQuery(document).on('click', '.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .add', function () {
-                            html = '<div class="item">';
-                            html += '<span class="button remove"><?php echo esc_html( $remove_text ); ?></span> <input type="text"  name="<?php echo esc_attr( $field_name ); ?>[]" value="" />';
-                            html += '</div>';
+				jQuery(document).ready(function ($) {
+					jQuery(document).on('click', '.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list .remove', function () {
+						jQuery(this).parent().remove();
+					})
+					jQuery(document).on('click', '.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .add', function () {
+						var html = '<div class="item">';
+						html += '<span class="button remove"><?php echo esc_html( $remove_text ); ?></span> <input type="text" name="<?php echo esc_attr( $field_name ); ?>[]" value="" />';
+						html += '</div>';
 
+						<?php if(! empty( $limit )): ?>
+						var limit = <?php echo esc_js( $limit ); ?>;
+						var node_count = $(".field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list .item").size();
+						if (limit > node_count) {
+							$('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list').append(html);
+							$('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> input').wpColorPicker();
+						} else {
+							jQuery('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .error-mgs').html('Sorry! you can add max ' + limit + ' item').stop().fadeIn(400).delay(3000).fadeOut(400);
+						}
+						<?php endif; ?>
+					})
+					$('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> input').wpColorPicker();
+				});
+			</script>
 
-							<?php
-							if(! empty( $limit )):
-							?>
-                            var limit = <?php  echo esc_attr( $limit ); ?>;
-                            var node_count = $(".field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list .item").size();
-                            if (limit > node_count) {
-                                $('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list').append(html);
-                                $('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> input').wpColorPicker();
-                            } else {
-                                jQuery('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .error-mgs').html('Sorry! you can add max ' + limit + ' item').stop().fadeIn(400).delay(3000).fadeOut(400);
-                            }
-							<?php
-							endif;
-							?>
-
-
-
-
-
-                        })
-                        $('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> input').wpColorPicker();
-                    });
-                </script>
 				<?php
 				return ob_get_clean();
 			}
@@ -4895,7 +4883,9 @@
                     </div>
                     <div class="icon-list">
                         <div class="ppof-button select-icon"><?php echo esc_html_e( 'Choose Icon', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                        <div class="search-icon"><input class="" type="text" placeholder="<?php echo esc_html_e( 'Start typing...', 'booking-and-rental-manager-for-woocommerce' ); ?>"></div>
+                        <div class="search-icon">
+							<input class="" type="text" placeholder="<?php echo esc_attr( __( 'Start typing...', 'booking-and-rental-manager-for-woocommerce' ) ); ?>">
+						</div>
                         <ul>
 							<?php
 								if ( ! empty( $icons ) ):
@@ -6727,30 +6717,31 @@
                     </div>
                     <div class="error-mgs"></div>
                 </div>
-                <script>jQuery(document).ready(function ($) {
-                        $('#media_upload_<?php echo esc_attr( $id ); ?>').click(function () {
-                            //var send_attachment_bkp = wp.media.editor.send.attachment;
-                            wp.media.editor.send.attachment = function (props, attachment) {
-                                attachment_id = attachment.id;
-                                attachment_url = attachment.url;
-                                html = '<div class="item">';
-                                html += '<span class="remove" onclick="jQuery(this).parent().remove()"><?php echo esc_html( $remove_text ); ?></span>';
-                                html += '<img src="' + attachment_url + '" style="width:100%"/>';
-                                html += '<input type="hidden" name="<?php echo esc_attr( $field_name ); ?>[]" value="' + attachment_id + '" />';
-                                html += '</div>';
-                                $('.media-list-<?php echo esc_attr( $id ); ?>').append(html);
-                                //wp.media.editor.send.attachment = send_attachment_bkp;
-                            }
-                            wp.media.editor.open($(this));
-                            return false;
-                        });
-                        $('#media_clear_<?php echo esc_attr( $id ); ?>').click(function () {
-                            $('.media-list-<?php echo esc_attr( $id ); ?> .item').remove();
-                        })
-                    });
-                </script>
-				<?php
-				return ob_get_clean();
+                <script>
+				jQuery(document).ready(function ($) {
+					$('#media_upload_<?php echo esc_attr( $id ); ?>').click(function () {
+						wp.media.editor.send.attachment = function (props, attachment) {
+							var attachment_id = attachment.id;
+							var attachment_url = attachment.url;
+							var html = '<div class="item">';
+							html += '<span class="remove" onclick="jQuery(this).parent().remove()"><?php echo esc_html( $remove_text ); ?></span>';
+							html += '<img src="' + <?php echo esc_js( esc_url( $attachment_url ) ); ?> + '" style="width:100%"/>';
+							html += '<input type="hidden" name="<?php echo esc_attr( $field_name ); ?>[]" value="' + esc_attr( attachment_id ) + '" />';
+							html += '</div>';
+							$('.media-list-<?php echo esc_attr( $id ); ?>').append(html);
+						};
+						wp.media.editor.open($(this));
+						return false;
+					});
+
+					$('#media_clear_<?php echo esc_attr( $id ); ?>').click(function () {
+						$('.media-list-<?php echo esc_attr( $id ); ?> .item').remove();
+					});
+				});
+			</script>
+			<?php
+			return ob_get_clean();
+
 			}
 
 			public function field_custom_html( $option ) {
@@ -7083,7 +7074,7 @@
                             var limit = <?php  echo esc_attr( $limit ); ?>;
                             var node_count = $(".field-repeatable-wrapper-<?php echo esc_attr( $id ); ?> .field-list .item-wrap").size();
                             if (limit > node_count) {
-                                jQuery('.<?php echo  'field-repeatable-wrapper-' .esc_html( $id ); ?> .field-list').append(html);
+                                jQuery('.<?php echo  'field-repeatable-wrapper-' .esc_attr( $id ); ?> .field-list').append(html);
                             } else {
                                 jQuery('.field-repeatable-wrapper-<?php echo esc_attr( $id ); ?> .error-mgs').html('Sorry! you can add max ' + limit + ' item').stop().fadeIn(400).delay(3000).fadeOut(400);
                             }

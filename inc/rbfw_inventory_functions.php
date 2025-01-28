@@ -776,7 +776,20 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
                     <td><a href="<?php echo esc_url(admin_url('post.php?post='.$post_id.'&action=edit')); ?>" class="rbfw_item_title"><?php echo esc_html(get_the_title()); ?></a></td>
 
-                    <td class="rbfw_text_center"><span class="rbfw_s_qty_span"><?php echo esc_html($remaining_item_stock); ?>/<?php echo esc_html($rbfw_item_stock_quantity); ?></span> <a class="rbfw_stock_view_details" data-request="closing" data-date="<?php echo esc_html($current_date); ?>" data-id="<?php echo esc_html(get_the_ID()); ?>"><?php esc_attr_e('View Details','booking-and-rental-manager-for-woocommerce'); ?></a></td>
+                    <td class="rbfw_text_center">
+                        <span class="rbfw_s_qty_span">
+                            <?php echo esc_html( $remaining_item_stock ); ?>/<?php echo esc_html( $rbfw_item_stock_quantity ); ?>
+                        </span>
+                        <a 
+                            class="rbfw_stock_view_details" 
+                            data-request="closing" 
+                            data-date="<?php echo esc_attr( $current_date ); ?>" 
+                            data-id="<?php echo esc_attr( get_the_ID() ); ?>"
+                        >
+                            <?php esc_html_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </a>
+                    </td>
+
 
                     <td class="rbfw_text_center"><?php  echo esc_html($sold_item_qty); ?></td>
                     <td class="rbfw_text_center"><?php echo esc_html($remaining_es_stock); ?>/<?php echo esc_html($total_es_qty); ?></td>
@@ -1091,9 +1104,9 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
                                                                 <td>
                                                                    <?php echo esc_html($value['name']); ?>
                                                                 </td>
-                                                                <td data-status="<?php if(empty($value['quantity']) || $value['quantity'] <= 0){ echo "empty"; }?>">
-                                                                    <?php echo esc_html($value['quantity']); ?>
-                                                               </td>
+                                                                <td data-status="<?php echo esc_attr( ( empty( $value['quantity'] ) || $value['quantity'] <= 0 ) ? 'empty' : '' ); ?>">
+                                                                    <?php echo esc_html( $value['quantity'] ); ?>
+                                                                </td>
                                                             </tr>
                                                         </tbody>
                                                    <?php } ?>

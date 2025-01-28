@@ -2241,18 +2241,24 @@
                     <!-- The Modal/Lightbox -->
                     <div id="rbfw_aig_Modal" class="rbfw_aig_modal"><span class="rbfw_aig_close cursor" onclick="rbfw_aig_closeModal()">&times;</span>
                         <div class="rbfw_aig_modal-content">
-							<?php
+						<?php
 								$c            = 1;
 								$count_images = count( $gallery_images_ids );
 								foreach ( $gallery_images_ids as $img_id ) {
+									// Get image URL and ensure it's safe
 									$image_url = wp_get_attachment_url( $img_id );
-									?>
-                                    <div class="rbfw_aig_slides">
-                                        <div class="rbfw_aig_numbertext"><?php echo esc_html( $c ); ?> / <?php echo esc_html( $count_images ); ?></div>
-                                        <img src="<?php echo esc_url( $image_url ); ?>">
-                                    </div>
-									<?php
-									$c ++;
+									if ( ! empty( $image_url ) ) :
+										?>
+										<div class="rbfw_aig_slides">
+											<!-- Ensure the current slide number and total images are safely escaped -->
+											<div class="rbfw_aig_numbertext"><?php echo esc_html( $c ); ?> / <?php echo esc_html( $count_images ); ?></div>
+											
+											<!-- Use esc_url() for the image source URL -->
+											<img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( sprintf( 'Slide %d of %d', $c, $count_images ) ); ?>">
+										</div>
+										<?php
+										$c ++;
+									endif;
 								}
 							?>
                             <!-- Next/rbfw_aig_previous controls --><a class="rbfw_aig_prev" onclick="rbfw_aig_plusSlides(-1)">&#10094;</a> <a class="rbfw_aig_next" onclick="rbfw_aig_plusSlides(1)">&#10095;</a>
@@ -2876,18 +2882,27 @@
 			$title        = '';
 			$category_arr = [];
 		}
+		
 		$option = '';
-		$option .= "<select name=$name class=$class>";
-		$option .= "<option value='' >" . $title . "</option>";
+		
+		// Escape name and class attributes
+		$option .= "<select name='" . esc_attr( $name ) . "' class='" . esc_attr( $class ) . "'>";
+		$option .= "<option value=''>" . esc_html( $title ) . "</option>";
+		
 		if ( is_array( $category_arr ) && count( $category_arr ) > 0 ) {
 			foreach ( $category_arr as $key => $value ) {
-				$selected_text = ! empty( $saved_value ) && $saved_value == $value ? 'Selected' : '';
-				$option        .= "<option value='$value' $selected_text>" . esc_html( $value ) . "</option>";
+				// Escape each option value for security
+				$selected_text = ( ! empty( $saved_value ) && $saved_value == $value ) ? 'selected' : '';
+				$option        .= "<option value='" . esc_attr( $value ) . "' $selected_text>" . esc_html( $value ) . "</option>";
 			}
 		}
+	
 		$option .= "</select>";
-		echo wp_kses( $option , rbfw_allowed_html());
+		
+		// Use wp_kses to filter the HTML and ensure it adheres to allowed HTML rules
+		echo wp_kses( $option, rbfw_allowed_html() );
 	}
+	
 	function rbfw_time_slot_select( $date_type, $iidex, $selected_time ) {
 		$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
 		global $RBFW_Timeslots_Page;
@@ -2898,7 +2913,7 @@
             <select class="medium" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $iidex ) ?>][<?php echo esc_attr( $date_type ) ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
                 <option value="">Select Time</option>
 				<?php foreach ( $rbfw_time_slots as $key => $value ): ?>
-                    <option <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?> </option>
+                    <option <?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?> </option>
 				<?php endforeach; ?>
             </select>
         </div>

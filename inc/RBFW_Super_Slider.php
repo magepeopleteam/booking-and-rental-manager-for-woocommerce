@@ -167,9 +167,16 @@
 									?>
 									<div class="abTopLeft">
 										<button type="button" class="_dButton_bgWhite_textDefault" data-target-popup="superSlider" data-slide-index="1">
-											<?php echo esc_html(__( 'View All', 'booking-and-rental-manager-for-woocommerce' ) . ' ' . sizeof( $image_ids ) . ' ' . __( 'Images', 'booking-and-rental-manager-for-woocommerce' )); ?>
+											<?php 
+											$view_all_text = sprintf( 
+												__( 'View All %d Images', 'booking-and-rental-manager-for-woocommerce' ), 
+												count( $image_ids ) 
+											);
+											echo esc_html( $view_all_text );
+											?>
 										</button>
 									</div>
+
 									<?php
 								}
 							?>
@@ -195,8 +202,8 @@
                 }
 				if ( $thumbnail ) {
 					?>
-					<div class="superSlider <?php echo esc_html($rbfw_image_display) ?>">
-						<div  data-bg-image="<?php echo esc_html( $thumbnail ); ?>"></div>
+					<div class="superSlider <?php echo esc_attr($rbfw_image_display); ?>">
+						<div data-bg-image="<?php echo esc_url( $thumbnail ); ?>"></div>
 					</div>
 					<?php
 				}
@@ -210,8 +217,8 @@
 							foreach ( $image_ids as $id ) {
 								$image_url = RBFW_Function::get_image_url( '', $id );
 								?>
-								<div class="sliderItem" data-slide-index="<?php echo esc_html( $count ); ?>" data-target-popup="superSlider" data-placeholder>
-									<div data-bg-image="<?php echo esc_html( $image_url ); ?>"></div>
+								<div class="sliderItem" data-slide-index="<?php echo esc_attr( $count ); ?>" data-target-popup="superSlider" data-placeholder>
+									<div data-bg-image="<?php echo esc_url( $image_url ); ?>"></div>
 								</div>
 								<?php
 								$count ++;
@@ -233,7 +240,7 @@
 					$showcase_position = RBFW_Function::get_settings( 'super_slider_showcase_position', 'super_slider_settings', 'right' );
 					$slider_style      = RBFW_Function::get_settings( 'super_slider_style', 'super_slider_settings', 'style_1' );
 					?>
-					<div class="sliderShowcase <?php echo esc_html( $showcase_position . ' ' . $slider_style ); ?>">
+					<div class="sliderShowcase <?php echo esc_attr( $showcase_position . ' ' . $slider_style ); ?>">
 						<?php
 							if ( $slider_style == 'style_1' ) {
 								$this->slider_showcase_style_1( $image_ids );
@@ -251,21 +258,22 @@
 					$image_url = RBFW_Function::get_image_url( '', $id );
 					if ( $count < 4 ) {
 						?>
-						<div class="sliderShowcaseItem" data-slide-target="<?php echo esc_html( $count ); ?>" data-placeholder>
-							<div data-bg-image="<?php echo esc_html( $image_url ); ?>"></div>
+						<div class="sliderItem" data-slide-index="<?php echo esc_attr( $count ); ?>" data-target-popup="superSlider" data-placeholder>
+							<div data-bg-image="<?php echo esc_url( $image_url ); ?>"></div>
 						</div>
 						<?php
 					}
 					if ( $count == 4 ) {
 						?>
 						<div class="sliderShowcaseItem" data-target-popup="superSlider" data-placeholder>
-							<div data-bg-image="<?php echo esc_html( $image_url ); ?>"></div>
+							<div data-bg-image="<?php echo esc_url( $image_url ); ?>"></div>
 							<div class="sliderMoreItem">
 								<span class="fas fa-plus"></span>
-								<?php echo esc_html(sizeof( $image_ids )) - 4; ?>
+								<?php echo esc_attr(sizeof( $image_ids )) - 4; ?>
 								<span class="far fa-image"></span>
 							</div>
 						</div>
+
 						<?php
 					}
 					$count ++;
@@ -277,8 +285,8 @@
 					$image_url = RBFW_Function::get_image_url( '', $id );
 					if ( $count > 1 && $count < 5 ) {
 						?>
-						<div class="sliderShowcaseItem" data-target-popup="superSlider" data-slide-index="<?php echo esc_html( $count ); ?>" data-placeholder>
-							<div data-bg-image="<?php echo esc_html( $image_url ); ?>"></div>
+						<div class="sliderShowcaseItem" data-target-popup="superSlider" data-slide-index="<?php echo esc_attr( $count ); ?>" data-placeholder>
+							<div data-bg-image="<?php echo esc_url( $image_url ); ?>"></div>
 						</div>
 						<?php
 					}
@@ -294,8 +302,8 @@
 							foreach ( $image_ids as $id ) {
 								$image_url = RBFW_Function::get_image_url( '', $id, array( 150, 100 ) );
 								?>
-								<div class="slideIndicatorItem" data-slide-target="<?php echo esc_html( $count ); ?>">
-									<div data-bg-image="<?php echo esc_html( $image_url ); ?>"></div>
+								<div class="slideIndicatorItem" data-slide-target="<?php echo esc_attr( $count ); ?>">
+									<div data-bg-image="<?php echo esc_url( $image_url ); ?>"></div>
 								</div>
 								<?php
 								$count ++;

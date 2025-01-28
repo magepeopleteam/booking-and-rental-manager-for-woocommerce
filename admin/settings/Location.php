@@ -92,13 +92,27 @@
 				<div class="rbfw-pickup-locations">
 
                     <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
-                        <select name="loc_pickup_name[]" id="rdfw_pickup_location" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
-                            <?php $i=0; foreach($location_arr as $key => $value) { if(isset($rbfw_pickup_data[$i]) && in_array($value,$rbfw_pickup_data[$i]) ){ ?>
-                                <option <?php echo 'selected' ?>   value="<?php echo esc_attr($value); ?>"> <?php echo esc_html($key); ?> </option>
-                            <?php $i++; } else{ ?>
-                                <option value="<?php echo esc_attr($value); ?>"> <?php echo esc_html($key); ?> </option>
-                            <?php } } ?>
-                        </select>
+					<select name="loc_pickup_name[]" id="rdfw_pickup_location" multiple tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
+						<?php 
+						$i = 0; 
+						foreach ( $location_arr as $key => $value ) { 
+							if ( isset( $rbfw_pickup_data[$i] ) && in_array( $value, $rbfw_pickup_data[$i] ) ) { 
+						?>
+							<option selected value="<?php echo esc_attr( $value ); ?>">
+								<?php echo esc_html( $key ); ?>
+							</option>
+						<?php 
+							$i++; 
+							} else { 
+						?>
+							<option value="<?php echo esc_attr( $value ); ?>">
+								<?php echo esc_html( $key ); ?>
+							</option>
+						<?php 
+							} 
+						} 
+						?>
+					</select>
                     </div>
                 </div>
             </section>
@@ -123,13 +137,27 @@
                 <section class="rbfw-drop-off-location <?php echo esc_attr(($rbfw_enable_dropoff_point=='yes')?'show':'hide'); ?>" >
                     <div class="rbfw-drop-off-locations">
                         <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
-                            <select name="loc_dropoff_name[]" id="rdfw_dropoff_location" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
-                                <?php $i=0; foreach($location_arr as $key => $value) { if(isset($rbfw_dropoff_data[$i]) && in_array($value,$rbfw_dropoff_data[$i]) ){ ?>
-                                    <option <?php echo 'selected' ?>   value="<?php echo esc_attr($value); ?>"> <?php echo esc_html($key); ?> </option>
-                                    <?php $i++; } else{ ?>
-                                    <option value="<?php echo esc_attr($value); ?>"> <?php echo esc_html($key); ?> </option>
-                                <?php } } ?>
-                            </select>
+						<select name="loc_dropoff_name[]" id="rdfw_dropoff_location" multiple tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
+							<?php 
+							$i = 0; 
+							foreach ( $location_arr as $key => $value ) { 
+								if ( isset( $rbfw_dropoff_data[$i] ) && in_array( $value, $rbfw_dropoff_data[$i] ) ) { 
+							?>
+								<option selected value="<?php echo esc_attr( $value ); ?>">
+									<?php echo esc_html( $key ); ?>
+								</option>
+							<?php 
+								$i++; 
+								} else { 
+							?>
+								<option value="<?php echo esc_attr( $value ); ?>">
+									<?php echo esc_html( $key ); ?>
+								</option>
+							<?php 
+								} 
+							} 
+							?>
+						</select>
                         </div>
                     </div>
                 </section>
