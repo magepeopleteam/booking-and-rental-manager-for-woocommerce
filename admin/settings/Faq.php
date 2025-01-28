@@ -41,7 +41,7 @@ if( ! class_exists('RBFW_Faq_Settings')){
         
         public function faq_tab(){
             ?>
-            <li data-target-tabs="#rbfw_event_faq_meta">
+            <li data-target-tabs="#rbfw_faq_meta">
                 <i class="far fa-question-circle"></i><?php esc_html_e('F.A.Q', 'mage-eventpress'); ?>
             </li>
             <?php
@@ -51,7 +51,7 @@ if( ! class_exists('RBFW_Faq_Settings')){
             $enable_faq = get_post_meta($post_id,'rbfw_enable_faq_content',true);
             $enable_faq = $enable_faq?$enable_faq:'yes';
             ?>
-            <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_event_faq_meta">
+            <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_faq_meta">
                 
                 <h2 class="mp_tab_item_title"><?php esc_html_e('FAQ Settings', 'mage-eventpress'); ?></h2>
                 <p class="mp_tab_item_description"><?php esc_html_e('FAQ Settings will be here.', 'mage-eventpress'); ?></p>
