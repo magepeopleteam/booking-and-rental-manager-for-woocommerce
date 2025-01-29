@@ -30,7 +30,7 @@
     ?>
 
 	<!--    Main Layout-->
-	<div class="rbfw-single-container" data-service-id="<?php echo esc_html($rbfw_id); ?>">
+	<div class="rbfw-single-container" data-service-id="<?php echo esc_attr($rbfw_id); ?>">
         <!--    Right Side-->
 		<div class="rbfw-single-right-container rbfw_bikecarsd_pricing_table_wrap">
 			<form action="" method='post' class="mp_rbfw_ticket_form">
@@ -48,7 +48,7 @@
                             <select class="rbfw-select" name="rbfw_pickup_point" required>
                                 <option value=""><?php echo esc_html($rbfw->get_option_trans('rbfw_text_choose_pickup_location', 'rbfw_basic_translation_settings', __('Choose pickup location','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                 <?php foreach ($pickup_location as $pickup) : ?>
-                                    <option value="<?php echo esc_html($pickup['loc_pickup_name']); ?>"><?php echo esc_html($pickup['loc_pickup_name']); ?></option>
+                                    <option value="<?php echo esc_attr($pickup['loc_pickup_name']); ?>"><?php echo esc_html($pickup['loc_pickup_name']); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -62,9 +62,9 @@
                         </div>
                         <div class="item-content rbfw-location">
                             <select class="rbfw-select" name="rbfw_dropoff_point" required>
-                                <option value=""><?php echo esc_html($rbfw->get_option_trans('rbfw_text_choose_dropoff_location', 'rbfw_basic_translation_settings', __('Choose drop-off location','booking-and-rental-manager-for-woocommerce'))); ?></option>
+                                <option value=""><?php echo esc_attr($rbfw->get_option_trans('rbfw_text_choose_dropoff_location', 'rbfw_basic_translation_settings', __('Choose drop-off location','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                 <?php foreach ($dropoff_location as $dropoff) : ?>
-                                    <option value="<?php echo esc_html($dropoff['loc_dropoff_name']); ?>"><?php echo esc_html($dropoff['loc_dropoff_name']); ?></option>
+                                    <option value="<?php echo esc_attr($dropoff['loc_dropoff_name']); ?>"><?php echo esc_html($dropoff['loc_dropoff_name']); ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -107,7 +107,7 @@
                                 </div>
                                 <div class="rbfw-p-relative">
                                     <span class="calendar"><i class="fas fa-calendar-days"></i></span>
-                                    <input class="rbfw-input rbfw-time-price pickup_date_timely" type="text"   placeholder="<?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" style="background-position: 95% center">
+                                    <input class="rbfw-input rbfw-time-price pickup_date_timely" type="text"   placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" style="background-position: 95% center">
                                     <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@
                                         <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time" required>
                                             <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup time','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                             <?php foreach ($available_times as $key => $time) : ?>
-                                                <option value="<?php echo esc_html($time); ?>"><?php echo esc_html(gmdate(get_option('time_format'), strtotime($time))); ?></option>
+                                                <option value="<?php echo esc_attr($time); ?>"><?php echo esc_html(gmdate(get_option('time_format'), strtotime($time))); ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                         <span class="input-picker-icon"></span>
@@ -142,7 +142,7 @@
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
                             <label>
                                 <input type="radio" name="option" class="radio-input">
-                                <span title="<?php echo esc_html($value['short_desc']); ?>" data-duration="<?php echo esc_html($value['duration']); ?>" data-price="<?php echo esc_html($value['price']); ?>" data-d_type="<?php echo esc_html($value['d_type']); ?>" data-start_time="<?php echo esc_html($value['start_time']) ?? '' ?>" data-end_time="<?php echo esc_html($value['end_time']) ?? '' ?>" class="radio-button single-type-timely"><?php echo esc_html($value['rent_type']); ?></span>
+                                <span title="<?php echo esc_attr($value['short_desc']); ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($value['price']); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']) ?? '' ?>" data-end_time="<?php echo esc_attr($value['end_time']) ?? '' ?>" class="radio-button single-type-timely"><?php echo esc_html($value['rent_type']); ?></span>
                             </label>
                         <?php } ?>
                     </div>
@@ -179,7 +179,7 @@
 				<!-- Button -->
 				
 				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
-					<button type="submit" name="add-to-cart" value="<?php echo esc_html($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn rbfw_disabled_button" disabled>
+					<button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn rbfw_disabled_button" disabled>
 					<?php
 						echo esc_html($rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce')));
 					?>
@@ -215,10 +215,10 @@
                 <input type="hidden" name="manage_inventory_as_timely" id="manage_inventory_as_timely" value="<?php echo esc_attr($manage_inventory_as_timely); ?>">
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
                 <input type="hidden" name="rbfw_regf_info" id="rbfw_regf_info"  value='<?php echo wp_json_encode($rbfw_regf_info); ?>'>
-                <input type="hidden" name="appointment_days" id="appointment_days"  value='<?php echo esc_html($appointment_days); ?>'>
-                <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_html(rbfw_off_days($post_id)); ?>'>
-                <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range" class="llll"  value='<?php echo esc_html(rbfw_off_dates($post_id)); ?>'>
-                <input type="hidden" name="rbfw_post_id" id="rbfw_post_id" class="rbfw_post_id"  value="<?php echo esc_html($rbfw_id); ?>">
+                <input type="hidden" name="appointment_days" id="appointment_days"  value='<?php echo esc_attr($appointment_days); ?>'>
+                <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
+                <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range" class="llll"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
+                <input type="hidden" name="rbfw_post_id" id="rbfw_post_id" class="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
 
 			</form>
 		</div>

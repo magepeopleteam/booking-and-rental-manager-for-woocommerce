@@ -54,7 +54,7 @@ if ( post_password_required() ) {
     //include_once( RBFW_Function::get_template($post_id) );
     $today_booking_enable = rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings');
     ?>
-    <input type="hidden" class="rbfw_today_booking_enable" value="<?php echo esc_html($today_booking_enable); ?>">
+    <input type="hidden" class="rbfw_today_booking_enable" value="<?php echo esc_attr($today_booking_enable); ?>">
     <?php
     RBFW_Frontend::load_template($post_id);
 

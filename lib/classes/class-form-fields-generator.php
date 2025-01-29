@@ -7131,52 +7131,52 @@
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 														?>
-                                                    <input type="text" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="text" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'number' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="number" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="number" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'url' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="url" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="url" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'tel' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="tel" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="tel" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'time' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="time" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="time" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'search' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="search" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="search" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'month' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="month" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="month" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'color' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="color" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="color" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'date' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="date" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="date" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'email' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="email" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="email" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'textarea' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$_value  = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;

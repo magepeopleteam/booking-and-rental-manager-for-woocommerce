@@ -164,7 +164,7 @@
 			$price_level = $prices_start_at;
 		}
 		?>
-        <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo esc_html( $d ); ?>">
+        <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo esc_attr( $d ); ?>">
             <div class="rbfw_rent_list_inner_wrapper">
                 <div class="<?php echo esc_attr( $image_holder ) ?>">
                     <a class="rbfw_rent_list_grid_view_top_img" href="<?php echo esc_url( $post_link ); ?>">
@@ -211,7 +211,13 @@
 														$rand_number = wp_rand();
 														if ( $title ) {
 															?>
-                                                            <li class=" bfw_rent_list_items title <?php echo esc_html( $rand_number ); ?>"><span class="bfw_rent_list_items_icon"><i class="<?php echo esc_html( $icon ) ?>"></i></span> <?php echo esc_html( $title ); ?></li>
+                                                            <li class="bfw_rent_list_items title <?php echo esc_attr( $rand_number ); ?>">
+																<span class="bfw_rent_list_items_icon">
+																	<i class="<?php echo esc_attr( $icon ); ?>"></i>
+																</span>
+																<?php echo esc_html( $title ); ?>
+															</li>
+
 															<?php
 														}
 													}
@@ -220,7 +226,7 @@
 											}
 										?>
 										<?php if ( count( $cat_features ) > $display_cat_features ) { ?>
-                                            <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_html( $post_id ); ?>">See more</div>
+                                            <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr( $post_id ); ?>">See more</div>
 										<?php } ?>
                                     </ul>
 									<?php
