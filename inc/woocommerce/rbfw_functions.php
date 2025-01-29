@@ -9,6 +9,7 @@
 	add_action( 'woocommerce_after_checkout_validation', 'rbfw_validation_before_checkout' );
 	add_action( 'woocommerce_checkout_create_order_line_item', 'rbfw_add_order_item_data', 90, 4 );
 	add_action( 'woocommerce_before_thankyou', 'rbfw_booking_management' );
+	//add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management' );
 	add_action( 'rbfw_wc_order_status_change', 'rbfw_change_user_order_status_on_order_status_change', 10, 3 );
 	function rbfw_add_info_to_cart_item( $cart_item_data, $product_id, $variation_id ) {
 
@@ -766,11 +767,29 @@
 		}
 	}
 	function rbfw_booking_management( $order_id ) {
+
+
+
+
+        $post = get_post($order_id);
+        if ($post) {
+            $parent_id = $post->post_parent;
+            if ($parent_id) {
+                if(isset($_COOKIE['parent_id']) && ($_COOKIE['parent_id'] ==$parent_id) ) {
+                    return;
+                }
+                setcookie('parent_id', $parent_id);
+                $order_id = $parent_id;
+            }
+        }
+
 		global $rbfw;
 		if ( ! $order_id ) {
 			return;
 		}
+
 		$order        = wc_get_order( $order_id );
+
 		$order_status = $order->get_status();
 		if ( $order_status != 'failed' ) {
 			foreach ( $order->get_items() as $item_id => $item_values ) {

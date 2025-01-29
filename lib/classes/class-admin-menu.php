@@ -463,6 +463,7 @@
 				$rbfw_payment_system = $rbfw->get_option_trans( 'rbfw_payment_system', 'rbfw_basic_payment_settings', 'mps' );
 				$title               = $meta_data['rbfw_billing_name'];
 				$cpt_name            = 'rbfw_order';
+
 				if ( $rbfw_payment_system == 'wps' ) {
 					$rbfw_id          = $meta_data['rbfw_id'];
 					$wc_order_id      = $meta_data['rbfw_order_id'];
