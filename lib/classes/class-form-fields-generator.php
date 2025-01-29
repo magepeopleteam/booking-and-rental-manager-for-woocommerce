@@ -1272,7 +1272,7 @@
 						<?php
 							foreach ( $args as $key => $arg ):
 								$checked = ( $arg == $value ) ? "checked" : "";
-								?><label class="<?php echo esc_attr( $checked ); ?>" for='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>'><input type='radio' id='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>' value='<?php echo esc_attr( $key ); ?>' <?php echo esc_attr( $checked ); ?>><span class="sw-button"><img data-id="<?php echo esc_attr( $id ); ?>" src="<?php echo esc_attr( $arg ); ?>"> </span></label><?php
+								?><label class="<?php echo esc_attr( $checked ); ?>" for='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>'><input type='radio' id='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>' value='<?php echo esc_attr( $key ); ?>' <?php echo esc_attr( $checked ); ?>><span class="sw-button"><img data-id="<?php echo esc_attr( $id ); ?>" src="<?php echo esc_url( $arg ); ?>"> </span></label><?php
 							endforeach;
 						?>
                     </div>
@@ -4603,7 +4603,7 @@
 							foreach ( $values as $user_id ):
 								$get_avatar_url = get_avatar_url( $user_id, array( 'size' => '60' ) );
 								?>
-                                <div class="item" title="click to remove"><img src="<?php echo esc_attr( $get_avatar_url ); ?>"/><input type="hidden" name="<?php echo esc_attr( $field_name ); ?>[]" value="<?php echo esc_attr( $user_id ); ?>"></div><?php
+                                <div class="item" title="click to remove"><img src="<?php echo esc_url( $get_avatar_url ); ?>"/><input type="hidden" name="<?php echo esc_attr( $field_name ); ?>[]" value="<?php echo esc_attr( $user_id ); ?>"></div><?php
 							endforeach;
 						endif; ?>
                     </div>
@@ -5911,7 +5911,7 @@
 							$thumb = isset( $grid_item['thumb'] ) ? $grid_item['thumb'] : '';
 							?>
                             <div class="item">
-                                <div class="thumb"><a href="<?php echo esc_attr( $link ); ?>"><img src="<?php echo esc_attr( $thumb ); ?>"></img></a></div>
+                                <div class="thumb"><a href="<?php echo esc_attr( $link ); ?>"><img src="<?php echo esc_url( $thumb ); ?>"></img></a></div>
                                 <div class="name"><a href="<?php echo esc_attr( $link ); ?>"><?php echo esc_html( $title ); ?></a></div>
                             </div>
 							<?php
@@ -6168,7 +6168,7 @@
 								?><label  class="<?php echo esc_attr( $checked ); ?>" for='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>'><input
                                     type='radio' id='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>'
                                     value='<?php echo esc_attr( $key ); ?>' <?php echo esc_attr( $checked ); ?>>
-                                <img src="<?php echo esc_attr( $link ); ?>">
+                                <img src="<?php echo esc_url( $link ); ?>">
                                 <span class="checked-icon"><i class="fas fa-check"></i></span>
                                 </label><?php
 							endforeach;
@@ -6177,7 +6177,7 @@
 							?><label  class="checked" for='<?php echo esc_attr( $id ); ?>-custom'><input
                                 type='radio' id='<?php echo esc_attr( $id ); ?>-custom'
                                 value='<?php echo esc_attr( $value ); ?>' checked>
-                            <img src="<?php echo esc_attr( $value ); ?>">
+                            <img src="<?php echo esc_url( $value ); ?>">
                             <span class="checked-icon"><i class="fas fa-check"></i></span>
                             </label><?php
 						}
@@ -6571,7 +6571,7 @@
 								<?php
 							} else {
 								?>
-                                <img id='media_preview_<?php echo esc_attr( $id ); ?>' src='<?php echo esc_attr( $media_url ); ?>' style='width:100%'/>
+                                <img id='media_preview_<?php echo esc_attr( $id ); ?>' src='<?php echo esc_url( $media_url ); ?>' style='width:100%'/>
 								<?php
 							}
 						?>
@@ -6706,7 +6706,7 @@
                                     <div class="item">
                                         <span class="remove" onclick="jQuery(this).parent().remove()"><?php echo esc_html( $remove_text ); ?></span>
                                         <span class="sort">sort</span>
-                                        <img id='media_preview_<?php echo esc_attr( $id ); ?>' src='<?php echo esc_attr( $media_url ); ?>' style='width:100%'/>
+                                        <img id='media_preview_<?php echo esc_attr( $id ); ?>' src='<?php echo esc_url( $media_url ); ?>' style='width:100%'/>
                                         <div class="item-title"><?php echo esc_html( $media_title ); ?></div>
                                         <input type='hidden' name='<?php echo esc_attr( $field_name ); ?>[]' value='<?php echo esc_attr( $value ); ?>'/>
                                     </div>

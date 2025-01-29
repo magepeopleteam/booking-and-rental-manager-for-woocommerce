@@ -81,7 +81,7 @@
                                 <div class="tab-content tab-content-<?php echo esc_attr( $panelsIndex ); ?>">
 									<?php foreach ( $panel['sections'] as $sectionIndex => $section ) : ?>
                                         <h2 id="<?php echo esc_attr( $sectionIndex ); ?>"><?php echo esc_html( $section['title'] ); ?></h2>
-                                        <div data-title="<?php echo esc_html( $section['title'] ); ?>">
+                                        <div data-title="<?php echo esc_attr( $section['title'] ); ?>">
 											<?php foreach ( $section['options'] as $option ) : ?>
                                                 <section class="component d-flex  justify-content-between align-items-start mb-2" data-row="<?php echo esc_attr( $option['id'] ); ?>">
                                                     <label scope="row" class="h6 w-30">

@@ -122,7 +122,9 @@
 													?>
                                                     <div class="rbfw_multi_image_item" data-image-id="<?php echo esc_attr( $image ); ?>">
                                                         <span class="rbfw_close_multi_image_item"><i class="fas fa-trash-can"></i></span>
-                                                        <img src="<?php echo esc_attr( wp_get_attachment_image_url( $image, 'medium' ) ) ?>" alt="<?php echo esc_attr( $image ); ?>'"/>
+                                                        <img src="<?php echo esc_url( wp_get_attachment_image_url( $image, 'medium' ) ); ?>" 
+     alt="<?php echo esc_attr( get_post_meta( $image, '_wp_attachment_image_alt', true ) ); ?>" />
+
                                                     </div>
 													<?php
 												}

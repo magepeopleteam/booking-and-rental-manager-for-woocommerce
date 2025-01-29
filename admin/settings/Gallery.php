@@ -68,7 +68,7 @@
 										<div class=" gallery-image">
 											<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>
 											
-											<img id='media_preview_<?php echo esc_attr($post_id); ?>' src='<?php echo esc_attr($media_url); ?>' />
+											<img id="media_preview_<?php echo esc_attr($post_id); ?>" src="<?php echo esc_url($media_url); ?>" />
 											<input type='hidden' name='rbfw_gallery_images[]' value='<?php echo esc_attr($image); ?>' />
 										</div>
 									<?php
@@ -79,28 +79,30 @@
 						</div>
 					</section>
 					<script>
-						jQuery(document).ready(function($){
-							$('#media_upload_<?php echo esc_attr($post_id); ?>').click(function() {
-								//var send_attachment_bkp = wp.media.editor.send.attachment;
-								wp.media.editor.send.attachment = function(props, attachment) {
-									attachment_id = attachment.id;
-									attachment_url = attachment.url;
-									html = '<div class=" gallery-image">';
-									html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>';
-									html += '<img src="'+attachment_url+'" style="width:100%"/>';
-									html += '<input type="hidden" name="rbfw_gallery_images[]" value="'+attachment_id+'" />';
-									html += '</div>';
-									$('.media-list-<?php echo esc_attr($post_id); ?>').append(html);
-									//wp.media.editor.send.attachment = send_attachment_bkp;
-								}
-								wp.media.editor.open($(this));
-								return false;
-							});
-							$('#media_clear_<?php echo esc_attr($post_id); ?>').click(function() {
-								$('.media-list-<?php echo esc_attr($post_id); ?> .gallery-image').remove();
-							})
+					jQuery(document).ready(function($){
+						$('#media_upload_<?php echo esc_js($post_id); ?>').click(function() {
+							wp.media.editor.send.attachment = function(props, attachment) {
+								var attachment_id = parseInt(attachment.id, 10); // Ensure it's an integer
+								var attachment_url = encodeURIComponent(attachment.url); // Escape the URL properly
+								
+								var html = '<div class="gallery-image">';
+								html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>';
+								html += '<img src="' + attachment_url + '" style="width:100%"/>';
+								html += '<input type="hidden" name="rbfw_gallery_images[]" value="' + attachment_id + '" />';
+								html += '</div>';
+
+								$('.media-list-<?php echo esc_js($post_id); ?>').append(html);
+							}
+							wp.media.editor.open($(this));
+							return false;
 						});
+
+						$('#media_clear_<?php echo esc_js($post_id); ?>').click(function() {
+							$('.media-list-<?php echo esc_js($post_id); ?> .gallery-image').remove();
+						});
+					});
 					</script>
+					
                 </div>
             <?php 
             }

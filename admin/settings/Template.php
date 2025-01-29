@@ -161,7 +161,7 @@
 											?>
                                             <div class=" gallery-image">
                                                 <span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>
-                                                <img id='media_preview_<?php echo esc_attr( $post_id ); ?>' src='<?php echo esc_attr( $media_url ); ?>'/>
+                                                <img id="media_preview_<?php echo esc_attr( $post_id ); ?>" src="<?php echo esc_url( $media_url ); ?>" />
                                                 <input type='hidden' name='rbfw_gallery_images_additional[]' value='<?php echo esc_attr( $image ); ?>'/>
                                             </div>
 										<?php

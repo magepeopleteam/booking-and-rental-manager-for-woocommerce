@@ -269,18 +269,19 @@ class RBFW_Setting_API {
 		$id			= isset( $args['id'] ) ? $args['id'] : "";
 		$value = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
 		$media_url	= wp_get_attachment_url( $value );
-		$media_type	= get_post_mime_type( $value );
-		$media_title= get_the_title( $value );
-		wp_enqueue_media();
+		$media_type = get_post_mime_type($value);
+        $media_title = get_the_title($value);
+        wp_enqueue_media();
 
-		echo "<div class='media_preview'>";
+        echo "<div class='media_preview'>";
 
-		if( "audio/mpeg" == $media_type ){
-			esc_html_e('Audio/Video format not supported.','booking-and-rental-manager-for-woocommerce');
-		}
-		else {
-			echo wp_kses_post("<img id='media_preview_$id' src='$media_url'/>");
-		}
+        if ("audio/mpeg" == $media_type) {
+            esc_html_e('Audio/Video format not supported.', 'booking-and-rental-manager-for-woocommerce');
+        } else {
+            echo "<img id='media_preview_" . esc_attr($id) . "' src='" . esc_url($media_url) . "' />";
+        }
+
+        echo "</div>";
 
 		echo "</div>";
         echo wp_kses_post( '<input type="hidden" id="media_input_'.$id.'" name="'.$args['section'].'['.$id.']" value="'.$value.'"/>');
