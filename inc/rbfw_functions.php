@@ -666,54 +666,57 @@
 		$icon_library_list = $icon_library->rbfw_fontawesome_icons();
 		?>
         <script>
-            jQuery(document).ready(function () {
-                jQuery('.rbfw_load_more_icons').click(function (e) {
-                    e.preventDefault();
-                    let data_loaded = parseInt(jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded'));
-                    var data = {
-                        'action': 'rbfw_load_more_icons',
-                        'data_loaded': data_loaded
-                    };
-                    jQuery.ajax({
-                        type: 'POST',
-                        url: ajaxurl,
-                        data: {
-                            'action': 'rbfw_load_more_icons',
-                            'data_loaded': data_loaded
-                        },
-                        beforeSend: function () {
-                            jQuery('.rbfw_load_more_icons').append('<span class="rbfw_load_more_icons_loader"><i class="fas fa-spinner fa-spin"></i></span>');
-                        },
-                        success: function (response) {
-                            console.log('response', response);
-                            jQuery('.rbfw_load_more_icons_loader').remove();
-                            jQuery('.rbfw_features_icon_list_body').append(response);
-                            data_loaded = data_loaded + 100;
-                            jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded', data_loaded);
-                            if (response == '') {
-                                jQuery('.rbfw_load_more_icons').hide();
-                            }
-                            // Selected Feature Icon Action
-                            jQuery(document).on('click', '#rbfw_features_icon_list_wrapper label', function (e) {
-                                e.stopImmediatePropagation();
-                                let selected_label = jQuery(this);
-                                let selected_val = jQuery('input', this).val();
-                                let selected_data_key = jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
-                                let selected_data_cat = jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
-                                jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-                                jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon_preview[data-key="' + selected_data_key + '"]').empty();
-                                jQuery(selected_label).addClass('selected');
-                                jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon[data-key="' + selected_data_key + '"]').val(selected_val);
-                                jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon_preview[data-key="' + selected_data_key + '"]').append('<i class="' + selected_val + '"></i>');
-                            });
-                        },
-                        error: function (response) {
-                            console.log(response);
-                        }
-                    });
-                });
-            });
-        </script>
+		jQuery(document).ready(function () {
+			jQuery('.rbfw_load_more_icons').click(function (e) {
+				e.preventDefault();
+				let data_loaded = parseInt(jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded'));
+				var data = {
+					'action': 'rbfw_load_more_icons',
+					'data_loaded': data_loaded
+				};
+				jQuery.ajax({
+					type: 'POST',
+					url: <?php echo json_encode(esc_url(admin_url('admin-ajax.php'))); ?>, // Escape URL
+					data: {
+						'action': 'rbfw_load_more_icons',
+						'data_loaded': data_loaded
+					},
+					beforeSend: function () {
+						jQuery('.rbfw_load_more_icons').append('<span class="rbfw_load_more_icons_loader"><i class="fas fa-spinner fa-spin"></i></span>');
+					},
+					success: function (response) {
+						console.log('response', response);
+						jQuery('.rbfw_load_more_icons_loader').remove();
+						// Escape response to ensure no unwanted HTML or scripts
+						jQuery('.rbfw_features_icon_list_body').append(esc_html(response));
+						data_loaded = data_loaded + 100;
+						jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded', data_loaded);
+						if (response == '') {
+							jQuery('.rbfw_load_more_icons').hide();
+						}
+						// Selected Feature Icon Action
+						jQuery(document).on('click', '#rbfw_features_icon_list_wrapper label', function (e) {
+							e.stopImmediatePropagation();
+							let selected_label = jQuery(this);
+							let selected_val = jQuery('input', this).val();
+							let selected_data_key = jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
+							let selected_data_cat = jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
+							jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
+							jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon_preview[data-key="' + selected_data_key + '"]').empty();
+							jQuery(selected_label).addClass('selected');
+							// Escape values for attributes and DOM
+							jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon[data-key="' + selected_data_key + '"]').val(esc_attr(selected_val));
+							jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon_preview[data-key="' + selected_data_key + '"]').append('<i class="' + esc_attr(selected_val) + '"></i>');
+						});
+					},
+					error: function (response) {
+						console.log(response);
+					}
+				});
+			});
+		});
+	</script>
+
         <div id="rbfw_features_icon_list_wrapper" class="mage_modal ggggg" data-loaded="100">
             <div class="rbfw_features_icon_list_header">
                 <div class="rbfw_features_icon_list_header_group">
@@ -1694,11 +1697,16 @@
 															echo '<li class="title' . esc_attr($rand_number) . '"><i class="' . esc_attr($icon) . '"></i></li>';
 															?>
                                                             <script>
-                                                                jQuery(document).ready(function () {
-                                                                    let content<?php echo esc_html( $rand_number ); ?> = '<?php echo esc_html( $feature['title'] ); ?>';
-                                                                    tippy('.title' +<?php echo esc_html( $rand_number ); ?>, {content: content<?php echo esc_html( $rand_number ); ?>, theme: 'blue', placement: 'top'});
-                                                                });
-                                                            </script>
+																jQuery(document).ready(function () {
+																	// Escape variables properly for JavaScript context
+																	let content<?php echo esc_js( $rand_number ); ?> = '<?php echo esc_html( $feature['title'] ); ?>';
+																	tippy('.title<?php echo esc_js( $rand_number ); ?>', {
+																		content: content<?php echo esc_js( $rand_number ); ?>,
+																		theme: 'blue',
+																		placement: 'top'
+																	});
+																});
+															</script>
 														<?php
 														endif;
 													}
@@ -1941,11 +1949,16 @@
 																echo '<li class="title' . esc_attr($rand_number) . '"><i class="' . esc_attr($icon) . '"></i></li>';
 																?>
                                                                 <script>
-                                                                    jQuery(document).ready(function () {
-                                                                        let content<?php echo esc_html( $rand_number ); ?> = '<?php echo esc_html( $feature['title'] ); ?>';
-                                                                        tippy('.title' +<?php echo esc_html( $rand_number ); ?>, {content: content<?php echo esc_html( $rand_number ); ?>, theme: 'blue', placement: 'top'});
-                                                                    });
-                                                                </script>
+																	jQuery(document).ready(function () {
+																		// Properly escape JavaScript and HTML content
+																		let content<?php echo esc_js( $rand_number ); ?> = '<?php echo esc_html( $feature['title'] ); ?>';
+																		tippy('.title<?php echo esc_js( $rand_number ); ?>', {
+																			content: content<?php echo esc_js( $rand_number ); ?>,
+																			theme: 'blue',
+																			placement: 'top'
+																		});
+																	});
+																</script>
 															<?php
 															endif;
 														}

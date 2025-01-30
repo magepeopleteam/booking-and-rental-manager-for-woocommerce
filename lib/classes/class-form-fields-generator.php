@@ -439,9 +439,10 @@
 								});
 							}
 						</script>
-                        <script async defer
-                                src="https://maps.googleapis.com/maps/api/js?key=<?php echo esc_html( $apikey ); ?>&callback=initMap">
-                        </script>
+						<script async defer
+								src="https://maps.googleapis.com/maps/api/js?key=<?php echo esc_html( $apikey ); ?>&callback=initMap">
+						</script>
+
 					<?php
 					endif;
 				endif;
@@ -549,84 +550,26 @@
                                 <input type='number' name='<?php echo esc_attr( $field_name ); ?>[width]' value='<?php echo esc_attr( $width ); ?>'/>
                             </span>
                             <select name="<?php echo esc_attr( $field_name ); ?>[unit]">
-                                <option <?php if ( $unit == 'px' ) {
-									echo 'selected';
-								} ?> value="px">px
-                                </option>
-                                <option <?php if ( $unit == '%' ) {
-									echo 'selected';
-								} ?> value="%">%
-                                </option>
-                                <option <?php if ( $unit == 'em' ) {
-									echo 'selected';
-								} ?> value="em">em
-                                </option>
-                                <option <?php if ( $unit == 'cm' ) {
-									echo 'selected';
-								} ?> value="cm">cm
-                                </option>
-                                <option <?php if ( $unit == 'mm' ) {
-									echo 'selected';
-								} ?> value="mm">mm
-                                </option>
-                                <option <?php if ( $unit == 'in' ) {
-									echo 'selected';
-								} ?> value="in">in
-                                </option>
-                                <option <?php if ( $unit == 'pt' ) {
-									echo 'selected';
-								} ?> value="pt">pt
-                                </option>
-                                <option <?php if ( $unit == 'pc' ) {
-									echo 'selected';
-								} ?> value="pc">pc
-                                </option>
-                                <option <?php if ( $unit == 'ex' ) {
-									echo 'selected';
-								} ?> value="ex">ex
-                                </option>
-                            </select>
+								<?php 
+								$units = [ 'px', '%', 'em', 'cm', 'mm', 'in', 'pt', 'pc', 'ex' ];
+								foreach ( $units as $u ) : ?>
+									<option value="<?php echo esc_attr( $u ); ?>" <?php selected( $unit, $u ); ?>>
+										<?php echo esc_html( $u ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
                         </div>
                         <div class="item">
                             <span class="field-title">Style</span>
                             <select name="<?php echo esc_attr( $field_name ); ?>[style]">
-                                <option <?php if ( $style == 'dotted' ) {
-									echo 'selected';
-								} ?> value="dotted">dotted
-                                </option>
-                                <option <?php if ( $style == 'dashed' ) {
-									echo 'selected';
-								} ?> value="dashed">dashed
-                                </option>
-                                <option <?php if ( $style == 'solid' ) {
-									echo 'selected';
-								} ?> value="solid">solid
-                                </option>
-                                <option <?php if ( $style == 'double' ) {
-									echo 'selected';
-								} ?> value="double">double
-                                </option>
-                                <option <?php if ( $style == 'groove' ) {
-									echo 'selected';
-								} ?> value="groove">groove
-                                </option>
-                                <option <?php if ( $style == 'ridge' ) {
-									echo 'selected';
-								} ?> value="ridge">ridge
-                                </option>
-                                <option <?php if ( $style == 'inset' ) {
-									echo 'selected';
-								} ?> value="inset">inset
-                                </option>
-                                <option <?php if ( $style == 'outset' ) {
-									echo 'selected';
-								} ?> value="outset">outset
-                                </option>
-                                <option <?php if ( $style == 'none' ) {
-									echo 'selected';
-								} ?> value="none">none
-                                </option>
-                            </select>
+								<?php 
+								$styles = [ 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset', 'none' ];
+								foreach ( $styles as $s ) : ?>
+									<option value="<?php echo esc_attr( $s ); ?>" <?php selected( $style, $s ); ?>>
+										<?php echo esc_html( $s ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
                         </div>
                         <div class="item">
                             <span class="field-title">Color</span>
@@ -742,43 +685,14 @@
 												echo esc_attr( $index ); ?>][val]' value='<?php
 												echo esc_attr( $values[ $index ]['val'] ); ?>'/></span>
                                         <select name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][unit]">
-                                            <option <?php if ( $unit == 'px' ) {
-												echo 'selected';
-											} ?> value="px">px
-                                            </option>
-                                            <option <?php if ( $unit == '%' ) {
-												echo 'selected';
-											} ?> value="%">%
-                                            </option>
-                                            <option <?php if ( $unit == 'em' ) {
-												echo 'selected';
-											} ?> value="em">em
-                                            </option>
-                                            <option <?php if ( $unit == 'cm' ) {
-												echo 'selected';
-											} ?> value="cm">cm
-                                            </option>
-                                            <option <?php if ( $unit == 'mm' ) {
-												echo 'selected';
-											} ?> value="mm">mm
-                                            </option>
-                                            <option <?php if ( $unit == 'in' ) {
-												echo 'selected';
-											} ?> value="in">in
-                                            </option>
-                                            <option <?php if ( $unit == 'pt' ) {
-												echo 'selected';
-											} ?> value="pt">pt
-                                            </option>
-                                            <option <?php if ( $unit == 'pc' ) {
-												echo 'selected';
-											} ?> value="pc">pc
-                                            </option>
-                                            <option <?php if ( $unit == 'ex' ) {
-												echo 'selected';
-											} ?> value="ex">ex
-                                            </option>
-                                        </select>
+											<?php 
+											$units = [ 'px', '%', 'em', 'cm', 'mm', 'in', 'pt', 'pc', 'ex' ];
+											foreach ( $units as $u ) : ?>
+												<option value="<?php echo esc_attr( $u ); ?>" <?php selected( $unit, $u ); ?>>
+													<?php echo esc_html( $u ); ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
                                     </div>
 								<?php
 								endforeach;
@@ -894,44 +808,15 @@
                                         <span class="input-wrapper">
                                     <input type='number' name='<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][val]' value='<?php echo esc_attr( $values[ $index ]['val'] ); ?>'/>
                                 </span>
-                                        <select name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][unit]">
-                                            <option <?php if ( $unit == 'px' ) {
-												echo 'selected';
-											} ?> value="px">px
-                                            </option>
-                                            <option <?php if ( $unit == '%' ) {
-												echo 'selected';
-											} ?> value="%">%
-                                            </option>
-                                            <option <?php if ( $unit == 'em' ) {
-												echo 'selected';
-											} ?> value="em">em
-                                            </option>
-                                            <option <?php if ( $unit == 'cm' ) {
-												echo 'selected';
-											} ?> value="cm">cm
-                                            </option>
-                                            <option <?php if ( $unit == 'mm' ) {
-												echo 'selected';
-											} ?> value="mm">mm
-                                            </option>
-                                            <option <?php if ( $unit == 'in' ) {
-												echo 'selected';
-											} ?> value="in">in
-                                            </option>
-                                            <option <?php if ( $unit == 'pt' ) {
-												echo 'selected';
-											} ?> value="pt">pt
-                                            </option>
-                                            <option <?php if ( $unit == 'pc' ) {
-												echo 'selected';
-											} ?> value="pc">pc
-                                            </option>
-                                            <option <?php if ( $unit == 'ex' ) {
-												echo 'selected';
-											} ?> value="ex">ex
-                                            </option>
-                                        </select>
+								<select name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][unit]">
+									<?php 
+									$units = [ 'px', '%', 'em', 'cm', 'mm', 'in', 'pt', 'pc', 'ex' ];
+									foreach ( $units as $u ) : ?>
+										<option value="<?php echo esc_attr( $u ); ?>" <?php selected( $unit, $u ); ?>>
+											<?php echo esc_html( $u ); ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
                                     </div>
 								<?php
 								endforeach;
@@ -940,45 +825,46 @@
                         <div class="error-mgs"></div>
                     </div>
                     <script>
-                        jQuery(document).ready(function ($) {
-                            jQuery(document).on('keyup change', '.field-padding-wrapper-<?php echo esc_attr( $id ); ?>  input[type="number"]',
-                                function () {
-                                    is_checked = jQuery('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> .change-together').attr('checked');
-                                    if (is_checked == 'checked') {
-                                        val = jQuery(this).val();
-                                        i = 0;
-                                        $('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
-                                            if (i > 0) {
-                                                jQuery(this).val(val);
-                                            }
-                                            i++;
-                                        });
-                                    }
-                                })
-                            jQuery(document).on('click', '.field-padding-wrapper-<?php echo esc_attr( $id ); ?> .change-together', function () {
-                                is_checked = this.checked;
-                                if (is_checked) {
-                                    i = 0;
-                                    $('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
-                                        if (i > 0) {
-                                            jQuery(this).attr('readonly', 'readonly');
-                                        }
-                                        i++;
-                                    });
-                                    i = 0;
-                                    $('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> select').each(function (index) {
-                                        if (i > 0) {
-                                            //jQuery(this).attr('disabled','disabled');
-                                        }
-                                        i++;
-                                    });
-                                } else {
-                                    jQuery('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').removeAttr('readonly');
-                                    //jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> select').removeAttr('disabled');
-                                }
-                            })
-                        })
-                    </script>
+						jQuery(document).ready(function ($) {
+							jQuery(document).on('keyup change', '.field-padding-wrapper-<?php echo esc_attr( $id ); ?>  input[type="number"]', function () {
+								var is_checked = jQuery('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> .change-together').prop('checked');
+								if (is_checked) {
+									var val = jQuery(this).val();
+									var i = 0;
+									$('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
+										if (i > 0) {
+											jQuery(this).val(val);
+										}
+										i++;
+									});
+								}
+							});
+
+							jQuery(document).on('click', '.field-padding-wrapper-<?php echo esc_attr( $id ); ?> .change-together', function () {
+								var is_checked = this.checked;
+								if (is_checked) {
+									var i = 0;
+									$('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
+										if (i > 0) {
+											jQuery(this).attr('readonly', 'readonly');
+										}
+										i++;
+									});
+									i = 0;
+									$('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> select').each(function (index) {
+										if (i > 0) {
+											//jQuery(this).attr('disabled','disabled');
+										}
+										i++;
+									});
+								} else {
+									jQuery('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').removeAttr('readonly');
+									//jQuery('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> select').removeAttr('disabled');
+								}
+							});
+						});
+					</script>
+
 				<?php
 				endif;
 
@@ -1086,44 +972,15 @@
                                         <span class="input-wrapper">
                                     <input class="<?php echo esc_attr( $index ); ?>" type='number' name='<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][val]' value='<?php echo esc_attr( $values[ $index ]['val'] ); ?>'/>
                                 </span>
-                                        <select name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][unit]">
-                                            <option <?php if ( $unit == 'px' ) {
-												echo 'selected';
-											} ?> value="px">px
-                                            </option>
-                                            <option <?php if ( $unit == '%' ) {
-												echo 'selected';
-											} ?> value="%">%
-                                            </option>
-                                            <option <?php if ( $unit == 'em' ) {
-												echo 'selected';
-											} ?> value="em">em
-                                            </option>
-                                            <option <?php if ( $unit == 'cm' ) {
-												echo 'selected';
-											} ?> value="cm">cm
-                                            </option>
-                                            <option <?php if ( $unit == 'mm' ) {
-												echo 'selected';
-											} ?> value="mm">mm
-                                            </option>
-                                            <option <?php if ( $unit == 'in' ) {
-												echo 'selected';
-											} ?> value="in">in
-                                            </option>
-                                            <option <?php if ( $unit == 'pt' ) {
-												echo 'selected';
-											} ?> value="pt">pt
-                                            </option>
-                                            <option <?php if ( $unit == 'pc' ) {
-												echo 'selected';
-											} ?> value="pc">pc
-                                            </option>
-                                            <option <?php if ( $unit == 'ex' ) {
-												echo 'selected';
-											} ?> value="ex">ex
-                                            </option>
-                                        </select>
+								<select name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][unit]">
+									<?php 
+									$units = [ 'px', '%', 'em', 'cm', 'mm', 'in', 'pt', 'pc', 'ex' ];
+									foreach ( $units as $u ) : ?>
+										<option value="<?php echo esc_attr( $u ); ?>" <?php selected( $unit, $u ); ?>>
+											<?php echo esc_html( $u ); ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
                                     </div>
 								<?php
 								endforeach;
@@ -1131,46 +988,46 @@
                         </div>
                         <div class="error-mgs"></div>
                     </div>
-                    <script>
-                        jQuery(document).ready(function ($) {
-                            jQuery(document).on('keyup change', '.field-margin-wrapper-<?php echo esc_attr( $id ); ?>  input[type="number"]',
-                                function () {
-                                    is_checked = jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> .change-together').attr('checked');
-                                    if (is_checked == 'checked') {
-                                        val = jQuery(this).val();
-                                        i = 0;
-                                        $('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
-                                            if (i > 0) {
-                                                jQuery(this).val(val);
-                                            }
-                                            i++;
-                                        });
-                                    }
-                                })
-                            jQuery(document).on('click', '.field-margin-wrapper-<?php echo esc_attr( $id ); ?> .change-together', function () {
-                                is_checked = this.checked;
-                                if (is_checked) {
-                                    i = 0;
-                                    $('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
-                                        if (i > 0) {
-                                            jQuery(this).attr('readonly', 'readonly');
-                                        }
-                                        i++;
-                                    });
-                                    i = 0;
-                                    $('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> select').each(function (index) {
-                                        if (i > 0) {
-                                            //jQuery(this).attr('disabled','disabled');
-                                        }
-                                        i++;
-                                    });
-                                } else {
-                                    jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').removeAttr('readonly');
-                                    //jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> select').removeAttr('disabled');
-                                }
-                            })
-                        })
-                    </script>
+					<script>
+						jQuery(document).ready(function ($) {
+							jQuery(document).on('keyup change', '.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]', function () {
+								var is_checked = jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> .change-together').prop('checked');
+								if (is_checked) {
+									var val = jQuery(this).val();
+									var i = 0;
+									$('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
+										if (i > 0) {
+											jQuery(this).val(val);
+										}
+										i++;
+									});
+								}
+							});
+
+							jQuery(document).on('click', '.field-margin-wrapper-<?php echo esc_attr( $id ); ?> .change-together', function () {
+								var is_checked = this.checked;
+								if (is_checked) {
+									var i = 0;
+									$('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
+										if (i > 0) {
+											jQuery(this).attr('readonly', 'readonly');
+										}
+										i++;
+									});
+									i = 0;
+									$('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> select').each(function (index) {
+										if (i > 0) {
+											//jQuery(this).attr('disabled','disabled');
+										}
+										i++;
+									});
+								} else {
+									jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').removeAttr('readonly');
+									//jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> select').removeAttr('disabled');
+								}
+							});
+						});
+					</script>
 				<?php
 				endif;
 

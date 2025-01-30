@@ -167,12 +167,14 @@ if ( ! class_exists( 'RBFW_Dependencies' ) ) {
         public function included_header_script() {
             ?>
             <script>
+                // Safely pass WordPress options to JavaScript
                 let start_of_week = <?php echo json_encode(esc_js(get_option('start_of_week'))); ?>;
                 let wp_date_format = <?php echo json_encode(esc_js(get_option('date_format'))); ?>;
                 let wp_time_format = <?php echo json_encode(esc_js(get_option('time_format'))); ?>;
                 
-                let js_date_format = 'yy-mm-dd';
+                let js_date_format = 'yy-mm-dd'; // Default date format
 
+                // Modify JavaScript date format based on WordPress date format
                 if (wp_date_format === 'F j, Y') {
                     js_date_format = 'dd M yy';
                 } else if (wp_date_format === 'm/d/Y') {
@@ -180,12 +182,11 @@ if ( ! class_exists( 'RBFW_Dependencies' ) ) {
                 } else if (wp_date_format === 'd/m/Y') {
                     js_date_format = 'dd/mm/yy';
                 }
-
             </script>
             <script type="text/javascript">
-                let rbfw_ajax_url = <?php echo json_encode(admin_url('admin-ajax.php')); ?>;
+                let rbfw_ajax_url = <?php echo json_encode(esc_url(admin_url('admin-ajax.php'))); ?>;
                 let rbfw_vars = {
-                    rbfw_nonce: <?php echo json_encode(wp_create_nonce('rbfw_nonce')); ?>
+                    rbfw_nonce: <?php echo json_encode(esc_js(wp_create_nonce('rbfw_nonce'))); ?>
                 };
             </script>
             <?php

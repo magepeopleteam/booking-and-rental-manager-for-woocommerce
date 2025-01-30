@@ -145,9 +145,10 @@ if (!class_exists('RBFW_Status')) {
 		        $activate = activate_plugin( $slug );
                 $url = admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_import' );
                 echo wp_kses_post('<script>
-                var url = "'.$url.'";
-                window.location.replace(url);
+                    var url = "' . esc_url( $url ) . '";
+                    window.location.replace(url);
                 </script>');
+
             }
             else{
                 return false;
@@ -176,10 +177,11 @@ if (!class_exists('RBFW_Status')) {
                     );
                     if(isset($url)){
                         echo wp_kses_post('<script>
-                            str = "'.$url.'";
+                            var str = "' . esc_js( esc_url( $url ) ) . '";
                             var url = str.replace(/&amp;/g, "&");
                             window.location.replace(url);
-                            </script>');
+                        </script>');
+
                     }
 
 

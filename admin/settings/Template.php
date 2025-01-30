@@ -232,26 +232,26 @@
                             .children('.testimonial-field').attr('name', 'rbfw_dt_sidebar_testimonials[' + now + '][rbfw_dt_sidebar_testimonial_text]');
                     }
                     jQuery(document).ready(function ($) {
-                        $('#rbfw_gallery_images_additional_<?php echo esc_attr( $post_id ); ?>').click(function () {
-                            //var send_attachment_bkp = wp.media.editor.send.attachment;
-                            wp.media.editor.send.attachment = function (props, attachment) {
-                                attachment_id = attachment.id;
-                                attachment_url = attachment.url;
-                                html = '<div class=" gallery-image">';
-                                html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>';
-                                html += '<img src="' + attachment_url + '" style="width:100%"/>';
-                                html += '<input type="hidden" name="rbfw_gallery_images_additional[]" value="' + attachment_id + '" />';
-                                html += '</div>';
-                                $('.media-list-additional-<?php echo esc_attr( $post_id ); ?>').append(html);
-                                //wp.media.editor.send.attachment = send_attachment_bkp;
-                            }
-                            wp.media.editor.open($(this));
-                            return false;
-                        });
-                        $('#media_clear_additional_<?php echo esc_attr( $post_id ); ?>').click(function () {
-                            $('.media-list-additional-<?php echo esc_attr( $post_id ); ?> .gallery-image').remove();
-                        })
+                    $('#rbfw_gallery_images_additional_<?php echo esc_attr( $post_id ); ?>').click(function () {
+                        // Set up the media editor attachment handler
+                        wp.media.editor.send.attachment = function (props, attachment) {
+                            var attachment_id = attachment.id;
+                            var attachment_url = <?php echo json_encode( esc_url( get_template_directory_uri() ) ); ?> + '/' + attachment.url;
+                            var html = '<div class="gallery-image">';
+                            html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>';
+                            html += '<img src="' + esc_url(attachment_url) + '" style="width:100%"/>';
+                            html += '<input type="hidden" name="rbfw_gallery_images_additional[]" value="' + esc_attr(attachment_id) + '" />';
+                            html += '</div>';
+                            $('.media-list-additional-<?php echo esc_attr( $post_id ); ?>').append(html);
+                        }
+                        wp.media.editor.open($(this));
+                        return false;
                     });
+
+                    $('#media_clear_additional_<?php echo esc_attr( $post_id ); ?>').click(function () {
+                        $('.media-list-additional-<?php echo esc_attr( $post_id ); ?> .gallery-image').remove();
+                    })
+                });
                 </script>
 				<?php
 			}

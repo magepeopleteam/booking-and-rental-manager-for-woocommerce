@@ -3,8 +3,9 @@ if (!defined('ABSPATH')) {
     die;
 } // Cannot access pages directly.
 
-add_action('admin_init','rbfw_quick_setup_exit',99);
-function rbfw_quick_setup_exit(){
+add_action('admin_init', 'rbfw_quick_setup_exit', 99);
+function rbfw_quick_setup_exit()
+{
     if (isset($_POST['rbfw_quick_setup']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_quick_setup'])), 'rbfw_quick_setup_nonce')) {
         if (isset($_REQUEST['rbfw_skip_quick_setup'])) {
             update_option('rbfw_quick_setup_done', 'exit');
@@ -16,27 +17,28 @@ function rbfw_quick_setup_exit(){
 }
 
 if (!class_exists('RBFW_Quick_Setup')) {
-    class RBFW_Quick_Setup {
+    class RBFW_Quick_Setup
+    {
 
-        public function __construct() {
+        public function __construct()
+        {
             if (!class_exists('TTBM_Dependencies')) {
                 add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'), 10, 1);
             }
             add_action('admin_menu', array($this, 'quick_setup_menu'));
         }
-        public function add_admin_scripts() {
-
-        }
-        public function quick_setup_menu() {
+        public function add_admin_scripts() {}
+        public function quick_setup_menu()
+        {
             $status = rbfw_woo_install_check();;
             if ($status == 'Yes') {
                 add_submenu_page('edit.php?post_type=rbfw_item', esc_html__('Quick Setup', 'booking-and-rental-manager-for-woocommerce'), '<span style="color:#10dd10">' . esc_html__('Quick Setup', 'booking-and-rental-manager-for-woocommerce') . '</span>', 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'));
-            }
-            else {
-                add_menu_page( esc_html__('Rent Item', 'booking-and-rental-manager-for-woocommerce'), esc_html__('Rent Item', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'),'dashicons-clipboard',25);
+            } else {
+                add_menu_page(esc_html__('Rent Item', 'booking-and-rental-manager-for-woocommerce'), esc_html__('Rent Item', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_quick_setup', array($this, 'quick_setup'), 'dashicons-clipboard', 25);
             }
         }
-        public function quick_setup() {
+        public function quick_setup()
+        {
 
 
 
@@ -44,10 +46,9 @@ if (!class_exists('RBFW_Quick_Setup')) {
             $woo_status = rbfw_woo_install_check();
 
 
-            if (isset($_POST['rbfw_quick_setup']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_quick_setup'])), 'rbfw_quick_setup_nonce'))
-            {
+            if (isset($_POST['rbfw_quick_setup']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_quick_setup'])), 'rbfw_quick_setup_nonce')) {
                 if (isset($_POST['active_woo_btn'])) {
-                    ?>
+?>
                     <script>
                         dLoaderBody();
                     </script>
@@ -57,18 +58,31 @@ if (!class_exists('RBFW_Quick_Setup')) {
 
                     ?>
                     <script>
-                        (function ($) {
+                        (function($) {
                             "use strict";
-                            $(document).ready(function () {
+                            $(document).ready(function() {
                                 let ttbm_admin_location = window.location.href;
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_item', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
-                                window.location.href = ttbm_admin_location;
+
+                                // Applying esc_url for URL sanitization
+                                ttbm_admin_location = ttbm_admin_location.replace(
+                                    'admin.php?post_type=rbfw_item&page=rbfw_quick_setup',
+                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
+                                );
+                                ttbm_admin_location = ttbm_admin_location.replace(
+                                    'admin.php?page=rbfw_item',
+                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
+                                );
+                                ttbm_admin_location = ttbm_admin_location.replace(
+                                    'admin.php?page=rbfw_quick_setup',
+                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
+                                );
+
+                                // Escape the final URL with esc_url to ensure safety
+                                window.location.href = <?php echo esc_js(json_encode(esc_url(ttbm_admin_location))); ?>;
                             });
                         }(jQuery));
                     </script>
-                    <?php
+                <?php
                 }
                 if (isset($_POST['install_and_active_woo_btn'])) {
                     echo '<div style="display:none">';
@@ -102,33 +116,46 @@ if (!class_exists('RBFW_Quick_Setup')) {
                     activate_plugin('woocommerce/woocommerce.php');
                     //TTBM_Woocommerce_Plugin::on_activation_page_create();
                     echo '</div>';
-                    ?>
+                ?>
                     <script>
-                        (function ($) {
+                        (function($) {
                             "use strict";
-                            $(document).ready(function () {
+                            $(document).ready(function() {
                                 let ttbm_admin_location = window.location.href;
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_item', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
-                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
-                                window.location.href = ttbm_admin_location;
+                                
+                                // Apply the replacement logic with esc_url sanitization
+                                ttbm_admin_location = ttbm_admin_location.replace(
+                                    'admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 
+                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
+                                );
+                                ttbm_admin_location = ttbm_admin_location.replace(
+                                    'admin.php?page=rbfw_item', 
+                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
+                                );
+                                ttbm_admin_location = ttbm_admin_location.replace(
+                                    'admin.php?page=rbfw_quick_setup', 
+                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
+                                );
+                                
+                                // Escape the URL and ensure it is safe to use in JavaScript
+                                window.location.href = <?php echo esc_js( json_encode( esc_url( ttbm_admin_location ) ) ); ?>;
                             });
                         }(jQuery));
                     </script>
-                    <?php
+            <?php
                 }
                 if (isset($_POST['finish_quick_setup'])) {
 
-                    if(isset($_POST['rbfw_rent_label']) && !empty($_POST['rbfw_rent_label'])){
-                        $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings',true);
-                        $rbfw_basic_gen_settings=is_array($rbfw_basic_gen_settings)?$rbfw_basic_gen_settings:[];
+                    if (isset($_POST['rbfw_rent_label']) && !empty($_POST['rbfw_rent_label'])) {
+                        $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings', true);
+                        $rbfw_basic_gen_settings = is_array($rbfw_basic_gen_settings) ? $rbfw_basic_gen_settings : [];
                         $rbfw_basic_gen_settings['rbfw_rent_label'] =  sanitize_text_field(wp_unslash($_POST['rbfw_rent_label']));
                         $rbfw_basic_gen_settings['rbfw_gutenburg_switch'] =  'Off';
                         update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
                     }
 
-                    if(isset($_POST['rbfw_rent_slug']) && !empty($_POST['rbfw_rent_slug'])){
-                        $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings',true);
+                    if (isset($_POST['rbfw_rent_slug']) && !empty($_POST['rbfw_rent_slug'])) {
+                        $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings', true);
                         $rbfw_basic_gen_settings['rbfw_rent_slug'] = sanitize_text_field(wp_unslash($_POST['rbfw_rent_slug']));
                         update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
                     }
@@ -192,14 +219,15 @@ if (!class_exists('RBFW_Quick_Setup')) {
                 </div>
             </div>
 
-            <?php
+        <?php
 
         }
 
 
-        public function setup_welcome_content() {
+        public function setup_welcome_content()
+        {
             $woo_status = rbfw_woo_install_check();
-            ?>
+        ?>
             <div data-tabs-next="#ttbm_qs_welcome">
                 <h2><?php esc_html_e('Booking and Rental Manager For Woocommerce Plugin', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
                 <p class="mTB_xs"><?php esc_html_e('Thanks for choosing Booking and Rental Manager Manager Plugin for WooCommerce for your site, Please go step by step and choose some options to get started.', 'booking-and-rental-manager-for-woocommerce'); ?></p>
@@ -207,11 +235,9 @@ if (!class_exists('RBFW_Quick_Setup')) {
                     <h5>
                         <?php if ($woo_status == 'Yes') {
                             esc_html_e('Woocommerce already installed and activated', 'booking-and-rental-manager-for-woocommerce');
-                        }
-                        elseif ($woo_status == 'No') {
+                        } elseif ($woo_status == 'No') {
                             esc_html_e('Woocommerce need to install and active', 'booking-and-rental-manager-for-woocommerce');
-                        }
-                        else {
+                        } else {
                             esc_html_e('Woocommerce already install , please activate it', 'booking-and-rental-manager-for-woocommerce');
                         } ?>
                     </h5>
@@ -227,18 +253,19 @@ if (!class_exists('RBFW_Quick_Setup')) {
                 </div>
                 <?php if ($woo_status != 'Yes') { ?>
                     <div class='mep_seup_exit_sec'>
-                        <button style='margin:10px auto;' class="warningButton" type="submit" name="rbfw_skip_quick_setup"><?php esc_attr_e('Skip, Go to Dashboard','booking-and-rental-manager-for-woocommerce') ?></button>
+                        <button style='margin:10px auto;' class="warningButton" type="submit" name="rbfw_skip_quick_setup"><?php esc_attr_e('Skip, Go to Dashboard', 'booking-and-rental-manager-for-woocommerce') ?></button>
                     </div>
                 <?php } ?>
             </div>
-            <?php
+        <?php
         }
-        public function setup_general_content() {
-            $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings')?get_option('rbfw_basic_gen_settings'):[];
+        public function setup_general_content()
+        {
+            $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings') ? get_option('rbfw_basic_gen_settings') : [];
 
             $label = isset($rbfw_basic_gen_settings['rbfw_rent_label']) ? $rbfw_basic_gen_settings['rbfw_rent_label'] : 'Rent Item';
             $slug = isset($rbfw_basic_gen_settings['rbfw_rent_slug']) ? $rbfw_basic_gen_settings['rbfw_rent_slug'] : 'rbfw_item';
-            ?>
+        ?>
             <div data-tabs-next="#ttbm_qs_general">
                 <div class="section">
                     <h2><?php esc_html_e('General settings', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
@@ -246,7 +273,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
                     <div class="_dLayout_mT">
                         <label class="fullWidth">
                             <span class="min_200"><?php esc_html_e('Rent Label:', 'booking-and-rental-manager-for-woocommerce'); ?></span>
-                            <input type="text" class="formControl" name="rbfw_rent_label" value='<?php echo esc_attr($label); ?>'/>
+                            <input type="text" class="formControl" name="rbfw_rent_label" value='<?php echo esc_attr($label); ?>' />
                         </label>
                         <i class="info_text">
                             <span class="fas fa-info-circle"></span>
@@ -255,7 +282,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
                         <div class="divider"></div>
                         <label class="fullWidth">
                             <span class="min_200"><?php esc_html_e('Rent Slug:', 'booking-and-rental-manager-for-woocommerce'); ?></span>
-                            <input type="text" class="formControl" name="rbfw_rent_slug" value='<?php echo esc_attr($slug); ?>'/>
+                            <input type="text" class="formControl" name="rbfw_rent_slug" value='<?php echo esc_attr($slug); ?>' />
                         </label>
                         <i class="info_text">
                             <span class="fas fa-info-circle"></span>
@@ -264,10 +291,11 @@ if (!class_exists('RBFW_Quick_Setup')) {
                     </div>
                 </div>
             </div>
-            <?php
+        <?php
         }
-        public function setup_content_done() {
-            ?>
+        public function setup_content_done()
+        {
+        ?>
             <div data-tabs-next="#ttbm_qs_done">
                 <h2><?php esc_html_e('Finalize Setup', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
                 <p class="mTB_xs"><?php esc_html_e('You are about to Finish & Save Booking and Reantal Manager For Woocommerce Plugin setup process', 'booking-and-rental-manager-for-woocommerce'); ?></p>
@@ -275,12 +303,8 @@ if (!class_exists('RBFW_Quick_Setup')) {
                     <button type="submit" name="finish_quick_setup" class="themeButton"><?php esc_html_e('Finish & Save', 'booking-and-rental-manager-for-woocommerce'); ?></button>
                 </div>
             </div>
-            <?php
+<?php
         }
-
-
-
-
     }
     new RBFW_Quick_Setup();
 }
