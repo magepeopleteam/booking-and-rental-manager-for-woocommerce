@@ -789,6 +789,7 @@
 		}
 
 		$order        = wc_get_order( $order_id );
+        
 
 		$order_status = $order->get_status();
 		if ( $order_status != 'failed' ) {
@@ -799,6 +800,7 @@
 				$rbfw_id                        = $item_values->get_meta( '_rbfw_id' );
 				if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
 					$ticket_info = wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ? maybe_unserialize( wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ) : [];
+					$wc_deposit_meta = wc_get_order_item_meta( $item_id, 'wc_deposit_meta', true ) ? maybe_unserialize( wc_get_order_item_meta( $item_id, 'wc_deposit_meta', true ) ) : [];
 					rbfw_prepar_and_add_user_data( $ticket_info, $rbfw_id, $order_id, $start_date, $end_date, $rbfw_service_price_data_actual );
 				}
 			}

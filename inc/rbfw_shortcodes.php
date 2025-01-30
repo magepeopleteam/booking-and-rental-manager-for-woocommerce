@@ -10,12 +10,23 @@ add_shortcode('rent-list', 'rbfw_rent_list_shortcode_func');
 /******************************
  * Rent List Shortcode
  ******************************/
-add_shortcode('search-result', 'rbfw_rent_list_shortcode_func');
+add_shortcode('search-result', 'rbfw_rent_search_result_shortcode_func');
+
+add_shortcode('rent-add-to-cart', 'rbfw_add_to_cart_shortcode_func');
+
+/******************************
+ * Rent Filter Form Shortcode
+ ******************************/
+add_shortcode('rbfw-search1', 'rbfw_rent_search_shortcode_func');
+
+add_shortcode('rbfw_search', 'rbfw_rent_search_shortcode' );
+
+add_shortcode('rbfw_search_ac', 'rbfw_rent_search_ac_shortcode' );
+
+add_shortcode('rbfw_left_filter', 'rbfw_rent_left_filter' );
+
 function rbfw_rent_list_shortcode_func($atts = null) {
 
-    if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
-        return;
-    }
 
     $attributes = shortcode_atts( array(
         'style' => 'grid',
@@ -330,10 +341,23 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     return $content;
 }
 
+
+
+
+function rbfw_rent_search_result_shortcode_func()
+{
+   return rbfw_rent_list_shortcode_func();
+}
+
+function rbfw_rent_search_ac_shortcode()
+{
+   return rbfw_rent_search_shortcode();
+}
+
 /******************************
  * Single Add to Cart Shortcode
  ******************************/
-add_shortcode('rent-add-to-cart', 'rbfw_add_to_cart_shortcode_func');
+
 
 function rbfw_add_to_cart_shortcode_func($atts){
 
@@ -400,10 +424,7 @@ function rbfw_add_to_cart_shortcode_func($atts){
 
 }
 
-/******************************
- * Rent Filter Form Shortcode
- ******************************/
-add_shortcode('rbfw-search1', 'rbfw_rent_search_shortcode_func');
+
 function rbfw_rent_search_shortcode_func() {
 
     if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
@@ -434,12 +455,10 @@ function rbfw_rent_search_shortcode_func() {
     <?php
 }
 
-add_shortcode('rbfw_search', 'rbfw_rent_search_shortcode' );
+
 function rbfw_rent_search_shortcode( $attr = null ){
 
-    if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
-        return;
-    }
+
 
     $search_page_id = rbfw_get_option('search-item-list','rbfw_basic_gen_settings');
     $search_page_link = get_page_link($search_page_id);
@@ -455,7 +474,6 @@ function rbfw_rent_search_shortcode( $attr = null ){
 <!--            <form class="rbfw_search_form_new" action="--><?php //echo esc_url($search_page_link); ?><!--" method="GET">-->
             <form class="rbfw_search_form_new" action="<?php echo esc_html(get_home_url() . '/search-item-list/');  ?>" method="GET">
                 <div class="rbfw_rent_item_search_container">
-
                     <div class="rbfw_rent_item_searchContentHolder">
                         <div class="rbfw_rent_item_searchTypeLocationHolder">
                             <div class="rbfw_rent_item_search_item">
@@ -487,7 +505,7 @@ function rbfw_rent_search_shortcode( $attr = null ){
 //    ob_get_clean(); }
 }
 
-add_shortcode('rbfw_left_filter', 'rbfw_rent_left_filter' );
+
 function rbfw_rent_left_filter( $left_filter_control = null ){
 
     $rbfw_categorys = get_rbfw_post_categories_from_meta();
