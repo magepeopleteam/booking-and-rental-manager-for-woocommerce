@@ -1131,8 +1131,15 @@
 				$booked_dates    = ! empty( $inventory['booked_dates'] ) ? $inventory['booked_dates'] : [];
 				$rbfw_type_info  = ! empty( $inventory['rbfw_type_info'] ) ? $inventory['rbfw_type_info'] : [];
 				$rbfw_start_time = ! empty( $inventory['rbfw_start_time'] ) ? $inventory['rbfw_start_time'] : '';
+
+                $partial_stock = true;
+                if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
+                    $partial_stock = false;
+                }
+
+
 				if ( $rbfw_rent_type == 'appointment' ) {
-					if ( in_array( $selected_date, $booked_dates ) && ( $selected_time == $rbfw_start_time ) && ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' ) ) {
+					if ( in_array( $selected_date, $booked_dates ) && ( $selected_time == $rbfw_start_time ) && ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' ) && $partial_stock ) {
 						foreach ( $rbfw_type_info as $type_name => $type_qty ) {
 							if ( $type_name == $type ) {
 								$total_qty += $type_qty;
@@ -1140,7 +1147,7 @@
 						}
 					}
 				} else {
-					if ( in_array( $selected_date, $booked_dates ) && ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' ) ) {
+					if ( in_array( $selected_date, $booked_dates ) && ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' ) && $partial_stock ) {
 						foreach ( $rbfw_type_info as $type_name => $type_qty ) {
 							if ( $type_name == $type ) {
 								$total_qty += $type_qty;
@@ -1230,7 +1237,14 @@
 			foreach ( $rbfw_inventory as $key => $inventory ) {
 				$rbfw_item_quantity        = ! empty( $inventory['rbfw_item_quantity'] ) ? $inventory['rbfw_item_quantity'] : 0;
 				$inventory_based_on_return = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
-				if ( ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ( ( $inventory_based_on_return == 'yes' ) ? $inventory['rbfw_order_status'] == 'returned' : '' ) ) ) {
+
+                $partial_stock = true;
+                if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
+                    $partial_stock = false;
+                }
+
+
+                if ( ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ( ( $inventory_based_on_return == 'yes' ) ? $inventory['rbfw_order_status'] == 'returned' : '' ) ) && $partial_stock ) {
 					if ( $inventory['rbfw_start_date_ymd'] && $inventory['rbfw_end_date_ymd'] ) {
 						$inventory_start_date = $inventory['rbfw_start_date_ymd'];
 						$inventory_end_date   = $inventory['rbfw_end_date_ymd'];
@@ -1293,7 +1307,13 @@
 				foreach ( $rbfw_inventory as $key => $inventory ) {
 					$booked_dates      = ! empty( $inventory['booked_dates'] ) ? $inventory['booked_dates'] : [];
 					$rbfw_service_info = ! empty( $inventory['rbfw_service_info'] ) ? $inventory['rbfw_service_info'] : [];
-					if ( in_array( $range_date, $booked_dates ) && ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' ) ) {
+
+                    $partial_stock = true;
+                    if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
+                        $partial_stock = false;
+                    }
+
+					if ( in_array( $range_date, $booked_dates ) && ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' ) && $partial_stock ) {
 						foreach ( $rbfw_service_info as $service_name => $service_qty ) {
 							if ( $service_name == $service ) {
 								$total_qty += $service_qty;
