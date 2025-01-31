@@ -10,6 +10,8 @@ add_shortcode('rent-list', 'rbfw_rent_list_shortcode_func');
 /******************************
  * Rent List Shortcode
  ******************************/
+
+add_shortcode('rbfw_search_ac', 'rbfw_rent_search_ac_shortcode' );
 add_shortcode('search-result', 'rbfw_rent_search_result_shortcode_func');
 
 add_shortcode('rent-add-to-cart', 'rbfw_add_to_cart_shortcode_func');
@@ -21,11 +23,13 @@ add_shortcode('rbfw-search1', 'rbfw_rent_search_shortcode_func');
 
 add_shortcode('rbfw_search', 'rbfw_rent_search_shortcode' );
 
-add_shortcode('rbfw_search_ac', 'rbfw_rent_search_ac_shortcode' );
+
 
 add_shortcode('rbfw_left_filter', 'rbfw_rent_left_filter' );
 
 function rbfw_rent_list_shortcode_func($atts = null) {
+
+
 
 
     $attributes = shortcode_atts( array(
@@ -68,20 +72,24 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             'feature_filter_shown'  => $attributes['left-feature-filter'],
     );
 
-//    [rent-list style='grid' left-filter='yes' left-title-filter='on' left-price-filter='on' left-location-filter='on' left-category-filter='off' left-type-filter='on' left-feature-filter='off']
-
     if(!$category){
         $category  = $cat_ids;
     }
 
-    $location = !empty( $_GET['rbfw_search_location'] ) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_location'])  ) : $location;
-    if( $category ){
-        $category = !empty( $_GET['rbfw_search_type'] ) ? trim(sanitize_text_field ( wp_unslash($_GET['rbfw_search_type'] )) ) : $category ;
+    $rbfw_search_location = isset($atts['rbfw_search_location'])?$atts['rbfw_search_location']:'';
+    $rbfw_search_type = isset($atts['rbfw_search_type'])?$atts['rbfw_search_type']:'';
+    $rbfw_pickup_date = isset($atts['rbfw_pickup_date'])?$atts['rbfw_pickup_date']:'';
+
+    $location = ( $rbfw_search_location != '') ? $rbfw_search_location : $location;
+   if( $category ){
+        $category = ( $rbfw_search_type != '' ) ? $rbfw_search_type : $category ;
     }else{
-        $search_category = !empty( $_GET['rbfw_search_type'] ) ? trim(  sanitize_text_field( wp_unslash($_GET['rbfw_search_type'] )) ) : '' ;
+        $search_category = ( $rbfw_search_type != '' ) ? $rbfw_search_type  : '' ;
     }
 
-    $pickup_date = !empty( $_GET['rbfw-pickup-date'] ) ? trim(sanitize_text_field ( wp_unslash($_GET['rbfw-pickup-date'] )) ) : '';
+    $pickup_date = ( $rbfw_pickup_date != '' ) ? $rbfw_pickup_date : '';
+
+
     if( $pickup_date !== 'Pickup date' && !empty( $pickup_date )) {
         $date = DateTime::createFromFormat('F j, Y', $pickup_date );
         $pickup_date = $date->format('d-m-Y');
@@ -344,14 +352,40 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
 
 
-function rbfw_rent_search_result_shortcode_func()
+function rbfw_rent_search_result_shortcode_func($atts = null)
 {
-   return rbfw_rent_list_shortcode_func();
+
+    if ( ! ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'rbfw_nonce_action' ) ) ) {
+        return;
+    }
+
+    $rbfw_search_location = !empty( $_GET['rbfw_search_location'] ) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_location'])  ) : '';
+    $rbfw_search_type = !empty( $_GET['rbfw_search_type'] ) ? trim(  sanitize_text_field( wp_unslash($_GET['rbfw_search_type'] )) ) : '' ;
+    $rbfw_pickup_date = !empty( $_GET['rbfw-pickup-date'] ) ? trim(sanitize_text_field ( wp_unslash($_GET['rbfw-pickup-date'] )) ) : '';
+
+    $atts['rbfw_search_location'] = $rbfw_search_location;
+    $atts['rbfw_search_type'] = $rbfw_search_type;
+    $atts['rbfw_pickup_date'] = $rbfw_pickup_date;
+
+    return rbfw_rent_list_shortcode_func($atts);
 }
 
-function rbfw_rent_search_ac_shortcode()
+function rbfw_rent_search_ac_shortcode($atts = null)
 {
-   return rbfw_rent_search_shortcode();
+    if ( ! ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'rbfw_nonce_action' ) ) ) {
+        return 'Validation Required';
+    }
+
+    $location = !empty($_GET['rbfw_search_location']) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_location'])) : '';
+    $type = !empty($_GET['rbfw_search_type']) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_type'])) : '';
+    $pickup_date = !empty($_GET['rbfw-pickup-date']) ? sanitize_text_field(wp_unslash($_GET['rbfw-pickup-date'])) : 'Pickup date';
+
+
+    $atts['rbfw_search_location'] = $location;
+    $atts['rbfw_search_type'] = $type;
+    $atts['rbfw_pickup_date'] = $pickup_date;
+
+    return rbfw_rent_search_shortcode($atts);
 }
 
 /******************************
@@ -427,7 +461,7 @@ function rbfw_add_to_cart_shortcode_func($atts){
 
 function rbfw_rent_search_shortcode_func() {
 
-    if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+    if (!(isset($_GET['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_GET['nonce'])), 'rbfw_ajax_action'))) {
         return;
     }
 
@@ -456,15 +490,15 @@ function rbfw_rent_search_shortcode_func() {
 }
 
 
-function rbfw_rent_search_shortcode( $attr = null ){
-
+function rbfw_rent_search_shortcode( $atts = null ){
 
 
     $search_page_id = rbfw_get_option('search-item-list','rbfw_basic_gen_settings');
     $search_page_link = get_page_link($search_page_id);
-    $location = !empty($_GET['rbfw_search_location']) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_location'])) : '';
-    $type = !empty($_GET['rbfw_search_type']) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_type'])) : '';
-    $pickup_date = !empty($_GET['rbfw-pickup-date']) ? sanitize_text_field(wp_unslash($_GET['rbfw-pickup-date'])) : 'Pickup date';
+
+    $location = isset($atts['rbfw_search_location'])?$atts['rbfw_search_location']:'';
+    $type = isset($atts['rbfw_search_type'])?$atts['rbfw_search_type']:'';
+    $pickup_date = isset($atts['rbfw_pickup_date'])?$atts['rbfw_pickup_date']:'';
 
     ob_start();
     ?>
@@ -483,6 +517,7 @@ function rbfw_rent_search_shortcode( $attr = null ){
                                 <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location' );?>
                             </div>
                         </div>
+                        <?php wp_nonce_field('rbfw_nonce_action', 'nonce'); ?>
                         <div class="rbfw_rent_item_search_dateButtonHolder">
                             <div class="rbfw_rent_item_search-item_date">
                                 <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
