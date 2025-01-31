@@ -96,7 +96,7 @@
     </div>
     <div class="rbfw_muff_row_slider rbfw_muff_row_slider_content">
         <div class="rbfw_muff_content_col1">
-            <div class="rbfw_muff_slider mpStyle <?php echo esc_html( $slide_style ); ?>">
+            <div class="rbfw_muff_slider mpStyle <?php echo esc_attr( $slide_style ); ?>">
 				<?php do_action( 'add_super_slider', $post_id, 'rbfw_gallery_images' ); ?>
             </div>
         </div>
@@ -127,7 +127,7 @@
 						?>
                     </ul>
 					<?php if ( $total_features >= 10 ) : ?>
-                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_html( $post_id ); ?>">See more</div>
+                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr( $post_id ); ?>">See more</div>
 					<?php endif; ?>
 				<?php endif; ?>
             </div>
@@ -150,7 +150,7 @@
 				<?php include( RBFW_Function::get_template_path( 'forms/multi-day-registration.php' ) ); ?>
             </div>
         </div>
-        <div class="rbfw_muff_content_col2 <?php echo esc_html( $total_features ) < 10 ? 'rbfw_muff_content_wrapper' : ''; ?>">
+        <div class="rbfw_muff_content_col2 <?php echo esc_attr( $total_features ) < 10 ? 'rbfw_muff_content_wrapper' : ''; ?>">
             <div class="rbfw_muff_content_wrapper">
                 <div class="rbfw_muff_post_content">
                     <h2 class="rbfw_muff_post_content_headline">
@@ -226,7 +226,7 @@
                             <label><?php rbfw_string( 'rbfw_text_quality', __( 'Quality', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
                             <div class="rbfw_muff_review_progress_inner_wrap">
                                 <div class="rbfw_muff_review_progress_bar">
-                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_html( $post_quality_progress_width ); ?>></div>
+                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_attr( $post_quality_progress_width ); ?>></div>
                                 </div>
                                 <div class="rbfw_muff_review_progress_bar_avg"><?php echo esc_html( $post_review_value_round_quality ); ?>/5</div>
                             </div>
@@ -248,7 +248,7 @@
                             <label><?php rbfw_string( 'rbfw_text_staff', __( 'Staff', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
                             <div class="rbfw_muff_review_progress_inner_wrap">
                                 <div class="rbfw_muff_review_progress_bar">
-                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_html( $post_staff_progress_width ); ?>></div>
+                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_attr( $post_staff_progress_width ); ?>></div>
                                 </div>
                                 <div class="rbfw_muff_review_progress_bar_avg"><?php echo esc_html( $post_review_value_round_staff ); ?>/5</div>
                             </div>
@@ -257,7 +257,7 @@
                             <label><?php rbfw_string( 'rbfw_text_facilities', __( 'Facilities', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
                             <div class="rbfw_muff_review_progress_inner_wrap">
                                 <div class="rbfw_muff_review_progress_bar">
-                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_html( $post_facilities_progress_width ); ?>></div>
+                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_attr( $post_facilities_progress_width ); ?>></div>
                                 </div>
                                 <div class="rbfw_muff_review_progress_bar_avg"><?php echo esc_html( $post_review_value_round_facilities ); ?>/5</div>
                             </div>
@@ -266,7 +266,7 @@
                             <label><?php rbfw_string( 'rbfw_text_comfort', __( 'Comfort', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
                             <div class="rbfw_muff_review_progress_inner_wrap">
                                 <div class="rbfw_muff_review_progress_bar">
-                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_html( $post_comfort_progress_width ); ?>></div>
+                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_attr( $post_comfort_progress_width ); ?>></div>
                                 </div>
                                 <div class="rbfw_muff_review_progress_bar_avg"><?php echo esc_html( $post_review_value_round_comfort ); ?>/5</div>
                             </div>
@@ -284,7 +284,7 @@
 					<?php do_action( 'rbfw_muff_review_tab', $post_id ); ?>
                 </div>
                 <div class="rbfw_muff_review_write_btn_wrapper">
-                    <button class="rbfw_muff_review_write_btn"><?php echo esc_html( $rbfw->get_option( 'rbfw_text_write_review', 'rbfw_basic_translation_settings', __( 'Write Review', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></button>
+                    <button class="rbfw_muff_review_write_btn"><?php echo esc_attr( $rbfw->get_option( 'rbfw_text_write_review', 'rbfw_basic_translation_settings', __( 'Write Review', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></button>
                 </div>
             </div>
             <div class="rbfw_muff_faq_tab_contents">

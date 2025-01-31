@@ -73,7 +73,7 @@
 					]; ?>
                     <select name="rbfw_item_type" id="rbfw_item_type">
 						<?php foreach ( $item_type as $kay => $value ): ?>
-                            <option <?php echo esc_html( $kay == $rbfw_item_type ) ? 'selected' : '' ?> value="<?php echo esc_html( $kay ); ?>"> <?php echo esc_html( $value ); ?> </option>
+                            <option <?php echo esc_attr( $kay == $rbfw_item_type ? 'selected' : '' ); ?> value="<?php echo esc_attr( $kay ); ?>"> <?php echo esc_html( $value ); ?> </option>
 						<?php endforeach; ?>
                     </select>
                 </section>
@@ -134,16 +134,22 @@
 																			} ?></div>
                                                                         <input type='hidden' name='rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][icon]' placeholder='<?php echo esc_attr__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?>' value='<?php echo esc_attr( $icon ); ?>' data-key="<?php echo esc_attr( $c ); ?>" class="rbfw_service_icon"/>
                                                                         <input type='text' name='rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][title]' placeholder='<?php echo esc_attr( $placeholder ); ?>' value="<?php echo esc_attr( $title ); ?>" data-key="<?php echo esc_attr( $c ); ?>"/>
-                                                                        <input type='text' class="medium" name='rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][price]' placeholder='<?php echo esc_html__( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>' value='<?php echo esc_attr( $price ); ?>' data-key="0"/>
-                                                                        <input type='text' class="medium" name='rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][stock_quantity]' placeholder='<?php echo esc_html__( 'Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>' value='<?php echo esc_attr( $stock_quantity ); ?>' data-key="0"/>
+                                                                        
+                                                                        <input type='text' class="medium" name='rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][price]' placeholder='<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>' value='<?php echo esc_attr( $price ); ?>' data-key="0"/>
+
+                                                                        <input type='text' class="medium" name='rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][stock_quantity]' placeholder='<?php echo esc_attr( 'Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>' value='<?php echo esc_attr( $stock_quantity ); ?>' data-key="0"/>
+
+
+
                                                                         <label class="" for="rbfw_dt_sidebar_switch-on">
-                                                                            <input name="rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][service_price_type]" type="radio" <?php echo esc_html( $service_price_type == 'one_time' ) ? 'checked' : '' ?> id="rbfw_dt_sidebar_switch-on" value="one_time">
+                                                                            <input name="rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][service_price_type]" type="radio" <?php echo esc_attr( $service_price_type == 'one_time' ? 'checked' : '' ); ?> id="rbfw_dt_sidebar_switch-on" value="one_time">
                                                                             <span class="sw-button"><?php echo esc_html__( 'One Time', 'booking-and-rental-manager-for-woocommerce' ); ?> </span>
                                                                         </label>
                                                                         <label class="checked" for="rbfw_dt_sidebar_switch-off">
-                                                                            <input name="rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][service_price_type]" type="radio" <?php echo esc_html( $service_price_type == 'day_wise' ) ? 'checked' : '' ?> id="rbfw_dt_sidebar_switch-off" value="day_wise">
+                                                                            <input name="rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][service_price_type]" type="radio" <?php echo esc_attr( $service_price_type == 'day_wise' ? 'checked' : '' ); ?> id="rbfw_dt_sidebar_switch-off" value="day_wise">
                                                                             <span class="sw-button"><?php echo esc_html__( 'Day Wise', 'booking-and-rental-manager-for-woocommerce' ); ?> </span>
                                                                         </label>
+
                                                                         <div>
 																			<?php if ( $sortable ): ?>
                                                                                 <span class="button sort"><i class="fas fa-arrows-alt"></i></span>
@@ -197,8 +203,8 @@
                                                         <div class="rbfw_service_icon_preview p-1" data-key="0"></div>
                                                         <input type='hidden' name='rbfw_service_category_price[0][cat_services][0][icon]' placeholder='<?php echo esc_attr__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?>' data-key="0" class="rbfw_service_icon"/>
                                                         <input type='text' name='rbfw_service_category_price[0][cat_services][0][title]' placeholder='<?php echo esc_attr( $placeholder ); ?>' value='' data-key="0"/>
-                                                        <input type='text' class="medium" name='rbfw_service_category_price[0][cat_services][0][price]' placeholder='<?php echo esc_html__( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>' value='' data-key="0"/>
-                                                        <input type='text' class="medium" name='rbfw_service_category_price[0][cat_services][0][stock_quantity]' placeholder='<?php echo esc_html__( 'Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>' value='' data-key="0"/>
+                                                        <input type='text' class="medium" name='rbfw_service_category_price[0][cat_services][0][price]' placeholder='<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>' value='' data-key="0"/>
+                                                        <input type='text' class="medium" name='rbfw_service_category_price[0][cat_services][0][stock_quantity]' placeholder='<?php echo esc_attr( 'Stock', 'booking-and-rental-manager-for-woocommerce' ); ?>' value='' data-key="0"/>
                                                         <label class="" for="rbfw_dt_sidebar_switch-on">
                                                             <input name="rbfw_service_category_price[0][cat_services][0][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time">
                                                             <span class="sw-button"><?php echo esc_html__( 'One Time', 'booking-and-rental-manager-for-woocommerce' ); ?> </span>
@@ -326,65 +332,75 @@
                         jQuery(".sortable").sortable({handle: '.sort'});
                         let dataCat = jQuery(this).closest('tr').attr('data-cat');
                         html = '<div class="item">';
-                        html += '<a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="' + c + '"><i class="fas fa-circle-plus"></i> <?php echo esc_html__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?></a>';
-                        html += '<div class="rbfw_service_icon_preview p-1" data-key="' + c + '"></div>';
-                        html += '<input type="hidden" name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][icon]" placeholder="<?php echo esc_html__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-key="' + c + '" class="rbfw_service_icon"/>';
-                        html += '<input type="text" name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][title]" placeholder="<?php echo esc_attr( $placeholder ); ?>" data-key="' + c + '"/>';
-                        html += '<input type="text" class="medium" name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][price]" placeholder="Price" data-key="' + c + '"/>';
-                        html += '<input type="text" class="medium" name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][stock_quantity]" placeholder="Stock" data-key="' + c + '"/>';
-                        html += '<label class="" for="rbfw_dt_sidebar_switch-on"> <input name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time"> <span class="sw-button"> <?php echo esc_html__( 'One Time', 'booking-and-rental-manager-for-woocommerce' ); ?> </span> </label>';
-                        html += '<label class="checked" for="rbfw_dt_sidebar_switch-off"> <input name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked=""> <span class="sw-button"><?php echo esc_html__( 'Day Wise', 'booking-and-rental-manager-for-woocommerce' ); ?> </span> </label>';
-
-						<?php if($sortable):?>
+                        html += '<a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="' + esc_js(c) + '"><i class="fas fa-circle-plus"></i> <?php echo esc_html__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?></a>';
+                        html += '<div class="rbfw_service_icon_preview p-1" data-key="' + esc_js(c) + '"></div>';
+                        html += '<input type="hidden" name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][icon]" placeholder="<?php echo esc_attr__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-key="' + esc_attr(c) + '" class="rbfw_service_icon"/>';
+                        html += '<input type="text" name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][title]" placeholder="<?php echo esc_attr( $placeholder ); ?>" data-key="' + esc_attr(c) + '"/>';
+                        html += '<input type="text" class="medium" name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][price]" placeholder="Price" data-key="' + esc_attr(c) + '"/>';
+                        html += '<input type="text" class="medium" name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][stock_quantity]" placeholder="Stock" data-key="' + esc_attr(c) + '"/>';
+                        html += '<label class="" for="rbfw_dt_sidebar_switch-on"> <input name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time"> <span class="sw-button"> <?php echo esc_html__( 'One Time', 'booking-and-rental-manager-for-woocommerce' ); ?> </span> </label>';
+                        html += '<label class="checked" for="rbfw_dt_sidebar_switch-off"> <input name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked=""> <span class="sw-button"><?php echo esc_html__( 'Day Wise', 'booking-and-rental-manager-for-woocommerce' ); ?> </span> </label>';
+                        
+                        <?php if($sortable):?>
                         html += '<div>';
                         html += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
-						<?php endif; ?>
+                        <?php endif; ?>
 
-                        html += '<span class="button remove" onclick="jQuery(this).parent().parent().remove()' + '"><?php echo esc_html( $remove_text ); ?></span>';
+                        html += '<span class="button remove" class="remove-item"><?php echo esc_html( $remove_text ); ?></span>';
                         html += '</div></div>';
                         theTarget.append(html);
+                        
+                        // Bind remove button event
+                        jQuery('.remove-item').on('click', function() {
+                            jQuery(this).parent().parent().remove();
+                        });
                     });
                     // Features Icon Popup
-                    jQuery(document).on('click', '.rbfw_service_icon_btn', function (e) {
-                        e.stopImmediatePropagation();
-                        let remove_exist_data_key = jQuery("#rbfw_features_icon_list_wrapper").removeAttr('data-key');
-                        let remove_active_label = jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-                        let data_key = jQuery(this).attr('data-key');
-                        let data_cat = jQuery(this).parents('tr').attr('data-cat');
-                        jQuery('#rbfw_services_search_icon').val('');
-                        jQuery('.rbfw_services_icon_list_body label').show();
-                        jQuery("#rbfw_features_icon_list_wrapper").attr('data-key', data_key);
-                        jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat', data_cat);
-                        jQuery("#rbfw_features_icon_list_wrapper").mage_modal({
-                            escapeClose: false,
-                            clickClose: false,
-                            showClose: false
-                        });
-                        // Selected Feature Icon Action
-                        jQuery(document).on('click', '.ggggg label', function (e) {
+                    // Features Icon Popup
+                        jQuery(document).on('click', '.rbfw_service_icon_btn', function (e) {
                             e.stopImmediatePropagation();
-                            let selected_label = jQuery(this);
-                            let selected_val = jQuery('input', this).val();
-                            let selected_data_key = jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
-                            let selected_data_cat = jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
-                            console.log('selected_val', selected_val);
-                            console.log('selected_label', selected_label);
-                            console.log('selected_data_key', selected_data_key);
-                            console.log('selected_data_cat', selected_data_cat);
-                            jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-                            jQuery('.rbfw_service_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_service_icon_preview[data-key="' + selected_data_key + '"]').empty();
-                            jQuery(selected_label).addClass('selected');
-                            jQuery('.rbfw_service_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_service_icon[data-key="' + selected_data_key + '"]').val(selected_val);
-                            jQuery('.rbfw_service_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_service_icon_preview[data-key="' + selected_data_key + '"]').append('<i class="' + selected_val + '"></i>');
+                            let remove_exist_data_key = jQuery("#rbfw_features_icon_list_wrapper").removeAttr('data-key');
+                            let remove_active_label = jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
+                            let data_key = jQuery(this).attr('data-key');
+                            let data_cat = jQuery(this).parents('tr').attr('data-cat');
+                            jQuery('#rbfw_services_search_icon').val('');
+                            jQuery('.rbfw_services_icon_list_body label').show();
+                            jQuery("#rbfw_features_icon_list_wrapper").attr('data-key', esc_attr(data_key));
+                            jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat', esc_attr(data_cat));
+                            jQuery("#rbfw_features_icon_list_wrapper").mage_modal({
+                                escapeClose: false,
+                                clickClose: false,
+                                showClose: false
+                            });
+                            
+                            // Selected Feature Icon Action
+                            jQuery(document).on('click', '.ggggg label', function (e) {
+                                e.stopImmediatePropagation();
+                                let selected_label = jQuery(this);
+                                let selected_val = jQuery('input', this).val();
+                                let selected_data_key = jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
+                                let selected_data_cat = jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
+                                
+                                console.log('selected_val', esc_js(selected_val));
+                                console.log('selected_label', esc_js(selected_label));
+                                console.log('selected_data_key', esc_js(selected_data_key));
+                                console.log('selected_data_cat', esc_js(selected_data_cat));
+                                
+                                jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
+                                jQuery('.rbfw_service_category_table tr[data-cat="' + esc_attr(selected_data_cat) + '"]').find('.rbfw_service_icon_preview[data-key="' + esc_attr(selected_data_key) + '"]').empty();
+                                jQuery(selected_label).addClass('selected');
+                                jQuery('.rbfw_service_category_table tr[data-cat="' + esc_attr(selected_data_cat) + '"]').find('.rbfw_service_icon[data-key="' + esc_attr(selected_data_key) + '"]').val(esc_attr(selected_val));
+                                jQuery('.rbfw_service_category_table tr[data-cat="' + esc_attr(selected_data_cat) + '"]').find('.rbfw_service_icon_preview[data-key="' + esc_attr(selected_data_key) + '"]').append('<i class="' + esc_attr(selected_val) + '"></i>');
+                            });
+                            
+                            // Icon Filter
+                            jQuery('#rbfw_services_search_icon').keyup(function (e) {
+                                let value = jQuery(this).val().toLowerCase();
+                                jQuery(".rbfw_services_icon_list_body label[data-id]").show().filter(function () {
+                                    jQuery(this).toggle(jQuery(this).attr('data-id').toLowerCase().indexOf(value) > -1)
+                                }).hide();
+                            });
                         });
-                        // Icon Filter
-                        jQuery('#rbfw_services_search_icon').keyup(function (e) {
-                            let value = jQuery(this).val().toLowerCase();
-                            jQuery(".rbfw_services_icon_list_body label[data-id]").show().filter(function () {
-                                jQuery(this).toggle(jQuery(this).attr('data-id').toLowerCase().indexOf(value) > -1)
-                            }).hide();
-                        });
-                    });
                 </script>
 
                         <?php
@@ -452,20 +468,20 @@
                                         <th>
 											<?php echo wp_kses( sprintf( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ), array( 'b' => array( 'class' => array() ), ) ); ?>
                                         </th>
-                                        <th class="rbfw_without_time_inventory <?php echo esc_html( $manage_inventory_as_timely == 'on' ) ? 'rbfw_hide' : '' ?>">
+                                        <th class="rbfw_without_time_inventory <?php echo esc_attr( $manage_inventory_as_timely == 'on' ) ? 'rbfw_hide' : '' ?>">
 											<?php $text = sprintf( __( 'Stock/Day <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ) );
 												echo wp_kses( $text, array( 'b' => array( 'class' => array(), ), ) ); ?>
                                         </th>
-                                        <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo esc_html( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'off' ) ? 'rbfw_hide' : '' ) ?>">
+                                        <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo esc_attr( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'off' ) ? 'rbfw_hide' : '' ) ?>">
 											<?php esc_html_e( 'Start Time', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                         </th>
-                                        <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo esc_html( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'off' ) ? 'rbfw_hide' : '' ) ?>">
+                                        <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo esc_attr( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'off' ) ? 'rbfw_hide' : '' ) ?>">
 											<?php esc_html_e( 'End Time', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                         </th>
-                                        <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo esc_html( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'on' ) ? 'rbfw_hide' : '' ) ?>">
+                                        <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo esc_attr( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'on' ) ? 'rbfw_hide' : '' ) ?>">
 											<?php esc_html_e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                         </th>
-                                        <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo esc_html( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'on' ) ? 'rbfw_hide' : '' ) ?>">
+                                        <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo esc_attr( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'on' ) ? 'rbfw_hide' : '' ) ?>">
 											<?php esc_html_e( 'Duration Type', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                         </th>
                                         <th class="rbfw_bike_car_sd_price_table_action_column">
@@ -480,26 +496,26 @@
 											foreach ( $rbfw_bike_car_sd_data as $key => $value ):
 												?>
                                                 <tr class="rbfw_bike_car_sd_price_table_row" data-key="<?php echo esc_attr( $i ); ?>">
-                                                    <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                    <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][short_desc]" value="<?php echo esc_attr( $value['short_desc'] ); ?>" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                    <td><input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][price]" step=".01" value="<?php echo esc_attr( $value['price'] ); ?>" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                    <td class="rbfw_without_time_inventory <?php echo esc_html( $manage_inventory_as_timely == 'on' ) ? 'rbfw_hide' : '' ?>">
-                                                        <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php echo esc_attr( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                    <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][short_desc]" value="<?php echo esc_attr( $value['short_desc'] ); ?>" placeholder="<?php echo esc_attr( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                    <td><input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][price]" step=".01" value="<?php echo esc_attr( $value['price'] ); ?>" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                    <td class="rbfw_without_time_inventory <?php echo esc_attr( $manage_inventory_as_timely == 'on' ? 'rbfw_hide' : '' ); ?>">
+                                                        <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                     </td>
-                                                    <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo esc_html( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'off' ) ? 'rbfw_hide' : '' ) ?>">
+                                                    <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo esc_attr( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'off' ) ? 'rbfw_hide' : '' ) ?>">
 														<?php rbfw_time_slot_select( 'start_time', $i, isset( $value['start_time'] ) ? $value['start_time'] : '' ); ?>
                                                     </td>
-                                                    <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo esc_html( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'off' ) ? 'rbfw_hide' : '' ) ?>">
+                                                    <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable <?php echo esc_attr( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'off' ) ? 'rbfw_hide' : '' ) ?>">
 														<?php rbfw_time_slot_select( 'end_time', $i, isset( $value['end_time'] ) ? $value['end_time'] : '' ); ?>
                                                     </td>
-                                                    <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo esc_html( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'on' ) ? 'rbfw_hide' : '' ) ?>">
-                                                        <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][duration]" value="<?php echo esc_attr( isset( $value['duration'] ) ? $value['duration'] : '' ); ?>" placeholder="<?php esc_html_e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo esc_attr( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'on' ) ? 'rbfw_hide' : '' ) ?>">
+                                                        <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][duration]" value="<?php echo esc_attr( isset( $value['duration'] ) ? $value['duration'] : '' ); ?>" placeholder="<?php echo esc_attr( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                     </td>
-                                                    <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo esc_html( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'on' ) ? 'rbfw_hide' : '' ) ?>">
+                                                    <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo esc_attr( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'on' ) ? 'rbfw_hide' : '' ) ?>">
                                                         <select class="medium" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][d_type]">
-                                                            <option <?php echo esc_html( isset( $value['d_type'] ) && $value['d_type'] == 'Hours' ) ? 'selected' : ''; ?> value="Hours">Hours</option>
-                                                            <option <?php echo esc_html( isset( $value['d_type'] ) && $value['d_type'] == 'Days' ) ? 'selected' : ''; ?> value="Days">Days</option>
-                                                            <option <?php echo esc_html( isset( $value['d_type'] ) && $value['d_type'] == 'Weeks' ) ? 'selected' : ''; ?> value="Weeks">Weeks</option>
+                                                            <option <?php echo esc_attr( isset( $value['d_type'] ) && $value['d_type'] == 'Hours' ) ? 'selected' : ''; ?> value="Hours">Hours</option>
+                                                            <option <?php echo esc_attr( isset( $value['d_type'] ) && $value['d_type'] == 'Days' ) ? 'selected' : ''; ?> value="Days">Days</option>
+                                                            <option <?php echo esc_attr( isset( $value['d_type'] ) && $value['d_type'] == 'Weeks' ) ? 'selected' : ''; ?> value="Weeks">Weeks</option>
                                                         </select>
                                                     </td>
                                                     <td class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
@@ -518,16 +534,16 @@
 											?>
                                             <tr class="rbfw_bike_car_sd_price_table_row" data-key="0">
                                                 <td>
-                                                    <input type="text" name="rbfw_bike_car_sd_data[0][rent_type]" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input type="text" name="rbfw_bike_car_sd_data[0][rent_type]" placeholder="<?php echo esc_attr( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="rbfw_bike_car_sd_data[0][short_desc]" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input type="text" name="rbfw_bike_car_sd_data[0][short_desc]" placeholder="<?php echo esc_attr( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                                 <td>
-                                                    <input class="medium" type="number" name="rbfw_bike_car_sd_data[0][price]" step=".01" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input class="medium" type="number" name="rbfw_bike_car_sd_data[0][price]" step=".01" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                                 <td class="rbfw_without_time_inventory">
-                                                    <input class="medium" type="number" name="rbfw_bike_car_sd_data[0][qty]" placeholder="<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input class="medium" type="number" name="rbfw_bike_car_sd_data[0][qty]" placeholder="<?php echo esc_attr( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                                 <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_enable rbfw_hide">
 													<?php rbfw_time_slot_select( 'start_time', 0, isset( $value['start_time'] ) ? $value['start_time'] : '' ); ?>
@@ -536,7 +552,7 @@
 													<?php rbfw_time_slot_select( 'end_time', 0, isset( $value['end_time'] ) ? $value['end_time'] : '' ); ?>
                                                 </td>
                                                 <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable rbfw_hide">
-                                                    <input class="medium" type="number" name="rbfw_bike_car_sd_data[0][duration]" " placeholder="<?php esc_html_e( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
+                                                    <input class="medium" type="number" name="rbfw_bike_car_sd_data[0][duration]" " placeholder="<?php echo esc_attr( 'Duration', 'booking-and-rental-manager-for-woocommerce' ); ?>" />
                                                 </td>
                                                 <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable rbfw_hide">
                                                     <select class="medium" name="rbfw_bike_car_sd_data[0][d_type]">
@@ -598,12 +614,12 @@
 											foreach ( $rbfw_bike_car_sd_data as $key => $value ):
 												?>
                                                 <tr class="rbfw_bike_car_sd_price_table_row" data-key="<?php echo esc_attr( $i ); ?>">
-                                                    <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                    <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][short_desc]" value="<?php echo esc_attr( $value['short_desc'] ); ?>" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                    <td><input type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][price]" step=".01" value="<?php echo esc_attr( $value['price'] ); ?>" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                    <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php echo esc_attr( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                    <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][short_desc]" value="<?php echo esc_attr( $value['short_desc'] ); ?>" placeholder="<?php echo esc_attr( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                    <td><input type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][price]" step=".01" value="<?php echo esc_attr( $value['price'] ); ?>" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
 														echo 'style="display:none"';
-													} ?>><input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+													} ?>><input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php echo esc_attr( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
 														echo 'style="display:none"';
 													} ?>>
@@ -619,12 +635,12 @@
 										else:
 											?>
                                             <tr class="rbfw_bike_car_sd_price_table_row" data-key="0">
-                                                <td><input type="text" name="rbfw_bike_car_sd_data[0][rent_type]" value="" placeholder="<?php esc_html_e( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                <td><input type="text" name="rbfw_bike_car_sd_data[0][short_desc]" value="" placeholder="<?php esc_html_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                <td><input type="number" name="rbfw_bike_car_sd_data[0][price]" step=".01" value="" placeholder="<?php esc_html_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                <td><input type="text" name="rbfw_bike_car_sd_data[0][rent_type]" value="" placeholder="<?php echo esc_attr( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                <td><input type="text" name="rbfw_bike_car_sd_data[0][short_desc]" value="" placeholder="<?php echo esc_attr( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+                                                <td><input type="number" name="rbfw_bike_car_sd_data[0][price]" step=".01" value="" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                 <td class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
 													echo 'style="display:none"';
-												} ?> ><input class="medium" type="number" name="rbfw_bike_car_sd_data[0][qty]" value="" placeholder="<?php esc_html_e( '(Quantity/Stock)/Day', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
+												} ?> ><input class="medium" type="number" name="rbfw_bike_car_sd_data[0][qty]" value="" placeholder="<?php echo esc_attr( '(Quantity/Stock)/Day', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                 <td class="rbfw_bike_car_sd_price_table_action_column"<?php if ( $rbfw_item_type == 'appointment' ) {
 													echo 'style="display:none"';
 												} ?>>
@@ -703,10 +719,10 @@
                                                             </div>
                                                         </div>
                                                     </td>
-                                                    <td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap" value="<?php echo esc_html( $service_name ); ?>"/></td>
-                                                    <td><input type="text" class="mp_formControl" name="service_desc[]" placeholder="Service Description" value="<?php echo esc_html( $service_desc ); ?>"/></td>
-                                                    <td><input type="number" class="medium" step="0.01" class="mp_formControl" name="service_price[]" placeholder="Ex: 10" value="<?php echo esc_html( $service_price ); ?>"/></td>
-                                                    <td><input type="number" class="medium" name="service_qty[]" placeholder="Ex: 100" value="<?php echo esc_html( $service_qty ); ?>"/></td>
+                                                    <td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap" value="<?php echo esc_attr( $service_name ); ?>"/></td>
+                                                    <td><input type="text" class="mp_formControl" name="service_desc[]" placeholder="Service Description" value="<?php echo esc_attr( $service_desc ); ?>"/></td>
+                                                    <td><input type="number" class="medium" step="0.01" class="mp_formControl" name="service_price[]" placeholder="Ex: 10" value="<?php echo esc_attr( $service_price ); ?>"/></td>
+                                                    <td><input type="number" class="medium" name="service_qty[]" placeholder="Ex: 100" value="<?php echo esc_attr( $service_qty ); ?>"/></td>
                                                     <td>
                                                         <div class="mp_event_remove_move">
                                                             <button class="button remove-row" type="button"><i class="fas fa-trash-can"></i></button>
@@ -813,7 +829,7 @@
 												?>
                                                 <tr class="rbfw_resort_price_table_row" data-key="<?php echo esc_attr( $i ); ?>">
                                                     <td>
-                                                        <input type="text" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][room_type]" value="<?php echo esc_attr( $value['room_type'] ); ?>" placeholder="<?php esc_html_e( 'Room type', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                        <input type="text" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][room_type]" value="<?php echo esc_attr( $value['room_type'] ); ?>" placeholder="<?php echo esc_attr( 'Room type', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                     </td>
                                                     <td class="text-center">
                                                         <div class="rbfw_room_type_image_preview">
@@ -828,8 +844,8 @@
 														echo esc_attr( 'table-cell' );
 													} else {
 														echo esc_attr( 'none' );
-													} ?>;"><input type="number" class="medium" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][rbfw_room_daylong_rate]" step=".01" value="<?php echo esc_attr( $value['rbfw_room_daylong_rate'] ); ?>" placeholder="<?php esc_html_e( 'Day-long Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
-                                                    <td><input type="number" class="medium" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][rbfw_room_daynight_rate]" step=".01" value="<?php echo esc_attr( $value['rbfw_room_daynight_rate'] ); ?>" placeholder="<?php esc_html_e( 'Day-night Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
+													} ?>;"><input type="number" class="medium" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][rbfw_room_daylong_rate]" step=".01" value="<?php echo esc_attr( $value['rbfw_room_daylong_rate'] ); ?>" placeholder="<?php echo esc_attr( 'Day-long Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
+                                                    <td><input type="number" class="medium" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][rbfw_room_daynight_rate]" step=".01" value="<?php echo esc_attr( $value['rbfw_room_daynight_rate'] ); ?>" placeholder="<?php echo esc_attr( 'Day-night Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
                                                     <td><input type="text" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][rbfw_room_desc]" value="<?php echo esc_attr( $value['rbfw_room_desc'] ); ?>" placeholder="<?php esc_attr_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
                                                     <td><input type="number" class="medium" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][rbfw_room_available_qty]" step=".01" value="<?php echo esc_attr( $value['rbfw_room_available_qty'] ); ?>" placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
                                                     <td>
@@ -846,21 +862,50 @@
 											?>
                                             <tr class="rbfw_resort_price_table_row" data-key="0">
                                                 <td>
-                                                    <input type="text" name="rbfw_resort_room_data[0][room_type]" value="" placeholder="<?php esc_html_e( 'Room type', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input type="text" name="rbfw_resort_room_data[0][room_type]" value="" placeholder="<?php echo esc_attr( 'Room type', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="rbfw_room_type_image_preview"></div>
                                                     <a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i> </a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a>
                                                     <input type="hidden" name="rbfw_resort_room_data[0][rbfw_room_image]" value="" class="rbfw_room_image"/>
                                                 </td>
-                                                <td class="resort_day_long_price" style="display: <?php if ( ( $rbfw_item_type == 'resort' ) && $rbfw_enable_resort_daylong_price == 'yes' ) {
-													echo esc_attr( 'block' );
-												} else {
-													echo esc_attr( 'none' );
-												} ?>;"><input type="number" class="medium" name="rbfw_resort_room_data[0][rbfw_room_daylong_rate]" step=".01" value="" placeholder="<?php esc_html_e( 'Day-long Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
-                                                <td><input type="number" class="medium" name="rbfw_resort_room_data[0][rbfw_room_daynight_rate]" step=".01" value="" placeholder="<?php esc_html_e( 'Day-night Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
-                                                <td><input type="text" name="rbfw_resort_room_data[0][rbfw_room_desc]" value="" placeholder="<?php esc_attr_e( "Short Description", "booking-and-rental-manager-for-woocommerce" ); ?>"></td>
-                                                <td><input type="number" class="medium" name="rbfw_resort_room_data[0][rbfw_room_available_qty]" step=".01" value="" placeholder="<?php esc_attr_e( "Stock Quantity", "booking-and-rental-manager-for-woocommerce" ); ?>"></td>
+                                                <td class="resort_day_long_price" 
+                                                        style="display: <?php echo ( $rbfw_item_type === 'resort' && $rbfw_enable_resort_daylong_price === 'yes' ) 
+                                                            ? esc_attr( 'block' ) 
+                                                            : esc_attr( 'none' ); ?>;">
+                                                        <input 
+                                                            type="number" 
+                                                            class="medium" 
+                                                            name="rbfw_resort_room_data[0][rbfw_room_daylong_rate]" 
+                                                            step=".01" 
+                                                            value="<?php echo esc_attr( '' ); ?>" 
+                                                            placeholder="<?php esc_attr_e( 'Day-long Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                    </td>
+                                                    <td>
+                                                        <input 
+                                                            type="number" 
+                                                            class="medium" 
+                                                            name="rbfw_resort_room_data[0][rbfw_room_daynight_rate]" 
+                                                            step=".01" 
+                                                            value="<?php echo esc_attr( '' ); ?>" 
+                                                            placeholder="<?php esc_attr_e( 'Day-night Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                    </td>
+                                                    <td>
+                                                        <input 
+                                                            type="text" 
+                                                            name="rbfw_resort_room_data[0][rbfw_room_desc]" 
+                                                            value="<?php echo esc_attr( '' ); ?>" 
+                                                            placeholder="<?php esc_attr_e( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                    </td>
+                                                    <td>
+                                                        <input 
+                                                            type="number" 
+                                                            class="medium" 
+                                                            name="rbfw_resort_room_data[0][rbfw_room_available_qty]" 
+                                                            step=".01" 
+                                                            value="<?php echo esc_attr( '' ); ?>" 
+                                                            placeholder="<?php esc_attr_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                    </td>
                                                 <td>
                                                     <div class="mp_event_remove_move">
                                                         <button class="button remove-row"><i class="fas fa-trash-can"></i></button>
@@ -889,11 +934,27 @@
 				?>
                 <tr>
                     <th><?php echo esc_html( $day_name ); ?></th>
-                    <td><input type="number" name='rbfw_<?php echo esc_attr( $day_slug ); ?>_hourly_rate' value="<?php echo esc_html( $hourly_rate ); ?>" placeholder="<?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
-                    <td><input type="number" name='rbfw_<?php echo esc_attr( $day_slug ); ?>_daily_rate' value="<?php echo esc_html( $daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"></td>
-                    <td><input type="checkbox" name='rbfw_enable_<?php echo esc_attr( $day_slug ); ?>_day' value='yes' <?php if ( $enable == 'yes' ) {
-							echo 'checked';
-						} ?> ></td>
+                    <td>
+                        <input 
+                            type="number" 
+                            name="rbfw_<?php echo esc_attr( $day_slug ); ?>_hourly_rate" 
+                            value="<?php echo esc_attr( $hourly_rate ); ?>" 
+                            placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                    </td>
+                    <td>
+                        <input 
+                            type="number" 
+                            name="rbfw_<?php echo esc_attr( $day_slug ); ?>_daily_rate" 
+                            value="<?php echo esc_attr( $daily_rate ); ?>" 
+                            placeholder="<?php esc_attr_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                    </td>
+                    <td>
+                        <input 
+                            type="checkbox" 
+                            name="rbfw_enable_<?php echo esc_attr( $day_slug ); ?>_day" 
+                            value="yes" 
+                            <?php checked( $enable, 'yes' ); ?>>
+                    </td>
                 </tr>
 				<?php
 			}
@@ -987,7 +1048,14 @@
                                 <span class="slider round"></span>
                             </label>
                             <span class="rbfw_daily_rate_input ms-2">
-							<input type="number" name='rbfw_daily_rate' step="0.01" value="<?php echo esc_html( $rbfw_daily_rate ); ?>" placeholder="<?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_html( $rbfw_enable_daily_rate == 'no' ) ? 'disabled' : ''; ?>>
+							<input 
+                            type="number" 
+                            name="rbfw_daily_rate" 
+                            step="0.01" 
+                            value="<?php echo esc_attr( $rbfw_daily_rate ); ?>" 
+                            placeholder="<?php esc_attr_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" 
+                            <?php echo esc_attr( $rbfw_enable_daily_rate == 'no' ? 'disabled' : '' ); ?>>
+
 						</span>
                         </div>
                     </section>
@@ -1002,7 +1070,13 @@
                                 <span class="slider round"></span>
                             </label>
                             <span class="rbfw_hourly_rate ms-2">
-							<input type="number" name='rbfw_hourly_rate' step="0.01" value="<?php echo esc_html( $rbfw_hourly_rate ); ?>" placeholder="<?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_html( $rbfw_enable_hourly_rate == 'no' ) ? 'disabled' : ''; ?>>
+							<input 
+                                type="number" 
+                                name="rbfw_hourly_rate" 
+                                step="0.01" 
+                                value="<?php echo esc_attr( $rbfw_hourly_rate ); ?>" 
+                                placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" 
+                                <?php echo esc_attr( $rbfw_enable_hourly_rate == 'no' ? 'disabled' : '' ); ?>>
 						</span>
                         </div>
                     </section>
@@ -1073,6 +1147,7 @@
 					<?php $this->extra_service_table( $post_id ); ?>
                 </div>
                 <script>
+                    // Toggle visibility for category service price
                     jQuery('input[name=rbfw_enable_category_service_price]').click(function () {
                         var status = jQuery(this).val();
                         if (status === 'on') {
@@ -1084,6 +1159,8 @@
                             jQuery('#field-wrapper-rbfw_service_category_price').slideDown().removeClass('hide').addClass('show');
                         }
                     });
+
+                    // Toggle extra service quantity options
                     jQuery('input[name=rbfw_enable_extra_service_qty]').click(function () {
                         var status = jQuery(this).val();
                         if (status === 'yes') {
@@ -1093,36 +1170,39 @@
                             jQuery(this).val('yes');
                         }
                     });
+
+                    // Make the bike/car service price table sortable
                     jQuery(document).ready(function () {
                         jQuery(".rbfw_bike_car_sd_price_table_body").sortable();
                     });
+
+                    // Handle extra service image upload
                     jQuery(document).ready(function () {
-                        // extra service add image button and remove image button function
                         function rbfw_service_image_addup() {
-                            // onclick extra service add image button action
+                            // Onclick for extra service add image button
                             jQuery('.rbfw_service_image_btn').click(function () {
                                 let target = jQuery(this).parents('tr');
                                 let send_attachment_bkp = wp.media.editor.send.attachment;
                                 wp.media.editor.send.attachment = function (props, attachment) {
                                     target.find('.rbfw_service_image_preview img').remove();
-                                    target.find('.rbfw_service_image_preview').append('<img src="' + attachment.url + '"/>');
-                                    target.find('.rbfw_service_image').val(attachment.id);
+                                    // Escape URL before appending it to the DOM
+                                    target.find('.rbfw_service_image_preview').append('<img src="' + esc_url(attachment.url) + '"/>');
+                                    target.find('.rbfw_service_image').val(esc_attr(attachment.id)); // Escape the attachment ID
                                     wp.media.editor.send.attachment = send_attachment_bkp;
                                 }
                                 wp.media.editor.open(jQuery(this));
                                 return false;
                             });
-                            // end onclick extra service add image button action
-                            // onclick extra service remove image button action
+                            
+                            // Onclick for extra service remove image button
                             jQuery('.rbfw_remove_service_image_btn').click(function () {
                                 let target = jQuery(this).parents('tr');
                                 target.find('.rbfw_service_image_preview img').remove();
                                 target.find('.rbfw_service_image').val('');
                             });
-                            // end onclick extra service remove image button action
                         }
+
                         rbfw_service_image_addup();
-                        // End extra service add image button and remove image button function
                     });
                     // Daily price
                     jQuery('input[name=rbfw_enable_daily_rate]').click(function () {
@@ -1136,6 +1216,7 @@
                             jQuery('.rbfw_daily_rate_input input').removeAttr("disabled");
                         }
                     });
+
                     // Hourly price
                     jQuery('input[name=rbfw_enable_hourly_rate]').click(function () {
                         var status = jQuery(this).val();
@@ -1154,7 +1235,8 @@
                             }
                         }
                     });
-                    // daywise price
+
+                    // Daywise price
                     jQuery('input[name=rbfw_enable_daywise_price]').click(function () {
                         var status = jQuery(this).val();
                         if (status === 'yes') {
@@ -1166,7 +1248,7 @@
                             jQuery('.day-wise-price-configuration').slideDown().removeClass('hide').addClass('show');
                         }
                     });
-                    //day long price
+                    // Day long price
                     jQuery('input[name=rbfw_enable_resort_daylong_price]').click(function () {
                         var status = jQuery(this).val();
                         if (status === 'yes') {
@@ -1178,7 +1260,8 @@
                             jQuery('.resort_day_long_price').show();
                         }
                     });
-                    // ===============resort============
+
+                    // Resort
                     jQuery('#add-resort-type-row').click(function (e) {
                         e.preventDefault();
                         let current_time = jQuery.now();
@@ -1186,14 +1269,34 @@
                             let resort_last_row = jQuery('.rbfw_resort_price_table .rbfw_resort_price_table_row:last-child()');
                             let resort_type_last_data_key = parseInt(resort_last_row.attr('data-key'));
                             let resort_type_new_data_key = resort_type_last_data_key + 1;
-                            let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + resort_type_new_data_key + '"><td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="Room type"></td><td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_image]" value="" class="rbfw_room_image"></td><td class="resort_day_long_price" style="display: none;"><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td><td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td><td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_desc]" value="" placeholder="Short Description"></td><td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td><td><div class="mp_event_remove_move"><button class="button remove-row ' + current_time + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
-                            let resort_type_add_new_row = jQuery('.rbfw_resort_price_table').append(resort_type_row);
+                            
+                            let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + esc_attr(resort_type_new_data_key) + '">'
+                                + '<td><input type="text" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][room_type]" value="" placeholder="Room type"></td>'
+                                + '<td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_image]" value="" class="rbfw_room_image"></td>'
+                                + '<td class="resort_day_long_price" style="display: none;"><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td>'
+                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td>'
+                                + '<td><input type="text" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_desc]" value="" placeholder="Short Description"></td>'
+                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td>'
+                                + '<td><div class="mp_event_remove_move"><button class="button remove-row ' + esc_attr(current_time) + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>'
+                                + '</tr>';
+                            
+                            jQuery('.rbfw_resort_price_table').append(resort_type_row);
                         } else {
                             let resort_type_new_data_key = 0;
-                            let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + resort_type_new_data_key + '"><td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="Room type"></td><td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_image]" value="" class="rbfw_room_image"></td><td class="resort_day_long_price" style="display: none;"><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td><td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td><td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_desc]" value="" placeholder="Short Description"></td><td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td><td><div class="mp_event_remove_move"><button class="button remove-row ' + current_time + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td></tr>';
-                            let resort_type_add_new_row = jQuery('.rbfw_resort_price_table').append(resort_type_row);
+                            let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + esc_attr(resort_type_new_data_key) + '">'
+                                + '<td><input type="text" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][room_type]" value="" placeholder="Room type"></td>'
+                                + '<td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_image]" value="" class="rbfw_room_image"></td>'
+                                + '<td class="resort_day_long_price" style="display: none;"><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td>'
+                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td>'
+                                + '<td><input type="text" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_desc]" value="" placeholder="Short Description"></td>'
+                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td>'
+                                + '<td><div class="mp_event_remove_move"><button class="button remove-row ' + esc_attr(current_time) + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>'
+                                + '</tr>';
+                            
+                            jQuery('.rbfw_resort_price_table').append(resort_type_row);
                         }
-                        jQuery('.remove-row.' + current_time + '').on('click', function () {
+                        
+                        jQuery('.remove-row.' + esc_attr(current_time) + '').on('click', function () {
                             e.preventDefault();
                             e.stopImmediatePropagation();
                             if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
@@ -1204,6 +1307,7 @@
                         });
                         jQuery(".rbfw_resort_price_table_body").sortable();
                         rbfw_room_type_image_addup();
+
                         var daylong_price_label_val = jQuery('.rbfw_resort_daylong_price_switch label.active').find('input').val();
                         if (daylong_price_label_val === 'yes') {
                             jQuery('.resort_day_long_price').show();
@@ -1211,23 +1315,27 @@
                             jQuery('.resort_day_long_price').hide();
                         }
                     });
+
+                    // Image handling for room type
                     function rbfw_room_type_image_addup() {
                         jQuery('.rbfw_room_type_image_btn').click(function () {
                             let parent_data_key = jQuery(this).closest('.rbfw_resort_price_table_row').attr('data-key');
                             let send_attachment_bkp = wp.media.editor.send.attachment;
                             wp.media.editor.send.attachment = function (props, attachment) {
-                                jQuery('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_type_image_preview img').remove();
-                                jQuery('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_type_image_preview').append('<img src="' + attachment.url + '"/>');
-                                jQuery('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_image').val(attachment.id);
+                                let image_url = esc_url(attachment.url); // Escape URL
+                                jQuery('.rbfw_resort_price_table_row[data-key=' + esc_attr(parent_data_key) + '] .rbfw_room_type_image_preview img').remove();
+                                jQuery('.rbfw_resort_price_table_row[data-key=' + esc_attr(parent_data_key) + '] .rbfw_room_type_image_preview').append('<img src="' + image_url + '"/>');
+                                jQuery('.rbfw_resort_price_table_row[data-key=' + esc_attr(parent_data_key) + '] .rbfw_room_image').val(attachment.id);
                                 wp.media.editor.send.attachment = send_attachment_bkp;
                             }
                             wp.media.editor.open(jQuery(this));
                             return false;
                         });
+
                         jQuery('.rbfw_remove_room_type_image_btn').click(function () {
                             let parent_data_key = jQuery(this).closest('.rbfw_resort_price_table_row').attr('data-key');
-                            jQuery('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_type_image_preview img').remove();
-                            jQuery('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_image').val('');
+                            jQuery('.rbfw_resort_price_table_row[data-key=' + esc_attr(parent_data_key) + '] .rbfw_room_type_image_preview img').remove();
+                            jQuery('.rbfw_resort_price_table_row[data-key=' + esc_attr(parent_data_key) + '] .rbfw_room_image').val('');
                         });
                     }
                     rbfw_room_type_image_addup();
