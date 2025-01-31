@@ -50,7 +50,11 @@
 								) );
 							?>
 							<?php while ( $the_query->have_posts() ) : $the_query->the_post(); ?>
-                                <option <?php echo esc_html( in_array( get_the_ID(), $releted_post_id ) ) ? 'selected' : '' ?> value="<?php the_ID(); ?>"> <?php the_title(); ?> </option>
+								<option 
+									<?php echo ( in_array( get_the_ID(), $releted_post_id ) ) ? 'selected' : ''; ?> 
+									value="<?php echo esc_attr( get_the_ID() ); ?>"> 
+									<?php echo esc_html( get_the_title() ); ?> 
+								</option>
 							<?php endwhile; ?>
                         </select>
                     </div>

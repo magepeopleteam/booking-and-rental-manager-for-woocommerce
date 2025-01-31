@@ -118,28 +118,35 @@
                     </div>
                 </div>
                 <script>
-                    jQuery('input[name=rbfw_time_slot_switch]').click(function () {
-                        var status = jQuery(this).val();
-                        if (status === 'on') {
-                            jQuery(this).val('off');
-                            jQuery('.available-time-slot').slideUp().removeClass('show').addClass('hide');
-                        }
-                        if (status === 'off') {
-                            jQuery(this).val('on');
-                            jQuery('.available-time-slot').slideDown().removeClass('hide').addClass('show');
-                        }
-                    });
-                    jQuery('input[name=rbfw_enable_start_end_date]').click(function () {
-                        var status = jQuery(this).val();
-                        jQuery('.rbfw_enable_start_end_date_ggg').val(status);
-                        if (status === 'yes') {
-                            jQuery(this).val('no');
-                            jQuery('.rbfw-fixed-date').slideUp().removeClass('show').addClass('hide');
-                        }
-                        if (status === 'no') {
-                            jQuery(this).val('yes');
-                            jQuery('.rbfw-fixed-date').slideDown().removeClass('hide').addClass('show');
-                        }
+                    jQuery(function ($) {
+                        "use strict";
+
+                        // Ensure 'on' and 'off' values are safe to use in JavaScript (though they are static here, it's a good practice for dynamic values)
+                        $('input[name=rbfw_time_slot_switch]').click(function () {
+                            var status = $(this).val();
+                            if (status === 'on') {
+                                $(this).val('off');
+                                $('.available-time-slot').slideUp().removeClass('show').addClass('hide');
+                            }
+                            if (status === 'off') {
+                                $(this).val('on');
+                                $('.available-time-slot').slideDown().removeClass('hide').addClass('show');
+                            }
+                        });
+
+                        // Ensure values like 'yes' and 'no' are safe when used in JavaScript
+                        $('input[name=rbfw_enable_start_end_date]').click(function () {
+                            var status = $(this).val();
+                            $('.rbfw_enable_start_end_date_ggg').val(status);
+                            if (status === 'yes') {
+                                $(this).val('no');
+                                $('.rbfw-fixed-date').slideUp().removeClass('show').addClass('hide');
+                            }
+                            if (status === 'no') {
+                                $(this).val('yes');
+                                $('.rbfw-fixed-date').slideDown().removeClass('hide').addClass('show');
+                            }
+                        });
                     });
                 </script>
 				<?php

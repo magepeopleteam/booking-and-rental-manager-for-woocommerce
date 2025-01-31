@@ -261,33 +261,42 @@
                         jQuery('.tr_remove').click(function (e) { jQuery(this).closest("tr").remove();});
                     });
 
-                    jQuery(document).on('click', '.add-new-feature',function(e){
+                    jQuery(document).on('click', '.add-new-feature', function(e) {
                         e.stopImmediatePropagation();
+                        
                         let data_key = jQuery(this).siblings(".rbfw_feature_category").find("div.item:last-child input").attr('data-key');
-                        let i = parseInt(data_key);
+                        let i = parseInt(data_key) || 0; // Ensuring it is a number
                         let c = i + 1;
+                        
                         let theTarget = jQuery(this).siblings('.rbfw_feature_category').find('.feature_category_inner_wrap .feature_category_inner_item_wrap');
-                        jQuery( ".sortable" ).sortable({ handle: '.sort' });
+                        jQuery(".sortable").sortable({ handle: '.sort' });
+                        
                         let dataCat = jQuery(this).closest('tr').attr('data-cat');
 
-                        html = '<div class="item">';
+                        let html = '<div class="item">';
 
-                        html += '<a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="'+ c +'"><i class="fas fa-circle-plus"></i> <?php echo esc_html__('Add Icon','booking-and-rental-manager-for-woocommerce'); ?></a>';
+                        html += '<a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="'+ c +'">';
+                        html += '<i class="fas fa-circle-plus"></i> ' + <?php echo json_encode(esc_html__('Add Icon', 'booking-and-rental-manager-for-woocommerce')); ?>;
+                        html += '</a>';
 
                         html += '<div class="rbfw_feature_icon_preview" data-key="'+ c +'"></div>';
 
-                        html += '<input type="hidden" name="rbfw_feature_category['+ dataCat +'][cat_features]['+ c +'][icon]" placeholder="<?php
-                            echo esc_html__('Icon','booking-and-rental-manager-for-woocommerce'); ?>" data-key="'+ c +'" class="rbfw_feature_icon"/>';
+                        html += '<input type="hidden" name="rbfw_feature_category['+ dataCat +'][cat_features]['+ c +'][icon]" placeholder="';
+                        html += <?php echo json_encode(esc_html__('Icon', 'booking-and-rental-manager-for-woocommerce')); ?> + '" data-key="'+ c +'" class="rbfw_feature_icon"/>';
 
-                        html += '<input type="text" name="rbfw_feature_category['+ dataCat +'][cat_features]['+ c +'][title]" placeholder="<?php
-                            echo esc_attr($placeholder); ?>" data-key="'+ c +'"/>';
+                        html += '<input type="text" name="rbfw_feature_category['+ dataCat +'][cat_features]['+ c +'][title]" placeholder="';
+                        html += <?php echo json_encode(esc_attr($placeholder)); ?> + '" data-key="'+ c +'"/>';
+
                         html += '<div>';
-                        <?php if($sortable):?>
-                        html += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
+
+                        <?php if ($sortable): ?>
+                        html += ' <span class="button sort"><i class="fas fa-arrows-alt"></i></span>';
                         <?php endif; ?>
 
-                        html += '<span class="button remove" onclick="jQuery(this).parent().parent().remove()' +
-                            '"><?php echo wp_kses_post($remove_text); ?></span>';
+                        html += '<span class="button remove" onclick="jQuery(this).parent().parent().remove()">';
+                        html += <?php echo json_encode(wp_kses_post($remove_text)); ?>;
+                        html += '</span>';
+
                         html += '</div>';
                         html += '</div>';
 

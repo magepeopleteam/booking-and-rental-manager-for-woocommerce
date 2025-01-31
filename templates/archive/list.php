@@ -263,7 +263,7 @@ echo '<pre>';*/
                                                 echo 'style="display:none"';
                                                 echo 'data-status="extra"';
                                             }
-                                            echo '><i class="'.esc_html($icon).'"></i></li>';
+                                            echo '><i class="'.esc_attr($icon).'"></i></li>';
 
                                         endif;
 

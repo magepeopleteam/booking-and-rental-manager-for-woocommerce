@@ -61,6 +61,7 @@ if( ! class_exists('RBFW_Faq_Settings')){
                         <span><?php esc_html_e('FAQ Settings', 'booking-and-rental-manager-for-woocommerce'); ?></span>
                     </div>
                 </section>
+
                 <section>
                     <div>
                         <label><?php esc_html_e('FAQ Settings Enable', 'booking-and-rental-manager-for-woocommerce'); ?></label>
@@ -111,6 +112,7 @@ if( ! class_exists('RBFW_Faq_Settings')){
                             <div class="rbfw_faq_save_buttons">
                                 <p><button id="rbfw_faq_save" class="button button-primary button-large"><?php _e('Save','booking-and-rental-manager-for-woocommerce'); ?></button> <button id="rbfw_faq_save_close" class="button button-primary button-large">save close</button><p>
                             </div>
+
                             <div class="rbfw_faq_update_buttons" style="display: none;">
                                 <p><button id="rbfw_faq_update" class="button button-primary button-large"><?php _e('Update and Close','booking-and-rental-manager-for-woocommerce'); ?></button><p>
                             </div>

@@ -50,7 +50,7 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
                         <div class="rbfw_regf_group">
                             <select name="rbfw_item_quantity" id="rbfw_item_quantity">
                                 <?php for ($qty = 1; $qty <= $available_quantity; $qty++) { ?>
-                                    <option value="<?php echo esc_html($qty); ?>">
+                                    <option value="<?php echo esc_attr($qty); ?>">
                                         <?php echo esc_html($qty); ?>
                                     </option>
                                 <?php } ?>
@@ -67,8 +67,8 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
     </div>
 
 
-    <input type="hidden" name="end_date" value="<?php echo esc_html($end_date); ?>">
-    <input type="hidden" name="end_time" value="<?php echo esc_html($end_time); ?>">
+    <input type="hidden" name="end_date" value="<?php echo esc_attr($end_date); ?>">
+    <input type="hidden" name="end_time" value="<?php echo esc_attr($end_time); ?>">
     <input type="hidden" name="service_type" value="<?php echo esc_attr($service_type) ?>">
     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step">
         <div class="">
@@ -113,7 +113,7 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
                                         <?php if($available_qty_info_switch == 'yes'){ ?>
                                             <small class="rbfw_available_qty_notice">(<?php echo esc_html(rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce'))).esc_html($max_es_available_qty); ?>)</small>
                                         <?php } ?>
-                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_html($c); ?>][service_name]" value="<?php echo esc_html($value['service_name']); ?>"/>
+                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_name]" value="<?php echo esc_attr($value['service_name']); ?>"/>
                                     </div>
                                 </td>
                                 <td class="w_30_pc">
@@ -121,11 +121,11 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
                                 </td>
                                 <td class="w_20_pc">
                                     <div class="rbfw_service_price_wrap">
-                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_html($c); ?>][service_price]" value="<?php echo esc_html($value['service_price']); ?>"/>
+                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_price]" value="<?php echo esc_attr($value['service_price']); ?>"/>
                                         <div class="rbfw_qty_input">
                                             <?php if($max_es_available_qty){ ?>
                                                 <a class="rbfw_qty_minus rbfw_timely_es_qty_minus"><i class="fas fa-minus"></i></a>
-                                                <input type="number" min="0" max="<?php echo esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo esc_html($c); ?>][service_qty]" class="rbfw_timely_es_qty" data-price="<?php echo esc_html($value['service_price']); ?>" data-type="<?php echo esc_html($value['service_name']); ?>" data-cat="service"/>
+                                                <input type="number" min="0" max="<?php echo esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_qty]" class="rbfw_timely_es_qty" data-price="<?php echo esc_attr($value['service_price']); ?>" data-type="<?php echo esc_attr($value['service_name']); ?>" data-cat="service"/>
                                                 <a class="rbfw_qty_plus rbfw_timely_es_qty_plus"><i class="fas fa-plus"></i></a>
                                             <?php }else{ ?>
                                                 <div style="width: 120px">Sold Out</div>

@@ -666,54 +666,57 @@
 		$icon_library_list = $icon_library->rbfw_fontawesome_icons();
 		?>
         <script>
-            jQuery(document).ready(function () {
-                jQuery('.rbfw_load_more_icons').click(function (e) {
-                    e.preventDefault();
-                    let data_loaded = parseInt(jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded'));
-                    var data = {
-                        'action': 'rbfw_load_more_icons',
-                        'data_loaded': data_loaded
-                    };
-                    jQuery.ajax({
-                        type: 'POST',
-                        url: ajaxurl,
-                        data: {
-                            'action': 'rbfw_load_more_icons',
-                            'data_loaded': data_loaded
-                        },
-                        beforeSend: function () {
-                            jQuery('.rbfw_load_more_icons').append('<span class="rbfw_load_more_icons_loader"><i class="fas fa-spinner fa-spin"></i></span>');
-                        },
-                        success: function (response) {
-                            console.log('response', response);
-                            jQuery('.rbfw_load_more_icons_loader').remove();
-                            jQuery('.rbfw_features_icon_list_body').append(response);
-                            data_loaded = data_loaded + 100;
-                            jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded', data_loaded);
-                            if (response == '') {
-                                jQuery('.rbfw_load_more_icons').hide();
-                            }
-                            // Selected Feature Icon Action
-                            jQuery(document).on('click', '#rbfw_features_icon_list_wrapper label', function (e) {
-                                e.stopImmediatePropagation();
-                                let selected_label = jQuery(this);
-                                let selected_val = jQuery('input', this).val();
-                                let selected_data_key = jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
-                                let selected_data_cat = jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
-                                jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-                                jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon_preview[data-key="' + selected_data_key + '"]').empty();
-                                jQuery(selected_label).addClass('selected');
-                                jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon[data-key="' + selected_data_key + '"]').val(selected_val);
-                                jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon_preview[data-key="' + selected_data_key + '"]').append('<i class="' + selected_val + '"></i>');
-                            });
-                        },
-                        error: function (response) {
-                            console.log(response);
-                        }
-                    });
-                });
-            });
-        </script>
+		jQuery(document).ready(function () {
+			jQuery('.rbfw_load_more_icons').click(function (e) {
+				e.preventDefault();
+				let data_loaded = parseInt(jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded'));
+				var data = {
+					'action': 'rbfw_load_more_icons',
+					'data_loaded': data_loaded
+				};
+				jQuery.ajax({
+					type: 'POST',
+					url: <?php echo json_encode(esc_url(admin_url('admin-ajax.php'))); ?>, // Escape URL
+					data: {
+						'action': 'rbfw_load_more_icons',
+						'data_loaded': data_loaded
+					},
+					beforeSend: function () {
+						jQuery('.rbfw_load_more_icons').append('<span class="rbfw_load_more_icons_loader"><i class="fas fa-spinner fa-spin"></i></span>');
+					},
+					success: function (response) {
+						console.log('response', response);
+						jQuery('.rbfw_load_more_icons_loader').remove();
+						// Escape response to ensure no unwanted HTML or scripts
+						jQuery('.rbfw_features_icon_list_body').append(esc_html(response));
+						data_loaded = data_loaded + 100;
+						jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded', data_loaded);
+						if (response == '') {
+							jQuery('.rbfw_load_more_icons').hide();
+						}
+						// Selected Feature Icon Action
+						jQuery(document).on('click', '#rbfw_features_icon_list_wrapper label', function (e) {
+							e.stopImmediatePropagation();
+							let selected_label = jQuery(this);
+							let selected_val = jQuery('input', this).val();
+							let selected_data_key = jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
+							let selected_data_cat = jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
+							jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
+							jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon_preview[data-key="' + selected_data_key + '"]').empty();
+							jQuery(selected_label).addClass('selected');
+							// Escape values for attributes and DOM
+							jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon[data-key="' + selected_data_key + '"]').val(esc_attr(selected_val));
+							jQuery('.rbfw_feature_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_feature_icon_preview[data-key="' + selected_data_key + '"]').append('<i class="' + esc_attr(selected_val) + '"></i>');
+						});
+					},
+					error: function (response) {
+						console.log(response);
+					}
+				});
+			});
+		});
+	</script>
+
         <div id="rbfw_features_icon_list_wrapper" class="mage_modal ggggg" data-loaded="100">
             <div class="rbfw_features_icon_list_header">
                 <div class="rbfw_features_icon_list_header_group">
@@ -1694,11 +1697,16 @@
 															echo '<li class="title' . esc_attr($rand_number) . '"><i class="' . esc_attr($icon) . '"></i></li>';
 															?>
                                                             <script>
-                                                                jQuery(document).ready(function () {
-                                                                    let content<?php echo esc_html( $rand_number ); ?> = '<?php echo esc_html( $feature['title'] ); ?>';
-                                                                    tippy('.title' +<?php echo esc_html( $rand_number ); ?>, {content: content<?php echo esc_html( $rand_number ); ?>, theme: 'blue', placement: 'top'});
-                                                                });
-                                                            </script>
+																jQuery(document).ready(function () {
+																	// Escape variables properly for JavaScript context
+																	let content<?php echo esc_js( $rand_number ); ?> = '<?php echo esc_html( $feature['title'] ); ?>';
+																	tippy('.title<?php echo esc_js( $rand_number ); ?>', {
+																		content: content<?php echo esc_js( $rand_number ); ?>,
+																		theme: 'blue',
+																		placement: 'top'
+																	});
+																});
+															</script>
 														<?php
 														endif;
 													}
@@ -1941,11 +1949,16 @@
 																echo '<li class="title' . esc_attr($rand_number) . '"><i class="' . esc_attr($icon) . '"></i></li>';
 																?>
                                                                 <script>
-                                                                    jQuery(document).ready(function () {
-                                                                        let content<?php echo esc_html( $rand_number ); ?> = '<?php echo esc_html( $feature['title'] ); ?>';
-                                                                        tippy('.title' +<?php echo esc_html( $rand_number ); ?>, {content: content<?php echo esc_html( $rand_number ); ?>, theme: 'blue', placement: 'top'});
-                                                                    });
-                                                                </script>
+																	jQuery(document).ready(function () {
+																		// Properly escape JavaScript and HTML content
+																		let content<?php echo esc_js( $rand_number ); ?> = '<?php echo esc_html( $feature['title'] ); ?>';
+																		tippy('.title<?php echo esc_js( $rand_number ); ?>', {
+																			content: content<?php echo esc_js( $rand_number ); ?>,
+																			theme: 'blue',
+																			placement: 'top'
+																		});
+																	});
+																</script>
 															<?php
 															endif;
 														}
@@ -2241,18 +2254,24 @@
                     <!-- The Modal/Lightbox -->
                     <div id="rbfw_aig_Modal" class="rbfw_aig_modal"><span class="rbfw_aig_close cursor" onclick="rbfw_aig_closeModal()">&times;</span>
                         <div class="rbfw_aig_modal-content">
-							<?php
+						<?php
 								$c            = 1;
 								$count_images = count( $gallery_images_ids );
 								foreach ( $gallery_images_ids as $img_id ) {
+									// Get image URL and ensure it's safe
 									$image_url = wp_get_attachment_url( $img_id );
-									?>
-                                    <div class="rbfw_aig_slides">
-                                        <div class="rbfw_aig_numbertext"><?php echo esc_html( $c ); ?> / <?php echo esc_html( $count_images ); ?></div>
-                                        <img src="<?php echo esc_url( $image_url ); ?>">
-                                    </div>
-									<?php
-									$c ++;
+									if ( ! empty( $image_url ) ) :
+										?>
+										<div class="rbfw_aig_slides">
+											<!-- Ensure the current slide number and total images are safely escaped -->
+											<div class="rbfw_aig_numbertext"><?php echo esc_html( $c ); ?> / <?php echo esc_html( $count_images ); ?></div>
+											
+											<!-- Use esc_url() for the image source URL -->
+											<img src="<?php echo esc_url( $image_url ); ?>" alt="<?php echo esc_attr( sprintf( 'Slide %d of %d', $c, $count_images ) ); ?>">
+										</div>
+										<?php
+										$c ++;
+									endif;
 								}
 							?>
                             <!-- Next/rbfw_aig_previous controls --><a class="rbfw_aig_prev" onclick="rbfw_aig_plusSlides(-1)">&#10094;</a> <a class="rbfw_aig_next" onclick="rbfw_aig_plusSlides(1)">&#10095;</a>
@@ -2931,18 +2950,27 @@
 			$title        = '';
 			$category_arr = [];
 		}
+		
 		$option = '';
-		$option .= "<select name=$name class=$class>";
-		$option .= "<option value='' >" . $title . "</option>";
+		
+		// Escape name and class attributes
+		$option .= "<select name='" . esc_attr( $name ) . "' class='" . esc_attr( $class ) . "'>";
+		$option .= "<option value=''>" . esc_html( $title ) . "</option>";
+		
 		if ( is_array( $category_arr ) && count( $category_arr ) > 0 ) {
 			foreach ( $category_arr as $key => $value ) {
-				$selected_text = ! empty( $saved_value ) && $saved_value == $value ? 'Selected' : '';
-				$option        .= "<option value='$value' $selected_text>" . esc_html( $value ) . "</option>";
+				// Escape each option value for security
+				$selected_text = ( ! empty( $saved_value ) && $saved_value == $value ) ? 'selected' : '';
+				$option        .= "<option value='" . esc_attr( $value ) . "' $selected_text>" . esc_html( $value ) . "</option>";
 			}
 		}
+	
 		$option .= "</select>";
-		echo wp_kses( $option , rbfw_allowed_html());
+		
+		// Use wp_kses to filter the HTML and ensure it adheres to allowed HTML rules
+		echo wp_kses( $option, rbfw_allowed_html() );
 	}
+	
 	function rbfw_time_slot_select( $date_type, $iidex, $selected_time ) {
 		$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
 		global $RBFW_Timeslots_Page;
@@ -2953,7 +2981,7 @@
             <select class="medium" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $iidex ) ?>][<?php echo esc_attr( $date_type ) ?>]" id="rdfw_available_time" tabindex="-1" class="" aria-hidden="true">
                 <option value="">Select Time</option>
 				<?php foreach ( $rbfw_time_slots as $key => $value ): ?>
-                    <option <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?> </option>
+                    <option <?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) == $selected_time ) ? 'selected' : '' ?> value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?> </option>
 				<?php endforeach; ?>
             </select>
         </div>

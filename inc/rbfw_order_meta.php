@@ -391,59 +391,61 @@ function rbfw_order_meta_box_callback(){
                     <tr>
                         <td><strong><?php rbfw_string('rbfw_text_status',esc_html__('Status','booking-and-rental-manager-for-woocommerce')); ?></strong></td>
                         <td>
-                            <select name="rbfw_order_status">
-                                <option value="pending" <?php if($status == 'pending'){ echo 'selected'; } ?>><?php esc_html_e( 'Pending payment', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                <option value="processing" <?php if($status == 'processing'){ echo 'selected'; } ?>><?php esc_html_e( 'Processing', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                <option value="on-hold" <?php if($status == 'on-hold'){ echo 'selected'; } ?>><?php esc_html_e( 'On hold', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                <option value="completed" <?php if($status == 'completed'){ echo 'selected'; } ?>><?php esc_html_e( 'Completed', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                <option value="cancelled" <?php if($status == 'cancelled'){ echo 'selected'; } ?>><?php esc_html_e( 'Cancelled', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                <option value="refunded" <?php if($status == 'refunded'){ echo 'selected'; } ?>><?php esc_html_e( 'Refunded', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                <option value="picked" <?php if($status == 'picked'){ echo 'selected'; } ?>><?php esc_html_e( 'Picked', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                <option value="returned" <?php if($status == 'returned'){ echo 'selected'; } ?>><?php esc_html_e( 'Returned', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                            </select>
+                        <select name="rbfw_order_status">
+                            <option value="pending" <?php echo selected( $status, 'pending', false ); ?>><?php esc_html_e( 'Pending payment', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                            <option value="processing" <?php echo selected( $status, 'processing', false ); ?>><?php esc_html_e( 'Processing', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                            <option value="on-hold" <?php echo selected( $status, 'on-hold', false ); ?>><?php esc_html_e( 'On hold', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                            <option value="completed" <?php echo selected( $status, 'completed', false ); ?>><?php esc_html_e( 'Completed', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                            <option value="cancelled" <?php echo selected( $status, 'cancelled', false ); ?>><?php esc_html_e( 'Cancelled', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                            <option value="refunded" <?php echo selected( $status, 'refunded', false ); ?>><?php esc_html_e( 'Refunded', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                            <option value="picked" <?php echo selected( $status, 'picked', false ); ?>><?php esc_html_e( 'Picked', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                            <option value="returned" <?php echo selected( $status, 'returned', false ); ?>><?php esc_html_e( 'Returned', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                        </select>
                         </td>
                     </tr>
 
                     <tr class="rbfw_pickup_note" style="display: none">
                         <td><strong><?php esc_html_e( 'Pick Up Note', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                        <td><textarea name="rbfw_pickup_note" placeholder="Pickup Note" cols="50" rows="3"><?php echo esc_html($rbfw_pickup_note) ?></textarea></td>
+                        <td><textarea name="rbfw_pickup_note" placeholder="Pickup Note" cols="50" rows="3"><?php echo esc_textarea( $rbfw_pickup_note ); ?></textarea></td>
                     </tr>
                     <tr class="rbfw_return_note" style="display: none">
                         <td><strong><?php esc_html_e( 'Return Note', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                        <td><textarea name="rbfw_return_note" placeholder="Return Note" cols="50" rows="3"><?php echo esc_html($rbfw_return_note) ?></textarea></td>
+                        <td><textarea name="rbfw_return_note" placeholder="Return Note" cols="50" rows="3"><?php echo esc_textarea( $rbfw_return_note ); ?></textarea></td>
                     </tr>
                     <tr class="rbfw_return_security_deposit_amount" style="display: none">
-                        <td>
-                            <strong><?php esc_html_e( 'Return Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
-                        </td>
-                        <td>
-                            <input type="number" value="<?php echo esc_attr($rbfw_return_security_deposit_amount) ?>" name="rbfw_return_security_deposit_amount" placeholder="Return Security Deposit">
-                        </td>
+                        <td><strong><?php esc_html_e( 'Return Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
+                        <td><input type="number" value="<?php echo esc_attr( $rbfw_return_security_deposit_amount ); ?>" name="rbfw_return_security_deposit_amount" placeholder="Return Security Deposit"></td>
                     </tr>
-                    <?php if($rbfw_pickup_note){ ?>
+
+                    <?php if ( $rbfw_pickup_note ) { ?>
                         <tr>
                             <td><strong><?php esc_html_e( 'Pick Up Note', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                            <td><?php echo esc_html($rbfw_pickup_note) ?></td>
+                            <td><?php echo esc_html( $rbfw_pickup_note ); ?></td>
                         </tr>
                         <tr>
                             <td><strong><?php esc_html_e( 'Pick Up Date', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                            <td><?php echo esc_html(get_post_meta($order_id, 'rbfw_pickup_date', true)) ?></td>
+                            <td><?php echo esc_html( get_post_meta( $order_id, 'rbfw_pickup_date', true ) ); ?></td>
                         </tr>
-                    <?php } if($rbfw_return_note){ ?>
+                    <?php } ?>
+
+                    <?php if ( $rbfw_return_note ) { ?>
                         <tr>
                             <td><strong><?php esc_html_e( 'Return Note', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                            <td><?php echo esc_html($rbfw_return_note) ?></td>
+                            <td><?php echo esc_html( $rbfw_return_note ); ?></td>
                         </tr>
                         <tr>
                             <td><strong><?php esc_html_e( 'Return Date', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                            <td><?php echo esc_html(get_post_meta($order_id, 'rbfw_return_date', true)) ?></td>
+                            <td><?php echo esc_html( get_post_meta( $order_id, 'rbfw_return_date', true ) ); ?></td>
                         </tr>
-                    <?php } if($rbfw_return_security_deposit_amount){ ?>
-                    <tr>
-                        <td><strong><?php esc_html_e( 'Return Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                        <td><?php echo esc_html($rbfw_return_security_deposit_amount) ?></td>
-                    </tr>
                     <?php } ?>
+
+                    <?php if ( $rbfw_return_security_deposit_amount ) { ?>
+                        <tr>
+                            <td><strong><?php esc_html_e( 'Return Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
+                            <td><?php echo esc_html( $rbfw_return_security_deposit_amount ); ?></td>
+                        </tr>
+                    <?php } ?>
+
 
                     <tr>
                         <td><strong><?php rbfw_string('rbfw_text_order_created_date',esc_html__('Order created date','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>

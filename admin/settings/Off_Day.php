@@ -102,9 +102,9 @@
                             <input type="hidden" name="rbfw_off_days" value="<?php echo esc_attr($rbfw_off_days) ?>">
                             <?php foreach ($days as $day){ ?>
                                 <label class="customCheckboxLabel">
-    <input type="checkbox" <?php echo in_array($day, $off_day_array) ? 'checked' : ''; ?> data-checked="<?php echo esc_attr($day); ?>">
-    <span class="customCheckbox"><?php echo esc_html(ucfirst($day)); ?></span>
-</label>
+                                    <input type="checkbox" <?php echo in_array($day, $off_day_array) ? 'checked' : ''; ?> data-checked="<?php echo esc_attr($day); ?>">
+                                    <span class="customCheckbox"><?php echo esc_html(ucfirst($day)); ?></span>
+                                </label>
 
                             <?php } ?>
                         </div>

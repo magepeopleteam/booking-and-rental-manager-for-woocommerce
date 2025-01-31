@@ -88,7 +88,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
     <?php die;  ?>
 <?php } ?>
 
-<div class="rbfw-single-container" data-service-id="<?php echo esc_html($rbfw_id); ?>">
+<div class="rbfw-single-container" data-service-id="<?php echo esc_attr($rbfw_id); ?>">
     <div class="rbfw-single-right-container">
         <form action="" method='post' class="mp_rbfw_ticket_form">
             <div class="rbfw_bike_car_md_item_wrapper">
@@ -233,12 +233,12 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
 
                     <?php if ($location_switch == 'yes' && !empty($pickup_location)) : ?>
                         <div class="item">
-                            <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_location', 'rbfw_basic_translation_settings', __('Pickup Location','booking-and-rental-manager-for-woocommerce'))); ?></div>
+                            <div class="rbfw-single-right-heading"><?php echo esc_attr($rbfw->get_option_trans('rbfw_text_pickup_location', 'rbfw_basic_translation_settings', __('Pickup Location','booking-and-rental-manager-for-woocommerce'))); ?></div>
                             <div class="item-content rbfw-location">
                                 <select class="rbfw-select" name="rbfw_pickup_point" required>
                                     <option value=""><?php echo esc_html($rbfw->get_option_trans('rbfw_text_choose_pickup_location', 'rbfw_basic_translation_settings', __('Choose pickup location','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                     <?php foreach ($pickup_location as $pickup) : ?>
-                                        <option value="<?php echo esc_html($pickup['loc_pickup_name']); ?>"><?php echo esc_html($pickup['loc_pickup_name']); ?></option>
+                                        <option value="<?php echo esc_attr($pickup['loc_pickup_name']); ?>"><?php echo esc_html($pickup['loc_pickup_name']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -251,9 +251,9 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                             </div>
                             <div class="item-content rbfw-location">
                                 <select class="rbfw-select" name="rbfw_dropoff_point" required>
-                                    <option value=""><?php echo esc_html($rbfw->get_option_trans('rbfw_text_choose_dropoff_location', 'rbfw_basic_translation_settings', __('Choose drop-off location','booking-and-rental-manager-for-woocommerce'))); ?></option>
+                                    <option value=""><?php echo esc_attr($rbfw->get_option_trans('rbfw_text_choose_dropoff_location', 'rbfw_basic_translation_settings', __('Choose drop-off location','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                     <?php foreach ($dropoff_location as $dropoff) : ?>
-                                        <option value="<?php echo esc_html($dropoff['loc_dropoff_name']); ?>"><?php echo esc_html($dropoff['loc_dropoff_name']); ?></option>
+                                        <option value="<?php echo esc_attr($dropoff['loc_dropoff_name']); ?>"><?php echo esc_html($dropoff['loc_dropoff_name']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -261,20 +261,20 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                     <?php endif; ?>
 
 
-                    <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_html(rbfw_off_days($post_id)); ?>'>
-                    <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_html(rbfw_off_dates($post_id)); ?>'>
+                    <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
+                    <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
 
                     <?php if($rbfw_enable_start_end_date == 'yes'){ ?>
                         <div class="item">
                             <div class="item-content rbfw-datetime">
-                                <div class="<?php echo esc_html(($time_picker == 'on')?'left':''); ?> date">
+                                <div class="<?php echo esc_attr(($time_picker == 'on')?'left':''); ?> date">
                                     <div class="rbfw-single-right-heading">
                                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                     </div>
                                     <div class="rbfw-p-relative">
                                         <span class="calendar"><i class="fas fa-calendar-days"></i></span>
                                         <input type="hidden" id="hidden_pickup_date" name="rbfw_pickup_start_date">
-                                        <input class="rbfw-input rbfw-time-price pickup_date" type="text"  id="pickup_date" placeholder="<?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
+                                        <input class="rbfw-input rbfw-time-price pickup_date" type="text"  id="pickup_date" placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
                                         <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                     </div>
                                 </div>
@@ -290,7 +290,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                             <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_pickup_start_time" id="pickup_time" required>
                                                 <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup time','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                                 <?php foreach ($availabe_time as $key => $time) : ?>
-                                                    <option value="<?php echo esc_html($time); ?>"><?php echo esc_html(gmdate(get_option('time_format'), strtotime($time))); ?></option>
+                                                    <option value="<?php echo esc_attr($time); ?>"><?php echo esc_html(gmdate(get_option('time_format'), strtotime($time))); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                             <span class="input-picker-icon"></span>
@@ -308,7 +308,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                     <div class="rbfw-p-relative">
                                         <span class="calendar"><i class="fas fa-calendar-days"></i></span>
                                         <input type="hidden" id="hidden_dropoff_date" name="rbfw_pickup_end_date">
-                                        <input class="rbfw-input rbfw-time-price dropoff_date" type="text" id="dropoff_date" placeholder="<?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_date', 'rbfw_basic_translation_settings', __('Return date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
+                                        <input class="rbfw-input rbfw-time-price dropoff_date" type="text" id="dropoff_date" placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_return_date', 'rbfw_basic_translation_settings', __('Return date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
                                         <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                     </div>
                                 </div>
@@ -321,7 +321,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                             <select class="rbfw-select rbfw-time-price dropoff_time" name="rbfw_pickup_end_time" id="dropoff_time" required>
                                                 <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_time', 'rbfw_basic_translation_settings', __('Return time','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                                 <?php foreach ($availabe_time as $key => $time) : ?>
-                                                    <option value="<?php echo esc_html($time); ?>"><?php echo esc_html(gmdate(get_option('time_format'), strtotime($time))); ?></option>
+                                                    <option value="<?php echo esc_attr($time); ?>"><?php echo esc_html(gmdate(get_option('time_format'), strtotime($time))); ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                             <span class="input-picker-icon"></span>
@@ -355,7 +355,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                 <select class="rbfw-select" name="rbfw_item_quantity" id="rbfw_item_quantity">
                                     <option value="0"><?php rbfw_string('rbfw_text_choose_number_of_qty',__('Choose number of quantity','booking-and-rental-manager-for-woocommerce')); ?></option>
                                     <?php for ($qty = 1; $qty <= $item_stock_quantity; $qty++) { ?>
-                                        <option value="<?php echo esc_html($qty); ?>" <?php if($qty == 1){ echo 'selected'; } ?>><?php echo esc_html($qty); ?></option>
+                                        <option value="<?php echo esc_attr($qty); ?>" <?php if($qty == 1){ echo 'selected'; } ?>><?php echo esc_html($qty); ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -491,12 +491,12 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                         Sold Out
                                                     </div>
                                                     <div class="label rbfw-checkbox">
-                                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_html($c); ?>][service_name]" value="<?php echo esc_html($extra['service_name']); ?>">
-                                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_html($c); ?>][service_qty]" class="rbfw-resource-qty key_value_cart_<?php echo esc_html($key+1); ?>" value="">
-                                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_html($c); ?>][service_price]"  value="<?php echo esc_html($extra['service_price']); ?>">
+                                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_name]" value="<?php echo esc_attr($extra['service_name']); ?>">
+                                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_qty]" class="rbfw-resource-qty key_value_cart_<?php echo esc_attr($key+1); ?>" value="">
+                                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_price]"  value="<?php echo esc_attr($extra['service_price']); ?>">
 
                                                         <label class="switch">
-                                                            <input type="checkbox" max="4"  class="rbfw-resource-price rbfw-resource-price-multiple-qty key_value_<?php echo esc_html($key+1); ?>" data-status="0" value="1" data-cat="service"  data-quantity="1"  data-price="<?php echo esc_html($extra['service_price']); ?>" data-name="<?php echo esc_html($extra['service_name']); ?>">
+                                                            <input type="checkbox" max="4"  class="rbfw-resource-price rbfw-resource-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>" data-status="0" value="1" data-cat="service"  data-quantity="1"  data-price="<?php echo esc_attr($extra['service_price']); ?>" data-name="<?php echo esc_attr($extra['service_name']); ?>">
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
@@ -509,9 +509,9 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                 <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>
                                                     <td class="rbfw_bikecarmd_es_input_box" style="display:none">
                                                         <div class="rbfw_qty_input">
-                                                            <a class="rbfw_qty_minus rbfw_bikecarmd_es_qty_minus" data-item="<?php echo esc_html($key+1); ?>"><i class="fas fa-minus"></i></a>
-                                                            <input type="number" min="0" max="" value="1" class="rbfw_bikecarmd_es_qty"  data-cat="service" data-item="<?php echo esc_html($key+1); ?>" data-price="<?php echo esc_html($extra['service_price']); ?>" data-name="<?php echo esc_html($extra['service_name']); ?>"/>
-                                                            <a class="rbfw_qty_plus rbfw_bikecarmd_es_qty_plus" data-item="<?php echo esc_html($key+1); ?>"><i class="fas fa-plus"></i></a>
+                                                            <a class="rbfw_qty_minus rbfw_bikecarmd_es_qty_minus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-minus"></i></a>
+                                                            <input type="number" min="0" max="" value="1" class="rbfw_bikecarmd_es_qty"  data-cat="service" data-item="<?php echo esc_attr($key+1); ?>" data-price="<?php echo esc_attr($extra['service_price']); ?>" data-name="<?php echo esc_attr($extra['service_name']); ?>"/>
+                                                            <a class="rbfw_qty_plus rbfw_bikecarmd_es_qty_plus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-plus"></i></a>
                                                         </div>
                                                     </td>
                                                 <?php } ?>
@@ -585,13 +585,13 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price"  value="0">
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
-                <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_html($rbfw_id); ?>">
-                <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo esc_html($rbfw_enable_variations); ?>">
-                <input type="hidden" name="rbfw_input_stock_quantity" id="rbfw_input_stock_quantity"  value="<?php echo esc_html($input_stock_quantity); ?>">
-                <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_html($time_picker); ?>">
+                <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
+                <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo esc_attr($rbfw_enable_variations); ?>">
+                <input type="hidden" name="rbfw_input_stock_quantity" id="rbfw_input_stock_quantity"  value="<?php echo esc_attr($input_stock_quantity); ?>">
+                <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_attr($time_picker); ?>">
                 <input type="hidden" name="total_days" value="0">
-                <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_html($rbfw_minimum_booking_day); ?>">
-                <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo esc_html($rbfw_maximum_booking_day); ?>">
+                <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_attr($rbfw_minimum_booking_day); ?>">
+                <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo esc_attr($rbfw_maximum_booking_day); ?>">
 
 
 
@@ -607,14 +607,14 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
 
                         <?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>
 
-                        <button type="submit" name="<?php echo esc_html($submit_name); ?>" value="<?php echo esc_html($rbfw_product_id); ?>" class="rbfw_mps_book_now_btn_regf_____ mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn"  disabled >
+                        <button type="submit" name="<?php echo esc_attr($submit_name); ?>" value="<?php echo esc_attr($rbfw_product_id); ?>" class="rbfw_mps_book_now_btn_regf_____ mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn"  disabled >
                             <?php rbfw_string('rbfw_text_book_now',__('Book Now','booking-and-rental-manager-for-woocommerce')); ?>
                         </button>
                     </div>
                 <?php } else{ ?>
                     <div class="item">
                         <?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>
-                        <button type="submit" name="<?php echo esc_html($submit_name); ?>" value="<?php echo esc_html($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn" disabled <?php if( $rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date ) { echo 'style="display:none"'; }?>>
+                        <button type="submit" name="<?php echo esc_attr($submit_name); ?>" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn" disabled <?php if( $rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date ) { echo 'style="display:none"'; }?>>
                             <?php rbfw_string('rbfw_text_book_now',__('Book Now','booking-and-rental-manager-for-woocommerce')); ?>
                         </button>
                     </div>
