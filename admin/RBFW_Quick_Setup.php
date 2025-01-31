@@ -64,7 +64,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
                                 ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
                                 ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_item', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
                                 ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
-                                window.location.href = ttbm_admin_location;
+                                window.location.href = encodeURI(ttbm_admin_location);;
                             });
                         }(jQuery));
                     </script>
@@ -111,7 +111,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
                                 ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
                                 ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_item', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
                                 ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
-                                window.location.href = ttbm_admin_location;
+                                window.location.href = encodeURI(ttbm_admin_location);;
                             });
                         }(jQuery));
                     </script>
