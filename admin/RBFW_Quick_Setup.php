@@ -62,23 +62,11 @@ if (!class_exists('RBFW_Quick_Setup')) {
                             "use strict";
                             $(document).ready(function() {
                                 let ttbm_admin_location = window.location.href;
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_item', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
+                                window.location.href = encodeURI(ttbm_admin_location);;
 
-                                // Applying esc_url for URL sanitization
-                                ttbm_admin_location = ttbm_admin_location.replace(
-                                    'admin.php?post_type=rbfw_item&page=rbfw_quick_setup',
-                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
-                                );
-                                ttbm_admin_location = ttbm_admin_location.replace(
-                                    'admin.php?page=rbfw_item',
-                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
-                                );
-                                ttbm_admin_location = ttbm_admin_location.replace(
-                                    'admin.php?page=rbfw_quick_setup',
-                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
-                                );
-
-                                // Escape the final URL with esc_url to ensure safety
-                                window.location.href = <?php echo esc_js(json_encode(esc_url(ttbm_admin_location))); ?>;
                             });
                         }(jQuery));
                     </script>
@@ -122,23 +110,11 @@ if (!class_exists('RBFW_Quick_Setup')) {
                             "use strict";
                             $(document).ready(function() {
                                 let ttbm_admin_location = window.location.href;
-                                
-                                // Apply the replacement logic with esc_url sanitization
-                                ttbm_admin_location = ttbm_admin_location.replace(
-                                    'admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 
-                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
-                                );
-                                ttbm_admin_location = ttbm_admin_location.replace(
-                                    'admin.php?page=rbfw_item', 
-                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
-                                );
-                                ttbm_admin_location = ttbm_admin_location.replace(
-                                    'admin.php?page=rbfw_quick_setup', 
-                                    'edit.php?post_type=rbfw_item&page=rbfw_quick_setup'
-                                );
-                                
-                                // Escape the URL and ensure it is safe to use in JavaScript
-                                window.location.href = <?php echo esc_js( json_encode( esc_url( ttbm_admin_location ) ) ); ?>;
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?post_type=rbfw_item&page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_item', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
+                                ttbm_admin_location = ttbm_admin_location.replace('admin.php?page=rbfw_quick_setup', 'edit.php?post_type=rbfw_item&page=rbfw_quick_setup');
+                                window.location.href = encodeURI(ttbm_admin_location);;
+
                             });
                         }(jQuery));
                     </script>
