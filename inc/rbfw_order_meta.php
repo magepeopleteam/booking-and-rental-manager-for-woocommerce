@@ -957,7 +957,7 @@ if ( isset( $_POST['rbfw_return_security_deposit_amount'] ) ) {
 
 }
 
-function rbfw_update_reports_status($id,$status){
+function rbfw_update_reports_status($id,$status){  
 
     if(empty($id) || empty($status)){
         return;
