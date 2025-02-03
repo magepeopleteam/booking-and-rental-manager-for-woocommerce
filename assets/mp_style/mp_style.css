@@ -670,7 +670,7 @@ div.mpStyle .mage_disabled {
 div.mpStyle .mp_hidden_content,
 .mpStyle .dNone,
 .mpStyle [class*="_dNone"] {
-    display: none;
+    display: none !important;
 }
 
 .mpStyle .dBlock,
