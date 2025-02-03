@@ -426,22 +426,23 @@
 						?>
                         <div id="map-<?php echo esc_attr( $field_id ); ?>"></div>
                         <script>
-                            function initMap() {
-                                var myLatLng = {lat: <?php echo esc_html( $lat ); ?>, lng: <?php echo esc_html( $lng ); ?>};
-                                var map = new google.maps.Map(document.getElementById('map-<?php echo esc_html( $field_id ); ?>'), {
-                                    zoom: <?php echo esc_html( $zoom ); ?>,
-                                    center: myLatLng
-                                });
-                                var marker = new google.maps.Marker({
-                                    position: myLatLng,
-                                    map: map,
-                                    title: '<?php echo esc_html( $title ); ?>'
-                                });
-                            }
-                        </script>
-                        <script async defer
-                                src="https://maps.googleapis.com/maps/api/js?key=<?php echo esc_html( $apikey ); ?>&callback=initMap">
-                        </script>
+							function initMap() {
+								var myLatLng = {lat: <?php echo esc_js( $lat ); ?>, lng: <?php echo esc_js( $lng ); ?>};
+								var map = new google.maps.Map(document.getElementById('map-<?php echo esc_js( $field_id ); ?>'), {
+									zoom: <?php echo esc_js( $zoom ); ?>,
+									center: myLatLng
+								});
+								var marker = new google.maps.Marker({
+									position: myLatLng,
+									map: map,
+									title: '<?php echo esc_attr( $title ); ?>'
+								});
+							}
+						</script>
+						<script async defer
+								src="https://maps.googleapis.com/maps/api/js?key=<?php echo esc_html( $apikey ); ?>&callback=initMap">
+						</script>
+
 					<?php
 					endif;
 				endif;
@@ -549,84 +550,26 @@
                                 <input type='number' name='<?php echo esc_attr( $field_name ); ?>[width]' value='<?php echo esc_attr( $width ); ?>'/>
                             </span>
                             <select name="<?php echo esc_attr( $field_name ); ?>[unit]">
-                                <option <?php if ( $unit == 'px' ) {
-									echo 'selected';
-								} ?> value="px">px
-                                </option>
-                                <option <?php if ( $unit == '%' ) {
-									echo 'selected';
-								} ?> value="%">%
-                                </option>
-                                <option <?php if ( $unit == 'em' ) {
-									echo 'selected';
-								} ?> value="em">em
-                                </option>
-                                <option <?php if ( $unit == 'cm' ) {
-									echo 'selected';
-								} ?> value="cm">cm
-                                </option>
-                                <option <?php if ( $unit == 'mm' ) {
-									echo 'selected';
-								} ?> value="mm">mm
-                                </option>
-                                <option <?php if ( $unit == 'in' ) {
-									echo 'selected';
-								} ?> value="in">in
-                                </option>
-                                <option <?php if ( $unit == 'pt' ) {
-									echo 'selected';
-								} ?> value="pt">pt
-                                </option>
-                                <option <?php if ( $unit == 'pc' ) {
-									echo 'selected';
-								} ?> value="pc">pc
-                                </option>
-                                <option <?php if ( $unit == 'ex' ) {
-									echo 'selected';
-								} ?> value="ex">ex
-                                </option>
-                            </select>
+								<?php 
+								$units = [ 'px', '%', 'em', 'cm', 'mm', 'in', 'pt', 'pc', 'ex' ];
+								foreach ( $units as $u ) : ?>
+									<option value="<?php echo esc_attr( $u ); ?>" <?php selected( $unit, $u ); ?>>
+										<?php echo esc_html( $u ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
                         </div>
                         <div class="item">
                             <span class="field-title">Style</span>
                             <select name="<?php echo esc_attr( $field_name ); ?>[style]">
-                                <option <?php if ( $style == 'dotted' ) {
-									echo 'selected';
-								} ?> value="dotted">dotted
-                                </option>
-                                <option <?php if ( $style == 'dashed' ) {
-									echo 'selected';
-								} ?> value="dashed">dashed
-                                </option>
-                                <option <?php if ( $style == 'solid' ) {
-									echo 'selected';
-								} ?> value="solid">solid
-                                </option>
-                                <option <?php if ( $style == 'double' ) {
-									echo 'selected';
-								} ?> value="double">double
-                                </option>
-                                <option <?php if ( $style == 'groove' ) {
-									echo 'selected';
-								} ?> value="groove">groove
-                                </option>
-                                <option <?php if ( $style == 'ridge' ) {
-									echo 'selected';
-								} ?> value="ridge">ridge
-                                </option>
-                                <option <?php if ( $style == 'inset' ) {
-									echo 'selected';
-								} ?> value="inset">inset
-                                </option>
-                                <option <?php if ( $style == 'outset' ) {
-									echo 'selected';
-								} ?> value="outset">outset
-                                </option>
-                                <option <?php if ( $style == 'none' ) {
-									echo 'selected';
-								} ?> value="none">none
-                                </option>
-                            </select>
+								<?php 
+								$styles = [ 'dotted', 'dashed', 'solid', 'double', 'groove', 'ridge', 'inset', 'outset', 'none' ];
+								foreach ( $styles as $s ) : ?>
+									<option value="<?php echo esc_attr( $s ); ?>" <?php selected( $style, $s ); ?>>
+										<?php echo esc_html( $s ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
                         </div>
                         <div class="item">
                             <span class="field-title">Color</span>
@@ -742,43 +685,14 @@
 												echo esc_attr( $index ); ?>][val]' value='<?php
 												echo esc_attr( $values[ $index ]['val'] ); ?>'/></span>
                                         <select name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][unit]">
-                                            <option <?php if ( $unit == 'px' ) {
-												echo 'selected';
-											} ?> value="px">px
-                                            </option>
-                                            <option <?php if ( $unit == '%' ) {
-												echo 'selected';
-											} ?> value="%">%
-                                            </option>
-                                            <option <?php if ( $unit == 'em' ) {
-												echo 'selected';
-											} ?> value="em">em
-                                            </option>
-                                            <option <?php if ( $unit == 'cm' ) {
-												echo 'selected';
-											} ?> value="cm">cm
-                                            </option>
-                                            <option <?php if ( $unit == 'mm' ) {
-												echo 'selected';
-											} ?> value="mm">mm
-                                            </option>
-                                            <option <?php if ( $unit == 'in' ) {
-												echo 'selected';
-											} ?> value="in">in
-                                            </option>
-                                            <option <?php if ( $unit == 'pt' ) {
-												echo 'selected';
-											} ?> value="pt">pt
-                                            </option>
-                                            <option <?php if ( $unit == 'pc' ) {
-												echo 'selected';
-											} ?> value="pc">pc
-                                            </option>
-                                            <option <?php if ( $unit == 'ex' ) {
-												echo 'selected';
-											} ?> value="ex">ex
-                                            </option>
-                                        </select>
+											<?php 
+											$units = [ 'px', '%', 'em', 'cm', 'mm', 'in', 'pt', 'pc', 'ex' ];
+											foreach ( $units as $u ) : ?>
+												<option value="<?php echo esc_attr( $u ); ?>" <?php selected( $unit, $u ); ?>>
+													<?php echo esc_html( $u ); ?>
+												</option>
+											<?php endforeach; ?>
+										</select>
                                     </div>
 								<?php
 								endforeach;
@@ -894,44 +808,15 @@
                                         <span class="input-wrapper">
                                     <input type='number' name='<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][val]' value='<?php echo esc_attr( $values[ $index ]['val'] ); ?>'/>
                                 </span>
-                                        <select name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][unit]">
-                                            <option <?php if ( $unit == 'px' ) {
-												echo 'selected';
-											} ?> value="px">px
-                                            </option>
-                                            <option <?php if ( $unit == '%' ) {
-												echo 'selected';
-											} ?> value="%">%
-                                            </option>
-                                            <option <?php if ( $unit == 'em' ) {
-												echo 'selected';
-											} ?> value="em">em
-                                            </option>
-                                            <option <?php if ( $unit == 'cm' ) {
-												echo 'selected';
-											} ?> value="cm">cm
-                                            </option>
-                                            <option <?php if ( $unit == 'mm' ) {
-												echo 'selected';
-											} ?> value="mm">mm
-                                            </option>
-                                            <option <?php if ( $unit == 'in' ) {
-												echo 'selected';
-											} ?> value="in">in
-                                            </option>
-                                            <option <?php if ( $unit == 'pt' ) {
-												echo 'selected';
-											} ?> value="pt">pt
-                                            </option>
-                                            <option <?php if ( $unit == 'pc' ) {
-												echo 'selected';
-											} ?> value="pc">pc
-                                            </option>
-                                            <option <?php if ( $unit == 'ex' ) {
-												echo 'selected';
-											} ?> value="ex">ex
-                                            </option>
-                                        </select>
+								<select name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][unit]">
+									<?php 
+									$units = [ 'px', '%', 'em', 'cm', 'mm', 'in', 'pt', 'pc', 'ex' ];
+									foreach ( $units as $u ) : ?>
+										<option value="<?php echo esc_attr( $u ); ?>" <?php selected( $unit, $u ); ?>>
+											<?php echo esc_html( $u ); ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
                                     </div>
 								<?php
 								endforeach;
@@ -940,45 +825,46 @@
                         <div class="error-mgs"></div>
                     </div>
                     <script>
-                        jQuery(document).ready(function ($) {
-                            jQuery(document).on('keyup change', '.field-padding-wrapper-<?php echo esc_attr( $id ); ?>  input[type="number"]',
-                                function () {
-                                    is_checked = jQuery('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> .change-together').attr('checked');
-                                    if (is_checked == 'checked') {
-                                        val = jQuery(this).val();
-                                        i = 0;
-                                        $('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
-                                            if (i > 0) {
-                                                jQuery(this).val(val);
-                                            }
-                                            i++;
-                                        });
-                                    }
-                                })
-                            jQuery(document).on('click', '.field-padding-wrapper-<?php echo esc_attr( $id ); ?> .change-together', function () {
-                                is_checked = this.checked;
-                                if (is_checked) {
-                                    i = 0;
-                                    $('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
-                                        if (i > 0) {
-                                            jQuery(this).attr('readonly', 'readonly');
-                                        }
-                                        i++;
-                                    });
-                                    i = 0;
-                                    $('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> select').each(function (index) {
-                                        if (i > 0) {
-                                            //jQuery(this).attr('disabled','disabled');
-                                        }
-                                        i++;
-                                    });
-                                } else {
-                                    jQuery('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').removeAttr('readonly');
-                                    //jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> select').removeAttr('disabled');
-                                }
-                            })
-                        })
-                    </script>
+						jQuery(document).ready(function ($) {
+							jQuery(document).on('keyup change', '.field-padding-wrapper-<?php echo esc_attr( $id ); ?>  input[type="number"]', function () {
+								var is_checked = jQuery('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> .change-together').prop('checked');
+								if (is_checked) {
+									var val = jQuery(this).val();
+									var i = 0;
+									$('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
+										if (i > 0) {
+											jQuery(this).val(val);
+										}
+										i++;
+									});
+								}
+							});
+
+							jQuery(document).on('click', '.field-padding-wrapper-<?php echo esc_attr( $id ); ?> .change-together', function () {
+								var is_checked = this.checked;
+								if (is_checked) {
+									var i = 0;
+									$('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
+										if (i > 0) {
+											jQuery(this).attr('readonly', 'readonly');
+										}
+										i++;
+									});
+									i = 0;
+									$('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> select').each(function (index) {
+										if (i > 0) {
+											//jQuery(this).attr('disabled','disabled');
+										}
+										i++;
+									});
+								} else {
+									jQuery('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').removeAttr('readonly');
+									//jQuery('.field-padding-wrapper-<?php echo esc_attr( $id ); ?> select').removeAttr('disabled');
+								}
+							});
+						});
+					</script>
+
 				<?php
 				endif;
 
@@ -1086,44 +972,15 @@
                                         <span class="input-wrapper">
                                     <input class="<?php echo esc_attr( $index ); ?>" type='number' name='<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][val]' value='<?php echo esc_attr( $values[ $index ]['val'] ); ?>'/>
                                 </span>
-                                        <select name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][unit]">
-                                            <option <?php if ( $unit == 'px' ) {
-												echo 'selected';
-											} ?> value="px">px
-                                            </option>
-                                            <option <?php if ( $unit == '%' ) {
-												echo 'selected';
-											} ?> value="%">%
-                                            </option>
-                                            <option <?php if ( $unit == 'em' ) {
-												echo 'selected';
-											} ?> value="em">em
-                                            </option>
-                                            <option <?php if ( $unit == 'cm' ) {
-												echo 'selected';
-											} ?> value="cm">cm
-                                            </option>
-                                            <option <?php if ( $unit == 'mm' ) {
-												echo 'selected';
-											} ?> value="mm">mm
-                                            </option>
-                                            <option <?php if ( $unit == 'in' ) {
-												echo 'selected';
-											} ?> value="in">in
-                                            </option>
-                                            <option <?php if ( $unit == 'pt' ) {
-												echo 'selected';
-											} ?> value="pt">pt
-                                            </option>
-                                            <option <?php if ( $unit == 'pc' ) {
-												echo 'selected';
-											} ?> value="pc">pc
-                                            </option>
-                                            <option <?php if ( $unit == 'ex' ) {
-												echo 'selected';
-											} ?> value="ex">ex
-                                            </option>
-                                        </select>
+								<select name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][unit]">
+									<?php 
+									$units = [ 'px', '%', 'em', 'cm', 'mm', 'in', 'pt', 'pc', 'ex' ];
+									foreach ( $units as $u ) : ?>
+										<option value="<?php echo esc_attr( $u ); ?>" <?php selected( $unit, $u ); ?>>
+											<?php echo esc_html( $u ); ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
                                     </div>
 								<?php
 								endforeach;
@@ -1131,46 +988,46 @@
                         </div>
                         <div class="error-mgs"></div>
                     </div>
-                    <script>
-                        jQuery(document).ready(function ($) {
-                            jQuery(document).on('keyup change', '.field-margin-wrapper-<?php echo esc_attr( $id ); ?>  input[type="number"]',
-                                function () {
-                                    is_checked = jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> .change-together').attr('checked');
-                                    if (is_checked == 'checked') {
-                                        val = jQuery(this).val();
-                                        i = 0;
-                                        $('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
-                                            if (i > 0) {
-                                                jQuery(this).val(val);
-                                            }
-                                            i++;
-                                        });
-                                    }
-                                })
-                            jQuery(document).on('click', '.field-margin-wrapper-<?php echo esc_attr( $id ); ?> .change-together', function () {
-                                is_checked = this.checked;
-                                if (is_checked) {
-                                    i = 0;
-                                    $('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
-                                        if (i > 0) {
-                                            jQuery(this).attr('readonly', 'readonly');
-                                        }
-                                        i++;
-                                    });
-                                    i = 0;
-                                    $('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> select').each(function (index) {
-                                        if (i > 0) {
-                                            //jQuery(this).attr('disabled','disabled');
-                                        }
-                                        i++;
-                                    });
-                                } else {
-                                    jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').removeAttr('readonly');
-                                    //jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> select').removeAttr('disabled');
-                                }
-                            })
-                        })
-                    </script>
+					<script>
+						jQuery(document).ready(function ($) {
+							jQuery(document).on('keyup change', '.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]', function () {
+								var is_checked = jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> .change-together').prop('checked');
+								if (is_checked) {
+									var val = jQuery(this).val();
+									var i = 0;
+									$('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
+										if (i > 0) {
+											jQuery(this).val(val);
+										}
+										i++;
+									});
+								}
+							});
+
+							jQuery(document).on('click', '.field-margin-wrapper-<?php echo esc_attr( $id ); ?> .change-together', function () {
+								var is_checked = this.checked;
+								if (is_checked) {
+									var i = 0;
+									$('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').each(function (index) {
+										if (i > 0) {
+											jQuery(this).attr('readonly', 'readonly');
+										}
+										i++;
+									});
+									i = 0;
+									$('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> select').each(function (index) {
+										if (i > 0) {
+											//jQuery(this).attr('disabled','disabled');
+										}
+										i++;
+									});
+								} else {
+									jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> input[type="number"]').removeAttr('readonly');
+									//jQuery('.field-margin-wrapper-<?php echo esc_attr( $id ); ?> select').removeAttr('disabled');
+								}
+							});
+						});
+					</script>
 				<?php
 				endif;
 
@@ -1272,7 +1129,7 @@
 						<?php
 							foreach ( $args as $key => $arg ):
 								$checked = ( $arg == $value ) ? "checked" : "";
-								?><label class="<?php echo esc_attr( $checked ); ?>" for='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>'><input type='radio' id='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>' value='<?php echo esc_attr( $key ); ?>' <?php echo esc_attr( $checked ); ?>><span class="sw-button"><img data-id="<?php echo esc_attr( $id ); ?>" src="<?php echo esc_attr( $arg ); ?>"> </span></label><?php
+								?><label class="<?php echo esc_attr( $checked ); ?>" for='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>'><input type='radio' id='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>' value='<?php echo esc_attr( $key ); ?>' <?php echo esc_attr( $checked ); ?>><span class="sw-button"><img data-id="<?php echo esc_attr( $id ); ?>" src="<?php echo esc_url( $arg ); ?>"> </span></label><?php
 							endforeach;
 						?>
                     </div>
@@ -3704,10 +3561,7 @@
 				endif;
 				ob_start();
 				?>
-                <div <?php if ( ! empty( $depends ) ) { ?> data-depends="[<?php echo esc_attr( $depends ); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr( $id ); ?>" class="<?php if ( ! empty( $depends ) ) {
-					echo 'dependency-field';
-				} ?> field-wrapper field-switch-multi-wrapper
-            field-switch-multi-wrapper-<?php echo esc_html( $id ); ?>">
+                <div <?php if ( ! empty( $depends ) ) { ?> data-depends="[<?php echo esc_attr( $depends ); ?>]" <?php } ?> id="field-wrapper-<?php echo esc_attr( $id ); ?>" class="<?php if ( ! empty( $depends ) ) { echo 'dependency-field'; } ?> field-wrapper field-switch-multi-wrapper field-switch-multi-wrapper-<?php echo esc_attr( $id ); ?>">
 					<?php
 						foreach ( $args as $key => $argName ):
 							$checked = is_array( $value ) && in_array( $key, $value ) ? "checked" : "";
@@ -4365,39 +4219,30 @@
 				endif;
 				?>
                 <script>
-                    jQuery(document).ready(function ($) {
-                        jQuery(document).on('click', '.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list .remove', function () {
-                            jQuery(this).parent().remove();
-                        })
-                        jQuery(document).on('click', '.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .add', function () {
-                            html = '<div class="item">';
-                            html += '<span class="button remove"><?php echo esc_html( $remove_text ); ?></span> <input type="text"  name="<?php echo esc_attr( $field_name ); ?>[]" value="" />';
-                            html += '</div>';
+				jQuery(document).ready(function ($) {
+					jQuery(document).on('click', '.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list .remove', function () {
+						jQuery(this).parent().remove();
+					})
+					jQuery(document).on('click', '.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .add', function () {
+						var html = '<div class="item">';
+						html += '<span class="button remove"><?php echo esc_html( $remove_text ); ?></span> <input type="text" name="<?php echo esc_attr( $field_name ); ?>[]" value="" />';
+						html += '</div>';
 
+						<?php if(! empty( $limit )): ?>
+						var limit = <?php echo esc_js( $limit ); ?>;
+						var node_count = $(".field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list .item").size();
+						if (limit > node_count) {
+							$('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list').append(html);
+							$('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> input').wpColorPicker();
+						} else {
+							jQuery('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .error-mgs').html('Sorry! you can add max ' + limit + ' item').stop().fadeIn(400).delay(3000).fadeOut(400);
+						}
+						<?php endif; ?>
+					})
+					$('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> input').wpColorPicker();
+				});
+			</script>
 
-							<?php
-							if(! empty( $limit )):
-							?>
-                            var limit = <?php  echo esc_attr( $limit ); ?>;
-                            var node_count = $(".field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list .item").size();
-                            if (limit > node_count) {
-                                $('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .item-list').append(html);
-                                $('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> input').wpColorPicker();
-                            } else {
-                                jQuery('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> .error-mgs').html('Sorry! you can add max ' + limit + ' item').stop().fadeIn(400).delay(3000).fadeOut(400);
-                            }
-							<?php
-							endif;
-							?>
-
-
-
-
-
-                        })
-                        $('.field-colorpicker-multi-wrapper-<?php echo esc_attr( $id ); ?> input').wpColorPicker();
-                    });
-                </script>
 				<?php
 				return ob_get_clean();
 			}
@@ -4615,7 +4460,7 @@
 							foreach ( $values as $user_id ):
 								$get_avatar_url = get_avatar_url( $user_id, array( 'size' => '60' ) );
 								?>
-                                <div class="item" title="click to remove"><img src="<?php echo esc_attr( $get_avatar_url ); ?>"/><input type="hidden" name="<?php echo esc_attr( $field_name ); ?>[]" value="<?php echo esc_attr( $user_id ); ?>"></div><?php
+                                <div class="item" title="click to remove"><img src="<?php echo esc_url( $get_avatar_url ); ?>"/><input type="hidden" name="<?php echo esc_attr( $field_name ); ?>[]" value="<?php echo esc_attr( $user_id ); ?>"></div><?php
 							endforeach;
 						endif; ?>
                     </div>
@@ -4895,7 +4740,9 @@
                     </div>
                     <div class="icon-list">
                         <div class="ppof-button select-icon"><?php echo esc_html_e( 'Choose Icon', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                        <div class="search-icon"><input class="" type="text" placeholder="<?php echo esc_html_e( 'Start typing...', 'booking-and-rental-manager-for-woocommerce' ); ?>"></div>
+                        <div class="search-icon">
+							<input class="" type="text" placeholder="<?php echo esc_attr( __( 'Start typing...', 'booking-and-rental-manager-for-woocommerce' ) ); ?>">
+						</div>
                         <ul>
 							<?php
 								if ( ! empty( $icons ) ):
@@ -5921,7 +5768,7 @@
 							$thumb = isset( $grid_item['thumb'] ) ? $grid_item['thumb'] : '';
 							?>
                             <div class="item">
-                                <div class="thumb"><a href="<?php echo esc_attr( $link ); ?>"><img src="<?php echo esc_attr( $thumb ); ?>"></img></a></div>
+                                <div class="thumb"><a href="<?php echo esc_attr( $link ); ?>"><img src="<?php echo esc_url( $thumb ); ?>"></img></a></div>
                                 <div class="name"><a href="<?php echo esc_attr( $link ); ?>"><?php echo esc_html( $title ); ?></a></div>
                             </div>
 							<?php
@@ -6178,7 +6025,7 @@
 								?><label  class="<?php echo esc_attr( $checked ); ?>" for='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>'><input
                                     type='radio' id='<?php echo esc_attr( $id ); ?>-<?php echo esc_attr( $key ); ?>'
                                     value='<?php echo esc_attr( $key ); ?>' <?php echo esc_attr( $checked ); ?>>
-                                <img src="<?php echo esc_attr( $link ); ?>">
+                                <img src="<?php echo esc_url( $link ); ?>">
                                 <span class="checked-icon"><i class="fas fa-check"></i></span>
                                 </label><?php
 							endforeach;
@@ -6187,7 +6034,7 @@
 							?><label  class="checked" for='<?php echo esc_attr( $id ); ?>-custom'><input
                                 type='radio' id='<?php echo esc_attr( $id ); ?>-custom'
                                 value='<?php echo esc_attr( $value ); ?>' checked>
-                            <img src="<?php echo esc_attr( $value ); ?>">
+                            <img src="<?php echo esc_url( $value ); ?>">
                             <span class="checked-icon"><i class="fas fa-check"></i></span>
                             </label><?php
 						}
@@ -6581,7 +6428,7 @@
 								<?php
 							} else {
 								?>
-                                <img id='media_preview_<?php echo esc_attr( $id ); ?>' src='<?php echo esc_attr( $media_url ); ?>' style='width:100%'/>
+                                <img id='media_preview_<?php echo esc_attr( $id ); ?>' src='<?php echo esc_url( $media_url ); ?>' style='width:100%'/>
 								<?php
 							}
 						?>
@@ -6716,7 +6563,7 @@
                                     <div class="item">
                                         <span class="remove" onclick="jQuery(this).parent().remove()"><?php echo esc_html( $remove_text ); ?></span>
                                         <span class="sort">sort</span>
-                                        <img id='media_preview_<?php echo esc_attr( $id ); ?>' src='<?php echo esc_attr( $media_url ); ?>' style='width:100%'/>
+                                        <img id='media_preview_<?php echo esc_attr( $id ); ?>' src='<?php echo esc_url( $media_url ); ?>' style='width:100%'/>
                                         <div class="item-title"><?php echo esc_html( $media_title ); ?></div>
                                         <input type='hidden' name='<?php echo esc_attr( $field_name ); ?>[]' value='<?php echo esc_attr( $value ); ?>'/>
                                     </div>
@@ -6727,30 +6574,31 @@
                     </div>
                     <div class="error-mgs"></div>
                 </div>
-                <script>jQuery(document).ready(function ($) {
-                        $('#media_upload_<?php echo esc_attr( $id ); ?>').click(function () {
-                            //var send_attachment_bkp = wp.media.editor.send.attachment;
-                            wp.media.editor.send.attachment = function (props, attachment) {
-                                attachment_id = attachment.id;
-                                attachment_url = attachment.url;
-                                html = '<div class="item">';
-                                html += '<span class="remove" onclick="jQuery(this).parent().remove()"><?php echo esc_html( $remove_text ); ?></span>';
-                                html += '<img src="' + attachment_url + '" style="width:100%"/>';
-                                html += '<input type="hidden" name="<?php echo esc_attr( $field_name ); ?>[]" value="' + attachment_id + '" />';
-                                html += '</div>';
-                                $('.media-list-<?php echo esc_attr( $id ); ?>').append(html);
-                                //wp.media.editor.send.attachment = send_attachment_bkp;
-                            }
-                            wp.media.editor.open($(this));
-                            return false;
-                        });
-                        $('#media_clear_<?php echo esc_attr( $id ); ?>').click(function () {
-                            $('.media-list-<?php echo esc_attr( $id ); ?> .item').remove();
-                        })
-                    });
-                </script>
-				<?php
-				return ob_get_clean();
+                <script>
+				jQuery(document).ready(function ($) {
+					$('#media_upload_<?php echo esc_attr( $id ); ?>').click(function () {
+						wp.media.editor.send.attachment = function (props, attachment) {
+							var attachment_id = attachment.id;
+							var attachment_url = attachment.url;
+							var html = '<div class="item">';
+							html += '<span class="remove" onclick="jQuery(this).parent().remove()"><?php echo esc_html( $remove_text ); ?></span>';
+							html += '<img src="' + <?php echo esc_js( esc_url( $attachment_url ) ); ?> + '" style="width:100%"/>';
+							html += '<input type="hidden" name="<?php echo esc_attr( $field_name ); ?>[]" value="' + esc_attr( attachment_id ) + '" />';
+							html += '</div>';
+							$('.media-list-<?php echo esc_attr( $id ); ?>').append(html);
+						};
+						wp.media.editor.open($(this));
+						return false;
+					});
+
+					$('#media_clear_<?php echo esc_attr( $id ); ?>').click(function () {
+						$('.media-list-<?php echo esc_attr( $id ); ?> .item').remove();
+					});
+				});
+			</script>
+			<?php
+			return ob_get_clean();
+
 			}
 
 			public function field_custom_html( $option ) {
@@ -7083,7 +6931,7 @@
                             var limit = <?php  echo esc_attr( $limit ); ?>;
                             var node_count = $(".field-repeatable-wrapper-<?php echo esc_attr( $id ); ?> .field-list .item-wrap").size();
                             if (limit > node_count) {
-                                jQuery('.<?php echo  'field-repeatable-wrapper-' .esc_html( $id ); ?> .field-list').append(html);
+                                jQuery('.<?php echo  'field-repeatable-wrapper-' .esc_attr( $id ); ?> .field-list').append(html);
                             } else {
                                 jQuery('.field-repeatable-wrapper-<?php echo esc_attr( $id ); ?> .error-mgs').html('Sorry! you can add max ' + limit + ' item').stop().fadeIn(400).delay(3000).fadeOut(400);
                             }
@@ -7140,52 +6988,52 @@
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 														?>
-                                                    <input type="text" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="text" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'number' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="number" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="number" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'url' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="url" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="url" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'tel' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="tel" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="tel" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'time' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="time" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="time" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'search' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="search" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="search" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'month' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="month" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="month" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'color' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="color" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="color" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'date' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="date" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="date" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'email' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$value   = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;
 													?>
-                                                    <input type="email" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_html( $value ); ?>">
+                                                    <input type="email" class="regular-text" name="<?php echo esc_attr( $field_name ); ?>[<?php echo esc_attr( $index ); ?>][<?php echo esc_attr( $item_id ); ?>]" placeholder="" value="<?php echo esc_attr( $value ); ?>">
 													<?php elseif ( $type == 'textarea' ):
 														$default = isset( $field['default'] ) ? $field['default'] : '';
 														$_value  = ! empty( $val[ $item_id ] ) ? $val[ $item_id ] : $default;

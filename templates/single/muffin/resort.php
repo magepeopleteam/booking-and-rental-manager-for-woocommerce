@@ -98,7 +98,7 @@
     </div>
     <div class="rbfw_muff_row_slider rbfw_muff_row_slider_content">
         <div class="rbfw_muff_content_col1">
-            <div class="rbfw_muff_slider mpStyle <?php echo esc_html( $slide_style ); ?>">
+            <div class="rbfw_muff_slider mpStyle <?php echo esc_attr( $slide_style ); ?>">
 				<?php do_action( 'add_super_slider', $post_id, 'rbfw_gallery_images' ); ?>
             </div>
         </div>
@@ -129,7 +129,7 @@
 						?>
                     </ul>
 					<?php if ( $total_features >= 10 ) : ?>
-                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_html( $post_id ); ?>">See more</div>
+                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr( $post_id ); ?>">See more</div>
 					<?php endif; ?>
 				<?php endif; ?>
             </div>
@@ -216,7 +216,7 @@
                             <label><?php rbfw_string( 'rbfw_text_hygenic', __( 'Hygenic', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
                             <div class="rbfw_muff_review_progress_inner_wrap">
                                 <div class="rbfw_muff_review_progress_bar">
-                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_html( $post_hygenic_progress_width ); ?>>
+                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_attr( $post_hygenic_progress_width ); ?>>
                                     </div>
                                 </div>
                                 <div class="rbfw_muff_review_progress_bar_avg">
@@ -228,7 +228,7 @@
                             <label><?php rbfw_string( 'rbfw_text_quality', __( 'Quality', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
                             <div class="rbfw_muff_review_progress_inner_wrap">
                                 <div class="rbfw_muff_review_progress_bar">
-                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_html( $post_quality_progress_width ); ?>></div>
+                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_attr( $post_quality_progress_width ); ?>></div>
                                 </div>
                                 <div class="rbfw_muff_review_progress_bar_avg"><?php echo esc_html( $post_review_value_round_quality ); ?>/5</div>
                             </div>
@@ -237,9 +237,9 @@
                             <label><?php rbfw_string( 'rbfw_text_cost_value', __( 'Cost Value', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
                             <div class="rbfw_muff_review_progress_inner_wrap">
                                 <div class="rbfw_muff_review_progress_bar">
-                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_html( $post_cost_value_progress_width ); ?>></div>
+                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_attr( $post_cost_value_progress_width ); ?>></div>
                                 </div>
-                                <div class="rbfw_muff_review_progress_bar_avg"><?php echo esc_html( $post_review_value_round_cost_value ); ?>/5</div>
+                                <div class="rbfw_muff_review_progress_bar_avg"><?php echo esc_attr( $post_review_value_round_cost_value ); ?>/5</div>
                             </div>
                         </div>
                     </div>
@@ -250,7 +250,7 @@
                             <label><?php rbfw_string( 'rbfw_text_staff', __( 'Staff', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
                             <div class="rbfw_muff_review_progress_inner_wrap">
                                 <div class="rbfw_muff_review_progress_bar">
-                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_html( $post_staff_progress_width ); ?>></div>
+                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_attr( $post_staff_progress_width ); ?>></div>
                                 </div>
                                 <div class="rbfw_muff_review_progress_bar_avg"><?php echo esc_html( $post_review_value_round_staff ); ?>/5</div>
                             </div>
@@ -259,7 +259,7 @@
                             <label><?php rbfw_string( 'rbfw_text_facilities', __( 'Facilities', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
                             <div class="rbfw_muff_review_progress_inner_wrap">
                                 <div class="rbfw_muff_review_progress_bar">
-                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_html( $post_facilities_progress_width ); ?>></div>
+                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_attr( $post_facilities_progress_width ); ?>></div>
                                 </div>
                                 <div class="rbfw_muff_review_progress_bar_avg"><?php echo esc_html( $post_review_value_round_facilities ); ?>/5</div>
                             </div>
@@ -268,7 +268,7 @@
                             <label><?php rbfw_string( 'rbfw_text_comfort', __( 'Comfort', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
                             <div class="rbfw_muff_review_progress_inner_wrap">
                                 <div class="rbfw_muff_review_progress_bar">
-                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_html( $post_comfort_progress_width ); ?>></div>
+                                    <div class="rbfw_muff_review_progress_bar-green" <?php echo esc_attr( $post_comfort_progress_width ); ?>></div>
                                 </div>
                                 <div class="rbfw_muff_review_progress_bar_avg"><?php echo esc_html( $post_review_value_round_comfort ); ?>/5</div>
                             </div>

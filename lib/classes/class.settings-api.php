@@ -269,40 +269,44 @@ class RBFW_Setting_API {
 		$id			= isset( $args['id'] ) ? $args['id'] : "";
 		$value = esc_attr( $this->get_option_trans( $args['id'], $args['section'], $args['std'] ) );
 		$media_url	= wp_get_attachment_url( $value );
-		$media_type	= get_post_mime_type( $value );
-		$media_title= get_the_title( $value );
-		wp_enqueue_media();
+		$media_type = get_post_mime_type($value);
+        $media_title = get_the_title($value);
+        wp_enqueue_media();
 
-		echo "<div class='media_preview'>";
+        echo "<div class='media_preview'>";
 
-		if( "audio/mpeg" == $media_type ){
-			esc_html_e('Audio/Video format not supported.','booking-and-rental-manager-for-woocommerce');
-		}
-		else {
-			echo wp_kses_post("<img id='media_preview_$id' src='$media_url'/>");
-		}
+        if ("audio/mpeg" == $media_type) {
+            esc_html_e('Audio/Video format not supported.', 'booking-and-rental-manager-for-woocommerce');
+        } else {
+            echo "<img id='media_preview_" . esc_attr($id) . "' src='" . esc_url($media_url) . "' />";
+        }
+
+        echo "</div>";
 
 		echo "</div>";
         echo wp_kses_post( '<input type="hidden" id="media_input_'.$id.'" name="'.$args['section'].'['.$id.']" value="'.$value.'"/>');
 		echo  wp_kses_post("<div class='rbfw_green_btn' id='media_upload_$id' style='margin-right:5px'>".__('Upload','booking-and-rental-manager-for-woocommerce')."</div>");
 		echo  wp_kses_post("<div class='rbfw_red_btn' id='media_remove_$id'>".__('Remove','booking-and-rental-manager-for-woocommerce')."</div>");
 
-		echo  wp_kses_post("<script>jQuery(document).ready(function($){
-		jQuery('#media_upload_$id').click(function() {
-			var send_attachment_bkp = wp.media.editor.send.attachment;
-			wp.media.editor.send.attachment = function(props, attachment) {
-				jQuery('#media_preview_$id').attr('src', attachment.url);
-				jQuery('#media_input_$id').val(attachment.id);
-				wp.media.editor.send.attachment = send_attachment_bkp;
-			}
-			wp.media.editor.open(jQuery(this));
-			return false;
-		});
-        jQuery('#media_remove_$id').click(function() {
-            jQuery('#media_preview_$id').attr('src','');
-            jQuery('#media_input_$id').val('');
-        });
-		});	</script>");
+		echo '<script>' . esc_js('
+            jQuery(document).ready(function($) {
+                jQuery("#media_upload_' . esc_attr($id) . '").click(function() {
+                    var send_attachment_bkp = wp.media.editor.send.attachment;
+                    wp.media.editor.send.attachment = function(props, attachment) {
+                        jQuery("#media_preview_' . esc_attr($id) . '").attr("src", attachment.url);
+                        jQuery("#media_input_' . esc_attr($id) . '").val(attachment.id);
+                        wp.media.editor.send.attachment = send_attachment_bkp;
+                    };
+                    wp.media.editor.open(jQuery(this));
+                    return false;
+                });
+
+                jQuery("#media_remove_' . esc_attr($id) . '").click(function() {
+                    jQuery("#media_preview_' . esc_attr($id) . '").attr("src", "");
+                    jQuery("#media_input_' . esc_attr($id) . '").val("");
+                });
+            });
+        ') . '</script>';
 	}
 
     function callback_multicheck( $args ) {

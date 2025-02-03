@@ -55,7 +55,7 @@
     </div>
     <div class="rbfw_dt_row_content">
         <div class="rbfw_dt_content_col1">
-            <div class="rbfw_dt_slider mpStyle <?php echo esc_html( $slide_style ); ?>">
+            <div class="rbfw_dt_slider mpStyle <?php echo esc_attr( $slide_style ); ?>">
 				<?php do_action( 'add_super_slider', $post_id, 'rbfw_gallery_images' ); ?>
             </div>
         </div>

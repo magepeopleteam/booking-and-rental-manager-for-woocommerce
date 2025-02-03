@@ -161,7 +161,7 @@ endif;
 $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
 ?>
 
-<div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo esc_html($d); ?>">
+<div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo esc_attr($d); ?>">
     <div class="rbfw_rent_list_inner_wrapper">
 
         <div class="rbfw_rent_list_featured_img_wrap">
@@ -221,7 +221,10 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
                                     $rand_number = wp_rand();
                                     if($title) {
                                         ?>
-                                        <li class="title <?php echo esc_html($rand_number); ?>"><i class="<?php echo esc_html($icon) ?>"></i><?php echo esc_html($title); ?></li>
+                                        <li class="title <?php echo esc_attr($rand_number); ?>">
+                                            <i class="<?php echo esc_attr($icon); ?>"></i>
+                                            <?php echo esc_html($title); ?>
+                                        </li>
                                         <?php
                                     }
                                 }

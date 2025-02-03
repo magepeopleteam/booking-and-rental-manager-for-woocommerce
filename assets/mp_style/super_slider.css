@@ -20,7 +20,6 @@ div.superSlider .area_column {-webkit-flex-direction: column;flex-direction: col
 div.superSlider .sliderAllItem {width: 100%;position: relative;overflow: hidden;}
 div.superSlider .sliderItem img {width: 100%;max-height: 100%;}
 div.superSlider .sliderItem {position: relative; float: left; width: 100%; margin-right: -100%;
-	-ms-transform: translateX(100%);transform: translateX(100%);
 	backface-visibility: hidden;
 	-webkit-transition: -webkit-transform .06s ease-in-out; transition: transform .6s ease-in-out, -webkit-transform .6s ease-in-out;
 }

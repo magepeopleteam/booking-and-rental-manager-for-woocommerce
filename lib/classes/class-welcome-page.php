@@ -29,14 +29,14 @@
 
 			$arr = array( 'strong' => array() );
 			if (  isset( $_GET['page'] ) && sanitize_text_field( wp_unslash( $_GET['page'] ) ) == 'rbfw_import' ) {
-				echo '<script>jQuery(document).ready(function(){
-
-            jQuery(".tab-link").removeClass("current");
-            jQuery(".tab-content").removeClass("current");
-            jQuery(".tab-link[data-tab=tab-2]").addClass("current");
-            jQuery("#tab-2").addClass("current");
-          
-          });</script>';
+				echo '<script>' . esc_js('
+				jQuery(document).ready(function(){
+					jQuery(".tab-link").removeClass("current");
+					jQuery(".tab-content").removeClass("current");
+					jQuery(".tab-link[data-tab=\'tab-2\']").addClass("current");
+					jQuery("#tab-2").addClass("current");
+				});
+			') . '</script>';
 			}
 			?>
             <div class="wrap rbfw_welcome_wrap">

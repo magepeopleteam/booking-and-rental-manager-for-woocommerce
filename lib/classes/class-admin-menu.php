@@ -128,16 +128,17 @@
                                         </a>
                                     </td>
                                     <script>
-                                        document.querySelectorAll('.pro-overlay').forEach(function (button) {
-                                            button.replaceWith(button.cloneNode(true));
-                                        });
-                                        document.querySelectorAll('.pro-overlay').forEach(function (button) {
-                                            button.addEventListener('click', function (event) {
-                                                event.preventDefault(); // Prevent default link behavior
-                                                window.open('https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/', '_blank');
-                                            });
-                                        });
-                                    </script>
+										document.querySelectorAll('.pro-overlay').forEach(function (button) {
+											button.replaceWith(button.cloneNode(true));
+										});
+
+										document.querySelectorAll('.pro-overlay').forEach(function (button) {
+											button.addEventListener('click', function (event) {
+												event.preventDefault(); // Prevent default link behavior
+												window.open('<?php echo esc_js( esc_url( 'https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/' ) ); ?>', '_blank');
+											});
+										});
+									</script>
 									<?php
 								}
 								?>
@@ -231,47 +232,46 @@
                     });
                 </script>
                 <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        document.querySelectorAll('.rbfw_order_view_btn').forEach(function (button) {
-                            button.addEventListener('click', function () {
-                                const postId = this.getAttribute('data-post-id');
-                                const orderDetailsRow = document.getElementById(`order-details-${postId}`);
-                                const loader = document.getElementById('loader');
-                                if (orderDetailsRow.style.display === 'none') {
-                                    // Show the loader
-                                    loader.style.display = 'flex';
-                                    // Make an AJAX request to fetch the order details
-                                    fetch(ajaxurl, {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/x-www-form-urlencoded',
-                                        },
-                                        body: new URLSearchParams({
-                                            action: 'fetch_order_details',
-                                            post_id: postId,
-                                            'nonce' : rbfw_ajax.nonce
-
-                                        })
-                                    })
-                                        .then(response => response.text())
-                                        .then(data => {
-                                            orderDetailsRow.querySelector('.order-details-content').innerHTML = data;
-                                            orderDetailsRow.style.display = 'table-row';
-                                            // Hide the loader
-                                            loader.style.display = 'none';
-                                        })
-                                        .catch(error => {
-                                            console.error('Error:', error);
-                                            // Hide the loader in case of an error
-                                            loader.style.display = 'none';
-                                        });
-                                } else {
-                                    orderDetailsRow.style.display = 'none';
-                                }
-                            });
-                        });
-                    });
-                </script>
+					document.addEventListener('DOMContentLoaded', function () {
+						document.querySelectorAll('.rbfw_order_view_btn').forEach(function (button) {
+							button.addEventListener('click', function () {
+								const postId = this.getAttribute('data-post-id'); // Ensure post_id is sanitized on the server side
+								const orderDetailsRow = document.getElementById(`order-details-${postId}`);
+								const loader = document.getElementById('loader');
+								
+								if (orderDetailsRow.style.display === 'none') {
+									// Show the loader
+									loader.style.display = 'flex';
+									// Make an AJAX request to fetch the order details
+									fetch('<?php echo esc_url( admin_url('admin-ajax.php') ); ?>', {
+										method: 'POST',
+										headers: {
+											'Content-Type': 'application/x-www-form-urlencoded',
+										},
+										body: new URLSearchParams({
+											action: 'fetch_order_details',
+											post_id: postId,
+										})
+									})
+										.then(response => response.text())
+										.then(data => {
+											orderDetailsRow.querySelector('.order-details-content').innerHTML = data;
+											orderDetailsRow.style.display = 'table-row';
+											// Hide the loader
+											loader.style.display = 'none';
+										})
+										.catch(error => {
+											console.error('Error:', error);
+											// Hide the loader in case of an error
+											loader.style.display = 'none';
+										});
+								} else {
+									orderDetailsRow.style.display = 'none';
+								}
+							});
+						});
+					});
+				</script>
 				<?php
 			}
 
