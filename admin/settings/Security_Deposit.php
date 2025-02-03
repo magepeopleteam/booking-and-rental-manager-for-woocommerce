@@ -42,11 +42,11 @@
 				<?php
 			}
 
-			public function related_items( $post_id ) {
-				$rbfw_enable_security_deposit = get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) ? get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) : 'no';
-				$rbfw_security_deposit_type   = get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) : 'percentage';
-				$rbfw_security_deposit_amount = get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) : 0;
-				?>
+            public function related_items( $post_id ) {
+                $rbfw_enable_security_deposit = get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) ? get_post_meta( $post_id, 'rbfw_enable_security_deposit', true ) : 'no';
+                $rbfw_security_deposit_type   = get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_type', true ) : 'percentage';
+                $rbfw_security_deposit_amount = get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_amount', true ) : 0;
+                ?>
                 <div class="rbfw_security_deposit_table <?php echo esc_attr( ( $rbfw_enable_security_deposit == 'yes' ) ? 'show' : 'hide' ); ?>">
                     <section>
                         <div class="w-100">
@@ -57,31 +57,25 @@
                                         <div class="rbfw_td_title"><?php esc_html_e( 'Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                     </th>
                                     <th>
-                                        <div class="rbfw_td_title"><?php esc_html_e( 'Number of percentage/fixed amount', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                        <div class="rbfw_td_title"><?php esc_html_e( 'Details', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                     </th>
                                 </tr>
                                 </thead>
-                                <tbody class="mp_event_type_sortable">
+                                <tbody>
                                 <tr>
                                     <td>
                                         <section>
-                                            <label for="">Security Deposit Label</label>
-                                            <input type="text" name="rbfw_security_deposit_label" value="<?php echo esc_attr( get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) : 'Security Deposit' ) ?>" placeholder="">
+                                            <label for=""><?php esc_html_e('Security Deposit Label', 'booking-and-rental-manager-for-woocommerce'); ?></label>
+                                            <input type="text" name="rbfw_security_deposit_label" value="<?php echo esc_attr( get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) ? get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) : 'Security Deposit' ); ?>" placeholder="">
                                         </section>
                                     </td>
-                                </tr>
-                                <tr>
                                     <td>
                                         <select class="rbfw_security_deposit_type" name="rbfw_security_deposit_type">
-                                            <option value="percentage" <?php if ( $rbfw_security_deposit_type == 'percentage' ) {
-												echo 'selected';
-											} ?>><?php esc_html_e( 'Percentage', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-                                            <option value="fixed_amount" <?php if ( $rbfw_security_deposit_type == 'fixed_amount' ) {
-												echo 'selected';
-											} ?>><?php esc_html_e( 'Fixed Amount', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                            <option value="percentage" <?php selected( $rbfw_security_deposit_type, 'percentage' ); ?>><?php esc_html_e( 'Percentage', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                                            <option value="fixed_amount" <?php selected( $rbfw_security_deposit_type, 'fixed_amount' ); ?>><?php esc_html_e( 'Fixed Amount', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
                                         </select>
+                                        <input type="number" name="rbfw_security_deposit_amount" value="<?php echo esc_attr( $rbfw_security_deposit_amount ); ?>" placeholder="<?php esc_attr_e('Enter Amount', 'booking-and-rental-manager-for-woocommerce'); ?>"/>
                                     </td>
-                                    <td><input type="number" name="rbfw_security_deposit_amount" value="<?php echo esc_attr( $rbfw_security_deposit_amount ); ?>"/></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -94,17 +88,17 @@
                         if (status === 'yes') {
                             jQuery(this).val('no');
                             jQuery('.rbfw_security_deposit_table').slideUp().removeClass('show').addClass('hide');
-                        }
-                        if (status === 'no') {
+                        } else {
                             jQuery(this).val('yes');
                             jQuery('.rbfw_security_deposit_table').slideDown().removeClass('hide').addClass('show');
                         }
                     });
                 </script>
-				<?php
-			}
+                <?php
+            }
 
-			public function add_tabs_content( $post_id ) {
+
+            public function add_tabs_content( $post_id ) {
 				?>
                 <div class="mpStyle mp_tab_item " data-tab-item="#rbfw_security_deposit">
 					<?php $this->section_header(); ?>

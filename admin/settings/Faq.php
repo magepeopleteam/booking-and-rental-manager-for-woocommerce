@@ -109,11 +109,11 @@ if( ! class_exists('RBFW_Faq_Settings')){
                                 wp_editor( $content, $editor_id, $settings );
                             ?>
                             <div class="mT"></div>
-                            <div class="rbfw_faq_save_buttons">
+                            <div class="rbfw_faq_save_buttons m-1" >
                                 <p><button id="rbfw_faq_save" class="button button-primary button-large"><?php _e('Save','booking-and-rental-manager-for-woocommerce'); ?></button> <button id="rbfw_faq_save_close" class="button button-primary button-large">save close</button><p>
                             </div>
 
-                            <div class="rbfw_faq_update_buttons" style="display: none;">
+                            <div class="rbfw_faq_update_buttons m-1" style="display: none;">
                                 <p><button id="rbfw_faq_update" class="button button-primary button-large"><?php _e('Update and Close','booking-and-rental-manager-for-woocommerce'); ?></button><p>
                             </div>
                         </div>
