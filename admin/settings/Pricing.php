@@ -332,21 +332,21 @@
                         jQuery(".sortable").sortable({handle: '.sort'});
                         let dataCat = jQuery(this).closest('tr').attr('data-cat');
                         html = '<div class="item">';
-                        html += '<a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="' + esc_js(c) + '"><i class="fas fa-circle-plus"></i> <?php echo esc_html__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?></a>';
-                        html += '<div class="rbfw_service_icon_preview p-1" data-key="' + esc_js(c) + '"></div>';
-                        html += '<input type="hidden" name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][icon]" placeholder="<?php echo esc_attr__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-key="' + esc_attr(c) + '" class="rbfw_service_icon"/>';
-                        html += '<input type="text" name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][title]" placeholder="<?php echo esc_attr( $placeholder ); ?>" data-key="' + esc_attr(c) + '"/>';
-                        html += '<input type="text" class="medium" name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][price]" placeholder="Price" data-key="' + esc_attr(c) + '"/>';
-                        html += '<input type="text" class="medium" name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][stock_quantity]" placeholder="Stock" data-key="' + esc_attr(c) + '"/>';
-                        html += '<label class="" for="rbfw_dt_sidebar_switch-on"> <input name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time"> <span class="sw-button"> <?php echo esc_html__( 'One Time', 'booking-and-rental-manager-for-woocommerce' ); ?> </span> </label>';
-                        html += '<label class="checked" for="rbfw_dt_sidebar_switch-off"> <input name="rbfw_service_category_price[' + esc_attr(dataCat) + '][cat_services][' + esc_attr(c) + '][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked=""> <span class="sw-button"><?php echo esc_html__( 'Day Wise', 'booking-and-rental-manager-for-woocommerce' ); ?> </span> </label>';
+                        html += '<a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="' + c + '"><i class="fas fa-circle-plus"></i> <?php echo esc_html__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?></a>';
+                        html += '<div class="rbfw_service_icon_preview p-1" data-key="' + c + '"></div>';
+                        html += '<input type="hidden" name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][icon]" placeholder="<?php echo esc_attr__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?>" data-key="' + c + '" class="rbfw_service_icon"/>';
+                        html += '<input type="text" name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][title]" placeholder="<?php echo esc_attr( $placeholder ); ?>" data-key="' + c + '"/>';
+                        html += '<input type="text" class="medium" name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][price]" placeholder="Price" data-key="' + c + '"/>';
+                        html += '<input type="text" class="medium" name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][stock_quantity]" placeholder="Stock" data-key="' + c + '"/>';
+                        html += '<label class="" for="rbfw_dt_sidebar_switch-on"> <input name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-on" value="one_time"> <span class="sw-button"> <?php echo esc_html__( 'One Time', 'booking-and-rental-manager-for-woocommerce' ); ?> </span> </label>';
+                        html += '<label class="checked" for="rbfw_dt_sidebar_switch-off"> <input name="rbfw_service_category_price[' + dataCat + '][cat_services][' + c + '][service_price_type]" type="radio" id="rbfw_dt_sidebar_switch-off" value="day_wise" checked=""> <span class="sw-button"><?php echo esc_html__( 'Day Wise', 'booking-and-rental-manager-for-woocommerce' ); ?> </span> </label>';
                         
                         <?php if($sortable):?>
                         html += '<div>';
                         html += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
                         <?php endif; ?>
 
-                        html += '<span class="button remove" class="remove-item"><?php echo esc_html( $remove_text ); ?></span>';
+                        html += '<span class="button remove" class="remove-item"><?php echo wp_kses( $remove_text , rbfw_allowed_html()); ?></span>';
                         html += '</div></div>';
                         theTarget.append(html);
                         
@@ -381,16 +381,13 @@
                                 let selected_data_key = jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
                                 let selected_data_cat = jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
                                 
-                                console.log('selected_val', esc_js(selected_val));
-                                console.log('selected_label', esc_js(selected_label));
-                                console.log('selected_data_key', esc_js(selected_data_key));
-                                console.log('selected_data_cat', esc_js(selected_data_cat));
+
                                 
                                 jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
-                                jQuery('.rbfw_service_category_table tr[data-cat="' + esc_attr(selected_data_cat) + '"]').find('.rbfw_service_icon_preview[data-key="' + esc_attr(selected_data_key) + '"]').empty();
+                                jQuery('.rbfw_service_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_service_icon_preview[data-key="' + selected_data_key + '"]').empty();
                                 jQuery(selected_label).addClass('selected');
-                                jQuery('.rbfw_service_category_table tr[data-cat="' + esc_attr(selected_data_cat) + '"]').find('.rbfw_service_icon[data-key="' + esc_attr(selected_data_key) + '"]').val(esc_attr(selected_val));
-                                jQuery('.rbfw_service_category_table tr[data-cat="' + esc_attr(selected_data_cat) + '"]').find('.rbfw_service_icon_preview[data-key="' + esc_attr(selected_data_key) + '"]').append('<i class="' + esc_attr(selected_val) + '"></i>');
+                                jQuery('.rbfw_service_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_service_icon[data-key="' + selected_data_key + '"]').val(selected_val);
+                                jQuery('.rbfw_service_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_service_icon_preview[data-key="' + selected_data_key + '"]').append('<i class="' + selected_val + '"></i>');
                             });
                             
                             // Icon Filter
@@ -1270,33 +1267,33 @@
                             let resort_type_last_data_key = parseInt(resort_last_row.attr('data-key'));
                             let resort_type_new_data_key = resort_type_last_data_key + 1;
                             
-                            let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + esc_attr(resort_type_new_data_key) + '">'
-                                + '<td><input type="text" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][room_type]" value="" placeholder="Room type"></td>'
-                                + '<td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_image]" value="" class="rbfw_room_image"></td>'
-                                + '<td class="resort_day_long_price" style="display: none;"><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td>'
-                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td>'
-                                + '<td><input type="text" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_desc]" value="" placeholder="Short Description"></td>'
-                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td>'
-                                + '<td><div class="mp_event_remove_move"><button class="button remove-row ' + esc_attr(current_time) + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>'
+                            let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + resort_type_new_data_key + '">'
+                                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="Room type"></td>'
+                                + '<td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_image]" value="" class="rbfw_room_image"></td>'
+                                + '<td class="resort_day_long_price" style="display: none;"><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td>'
+                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td>'
+                                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_desc]" value="" placeholder="Short Description"></td>'
+                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td>'
+                                + '<td><div class="mp_event_remove_move"><button class="button remove-row ' + current_time + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>'
                                 + '</tr>';
                             
                             jQuery('.rbfw_resort_price_table').append(resort_type_row);
                         } else {
                             let resort_type_new_data_key = 0;
-                            let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + esc_attr(resort_type_new_data_key) + '">'
-                                + '<td><input type="text" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][room_type]" value="" placeholder="Room type"></td>'
-                                + '<td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_image]" value="" class="rbfw_room_image"></td>'
-                                + '<td class="resort_day_long_price" style="display: none;"><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td>'
-                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td>'
-                                + '<td><input type="text" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_desc]" value="" placeholder="Short Description"></td>'
-                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + esc_attr(resort_type_new_data_key) + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td>'
-                                + '<td><div class="mp_event_remove_move"><button class="button remove-row ' + esc_attr(current_time) + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>'
+                            let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + resort_type_new_data_key + '">'
+                                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="Room type"></td>'
+                                + '<td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_image]" value="" class="rbfw_room_image"></td>'
+                                + '<td class="resort_day_long_price" style="display: none;"><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td>'
+                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td>'
+                                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_desc]" value="" placeholder="Short Description"></td>'
+                                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td>'
+                                + '<td><div class="mp_event_remove_move"><button class="button remove-row ' + current_time + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>'
                                 + '</tr>';
                             
                             jQuery('.rbfw_resort_price_table').append(resort_type_row);
                         }
                         
-                        jQuery('.remove-row.' + esc_attr(current_time) + '').on('click', function () {
+                        jQuery('.remove-row.' + current_time + '').on('click', function () {
                             e.preventDefault();
                             e.stopImmediatePropagation();
                             if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
@@ -1323,9 +1320,9 @@
                             let send_attachment_bkp = wp.media.editor.send.attachment;
                             wp.media.editor.send.attachment = function (props, attachment) {
                                 let image_url = esc_url(attachment.url); // Escape URL
-                                jQuery('.rbfw_resort_price_table_row[data-key=' + esc_attr(parent_data_key) + '] .rbfw_room_type_image_preview img').remove();
-                                jQuery('.rbfw_resort_price_table_row[data-key=' + esc_attr(parent_data_key) + '] .rbfw_room_type_image_preview').append('<img src="' + image_url + '"/>');
-                                jQuery('.rbfw_resort_price_table_row[data-key=' + esc_attr(parent_data_key) + '] .rbfw_room_image').val(attachment.id);
+                                jQuery('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_type_image_preview img').remove();
+                                jQuery('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_type_image_preview').append('<img src="' + image_url + '"/>');
+                                jQuery('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_image').val(attachment.id);
                                 wp.media.editor.send.attachment = send_attachment_bkp;
                             }
                             wp.media.editor.open(jQuery(this));
@@ -1334,8 +1331,8 @@
 
                         jQuery('.rbfw_remove_room_type_image_btn').click(function () {
                             let parent_data_key = jQuery(this).closest('.rbfw_resort_price_table_row').attr('data-key');
-                            jQuery('.rbfw_resort_price_table_row[data-key=' + esc_attr(parent_data_key) + '] .rbfw_room_type_image_preview img').remove();
-                            jQuery('.rbfw_resort_price_table_row[data-key=' + esc_attr(parent_data_key) + '] .rbfw_room_image').val('');
+                            jQuery('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_type_image_preview img').remove();
+                            jQuery('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_image').val('');
                         });
                     }
                     rbfw_room_type_image_addup();
