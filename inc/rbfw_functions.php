@@ -65,6 +65,12 @@
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
 				'data-price' => true, // Allows inline JavaScript
+                'title' => true,
+                'data-duration' => true,
+                'data-d_type' => true,
+                'data-start_time' => true,
+                'data-end_time' => true,
+                'data-available_quantity' => true,
 			),
 			'section' => array(
 				'style'   => true, // Allows inline styles
