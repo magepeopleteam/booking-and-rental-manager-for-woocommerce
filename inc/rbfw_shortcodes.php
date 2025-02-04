@@ -266,7 +266,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         <?php
         if( $left_filter === 'yes' ){
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper_with_left_filter';
-            echo esc_html(rbfw_rent_left_filter( $left_filter_control ));
+            echo wp_kses(rbfw_rent_left_filter( $left_filter_control ) , rbfw_allowed_html());
         }else{
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper';
         }

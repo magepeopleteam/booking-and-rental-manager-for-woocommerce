@@ -46,6 +46,7 @@ function fetch_order_details_callback() {
         ?>
         <div class="rbfw_order_meta_box_wrap">
             <div class="rbfw_order_meta_box_body">
+
                 <h2><?php esc_html_e('Order Details', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
 
                 <!-- General Information -->

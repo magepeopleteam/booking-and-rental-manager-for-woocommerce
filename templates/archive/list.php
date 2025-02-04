@@ -226,7 +226,7 @@ echo '<pre>';*/
             </div>
             <?php if (!empty($post_review_rating)): ?>
                 <div class="rbfw_rent_list_average_rating">
-                    <?php echo esc_html($post_review_rating); ?>
+                    <?php echo wp_kses( $post_review_rating , rbfw_allowed_html() ); ?>
                 </div>
             <?php endif; ?>
             <div class="rbfw_rent_list_divider"></div>
