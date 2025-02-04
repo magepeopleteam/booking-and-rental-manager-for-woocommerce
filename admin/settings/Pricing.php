@@ -1376,11 +1376,11 @@
 					$rbfw_enable_daywise_price          = isset( $_POST['rbfw_enable_daywise_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daywise_price'] ) ) : 'no';
 					$rbfw_enable_category_service_price = isset( $_POST['rbfw_enable_category_service_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_category_service_price'] ) ) : 'off';
 					$rbfw_service_category_price        = isset( $input_data_sabitized['rbfw_service_category_price'] ) ? $input_data_sabitized['rbfw_service_category_price']  : [];
-					$rbfw_bike_car_sd_data              = isset( $input_data_sabitized['rbfw_bike_car_sd_data'] ) ? $input_data_sabitized['rbfw_bike_car_sd_data']  : 0;
+					$rbfw_bike_car_sd_data              = isset( $input_data_sabitized['rbfw_bike_car_sd_data'] ) ? $input_data_sabitized['rbfw_bike_car_sd_data']  : [];
 					// echo '<pre>';print_r($rbfw_bike_car_sd_data );echo '<pre>';exit;
 					$rbfw_enable_resort_daylong_price        = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_resort_daylong_price'] ) ) : 'no';
 
-                    $rbfw_resort_room_data                   = isset( $_POST['rbfw_resort_room_data'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_resort_room_data'] ) ) : 0;
+                    $rbfw_resort_room_data                   = isset( $input_data_sabitized['rbfw_resort_room_data'] ) ? $input_data_sabitized['rbfw_resort_room_data']  : [];
 
                     $rbfw_sd_appointment_max_qty_per_session = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ) : '';
 					$rbfw_sd_appointment_ondays              = isset( $input_data_sabitized['rbfw_sd_appointment_ondays'] ) ?  $input_data_sabitized['rbfw_sd_appointment_ondays']  : [];
