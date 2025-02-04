@@ -136,6 +136,12 @@
                 'class'          => true,
                 'aria-expanded'          => true,
             ),
+            'h2'   => array(
+                'id'          => true,
+                'class'          => true,
+            ),
+
+
 
 		);
 
