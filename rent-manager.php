@@ -3,7 +3,7 @@
 	 * Plugin Name: Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Equipment
 	 * Plugin URI: https://mage-people.com
 	 * Description: A complete booking & rental solution for WordPress.
-	 * Version: 2.2.2
+	 * Version: 2.2.3
 	 * Author: MagePeople Team
 	 * Author URI: https://www.mage-people.com/
 	 * Text Domain: booking-and-rental-manager-for-woocommerce
@@ -118,11 +118,12 @@
 			}
 
 			function flush_rules_rbfw_post_list_page() {
-				if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
-					return;
-				}
+				// if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
+				// 	return;
+				// }
+
 				if ( isset( $_GET['post_type'] ) && sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) == 'rbfw_item' ) {
-					flush_rewrite_rules();
+					flush_rewrite_rules(); 
 				}
 			}
 
