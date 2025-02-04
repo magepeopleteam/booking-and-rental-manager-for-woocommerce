@@ -418,7 +418,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                                     <input type="checkbox"
                                                                            class="rbfw_service_price_data item_<?php echo esc_attr($cat . $serkey); ?>"
                                                                            name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][main_cat_name]"
-                                                                           data-service_price_type="<?php echo esc_attr($service['service_price_type']); ?>"
+                                                                           data-service_price_type="<?php echo esc_attr(isset($service['service_price_type']) && $service['service_price_type']); ?>"
                                                                            data-price="<?php echo esc_attr($service['price']); ?>"
                                                                            data-quantity="1"
                                                                            data-rbfw_enable_md_type_item_qty="<?php echo esc_attr($rbfw_enable_extra_service_qty); ?>"
@@ -426,7 +426,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                                     <span class="slider round"></span>
                                                                 </label>
                                                                 <input type="hidden" name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][name]" value="<?php echo esc_attr($service['title']); ?>">
-                                                                <input type="hidden" name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][service_price_type]" value="<?php echo esc_attr($service['service_price_type']); ?>">
+                                                                <input type="hidden" name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][service_price_type]" value="<?php echo esc_attr(isset($service['service_price_type'])?$service['service_price_type']:''); ?>">
                                                                 <input type="hidden" name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][price]" value="<?php echo esc_attr($service['price']); ?>">
                                                             </div>
                                                         </td>
@@ -440,7 +440,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                         </td>
                                                         <td class="w_20">
                                                             <div class="title"><?php echo wp_kses(wc_price($service['price']),rbfw_allowed_html()); ?></div>
-                                                            <span class="day-time-wise"><?php echo ($service['service_price_type'] === 'day_wise') ? esc_html__('Day Wise', 'booking-and-rental-manager-for-woocommerce') : esc_html__('One Time', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                                                            <span class="day-time-wise"><?php echo (isset($service['service_price_type'] ) && $service['service_price_type'] === 'day_wise') ? esc_html__('Day Wise', 'booking-and-rental-manager-for-woocommerce') : esc_html__('One Time', 'booking-and-rental-manager-for-woocommerce'); ?></span>
                                                         </td>
                                                         <td class="rbfw_service_quantity item_<?php echo esc_attr($cat . $serkey); ?>" style="display: none;">
                                                             <div class="rbfw_qty_input">

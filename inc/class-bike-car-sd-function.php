@@ -502,7 +502,7 @@
 					$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration );
 					$content                        .= '<label><input type="radio" name="option" class="radio-input">';
 					if ( $rbfw_timely_available_quantity > 0 ) {
-						$content .= '<span title="' . $value['short_desc'] . '" data-duration="' . $value['duration'] . '" data-price="' . $value['price'] . '" data-d_type="' . $value['d_type'] . '" data-start_time="' . $value['start_time'] . '" data-end_time="' . $value['end_time'] . '" data-available_quantity="' . $rbfw_timely_available_quantity . '" class="radio-button single-type-timely">' . $value['rent_type'] .$rbfw_timely_available_quantity . '</span>';
+						$content .= '<span title="' . $value['short_desc'] . '" data-duration="' . $value['duration'] . '" data-price="' . $value['price'] . '" data-d_type="' . $value['d_type'] . '" data-start_time="' . $value['start_time'] . '" data-end_time="' . $value['end_time'] . '" data-available_quantity="' . $rbfw_timely_available_quantity . '" class="radio-button single-type-timely">' . $value['rent_type'] . '</span>';
 					} else {
 						$content .= '<span style="text-decoration: line-through;cursor:text" title="' . $value['short_desc'] . '" data-duration="' . $value['duration'] . '" data-price="' . $value['price'] . '" data-d_type="' . $value['d_type'] . '" class="radio-button">' . $value['rent_type'] . '</span>';
 					}

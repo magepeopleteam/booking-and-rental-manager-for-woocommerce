@@ -251,6 +251,7 @@
 										body: new URLSearchParams({
 											action: 'fetch_order_details',
 											post_id: postId,
+                                            'nonce': rbfw_ajax.nonce
 										})
 									})
 										.then(response => response.text())
