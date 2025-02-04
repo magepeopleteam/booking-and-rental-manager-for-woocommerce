@@ -146,7 +146,7 @@
 							$search_by_title = $text_search;
 						}
 						$filter_by_price = isset( $filter_date['price'] ) ? $filter_date['price'] : [];
-						if ( count( $filter_by_price ) > 0 ) {
+						if ( count( is_array($filter_by_price)?$filter_by_price:[] ) > 0 ) {
 							if ( isset( $filter_by_price['start'] ) && isset( $filter_by_price['end'] ) && $filter_by_price['start'] == 0 && $filter_by_price['end'] == 0 ) {
 								$price_filter_query = '';
 							} else {
