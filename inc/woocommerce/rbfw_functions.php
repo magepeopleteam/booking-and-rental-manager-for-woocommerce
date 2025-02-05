@@ -142,7 +142,7 @@
 			$rbfw_start_datetime = $rbfw_bikecarsd_selected_date;
 			$rbfw_end_datetime   = $end_date;
 
-			$rbfw_type_info_all  = $sd_input_data_sabitized['rbfw_bikecarsd_info'] ;
+			$rbfw_type_info_all  = isset($sd_input_data_sabitized['rbfw_bikecarsd_info'])?$sd_input_data_sabitized['rbfw_bikecarsd_info']:[] ;
 
             $rbfw_type_info      = array();
 			if ( isset( $sd_input_data_sabitized['service_type'] ) ) {
@@ -302,7 +302,7 @@
 			$cart_item_data['security_deposit_desc']          = $security_deposit['security_deposit_desc'];
 			$cart_item_data['total_days']                     = $total_days;
 		}
-		$cart_item_data['start_date']    = $start_date;
+		$cart_item_data['start_date']    = isset($start_date)?$start_date:'';
 		$cart_item_data['end_date']      = $end_date;
 		$cart_item_data['rbfw_tp']       = $total_price;
 		$cart_item_data['line_total']    = $total_price;

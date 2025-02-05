@@ -1257,14 +1257,14 @@
 
 
                 if ( ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ( ( $inventory_based_on_return == 'yes' ) ? $inventory['rbfw_order_status'] == 'returned' : '' ) ) && $partial_stock ) {
-					if ( $inventory['rbfw_start_date_ymd'] && $inventory['rbfw_end_date_ymd'] ) {
+					if ( isset($inventory['rbfw_start_date_ymd']) && $inventory['rbfw_end_date_ymd'] ) {
 						$inventory_start_date = $inventory['rbfw_start_date_ymd'];
 						$inventory_end_date   = $inventory['rbfw_end_date_ymd'];
 						$inventory_start_time = $inventory['rbfw_start_time_24'];
 						$inventory_end_time   = $inventory['rbfw_end_time_24'];
 					} else {
 						$booked_dates         = ! empty( $inventory['booked_dates'] ) ? $inventory['booked_dates'] : [];
-						$inventory_start_date = $booked_dates[0];
+						$inventory_start_date = isset($booked_dates[0])?$booked_dates[0]:'';
 						$inventory_end_date   = end( $booked_dates );
 						$inventory_start_time = $inventory['rbfw_start_time'];
 						$inventory_end_time   = $inventory['rbfw_end_time'];
