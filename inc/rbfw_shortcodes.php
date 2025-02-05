@@ -585,9 +585,9 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
             <div class="rbfw_price-range">
             <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">-</span></h5>
             <div class="rbfw_toggle-content" style="display: block">
-                <div class="price-range">
-                    <label for="price">Price range:</label>
-                    <input type="text" id="rbfw_left_filter_price" readonly>
+                <div class="rbfw_price_range_holder">
+                    <input name="rbfw_price_start" type="number" class="rbfw_price_start_end" id="rbfw_price_start" placeholder="Start">
+                    <input name="rbfw_price_end" type="number" class="rbfw_price_start_end" id="rbfw_price_end" placeholder="End">
                 </div>
                 <div id="slider-range"></div>
             </div>

@@ -148,7 +148,7 @@
 						}
 						$filter_by_price = isset( $filter_date['price'] ) ? $filter_date['price'] : [];
 						if ( is_array( $filter_by_price ) && count( $filter_by_price ) > 0 ) {
-							if ( isset( $filter_by_price['start'] ) && isset( $filter_by_price['end'] ) && $filter_by_price['start'] == 0 && $filter_by_price['end'] == 0 ) {
+							if ( isset( $filter_by_price['start'] ) && isset( $filter_by_price['end'] ) && $filter_by_price['start'] == 0 && $filter_by_price['end'] == 100000 ) {
 								$price_filter_query = '';
 							} else {
 								$start_price        = sanitize_text_field( $filter_by_price['start'] );

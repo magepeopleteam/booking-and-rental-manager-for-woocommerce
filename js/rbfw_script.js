@@ -360,7 +360,7 @@
         });
 
         // Price slider handling
-        if ($('#slider-range').length > 0) {
+        /*if ($('#slider-range').length > 0) {
             var start_val = 0;
             var end_val = 0;
             $("#slider-range").slider({
@@ -385,7 +385,26 @@
             $("#rbfw_left_filter_price").val("" + $("#slider-range").slider("values", 0) + " - " + $("#slider-range").slider("values", 1));
             get_filters.price.start = $("#slider-range").slider("values", 0);
             get_filters.price.end = $("#slider-range").slider("values", 1);
-        }
+        }*/
+
+        $('.rbfw_price_start_end').on('focusout', function () {
+
+            let startPrice = $("#rbfw_price_start").val();
+            let endPrice = $("#rbfw_price_end").val();
+
+            if( startPrice === '' ){
+                startPrice =  0;
+            }
+            if( endPrice === '' ){
+                endPrice =  100000;
+            }
+
+            get_filters.price.start = parseInt( startPrice );
+            get_filters.price.end = parseInt( endPrice );
+
+            get_left_filter_data( get_filters );
+
+        });
 
         $(document).on('click', '.rbfw_left_filter_search_btn', function() {
 
@@ -441,6 +460,8 @@
 
             };
             get_left_filter_data(clear_get_filters);
+            $("#rbfw_price_start").val('');
+            $("#rbfw_price_end").val('');
             $("#rbfw_left_filter_clearButton").hide();
         });
 
