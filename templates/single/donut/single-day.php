@@ -58,7 +58,7 @@
                     <div class="rbfw_dt_pricing_card_col1"><?php echo esc_html( $currency_symbol ); ?></div>
                     <div class="rbfw_dt_pricing_card_col2">
 						<?php if ( ! empty( $price ) ) : ?>
-                            <div class="rbfw_dt_pricing_card_price rbfw_text_center"><?php echo esc_html( $price ); ?></div>
+                            <div class="rbfw_dt_pricing_card_price rbfw_text_center"><?php echo wp_kses( wc_price($price) , rbfw_allowed_html()); ?></div>
 						<?php endif; ?>
                     </div>
                 </div>
