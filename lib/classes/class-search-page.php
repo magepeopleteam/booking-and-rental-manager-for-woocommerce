@@ -140,7 +140,6 @@
 					if ( isset( $_POST['filter_date'] ) ) {
 						$filter_date_str     = sanitize_text_field( stripslashes( $_POST['filter_date' ] ) );
                         $filter_date = json_decode( $filter_date_str, true);
-                        error_log( print_r( [ '$filter_date' => $filter_date ], true ) );
 						$item_style      = isset( $_POST['rbfw_item_style'] ) ? sanitize_text_field(wp_unslash( $_POST['rbfw_item_style']) ) : '';
 						$text_search     = isset( $filter_date['title_text'] ) ? sanitize_text_field( $filter_date['title_text'] ) : '';
 						$search_by_title = '';

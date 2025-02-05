@@ -226,10 +226,10 @@
 
 //Left Filtering
         $('.rbfw_toggle-content').show();
-        $('.rbfw_toggle-header').on('click', function() {
+        $('.rbfw_toggle-icon').on('click', function() {
             var content = $(this).next('.rbfw_toggle-content');
             content.slideToggle();
-            var icon = $(this).find('.rbfw_toggle-icon');
+            var icon = $(this);
             if (icon.text() === '+') {
                 icon.text('−');
             } else {

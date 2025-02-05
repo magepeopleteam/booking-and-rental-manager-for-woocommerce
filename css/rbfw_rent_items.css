@@ -848,6 +848,7 @@ ul.rbfw_show_all_cat_features li:last-child {
     float: right;
     font-size: 1.2em;
     color: var(--rbfw_color_primary);
+    cursor: pointer;
 }
 
 /* ==============range========= */
