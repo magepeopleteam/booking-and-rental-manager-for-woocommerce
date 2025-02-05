@@ -340,7 +340,6 @@
 }
 #rbfw_add_meta_box .ms-2 {
   margin-left: 1em;
-  margin-top: 1em;
 }
 #rbfw_add_meta_box .ms-3 {
   margin-left: 1.5em;
@@ -723,7 +722,6 @@
 #rbfw_add_meta_box label {
   font-size: 1rem;
   font-weight: 300;
-  line-height: 1.2rem;
 }
 #rbfw_add_meta_box textarea, #rbfw_add_meta_box select, #rbfw_add_meta_box input[type=text], #rbfw_add_meta_box input[type=email], #rbfw_add_meta_box input[type=search], #rbfw_add_meta_box input[type=tel], #rbfw_add_meta_box input[type=url], #rbfw_add_meta_box input[type=password], #rbfw_add_meta_box input[type=file], #rbfw_add_meta_box input[type=color], #rbfw_add_meta_box input[type=number], #rbfw_add_meta_box input[type=range], #rbfw_add_meta_box input[type=date], #rbfw_add_meta_box input[type=month], #rbfw_add_meta_box input[type=week], #rbfw_add_meta_box input[type=time], #rbfw_add_meta_box input[type=datetime], #rbfw_add_meta_box input[type=datetime-local] {
   width: 16em;
@@ -875,10 +873,10 @@
   justify-content: space-between;
   align-items: center;
 }
-/*#rbfw_add_meta_box section > div {*/
-/*  display: flex;*/
-/*  flex-direction: column;*/
-/*}*/
+#rbfw_add_meta_box section > div {
+  display: flex;
+  flex-direction: column;
+}
 #rbfw_add_meta_box section label {
   margin: 0;
   font-size: 14px;
@@ -1165,7 +1163,6 @@
   background-color: var(--mage-primary);
   border: 1px solid var(--mage-primary);
   margin-left: 15%;
-  width: 15em;
 }
 #rbfw_add_meta_box .add-feature-category:hover {
   opacity: 0.8;
