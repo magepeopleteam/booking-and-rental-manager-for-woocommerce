@@ -292,7 +292,7 @@
             location: [],
             category: [],
             type: [],
-            price: { start: 0, end: 0 },
+            price: {},
             title_text: '',
         };
         $(document).on('change', '.rbfw_location', function() {
@@ -392,15 +392,18 @@
             let startPrice = $("#rbfw_price_start").val();
             let endPrice = $("#rbfw_price_end").val();
 
-            if( startPrice === '' ){
-                startPrice =  0;
+            if( startPrice === '' && endPrice === '' ){
+                get_filters.price = {};
+            }else{
+                if( startPrice === '' ){
+                    startPrice =  0;
+                }
+                if( endPrice === '' ){
+                    endPrice =  100000;
+                }
+                get_filters.price.start = parseInt( startPrice );
+                get_filters.price.end = parseInt( endPrice );
             }
-            if( endPrice === '' ){
-                endPrice =  100000;
-            }
-
-            get_filters.price.start = parseInt( startPrice );
-            get_filters.price.end = parseInt( endPrice );
 
             get_left_filter_data( get_filters );
 
@@ -451,15 +454,15 @@
 
         $(document).on('click', '.rbfw_left_filter_clearButton',function() {
             $('.rbfw_location, .rbfw_category, .rbfw_rent_type, .rbfw_rent_feature').prop('checked', false);
-            let clear_get_filters = {
+            get_filters = {
                 location: [],
                 category: [],
                 type: [],
-                price: { start: 0, end: 100000 },
+                price: {},
                 title_text: '',
 
             };
-            get_left_filter_data(clear_get_filters);
+            get_left_filter_data( get_filters );
             $("#rbfw_price_start").val('');
             $("#rbfw_price_end").val('');
             $("#rbfw_left_filter_clearButton").hide();
