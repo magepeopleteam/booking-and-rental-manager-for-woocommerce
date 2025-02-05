@@ -601,7 +601,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                         <div class="rbfw_reg_form_rb" style="display: none">
                             <?php
                             $reg_form = new Rbfw_Reg_Form();
-                            echo esc_html($reg_form->rbfw_generate_regf_fields($post_id));
+                            echo wp_kses($reg_form->rbfw_generate_regf_fields($post_id),rbfw_allowed_html());
                             ?>
                         </div>
 

@@ -147,6 +147,7 @@
 							$search_by_title = $text_search;
 						}
 						$filter_by_price = isset( $filter_date['price'] ) ? $filter_date['price'] : [];
+
 						if ( is_array( $filter_by_price ) && count( $filter_by_price ) > 0 ) {
                             $start_price        = sanitize_text_field( $filter_by_price['start'] );
                             $end_price          = sanitize_text_field( $filter_by_price['end'] );
@@ -156,6 +157,7 @@
                                 'type'    => 'NUMERIC',
                                 'compare' => 'BETWEEN',
                             );
+
 						} else {
 							$price_filter_query = '';
 						}
