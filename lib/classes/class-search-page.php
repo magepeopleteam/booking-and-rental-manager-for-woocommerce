@@ -148,23 +148,18 @@
 						}
 						$filter_by_price = isset( $filter_date['price'] ) ? $filter_date['price'] : [];
 						if ( is_array( $filter_by_price ) && count( $filter_by_price ) > 0 ) {
-							if ( isset( $filter_by_price['start'] ) && isset( $filter_by_price['end'] ) && $filter_by_price['start'] == 0 && $filter_by_price['end'] == 100000 ) {
-								$price_filter_query = '';
-							} else {
-								/*$start_price        = sanitize_text_field( $filter_by_price['start'] );
-								$end_price          = sanitize_text_field( $filter_by_price['end'] );
-								$price_filter_query = array(
-									'key'     => 'rbfw_hourly_rate',
-									'value'   => array( $start_price, $end_price ),
-									'type'    => 'NUMERIC',
-									'compare' => 'BETWEEN',
-								);*/
-
-                                $price_filter_query = '';
-							}
+                            $start_price        = sanitize_text_field( $filter_by_price['start'] );
+                            $end_price          = sanitize_text_field( $filter_by_price['end'] );
+                            $price_filter_query = array(
+                                'key'     => 'rbfw_hourly_rate',
+                                'value'   => array( $start_price, $end_price ),
+                                'type'    => 'NUMERIC',
+                                'compare' => 'BETWEEN',
+                            );
 						} else {
 							$price_filter_query = '';
 						}
+
 						$features_to_search   = isset( $filter_date['feature'] ) ? $filter_date['feature'] : [];
 						$feature_meta_queries = '';
 						if ( is_array( $features_to_search ) && count( $features_to_search ) > 0 ) {
