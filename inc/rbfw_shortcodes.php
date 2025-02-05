@@ -581,7 +581,7 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
         </div>
         <?php }?>
 
-        <?php if( $left_filter_control['price_filter_shown'] === 'on' ){?>
+        <?php if( $left_filter_control['price_filter_shown'] === 'onoo' ){?>
             <div class="rbfw_price-range">
             <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">-</span></h5>
             <div class="rbfw_toggle-content" style="display: block">
