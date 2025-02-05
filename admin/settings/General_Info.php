@@ -201,7 +201,7 @@
                                 ?>
                             </tbody>
                         </table>
-                        <span class="ppof-button add-feature-category mt-1"><i class="fas fa-circle-plus"></i> <?php echo esc_html__('Add New Feature Category','booking-and-rental-manager-for-woocommerce'); ?></span>
+                        <span class="ppof-button add-feature-category mt-1 w-30"><i class="fas fa-circle-plus"></i> <?php echo esc_html__('Add New Feature Category','booking-and-rental-manager-for-woocommerce'); ?></span>
                         </div> 
                     </section> 
                     </div>
