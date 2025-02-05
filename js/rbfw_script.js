@@ -455,7 +455,7 @@
                 location: [],
                 category: [],
                 type: [],
-                price: { start: 0, end: 0 },
+                price: { start: 0, end: 100000 },
                 title_text: '',
 
             };
