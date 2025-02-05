@@ -31,7 +31,7 @@
                 <section class="bg-light mt-5">
                     <div>
                         <label><?php echo esc_html( $title ); ?></label>
-                        <span><?php echo esc_html( $description ); ?></span>
+                        <p><?php echo esc_html( $description ); ?></p>
                     </div>
                 </section>
 				<?php
@@ -46,7 +46,7 @@
                             <label>
 								<?php echo esc_html__( 'Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
-                            <span><?php echo esc_html__( 'Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <p><?php echo esc_html__( 'Donut Template Sidebar', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
 						<?php $dt_sidebar_switch = get_post_meta( $post_id, 'rbfw_dt_sidebar_switch', true ); ?>
                         <label class="switch">
@@ -134,7 +134,7 @@
                     <section>
                         <div>
                             <label><?php esc_html_e( 'Enable Additional Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                            <span><?php esc_html_e( 'Enable/Disable Additional Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <p><?php esc_html_e( 'Enable/Disable Additional Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="rbfw_enable_additional_gallary" value="<?php echo esc_attr( $additional_gallary ); ?>" <?php echo esc_attr( ( $additional_gallary == 'on' ) ? 'checked' : '' ); ?>>

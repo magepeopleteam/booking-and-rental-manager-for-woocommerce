@@ -45,7 +45,7 @@
                 <section class="bg-light mt-5">
                     <div>
                         <label><?php echo esc_html( $title ); ?></label>
-                        <span><?php echo esc_html( $description ); ?></span>
+                        <p><?php echo esc_html( $description ); ?></p>
                     </div>
                 </section>
 				<?php
@@ -59,7 +59,7 @@
                         <label for="">
 							<?php esc_html_e( 'Rent Types', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </label>
-                        <span><?php esc_html_e( 'Price will be changed based on this type selection', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <p><?php esc_html_e( 'Price will be changed based on this type selection', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
 					<?php $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd'; ?>
 					<?php $item_type = [
@@ -266,7 +266,7 @@
                             <label>
 								<?php echo esc_html__( 'Enable Category service price ', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
-                            <span><?php echo esc_html__( 'You can enable/disable this section switching this button.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <p><?php echo esc_html__( 'You can enable/disable this section switching this button.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="rbfw_enable_category_service_price" value="<?php echo esc_attr( ( $enable_service_price == 'on' ) ? $enable_service_price : 'off' ); ?>" <?php echo esc_attr( ( $enable_service_price == 'on' ) ? 'checked' : '' ); ?>>
@@ -424,7 +424,7 @@
                             <label>
 								<?php esc_html_e( 'Manage a single-item inventory on an hourly basis.', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
-                            <span><?php esc_html_e( 'Enabling this allows you to manage a shared inventory for rental items.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <p><?php esc_html_e( 'Enabling this allows you to manage a shared inventory for rental items.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="manage_inventory_as_timely" value="<?php echo esc_attr( $manage_inventory_as_timely ); ?>" <?php echo esc_attr( $manage_inventory_as_timely == 'on' ? 'checked' : '' ); ?>>
@@ -435,7 +435,7 @@
                         <section class="rbfw_item_quantiry_duration">
                             <div>
                                 <label><?php esc_html_e( 'Rent Item Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                <span><?php esc_html_e( 'Add stock quantity that you want allow to rent', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <p><?php esc_html_e( 'Add stock quantity that you want allow to rent', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                             </div>
                             <div class="item_stock_quantity">
                                 <input type="number" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity" value="<?php echo esc_attr( $rbfw_item_stock_quantity_timely ) ?>">
@@ -444,7 +444,7 @@
                         <section class="rbfw_item_quantiry_duration">
                             <div>
                                 <label><?php esc_html_e( 'Enable duration-based rental items.', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                <span><?php esc_html_e( 'Enable this option to set a specific time duration.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <p><?php esc_html_e( 'Enable this option to set a specific time duration.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                             </div>
                             <label class="switch">
                                 <input type="checkbox" class="enable_specific_duration" name="enable_specific_duration" value="<?php echo esc_attr( $enable_specific_duration ); ?>" <?php echo esc_attr( ( $enable_specific_duration == 'on' ) ? 'checked' : '' ); ?>>
@@ -769,7 +769,7 @@
                         <section>
                             <div>
                                 <label><?php esc_html_e( 'Enable Service Quantity Box', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                <span><?php esc_html_e( 'If you Enable this customer can select number of quantity in front-end.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <p><?php esc_html_e( 'If you Enable this customer can select number of quantity in front-end.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                             </div>
                             <label class="switch">
                                 <input type="checkbox" name="rbfw_enable_extra_service_qty" value="<?php echo esc_attr( $rbfw_enable_extra_service_qty ); ?>" <?php echo esc_attr( ( $rbfw_enable_extra_service_qty == 'yes' ) ? 'checked' : '' ); ?>>
@@ -797,7 +797,7 @@
                             <label>
 								<?php echo esc_html__( 'Day-long Price Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
-                            <span><?php echo esc_html__( 'If you like to set price for same day check-in/check-out this option can be used.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <p><?php echo esc_html__( 'If you like to set price for same day check-in/check-out this option can be used.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="rbfw_enable_resort_daylong_price" value="<?php echo esc_attr( ( $rbfw_enable_resort_daylong_price == 'yes' ) ? $rbfw_enable_resort_daylong_price : 'no' ); ?>" <?php echo esc_attr( ( $rbfw_enable_resort_daylong_price == 'yes' ) ? 'checked' : '' ); ?>>
@@ -1039,7 +1039,7 @@
                     <section>
                         <div>
                             <label for=""><?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                            <span for=""><?php esc_html_e( 'Pricing will be calculated based on number of day.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <p for=""><?php esc_html_e( 'Pricing will be calculated based on number of day.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
                         <div>
                             <label class="switch">
@@ -1061,7 +1061,7 @@
                     <section>
                         <div>
                             <label for=""><?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                            <span><?php esc_html_e( 'Pricing will be calculated as per hour.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <p><?php esc_html_e( 'Pricing will be calculated as per hour.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
                         <div>
                             <label class="switch">
@@ -1085,9 +1085,9 @@
                             <label>
 								<?php esc_html_e( 'Enable Day-wise Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
-                            <span>
-							<?php esc_html_e( 'Enabling this will set prices based on the day of the week, overriding the general daily price', 'booking-and-rental-manager-for-woocommerce' ); ?>
-						</span>
+                            <P>
+                                <?php esc_html_e( 'Enabling this will set prices based on the day of the week, overriding the general daily price', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </P>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="rbfw_enable_daywise_price" value="<?php echo esc_attr( $rbfw_enable_daywise_price ); ?>" <?php echo esc_attr( ( $rbfw_enable_daywise_price == 'yes' ) ? 'checked' : '' ); ?>>

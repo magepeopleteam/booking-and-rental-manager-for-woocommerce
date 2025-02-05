@@ -35,7 +35,7 @@
                             <label>
                                 <?php echo esc_html($title); ?>
                             </label>
-                            <span><?php echo esc_html($description); ?></span>
+                            <p><?php echo esc_html($description); ?></p>
                         </div>
                     </section>
                 <?php

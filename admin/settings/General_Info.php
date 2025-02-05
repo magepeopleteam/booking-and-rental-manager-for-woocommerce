@@ -35,7 +35,7 @@
                             <label>
                                 <?php echo esc_html($title); ?>
                             </label>
-                            <span><?php echo esc_html($description ); ?></span>
+                            <p><?php echo esc_html($description ); ?></p>
                         </div>
                     </section>
                 <?php
@@ -55,7 +55,7 @@
                                     esc_html__( ' Type', 'booking-and-rental-manager-for-woocommerce' ); 
                                 ?>
                             </label>
-                            <span><?php esc_html_e( 'Choose a type that is related with this item', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
+                            <p><?php esc_html_e( 'Choose a type that is related with this item', 'booking-and-rental-manager-for-woocommerce' ) ?></p>
                         </div>
                         <div class="w-50">
                             <select name="rbfw_categories[]" multiple class="category2">
