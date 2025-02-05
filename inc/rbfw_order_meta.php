@@ -37,10 +37,12 @@ function fetch_order_details_callback() {
         $rbfw_return_security_deposit_amount = get_post_meta($post_id, 'rbfw_return_security_deposit_amount', true);
         $ticket_infos = maybe_unserialize(get_post_meta($post_id, 'rbfw_ticket_info', true));
         $current_status = get_post_meta($post_id, 'rbfw_order_status', true);
-        $order_no = get_post_meta($post_id, 'rbfw_order_id', true);
+        $wc_order_no = get_post_meta($post_id, 'rbfw_link_order_id', true);
         $grand_total = !empty(get_post_meta($post_id, 'rbfw_ticket_total_price', true)) ? wc_price(get_post_meta($post_id, 'rbfw_ticket_total_price', true)) : '';
         $rbfw_order_tax = !empty(get_post_meta($post_id, 'rbfw_order_tax', true)) ? wc_price(get_post_meta($post_id, 'rbfw_order_tax', true)) : '';
         $order_created_date = get_the_date('F j, Y', $post_id) . ' ' . get_the_time('', $post_id);
+
+
 
         ob_start();
         ?>
@@ -260,7 +262,7 @@ function fetch_order_details_callback() {
                                         if ($item['service_price_type'] == 'day_wise') {
                                             echo '<td>(' . wp_kses(wc_price($item['price']),rbfw_allowed_html()) . ' x ' . esc_html($item['quantity']) . ' x ' . esc_html($ticket_info['total_days']) . ' = ' . wp_kses(wc_price($item['price'] * $item['quantity'] * $ticket_info['total_days']),rbfw_allowed_html()) . ')</td>';
                                         } else {
-                                            echo '<td>(' . wp_kses(wc_price($item['price'])) . ' x ' . esc_html($item['quantity']) . ' = ' . wp_kses(wc_price($item['price'] * $item['quantity']),rbfw_allowed_html()) . ')</td>';
+                                            echo '<td>(' . wp_kses(wc_price($item['price']),rbfw_allowed_html()) . ' x ' . esc_html($item['quantity']) . ' = ' . wp_kses(wc_price($item['price'] * $item['quantity']),rbfw_allowed_html()) . ')</td>';
                                         }
                                         echo '</tr>';
                                     }
