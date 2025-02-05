@@ -31,7 +31,7 @@
                 <section class="bg-light mt-5">
                     <div>
                         <label><?php echo esc_html( $title ); ?></label>
-                        <span><?php echo esc_html( $description ); ?></span>
+                        <p><?php echo esc_html( $description ); ?></p>
                     </div>
                 </section>
 				<?php
@@ -44,7 +44,7 @@
                         <label>
 							<?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </label>
-                        <span><?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <p><?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
 					<?php $shipping_enable_switch = get_post_meta( $post_id, 'shipping_enable', true ); ?>
                     <label class="switch">
@@ -61,7 +61,7 @@
                 <section>
                     <div>
                         <label><?php esc_html_e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                        <span><?php esc_html_e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <p><?php esc_html_e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" name="rbfw_available_qty_info_switch" value="<?php echo esc_attr( $rbfw_available_qty_info_switch ); ?>" <?php echo esc_attr( ( $rbfw_available_qty_info_switch == 'yes' ) ? 'checked' : '' ); ?>>
@@ -78,7 +78,7 @@
                         <label>
 							<?php echo esc_html__( 'Add To Cart Form Shortcode', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </label>
-                        <span><?php echo esc_html__( 'This short code you can put anywhere in your content.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <p><?php echo esc_html__( 'This short code you can put anywhere in your content.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
                     <code class="rbfw_add_to_cart_shortcode_code">[rent-add-to-cart id='<?php echo esc_attr( $post_id ); ?>']</code>
                 </section>

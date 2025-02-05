@@ -32,7 +32,7 @@
                 <section class="bg-light mt-5">
                     <div>
                         <label><?php echo esc_html( $title ); ?></label>
-                        <span><?php echo wp_kses_post( $description ); ?></span>
+                        <p><?php echo wp_kses_post( $description ); ?></p>
                     </div>
                 </section>
 				<?php
@@ -94,7 +94,7 @@
                             <label>
 								<?php echo esc_html__( 'Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
-                            <span><?php echo esc_html__( 'It enables/disables the time slot for Bike/Car Single Day and Appointment rent type.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <p><?php echo esc_html__( 'It enables/disables the time slot for Bike/Car Single Day and Appointment rent type.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
 						<?php $rbfw_time_slot_switch = get_post_meta( $post_id, 'rbfw_time_slot_switch', true ) ? get_post_meta( $post_id, 'rbfw_time_slot_switch', true ) : 'off'; ?>
                         <label class="switch">
@@ -109,7 +109,7 @@
                                 <label>
 									<?php esc_html_e( 'Available Time Slot', 'booking-and-rental-manager-for-woocommerce' ) ?>
                                 </label>
-                                <span><?php esc_html_e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
+                                <p><?php esc_html_e( 'Please select the availabe time slots', 'booking-and-rental-manager-for-woocommerce' ) ?></p>
                             </div>
                             <div class="w-70">
 								<?php $this->multiple_time_slot_select( $post_id ); ?>
@@ -163,7 +163,7 @@
                             <label>
 								<?php echo esc_html__( 'Particular date time slots', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
-                            <span><?php echo esc_html__( 'It enables/disables the particulars for selection.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <p><?php echo esc_html__( 'It enables/disables the particulars for selection.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
 						<?php $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off'; ?>
                         <label class="switch">

@@ -35,7 +35,7 @@
                             <label>
                                 <?php echo esc_html($title ); ?>
                             </label>
-                            <span><?php echo esc_html($description); ?></span>
+                            <p><?php echo esc_html($description); ?></p>
                         </div>
                     </section>
                 <?php
@@ -80,7 +80,7 @@
 			<section >
 				<div>
 					<label><?php esc_html_e( 'Pick-up Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-					<span><?php esc_html_e( 'Turn Pick-up Location On/Off', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					<p><?php esc_html_e( 'Turn Pick-up Location On/Off', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 				</div>
 				<label class="switch">
 					<input type="checkbox" name="rbfw_enable_pick_point" value="<?php echo esc_attr($rbfw_enable_pick_point); ?>" <?php echo esc_attr(($rbfw_enable_pick_point=='yes')?'checked':''); ?>>
@@ -127,7 +127,7 @@
                 <section>
                     <div>
                         <label><?php esc_html_e( 'Drop-Off Location', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                        <span><?php esc_html_e( 'Turn drop off Location On/Off', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <p><?php esc_html_e( 'Turn drop off Location On/Off', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" name="rbfw_enable_dropoff_point" value="<?php echo esc_attr($rbfw_enable_dropoff_point); ?>" <?php echo esc_attr(($rbfw_enable_dropoff_point=='yes')?'checked':''); ?>>
