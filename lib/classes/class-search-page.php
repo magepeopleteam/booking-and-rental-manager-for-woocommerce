@@ -151,14 +151,16 @@
 							if ( isset( $filter_by_price['start'] ) && isset( $filter_by_price['end'] ) && $filter_by_price['start'] == 0 && $filter_by_price['end'] == 100000 ) {
 								$price_filter_query = '';
 							} else {
-								$start_price        = sanitize_text_field( $filter_by_price['start'] );
+								/*$start_price        = sanitize_text_field( $filter_by_price['start'] );
 								$end_price          = sanitize_text_field( $filter_by_price['end'] );
 								$price_filter_query = array(
 									'key'     => 'rbfw_hourly_rate',
 									'value'   => array( $start_price, $end_price ),
 									'type'    => 'NUMERIC',
 									'compare' => 'BETWEEN',
-								);
+								);*/
+
+                                $price_filter_query = '';
 							}
 						} else {
 							$price_filter_query = '';
