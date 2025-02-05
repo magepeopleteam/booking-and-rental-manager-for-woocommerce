@@ -238,6 +238,8 @@
         });
         function get_left_filter_data( filter_date ){
 
+            filter_date = JSON.stringify(filter_date);
+
             $("#rbfw_left_filter_clearButton").show();
             $("#rbfw_left_filter_cover").show();
 
@@ -255,7 +257,7 @@
                 data: {
                     'action' : 'rbfw_get_left_side_filter_data',
                     'filter_date': filter_date,
-                    'rbfw_nomce': rbfw_vars.rbfw_nonce,
+                    'rbfw_nonce': rbfw_vars.rbfw_nonce,
                     'rbfw_item_style': rbfw_item_style,
                     'nonce' : rbfw_ajax.nonce
                 },
@@ -385,8 +387,6 @@
             get_filters.price.end = $("#slider-range").slider("values", 1);
         }
 
-
-
         $(document).on('click', '.rbfw_left_filter_search_btn', function() {
 
             let filter_title_text = $("input[name='rbfw_search_by_title']").val();
@@ -394,7 +394,6 @@
             get_left_filter_data(get_filters);
 
         });
-
 
         $(document).on('click', '.rbfw_left_filter_more_feature_loaders', function(e) {
 
@@ -446,6 +445,7 @@
         });
 
     });
+
 })(jQuery)
 
 /* Additional Gallary Images */
