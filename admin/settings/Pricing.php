@@ -412,9 +412,11 @@
 			public function bike_car_single_day( $post_id ) {
 				$rbfw_item_type                  = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$rbfw_bike_car_sd_data           = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) : [];
-				$manage_inventory_as_timely      = get_post_meta( $post_id, 'manage_inventory_as_timely', true ) ? get_post_meta( $post_id, 'manage_inventory_as_timely', true ) : 'off';
+				$manage_inventory_as_timely      = get_post_meta( $post_id, 'manage_inventory_as_timely', true );
+                $manage_inventory_as_timely      = $manage_inventory_as_timely ? $manage_inventory_as_timely : 'off';
 				$rbfw_item_stock_quantity_timely = get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true ) ? get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true ) : 'off';
 				$enable_specific_duration        = get_post_meta( $post_id, 'enable_specific_duration', true ) ? get_post_meta( $post_id, 'enable_specific_duration', true ) : 'off';
+				$enable_specific_duration        = $enable_specific_duration ? $enable_specific_duration : 'off';
 				?>
                 <div class="rbfw_bike_car_sd_wrapper <?php echo esc_attr( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) ? 'show' : 'hide'; ?>">
                     <section class="manage_inventory_as_timely ">
@@ -425,7 +427,7 @@
                             <span><?php esc_html_e( 'Enabling this allows you to manage a shared inventory for rental items.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                         </div>
                         <label class="switch">
-                            <input type="checkbox" name="manage_inventory_as_timely" value="<?php echo esc_attr( ( $manage_inventory_as_timely == 'on' ) ? $manage_inventory_as_timely : 'off' ); ?>" <?php echo esc_attr( ( $manage_inventory_as_timely == 'on' ) ? 'checked' : '' ); ?>>
+                            <input type="checkbox" name="manage_inventory_as_timely" value="<?php echo esc_attr( $manage_inventory_as_timely ); ?>" <?php echo esc_attr( $manage_inventory_as_timely == 'on' ? 'checked' : '' ); ?>>
                             <span class="slider round"></span>
                         </label>
                     </section>
@@ -445,7 +447,7 @@
                                 <span><?php esc_html_e( 'Enable this option to set a specific time duration.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </div>
                             <label class="switch">
-                                <input type="checkbox" class="enable_specific_duration" name="enable_specific_duration" value="<?php echo esc_attr( ( $enable_specific_duration == 'on' ) ? $enable_specific_duration : 'off' ); ?>" <?php echo esc_attr( ( $enable_specific_duration == 'on' ) ? 'checked' : '' ); ?>>
+                                <input type="checkbox" class="enable_specific_duration" name="enable_specific_duration" value="<?php echo esc_attr( $enable_specific_duration ); ?>" <?php echo esc_attr( ( $enable_specific_duration == 'on' ) ? 'checked' : '' ); ?>>
                                 <span class="slider round"></span>
                             </label>
                         </section>

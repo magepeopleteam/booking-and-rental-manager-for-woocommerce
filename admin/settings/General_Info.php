@@ -49,7 +49,11 @@
                     <section>
                         <div>
                             <label>
-                                <?php esc_html_e( 'Select ', 'booking-and-rental-manager-for-woocommerce' ).esc_html($label).esc_html__( ' Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            <?php 
+                                echo esc_html__( 'Select ', 'booking-and-rental-manager-for-woocommerce' ) . 
+                                    esc_html($label) . 
+                                    esc_html__( ' Type', 'booking-and-rental-manager-for-woocommerce' ); 
+                                ?>
                             </label>
                             <span><?php esc_html_e( 'Choose a type that is related with this item', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
                         </div>
