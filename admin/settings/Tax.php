@@ -33,7 +33,7 @@
                         <label>
 							<?php echo esc_html( $title ); ?>
                         </label>
-                        <span><?php echo esc_html( $description ); ?></span>
+                        <p><?php echo esc_html( $description ); ?></p>
                     </div>
                 </section>
 				<?php
@@ -55,7 +55,7 @@
                             <section>
                                 <div>
                                     <label><?php esc_html_e( 'Tax Status', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                    <span><?php esc_html_e( 'Please Select Tax Status', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <p><?php esc_html_e( 'Please Select Tax Status', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                                 </div>
                                 <select class="formControl max_300" name="_tax_status">
                                     <option><?php esc_html_e( 'Select Tax Status', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
@@ -75,7 +75,7 @@
                                     <label>
 										<?php esc_html_e( 'Tax Class', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                     </label>
-                                    <span><?php esc_html_e( 'Please Select Tax Class', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <p><?php esc_html_e( 'Please Select Tax Class', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                                 </div>
                                 <select id="_tax_class" name="_tax_class">
                                     <option><?php esc_html_e( 'Select Tax Class', 'booking-and-rental-manager-for-woocommerce' ); ?></option>

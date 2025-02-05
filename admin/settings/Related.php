@@ -31,7 +31,7 @@
                 <section class="bg-light mt-5">
                     <div>
                         <label><?php echo esc_html( $title ); ?></label>
-                        <span><?php echo esc_html( $description ); ?></span>
+                        <P><?php echo esc_html( $description ); ?></P>
                     </div>
                 </section>
 				<?php

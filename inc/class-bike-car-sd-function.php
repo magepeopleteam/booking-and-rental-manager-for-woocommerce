@@ -491,6 +491,9 @@
 				$start_time               = isset( $_POST['pickup_time'] ) ? sanitize_text_field( wp_unslash( $_POST['pickup_time'] ) ) : '00:00';
 				$rbfw_bike_car_sd_data    = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) : [];
 				$content                  = '';
+				?>
+				<label>
+				<?php
 				foreach ( $rbfw_bike_car_sd_data as $value ) {
 					if ( $enable_specific_duration == 'on' ) {
 						$d_type   = $value['start_time'];
@@ -500,15 +503,19 @@
 						$duration = $value['duration'];
 					}
 					$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration );
-					$content                        .= '<label><input type="radio" name="option" class="radio-input">';
+					
+					$content  .= '<input type="radio" name="option" class="radio-input">';
 					if ( $rbfw_timely_available_quantity > 0 ) {
 						$content .= '<span title="' . $value['short_desc'] . '" data-duration="' . $value['duration'] . '" data-price="' . $value['price'] . '" data-d_type="' . $value['d_type'] . '" data-start_time="' . $value['start_time'] . '" data-end_time="' . $value['end_time'] . '" data-available_quantity="' . $rbfw_timely_available_quantity . '" class="radio-button single-type-timely">' . $value['rent_type'] . '</span>';
 					} else {
 						$content .= '<span style="text-decoration: line-through;cursor:text" title="' . $value['short_desc'] . '" data-duration="' . $value['duration'] . '" data-price="' . $value['price'] . '" data-d_type="' . $value['d_type'] . '" class="radio-button">' . $value['rent_type'] . '</span>';
 					}
-					$content .= ' </label>';
+					
 				}
 				echo wp_kses( $content , rbfw_allowed_html());
+				?>
+				</label>
+				<?php
 				wp_die();
 			}
 

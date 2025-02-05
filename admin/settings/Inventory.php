@@ -39,7 +39,7 @@
                             <label>
                                 <?php echo esc_html($title ); ?>
                             </label>
-                            <span><?php echo esc_html($description ); ?></span>
+                            <p><?php echo esc_html($description ); ?></p>
                         </div>
                     </section>
                 <?php
@@ -187,7 +187,7 @@
                         <label>
                             <?php esc_html_e( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </label>
-                        <span><?php esc_html_e( 'Add stock quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <p><?php esc_html_e( 'Add stock quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
                     <div class="item_stock_quantity">
                         <input type="number" name="rbfw_item_stock_quantity" id="rbfw_item_stock_quantity" value="<?php echo esc_attr($rbfw_item_stock_quantity); ?>" <?php echo esc_html(  $rbfw_enable_variations == 'yes' ) ? 'disabled':''; ?>>
@@ -204,7 +204,7 @@
                     <section >
                         <div>
                             <label><?php esc_html_e( 'Enable Multiple Item Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                            <span><?php  esc_html_e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <p><?php  esc_html_e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
                         <label class="switch">
                             <input type="checkbox" name="rbfw_enable_md_type_item_qty" value="<?php echo esc_attr($rbfw_enable_md_type_item_qty); ?>" <?php echo esc_attr(($rbfw_enable_md_type_item_qty=='yes')?'checked':''); ?>>
@@ -220,7 +220,7 @@
                 <section>
 					<div>
 						<label><?php esc_html_e( 'Item variation', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-						<span><?php  esc_html_e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.','booking-and-rental-manager-for-woocommerce' ); ?></span>
+						<p><?php  esc_html_e( 'Enable/Disable Variations. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.','booking-and-rental-manager-for-woocommerce' ); ?></p>
 					</div>
 					<label class="switch">
 						<input type="checkbox" name="rbfw_enable_variations" value="<?php echo esc_attr($rbfw_enable_variations); ?>" <?php echo esc_attr(($rbfw_enable_variations=='yes')?'checked':''); ?>>

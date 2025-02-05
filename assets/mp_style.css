@@ -777,7 +777,7 @@
 	div.mpStyle .mp_hidden_content,
 	.mpStyle .dNone,
 	.mpStyle [class*="_dNone"] {
-		display: none;
+		display: none !important;
 	}
 	.mpStyle .dBlock,
 	.mpStyle [class*="_dBlock"] {
@@ -3961,6 +3961,7 @@ div.mpStyle .groupContent input[type="radio"]:checked::after {
 		padding:2px;
 		background-color: #fff;
 		box-shadow: 0 0 5px #ddd;
+		overflow: auto;
 	}
 	table.ui-datepicker-calendar th{
 		padding: 10px;

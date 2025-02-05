@@ -58,14 +58,14 @@ if( ! class_exists('RBFW_Faq_Settings')){
 				<section class="bg-light mt-5">
                     <div>
                         <label><?php esc_html_e('FAQ Settings', 'booking-and-rental-manager-for-woocommerce'); ?></label>
-                        <span><?php esc_html_e('FAQ Settings', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                        <p><?php esc_html_e('FAQ Settings', 'booking-and-rental-manager-for-woocommerce'); ?></p>
                     </div>
                 </section>
 
                 <section>
                     <div>
                         <label><?php esc_html_e('FAQ Settings Enable', 'booking-and-rental-manager-for-woocommerce'); ?></label>
-                        <span><?php esc_html_e('FAQ Settings Enable', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                        <p><?php esc_html_e('FAQ Settings Enable', 'booking-and-rental-manager-for-woocommerce'); ?></p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" name="rbfw_enable_faq_content" value="<?php echo esc_attr( ( $enable_faq == 'yes' ) ? $enable_faq : 'no' ); ?>" <?php echo esc_attr( ( $enable_faq == 'yes' ) ? 'checked' : '' ); ?>>

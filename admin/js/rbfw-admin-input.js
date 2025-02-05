@@ -1,49 +1,41 @@
 (function($) {
     "use strict";
 
-    jQuery(document).on('click','input[name=manage_inventory_as_timely]',function(){
-        var status = jQuery(this).val();
-        console.log(status);
+    $(document).on('click','input[name=manage_inventory_as_timely]',function(){
+        
+        var status = $(this).val();
         if(status == 'on') {
-            jQuery(this).val('off');
-            jQuery('.rbfw_without_time_inventory').show('slow');
-            jQuery('.rbfw_time_inventory').hide('slow');
-
-            /*if(jQuery('.enable_specific_duration').val()=='on'){
-                jQuery('.rbfw_time_inventory_enable.durstion_disable').hide('slow');
-                jQuery('.rbfw_time_inventory_enable.duration_enable').show('slow');
-            }else{
-                jQuery('.rbfw_time_inventory_enable.durstion_disable').show('slow');
-                jQuery('.rbfw_time_inventory_enable.duration_enable').hide('slow')
-            }*/
+            $(this).val('off');
+            $('.rbfw_without_time_inventory').slideDown();
+            $('.rbfw_time_inventory').slideUp();
         }
         if(status == 'off') {
-            jQuery(this).val('on');
-            jQuery('.rbfw_without_time_inventory').hide('slow');
-            jQuery('.rbfw_time_inventory').show('slow');
+            $(this).val('on');
+            $('.rbfw_without_time_inventory').slideUp();
+            $('.rbfw_time_inventory').slideDown();
+        }
 
-            if(jQuery('.enable_specific_duration').val()=='off'){
-                jQuery('.rbfw_time_inventory_enable.duration_disable').show('slow');
-                jQuery('.rbfw_time_inventory_enable.duration_enable').hide('slow');
-            }else{
-                jQuery('.rbfw_time_inventory_enable.duration_disable').hide('slow');
-                jQuery('.rbfw_time_inventory_enable.duration_enable').show('slow');
-            }
+        if($('.enable_specific_duration').val()==='on'){
+            $('.rbfw_time_inventory_enable.durstion_disable').hide();
+            $('.rbfw_time_inventory_enable.duration_enable').show()
+        }
+        if($('.enable_specific_duration').val()==='off'){
+            $('.rbfw_time_inventory_enable.durstion_disable').show();
+            $('.rbfw_time_inventory_enable.duration_enable').hide()
         }
     });
 
-    jQuery(document).on('click','input[name=enable_specific_duration]',function(){
-        var status = jQuery(this).val();
-        console.log('status',status);
+    $(document).on('click','input[name=enable_specific_duration]',function(){
+        var status = $(this).val();
         if(status == 'on') {
-            jQuery(this).val('off');
-            jQuery('.rbfw_time_inventory_enable.duration_disable').show('slow');
-            jQuery('.rbfw_time_inventory_enable.duration_enable').hide('slow');
+            $(this).val('off');
+            $('.rbfw_time_inventory_enable.duration_disable').show();
+            $('.rbfw_time_inventory_enable.duration_enable').hide();
         }
         if(status == 'off') {
-            jQuery(this).val('on');
-            jQuery('.rbfw_time_inventory_enable.duration_disable').hide('slow');
-            jQuery('.rbfw_time_inventory_enable.duration_enable').show('slow');
+            $(this).val('on');
+            $('.rbfw_time_inventory_enable.duration_disable').hide();
+            $('.rbfw_time_inventory_enable.duration_enable').show();
         }
     });
 
