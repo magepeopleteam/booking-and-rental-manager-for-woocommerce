@@ -135,10 +135,17 @@ function fetch_order_details_callback() {
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><strong><?php rbfw_string('rbfw_text_item_name',__('Item Name','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                            <td><?php echo esc_html($item_name) .' * '. esc_html($item_quantity); ?></td>
-                        </tr>
+                        <?php if($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){ ?>
+                            <tr>
+                                <td><strong><?php rbfw_string('rbfw_text_item_name',__('Item Name','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                                <td><?php echo esc_html($item_name) .' * '. esc_html($item_quantity); ?></td>
+                            </tr>
+                        <?php }else{ ?>
+                            <tr>
+                                <td><strong><?php rbfw_string('rbfw_text_item_name',__('Item Name','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                                <td><?php echo esc_html($item_name); ?></td>
+                            </tr>
+                        <?php } ?>
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_item_type',__('Item Type','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td><?php echo rbfw_get_type_label($rent_type); ?></td>
@@ -182,7 +189,7 @@ function fetch_order_details_callback() {
                                                 ?>
                                                 <tr>
                                                     <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                    <td><?php echo esc_html($value);?></td>
+                                                    <td><?php echo wp_kses($value,rbfw_allowed_html());?></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -225,7 +232,7 @@ function fetch_order_details_callback() {
                                                 ?>
                                                 <tr>
                                                     <td><strong><?php echo $key; ?></strong></td>
-                                                    <td><?php echo esc_html($value); ?></td>
+                                                    <td><?php echo wp_kses($value, rbfw_allowed_html()); ?></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -309,7 +316,7 @@ function fetch_order_details_callback() {
                        <?php if($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){  ?>
                            <tr>
                                 <td><strong><?php rbfw_string('rbfw_text_duration_cost',__('Duration Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                                <td><?php $duration_cost_per_item = $ticket_info['duration_cost']/$item_quantity; echo wc_price($duration_cost_per_item).' * '.$item_quantity. ' = '. $duration_cost; ?></td>
+                                <td><?php $duration_cost_per_item = $ticket_info['duration_cost']/$item_quantity; echo wp_kses(wc_price($duration_cost_per_item) , rbfw_allowed_html()).' * '.$item_quantity. ' = '. $duration_cost; ?></td>
                             </tr>
 
                        <?php }else{ ?>
@@ -385,6 +392,7 @@ function fetch_order_details_callback() {
 
     <?php
     }
+    wp_die();
 }
 
 
@@ -683,7 +691,7 @@ function rbfw_order_meta_box_callback(){
                                                         ?>
                                                         <tr>
                                                             <td><strong><?php echo esc_html($key); ?></strong></td>
-                                                            <td><?php echo esc_html($value); ?></td>
+                                                            <td><?php echo wp_kses($value , rbfw_allowed_html()); ?></td>
                                                         </tr>
                                                         <?php
                                                     }

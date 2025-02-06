@@ -271,7 +271,7 @@
 			$sub_total_price = $rbfw_duration_price + $rbfw_service_price + $rbfw_extra_service_price;
 			$discount_amount = 0;
 			if ( function_exists( 'rbfw_get_discount_array' ) ) {
-				$discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $sub_total_price );
+				$discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $sub_total_price, $rbfw_item_quantity );
 				if ( ! empty( $discount_arr ) ) {
 					$discount_type   = $discount_arr['discount_type'];
 					$discount_amount = $discount_arr['discount_amount'];
