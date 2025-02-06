@@ -1,5 +1,5 @@
 <?php
-if (!defined('ABSPATH')) {
+if (!defined('ABSPATH')) { 
     die;
 } // Cannot access pages directly.
 
@@ -134,6 +134,13 @@ if (!class_exists('RBFW_Quick_Setup')) {
                         $rbfw_basic_gen_settings = get_option('rbfw_basic_gen_settings', true);
                         $rbfw_basic_gen_settings['rbfw_rent_slug'] = sanitize_text_field(wp_unslash($_POST['rbfw_rent_slug']));
                         update_option('rbfw_basic_gen_settings', $rbfw_basic_gen_settings);
+                    }
+
+
+                    $sample_rent_items = get_option( 'rbfw_sample_rent_items' );
+                    if ( $sample_rent_items != 'imported' ) {
+                        $dummy_import = new RbfwImportDemo();
+                        $dummy_import->rbfw_import_demo_function();
                     }
 
                     update_option('rbfw_quick_setup_done', 'yes');
