@@ -6,17 +6,18 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		die;
 	} // Cannot access pages directly.
-	if ( ! class_exists( 'RbfwImportDemo' ) ) {
+	if ( ! class_exists( 'RbfwImportDemo' ) ) { 
 		class RbfwImportDemo {
 			public function __construct() {
-				$sample_rent_items = get_option( 'rbfw_sample_rent_items' );
-				if ( $sample_rent_items != 'imported' ) {
-					$this->rbfw_import_demo_function();
-				}
+				
+				// $sample_rent_items = get_option( 'rbfw_sample_rent_items' );
+				// if ( $sample_rent_items != 'imported' ) {
+				// 	$this->rbfw_import_demo_function();
+				// }
 
 			}
 
-			public function rbfw_import_demo_function() {
+public function rbfw_import_demo_function() {
     // If you must ensure longer execution time, consider handling this at the server level.
     
     $xml_url     = RBFW_PLUGIN_URL . '/assets/sample-rent-items.xml';
@@ -143,5 +144,5 @@
 			}
 
 		}
-		new RbfwImportDemo();
+		$dummy_import = new RbfwImportDemo();
 	}

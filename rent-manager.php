@@ -114,10 +114,11 @@
 				if ( ! empty( $_POST['post_type'] ) && sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) != 'rbfw_item' ) {
 					return;
 				}
-				flush_rewrite_rules();
+				flush_rewrite_rules(); 
 			}
 
 			function flush_rules_rbfw_post_list_page() {
+				
 				// if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
 				// 	return;
 				// }
