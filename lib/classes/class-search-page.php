@@ -133,12 +133,13 @@
 			}
 
 			public function rbfw_get_left_side_filter_data() {
-				$nonce       = isset( $_POST['rbfw_nomce'] ) ? sanitize_text_field( wp_unslash($_POST['rbfw_nomce'])) : '';
+				$nonce       = isset( $_POST['rbfw_nonce'] ) ? sanitize_text_field( wp_unslash($_POST['rbfw_nonce'])) : '';
 				$response    = '';
-				$shoe_result = '0 result of total 0';
+				$show_result = '0 result of total 0';
 				if ( wp_verify_nonce( $nonce, 'rbfw_nonce' ) ) {
 					if ( isset( $_POST['filter_date'] ) ) {
-						$filter_date     = array_map('sanitize_text_field',wp_unslash($_POST['filter_date']));
+						$filter_date_str     = sanitize_text_field( stripslashes( $_POST['filter_date' ] ) );
+                        $filter_date = json_decode( $filter_date_str, true);
 						$item_style      = isset( $_POST['rbfw_item_style'] ) ? sanitize_text_field(wp_unslash( $_POST['rbfw_item_style']) ) : '';
 						$text_search     = isset( $filter_date['title_text'] ) ? sanitize_text_field( $filter_date['title_text'] ) : '';
 						$search_by_title = '';
@@ -146,22 +147,21 @@
 							$search_by_title = $text_search;
 						}
 						$filter_by_price = isset( $filter_date['price'] ) ? $filter_date['price'] : [];
-						if ( count( is_array($filter_by_price)?$filter_by_price:[] ) > 0 ) {
-							if ( isset( $filter_by_price['start'] ) && isset( $filter_by_price['end'] ) && $filter_by_price['start'] == 0 && $filter_by_price['end'] == 0 ) {
-								$price_filter_query = '';
-							} else {
-								$start_price        = sanitize_text_field( $filter_by_price['start'] );
-								$end_price          = sanitize_text_field( $filter_by_price['end'] );
-								$price_filter_query = array(
-									'key'     => 'rbfw_hourly_rate',
-									'value'   => array( $start_price, $end_price ),
-									'type'    => 'NUMERIC',
-									'compare' => 'BETWEEN',
-								);
-							}
+
+						if ( is_array( $filter_by_price ) && count( $filter_by_price ) > 0 ) {
+                            $start_price        = sanitize_text_field( $filter_by_price['start'] );
+                            $end_price          = sanitize_text_field( $filter_by_price['end'] );
+                            $price_filter_query = array(
+                                'key'     => 'rbfw_hourly_rate',
+                                'value'   => array( $start_price, $end_price ),
+                                'type'    => 'NUMERIC',
+                                'compare' => 'BETWEEN',
+                            );
+
 						} else {
 							$price_filter_query = '';
 						}
+
 						$features_to_search   = isset( $filter_date['feature'] ) ? $filter_date['feature'] : [];
 						$feature_meta_queries = '';
 						if ( is_array( $features_to_search ) && count( $features_to_search ) > 0 ) {
@@ -246,17 +246,17 @@
 						}
 						$pages_in_ary = [];
 						$total_pages  = ceil( $total_posts / $posts_per_page );
-						if ( $total_pages > 1 ) {
+						/*if ( $total_pages > 1 ) {
 							for ( $i = 1; $i <= $total_pages; $i ++ ) {
 								$pages_in_ary[] = $i;
 							}
-						}
-						$shoe_result = $total_posts . ' results. Showing ' . $post_count . ' of ' . $total_posts . ' of total';
+						}*/
+                        $show_result = $total_posts . ' results. Showing ' . $post_count . ' of ' . $total_posts . ' of total';
 					}
 				}
 				$result = array(
 					'display_date' => $response,
-					'show_text'    => $shoe_result,
+					'show_text'    => $show_result,
 				);
 				wp_send_json_success( $result );
 			}

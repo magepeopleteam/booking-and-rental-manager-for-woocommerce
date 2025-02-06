@@ -35,7 +35,7 @@
                             <label>
                                 <?php echo esc_html($title); ?>
                             </label>
-                            <span><?php echo esc_html($description ); ?></span>
+                            <p><?php echo esc_html($description ); ?></p>
                         </div>
                     </section>
                 <?php
@@ -49,9 +49,13 @@
                     <section>
                         <div>
                             <label>
-                                <?php esc_html_e( 'Select ', 'booking-and-rental-manager-for-woocommerce' ).esc_html($label).esc_html__( ' Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            <?php 
+                                echo esc_html__( 'Select ', 'booking-and-rental-manager-for-woocommerce' ) . 
+                                    esc_html($label) . 
+                                    esc_html__( ' Type', 'booking-and-rental-manager-for-woocommerce' ); 
+                                ?>
                             </label>
-                            <span><?php esc_html_e( 'Choose a type that is related with this item', 'booking-and-rental-manager-for-woocommerce' ) ?></span>
+                            <p><?php esc_html_e( 'Choose a type that is related with this item', 'booking-and-rental-manager-for-woocommerce' ) ?></p>
                         </div>
                         <div class="w-50">
                             <select name="rbfw_categories[]" multiple class="category2">
@@ -201,7 +205,7 @@
                                 ?>
                             </tbody>
                         </table>
-                        <span class="ppof-button add-feature-category mt-1"><i class="fas fa-circle-plus"></i> <?php echo esc_html__('Add New Feature Category','booking-and-rental-manager-for-woocommerce'); ?></span>
+                        <span class="ppof-button add-feature-category mt-1 w-30"><i class="fas fa-circle-plus"></i> <?php echo esc_html__('Add New Feature Category','booking-and-rental-manager-for-woocommerce'); ?></span>
                         </div> 
                     </section> 
                     </div>

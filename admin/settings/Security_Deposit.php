@@ -32,7 +32,7 @@
                 <section>
                     <div>
                         <label><?php esc_html_e( 'Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                        <span><?php esc_html_e( 'Turn on/off security deposit by switching this button.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <p><?php esc_html_e( 'Turn on/off security deposit by switching this button.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" name="rbfw_enable_security_deposit" value="<?php echo esc_attr( ( $rbfw_enable_security_deposit == 'yes' ) ? $rbfw_enable_security_deposit : 'no' ); ?>" <?php echo esc_attr( ( $rbfw_enable_security_deposit == 'yes' ) ? 'checked' : '' ); ?>>

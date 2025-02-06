@@ -47,7 +47,11 @@ function fetch_order_details_callback() {
         ?>
         <div class="rbfw_order_meta_box_wrap">
             <div class="rbfw_order_meta_box_head">
-                <h1><?php esc_html_e( 'Order #' .$order_no. ' Details', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
+                <h1>
+                    <?php esc_html_e( 'Order', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    <?php echo '#' .esc_html($order_no); ?>
+                    <?php esc_html_e('Details', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                </h1>
             </div>
             <div class="rbfw_order_meta_box_body">
 
@@ -57,7 +61,6 @@ function fetch_order_details_callback() {
                 $subtotal = 0;
 
                 foreach ($ticket_infos as $ticket_info) {
-
 
                     $item_name = !empty($ticket_info['ticket_name']) ? $ticket_info['ticket_name'] : '';
                     $rbfw_id = $ticket_info['rbfw_id'];
@@ -95,6 +98,7 @@ function fetch_order_details_callback() {
                         $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                         $service_info = $BikeCarMdClass->rbfw_get_bikecarmd_service_info($item_id, $service_info);
                         $item_quantity = !empty($ticket_info['rbfw_item_quantity']) ? $ticket_info['rbfw_item_quantity'] : 1;
+                        $total_days = !empty($ticket_info['total_days']) ? $ticket_info['total_days'] : 1;
                         $pickup_point = !empty($ticket_info['rbfw_pickup_point']) ? $ticket_info['rbfw_pickup_point'] : '';
                         $dropoff_point = !empty($ticket_info['rbfw_dropoff_point']) ? $ticket_info['rbfw_dropoff_point'] : '';
 
@@ -133,7 +137,7 @@ function fetch_order_details_callback() {
                         <tbody>
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_item_name',__('Item Name','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                            <td><?php echo esc_html($item_name); ?></td>
+                            <td><?php echo esc_html($item_name) .' * '. esc_html($item_quantity); ?></td>
                         </tr>
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_item_type',__('Item Type','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
@@ -163,7 +167,7 @@ function fetch_order_details_callback() {
                         <?php if(!empty($discount_type)){ ?>
                             <tr>
                                 <td><strong><?php echo $rbfw->get_option('rbfw_text_discount_type', 'rbfw_basic_translation_settings', __('Discount Type','booking-and-rental-manager-for-woocommerce')); ?>:</strong></td>
-                                <td><?php echo $discount_type; ?></td>
+                                <td><?php echo esc_html($discount_type); ?></td>
                             </tr>
                         <?php } ?>
 
@@ -178,7 +182,7 @@ function fetch_order_details_callback() {
                                                 ?>
                                                 <tr>
                                                     <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                    <td><?php echo $value;?></td>
+                                                    <td><?php echo esc_html($value);?></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -199,7 +203,7 @@ function fetch_order_details_callback() {
                                                 ?>
                                                 <tr>
                                                     <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                    <td><?php echo $value; ?></td>
+                                                    <td><?php echo esc_html($value); ?></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -221,7 +225,7 @@ function fetch_order_details_callback() {
                                                 ?>
                                                 <tr>
                                                     <td><strong><?php echo $key; ?></strong></td>
-                                                    <td><?php echo $value; ?></td>
+                                                    <td><?php echo esc_html($value); ?></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -245,7 +249,7 @@ function fetch_order_details_callback() {
                                                 ?>
                                                 <tr>
                                                     <td><strong><?php esc_html_e($key); ?></strong></td>
-                                                    <td><?php echo $value; ?></td>
+                                                    <td><?php echo esc_html($value); ?></td>
                                                 </tr>
                                                 <?php
                                             }
@@ -301,10 +305,24 @@ function fetch_order_details_callback() {
                                 </tr>
                             <?php } } ?>
 
+
+                       <?php if($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){  ?>
+                           <tr>
+                                <td><strong><?php rbfw_string('rbfw_text_duration_cost',__('Duration Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                                <td><?php $duration_cost_per_item = $ticket_info['duration_cost']/$item_quantity; echo wc_price($duration_cost_per_item).' * '.$item_quantity. ' = '. $duration_cost; ?></td>
+                            </tr>
+
+                       <?php }else{ ?>
+
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_duration_cost',__('Duration Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td><?php echo $duration_cost; ?></td>
                         </tr>
+
+                        <?php } ?>
+
+
+
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_resource_cost',__('Resource Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td><?php echo $service_cost; ?></td>
