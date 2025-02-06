@@ -96,7 +96,7 @@
 			$interval                 = date_diff( $origin, $target );
 			$total_days               = $interval->format( '%a' );
 			if ( function_exists( 'rbfw_get_discount_array' ) ) {
-				$discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $rbfw_room_total_price );
+				$discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $rbfw_room_total_price,$rbfw_item_quantity );
 			} else {
 				$discount_arr = [];
 			}
