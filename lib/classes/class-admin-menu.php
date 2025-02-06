@@ -37,7 +37,7 @@
 				add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ), __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ), 'manage_options', 'rbfw_settings_page', array( $this, 'plugin_page' ) );
 				do_action( 'rbfw_admin_menu_after_settings' );
 				// If PRO plugin is activated
-				if ( ! is_plugin_active( 'booking-and-rental-manager-for-woocommerce/rent-pro.php' ) ) {
+				if ( ! is_plugin_active( 'booking-and-rental-manager-for-woocommerce-pro/rent-pro.php' ) ) {
 					/* Add Pro Submenu */
 					add_submenu_page( 'edit.php?post_type=rbfw_item', __( 'Get PRO', 'booking-and-rental-manager-for-woocommerce' ), '<span class="rbfw_plugin_pro_menu">' . __( 'Get PRO', 'booking-and-rental-manager-for-woocommerce' ) . '</span>', 'manage_options', 'rbfw_go_pro_page', array( $this, 'rbfw_go_pro_page' ) );
 				}
