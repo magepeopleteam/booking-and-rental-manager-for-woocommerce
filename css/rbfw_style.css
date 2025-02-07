@@ -7065,6 +7065,10 @@ select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
     text-decoration: line-through;
 }
 
+.rbfw_single_default_template .product-quantity{
+    display: none;
+}
+
 /*.ui-datepicker td span, .ui-datepicker td a {
     padding-bottom: 1em;
 }

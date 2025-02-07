@@ -387,6 +387,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                 }
             }
         }
+        $remaining_stock = max($variant_instock);
     }
 
     /*end variation inventory*/

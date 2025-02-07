@@ -131,7 +131,7 @@ function fetch_order_details_callback() {
                     <table class="wp-list-table widefat fixed striped table-view-list">
                         <thead>
                         <tr>
-                            <th colspan="2"><?php rbfw_string('rbfw_text_item_information',__('Item Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></th>
+                            <th colspan="2">nn<?php rbfw_string('rbfw_text_item_information',__('Item Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></th>
                         </tr>
                         </thead>
                         <tbody>
