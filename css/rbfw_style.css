@@ -4515,6 +4515,9 @@ span {
     text-align: center;
     border: 0;
     font-size: 16px;
+    width: 33px;
+    height: 33px;
+    line-height: 25px;
 }
 
 .single-rbfw_item .ui-state-disabled .ui-state-default, .single-rbfw_item .ui-widget-content .ui-state-disabled .ui-state-default{
