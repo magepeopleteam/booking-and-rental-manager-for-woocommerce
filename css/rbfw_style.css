@@ -687,6 +687,15 @@ div.mp_right_section {
     justify-content: space-between;
     margin-bottom: 0;
 }
+#rbfw_faq_accordion .rbfw_faq_header.active {
+    background: var(--rbfw_color_primary);
+    color: #fff;
+    border-radius: 5px 5px 0 0;
+}
+
+#rbfw_faq_accordion .rbfw_faq_header.active i {
+    color: #fff;
+}
 
 #rbfw_faq_accordion .rbfw_faq_header i {
     color: var(--rbfw_color_primary);
@@ -702,6 +711,10 @@ div.mp_right_section {
     border-top: 1px solid #e1e1e1;
 }
 
+#rbfw_faq_accordion .rbfw_faq_content_wrapper.active {
+    border: 1px solid var(--rbfw_color_primary);
+    border-radius:0 0 5px 5px;
+}
 
 .rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_content_wrapper {
     background-color: rgb(255, 255, 255);
@@ -4524,7 +4537,9 @@ span {
 background-color: transparent;
 color: #666;
 }
-
+.single-rbfw_item .ui-datepicker-other-month .ui-state-default{
+    color: #333;
+}
 .single-rbfw_item .ui-state-hover:hover, 
 .single-rbfw_item .ui-state-default.ui-state-active,
 .single-rbfw_item .ui-state-highlight{
