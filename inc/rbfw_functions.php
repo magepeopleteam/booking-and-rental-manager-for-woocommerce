@@ -85,6 +85,7 @@
 				'data-request' => true, // Allows inline JavaScript
 				'data-date' => true, // Allows inline JavaScript
 				'data-id' => true, // Allows inline JavaScript
+				'data-time' => true, // Allows inline JavaScript
 			),
 			'input'   => array(
 				'style'       => true, // Allows inline styles

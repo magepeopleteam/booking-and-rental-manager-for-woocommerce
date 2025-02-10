@@ -30,8 +30,6 @@ add_shortcode('rbfw_left_filter', 'rbfw_rent_left_filter' );
 function rbfw_rent_list_shortcode_func($atts = null) {
 
 
-
-
     $attributes = shortcode_atts( array(
         'style' => 'grid',
         'show'  => -1,
@@ -81,11 +79,12 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $rbfw_pickup_date = isset($atts['rbfw_pickup_date'])?$atts['rbfw_pickup_date']:'';
 
     $location = ( $rbfw_search_location != '') ? $rbfw_search_location : $location;
-   if( $category ){
+    if( $category ){
         $category = ( $rbfw_search_type != '' ) ? $rbfw_search_type : $category ;
     }else{
         $search_category = ( $rbfw_search_type != '' ) ? $rbfw_search_type  : '' ;
     }
+
 
     $pickup_date = ( $rbfw_pickup_date != '' ) ? $rbfw_pickup_date : '';
 
@@ -157,16 +156,17 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         endif;
     }else{
         if( !empty( $search_category ) ):
-            $search_category_name=$search_category;
+            $search_category_name = $search_category;
             $args['meta_query'][] = array(
                 'key' => 'rbfw_categories',
-                'value' => serialize($search_category_name),
+                'value' => $search_category_name,
                 'compare' => 'LIKE'
             );
         endif;
     }
 
 
+    //echo '<pre>';print_r($args);echo '<pre>';exit;
 
     $query = new WP_Query($args);
     $total_posts = $query->found_posts;
@@ -366,6 +366,7 @@ function rbfw_rent_search_result_shortcode_func($atts = null)
     $atts['rbfw_search_location'] = $rbfw_search_location;
     $atts['rbfw_search_type'] = $rbfw_search_type;
     $atts['rbfw_pickup_date'] = $rbfw_pickup_date;
+
 
     return rbfw_rent_list_shortcode_func($atts);
 }
