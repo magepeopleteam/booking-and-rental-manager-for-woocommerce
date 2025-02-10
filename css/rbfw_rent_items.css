@@ -230,7 +230,7 @@ p {
 
 .rbfw_search_container {
     background-color: #f3f3f3;
-    padding: 25px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -278,6 +278,7 @@ p {
         flex-direction: row;
         align-items: center;
         justify-content: stretch;
+        padding: 25px;
     }    
 }
 /* shortcode end */

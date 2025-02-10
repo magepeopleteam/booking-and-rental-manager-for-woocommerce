@@ -171,7 +171,8 @@
             let tomorrow = new Date();
             tomorrow.setDate(today.getDate() + 1); // Add 1 day to get tomorrow
             let todayFormatted = flatpickr.formatDate(today, "d-m-Y");
-            let calendar = flatpickr("#rbfw_rent_item_search_calendar_icon", {
+            let calendar = flatpickr(".rbfw_flatpicker", {
+                disableMobile: "true",
                 dateFormat: "d-m-Y",
                 defaultDate: todayFormatted,
                 minDate: "today",
@@ -179,13 +180,9 @@
                 onChange: function(selectedDates, dateStr, instance) {
                     if (selectedDates.length === 1) {
                         let selectedDate = flatpickr.formatDate(selectedDates[0], "F j, Y");
-                        $("#rbfw_rent_item_search_pickup_date").val(selectedDate);  // Set the input value to the formatted date
+                        $("#rbfw_rent_item_search_pickup_date").val(selectedDate);
                     }
                 }
-            });
-
-            $('#rbfw_rent_item_search_calendar_icon').on('click', function() {
-                calendar.open(); // Trigger the calendar to open
             });
 
             $("#rbfw_rent_item_search_pickup_date").on('focus', function (){
