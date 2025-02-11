@@ -131,10 +131,11 @@ function fetch_order_details_callback() {
                     <table class="wp-list-table widefat fixed striped table-view-list">
                         <thead>
                         <tr>
-                            <th colspan="2"><?php rbfw_string('rbfw_text_item_information',__('Item Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></th>
+                            <th colspan="2">nn<?php rbfw_string('rbfw_text_item_information',__('Item Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></th>
                         </tr>
                         </thead>
                         <tbody>
+
                         <?php if($rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others'){ ?>
                             <tr>
                                 <td><strong><?php rbfw_string('rbfw_text_item_name',__('Item Name','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
@@ -146,6 +147,7 @@ function fetch_order_details_callback() {
                                 <td><?php echo esc_html($item_name); ?></td>
                             </tr>
                         <?php } ?>
+
                         <tr>
                             <td><strong><?php rbfw_string('rbfw_text_item_type',__('Item Type','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
                             <td><?php echo rbfw_get_type_label($rent_type); ?></td>
