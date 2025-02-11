@@ -687,6 +687,15 @@ div.mp_right_section {
     justify-content: space-between;
     margin-bottom: 0;
 }
+#rbfw_faq_accordion .rbfw_faq_header.active {
+    background: var(--rbfw_color_primary);
+    color: #fff;
+    border-radius: 5px 5px 0 0;
+}
+
+#rbfw_faq_accordion .rbfw_faq_header.active i {
+    color: #fff;
+}
 
 #rbfw_faq_accordion .rbfw_faq_header i {
     color: var(--rbfw_color_primary);
@@ -702,6 +711,10 @@ div.mp_right_section {
     border-top: 1px solid #e1e1e1;
 }
 
+#rbfw_faq_accordion .rbfw_faq_content_wrapper.active {
+    border: 1px solid var(--rbfw_color_primary);
+    border-radius:0 0 5px 5px;
+}
 
 .rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_content_wrapper {
     background-color: rgb(255, 255, 255);
@@ -2562,7 +2575,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw-bikecarsd-calendar-header {
-    background: #f5f5f5;
+    background: var(--rbfw_primary_opacity);
     padding: 20px;
     position: relative;
     margin-bottom: 20px;
@@ -2605,11 +2618,11 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     position: absolute;
     width: 0;
     height: 0;
-    border-width: 12px;
+    border-width: 8px;
     border-style: solid;
-    border-color: #f5f5f5 transparent transparent transparent;
-    bottom: -20px;
-    left: 25px;
+    border-color: var(--rbfw_primary_opacity) transparent transparent transparent;
+    top: 100%;
+    left: 35px;
 }
 
 .rbfw-bikecarsd-calendar-footer {
@@ -4409,12 +4422,12 @@ span {
 /* =======================Single day booking calendar=========================== */
 .single-rbfw_item .ui-datepicker .ui-datepicker-header{
     background: none;
-    background-color: var(--rbfw_color_primary);
-    color: #fff;
+    background-color:var(--rbfw_primary_opacity);
+    color: #333;
     border: 0;
     padding: .7em 0;
     position: relative;
-    border-radius: 0;
+    border-radius: 20px 20px 0 0;
 }
 
 .single-rbfw_item .ui-datepicker .ui-datepicker-title{
@@ -4434,11 +4447,11 @@ span {
     height: 36px;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #fff;
+    color: #333;
     border-radius: 0;
 }
 .single-rbfw_item .ui-datepicker .ui-datepicker-next::before{
-    font-size: 25px;
+    font-size: 15px;
     content: "\f054";
     position: absolute;
     top: 50%;
@@ -4456,12 +4469,12 @@ span {
     height: 36px;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #fff;
+    color: #333;
     border-radius: 0;
 }
 
 .single-rbfw_item .ui-datepicker .ui-datepicker-prev::before{
-    font-size: 25px;
+    font-size: 15px;
     content: "\f053";
     position: absolute;
     top: 50%;
@@ -4475,54 +4488,65 @@ span {
     border-collapse: collapse;
     margin: 0;
 }
+.single-rbfw_item .ui-datepicker table tbody{
+    background-color:#edf5ff;
+}
+.single-rbfw_item .ui-datepicker table th{
+    padding: 5px;
+    font-weight: normal;
+    font-size: 16px;
+    color: #333;
+}
 
 .single-rbfw_item .ui-datepicker table thead:first-child tr:first-child th{
     border-block-start:0
 }
 
 .single-rbfw_item thead th.ui-datepicker-week-end{
-    color: var(--rbfw_color_primary);
+    color: #333;
 }
 
 .single-rbfw_item .ui-datepicker table thead{
-    background-color:#ddd;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 120%;
+    background-color:#edf5ff;
 }
 
 .single-rbfw_item .ui-datepicker table td{
     border: 0;
-    padding: 5px;
+    padding: 10px;
 }
 
 .single-rbfw_item  .ui-widget-content {
-    border-radius: 0;
+    border-radius: 20px 20px 0 0;
     border: 1px solid #dfdedd;
     padding: 0;
 }
 
 .single-rbfw_item .ui-state-default,
 .single-rbfw_item .ui-widget-content .ui-state-default{
-    background: var(--rbfw_color_primary);
-    color: #fff;
+    background: transparent;
+    color: #333;
     text-align: center;
     border: 0;
-    padding: 10px;
+    font-size: 16px;
+    width: 33px;
+    height: 33px;
+    line-height: 25px;
 }
 
 .single-rbfw_item .ui-state-disabled .ui-state-default, .single-rbfw_item .ui-widget-content .ui-state-disabled .ui-state-default{
-background-color: #000;
+background-color: transparent;
+color: #666;
 }
-
+.single-rbfw_item .ui-datepicker-other-month .ui-state-default{
+    color: #333;
+}
 .single-rbfw_item .ui-state-hover:hover, 
 .single-rbfw_item .ui-state-default.ui-state-active,
 .single-rbfw_item .ui-state-highlight{
-    background:var(--rbfw_single_page_secondary_color);
+    background:var(--rbfw_color_primary);
     color: #fff;
     text-align: center;
-    border: 0;
-    padding: 10px;
+    border-radius: 100px;
 }
 
 .single-rbfw_item .rbfw_bikecarsd_book_now_btn_wrap button.mp_rbfw_book_now_submit.rbfw_disabled_button{
