@@ -208,15 +208,15 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
         <?php if ( ! empty( $start_datetime )): ?>
             <tr>
                 <th>
-                    <?php if(($start_time != '00:00')){ ?>
+                    <?php if(($start_time)){ ?>
                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', __('Start Date and Time','booking-and-rental-manager-for-woocommerce')));?>:
                     <?php } else{ ?>
                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_start_date', 'rbfw_basic_translation_settings', __('Start Date','booking-and-rental-manager-for-woocommerce')));?>:
                     <?php } ?>
                 </th>
                 <td>
-                    <?php echo esc_html(rbfw_date_format($start_datetime)); ?>
-                    <?php if(($start_time != '00:00')){
+                    <?php echo esc_html(rbfw_date_format($start_datetime)) ; ?>
+                    <?php if(($start_time)){
                         echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($start_time)));
                     } ?>
                 </td>

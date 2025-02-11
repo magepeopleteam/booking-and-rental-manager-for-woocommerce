@@ -665,6 +665,45 @@ ul.rbfw_show_all_cat_features li:last-child {
     padding: 20px;
 }
 
+.rbfw_price_range_holder{
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+.rbfw_price_start_end {
+    width: 80px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+.rbfw_price_start_end:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    outline: none;
+}
+.rbfw_price_start_end:hover {
+    border-color: #007bff;
+    background-color: #f9f9f9;
+}
+.rbfw_price_start_end::-webkit-input-placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+.rbfw_price_start_end::-moz-placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+.rbfw_price_start_end:-ms-input-placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+.rbfw_price_start_end:-moz-pl
+
+
 .rbfw_toggle-header {
     cursor: pointer;
     user-select: none;
@@ -690,6 +729,7 @@ ul.rbfw_show_all_cat_features li:last-child {
     float: right;
     font-size: 1.2em;
     color: var(--rbfw_color_primary);
+    cursor: pointer;
 }
 
 /* ==============range========= */

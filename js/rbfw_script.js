@@ -223,10 +223,10 @@
 
 //Left Filtering
         $('.rbfw_toggle-content').show();
-        $('.rbfw_toggle-header').on('click', function() {
+        $('.rbfw_toggle-icon').on('click', function() {
             var content = $(this).next('.rbfw_toggle-content');
             content.slideToggle();
-            var icon = $(this).find('.rbfw_toggle-icon');
+            var icon = $(this);
             if (icon.text() === '+') {
                 icon.text('−');
             } else {
@@ -234,6 +234,8 @@
             }
         });
         function get_left_filter_data( filter_date ){
+
+            filter_date = JSON.stringify(filter_date);
 
             $("#rbfw_left_filter_clearButton").show();
             $("#rbfw_left_filter_cover").show();
@@ -252,7 +254,7 @@
                 data: {
                     'action' : 'rbfw_get_left_side_filter_data',
                     'filter_date': filter_date,
-                    'rbfw_nomce': rbfw_vars.rbfw_nonce,
+                    'rbfw_nonce': rbfw_vars.rbfw_nonce,
                     'rbfw_item_style': rbfw_item_style,
                     'nonce' : rbfw_ajax.nonce
                 },
@@ -287,7 +289,7 @@
             location: [],
             category: [],
             type: [],
-            price: { start: 0, end: 0 },
+            price: {},
             title_text: '',
         };
         $(document).on('change', '.rbfw_location', function() {
@@ -355,7 +357,7 @@
         });
 
         // Price slider handling
-        if ($('#slider-range').length > 0) {
+        /*if ($('#slider-range').length > 0) {
             var start_val = 0;
             var end_val = 0;
             $("#slider-range").slider({
@@ -380,9 +382,29 @@
             $("#rbfw_left_filter_price").val("" + $("#slider-range").slider("values", 0) + " - " + $("#slider-range").slider("values", 1));
             get_filters.price.start = $("#slider-range").slider("values", 0);
             get_filters.price.end = $("#slider-range").slider("values", 1);
-        }
+        }*/
 
+        $('.rbfw_price_start_end').on('focusout', function () {
 
+            let startPrice = $("#rbfw_price_start").val();
+            let endPrice = $("#rbfw_price_end").val();
+
+            if( startPrice === '' && endPrice === '' ){
+                get_filters.price = {};
+            }else{
+                if( startPrice === '' ){
+                    startPrice =  0;
+                }
+                if( endPrice === '' ){
+                    endPrice =  100000;
+                }
+                get_filters.price.start = parseInt( startPrice );
+                get_filters.price.end = parseInt( endPrice );
+            }
+
+            get_left_filter_data( get_filters );
+
+        });
 
         $(document).on('click', '.rbfw_left_filter_search_btn', function() {
 
@@ -391,7 +413,6 @@
             get_left_filter_data(get_filters);
 
         });
-
 
         $(document).on('click', '.rbfw_left_filter_more_feature_loaders', function(e) {
 
@@ -430,19 +451,22 @@
 
         $(document).on('click', '.rbfw_left_filter_clearButton',function() {
             $('.rbfw_location, .rbfw_category, .rbfw_rent_type, .rbfw_rent_feature').prop('checked', false);
-            let clear_get_filters = {
+            get_filters = {
                 location: [],
                 category: [],
                 type: [],
-                price: { start: 0, end: 0 },
+                price: {},
                 title_text: '',
 
             };
-            get_left_filter_data(clear_get_filters);
+            get_left_filter_data( get_filters );
+            $("#rbfw_price_start").val('');
+            $("#rbfw_price_end").val('');
             $("#rbfw_left_filter_clearButton").hide();
         });
 
     });
+
 
     //========= faq accordion=============
     $('#rbfw_faq_accordion .rbfw_faq_item .rbfw_faq_header').first().addClass('active');
@@ -456,6 +480,7 @@
         $(this).next('.rbfw_faq_content_wrapper').toggleClass(' active');
         $(this).find('i').toggleClass('fa-plus fa-minus');
     });
+
 })(jQuery)
 
 /* Additional Gallary Images */

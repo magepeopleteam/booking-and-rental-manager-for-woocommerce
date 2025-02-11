@@ -96,7 +96,7 @@
 			$interval                 = date_diff( $origin, $target );
 			$total_days               = $interval->format( '%a' );
 			if ( function_exists( 'rbfw_get_discount_array' ) ) {
-				$discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $rbfw_room_total_price );
+				$discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $rbfw_room_total_price,$rbfw_item_quantity );
 			} else {
 				$discount_arr = [];
 			}
@@ -142,7 +142,7 @@
 			$rbfw_start_datetime = $rbfw_bikecarsd_selected_date;
 			$rbfw_end_datetime   = $end_date;
 
-			$rbfw_type_info_all  = $sd_input_data_sabitized['rbfw_bikecarsd_info'] ;
+			$rbfw_type_info_all  = isset($sd_input_data_sabitized['rbfw_bikecarsd_info'])?$sd_input_data_sabitized['rbfw_bikecarsd_info']:[] ;
 
             $rbfw_type_info      = array();
 			if ( isset( $sd_input_data_sabitized['service_type'] ) ) {
@@ -271,7 +271,7 @@
 			$sub_total_price = $rbfw_duration_price + $rbfw_service_price + $rbfw_extra_service_price;
 			$discount_amount = 0;
 			if ( function_exists( 'rbfw_get_discount_array' ) ) {
-				$discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $sub_total_price );
+				$discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $sub_total_price, $rbfw_item_quantity );
 				if ( ! empty( $discount_arr ) ) {
 					$discount_type   = $discount_arr['discount_type'];
 					$discount_amount = $discount_arr['discount_amount'];
@@ -302,7 +302,7 @@
 			$cart_item_data['security_deposit_desc']          = $security_deposit['security_deposit_desc'];
 			$cart_item_data['total_days']                     = $total_days;
 		}
-		$cart_item_data['start_date']    = $start_date;
+		$cart_item_data['start_date']    = isset($start_date)?$start_date:'';
 		$cart_item_data['end_date']      = $end_date;
 		$cart_item_data['rbfw_tp']       = $total_price;
 		$cart_item_data['line_total']    = $total_price;

@@ -30,8 +30,6 @@ add_shortcode('rbfw_left_filter', 'rbfw_rent_left_filter' );
 function rbfw_rent_list_shortcode_func($atts = null) {
 
 
-
-
     $attributes = shortcode_atts( array(
         'style' => 'grid',
         'show'  => -1,
@@ -81,11 +79,12 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $rbfw_pickup_date = isset($atts['rbfw_pickup_date'])?$atts['rbfw_pickup_date']:'';
 
     $location = ( $rbfw_search_location != '') ? $rbfw_search_location : $location;
-   if( $category ){
+    if( $category ){
         $category = ( $rbfw_search_type != '' ) ? $rbfw_search_type : $category ;
     }else{
         $search_category = ( $rbfw_search_type != '' ) ? $rbfw_search_type  : '' ;
     }
+
 
     $pickup_date = ( $rbfw_pickup_date != '' ) ? $rbfw_pickup_date : '';
 
@@ -157,16 +156,17 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         endif;
     }else{
         if( !empty( $search_category ) ):
-            $search_category_name=$search_category;
+            $search_category_name = $search_category;
             $args['meta_query'][] = array(
                 'key' => 'rbfw_categories',
-                'value' => serialize($search_category_name),
+                'value' => $search_category_name,
                 'compare' => 'LIKE'
             );
         endif;
     }
 
 
+    //echo '<pre>';print_r($args);echo '<pre>';exit;
 
     $query = new WP_Query($args);
     $total_posts = $query->found_posts;
@@ -366,6 +366,7 @@ function rbfw_rent_search_result_shortcode_func($atts = null)
     $atts['rbfw_search_location'] = $rbfw_search_location;
     $atts['rbfw_search_type'] = $rbfw_search_type;
     $atts['rbfw_pickup_date'] = $rbfw_pickup_date;
+
 
     return rbfw_rent_list_shortcode_func($atts);
 }
@@ -576,11 +577,10 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
             <div class="rbfw_price-range">
             <h5 class="rbfw_toggle-header">Price <span class="rbfw_toggle-icon">-</span></h5>
             <div class="rbfw_toggle-content" style="display: block">
-                <div class="price-range">
-                    <label for="price">Price range:</label>
-                    <input type="text" id="rbfw_left_filter_price" readonly>
+                <div class="rbfw_price_range_holder">
+                    <input name="rbfw_price_start" type="number" class="rbfw_price_start_end" id="rbfw_price_start" placeholder="Start">
+                    <input name="rbfw_price_end" type="number" class="rbfw_price_start_end" id="rbfw_price_end" placeholder="End">
                 </div>
-                <div id="slider-range"></div>
             </div>
         </div>
         <?php }?>

@@ -45,8 +45,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
         function rbfw_md_duration_price_calculation_ajax(){
 
-
-
             if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                 return;
             }
@@ -96,7 +94,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $discount_amount = 0;
             if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
                 if(function_exists('rbfw_get_discount_array')){
-                    $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price);
+                    $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price,$item_quantity);
                     $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
                 }
             }
