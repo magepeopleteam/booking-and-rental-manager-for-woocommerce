@@ -49,7 +49,7 @@
 		$rbfw_rent_type                = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 		$rbfw_item_quantity            = isset($sd_input_data_sabitized['rbfw_item_quantity'])?intval( $sd_input_data_sabitized['rbfw_item_quantity'] ) : 1;
 
-        $rbfw_service_info_all  = $sd_input_data_sabitized['rbfw_service_info'] ;
+        $rbfw_service_info_all  = is_array($sd_input_data_sabitized['rbfw_service_info'])?$sd_input_data_sabitized['rbfw_service_info']:[] ;
 
         $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 		$rbfw_service_info             = array();
