@@ -446,7 +446,7 @@ function total_service_quantity($paraent,$service,$date,$inventory,$inventory_ba
             }else{
                 foreach ($item['rbfw_service_infos'] as $key=>$single){
                     $single_info = is_array($single)?$single:[];
-                    foreach ($single as $basic_item){
+                    foreach ($single_info as $basic_item){
                         if(in_array($service,$basic_item)){
                             $total_single_service += $basic_item['quantity'];
                         }
