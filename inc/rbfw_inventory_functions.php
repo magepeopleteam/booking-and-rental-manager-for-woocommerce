@@ -433,10 +433,8 @@ function total_service_quantity($paraent,$service,$date,$inventory,$inventory_ba
                 $pickup_datetime = strtotime($date . ' ' . $start_time);
                 $dropoff_datetime = strtotime($date . ' ' . $end_time);
                 if(!(($inventory_start_datetime>$pickup_datetime && $inventory_start_datetime>$dropoff_datetime) || ($inventory_end_datetime<$pickup_datetime && $inventory_end_datetime<$dropoff_datetime))){
-                    $rbfw_service_infos = is_array($item['rbfw_service_infos'])?$item['rbfw_service_infos']:[];
-                    foreach ($rbfw_service_infos as $key=>$single){
-                        $single_info = is_array($single)?$single:[];
-                        foreach ($single_info as $basic_item){
+                    foreach ($item['rbfw_service_infos'] as $key=>$single){
+                        foreach ($single as $basic_item){
                             if(in_array($service,$basic_item)){
                                 $total_single_service += $basic_item['quantity'];
                             }
@@ -445,8 +443,7 @@ function total_service_quantity($paraent,$service,$date,$inventory,$inventory_ba
                 }
             }else{
                 foreach ($item['rbfw_service_infos'] as $key=>$single){
-                    $single_info = is_array($single)?$single:[];
-                    foreach ($single_info as $basic_item){
+                    foreach ($single as $basic_item){
                         if(in_array($service,$basic_item)){
                             $total_single_service += $basic_item['quantity'];
                         }
