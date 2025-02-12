@@ -208,7 +208,9 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 == Changelog ==
 
 = 2.2.5 =
-* Label fixed
+* Label fixed.
+* Warning removed.
+* Single daye time fixed.
 
 
 = 2.2.2 =
