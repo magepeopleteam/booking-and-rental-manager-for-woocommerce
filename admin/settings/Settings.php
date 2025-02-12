@@ -42,9 +42,9 @@
                 <section>
                     <div>
                         <label>
-							<?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<?php echo esc_html__( 'Is shipping disable', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </label>
-                        <p><?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        <p><?php echo esc_html__( 'Is shipping disable', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
 					<?php $shipping_enable_switch = get_post_meta( $post_id, 'shipping_enable', true ); ?>
                     <label class="switch">
