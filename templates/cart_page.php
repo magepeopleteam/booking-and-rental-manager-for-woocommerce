@@ -13,7 +13,6 @@ do_action( 'rbfw_before_cart_item_display', $cart_item, $rbfw_id );
 $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['security_deposit_amount'] : '';
 
 
-
 ?>
 
 <?php /* Type: Resort */ ?>
