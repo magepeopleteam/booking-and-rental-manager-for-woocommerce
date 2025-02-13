@@ -361,7 +361,7 @@ function fetch_order_details_callback() {
                     <tbody>
                     <tr>
                         <td><strong><?php rbfw_string('rbfw_text_summary',__('Subtotal','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                        <td><?php echo $subtotal_total; ?></td>
+                        <td><?php echo wc_price($wc_order_details->get_total() - $total_security_deposit_amount - $wc_order_details->get_total_tax()); ?></td>
                     </tr>
 
                     <?php if($wc_order_details->get_total_tax()){ ?>
