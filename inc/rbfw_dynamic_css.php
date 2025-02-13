@@ -34,7 +34,7 @@ function rbfw_dynamic_css(){
 	$rbfw_single_page_base_color_3 = $rbfw_single_page_base_color_3? $rbfw_single_page_base_color_3: '#6F1E51';
 	$rbfw_single_page_base_color_6 = $rbfw_single_page_base_color_6? $rbfw_single_page_base_color_6: '#1ABC9C';
 
-	$uidatepicker = rbfw_hex2rgba($rbfw_single_page_base_color_5, 0.7);
+	$uidatepicker = rbfw_hex2rgba($rbfw_single_page_base_color_5, 0.1);
 
 	$inline_css =  
 	":root{
