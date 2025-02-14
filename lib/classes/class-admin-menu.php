@@ -80,10 +80,15 @@
 							global $post;
 							$post_id             = $post->ID;
 							$billing_name        = get_post_meta( $post_id, 'rbfw_billing_name', true );
-							$rbfw_order_id       = get_post_meta( $post_id, 'rbfw_order_id', true );
-                            $order = wc_get_order($rbfw_order_id);
+							$wc_order_id       = get_post_meta( $post_id, 'rbfw_order_id', true );
+
+                            $order = wc_get_order($wc_order_id);
+                            if (!$order) {
+                                continue;
+                            }
+
 							$status              = ( $order && $order->get_status() === 'trash')? $order->get_status() : get_post_meta( $post_id, 'rbfw_order_status', true );
-							$total_price         = get_post_meta( $post_id, 'rbfw_ticket_total_price', true );
+							$total_price         = $order->get_total();
 							$ticket_infos        = get_post_meta( $post_id, 'rbfw_ticket_info', true );
 							$ticket_info_array   = maybe_unserialize( $ticket_infos );
 							$rbfw_start_datetime = '';
@@ -96,7 +101,7 @@
 							}
 							?>
                             <tr class="order-row">
-                                <td><?php echo esc_html( $rbfw_order_id ); ?></td>
+                                <td><?php echo esc_html( $wc_order_id ); ?></td>
                                 <td><?php echo esc_html( $billing_name ); ?></td>
                                 <td><?php echo esc_html( get_the_date( 'F j, Y' ) . ' ' . get_the_time() ); ?></td>
                                 <td><?php echo esc_html( ! empty( $rbfw_start_datetime ) ? date_i18n( 'F j, Y g:i a', strtotime( $rbfw_start_datetime ) ) : '' ); ?></td>

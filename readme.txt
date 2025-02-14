@@ -207,6 +207,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.2.6 =
+* Security discount exclude vat.
+* Shipping enable fixed.
+
+
 = 2.2.5 =
 * Label fixed.
 * Warning removed.

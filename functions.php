@@ -110,3 +110,16 @@ function rbfw_page_create()
 
 
 }
+
+add_action('woocommerce_cart_calculate_fees', 'custom_taxable_fee', 20);
+function custom_taxable_fee() {
+    $total_deposit_amount = 0;
+    $cart = WC()->cart->get_cart();
+    foreach ($cart as $cart_item_key => $cart_item) {
+        foreach ($cart_item['rbfw_ticket_info'] as $item_dep){
+            $total_deposit_amount = $total_deposit_amount + $item_dep['security_deposit_amount'];
+        }
+    }
+    WC()->cart->add_fee(__('Security Deposit', 'woocommerce'), $total_deposit_amount, false); // 'true' makes it taxable
+}
+
