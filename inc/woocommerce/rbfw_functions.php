@@ -768,12 +768,12 @@
 			rbfw_update_inventory( $rbfw_post_id, $order_status );
 		}
 	}
-	function rbfw_booking_management( $order_id ) {
+	function rbfw_booking_management( $wc_order_id ) {
 
 
 
 
-        $post = get_post($order_id);
+        $post = get_post($wc_order_id);
         if ($post) {
             $parent_id = $post->post_parent;
             if ($parent_id) {
@@ -781,16 +781,16 @@
                     return;
                 }
                 setcookie('parent_id', $parent_id);
-                $order_id = $parent_id;
+                $wc_order_id = $parent_id;
             }
         }
 
 		global $rbfw;
-		if ( ! $order_id ) {
+		if ( ! $wc_order_id ) {
 			return;
 		}
 
-		$order        = wc_get_order( $order_id );
+		$order        = wc_get_order( $wc_order_id );
         
 
 		$order_status = $order->get_status();
@@ -803,16 +803,16 @@
 				if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
 					$ticket_info = wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ? maybe_unserialize( wc_get_order_item_meta( $item_id, '_rbfw_ticket_info', true ) ) : [];
 					$wc_deposit_meta = wc_get_order_item_meta( $item_id, 'wc_deposit_meta', true ) ? maybe_unserialize( wc_get_order_item_meta( $item_id, 'wc_deposit_meta', true ) ) : [];
-					rbfw_prepar_and_add_user_data( $ticket_info, $rbfw_id, $order_id, $start_date, $end_date, $rbfw_service_price_data_actual );
+					rbfw_prepar_and_add_user_data( $ticket_info, $rbfw_id, $wc_order_id, $start_date, $end_date, $rbfw_service_price_data_actual );
 				}
 			}
 		}
 	}
-	function rbfw_prepar_and_add_user_data( $ticket_info, $rbfw_id, $order_id, $start_date = null, $end_date = null, $rbfw_service_price_data_actual = array() ) {
+	function rbfw_prepar_and_add_user_data( $ticket_info, $rbfw_id, $wc_order_id, $start_date = null, $end_date = null, $rbfw_service_price_data_actual = array() ) {
 		global $rbfw;
 		$rbfw_rent_type  = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
-		$order           = wc_get_order( $order_id );
-		$order_meta      = get_post_meta( $order_id );
+		$order           = wc_get_order( $wc_order_id );
+		$order_meta      = get_post_meta( $wc_order_id );
 		$billing_name    = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
 		$billing_email   = $order->get_billing_email();
 		$billing_phone   = $order->get_billing_phone();
@@ -826,7 +826,7 @@
 				$zdata[ $key ]['rbfw_ticket_total_price'] = ( (float) $_ticket['ticket_price'] * (int) $_ticket['ticket_qty'] );
 				$zdata[ $key ]['rbfw_ticket_qty']         = $_ticket['ticket_qty'];
 				$zdata[ $key ]['discount_amount']         = isset( $_ticket['discount_amount'] ) ? $_ticket['discount_amount'] : 0;
-				$zdata[ $key ]['rbfw_order_id']           = $order_id;
+				$zdata[ $key ]['rbfw_order_id']           = $wc_order_id;
 				$zdata[ $key ]['rbfw_order_status']       = $order_status;
 				$zdata[ $key ]['rbfw_payment_method']     = $payment_method;
 				$zdata[ $key ]['rbfw_user_id']            = $user_id;
@@ -839,14 +839,29 @@
 				$zdata[ $key ]['rbfw_id']                 = $rbfw_id;
 				$zdata[ $key ]['rbfw_ticket_info']        = $ticket_info;
 				$meta_data                                = array_merge( $zdata[ $key ] );
-				/*rbfw_order add*/
-				$order_id = $rbfw->rbfw_add_order_data( $meta_data, $ticket_info, $rbfw_service_price_data_actual );
-				/*rbfw_order_mata add and manage inventory*/
-				$order_meta_id = rbfw_add_order_meta_data( $meta_data, $ticket_info );
-				if ( $order_id && $order_meta_id ) {
-					update_post_meta( $order_id, 'rbfw_order_status', $order_status );
-					update_post_meta( $order_meta_id, 'rbfw_order_status', $order_status );
-				}
+
+
+
+                $args = array(
+                    'post_type'      => 'rbfw_order',
+                    'meta_key'       => 'rbfw_link_order_id',
+                    'meta_value'     => $wc_order_id,
+                    'meta_compare'   => '=',
+                );
+
+                $query = new WP_Query($args);
+
+
+                if (!($query->have_posts())) {
+                    /*rbfw_order add*/
+                    $order_id = $rbfw->rbfw_add_order_data( $meta_data, $ticket_info, $rbfw_service_price_data_actual );
+                    /*rbfw_order_mata add and manage inventory*/
+                    $order_meta_id = rbfw_add_order_meta_data( $meta_data, $ticket_info );
+                    if ( $order_id && $order_meta_id ) {
+                        update_post_meta( $order_id, 'rbfw_order_status', $order_status );
+                        update_post_meta( $order_meta_id, 'rbfw_order_status', $order_status );
+                    }
+                }
 			}
 		}
 	}
