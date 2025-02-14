@@ -76,9 +76,7 @@ if (!class_exists('RBFW_Hidden_Product')) {
         }
         public function run_link_product_on_save($post_id) {
             if (get_post_type($post_id) == 'rbfw_item') {
-                $product_type = get_post_meta($post_id, 'shipping_enable', true) ? get_post_meta($post_id, 'shipping_enable', true) : 'no';
 
-                echo $product_type.'llll';exit;
                 // Unslash and sanitize the nonce
                 if (!isset($_POST['rbfw_ticket_type_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_ticket_type_nonce'])), 'rbfw_ticket_type_nonce')) {
                     return;
