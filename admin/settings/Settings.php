@@ -137,6 +137,8 @@
 					$rbfw_available_qty_info_switch = isset( $_POST['rbfw_available_qty_info_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_available_qty_info_switch'] ) ) : 'no';
 					$shipping_enable                = isset( $_POST['shipping_enable'] ) ? sanitize_text_field( wp_unslash( $_POST['shipping_enable'] ) ) : 'no';
                     update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
+                    $product_id = get_post_meta($post_id, 'link_wc_product', true) ? get_post_meta($post_id, 'link_wc_product', true) : $post_id;
+                    update_post_meta($product_id, '_virtual', ($shipping_enable=='yes')?'no':'yes');
 					update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
 				}
 			}
