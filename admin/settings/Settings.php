@@ -42,13 +42,19 @@
                 <section>
                     <div>
                         <label>
-							<?php echo esc_html__( 'Is shipping disable', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							<?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </label>
-                        <p><?php echo esc_html__( 'Is shipping disable', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        <p><?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
-					<?php $shipping_enable_switch = get_post_meta( $post_id, 'shipping_enable', true ); ?>
+					<?php
+                    $shipping_enable_switch = get_post_meta( $post_id, 'shipping_enable', true ) ? get_post_meta( $post_id, 'shipping_enable', true ) : 'no';
+                    if($shipping_enable_switch=='off'){
+                        $shipping_enable_switch = 'no';
+                    }
+                    ?>
+
                     <label class="switch">
-                        <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr( ( $shipping_enable_switch == 'on' ) ? $shipping_enable_switch : 'off' ); ?>" <?php echo esc_attr( ( $shipping_enable_switch == 'on' ) ? 'checked' : '' ); ?>>
+                        <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr($shipping_enable_switch); ?>" <?php echo esc_attr( ( $shipping_enable_switch == 'yes' ) ? 'checked' : '' ); ?>>
                         <span class="slider round"></span>
                     </label>
                 </section>
@@ -105,11 +111,11 @@
                         });
                         jQuery('input[name=shipping_enable]').click(function () {
                             var status = jQuery(this).val();
-                            if (status === 'on') {
-                                jQuery(this).val('off')
+                            if (status === 'yes') {
+                                jQuery(this).val('no')
                             }
-                            if (status === 'off') {
-                                jQuery(this).val('on');
+                            if (status === 'no') {
+                                jQuery(this).val('yes');
                             }
                         });
                     </script>
@@ -129,8 +135,11 @@
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$rbfw_available_qty_info_switch = isset( $_POST['rbfw_available_qty_info_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_available_qty_info_switch'] ) ) : 'no';
-					$shipping_enable                = isset( $_POST['shipping_enable'] ) ? sanitize_text_field( wp_unslash( $_POST['shipping_enable'] ) ) : '';
-					update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
+					$shipping_enable                = isset( $_POST['shipping_enable'] ) ? sanitize_text_field( wp_unslash( $_POST['shipping_enable'] ) ) : 'no';
+                    update_post_meta( $post_id, 'shipping_enable', $shipping_enable );
+                    $product_type = get_post_meta($post_id, 'shipping_enable', true) ? get_post_meta($post_id, 'shipping_enable', true) : 'no';
+
+                    echo $product_type;exit;
 					update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
 				}
 			}

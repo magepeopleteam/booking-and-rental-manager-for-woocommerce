@@ -75,47 +75,50 @@ if (!class_exists('RBFW_Hidden_Product')) {
 	        return $loop->post_count;
         }
         public function run_link_product_on_save($post_id) {
-    if (get_post_type($post_id) == 'rbfw_item') {
-        // Unslash and sanitize the nonce
-        if (!isset($_POST['rbfw_ticket_type_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_ticket_type_nonce'])), 'rbfw_ticket_type_nonce')) {
-            return;
-        }
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
-        }
-        if (!current_user_can('edit_post', $post_id)) {
-            return;
-        }
-        $event_name = get_the_title($post_id);
-        if ($this->count_hidden_wc_product($post_id) == 0 || empty(get_post_meta($post_id, 'link_wc_product', true))) {
-            $this->create_hidden_wc_product($post_id, $event_name);
-        }
-        $product_id = get_post_meta($post_id, 'link_wc_product', true) ? get_post_meta($post_id, 'link_wc_product', true) : $post_id;
-        $shipping_enable = get_post_meta($post_id, 'shipping_enable', true) ? get_post_meta($post_id, 'shipping_enable', true) : 'off';
-        set_post_thumbnail($product_id, get_post_thumbnail_id($post_id));
-        wp_publish_post($product_id);
-        
-        $product_type = ($shipping_enable == 'on') ? 'no' : 'yes';
+            if (get_post_type($post_id) == 'rbfw_item') {
+                $product_type = get_post_meta($post_id, 'shipping_enable', true) ? get_post_meta($post_id, 'shipping_enable', true) : 'no';
 
-        // Unslash and sanitize tax status and tax class
-        $_tax_status = isset($_POST['_tax_status']) ? sanitize_text_field(wp_unslash($_POST['_tax_status'])) : 'none';
-        $_tax_class  = isset($_POST['_tax_class']) ? sanitize_text_field(wp_unslash($_POST['_tax_class'])) : '';
-        
-        update_post_meta($product_id, '_tax_status', $_tax_status);
-        update_post_meta($product_id, '_tax_class', $_tax_class);
-        update_post_meta($product_id, '_stock_status', 'instock');
-        update_post_meta($product_id, '_manage_stock', 'no');
-        update_post_meta($product_id, '_virtual', $product_type);
-        update_post_meta($product_id, '_sold_individually', 'yes');
+                echo $product_type.'llll';exit;
+                // Unslash and sanitize the nonce
+                if (!isset($_POST['rbfw_ticket_type_nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_ticket_type_nonce'])), 'rbfw_ticket_type_nonce')) {
+                    return;
+                }
+                if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+                    return;
+                }
+                if (!current_user_can('edit_post', $post_id)) {
+                    return;
+                }
+                $event_name = get_the_title($post_id);
+                if ($this->count_hidden_wc_product($post_id) == 0 || empty(get_post_meta($post_id, 'link_wc_product', true))) {
+                    $this->create_hidden_wc_product($post_id, $event_name);
+                }
+                $product_id = get_post_meta($post_id, 'link_wc_product', true) ? get_post_meta($post_id, 'link_wc_product', true) : $post_id;
+                $product_type = get_post_meta($post_id, 'shipping_enable', true) ? get_post_meta($post_id, 'shipping_enable', true) : 'no';
+                set_post_thumbnail($product_id, get_post_thumbnail_id($post_id));
+                wp_publish_post($product_id);
 
-        $my_post = array(
-            'ID'         => $product_id,
-            'post_title' => $event_name,
-            'post_name'  => uniqid(),
-        );
-        
-        wp_update_post($my_post);
-    }
+                //$product_type = $shipping_enable ;
+
+                // Unslash and sanitize tax status and tax class
+                $_tax_status = isset($_POST['_tax_status']) ? sanitize_text_field(wp_unslash($_POST['_tax_status'])) : 'none';
+                $_tax_class  = isset($_POST['_tax_class']) ? sanitize_text_field(wp_unslash($_POST['_tax_class'])) : '';
+
+                update_post_meta($product_id, '_tax_status', $_tax_status);
+                update_post_meta($product_id, '_tax_class', $_tax_class);
+                update_post_meta($product_id, '_stock_status', 'instock');
+                update_post_meta($product_id, '_manage_stock', 'no');
+                update_post_meta($product_id, '_virtual', $product_type);
+                update_post_meta($product_id, '_sold_individually', 'yes');
+
+                $my_post = array(
+                    'ID'         => $product_id,
+                    'post_title' => $event_name,
+                    'post_name'  => uniqid(),
+                );
+
+                wp_update_post($my_post);
+            }
 }
 
         public function hide_wc_hidden_product_from_product_list($query) {
