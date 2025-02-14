@@ -16,6 +16,7 @@
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
 				'data-step' => true, // Allows inline JavaScript
+				'data-key' => true, // Allows inline JavaScript
 			),
 			'table'   => array(
                 'class' => true,
