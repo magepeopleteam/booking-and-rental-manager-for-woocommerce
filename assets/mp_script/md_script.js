@@ -81,7 +81,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
         }
     });
 });
-
+/*
 jQuery('body').on('change', '.pickup_time, #hidden_dropoff_date', function(e) {
     let pickup_date = jQuery('#hidden_pickup_date').val();
     let dropoff_date = jQuery('#hidden_dropoff_date').val();
@@ -112,7 +112,7 @@ jQuery('body').on('change', '.pickup_time, #hidden_dropoff_date', function(e) {
             }
         });
     }
-});
+});*/
 
 jQuery('.dropoff_date').change(function(e) {
     jQuery(".pickup_time").trigger("change");
