@@ -26,6 +26,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
                 add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'), 10, 1);
             }
             add_action('admin_menu', array($this, 'quick_setup_menu'));
+            rbfw_page_create();
         }
         public function add_admin_scripts() {}
         public function quick_setup_menu()

@@ -149,11 +149,8 @@
 
 			public static function activate() {
 				// rbfw_activation_redirect();
-				update_option( 'rewrite_rules', '' );
+				flush_rewrite_rules();
 				rbfw_update_settings();
-				rbfw_page_create();
-				
-				// flush_rewrite_rules(); // Flush permalinks
 			}
 
 			public static function deactivate() {
