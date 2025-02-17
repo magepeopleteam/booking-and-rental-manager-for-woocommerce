@@ -866,7 +866,7 @@
 }
 #rbfw_add_meta_box section {
   padding: 20px;
-  border: 1px solid var(--mage-light);
+  border: 5px solid var(--mage-light);
   margin-top: -1px;
   border-radius: 0;
   display: flex;
