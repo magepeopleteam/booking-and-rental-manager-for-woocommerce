@@ -2591,19 +2591,13 @@
                 }
                 $hours = 0;
 
-
                 for ( $i = 1; $i < $total_days+1; $i ++ ) {
-
-
-
 
                     foreach ( $rbfw_additional_day_prices as $rbfw_additional_day_price ) {
                         $rbfw_start_day = $rbfw_additional_day_price['rbfw_start_day'];
                         $rbfw_end_day = $rbfw_additional_day_price['rbfw_end_day'];
 
                         $additional_days_array     = range( $rbfw_start_day, $rbfw_end_day );
-
-
 
                         if ( in_array( $i, $additional_days_array ) ) {
                             $daily_rate = $rbfw_additional_day_price['rbfw_daily_price'];

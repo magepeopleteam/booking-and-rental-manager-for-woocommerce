@@ -1166,5 +1166,8 @@
 #rbfw_add_meta_box .required {
   color: var(--mage-primary);
 }
+#rbfw_add_meta_box input.rbfw-multi-day{
+    width: inherit;
+}
 
 /*# sourceMappingURL=admin.css.map */
