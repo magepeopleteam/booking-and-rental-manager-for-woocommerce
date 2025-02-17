@@ -62,54 +62,44 @@ function rbfw_exist_page_by_title( $title ) {
     }
 }
 
+function rbfw_page_create() {
+    $pages = [
+        'rent-list' => [
+            'title' => 'Rent List',
+            'content' => "[rent-list style='list']"
+        ],
+        'rent-grid' => [
+            'title' => 'Rent Grid',
+            'content' => "[rent-list style='grid']"
+        ],
+        'search-item-list' => [
+            'title' => 'Search Item List',
+            'content' => '[rbfw_search] [search-result]'
+        ]
+    ];
 
-function rbfw_page_create()
-{
-    $page_obj = rbfw_exist_page_by_slug('rent-list');
+    foreach ($pages as $slug => $page) {
+        if (get_page_by_path($slug) === null) {
+            $page_id = wp_insert_post([
+                'post_title'    => $page['title'],
+                'post_content'  => $page['content'],
+                'post_status'   => 'publish',
+                'post_type'     => 'page',
+                'post_name'     => $slug,
+                'post_author'   => 1 // Set admin as author
+            ]);
 
-
-    if($page_obj === false){
-        $args = array(
-            'post_title'    => 'Rent List',
-            'post_content'  => "[rent-list style='list']",
-            'post_status'   => 'publish',
-            'post_type'     => 'page'
-        );
-        wp_insert_post( $args );
+            if (!is_wp_error($page_id)) {
+                error_log("Page '{$page['title']}' created successfully with ID: $page_id");
+            } else {
+                error_log("Failed to create page '{$page['title']}': " . $page_id->get_error_message());
+            }
+        }
     }
 
-    $page_obj = rbfw_exist_page_by_slug('rent-grid');
-
-    if($page_obj === false){
-        $args = array(
-            'post_title'    => 'Rent Grid',
-            'post_content'  => "[rent-list style='grid']",
-            'post_status'   => 'publish',
-            'post_type'     => 'page'
-        );
-        wp_insert_post( $args );
-    }
-
-
-    $page_slug = 'search-item-list';
-    // Check if the page already exists
-    $existing_page = get_page_by_path($page_slug);
-    if (!$existing_page) {
-        // Page doesn't exist, so create it
-        $page_data = array(
-            'post_title'    => 'Search Item List',
-            'post_content'  => '[rbfw_search] [search-result]',
-            'post_status'   => 'publish',
-            'post_type'     => 'page',
-            'post_name'     => $page_slug,
-        );
-
-        // Insert the page into the database
-        wp_insert_post($page_data);
-    }
-
-
+    wp_cache_flush(); // Clear cache to avoid stale queries
 }
+
 
 add_action('woocommerce_cart_calculate_fees', 'custom_taxable_fee', 20);
 function custom_taxable_fee() {
