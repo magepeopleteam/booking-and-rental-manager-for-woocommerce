@@ -376,6 +376,46 @@ function particular_time_date_dependent_ajax(post_id,date_ymd,type='',rbfw_enabl
                 quantity_options += "<option "+ item[0] +" value="+i+">"+item[1]+"</option>";
             });
             jQuery(response[1]).html(quantity_options);
+
+
+
+            let pickup_date = jQuery('#hidden_pickup_date').val();
+            let dropoff_date = jQuery('#hidden_dropoff_date').val();
+
+            console.log('pickup_date',pickup_date)
+            console.log('dropoff_date',dropoff_date)
+
+
+            if (pickup_date == dropoff_date) {
+                let selected_time = jQuery('.pickup_time').val();
+                selected_time = new Date (pickup_date +' '+ selected_time);
+                jQuery(".dropoff_time").val("").trigger("change");
+
+                jQuery("#dropoff_time option").each(function() {
+                    var thisOptionValue = jQuery(this).val();
+                    thisOptionValue = new Date(pickup_date +' '+ thisOptionValue);
+
+
+                    if (thisOptionValue <= selected_time) {
+                        jQuery(this).attr('disabled', true);
+                    } else {
+                        jQuery(this).attr('disabled', false);
+                    }
+                });
+
+            } else {
+                jQuery("#dropoff_time option").each(function() {
+                    var thisOptionValue = jQuery(this).val();
+                    if (thisOptionValue != '') {
+                        jQuery(this).attr('disabled', false);
+                    } else {
+                        jQuery(this).attr('disabled', true);
+                    }
+                });
+            }
+
+
+
         }
     });
 }

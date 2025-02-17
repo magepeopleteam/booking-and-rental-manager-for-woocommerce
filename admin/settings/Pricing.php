@@ -380,9 +380,8 @@
                                 let selected_val = jQuery('input', this).val();
                                 let selected_data_key = jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
                                 let selected_data_cat = jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
-                                
 
-                                
+
                                 jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
                                 jQuery('.rbfw_service_category_table tr[data-cat="' + selected_data_cat + '"]').find('.rbfw_service_icon_preview[data-key="' + selected_data_key + '"]').empty();
                                 jQuery(selected_label).addClass('selected');
