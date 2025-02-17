@@ -116,8 +116,10 @@ function custom_taxable_fee() {
     $total_deposit_amount = 0;
     $cart = WC()->cart->get_cart();
     foreach ($cart as $cart_item_key => $cart_item) {
-        foreach ($cart_item['rbfw_ticket_info'] as $item_dep){
-            $total_deposit_amount = $total_deposit_amount + $item_dep['security_deposit_amount'];
+        if(!empty($cart_item['rbfw_ticket_info'])){
+            foreach ($cart_item['rbfw_ticket_info'] as $item_dep){
+                $total_deposit_amount = $total_deposit_amount + $item_dep['security_deposit_amount'];
+            }
         }
     }
     WC()->cart->add_fee(__('Security Deposit', 'booking-and-rental-manager-for-woocommerce'), $total_deposit_amount, false); // 'true' makes it taxable

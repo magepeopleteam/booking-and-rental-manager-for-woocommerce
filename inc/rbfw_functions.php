@@ -2583,7 +2583,7 @@
 
 
 
-            if ( is_plugin_active( 'booking-and-rental-manager-additional-day-price/additional-day-price.php' ) && (!(empty($rbfw_additional_day_prices))) ) {
+            if ( is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) && (!(empty($rbfw_additional_day_prices))) ) {
 
                 $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
                 if($rbfw_count_extra_day_enable=='on'){
