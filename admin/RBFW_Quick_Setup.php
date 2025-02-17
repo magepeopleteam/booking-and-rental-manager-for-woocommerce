@@ -214,6 +214,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
             <div data-tabs-next="#ttbm_qs_welcome">
                 <h2><?php esc_html_e('Booking and Rental Manager For Woocommerce Plugin', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
                 <p class="mTB_xs"><?php esc_html_e('Thanks for choosing Booking and Rental Manager Manager Plugin for WooCommerce for your site, Please go step by step and choose some options to get started.', 'booking-and-rental-manager-for-woocommerce'); ?></p>
+                <br>
                 <div class="_dLayout_mT_alignCenter justifyBetween">
                     <h5>
                         <?php if ($woo_status == 'Yes') {
@@ -256,16 +257,17 @@ if (!class_exists('RBFW_Quick_Setup')) {
                     <div class="_dLayout_mT">
                         <label class="fullWidth">
                             <span class="min_200"><?php esc_html_e('Rent Label:', 'booking-and-rental-manager-for-woocommerce'); ?></span>
-                            <input type="text" class="formControl" name="rbfw_rent_label" value='<?php echo esc_attr($label); ?>' />
+                            <input style="margin: 7px 0;"  type="text" class="formControl" name="rbfw_rent_label" value='<?php echo esc_attr($label); ?>' />
                         </label>
                         <i class="info_text">
                             <span class="fas fa-info-circle"></span>
                             <?php esc_html_e('It will change the Rent post type label on the entire plugin.', 'booking-and-rental-manager-for-woocommerce'); ?>
                         </i>
+                        <br>
                         <div class="divider"></div>
                         <label class="fullWidth">
                             <span class="min_200"><?php esc_html_e('Rent Slug:', 'booking-and-rental-manager-for-woocommerce'); ?></span>
-                            <input type="text" class="formControl" name="rbfw_rent_slug" value='<?php echo esc_attr($slug); ?>' />
+                            <input style="margin: 7px 0;" type="text" class="formControl" name="rbfw_rent_slug" value='<?php echo esc_attr($slug); ?>' />
                         </label>
                         <i class="info_text">
                             <span class="fas fa-info-circle"></span>
@@ -282,6 +284,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
             <div data-tabs-next="#ttbm_qs_done">
                 <h2><?php esc_html_e('Finalize Setup', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
                 <p class="mTB_xs"><?php esc_html_e('You are about to Finish & Save Booking and Reantal Manager For Woocommerce Plugin setup process', 'booking-and-rental-manager-for-woocommerce'); ?></p>
+                <br>
                 <div class="mT allCenter">
                     <button type="submit" name="finish_quick_setup" class="themeButton"><?php esc_html_e('Finish & Save', 'booking-and-rental-manager-for-woocommerce'); ?></button>
                 </div>
