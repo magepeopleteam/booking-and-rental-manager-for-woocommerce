@@ -4421,7 +4421,14 @@ span {
 .rbfw_muffin_template .rbfw_bikecarmd_backstep1_btn {
     display: none;
 }
-
+@media (max-width:540px){
+    .ui-datepicker-calendar{
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+        display: block; 
+    }
+}
 
 /* =======================Single day booking calendar=========================== */
 .single-rbfw_item .ui-datepicker .ui-datepicker-header{
