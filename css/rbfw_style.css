@@ -4405,9 +4405,13 @@ span {
 }
 
 .rbfw_muffin_template #rbfw-bikecarsd-calendar {
-    background-color: var(--rbfw_dt_color2);
-    padding: 30px;
+    background-color: none;
+    padding: 0;
     margin-bottom: 20px;
+}
+
+.rbfw_muffin_template .rbfw-bikecarsd-calendar-header::after{
+    border-color:#fff transparent transparent transparent;
 }
 
 .rbfw_muffin_template .rbfw-bikecarmd-result {
