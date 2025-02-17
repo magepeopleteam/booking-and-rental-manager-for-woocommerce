@@ -99,6 +99,12 @@
             <div class="rbfw_muff_slider mpStyle <?php echo esc_attr( $slide_style ); ?>">
 				<?php do_action( 'add_super_slider', $post_id, 'rbfw_gallery_images' ); ?>
             </div>
+            <div class="rbfw_muff_registration_wrapper">
+                <h2 class="rbfw_muff_heading">
+					<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_start_booking', 'rbfw_basic_translation_settings', __( 'Start Booking', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>
+                </h2>
+				<?php include( RBFW_Function::get_template_path( 'forms/single-day-registration.php' ) ); ?>
+            </div>
         </div>
         <div class="rbfw_muff_content_col2">
             <div class="rbfw_muff_highlighted_features">
@@ -131,26 +137,14 @@
 					<?php endif; ?>
 				<?php endif; ?>
             </div>
-        </div>
-    </div>
-    <!-- popup content will show here -->
-    <div class="rbfw_popup_wrapper" id="rbfw_popup_wrapper">
-        <div class="rbfw_rent_cat_info_popup">
-            <span class="rbfw_popup_close_btn" id="rbfw_popup_close_btn">&times;</span>
-            <div id="rbfw_popup_content">
+            <!-- popup content will show here -->
+            <div class="rbfw_popup_wrapper" id="rbfw_popup_wrapper">
+                <div class="rbfw_rent_cat_info_popup">
+                    <span class="rbfw_popup_close_btn" id="rbfw_popup_close_btn">&times;</span>
+                    <div id="rbfw_popup_content">
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="rbfw_muff_row_content">
-        <div class="rbfw_muff_content_col1">
-            <div class="rbfw_muff_registration_wrapper">
-                <h2 class="rbfw_muff_heading">
-					<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_start_booking', 'rbfw_basic_translation_settings', __( 'Start Booking', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>
-                </h2>
-				<?php include( RBFW_Function::get_template_path( 'forms/single-day-registration.php' ) ); ?>
-            </div>
-        </div>
-        <div class="rbfw_muff_content_col2 <?php echo $total_features < 10 ? 'rbfw_muff_content_wrapper' : ''; ?>">
             <div class="rbfw_muff_content_wrapper">
                 <div class="rbfw_muff_post_content">
                     <h2 class="rbfw_muff_post_content_headline">
@@ -190,6 +184,7 @@
             </div>
         </div>
     </div>
+
 	<?php if ( rbfw_check_pro_active() === true && $review_system == 'on' ) { ?>
         <div class="rbfw_muff_row_review_summary">
             <h3 class="rbfw_muff_heading">

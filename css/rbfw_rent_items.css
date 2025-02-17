@@ -383,32 +383,9 @@ p {
     padding: 10px ;
 
 }
-.rbfw_muff_content_wrapper {
-    margin-top: -14% !important;
-}
-
-@media (max-width: 600px) {
-    .rbfw_muff_content_wrapper {
-        margin-top: 4% !important;
-    }
-    .rbfw_see_more_category {
-        top: -12px !important;
-    }
-}
-@media (min-width: 601px) and (max-width: 768px) {
-    .rbfw_muff_content_wrapper {
-        margin-top: -8% !important;
-    }
-}
-@media (min-width: 769px) and (max-width: 1024px) {
-    .rbfw_muff_content_wrapper {
-        margin-top: -10% !important;
-    }
-}
-@media (min-width: 1025px) {
-    .rbfw_muff_content_wrapper {
-        margin-top: -14% !important;
-    }
+.rbfw_muff_slider{
+    margin-bottom: 25px;
+    min-height: 200px;
 }
 .rbfw_popup_fearure_title{
     color: #ffffff;
