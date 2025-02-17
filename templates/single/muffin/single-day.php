@@ -107,6 +107,9 @@
             </div>
         </div>
         <div class="rbfw_muff_content_col2">
+            <div class="rbfw_muff_content_wrapper">
+                <h2 class="rbfw_muff_post_content_headline"><?php _e('Feature Highlights','booking-and-rental-manager-for-woocommerce'); ?></h2>
+            </div>
             <div class="rbfw_muff_highlighted_features">
 				<?php if ( $rbfw_feature_category ) : ?>
                     <ul class="muff_features_item">
