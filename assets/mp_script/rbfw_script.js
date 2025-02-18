@@ -90,6 +90,15 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 
 
 jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus, .rbfw_service_qty_plus',function (e) {
+
+    let quantity_fixed = jQuery(this).data('quantity_fixed');
+
+    if(quantity_fixed=='checkbox' && jQuery(this).hasClass("rbfw_servicesd_qty_plus")){
+        jQuery(this).attr('class','rbfw_servicesd_qty_minus');
+    }else if(quantity_fixed=='checkbox' && jQuery(this).hasClass("rbfw_servicesd_qty_minus")){
+        jQuery(this).attr('class','rbfw_servicesd_qty_plus');
+    }
+
     let target_input = jQuery(this).siblings("input[type=number]");
     let current_value = parseInt(jQuery(this).siblings("input[type=number]").val());
     let max_value = parseInt(jQuery(this).siblings("input[type=number]").attr('max'));
@@ -106,6 +115,15 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus, 
 });
 
 jQuery(document).on('click','.rbfw_bikecarsd_qty_minus,.rbfw_servicesd_qty_minus, .rbfw_service_qty_minus',function (e) {
+
+    let quantity_fixed = jQuery(this).data('quantity_fixed');
+
+    if(quantity_fixed=='checkbox' && jQuery(this).hasClass("rbfw_servicesd_qty_plus")){
+        jQuery(this).attr('class','rbfw_servicesd_qty_minus');
+    }else if(quantity_fixed=='checkbox' && jQuery(this).hasClass("rbfw_servicesd_qty_minus")){
+        jQuery(this).attr('class','rbfw_servicesd_qty_plus');
+    }
+
         let target_input = jQuery(this).siblings("input[type=number]");
         let current_value = parseInt(jQuery(this).siblings("input[type=number]").val());
         let update_value = current_value - 1;
@@ -113,7 +131,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_minus,.rbfw_servicesd_qty_minus
             jQuery(target_input).val(update_value);
             jQuery(target_input).attr('value',update_value);
         }
-    });
+});
 
 jQuery(document).on('change','.rbfw_bikecarsd_qty',function (e) {
         let get_value = jQuery(this).val();
@@ -132,10 +150,11 @@ jQuery(document).on('change','.rbfw_bikecarsd_qty',function (e) {
 
 
 
+/********For single day services************/
 
-
-    /********For single day services************/
 jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus,.rbfw_servicesd_qty_minus,.rbfw_servicesd_qty_plus',function (e) {
+
+
 
     let data_cat = jQuery(this).siblings('input[type=number]').attr('data-cat');
         let post_id = jQuery('#rbfw_post_id').val();
@@ -248,6 +267,16 @@ jQuery(document).on('change','.rbfw_bikecarsd_qty, .rbfw_servicesd_qty',function
 
 
 jQuery(document).on('click','.rbfw_bikecarsd_qty_plus, .rbfw_bikecarsd_qty_minus',function (e) {
+
+    let quantity_fixed = jQuery(this).data('quantity_fixed');
+
+    if(quantity_fixed=='checkbox' && jQuery(this).hasClass("rbfw_bikecarsd_qty_plus")){
+        jQuery(this).attr('class','rbfw_bikecarsd_qty_minus');
+    }else if(quantity_fixed=='checkbox' && jQuery(this).hasClass("rbfw_bikecarsd_qty_minus")){
+        jQuery(this).attr('class','rbfw_bikecarsd_qty_plus');
+    }
+
+
         let count = jQuery('.rbfw_bikecarsd_rt_price_table tbody tr').length;
         let total_qty = 0;
         for (let index = 1; index <= count; index++) {

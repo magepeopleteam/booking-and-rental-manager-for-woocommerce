@@ -762,9 +762,7 @@
                             </p>
                         </div>
                     </section>
-                    <div class="wervice_quantity_input_box" <?php if ( $rbfw_item_type == 'bike_car_sd' ) {
-						echo 'style="display:none"';
-					} ?>>
+                    <div class="wervice_quantity_input_box">
                         <section>
                             <div>
                                 <label><?php esc_html_e( 'Enable Service Quantity Box', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
