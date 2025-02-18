@@ -52,11 +52,7 @@
                 <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
                     <select name="rdfw_available_time[]" id="rdfw_available_time" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
 						<?php foreach ( $rbfw_time_slots as $key => $value ): ?>
-							<?php if ( get_the_title( $post_id ) == 'Auto Draft' ) { ?>
-                                <option selected value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_attr( $key ); ?> </option>
-							<?php } else { ?>
-                                <option <?php echo esc_attr( in_array( gmdate( 'H:i', strtotime( $value ) ), $rdfw_available_time_update ) ) ? 'selected' : '' ?> value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?> </option>
-							<?php } ?>
+                            <option <?php echo esc_attr( in_array( gmdate( 'H:i', strtotime( $value ) ), $rdfw_available_time_update ) ) ? 'selected' : '' ?> value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?> </option>
 						<?php endforeach; ?>
                     </select>
                 </div>
@@ -281,24 +277,6 @@
 			}
 
 			public function settings_save( $post_id ) {
-
-                if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
-                    return;
-                }
-
-                $rules = [
-                    'name' => 'sanitize_text_field',
-                    'email' => 'sanitize_email',
-                    'age' => 'absint',
-                    'preferences' => [
-                        'color' => 'sanitize_text_field',
-                        'notifications' => function ($value) {
-                            return $value === 'yes' ? 'yes' : 'no';
-                        }
-                    ]
-                ];
-                $input_data_sabitized = sanitize_post_array($_POST, $rules);
-
                 if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
 					return;
 				}
@@ -325,7 +303,10 @@
 
                     
 					$rbfw_time_slot             = isset( $_POST['rbfw_time_slot_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_time_slot_switch'] ) ) : 'off';
-					$rdfw_available_time        = isset( $input_data_sabitized['rdfw_available_time'] ) ?  $input_data_sabitized['rdfw_available_time']  : [];
+					$rdfw_available_time = isset( $_POST['rdfw_available_time'] ) && is_array($_POST['rdfw_available_time']) ? array_map('sanitize_text_field',wp_unslash( $_POST['rdfw_available_time'] )) :[];
+                    //echo '<pre>';print_r($rdfw_available_time );echo '</pre>';
+                   // echo '<pre>';print_r($_POST['rdfw_available_time'] );echo '</pre>';die();
+
 					$rbfw_enable_start_end_date = isset( $_POST['rbfw_enable_start_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_start_end_date'] ) ) : 'yes';
 					$rbfw_event_start_date      = isset( $_POST['rbfw_event_start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_event_start_date'] ) ) : '';
 					$rbfw_event_start_time      = isset( $_POST['rbfw_event_start_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_event_start_time'] ) ) : '';

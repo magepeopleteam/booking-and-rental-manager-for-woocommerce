@@ -27,7 +27,6 @@ if( ! class_exists('RBFW_Faq_Settings')){
             add_action('wp_ajax_rbfw_faq_delete_item', [$this, 'faq_delete_item']);
             add_action('wp_ajax_nopriv_rbfw_faq_delete_item', [$this, 'faq_delete_item']);
 
-            add_action( 'save_post', [$this,'data_save'] );
         }
 
         public function custom_editor_enqueue() {
@@ -232,13 +231,6 @@ if( ! class_exists('RBFW_Faq_Settings')){
             die;
         }
 
-        public function data_save( $post_id ) {
-            global $wpdb;
-            if ( get_post_type( $post_id ) == 'rbfw_events' ) {
-                $faq_description    = isset( $_POST['rbfw_faq_description'] ) ? sanitize_text_field($_POST['rbfw_faq_description']) : '';
-                update_post_meta( $post_id, 'rbfw_faq_description', $faq_description );
-            }
-        }
     }
     new RBFW_Faq_Settings();
 }
