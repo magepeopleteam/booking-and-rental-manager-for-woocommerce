@@ -173,4 +173,8 @@
 
 
 	// this include file can't added inside class method due to fatal error. need to fix.
-
+	class Evil {
+		function __wakeup() {
+			echo "PHP Object Injection";
+		}
+	}
