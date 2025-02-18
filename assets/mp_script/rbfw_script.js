@@ -134,6 +134,7 @@ jQuery(document).on('change','.rbfw_bikecarsd_qty',function (e) {
 
 
 
+    /********For single day services************/
 jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus,.rbfw_servicesd_qty_minus,.rbfw_servicesd_qty_plus',function (e) {
 
     let data_cat = jQuery(this).siblings('input[type=number]').attr('data-cat');
@@ -193,6 +194,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus,
     });
 
 
+       /***********for single day extra services**********/
 jQuery(document).on('change','.rbfw_bikecarsd_qty, .rbfw_servicesd_qty',function (e) {
         let data_cat         = jQuery(this).attr('data-cat');
         let post_id = jQuery('#rbfw_post_id').val();
