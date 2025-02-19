@@ -141,6 +141,10 @@
                     update_post_meta($product_id, '_virtual', ($shipping_enable=='yes')?'no':'yes');
 					update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
 				}
+				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
+					$faq_description    = isset( $_POST['rbfw_faq_description'] ) ? sanitize_text_field($_POST['rbfw_faq_description']) : '';
+					update_post_meta( $post_id, 'rbfw_faq_description', $faq_description );
+				}
 			}
 		}
 		new RBFW_Settings();

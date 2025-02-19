@@ -3502,10 +3502,14 @@ div.mpStyle [class*="_bgColor_1"] i {
 #rbfw_add_meta_box table.form-table.rbfw_item_type_table tr td {
     padding: 0;
 }
-
+.sss {
+    border: 0px solid #d30c0c !important;
+}
 #rbfw_add_meta_box table.form-table {
     margin-bottom: 0px;
     border-collapse: collapse;
+    border: 5px solid var(--mage-light);
+    overflow: scroll;
     
 }
 #rbfw_add_meta_box .rbfw_feature_category_table{
@@ -3618,7 +3622,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     justify-content: start;
     align-items: center;
     border: 1px solid var(--mage-light);
-    gap:30px;
+    gap:10px;
 }
 
 #rbfw_features_icon_list_wrapper.mage_modal {
