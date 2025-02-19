@@ -207,7 +207,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
-= 2.2.6 =
+= 2.2.7 =
 * Quantity off option added in single day.
 
 

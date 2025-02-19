@@ -126,12 +126,15 @@
 																	$price              = $service['price'];
 																	$stock_quantity     = isset( $service['stock_quantity'] ) ? $service['stock_quantity'] : '';
 																	$service_price_type = $service['service_price_type']??'';
+
 																	?>
                                                                     <div class="item">
                                                                         <a href="#rbfw_services_icon_list_wrapper" class="rbfw_service_icon_btn btn" data-key="<?php echo esc_attr( $c ); ?>"><i class="fas fa-circle-plus"></i> <?php echo esc_html__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?></a>
-                                                                        <div class="rbfw_service_icon_preview p-1" data-key="<?php echo esc_attr( $c ); ?>"><?php if ( $icon ) {
+                                                                        <div class="rbfw_service_icon_preview p-1" data-key="<?php echo esc_attr( $c ); ?>">
+                                                                            <?php if ( $icon ) {
 																				echo '<i class="' . esc_attr( $icon ) . '"></i>';
-																			} ?></div>
+																			} ?>
+                                                                        </div>
                                                                         <input type='hidden' name='rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][icon]' placeholder='<?php echo esc_attr__( 'Icon', 'booking-and-rental-manager-for-woocommerce' ); ?>' value='<?php echo esc_attr( $icon ); ?>' data-key="<?php echo esc_attr( $c ); ?>" class="rbfw_service_icon"/>
                                                                         <input type='text' name='rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_services][<?php echo esc_attr( $c ); ?>][title]' placeholder='<?php echo esc_attr( $placeholder ); ?>' value="<?php echo esc_attr( $title ); ?>" data-key="<?php echo esc_attr( $c ); ?>"/>
                                                                         
