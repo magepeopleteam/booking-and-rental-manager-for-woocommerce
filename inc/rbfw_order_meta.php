@@ -32,8 +32,6 @@ function fetch_order_details_callback() {
 
         $wc_order_details = wc_get_order($wc_order_id);
 
-        //echo '<pre>';print_r($wc_order_details);echo '<pre>';
-
         $rbfw_payment_system = $rbfw->get_option('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
 
 
@@ -80,8 +78,15 @@ function fetch_order_details_callback() {
 
 
                     if($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
+
                         $BikeCarSdClass = new RBFW_BikeCarSd_Function();
                         $rent_info = !empty($ticket_info['rbfw_type_info']) ? $ticket_info['rbfw_type_info'] : [];
+                        if($ticket_info['rbfw_end_time']){
+                            $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-time-text').$ticket_info['rbfw_end_time'];
+                        }else{
+                            $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-text');
+                        }
+
                         $service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
                         $rent_info = $BikeCarSdClass->rbfw_get_bikecarsd_rent_info($item_id, $rent_info);
                         $service_info = $BikeCarSdClass->rbfw_get_bikecarsd_service_info($item_id, $service_info);
@@ -213,7 +218,9 @@ function fetch_order_details_callback() {
                         <?php } ?>
                         <?php if(!empty($service_info)){ ?>
                             <tr>
-                                <td><strong><?php rbfw_string('rbfw_text_extra_service_information',__('Extra Service Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
+                                <td>
+                                    <strong><?php rbfw_string('rbfw_text_extra_service_information',__('Extra Service Information','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong>
+                                </td>
                                 <td>
                                     <table class="wp-list-table widefat fixed striped table-view-list">
                                         <?php
@@ -314,7 +321,7 @@ function fetch_order_details_callback() {
 
                             <tr>
                                 <td><strong><?php rbfw_string('rbfw_text_duration_cost',__('Duration Cost','booking-and-rental-manager-for-woocommerce')); echo ':'; ?></strong></td>
-                                <td><?php echo esc_html($duration_cost); ?></td>
+                                <td><?php echo wp_kses($duration_cost,rbfw_allowed_html()); ?></td>
                             </tr>
 
                         <?php } ?>

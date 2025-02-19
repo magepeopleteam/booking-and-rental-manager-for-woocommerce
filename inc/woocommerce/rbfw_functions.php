@@ -133,17 +133,21 @@
 			$cart_item_data['security_deposit_desc']    = $security_deposit['security_deposit_desc'];
 
 		} elseif ( $rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment' ) {
+
 			$rbfw_bikecarsd               = new RBFW_BikeCarSd_Function();
 			$rbfw_bikecarsd_selected_date = isset( $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] ) ?$sd_input_data_sabitized['rbfw_bikecarsd_selected_date']  : '';
 			$bikecarsd_selected_date      = isset( $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] ) ?  $sd_input_data_sabitized['rbfw_bikecarsd_selected_date']  : '';
 			$rbfw_bikecarsd_selected_time = isset( $sd_input_data_sabitized['rbfw_start_time'] ) ?  $sd_input_data_sabitized['rbfw_start_time']  : '';
-			$end_date                     = isset( $sd_input_data_sabitized['end_date'] ) ? $sd_input_data_sabitized['end_date']  : '';
-			$end_time                     = isset( $sd_input_data_sabitized['end_time'] ) ?  $sd_input_data_sabitized['end_time']  : '';
-			if ( ! ( $end_date && $end_time ) ) {
+
+            $end_date                     = isset( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) )  : '';
+            $end_time                     = isset( $_POST['end_time'] ) ?  sanitize_text_field( wp_unslash( $_POST['end_time'] ) )  : '';
+
+            if ( ! ( $end_date && $end_time ) ) {
 				$end_date = $bikecarsd_selected_date;
 			}
+
 			$rbfw_start_datetime = $rbfw_bikecarsd_selected_date;
-			$rbfw_end_datetime   = $end_date;
+
 
 			$rbfw_type_info_all  = isset($sd_input_data_sabitized['rbfw_bikecarsd_info'])?$sd_input_data_sabitized['rbfw_bikecarsd_info']:[] ;
 
@@ -168,7 +172,7 @@
 			$rbfw_bikecarsd_total_price                      = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_total_price' );
 			$rbfw_pickup_point                               = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ?  $sd_input_data_sabitized['rbfw_pickup_point']  : '';
 			$rbfw_dropoff_point                              = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ?  $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
-			$rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $rbfw_end_datetime, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity );
+			$rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $end_date, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity );
 			$base_price                                      = $rbfw_bikecarsd_total_price;
 			$total_price                                     = apply_filters( 'rbfw_cart_base_price', $base_price );
 			$security_deposit                                = rbfw_security_deposit( $rbfw_id, $total_price );
@@ -177,7 +181,7 @@
 			$cart_item_data['rbfw_pickup_point']             = $rbfw_pickup_point;
 			$cart_item_data['rbfw_dropoff_point']            = $rbfw_dropoff_point;
 			$cart_item_data['rbfw_start_datetime']           = $rbfw_start_datetime;
-			$cart_item_data['rbfw_end_datetime']             = $rbfw_end_datetime;
+			$cart_item_data['rbfw_end_datetime']             = $end_date.' '.$end_time;
 			$cart_item_data['rbfw_start_date']               = $bikecarsd_selected_date;
 			$cart_item_data['rbfw_start_time']               = $rbfw_bikecarsd_selected_time;
 			$cart_item_data['rbfw_end_date']                 = $end_date;
@@ -189,6 +193,7 @@
 			$cart_item_data['rbfw_ticket_info']              = $rbfw_bikecarsd_ticket_info;
 			$cart_item_data['security_deposit_amount']       = $security_deposit['security_deposit_amount'];
 			$cart_item_data['security_deposit_desc']         = $security_deposit['security_deposit_desc'];
+
 		} else {
 			$start_date                = isset( $sd_input_data_sabitized['rbfw_pickup_start_date'] ) ?  $sd_input_data_sabitized['rbfw_pickup_start_date']  : '';
 			$end_date                  = isset( $sd_input_data_sabitized['rbfw_pickup_end_date'] ) ?  $sd_input_data_sabitized['rbfw_pickup_end_date']  : '';

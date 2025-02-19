@@ -97,6 +97,7 @@
 				'id'          => true,
 				'data-key'    => true,
 				'placeholder' => true,
+				'checked' => true,
 			),
             'select'   => array(
                 'style'       => true, // Allows inline styles
