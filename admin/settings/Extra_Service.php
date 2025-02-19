@@ -101,7 +101,7 @@
                                 <table class='rbfw_pricing_table form-table w-100' id="repeatable-fieldset-one">
                                     <thead>
                                     <tr>
-                                        <th><?php esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                        <!-- <th><?php // esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th> -->
                                         <th><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                         <th><?php echo wp_kses_post( 'Price <b class="required">*</b>' ); ?></th>
@@ -127,19 +127,19 @@
 												$service_qty   = array_key_exists( 'service_qty', $field ) ? esc_attr( $field['service_qty'] ) : '';
 												?>
                                                 <tr>
-                                                    <td>
+                                                    <!-- <td>
                                                         <div class="rbfw_service_image_wrap text-center">
                                                             <div class="rbfw_service_image_preview">
-																<?php if ( $img_url ): ?>
-                                                                    <img src="<?php echo esc_url( $img_url ); ?>">
-																<?php endif; ?>
+																<?php // if ( $img_url ): ?>
+                                                                    <img src="<?php //echo esc_url( $img_url ); ?>">
+																<?php // endif; ?>
                                                             </div>
                                                             <div class="service_image_add_remove">
                                                                 <a class="rbfw_service_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn btn"><i class="fas fa-circle-minus"></i></a>
                                                                 <input type="hidden" name="service_img[]" value="<?php echo esc_attr( $service_img ); ?>" class="rbfw_service_image"/>
                                                             </div>
                                                         </div>
-                                                    </td>
+                                                    </td> -->
                                                     <td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap" value="<?php echo esc_attr( $service_name ); ?>"/></td>
                                                     <td><input type="text" class="mp_formControl" name="service_desc[]" placeholder="Service Description" value="<?php echo esc_attr( $service_desc ); ?>"/></td>
                                                     <td><input type="number" class="medium" step="0.01" class="mp_formControl" name="service_price[]" placeholder="Ex: 10" value="<?php echo esc_attr( $service_price ); ?>"/></td>
@@ -157,7 +157,7 @@
 									?>
                                     <!-- empty hidden one for jQuery -->
                                     <tr class="empty-row screen-reader-text">
-                                        <td>
+                                        <!-- <td>
                                             <div class="rbfw_service_image_wrap text-center">
                                                 <div class="rbfw_service_image_preview"></div>
                                                 <div class="service_image_add_remove">
@@ -165,7 +165,7 @@
                                                     <input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
                                                 </div>
                                             </div>
-                                        </td>
+                                        </td> -->
                                         <td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap"/></td>
                                         <td><input type="text" class="mp_formControl " name="service_desc[]" placeholder="Service Description" value=""/></td>
                                         <td><input type="number" class="mp_formControl medium" step="0.01" name="service_price[]" placeholder="Ex: 10" value=""/></td>
