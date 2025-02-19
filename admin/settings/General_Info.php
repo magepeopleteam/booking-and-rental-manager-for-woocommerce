@@ -331,7 +331,8 @@
                         });
 
                         // Selected Feature Icon Action
-                        jQuery(document).on('click', '.ggggg label',function(e){
+                        jQuery(document).on('click', '.rbfw_features_icon_list_wrapper_modal label',function(e){
+                            alert(12);
                             e.stopImmediatePropagation();
                             let selected_label 		= jQuery(this);
                             let selected_val 		= jQuery('input', this).val();
