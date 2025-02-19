@@ -438,10 +438,10 @@
                         <section class="rbfw_item_quantiry_duration">
                             <div>
                                 <label><?php esc_html_e( 'Rent Item Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                <p><?php esc_html_e( 'Add stock quantity that you want allow to rent', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                                <p><?php esc_html_e( 'Add stock quantity that you want allow to rent, add total stock', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                             </div>
                             <div class="item_stock_quantity">
-                                <input type="number" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity" value="<?php echo esc_attr( $rbfw_item_stock_quantity_timely ) ?>">
+                                <input type="number" name="rbfw_item_stock_quantity_timely" id="rbfw_item_stock_quantity" value="<?php echo esc_attr( $rbfw_item_stock_quantity_timely ) ?>" placeholder="<?php esc_html_e('Ex: 10',''); ?>">
                             </div>
                         </section>
                         <section class="rbfw_item_quantiry_duration">
