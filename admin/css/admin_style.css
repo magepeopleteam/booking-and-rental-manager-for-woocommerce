@@ -3625,6 +3625,10 @@ div.mpStyle [class*="_bgColor_1"] i {
     gap:10px;
 }
 
+.wp-core-ui select {
+    height: auto !important;
+}
+
 #rbfw_features_icon_list_wrapper.mage_modal {
     width: 90%;
     max-width: 90%;
