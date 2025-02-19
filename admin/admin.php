@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) { die; } // Cannot access pages directly.
 require_once RBFW_PLUGIN_DIR . '/admin/custom_post.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/General_Info.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Pricing.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/Extra_Service.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Inventory.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Date_Time.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Off_Day.php';

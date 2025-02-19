@@ -1075,7 +1075,7 @@
   border-radius: 0;
 }
 #rbfw_add_meta_box .rbfw_variations_table .rbfw_variations_table_row {
-  border: 1px solid var(--mage-light);
+  border: 3px solid var(--mage-light);
   margin-bottom: 20px;
 }
 #rbfw_add_meta_box .rbfw_variations_table .rbfw_variations_table_row header {
@@ -1165,9 +1165,6 @@
 }
 #rbfw_add_meta_box .required {
   color: var(--mage-primary);
-}
-#rbfw_add_meta_box input.rbfw-multi-day{
-    width: inherit;
 }
 
 /*# sourceMappingURL=admin.css.map */

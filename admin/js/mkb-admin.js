@@ -672,6 +672,7 @@
         });
         /* end inventory filter and view details */
     });
+    
     // =====================sidebar modal open close=============
 	$(document).on('click', '[data-modal]', function (e) {
 		const modalTarget = $(this).data('modal');
