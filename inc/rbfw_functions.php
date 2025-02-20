@@ -726,7 +726,7 @@
 		});
 	</script>
 
-        <div id="rbfw_features_icon_list_wrapper" class="mage_modal ggggg" data-loaded="100">
+        <div id="rbfw_features_icon_list_wrapper" class="mage_modal rbfw_features_icon_list_wrapper_modal" data-loaded="100">
             <div class="rbfw_features_icon_list_header">
                 <div class="rbfw_features_icon_list_header_group">
                     <a href="#rbfw_features_icon_list_wrapper" rel="mage_modal:close" class="rbfw_feature_icon_list_close_button"><?php esc_html_e( 'Close', 'booking-and-rental-manager-for-woocommerce' ); ?></a>

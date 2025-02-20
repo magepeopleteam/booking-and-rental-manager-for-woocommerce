@@ -133,7 +133,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'orderby' => $orderby,
         'order' => $order,
         'meta_query' => array(
-            'relation' => 'AND',
+            'relation' => 'OR',
             $rent_type,
             $location_query,
             $date_range_query,
@@ -149,7 +149,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 $category_name=isset(get_term($cat)->name) ? get_term($cat)->name : '';
                 $args['meta_query'][] = array(
                     'key' => 'rbfw_categories',
-                    'value' => serialize($category_name),
+                    'value' => $category_name,
                     'compare' => 'LIKE'
                 );
             }
@@ -166,10 +166,11 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     }
 
 
-    //echo '<pre>';print_r($args);echo '<pre>';exit;
+   // echo '<pre>';print_r($args);echo '<pre>';exit;
 
     $query = new WP_Query($args);
     $total_posts = $query->found_posts;
+
     $post_count = $query->post_count;
 
     $j = 1;
