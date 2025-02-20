@@ -332,13 +332,14 @@
 
                         // Selected Feature Icon Action
                         jQuery(document).on('click', '.rbfw_features_icon_list_wrapper_modal label',function(e){
-                            alert(12);
+                            alert(123);
                             e.stopImmediatePropagation();
                             let selected_label 		= jQuery(this);
                             let selected_val 		= jQuery('input', this).val();
+
                             let selected_data_key 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-key');
                             let selected_data_cat 	= jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat');
-
+                            alert(selected_data_key);
                             jQuery('#rbfw_features_icon_list_wrapper label').removeClass('selected');
 
                             jQuery('.rbfw_feature_category_table tr[data-cat="'+selected_data_cat+'"]').find('.rbfw_feature_icon_preview[data-key="'+selected_data_key+'"]').empty();
