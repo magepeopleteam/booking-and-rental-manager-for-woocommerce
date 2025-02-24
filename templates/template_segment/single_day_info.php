@@ -253,7 +253,7 @@ if(isset($_POST['post_id'])){
 
                                 $max_es_available_qty = rbfw_get_bike_car_sd_es_available_qty($id, $selected_date, $value['service_name']);
 
-                                if($value['service_qty'] > 0){
+                                if(isset($value['service_qty']) && ($value['service_qty'] > 0)){
                                     ?>
                                     <tr>
                                         <td class="w_50_pc">

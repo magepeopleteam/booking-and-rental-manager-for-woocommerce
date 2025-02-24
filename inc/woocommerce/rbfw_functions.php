@@ -17,9 +17,6 @@
 
         global $rbfw;
 
-
-
-
 		$linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
 		$product_id     = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
 		if ( get_post_type( $product_id ) == $rbfw->get_cpt_name() ) {
@@ -790,8 +787,7 @@
 	}
 	function rbfw_booking_management( $wc_order_id ) {
 
-
-
+        global $rbfw;
 
         $post = get_post($wc_order_id);
         if ($post) {
@@ -805,10 +801,22 @@
             }
         }
 
-		global $rbfw;
+
 		if ( ! $wc_order_id ) {
 			return;
 		}
+
+        $args = array(
+            'post_type'      => 'rbfw_order',
+            'meta_key'       => 'rbfw_link_order_id',
+            'meta_value'     => $wc_order_id,
+            'meta_compare'   => '=',
+        );
+        $query = new WP_Query($args);
+        $post_count = $query->post_count;
+        if($post_count){
+            return;
+        }
 
 		$order        = wc_get_order( $wc_order_id );
         
@@ -862,26 +870,14 @@
 
 
 
-                $args = array(
-                    'post_type'      => 'rbfw_order',
-                    'meta_key'       => 'rbfw_link_order_id',
-                    'meta_value'     => $wc_order_id,
-                    'meta_compare'   => '=',
-                );
-
-                $query = new WP_Query($args);
-
-
-                if (!($query->have_posts())) {
-                    /*rbfw_order add*/
-                    $order_id = $rbfw->rbfw_add_order_data( $meta_data, $ticket_info, $rbfw_service_price_data_actual );
-                    /*rbfw_order_mata add and manage inventory*/
-                    $order_meta_id = rbfw_add_order_meta_data( $meta_data, $ticket_info );
-                    if ( $order_id && $order_meta_id ) {
-                        update_post_meta( $order_id, 'rbfw_order_status', $order_status );
-                        update_post_meta( $order_meta_id, 'rbfw_order_status', $order_status );
-                    }
+                /*rbfw_order add*/
+                $order_id = $rbfw->rbfw_add_order_data( $meta_data, $ticket_info, $rbfw_service_price_data_actual );
+                /*rbfw_order_mata add and manage inventory*/
+                $order_meta_id = rbfw_add_order_meta_data( $meta_data, $ticket_info );
+                if ( $order_id && $order_meta_id ) {
+                    update_post_meta( $order_id, 'rbfw_order_status', $order_status );
+                    update_post_meta( $order_meta_id, 'rbfw_order_status', $order_status );
                 }
-			}
+            }
 		}
 	}
