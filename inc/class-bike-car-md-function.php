@@ -116,6 +116,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             echo wp_json_encode( array(
                 'duration_price' => $duration_price,
                 'duration_price_html' => wc_price($duration_price),
+                'duration_price_number' => $duration_price,
                 'rbfw_service_price' => $rbfw_service_price,
                 'rbfw_service_price_html' => wc_price($rbfw_service_price),
                 'service_cost' => $service_cost+$rbfw_service_price,
