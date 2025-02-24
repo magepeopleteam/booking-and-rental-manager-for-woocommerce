@@ -553,16 +553,15 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                 <?php echo esc_html($rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings', __('Discount','booking-and-rental-manager-for-woocommerce'))); ?>
                                 <span></span>
                             </li>
+
                             <li class="security_deposit" style="display:none;">
-
                                 <?php echo esc_html((!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit')); ?>
-
                                 <span></span>
                             </li>
                             <li class="total">
                                 <?php echo esc_html($rbfw->get_option_trans('rbfw_text_price', 'rbfw_basic_translation_settings', __('Price','booking-and-rental-manager-for-woocommerce'))); ?>
                                 <span class="price-figure" data-price="">
-                                    </span>
+                                </span>
                             </li>
                         </ul>
                         <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>

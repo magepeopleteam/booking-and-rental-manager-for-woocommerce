@@ -434,9 +434,19 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
 
             jQuery('[name="total_days"]').val(response.total_days);
 
-            jQuery('.duration-costing .price-figure').html(response.duration_price_html);
+
             jQuery('.resource-costing .price-figure').html(response.service_cost_html);
             jQuery('.subtotal .price-figure').html(response.sub_total_price_html);
+
+
+
+            if(response.duration_price_number){
+                jQuery('.duration-costing').show();
+                jQuery('.duration-costing .price-figure').html(response.duration_price_html);
+            }else{
+                jQuery('.duration-costing').hide();
+            }
+
 
             if(response.discount){
                 jQuery('.discount').show();
@@ -452,6 +462,9 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             }else{
                 jQuery('.security_deposit').hide();
             }
+
+
+
 
             jQuery('.total .price-figure').html(response.total_price_html);
             jQuery('.rbfw-duration').show();

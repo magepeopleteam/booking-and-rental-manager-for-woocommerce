@@ -370,22 +370,25 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
         <?php endif; ?>
 
         <table class="rbfw_room_cart_table">
-            <?php if ( ! empty( $start_datetime ) && ! empty( $end_datetime ) ): ?>
+            <?php if ( ! empty( $start_datetime ) && ! empty( $end_datetime ) && $rbfw_duration_price_individual ){ ?>
                 <tr>
                     <th>
                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost:','booking-and-rental-manager-for-woocommerce'))); ?>
-                        <br>
-                        <span>
-                            <?php
-                            echo esc_html($cart_item['total_days'].' '.(($cart_item['total_days']==1)?'Day':'Days'));
-                            ?>
-                        </span>
                     </th>
                     <td>
                         <?php echo wp_kses('('.wc_price((float)$rbfw_duration_price_individual) .' x '.$rbfw_item_quantity.')'. ' = '.wc_price((float)$rbfw_duration_price_individual * $rbfw_item_quantity),rbfw_allowed_html());?>
                     </td>
                 </tr>
-            <?php endif; ?>
+            <?php } ?>
+
+            <tr>
+                <th>
+                    <?php   esc_html_e('Duration:','booking-and-rental-manager-for-woocommerce'); ?>
+                </th>
+                <td>
+                    <?php echo esc_html($cart_item['total_days'].' '.(($cart_item['total_days']==1)?'Day':'Days')); ?>
+                </td>
+            </tr>
 
 
 
@@ -418,8 +421,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
             <?php if ( ! empty( $rbfw_service_info ) ){ ?>
                 <?php
-
-
                 foreach ($rbfw_service_info as $key => $value){
                     $service_name = $key; //service name
                     if(array_key_exists($service_name, $extra_services)){ // if service name exist in array
