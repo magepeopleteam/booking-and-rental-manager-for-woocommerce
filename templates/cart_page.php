@@ -374,10 +374,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 <tr>
                     <th>
                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost:','booking-and-rental-manager-for-woocommerce'))); ?>
-                        <br>
-                        <span>
-                            <?php echo esc_html($cart_item['total_days'].' '.(($cart_item['total_days']==1)?'Day':'Days')); ?>
-                        </span>
                     </th>
                     <td>
                         <?php echo wp_kses('('.wc_price((float)$rbfw_duration_price_individual) .' x '.$rbfw_item_quantity.')'. ' = '.wc_price((float)$rbfw_duration_price_individual * $rbfw_item_quantity),rbfw_allowed_html());?>
