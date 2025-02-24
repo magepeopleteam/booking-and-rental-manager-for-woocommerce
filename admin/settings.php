@@ -298,10 +298,10 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 			),
 			array(
 				'name'    => 'rbfw_text_pickup_time',
-				'label'   => esc_html__( 'Pickup time', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'Enter the translated text of <strong>Pickup time.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => esc_html__( 'Pickup Time', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( 'Enter the translated text of <strong>Pickup Time.</strong>', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
-				'default' => 'Pickup time'
+				'default' => 'Pickup Time'
 			),
 			array(
 				'name'    => 'rbfw_text_pickup_point',

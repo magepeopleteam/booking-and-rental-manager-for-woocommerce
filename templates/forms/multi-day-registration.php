@@ -33,8 +33,9 @@ $current_date = date_i18n('Y-m-d');
 global $rbfw;
 
 
-$rbfw_enable_md_type_item_qty = get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) ? get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) : 'no';
+$rbfw_enable_md_type_item_qty = get_post_meta($rbfw_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($rbfw_id, 'rbfw_available_qty_info_switch', true) : 'no';
 
+//echo $rbfw_enable_md_type_item_qty;exit;
 
 $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
@@ -274,7 +275,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                     <div class="rbfw-p-relative">
                                         <span class="calendar"><i class="fas fa-calendar-days"></i></span>
                                         <input type="hidden" id="hidden_pickup_date" name="rbfw_pickup_start_date">
-                                        <input class="rbfw-input rbfw-time-price pickup_date" type="text"  id="pickup_date" placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
+                                        <input class="rbfw-input rbfw-time-price pickup_date" type="text"  id="pickup_date" placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
                                         <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                     </div>
                                 </div>
@@ -288,7 +289,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                 <i class="fa-regular fa-clock"></i>
                                             </span>
                                             <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_pickup_start_time" id="pickup_time" required>
-                                                <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup time','booking-and-rental-manager-for-woocommerce'))); ?></option>
+                                                <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup Time','booking-and-rental-manager-for-woocommerce'))); ?></option>
                                                 <?php foreach ($availabe_time as $key => $time) : ?>
                                                     <option value="<?php echo esc_attr($time); ?>"><?php echo esc_html(gmdate(get_option('time_format'), strtotime($time))); ?></option>
                                                 <?php endforeach; ?>
@@ -407,6 +408,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                         <table class="rbfw_bikecarmd_es_table">
                                             <tbody>
                                             <?php foreach ($item['cat_services'] as $serkey => $service) { ?>
+
                                                 <?php if (!empty($service['title'])) { ?>
                                                     <tr class="service-price-item">
                                                         <td class="w_20">
@@ -418,7 +420,7 @@ if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_ra
                                                                     <input type="checkbox"
                                                                            class="rbfw_service_price_data item_<?php echo esc_attr($cat . $serkey); ?>"
                                                                            name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][main_cat_name]"
-                                                                           data-service_price_type="<?php echo esc_attr(isset($service['service_price_type']) && $service['service_price_type']); ?>"
+                                                                           data-service_price_type="<?php echo esc_attr(isset($service['service_price_type'])?$service['service_price_type']:''); ?>"
                                                                            data-price="<?php echo esc_attr($service['price']); ?>"
                                                                            data-quantity="1"
                                                                            data-rbfw_enable_md_type_item_qty="<?php echo esc_attr($rbfw_enable_extra_service_qty); ?>"
