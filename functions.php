@@ -112,6 +112,8 @@ function custom_taxable_fee() {
             }
         }
     }
-    WC()->cart->add_fee(__('Security Deposit', 'booking-and-rental-manager-for-woocommerce'), $total_deposit_amount, false); // 'true' makes it taxable
+    if($total_deposit_amount){
+        WC()->cart->add_fee(__('Security Deposit', 'booking-and-rental-manager-for-woocommerce'), $total_deposit_amount, false); // 'true' makes it taxable
+    }
 }
 
