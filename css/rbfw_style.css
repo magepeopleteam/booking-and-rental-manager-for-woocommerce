@@ -6718,7 +6718,7 @@ h2.rbfw_rent_list_grid_title {
     line-height: 20px;
 }
 h2.rbfw_rent_list_grid_title a{
-    text-decoration: none;
+    text-decoration: none !important;
 }
 
 .rbfw_rent_list_grid_title {
