@@ -324,7 +324,7 @@ class RBFW_Setting_API {
         $html .= $this->get_field_description( $args );
         $html .= '</fieldset>';
 
-        echo esc_html($html,rbfw_allowed_html());
+        echo wp_kses($html,rbfw_allowed_html());
     }
 
     /**
