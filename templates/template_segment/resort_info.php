@@ -93,7 +93,7 @@ if(isset($post_id) && isset($active_tab)){
         <input type="hidden" name="rbfw_room_info[<?php echo  esc_attr($i); ?>][room_desc]" value="<?php echo  esc_attr($value['rbfw_room_desc']); ?>"/>
 
         </td>
-            <td><?php echo esc_html($img); ?></td>
+            <td><?php echo wp_kses($img , rbfw_allowed_html()); ?></td>
             <td>
                 <?php echo wp_kses(wc_price($price) , rbfw_allowed_html()); ?>
                 <input type="hidden" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]" value="<?php echo esc_attr($price); ?>"/>
@@ -163,7 +163,7 @@ if(isset($post_id) && isset($active_tab)){
                                     <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_desc]" value="<?php echo esc_attr($value['service_desc']); ?>"/>
                                 </td>
                                 <td>
-                                    <?php echo esc_html($img); ?>
+                                    <?php echo wp_kses($img , rbfw_allowed_html()); ?>
                                 </td>
                                 <td>
                                     <?php echo wp_kses(wc_price($value['service_price']) , rbfw_allowed_html()); ?>
