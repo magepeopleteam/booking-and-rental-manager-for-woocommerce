@@ -207,6 +207,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.2.8 =
+* Cart page update.
+* In Multiday quantity visible option solved.
+
 = 2.2.7 =
 * Quantity off option added in single day.
 * Multi category solved in rent list page.

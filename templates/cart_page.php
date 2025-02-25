@@ -195,13 +195,20 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     ?>
     <table class="rbfw_bikecarsd_cart_table rbfw_room_cart_table">
 
-        <?php if ( ! empty( $rbfw_pickup_point ) ): ?>
-            <li><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_point', 'rbfw_basic_translation_settings', __('Pickup Point','booking-and-rental-manager-for-woocommerce'))); echo ': ' . esc_html($rbfw_pickup_point); ?></li>
-        <?php endif; ?>
+        <?php if ( ! empty( $rbfw_pickup_point ) ){ ?>
+            <tr>
+                <th><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_point', 'rbfw_basic_translation_settings', __('Pickup Point','booking-and-rental-manager-for-woocommerce'))); ?></th>
+                <td><?php echo esc_html($rbfw_pickup_point); ?></td>
+            </tr>
+        <?php } ?>
 
-        <?php if ( ! empty( $rbfw_dropoff_point ) ): ?>
-            <li><?php echo esc_html($rbfw->get_option_trans('rbfw_text_dropoff_point', 'rbfw_basic_translation_settings', __('Drop-off Point','booking-and-rental-manager-for-woocommerce'))); echo ': ' . esc_html($rbfw_dropoff_point); ?></li>
-        <?php endif; ?>
+        <?php if ( ! empty( $rbfw_dropoff_point ) ){ ?>
+                <tr>
+                    <th><?php echo esc_html($rbfw->get_option_trans('rbfw_text_dropoff_point', 'rbfw_basic_translation_settings', __('Drop-off Point','booking-and-rental-manager-for-woocommerce')));  ?></th>
+                    <td><?php echo esc_html($rbfw_dropoff_point); ?></td>
+                </tr>
+
+        <?php } ?>
 
 
         <?php if ( ! empty( $start_datetime )): ?>
@@ -333,46 +340,53 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
     ?>
 
-    <ul>
+    <table class="rbfw_room_cart_table">
+
         <?php if ( ! empty( $rbfw_pickup_point ) ){ ?>
             <tr>
                 <th><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_point', 'rbfw_basic_translation_settings', __('Pickup Point','booking-and-rental-manager-for-woocommerce'))); ?></th>
-                <td><?php echo ': ' . esc_html($rbfw_pickup_point); ?></td>
+                <td><?php echo esc_html($rbfw_pickup_point); ?></td>
             </tr>
         <?php } ?>
 
         <?php if ( ! empty( $rbfw_dropoff_point ) ){ ?>
             <tr>
                 <th><?php echo esc_html($rbfw->get_option_trans('rbfw_text_dropoff_point', 'rbfw_basic_translation_settings', __('Drop-off Point','booking-and-rental-manager-for-woocommerce'))); ?></th>
-                <td><?php echo ': ' . esc_html($rbfw_dropoff_point); ?></td>
+                <td><?php echo  esc_html($rbfw_dropoff_point); ?></td>
             </tr>
         <?php } ?>
 
         <?php if ( !empty($start_datetime) && !empty($start_time)){ ?>
             <tr>
                 <th><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings', __('Pickup Date & Time','booking-and-rental-manager-for-woocommerce'))); ?></th>
-                <td><?php echo ': ' . esc_html(rbfw_get_datetime( $start_datetime, 'date-time-text' )); ?></td>
+                <td><?php echo esc_html(rbfw_get_datetime( $start_datetime, 'date-time-text' )); ?></td>
             </tr>
         <?php }else{ ?>
             <tr>
                 <th><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup Date','booking-and-rental-manager-for-woocommerce'))) ?></th>
-                <td><?php echo ': ' . esc_html(rbfw_get_datetime( $start_datetime, 'date-text' )); ?></td>
+                <td><?php echo esc_html(rbfw_get_datetime( $start_datetime, 'date-text' )); ?></td>
             </tr>
         <?php } ?>
 
 
 
         <?php if (!empty($end_datetime) && !empty($end_time)){ ?>
-            <li><?php echo esc_html($rbfw->get_option_trans('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time','booking-and-rental-manager-for-woocommerce')));  echo ': ' . esc_html(rbfw_get_datetime( $end_datetime, 'date-time-text' )); ?></li>
+            <tr>
+                <th><?php echo esc_html($rbfw->get_option_trans('rbfw_text_dropoff_date_time', 'rbfw_basic_translation_settings', __('Drop-off Date & Time','booking-and-rental-manager-for-woocommerce'))); ?></th>
+                <td><?php echo esc_html(rbfw_get_datetime( $end_datetime, 'date-time-text' )); ?></td>
+            </tr>
         <?php }else{ ?>
-            <li><?php echo esc_html($rbfw->get_option_trans('rbfw_text_dropoff_date', 'rbfw_basic_translation_settings', __('Drop-off Date','booking-and-rental-manager-for-woocommerce'))); echo ': ' . esc_html(rbfw_get_datetime( $end_datetime, 'date-text' )); ?></li>
+            <tr>
+                <th><?php echo esc_html($rbfw->get_option_trans('rbfw_text_dropoff_date', 'rbfw_basic_translation_settings', __('Drop-off Date','booking-and-rental-manager-for-woocommerce'))); ?></th>
+                <td><?php echo esc_html(rbfw_get_datetime( $end_datetime, 'date-text' )); ?></td>
+            </tr>
         <?php } ?>
 
         <?php if(!empty($variation_info)){ ?>
             <?php foreach ($variation_info as $key => $value) { ?>
                 <tr>
                     <th><?php echo esc_html($value['field_label']);  ?></th>
-                    <td><?php  echo ': '; echo esc_html($value['field_value']); ?></td>
+                    <td><?php echo esc_html($value['field_value']); ?></td>
                 </tr>
             <?php } ?>
         <?php }  ?>
@@ -380,11 +394,11 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
         <?php if ( ! empty( $rbfw_item_quantity ) ){ ?>
             <tr>
                 <th><?php echo esc_html($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce'))); ?></th>
-                <td><?php echo ': '.esc_html($rbfw_item_quantity); ?></td>
+                <td><?php echo esc_html($rbfw_item_quantity); ?></td>
             </tr>
         <?php } ?>
 
-        <table class="rbfw_room_cart_table">
+
             <?php if ( ! empty( $start_datetime ) && ! empty( $end_datetime ) && $rbfw_duration_price_individual ){ ?>
                 <tr>
                     <th>
@@ -406,31 +420,34 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
             </tr>
 
 
-
-            <?php if ( ! empty( $rbfw_service_infos ) ){ ?>
-                <?php foreach ($rbfw_service_infos as $key => $value){ ?>
+        <?php if ( ! empty( $rbfw_service_infos ) ){ ?>
+            <?php foreach ($rbfw_service_infos as $key => $value){ ?>
                     <?php if(count($value)){ ?>
                         <tr>
-                            <th rowspan="3" ><?php echo esc_html($key); ?> </th>
+                            <th><?php echo esc_html($key); ?> </th>
+                            <td>
+                                <table>
+                                    <?php foreach ($value as $key1=>$item){ ?>
+                                        <tr>
+                                            <td><?php echo esc_html($item['name']); ?></td>
+                                            <td><?php
+                                                if($item['service_price_type']=='day_wise'){
+                                                    $rbfw_service_price =  (float)$rbfw_service_price+(float)$item['price']*(int)$item['quantity']*(int)$total_days;
+                                                    echo '('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) . 'x' .esc_html($total_days) .'='.wp_kses(wc_price($item['price']*(int)$item['quantity']*$total_days),rbfw_allowed_html()).')';
+                                                }else{
+                                                    echo ('('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) .'='.wp_kses(wc_price($item['price']*$item['quantity']),rbfw_allowed_html())).')';
+                                                }
+                                                ?>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                </table>
+                            </td>
                         </tr>
-                        <?php foreach ($value as $key1=>$item){ ?>
-                            <tr>
-                                <td><?php echo esc_html($item['name']); ?></td>
-                                <td>
-                                    <?php
-                                    if($item['service_price_type']=='day_wise'){
-                                        $rbfw_service_price =  (float)$rbfw_service_price+(float)$item['price']*(int)$item['quantity']*(int)$total_days;
-                                        echo '('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) . 'x' .esc_html($total_days) .'='.wp_kses(wc_price($item['price']*(int)$item['quantity']*$total_days),rbfw_allowed_html()).')';
-                                    }else{
-                                        echo ('('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) .'='.wp_kses(wc_price($item['price']*$item['quantity']),rbfw_allowed_html())).')';
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
-                        <?php } ?>
                     <?php } ?>
                 <?php } ?>
             <?php } ?>
+
 
 
 
@@ -477,7 +494,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
         </table>
 
-    </ul>
 <?php }  ?>
 
 
