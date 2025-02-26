@@ -47,8 +47,9 @@
                 $rbfw_event_end_date  = get_post_meta( $post_id, 'rbfw_event_end_date', true ) ? get_post_meta( $post_id, 'rbfw_event_end_date', true ) : '';
                 $rbfw_offday_range  = get_post_meta( $post_id, 'rbfw_offday_range', true ) ? get_post_meta( $post_id, 'rbfw_offday_range', true ) : [];
                 ?>
+                <?php foreach ($rbfw_offday_range as $single){ ?>
                 <div class="form-table rbfw_item_type_table off_date_range">
-                    <?php foreach ($rbfw_offday_range as $single){ ?>
+
                         <section class="off_date_range_child" >
                             <div class="d-flex justify-content-between w-40">
                                 <label for=""><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?> </label>
@@ -62,8 +63,9 @@
                                 <button class="button remove-row-off-days ms-2"><i class="fas fa-trash-can"></i></button>
                             </div>
                         </section>
-                    <?php } ?>
+
                 </div>
+                <?php } ?>
 
                 <div class="off_date_range_content hidden">
                     <section class="off_date_range_child">
