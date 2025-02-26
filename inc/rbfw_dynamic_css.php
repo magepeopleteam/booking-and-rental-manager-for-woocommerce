@@ -53,6 +53,20 @@ function rbfw_dynamic_css(){
 	.ui-datepicker table thead{
 		background-color:var(--rbfw_primary_opacity);
 	}
+	#ui-datepicker-div{
+    	width: auto;
+	}
+	#ui-datepicker-div .ui-datepicker-header{
+		padding: 16px 2px;
+	}
+	#ui-datepicker-div .ui-datepicker-next,#ui-datepicker-div .ui-datepicker-prev{
+		border: 1px solid var(--mage-primary);
+	}
+	#ui-datepicker-div .ui-datepicker-header a.ui-datepicker-next::before,#ui-datepicker-div .ui-datepicker-header a.ui-datepicker-prev::before{
+		color: var(--mage-primary);
+		top:50%;
+		transform: translateY(-50%);
+	}
 	";
 	// 
 	wp_add_inline_style('rbfw-style', $inline_css);
