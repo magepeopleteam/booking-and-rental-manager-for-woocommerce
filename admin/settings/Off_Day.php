@@ -59,7 +59,7 @@
                                 <input type="text" placeholder="YYYY-MM-DD" name="off_days_end[]"  class="rbfw_off_days_range" value="<?php echo esc_attr( $single['to_date'] ); ?>" readonly>
                             </div>
                             <div class="component mp_event_remove_move">
-                                <button class="button remove-row ms-2"><i class="fas fa-trash-can"></i></button>
+                                <button class="button remove-row-off-days ms-2"><i class="fas fa-trash-can"></i></button>
                             </div>
                         </section>
                     <?php } ?>
@@ -76,7 +76,7 @@
                             <input type="text" placeholder="YYYY-MM-DD"   class="rbfw_off_days_range rbfw_off_days_range_end" value="<?php echo esc_attr( $rbfw_event_end_date ); ?>" readonly>
                         </div>
                         <div class="component mp_event_remove_move">
-                            <button class="button remove-row"><i class="fas fa-trash-can"></i></button>
+                            <button class="button remove-row-off-days"><i class="fas fa-trash-can"></i></button>
                         </div>
                     </section>
                 </div>

@@ -83,6 +83,20 @@
         }
     });
 
+
+    jQuery(document).on('click','.remove-row-off-days', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+            jQuery(this).parents('.form-table.rbfw_item_type_table.off_date_range, .off_date_range_remove').remove();
+        } else {
+            return false;
+        }
+    });
+
+
+
+
 }(jQuery));
 
 
