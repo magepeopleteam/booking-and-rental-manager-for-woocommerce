@@ -622,6 +622,7 @@
                 data: {
                     'action' : 'rbfw_get_stock_by_filter',
                     'selected_date' : selected_date,
+                    'nonce' : rbfw_ajax.nonce
                 },
                 beforeSend: function() {
                     jQuery('.rbfw_inventory_page_table_wrap').empty();
@@ -768,6 +769,7 @@
 				rbfw_faq_content:content,
 				rbfw_faq_postID:postID.val(),
 				rbfw_faq_itemID:itemId.val(),
+                'nonce' : rbfw_ajax.nonce
 			},
 			success: function(response) {
 				$('#rbfw-faq-msg').html(response.data.message);
@@ -797,6 +799,7 @@
 				rbfw_faq_title:title.val(),
 				rbfw_faq_content:content,
 				rbfw_faq_postID:postID.val(),
+                'nonce' : rbfw_ajax.nonce
 			},
 			success: function(response) {
 				$('#rbfw-faq-msg').html(response.data.message);
@@ -819,6 +822,7 @@
 				action: 'rbfw_faq_delete_item',
 				rbfw_faq_postID:postID.val(),
 				itemId:itemId,
+                'nonce' : rbfw_ajax.nonce
 			},
 			success: function(response) {
 				$('.rbfw-faq-items').html('');

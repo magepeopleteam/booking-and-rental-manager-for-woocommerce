@@ -2999,8 +2999,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 /* MPS Thank you page css*/
 
-.rbfw_thankyou_page_wrap,
-.rbfw_account_page_wrap {
+.rbfw_thankyou_page_wrap{
     padding-top: 30px;
     padding-bottom: 30px;
     width: 100% !important;
@@ -3008,18 +3007,15 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin: auto;
 }
 
-.rbfw_thankyou_page_wrap table thead,
-.rbfw_account_page_wrap table thead {
+.rbfw_thankyou_page_wrap table thead{
     background: #ddd;
 }
 
-.rbfw_thankyou_page_wrap table tbody tr:nth-child(2n + 1),
-.rbfw_account_page_wrap table tbody tr:nth-child(2n + 1) {
+.rbfw_thankyou_page_wrap table tbody tr:nth-child(2n + 1){
     background-color: #00328014;
 }
 
-.rbfw_thankyou_page_wrap table tbody tr:nth-child(2n),
-.rbfw_account_page_wrap table tbody tr:nth-child(2n) {
+.rbfw_thankyou_page_wrap table tbody tr:nth-child(2n){
     background-color: #fff;
 }
 

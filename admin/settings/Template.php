@@ -279,10 +279,7 @@
                         ]
                     ];
                     $input_data_sabitized = sanitize_post_array( $_POST, $rules );
-					$rbfw_single_template_original = isset( $_POST['rbfw_single_template'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_single_template'] ) ) : 'Default';
-
-                    $rbfw_single_template = is_dir( RBFW_Function::get_template_path( 'single/' . strtolower( $rbfw_single_template_original ) ) ) ? $rbfw_single_template_original : 'Default';
-					$rbfw_single_template=mep_isValidFilename($rbfw_single_template)?$rbfw_single_template:'Default';
+					$rbfw_single_template_original = isset( $_POST['rbfw_single_template'] ) ? sanitize_file_name( wp_unslash( $_POST['rbfw_single_template'] ) ) : 'Default';
 
 					$dt_sidebar_switch         = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_dt_sidebar_switch'] ) ) : '';
 					$testimonials              = isset( $input_data_sabitized['rbfw_dt_sidebar_testimonials'] ) ?  $input_data_sabitized['rbfw_dt_sidebar_testimonials']  : [];
@@ -299,13 +296,4 @@
 			}
 		}
 		new RBFW_Template();
-	}
-	if (!function_exists('mep_isValidFilename')) {
-		function mep_isValidFilename($filename) {
-			// Define the allowed pattern: lowercase letters, numbers, and must end with .php
-			$pattern = '/^[a-z0-9]+\.php$/';
-
-			// Check if the filename matches the pattern
-			return preg_match($pattern, $filename) === 1;
-		}
 	}
