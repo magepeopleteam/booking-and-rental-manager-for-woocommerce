@@ -726,7 +726,7 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                             if($single['title']){
                                 $service_quantity[] = esc_html($single['stock_quantity']);
                                 $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return,$start_time , $end_time ));
-                                $service_stock[] = $single['stock_quantity'] - max(array_column($service_q, $single['title']));
+                                $service_stock[] = (int)$single['stock_quantity'] - max(array_column($service_q, $single['title']));
                             }
                         }
                     }
