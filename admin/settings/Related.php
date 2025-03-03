@@ -50,11 +50,11 @@
 								) );
 							?>
 							<?php while ( $the_query->have_posts() ) : $the_query->the_post(); ?>
-								<option 
-									<?php echo ( in_array( get_the_ID(), $releted_post_id ) ) ? 'selected' : ''; ?> 
-									value="<?php echo esc_attr( get_the_ID() ); ?>"> 
-									<?php echo esc_html( get_the_title() ); ?> 
-								</option>
+                                <option
+									<?php echo ( in_array( get_the_ID(), $releted_post_id ) ) ? 'selected' : ''; ?>
+                                    value="<?php echo esc_attr( get_the_ID() ); ?>">
+									<?php echo esc_html( get_the_title() ); ?>
+                                </option>
 							<?php endwhile; ?>
                         </select>
                     </div>
@@ -83,20 +83,7 @@
 					return;
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-                    $rules = [
-                        'name'        => 'sanitize_text_field',
-                        'email'       => 'sanitize_email',
-                        'age'         => 'absint',
-                        'preferences' => [
-                            'color'         => 'sanitize_text_field',
-                            'notifications' => function ( $value ) {
-                                return $value === 'yes' ? 'yes' : 'no';
-                            }
-                        ]
-                    ];
-                    $input_data_sabitized = sanitize_post_array( $_POST, $rules );
-					// Use wp_unslash to remove slashes and then sanitize array items using rbfw_array_strip
-					$related_categories = isset( $input_data_sabitized['rbfw_releted_rbfw'] ) ?  $input_data_sabitized['rbfw_releted_rbfw']  : [];
+					$related_categories = isset( $_POST['rbfw_releted_rbfw'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_releted_rbfw'] ) : [];
 					// Update the post meta
 					update_post_meta( $post_id, 'rbfw_releted_rbfw', $related_categories );
 				}
