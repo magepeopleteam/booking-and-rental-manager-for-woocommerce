@@ -3063,28 +3063,3 @@ function rbfw_array_strip( $array_or_string ) {
 
     return $array_or_string;
 }
-
-function sanitize_post_array($data, $rules) {
-    $sanitized_data = [];
-
-    foreach ($data as $key => $value) {
-        if (is_array($value)) {
-            // Recursively sanitize nested arrays
-            $sanitized_data[$key] = sanitize_post_array(
-                $value,
-                isset($rules[$key]) ? $rules[$key] : []
-            );
-        } else {
-            // Apply sanitization rule if defined
-            if (isset($rules[$key]) && is_callable($rules[$key])) {
-                $sanitized_data[$key] = call_user_func($rules[$key], $value);
-            } else {
-                // Default: sanitize as text
-                $sanitized_data[$key] = sanitize_text_field($value);
-            }
-        }
-    }
-
-    return $sanitized_data;
-}
-

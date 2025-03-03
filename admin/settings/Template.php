@@ -161,7 +161,7 @@
 											?>
                                             <div class=" gallery-image">
                                                 <span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>
-                                                <img id="media_preview_<?php echo esc_attr( $post_id ); ?>" src="<?php echo esc_url( $media_url ); ?>" />
+                                                <img id="media_preview_<?php echo esc_attr( $post_id ); ?>" src="<?php echo esc_url( $media_url ); ?>"/>
                                                 <input type='hidden' name='rbfw_gallery_images_additional[]' value='<?php echo esc_attr( $image ); ?>'/>
                                             </div>
 										<?php
@@ -232,26 +232,25 @@
                             .children('.testimonial-field').attr('name', 'rbfw_dt_sidebar_testimonials[' + now + '][rbfw_dt_sidebar_testimonial_text]');
                     }
                     jQuery(document).ready(function ($) {
-                    $('#rbfw_gallery_images_additional_<?php echo esc_attr( $post_id ); ?>').click(function () {
-                        // Set up the media editor attachment handler
-                        wp.media.editor.send.attachment = function (props, attachment) {
-                            var attachment_id = attachment.id;
-                            var attachment_url = <?php echo json_encode( esc_url( get_template_directory_uri() ) ); ?> + '/' + attachment.url;
-                            var html = '<div class="gallery-image">';
-                            html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>';
-                            html += '<img src="' + esc_url(attachment_url) + '" style="width:100%"/>';
-                            html += '<input type="hidden" name="rbfw_gallery_images_additional[]" value="' + esc_attr(attachment_id) + '" />';
-                            html += '</div>';
-                            $('.media-list-additional-<?php echo esc_attr( $post_id ); ?>').append(html);
-                        }
-                        wp.media.editor.open($(this));
-                        return false;
+                        $('#rbfw_gallery_images_additional_<?php echo esc_attr( $post_id ); ?>').click(function () {
+                            // Set up the media editor attachment handler
+                            wp.media.editor.send.attachment = function (props, attachment) {
+                                var attachment_id = attachment.id;
+                                var attachment_url = <?php echo json_encode( esc_url( get_template_directory_uri() ) ); ?> +'/' + attachment.url;
+                                var html = '<div class="gallery-image">';
+                                html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>';
+                                html += '<img src="' + esc_url(attachment_url) + '" style="width:100%"/>';
+                                html += '<input type="hidden" name="rbfw_gallery_images_additional[]" value="' + esc_attr(attachment_id) + '" />';
+                                html += '</div>';
+                                $('.media-list-additional-<?php echo esc_attr( $post_id ); ?>').append(html);
+                            }
+                            wp.media.editor.open($(this));
+                            return false;
+                        });
+                        $('#media_clear_additional_<?php echo esc_attr( $post_id ); ?>').click(function () {
+                            $('.media-list-additional-<?php echo esc_attr( $post_id ); ?> .gallery-image').remove();
+                        })
                     });
-
-                    $('#media_clear_additional_<?php echo esc_attr( $post_id ); ?>').click(function () {
-                        $('.media-list-additional-<?php echo esc_attr( $post_id ); ?> .gallery-image').remove();
-                    })
-                });
                 </script>
 				<?php
 			}
@@ -267,25 +266,12 @@
 					return;
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-                    $rules = [
-                        'name'        => 'sanitize_text_field',
-                        'email'       => 'sanitize_email',
-                        'age'         => 'absint',
-                        'preferences' => [
-                            'color'         => 'sanitize_text_field',
-                            'notifications' => function ( $value ) {
-                                return $value === 'yes' ? 'yes' : 'no';
-                            }
-                        ]
-                    ];
-                    $input_data_sabitized = sanitize_post_array( $_POST, $rules );
 					$rbfw_single_template_original = isset( $_POST['rbfw_single_template'] ) ? sanitize_file_name( wp_unslash( $_POST['rbfw_single_template'] ) ) : 'Default';
-
-					$dt_sidebar_switch         = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_dt_sidebar_switch'] ) ) : '';
-					$testimonials              = isset( $input_data_sabitized['rbfw_dt_sidebar_testimonials'] ) ?  $input_data_sabitized['rbfw_dt_sidebar_testimonials']  : [];
-					$sidebar_content           = isset( $input_data_sabitized['rbfw_dt_sidebar_content'] ) ?  $input_data_sabitized['rbfw_dt_sidebar_content']  : [];
-					$additional_gallery_images = isset( $_POST['rbfw_enable_additional_gallary'] ) ?  sanitize_text_field( wp_unslash($_POST['rbfw_enable_additional_gallary'] )) : 'off';
-					$gallery_images            = isset( $_POST['rbfw_gallery_images_additional'] ) ?  $input_data_sabitized['rbfw_gallery_images_additional']  : [];
+					$dt_sidebar_switch             = isset( $_POST['rbfw_dt_sidebar_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_dt_sidebar_switch'] ) ) : '';
+					$testimonials                  = isset( $_POST['rbfw_dt_sidebar_testimonials'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_dt_sidebar_testimonials'] ) : [];
+					$sidebar_content               = isset( $_POST['rbfw_dt_sidebar_content'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_dt_sidebar_content'] ) : [];
+					$gallery_images                = isset( $_POST['rbfw_gallery_images_additional'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_gallery_images_additional'] ) : [];
+					$additional_gallery_images = isset( $_POST['rbfw_enable_additional_gallary'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_additional_gallary'] ) ) : 'off';
 					update_post_meta( $post_id, 'rbfw_dt_sidebar_switch', $dt_sidebar_switch );
 					update_post_meta( $post_id, 'rbfw_single_template', $rbfw_single_template_original );
 					update_post_meta( $post_id, 'rbfw_dt_sidebar_testimonials', $testimonials );
