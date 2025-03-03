@@ -67,7 +67,7 @@ if (!class_exists('RBFW_Status')) {
                     <tbody>
                         <tr>
                             <td><?php esc_html_e( 'WooCommerce', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
-                            <td><?php echo esc_html($button_wc); ?></td>
+                            <td><?php echo wp_kses($button_wc,rbfw_allowed_html()); ?></td>
                         </tr>
                     </tbody>
                 </table>

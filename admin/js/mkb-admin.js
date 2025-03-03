@@ -203,7 +203,7 @@
         });
 
         var current_item_type = jQuery('#rbfw_item_type').val();
-        if (current_item_type != 'bike_car_sd' && current_item_type != 'appointment' && current_item_type != 'resort') {
+        if ( current_item_type != 'appointment' && current_item_type != 'resort') {
             jQuery('.rbfw_seasonal_price_config_wrapper').show();
         } else {
             jQuery('.rbfw_seasonal_price_config_wrapper').hide();
@@ -227,7 +227,7 @@
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').show();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
-                jQuery('.rbfw_seasonal_price_config_wrapper').hide();
+                jQuery('.rbfw_seasonal_price_config_wrapper').show();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 jQuery('.rbfw_es_price_config_wrapper').show();

@@ -2629,6 +2629,7 @@
                     }
                     $total_days = ( $total_days == 0 ) ? 1 : $total_days;
                 }
+
                 for ( $i = 0; $i < $total_days; $i ++ ) {
                     $day = strtolower( gmdate( 'D', strtotime( "+$i day", strtotime( $start_date ) ) ) );
                     if ( $rbfw_enable_daily_rate == 'no' && $rbfw_enable_hourly_rate == 'yes' ) {
@@ -2745,7 +2746,7 @@
                             if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices && ( $sp_price = check_seasonal_price( $Book_dates_array[ $i ], $rbfw_sp_prices, $hours, $rbfw_enable_daily_rate ) ) != 'not_found' ) {
                                 $duration_price = $sp_price + $duration_price;
                             }
-                            if ( get_post_meta( $post_id, 'rbfw_enable_' . $day . '_day', true ) == 'yes' ) {
+                            elseif ( get_post_meta( $post_id, 'rbfw_enable_' . $day . '_day', true ) == 'yes' ) {
                                 $duration_price = (float) get_post_meta( $post_id, 'rbfw_' . $day . '_daily_rate', true ) + $duration_price;
                             } else {
                                 $duration_price = $rbfw_daily_rate + $duration_price;
