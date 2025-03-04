@@ -66,7 +66,7 @@
 				?>
                 <section>
                     <div>
-                        <label><?php esc_html_e( 'Enable the Available Item Quantity Display on Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                        <label><?php esc_html_e( 'Display item available quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                         <p><?php esc_html_e( 'It displays available quantity information in item details page.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
                     <label class="switch">

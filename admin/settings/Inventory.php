@@ -199,7 +199,7 @@
 				?>
                 <section>
                     <div>
-                        <label><?php esc_html_e( 'Enable Multiple Item Quantity Box Display in Front-end', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                        <label><?php esc_html_e( 'Enable Multiple Item Choosing Option', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                         <p><?php esc_html_e( 'It enables the multiple item quantity selection option. It will work when the type is Bike/Car for multiple day, Dress, Equipment & Others.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
                     <label class="switch">
