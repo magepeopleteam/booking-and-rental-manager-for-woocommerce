@@ -58,6 +58,19 @@
             },
             success: function(response) {
                 jQuery('.rbfw_bike_car_sd_price_table tbody').append(response);
+
+                $('.bike_cad_sd_type_sp').html("<option value=''>Select Type</option>");
+                $( "tr.rbfw_bike_car_sd_price_table_row" ).each(function( index ) {
+
+                   let type_value = $("[name='rbfw_bike_car_sd_data["+index+"][rent_type]']").val();
+
+                    if(type_value){
+                        $('.bike_cad_sd_type_sp').append("<option value='"+type_value+"'>"+type_value+"</option>")
+                    }
+                });
+
+
+
                 jQuery('.rbfw_bike_car_sd_price_table_body').sortable({
                     // You can add other options as needed
                     update: function(event, ui) {
@@ -67,8 +80,6 @@
                 });
             },
         });
-
-
     })
 
     jQuery( ".rbfw_bike_car_sd_price_table_body" ).sortable();
