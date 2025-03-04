@@ -33,7 +33,7 @@ $current_date = date_i18n('Y-m-d');
 global $rbfw;
 
 
-$rbfw_enable_md_type_item_qty = get_post_meta($rbfw_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($rbfw_id, 'rbfw_available_qty_info_switch', true) : 'no';
+$rbfw_enable_md_type_item_qty = get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) ? get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) : 'no';
 
 //echo $rbfw_enable_md_type_item_qty;exit;
 
