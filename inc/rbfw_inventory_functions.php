@@ -298,7 +298,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
             if ( ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
 
-                if($inventory['rbfw_start_date_ymd'] && $inventory['rbfw_end_date_ymd']){
+                if(isset($inventory['rbfw_start_date_ymd']) && isset($inventory['rbfw_end_date_ymd'])){
                     $inventory_start_date = $inventory['rbfw_start_date_ymd'];
                     $inventory_end_date = $inventory['rbfw_end_date_ymd'];
                     $inventory_start_time = $inventory['rbfw_start_time_24'];
@@ -1013,7 +1013,7 @@ function rbfw_get_stock_details(){
                 <table class="rbfw_inventory_page_inner_table">
                     <thead>
                         <tr>
-                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Rent Type','booking-and-rental-manager-for-woocommerce'); ?>gggg</th>
+                            <th class="rbfw_inventory_vf_label"><?php esc_html_e('Rent Type','booking-and-rental-manager-for-woocommerce'); ?></th>
                             <th class="rbfw_inventory_vf_label"><?php esc_html_e('Available Quantity','booking-and-rental-manager-for-woocommerce'); ?></th>
                         </tr>
                     </thead>
