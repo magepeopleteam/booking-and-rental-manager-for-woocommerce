@@ -385,18 +385,7 @@
 
 				global $rbfw;
 				$content                 = '';
-				$rules                   = [
-					'name'        => 'sanitize_text_field',
-					'email'       => 'sanitize_email',
-					'age'         => 'absint',
-					'preferences' => [
-						'color'         => 'sanitize_text_field',
-						'notifications' => function ( $value ) {
-							return $value === 'yes' ? 'yes' : 'no';
-						}
-					]
-				];
-				$sd_input_data_sabitized = sanitize_post_array( $_POST, $rules );
+				$sd_input_data_sabitized = RBFW_Function::data_sanitize($_POST);
 				$post_id             = ! empty( $_POST['post_id'] ) ? sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : '';
 				$bikecarsd_price     = 0;
 				$service_price       = 0;

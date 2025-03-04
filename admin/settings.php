@@ -87,14 +87,6 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 				'options' => rbfw_get_pages_arr()
 			),
 			array(
-				'name'    => 'rbfw_account_page',
-				'label'   => esc_html__( 'Booking Account Page', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'It will work when the mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'generatepage',
-				'default' => '',
-				'options' => rbfw_get_pages_arr()
-			),
-			array(
 				'name'    => 'rbfw_search_page',
 				'label'   => esc_html__( 'Search Page', 'booking-and-rental-manager-for-woocommerce' ),
 				'desc'    => esc_html__( 'The filter form result will display on search result page.', 'booking-and-rental-manager-for-woocommerce' ),

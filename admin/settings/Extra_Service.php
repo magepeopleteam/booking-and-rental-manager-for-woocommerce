@@ -43,18 +43,18 @@
 					<?php $this->section_header(); ?>
 					<?php $this->extra_service_table( $post_id ); ?>
                 </div>
-				<script>
-					// Toggle extra service quantity options
-					jQuery('input[name=rbfw_enable_extra_service_qty]').click(function () {
-						var status = jQuery(this).val();
-						if (status === 'yes') {
-							jQuery(this).val('no');
-						}
-						if (status === 'no') {
-							jQuery(this).val('yes');
-						}
-					});
-					// Handle extra service image upload
+                <script>
+                    // Toggle extra service quantity options
+                    jQuery('input[name=rbfw_enable_extra_service_qty]').click(function () {
+                        var status = jQuery(this).val();
+                        if (status === 'yes') {
+                            jQuery(this).val('no');
+                        }
+                        if (status === 'no') {
+                            jQuery(this).val('yes');
+                        }
+                    });
+                    // Handle extra service image upload
                     jQuery(document).ready(function () {
                         function rbfw_service_image_addup() {
                             // Onclick for extra service add image button
@@ -71,7 +71,6 @@
                                 wp.media.editor.open(jQuery(this));
                                 return false;
                             });
-                            
                             // Onclick for extra service remove image button
                             jQuery('.rbfw_remove_service_image_btn').click(function () {
                                 let target = jQuery(this).parents('tr');
@@ -79,10 +78,9 @@
                                 target.find('.rbfw_service_image').val('');
                             });
                         }
-
                         rbfw_service_image_addup();
                     });
-				</script>
+                </script>
 				<?php
 			}
 
@@ -212,32 +210,19 @@
 					return;
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-
-                    $rules = [
-                        'name'        => 'sanitize_text_field',
-                        'email'       => 'sanitize_email',
-                        'age'         => 'absint',
-                        'preferences' => [
-                            'color'         => 'sanitize_text_field',
-                            'notifications' => function ( $value ) {
-                                return $value === 'yes' ? 'yes' : 'no';
-                            }
-                        ]
-                    ];
-                    $input_data_sabitized = sanitize_post_array( $_POST, $rules );
+					$input_data_sabitized          = RBFW_Function::data_sanitize( $_POST );
 					$rbfw_enable_extra_service_qty = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_extra_service_qty'] ) ) : 'no';
 					update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
 					// save extra service data==========================================
 					$old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 					$new_extra_service = array();
 					$service_img       = ! empty( $_POST['service_img'] ) ? sanitize_text_field( wp_unslash( $_POST['service_img'] ) ) : [];
-					$names             = isset( $input_data_sabitized['service_name'] ) ?  $input_data_sabitized['service_name']  : array();
-					$urls              = isset( $input_data_sabitized['service_price'] ) ? $input_data_sabitized['service_price']  : array();
-					$service_desc      = isset( $input_data_sabitized['service_desc'] ) ? $input_data_sabitized['service_desc']  : array();
+					$names             = isset( $input_data_sabitized['service_name'] ) ? $input_data_sabitized['service_name'] : array();
+					$urls              = isset( $input_data_sabitized['service_price'] ) ? $input_data_sabitized['service_price'] : array();
+					$service_desc      = isset( $input_data_sabitized['service_desc'] ) ? $input_data_sabitized['service_desc'] : array();
 					$qty               = isset( $input_data_sabitized['service_qty'] ) ? $input_data_sabitized['service_qty'] : array();
 					$qty_type          = ! empty( $input_data_sabitized['service_qty_type'] ) ? $input_data_sabitized['service_qty_type'] : array();
-
-                    $count             = count( $names );
+					$count = count( $names );
 					for ( $i = 0; $i < $count; $i ++ ) {
 						if ( ! empty( $service_img[ $i ] ) ) :
 							$new_extra_service[ $i ]['service_img'] = stripslashes( wp_strip_all_tags( $service_img[ $i ] ) );
@@ -258,7 +243,6 @@
 							$new_extra_service[ $i ]['service_qty_type'] = stripslashes( wp_strip_all_tags( $qty_type[ $i ] ) );
 						endif;
 					}
-					
 					$extra_service_data_arr = apply_filters( 'rbfw_extra_service_arr_save', $new_extra_service );
 					if ( ! empty( $extra_service_data_arr ) && $extra_service_data_arr != $old_extra_service ) {
 						update_post_meta( $post_id, 'rbfw_extra_service_data', $extra_service_data_arr );
