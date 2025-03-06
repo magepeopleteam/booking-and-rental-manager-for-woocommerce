@@ -78,7 +78,7 @@ function loadBgImage() {
 			target.css({"min-height": height});
 			let bg_url = target.data('bg-image');
 			if (!bg_url || bg_url.width === 0 || bg_url.width === 'undefined') {
-				bg_url = ttbm_empty_image_url;
+				bg_url = '';
 			}
 			target.css('background-image', 'url("' + bg_url + '")').promise().done(function () {
 				dLoaderRemove(jQuery(this));
