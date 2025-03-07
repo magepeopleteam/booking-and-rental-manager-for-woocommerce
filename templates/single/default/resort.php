@@ -20,7 +20,7 @@
 			<?php if ( $frontend ) { ?>
                 <div class="mp_left_section">
                     <div class="mpStyle <?php echo esc_attr( $slide_style ); ?>">
-						<?php do_action( 'add_super_slider', $post_id, 'rbfw_gallery_images' ); ?>
+						<?php do_action( 'rbfw_slider', $post_id, 'rbfw_gallery_images' ); ?>
                     </div>
                     <div class="rbfw-single-left-container">
                         <div class="rbfw-single-left-information">
