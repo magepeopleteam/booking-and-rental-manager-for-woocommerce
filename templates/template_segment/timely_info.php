@@ -185,7 +185,7 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
         /* Include Custom Registration Form */
         if(class_exists('Rbfw_Reg_Form')){
             $reg_form = new Rbfw_Reg_Form();
-            echo esc_html($reg_form->rbfw_generate_regf_fields($id));
+            echo wp_kses($reg_form->rbfw_generate_regf_fields($id),  rbfw_allowed_html());
         }
         /* End: Include Custom Registration Form */
         ?>
