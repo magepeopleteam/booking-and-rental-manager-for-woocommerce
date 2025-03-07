@@ -69,74 +69,7 @@ if(isset($_POST['post_id'])){
 
 
         <div class="">
-           <?php
 
-                if(($enable_service_price_sd=='on')){
-
-                    $option_value  = get_post_meta($id, 'rbfw_service_category_price_sd', true);
-                    $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
-                    if(!empty($option_value)){  ?>
-                        <div class="multi-service-category-section">
-                            <div class="rbfw-single-right-heading">
-                                <?php esc_html_e( 'Category wise service price', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </div>
-
-                            <div class="tab">
-                                <?php foreach ($option_value as $cat=>$item){ ?>
-                                    <?php if($item['cat_title']){ ?>
-                                        <button class="tablinks" onclick="openCity(event, 'service_item_<?php echo esc_attr($cat); ?>')"><?php echo esc_html($item['cat_title']); ?></button>
-                                        <input type="hidden" name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][cat_title]" value="<?php echo esc_attr($item['cat_title']); ?>">
-                                        <?php
-                                    }
-                                }
-                                ?>
-                            </div>
-
-                                    <?php foreach ($option_value as $cat=>$item){ ?>
-                                        <?php if($item['cat_title']){ ?>
-                                            <div id="service_item_<?php echo esc_html($cat); ?>" class="tabcontent">
-                                                <?php foreach ($item['cat_services'] as $serkey=>$service){ ?>
-                                                    <?php if($service['title']){ ?>
-
-                                                            <div class="rbfw_multi_services">
-                                                                <div class="service-price-item" style="display: flex;gap:20px">
-                                                                    <div style="display: none" class="rbfw-sold-out">
-                                                                        Sold Out
-                                                                    </div>
-
-                                                                    <div class="rbfw-checkbox">
-                                                                        <label class="switch">
-                                                                            <input type="checkbox" class="rbfw_service_price_data_sd item_<?php echo esc_attr($cat.$serkey); ?>" name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][main_cat_name]" data-service_price_type="<?php echo esc_attr($service['service_price_type']); ?>" data-price="<?php echo esc_attr($service['price']); ?>" data-quantity="1" data-rbfw_enable_md_type_item_qty="<?php echo esc_html($rbfw_enable_extra_service_qty); ?>" data-item="<?php echo esc_attr($cat.$serkey); ?>">
-                                                                            <span class="slider round"></span>
-                                                                        </label>
-                                                                        <input type="hidden" name="rbfw_service_price_data[<?php echo esc_html($cat); ?>][<?php echo esc_html($serkey); ?>][name]" value="<?php echo esc_attr($service['title']); ?>">
-                                                                        <input type="hidden" name="rbfw_service_price_data[<?php echo esc_html($cat); ?>][<?php echo esc_html($serkey); ?>][service_price_type]" value="<?php echo esc_attr($service['service_price_type']); ?>">
-                                                                        <input type="hidden" name="rbfw_service_price_data[<?php echo esc_html($cat); ?>][<?php echo esc_html($serkey); ?>][price]" value="<?php echo esc_attr($service['price']); ?>">
-                                                                    </div>
-
-                                                                    <div class="title">
-                                                                        <?php echo esc_html($service['title']); ?> <span class="remaining_stock"></span>
-                                                                    </div>
-                                                                    <div  class="rbfw_qty_input rbfw_service_quantity item_<?php echo esc_attr($cat.$serkey); ?>">
-                                                                        <a class="rbfw_service_quantity_minus_sd" data-item="<?php echo esc_html($cat.$serkey); ?>"><i class="fas fa-minus"></i></a>
-                                                                        <input type="number"  name="rbfw_service_price_data[<?php echo esc_html($cat); ?>][<?php echo esc_html($serkey); ?>][quantity]" min="0"  value="1" class="rbfw_servicesd_qty rbfw_service_info_stock" data-cat="service" data-price="20" data-item="<?php echo esc_attr($cat.$serkey); ?>" data-name="ddd" autocomplete="off">
-                                                                        <a class="rbfw_service_quantity_plus_sd" data-item="<?php echo esc_html($cat.$serkey); ?>"><i class="fas fa-plus"></i></a>
-                                                                    </div>
-                                                                    <div class="title"><?php echo wp_kses(wc_price($service['price']),rbfw_allowed_html()); ?></div>
-                                                                </div>
-                                                            </div>
-
-                                                    <?php }
-                                                 } ?>
-                                            </div>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                        </div>
-
-                    <?php }
-                }else{ ?>
 
 
 
@@ -169,6 +102,15 @@ if(isset($_POST['post_id'])){
                             foreach ($rbfw_bike_car_sd_data as $value) {
                                 $max_available_qty = rbfw_get_bike_car_sd_available_qty($id, $selected_date, $value['rent_type'], $selected_time);
                                 if($value['qty'] > 0){
+
+                                    if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
+                                        $rbfw_sp_prices = get_post_meta( $id, 'rbfw_bike_car_sd_data_sp', true );
+                                        if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices  ) {
+                                            $sp_price = check_seasonal_price_sd( $selected_date, $rbfw_sp_prices, $value['rent_type'] );
+                                        }
+                                    }
+                                    $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
+
                                     ?>
                                     <tr>
                                         <td class="w_50_pc">
@@ -182,22 +124,24 @@ if(isset($_POST['post_id'])){
                                         </td>
 
                                         <td class="w_30_pc">
-                                            <span class="rbfw_bikecarsd_type_price"><?php echo wp_kses(wc_price($value['price']),rbfw_allowed_html()); ?></span>
+                                            <span class="rbfw_bikecarsd_type_price"><?php echo wp_kses(wc_price($type_price),rbfw_allowed_html()); ?></span>
                                         </td>
-                                        <input type="hidden" name="rbfw_bikecarsd_info[<?php echo esc_html($i); ?>][price]" value="<?php echo esc_attr($value['price']); ?>"/>
+
+                                        <input type="hidden" name="rbfw_bikecarsd_info[<?php echo esc_html($i); ?>][price]" value="<?php echo esc_attr($type_price); ?>"/>
+
                                         <td class="w_20_pc">
                                             <div class="rbfw_service_price_wrap">
                                                 <div class="rbfw_qty_input">
                                                     <?php if($max_available_qty){ ?>
                                                         <?php if($rbfw_enable_extra_service_qty=='yes'){ ?>
                                                             <a class="rbfw_qty_minus rbfw_bikecarsd_qty_minus"><i class="fas fa-minus"></i></a>
-                                                            <input type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($value['price']); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
+                                                            <input type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($type_price); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
                                                             <a class="rbfw_qty_plus rbfw_bikecarsd_qty_plus"><i class="fas fa-plus"></i></a>
                                                         <?php }else{ ?>
                                                             <label class="switch">
                                                                 <input type="checkbox" class="rbfw_bikecarsd_qty_plus" data-quantity_fixed="checkbox">
                                                                 <span class="slider round"></span>
-                                                                <input style="display:none" type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($value['price']); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
+                                                                <input style="display:none" type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($type_price); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
                                                             </label>
                                                         <?php } ?>
                                                     <?php }else{ ?>
@@ -215,9 +159,6 @@ if(isset($_POST['post_id'])){
 
 
 
-                    <?php
-                }
-                ?>
 
 
             <?php if(!empty($rbfw_extra_service_data)){ ?>
