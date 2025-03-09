@@ -1,0 +1,47 @@
+/**
+ * Booking and Rental Manager Block Editor Styles
+ */
+
+.rbfw-block-preview {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #e2e4e7;
+    border-radius: 4px;
+}
+
+.rbfw-block-preview h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #23282d;
+}
+
+.rbfw-block-preview p {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* Rent List Block */
+.wp-block-rbfw-rent-list .rbfw-block-preview {
+    border-left: 4px solid #0073aa;
+}
+
+/* Rent Search Block */
+.wp-block-rbfw-rent-search .rbfw-block-preview {
+    border-left: 4px solid #46b450;
+}
+
+/* Rent Filter Block */
+.wp-block-rbfw-rent-filter .rbfw-block-preview {
+    border-left: 4px solid #ffb900;
+}
+
+/* Add to Cart Block */
+.wp-block-rbfw-add-to-cart .rbfw-block-preview {
+    border-left: 4px solid #dc3232;
+}
+
+/* Search Results Block */
+.wp-block-rbfw-search-result .rbfw-block-preview {
+    border-left: 4px solid #826eb4;
+}

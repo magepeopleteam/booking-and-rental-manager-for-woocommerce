@@ -19,5 +19,6 @@ require_once RBFW_PLUGIN_DIR . '/admin/settings/Faq.php';
 require_once RBFW_PLUGIN_DIR . '/admin/taxonomy_register.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Security_Deposit.php';
+require_once RBFW_PLUGIN_DIR . '/admin/rbfw_customer_loyalty.php';
 
 

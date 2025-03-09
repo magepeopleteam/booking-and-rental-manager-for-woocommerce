@@ -1,0 +1,16 @@
+/**
+ * Booking and Rental Manager Block Styles
+ * 
+ * These styles will be applied to both the editor and the front-end.
+ */
+
+/* Common styles for all blocks */
+.wp-block-rbfw-rent-list,
+.wp-block-rbfw-rent-search,
+.wp-block-rbfw-rent-filter,
+.wp-block-rbfw-add-to-cart,
+.wp-block-rbfw-search-result {
+    margin-bottom: 30px;
+}
+
+/* Additional styles can be added here if needed */

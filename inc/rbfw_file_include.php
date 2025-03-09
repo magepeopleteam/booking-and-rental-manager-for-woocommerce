@@ -22,6 +22,7 @@ require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-sd-function.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_currency.php';
 
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_order_meta.php';
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_customer_profile_shortcode.php';
 require_once RBFW_PLUGIN_DIR . '/inc/class-bike-car-md-function.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-thankyou-page.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-search-page.php';
@@ -30,6 +31,9 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-rating-notice.php';
 
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-time-slots-page.php';
 require_once RBFW_PLUGIN_DIR . '/support/elementor/elementor-support.php';
+require_once RBFW_PLUGIN_DIR . '/support/blocks/block-support.php';
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_customer_management.php';
+require_once RBFW_PLUGIN_DIR . '/inc/rbfw_loyalty_program.php';
 //require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
 
 
