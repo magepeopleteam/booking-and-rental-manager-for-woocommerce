@@ -180,7 +180,7 @@
 				endif;
 			}
 
-			public function rbfw_bikecarsd_price_calculation( $product_id, $rbfw_bikecarsd_info, $rbfw_service_info = null, $rbfw_request = null ) {
+			public function rbfw_bikecarsd_price_calculation( $product_id, $rbfw_bikecarsd_info, $rbfw_service_info = null, $rbfw_request = null , $booking_date = null) {
 				global $rbfw;
 				if ( ! empty( $product_id ) && ! empty( $rbfw_bikecarsd_info ) ):
 					$rent_price          = 0;
@@ -201,13 +201,33 @@
 					else:
 						$extra_services = array();
 					endif;
-					foreach ( $rbfw_bikecarsd_info as $key => $value ):
-						$rent_type = $key; //Type1
+
+                    foreach ( $rbfw_rent_data as $key => $value ){
+                        $rent_type = $value['rent_type'];
+                        if ( array_key_exists( $rent_type, $rbfw_bikecarsd_info ) ) {
+
+                            if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
+                                $rbfw_sp_prices = get_post_meta( $product_id, 'rbfw_bike_car_sd_data_sp', true );
+                                if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices  ) {
+                                    $sp_price = check_seasonal_price_sd( $booking_date, $rbfw_sp_prices, $rent_type );
+                                }
+                            }
+                            $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
+                            $rent_price += (float) $rbfw_bikecarsd_info[ $rent_type ] * (float) $type_price; // addup price
+                        }
+                    }
+
+
+                    /*foreach ( $rbfw_bikecarsd_info as $key => $value ):
+						$rent_type = $key;
 						if ( array_key_exists( $rent_type, $rent_types ) ) {
-							// if Type1 exist in array
+
 							$rent_price += (float) $rent_types[ $rent_type ] * (float) $value; // addup price
 						}
-					endforeach;
+					endforeach;*/
+
+
+
 					if ( $rent_price > 0 ):
 						$total_rent_price = (float) $rent_price;
 					endif;
