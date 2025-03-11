@@ -66,14 +66,8 @@ if(isset($_POST['post_id'])){
         <?php } ?>
 
 
-
-
         <div class="">
-
-
-
-
-                        <table class="rbfw_bikecarsd_price_table rbfw_bikecarsd_rt_price_table">
+            <table class="rbfw_bikecarsd_price_table rbfw_bikecarsd_rt_price_table">
                             <thead>
                             <tr>
                                 <th class="w_50_pc">
@@ -110,6 +104,7 @@ if(isset($_POST['post_id'])){
                                         }
                                     }
                                     $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
+
 
                                     ?>
                                     <tr>
