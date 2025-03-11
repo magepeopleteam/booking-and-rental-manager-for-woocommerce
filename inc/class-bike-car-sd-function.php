@@ -502,6 +502,16 @@
 				$rbfw_bike_car_sd_data    = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) : [];
 				
 				foreach ( $rbfw_bike_car_sd_data as $value ) {
+
+
+                    if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
+                        $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_bike_car_sd_data_sp', true );
+                        if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices  ) {
+                            $sp_price = check_seasonal_price_sd( $start_date, $rbfw_sp_prices, $value['rent_type'] );
+                        }
+                    }
+                    $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
+
 					if ( $enable_specific_duration == 'on' ) {
 						$d_type   = $value['start_time'];
 						$duration = $value['end_time'];
@@ -514,9 +524,9 @@
 					<label>
 						<input type="radio" name="option" class="radio-input">
 						<?php if ( $rbfw_timely_available_quantity > 0 ):?>
-							<span title="<?php echo esc_attr($value['short_desc']) ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($value['price']); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']); ?>" data-end_time="<?php echo esc_attr($value['end_time']); ?>" data-available_quantity="<?php echo esc_attr($rbfw_timely_available_quantity); ?>" class="radio-button single-type-timely"><?php echo esc_attr($value['rent_type']); ?></span>
+							<span title="<?php echo esc_attr($value['short_desc']) ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($type_price); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']); ?>" data-end_time="<?php echo esc_attr($value['end_time']); ?>" data-available_quantity="<?php echo esc_attr($rbfw_timely_available_quantity); ?>" class="radio-button single-type-timely"><?php echo esc_attr($value['rent_type']); ?></span>
 						<?php else: ?>
-							<span style="text-decoration: line-through;cursor:text" title="<?php echo esc_attr($value['short_desc']); ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($value['price']); ?>" data-d_type="<?php echo esc_attr($value['d_type']);?>" class="radio-button"><?php echo esc_attr($value['rent_type'])?></span>
+							<span style="text-decoration: line-through;cursor:text" title="<?php echo esc_attr($value['short_desc']); ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($type_price); ?>" data-d_type="<?php echo esc_attr($value['d_type']);?>" class="radio-button"><?php echo esc_attr($value['rent_type'])?></span>
 						<?php endif;?>
 					</label>
 					<?php
