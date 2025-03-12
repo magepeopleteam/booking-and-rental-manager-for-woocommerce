@@ -30,6 +30,11 @@ class RBFWElementor {
 	private function include_widgets_files() {
 		require_once( __DIR__ . '/widget/rbfw-rent-add-to-cart.php' );	
 		require_once( __DIR__ . '/widget/rbfw-search.php' );
+		require_once( __DIR__ . '/widget/rbfw-rent-list.php' );
+		require_once( __DIR__ . '/widget/rbfw-search-result.php' );
+		require_once( __DIR__ . '/widget/rbfw-search-ac.php' );
+		require_once( __DIR__ . '/widget/rbfw-search1.php' );
+		require_once( __DIR__ . '/widget/rbfw-left-filter.php' );
 	}
 	
 	public function register_widgets() {
@@ -40,6 +45,11 @@ class RBFWElementor {
 		// Register Widgets		
 		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\RBFWAddToCartWidget() );
 		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\RBFWSearchWidget() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\RBFWRentListWidget() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\RBFWSearchResultWidget() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\RBFWSearchAcWidget() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\RBFWSearch1Widget() );
+		\Elementor\Plugin::instance()->widgets_manager->register_widget_type( new Widgets\RBFWLeftFilterWidget() );
 	}
 	
 	public function __construct() {

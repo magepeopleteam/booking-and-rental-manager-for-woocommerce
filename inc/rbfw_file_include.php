@@ -30,6 +30,8 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-rating-notice.php';
 
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-time-slots-page.php';
 require_once RBFW_PLUGIN_DIR . '/support/elementor/elementor-support.php';
+
+require_once RBFW_PLUGIN_DIR . '/support/blocks/block-support.php';
 //require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
 
 
