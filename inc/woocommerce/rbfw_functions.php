@@ -141,7 +141,7 @@
 			$rbfw_bikecarsd_total_price                      = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_total_price' , $bikecarsd_selected_date);
 			$rbfw_pickup_point                               = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
 			$rbfw_dropoff_point                              = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
-			$rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $end_date, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity );
+			$rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $end_date, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity , $bikecarsd_selected_date);
 			$base_price                                      = $rbfw_bikecarsd_total_price;
 			$total_price                                     = apply_filters( 'rbfw_cart_base_price', $base_price );
 			$security_deposit                                = rbfw_security_deposit( $rbfw_id, $total_price );
@@ -535,7 +535,8 @@
 				$item->add_meta_data( $rbfw_security_deposit_label, wc_price( $security_deposit['security_deposit_amount'] ) );
 			}
 			$item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
-		} else {
+
+        } else {
 			$rbfw_extra_service_data = get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
 			if ( ! empty( $rbfw_extra_service_data ) ) {
 				$extra_services = array_column( $rbfw_extra_service_data, 'service_price', 'service_name' );
@@ -804,7 +805,9 @@
 		}
 	}
 	function rbfw_prepar_and_add_user_data( $ticket_info, $rbfw_id, $wc_order_id, $start_date = null, $end_date = null, $rbfw_service_price_data_actual = array() ) {
-		global $rbfw;
+
+
+        global $rbfw;
 		$rbfw_rent_type  = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 		$order           = wc_get_order( $wc_order_id );
 		$order_meta      = get_post_meta( $wc_order_id );

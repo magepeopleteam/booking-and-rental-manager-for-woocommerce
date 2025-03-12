@@ -27,7 +27,8 @@
 				add_action( 'wp_ajax_nopriv_rbfw_service_type_timely_stock', array( $this, 'rbfw_service_type_timely_stock' ) );
 			}
 
-			public function rbfw_get_bikecarsd_rent_info( $product_id, $rent_info ) {
+			public function rbfw_get_bikecarsd_rent_info( $product_id, $rent_info , $booking_date = null ) {
+
 				$main_array     = [];
 				$rbfw_rent_data = get_post_meta( $product_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $product_id, 'rbfw_bike_car_sd_data', true ) : array();
 				if ( ! empty( $rbfw_rent_data ) ):
@@ -35,7 +36,38 @@
 				else:
 					$rent_types = array();
 				endif;
-				if ( ! empty( $rent_info ) ) {
+
+
+                foreach ( $rbfw_rent_data as $key => $value ){
+                    $rent_type = $value['rent_type'];
+                    if ( array_key_exists( $rent_type, $rent_info ) ) {
+
+                        if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
+                            $rbfw_sp_prices = get_post_meta( $product_id, 'rbfw_bike_car_sd_data_sp', true );
+                            if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices  ) {
+                                $sp_price = check_seasonal_price_sd( $booking_date, $rbfw_sp_prices, $rent_type );
+                            }
+                        }
+                        $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
+
+                        $main_array[ $rent_type ] = '(' . rbfw_mps_price( (float) $type_price ) . ' x ' . (float) $rent_info[ $rent_type ] . ') = ' . rbfw_mps_price( (float) $type_price * (float) $rent_info[ $rent_type ] );
+
+                    }
+                }
+
+
+                /*foreach ( $rbfw_type_info as $key => $value ):
+                    $rent_type = $key; //Type1
+                    if ( array_key_exists( $rent_type, $rent_types ) ) { // if Type1 exist in array
+                        $rent_price += (float) $rent_types[ $rent_type ] * (float) $value; // addup price
+                    }
+                endforeach;*/
+
+
+
+
+
+           /*     if ( ! empty( $rent_info ) ) {
 					foreach ( $rent_info as $key => $value ) {
 						$rent_type = $key; //Type1
 						if ( $value > 0 ) {
@@ -44,7 +76,10 @@
 							}
 						}
 					}
-				}
+				}*/
+
+
+
 
 				return $main_array;
 			}
@@ -69,7 +104,7 @@
 				return $main_array;
 			}
 
-			public function rbfw_bikecarsd_ticket_info( $product_id, $rbfw_start_datetime = null, $rbfw_end_date = null, $rbfw_type_info = array(), $rbfw_service_info = array(), $selected_time = null, $rbfw_regf_info = array(), $rbfw_pickup_point = null, $rbfw_dropoff_point = null, $end_time = null, $rbfw_item_quantity = null ) {
+			public function rbfw_bikecarsd_ticket_info( $product_id, $rbfw_start_datetime = null, $rbfw_end_date = null, $rbfw_type_info = array(), $rbfw_service_info = array(), $selected_time = null, $rbfw_regf_info = array(), $rbfw_pickup_point = null, $rbfw_dropoff_point = null, $end_time = null, $rbfw_item_quantity = null , $booking_date = null) {
 				global $rbfw;
 				if ( ! empty( $product_id ) && ! empty( $rbfw_type_info ) ):
 					$rent_price          = 0;
@@ -93,12 +128,34 @@
 					else:
 						$extra_services = array();
 					endif;
-					foreach ( $rbfw_type_info as $key => $value ):
+
+
+                    foreach ( $rbfw_rent_data as $key => $value ){
+                        $rent_type = $value['rent_type'];
+                        if ( array_key_exists( $rent_type, $rbfw_type_info ) ) {
+
+                            if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
+                                $rbfw_sp_prices = get_post_meta( $product_id, 'rbfw_bike_car_sd_data_sp', true );
+                                if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices  ) {
+                                    $sp_price = check_seasonal_price_sd( $booking_date, $rbfw_sp_prices, $rent_type );
+                                }
+                            }
+                            $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
+                            $rent_price += (float) $rbfw_type_info[ $rent_type ] * (float) $type_price; // addup price
+                        }
+                    }
+
+
+                    /*foreach ( $rbfw_type_info as $key => $value ):
 						$rent_type = $key; //Type1
 						if ( array_key_exists( $rent_type, $rent_types ) ) { // if Type1 exist in array
 							$rent_price += (float) $rent_types[ $rent_type ] * (float) $value; // addup price
 						}
-					endforeach;
+					endforeach;*/
+
+
+
+
 					if ( $rent_price > 0 ):
 						$total_rent_price = (float) $rent_price;
 					endif;
