@@ -59,12 +59,12 @@ function fetch_order_details_callback() {
                         $BikeCarSdClass = new RBFW_BikeCarSd_Function();
                         $rent_info      = ! empty( $ticket_info['rbfw_type_info'] ) ? $ticket_info['rbfw_type_info'] : [];
                         if($ticket_info['rbfw_end_time']){
-                            $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-time-text').$ticket_info['rbfw_end_time'];
+                            $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-time-text');
                         }else{
                             $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-text');
                         }
                         $service_info   = ! empty( $ticket_info['rbfw_service_info'] ) ? $ticket_info['rbfw_service_info'] : [];
-                        $rent_info      = $BikeCarSdClass->rbfw_get_bikecarsd_rent_info( $item_id, $rent_info );
+                        $rent_info      = $BikeCarSdClass->rbfw_get_bikecarsd_rent_info( $item_id, $rent_info , $ticket_info['rbfw_start_date']);
                         $service_info   = $BikeCarSdClass->rbfw_get_bikecarsd_service_info( $item_id, $service_info );
                     } elseif ( $rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others' ) {
                         $BikeCarMdClass = new RBFW_BikeCarMd_Function();
@@ -96,7 +96,7 @@ function fetch_order_details_callback() {
                     <table class="wp-list-table widefat fixed striped table-view-list">
                         <thead>
                         <tr>
-                            <th colspan="2">nn<?php rbfw_string( 'rbfw_text_item_information', __( 'Item Information', 'booking-and-rental-manager-for-woocommerce' ) );
+                            <th colspan="2"><?php rbfw_string( 'rbfw_text_item_information', __( 'Item Information', 'booking-and-rental-manager-for-woocommerce' ) );
                                 echo ':'; ?></th>
                         </tr>
                         </thead>
@@ -397,6 +397,9 @@ function rbfw_order_meta_box_callback() {
     $mps_tax_switch = $rbfw->get_option_trans( 'rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off' );
     $grand_total    = ! empty( get_post_meta( $order_id, 'rbfw_ticket_total_price', true ) ) ? rbfw_mps_price( get_post_meta( $order_id, 'rbfw_ticket_total_price', true ) ) : '';
     $rbfw_order_tax = ! empty( get_post_meta( $order_id, 'rbfw_order_tax', true ) ) ? rbfw_mps_price( get_post_meta( $order_id, 'rbfw_order_tax', true ) ) : '';
+
+    wp_nonce_field( 'rbfw_nonce_action', 'nonce' );
+
     ?>
     <div class="rbfw_order_meta_box_wrap">
         <div class="rbfw_order_meta_box_head">
@@ -884,6 +887,7 @@ function rbfw_order_meta_box_sidebar_callback() {
 /* Save Order Meta Data */
 add_action( 'save_post', 'save_rbfw_order_meta_box' );
 function save_rbfw_order_meta_box( $post_id ) {
+
     if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_nonce_action' ) ) {
         return;
     }

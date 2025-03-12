@@ -211,7 +211,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                                             $sp_price_d = array_key_exists( 'rbfw_sp_price_d', $sp ) ? $sp['rbfw_sp_price_d'] : '0';
                                                             ?>
                                                             <tr>
-                                                                <td colspan="2"><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format($start_date) ); ?></strong><?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>  <strong><?php echo esc_html( rbfw_date_format($end_date) ); ?></strong> </td>
+                                                                <td colspan="2"><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format($start_date) ); ?></strong> <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>  <strong><?php echo esc_html( rbfw_date_format($end_date) ); ?></strong> </td>
                                                             </tr>
                                                             <tr>
                                                                 <td><strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo  wp_kses(wc_price($sp_price_d) , rbfw_allowed_html()); ?></td>
