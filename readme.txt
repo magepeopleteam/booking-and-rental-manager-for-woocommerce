@@ -207,6 +207,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.3.1 =
+* Seassional price implementation on single day option.
+* In Multiday quantity seassional price solve solved.
+* PDF issue solved.
+
 = 2.2.8 =
 * Cart page update.
 * In Multiday quantity visible option solved.
