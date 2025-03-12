@@ -1577,7 +1577,7 @@
 			foreach ( $rbfw_related_post_arr as $rbfw_related_post_id ) {
 				$rbfw_rent_type = get_post_meta( $rbfw_related_post_id, 'rbfw_item_type', true );
 				$gallery_images = get_post_meta( $rbfw_related_post_id, 'rbfw_gallery_images', true );
-				if ( isset( $gallery_images ) ) {
+				if ( isset( $gallery_images[0] ) ) {
 					$gallery_image = wp_get_attachment_url( $gallery_images[0] );
 				} else {
 					$gallery_image = RBFW_PLUGIN_URL . '/assets/images/no_image.png';
@@ -1801,7 +1801,7 @@
 			echo '<div class="owl-carousel owl-theme t_carousel">';
 			foreach ( $rbfw_related_post_arr as $rbfw_related_post_id ) {
 				$gallery_images = get_post_meta( $rbfw_related_post_id, 'rbfw_gallery_images', true );
-				if ( isset( $gallery_images ) ) {
+				if ( isset( $gallery_images[0] ) ) {
 					$gallery_image = wp_get_attachment_url( $gallery_images[0] );
 				} else {
 					$gallery_image = RBFW_PLUGIN_URL . '/assets/images/no_image.png';
