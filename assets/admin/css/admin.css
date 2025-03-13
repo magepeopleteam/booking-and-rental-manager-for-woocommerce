@@ -45,6 +45,9 @@
 #rbfw_add_meta_box .rbfw-faq-section .rbfw-faq-items .faq-content {
   display: none;
 }
+#rbfw_add_meta_box .rbfw-faq-section .rbfw-faq-items .faq-content img {
+  width: auto;
+}
 
 .rbfw-modal-container {
   position: fixed;
