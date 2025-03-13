@@ -709,7 +709,7 @@
 		var itemId = $(this).closest('.rbfw-faq-item').data('id');
 		var parent = $(this).closest('.rbfw-faq-item');
 		var headerText = parent.find('.faq-header p').text().trim();
-		var faqContentId = parent.find('.faq-content').text().trim();
+		var faqContentId = parent.find('.faq-content').html().trim();
 		var editorId = 'rbfw_faq_content';
 		$('input[name="rbfw_faq_title"]').val(headerText);
 		$('input[name="rbfw_faq_item_id"]').val(itemId);
