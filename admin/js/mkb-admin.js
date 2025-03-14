@@ -867,6 +867,17 @@
             $(this).val('yes');
         }
     });
+    $(document).on('click', 'input[name=rbfw_enable_faq_content]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no')
+            $('.rbfw-faq-section').slideUp();
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+            $('.rbfw-faq-section').slideDown();
+        }
+    });
     // ================toggle switch===================
 }(jQuery));
 

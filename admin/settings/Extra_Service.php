@@ -174,18 +174,7 @@
                             </p>
                         </div>
                     </section>
-                    <div class="wervice_quantity_input_box">
-                        <section>
-                            <div>
-                                <label><?php esc_html_e( 'Enable Service Quantity Box', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                <p><?php esc_html_e( 'If you Enable this customer can select number of quantity in front-end.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" name="rbfw_enable_extra_service_qty" value="<?php echo esc_attr( $rbfw_enable_extra_service_qty ); ?>" <?php echo esc_attr( ( $rbfw_enable_extra_service_qty == 'yes' ) ? 'checked' : '' ); ?>>
-                                <span class="slider round"></span>
-                            </label>
-                        </section>
-                    </div>
+                   
                 </div>
 				<?php
 			}
