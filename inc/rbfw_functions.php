@@ -347,7 +347,7 @@
                             <p class="rbfw_faq_desc">
 								<?php
 									if ( ! empty( $faq['rbfw_faq_content'] ) ):
-										echo esc_html( $faq['rbfw_faq_content'] );
+										echo wp_kses_post( $faq['rbfw_faq_content'] );
 									endif;
 								?>
                             </p>
