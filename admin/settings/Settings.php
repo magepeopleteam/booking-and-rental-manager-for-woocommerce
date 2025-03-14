@@ -91,34 +91,34 @@
 				<?php
 			}
 
+			public function  service_quantity_box($post_id){
+				$rbfw_enable_extra_service_qty = get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $post_id, 'rbfw_enable_extra_service_qty', true ) : 'yes';
+				?>
+				<div class="wervice_quantity_input_box">
+					<section>
+						<div>
+							<label><?php esc_html_e( 'Enable Service Quantity Box', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+							<p><?php esc_html_e( 'If you Enable this customer can select number of quantity in front-end.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						</div>
+						<label class="switch">
+							<input type="checkbox" name="rbfw_enable_extra_service_qty" value="<?php echo esc_attr( $rbfw_enable_extra_service_qty ); ?>" <?php echo esc_attr( ( $rbfw_enable_extra_service_qty == 'yes' ) ? 'checked' : '' ); ?>>
+							<span class="slider round"></span>
+						</label>
+					</section>
+				</div>
+				<?php
+			}
+
 			public function add_tabs_content( $post_id ) {
 				?>
                 <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_frontend_display">
 					<?php $this->section_header(); ?>
 					<?php $this->panel_header( 'Front-end Display Settings ', 'Front-end Display Settings' ); ?>
+					<?php $this->shortcode( $post_id ); ?>
 					<?php $this->quantity_display( $post_id ); ?>
 					<?php $this->shipping_enable( $post_id ); ?>
-					<?php $this->shortcode( $post_id ); ?>
-                    <script>
-                        jQuery('input[name=rbfw_available_qty_info_switch]').click(function () {
-                            var status = jQuery(this).val();
-                            if (status === 'yes') {
-                                jQuery(this).val('no');
-                            }
-                            if (status === 'no') {
-                                jQuery(this).val('yes');
-                            }
-                        });
-                        jQuery('input[name=shipping_enable]').click(function () {
-                            var status = jQuery(this).val();
-                            if (status === 'yes') {
-                                jQuery(this).val('no')
-                            }
-                            if (status === 'no') {
-                                jQuery(this).val('yes');
-                            }
-                        });
-                    </script>
+					
+					<?php $this->service_quantity_box( $post_id ); ?>
                 </div>
 				<?php
 			}
@@ -140,6 +140,9 @@
                     $product_id = get_post_meta($post_id, 'link_wc_product', true) ? get_post_meta($post_id, 'link_wc_product', true) : $post_id;
                     update_post_meta($product_id, '_virtual', ($shipping_enable=='yes')?'no':'yes');
 					update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
+					
+					$rbfw_enable_extra_service_qty = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_extra_service_qty'] ) ) : 'yes';
+					update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$faq_description    = isset( $_POST['rbfw_faq_description'] ) ? sanitize_text_field($_POST['rbfw_faq_description']) : '';
