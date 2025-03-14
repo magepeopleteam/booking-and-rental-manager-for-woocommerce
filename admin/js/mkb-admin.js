@@ -247,7 +247,7 @@
                 jQuery('.rbfw_enable_start_end_date_field_row').hide();
                 jQuery('.regular_fixed_date').hide();
                 jQuery('.rbfw_off_days').show();
-                jQuery('.wervice_quantity_input_box').hide();
+                jQuery('.wervice_quantity_input_box').show();
                 jQuery('#add-bike-car-sd-type-row').show();
 
                 jQuery('.manage_inventory_as_timely').show();
@@ -835,7 +835,38 @@
 			}
 		});
 	}
+    // ================toggle switch, ===================
+    /**
+     * it should move from internal script to here
+     * then all should in one function
+     */
+    $(document).on('click', 'input[name=rbfw_enable_extra_service_qty]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no');
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+        }
+    });
+    $(document).on('click', 'input[name=rbfw_available_qty_info_switch]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no');
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+        }
+    });
+    $(document).on('click', 'input[name=shipping_enable]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no')
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+        }
+    });
+    // ================toggle switch===================
 }(jQuery));
-
-
 
