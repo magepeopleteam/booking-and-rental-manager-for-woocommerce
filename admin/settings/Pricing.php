@@ -342,7 +342,8 @@
                                 html += ' <span class="button sort" ><i class="fas fa-arrows-alt"></i></span>';
 								<?php endif; ?>
 
-                                html += '<span class="button remove" class="remove-item"><?php echo wp_kses( $remove_text, rbfw_allowed_html() ); ?></span>';
+                                html += '<span class="button remove" onclick="jQuery(this).parent().parent().remove()' +
+                                    '"><?php echo wp_kses( $remove_text, rbfw_allowed_html() ); ?></span>';
                                 html += '</div></div>';
                                 theTarget.append(html);
                                 // Bind remove button event
