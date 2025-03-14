@@ -467,6 +467,20 @@
 
     });
 
+
+    //========= faq accordion=============
+    $('#rbfw_faq_accordion .rbfw_faq_item .rbfw_faq_header').first().addClass('active');
+    $('#rbfw_faq_accordion .rbfw_faq_item .rbfw_faq_content_wrapper').first().addClass('active');
+    $('#rbfw_faq_accordion .rbfw_faq_item .rbfw_faq_content_wrapper').first().slideDown();
+    $('#rbfw_faq_accordion .rbfw_faq_item .rbfw_faq_header').first().find('i').removeClass('fa-plus').addClass('fa-minus');
+    $('.rbfw_faq_header').click(function (e) {
+        e.preventDefault();
+        $(this).next('.rbfw_faq_content_wrapper').slideToggle();
+        $(this).toggleClass(' active');
+        $(this).next('.rbfw_faq_content_wrapper').toggleClass(' active');
+        $(this).find('i').toggleClass('fa-plus fa-minus');
+    });
+
 })(jQuery)
 
 /* Additional Gallary Images */
