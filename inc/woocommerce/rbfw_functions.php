@@ -180,7 +180,7 @@
 			$total_days                = $duration_price_info['total_days'];
 			/* service price start for multiple days */
 			$rbfw_service_price = 0;
-			$rbfw_service_infos_post = $sd_input_data_sabitized['rbfw_service_price_data'];
+			$rbfw_service_infos_post = isset( $sd_input_data_sabitized['rbfw_service_price_data'] ) ? $sd_input_data_sabitized['rbfw_service_price_data'] : [];
 			$rbfw_service_infos = [];
 			if ( ! empty( $rbfw_service_infos_post ) ) {
 				foreach ( $rbfw_service_infos_post as $key_cat => $value ) {
