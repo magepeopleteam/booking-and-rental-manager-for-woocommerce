@@ -7107,6 +7107,10 @@ select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
     display: none;
 }
 
+.woocommerce-order-received .order-actions-button{
+    display:none !important;
+}
+
 /*.ui-datepicker td span, .ui-datepicker td a {
     padding-bottom: 1em;
 }
