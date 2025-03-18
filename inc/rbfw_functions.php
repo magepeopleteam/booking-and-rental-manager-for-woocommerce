@@ -1958,7 +1958,7 @@
 									<?php endif; ?>
 
 									<?php if ( ( $rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment' ) && ! empty( $rbfw_bike_car_sd_data ) && $price ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo wp_kses( wc_price($price) , rbfw_allowed_html()); ?>/span></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo wp_kses( wc_price($price) , rbfw_allowed_html()); ?></span></div>
 									<?php endif; ?>
                                 </div>
 								<?php if ( ! empty( $highlited_features ) ): ?>
