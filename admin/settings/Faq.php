@@ -22,6 +22,7 @@
 				// rbfw_delete_faq_data
 				add_action( 'wp_ajax_rbfw_faq_delete_item', [ $this, 'faq_delete_item' ] );
 				add_action( 'wp_ajax_nopriv_rbfw_faq_delete_item', [ $this, 'faq_delete_item' ] );
+				add_action( 'save_post', array( $this, 'settings_save' ), 99 );
 			}
 
 			public function custom_editor_enqueue() {
@@ -64,14 +65,16 @@
                             <span class="slider round"></span>
                         </label>
                     </section>
-                    <section class="rbfw-faq-section">
-                        <div class="rbfw-faq-items mB">
-							<?php
-								$this->show_faq_data( $post_id );
-							?>
-                        </div>
-                        <button class="button rbfw-faq-item-new" data-modal="rbfw-faq-item-new" type="button"><?php _e( 'Add FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-                    </section>
+					<div class="">
+						<section class="rbfw-faq-section" style="display:<?php echo esc_attr( ( $enable_faq == 'no' ) ? 'none' : 'block' ); ?>">
+							<div class="rbfw-faq-items mB">
+								<?php
+									$this->show_faq_data( $post_id );
+								?>
+							</div>
+							<button class="button rbfw-faq-item-new" data-modal="rbfw-faq-item-new" type="button"><?php _e( 'Add FAQ', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+						</section>
+					</div>
                     <!-- sidebar collapse open -->
                     <div class="rbfw-modal-container" data-modal-target="rbfw-faq-item-new">
                         <div class="rbfw-modal-content">
@@ -117,6 +120,22 @@
                     </div>
                 </div>
 				<?php
+			}
+
+			public function settings_save( $post_id ) {
+				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
+					return;
+				}
+				if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+					return;
+				}
+				if ( ! current_user_can( 'edit_post', $post_id ) ) {
+					return;
+				}
+				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
+					$enable_faq_content = isset( $_POST['rbfw_enable_faq_content'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_faq_content'] ) ) : 'no';
+					update_post_meta( $post_id, 'rbfw_enable_faq_content', $enable_faq_content );
+				}
 			}
 
 			public function show_faq_data( $post_id ) {

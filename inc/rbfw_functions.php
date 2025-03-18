@@ -1958,7 +1958,7 @@
 									<?php endif; ?>
 
 									<?php if ( ( $rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment' ) && ! empty( $rbfw_bike_car_sd_data ) && $price ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo wp_kses( wc_price($price) , rbfw_allowed_html()); ?>/span></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo wp_kses( wc_price($price) , rbfw_allowed_html()); ?></span></div>
 									<?php endif; ?>
                                 </div>
 								<?php if ( ! empty( $highlited_features ) ): ?>
@@ -2071,7 +2071,7 @@
                             <p class="rbfw_faq_desc">
 								<?php
 									if ( ! empty( $faq['rbfw_faq_content'] ) ):
-										echo esc_html( $faq['rbfw_faq_content'] );
+										echo wp_kses_post( $faq['rbfw_faq_content'] );
 									endif;
 								?>
                             </p>
@@ -2079,17 +2079,6 @@
                     </div>
 				<?php } ?>
             </div>
-            <script>
-                jQuery(document).ready(function ($) {
-                    $('#rbfw_faq_accordion .rbfw_faq_content_wrapper').first().slideDown();
-                    $('#rbfw_faq_accordion .rbfw_faq_header').first().find('i').removeClass('fa-plus').addClass('fa-minus');
-                    $('.rbfw_faq_header').click(function (e) {
-                        e.preventDefault();
-                        $(this).next('.rbfw_faq_content_wrapper').slideToggle();
-                        $(this).find('i').toggleClass('fa-plus fa-minus');
-                    });
-                });
-            </script>
 			<?php
 		}
 	}
