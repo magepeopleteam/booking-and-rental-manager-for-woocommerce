@@ -49,40 +49,33 @@
 							
 							
 							if ( ! empty( $rent_post_id ) ) {
+								// meata key and value udpates
 								foreach ( $rent_post_metas as $value ) {
 									$meta_key = $value['meta_key'];
 									$meta_value = ! empty( $value['meta_value'] ) ? maybe_unserialize( $value['meta_value'] ) : '';
 									update_post_meta( $rent_post_id, $meta_key, $meta_value );
 								}
-
+								// set featured thumbnail image
+								$rbfw_bkp_thumb_img    = get_post_meta( $rent_post_id, 'rbfw_bkp_thumb_img', true );
+								$thumb_id = '';
+								foreach ( $rbfw_bkp_thumb_img as $url ) {
+									$filename = pathinfo($url, PATHINFO_BASENAME);
+									$path = RBFW_PLUGIN_DIR.'/assets/importimg/'.$filename;
+									$attach_id = $this->rbfw_media_upload_from_path( $path );
+									$thumb_id  = $attach_id;
+								}
+								update_post_meta( $rent_post_id, '_thumbnail_id', $thumb_id );
+								// gallery image;
 								// $rbfw_bkp_gallary_imgs = get_post_meta( $rent_post_id, 'rbfw_bkp_gallary_imgs', true );
-								// $rbfw_bkp_thumb_img    = get_post_meta( $rent_post_id, 'rbfw_bkp_thumb_img', true );
 								// $gallary_arr = [];
-
 								// foreach ( $rbfw_bkp_gallary_imgs as $url ) {
-								// 	$attach_id     = $this->rbfw_media_upload_from_url( $url );
+								// 	$filename = pathinfo($url, PATHINFO_BASENAME);
+								// 	$path = RBFW_PLUGIN_DIR.'/assets/importimg/'.$filename;
+								// 	$attach_id = $this->rbfw_media_upload_from_path( $path );
 								// 	$gallary_arr[] = $attach_id;
 								// }
 								// update_post_meta( $rent_post_id, 'rbfw_gallery_images', $gallary_arr );
 								// update_post_meta( $rent_post_id, 'rbfw_gallery_images_additional', $gallary_arr );
-								
-								// $thumb_id = '';
-								// foreach ( $rbfw_bkp_thumb_img as $url ) {
-								// 	$attach_id = $this->rbfw_media_upload_from_url( $url );
-								// 	$thumb_id  = $attach_id;
-								// }
-								// update_post_meta( $rent_post_id, '_thumbnail_id', $thumb_id );
-
-								$rbfw_bkp_thumb_img    = get_post_meta( $rent_post_id, 'rbfw_bkp_thumb_img', true );
-								$thumb_id = '';
-								foreach ( $rbfw_bkp_thumb_img as $url ) {
-									$path = RBFW_PLUGIN_URL.'/assets/importimg/0.jpg';
-									$attach_id = $this->rbfw_media_upload_from_path( $path );
-									$thumb_id  = $attach_id;
-								}
-								echo $thumb_id;
-
-								update_post_meta( $rent_post_id, '_thumbnail_id', $thumb_id );
 							}
 						}
 						$i++;
@@ -91,8 +84,7 @@
 					update_option( 'rbfw_sample_rent_items', 'imported' );
 				}
 			}
-
-
+			
 			public function rbfw_update_related_products() {
 				$args = array( 'fields' => 'ids', 'post_type' => 'rbfw_item', 'numberposts' => - 1, 'post_status' => 'publish' );
 				$ids  = get_posts( $args );
