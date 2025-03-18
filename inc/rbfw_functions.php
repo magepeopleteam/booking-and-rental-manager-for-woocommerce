@@ -2071,7 +2071,7 @@
                             <p class="rbfw_faq_desc">
 								<?php
 									if ( ! empty( $faq['rbfw_faq_content'] ) ):
-										echo esc_html( $faq['rbfw_faq_content'] );
+										echo wp_kses_post( $faq['rbfw_faq_content'] );
 									endif;
 								?>
                             </p>
@@ -2079,17 +2079,6 @@
                     </div>
 				<?php } ?>
             </div>
-            <script>
-                jQuery(document).ready(function ($) {
-                    $('#rbfw_faq_accordion .rbfw_faq_content_wrapper').first().slideDown();
-                    $('#rbfw_faq_accordion .rbfw_faq_header').first().find('i').removeClass('fa-plus').addClass('fa-minus');
-                    $('.rbfw_faq_header').click(function (e) {
-                        e.preventDefault();
-                        $(this).next('.rbfw_faq_content_wrapper').slideToggle();
-                        $(this).find('i').toggleClass('fa-plus fa-minus');
-                    });
-                });
-            </script>
 			<?php
 		}
 	}
