@@ -2596,9 +2596,9 @@
                     if ($multi_day_price_saver = check_multi_day_price_saver($i,$rbfw_additional_day_prices)) {
                         $duration_price =  $multi_day_price_saver + $duration_price;
                     } else {
-                        $daily_rate = get_post_meta($post_id, 'rbfw_daily_rate', true);
+                        $duration_price = $duration_price + get_post_meta($post_id, 'rbfw_daily_rate', true);
                     }
-                    $duration_price = $duration_price + $daily_rate;
+
                 }
 
 
