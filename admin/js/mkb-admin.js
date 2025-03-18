@@ -835,6 +835,7 @@
 			}
 		});
 	}
+   
     // ================toggle switch, ===================
     /**
      * it should move from internal script to here
@@ -878,6 +879,34 @@
             $('.rbfw-faq-section').slideDown();
         }
     });
+
+    $(document).on('click', 'input[name=rbfw_enable_additional_gallary]', function (e) {
+        var status = $(this).val();
+        if (status === 'on') {
+            $(this).val('off');
+            $('.additional-gallary-image').slideUp().removeClass('show').addClass('hide');
+        }
+        if (status === 'off') {
+            $(this).val('on');
+            $('.additional-gallary-image').slideDown().removeClass('hide').addClass('show');
+        }
+    });
+    $(document).on('click', 'input[name=rbfw_dt_sidebar_switch]', function (e) {
+        var status = $(this).val();
+        if (status === 'on') {
+            $(this).val('off')
+        }
+        if (status === 'off') {
+            $(this).val('on');
+        }
+    });
     // ================toggle switch===================
 }(jQuery));
 
+ // testimonial
+ function createTestimonial() {
+    now = jQuery.now();
+    jQuery(".testimonial-clone").clone().appendTo(".testimonials")
+        .removeClass('testimonial-clone').addClass('testimonial')
+        .children('.testimonial-field').attr('name', 'rbfw_dt_sidebar_testimonials[' + now + '][rbfw_dt_sidebar_testimonial_text]');
+}
