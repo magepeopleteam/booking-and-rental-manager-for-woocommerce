@@ -194,8 +194,9 @@
 					wp_update_attachment_metadata( $attach_id, $attach_data );
 					return $attach_id; 
 				}
-				return $attachment; 
+				return $attachment['id']; 
 			}
+
 			public function does_attachment_exist($filename) {
 				global $wpdb;
 			

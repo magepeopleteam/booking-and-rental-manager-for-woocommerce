@@ -196,11 +196,6 @@
         </postmeta>
 
         <postmeta>
-            <meta_key>rbfw_gallery_images</meta_key>
-            <meta_value>a:5:{i:0;s:4:"1282";i:1;s:4:"1286";i:2;s:4:"1287";i:3;s:4:"1288";i:4;s:4:"1308";}</meta_value>
-        </postmeta>
-
-        <postmeta>
             <meta_key>rbfw_list_thumbnail</meta_key>
             <meta_value></meta_value>
         </postmeta>
@@ -235,11 +230,6 @@
         <postmeta>
             <meta_key>rbfw_dt_sidebar_content</meta_key>
             <meta_value></meta_value>
-        </postmeta>
-
-        <postmeta>
-            <meta_key>rbfw_gallery_images_additional</meta_key>
-            <meta_value>a:6:{i:0;s:4:"1315";i:1;s:4:"1314";i:2;s:4:"1311";i:3;s:4:"1312";i:4;s:4:"1313";i:5;s:4:"1316";}</meta_value>
         </postmeta>
 
         <postmeta>
@@ -511,11 +501,6 @@
         </postmeta>
 
         <postmeta>
-            <meta_key>rbfw_gallery_images</meta_key>
-            <meta_value>a:4:{i:0;s:2:"47";i:1;s:2:"48";i:2;s:2:"49";i:3;s:2:"50";}</meta_value>
-        </postmeta>
-
-        <postmeta>
             <meta_key>rbfw_list_thumbnail</meta_key>
             <meta_value></meta_value>
         </postmeta>
@@ -598,11 +583,6 @@
         <postmeta>
             <meta_key>rbfw_dt_sidebar_content</meta_key>
             <meta_value></meta_value>
-        </postmeta>
-
-        <postmeta>
-            <meta_key>rbfw_gallery_images_additional</meta_key>
-            <meta_value>a:2:{i:0;s:2:"49";i:1;s:2:"48";}</meta_value>
         </postmeta>
 
         <postmeta>
@@ -822,11 +802,6 @@
         </postmeta>
 
         <postmeta>
-            <meta_key>rbfw_gallery_images</meta_key>
-            <meta_value>a:4:{i:0;s:2:"52";i:1;s:2:"51";i:2;s:2:"53";i:3;s:2:"54";}</meta_value>
-        </postmeta>
-
-        <postmeta>
             <meta_key>rbfw_list_thumbnail</meta_key>
             <meta_value></meta_value>
         </postmeta>
@@ -909,11 +884,6 @@
         <postmeta>
             <meta_key>rbfw_dt_sidebar_content</meta_key>
             <meta_value></meta_value>
-        </postmeta>
-
-        <postmeta>
-            <meta_key>rbfw_gallery_images_additional</meta_key>
-            <meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
         </postmeta>
 
         <postmeta>
@@ -1138,11 +1108,6 @@
         </postmeta>
 
         <postmeta>
-            <meta_key>rbfw_gallery_images</meta_key>
-            <meta_value>a:5:{i:0;s:4:"1647";i:1;s:4:"1648";i:2;s:4:"1650";i:3;s:4:"1651";i:4;s:4:"1652";}</meta_value>
-        </postmeta>
-
-        <postmeta>
             <meta_key>rbfw_list_thumbnail</meta_key>
             <meta_value></meta_value>
         </postmeta>
@@ -1225,11 +1190,6 @@
         <postmeta>
             <meta_key>rbfw_dt_sidebar_content</meta_key>
             <meta_value></meta_value>
-        </postmeta>
-
-        <postmeta>
-            <meta_key>rbfw_gallery_images_additional</meta_key>
-            <meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
         </postmeta>
 
         <postmeta>
@@ -1449,11 +1409,6 @@
         </postmeta>
 
         <postmeta>
-            <meta_key>rbfw_gallery_images</meta_key>
-            <meta_value>a:5:{i:0;s:4:"1647";i:1;s:4:"1648";i:2;s:4:"1650";i:3;s:4:"1651";i:4;s:4:"1652";}</meta_value>
-        </postmeta>
-
-        <postmeta>
             <meta_key>rbfw_list_thumbnail</meta_key>
             <meta_value></meta_value>
         </postmeta>
@@ -1539,23 +1494,18 @@
         </postmeta>
 
         <postmeta>
-            <meta_key>rbfw_gallery_images_additional</meta_key>
-            <meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
-        </postmeta>
-
-        <postmeta>
             <meta_key>_thumbnail_id</meta_key>
             <meta_value></meta_value>
         </postmeta>
 
         <postmeta>
             <meta_key>rbfw_bkp_gallary_imgs</meta_key>
-            <meta_value>a:5:{i:0;s:64:"https://booking.mage-people.com/wp-content/uploads/2023/04/5.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-2.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-2.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-2.jpg";i:4;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-2.jpg";}</meta_value>
+            <meta_value>a:5:{i:0;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/5-2.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-2.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-2.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-2.jpg";i:4;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-2.jpg";}</meta_value>
         </postmeta>
 
         <postmeta>
             <meta_key>rbfw_bkp_add_gallary_imgs</meta_key>
-            <meta_value>a:5:{i:0;s:64:"https://booking.mage-people.com/wp-content/uploads/2023/04/5.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-2.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-2.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-2.jpg";i:4;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-2.jpg";}</meta_value>
+            <meta_value>a:5:{i:0;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/5-2.jpg";i:1;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/4-2.jpg";i:2;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/3-2.jpg";i:3;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/2-2.jpg";i:4;s:66:"https://booking.mage-people.com/wp-content/uploads/2023/04/1-2.jpg";}</meta_value>
         </postmeta>
 
         <postmeta>
@@ -1760,11 +1710,6 @@
         </postmeta>
 
         <postmeta>
-            <meta_key>rbfw_gallery_images</meta_key>
-            <meta_value>a:6:{i:0;s:4:"1652";i:1;s:4:"1651";i:2;s:4:"1650";i:3;s:4:"1649";i:4;s:4:"1648";i:5;s:4:"1647";}</meta_value>
-        </postmeta>
-
-        <postmeta>
             <meta_key>rbfw_list_thumbnail</meta_key>
             <meta_value></meta_value>
         </postmeta>
@@ -1847,11 +1792,6 @@
         <postmeta>
             <meta_key>rbfw_dt_sidebar_content</meta_key>
             <meta_value></meta_value>
-        </postmeta>
-
-        <postmeta>
-            <meta_key>rbfw_gallery_images_additional</meta_key>
-            <meta_value>a:2:{i:0;s:2:"54";i:1;s:2:"51";}</meta_value>
         </postmeta>
 
         <postmeta>
