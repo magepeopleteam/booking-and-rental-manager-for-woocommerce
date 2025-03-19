@@ -1016,11 +1016,7 @@
 					<?php $this->category_service_price( $post_id ); ?>
                 </div>
                 <script>
-                   
-                    // Make the bike/car service price table sortable
-                    jQuery(document).ready(function () {
-                        jQuery(".rbfw_bike_car_sd_price_table_body").sortable();
-                    });
+                
                     // Handle extra service image upload
                     jQuery(document).ready(function () {
                         function rbfw_service_image_addup() {

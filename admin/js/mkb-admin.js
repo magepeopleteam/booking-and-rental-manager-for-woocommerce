@@ -977,3 +977,8 @@
         .removeClass('testimonial-clone').addClass('testimonial')
         .children('.testimonial-field').attr('name', 'rbfw_dt_sidebar_testimonials[' + now + '][rbfw_dt_sidebar_testimonial_text]');
 }
+
+// Make the bike/car service price table sortable
+jQuery(document).ready(function () {
+    jQuery(".rbfw_bike_car_sd_price_table_body").sortable();
+});
