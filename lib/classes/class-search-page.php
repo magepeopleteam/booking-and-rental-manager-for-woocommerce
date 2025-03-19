@@ -244,14 +244,17 @@
 							}
 							wp_reset_postdata();
 						}
-						$pages_in_ary = [];
-						$total_pages  = ceil( $total_posts / $posts_per_page );
-						/*if ( $total_pages > 1 ) {
-							for ( $i = 1; $i <= $total_pages; $i ++ ) {
-								$pages_in_ary[] = $i;
-							}
-						}*/
-                        $show_result = $total_posts . ' results. Showing ' . $post_count . ' of ' . $total_posts . ' of total';
+
+                        global $rbfw;
+
+                        $show_result = $total_posts;
+                        $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_results', 'rbfw_basic_translation_settings', __('results','booking-and-rental-manager-for-woocommerce')));
+                        $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_showings', 'rbfw_basic_translation_settings', __('Showing','booking-and-rental-manager-for-woocommerce')));
+                        $show_result .= $post_count;
+                        $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_of', 'rbfw_basic_translation_settings', __('of','booking-and-rental-manager-for-woocommerce')));
+                        $show_result .=  $total_posts ;
+                        $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_of', 'rbfw_basic_translation_settings', __('of','booking-and-rental-manager-for-woocommerce')));
+                        $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('total','booking-and-rental-manager-for-woocommerce')));
 					}
 				}
 				$result = array(

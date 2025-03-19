@@ -66,7 +66,7 @@
 											?>
                                             <div class=" gallery-image">
                                                 <span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>
-                                                <img id="media_preview_<?php echo esc_attr( $post_id ); ?>" src="<?php echo esc_url( $media_url ); ?>"/>
+                                                <img id="media_preview_<?php echo esc_attr( $post_id ); ?>" src="<?php echo esc_attr( $media_url ); ?>"/>
                                                 <input type='hidden' name='rbfw_gallery_images[]' value='<?php echo esc_attr( $image ); ?>'/>
                                             </div>
 										<?php
@@ -83,7 +83,7 @@
                             $('#media_upload_' + post_id).click(function () {
                                 wp.media.editor.send.attachment = function (props, attachment) {
                                     var attachment_id = parseInt(attachment.id, 10); // Ensure it's an integer
-                                    var attachment_url = encodeURIComponent(attachment.url); // Escape the URL properly
+                                    var attachment_url = attachment.url; // Escape the URL properly
                                     // Create the gallery image HTML with properly escaped attributes
                                     var html = '<div class="gallery-image">';
                                     html += '<span class="remove" onclick="jQuery(this).parent().remove()"><i class="fas fa-trash-can"></i></span>';

@@ -79,6 +79,7 @@
 						<?php if ( $query->have_posts() ) : while ( $query->have_posts() ) : $query->the_post();
 							global $post;
 							$post_id             = $post->ID;
+
 							$billing_name        = get_post_meta( $post_id, 'rbfw_billing_name', true );
 							$wc_order_id       = get_post_meta( $post_id, 'rbfw_order_id', true );
 

@@ -84,17 +84,6 @@
 
     jQuery( ".rbfw_bike_car_sd_price_table_body" ).sortable();
 
-    jQuery(document).on('click','.remove-row', function (e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
-            jQuery(this).parents('tr').remove();
-        } else {
-            return false;
-        }
-    });
-
-
     jQuery(document).on('click','.remove-row-off-days', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
