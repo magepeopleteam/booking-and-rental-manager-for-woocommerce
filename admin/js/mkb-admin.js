@@ -841,6 +841,31 @@
      * it should move from internal script to here
      * then all should in one function
      */
+     // Toggle visibility for category service price
+    $(document).on('click', 'input[name=rbfw_enable_category_service_price]', function (e) {
+        var status = $(this).val();
+        if (status === 'on') {
+            $(this).val('off')
+            $('#field-wrapper-rbfw_service_category_price').slideUp().removeClass('show').addClass('hide');
+        }
+        if (status === 'off') {
+            $(this).val('on');
+            $('#field-wrapper-rbfw_service_category_price').slideDown().removeClass('hide').addClass('show');
+        }
+    });
+    // Daywise price
+    $(document).on('click', 'input[name=rbfw_enable_daywise_price]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no');
+            $('.day-wise-price-configuration').slideUp().removeClass('show').addClass('hide');
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+            $('.day-wise-price-configuration').slideDown().removeClass('hide').addClass('show');
+        }
+    });
+
     $(document).on('click', 'input[name=rbfw_enable_extra_service_qty]', function (e) {
         var status = $(this).val();
         if (status === 'yes') {
@@ -898,6 +923,48 @@
         }
         if (status === 'off') {
             $(this).val('on');
+        }
+    });
+    // Daily price
+    $(document).on('click', 'input[name=rbfw_enable_daily_rate]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no');
+            $('.rbfw_daily_rate_input input').attr("disabled", true);
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+            $('.rbfw_daily_rate_input input').removeAttr("disabled");
+        }
+    });
+    // Hourly price
+    $(document).on('click', 'input[name=rbfw_enable_hourly_rate]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no');
+            $('.rbfw_hourly_rate input').attr("disabled", true);
+            if ($('input[name=rbfw_time_slot_switch]').val() == 'on') {
+                $('input[name=rbfw_time_slot_switch]').trigger("click");
+            }
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+            $('.rbfw_hourly_rate input').removeAttr("disabled");
+            if ($('input[name=rbfw_time_slot_switch]').val() == 'off') {
+                $('input[name=rbfw_time_slot_switch]').trigger("click");
+            }
+        }
+    });
+    // Day long price
+    $(document).on('click', 'input[name=rbfw_enable_resort_daylong_price]', function (e) {
+        var status = jQuery(this).val();
+        if (status === 'yes') {
+            jQuery(this).val('no');
+            jQuery('.resort_day_long_price').hide();
+        }
+        if (status === 'no') {
+            jQuery(this).val('yes');
+            jQuery('.resort_day_long_price').show();
         }
     });
     // ================toggle switch===================

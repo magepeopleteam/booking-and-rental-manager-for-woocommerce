@@ -1016,18 +1016,7 @@
 					<?php $this->category_service_price( $post_id ); ?>
                 </div>
                 <script>
-                    // Toggle visibility for category service price
-                    jQuery('input[name=rbfw_enable_category_service_price]').click(function () {
-                        var status = jQuery(this).val();
-                        if (status === 'on') {
-                            jQuery(this).val('off')
-                            jQuery('#field-wrapper-rbfw_service_category_price').slideUp().removeClass('show').addClass('hide');
-                        }
-                        if (status === 'off') {
-                            jQuery(this).val('on');
-                            jQuery('#field-wrapper-rbfw_service_category_price').slideDown().removeClass('hide').addClass('show');
-                        }
-                    });
+                   
                     // Make the bike/car service price table sortable
                     jQuery(document).ready(function () {
                         jQuery(".rbfw_bike_car_sd_price_table_body").sortable();
@@ -1058,60 +1047,10 @@
                         }
                         rbfw_service_image_addup();
                     });
-                    // Daily price
-                    jQuery('input[name=rbfw_enable_daily_rate]').click(function () {
-                        var status = jQuery(this).val();
-                        if (status === 'yes') {
-                            jQuery(this).val('no');
-                            jQuery('.rbfw_daily_rate_input input').attr("disabled", true);
-                        }
-                        if (status === 'no') {
-                            jQuery(this).val('yes');
-                            jQuery('.rbfw_daily_rate_input input').removeAttr("disabled");
-                        }
-                    });
-                    // Hourly price
-                    jQuery('input[name=rbfw_enable_hourly_rate]').click(function () {
-                        var status = jQuery(this).val();
-                        if (status === 'yes') {
-                            jQuery(this).val('no');
-                            jQuery('.rbfw_hourly_rate input').attr("disabled", true);
-                            if (jQuery('input[name=rbfw_time_slot_switch]').val() == 'on') {
-                                jQuery('input[name=rbfw_time_slot_switch]').trigger("click");
-                            }
-                        }
-                        if (status === 'no') {
-                            jQuery(this).val('yes');
-                            jQuery('.rbfw_hourly_rate input').removeAttr("disabled");
-                            if (jQuery('input[name=rbfw_time_slot_switch]').val() == 'off') {
-                                jQuery('input[name=rbfw_time_slot_switch]').trigger("click");
-                            }
-                        }
-                    });
-                    // Daywise price
-                    jQuery('input[name=rbfw_enable_daywise_price]').click(function () {
-                        var status = jQuery(this).val();
-                        if (status === 'yes') {
-                            jQuery(this).val('no');
-                            jQuery('.day-wise-price-configuration').slideUp().removeClass('show').addClass('hide');
-                        }
-                        if (status === 'no') {
-                            jQuery(this).val('yes');
-                            jQuery('.day-wise-price-configuration').slideDown().removeClass('hide').addClass('show');
-                        }
-                    });
-                    // Day long price
-                    jQuery('input[name=rbfw_enable_resort_daylong_price]').click(function () {
-                        var status = jQuery(this).val();
-                        if (status === 'yes') {
-                            jQuery(this).val('no');
-                            jQuery('.resort_day_long_price').hide();
-                        }
-                        if (status === 'no') {
-                            jQuery(this).val('yes');
-                            jQuery('.resort_day_long_price').show();
-                        }
-                    });
+                    
+                    
+                    
+                    
                     // Resort
                     jQuery('#add-resort-type-row').click(function (e) {
                         e.preventDefault();
