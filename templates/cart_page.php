@@ -423,7 +423,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
             <tr>
                 <th>
-                    <?php   esc_html_e('Duration:','booking-and-rental-manager-for-woocommerce'); ?>
+                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?>
                 </th>
                 <td>
                     <?php echo esc_html($cart_item['total_days'].' '.(($cart_item['total_days']==1)?'Day':'Days')); ?>

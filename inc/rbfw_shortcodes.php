@@ -234,7 +234,20 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     }
 
 
-    $shoe_result =  $total_posts. ' results. Showing '.$post_count. ' of '. $total_posts. ' of total';
+    //$shoe_result =  $total_posts. ' results. Showing '.$post_count. ' of '. $total_posts. ' of total';
+
+    global $rbfw;
+
+    $show_result = $total_posts.' ';
+    $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_results', 'rbfw_basic_translation_settings', __('results','booking-and-rental-manager-for-woocommerce'))).'. ';
+    $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_showings', 'rbfw_basic_translation_settings', __('Showing','booking-and-rental-manager-for-woocommerce'))).' ';
+    $show_result .= $post_count.' ';
+    $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_of', 'rbfw_basic_translation_settings', __('of','booking-and-rental-manager-for-woocommerce'))).' ';
+    $show_result .=  $total_posts.' ' ;
+    $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_of', 'rbfw_basic_translation_settings', __('of','booking-and-rental-manager-for-woocommerce'))).' ';
+    $show_result .= esc_html(strtolower($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('total','booking-and-rental-manager-for-woocommerce')))).'.';
+
+
     ?>
     <div class="rbfw_rent_show_result_list_grid_icon_holder">
 
@@ -248,7 +261,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         </div>
 
         <div class="rbfw_shoe_result_text" id="rbfw_shoe_result_text">
-            <span> <?php echo esc_attr( $shoe_result );?></span>
+            <span> <?php echo esc_attr( $show_result );?></span>
         </div>
         <div class="rbfw_rent_list_grid_icon_holder">
             <div class="rbfw_rent_items_list_grid rbfw_rent_items_grid <?php echo esc_attr( $is_grid_selected )?>" id="rbfw_rent_items_grid">
