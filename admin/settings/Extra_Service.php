@@ -43,35 +43,7 @@
 					<?php $this->section_header(); ?>
 					<?php $this->extra_service_table( $post_id ); ?>
                 </div>
-                <script>
-                    
-                    // Handle extra service image upload
-                    jQuery(document).ready(function () {
-                        function rbfw_service_image_addup() {
-                            // Onclick for extra service add image button
-                            jQuery('.rbfw_service_image_btn').click(function () {
-                                let target = jQuery(this).parents('tr');
-                                let send_attachment_bkp = wp.media.editor.send.attachment;
-                                wp.media.editor.send.attachment = function (props, attachment) {
-                                    target.find('.rbfw_service_image_preview img').remove();
-                                    // Escape URL before appending it to the DOM
-                                    target.find('.rbfw_service_image_preview').append('<img src="' + esc_url(attachment.url) + '"/>');
-                                    target.find('.rbfw_service_image').val(esc_attr(attachment.id)); // Escape the attachment ID
-                                    wp.media.editor.send.attachment = send_attachment_bkp;
-                                }
-                                wp.media.editor.open(jQuery(this));
-                                return false;
-                            });
-                            // Onclick for extra service remove image button
-                            jQuery('.rbfw_remove_service_image_btn').click(function () {
-                                let target = jQuery(this).parents('tr');
-                                target.find('.rbfw_service_image_preview img').remove();
-                                target.find('.rbfw_service_image').val('');
-                            });
-                        }
-                        rbfw_service_image_addup();
-                    });
-                </script>
+                
 				<?php
 			}
 
