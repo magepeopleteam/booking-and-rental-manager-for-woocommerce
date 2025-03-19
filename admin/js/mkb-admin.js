@@ -841,6 +841,31 @@
      * it should move from internal script to here
      * then all should in one function
      */
+     // Toggle visibility for category service price
+    $(document).on('click', 'input[name=rbfw_enable_category_service_price]', function (e) {
+        var status = $(this).val();
+        if (status === 'on') {
+            $(this).val('off')
+            $('#field-wrapper-rbfw_service_category_price').slideUp().removeClass('show').addClass('hide');
+        }
+        if (status === 'off') {
+            $(this).val('on');
+            $('#field-wrapper-rbfw_service_category_price').slideDown().removeClass('hide').addClass('show');
+        }
+    });
+    // Daywise price
+    $(document).on('click', 'input[name=rbfw_enable_daywise_price]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no');
+            $('.day-wise-price-configuration').slideUp().removeClass('show').addClass('hide');
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+            $('.day-wise-price-configuration').slideDown().removeClass('hide').addClass('show');
+        }
+    });
+
     $(document).on('click', 'input[name=rbfw_enable_extra_service_qty]', function (e) {
         var status = $(this).val();
         if (status === 'yes') {
@@ -900,7 +925,122 @@
             $(this).val('on');
         }
     });
+    // Daily price
+    $(document).on('click', 'input[name=rbfw_enable_daily_rate]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no');
+            $('.rbfw_daily_rate_input input').attr("disabled", true);
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+            $('.rbfw_daily_rate_input input').removeAttr("disabled");
+        }
+    });
+    // Hourly price
+    $(document).on('click', 'input[name=rbfw_enable_hourly_rate]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no');
+            $('.rbfw_hourly_rate input').attr("disabled", true);
+            if ($('input[name=rbfw_time_slot_switch]').val() == 'on') {
+                $('input[name=rbfw_time_slot_switch]').trigger("click");
+            }
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+            $('.rbfw_hourly_rate input').removeAttr("disabled");
+            if ($('input[name=rbfw_time_slot_switch]').val() == 'off') {
+                $('input[name=rbfw_time_slot_switch]').trigger("click");
+            }
+        }
+    });
+    // Day long price
+    $(document).on('click', 'input[name=rbfw_enable_resort_daylong_price]', function (e) {
+        var status = jQuery(this).val();
+        if (status === 'yes') {
+            jQuery(this).val('no');
+            jQuery('.resort_day_long_price').hide();
+        }
+        if (status === 'no') {
+            jQuery(this).val('yes');
+            jQuery('.resort_day_long_price').show();
+        }
+    });
     // ================toggle switch===================
+
+    // ============== Resort type in price ===================
+    $(document).on('click', '#add-resort-type-row', function (e) {
+        e.preventDefault();
+        let current_time = jQuery.now();
+        if ($('.rbfw_resort_price_table .rbfw_resort_price_table_row').length) {
+            let resort_last_row = $('.rbfw_resort_price_table .rbfw_resort_price_table_row:last-child()');
+            let resort_type_last_data_key = parseInt(resort_last_row.attr('data-key'));
+            let resort_type_new_data_key = resort_type_last_data_key + 1;
+            let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + resort_type_new_data_key + '">'
+                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="Room type"></td>'
+                + '<td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_image]" value="" class="rbfw_room_image"></td>'
+                + '<td class="resort_day_long_price" style="display: none;"><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td>'
+                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td>'
+                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_desc]" value="" placeholder="Short Description"></td>'
+                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td>'
+                + '<td><div class="mp_event_remove_move"><button class="button remove-row ' + current_time + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>'
+                + '</tr>';
+                $('.rbfw_resort_price_table').append(resort_type_row);
+        } else {
+            let resort_type_new_data_key = 0;
+            let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + resort_type_new_data_key + '">'
+                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="Room type"></td>'
+                + '<td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_image]" value="" class="rbfw_room_image"></td>'
+                + '<td class="resort_day_long_price" style="display: none;"><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td>'
+                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td>'
+                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_desc]" value="" placeholder="Short Description"></td>'
+                + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_available_qty]" value="" placeholder="Available Qty"></td>'
+                + '<td><div class="mp_event_remove_move"><button class="button remove-row ' + current_time + '"><i class="fas fa-trash-can"></i></button><div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div></div></td>'
+                + '</tr>';
+                $('.rbfw_resort_price_table').append(resort_type_row);
+        }
+        $('.remove-row.' + current_time + '').on('click', function () {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
+                $(this).parents('tr').remove();
+            } else {
+                return false;
+            }
+        });
+        $(".rbfw_resort_price_table_body").sortable();
+
+        var daylong_price_label_val = $('.rbfw_resort_daylong_price_switch label.active').find('input').val();
+        if (daylong_price_label_val === 'yes') {
+            $('.resort_day_long_price').show();
+        } else {
+            $('.resort_day_long_price').hide();
+        }
+    });
+
+    // Image handling for room type
+    $(document).on('click', '.rbfw_room_type_image_btn', function (e) {
+        let parent_data_key = $(this).closest('.rbfw_resort_price_table_row').attr('data-key');
+        let send_attachment_bkp = wp.media.editor.send.attachment;
+        wp.media.editor.send.attachment = function (props, attachment) {
+            let image_url = attachment.url;
+            $('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_type_image_preview img').remove();
+            $('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_type_image_preview').append('<img src="' + image_url + '"/>');
+            $('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_image').val(attachment.id);
+            wp.media.editor.send.attachment = send_attachment_bkp;
+        }
+        wp.media.editor.open($(this));
+        return false;
+    });
+
+    $(document).on('click', '.rbfw_remove_room_type_image_btn', function (e) {
+        let parent_data_key =  $(this).closest('.rbfw_resort_price_table_row').attr('data-key');
+        $('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_type_image_preview img').remove();
+        $('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_image').val('');
+    });
+    
+    // ===========resort===========
 }(jQuery));
 
  // testimonial
@@ -910,3 +1050,32 @@
         .removeClass('testimonial-clone').addClass('testimonial')
         .children('.testimonial-field').attr('name', 'rbfw_dt_sidebar_testimonials[' + now + '][rbfw_dt_sidebar_testimonial_text]');
 }
+
+// Handle extra service image upload
+jQuery(document).ready(function () {
+    function rbfw_service_image_addup() {
+        // Onclick for extra service add image button
+        jQuery('.rbfw_service_image_btn').click(function () {
+            let target = jQuery(this).parents('tr');
+            let send_attachment_bkp = wp.media.editor.send.attachment;
+            wp.media.editor.send.attachment = function (props, attachment) {
+                target.find('.rbfw_service_image_preview img').remove();
+                // Escape URL before appending it to the DOM
+                target.find('.rbfw_service_image_preview').append('<img src="' + esc_url(attachment.url) + '"/>');
+                target.find('.rbfw_service_image').val(esc_attr(attachment.id)); // Escape the attachment ID
+                wp.media.editor.send.attachment = send_attachment_bkp;
+            }
+            wp.media.editor.open(jQuery(this));
+            return false;
+        });
+        // Onclick for extra service remove image button
+        jQuery('.rbfw_remove_service_image_btn').click(function () {
+            let target = jQuery(this).parents('tr');
+            target.find('.rbfw_service_image_preview img').remove();
+            target.find('.rbfw_service_image').val('');
+        });
+    }
+    rbfw_service_image_addup();
+});
+
+
