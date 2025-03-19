@@ -32,7 +32,7 @@ function rbfw_admin_settings_sec_reg_basic( $default_sec ) {
 
 		array(
 			'id'    => 'rbfw_basic_payment_settings',
-			'title' => '<i class="fas fa-money-check-dollar"></i>'.esc_html__( 'Payment Settings', 'booking-and-rental-manager-for-woocommerce' )
+			'title' => '<i class="fas fa-money-check-dollar"></i>'.esc_html__( 'Checkout Page', 'booking-and-rental-manager-for-woocommerce' )
 		),
 	);
 
