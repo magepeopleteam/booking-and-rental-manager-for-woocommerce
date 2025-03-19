@@ -175,13 +175,18 @@
 			$rbfw_dropoff_point        = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
 			$rbfw_enable_time_slot     = isset( $sd_input_data_sabitized['rbfw_enable_time_slot'] ) ? $sd_input_data_sabitized['rbfw_enable_time_slot'] : 'off';
 			$duration_price_info       = rbfw_md_duration_price_calculation( $rbfw_id, $pickup_datetime, $dropoff_datetime, $start_date, $end_date, $start_time, $end_time, $rbfw_enable_time_slot );
-			$duration_price_individual = $duration_price_info['duration_price'];
+
+
+
+            $duration_price_individual = $duration_price_info['duration_price'];
 			$duration_price            = $duration_price_info['duration_price'] * $rbfw_item_quantity;
 			$total_days                = $duration_price_info['total_days'];
 			/* service price start for multiple days */
 			$rbfw_service_price = 0;
-			$rbfw_service_infos_post = $sd_input_data_sabitized['rbfw_service_price_data'];
+
+			$rbfw_service_infos_post = isset( $sd_input_data_sabitized['rbfw_service_price_data'] ) ? $sd_input_data_sabitized['rbfw_service_price_data'] : [];
 			$rbfw_service_infos = [];
+
 			if ( ! empty( $rbfw_service_infos_post ) ) {
 				foreach ( $rbfw_service_infos_post as $key_cat => $value ) {
 					$rbfw_service_infos[ $value['cat_title'] ] = [];

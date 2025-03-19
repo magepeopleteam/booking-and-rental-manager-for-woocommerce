@@ -103,7 +103,7 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
                             <tr>
                                 <td class="w_50_pc">
                                     <div>
-                                        <?php echo esc_html($img); ?>
+                                        <?php echo wp_kses($img , rbfw_allowed_html()); ?>
                                     </div>
                                     <div>
                                         <span class="rbfw_bikecarsd_type_title"><?php echo esc_html($value['service_name']); ?></span>

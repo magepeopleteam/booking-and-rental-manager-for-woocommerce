@@ -20,7 +20,7 @@ function fetch_order_details_callback() {
     global $rbfw;
     if ( isset( $_POST['post_id'] ) ) {
         $rbfw_order_id = intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) );
-        $wc_order_id   = get_post_meta( $rbfw_order_id, 'rbfw_link_order_id', true );
+        $wc_order_id   = get_post_meta( $rbfw_order_id, 'rbfw_order_id', true );
         $wc_order_details = wc_get_order( $wc_order_id );
         //echo '<pre>';print_r($wc_order_details);echo '<pre>';
         $rbfw_payment_system = $rbfw->get_option( 'rbfw_payment_system', 'rbfw_basic_payment_settings', 'mps' );

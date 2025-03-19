@@ -22,13 +22,9 @@ if (!class_exists('RBFW_Quick_Setup')) {
 
         public function __construct()
         {
-            if (!class_exists('TTBM_Dependencies')) {
-                add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'), 10, 1);
-            }
             add_action('admin_menu', array($this, 'quick_setup_menu'));
             rbfw_page_create();
         }
-        public function add_admin_scripts() {}
         public function quick_setup_menu()
         {
             $status = rbfw_woo_install_check();;
@@ -40,13 +36,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
         }
         public function quick_setup()
         {
-
-
-
-
             $woo_status = rbfw_woo_install_check();
-
-
             if (isset($_POST['rbfw_quick_setup']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['rbfw_quick_setup'])), 'rbfw_quick_setup_nonce')) {
                 if (isset($_POST['active_woo_btn'])) {
 ?>
@@ -54,9 +44,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
                         dLoaderBody();
                     </script>
                     <?php
-
                     activate_plugin('woocommerce/woocommerce.php');
-
                     ?>
                     <script>
                         (function($) {
@@ -151,7 +139,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
 
             ?>
             <div class="mpStyle">
-                <div class=_dShadow_6_adminLayout">
+                <div class="_dShadow_6_adminLayout">
                     <form method="post" action="">
                         <?php wp_nonce_field('rbfw_quick_setup_nonce', 'rbfw_quick_setup'); ?>
 

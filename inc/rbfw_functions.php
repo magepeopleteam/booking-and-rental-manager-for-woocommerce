@@ -348,7 +348,7 @@
                             <p class="rbfw_faq_desc">
 								<?php
 									if ( ! empty( $faq['rbfw_faq_content'] ) ):
-										echo esc_html( $faq['rbfw_faq_content'] );
+										echo wp_kses_post( $faq['rbfw_faq_content'] );
 									endif;
 								?>
                             </p>
@@ -932,15 +932,15 @@
 	add_filter( 'rbfw_settings_field', 'rbfw_payment_settings_fields', 10 );
 	function rbfw_payment_settings_fields( $settings_fields ) {
 		$settings_fields['rbfw_basic_payment_settings'] = array(
-			array(
-				'name'    => 'rbfw_payment_system',
-				'label'   => esc_html__( 'Payment System', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'Desc', 'booking-and-rental-manager-for-woocommerce' ),
-				'class'   => 'rbfw_payment_system',
-				'type'    => 'select',
-				'default' => 'wps',
-				'options' => rbfw_payment_systems(),
-			),
+			// array(
+			// 	'name'    => 'rbfw_payment_system',
+			// 	'label'   => esc_html__( 'Payment System', 'booking-and-rental-manager-for-woocommerce' ),
+			// 	'desc'    => esc_html__( 'Desc', 'booking-and-rental-manager-for-woocommerce' ),
+			// 	'class'   => 'rbfw_payment_system',
+			// 	'type'    => 'select',
+			// 	'default' => 'wps',
+			// 	'options' => rbfw_payment_systems(),
+			// ),
 			array(
 				'name'    => 'rbfw_mps_currency',
 				'label'   => esc_html__( 'Currency', 'booking-and-rental-manager-for-woocommerce' ),
@@ -1022,8 +1022,8 @@
 			),
 			array(
 				'name'    => 'rbfw_wps_add_to_cart_redirect',
-				'label'   => esc_html__( 'Added to cart redirect to', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => esc_html__( 'Page redirect to', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( '', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'select',
 				'default' => 'checkout',
 				'options' => array(
@@ -1959,7 +1959,7 @@
 									<?php endif; ?>
 
 									<?php if ( ( $rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment' ) && ! empty( $rbfw_bike_car_sd_data ) && $price ): ?>
-                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo wp_kses( wc_price($price) , rbfw_allowed_html()); ?>/span></div>
+                                        <div class="rbfw-related-product-price-wrap"><?php echo esc_html( $prices_start_at ); ?>: <span class="rbfw-related-product-price-badge"><?php echo wp_kses( wc_price($price) , rbfw_allowed_html()); ?></span></div>
 									<?php endif; ?>
                                 </div>
 								<?php if ( ! empty( $highlited_features ) ): ?>
@@ -2072,7 +2072,7 @@
                             <p class="rbfw_faq_desc">
 								<?php
 									if ( ! empty( $faq['rbfw_faq_content'] ) ):
-										echo esc_html( $faq['rbfw_faq_content'] );
+										echo wp_kses_post( $faq['rbfw_faq_content'] );
 									endif;
 								?>
                             </p>
@@ -2080,17 +2080,6 @@
                     </div>
 				<?php } ?>
             </div>
-            <script>
-                jQuery(document).ready(function ($) {
-                    $('#rbfw_faq_accordion .rbfw_faq_content_wrapper').first().slideDown();
-                    $('#rbfw_faq_accordion .rbfw_faq_header').first().find('i').removeClass('fa-plus').addClass('fa-minus');
-                    $('.rbfw_faq_header').click(function (e) {
-                        e.preventDefault();
-                        $(this).next('.rbfw_faq_content_wrapper').slideToggle();
-                        $(this).find('i').toggleClass('fa-plus fa-minus');
-                    });
-                });
-            </script>
 			<?php
 		}
 	}
@@ -2594,20 +2583,12 @@
 
                 for ($i = 1; $i < $total_days + 1; $i++) {
 
-                    foreach ($rbfw_additional_day_prices as $rbfw_additional_day_price) {
-                        $rbfw_start_day = $rbfw_additional_day_price['rbfw_start_day'];
-                        $rbfw_end_day = $rbfw_additional_day_price['rbfw_end_day'];
-
-                        $additional_days_array = range($rbfw_start_day, $rbfw_end_day);
-
-                        if (in_array($i, $additional_days_array)) {
-                            $daily_rate = $rbfw_additional_day_price['rbfw_daily_price'];
-                        } else {
-                            $daily_rate = get_post_meta($post_id, 'rbfw_daily_rate', true);
-                        }
-
+                    if ($multi_day_price_saver = check_multi_day_price_saver($i,$rbfw_additional_day_prices)) {
+                        $duration_price =  $multi_day_price_saver + $duration_price;
+                    } else {
+                        $duration_price = $duration_price + get_post_meta($post_id, 'rbfw_daily_rate', true);
                     }
-                    $duration_price = $duration_price + $daily_rate;
+
                 }
 
 
@@ -2825,6 +2806,18 @@ function check_seasonal_price_sd( $Book_date, $rbfw_sp_prices, $rent_type = '0' 
                     return $type_info['price'];
                 }
             }
+        }
+    }
+    return '';
+}
+
+
+function check_multi_day_price_saver( $day_number, $rbfw_additional_day_prices) {
+    foreach ( $rbfw_additional_day_prices as $item ) {
+        $rbfw_start_day = $item['rbfw_start_day'];
+        $rbfw_end_day   = $item['rbfw_end_day'];
+        if ( $day_number >= $rbfw_start_day  &&  $day_number <= $rbfw_end_day) {
+            return $item['rbfw_daily_price'];
         }
     }
     return '';

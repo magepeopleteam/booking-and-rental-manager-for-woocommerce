@@ -247,7 +247,7 @@
                 jQuery('.rbfw_enable_start_end_date_field_row').hide();
                 jQuery('.regular_fixed_date').hide();
                 jQuery('.rbfw_off_days').show();
-                jQuery('.wervice_quantity_input_box').hide();
+                jQuery('.wervice_quantity_input_box').show();
                 jQuery('#add-bike-car-sd-type-row').show();
 
                 jQuery('.manage_inventory_as_timely').show();
@@ -835,7 +835,78 @@
 			}
 		});
 	}
+   
+    // ================toggle switch, ===================
+    /**
+     * it should move from internal script to here
+     * then all should in one function
+     */
+    $(document).on('click', 'input[name=rbfw_enable_extra_service_qty]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no');
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+        }
+    });
+    $(document).on('click', 'input[name=rbfw_available_qty_info_switch]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no');
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+        }
+    });
+    $(document).on('click', 'input[name=shipping_enable]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no')
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+        }
+    });
+    $(document).on('click', 'input[name=rbfw_enable_faq_content]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no')
+            $('.rbfw-faq-section').slideUp();
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+            $('.rbfw-faq-section').slideDown();
+        }
+    });
+
+    $(document).on('click', 'input[name=rbfw_enable_additional_gallary]', function (e) {
+        var status = $(this).val();
+        if (status === 'on') {
+            $(this).val('off');
+            $('.additional-gallary-image').slideUp().removeClass('show').addClass('hide');
+        }
+        if (status === 'off') {
+            $(this).val('on');
+            $('.additional-gallary-image').slideDown().removeClass('hide').addClass('show');
+        }
+    });
+    $(document).on('click', 'input[name=rbfw_dt_sidebar_switch]', function (e) {
+        var status = $(this).val();
+        if (status === 'on') {
+            $(this).val('off')
+        }
+        if (status === 'off') {
+            $(this).val('on');
+        }
+    });
+    // ================toggle switch===================
 }(jQuery));
 
-
-
+ // testimonial
+ function createTestimonial() {
+    now = jQuery.now();
+    jQuery(".testimonial-clone").clone().appendTo(".testimonials")
+        .removeClass('testimonial-clone').addClass('testimonial')
+        .children('.testimonial-field').attr('name', 'rbfw_dt_sidebar_testimonials[' + now + '][rbfw_dt_sidebar_testimonial_text]');
+}

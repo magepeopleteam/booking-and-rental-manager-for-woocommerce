@@ -44,16 +44,7 @@
 					<?php $this->extra_service_table( $post_id ); ?>
                 </div>
                 <script>
-                    // Toggle extra service quantity options
-                    jQuery('input[name=rbfw_enable_extra_service_qty]').click(function () {
-                        var status = jQuery(this).val();
-                        if (status === 'yes') {
-                            jQuery(this).val('no');
-                        }
-                        if (status === 'no') {
-                            jQuery(this).val('yes');
-                        }
-                    });
+                    
                     // Handle extra service image upload
                     jQuery(document).ready(function () {
                         function rbfw_service_image_addup() {
@@ -183,18 +174,7 @@
                             </p>
                         </div>
                     </section>
-                    <div class="wervice_quantity_input_box">
-                        <section>
-                            <div>
-                                <label><?php esc_html_e( 'Enable Service Quantity Box', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                                <p><?php esc_html_e( 'If you Enable this customer can select number of quantity in front-end.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" name="rbfw_enable_extra_service_qty" value="<?php echo esc_attr( $rbfw_enable_extra_service_qty ); ?>" <?php echo esc_attr( ( $rbfw_enable_extra_service_qty == 'yes' ) ? 'checked' : '' ); ?>>
-                                <span class="slider round"></span>
-                            </label>
-                        </section>
-                    </div>
+                   
                 </div>
 				<?php
 			}
@@ -211,8 +191,7 @@
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$input_data_sabitized          = RBFW_Function::data_sanitize( $_POST );
-					$rbfw_enable_extra_service_qty = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_extra_service_qty'] ) ) : 'no';
-					update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
+					
 					// save extra service data==========================================
 					$old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 					$new_extra_service = array();
