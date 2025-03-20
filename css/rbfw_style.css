@@ -989,15 +989,6 @@ a.rbfw-related-product-btn:hover {
     border-right-color: var(--rbfw_single_page_secondary_color);
 }
 
-div.superSlider .iconIndicator {
-    font-size: 20px;
-    color: #fff;
-    background: rgba(0, 0, 0, 0.4);
-    width: 45px;
-    text-align: center;
-    height: 45px;
-}
-
 div.superSlider .iconIndicator:hover {
     background-color: var(--rbfw_color_primary);
 }
@@ -3252,11 +3243,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 /* End MPS booking account page css*/
-
-.mp_left_section div.superSlider .iconIndicator,
-.rbfw_muffin_template div.superSlider .iconIndicator {
-    color: #fff;
-}
 
 .mp_left_section hr {
     margin-bottom: 10px;
