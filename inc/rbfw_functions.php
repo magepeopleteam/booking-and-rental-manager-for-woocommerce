@@ -87,6 +87,7 @@
 				'data-date' => true, // Allows inline JavaScript
 				'data-id' => true, // Allows inline JavaScript
 				'data-time' => true, // Allows inline JavaScript
+				'data-key' => true, // Allows inline JavaScript
 			),
 			'input'   => array(
 				'style'       => true, // Allows inline styles
@@ -1031,6 +1032,8 @@
 				),
 			),
 		);
+
+
 
 		return apply_filters( 'rbfw_payment_settings_fields', $settings_fields );
 	}
@@ -2583,20 +2586,12 @@
 
                 for ($i = 1; $i < $total_days + 1; $i++) {
 
-                    foreach ($rbfw_additional_day_prices as $rbfw_additional_day_price) {
-                        $rbfw_start_day = $rbfw_additional_day_price['rbfw_start_day'];
-                        $rbfw_end_day = $rbfw_additional_day_price['rbfw_end_day'];
-
-                        $additional_days_array = range($rbfw_start_day, $rbfw_end_day);
-
-                        if (in_array($i, $additional_days_array)) {
-                            $daily_rate = $rbfw_additional_day_price['rbfw_daily_price'];
-                        } else {
-                            $daily_rate = get_post_meta($post_id, 'rbfw_daily_rate', true);
-                        }
-
+                    if ($multi_day_price_saver = check_multi_day_price_saver($i,$rbfw_additional_day_prices)) {
+                        $duration_price =  $multi_day_price_saver + $duration_price;
+                    } else {
+                        $duration_price = $duration_price + get_post_meta($post_id, 'rbfw_daily_rate', true);
                     }
-                    $duration_price = $duration_price + $daily_rate;
+
                 }
 
 
@@ -2814,6 +2809,18 @@ function check_seasonal_price_sd( $Book_date, $rbfw_sp_prices, $rent_type = '0' 
                     return $type_info['price'];
                 }
             }
+        }
+    }
+    return '';
+}
+
+
+function check_multi_day_price_saver( $day_number, $rbfw_additional_day_prices) {
+    foreach ( $rbfw_additional_day_prices as $item ) {
+        $rbfw_start_day = $item['rbfw_start_day'];
+        $rbfw_end_day   = $item['rbfw_end_day'];
+        if ( $day_number >= $rbfw_start_day  &&  $day_number <= $rbfw_end_day) {
+            return $item['rbfw_daily_price'];
         }
     }
     return '';

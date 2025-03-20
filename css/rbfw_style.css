@@ -7094,7 +7094,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     font-size: 16px;
 }
 .timely_quqntity_table .rbfw_regf_group select{
-    width: auto;
+    width: 60px;
     text-align: center;
 }
 .price-item-container.pricing-content_dh.mpStyle.open {
@@ -7106,6 +7106,10 @@ select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
 
 .rbfw_single_default_template .product-quantity{
     display: none;
+}
+
+.woocommerce-order-received .order-actions-button{
+    display:none !important;
 }
 
 /*.ui-datepicker td span, .ui-datepicker td a {
