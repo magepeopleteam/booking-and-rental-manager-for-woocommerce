@@ -230,7 +230,7 @@
                                                 <div class="service_category_inner_wrap">
                                                     <section class="service_category_title sss ">
                                                         <label class=" mb-1">
-															<?php echo esc_html__( 'Service Category Title', 'booking-and-rental-manager-for-woocommerce' ); ?>
+															<?php echo esc_html__( 'Additional Service Category Title', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                                         </label>
                                                         <input type="text" value="<?php echo esc_attr( $value['cat_title'] ); ?>" name="rbfw_service_category_price[<?php echo esc_attr( $i ); ?>][cat_title]" data-key="<?php echo esc_attr( $i ); ?>" placeholder="<?php echo esc_attr__( 'Service Category Label', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                     </section>
