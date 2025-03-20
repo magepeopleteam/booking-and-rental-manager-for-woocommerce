@@ -2433,6 +2433,7 @@
 				$the_query->the_post();
 				$id        = get_the_ID();
 				$inventory = get_post_meta( $id, 'rbfw_inventory', true );
+				$inventory = $inventory ? $inventory: [];
 				if ( ! empty( $inventory ) ) {
 					foreach ( $inventory as $key => $value ) {
 						$order_id                                    = $key;

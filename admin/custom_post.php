@@ -61,6 +61,7 @@ if( ! class_exists('RBFW_Custom_Post')){
 
         public function rbfw_cpt(){
             global $rbfw;
+            $rbfw = new MageRBFWClass();
             $cpt_label        = $rbfw->get_name();
             $cpt_slug         = $rbfw->get_slug();    
             $cpt_icon         = $rbfw->get_icon();
