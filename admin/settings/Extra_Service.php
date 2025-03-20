@@ -21,8 +21,8 @@
 
 			public function section_header() {
 				?>
-                <h2 class="mp_tab_item_title"><?php echo esc_html__( 'Extra Services ', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-                <p class="mp_tab_item_description"><?php echo esc_html__( 'Here you can configure price.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                <h2 class="mp_tab_item_title"><?php echo esc_html__( 'Additional Extra Services ', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                <p class="mp_tab_item_description"><?php echo esc_html__( 'Here you can configure additional extra service with rent item.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 				<?php
 			}
 
@@ -56,11 +56,11 @@
 				$section_visibility   = ( $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment' && $rbfw_item_type != 'resort' ) ? 'show' : 'hide';
 				?>
                 <div class="rbfw_general_price_config_wrapper <?php echo esc_attr( $section_visibility ); ?>">
-					<?php $this->panel_header( 'Service item price settings ', 'Service price settings with category.' ); ?>
+					<?php $this->panel_header( 'Additional Service item price settings ', 'Additional Service item and price settings' ); ?>
                     <section>
                         <div>
                             <label>
-								<?php echo esc_html__( 'Enable Category service price ', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								<?php echo esc_html__( 'Enable Additional service.', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
                             <p><?php echo esc_html__( 'You can enable/disable this section switching this button.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                         </div>
@@ -375,106 +375,112 @@
 				?>
 				<div class="rbfw_es_price_config_wrapper " <?php if ( $rbfw_item_type == 'appointment' ) {
 					echo 'style="display:none"'; } ?> data-status="<?php echo !empty($rbfw_extra_service_data)?'yes':'no'; ?>">
-					<section class="bg-light mt-5">
-						<div>
-							<label><?php echo esc_html__('Extra Service Price Settings','booking-and-rental-manager-for-woocommerce'); ?></label>
-							<p><?php echo esc_html__( 'Extra Service Price Settings','booking-and-rental-manager-for-woocommerce'); ?></p>
-						</div>
-					</section>
-					<section>
-						<div class="w-100">
-							<div style="overflow-x: auto;">
-								<table class='rbfw_pricing_table form-table w-100' id="repeatable-fieldset-one">
-									<thead>
-									<tr>
-										<!-- <th><?php // esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th> -->
-										<th><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-										<th><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-										<th><?php echo wp_kses_post( 'Price <b class="required">*</b>' ); ?></th>
-										<th><?php echo wp_kses_post( 'Stock Quantity <b class="required">*</b>' ); ?></th>
-										<!--<th><?php esc_html_e( 'Qty Box', 'booking-and-rental-manager-for-woocommerce' ); ?></th>-->
-										<th></th>
-									</tr>
-									</thead>
-									<tbody class="mp_event_type_sortable">
-									<?php
-										if ( ! empty( $rbfw_extra_service_data ) ) :
-											foreach ( $rbfw_extra_service_data as $field ) {
-												if ( ! empty( $field['service_img'] ) ) {
-													$service_img = ! empty( $field['service_img'] ) ? esc_attr( $field['service_img'] ) : '';
-													$img_url     = wp_get_attachment_url( $service_img );
-												} else {
-													$service_img = '';
-													$img_url     = '';
-												}
-												$service_name  = array_key_exists( 'service_name', $field ) ? esc_attr( $field['service_name'] ) : '';
-												$service_price = array_key_exists( 'service_price', $field ) ? esc_attr( $field['service_price'] ) : '';
-												$service_desc  = array_key_exists( 'service_desc', $field ) ? esc_attr( $field['service_desc'] ) : '';
-												$service_qty   = array_key_exists( 'service_qty', $field ) ? esc_attr( $field['service_qty'] ) : '';
-												?>
-												<tr>
-													<!-- <td>
-														<div class="rbfw_service_image_wrap text-center">
-															<div class="rbfw_service_image_preview">
-																<?php // if ( $img_url ): ?>
-																	<img src="<?php //echo esc_url( $img_url ); ?>">
-																<?php // endif; ?>
-															</div>
-															<div class="service_image_add_remove">
-																<a class="rbfw_service_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn btn"><i class="fas fa-circle-minus"></i></a>
-																<input type="hidden" name="service_img[]" value="<?php echo esc_attr( $service_img ); ?>" class="rbfw_service_image"/>
-															</div>
-														</div>
-													</td> -->
-													<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap" value="<?php echo esc_attr( $service_name ); ?>"/></td>
-													<td><input type="text" class="mp_formControl" name="service_desc[]" placeholder="Service Description" value="<?php echo esc_attr( $service_desc ); ?>"/></td>
-													<td><input type="number" class="medium" step="0.01" class="mp_formControl" name="service_price[]" placeholder="Ex: 10" value="<?php echo esc_attr( $service_price ); ?>"/></td>
-													<td><input type="number" class="medium" name="service_qty[]" placeholder="Ex: 100" value="<?php echo esc_attr( $service_qty ); ?>"/></td>
-													<td>
-														<div class="mp_event_remove_move">
-															<button class="button remove-row" type="button"><i class="fas fa-trash-can"></i></button>
-															<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
-														</div>
-													</td>
-												</tr>
-												<?php
-											}
-										endif;
-									?>
-									<!-- empty hidden one for jQuery -->
-									<tr class="empty-row screen-reader-text">
-										<!-- <td>
-											<div class="rbfw_service_image_wrap text-center">
-												<div class="rbfw_service_image_preview"></div>
-												<div class="service_image_add_remove">
-													<a class="rbfw_service_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn button"><i class="fas fa-circle-minus"></i></a>
-													<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
-												</div>
-											</div>
-										</td> -->
-										<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap"/></td>
-										<td><input type="text" class="mp_formControl " name="service_desc[]" placeholder="Service Description" value=""/></td>
-										<td><input type="number" class="mp_formControl medium" step="0.01" name="service_price[]" placeholder="Ex: 10" value=""/></td>
-										<td><input type="number" class="medium" name="service_qty[]" placeholder="Ex: 100" value=""/></td>
-										<td>
-											<div class="mp_event_remove_move">
-												<button class="button remove-row"><i class="fas fa-trash-can"></i></button>
-												<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
-											</div>
-										</td>
-									</tr>
-									</tbody>
-								</table>
-							</div>
-							<p class="mt-2">
-								<button id="add-row" class="ppof-button"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add New Extra Service', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-							</p>
-						</div>
-					</section>
+					<?php $this->show_extra_service( $post_id ) ?>
 				</div>
 				<?php
 			}
-
+			public function show_extra_service( $post_id ){
+				$rbfw_item_type                = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+				$rbfw_extra_service_data       = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
+				?>
+				<section class="bg-light mt-5">
+							<div>
+								<label><?php echo esc_html__('Extra Service Price Settings','booking-and-rental-manager-for-woocommerce'); ?></label>
+								<p><?php echo esc_html__( 'Extra Service Price Settings','booking-and-rental-manager-for-woocommerce'); ?></p>
+							</div>
+						</section>
+						<section>
+							<div class="w-100">
+								<div style="overflow-x: auto;">
+									<table class='rbfw_pricing_table form-table w-100' id="repeatable-fieldset-one">
+										<thead>
+										<tr>
+											<!-- <th><?php // esc_html_e( 'Image', 'booking-and-rental-manager-for-woocommerce' ); ?></th> -->
+											<th><?php esc_html_e( 'Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+											<th><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+											<th><?php echo wp_kses_post( 'Price <b class="required">*</b>' ); ?></th>
+											<th><?php echo wp_kses_post( 'Stock Quantity <b class="required">*</b>' ); ?></th>
+											<!--<th><?php esc_html_e( 'Qty Box', 'booking-and-rental-manager-for-woocommerce' ); ?></th>-->
+											<th></th>
+										</tr>
+										</thead>
+										<tbody class="mp_event_type_sortable">
+										<?php
+											if ( ! empty( $rbfw_extra_service_data ) ) :
+												foreach ( $rbfw_extra_service_data as $field ) {
+													if ( ! empty( $field['service_img'] ) ) {
+														$service_img = ! empty( $field['service_img'] ) ? esc_attr( $field['service_img'] ) : '';
+														$img_url     = wp_get_attachment_url( $service_img );
+													} else {
+														$service_img = '';
+														$img_url     = '';
+													}
+													$service_name  = array_key_exists( 'service_name', $field ) ? esc_attr( $field['service_name'] ) : '';
+													$service_price = array_key_exists( 'service_price', $field ) ? esc_attr( $field['service_price'] ) : '';
+													$service_desc  = array_key_exists( 'service_desc', $field ) ? esc_attr( $field['service_desc'] ) : '';
+													$service_qty   = array_key_exists( 'service_qty', $field ) ? esc_attr( $field['service_qty'] ) : '';
+													?>
+													<tr>
+														<!-- <td>
+															<div class="rbfw_service_image_wrap text-center">
+																<div class="rbfw_service_image_preview">
+																	<?php // if ( $img_url ): ?>
+																		<img src="<?php //echo esc_url( $img_url ); ?>">
+																	<?php // endif; ?>
+																</div>
+																<div class="service_image_add_remove">
+																	<a class="rbfw_service_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn btn"><i class="fas fa-circle-minus"></i></a>
+																	<input type="hidden" name="service_img[]" value="<?php echo esc_attr( $service_img ); ?>" class="rbfw_service_image"/>
+																</div>
+															</div>
+														</td> -->
+														<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap" value="<?php echo esc_attr( $service_name ); ?>"/></td>
+														<td><input type="text" class="mp_formControl" name="service_desc[]" placeholder="Service Description" value="<?php echo esc_attr( $service_desc ); ?>"/></td>
+														<td><input type="number" class="medium" step="0.01" class="mp_formControl" name="service_price[]" placeholder="Ex: 10" value="<?php echo esc_attr( $service_price ); ?>"/></td>
+														<td><input type="number" class="medium" name="service_qty[]" placeholder="Ex: 100" value="<?php echo esc_attr( $service_qty ); ?>"/></td>
+														<td>
+															<div class="mp_event_remove_move">
+																<button class="button remove-row" type="button"><i class="fas fa-trash-can"></i></button>
+																<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
+															</div>
+														</td>
+													</tr>
+													<?php
+												}
+											endif;
+										?>
+										<!-- empty hidden one for jQuery -->
+										<tr class="empty-row screen-reader-text">
+											<!-- <td>
+												<div class="rbfw_service_image_wrap text-center">
+													<div class="rbfw_service_image_preview"></div>
+													<div class="service_image_add_remove">
+														<a class="rbfw_service_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_service_image_btn button"><i class="fas fa-circle-minus"></i></a>
+														<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
+													</div>
+												</div>
+											</td> -->
+											<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap"/></td>
+											<td><input type="text" class="mp_formControl " name="service_desc[]" placeholder="Service Description" value=""/></td>
+											<td><input type="number" class="mp_formControl medium" step="0.01" name="service_price[]" placeholder="Ex: 10" value=""/></td>
+											<td><input type="number" class="medium" name="service_qty[]" placeholder="Ex: 100" value=""/></td>
+											<td>
+												<div class="mp_event_remove_move">
+													<button class="button remove-row"><i class="fas fa-trash-can"></i></button>
+													<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
+												</div>
+											</td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+								<p class="mt-2">
+									<button id="add-row" class="ppof-button"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add New Extra Service', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+								</p>
+							</div>
+						</section>
+				<?php
+			}
 			public function settings_save( $post_id ) {
 				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
 					return;
