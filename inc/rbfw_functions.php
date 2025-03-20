@@ -1033,6 +1033,8 @@
 			),
 		);
 
+
+
 		return apply_filters( 'rbfw_payment_settings_fields', $settings_fields );
 	}
 // Update Settings On Register the Plugin

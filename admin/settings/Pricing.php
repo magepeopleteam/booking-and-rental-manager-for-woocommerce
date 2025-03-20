@@ -283,7 +283,7 @@
 							}
 							$field_name  = isset( $option['field_name'] ) ? $option['field_name'] : $id;
 							$conditions  = isset( $option['conditions'] ) ? $option['conditions'] : array();
-							$placeholder = isset( $option['placeholder'] ) ? $option['placeholder'] : "";
+							$placeholder = isset( $option['placeholder'] ) ? $option['placeholder'] : "Service Name";
 							$remove_text = isset( $option['remove_text'] ) ? $option['remove_text'] : '<i class="fas fa-trash-can"></i>';
 							$sortable    = isset( $option['sortable'] ) ? $option['sortable'] : true;
 							$default     = isset( $option['default'] ) ? $option['default'] : array();

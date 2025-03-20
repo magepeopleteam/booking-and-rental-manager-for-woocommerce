@@ -30,6 +30,9 @@ function rbfw_admin_settings_sec_reg_basic( $default_sec ) {
             'title' => '<i class="fas fa-palette"></i>'.esc_html__( 'Custom CSS', 'booking-and-rental-manager-for-woocommerce' )
         ),
 
+
+
+
 		array(
 			'id'    => 'rbfw_basic_payment_settings',
 			'title' => '<i class="fas fa-money-check-dollar"></i>'.esc_html__( 'Checkout Page', 'booking-and-rental-manager-for-woocommerce' )
