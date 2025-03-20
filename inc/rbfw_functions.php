@@ -931,15 +931,15 @@
 	add_filter( 'rbfw_settings_field', 'rbfw_payment_settings_fields', 10 );
 	function rbfw_payment_settings_fields( $settings_fields ) {
 		$settings_fields['rbfw_basic_payment_settings'] = array(
-			// array(
-			// 	'name'    => 'rbfw_payment_system',
-			// 	'label'   => esc_html__( 'Payment System', 'booking-and-rental-manager-for-woocommerce' ),
-			// 	'desc'    => esc_html__( 'Desc', 'booking-and-rental-manager-for-woocommerce' ),
-			// 	'class'   => 'rbfw_payment_system',
-			// 	'type'    => 'select',
-			// 	'default' => 'wps',
-			// 	'options' => rbfw_payment_systems(),
-			// ),
+			array(
+				'name'    => 'rbfw_payment_system',
+				'label'   => esc_html__( 'Payment System', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => esc_html__( 'Desc', 'booking-and-rental-manager-for-woocommerce' ),
+				'class'   => 'rbfw_payment_system',
+				'type'    => 'select',
+				'default' => 'wps',
+				'options' => rbfw_payment_systems(),
+			),
 			array(
 				'name'    => 'rbfw_mps_currency',
 				'label'   => esc_html__( 'Currency', 'booking-and-rental-manager-for-woocommerce' ),
