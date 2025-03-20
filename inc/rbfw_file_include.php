@@ -35,6 +35,14 @@ require_once RBFW_PLUGIN_DIR . '/support/blocks/block-support.php';
 //require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
 
 
+$rbfw_basic_payment_settings = get_option('rbfw_basic_payment_settings');
+
+if(!is_array($rbfw_basic_payment_settings)){
+    $rbfw_basic_payment_settings = [];
+}
+$rbfw_basic_payment_settings['rbfw_payment_system'] = 'wps';
+
+update_option('rbfw_basic_payment_settings', $rbfw_basic_payment_settings);
 
 
 add_action('init', 'rbfw_category_update');
