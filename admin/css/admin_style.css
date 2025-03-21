@@ -3619,7 +3619,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     padding:5px;
     margin: 5px 0;
     display: flex;
-    justify-content: start;
+    justify-content: space-between;
     align-items: center;
     border: 1px solid var(--mage-light);
     gap:10px;

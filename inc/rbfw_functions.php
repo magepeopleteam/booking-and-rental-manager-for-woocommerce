@@ -56,6 +56,11 @@
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
 			),
+			'label'       => array(
+				'style'   => true, // Allows inline styles
+				'class'   => true,
+				'onclick' => true, // Allows inline JavaScript
+			),
 			'i'       => array(
 				'style'   => true, // Allows inline styles
 				'class'   => true,
@@ -145,8 +150,6 @@
                 'id'          => true,
                 'class'          => true,
             ),
-
-
 
 		);
 
