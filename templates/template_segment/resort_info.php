@@ -22,12 +22,9 @@ if(isset($post_id) && isset($active_tab)){
     $rbfw_product_id = get_post_meta( $post_id, "link_wc_product", true ) ? get_post_meta( $post_id, "link_wc_product", true ) : $post_id;
 
     $currency_symbol = rbfw_mps_currency_symbol();
-    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-    if($rbfw_payment_system == 'mps'){
-        $rbfw_payment_system = 'mps_enabled';
-    }else{
-        $rbfw_payment_system = 'wps_enabled';
-    }
+
+    $rbfw_payment_system = 'wps_enabled';
+
     $available_qty_info_switch = get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) : 'no';
 
     ?>
