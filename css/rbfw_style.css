@@ -327,17 +327,20 @@ CSS for Single Page Template
     content: '\f078';
     font-family: FontAwesome;
     position: absolute;
-    top: 26px;
+    top: 50%;
     right: 15px;
     transform: translateY(-50%);
+    font-size: 14px;
 }
 
 .input-picker-icon{
     position: absolute;
     right: 12px;
-    top: 12px;
+    top: 10px;
 }
-
+.input-picker-icon i{
+    font-size: 14px;
+}
 .pricing-content .price-type {
     margin-bottom: 10px;
     display: -webkit-box;
@@ -388,7 +391,7 @@ CSS for Single Page Template
 #pickup_date,
 #dropoff_date {
     cursor: pointer;
-    padding: 0 0 0 35px;
+    padding: 0 0 0 42px;
     height: 50px;
     margin-bottom: 0;
     box-sizing: border-box;
@@ -7112,17 +7115,96 @@ select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
     display:none !important;
 }
 
-/*.ui-datepicker td span, .ui-datepicker td a {
-    padding-bottom: 1em;
+/* =============date picker format=========== */
+.single-rbfw_item #ui-datepicker-div{
+    border:1px solid #dfdedd;
+    box-shadow: 0 0 15px #ddd;
 }
-.ui-datepicker td[title]::after {
-    content: attr(title);
-    display: block;
-    position: relative;
-    font-size: 10px !important;
-    height: 1.25em;
-    margin-top: -1.25em;
-    text-align: right;
-    padding-right: .25em;
-    color:white;
-}*/
+.single-rbfw_item #ui-datepicker-div .ui-datepicker-header{
+    background-color: var(--rbfw_primary_opacity);
+    background-image: none;
+    border-color: var(--rbfw_color_primary);
+    border-radius: 18px 18px 0 0;
+}
+.single-rbfw_item  #ui-datepicker-div .ui-datepicker-next{
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    width: 36px;
+    height: 36px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #333;
+    border-radius: 0;
+}
+.single-rbfw_item #ui-datepicker-div .ui-datepicker-prev{
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    width: 36px;
+    height: 36px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #333;
+    border-radius: 0;
+}
+.single-rbfw_item #ui-datepicker-div .ui-datepicker-header a.ui-datepicker-next::before{
+    font-size: 15px;
+    content: "\f054";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 900;
+    font-family: 'Font Awesome 5 Free';
+}
+.single-rbfw_item #ui-datepicker-div .ui-datepicker-header a.ui-datepicker-prev::before{
+    font-size: 15px;
+    content: "\f053";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: 900;
+    font-family: 'Font Awesome 5 Free';
+  }
+
+.single-rbfw_item #ui-datepicker-div .ui-datepicker-prev:hover,
+.single-rbfw_item #ui-datepicker-div .ui-datepicker-next:hover{
+    background:var(--rbfw_color_primary);
+    color: #fff;
+    text-align: center;
+    border-radius: 100px;
+  }
+  .single-rbfw_item #ui-datepicker-div .ui-state-default{
+    color: var(--rbfw_color_primary);
+  }
+  .single-rbfw_item #ui-datepicker-div .ui-state-active{
+    background-color: var(--rbfw_color_primary);
+    color: #fff;
+  }
+  .single-rbfw_item #ui-datepicker-div a.ui-state-default:hover {
+    background-color: var(--rbfw_primary_opacity);
+  }
+.single-rbfw_item #ui-datepicker-div .ui-datepicker-title{
+    background-color: transparent;
+    color: var(--rbfw_color_primary);
+}
+
+.ui-datepicker table thead{
+    background-color:var(--rbfw_primary_opacity);
+}
+#ui-datepicker-div{
+    width: auto;
+}
+#ui-datepicker-div .ui-datepicker-header{
+    padding: 16px 2px;
+}
+#ui-datepicker-div .ui-datepicker-next,#ui-datepicker-div .ui-datepicker-prev{
+    border: 1px solid var(--mage-primary);
+}
+#ui-datepicker-div .ui-datepicker-header a.ui-datepicker-next::before,#ui-datepicker-div .ui-datepicker-header a.ui-datepicker-prev::before{
+    color: var(--mage-primary);
+    top:50%;
+    transform: translateY(-50%);
+}
