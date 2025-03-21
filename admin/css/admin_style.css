@@ -3624,7 +3624,9 @@ div.mpStyle [class*="_bgColor_1"] i {
     border: 1px solid var(--mage-light);
     gap:10px;
 }
-
+.service_category_inner_item_wrap .item:nth-child(even){
+    background-color: var(--mage-light);
+}
 .wp-core-ui select {
     height: auto !important;
 }
