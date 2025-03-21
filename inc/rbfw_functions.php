@@ -2380,6 +2380,7 @@
 	function rbfw_get_available_times_particulars( $rbfw_id, $start_date, $type = '', $selector = '' ) {
 		$particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true );
 		$the_array        = [];
+
 		foreach ( $particulars_data as $single ) {
 			$pd_dates_array = getAllDates( $single['start_date'], $single['end_date'] );
 			if ( in_array( $start_date, $pd_dates_array ) ) {
@@ -2396,12 +2397,14 @@
 				return array( $the_array, $selector );
 			}
 		}
+
 		$rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 		foreach ( $rdfw_available_time as $start_time ) {
 
 			if ( $type == 'time_enable' ) {
 				$time_status = '';
 			} else {
+
 				$time_status = rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time );
 			}
 			$the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
@@ -2410,16 +2413,21 @@
 		return array( $the_array, $selector );
 	}
 	function rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time ) {
-		$rbfw_bike_car_sd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : [];
-		foreach ( $rbfw_bike_car_sd_data as $value ) {
-			$d_type                         = $value['d_type'];
-			$duration                       = $value['duration'];
-			$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $rbfw_id, $start_date, $start_time, $d_type, $duration );
-			if ( $rbfw_timely_available_quantity > 0 ) {
-				return;
-			}
-		}
 
+        $rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
+        if($rbfw_item_type == 'bike_car_sd'){
+            $rbfw_bike_car_sd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : [];
+            foreach ( $rbfw_bike_car_sd_data as $value ) {
+                if(isset($value['rent_type']) && $value['rent_type']){
+                    $d_type                         = $value['d_type'];
+                    $duration                       = $value['duration'];
+                    $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $rbfw_id, $start_date, $start_time, $d_type, $duration );
+                    if ( $rbfw_timely_available_quantity > 0 ) {
+                        return;
+                    }
+                }
+            }
+        }
 		return 'disabled';
 	}
 	/* UPDATE: Inventory order status */
@@ -2440,7 +2448,7 @@
 				$id        = get_the_ID();
 				$inventory = get_post_meta( $id, 'rbfw_inventory', true );
 				$inventory = $inventory ? $inventory: [];
-				if ( ! empty( $inventory ) ) {
+				if ( ! empty( $inventory ) && is_array($inventory) ) {
 					foreach ( $inventory as $key => $value ) {
 						$order_id                                    = $key;
 						$order_status                                = rbfw_get_order_status_by_id( $order_id );
