@@ -5,11 +5,10 @@ add_action('wp_ajax_rbfw_get_stock_by_filter', 'rbfw_get_stock_by_filter');
 
 
 function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) {
-    global $rbfw;
-    $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
+
     $title = $meta_data['rbfw_billing_name'];
     $cpt_name = 'rbfw_order_meta';
-    if($rbfw_payment_system == 'wps'){
+
         $wc_order_id = intval($meta_data['rbfw_order_id']);
         $ticket_info = $meta_data['rbfw_ticket_info'];
         $order_tax = !empty(get_post_meta($wc_order_id, '_order_tax', true)) ? get_post_meta($wc_order_id, '_order_tax', true) : 0;
@@ -60,7 +59,7 @@ function rbfw_add_order_meta_data($meta_data = array(), $ticket_info = array()) 
         /* End */
 
         rbfw_update_inventory( $wc_order_id, 'processing');
-    }
+
 
     return $post_id;
 }

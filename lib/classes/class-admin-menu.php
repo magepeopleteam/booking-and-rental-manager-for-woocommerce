@@ -467,12 +467,11 @@
 			}
 
 			function rbfw_add_order_data( $meta_data = array(), $ticket_info = array(), $rbfw_service_price_data_actual = array() ) {
-				global $rbfw;
-				$rbfw_payment_system = $rbfw->get_option_trans( 'rbfw_payment_system', 'rbfw_basic_payment_settings', 'mps' );
+
 				$title               = $meta_data['rbfw_billing_name'];
 				$cpt_name            = 'rbfw_order';
 
-				if ( $rbfw_payment_system == 'wps' ) {
+
 					$rbfw_id          = $meta_data['rbfw_id'];
 					$wc_order_id      = $meta_data['rbfw_order_id'];
 					$duration_cost    = $meta_data['rbfw_ticket_info'][0]['duration_cost'];
@@ -552,7 +551,7 @@
 						update_post_meta( $post_id, 'rbfw_link_order_id', $wc_order_id );
 					}
 					wp_reset_postdata();
-				}
+
 
 				return $post_id;
 			}
