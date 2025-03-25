@@ -68,9 +68,6 @@
 				$t_page_id           = rbfw_get_option( 'rbfw_thankyou_page', 'rbfw_basic_gen_settings' );
 				$current_page_id     = get_queried_object_id();
 				$checkout_account    = $rbfw->get_option_trans( 'rbfw_mps_checkout_account', 'rbfw_basic_payment_settings', 'on' );
-				$rbfw_payment_system = $rbfw->get_option_trans( 'rbfw_payment_system', 'rbfw_basic_payment_settings', 'mps' );
-				$mps_tax_switch      = $rbfw->get_option_trans( 'rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off' );
-				$mps_tax_format      = $rbfw->get_option_trans( 'rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax' );
 				if ( $current_page_id != $t_page_id ) {
 					return;
 				}
@@ -119,9 +116,7 @@
 							}
 							$tax        = ! empty( $ticket_info['rbfw_mps_tax'] ) ? $ticket_info['rbfw_mps_tax'] : 0;
 							$tax_status = '';
-							if ( $rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && $mps_tax_format == 'including_tax' ) {
-								$tax_status = '(' . rbfw_string_return( 'rbfw_text_includes', __( 'Includes', 'booking-and-rental-manager-for-woocommerce' ) ) . ' ' . rbfw_mps_price( $tax ) . ' ' . rbfw_string_return( 'rbfw_text_tax', __( 'Tax', 'booking-and-rental-manager-for-woocommerce' ) ) . ')';
-							}
+
 							if ( ! empty( $_GET['paymentStatus'] ) && empty( get_post_meta( $order_id, 'rbfw_payment_status', true ) ) ) {
 								$paymentStatus = sanitize_text_field( wp_unslash( $_GET['paymentStatus'] ) );
 							} else {
@@ -368,12 +363,7 @@
 													echo ':'; ?></strong></td>
                                         <td><?php echo esc_html( $service_cost ); ?></td>
                                     </tr>
-									<?php if ( $rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && ! empty( $tax ) ) { ?>
-                                        <tr>
-                                            <td><strong><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_tax', 'rbfw_basic_translation_settings', __( 'Tax', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></strong></td>
-                                            <td><?php echo esc_html( $tax ); ?></td>
-                                        </tr>
-									<?php } ?>
+
 									<?php if ( ! empty( $discount_amount ) ) { ?>
                                         <tr>
                                             <td><strong><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings', __( 'Discount', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>:</strong></td>
@@ -425,9 +415,7 @@
 					}
 					$tax        = ! empty( $ticket_info['rbfw_mps_tax'] ) ? $ticket_info['rbfw_mps_tax'] : 0;
 					$tax_status = '';
-					if ( $rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && $mps_tax_format == 'including_tax' ) {
-						$tax_status = '(' . rbfw_string_return( 'rbfw_text_includes', __( 'Includes', 'booking-and-rental-manager-for-woocommerce' ) ) . ' ' . rbfw_mps_price( $tax ) . ' ' . rbfw_string_return( 'rbfw_text_tax', __( 'Tax', 'booking-and-rental-manager-for-woocommerce' ) ) . ')';
-					}
+
 					if ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) {
 						$BikeCarSdClass = new RBFW_BikeCarSd_Function();
 						$rent_info      = ! empty( $ticket_info['rbfw_type_info'] ) ? $ticket_info['rbfw_type_info'] : [];
@@ -654,17 +642,13 @@
 											echo ':'; ?></strong></td>
                                 <td><?php echo esc_html( $duration_cost ); ?></td>
                             </tr>
+
                             <tr>
                                 <td><strong><?php rbfw_string( 'rbfw_text_resource_cost', __( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) );
 											echo ':'; ?></strong></td>
                                 <td><?php echo esc_html( $service_cost ); ?></td>
                             </tr>
-							<?php if ( $rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && ! empty( $tax ) ) { ?>
-                                <tr>
-                                    <td><strong><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_tax', 'rbfw_basic_translation_settings', __( 'Tax', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></strong></td>
-                                    <td> <?php echo esc_html( rbfw_mps_price( $tax ) ); ?> </td>
-                                </tr>
-							<?php } ?>
+
 							<?php if ( ! empty( $discount_amount ) ) { ?>
                                 <tr>
                                     <td><strong><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings', __( 'Discount', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>:</strong></td>

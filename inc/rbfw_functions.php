@@ -56,6 +56,11 @@
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
 			),
+			'label'       => array(
+				'style'   => true, // Allows inline styles
+				'class'   => true,
+				'onclick' => true, // Allows inline JavaScript
+			),
 			'i'       => array(
 				'style'   => true, // Allows inline styles
 				'class'   => true,
@@ -145,8 +150,6 @@
                 'id'          => true,
                 'class'          => true,
             ),
-
-
 
 		);
 
@@ -902,20 +905,6 @@
 	function rbfw_payment_systems_css() {
 		$current_payment_system = rbfw_get_option( 'rbfw_payment_system', 'rbfw_basic_payment_settings' );
 		$mps_tax_switch         = rbfw_get_option( 'rbfw_mps_tax_switch', 'rbfw_basic_payment_settings' );
-		if ( 'wps' == $current_payment_system ) {
-			echo '<style>tr.rbfw_mps_currency,tr.rbfw_mps_currency_position,tr.rbfw_mps_currency_decimal_seperator,tr.rbfw_mps_currency_thousand_seperator,tr.rbfw_mps_currency_decimal_number,tr.rbfw_mps_checkout_account,tr.rbfw_mps_payment_gateway,tr.rbfw_mps_payment_gateway_environment,tr.rbfw_mps_paypal_heading,tr.rbfw_mps_paypal_account_email,tr.rbfw_mps_paypal_api_username,tr.rbfw_mps_paypal_api_password,tr.rbfw_mps_paypal_api_signature,tr.rbfw_mps_paypal_ipn_handler,tr.rbfw_mps_stripe_heading,tr.rbfw_mps_stripe_publishable_key,tr.rbfw_mps_stripe_secret_key,tr.rbfw_mps_stripe_webhook,tr.rbfw_mps_paypal_client_id,tr.rbfw_mps_paypal_secret_key,tr.rbfw_mps_stripe_postal_field,tr.rbfw_mps_tax_switch,tr.rbfw_mps_tax_format{display:none;}</style>';
-		} else {
-			echo '<style>tr.rbfw_wps_add_to_cart_redirect{display:none;}</style>';
-		}
-		if ( $mps_tax_switch != 'on' ) {
-			?>
-            <script>jQuery(document).ready(function () {
-                    jQuery(".mp_tab_details .mp_tab_item[data-tab-item=#rbfw_tax_settings_meta_boxes] .form-table").remove();
-                    jQuery(".mp_tab_details .mp_tab_item[data-tab-item=#rbfw_tax_settings_meta_boxes] .description").html("<div class='rbfw_alert_info'><i class='fas fa-circle-info'></i> To enable tax settings, go to Settings->Payment Settings and enable the tax switch.</div>");
-                });
-            </script>
-			<?php
-		}
 	}
 // get page list array
 	function rbfw_get_pages_arr() {
@@ -932,106 +921,17 @@
 	add_filter( 'rbfw_settings_field', 'rbfw_payment_settings_fields', 10 );
 	function rbfw_payment_settings_fields( $settings_fields ) {
 		$settings_fields['rbfw_basic_payment_settings'] = array(
-			// array(
-			// 	'name'    => 'rbfw_payment_system',
-			// 	'label'   => esc_html__( 'Payment System', 'booking-and-rental-manager-for-woocommerce' ),
-			// 	'desc'    => esc_html__( 'Desc', 'booking-and-rental-manager-for-woocommerce' ),
-			// 	'class'   => 'rbfw_payment_system',
-			// 	'type'    => 'select',
-			// 	'default' => 'wps',
-			// 	'options' => rbfw_payment_systems(),
-			// ),
-			array(
-				'name'    => 'rbfw_mps_currency',
-				'label'   => esc_html__( 'Currency', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'Please choose the currency if mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'select',
-				'default' => 'USD',
-				'options' => rbfw_mps_currency_list(),
-			),
-			array(
-				'name'    => 'rbfw_mps_currency_position',
-				'label'   => esc_html__( 'Currency position', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'This controls the position of the currency symbol if mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'select',
-				'default' => 'left',
-				'options' => array(
-					'left'        => 'Left',
-					'right'       => 'Right',
-					'left_space'  => 'Left with space',
-					'right_space' => 'Right with space'
-				),
-			),
-			array(
-				'name'      => 'rbfw_mps_currency_thousand_seperator',
-				'label'     => esc_html__( 'Thousand separator', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'      => esc_html__( 'This sets the thousand seperator of displayed prices.', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'      => 'text',
-				'default'   => ',',
-				'maxlength' => '1',
-				'size'      => '1',
-			),
-			array(
-				'name'      => 'rbfw_mps_currency_decimal_seperator',
-				'label'     => esc_html__( 'Decimal separator', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'      => esc_html__( 'This sets the decimal seperator of displayed prices.', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'      => 'text',
-				'default'   => '.',
-				'maxlength' => '1',
-				'size'      => '1',
-			),
-			array(
-				'name'    => 'rbfw_mps_currency_decimal_number',
-				'label'   => esc_html__( 'Number of decimals', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'This sets the number of decimal points shown in displayed prices. It will work if mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'number',
-				'default' => '2',
-			),
-			array(
-				'name'    => 'rbfw_mps_tax_switch',
-				'label'   => esc_html__( 'Enable taxes', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( ' Enable tax rates and calculations. Rates will be configurable and taxes will be calculated during checkout.', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'checkbox',
-				'default' => 'off',
-			),
-			array(
-				'name'    => 'rbfw_mps_tax_format',
-				'label'   => esc_html__( 'Display prices during checkout', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'Please select the tax format.', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'select',
-				'default' => 'excluding_tax',
-				'options' => array(
-					'excluding_tax' => esc_html__( 'Excluding tax', 'booking-and-rental-manager-for-woocommerce' ),
-					'including_tax' => esc_html__( 'Including tax', 'booking-and-rental-manager-for-woocommerce' ),
-				),
-			),
-			array(
-				'name'    => 'rbfw_mps_checkout_account',
-				'label'   => esc_html__( 'Account creation', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'Allow customers to create an account during checkout.', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'checkbox',
-				'default' => 'on',
-			),
-			array(
-				'name'    => 'rbfw_mps_payment_gateway',
-				'label'   => esc_html__( 'Payment Gateway', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'multicheck',
-				'default' => 'offline',
-				'options' => rbfw_get_payment_gateways()
-			),
-			array(
-				'name'    => 'rbfw_wps_add_to_cart_redirect',
-				'label'   => esc_html__( 'Page redirect to', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( '', 'booking-and-rental-manager-for-woocommerce' ),
-				'type'    => 'select',
-				'default' => 'checkout',
-				'options' => array(
-					'checkout' => 'Checkout',
-					'cart'     => 'Cart',
-				),
-			),
+                array('name'    => 'rbfw_mps_payment_gateway',
+                    'label'   => esc_html__( 'Payment Gateway', 'booking-and-rental-manager-for-woocommerce' ),
+                    'desc'    => esc_html__( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
+                    'type'    => 'multicheck',
+                    'default' => 'offline',
+                    'options' => rbfw_get_payment_gateways()
+                )
+
 		);
+
+
 
 		return apply_filters( 'rbfw_payment_settings_fields', $settings_fields );
 	}
@@ -2375,6 +2275,7 @@
 	function rbfw_get_available_times_particulars( $rbfw_id, $start_date, $type = '', $selector = '' ) {
 		$particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true );
 		$the_array        = [];
+
 		foreach ( $particulars_data as $single ) {
 			$pd_dates_array = getAllDates( $single['start_date'], $single['end_date'] );
 			if ( in_array( $start_date, $pd_dates_array ) ) {
@@ -2391,12 +2292,14 @@
 				return array( $the_array, $selector );
 			}
 		}
+
 		$rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 		foreach ( $rdfw_available_time as $start_time ) {
 
 			if ( $type == 'time_enable' ) {
 				$time_status = '';
 			} else {
+
 				$time_status = rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time );
 			}
 			$the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
@@ -2405,16 +2308,21 @@
 		return array( $the_array, $selector );
 	}
 	function rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time ) {
-		$rbfw_bike_car_sd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : [];
-		foreach ( $rbfw_bike_car_sd_data as $value ) {
-			$d_type                         = $value['d_type'];
-			$duration                       = $value['duration'];
-			$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $rbfw_id, $start_date, $start_time, $d_type, $duration );
-			if ( $rbfw_timely_available_quantity > 0 ) {
-				return;
-			}
-		}
 
+        $rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
+        if($rbfw_item_type == 'bike_car_sd'){
+            $rbfw_bike_car_sd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : [];
+            foreach ( $rbfw_bike_car_sd_data as $value ) {
+                if(isset($value['rent_type']) && $value['rent_type']){
+                    $d_type                         = $value['d_type'];
+                    $duration                       = $value['duration'];
+                    $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $rbfw_id, $start_date, $start_time, $d_type, $duration );
+                    if ( $rbfw_timely_available_quantity > 0 ) {
+                        return;
+                    }
+                }
+            }
+        }
 		return 'disabled';
 	}
 	/* UPDATE: Inventory order status */
@@ -2434,7 +2342,8 @@
 				$the_query->the_post();
 				$id        = get_the_ID();
 				$inventory = get_post_meta( $id, 'rbfw_inventory', true );
-				if ( ! empty( $inventory ) ) {
+				$inventory = $inventory ? $inventory: [];
+				if ( ! empty( $inventory ) && is_array($inventory) ) {
 					foreach ( $inventory as $key => $value ) {
 						$order_id                                    = $key;
 						$order_status                                = rbfw_get_order_status_by_id( $order_id );

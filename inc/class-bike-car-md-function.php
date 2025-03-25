@@ -104,7 +104,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $duration = '';
 
             if ( $actual_days > 0 ) {
-                $duration .= $actual_days > 1 ? $actual_days.' '.rbfw_string_return('rbfw_text_days',esc_html__('Days','booking-and-rental-manager-for-woocommerce')).' ' : $actual_days.' '.rbfw_string_return('rbfw_text_day',esc_html__('Day','booking-and-rental-manager-for-woocommerce')).' ';
+                $duration .= $actual_days > 1 ? $actual_days.' '.esc_html__($rbfw->get_option_trans('rbfw_text_days','rbfw_basic_translation_settings',__('Days','booking-and-rental-manager-for-woocommerce'))).' ' : $actual_days.' '.esc_html__($rbfw->get_option_trans('rbfw_text_day','rbfw_basic_translation_settings',__('Day','booking-and-rental-manager-for-woocommerce'))).' ';
             }
             if ( $hours > 0 ) {
                 $duration .= $hours > 1 ? $hours.' '.rbfw_string_return('rbfw_text_hours',esc_html__('Hours','booking-and-rental-manager-for-woocommerce')) : $hours.' '.rbfw_string_return('rbfw_text_hour',esc_html__('Hour','booking-and-rental-manager-for-woocommerce'));
@@ -177,19 +177,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $rbfw_enable_extra_service_qty = get_post_meta( $product_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $product_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
                 /* Start Tax Calculations */
-                $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-                $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-                $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
-                $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? wp_strip_all_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $percent = 0;
-                $tax_status = '';
-                if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage)){
-                    //Convert our percentage value into a decimal.
-                    $percentInDecimal = $mps_tax_percentage / 100;
-                    //Get the result.
-                    $percent = $percentInDecimal * $ticket_total_price;
-                    $ticket_total_price = $ticket_total_price + $percent;
-                }
 
                 /* End Tax Calculations */
 

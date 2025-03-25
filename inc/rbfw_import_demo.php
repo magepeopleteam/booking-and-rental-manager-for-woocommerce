@@ -152,7 +152,7 @@
 				return (int) $attachment_id;
 			}
 
-			public function rbfw_media_upload_from_path( $file_path) {
+			public function rbfw_media_upload_from_path( $file_path, $title = '') {
 
 				$attachment = $this->does_attachment_exist(basename($file_path));
 				if(empty($attachment)){

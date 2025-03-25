@@ -6,7 +6,14 @@ $rbfw_id = $post_id ??0;
 global $frontend;
 global $submit_name;
 $frontend = $frontend??0;
-$submit_name=$submit_name??'admin-purchase';
+$cart_backend = $cart_backend??'';
+
+if($cart_backend){
+    $submit_name = 'admin-purchase';
+}else{
+    $submit_name = 'add-to-cart';
+}
+
 $daily_rate = get_post_meta($rbfw_id, 'rbfw_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_daily_rate', true) : 0;
 $hourly_rate = get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) : 0;
 $enable_daily_rate = get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) : 'yes';

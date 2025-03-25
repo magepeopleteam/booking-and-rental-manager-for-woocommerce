@@ -105,11 +105,6 @@
     color: var(--rbfw_color_primary);
 }
 
-p {
-    margin-block-start: 0;
-    margin-block-end: 0;
-}
-
 .rbfw_rent_list_btn_holder {
 
 }
