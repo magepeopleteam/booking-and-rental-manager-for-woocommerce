@@ -17,15 +17,15 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 
 jQuery('body').on('focusin', '.pickup_date', function(e) {
 
-    //alert(jQuery('.ui-datepicker-title .ui-datepicker-month').text());
-    //alert(jQuery('.ui-datepicker-title .ui-datepicker-year').text());
+    let calendar_month = jQuery('.ui-datepicker-title .ui-datepicker-month').text();
+    let calendar_year = jQuery('.ui-datepicker-title .ui-datepicker-year').text();
 
     jQuery(this).datepicker({
         dateFormat: js_date_format,
         minDate: '',
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable,jQuery('#rbfw_post_id').val());
         },
         onSelect: function (dateString, data) {
             let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -61,16 +61,16 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
         },
     });
 
-  /*  jQuery(document).on("mousemove", ".ui-datepicker-calendar td", function() {
+    jQuery(document).on("mousemove", ".ui-datepicker-calendar td", function() {
         let $this = jQuery(this);
         console.log($this.text());
-        if ($this.find(".date-label").length === 0) {
+        if ($this.find(".date-label").length === 0) {  
             let dateText = $this.text().trim();
             if (dateText) {
                 $this.append(`<span class='date-label'>Off</span>`);
             }
         }
-    });*/
+    });
 });
 
 jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {

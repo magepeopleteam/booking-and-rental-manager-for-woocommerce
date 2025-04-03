@@ -339,7 +339,7 @@ function rbfw_mps_checkout_header_link(){
 
 /*start multiple day pricing booking*/
 
-function rbfw_off_day_dates(date,type='',today_enable='no'){
+function rbfw_off_day_dates(date,type='',today_enable='no',rbfw_post_id=''){
 
 
     var curr_date = ("0" + (date.getDate())).slice(-2);
@@ -364,12 +364,36 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
         if(type=='md'){
             return [false, "notav", 'Off'];
         }else{
+
             return   true;
         }
     }else{
-
         if(type=='md'){
-            return [true, "av", ""];
+            var date    = new Date(date),
+                yr      = date.getFullYear(),
+                month   = date.getMonth() < 10 ? '0' + date.getMonth() : date.getMonth(),
+                day     = date.getDate()  < 10 ? '0' + date.getDate()  : date.getDate(),
+                newDate = yr + '-' + month + '-' + day;
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax_url,
+                data: {
+                    'action' : 'rbfw_check_available',
+                    'selected_date' : newDate,
+                    'rbfw_post_id' : rbfw_post_id,
+                    'nonce' : rbfw_ajax.nonce
+                },
+                success: function (response) {
+                    jQuery('.rbfw_inventory_page_table_wrap').html(response);
+                }
+            });
+
+
+
+
+
+            return [true, "av", "on"];
         }else{
             return false;
         }
