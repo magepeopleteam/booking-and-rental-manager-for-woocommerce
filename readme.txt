@@ -207,10 +207,16 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.3.6 =
+* Shipping class select option added.
+* Code update.
+
 = 2.3.4 =
 * Translation issues solved.
 * Icon adding problem solved.
+
 =======
+
 = 2.3.3 =
 * Warning fixed.
 
