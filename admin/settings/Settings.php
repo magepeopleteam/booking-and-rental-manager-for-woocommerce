@@ -38,28 +38,59 @@
 			}
 
 			public function shipping_enable( $post_id ) {
-				?>
+            ?>
+            <section>
+                <div>
+                    <label>
+                        <?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    </label>
+                    <p><?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                </div>
+                <?php
+                $shipping_enable_switch = get_post_meta( $post_id, 'shipping_enable', true ) ? get_post_meta( $post_id, 'shipping_enable', true ) : 'no';
+                if($shipping_enable_switch=='off'){
+                    $shipping_enable_switch = 'no';
+                }
+                ?>
+
+                <label class="switch">
+                    <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr($shipping_enable_switch); ?>" <?php echo esc_attr( ( $shipping_enable_switch == 'yes' ) ? 'checked' : '' ); ?>>
+                    <span class="slider round"></span>
+                </label>
+            </section>
+            <?php
+        }
+
+
+            public function shipping_method( $post_id ) {
+                ?>
                 <section>
                     <div>
                         <label>
-							<?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            <?php echo esc_html__( 'Select shopping class', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </label>
-                        <p><?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
-					<?php
-                    $shipping_enable_switch = get_post_meta( $post_id, 'shipping_enable', true ) ? get_post_meta( $post_id, 'shipping_enable', true ) : 'no';
-                    if($shipping_enable_switch=='off'){
-                        $shipping_enable_switch = 'no';
-                    }
-                    ?>
 
-                    <label class="switch">
-                        <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr($shipping_enable_switch); ?>" <?php echo esc_attr( ( $shipping_enable_switch == 'yes' ) ? 'checked' : '' ); ?>>
-                        <span class="slider round"></span>
-                    </label>
+
+                    <?php
+
+                    $shipping_classes = get_terms( 'product_shipping_class', array( 'hide_empty' => false ) );
+
+                    // Get the saved shipping class for this post
+                    $selected_class = get_post_meta( $post_id, '_custom_shipping_class', true );
+
+                    echo '<select name="custom_shipping_class" id="custom_shipping_class">';
+                    echo '<option value="">'.esc_html__( 'Select shopping class', 'booking-and-rental-manager-for-woocommerce' ).'</option>';
+
+                    foreach ( $shipping_classes as $class ) {
+                        $selected = ( $selected_class == $class->term_id ) ? 'selected' : '';
+                        echo '<option value="' . $class->term_id . '" ' . $selected . '>' . esc_html( $class->name ) . '</option>';
+                    }
+                    echo '</select>';
+                    ?>
                 </section>
-				<?php
-			}
+                <?php
+            }
 
 			public function quantity_display( $post_id ) {
 				$rbfw_available_qty_info_switch = get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) ? get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) : 'no';
@@ -117,7 +148,8 @@
 					<?php $this->shortcode( $post_id ); ?>
 					<?php $this->quantity_display( $post_id ); ?>
 					<?php $this->shipping_enable( $post_id ); ?>
-					
+					<?php $this->shipping_method( $post_id ); ?>
+
 					<?php $this->service_quantity_box( $post_id ); ?>
                 </div>
 				<?php
@@ -148,6 +180,10 @@
 					$faq_description    = isset( $_POST['rbfw_faq_description'] ) ? sanitize_text_field($_POST['rbfw_faq_description']) : '';
 					update_post_meta( $post_id, 'rbfw_faq_description', $faq_description );
 				}
+
+                if ( isset( $_POST['custom_shipping_class'] ) ) {
+                    update_post_meta( $post_id, '_custom_shipping_class', sanitize_text_field( wp_unslash($_POST['custom_shipping_class'] )) );
+                }
 			}
 		}
 		new RBFW_Settings();
