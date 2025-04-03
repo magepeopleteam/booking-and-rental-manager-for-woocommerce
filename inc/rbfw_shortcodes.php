@@ -410,7 +410,7 @@ function rbfw_rent_search_ac_shortcode($atts = null)
 
 function rbfw_add_to_cart_shortcode_func($atts){
 
-   // echo print_r($atts);exit;
+
 
 
 
@@ -419,7 +419,7 @@ function rbfw_add_to_cart_shortcode_func($atts){
         'backend' => ''
     ), $atts );
 
-
+   // echo print_r($attributes);exit;
 
     $post_id = $attributes['id'];
     $backend = $attributes['backend']??0;
@@ -438,11 +438,14 @@ function rbfw_add_to_cart_shortcode_func($atts){
 
     $rbfw_item_type = get_post_meta($post_id, 'rbfw_item_type', true);
 
-
+    $cart_backend = 'yes';
     if(!$backend){
         ob_start();
         do_action( 'woocommerce_before_single_product' );
+        $cart_backend = '';
     }
+
+
 
 
     if($rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment'){

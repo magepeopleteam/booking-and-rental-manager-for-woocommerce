@@ -13,7 +13,7 @@
 	$rbfw_enable_faq_content = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
 	$slide_style             = $rbfw->get_option_trans( 'super_slider_style', 'super_slider_settings', '' );
 	$post_review_rating      = function_exists( 'rbfw_review_display_average_rating' ) ? rbfw_review_display_average_rating() : '';
-	$currency_symbol         = rbfw_mps_currency_symbol();
+	$currency_symbol         = get_woocommerce_currency_symbol();
 	$rbfw_related_post_arr   = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ) : [];
 	/* Resort Type */
 	$rbfw_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true );

@@ -16,6 +16,10 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 
 
 jQuery('body').on('focusin', '.pickup_date', function(e) {
+
+    //alert(jQuery('.ui-datepicker-title .ui-datepicker-month').text());
+    //alert(jQuery('.ui-datepicker-title .ui-datepicker-year').text());
+
     jQuery(this).datepicker({
         dateFormat: js_date_format,
         minDate: '',
@@ -56,6 +60,17 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             }
         },
     });
+
+  /*  jQuery(document).on("mousemove", ".ui-datepicker-calendar td", function() {
+        let $this = jQuery(this);
+        console.log($this.text());
+        if ($this.find(".date-label").length === 0) {
+            let dateText = $this.text().trim();
+            if (dateText) {
+                $this.append(`<span class='date-label'>Off</span>`);
+            }
+        }
+    });*/
 });
 
 jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {

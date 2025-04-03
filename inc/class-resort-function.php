@@ -284,19 +284,9 @@
 						$total_price = (float) $subtotal_price;
 					endif;
 					/* Start Tax Calculations */
-					$rbfw_payment_system = $rbfw->get_option_trans( 'rbfw_payment_system', 'rbfw_basic_payment_settings', 'mps' );
-					$mps_tax_switch      = $rbfw->get_option_trans( 'rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off' );
-					$mps_tax_format      = $rbfw->get_option_trans( 'rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax' );
-					$mps_tax_percentage  = ! empty( get_post_meta( $product_id, 'rbfw_mps_tax_percentage', true ) ) ? wp_strip_all_tags( get_post_meta( $product_id, 'rbfw_mps_tax_percentage', true ) ) : '';
 					$percent             = 0;
-					$tax_status          = '';
-					if ( $rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && ! empty( $mps_tax_percentage ) ) {
-						//Convert our percentage value into a decimal.
-						$percentInDecimal = $mps_tax_percentage / 100;
-						//Get the result.
-						$percent     = $percentInDecimal * $total_price;
-						$total_price = $total_price + $percent;
-					}
+
+
 					/* End Tax Calculations */
 					if ( $rbfw_request == 'rbfw_room_total_price' ):
 						return $total_price;
@@ -387,15 +377,9 @@
 						$total_price = (float) $subtotal_price;
 					endif;
 					/* Start Tax Calculations */
-					$rbfw_payment_system = $rbfw->get_option_trans( 'rbfw_payment_system', 'rbfw_basic_payment_settings', 'mps' );
-					$mps_tax_switch      = $rbfw->get_option_trans( 'rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off' );
-					$mps_tax_format      = $rbfw->get_option_trans( 'rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax' );
-					$mps_tax_percentage  = ! empty( get_post_meta( $post_id, 'rbfw_mps_tax_percentage', true ) ) ? wp_strip_all_tags( get_post_meta( $post_id, 'rbfw_mps_tax_percentage', true ) ) : '';
-					$percent             = 0;
+
 					$tax_status          = '';
-					if ( $rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && ! empty( $mps_tax_percentage ) && $mps_tax_format == 'including_tax' ) {
-						$tax_status = '(' . rbfw_string_return( 'rbfw_text_includes', esc_html__( 'Includes', 'booking-and-rental-manager-for-woocommerce' ) ) . ' ' . rbfw_mps_price( $percent ) . ' ' . rbfw_string_return( 'rbfw_text_tax', esc_html__( 'Tax', 'booking-and-rental-manager-for-woocommerce' ) ) . ')';
-					}
+
 					/* End Tax Calculations */
 					$content          .= '<div class="item rbfw_room_price_summary">
                             <div class="item-content rbfw-costing">
@@ -407,9 +391,7 @@
 					if ( $security_deposit['security_deposit_amount'] ) {
 						$content .= '<li class="subtotal">' . ( ! empty( get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) ) ? get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) : 'Security Deposit' ) . '<span class="price-figure" data-price="' . $subtotal_price . '">' . $security_deposit['security_deposit_desc'] . '</span></li>';
 					}
-					if ( $rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && ! empty( $mps_tax_percentage ) && $mps_tax_format == 'excluding_tax' ) {
-						$content .= '<li class="tax">' . $rbfw->get_option_trans( 'rbfw_text_tax', 'rbfw_basic_translation_settings', esc_html__( 'Tax', 'booking-and-rental-manager-for-woocommerce' ) ) . '<span class="price-figure" data-price="' . $percent . '">' . rbfw_mps_price( $percent ) . '</span></li>';
-					}
+
 					if ( rbfw_check_discount_over_days_plugin_active() === true ) {
 						if ( function_exists( 'rbfw_get_discount_array' ) ) {
 							$discount_arr = rbfw_get_discount_array( $post_id, $total_days, $total_price );

@@ -177,19 +177,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $rbfw_enable_extra_service_qty = get_post_meta( $product_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $product_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
                 /* Start Tax Calculations */
-                $rbfw_payment_system = $rbfw->get_option_trans('rbfw_payment_system', 'rbfw_basic_payment_settings','mps');
-                $mps_tax_switch = $rbfw->get_option_trans('rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off');
-                $mps_tax_format = $rbfw->get_option_trans('rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax');
-                $mps_tax_percentage = !empty(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) ? wp_strip_all_tags(get_post_meta($product_id, 'rbfw_mps_tax_percentage', true)) : '';
                 $percent = 0;
-                $tax_status = '';
-                if($rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && !empty($mps_tax_percentage)){
-                    //Convert our percentage value into a decimal.
-                    $percentInDecimal = $mps_tax_percentage / 100;
-                    //Get the result.
-                    $percent = $percentInDecimal * $ticket_total_price;
-                    $ticket_total_price = $ticket_total_price + $percent;
-                }
 
                 /* End Tax Calculations */
 

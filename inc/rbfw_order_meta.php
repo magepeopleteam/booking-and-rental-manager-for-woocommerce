@@ -22,11 +22,6 @@ function fetch_order_details_callback() {
         $rbfw_order_id = intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) );
         $wc_order_id   = get_post_meta( $rbfw_order_id, 'rbfw_order_id', true );
         $wc_order_details = wc_get_order( $wc_order_id );
-        //echo '<pre>';print_r($wc_order_details);echo '<pre>';
-        $rbfw_payment_system = $rbfw->get_option( 'rbfw_payment_system', 'rbfw_basic_payment_settings', 'mps' );
-        $mps_tax_switch = $rbfw->get_option( 'rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off' );
-        $mps_tax_format = $rbfw->get_option( 'rbfw_mps_tax_format', 'rbfw_basic_payment_settings', 'excluding_tax' );
-        $subtotal_total = ! empty( get_post_meta( $rbfw_order_id, 'rbfw_ticket_total_price', true ) ) ? rbfw_mps_price( get_post_meta( $rbfw_order_id, 'rbfw_ticket_total_price', true ) ) : '';
         ?>
         <div class="rbfw_order_meta_box_wrap">
             <div class="rbfw_order_meta_box_head">
@@ -314,12 +309,6 @@ function fetch_order_details_callback() {
                             </tr>
                         <?php } ?>
 
-                        <?php if ( $rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && ! empty( $tax ) ) { ?>
-                            <tr>
-                                <td><strong><?php echo esc_html( $rbfw->get_option( 'rbfw_text_tax', 'rbfw_basic_translation_settings', __( 'Tax', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></strong></td>
-                                <td><?php echo wp_kses( wc_price( $tax ), rbfw_allowed_html() ); ?></td>
-                            </tr>
-                        <?php } ?>
 
                         <?php if ( ! empty( $discount_amount ) ) { ?>
                             <tr>
@@ -392,9 +381,7 @@ function rbfw_order_meta_box_callback() {
     $billing_email                       = get_post_meta( $order_id, 'rbfw_billing_email', true );
     $payment_method                      = get_post_meta( $order_id, 'rbfw_payment_method', true );
     $payment_id                          = get_post_meta( $order_id, 'rbfw_payment_id', true );
-    $rbfw_payment_system = $rbfw->get_option_trans( 'rbfw_payment_system', 'rbfw_basic_payment_settings', 'mps' );
     $order_no       = get_post_meta( $order_id, 'rbfw_order_id', true );
-    $mps_tax_switch = $rbfw->get_option_trans( 'rbfw_mps_tax_switch', 'rbfw_basic_payment_settings', 'off' );
     $grand_total    = ! empty( get_post_meta( $order_id, 'rbfw_ticket_total_price', true ) ) ? rbfw_mps_price( get_post_meta( $order_id, 'rbfw_ticket_total_price', true ) ) : '';
     $rbfw_order_tax = ! empty( get_post_meta( $order_id, 'rbfw_order_tax', true ) ) ? rbfw_mps_price( get_post_meta( $order_id, 'rbfw_order_tax', true ) ) : '';
 
@@ -801,13 +788,6 @@ function rbfw_order_meta_box_callback() {
                         </tr>
                     <?php } ?>
 
-                    <?php if ( $rbfw_payment_system == 'mps' && $mps_tax_switch == 'on' && ! empty( $tax ) ) { ?>
-                        <tr>
-                            <td><strong><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_tax', 'rbfw_basic_translation_settings', esc_html__( 'Tax', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></strong></td>
-                            <td><?php echo wp_kses( wc_price( $tax ), rbfw_allowed_html() ); ?></td>
-                        </tr>
-                    <?php } ?>
-
 
 
                     <?php if ( $discount_amount ) { ?>
@@ -924,16 +904,14 @@ function save_rbfw_order_meta_box( $post_id ) {
             if ( $current_status == 'returned' ) {
                 $current_status_wc = 'completed';
             }
-            global $rbfw;
-            $rbfw_payment_system = $rbfw->get_option_trans( 'rbfw_payment_system', 'rbfw_basic_payment_settings', 'mps' );
-            if ( $rbfw_payment_system == 'wps' ) {
-                $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_link_order_id', true );
-                $orderDetail        = new WC_Order( $rbfw_link_order_id );
-                $orderDetail->update_status( "wc-" . $current_status_wc, $current_status_wc, true );
-                update_post_meta( $post_id, 'rbfw_order_status', sanitize_text_field( wp_unslash( $_POST['rbfw_order_status'] ) ) );
-            } else {
-                $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_status_id', true );
-            }
+
+
+            $rbfw_link_order_id = get_post_meta( $post_id, 'rbfw_link_order_id', true );
+            $orderDetail        = new WC_Order( $rbfw_link_order_id );
+            $orderDetail->update_status( "wc-" . $current_status_wc, $current_status_wc, true );
+            update_post_meta( $post_id, 'rbfw_order_status', sanitize_text_field( wp_unslash( $_POST['rbfw_order_status'] ) ) );
+
+
             if ( empty( $current_status_update ) ) {
                 $all_status_update   = array();
                 $all_status_update[] = $status;

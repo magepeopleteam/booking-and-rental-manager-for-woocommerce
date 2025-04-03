@@ -162,8 +162,8 @@
                                 let data_cat = jQuery(this).parents('tr').attr('data-cat');
                                 jQuery('#rbfw_services_search_icon').val('');
                                 jQuery('.rbfw_services_icon_list_body label').show();
-                                jQuery("#rbfw_features_icon_list_wrapper").attr('data-key', esc_attr(data_key));
-                                jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat', esc_attr(data_cat));
+                                jQuery("#rbfw_features_icon_list_wrapper").attr('data-key', data_key);
+                                jQuery("#rbfw_features_icon_list_wrapper").attr('data-cat', data_cat);
                                 jQuery("#rbfw_features_icon_list_wrapper").mage_modal({
                                     escapeClose: false,
                                     clickClose: false,

@@ -411,16 +411,8 @@
         jQuery('.rbfw_payment_system').on('change', function() {
             let this_value = jQuery(this).val();
             let this_parent = jQuery(this).parents('tr');
-
-            if (this_value == 'mps') {
-                jQuery(this_parent).siblings('tr').show();
-                jQuery(this_parent).siblings('tr.rbfw_wps_add_to_cart_redirect').hide();
-
-            } else if (this_value == 'wps') {
-                jQuery(this_parent).siblings('tr').hide();
-                jQuery(this_parent).siblings('tr.rbfw_wps_add_to_cart_redirect').show();
-
-            }
+            jQuery(this_parent).siblings('tr').hide();
+            jQuery(this_parent).siblings('tr.rbfw_wps_add_to_cart_redirect').show();
         });
 
 
