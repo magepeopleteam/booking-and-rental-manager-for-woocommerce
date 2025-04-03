@@ -41,34 +41,36 @@
 
 			public function select_category( $post_id ) {
 				$rbfw_categories = get_post_meta( $post_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_categories', true ) ) : [];
-				global $rbfw;
+				$terms = get_terms( array(
+                    'taxonomy'   => 'rbfw_item_caregory',
+                    'hide_empty' => false,
+                ) );
+                global $rbfw;
 				$label = $rbfw->get_name();
+                $rbfw_categories_items = implode(',', $rbfw_categories);
+                $rbfw_categories_array = $rbfw_categories_items ? explode(',', $rbfw_categories_items) : [];
 				?>
                 <section>
                     <div>
                         <label>
 							<?php
 								echo esc_html__( 'Select ', 'booking-and-rental-manager-for-woocommerce' ) .
-								     esc_html( $label ) .
-								     esc_html__( ' Type', 'booking-and-rental-manager-for-woocommerce' );
+								esc_html( $label ) .
+								esc_html__( ' Type', 'booking-and-rental-manager-for-woocommerce' );
 							?>
                         </label>
                         <p><?php esc_html_e( 'Choose a type that is related with this item', 'booking-and-rental-manager-for-woocommerce' ) ?></p>
                     </div>
-                    <div class="w-50">
-                        <select name="rbfw_categories[]" multiple class="category2">
-							<?php
-								$terms = get_terms( array(
-									'taxonomy'   => 'rbfw_item_caregory',
-									'hide_empty' => false,
-								) );
-								foreach ( $terms as $key => $value ) {
-									?>
-                                    <option <?php echo esc_attr( in_array( $value->name, $rbfw_categories ) ) ? 'selected' : '' ?> value="<?php echo esc_attr( $value->name ) ?>"> <?php echo esc_html( $value->name ) ?> </option>
-									<?php
-								}
-							?>
-                        </select>
+                </section>
+                <section class="rbfw_off_days justify-content-center">
+                    <div class="groupCheckBox">
+                        <input type="hidden" name="rbfw_categories[]" value="<?php echo esc_attr( $rbfw_categories_items ); ?>">
+                        <?php foreach ( $terms as $key => $value ) { ?>
+                            <label class="customCheckboxLabel">
+                                <input type="checkbox" <?php echo esc_attr( in_array( $value->name, $rbfw_categories_array ) ) ? 'checked' : ''; ?> data-checked="<?php echo esc_attr( $value->name ) ?>">
+                                <span class="customCheckbox"><?php echo esc_html( ucfirst( $value->name ) ); ?></span>
+                            </label>
+                        <?php } ?>
                     </div>
                 </section>
 				<?php
