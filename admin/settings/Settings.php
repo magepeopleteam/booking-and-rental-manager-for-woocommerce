@@ -80,17 +80,14 @@
                     $selected_class = get_post_meta( $post_id, '_custom_shipping_class', true );
 
                     echo '<select name="custom_shipping_class" id="custom_shipping_class">';
-                    echo '<option value="">Select Shipping Class</option>';
+                    echo '<option value="">'.esc_html__( 'Select shopping class', 'booking-and-rental-manager-for-woocommerce' ).'</option>';
 
-                        foreach ( $shipping_classes as $class ) {
+                    foreach ( $shipping_classes as $class ) {
                         $selected = ( $selected_class == $class->term_id ) ? 'selected' : '';
                         echo '<option value="' . $class->term_id . '" ' . $selected . '>' . esc_html( $class->name ) . '</option>';
-                        }
-
-                        echo '</select>';
-
-                        ?>
-
+                    }
+                    echo '</select>';
+                    ?>
                 </section>
                 <?php
             }
