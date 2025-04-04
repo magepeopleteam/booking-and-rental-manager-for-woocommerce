@@ -257,7 +257,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     if($value > 0){
                         if(array_key_exists($service_name, $extra_services)){ // if Type1 exist in array
                             $service_price += (float)$extra_services[$service_name] * (float)$value;// addup price
-                            $main_array[$service_name] = '('.rbfw_mps_price($extra_services[$service_name]) .' x '. (float)$value.') = '.rbfw_mps_price((float)$extra_services[$service_name] * (float)$value); // type = quantity
+                            $main_array[$service_name] = '('.wc_price($extra_services[$service_name]) .' x '. (float)$value.') = '.wc_price((float)$extra_services[$service_name] * (float)$value); // type = quantity
                         }
                     }
                 }

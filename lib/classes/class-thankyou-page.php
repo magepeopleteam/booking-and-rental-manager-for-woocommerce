@@ -149,10 +149,10 @@
 								$service_info = '';
 							}
 							$variation_info  = ! empty( $ticket_info['rbfw_variation_info'] ) ? $ticket_info['rbfw_variation_info'] : [];
-							$duration_cost   = rbfw_mps_price( $ticket_info['duration_cost'] );
-							$service_cost    = rbfw_mps_price( $ticket_info['service_cost'] );
-							$total_cost      = rbfw_mps_price( $ticket_info['ticket_price'] );
-							$discount_amount = ! empty( $ticket_info['discount_amount'] ) ? rbfw_mps_price( $ticket_info['discount_amount'] ) : '';
+							$duration_cost   = wc_price( $ticket_info['duration_cost'] );
+							$service_cost    = wc_price( $ticket_info['service_cost'] );
+							$total_cost      = wc_price( $ticket_info['ticket_price'] );
+							$discount_amount = ! empty( $ticket_info['discount_amount'] ) ? wc_price( $ticket_info['discount_amount'] ) : '';
 							$rbfw_regf_info  = ! empty( $ticket_info['rbfw_regf_info'] ) ? $ticket_info['rbfw_regf_info'] : [];
 							ob_start();
 							?>
@@ -438,10 +438,10 @@
 						$rent_info    = '';
 						$service_info = '';
 					}
-					$duration_cost   = rbfw_mps_price( $ticket_info['duration_cost'] );
-					$service_cost    = rbfw_mps_price( $ticket_info['service_cost'] );
-					$total_cost      = rbfw_mps_price( $ticket_info['ticket_price'] );
-					$discount_amount = ! empty( $ticket_info['discount_amount'] ) ? rbfw_mps_price( $ticket_info['discount_amount'] ) : '';
+					$duration_cost   = wc_price( $ticket_info['duration_cost'] );
+					$service_cost    = wc_price( $ticket_info['service_cost'] );
+					$total_cost      = wc_price( $ticket_info['ticket_price'] );
+					$discount_amount = ! empty( $ticket_info['discount_amount'] ) ? wc_price( $ticket_info['discount_amount'] ) : '';
 					$rbfw_regf_info  = ! empty( $ticket_info['rbfw_regf_info'] ) ? $ticket_info['rbfw_regf_info'] : [];
 					ob_start();
 					?>
