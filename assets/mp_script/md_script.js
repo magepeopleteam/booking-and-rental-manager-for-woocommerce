@@ -15,7 +15,11 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 
 
 
-jQuery('body').on('focusin', '.pickup_date', function(e) {
+jQuery('body').on('focusin', '.pickup_date', function(e) { 
+
+   
+
+  
 
     //alert(jQuery('.ui-datepicker-title .ui-datepicker-month').text());
     //alert(jQuery('.ui-datepicker-title .ui-datepicker-year').text());
@@ -38,11 +42,18 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
             let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
 
-            if(rbfw_maximum_booking_day){
-                rbfw_maximum_booking_day = '+'+rbfw_maximum_booking_day+'d';
-            }else{
-                rbfw_maximum_booking_day = null;
-            }
+      
+
+            //alert(rbfw_maximum_booking_day);
+
+            
+
+            // if(rbfw_maximum_booking_day){
+            //     rbfw_maximum_booking_day = '+'+rbfw_maximum_booking_day+'D';
+            // }else{
+            //     rbfw_maximum_booking_day = null;
+            // }
+        
 
             let selected_date_array = date_ymd.split('-');
             let gYear = selected_date_array[0];
@@ -52,8 +63,17 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             let minDate = new Date(gYear,  gMonth - 1, gDay );
             minDate.setDate(minDate.getDate() + rbfw_minimum_booking_day);
 
+
+
             jQuery(".dropoff_date").datepicker("option", "minDate", minDate);
-            jQuery(".dropoff_date").datepicker("option", "maxDate", rbfw_maximum_booking_day);
+
+
+            if(rbfw_minimum_booking_day){
+                let maxDate = new Date(gYear,  gMonth - 1, gDay );
+                maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
+                jQuery(".dropoff_date").datepicker("option", "maxDate", maxDate );
+            }
+            
 
             if(rbfw_enable_time_slot=='on'){
                 particular_time_date_dependent_ajax(post_id,date_ymd,'time_enable',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.pickup_time');
