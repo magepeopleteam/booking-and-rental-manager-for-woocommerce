@@ -92,10 +92,13 @@ if (!class_exists('RBFW_Hidden_Product')) {
                     $this->create_hidden_wc_product($post_id, $event_name);
                 }
                 $product_id = get_post_meta($post_id, 'link_wc_product', true) ? get_post_meta($post_id, 'link_wc_product', true) : $post_id;
-                $product_type = get_post_meta($post_id, 'shipping_enable', true) ? get_post_meta($post_id, 'shipping_enable', true) : 'no';
+                
+            
+                
+                
+                
                 set_post_thumbnail($product_id, get_post_thumbnail_id($post_id));
                 wp_publish_post($product_id);
-
 
                 // Unslash and sanitize tax status and tax class
                 $_tax_status = isset($_POST['_tax_status']) ? sanitize_text_field(wp_unslash($_POST['_tax_status'])) : 'none';
@@ -105,7 +108,6 @@ if (!class_exists('RBFW_Hidden_Product')) {
                 update_post_meta($product_id, '_tax_class', $_tax_class);
                 update_post_meta($product_id, '_stock_status', 'instock');
                 update_post_meta($product_id, '_manage_stock', 'no');
-                update_post_meta($product_id, '_virtual', ($product_type=='yes')?'no':'yes');
                 update_post_meta($product_id, '_sold_individually', 'yes');
 
                 $my_post = array(
