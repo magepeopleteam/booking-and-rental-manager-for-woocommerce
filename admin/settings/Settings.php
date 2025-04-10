@@ -63,23 +63,28 @@
 
 
             public function shipping_method( $post_id ) {
+
+				$shipping_classes = get_terms( 'product_shipping_class', array( 'hide_empty' => false ) );
+
+				if(!empty($shipping_classes)){
+
+
+
                 ?>
                 <section>
-                    <div>
+                    
+				    <div>
                         <label>
                             <?php echo esc_html__( 'Select shopping class', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </label>
                     </div>
 
-
                     <?php
 
-                    $shipping_classes = get_terms( 'product_shipping_class', array( 'hide_empty' => false ) );
-
                     // Get the saved shipping class for this post
-                    $selected_class = get_post_meta( $post_id, '_custom_shipping_class', true );
+                    $selected_class = get_post_meta( $post_id, 'rent_shipping_class', true );
 
-                    echo '<select name="custom_shipping_class" id="custom_shipping_class">';
+                    echo '<select name="rent_shipping_class" id="rent_shipping_class">';
                     echo '<option value="">'.esc_html__( 'Select shopping class', 'booking-and-rental-manager-for-woocommerce' ).'</option>';
 
                     foreach ( $shipping_classes as $class ) {
@@ -90,6 +95,7 @@
                     ?>
                 </section>
                 <?php
+				}
             }
 
 			public function quantity_display( $post_id ) {
@@ -181,9 +187,54 @@
 					update_post_meta( $post_id, 'rbfw_faq_description', $faq_description );
 				}
 
-                if ( isset( $_POST['custom_shipping_class'] ) ) {
-                    update_post_meta( $post_id, '_custom_shipping_class', sanitize_text_field( wp_unslash($_POST['custom_shipping_class'] )) );
+                if ( isset( $_POST['rent_shipping_class'] ) ) {
+                    update_post_meta( $post_id, 'rent_shipping_class', sanitize_text_field( wp_unslash($_POST['rent_shipping_class'] )) );
                 }
+
+
+				$product_id = get_post_meta($post_id, 'link_wc_product', true) ? get_post_meta($post_id, 'link_wc_product', true) : $post_id;
+                
+                $product_type = get_post_meta($post_id, 'shipping_enable', true) ? get_post_meta($post_id, 'shipping_enable', true) : 'no';
+                $term_id = get_post_meta($post_id, 'rent_shipping_class', true) ? get_post_meta($post_id, 'rent_shipping_class', true) : '';
+               
+    
+                global $wpdb;
+                wp_set_object_terms($product_id, array(), 'product_shipping_class');
+                $taxonomy   = 'product_shipping_class';
+                $term_taxonomy_id = $wpdb->get_var( $wpdb->prepare("
+                SELECT term_taxonomy_id 
+                    FROM {$wpdb->term_taxonomy}
+                    WHERE term_id = %d AND taxonomy = %s
+                    ", $term_id, $taxonomy));
+  
+                if ($term_taxonomy_id) {
+                        // Check if already assigned
+                        $exists = $wpdb->get_var( $wpdb->prepare("
+                            SELECT object_id 
+                            FROM {$wpdb->term_relationships}
+                            WHERE object_id = %d AND term_taxonomy_id = %d
+                        ", $product_id, $term_taxonomy_id));
+                    
+                        if (!$exists) {
+                            // Insert the relationship
+                            $wpdb->insert(
+                                $wpdb->term_relationships,
+                                array(
+                                    'object_id' => $product_id,
+                                    'term_taxonomy_id' => $term_taxonomy_id
+                                ),
+                                array('%d', '%d')
+                            );
+            
+                        } 
+                    }
+
+					update_post_meta($product_id, '_virtual', ($product_type=='yes')?'no':'yes');
+
+
+
+
+
 			}
 		}
 		new RBFW_Settings();
