@@ -406,6 +406,7 @@
 										</thead>
 										<tbody class="mp_event_type_sortable">
 										<?php
+									
 											if ( ! empty( $rbfw_extra_service_data ) ) :
 												foreach ( $rbfw_extra_service_data as $field ) {
 													if ( ! empty( $field['service_img'] ) ) {
@@ -451,7 +452,7 @@
 										?>
 										<!-- empty hidden one for jQuery -->
 										<tr class="empty-row screen-reader-text">
-											<!-- <td>
+											<td>
 												<div class="rbfw_service_image_wrap text-center">
 													<div class="rbfw_service_image_preview"></div>
 													<div class="service_image_add_remove">
@@ -459,7 +460,7 @@
 														<input type="hidden" name="service_img[]" value="" class="rbfw_service_image"/>
 													</div>
 												</div>
-											</td> -->
+											</td>
 											<td><input type="text" class="mp_formControl" name="service_name[]" placeholder="Ex: Cap"/></td>
 											<td><input type="text" class="mp_formControl " name="service_desc[]" placeholder="Service Description" value=""/></td>
 											<td><input type="number" class="mp_formControl medium" step="0.01" name="service_price[]" placeholder="Ex: 10" value=""/></td>
@@ -498,7 +499,9 @@
 					// save extra service data==========================================
 					$old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 					$new_extra_service = array();
-					$service_img       = ! empty( $_POST['service_img'] ) ? sanitize_text_field( wp_unslash( $_POST['service_img'] ) ) : [];
+				
+					$service_img             = isset( $input_data_sabitized['service_img'] ) ? $input_data_sabitized['service_img'] : array();
+					
 					$names             = isset( $input_data_sabitized['service_name'] ) ? $input_data_sabitized['service_name'] : array();
 					$urls              = isset( $input_data_sabitized['service_price'] ) ? $input_data_sabitized['service_price'] : array();
 					$service_desc      = isset( $input_data_sabitized['service_desc'] ) ? $input_data_sabitized['service_desc'] : array();
