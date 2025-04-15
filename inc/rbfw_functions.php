@@ -93,6 +93,7 @@
 				'data-id' => true, // Allows inline JavaScript
 				'data-time' => true, // Allows inline JavaScript
 				'data-key' => true, // Allows inline JavaScript
+				'rel' => true, // Allows inline JavaScript
 			),
 			'input'   => array(
 				'style'       => true, // Allows inline styles
@@ -149,6 +150,11 @@
             'h2'   => array(
                 'id'          => true,
                 'class'          => true,
+            ),
+			'img'   => array(
+                'id'          => true,
+                'class'          => true,
+				'src'          => true,
             ),
 
 		);

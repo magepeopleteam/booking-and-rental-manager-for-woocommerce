@@ -1069,7 +1069,7 @@ h2.rbfw-post-title{padding-left:10px;}
     color: #0a0a0a;
 }
 
-ul.rbfw-feature-lists li i {
+ul.rbfw-feature-lists li i, .service-price-item .title i.sc-icon {
     color: var(--rbfw_color_primary);
     margin-right: 8px;
 }
