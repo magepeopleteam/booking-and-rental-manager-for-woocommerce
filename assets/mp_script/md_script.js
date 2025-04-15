@@ -15,6 +15,10 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 
 jQuery(window).on('load', function() {
 
+    let rent_type = jQuery('#rbfw_rent_type').val();
+
+  if(rent_type == 'bike_car_md'){
+
     let post_id = jQuery('#rbfw_post_id').val();
     
     jQuery.ajax({
@@ -32,61 +36,15 @@ jQuery(window).on('load', function() {
             jQuery('.rbfw_bikecarsd_pricing_table_wrap').append('<i class="fas fa-spinner fa-spin"></i>');
         },
         success: function (response) {
-            jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
-            jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
-
-            if(response[1] == ".rbfw-select.rbfw-time-price.dropoff_time"){
-                var quantity_options = "<option value=''>Return Time</option>";
-            }else{
-                var quantity_options = "<option value=''>Pickup Time</option>";
-            }
-
-            jQuery.each(response[0], function(i, item) {
-                quantity_options += "<option "+ item[0] +" value="+i+">"+item[1]+"</option>";
-            });
-            jQuery(response[1]).html(quantity_options);
-
-
-
-            let pickup_date = jQuery('#hidden_pickup_date').val();
-            let dropoff_date = jQuery('#hidden_dropoff_date').val();
-
-            console.log('pickup_date',pickup_date)
-            console.log('dropoff_date',dropoff_date)
-
-
-            if (pickup_date == dropoff_date) {
-                let selected_time = jQuery('.pickup_time').val();
-                selected_time = new Date (pickup_date +' '+ selected_time);
-                jQuery(".dropoff_time").val("").trigger("change");
-
-                jQuery("#dropoff_time option").each(function() {
-                    var thisOptionValue = jQuery(this).val();
-                    thisOptionValue = new Date(pickup_date +' '+ thisOptionValue);
-
-
-                    if (thisOptionValue <= selected_time) {
-                        jQuery(this).attr('disabled', true);
-                    } else {
-                        jQuery(this).attr('disabled', false);
-                    }
-                });
-
-            } else {
-                jQuery("#dropoff_time option").each(function() {
-                    var thisOptionValue = jQuery(this).val();
-                    if (thisOptionValue != '') {
-                        jQuery(this).attr('disabled', false);
-                    } else {
-                        jQuery(this).attr('disabled', true);
-                    }
-                });
-            }
-
-
+            
 
         }
     });
+
+  }
+
+
+   
 
 })
 
