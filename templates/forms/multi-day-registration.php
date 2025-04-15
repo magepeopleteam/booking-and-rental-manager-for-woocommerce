@@ -167,8 +167,10 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                     </table>
                                 </div>
                             <?php }else{ ?>
+                                
+                            
                                 <div class="rbfw_day_wise_price">
-    <table>
+                                    <table>
         <tbody>
         <?php if ($enable_daily_rate == 'yes') { ?>
             <tr>
@@ -435,8 +437,13 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <div class="title">
-                                                                <?php echo esc_html($service['title']); ?>
+                                                            
+                                                        <div class="title">
+                                                            <?php if($service['icon']){ ?>
+                                                                <i class="sc-icon <?php echo esc_attr($service['icon']); ?>"></i>
+                                                            <?php } ?>
+                                                            <?php echo esc_html($service['title']); ?>
+
                                                     <?php if($available_qty_info_switch == 'yes'){ ?>
                                                                 <i class="available-stock item_<?php echo esc_attr($cat . $serkey); ?>">
                                                                     <?php esc_html_e('Available Qty ', 'booking-and-rental-manager-for-woocommerce'); ?><span class="remaining_stock"></span>
