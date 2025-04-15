@@ -369,6 +369,10 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
     }else{
 
         if(type=='md'){
+
+
+
+            
             return [true, "av", ""];
         }else{
             return false;
