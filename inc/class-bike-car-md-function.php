@@ -57,7 +57,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $abc = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days);
 
-            print_r($abc);
+            echo wp_json_encode($abc);
 
             wp_die();
         }

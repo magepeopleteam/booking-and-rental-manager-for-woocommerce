@@ -260,6 +260,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
         $date = gmdate('d-m-Y', $currentDate);
         $date_range[] = $date;
     }
+
     // End: Get Date Range
 
     if ($rent_type == 'resort') {
@@ -284,6 +285,8 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
 
     $total_booked = 0;
+
+   
 
     if(is_array($rbfw_inventory)){
         foreach ($rbfw_inventory as $key => $inventory) {
@@ -434,7 +437,7 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
     $rent_type = get_post_meta($post_id, 'rbfw_item_type', true);
     $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
-    $total_stock = 0;
+    
 
 
     $date_range = [];
@@ -442,8 +445,12 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
     $day_wise_inventory = [];
 
     for($i=1;$i<=$total_days;$i++){
-        $date = $year.'-'.str_pad($month, 2, '0', STR_PAD_LEFT).'-'.str_pad($i, 2, '0', STR_PAD_LEFT);
+        
+        $total_stock = 0;
+        $date = str_pad($i, 2, '0', STR_PAD_LEFT).'-'.str_pad($month, 2, '0', STR_PAD_LEFT).'-'.$year;
         $date_range[] = $date;
+
+ 
    
         if ($rent_type == 'resort') {
             $rbfw_resort_room_data = get_post_meta($post_id, 'rbfw_resort_room_data', true);
@@ -468,6 +475,8 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
         $total_booked = 0;
 
+       
+
         if(is_array($rbfw_inventory)){
             foreach ($rbfw_inventory as $key => $inventory) {
                 $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
@@ -483,18 +492,12 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
                     if(isset($inventory['rbfw_start_date_ymd']) && isset($inventory['rbfw_end_date_ymd'])){
                         $inventory_start_date = $inventory['rbfw_start_date_ymd'];
                         $inventory_end_date = $inventory['rbfw_end_date_ymd'];
-                        $inventory_start_time = $inventory['rbfw_start_time_24'];
-                        $inventory_end_time = $inventory['rbfw_end_time_24'];
                     }else{
                         $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
                         $inventory_start_date = $booked_dates[0];
                         $inventory_end_date = end($booked_dates);
-                        $inventory_start_time = $inventory['rbfw_start_time'];
-                        $inventory_end_time = $inventory['rbfw_end_time'];
                     }
 
-                    $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
-                    $date_inventory_end = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
 
                     if ($rent_type == 'resort') {
                         $start_date_time = new DateTime( $start_date );
@@ -509,16 +512,8 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
                             }
                         }
                     }else{
-                        $start_date_time = new DateTime( $pickup_datetime );
-                        $end_date_time = new DateTime( $dropoff_datetime );
-                        if($rbfw_enable_time_slot=='on'){
-                            if ($date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end) {
-                                $total_booked += $rbfw_item_quantity;
-                            }
-                        }else{
-                            if ($date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end) {
-                                $total_booked += $rbfw_item_quantity;
-                            }
+                        if (in_array($date,$inventory['booked_dates'])) {
+                            $total_booked += $rbfw_item_quantity;
                         }
                     }
                 }

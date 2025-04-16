@@ -7126,3 +7126,7 @@ select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
     padding-right: .25em;
     color:white;
 }*/
+
+.single-rbfw_item .ui-datepicker-calendar .date-label{
+    font-size: 8px;
+}

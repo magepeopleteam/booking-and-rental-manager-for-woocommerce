@@ -17,31 +17,26 @@ jQuery(window).on('load', function() {
 
     let rent_type = jQuery('#rbfw_rent_type').val();
 
-  if(rent_type == 'bike_car_md'){
+    if(rent_type == 'bike_car_md'){
 
-    let post_id = jQuery('#rbfw_post_id').val();
-    
-    jQuery.ajax({
-        type: 'POST',
-        dataType:'json',
-        url: rbfw_ajax.rbfw_ajaxurl,
-        data: {
-            'action'  : 'rbfw_day_wise_sold_out_check',
-            'post_id': post_id,
-            'nonce' : rbfw_ajax.nonce
-        },
-        beforeSend: function() {
-            jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
-            jQuery('.rbfw_bikecarsd_pricing_table_wrap').addClass('rbfw_loader_in');
-            jQuery('.rbfw_bikecarsd_pricing_table_wrap').append('<i class="fas fa-spinner fa-spin"></i>');
-        },
-        success: function (response) {
-            
+        let post_id = jQuery('#rbfw_post_id').val();
+        
+        jQuery.ajax({
+            type: 'POST',
+            dataType:'JSON',
+            url: rbfw_ajax.rbfw_ajaxurl,
+            data: {
+                'action'  : 'rbfw_day_wise_sold_out_check',
+                'post_id': post_id,
+                'nonce' : rbfw_ajax.nonce
+            },
+         
+            success: function (response) {  
+               // jQuery('#rbfw_month_wise_inventory').val(JSON.stringify(response)); 
+            }
+        });
 
-        }
-    });
-
-  }
+    }
 
 
    
@@ -55,6 +50,8 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
     //alert(jQuery('.ui-datepicker-title .ui-datepicker-month').text());
     //alert(jQuery('.ui-datepicker-title .ui-datepicker-year').text());
+
+
 
     jQuery(this).datepicker({
         dateFormat: js_date_format,
@@ -97,16 +94,17 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
         },
     });
 
-  /*  jQuery(document).on("mousemove", ".ui-datepicker-calendar td", function() {
+   jQuery(document).on("mousemove", ".ui-datepicker-calendar td", function() {
         let $this = jQuery(this);
-        console.log($this.text());
+        console.log($this.attr('title'));
         if ($this.find(".date-label").length === 0) {
-            let dateText = $this.text().trim();
+            let dateText = $this.attr('title');
+          
             if (dateText) {
-                $this.append(`<span class='date-label'>Off</span>`);
+                $this.append(`<span class='date-label'>`+dateText+`</span>`);
             }
         }
-    });*/
+    });
 });
 
 jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {

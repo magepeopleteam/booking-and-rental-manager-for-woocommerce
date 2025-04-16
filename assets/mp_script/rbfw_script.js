@@ -358,6 +358,8 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
 
     var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
 
+  
+
 
     if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || (date <  date_today) ){
 
@@ -370,8 +372,12 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
 
         if(type=='md'){
 
+            const  day_wise_inventory = JSON.parse(jQuery('#rbfw_month_wise_inventory').val()); 
 
 
+           if(day_wise_inventory[date_in]==0){
+                return [false, "notav", 'Sold Out'];
+            }
             
             return [true, "av", ""];
         }else{
