@@ -207,6 +207,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.3.7 =
+* Add to cart redirection problem solved.
+* Count extra day calculation problem solved in resort.
+
+
 = 2.3.6 =
 * Shipping class select option added.
 * Code updat
