@@ -927,13 +927,17 @@
 	add_filter( 'rbfw_settings_field', 'rbfw_payment_settings_fields', 10 );
 	function rbfw_payment_settings_fields( $settings_fields ) {
 		$settings_fields['rbfw_basic_payment_settings'] = array(
-                array('name'    => 'rbfw_mps_payment_gateway',
-                    'label'   => esc_html__( 'Payment Gateway', 'booking-and-rental-manager-for-woocommerce' ),
-                    'desc'    => esc_html__( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
-                    'type'    => 'multicheck',
-                    'default' => 'offline',
-                    'options' => rbfw_get_payment_gateways()
-                )
+			array(
+				'name' => 'rbfw_wps_add_to_cart_redirect',
+				'label' => __( 'Added to cart redirect to', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+				'type' => 'select',
+				'default' => 'checkout',
+				'options' => array(
+					'checkout' => 'Checkout',
+					'cart'  => 'Cart',
+				),
+			),
 
 		);
 
