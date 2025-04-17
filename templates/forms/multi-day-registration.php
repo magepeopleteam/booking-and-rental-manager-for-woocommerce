@@ -585,15 +585,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                     }
                 }
 
-             
-            $year = Date('Y');
-            $month = Date('n');
-
-            $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-
-            $day_wise_inventory = wp_json_encode(rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days));
-
-          
+            
 
                 ?>
 
@@ -608,7 +600,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                 <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_attr($time_picker); ?>">
                 <input type="hidden" name="total_days" value="0">
                 <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_attr($rbfw_minimum_booking_day); ?>">
-                <input type="hidden" id="rbfw_month_wise_inventory" value="<?php echo esc_attr($day_wise_inventory); ?>">
+                <input type="hidden" id="rbfw_month_wise_inventory">
 
 
 

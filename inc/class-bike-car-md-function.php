@@ -50,8 +50,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
         function rbfw_day_wise_sold_out_check(){
             
             $post_id = $_POST['post_id']; 
-            $year = Date('Y');
-            $month = Date('n');
+            $month = $_POST['month']; 
+            $year = $_POST['year']; 
 
             $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 

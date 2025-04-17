@@ -347,6 +347,9 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
     var curr_year = date.getFullYear();
     var date_in = curr_date+"-"+curr_month+"-"+curr_year;
 
+    let ajax = 'no';
+    
+
     var date_today = new Date();
     if(today_enable=='yes'){
         date_today.setDate(date_today.getDate() - 1);
