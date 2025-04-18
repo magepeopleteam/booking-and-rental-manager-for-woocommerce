@@ -50,14 +50,43 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
         function rbfw_day_wise_sold_out_check(){
             
             $post_id = $_POST['post_id']; 
-            $month = $_POST['month']; 
+            $month = $_POST['month'];
             $year = $_POST['year']; 
 
-            $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+          
 
-            $abc = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days);
+            for($i=0;$i<=1;$i++){
 
-            echo wp_json_encode($abc);
+                if($i==0){
+                    $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    $day_wise_imventory_1 = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days);
+                }
+
+                if($i==1){
+                    $date = new DateTime("$year-$month-01");
+                    $date->modify('+1 month');
+                    $year = $date->format('Y');
+                    $month = $month + 1;  
+                    $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    $day_wise_imventory_2 = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days);          
+                }
+               if($i==2){
+                    $date = new DateTime("$year-$month-01");
+                    $date->modify('+2 month');
+                    $year = $date->format('Y');
+                    $month = $month + 1;
+                    $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    $day_wise_imventory_3 = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days);            
+                }
+             
+                                
+            }
+
+            $day_wise_imventory = array_merge($day_wise_imventory_1, $day_wise_imventory_2);
+
+
+
+            echo wp_json_encode($day_wise_imventory);
 
             wp_die();
         }

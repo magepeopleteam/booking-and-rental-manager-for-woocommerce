@@ -21,7 +21,7 @@ jQuery(window).on('load', function() {
     var currentMonth = now.getMonth()+1;
     var currentYear = now.getFullYear();
 
-    if(rent_type == 'bike_car_md'){
+    if(rent_type == 'bike_car_mdjjjj'){
         let post_id = jQuery('#rbfw_post_id').val();
         jQuery.ajax({
             type: 'POST',
@@ -37,13 +37,10 @@ jQuery(window).on('load', function() {
          
             success: function (response) {  
                 jQuery('#rbfw_month_wise_inventory').val(JSON.stringify(response)); 
+                jQuery('.item .rbfw-datetime').show();
             }
         });
     }
-
-
-   
-
 })
 
 
@@ -66,78 +63,82 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
             
           
-            setTimeout(function() {
-                jQuery('.ui-datepicker-next').off('click.next').on('click.next', function() {
-                    var month = date.getMonth()+1;
-                    var year = jQuery(".ui-datepicker-year").text(); 
+            // setTimeout(function() {
+            //     jQuery('.ui-datepicker-next').off('click.next').on('click.next', function() {
+            //         var month = date.getMonth()+1;
+            //         var year = jQuery(".ui-datepicker-year").text(); 
                
-                    let post_id = jQuery('#rbfw_post_id').val();
-                    jQuery.ajax({
-                        type: 'POST',
-                        dataType:'JSON',
-                        url: rbfw_ajax.rbfw_ajaxurl,
-                        data: {
-                            'action'  : 'rbfw_day_wise_sold_out_check',
-                            'post_id': post_id,
-                            'month': month,
-                            'year': year,
-                            'nonce' : rbfw_ajax.nonce
-                        },
+            //         let post_id = jQuery('#rbfw_post_id').val();
+            //         jQuery.ajax({
+            //             type: 'POST',
+            //             dataType:'JSON',
+            //             url: rbfw_ajax.rbfw_ajaxurl,
+            //             data: {
+            //                 'action'  : 'rbfw_day_wise_sold_out_check',
+            //                 'post_id': post_id,
+            //                 'month': month,
+            //                 'year': year,
+            //                 'nonce' : rbfw_ajax.nonce
+            //             },
 
-                        beforeSend: function() {
-                            jQuery('.rbfw_bike_car_md_item_wrapper').addClass('rbfw_loader_in');
-                            jQuery('.rbfw_bike_car_md_item_wrapper').append('<i class="fas fa-spinner fa-spin"></i>');
-                        },
+            //             beforeSend: function() {
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').addClass('rbfw_loader_in');
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').append('<i class="fas fa-spinner fa-spin"></i>');
+            //             },
                     
-                        success: function (response) {  
-                            jQuery('.rbfw_bike_car_md_item_wrapper').removeClass('rbfw_loader_in');
-                            jQuery('.rbfw_bike_car_md_item_wrapper i.fa-spinner').remove();
-                            jQuery('#rbfw_month_wise_inventory').val(JSON.stringify(response)); 
-                        }
-                    });
+            //             success: function (response) {  
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').removeClass('rbfw_loader_in');
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper i.fa-spinner').remove();
+            //                 jQuery('#rbfw_month_wise_inventory').val(JSON.stringify(response)); 
+            //             }
+            //         });
             
           
-                });
-            }, 1000);
+            //     });
+            // }, 1);
 
 
-            setTimeout(function() {
-                jQuery('.ui-datepicker-prev').off('click.prev').on('click.prev', function() {
-                    var month = date.getMonth()-1;
-                    var year = jQuery(".ui-datepicker-year").text(); 
-                    if(month==0){
-                        month = 12;
-                    }else if(month==-1){
-                        month = 11;
-                    }
+            // setTimeout(function() {
+            //     jQuery('.ui-datepicker-prev').off('click.prev').on('click.prev', function() {
+            //         var month = date.getMonth()-1;
+            //         var year = jQuery(".ui-datepicker-year").text(); 
+            //         if(month==0){
+            //             month = 12;
+            //         }else if(month==-1){
+            //             month = 11;
+            //         }
 
-                    let post_id = jQuery('#rbfw_post_id').val();
-                    jQuery.ajax({
-                        type: 'POST',
-                        dataType:'JSON',
-                        url: rbfw_ajax.rbfw_ajaxurl,
-                        data: {
-                            'action'  : 'rbfw_day_wise_sold_out_check',
-                            'post_id': post_id,
-                            'month': month,
-                            'year': year,
-                            'nonce' : rbfw_ajax.nonce
-                        },
+            //         let post_id = jQuery('#rbfw_post_id').val();
+            //         jQuery.ajax({
+            //             type: 'POST',
+            //             dataType:'JSON',
+            //             url: rbfw_ajax.rbfw_ajaxurl,
+            //             data: {
+            //                 'action'  : 'rbfw_day_wise_sold_out_check',
+            //                 'post_id': post_id,
+            //                 'month': month,
+            //                 'year': year,
+            //                 'nonce' : rbfw_ajax.nonce
+            //             },
 
-                        beforeSend: function() {
-                            jQuery('.rbfw_bike_car_md_item_wrapper').addClass('rbfw_loader_in');
-                            jQuery('.rbfw_bike_car_md_item_wrapper').append('<i class="fas fa-spinner fa-spin"></i>');
-                        },
+            //             beforeSend: function() {
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').addClass('rbfw_loader_in');
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').append('<i class="fas fa-spinner fa-spin"></i>');
+            //             },
                     
-                        success: function (response) { 
-                            jQuery('.rbfw_bike_car_md_item_wrapper').removeClass('rbfw_loader_in');
-                            jQuery('.rbfw_bike_car_md_item_wrapper i.fa-spinner').remove(); 
-                            jQuery('#rbfw_month_wise_inventory').val(JSON.stringify(response)); 
-                        }
-                    });
+            //             success: function (response) { 
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').removeClass('rbfw_loader_in');
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper i.fa-spinner').remove(); 
+            //                 jQuery('#rbfw_month_wise_inventory').val(JSON.stringify(response)); 
+            //             }
+            //         });
                     
-                });
-            }, 1000);
+            //     });
+            // }, 1);
+
+            // const  day_wise_inventory = JSON.parse(jQuery('#rbfw_month_wise_inventory').val()); 
+
+            
 
            
 
