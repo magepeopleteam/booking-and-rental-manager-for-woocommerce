@@ -344,7 +344,17 @@
 					$origin        = date_create( $checkin_date );
 					$target        = date_create( $checkout_date );
 					$interval      = date_diff( $origin, $target );
+
 					$total_days    = $interval->format( '%a' );
+
+					$rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+                
+					if ($rbfw_count_extra_day_enable == 'on') {
+						$total_days = $total_days + 1;
+                	}
+
+					
+
 					$room_price_arr      = isset( $_POST['room_price_arr'] ) ? RBFW_Function::data_sanitize( $_POST['room_price_arr'] ) : [];
 					$service_price_arr   = isset( $_POST['service_price_arr'] ) ? RBFW_Function::data_sanitize( $_POST['service_price_arr'] ) : [];
 					$room_price          = 0;
