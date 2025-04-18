@@ -13,6 +13,37 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 });
 
 
+jQuery(window).on('load', function() {
+
+    let rent_type = jQuery('#rbfw_rent_type').val();
+
+    var now = new Date();
+    var currentMonth = now.getMonth()+1;
+    var currentYear = now.getFullYear();
+
+    if(rent_type == 'bike_car_mdjjjj'){
+        let post_id = jQuery('#rbfw_post_id').val();
+        jQuery.ajax({
+            type: 'POST',
+            dataType:'JSON',
+            url: rbfw_ajax.rbfw_ajaxurl,
+            data: {
+                'action'  : 'rbfw_day_wise_sold_out_check',
+                'post_id': post_id,
+                'month': currentMonth,
+                'year': currentYear,
+                'nonce' : rbfw_ajax.nonce
+            },
+         
+            success: function (response) {  
+                jQuery('#rbfw_month_wise_inventory').val(JSON.stringify(response)); 
+                jQuery('.item .rbfw-datetime').show();
+            }
+        });
+    }
+})
+
+
 
 
 jQuery('body').on('focusin', '.pickup_date', function(e) { 
@@ -21,14 +52,100 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
   
 
-    //alert(jQuery('.ui-datepicker-title .ui-datepicker-month').text());
-    //alert(jQuery('.ui-datepicker-title .ui-datepicker-year').text());
+    // alert(jQuery('.ui-datepicker-title .ui-datepicker-month').text());
+    // alert(jQuery('.ui-datepicker-title .ui-datepicker-year').text());
+
+    
+
 
     jQuery(this).datepicker({
         dateFormat: js_date_format,
         minDate: '',
         beforeShowDay: function(date)
         {
+
+
+            
+          
+            // setTimeout(function() {
+            //     jQuery('.ui-datepicker-next').off('click.next').on('click.next', function() {
+            //         var month = date.getMonth()+1;
+            //         var year = jQuery(".ui-datepicker-year").text(); 
+               
+            //         let post_id = jQuery('#rbfw_post_id').val();
+            //         jQuery.ajax({
+            //             type: 'POST',
+            //             dataType:'JSON',
+            //             url: rbfw_ajax.rbfw_ajaxurl,
+            //             data: {
+            //                 'action'  : 'rbfw_day_wise_sold_out_check',
+            //                 'post_id': post_id,
+            //                 'month': month,
+            //                 'year': year,
+            //                 'nonce' : rbfw_ajax.nonce
+            //             },
+
+            //             beforeSend: function() {
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').addClass('rbfw_loader_in');
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').append('<i class="fas fa-spinner fa-spin"></i>');
+            //             },
+                    
+            //             success: function (response) {  
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').removeClass('rbfw_loader_in');
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper i.fa-spinner').remove();
+            //                 jQuery('#rbfw_month_wise_inventory').val(JSON.stringify(response)); 
+            //             }
+            //         });
+            
+          
+            //     });
+            // }, 1);
+
+
+            // setTimeout(function() {
+            //     jQuery('.ui-datepicker-prev').off('click.prev').on('click.prev', function() {
+            //         var month = date.getMonth()-1;
+            //         var year = jQuery(".ui-datepicker-year").text(); 
+            //         if(month==0){
+            //             month = 12;
+            //         }else if(month==-1){
+            //             month = 11;
+            //         }
+
+            //         let post_id = jQuery('#rbfw_post_id').val();
+            //         jQuery.ajax({
+            //             type: 'POST',
+            //             dataType:'JSON',
+            //             url: rbfw_ajax.rbfw_ajaxurl,
+            //             data: {
+            //                 'action'  : 'rbfw_day_wise_sold_out_check',
+            //                 'post_id': post_id,
+            //                 'month': month,
+            //                 'year': year,
+            //                 'nonce' : rbfw_ajax.nonce
+            //             },
+
+            //             beforeSend: function() {
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').addClass('rbfw_loader_in');
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').append('<i class="fas fa-spinner fa-spin"></i>');
+            //             },
+                    
+            //             success: function (response) { 
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper').removeClass('rbfw_loader_in');
+            //                 jQuery('.rbfw_bike_car_md_item_wrapper i.fa-spinner').remove(); 
+            //                 jQuery('#rbfw_month_wise_inventory').val(JSON.stringify(response)); 
+            //             }
+            //         });
+                    
+            //     });
+            // }, 1);
+
+            // const  day_wise_inventory = JSON.parse(jQuery('#rbfw_month_wise_inventory').val()); 
+
+            
+
+           
+
             return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
         },
         onSelect: function (dateString, data) {
@@ -81,16 +198,17 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
         },
     });
 
-  /*  jQuery(document).on("mousemove", ".ui-datepicker-calendar td", function() {
+   jQuery(document).on("mousemove", ".ui-datepicker-calendar td", function() {
         let $this = jQuery(this);
-        console.log($this.text());
+        console.log($this.attr('title'));
         if ($this.find(".date-label").length === 0) {
-            let dateText = $this.text().trim();
+            let dateText = $this.attr('title');
+          
             if (dateText) {
-                $this.append(`<span class='date-label'>Off</span>`);
+                $this.append(`<span class='date-label'>`+dateText+`</span>`);
             }
         }
-    });*/
+    });
 });
 
 jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {

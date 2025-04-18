@@ -260,6 +260,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
         $date = gmdate('d-m-Y', $currentDate);
         $date_range[] = $date;
     }
+
     // End: Get Date Range
 
     if ($rent_type == 'resort') {
@@ -284,6 +285,8 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
 
     $total_booked = 0;
+
+   
 
     if(is_array($rbfw_inventory)){
         foreach ($rbfw_inventory as $key => $inventory) {
@@ -416,6 +419,145 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
         'service_stock'=>$service_stock,
         'variant_instock'=>$variant_instock,
     );
+}
+
+
+
+
+
+function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_days){
+
+
+    if (empty($post_id) || empty($year)  || empty($month) ) {
+        return;
+    }
+
+    $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
+    $rbfw_variations_stock = rbfw_get_variations_stock($post_id);
+
+    $rent_type = get_post_meta($post_id, 'rbfw_item_type', true);
+    $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
+    
+
+
+    $date_range = [];
+
+    $day_wise_inventory = [];
+
+    for($i=1;$i<=$total_days;$i++){
+        
+        $total_stock = 0;
+        $date = str_pad($i, 2, '0', STR_PAD_LEFT).'-'.str_pad($month, 2, '0', STR_PAD_LEFT).'-'.$year;
+        $date_range[] = $date;
+
+ 
+   
+        if ($rent_type == 'resort') {
+            $rbfw_resort_room_data = get_post_meta($post_id, 'rbfw_resort_room_data', true);
+            if (!empty($rbfw_resort_room_data)) {
+                foreach ($rbfw_resort_room_data as $key => $resort_room_data) {
+                    if($resort_room_data['room_type'] == $type){
+                        $total_stock += !empty($resort_room_data['rbfw_room_available_qty']) ? $resort_room_data['rbfw_room_available_qty'] : 0;
+                    }
+                }
+            }
+        } else {
+            // For Bike/car Multiple Day Type
+            if($rbfw_enable_variations == 'yes'){
+                $total_stock += $rbfw_variations_stock;
+            } else {
+                $total_stock += (int)get_post_meta($post_id, 'rbfw_item_stock_quantity', true);
+            }
+            // End Bike/car Multiple Day Type
+        }
+
+        $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
+
+        $total_booked = 0;
+
+       
+
+        if(is_array($rbfw_inventory)){
+            foreach ($rbfw_inventory as $key => $inventory) {
+                $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
+
+                $partial_stock = true;
+                if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
+                    $partial_stock = false;
+                }
+
+
+                if ( ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
+
+                    if(isset($inventory['rbfw_start_date_ymd']) && isset($inventory['rbfw_end_date_ymd'])){
+                        $inventory_start_date = $inventory['rbfw_start_date_ymd'];
+                        $inventory_end_date = $inventory['rbfw_end_date_ymd'];
+                    }else{
+                        $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
+                        $inventory_start_date = $booked_dates[0];
+                        $inventory_end_date = end($booked_dates);
+                    }
+
+
+                    if ($rent_type == 'resort') {
+                        $start_date_time = new DateTime( $start_date );
+                        $end_date_time = new DateTime( $end_date );
+
+                        if ($date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end) {
+                            $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
+                            foreach ($rbfw_type_info as $type_name => $type_qty) {
+                                if ($type_name == $type) {
+                                    $total_booked += $type_qty;
+                                }
+                            }
+                        }
+                    }else{
+                        if (in_array($date,$inventory['booked_dates'])) {
+                            $total_booked += $rbfw_item_quantity;
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+
+        $remaining_stock = $total_stock - $total_booked;
+
+
+
+
+        /*start variation inventory*/
+        $variant_instock = [];
+        $rbfw_variations_data = get_post_meta( $post_id, 'rbfw_variations_data', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];
+        $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
+
+        if(($rbfw_enable_variations=='yes') && !empty($rbfw_variations_data)){
+            $variant_q = [];
+            foreach($rbfw_variations_data as $key=>$item1){
+                $field_label = $item1['field_label'];
+                if($field_label){
+                    foreach ($item1['value'] as $key1=>$single){
+                        if($single['name']){
+                            foreach($date_range as $date){
+                                $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
+                            }
+                            $booked_quantity = array_column($variant_q, $single['name']);
+                            $variant_instock[] = $single['quantity'] - max($booked_quantity);
+                        }
+                    }
+                }
+            }
+            $remaining_stock = max($variant_instock);
+        
+        }
+
+        $day_wise_inventory[$date] = $remaining_stock;
+    }
+
+    return $day_wise_inventory;
+
 }
 
 
