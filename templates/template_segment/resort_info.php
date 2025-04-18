@@ -21,7 +21,7 @@ if(isset($post_id) && isset($active_tab)){
     $rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
     $rbfw_product_id = get_post_meta( $post_id, "link_wc_product", true ) ? get_post_meta( $post_id, "link_wc_product", true ) : $post_id;
 
-    $currency_symbol = rbfw_mps_currency_symbol();
+    $currency_symbol = get_woocommerce_currency_symbol();
 
     $rbfw_payment_system = 'wps_enabled';
 

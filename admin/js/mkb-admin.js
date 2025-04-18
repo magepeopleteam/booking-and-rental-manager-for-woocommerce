@@ -223,7 +223,14 @@
             jQuery('tr[data-row=rdfw_available_time]').show();
         }
 
-
+        var status = $('.rbfw_es_price_config_wrapper').data('status');
+        var item_type =  jQuery('#rbfw_item_type').val();
+        
+        if(status=='no' && item_type == 'bike_car_md'){
+            $('.rbfw_es_price_config_wrapper').hide();
+        }else{
+            $('.rbfw_es_price_config_wrapper').show();
+        }
 
         jQuery('#rbfw_item_type').on('change', function() {
             var item_type = jQuery(this).val();
@@ -261,8 +268,6 @@
                     jQuery('.rbfw_time_inventory').hide();
                     jQuery('.rbfw_without_time_inventory').show();
                 }
-
-
             } else if (item_type == 'appointment') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
                 jQuery('.rbfw_general_price_config_wrapper').addClass('rbfw-d-none');
@@ -350,7 +355,13 @@
                 jQuery('.sessional_price_multi_day').show();
                 jQuery('.sessional_price_single_day').hide();
 
-
+                var status = $('.rbfw_es_price_config_wrapper').data('status');
+                if(status=='yes'){
+                    $('.rbfw_es_price_config_wrapper').show();
+                }else{
+                    $('.rbfw_es_price_config_wrapper').hide();
+                }
+                
             }
 
             return false;
@@ -1053,8 +1064,8 @@ jQuery(document).ready(function () {
             wp.media.editor.send.attachment = function (props, attachment) {
                 target.find('.rbfw_service_image_preview img').remove();
                 // Escape URL before appending it to the DOM
-                target.find('.rbfw_service_image_preview').append('<img src="' + esc_url(attachment.url) + '"/>');
-                target.find('.rbfw_service_image').val(esc_attr(attachment.id)); // Escape the attachment ID
+                target.find('.rbfw_service_image_preview').append('<img src="' + attachment.url + '"/>');
+                target.find('.rbfw_service_image').val(attachment.id); // Escape the attachment ID
                 wp.media.editor.send.attachment = send_attachment_bkp;
             }
             wp.media.editor.open(jQuery(this));

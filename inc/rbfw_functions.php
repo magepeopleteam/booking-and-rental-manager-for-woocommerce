@@ -56,6 +56,11 @@
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
 			),
+			'label'       => array(
+				'style'   => true, // Allows inline styles
+				'class'   => true,
+				'onclick' => true, // Allows inline JavaScript
+			),
 			'i'       => array(
 				'style'   => true, // Allows inline styles
 				'class'   => true,
@@ -88,6 +93,7 @@
 				'data-id' => true, // Allows inline JavaScript
 				'data-time' => true, // Allows inline JavaScript
 				'data-key' => true, // Allows inline JavaScript
+				'rel' => true, // Allows inline JavaScript
 			),
 			'input'   => array(
 				'style'       => true, // Allows inline styles
@@ -145,8 +151,11 @@
                 'id'          => true,
                 'class'          => true,
             ),
-
-
+			'img'   => array(
+                'id'          => true,
+                'class'          => true,
+				'src'          => true,
+            ),
 
 		);
 
@@ -918,15 +927,21 @@
 	add_filter( 'rbfw_settings_field', 'rbfw_payment_settings_fields', 10 );
 	function rbfw_payment_settings_fields( $settings_fields ) {
 		$settings_fields['rbfw_basic_payment_settings'] = array(
-                array('name'    => 'rbfw_mps_payment_gateway',
-                    'label'   => esc_html__( 'Payment Gateway', 'booking-and-rental-manager-for-woocommerce' ),
-                    'desc'    => esc_html__( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
-                    'type'    => 'multicheck',
-                    'default' => 'offline',
-                    'options' => rbfw_get_payment_gateways()
-                )
+			array(
+				'name' => 'rbfw_wps_add_to_cart_redirect',
+				'label' => __( 'Added to cart redirect to', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+				'type' => 'select',
+				'default' => 'checkout',
+				'options' => array(
+					'checkout' => 'Checkout',
+					'cart'  => 'Cart',
+				),
+			),
 
 		);
+
+
 
 		return apply_filters( 'rbfw_payment_settings_fields', $settings_fields );
 	}
@@ -2268,25 +2283,33 @@
 		return $the_array;
 	}
 	function rbfw_get_available_times_particulars( $rbfw_id, $start_date, $type = '', $selector = '' ) {
-		$particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true );
-		$the_array        = [];
 
-		foreach ( $particulars_data as $single ) {
-			$pd_dates_array = getAllDates( $single['start_date'], $single['end_date'] );
-			if ( in_array( $start_date, $pd_dates_array ) ) {
-				$rdfw_available_time = $single['available_time'];
-				foreach ( $rdfw_available_time as $start_time ) {
-					if ( $type == 'time_enable' ) {
-						$time_status = '';
-					} else {
-						$time_status = rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time );
+		$particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
+		$the_array   = [];
+
+		if(!empty($particulars_data)){
+
+			foreach ( $particulars_data as $single ) {
+				$pd_dates_array = getAllDates( $single['start_date'], $single['end_date'] );
+				if ( in_array( $start_date, $pd_dates_array ) ) {
+					$rdfw_available_time = $single['available_time'];
+					foreach ( $rdfw_available_time as $start_time ) {
+						if ( $type == 'time_enable' ) {
+							$time_status = '';
+						} else {
+							$time_status = rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time );
+						}
+						$the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
 					}
-					$the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
+	
+					return array( $the_array, $selector );
 				}
-
-				return array( $the_array, $selector );
 			}
+
 		}
+		
+
+		
 
 		$rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 		foreach ( $rdfw_available_time as $start_time ) {
