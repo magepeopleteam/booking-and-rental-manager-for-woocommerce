@@ -540,8 +540,8 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
                 if($field_label){
                     foreach ($item1['value'] as $key1=>$single){
                         if($single['name']){
-                            foreach($date_range as $date){
-                                $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
+                            foreach($date_range as $date1){
+                                $variant_q[] = array('date'=>$date1,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
                             }
                             $booked_quantity = array_column($variant_q, $single['name']);
                             $variant_instock[] = $single['quantity'] - max($booked_quantity);
@@ -550,6 +550,7 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
                 }
             }
             $remaining_stock = max($variant_instock);
+
         
         }
 
