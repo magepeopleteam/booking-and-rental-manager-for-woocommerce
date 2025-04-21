@@ -71,6 +71,10 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
     $rbfw_item_type = !empty(get_post_meta($rbfw_id, 'rbfw_item_type', true)) ? get_post_meta($rbfw_id, 'rbfw_item_type', true) : '';
     $rbfw_inventory_info = !empty(get_post_meta($rbfw_id, 'rbfw_inventory', true)) ? get_post_meta($rbfw_id, 'rbfw_inventory', true) : [];
 
+    if(!is_array($rbfw_inventory_info)){
+        $rbfw_inventory_info = [];
+    }
+
     $order = wc_get_order( $order_id );
     $rbfw_order_status = $order->get_status();
 

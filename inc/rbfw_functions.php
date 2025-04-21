@@ -1028,7 +1028,7 @@
 	}
 	function rbfw_update_inventory_extra( $rbfw_id, $order_id, $order_status ) {
 		$inventory = get_post_meta( $rbfw_id, 'rbfw_inventory', true );
-		if ( ! empty( $inventory ) && array_key_exists( $order_id, $inventory ) ) {
+		if ( is_array($inventory) && ! empty( $inventory ) && array_key_exists( $order_id, $inventory ) ) {
 			$inventory[ $order_id ]['rbfw_order_status'] = $order_status;
 			update_post_meta( $rbfw_id, 'rbfw_inventory', $inventory );
 		}
@@ -2411,7 +2411,7 @@
 		foreach ( $items as $item_id => $item ) {
 			$rbfw_id   = wc_get_order_item_meta( $item_id, '_rbfw_id', true );
 			$inventory = get_post_meta( $rbfw_id, 'rbfw_inventory', true );
-			if ( ! empty( $inventory ) && array_key_exists( $order_id, $inventory ) ) {
+			if ( is_array($inventory) && ! empty( $inventory ) && array_key_exists( $order_id, $inventory ) ) {
 				$inventory[ $order_id ]['rbfw_order_status'] = $current_status;
 				update_post_meta( $rbfw_id, 'rbfw_inventory', $inventory );
 			}

@@ -214,6 +214,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.3.8 =
+* Soldout problem solved.
+* Critical error solved for wordpress 6.7 version.
+
 = 2.3.7 =
 * Add to cart redirection problem solved.
 * Count extra day calculation problem solved in resort.
