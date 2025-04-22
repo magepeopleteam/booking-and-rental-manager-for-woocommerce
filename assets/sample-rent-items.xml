@@ -12,7 +12,7 @@
 
         <postmeta>
             <meta_key>rdfw_available_time</meta_key>
-            <meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
+            <meta_value>a:9:{i:0;s:8:"10:00";i:1;s:8:"11:00";i:2;s:8:"12:00";i:3;s:7:"13:00";i:4;s:7:"14:00";i:5;s:7:"15:00";i:6;s:7:"14:00";i:7;s:7:"17:00";i:8;s:7:"21:00";}</meta_value>
         </postmeta>
 
         <postmeta>
@@ -618,7 +618,7 @@
 
         <postmeta>
             <meta_key>rdfw_available_time</meta_key>
-            <meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
+            <meta_value>a:9:{i:0;s:8:"10:00";i:1;s:8:"11:00";i:2;s:8:"12:00";i:3;s:7:"13:00";i:4;s:7:"14:00";i:5;s:7:"15:00";i:6;s:7:"16:00";i:7;s:7:"17:00";i:8;s:7:"21:00";}</meta_value>
         </postmeta>
 
         <postmeta>
@@ -919,7 +919,7 @@
 
         <postmeta>
             <meta_key>rdfw_available_time</meta_key>
-            <meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
+            <meta_value>a:9:{i:0;s:8:"10:00";i:1;s:8:"11:00";i:2;s:8:"12:00";i:3;s:7:"13:00";i:4;s:7:"14:00";i:5;s:7:"15:00";i:6;s:7:"16:00";i:7;s:7:"17:00";i:8;s:7:"21:00";}</meta_value>
         </postmeta>
 
         <postmeta>
@@ -1225,7 +1225,7 @@
 
         <postmeta>
             <meta_key>rdfw_available_time</meta_key>
-            <meta_value>a:9:{i:0;s:8:"10:00 AM";i:1;s:8:"11:00 AM";i:2;s:8:"12:00 PM";i:3;s:7:"1:00 PM";i:4;s:7:"2:00 PM";i:5;s:7:"3:00 PM";i:6;s:7:"4:00 PM";i:7;s:7:"5:00 PM";i:8;s:7:"9:00 AM";}</meta_value>
+            <meta_value>a:9:{i:0;s:8:"10:00";i:1;s:8:"11:00";i:2;s:8:"12:00";i:3;s:7:"13:00";i:4;s:7:"14:00";i:5;s:7:"3:00 PM";i:6;s:7:"16:00";i:7;s:7:"5:00 PM";i:8;s:7:"21:00";}</meta_value>
         </postmeta>
 
         <postmeta>
