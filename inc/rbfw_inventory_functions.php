@@ -71,6 +71,10 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
     $rbfw_item_type = !empty(get_post_meta($rbfw_id, 'rbfw_item_type', true)) ? get_post_meta($rbfw_id, 'rbfw_item_type', true) : '';
     $rbfw_inventory_info = !empty(get_post_meta($rbfw_id, 'rbfw_inventory', true)) ? get_post_meta($rbfw_id, 'rbfw_inventory', true) : [];
 
+    if(!is_array($rbfw_inventory_info)){
+        $rbfw_inventory_info = [];
+    }
+
     $order = wc_get_order( $order_id );
     $rbfw_order_status = $order->get_status();
 
@@ -540,8 +544,8 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
                 if($field_label){
                     foreach ($item1['value'] as $key1=>$single){
                         if($single['name']){
-                            foreach($date_range as $date){
-                                $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
+                            foreach($date_range as $date1){
+                                $variant_q[] = array('date'=>$date1,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
                             }
                             $booked_quantity = array_column($variant_q, $single['name']);
                             $variant_instock[] = $single['quantity'] - max($booked_quantity);
@@ -550,6 +554,7 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
                 }
             }
             $remaining_stock = max($variant_instock);
+
         
         }
 
