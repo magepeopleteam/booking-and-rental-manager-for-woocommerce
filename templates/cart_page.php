@@ -284,12 +284,14 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
         endif; ?>
 
-        <?php if ( ! empty( $rbfw_bikecarsd_duration_price ) ): ?>
+        <?php  if ( ! empty( $rbfw_bikecarsd_duration_price ) ): ?>
             <tr>
                 <th><?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce'))); ?>:</th>
                 <td><?php echo wp_kses(wc_price($rbfw_bikecarsd_duration_price),rbfw_allowed_html()); ?></td>
             </tr>
         <?php endif; ?>
+
+
 
         <?php if ( ! empty( $rbfw_bikecarsd_service_price ) ): ?>
             <tr>

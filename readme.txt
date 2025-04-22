@@ -214,6 +214,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+
+= 2.3.8 =
+* Sold out problem option added on calendar.
+* Extra service and totat pricing problem solved in cart page.
+
 = 2.3.7 =
 * Add to cart redirection problem solved.
 * Count extra day calculation problem solved in resort.
