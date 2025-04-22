@@ -214,9 +214,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+
 = 2.3.8 =
-* Soldout problem solved.
-* Critical error solved for wordpress 6.7 version.
+* Sold out problem option added on calendar.
+* Extra service and totat pricing problem solved in cart page.
+
 
 = 2.3.7 =
 * Add to cart redirection problem solved.
@@ -231,7 +233,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 = 2.3.4 =
 * Translation issues solved.
 * Icon adding problem solved.
-=======
+
 = 2.3.3 =
 * Warning fixed.
 

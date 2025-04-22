@@ -166,7 +166,7 @@ if(isset($_POST['post_id'])){
                             <thead>
                             <tr>
                                 <th class="w_50_pc"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_service_name', 'rbfw_basic_translation_settings', __('Service Name','booking-and-rental-manager-for-woocommerce'))); ?></th>
-                                <th class="w_30_pc"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Price','booking-and-rental-manager-for-woocommerce'))); ?></th>
+                                <th class="w_30_pc"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_price', 'rbfw_basic_translation_settings', __('Price','booking-and-rental-manager-for-woocommerce'))); ?></th>
                                 <?php if($rbfw_enable_extra_service_qty=='yes'){ ?>
                                     <th class="w_20_pc"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce'))); ?></th>
                                 <?php }else{ ?>
