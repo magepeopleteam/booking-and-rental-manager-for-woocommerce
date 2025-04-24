@@ -93,6 +93,7 @@
 				'data-id' => true, // Allows inline JavaScript
 				'data-time' => true, // Allows inline JavaScript
 				'data-key' => true, // Allows inline JavaScript
+				'rel' => true, // Allows inline JavaScript
 			),
 			'input'   => array(
 				'style'       => true, // Allows inline styles
@@ -149,6 +150,11 @@
             'h2'   => array(
                 'id'          => true,
                 'class'          => true,
+            ),
+			'img'   => array(
+                'id'          => true,
+                'class'          => true,
+				'src'          => true,
             ),
 
 		);
@@ -921,13 +927,17 @@
 	add_filter( 'rbfw_settings_field', 'rbfw_payment_settings_fields', 10 );
 	function rbfw_payment_settings_fields( $settings_fields ) {
 		$settings_fields['rbfw_basic_payment_settings'] = array(
-                array('name'    => 'rbfw_mps_payment_gateway',
-                    'label'   => esc_html__( 'Payment Gateway', 'booking-and-rental-manager-for-woocommerce' ),
-                    'desc'    => esc_html__( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
-                    'type'    => 'multicheck',
-                    'default' => 'offline',
-                    'options' => rbfw_get_payment_gateways()
-                )
+			array(
+				'name' => 'rbfw_wps_add_to_cart_redirect',
+				'label' => __( 'Added to cart redirect to', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc' => __( '', 'booking-and-rental-manager-for-woocommerce' ),
+				'type' => 'select',
+				'default' => 'checkout',
+				'options' => array(
+					'checkout' => 'Checkout',
+					'cart'  => 'Cart',
+				),
+			),
 
 		);
 
@@ -1018,7 +1028,7 @@
 	}
 	function rbfw_update_inventory_extra( $rbfw_id, $order_id, $order_status ) {
 		$inventory = get_post_meta( $rbfw_id, 'rbfw_inventory', true );
-		if ( ! empty( $inventory ) && array_key_exists( $order_id, $inventory ) ) {
+		if ( is_array($inventory) && ! empty( $inventory ) && array_key_exists( $order_id, $inventory ) ) {
 			$inventory[ $order_id ]['rbfw_order_status'] = $order_status;
 			update_post_meta( $rbfw_id, 'rbfw_inventory', $inventory );
 		}
@@ -2273,25 +2283,33 @@
 		return $the_array;
 	}
 	function rbfw_get_available_times_particulars( $rbfw_id, $start_date, $type = '', $selector = '' ) {
-		$particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true );
-		$the_array        = [];
 
-		foreach ( $particulars_data as $single ) {
-			$pd_dates_array = getAllDates( $single['start_date'], $single['end_date'] );
-			if ( in_array( $start_date, $pd_dates_array ) ) {
-				$rdfw_available_time = $single['available_time'];
-				foreach ( $rdfw_available_time as $start_time ) {
-					if ( $type == 'time_enable' ) {
-						$time_status = '';
-					} else {
-						$time_status = rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time );
+		$particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
+		$the_array   = [];
+
+		if(!empty($particulars_data)){
+
+			foreach ( $particulars_data as $single ) {
+				$pd_dates_array = getAllDates( $single['start_date'], $single['end_date'] );
+				if ( in_array( $start_date, $pd_dates_array ) ) {
+					$rdfw_available_time = $single['available_time'];
+					foreach ( $rdfw_available_time as $start_time ) {
+						if ( $type == 'time_enable' ) {
+							$time_status = '';
+						} else {
+							$time_status = rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time );
+						}
+						$the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
 					}
-					$the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
+	
+					return array( $the_array, $selector );
 				}
-
-				return array( $the_array, $selector );
 			}
+
 		}
+		
+
+		
 
 		$rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 		foreach ( $rdfw_available_time as $start_time ) {
@@ -2393,7 +2411,7 @@
 		foreach ( $items as $item_id => $item ) {
 			$rbfw_id   = wc_get_order_item_meta( $item_id, '_rbfw_id', true );
 			$inventory = get_post_meta( $rbfw_id, 'rbfw_inventory', true );
-			if ( ! empty( $inventory ) && array_key_exists( $order_id, $inventory ) ) {
+			if ( is_array($inventory) && ! empty( $inventory ) && array_key_exists( $order_id, $inventory ) ) {
 				$inventory[ $order_id ]['rbfw_order_status'] = $current_status;
 				update_post_meta( $rbfw_id, 'rbfw_inventory', $inventory );
 			}

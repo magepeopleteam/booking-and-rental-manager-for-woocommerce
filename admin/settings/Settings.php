@@ -38,28 +38,65 @@
 			}
 
 			public function shipping_enable( $post_id ) {
-				?>
-                <section>
-                    <div>
-                        <label>
-							<?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                        </label>
-                        <p><?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                    </div>
-					<?php
-                    $shipping_enable_switch = get_post_meta( $post_id, 'shipping_enable', true ) ? get_post_meta( $post_id, 'shipping_enable', true ) : 'no';
-                    if($shipping_enable_switch=='off'){
-                        $shipping_enable_switch = 'no';
-                    }
-                    ?>
-
-                    <label class="switch">
-                        <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr($shipping_enable_switch); ?>" <?php echo esc_attr( ( $shipping_enable_switch == 'yes' ) ? 'checked' : '' ); ?>>
-                        <span class="slider round"></span>
+            ?>
+            <section>
+                <div>
+                    <label>
+                        <?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?>
                     </label>
+                    <p><?php echo esc_html__( 'Is shipping enable', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                </div>
+                <?php
+                $shipping_enable_switch = get_post_meta( $post_id, 'shipping_enable', true ) ? get_post_meta( $post_id, 'shipping_enable', true ) : 'no';
+                if($shipping_enable_switch=='off'){
+                    $shipping_enable_switch = 'no';
+                }
+                ?>
+
+                <label class="switch">
+                    <input type="checkbox" name="shipping_enable" value="<?php echo esc_attr($shipping_enable_switch); ?>" <?php echo esc_attr( ( $shipping_enable_switch == 'yes' ) ? 'checked' : '' ); ?>>
+                    <span class="slider round"></span>
+                </label>
+            </section>
+            <?php
+        }
+
+
+            public function shipping_method( $post_id ) {
+
+				$shipping_classes = get_terms( 'product_shipping_class', array( 'hide_empty' => false ) );
+
+				if(!empty($shipping_classes)){
+
+
+
+                ?>
+                <section>
+                    
+				    <div>
+                        <label>
+                            <?php echo esc_html__( 'Select shopping class', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </label>
+                    </div>
+
+                    <?php
+
+                    // Get the saved shipping class for this post
+                    $selected_class = get_post_meta( $post_id, 'rent_shipping_class', true );
+
+                    echo '<select name="rent_shipping_class" id="rent_shipping_class">';
+                    echo '<option value="">'.esc_html__( 'Select shopping class', 'booking-and-rental-manager-for-woocommerce' ).'</option>';
+
+                    foreach ( $shipping_classes as $class ) {
+                        $selected = ( $selected_class == $class->term_id ) ? 'selected' : '';
+                        echo '<option value="' . $class->term_id . '" ' . $selected . '>' . esc_html( $class->name ) . '</option>';
+                    }
+                    echo '</select>';
+                    ?>
                 </section>
-				<?php
-			}
+                <?php
+				}
+            }
 
 			public function quantity_display( $post_id ) {
 				$rbfw_available_qty_info_switch = get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) ? get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) : 'no';
@@ -117,7 +154,8 @@
 					<?php $this->shortcode( $post_id ); ?>
 					<?php $this->quantity_display( $post_id ); ?>
 					<?php $this->shipping_enable( $post_id ); ?>
-					
+					<?php $this->shipping_method( $post_id ); ?>
+
 					<?php $this->service_quantity_box( $post_id ); ?>
                 </div>
 				<?php
@@ -148,6 +186,55 @@
 					$faq_description    = isset( $_POST['rbfw_faq_description'] ) ? sanitize_text_field($_POST['rbfw_faq_description']) : '';
 					update_post_meta( $post_id, 'rbfw_faq_description', $faq_description );
 				}
+
+                if ( isset( $_POST['rent_shipping_class'] ) ) {
+                    update_post_meta( $post_id, 'rent_shipping_class', sanitize_text_field( wp_unslash($_POST['rent_shipping_class'] )) );
+                }
+
+
+				$product_id = get_post_meta($post_id, 'link_wc_product', true) ? get_post_meta($post_id, 'link_wc_product', true) : $post_id;
+                
+                $product_type = get_post_meta($post_id, 'shipping_enable', true) ? get_post_meta($post_id, 'shipping_enable', true) : 'no';
+                $term_id = get_post_meta($post_id, 'rent_shipping_class', true) ? get_post_meta($post_id, 'rent_shipping_class', true) : '';
+               
+    
+                global $wpdb;
+                wp_set_object_terms($product_id, array(), 'product_shipping_class');
+                $taxonomy   = 'product_shipping_class';
+                $term_taxonomy_id = $wpdb->get_var( $wpdb->prepare("
+                SELECT term_taxonomy_id 
+                    FROM {$wpdb->term_taxonomy}
+                    WHERE term_id = %d AND taxonomy = %s
+                    ", $term_id, $taxonomy));
+  
+                if ($term_taxonomy_id) {
+                        // Check if already assigned
+                        $exists = $wpdb->get_var( $wpdb->prepare("
+                            SELECT object_id 
+                            FROM {$wpdb->term_relationships}
+                            WHERE object_id = %d AND term_taxonomy_id = %d
+                        ", $product_id, $term_taxonomy_id));
+                    
+                        if (!$exists) {
+                            // Insert the relationship
+                            $wpdb->insert(
+                                $wpdb->term_relationships,
+                                array(
+                                    'object_id' => $product_id,
+                                    'term_taxonomy_id' => $term_taxonomy_id
+                                ),
+                                array('%d', '%d')
+                            );
+            
+                        } 
+                    }
+
+					update_post_meta($product_id, '_virtual', ($product_type=='yes')?'no':'yes');
+
+
+
+
+
 			}
 		}
 		new RBFW_Settings();

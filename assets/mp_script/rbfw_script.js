@@ -347,6 +347,9 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
     var curr_year = date.getFullYear();
     var date_in = curr_date+"-"+curr_month+"-"+curr_year;
 
+    let ajax = 'no';
+    
+
     var date_today = new Date();
     if(today_enable=='yes'){
         date_today.setDate(date_today.getDate() - 1);
@@ -358,17 +361,38 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
 
     var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
 
+  
+
 
     if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || (date <  date_today) ){
 
         if(type=='md'){
-            return [false, "notav", 'Off'];
+            if((date <  date_today)){
+                return [false, "notav", ''];
+            }else{
+                return [false, "notav", 'Off'];
+            }
+
         }else{
             return   true;
         }
     }else{
 
         if(type=='md'){
+
+            let rbfw_rent_type = jQuery("#rbfw_rent_type").val();
+
+            if(rbfw_rent_type == 'bike_car_md'){
+                if(jQuery('#rbfw_month_wise_inventory').val()){
+                    const  day_wise_inventory = JSON.parse(jQuery('#rbfw_month_wise_inventory').val());
+                    if(day_wise_inventory[date_in]==0){
+                        return [false, "notav", 'Sold Out'];
+                    }
+                }
+
+            }
+            
+            
             return [true, "av", ""];
         }else{
             return false;

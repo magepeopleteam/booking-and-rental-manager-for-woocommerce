@@ -22,6 +22,13 @@ Locally and internationally, we don't just build businesses; we guarantee that w
 
 WpRently provides you with the necessary features for free to start your rental booking system. However, when you want to take your business to the next level, the pro version of WpRently will help you achieve that position. If you are running a small business, the free version would be okay, but for larger businesses or want to level up, the pro version would suit you best.
 
+###  Explore The Demo:
+
+🌐 [Live Demo](https://wprently.com/)
+📘 [Online Documentation](https://www.wprently.com/docs/)
+🛍️ [Buy Booking and Rental Pro](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
+
+
 
 ## Our plugin supports a variety of applications, including:
 
@@ -207,9 +214,21 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
-= 2.3.6 =
-* Shortcode problem solved.
 
+= 2.3.8 =
+* Sold out problem option added on calendar.
+* Extra service and totat pricing problem solved in cart page.
+
+
+= 2.3.7 =
+* Add to cart redirection problem solved.
+* Count extra day calculation problem solved in resort.
+
+
+= 2.3.6 =
+* Shipping class select option added.
+* Code updat
+* Shortcode problem solved.
 
 = 2.3.4 =
 * Translation issues solved.

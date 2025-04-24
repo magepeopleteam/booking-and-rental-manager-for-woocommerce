@@ -15,6 +15,12 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             add_action('wp_footer', array($this, 'rbfw_bike_car_md_frontend_scripts'));
             add_action('wp_ajax_rbfw_bikecarmd_ajax_price_calculation', array($this, 'rbfw_md_duration_price_calculation_ajax'));
             add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_price_calculation', array($this,'rbfw_md_duration_price_calculation_ajax'));
+
+            add_action('wp_ajax_rbfw_day_wise_sold_out_check', array($this, 'rbfw_day_wise_sold_out_check'));
+            add_action('wp_ajax_nopriv_rbfw_day_wise_sold_out_check', array($this,'rbfw_day_wise_sold_out_check'));
+
+
+            
         }
 
 
@@ -39,6 +45,50 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             return $main_array;
 
+        }
+
+        function rbfw_day_wise_sold_out_check(){
+            
+            $post_id = $_POST['post_id']; 
+            $month = $_POST['month'];
+            $year = $_POST['year']; 
+
+          
+
+            for($i=0;$i<=1;$i++){
+
+                if($i==0){
+                    $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    $day_wise_imventory_1 = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days);
+                }
+
+                if($i==1){
+                    $date = new DateTime("$year-$month-01");
+                    $date->modify('+1 month');
+                    $year = $date->format('Y');
+                    $month = $month + 1;  
+                    $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    $day_wise_imventory_2 = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days);          
+                }
+               if($i==2){
+                    $date = new DateTime("$year-$month-01");
+                    $date->modify('+2 month');
+                    $year = $date->format('Y');
+                    $month = $month + 1;
+                    $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                    $day_wise_imventory_3 = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days);            
+                }
+             
+                                
+            }
+
+            $day_wise_imventory = array_merge($day_wise_imventory_1, $day_wise_imventory_2);
+
+
+
+            echo wp_json_encode($day_wise_imventory);
+
+            wp_die();
         }
 
 
@@ -257,7 +307,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     if($value > 0){
                         if(array_key_exists($service_name, $extra_services)){ // if Type1 exist in array
                             $service_price += (float)$extra_services[$service_name] * (float)$value;// addup price
-                            $main_array[$service_name] = '('.rbfw_mps_price($extra_services[$service_name]) .' x '. (float)$value.') = '.rbfw_mps_price((float)$extra_services[$service_name] * (float)$value); // type = quantity
+                            $main_array[$service_name] = '('.wc_price($extra_services[$service_name]) .' x '. (float)$value.') = '.wc_price((float)$extra_services[$service_name] * (float)$value); // type = quantity
                         }
                     }
                 }

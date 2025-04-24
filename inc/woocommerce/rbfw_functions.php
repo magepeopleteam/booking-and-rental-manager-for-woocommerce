@@ -27,10 +27,15 @@
 			return;
 		}
 		$sd_input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
+
 		$rbfw_rent_type     = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 		$rbfw_item_quantity = isset( $sd_input_data_sabitized['rbfw_item_quantity'] ) ? intval( $sd_input_data_sabitized['rbfw_item_quantity'] ) : 1;
-		$rbfw_service_info_all = is_array( $sd_input_data_sabitized['rbfw_service_info'] ) ? $sd_input_data_sabitized['rbfw_service_info'] : [];
-		$rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
+		$rbfw_service_info_all = (isset( $sd_input_data_sabitized['rbfw_service_info'] ) && is_array( $sd_input_data_sabitized['rbfw_service_info'] ) ) ? $sd_input_data_sabitized['rbfw_service_info'] : [];
+
+
+
+
+        $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 		$rbfw_service_info             = array();
 		if ( ! empty( $rbfw_service_info_all ) ) {
 			foreach ( $rbfw_service_info_all as $key => $value ) {
@@ -136,9 +141,15 @@
 					$a ++;
 				}
 			}
+
 			$rbfw_bikecarsd_duration_price                   = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_duration_price' , $bikecarsd_selected_date);
 			$rbfw_bikecarsd_service_price                    = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_service_price' );
-			$rbfw_bikecarsd_total_price                      = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_total_price' , $bikecarsd_selected_date);
+
+
+
+
+
+            $rbfw_bikecarsd_total_price                      = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_total_price' , $bikecarsd_selected_date);
 			$rbfw_pickup_point                               = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
 			$rbfw_dropoff_point                              = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
 			$rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $end_date, $rbfw_type_info, $rbfw_service_info, $rbfw_bikecarsd_selected_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity , $bikecarsd_selected_date);

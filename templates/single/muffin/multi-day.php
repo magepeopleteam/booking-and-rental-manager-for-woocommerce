@@ -12,7 +12,7 @@
 	$rbfw_enable_faq_content            = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
 	$slide_style                        = $rbfw->get_option_trans( 'super_slider_style', 'super_slider_settings', '' );
 	$post_review_rating                 = function_exists( 'rbfw_review_display_average_rating' ) ? rbfw_review_display_average_rating( $post_id, 'muffin', 'style1' ) : '';
-	$currency_symbol                    = get_woocommerce_currency_symbol();
+	$currency_symbol                    = '';
 	$get_hourly_price                   = rbfw_get_bike_car_md_hourly_daily_price( $post_id, 'hourly' );
 	$get_daily_price                    = rbfw_get_bike_car_md_hourly_daily_price( $post_id, 'daily' );
 	$enable_daily_rate                  = get_post_meta( $rbfw_id, 'rbfw_enable_daily_rate', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_daily_rate', true ) : 'yes';

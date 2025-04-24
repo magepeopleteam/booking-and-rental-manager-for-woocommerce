@@ -50,7 +50,7 @@
                         }
                         $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
 
-                        $main_array[ $rent_type ] = '(' . rbfw_mps_price( (float) $type_price ) . ' x ' . (float) $rent_info[ $rent_type ] . ') = ' . rbfw_mps_price( (float) $type_price * (float) $rent_info[ $rent_type ] );
+                        $main_array[ $rent_type ] = '(' . wc_price( (float) $type_price ) . ' x ' . (float) $rent_info[ $rent_type ] . ') = ' . wc_price( (float) $type_price * (float) $rent_info[ $rent_type ] );
 
                     }
                 }
@@ -96,7 +96,7 @@
 					$service_name = $key; //Type1
 					if ( $value > 0 ) {
 						if ( array_key_exists( $service_name, $extra_services ) ) { // if Type1 exist in array
-							$main_array[ $service_name ] = '(' . rbfw_mps_price( $extra_services[ $service_name ] ) . ' x ' . (float) $value . ') = ' . rbfw_mps_price( (float) $extra_services[ $service_name ] * (float) $value ); // type = quantity
+							$main_array[ $service_name ] = '(' . wc_price( $extra_services[ $service_name ] ) . ' x ' . (float) $value . ') = ' . wc_price( (float) $extra_services[ $service_name ] * (float) $value ); // type = quantity
 						}
 					}
 				}
@@ -474,16 +474,16 @@
                                     <ul class="rbfw-ul">
                                         <li class="duration-costing rbfw-cond">' . $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings', esc_html__( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' ) ) . ' <span class="price-figure" data-price="' . $total_bikecarsd_price . '">' . wc_price( $total_bikecarsd_price ) . '</span></li>';
 				if ( ! empty( $service_price_arr ) ) {
-					$content .= '<li class="resource-costing rbfw-cond">' . $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings', esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) ) . ' <span class="price-figure" data-price="' . $total_service_price . '">' . rbfw_mps_price( $total_service_price ) . '</span></li>';
+					$content .= '<li class="resource-costing rbfw-cond">' . $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings', esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) ) . ' <span class="price-figure" data-price="' . $total_service_price . '">' . wc_price( $total_service_price ) . '</span></li>';
 				}
-				$content .= '<li class="subtotal">' . $rbfw->get_option_trans( 'rbfw_text_subtotal', 'rbfw_basic_translation_settings', esc_html__( 'Subtotal', 'booking-and-rental-manager-for-woocommerce' ) ) . '<span class="price-figure" data-price="' . $subtotal_price . '">' . rbfw_mps_price( $subtotal_price ) . '</span></li>';
+				$content .= '<li class="subtotal">' . $rbfw->get_option_trans( 'rbfw_text_subtotal', 'rbfw_basic_translation_settings', esc_html__( 'Subtotal', 'booking-and-rental-manager-for-woocommerce' ) ) . '<span class="price-figure" data-price="' . $subtotal_price . '">' . wc_price( $subtotal_price ) . '</span></li>';
 
 				$security_deposit = rbfw_security_deposit( $post_id, $subtotal_price );
 				if ( $security_deposit['security_deposit_desc'] ) {
 					$content .= '<li class="subtotal">' . ( ! empty( get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) ) ? get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) : 'Security Deposit' ) . '<span class="price-figure" data-price="' . $security_deposit['security_deposit_amount'] . '">' . $security_deposit['security_deposit_desc'] . '</span></li>';
 				}
 				$total_price = $total_price + $security_deposit['security_deposit_amount'];
-				$content     .= '<li class="total"><strong>' . $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings', esc_html__( 'Total', 'booking-and-rental-manager-for-woocommerce' ) ) . '</strong> <span class="price-figure" data-price="' . $total_price . '">' . rbfw_mps_price( $total_price ) . ' ' . $tax_status . '</span></li>
+				$content     .= '<li class="total"><strong>' . $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings', esc_html__( 'Total', 'booking-and-rental-manager-for-woocommerce' ) ) . '</strong> <span class="price-figure" data-price="' . $total_price . '">' . wc_price( $total_price ) . ' ' . $tax_status . '</span></li>
 
 
                                     </ul>

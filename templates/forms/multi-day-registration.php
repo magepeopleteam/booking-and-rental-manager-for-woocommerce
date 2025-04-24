@@ -167,8 +167,10 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                     </table>
                                 </div>
                             <?php }else{ ?>
+                                
+                            
                                 <div class="rbfw_day_wise_price">
-    <table>
+                                    <table>
         <tbody>
         <?php if ($enable_daily_rate == 'yes') { ?>
             <tr>
@@ -435,8 +437,13 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            <div class="title">
-                                                                <?php echo esc_html($service['title']); ?>
+                                                            
+                                                        <div class="title">
+                                                            <?php if($service['icon']){ ?>
+                                                                <i class="sc-icon <?php echo esc_attr($service['icon']); ?>"></i>
+                                                            <?php } ?>
+                                                            <?php echo esc_html($service['title']); ?>
+
                                                     <?php if($available_qty_info_switch == 'yes'){ ?>
                                                                 <i class="available-stock item_<?php echo esc_attr($cat . $serkey); ?>">
                                                                     <?php esc_html_e('Available Qty ', 'booking-and-rental-manager-for-woocommerce'); ?><span class="remaining_stock"></span>
@@ -585,6 +592,42 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                     }
                 }
 
+                $day_wise_imventory = '';
+
+                if($time_picker != 'on') {
+
+                    $year = Date('Y');
+                    $month = Date('n');
+
+                    for ($i = 0; $i <= 1; $i++) {
+
+                        if ($i == 0) {
+                            $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                            $day_wise_imventory_1 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days);
+                        }
+
+                        if ($i == 1) {
+                            $date = new DateTime("$year-$month-01");
+                            $date->modify('+1 month');
+                            $year = $date->format('Y');
+                            $month = $month + 1;
+                            $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                            $day_wise_imventory_2 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days);
+                        }
+                        if ($i == 2) {
+                            $date = new DateTime("$year-$month-01");
+                            $date->modify('+2 month');
+                            $year = $date->format('Y');
+                            $month = $month + 1;
+                            $total_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                            $day_wise_imventory_3 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days);
+                        }
+                    }
+                    $day_wise_imventory = wp_json_encode(array_merge($day_wise_imventory_1, $day_wise_imventory_2));
+                }
+
+            
+
                 ?>
 
                 <?php wp_nonce_field('rbfw_ajax_action', 'nonce'); ?>
@@ -598,7 +641,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                 <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_attr($time_picker); ?>">
                 <input type="hidden" name="total_days" value="0">
                 <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_attr($rbfw_minimum_booking_day); ?>">
-                <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo esc_attr($rbfw_maximum_booking_day); ?>">
+                <input type="hidden" id="rbfw_month_wise_inventory" value="<?php echo esc_attr($day_wise_imventory); ?>">
 
 
 

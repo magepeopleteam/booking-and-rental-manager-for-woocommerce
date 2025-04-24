@@ -914,6 +914,10 @@
         margin: 0;
     }
 }
+@media only screen and (max-width: 800px) {
+    div.superSlider [data-bg-image],
+    div.superSlider .sliderShowcaseItem { height: auto; }
+}
 /******************************************************************** Layout Section ************************************************/
 @media only screen and (min-width: 10px) {
     /***********Circular***********/

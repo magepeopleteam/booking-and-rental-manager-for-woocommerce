@@ -1064,8 +1064,8 @@ jQuery(document).ready(function () {
             wp.media.editor.send.attachment = function (props, attachment) {
                 target.find('.rbfw_service_image_preview img').remove();
                 // Escape URL before appending it to the DOM
-                target.find('.rbfw_service_image_preview').append('<img src="' + esc_url(attachment.url) + '"/>');
-                target.find('.rbfw_service_image').val(esc_attr(attachment.id)); // Escape the attachment ID
+                target.find('.rbfw_service_image_preview').append('<img src="' + attachment.url + '"/>');
+                target.find('.rbfw_service_image').val(attachment.id); // Escape the attachment ID
                 wp.media.editor.send.attachment = send_attachment_bkp;
             }
             wp.media.editor.open(jQuery(this));
