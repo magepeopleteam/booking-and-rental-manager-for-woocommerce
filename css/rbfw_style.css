@@ -4774,8 +4774,9 @@ span:not(.week .day[disabled="disabled"] span) {
 .rbfw_bikecarsd_time_table_wrap
 a.rbfw_bikecarsd_time
 span.rbfw_bikecarsd_time_span {
-    border: 1px solid var(--rbfw_color_primary);
-    background-color: var(--rbfw_muff_color1);
+    border: 1px solid #dedede;
+    background-color: #f3f3f3;
+    border-radius: 5px;
     color: var(--rbfw_dt_color4);
 }
 
