@@ -284,18 +284,13 @@ CSS for Single Page Template
     }
 }
 
-.rbfw-single-right-container .item {
-    margin-top: 5px;
-}
-
 .rbfw-single-right-container .item:first-child {
     margin-top: 0px;
 }
 
-.rbfw_muff_registration_wrapper .rbfw-single-right-heading { margin: 10px 10px;}
+
 .rbfw-single-right-heading {
     font-size: 16px;
-    margin: 10px 10px;
     font-weight:600;
     color: #0a0a0a;
 }
@@ -312,6 +307,8 @@ CSS for Single Page Template
 
 .rbfw-single-right-container .item:first-child .rbfw-single-right-heading {
     width: 100%;
+    padding:10px 0;
+    border-bottom:1px solid #ddd;
 }
 
 .rbfw-variations-content-wrapper .rbfw-single-right-heading {
@@ -320,9 +317,9 @@ CSS for Single Page Template
 
 .pricing-content {
     background-color: #f5f5f5;
-    padding: 10px 0px;
     position: relative;
 }
+
 .pricing-content::after{
     content: '\f078';
     font-family: FontAwesome;
@@ -681,7 +678,7 @@ div.mp_right_section {
 }
 
 #rbfw_faq_accordion .rbfw_faq_header {
-    background: transparent;
+    background: #fff;
     font-size: 15px;
     font-weight: 600;
     text-align: left;
@@ -1298,26 +1295,8 @@ table.rbfw_room_price_table tbody td img {
     display: flex;
 }
 
-.rbfw_qty_input input[type="number"] {
-    -webkit-appearance: textfield;
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-
-.rbfw_qty_input input[type="number"]::-webkit-inner-spin-button,
-.rbfw_qty_input input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-}
-
-.rbfw_qty_input {
-    display: table;
-    outline: none;
-    width: max-content;
-    /*float: right;*/
-}
-
-.rbfw_qty_input input[type="number"] {
-   margin-bottom: 0;
+.rbfw_service_price_wrap {
+    float: right;
 }
 
 .rbfw_qty_input,
@@ -1325,26 +1304,25 @@ table.rbfw_room_price_table tbody td img {
     box-sizing: border-box;
 }
 
+.rbfw_qty_input {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .rbfw_qty_input a {
-    outline: none;
-    -webkit-appearance: none;
-    background-color: var(--rbfw_color_primary);
-    border: none;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
     cursor: pointer;
     margin: 0;
     position: relative;
-    vertical-align: middle;
-    display: table-cell;
+    padding: 5px 8px;
+    display:block;
     text-align: center;
-    
 }
 
 .rbfw_qty_input a:hover {
-    background: var(--rbfw_single_page_secondary_color);
+    background: var(--rbfw_color_primary);
     transition: 0.2s;
     opacity: 1;
 }
@@ -1354,7 +1332,14 @@ table.rbfw_room_price_table tbody td img {
     color: #fff;
 }
 
+.rbfw_qty_input a.rbfw_timely_es_qty_minus i {
+    font-size: 12px;
+    color: #000;
+}
+
+
 .rbfw_qty_input input[type="number"] {
+    appearance: textfield;
     border: 1px solid #ddd !important;
     font-size: 16px;
     font-weight: normal;
@@ -1363,7 +1348,27 @@ table.rbfw_room_price_table tbody td img {
     border-radius: 0;
     margin: 0 !important;
     padding: 2px !important;
+    margin-bottom: 0;
 }
+
+.rbfw_qty_input input[type="number"]::-webkit-inner-spin-button,
+.rbfw_qty_input input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+a.rbfw_qty_minus.rbfw_timely_es_qty_minus{
+    border-radius:5px 0px 0px 5px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+a.rbfw_qty_plus.rbfw_timely_es_qty_plus {
+    border-radius:0px 5px 5px 0px;
+    background-color: var(--rbfw_color_primary);
+    border: 1px solid #ddd;
+}
+
 
 .rbfw_selected_room_dates {
     margin-top: 20px;
@@ -1978,9 +1983,7 @@ li.rbfw-visibility-hidden {
     font-weight: 600;
 }
 
-.rbfw_pricing_info_heading {
-    width: 100%;
-}
+
 .rbfw-single-right-heading.rbfw_pricing_info_heading .rbfw_pricing_info_heading{padding-left:20px}
 
 .rbfw_rent_list_button_wrap a.rbfw_rent_list_btn:hover {
@@ -2295,10 +2298,7 @@ li.rbfw-visibility-hidden {
     transition: 0.2s;
     opacity: 1;
 }
-.price-item-container{
-    padding: 5px;
-    border: 1px solid #f5f5f5;
-}
+
 .price-item-container-table {
     margin: 0 !important;
     font-size: 16px;
@@ -2482,6 +2482,7 @@ a.rbfw_back_step_btn i {
 }
 
 table.rbfw_bikecarsd_price_table {
+    border-collapse: collapse;
     border: 1px solid #dedede;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -2494,7 +2495,7 @@ table.rbfw_bikecarsd_price_table {
 }
 
 table.rbfw_bikecarsd_price_table thead {
-    border-bottom: 2px solid #ddd;
+    border-bottom: 0;
 }
 
 table.rbfw_bikecarsd_price_table thead th {
@@ -2504,7 +2505,7 @@ table.rbfw_bikecarsd_price_table thead th {
     text-align: left;
     padding: 5px 10px;
     text-transform: capitalize;
-    background:#e9e9e9;
+    background:#f7f7f7;
 }
 
 .rbfw_single_muffin_template table.rbfw_bikecarsd_price_table thead th {
@@ -2554,6 +2555,11 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     display: flex;
 }
 
+.rbfw_bikecarsd_price_summary .woocommerce-Price-amount{
+    font-weight: 600;
+    color: #222;
+}
+
 .rbfw_bikecarsd_price_table img {
     width: 50px;
     height: 50px;
@@ -2568,17 +2574,12 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     padding-left: 22px;
 }
 
-.rbfw-bikecarsd-calendar-header {
-    background: var(--rbfw_primary_opacity);
-    padding: 20px;
-    position: relative;
-    margin-bottom: 20px;
-}
 
 .rbfw-bikecarsd-calendar-header-title {
     font-size: 20px;
     font-weight: 600;
     padding-bottom: 3px;
+    margin-bottom: 15px;
 }
 
 .rbfw-bikecarsd-calendar-header-feature {
@@ -2608,15 +2609,15 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw-bikecarsd-calendar-header::after {
-    content: "";
+    /* content: "";
     position: absolute;
     width: 0;
     height: 0;
     border-width: 8px;
     border-style: solid;
-    border-color: var(--rbfw_primary_opacity) transparent transparent transparent;
-    top: 100%;
-    left: 35px;
+    /* border-color: var(--rbfw_primary_opacity) transparent transparent transparent; */
+    /* top: 100%;
+    left: 35px; */
 }
 
 .rbfw-bikecarsd-calendar-footer {
@@ -3256,7 +3257,10 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .mp_left_section a {
     text-decoration: none;
 }
-
+.rbfw-post-sharing a{
+    text-decoration: none;
+    color:var(--rbfw_color_primary);
+}
 .rbfw_mps_user_order_summary *,
 .rbfw_mps_user_form_wrap *,
 .rbfw_mps_payment_form_wrap * {
@@ -3396,9 +3400,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     float: right;
 }
 
-.rbfw_service_price_wrap {
-    float: right;
-}
+
 
 .rbfw_bikecarsd_time_table_wrap {
     margin-bottom:10px;
@@ -3650,10 +3652,15 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_registration_wrapper {
-    border: 0 solid var(--rbfw_booking_form_bg_color);
-    padding: 30px;
-    background-color: #e9e9e9;
+    border:1px solid #e0e0e0;
+    border-radius:10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding:20px;
+    background-color: #fff;
 }
+
+div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
+div.rbfw_muffin_template div.superSlider .sliderShowcaseItem:last-child{margin-bottom: 0;}
 
 .rbfw_muff_row_slider {
     margin-bottom: 50px;
@@ -4922,6 +4929,7 @@ tr:nth-child(2n + 1) {
     align-items: end;
     justify-content: space-between;
     gap: 12px;
+    margin-bottom: 20px;
 }
 
 .rbfw_muffin_template .rbfw-datetime .rbfw-datetime-part {
@@ -6990,10 +6998,13 @@ a.rbfw_rent_list_btn:hover{
     font-size: 12px;
     color: var(--rbfw_color_primary);
 }
-div.rbfw_day_wise_price {
-    margin-bottom: 10px;
+div.rbfw_day_wise_price table{
+    margin:0;
 }
 
+.pricing-content-collapse{
+    margin-bottom: 20px;
+}
 
 div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     font-size: 12px;
@@ -7031,15 +7042,15 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 .rbfw_service_type .radio-button {
     display: block;
     cursor: pointer;
-    font-size: 16px;
     color: #333;
-    padding: 10px 2px;
     transition: all 0.3s ease;
     user-select: none;
-    background-color: #fff;
-    border-radius: 5px;
-    border:1px solid #dedede;
     text-align: center;
+    padding:5px 12px;
+    font-size: 15px;
+    border-radius:5px;
+    border:1px solid #ddd;
+    background-color: #f9f9f9;
 }
 
 /* Hover effect */
@@ -7081,6 +7092,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     margin:0;
     padding: 5px 0;
     font-size: 16px;
+    font-weight: bold;
 }
 .timely_quqntity_table .rbfw_regf_group select{
     width: 60px;
