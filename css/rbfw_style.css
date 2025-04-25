@@ -4800,7 +4800,7 @@ span.rbfw_bikecarsd_time_span {
 
 .rbfw_muff_selected_date {
     text-align: center;
-    padding: 20px;
+    padding: 10px;
     background: var(--rbfw_muff_color7);
 }
 
@@ -6215,8 +6215,9 @@ span:not(.week .day[disabled="disabled"] span):hover {
 }
 
 .rbfw_muffin_template .rbfw_muff_selected_date {
-    background: var(--rbfw_color_primary);
-    color: var(--rbfw_muff_color1);
+    background: #f5f5f5;
+    color: #545050;
+    border: 1px solid #ededed;
 }
 
 /* End Donut Template Css */
