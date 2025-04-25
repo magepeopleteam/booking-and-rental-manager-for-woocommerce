@@ -1318,7 +1318,7 @@ table.rbfw_room_price_table tbody td img {
     cursor: pointer;
     margin: 0;
     position: relative;
-    padding: 5px 8px;
+    padding: 4px 8px;
     display:block;
     text-align: center;
 }
@@ -1349,7 +1349,7 @@ table.rbfw_room_price_table tbody td img {
     width: 30px;
     border-radius: 0;
     margin: 0 !important;
-    padding: 2px !important;
+    padding: 4px !important;
     margin-bottom: 0;
 }
 
