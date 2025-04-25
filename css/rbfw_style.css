@@ -184,9 +184,10 @@ CSS for Single Page Template
     width: 100%;
     border: none;
     background: #f5f5f5;
-    height: 50px;
+    height: 40px;
     padding: 0 10px;
     cursor: pointer;
+    border-radius:5px;
 }
 
 .rbfw-p-relative {
@@ -291,6 +292,7 @@ CSS for Single Page Template
 
 .rbfw-single-right-heading {
     font-size: 16px;
+    margin: 10px 0px;
     font-weight:600;
     color: #0a0a0a;
 }
@@ -378,8 +380,8 @@ CSS for Single Page Template
     border: none;
     background-color: #fff;
     padding-left: 45px;
-    height: 50px;
-    border-radius: 3px;
+    height: 40px;
+    border-radius: 5px;
     font-weight: 400;
     font-size: 14px;
     border: 1px solid #dbd5d5;
@@ -389,7 +391,7 @@ CSS for Single Page Template
 #dropoff_date {
     cursor: pointer;
     padding: 0 0 0 42px;
-    height: 50px;
+    height: 40px;
     margin-bottom: 0;
     box-sizing: border-box;
 }
@@ -2398,6 +2400,8 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
     color: #000;
     font-size: 1rem;
     background-color: #fff;
+    height:40px;
+    border-radius:5px;
 }
 
 .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time.disabled span.rbfw_bikecarsd_time_span {
@@ -2445,12 +2449,13 @@ a.rbfw_back_step_btn {
     text-decoration: none;
     background: #f5f5f5;
     color: var(--rbfw_single_page_secondary_color);
-    padding: 10px;
+    padding: 5px 10px;
     border-radius: 5px;
     text-align: left;
     margin-bottom: 10px;
     font-size: .9rem;
     font-weight: bold;
+    border: 1px solid #e1e1e1;
 }
 
 a.rbfw_back_step_btn i {
@@ -7214,3 +7219,7 @@ select#rbfw_variation_id_0,select#rbfw_variation_id_1,select#rbfw_variation_id_2
     border: 1px solid #dedede;
     background: #f5f5f5;
 }
+.item.rbfw_bikecarsd_price_summary {
+    margin-top: 20px; 
+}
+.item-content rbfw-costing{border-radius:5px; border: 1px solid #dbd5d5; }
