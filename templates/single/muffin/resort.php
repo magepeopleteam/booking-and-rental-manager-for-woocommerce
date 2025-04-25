@@ -102,9 +102,6 @@
 				<?php do_action( 'rbfw_slider', $post_id, 'rbfw_gallery_images' ); ?>
             </div>
             <div class="rbfw_muff_registration_wrapper">
-                <h2 class="rbfw_muff_heading">
-					<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_start_booking', 'rbfw_basic_translation_settings', __( 'Start Booking', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>
-                </h2>
 				<?php include( RBFW_Function::get_template_path( 'forms/resort-registration.php' ) ); ?>
             </div>
         </div>

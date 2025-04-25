@@ -284,10 +284,6 @@ CSS for Single Page Template
     }
 }
 
-.rbfw-single-right-container .item {
-    margin-top: 20px;
-}
-
 .rbfw-single-right-container .item:first-child {
     margin-top: 0px;
 }
@@ -295,7 +291,6 @@ CSS for Single Page Template
 
 .rbfw-single-right-heading {
     font-size: 16px;
-    margin: 10px 0px;
     font-weight:600;
     color: #0a0a0a;
 }
@@ -312,6 +307,8 @@ CSS for Single Page Template
 
 .rbfw-single-right-container .item:first-child .rbfw-single-right-heading {
     width: 100%;
+    padding:10px 0;
+    border-bottom:1px solid #ddd;
 }
 
 .rbfw-variations-content-wrapper .rbfw-single-right-heading {
@@ -320,9 +317,9 @@ CSS for Single Page Template
 
 .pricing-content {
     background-color: #f5f5f5;
-    padding: 10px 0px;
     position: relative;
 }
+
 .pricing-content::after{
     content: '\f078';
     font-family: FontAwesome;
@@ -681,7 +678,7 @@ div.mp_right_section {
 }
 
 #rbfw_faq_accordion .rbfw_faq_header {
-    background: transparent;
+    background: #fff;
     font-size: 15px;
     font-weight: 600;
     text-align: left;
@@ -1986,9 +1983,7 @@ li.rbfw-visibility-hidden {
     font-weight: 600;
 }
 
-.rbfw_pricing_info_heading {
-    width: 100%;
-}
+
 .rbfw-single-right-heading.rbfw_pricing_info_heading .rbfw_pricing_info_heading{padding-left:20px}
 
 .rbfw_rent_list_button_wrap a.rbfw_rent_list_btn:hover {
@@ -2303,10 +2298,7 @@ li.rbfw-visibility-hidden {
     transition: 0.2s;
     opacity: 1;
 }
-.price-item-container{
-    padding: 5px;
-    border: 1px solid #f5f5f5;
-}
+
 .price-item-container-table {
     margin: 0 !important;
     font-size: 16px;
@@ -2582,17 +2574,12 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     padding-left: 22px;
 }
 
-.rbfw-bikecarsd-calendar-header {
-    /* background: var(--rbfw_primary_opacity);
-    padding: 20px;
-    position: relative; */
-    margin-bottom: 20px;
-}
 
 .rbfw-bikecarsd-calendar-header-title {
     font-size: 20px;
     font-weight: 600;
     padding-bottom: 3px;
+    margin-bottom: 15px;
 }
 
 .rbfw-bikecarsd-calendar-header-feature {
@@ -4942,6 +4929,7 @@ tr:nth-child(2n + 1) {
     align-items: end;
     justify-content: space-between;
     gap: 12px;
+    margin-bottom: 20px;
 }
 
 .rbfw_muffin_template .rbfw-datetime .rbfw-datetime-part {
@@ -7010,10 +6998,13 @@ a.rbfw_rent_list_btn:hover{
     font-size: 12px;
     color: var(--rbfw_color_primary);
 }
-div.rbfw_day_wise_price {
-    margin-bottom: 10px;
+div.rbfw_day_wise_price table{
+    margin:0;
 }
 
+.pricing-content-collapse{
+    margin-bottom: 20px;
+}
 
 div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     font-size: 12px;

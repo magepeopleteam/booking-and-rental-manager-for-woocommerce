@@ -31,7 +31,7 @@
 			<form action="" method='post' class="mp_rbfw_ticket_form">
                 <?php do_action('rbfw_discount_ad', $rbfw_id); ?>
                 <div class="rbfw_resort_item_wrapper">
-                    <div class="item">
+                    <div class="item pricing-content-collapse">
                         <div class="item-content pricing-content">
                             <div class="section-header">
                                 <div class="rbfw-single-right-heading rbfw_pricing_info_heading">
