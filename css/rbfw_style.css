@@ -1298,26 +1298,8 @@ table.rbfw_room_price_table tbody td img {
     display: flex;
 }
 
-.rbfw_qty_input input[type="number"] {
-    -webkit-appearance: textfield;
-    -moz-appearance: textfield;
-    appearance: textfield;
-}
-
-.rbfw_qty_input input[type="number"]::-webkit-inner-spin-button,
-.rbfw_qty_input input[type="number"]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-}
-
-.rbfw_qty_input {
-    display: table;
-    outline: none;
-    width: max-content;
-    /*float: right;*/
-}
-
-.rbfw_qty_input input[type="number"] {
-   margin-bottom: 0;
+.rbfw_service_price_wrap {
+    float: right;
 }
 
 .rbfw_qty_input,
@@ -1325,30 +1307,25 @@ table.rbfw_room_price_table tbody td img {
     box-sizing: border-box;
 }
 
+.rbfw_qty_input {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .rbfw_qty_input a {
-    outline: none;
-    background-color: var(--rbfw_color_primary);
-    border: none;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
     cursor: pointer;
     margin: 0;
     position: relative;
-    vertical-align: middle;
-    display: table-cell;
+    padding: 5px 8px;
+    display:block;
     text-align: center;
 }
 
-
-
-a.rbfw_qty_plus.rbfw_timely_es_qty_plus {
-  border-radius:0px 5px 5px 0px;
-
-}
 .rbfw_qty_input a:hover {
-    background: var(--rbfw_single_page_secondary_color);
+    background: var(--rbfw_color_primary);
     transition: 0.2s;
     opacity: 1;
 }
@@ -1358,17 +1335,14 @@ a.rbfw_qty_plus.rbfw_timely_es_qty_plus {
     color: #fff;
 }
 
-a.rbfw_timely_es_qty_minus{
-    border-radius:5px 0px 0px 5px;
-    background-color: transparent;
-    border: 1px solid #dedede;
+.rbfw_qty_input a.rbfw_timely_es_qty_minus i {
+    font-size: 12px;
+    color: #000;
 }
 
-a.rbfw_timely_es_qty_minus i{
-    color: #333;
-}
 
 .rbfw_qty_input input[type="number"] {
+    appearance: textfield;
     border: 1px solid #ddd !important;
     font-size: 16px;
     font-weight: normal;
@@ -1377,7 +1351,27 @@ a.rbfw_timely_es_qty_minus i{
     border-radius: 0;
     margin: 0 !important;
     padding: 2px !important;
+    margin-bottom: 0;
 }
+
+.rbfw_qty_input input[type="number"]::-webkit-inner-spin-button,
+.rbfw_qty_input input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+a.rbfw_qty_minus.rbfw_timely_es_qty_minus{
+    border-radius:5px 0px 0px 5px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ddd;
+}
+
+a.rbfw_qty_plus.rbfw_timely_es_qty_plus {
+    border-radius:0px 5px 5px 0px;
+    background-color: var(--rbfw_color_primary);
+    border: 1px solid #ddd;
+}
+
 
 .rbfw_selected_room_dates {
     margin-top: 20px;
@@ -3419,9 +3413,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     float: right;
 }
 
-.rbfw_service_price_wrap {
-    float: right;
-}
+
 
 .rbfw_bikecarsd_time_table_wrap {
     margin-bottom:10px;
@@ -3673,10 +3665,15 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_registration_wrapper {
-    border: 0 solid var(--rbfw_booking_form_bg_color);
-    padding: 30px;
-    background-color: #e9e9e9;
+    border:1px solid #e0e0e0;
+    border-radius:10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding:20px;
+    background-color: #fff;
 }
+
+div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
+div.rbfw_muffin_template div.superSlider .sliderShowcaseItem:last-child{margin-bottom: 0;}
 
 .rbfw_muff_row_slider {
     margin-bottom: 50px;
