@@ -1690,3 +1690,70 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 
 	return apply_filters('rbfw_settings_field', $settings_fields );
 }
+
+
+// For license Page
+add_filter( 'rbfw_settings_sec_reg', 'rbfw_license_settings_sec', 100 );
+if (!function_exists('rbfw_license_settings_sec')) {
+	function rbfw_license_settings_sec( $default_sec ) {
+		$sections = array(
+			array(
+				'id'    => 'rbfw_license_settings',
+				'title' => '<i class="fa-solid fa-address-card"></i>' . __( 'License', 'booking-and-rental-manager-for-woocommerce' )
+			),
+		);
+		return array_merge( $default_sec, $sections );
+	}
+}
+
+add_action('wsa_form_bottom_rbfw_license_settings', 'rbfw_licensing_landing_page', 5);
+if (!function_exists('rbfw_licensing_landing_page')) {
+function rbfw_licensing_landing_page($form) {
+    ?>
+    <div class='mep-licensing-page'>
+        <h3><?php esc_html_e( 'Booking and Rental Manager Licensing', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+        <p><?php esc_html_e( 'Thanks you for using our Booking and Rental Manager plugin. This plugin is free and no license is required. We have some additional addons to enhance features of this plugin functionality. If you have any addon you need to enter a valid license for that plugin below.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+
+        <div class="mep_licensae_info"></div>
+        <table class='wp-list-table widefat striped posts mep-licensing-table'>
+            <thead>
+            <tr>
+                <th><?php esc_html_e( 'Plugin Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                <th width=10%><?php esc_html_e( 'Order No', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                <th width=15%><?php esc_html_e( 'Expire on', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                <th width=30%><?php esc_html_e( 'License Key', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                <th width=10%><?php esc_html_e( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                <th width=10%><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php do_action('rbfw_license_page_addon_list'); ?>
+            </tbody>
+        </table>
+    </div>
+    <?php
+}
+}
+
+if (!function_exists('mep_license_expire_date')) {
+    function mep_license_expire_date($date) {
+        if (empty($date) || $date == 'lifetime') {
+            echo esc_html($date);
+        } else {
+            if (strtotime(current_time('Y-m-d H:i')) < strtotime(date('Y-m-d H:i', strtotime($date)))) {
+                echo rbfw_get_datetime($date, 'date-time-text');
+            } else {
+                esc_html_e('Expired', 'booking-and-rental-manager-for-woocommerce');
+            }
+        }
+    }
+}
+
+
+// Removing functions from license hook
+add_action('plugins_loaded', 'rbfw_remove_rbfw_license_action', 110);
+function rbfw_remove_rbfw_license_action() {
+    remove_action('wsa_form_bottom_rbfw_license_settings', 'rbfw_licensing_page', 5);
+	remove_action( 'rbfw_settings_sec_reg', 'rbfw_free_settings_sec', 100 );
+	remove_action( 'rbfw_settings_sec_reg', 'rbfw_freeb_settings_sec', 100 );
+}
