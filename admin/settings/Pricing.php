@@ -382,7 +382,7 @@
 												?>
                                                 <tr class="rbfw_resort_price_table_row" data-key="<?php echo esc_attr( $i ); ?>">
                                                     <td>
-                                                        <input type="text" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][room_type]" value="<?php echo esc_attr( $value['room_type'] ); ?>" placeholder="<?php echo esc_attr( 'Room type', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                        <input class="rbfw_room_title" type="text" name="rbfw_resort_room_data[<?php echo esc_attr( $i ); ?>][room_type]" value="<?php echo esc_attr( $value['room_type'] ); ?>" placeholder="<?php echo esc_attr( 'Room type', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                     </td>
                                                     <td class="text-center">
                                                         <div class="rbfw_room_type_image_preview">
@@ -415,7 +415,7 @@
 											?>
                                             <tr class="rbfw_resort_price_table_row" data-key="0">
                                                 <td>
-                                                    <input type="text" name="rbfw_resort_room_data[0][room_type]" value="" placeholder="<?php echo esc_attr( 'Room type', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input type="text" class="rbfw_room_title" name="rbfw_resort_room_data[0][room_type]" value="" placeholder="<?php echo esc_attr( 'Room type', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="rbfw_room_type_image_preview"></div>
@@ -472,6 +472,7 @@
                             </div>
                             <p class="mt-2">
                                 <span id="add-resort-type-row" class="ppof-button"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add New Resort Type', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <span id="sync-with-sessional-price" class="ppof-button"><?php esc_html_e( 'Sync With Sessional Price', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </p>
 							<?php do_action( 'rbfw_after_resort_price_table' ); ?>
                         </div>
@@ -693,8 +694,9 @@
 					<?php $this->appointment( $post_id ); ?>
 					<?php $this->bike_car_single_day( $post_id ); ?>
 					<?php //$this->rbfw_appointment($post_id); ?>
+                    <?php $this->resort_price_config( $post_id ); ?>
 					<?php $this->general_price_config( $post_id ); ?>
-					<?php $this->resort_price_config( $post_id ); ?>
+
 					
                 </div>
                 
