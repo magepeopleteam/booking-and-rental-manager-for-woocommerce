@@ -1322,6 +1322,18 @@ table.rbfw_room_price_table tbody td img {
     display:block;
     text-align: center;
 }
+.rbfw_qty_input a.rbfw_qty_plus{
+    background: var(--rbfw_color_primary);
+    transition: 0.2s;
+    opacity: 1;
+}
+.rbfw_qty_input a.rbfw_qty_minus{
+    background: #fff;
+    transition: 0.2s;
+    opacity: 1;
+    border:#ededed;
+    color:#333;
+}
 
 .rbfw_qty_input a:hover {
     background: var(--rbfw_color_primary);
@@ -2400,7 +2412,7 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
     color: #000;
     font-size: 1rem;
     background-color: #fff;
-    height:30px;
+    height:40px;
     border-radius:5px;
 }
 
