@@ -1328,11 +1328,11 @@ table.rbfw_room_price_table tbody td img {
     opacity: 1;
 }
 .rbfw_qty_input a.rbfw_qty_minus{
-    background: #fff;
+    background: #ffffff;
     transition: 0.2s;
     opacity: 1;
-    border:#ededed;
-    color:#333;
+    border: 1px solid #e3e0e0;
+    color: #333;
 }
 
 .rbfw_qty_input a:hover {
