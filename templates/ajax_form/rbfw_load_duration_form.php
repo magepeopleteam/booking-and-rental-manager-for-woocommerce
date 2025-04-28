@@ -6,7 +6,7 @@ $total_row = $total_row??'';
 
 <tr class="rbfw_bike_car_sd_price_table_row" data-key="">
     <td>
-        <input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr($total_row); ?>][rent_type]" value="" placeholder="<?php echo esc_attr__('Type name', 'booking-and-rental-manager-for-woocommerce'); ?>">
+        <input type="text" class="rbfw_type_title" name="rbfw_bike_car_sd_data[<?php echo esc_attr($total_row); ?>][rent_type]" value="" placeholder="<?php echo esc_attr__('Type name', 'booking-and-rental-manager-for-woocommerce'); ?>">
     </td>
     <td>
         <input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr($total_row); ?>][short_desc]" value="" placeholder="<?php echo esc_attr__('Short Description', 'booking-and-rental-manager-for-woocommerce'); ?>">
