@@ -1353,6 +1353,10 @@ table.rbfw_room_price_table tbody td img {
     color: #000;
 }
 
+.rbfw-bikecarsd-calendar-header {
+    margin-bottom: 10px;
+}
+
 
 .rbfw_qty_input input[type="number"] {
     appearance: textfield;
