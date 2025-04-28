@@ -1326,6 +1326,7 @@ table.rbfw_room_price_table tbody td img {
     background: var(--rbfw_color_primary);
     transition: 0.2s;
     opacity: 1;
+    border-radius: 0 5px 5px 0px;
 }
 .rbfw_qty_input a.rbfw_qty_minus{
     background: #ffffff;
