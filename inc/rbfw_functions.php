@@ -2727,9 +2727,9 @@ function check_seasonal_price_resort( $Book_date, $rbfw_sp_prices, $room_type = 
 
 
 
+
         foreach ( $rbfw_sp_prices as $rbfw_sp_price ) {
             if(isset($rbfw_sp_price['start_date']) && isset($rbfw_sp_price['end_date'])){
-
 
 
                 $rbfw_sp_start_date = $rbfw_sp_price['start_date'];
@@ -2738,18 +2738,10 @@ function check_seasonal_price_resort( $Book_date, $rbfw_sp_prices, $room_type = 
                 $sp_dates_array     = getAllDates( $rbfw_sp_start_date, $rbfw_sp_end_date );
 
 
-
-
-
-
                 if ( in_array( $Book_date, $sp_dates_array ) ) {
-
                     foreach ($rbfw_sp_price['room_price'] as $room_price){
 
-
-
                         if($room_type == $room_price['room_type']){
-
                             return $room_price['price'];
                         }
                     }
@@ -2768,15 +2760,16 @@ function check_seasonal_price_resort( $Book_date, $rbfw_sp_prices, $room_type = 
 
 
 function check_seasonal_price_sd( $Book_date, $rbfw_sp_prices, $rent_type = '0' ) {
-
-    foreach ( $rbfw_sp_prices as $rbfw_sp_price ) {
-        $rbfw_sp_start_date = $rbfw_sp_price['start_date'];
-        $rbfw_sp_end_date   = $rbfw_sp_price['end_date'];
-        $sp_dates_array     = getAllDates( $rbfw_sp_start_date, $rbfw_sp_end_date );
-        if ( in_array( $Book_date, $sp_dates_array ) ) {
-            foreach ($rbfw_sp_price['type_price'] as $type_info){
-                if($rent_type == $type_info['type']){
-                    return $type_info['price'];
+        foreach ( $rbfw_sp_prices as $rbfw_sp_price ) {
+        if(isset($rbfw_sp_price['start_date']) && isset($rbfw_sp_price['end_date'])){
+            $rbfw_sp_start_date = $rbfw_sp_price['start_date'];
+            $rbfw_sp_end_date   = $rbfw_sp_price['end_date'];
+            $sp_dates_array     = getAllDates( $rbfw_sp_start_date, $rbfw_sp_end_date );
+            if ( in_array( $Book_date, $sp_dates_array ) ) {
+                foreach ($rbfw_sp_price['type_price'] as $type_info){
+                    if($rent_type == $type_info['type']){
+                        return $type_info['price'];
+                    }
                 }
             }
         }
