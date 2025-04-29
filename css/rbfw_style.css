@@ -710,7 +710,7 @@ div.mp_right_section {
 }
 
 #rbfw_faq_accordion .rbfw_faq_content_wrapper.active {
-    border: 1px solid var(--rbfw_color_primary);
+    border: 1px solid #ada6a1;
     border-radius:0 0 5px 5px;
 }
 
