@@ -686,8 +686,8 @@ div.mp_right_section {
     margin-bottom: 0;
 }
 #rbfw_faq_accordion .rbfw_faq_header.active {
-    background: var(--rbfw_color_primary);
-    color: #fff;
+    background: #ddd9d5;
+    color: #2e2323;
     border-radius: 5px 5px 0 0;
 }
 
