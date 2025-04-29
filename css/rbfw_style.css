@@ -7245,3 +7245,6 @@ select#rbfw_variation_id_0,select#rbfw_variation_id_1,select#rbfw_variation_id_2
     margin-top: 20px; 
 }
 .item-content rbfw-costing{border-radius:5px; border: 1px solid #dbd5d5; }
+i.fas.fa-minus {
+    color: #333;
+}
