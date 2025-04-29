@@ -4581,6 +4581,7 @@ color: #666;
 .single-rbfw_item .rbfw_bikecarsd_book_now_btn_wrap button.mp_rbfw_book_now_submit.rbfw_disabled_button{
     background: var(--rbfw_color_primary);
     opacity: .35;
+    border-radius: 10px;
 }
 
 .single-rbfw_item .ui-widget{
