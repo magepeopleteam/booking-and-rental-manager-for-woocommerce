@@ -3373,6 +3373,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     height: 380px;
     display: flex;
     flex-direction: column;
+    border-radius:10px;
 }
 
 .rbfw-related-product-inner .rbfw-related-product-content-wrapper {
