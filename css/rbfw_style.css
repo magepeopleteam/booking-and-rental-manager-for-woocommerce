@@ -7248,3 +7248,8 @@ select#rbfw_variation_id_0,select#rbfw_variation_id_1,select#rbfw_variation_id_2
 i.fas.fa-minus {
     color: #333;
 }
+.rbfw-single-left-information ul.rbfw-feature-lists li {
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 10px;
+}
