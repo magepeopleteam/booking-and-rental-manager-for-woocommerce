@@ -97,8 +97,12 @@ if(isset($post_id) && isset($active_tab)){
 
                     <?php
 
-                    if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
-                        $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
+                    if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {  ?>
+
+
+                        <td class="rbfw_see_resort_datewise_price" data-checkin_date="<?php echo esc_attr($checkin_date) ?>" data-checkout_date="<?php echo esc_attr($checkout_date) ?>" data-total_days="<?php echo esc_attr($total_days) ?>" data-price="<?php echo esc_attr($price) ?>" data-post_id="<?php echo esc_attr( $post_id ); ?>" data-room_type="<?php echo esc_attr($value['room_type']) ?>">See Details</td>
+
+                        <!--$rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
 
                         $book_dates = getAllDates( $checkin_date, $checkout_date );
 
@@ -110,10 +114,10 @@ if(isset($post_id) && isset($active_tab)){
                                 echo $book_dates[$d].' '.wp_kses(wc_price($price) , rbfw_allowed_html()).'<br>';
                             }
                         }
-                        echo '</td>';
+                        echo '</td>';-->
 
 
-                    }else{ ?>
+                   <?php }else{ ?>
                         <td>
                             <?php echo wp_kses(wc_price($price) , rbfw_allowed_html()); ?>
                             <input type="hidden" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]" value="<?php echo esc_attr($price); ?>"/>

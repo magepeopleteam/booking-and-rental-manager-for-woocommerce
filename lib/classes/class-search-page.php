@@ -14,9 +14,11 @@
 				add_action( 'wp_loaded', array( $this, 'rbfw_search_page' ) );
 				add_shortcode( 'rbfw_search_old', array( $this, 'rbfw_search_shortcode_func' ) );
 				add_filter( 'display_post_states', array( $this, 'rbfw_add_post_state' ), 10, 2 );
+
 				add_action( 'wp_ajax_rbfw_get_rent_item_category_info', array( $this, 'rbfw_get_rent_item_category_info' ) );
 				add_action( 'wp_ajax_nopriv_rbfw_get_rent_item_category_info', array( $this, 'rbfw_get_rent_item_category_info' ) );
-				//left Filter popup
+
+                //left Filter popup
 				add_action( 'wp_ajax_rbfw_get_rent_item_left_filter_more_data_popup', array( $this, 'rbfw_get_rent_item_left_filter_more_data_popup' ) );
 				add_action( 'wp_ajax_nopriv_rbfw_get_rent_item_left_filter_more_data_popup', array( $this, 'rbfw_get_rent_item_left_filter_more_data_popup' ) );
 				//Left side filter

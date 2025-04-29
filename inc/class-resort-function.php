@@ -16,7 +16,11 @@
 				add_action( 'wp_ajax_nopriv_rbfw_get_active_price_table', array( $this, 'rbfw_get_active_price_table' ) );
 				add_action( 'wp_ajax_rbfw_room_price_calculation', array( $this, 'rbfw_room_price_calculation' ) );
 				add_action( 'wp_ajax_nopriv_rbfw_room_price_calculation', array( $this, 'rbfw_room_price_calculation' ) );
-			}
+
+                add_action( 'wp_ajax_rbfw_get_resort_sessional_day_wise_price', array( $this, 'rbfw_get_resort_sessional_day_wise_price' ) );
+                add_action( 'wp_ajax_nopriv_rbfw_get_resort_sessional_day_wise_price', array( $this, 'rbfw_get_resort_sessional_day_wise_price' ) );
+
+            }
 
 			public function rbfw_get_resort_room_array_reorder( $product_id, $room_info ) {
 				$main_array = [];
@@ -512,6 +516,72 @@
 				}
 				wp_die();
 			}
+
+            public function rbfw_get_resort_sessional_day_wise_price() {
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+                $all_cat_features = '';
+                if ( isset( $_POST['post_id'] ) ) {
+
+                    $post_id = $_POST['post_id'];
+                    $price = $_POST['price'];
+                    $total_days = $_POST['total_days'];
+                    $checkout_date = $_POST['checkout_date'];
+                    $checkin_date = $_POST['checkin_date'];
+                    $room_type = $_POST['room_type'];
+
+
+                    $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
+
+                    $book_dates = getAllDates( $checkin_date, $checkout_date );
+
+                    $all_infos      = '<div class="rbfw_container">';
+                    $all_infos .= '<div class="rbfw_header">Price Details</div>';
+
+                    for($d = 0; $d < $total_days; $d++) {
+                        $all_infos .='<div class="rbfw_entry">';
+                        if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $room_type)) != 'not_found') {
+                            $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span><span class="rbfw_amount">'.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'</span>';
+                        } else {
+                            $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span> <span class="rbfw_amount">'.wp_kses(wc_price($price) , rbfw_allowed_html()).'</span>';
+                        }
+                        $all_infos .= '</div>';
+                    }
+
+                    $all_infos .= '</div>';
+
+
+
+                    /*$post_id               = sanitize_text_field( wp_unslash($_POST['post_id']));
+                    $rbfw_feature_category = get_post_meta( $post_id, 'rbfw_feature_category', true ) ? maybe_unserialize( get_post_meta( $post_id,
+                        'rbfw_feature_category', true ) ) : [];
+                    $all_cat_features      = '';
+                    $all_cat_features      .= '<div class="rbfw_show_all_cat_features" id="rbfw_show_all_cat_features-' . $post_id . '"> ';
+                    foreach ( $rbfw_feature_category as $value ) {
+                        $cat_features     = $value['cat_features'] ? $value['cat_features'] : [];
+                        $cat_title        = $value['cat_title'];
+                        $all_cat_features .= '<h2 class="rbfw_popup_fearure_title">' . $cat_title . '</h2>';
+                        if ( ! empty( $cat_features ) ) {
+                            $all_cat_features .= '<ul class="rbfw_popup_fearure_lists">';
+                            foreach ( $cat_features as $features ) {
+                                $icon        = ! empty( $features['icon'] ) ? $features['icon'] : 'fas fa-check-circle';
+                                $title       = $features['title'];
+                                $rand_number = wp_rand();
+                                if ( $title ) {
+                                    $icom             = esc_html( $icon );
+                                    $all_cat_features .= "<li class='bfw_rent_list_items title  $rand_number '><span class='bfw_rent_list_items_icon'><i class='$icom'></i></span>  $title </li>";
+                                }
+                            }
+                            $all_cat_features .= '</ul>';
+                        }
+                    }
+                    $all_cat_features .= '</div>';*/
+                }
+                wp_send_json_success( $all_infos );
+            }
+
+
 		}
 		new RBFW_Resort_Function();
 	}
