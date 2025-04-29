@@ -879,6 +879,7 @@ a.rbfw-related-product-btn {
     line-height: 16px;
     display: inline-block;
     text-decoration: none;
+    border-radius:10px;
 }
 
 a.rbfw-related-product-btn:hover {
