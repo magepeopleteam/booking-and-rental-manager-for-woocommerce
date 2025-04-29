@@ -105,7 +105,7 @@ if(isset($_POST['post_id'])){
 
             </div>
             <p>
-                <span class="ppof-button mp_add_item_sessional">
+                <span class="ppof-button mp_add_item_sessional_resort">
                     <i class="fa-solid fa-circle-plus"></i>&nbsp;
                     <?php esc_html_e( 'Add New Seasonal Pricing', 'rbfw-sp' ); ?>
                 </span>
@@ -150,10 +150,10 @@ if(isset($_POST['post_id'])){
 
                                     <tr class="rbfw_resort_price_table_row">
                                         <td>
-                                            <input class="medium room_type" type="text" name="rbfw_resort_data_sp[][<?php echo $key_1 ?>][room_type]"  value="<?php echo esc_attr( $value['room_type'] ); ?>" readonly placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                            <input class="medium room_type_<?php echo $key_1 ?>" type="text" name="rbfw_resort_data_sp[][<?php echo $key_1 ?>][room_type]"  value="<?php echo esc_attr( $value['room_type'] ); ?>" readonly placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                         </td>
                                         <td>
-                                            <input class="medium price" type="number" name="rbfw_resort_data_sp[][<?php echo $key_1 ?>][price]" step=".01" value="" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                            <input class="medium price_<?php echo $key_1 ?>" type="number" name="rbfw_resort_data_sp[][<?php echo $key_1 ?>][price]" step=".01" value="" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                         </td>
                                     </tr>
 
