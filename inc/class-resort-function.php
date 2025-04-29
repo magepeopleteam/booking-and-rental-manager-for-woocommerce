@@ -359,18 +359,56 @@
 					$service_price_arr   = isset( $_POST['service_price_arr'] ) ? RBFW_Function::data_sanitize( $_POST['service_price_arr'] ) : [];
 					$room_price          = 0;
 					$service_price       = 0;
-					$total_room_price    = 0;
 					$total_service_price = 0;
 					$subtotal_price      = 0;
 					$total_price         = 0;
-					foreach ( $room_price_arr as $key => $value ) {
-						$room_price += (float) $value['data_qty'] * (float) $value['data_price'];
-					}
-					if ( $room_price > 0 && $total_days > 0 ):
-						$total_room_price = (float) $room_price * (int) $total_days;
-					else:
-						$total_room_price = (float) $room_price;
-					endif;
+
+                    if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
+                        $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
+
+
+
+                        $book_dates = getAllDates( $checkin_date, $checkout_date );
+
+
+
+
+
+                        foreach ( $room_price_arr as $key => $value ) {
+
+                            for($d = 0; $d < $total_days; $d++) {
+
+
+                                if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $key)) != 'not_found') {
+                                    $room_price += (float)$value['data_qty'] * (float)$sp_price;
+                                } else {
+
+                                    $room_price += (float)$value['data_qty'] * (float)$value['data_price'];
+                                }
+                            }
+                        }
+                        $total_room_price = $room_price;
+
+                    }else{
+
+                        foreach ( $room_price_arr as $key => $value ) {
+                            $room_price += (float) $value['data_qty'] * (float) $value['data_price'];
+                        }
+                        if ( $room_price > 0 && $total_days > 0 ):
+                            $total_room_price = (float) $room_price * (int) $total_days;
+                        else:
+                            $total_room_price = (float) $room_price;
+                        endif;
+
+                    }
+
+
+
+
+
+
+
+
 					if ( ! empty( $service_price_arr ) ) {
 						foreach ( $service_price_arr as $key => $value ):
 							$service_price += (float) $value['data_qty'] * (float) $value['data_price'];

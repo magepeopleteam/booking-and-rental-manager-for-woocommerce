@@ -13,6 +13,31 @@ jQuery('body').on('focusin', '#checkin_date', function(e) {
         onSelect: function (dateString, data) {
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
             jQuery('input[name="rbfw_start_datetime"]').val(date_ymd_drop).trigger('change');
+
+            let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
+            let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
+
+
+
+
+            let selected_date_array = date_ymd_drop.split('-');
+            let gYear = selected_date_array[0];
+            let gMonth = selected_date_array[1];
+            let gDay = selected_date_array[2];
+
+            let minDate = new Date(gYear,  gMonth - 1, gDay );
+            minDate.setDate(minDate.getDate() + rbfw_minimum_booking_day);
+
+
+
+            jQuery("#checkout_date").datepicker("option", "minDate", minDate);
+
+
+            if(rbfw_minimum_booking_day){
+                let maxDate = new Date(gYear,  gMonth - 1, gDay );
+                maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
+                jQuery("#checkout_date").datepicker("option", "maxDate", maxDate );
+            }
         },
     });
 });
@@ -33,7 +58,12 @@ jQuery('body').on('change', '#hidden_checkin_date', function(e) {
     jQuery("#checkout_date").attr('value', '');
     jQuery('#checkout_date').datepicker({
         dateFormat: js_date_format,
+
+
         minDate: new Date(gYear, gMonth - 1 , parseInt(gDay) + extra_day),
+
+
+
         beforeShowDay: function(date)
         {
             return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);

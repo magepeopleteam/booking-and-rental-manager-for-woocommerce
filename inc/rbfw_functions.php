@@ -2720,6 +2720,51 @@
         return 'not_found';
 	}
 
+function check_seasonal_price_resort( $Book_date, $rbfw_sp_prices, $room_type = '' ) {
+
+
+
+
+
+
+        foreach ( $rbfw_sp_prices as $rbfw_sp_price ) {
+            if(isset($rbfw_sp_price['start_date']) && isset($rbfw_sp_price['end_date'])){
+
+
+
+                $rbfw_sp_start_date = $rbfw_sp_price['start_date'];
+                $rbfw_sp_end_date   = $rbfw_sp_price['end_date'];
+
+                $sp_dates_array     = getAllDates( $rbfw_sp_start_date, $rbfw_sp_end_date );
+
+
+
+
+
+
+                if ( in_array( $Book_date, $sp_dates_array ) ) {
+
+                    foreach ($rbfw_sp_price['room_price'] as $room_price){
+
+
+
+                        if($room_type == $room_price['room_type']){
+
+                            return $room_price['price'];
+                        }
+                    }
+
+                }
+
+            }
+
+    }
+    return 'not_found';
+}
+
+
+
+
 
 
 function check_seasonal_price_sd( $Book_date, $rbfw_sp_prices, $rent_type = '0' ) {

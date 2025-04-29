@@ -76,18 +76,8 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
             let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
 
-      
 
-            //alert(rbfw_maximum_booking_day);
 
-            
-
-            // if(rbfw_maximum_booking_day){
-            //     rbfw_maximum_booking_day = '+'+rbfw_maximum_booking_day+'D';
-            // }else{
-            //     rbfw_maximum_booking_day = null;
-            // }
-        
 
             let selected_date_array = date_ymd.split('-');
             let gYear = selected_date_array[0];

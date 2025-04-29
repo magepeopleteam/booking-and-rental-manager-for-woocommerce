@@ -137,22 +137,25 @@ if (!class_exists('RBFW_Hidden_Product')) {
         }
         public function hide_hidden_wc_product_from_frontend() {
             global $post, $wp_query;
-            if (is_product()) {
-                $post_id = $post->ID;
-                $visibility = get_the_terms($post_id, 'product_visibility');
-                if (is_object($visibility)) {
-                    if ($visibility[0]->name == 'exclude-from-catalog') {
-                        $check_event_hidden = get_post_meta( $post_id, 'link_rbfw_id', true ) ? get_post_meta( $post_id, 'link_rbfw_id', true ) : 0;
-                        if ($check_event_hidden > 0) {
-                            $wp_query->set_404();
-                            status_header(404);
-                            get_template_part(404);
-                            exit();
+            if(rbfw_woo_install_check() == 'Yes' ){
+                if (is_product()) {
+                    $post_id = $post->ID;
+                    $visibility = get_the_terms($post_id, 'product_visibility');
+                    if (is_object($visibility)) {
+                        if ($visibility[0]->name == 'exclude-from-catalog') {
+                            $check_event_hidden = get_post_meta( $post_id, 'link_rbfw_id', true ) ? get_post_meta( $post_id, 'link_rbfw_id', true ) : 0;
+                            if ($check_event_hidden > 0) {
+                                $wp_query->set_404();
+                                status_header(404);
+                                get_template_part(404);
+                                exit();
+                            }
                         }
                     }
                 }
             }
         }
+
         //**************Google search url hidden*********************//
         public function url_exclude_search_engine() {
             global $post;

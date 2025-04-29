@@ -203,14 +203,26 @@
         });
 
         var current_item_type = jQuery('#rbfw_item_type').val();
-        if ( current_item_type != 'appointment' && current_item_type != 'resort') {
+        if ( current_item_type != 'appointment') {
             jQuery('.rbfw_seasonal_price_config_wrapper').show();
             if(current_item_type == 'bike_car_sd'){
-                jQuery('.sessional_price_multi_day').hide();
+
                 jQuery('.sessional_price_single_day').show();
+                jQuery('.sessional_price_multi_day').hide();
+                jQuery('.sessional_price_resort').hide();
+
+            }else if(current_item_type == 'resort'){
+
+                jQuery('.sessional_price_resort').show();
+                jQuery('.sessional_price_multi_day').hide();
+                jQuery('.sessional_price_single_day').hide();
+
             }else{
+
                 jQuery('.sessional_price_multi_day').show();
                 jQuery('.sessional_price_single_day').hide();
+                jQuery('.sessional_price_resort').hide();
+
             }
         } else {
             jQuery('.rbfw_seasonal_price_config_wrapper').hide();
@@ -224,9 +236,9 @@
         }
 
         var status = $('.rbfw_es_price_config_wrapper').data('status');
-        var item_type =  jQuery('#rbfw_item_type').val();
+
         
-        if(status=='no' && item_type == 'bike_car_md'){
+        if(status=='no' && current_item_type == 'bike_car_md'){
             $('.rbfw_es_price_config_wrapper').hide();
         }else{
             $('.rbfw_es_price_config_wrapper').show();
@@ -258,8 +270,10 @@
                 jQuery('#add-bike-car-sd-type-row').show();
 
                 jQuery('.manage_inventory_as_timely').show();
-                jQuery('.sessional_price_multi_day').hide();
+
                 jQuery('.sessional_price_single_day').show();
+                jQuery('.sessional_price_multi_day').hide();
+                jQuery('.sessional_price_resort').hide();
 
                 if(jQuery('[name="manage_inventory_as_timely"]').val()=='on'){
                     jQuery('.rbfw_time_inventory').show();
@@ -315,7 +329,6 @@
                 jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').hide();
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
                 jQuery('.rbfw_general_price_config_wrapper').hide();
-                jQuery('.rbfw_seasonal_price_config_wrapper').hide();
                 jQuery('.rbfw_resort_price_config_wrapper').show();
                 jQuery('.rbfw_location_switch').hide();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
@@ -327,6 +340,11 @@
                 jQuery('.rbfw_enable_start_end_date_switch_row').hide();
                 jQuery('.rbfw_enable_start_end_date_field_row').hide();
                 jQuery('.rbfw_off_days').show();
+
+                jQuery('.sessional_price_resort').show();
+                jQuery('.sessional_price_multi_day').hide();
+                jQuery('.sessional_price_single_day').hide();
+
             } else {
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
@@ -361,6 +379,9 @@
                 }else{
                     $('.rbfw_es_price_config_wrapper').hide();
                 }
+                jQuery('.sessional_price_multi_day').show();
+                jQuery('.sessional_price_single_day').hide();
+                jQuery('.sessional_price_resort').hide();
                 
             }
 
@@ -981,7 +1002,7 @@
             let resort_type_last_data_key = parseInt(resort_last_row.attr('data-key'));
             let resort_type_new_data_key = resort_type_last_data_key + 1;
             let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + resort_type_new_data_key + '">'
-                + '<td><input type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="Room type"></td>'
+                + '<td><input class="rbfw_room_title" type="text" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][room_type]" value="" placeholder="Room type"></td>'
                 + '<td class="text-center"><div class="rbfw_room_type_image_preview"></div><a class="rbfw_room_type_image_btn button"><i class="fas fa-circle-plus"></i></a><a class="rbfw_remove_room_type_image_btn button"><i class="fas fa-circle-minus"></i></a><input type="hidden"  name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_image]" value="" class="rbfw_room_image"></td>'
                 + '<td class="resort_day_long_price" style="display: none;"><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daylong_rate]" step=".01" value="" placeholder="Day-long Rate"></td>'
                 + '<td><input type="number" class="medium" name="rbfw_resort_room_data[' + resort_type_new_data_key + '][rbfw_room_daynight_rate]" step=".01" value="" placeholder="Day-night Rate"></td>'
