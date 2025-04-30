@@ -548,7 +548,7 @@ button.rbfw-book-now-btn:focus {
 
 .rbfw-duration .item-content {
     background: #f7f7f7 !important;
-    padding: 10px;
+    padding: 5px 10px;
     border: 1px solid #dedede;
     font-size: 14px;
 }
@@ -686,8 +686,8 @@ div.mp_right_section {
     margin-bottom: 0;
 }
 #rbfw_faq_accordion .rbfw_faq_header.active {
-    background: var(--rbfw_color_primary);
-    color: #fff;
+    background: #ddd9d5;
+    color: #2e2323;
     border-radius: 5px 5px 0 0;
 }
 
@@ -710,7 +710,7 @@ div.mp_right_section {
 }
 
 #rbfw_faq_accordion .rbfw_faq_content_wrapper.active {
-    border: 1px solid var(--rbfw_color_primary);
+    border: 1px solid #ada6a1;
     border-radius:0 0 5px 5px;
 }
 
@@ -879,6 +879,7 @@ a.rbfw-related-product-btn {
     line-height: 16px;
     display: inline-block;
     text-decoration: none;
+    border-radius:10px;
 }
 
 a.rbfw-related-product-btn:hover {
@@ -3372,6 +3373,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     height: 380px;
     display: flex;
     flex-direction: column;
+    border-radius:10px;
 }
 
 .rbfw-related-product-inner .rbfw-related-product-content-wrapper {
@@ -3763,7 +3765,7 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem:last-child{margin-b
 .rbfw_muff_registration_wrapper .rbfw-datetime select {
     padding-left: 45px;
     box-sizing: border-box;
-    background-color: #fff;
+    background-color: #f7f7f7 !important
 }
 
 .rbfw_muff_registration_wrapper .rbfw-bikecarsd-calendar-header,
@@ -4580,6 +4582,7 @@ color: #666;
 .single-rbfw_item .rbfw_bikecarsd_book_now_btn_wrap button.mp_rbfw_book_now_submit.rbfw_disabled_button{
     background: var(--rbfw_color_primary);
     opacity: .35;
+    border-radius: 10px;
 }
 
 .single-rbfw_item .ui-widget{
@@ -7246,6 +7249,7 @@ select#rbfw_variation_id_0,select#rbfw_variation_id_1,select#rbfw_variation_id_2
 }
 .item-content rbfw-costing{border-radius:5px; border: 1px solid #dbd5d5; }
 
+
 .rbfw_container {
     background: white;
     width:100%;
@@ -7284,3 +7288,14 @@ select#rbfw_variation_id_0,select#rbfw_variation_id_1,select#rbfw_variation_id_2
     font-weight: 600;
     color: #2b7a78;
 }
+
+i.fas.fa-minus {
+    color: #333;
+}
+.rbfw-single-left-information ul.rbfw-feature-lists li {
+    background: #f5f5f5;
+    padding: 10px;
+    border-radius: 10px;
+}
+div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
+
