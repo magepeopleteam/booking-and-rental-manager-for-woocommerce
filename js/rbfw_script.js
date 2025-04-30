@@ -230,6 +230,7 @@
             let checkout_date = $(this).data('checkout_date');
             let checkin_date = $(this).data('checkin_date');
             let room_type = $(this).data('room_type');
+            let active_tab = $(this).data('active_tab');
 
             $("#rbfw_popup_wrapper").show();
             $("#rbfw_popup_content").html('<div class="rbfw_loader">Loading....</div>')
@@ -245,6 +246,7 @@
                     'checkout_date': checkout_date,
                     'checkin_date': checkin_date,
                     'room_type': room_type,
+                    'active_tab': active_tab,
                     'nonce' : rbfw_ajax.nonce
                 },
                 success: function (response) {

@@ -34,7 +34,7 @@ jQuery('body').on('focusin', '#checkin_date', function(e) {
 
 
             if(rbfw_minimum_booking_day){
-                let maxDate = new Date(gYear,  gMonth - 1, gDay );
+                let maxDate = new Date(gYear,  gMonth - 1, gDay - 1 );
                 maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
                 jQuery("#checkout_date").datepicker("option", "maxDate", maxDate );
             }
@@ -264,11 +264,13 @@ jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_serv
     let checkin_date     = jQuery('#hidden_checkin_date').val();
     let checkout_date    = jQuery('#hidden_checkout_date').val();
     let data_cat         = jQuery(this).siblings('input[type=number]').attr('data-cat');
-    console.log('ffff',data_cat)
+    let active_tab        = jQuery(this).siblings('input[type=number]').attr('data-active_tab');
+
     if(data_cat == 'room'){
         let data_qty         = jQuery(this).siblings('input[type=number]').attr('value');
         let data_price       = jQuery(this).siblings('input[type=number]').attr('data-price');
         let data_type        = jQuery(this).siblings('input[type=number]').attr('data-type');
+
         if(data_qty == 0){
             delete room_prices_arr[data_type];
         }
@@ -295,6 +297,7 @@ jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_serv
             'post_id'       : post_id,
             'checkin_date'  : checkin_date,
             'checkout_date' : checkout_date,
+            'active_tab' : active_tab,
             'room_price_arr': room_prices_arr,
             'service_price_arr': service_prices_arr,
             'nonce' : rbfw_ajax.nonce

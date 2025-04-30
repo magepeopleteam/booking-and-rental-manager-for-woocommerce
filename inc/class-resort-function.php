@@ -281,7 +281,7 @@
                                     $book_dates = getAllDates( $checkin_date, $checkout_date );
 
                                     for($d = 0; $d < $total_days; $d++) {
-                                        if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $key)) != 'not_found') {
+                                        if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $key, $rbfw_room_price_category)) != 'not_found') {
                                             $room_price += (float)$sp_price;
                                             //echo $book_dates[$d].' '.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'<br>';
                                         } else {
@@ -390,6 +390,7 @@
 					$checkin_date  = isset( $_POST['checkin_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkin_date'] ) ) : '';
 					$checkout_date = isset( $_POST['checkout_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkout_date'] ) ) : '';
 					$post_id       = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
+					$active_tab       = isset( $_POST['active_tab'] ) ?  sanitize_text_field( wp_unslash( $_POST['active_tab'] ) )  : '';
 					$origin        = date_create( $checkin_date );
 					$target        = date_create( $checkout_date );
 					$interval      = date_diff( $origin, $target );
@@ -402,7 +403,7 @@
 						$total_days = $total_days + 1;
                 	}
 
-					
+
 
 					$room_price_arr      = isset( $_POST['room_price_arr'] ) ? RBFW_Function::data_sanitize( $_POST['room_price_arr'] ) : [];
 					$service_price_arr   = isset( $_POST['service_price_arr'] ) ? RBFW_Function::data_sanitize( $_POST['service_price_arr'] ) : [];
@@ -428,7 +429,7 @@
                             for($d = 0; $d < $total_days; $d++) {
 
 
-                                if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $key)) != 'not_found') {
+                                if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $key, $active_tab)) != 'not_found') {
                                     $room_price += (float)$value['data_qty'] * (float)$sp_price;
                                 } else {
 
@@ -521,7 +522,7 @@
                 if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                     return;
                 }
-                $all_cat_features = '';
+
                 if ( isset( $_POST['post_id'] ) ) {
 
                     $post_id = $_POST['post_id'];
@@ -530,7 +531,7 @@
                     $checkout_date = $_POST['checkout_date'];
                     $checkin_date = $_POST['checkin_date'];
                     $room_type = $_POST['room_type'];
-
+                    $active_tab = $_POST['active_tab'];
 
                     $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
 
@@ -541,7 +542,7 @@
 
                     for($d = 0; $d < $total_days; $d++) {
                         $all_infos .='<div class="rbfw_entry">';
-                        if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $room_type)) != 'not_found') {
+                        if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $room_type, $active_tab)) != 'not_found') {
                             $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span><span class="rbfw_amount">'.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'</span>';
                         } else {
                             $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span> <span class="rbfw_amount">'.wp_kses(wc_price($price) , rbfw_allowed_html()).'</span>';
@@ -551,32 +552,6 @@
 
                     $all_infos .= '</div>';
 
-
-
-                    /*$post_id               = sanitize_text_field( wp_unslash($_POST['post_id']));
-                    $rbfw_feature_category = get_post_meta( $post_id, 'rbfw_feature_category', true ) ? maybe_unserialize( get_post_meta( $post_id,
-                        'rbfw_feature_category', true ) ) : [];
-                    $all_cat_features      = '';
-                    $all_cat_features      .= '<div class="rbfw_show_all_cat_features" id="rbfw_show_all_cat_features-' . $post_id . '"> ';
-                    foreach ( $rbfw_feature_category as $value ) {
-                        $cat_features     = $value['cat_features'] ? $value['cat_features'] : [];
-                        $cat_title        = $value['cat_title'];
-                        $all_cat_features .= '<h2 class="rbfw_popup_fearure_title">' . $cat_title . '</h2>';
-                        if ( ! empty( $cat_features ) ) {
-                            $all_cat_features .= '<ul class="rbfw_popup_fearure_lists">';
-                            foreach ( $cat_features as $features ) {
-                                $icon        = ! empty( $features['icon'] ) ? $features['icon'] : 'fas fa-check-circle';
-                                $title       = $features['title'];
-                                $rand_number = wp_rand();
-                                if ( $title ) {
-                                    $icom             = esc_html( $icon );
-                                    $all_cat_features .= "<li class='bfw_rent_list_items title  $rand_number '><span class='bfw_rent_list_items_icon'><i class='$icom'></i></span>  $title </li>";
-                                }
-                            }
-                            $all_cat_features .= '</ul>';
-                        }
-                    }
-                    $all_cat_features .= '</div>';*/
                 }
                 wp_send_json_success( $all_infos );
             }

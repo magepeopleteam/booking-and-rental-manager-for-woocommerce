@@ -2720,7 +2720,7 @@
         return 'not_found';
 	}
 
-function check_seasonal_price_resort( $Book_date, $rbfw_sp_prices, $room_type = '' ) {
+function check_seasonal_price_resort( $Book_date, $rbfw_sp_prices, $room_type = '' , $active_tab ='') {
 
 
 
@@ -2742,7 +2742,15 @@ function check_seasonal_price_resort( $Book_date, $rbfw_sp_prices, $room_type = 
                     foreach ($rbfw_sp_price['room_price'] as $room_price){
 
                         if($room_type == $room_price['room_type']){
-                            return $room_price['price'];
+
+                            if($active_tab=='daylong'){
+                                return $room_price['day_long_price'];
+                            }else{
+                                return $room_price['price'];
+                            }
+
+
+
                         }
                     }
 

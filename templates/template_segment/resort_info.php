@@ -37,9 +37,9 @@ if(isset($post_id) && isset($active_tab)){
 
     <div class="rbfw-single-right-heading" style="margin-top: 10px;margin-bottom:0;text-align:center;">
         <?php if($active_tab=='daylong'){ ?>
-            <p><?php esc_html_e('Daylong only day stay','booking-and-rental-manager-for-woocommerce'); ?> </p>
+            <p><?php echo esc_html($total_days) ?> <?php esc_html_e('Daylong only day stay','booking-and-rental-manager-for-woocommerce'); ?> </p>
         <?php } if($active_tab=='daynight'){  ?>
-            <p><?php esc_html_e('Day night stay','booking-and-rental-manager-for-woocommerce'); ?> </p>
+            <p><?php echo esc_html($total_days) ?> <?php esc_html_e('Day night stay','booking-and-rental-manager-for-woocommerce'); ?></p>
         <?php } ?>
     </div>
 
@@ -81,63 +81,44 @@ if(isset($post_id) && isset($active_tab)){
                 ?>
 
                 <tr>
-                <td>
-                <span class="room_type_title"><?php echo esc_html($value['room_type']) ?></span>
-                <input type="hidden" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_type]" value="<?php echo esc_attr($value['room_type']); ?>"/>
-                <?php if($value['rbfw_room_desc']) { ?>
-                    <small class="rbfw_room_desc">
-                        <?php echo esc_html($value['rbfw_room_desc']); ?>
-                    </small>
-                    <?php if ($available_qty_info_switch == 'yes') {  ?>
-                        <small class="rbfw_available_qty_notice">(<?php echo  esc_attr(rbfw_string_return('rbfw_text_available', __('Available:', 'booking-and-rental-manager-for-woocommerce'))) . esc_html($max_available_qty); ?>)</small>
-                    <?php   } ?>
-                    <input type="hidden" name="rbfw_room_info[<?php echo  esc_attr($i); ?>][room_desc]" value="<?php echo  esc_attr($value['rbfw_room_desc']); ?>"/>
+                    <td>
+                        <span class="room_type_title"><?php echo esc_html($value['room_type']) ?></span>
+                        <input type="hidden" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_type]" value="<?php echo esc_attr($value['room_type']); ?>"/>
+                        <?php if($value['rbfw_room_desc']) { ?>
+                            <small class="rbfw_room_desc">
+                                <?php echo esc_html($value['rbfw_room_desc']); ?>
+                            </small>
+                            <?php if ($available_qty_info_switch == 'yes') {  ?>
+                                <small class="rbfw_available_qty_notice">(<?php echo  esc_attr(rbfw_string_return('rbfw_text_available', __('Available:', 'booking-and-rental-manager-for-woocommerce'))) . esc_html($max_available_qty); ?>)</small>
+                            <?php  } ?>
+                            <input type="hidden" name="rbfw_room_info[<?php echo  esc_attr($i); ?>][room_desc]" value="<?php echo  esc_attr($value['rbfw_room_desc']); ?>"/>
+                        <?php  } ?>
                     </td>
                     <td><?php echo wp_kses($img , rbfw_allowed_html()); ?></td>
-
                     <?php
 
                     if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {  ?>
-
-
-                        <td class="rbfw_see_resort_datewise_price" data-checkin_date="<?php echo esc_attr($checkin_date) ?>" data-checkout_date="<?php echo esc_attr($checkout_date) ?>" data-total_days="<?php echo esc_attr($total_days) ?>" data-price="<?php echo esc_attr($price) ?>" data-post_id="<?php echo esc_attr( $post_id ); ?>" data-room_type="<?php echo esc_attr($value['room_type']) ?>">See Details</td>
-
-                        <!--$rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
-
-                        $book_dates = getAllDates( $checkin_date, $checkout_date );
-
-                        echo '<td>';
-                        for($d = 0; $d < $total_days; $d++) {
-                            if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $value['room_type'])) != 'not_found') {
-                                echo $book_dates[$d].' '.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'<br>';
-                            } else {
-                                echo $book_dates[$d].' '.wp_kses(wc_price($price) , rbfw_allowed_html()).'<br>';
-                            }
-                        }
-                        echo '</td>';-->
-
-
-                   <?php }else{ ?>
+                        <td class="rbfw_see_resort_datewise_price" data-checkin_date="<?php echo esc_attr($checkin_date) ?>" data-checkout_date="<?php echo esc_attr($checkout_date) ?>" data-total_days="<?php echo esc_attr($total_days) ?>" data-price="<?php echo esc_attr($price) ?>" data-post_id="<?php echo esc_attr( $post_id ); ?>" data-room_type="<?php echo esc_attr($value['room_type']) ?>" data-active_tab="<?php echo esc_attr($active_tab) ?>">
+                            <a href="#">See Details</a>
+                        </td>
+                    <?php }else{ ?>
                         <td>
                             <?php echo wp_kses(wc_price($price) , rbfw_allowed_html()); ?>
                             <input type="hidden" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]" value="<?php echo esc_attr($price); ?>"/>
                         </td>
-                    <?php  } ?>
-
-
+                    <?php } ?>
 
                     <td>
                         <div class="rbfw_service_price_wrap">
                             <div class="rbfw_qty_input">
                                 <a class="rbfw_qty_minus rbfw_room_qty_minus"><i class="fas fa-minus"></i></a>
-                                <input type="number" min="0" max="<?php echo esc_attr($max_available_qty) ?>" value="0" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_qty]" class="rbfw_room_qty" data-price="<?php echo esc_attr($price); ?>" data-type="<?php echo esc_attr($value['room_type']); ?>" data-cat="room"/>
+                                <input type="number" min="0" max="<?php echo esc_attr($max_available_qty) ?>" value="0" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_qty]" class="rbfw_room_qty" data-price="<?php echo esc_attr($price); ?>" data-type="<?php echo esc_attr($value['room_type']); ?>" data-active_tab="<?php echo esc_attr($active_tab); ?>" data-cat="room"/>
                                 <a class="rbfw_qty_plus rbfw_room_qty_plus"><i class="fas fa-plus"></i></a>
                             </div>
                         </div>
                     </td>
-                    </tr>
-                    <?php
-                }
+                </tr>
+                <?php
                 $i++;
             }
             ?>
