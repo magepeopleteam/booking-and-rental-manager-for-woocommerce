@@ -477,7 +477,7 @@
                             </div>
                             <p class="mt-2">
                                 <span id="add-resort-type-row" class="ppof-button"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add New Resort Type', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <span id="sync-with-sessional-price" class="ppof-button"><?php esc_html_e( 'Sync With Sessional Price', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <span id="sync-with-sessional-price" class="ppof-button sync-with-sessional-price"><?php esc_html_e( 'Sync With Sessional Price', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                             </p>
 							<?php do_action( 'rbfw_after_resort_price_table' ); ?>
                         </div>
@@ -687,6 +687,7 @@
                 </div>
                 <?php do_action( 'rbfw_after_rent_item_type_table_row' ); ?>
 				<?php do_action( 'rbfw_after_week_price_table', $post_id ); ?>
+                <?php do_action( 'rbfw_after_room_type_price_saver_price_table', $post_id ); ?>
 				<?php do_action( 'rbfw_after_extra_service_table' ); ?>
 				<?php
 			}

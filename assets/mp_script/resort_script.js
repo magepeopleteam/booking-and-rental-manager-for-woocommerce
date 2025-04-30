@@ -365,6 +365,55 @@ jQuery(document).on('change','.rbfw_service_qty',function (e) {
         }
     });
 
+
+/*resort sessional*/
+
+jQuery(document).on('click', '.rbfw_add_item_mds_resort', function() {
+    let parent = jQuery(this).closest('.mds_price_resort');
+    let item = parent.find('.mp_hidden_content').first().find('.mp_hidden_item').html();
+    let total_element = jQuery(".rbfw_item_insert_resort_mds").children().length;
+    let tempDiv = jQuery(item);
+    tempDiv.find(".sp_start_date").attr("name", "rbfw_resort_data_mds["+total_element+"][start_day]");
+    tempDiv.find(".sp_end_date").attr("name", "rbfw_resort_data_mds["+total_element+"][end_day]");
+
+
+    tempDiv.find(".rbfw_resort_price_table_sp #sp-price tr").each(function(index) {
+        jQuery(this).find('.room_type_'+index).attr("name", "rbfw_resort_data_mds["+total_element+"][room_price]["+index+"][room_type]");
+        jQuery(this).find('.day_long_price_'+index).attr("name", "rbfw_resort_data_mds["+total_element+"][room_price]["+index+"][day_long_price]");
+        jQuery(this).find('.price_'+index).attr("name", "rbfw_resort_data_mds["+total_element+"][room_price]["+index+"][price]");
+    })
+
+    parent.find('.rbfw_item_insert_resort_mds').first().append(tempDiv);
+});
+
+jQuery(document).on('click', '.sync-with-sessional-price', function (e) {
+    e.preventDefault();
+
+    var rbfw_room_types = [];
+    var post_id = getPostIdFromUrl();
+
+    jQuery('.rbfw_resort_price_table_body tr .rbfw_room_title').each(function(index, element) {
+        if(jQuery(this).val()){
+            rbfw_room_types.push(jQuery(this).val());
+        }
+    });
+
+
+    jQuery.ajax({
+        type: 'POST',
+        url: rbfw_ajax.rbfw_ajaxurl,
+        data: {
+            'action' : 'rbfw_room_types_with_resort_price_mds',
+            'post_id': post_id,
+            'rbfw_room_types': JSON.stringify(rbfw_room_types),
+            'nonce' : rbfw_ajax.nonce
+        },
+        success: function (response) {
+            jQuery('.mds_price_resort').html( response );
+        },
+    });
+});
+
 // end update input value onclick and onchange
 
 // display extra services box onclick and onchange
