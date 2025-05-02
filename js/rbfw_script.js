@@ -221,6 +221,40 @@
             });
         });
 
+
+        $('body').on( 'click', '.rbfw_see_resort_datewise_price', function(e){
+            e.preventDefault();
+            let post_id = $(this).data('post_id');
+            let price = $(this).data('price');
+            let total_days = $(this).data('total_days');
+            let checkout_date = $(this).data('checkout_date');
+            let checkin_date = $(this).data('checkin_date');
+            let room_type = $(this).data('room_type');
+            let active_tab = $(this).data('active_tab');
+
+            $("#rbfw_popup_wrapper").show();
+            $("#rbfw_popup_content").html('<div class="rbfw_loader">Loading....</div>')
+
+            jQuery.ajax({
+                type: 'POST',
+                url: rbfw_ajax.rbfw_ajaxurl,
+                data: {
+                    'action' : 'rbfw_get_resort_sessional_day_wise_price',
+                    'post_id': post_id,
+                    'price': price,
+                    'total_days': total_days,
+                    'checkout_date': checkout_date,
+                    'checkin_date': checkin_date,
+                    'room_type': room_type,
+                    'active_tab': active_tab,
+                    'nonce' : rbfw_ajax.nonce
+                },
+                success: function (response) {
+                    $('#rbfw_popup_content').html( response.data );
+                },
+            });
+        });
+
 //Left Filtering
         $('.rbfw_toggle-content').show();
         $('.rbfw_toggle-icon').on('click', function() {

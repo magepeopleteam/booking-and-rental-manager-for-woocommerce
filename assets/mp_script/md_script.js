@@ -93,7 +93,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
 
             if(rbfw_minimum_booking_day){
-                let maxDate = new Date(gYear,  gMonth - 1, gDay );
+                let maxDate = new Date(gYear,  gMonth - 1, gDay - 1 );
                 maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
                 jQuery(".dropoff_date").datepicker("option", "maxDate", maxDate );
             }

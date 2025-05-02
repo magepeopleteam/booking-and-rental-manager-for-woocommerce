@@ -34,7 +34,7 @@ jQuery('body').on('focusin', '#checkin_date', function(e) {
 
 
             if(rbfw_minimum_booking_day){
-                let maxDate = new Date(gYear,  gMonth - 1, gDay );
+                let maxDate = new Date(gYear,  gMonth - 1, gDay - 1 );
                 maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
                 jQuery("#checkout_date").datepicker("option", "maxDate", maxDate );
             }
@@ -264,11 +264,13 @@ jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_serv
     let checkin_date     = jQuery('#hidden_checkin_date').val();
     let checkout_date    = jQuery('#hidden_checkout_date').val();
     let data_cat         = jQuery(this).siblings('input[type=number]').attr('data-cat');
-    console.log('ffff',data_cat)
+    let active_tab        = jQuery(this).siblings('input[type=number]').attr('data-active_tab');
+
     if(data_cat == 'room'){
         let data_qty         = jQuery(this).siblings('input[type=number]').attr('value');
         let data_price       = jQuery(this).siblings('input[type=number]').attr('data-price');
         let data_type        = jQuery(this).siblings('input[type=number]').attr('data-type');
+
         if(data_qty == 0){
             delete room_prices_arr[data_type];
         }
@@ -295,6 +297,7 @@ jQuery(document).on('click','.rbfw_room_qty_plus,.rbfw_room_qty_minus,.rbfw_serv
             'post_id'       : post_id,
             'checkin_date'  : checkin_date,
             'checkout_date' : checkout_date,
+            'active_tab' : active_tab,
             'room_price_arr': room_prices_arr,
             'service_price_arr': service_prices_arr,
             'nonce' : rbfw_ajax.nonce
@@ -361,6 +364,55 @@ jQuery(document).on('change','.rbfw_service_qty',function (e) {
             jQuery('.rbfw_resort_available_es_qty_notice').hide();
         }
     });
+
+
+/*resort sessional*/
+
+jQuery(document).on('click', '.rbfw_add_item_mds_resort', function() {
+    let parent = jQuery(this).closest('.mds_price_resort');
+    let item = parent.find('.mp_hidden_content').first().find('.mp_hidden_item').html();
+    let total_element = jQuery(".rbfw_item_insert_resort_mds").children().length;
+    let tempDiv = jQuery(item);
+    tempDiv.find(".sp_start_date").attr("name", "rbfw_resort_data_mds["+total_element+"][start_day]");
+    tempDiv.find(".sp_end_date").attr("name", "rbfw_resort_data_mds["+total_element+"][end_day]");
+
+
+    tempDiv.find(".rbfw_resort_price_table_sp #sp-price tr").each(function(index) {
+        jQuery(this).find('.room_type_'+index).attr("name", "rbfw_resort_data_mds["+total_element+"][room_price]["+index+"][room_type]");
+        jQuery(this).find('.day_long_price_'+index).attr("name", "rbfw_resort_data_mds["+total_element+"][room_price]["+index+"][day_long_price]");
+        jQuery(this).find('.price_'+index).attr("name", "rbfw_resort_data_mds["+total_element+"][room_price]["+index+"][price]");
+    })
+
+    parent.find('.rbfw_item_insert_resort_mds').first().append(tempDiv);
+});
+
+jQuery(document).on('click', '.sync-with-sessional-price', function (e) {
+    e.preventDefault();
+
+    var rbfw_room_types = [];
+    var post_id = getPostIdFromUrl();
+
+    jQuery('.rbfw_resort_price_table_body tr .rbfw_room_title').each(function(index, element) {
+        if(jQuery(this).val()){
+            rbfw_room_types.push(jQuery(this).val());
+        }
+    });
+
+
+    jQuery.ajax({
+        type: 'POST',
+        url: rbfw_ajax.rbfw_ajaxurl,
+        data: {
+            'action' : 'rbfw_room_types_with_resort_price_mds',
+            'post_id': post_id,
+            'rbfw_room_types': JSON.stringify(rbfw_room_types),
+            'nonce' : rbfw_ajax.nonce
+        },
+        success: function (response) {
+            jQuery('.mds_price_resort').html( response );
+        },
+    });
+});
 
 // end update input value onclick and onchange
 
