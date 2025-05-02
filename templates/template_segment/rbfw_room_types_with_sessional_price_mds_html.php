@@ -18,10 +18,7 @@ if(isset($_POST['post_id'])){
         return in_array($room['room_type'], $roomTypes);
     });
 
-
     $filteredRooms = array_values($filteredRooms);
-
-
     $existingTypes = array_column($filteredRooms, 'room_type');
 
     foreach ($roomTypes as $type) {
@@ -36,9 +33,7 @@ if(isset($_POST['post_id'])){
             ];
         }
     }
-
     $rbfw_resort_data = $filteredRooms;
-
 
 
     ?>
@@ -108,9 +103,9 @@ if(isset($_POST['post_id'])){
             </div>
             <p>
                 <span class="ppof-button rbfw_add_item_mds_resort">
-                                    <i class="fa-solid fa-circle-plus"></i>&nbsp;
-                                    <?php esc_html_e( 'Add New Multi Day Saver', 'rbfw-sp' ); ?>
-                                </span>
+                    <i class="fa-solid fa-circle-plus"></i>&nbsp;
+                    <?php esc_html_e( 'Add New Multi Day Saver', 'rbfw-sp' ); ?>
+                </span>
             </p>
         </div>
 
