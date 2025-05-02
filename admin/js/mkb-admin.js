@@ -210,10 +210,12 @@
                 jQuery('.sessional_price_single_day').show();
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_resort').hide();
+                jQuery('.mds_price_resort').hide();
 
             }else if(current_item_type == 'resort'){
 
                 jQuery('.sessional_price_resort').show();
+                jQuery('.mds_price_resort').show();
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
 
@@ -222,6 +224,7 @@
                 jQuery('.sessional_price_multi_day').show();
                 jQuery('.sessional_price_single_day').hide();
                 jQuery('.sessional_price_resort').hide();
+                jQuery('.mds_price_resort').hide();
 
             }
         } else {
@@ -274,6 +277,7 @@
                 jQuery('.sessional_price_single_day').show();
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_resort').hide();
+                jQuery('.mds_price_resort').hide();
 
                 if(jQuery('[name="manage_inventory_as_timely"]').val()=='on'){
                     jQuery('.rbfw_time_inventory').show();
@@ -342,6 +346,7 @@
                 jQuery('.rbfw_off_days').show();
 
                 jQuery('.sessional_price_resort').show();
+                jQuery('.mds_price_resort').show();
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
 
@@ -382,7 +387,8 @@
                 jQuery('.sessional_price_multi_day').show();
                 jQuery('.sessional_price_single_day').hide();
                 jQuery('.sessional_price_resort').hide();
-                
+                jQuery('.mds_price_resort').hide();
+
             }
 
             return false;
