@@ -2747,14 +2747,18 @@ function check_seasonal_price_resort( $Book_date, $rbfw_sp_prices, $room_type = 
 
 
 
-function check_seasonal_price_resort_mds( $day_number, $rbfw_sp_prices, $room_type = '' , $active_tab ='') {
+function check_seasonal_price_resort_mds( $day_number, $rbfw_sp_prices, $room_type = '' , $active_tab ='', $minStartDay = '') {
 
-    foreach ( $rbfw_sp_prices as $rbfw_sp_price ) {
+
+        if($minStartDay > $day_number){
+            return 'not_found';
+        }
+
+        foreach ( $rbfw_sp_prices as $key=>$rbfw_sp_price ) {
         if(isset($rbfw_sp_price['start_day']) && isset($rbfw_sp_price['end_day'])){
 
             $rbfw_start_day = $rbfw_sp_price['start_day'];
             $rbfw_end_day   = $rbfw_sp_price['end_day'];
-
 
             if ( $day_number >= $rbfw_start_day  &&  $day_number <= $rbfw_end_day) {
                 foreach ($rbfw_sp_price['room_price'] as $room_price){
@@ -2766,9 +2770,28 @@ function check_seasonal_price_resort_mds( $day_number, $rbfw_sp_prices, $room_ty
                         }
                     }
                 }
+            }else{
+                $maxPrice = 0;
+
+                foreach ($rbfw_sp_prices as $item) {
+                    foreach ($item['room_price'] as $room) {
+                        if($room_type == $room['room_type']){
+                            if (is_numeric($room['price'])) {
+                                $price = (float)$room['price'];
+                                if ($price > $maxPrice) {
+                                    $maxPrice = $price;
+                                }
+                            }
+                        }
+                    }
+                }
+                return $maxPrice;
             }
         }
     }
+
+
+
     return 'not_found';
 }
 

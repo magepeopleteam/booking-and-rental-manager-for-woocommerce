@@ -281,8 +281,17 @@
                                     if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' )){
                                         $rbfw_resort_data_mds = get_post_meta($product_id, 'rbfw_resort_data_mds', true) ? get_post_meta($product_id, 'rbfw_resort_data_mds', true) : [];
 
+                                        $minStartDay = null;
+
+                                        foreach ($rbfw_resort_data_mds as $item) {
+                                            if (is_null($minStartDay) || $item['start_day'] < $minStartDay) {
+                                                $minStartDay = $item['start_day'];
+                                            }
+                                        }
+
+
                                         for($d = 1; $d <= $total_days; $d++) {
-                                            if (($sp_price = check_seasonal_price_resort_mds($d, $rbfw_resort_data_mds, $key, $rbfw_room_price_category)) != 'not_found') {
+                                            if (($sp_price = check_seasonal_price_resort_mds($d, $rbfw_resort_data_mds, $key, $rbfw_room_price_category, $minStartDay)) != 'not_found') {
                                                 $room_price += (float)$sp_price;
                                             } else {
                                                 $room_price += (float)$room_types[$room_type];
@@ -428,9 +437,17 @@
                         if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' )){
                             $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
 
+                            $minStartDay = null;
+
+                            foreach ($rbfw_resort_data_mds as $item) {
+                                if (is_null($minStartDay) || $item['start_day'] < $minStartDay) {
+                                    $minStartDay = $item['start_day'];
+                                }
+                            }
+
                             foreach ( $room_price_arr as $key => $value ) {
                                 for($d = 1; $d <= $total_days; $d++) {
-                                    if (($sp_price = check_seasonal_price_resort_mds($d, $rbfw_resort_data_mds, $key, $active_tab)) != 'not_found') {
+                                    if (($sp_price = check_seasonal_price_resort_mds($d, $rbfw_resort_data_mds, $key, $active_tab, $minStartDay)) != 'not_found') {
                                         $room_price += (float)$value['data_qty'] * (float)$sp_price;
                                     } else {
                                         $room_price += (float)$value['data_qty'] * (float)$value['data_price'];
@@ -551,9 +568,17 @@
 
                     if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' )){
                         $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
+                        $minStartDay = null;
+
+                        foreach ($rbfw_resort_data_mds as $item) {
+                            if (is_null($minStartDay) || $item['start_day'] < $minStartDay) {
+                                $minStartDay = $item['start_day'];
+                            }
+                        }
+
                         for($d = 1; $d <= $total_days; $d++) {
                             $all_infos .='<div class="rbfw_entry">';
-                            if (($sp_price = check_seasonal_price_resort_mds($d, $rbfw_resort_data_mds, $room_type, $active_tab)) != 'not_found') {
+                            if (($sp_price = check_seasonal_price_resort_mds($d, $rbfw_resort_data_mds, $room_type, $active_tab, $minStartDay)) != 'not_found') {
                                 $all_infos .= '<span class="rbfw_date">'.numberToOrdinal($d).'</span><span class="rbfw_amount">'.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'</span>';
                             } else {
                                 $all_infos .= '<span class="rbfw_date">'.numberToOrdinal($d).'</span> <span class="rbfw_amount">'.wp_kses(wc_price($price) , rbfw_allowed_html()).'</span>';
