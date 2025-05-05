@@ -2771,21 +2771,23 @@ function check_seasonal_price_resort_mds( $day_number, $rbfw_sp_prices, $room_ty
                     }
                 }
             }else{
-                $maxPrice = 0;
 
-                foreach ($rbfw_sp_prices as $item) {
-                    foreach ($item['room_price'] as $room) {
-                        if($room_type == $room['room_type']){
-                            if (is_numeric($room['price'])) {
-                                $price = (float)$room['price'];
-                                if ($price > $maxPrice) {
-                                    $maxPrice = $price;
-                                }
-                            }
-                        }
+                $max_end_day = 0;
+                $max_entry = null;
+
+                foreach ( $rbfw_sp_prices as $entry ) {
+                    if ( $entry['end_day'] > $max_end_day ) {
+                        $max_end_day = $entry['end_day'];
+                        $max_entry = $entry;
                     }
                 }
-                return $maxPrice;
+
+                if ( $max_entry && isset( $max_entry['room_price'] ) ) {
+                    foreach ( $max_entry['room_price'] as $price_info ) {
+                       return $price_info['price'];
+                    }
+                }
+
             }
         }
     }

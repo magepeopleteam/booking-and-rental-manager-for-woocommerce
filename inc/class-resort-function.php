@@ -568,7 +568,10 @@
 
                     if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' )){
                         $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
-                        $minStartDay = null;
+
+
+
+                       $minStartDay = null;
 
                         foreach ($rbfw_resort_data_mds as $item) {
                             if (is_null($minStartDay) || $item['start_day'] < $minStartDay) {
@@ -576,28 +579,37 @@
                             }
                         }
 
-                        for($d = 1; $d <= $total_days; $d++) {
-                            $all_infos .='<div class="rbfw_entry">';
-                            if (($sp_price = check_seasonal_price_resort_mds($d, $rbfw_resort_data_mds, $room_type, $active_tab, $minStartDay)) != 'not_found') {
-                                $all_infos .= '<span class="rbfw_date">'.numberToOrdinal($d).'</span><span class="rbfw_amount">'.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'</span>';
-                            } else {
-                                $all_infos .= '<span class="rbfw_date">'.numberToOrdinal($d).'</span> <span class="rbfw_amount">'.wp_kses(wc_price($price) , rbfw_allowed_html()).'</span>';
+                        for ( $d = 1; $d <= $total_days; $d++ ) {
+                            $all_infos .= '<div class="rbfw_entry">';
+
+                            $price_to_display = check_seasonal_price_resort_mds( $d, $rbfw_resort_data_mds, $room_type, $active_tab, $minStartDay );
+                            if ( $price_to_display === 'not_found' ) {
+                                $price_to_display = $price;
                             }
-                            $all_infos .='</div>';
+
+                            $all_infos .= '<span class="rbfw_date">' . numberToOrdinal( $d ) . ' ' . esc_html( __( 'Day', 'booking-and-rental-manager-for-woocommerce' ) ) . '</span>';
+                            $all_infos .= '<span class="rbfw_amount">' . wp_kses( wc_price( $price_to_display ), rbfw_allowed_html() ) . '</span>';
+
+                            $all_infos .= '</div>';
                         }
                     }else{
                         $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
                         $book_dates = getAllDates( $checkin_date, $checkout_date );
 
-                        for($d = 0; $d < $total_days; $d++) {
-                            $all_infos .='<div class="rbfw_entry">';
-                            if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $room_type, $active_tab)) != 'not_found') {
-                                $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span><span class="rbfw_amount">'.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'</span>';
-                            } else {
-                                $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span> <span class="rbfw_amount">'.wp_kses(wc_price($price) , rbfw_allowed_html()).'</span>';
-                            }
-                            $all_infos .='</div>';
+                        for ( $d = 0; $d < $total_days; $d++ ) {
+                            $date = $book_dates[ $d ];
+                            $all_infos .= '<div class="rbfw_entry">';
+
+                            $sp_price = check_seasonal_price_resort( $date, $rbfw_resort_data_sp, $room_type, $active_tab );
+                            $price_to_display = ( $sp_price !== 'not_found' ) ? $sp_price : $price;
+
+                            $all_infos .= '<span class="rbfw_date">' . rbfw_date_format( $date ) . ' ' . esc_html__( 'day', 'booking-and-rental-manager-for-woocommerce' ) . '</span>';
+                            $all_infos .= '<span class="rbfw_amount">' . wp_kses( wc_price( $price_to_display ), rbfw_allowed_html() ) . '</span>';
+
+                            $all_infos .= '</div>';
                         }
+
+
                     }
                     $all_infos .= '</div>';
                 }

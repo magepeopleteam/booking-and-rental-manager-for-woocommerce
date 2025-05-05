@@ -99,7 +99,6 @@ if(isset($_POST['post_id'])){
                             <span class="button " onclick="jQuery(this).parent().remove()"><i class="fa-solid fa-trash-can"></i></span>
                         </section>
                     <?php } $i++; } ?>
-
             </div>
             <p>
                 <span class="ppof-button rbfw_add_item_mds_resort">
