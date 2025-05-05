@@ -6887,7 +6887,7 @@ h2.rbfw_rent_list_grid_title a{
     align-items: center;
     gap: 3px;
     position: relative;
-    padding: 12px 30px;
+    padding: 5px 30px;
     transition: all 0.3s ease-in-out;
     z-index: 2;
     background: var(--rbfw_color_primary);
@@ -6900,7 +6900,7 @@ h2.rbfw_rent_list_grid_title a{
 }
 a.rbfw_rent_list_btn{
     color: #fff;
-    border-radius: 10px;
+    border-radius: 5px;
     text-decoration: none !important;
 }
 
