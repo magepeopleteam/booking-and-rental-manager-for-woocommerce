@@ -1308,7 +1308,6 @@ table.rbfw_room_price_table tbody td img {
 
 .rbfw_qty_input {
     display:flex;
-    justify-content: space-between;
     align-items: center;
 }
 
@@ -3833,7 +3832,6 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem:last-child{margin-b
 .rbfw_muff_registration_wrapper .rbfw_qty_input,
 .rbfw_muff_registration_wrapper .rbfw_qty_input input[type="number"] {
     border: none;
-    background-color: var(--rbfw_muff_color6);
 }
 
 .rbfw_muff_registration_wrapper .rbfw-book-now-btn,
