@@ -527,6 +527,7 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
     border: none;
     font-weight: 700;
     margin-top: 20px;
+    border-radius:5px;
 }
 
 button.rbfw-book-now-btn[disabled] {
