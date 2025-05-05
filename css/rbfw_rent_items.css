@@ -572,11 +572,12 @@ ul.rbfw_show_all_cat_features li:last-child {
     padding: 10px;
     background-color: var(--rbfw_color_primary);
     color: #fff;
+    border-radius: 5px 5px 0 0;
 }
 
 .rbfw_title_text.title h4{
     margin: 0;
-    font-weight:normal;
+    font-weight: normal;
     color:#fff;
     font-size:16px;
 }
@@ -833,6 +834,7 @@ ul.rbfw_show_all_cat_features li:last-child {
     border: 1px solid var(--rbfw_color_primary);
     color: #fff;
     margin-top: 10px;
+    border-radius:5px;
 }
 .rbfw_left_filter_more_feature_loaders:hover{
     text-decoration: none;
