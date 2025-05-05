@@ -3817,6 +3817,7 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem:last-child{margin-b
 .rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_plus {
     background-color: var(--rbfw_color_primary);
     color: #fff;
+    border-radius: 0px 5px 5px 0px;
 
 }
 
