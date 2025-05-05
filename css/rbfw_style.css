@@ -7309,3 +7309,7 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
     margin: 0 !importnt;
 }
 .rbfw-related-product-title-wrap a{color:#333;}
+.sliderItem.activeSlide{border-radius:8px;}
+.sliderShowcaseItem.activeSlide {
+    border-radius: 8px;
+}
