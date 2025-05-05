@@ -818,6 +818,7 @@ ul.rbfw_show_all_cat_features li:last-child {
     color: #fff;
     cursor: pointer;
     font-size: 14px;
+    border-radius: 0px 5px 5px;
 }
 .rbfw_left_filter_search_btn:hover{
     background-color: var(--rbfw_single_page_secondary_color);
