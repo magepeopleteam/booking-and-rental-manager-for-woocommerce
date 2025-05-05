@@ -6899,8 +6899,9 @@ h2.rbfw_rent_list_grid_title a{
     font-weight: 500;
 }
 a.rbfw_rent_list_btn{
-    text-decoration: none;
     color: #fff;
+    border-radius: 10px;
+    text-decoration: none !important;
 }
 
 a.rbfw_rent_list_btn:hover{
