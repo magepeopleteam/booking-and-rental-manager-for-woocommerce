@@ -7301,4 +7301,7 @@ i.fas.fa-minus {
     border-radius: 10px;
 }
 div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
-
+.entry-content ul, .entry-content ol {
+    padding: 0 !important;
+    margin: 0 !importnt;
+}
