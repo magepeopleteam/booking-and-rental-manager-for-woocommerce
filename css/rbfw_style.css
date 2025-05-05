@@ -488,6 +488,7 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
     background: #f5f5f5;
     padding: 20px;
     position: relative;
+    border-radius:5px;
 }
 
 /*
