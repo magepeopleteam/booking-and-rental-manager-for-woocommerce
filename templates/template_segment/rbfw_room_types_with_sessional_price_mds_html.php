@@ -6,6 +6,9 @@ if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($
 }
 if(isset($_POST['post_id'])){
 
+
+
+
     $post_id = isset($_POST['post_id']) ? sanitize_text_field(wp_unslash($_POST['post_id'])) : '';
     $rbfw_room_types = isset($_POST['rbfw_room_types']) ? sanitize_text_field(wp_unslash($_POST['rbfw_room_types'])) : '';
     $rbfw_resort_data_mds          = get_post_meta( $post_id, 'rbfw_resort_data_mds', true ) ? get_post_meta( $post_id, 'rbfw_resort_data_mds', true ) : [];

@@ -24,6 +24,10 @@ if(isset($post_id) && isset($active_tab)){
     }
 
     $rbfw_resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];
+
+
+
+
     $rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
     $rbfw_product_id = get_post_meta( $post_id, "link_wc_product", true ) ? get_post_meta( $post_id, "link_wc_product", true ) : $post_id;
 
@@ -94,14 +98,28 @@ if(isset($post_id) && isset($active_tab)){
                             <input type="hidden" name="rbfw_room_info[<?php echo  esc_attr($i); ?>][room_desc]" value="<?php echo  esc_attr($value['rbfw_room_desc']); ?>"/>
                         <?php  } ?>
                     </td>
-                    <td><?php echo wp_kses($img , rbfw_allowed_html()); ?></td>
+                    <td>
+                        <?php echo wp_kses($img , rbfw_allowed_html()); ?>
+                    </td>
                     <?php
-
-
 
                     if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) || is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) ) {  ?>
                         <td class="rbfw_see_resort_datewise_price" data-checkin_date="<?php echo esc_attr($checkin_date) ?>" data-checkout_date="<?php echo esc_attr($checkout_date) ?>" data-total_days="<?php echo esc_attr($total_days) ?>" data-price="<?php echo esc_attr($price) ?>" data-post_id="<?php echo esc_attr( $post_id ); ?>" data-room_type="<?php echo esc_attr($value['room_type']) ?>" data-active_tab="<?php echo esc_attr($active_tab) ?>">
-                            <a href="#">See Details</a>
+
+                            <?php
+
+                            $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
+
+                            $room_price = 0;
+                            if (($sp_price = check_seasonal_price_resort_mds($total_days, $rbfw_resort_data_mds, $value['room_type'], $active_tab)) != 0) {
+                                $room_price = (float)$sp_price;
+                            }else{
+                                $room_price = (float)$value['rbfw_room_daynight_rate'];
+                            }
+
+                            ?>
+                            <?php echo wp_kses(wc_price($room_price) , rbfw_allowed_html()); ?>
+
                         </td>
                     <?php }else{ ?>
                         <td>
