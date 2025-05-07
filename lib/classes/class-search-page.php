@@ -110,11 +110,11 @@
 					$rbfw_feature_category = get_post_meta( $post_id, 'rbfw_feature_category', true ) ? maybe_unserialize( get_post_meta( $post_id,
 						'rbfw_feature_category', true ) ) : [];
 					$all_cat_features      = '';
-					$all_cat_features      .= '<div class="rbfw_show_all_cat_features" id="rbfw_show_all_cat_features-' . $post_id . '"> ';
+					$all_cat_features      .= '<div class="rbfw_show_all_cat_features rbfw_show_all_cat_title" id="rbfw_show_all_cat_features-' . $post_id . '"> ';
 					foreach ( $rbfw_feature_category as $value ) {
 						$cat_features     = $value['cat_features'] ? $value['cat_features'] : [];
 						$cat_title        = $value['cat_title'];
-						$all_cat_features .= '<h2 class="rbfw_popup_fearure_title">' . $cat_title . '</h2>';
+						$all_cat_features .= '<h2 class="rbfw_popup_fearure_title rbfw_popup_fearure_title_color">' . $cat_title . '</h2>';
 						if ( ! empty( $cat_features ) ) {
 							$all_cat_features .= '<ul class="rbfw_popup_fearure_lists">';
 							foreach ( $cat_features as $features ) {
