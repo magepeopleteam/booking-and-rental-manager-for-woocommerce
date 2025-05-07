@@ -214,6 +214,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+= 2.3.9 =
+* For multi day default stock quantity is 100, if stock null.
+* Console error fixed.
+* Code updated.
 
 = 2.3.8 =
 * Sold out problem option added on calendar.

@@ -119,13 +119,13 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                             <?php if($rbfw_enable_daywise_price == 'yes'){ ?>
                                 <?php
 
-                                $sunday = rbfw_day_row( __( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun' );
-                                $monday = rbfw_day_row( __( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon' );
-                                $tueday = rbfw_day_row( __( 'Tuesday:', 'booking-and-rental-manager-for-woocommerce' ), 'tue' );
-                                $wedday = rbfw_day_row( __( 'Wednesday:', 'booking-and-rental-manager-for-woocommerce' ), 'wed' );
-                                $thuday = rbfw_day_row( __( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu' );
-                                $friday = rbfw_day_row( __( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri' );
-                                $satday = rbfw_day_row( __( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat' );
+                                $sunday = rbfw_day_row_md( __( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun' );
+                                $monday = rbfw_day_row_md( __( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon' );
+                                $tueday = rbfw_day_row_md( __( 'Tuesday:', 'booking-and-rental-manager-for-woocommerce' ), 'tue' );
+                                $wedday = rbfw_day_row_md( __( 'Wednesday:', 'booking-and-rental-manager-for-woocommerce' ), 'wed' );
+                                $thuday = rbfw_day_row_md( __( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu' );
+                                $friday = rbfw_day_row_md( __( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri' );
+                                $satday = rbfw_day_row_md( __( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat' );
 
                                 ?>
                                 <div class="rbfw_day_wise_price">
@@ -186,14 +186,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                     </table>
                                 </div>
                             <?php } ?>
-                            <?php
-                            function rbfw_day_row( $day_name, $day_slug ) {
-                                $hourly_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) : '';
-                                $daily_rate  = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) : '';
-                                $enable      = !empty(get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true )) ? get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) : '';
-                                return array('enable'=>$enable,'day_name'=>$day_name,'daily_rate'=>$daily_rate,'hourly_rate'=>$hourly_rate);
-                            }
-                            ?>
+
                             <?php
 
                             $seasonal_prices = [];

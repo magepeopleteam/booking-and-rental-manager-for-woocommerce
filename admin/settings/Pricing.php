@@ -249,10 +249,12 @@
                                     <i class="fas fa-circle-plus"></i>
                                     <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </span>
-                                <span id="sync-with-sessional-price-sd" data-post_id="<?php echo esc_attr( $post_id ) ?>" class="ppof-button" >
-                                    <i class="fas fa-circle-plus"></i>
-                                    <?php esc_html_e( 'Sync With Sessional Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                </span>
+
+                                <?php if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) || is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) ) { ?>
+                                    <span id="sync-with-sessional-price-sd" data-post_id="<?php echo esc_attr( $post_id ) ?>" class="ppof-button" >
+                                        <?php esc_html_e( 'Sync', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                    </span>
+                                <?php } ?>
                             </p>
                         </div>
                     </section>
@@ -292,12 +294,10 @@
                                                     <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][rent_type]" value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php echo esc_attr( 'Type name', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td><input type="text" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][short_desc]" value="<?php echo esc_attr( $value['short_desc'] ); ?>" placeholder="<?php echo esc_attr( 'Short Description', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
                                                     <td><input type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][price]" step=".01" value="<?php echo esc_attr( $value['price'] ); ?>" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                    <td class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
-														echo 'style="display:none"';
-													} ?>><input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php echo esc_attr( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"/></td>
-                                                    <td class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
-														echo 'style="display:none"';
-													} ?>>
+                                                    <td class="rbfw_bike_car_sd_price_table_action_column" <?php echo ( $rbfw_item_type == 'appointment' )?'style="display:none"':''; ?>>
+                                                        <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][qty]" value="<?php echo esc_attr( $value['qty'] ); ?>" placeholder="<?php echo esc_attr( 'Stock Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    </td>
+                                                    <td class="rbfw_bike_car_sd_price_table_action_column" <?php echo ( $rbfw_item_type == 'appointment' )?'style="display:none"':''; ?>>
                                                         <div class="mp_event_remove_move">
                                                             <button class="button remove-row"><i class="fas fa-trash-can"></i></button>
                                                             <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
@@ -475,10 +475,18 @@
                                     </tbody>
                                 </table>
                             </div>
+
                             <p class="mt-2">
                                 <span id="add-resort-type-row" class="ppof-button"><i class="fas fa-circle-plus"></i> <?php esc_html_e( 'Add New Resort Type', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                                <span id="sync-with-sessional-price" class="ppof-button sync-with-sessional-price"><?php esc_html_e( 'Sync With Sessional Price', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <?php if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) && is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) ) { ?>
+                                    <span id="sync-with-sessional-price" class="ppof-button sync-with-sessional-price"><?php esc_html_e( 'Sync with sessional price and multi day saver', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <?php }elseif(is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' )){ ?>
+                                    <span id="sync-with-sessional-price" class="ppof-button sync-with-sessional-price"><?php esc_html_e( 'Sync with sessional price', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <?php }elseif(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' )){ ?>
+                                    <span id="sync-with-sessional-price" class="ppof-button sync-with-sessional-price"><?php esc_html_e( 'Sync multi day saver', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <?php } ?>
                             </p>
+
 							<?php do_action( 'rbfw_after_resort_price_table' ); ?>
                         </div>
                     </section>

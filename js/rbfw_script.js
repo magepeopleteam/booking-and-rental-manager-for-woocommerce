@@ -563,6 +563,8 @@ function rbfw_aig_showSlides(n) {
     dots[slideIndex - 1].className += " active";
     captionText.innerHTML = dots[slideIndex - 1].alt;
 }
+
+
 /* End: Additional Gallary Images */
 // using muffin tempalte descriptoin show hide 
 jQuery(document).ready(function($) {
@@ -575,3 +577,5 @@ jQuery(document).ready(function($) {
         
     });
 });
+
+

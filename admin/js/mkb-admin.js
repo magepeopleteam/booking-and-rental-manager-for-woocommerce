@@ -1109,3 +1109,9 @@ jQuery(document).ready(function () {
 });
 
 
+function getPostIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('post'); // returns the post ID as a string
+}
+
+

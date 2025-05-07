@@ -128,7 +128,10 @@ function mp_alert($this, attr = 'alert') {
 	"use strict";
 	$(document).ready(function () {
 		mp_load_date_picker();
-		$('.mp_select2').select2({});
+		if ($.fn.select2) {
+			$('.mp_select2').select2({});
+		}
+
 	});
 }(jQuery));
 //====================================================================Load Bg Image=================//
