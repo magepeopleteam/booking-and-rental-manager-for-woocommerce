@@ -536,6 +536,56 @@
 			}
 
 
+            public function rbfw_get_resort_sessional_day_wise_price() {
+
+                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                    return;
+                }
+
+                if ( isset( $_POST['post_id'] ) ) {
+
+                    $post_id = $_POST['post_id'];
+                    $price = $_POST['price'];
+                    $total_days = $_POST['total_days'];
+                    $checkout_date = $_POST['checkout_date'];
+                    $checkin_date = $_POST['checkin_date'];
+                    $room_type = $_POST['room_type'];
+                    $active_tab = $_POST['active_tab'];
+
+                    $all_infos      = '<div class="rbfw_container">';
+                    $all_infos .= '<div class="rbfw_header">Price Details</div>';
+
+                    if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' )){
+                        $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
+                        for($d = 1; $d <= $total_days; $d++) {
+                            $all_infos .='<div class="rbfw_entry">';
+                            if (($sp_price = check_seasonal_price_resort_mds($d, $rbfw_resort_data_mds, $room_type, $active_tab)) != 'not_found') {
+                                $all_infos .= '<span class="rbfw_date">'.numberToOrdinal($d).'</span><span class="rbfw_amount">'.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'</span>';
+                            } else {
+                                $all_infos .= '<span class="rbfw_date">'.numberToOrdinal($d).'</span> <span class="rbfw_amount">'.wp_kses(wc_price($price) , rbfw_allowed_html()).'</span>';
+                            }
+                            $all_infos .='</div>';
+                        }
+                    }else{
+                        $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
+                        $book_dates = getAllDates( $checkin_date, $checkout_date );
+
+                        for($d = 0; $d < $total_days; $d++) {
+                            $all_infos .='<div class="rbfw_entry">';
+                            if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $room_type, $active_tab)) != 'not_found') {
+                                $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span><span class="rbfw_amount">'.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'</span>';
+                            } else {
+                                $all_infos .= '<span class="rbfw_date">'.rbfw_date_format($book_dates[$d]).'</span> <span class="rbfw_amount">'.wp_kses(wc_price($price) , rbfw_allowed_html()).'</span>';
+                            }
+                            $all_infos .='</div>';
+                        }
+                    }
+                    $all_infos .= '</div>';
+                }
+                wp_send_json_success( $all_infos );
+            }
+
+
 
 
 		}
