@@ -13,15 +13,14 @@
 				add_action( 'rbfw_meta_box_tab_name', [ $this, 'faq_tab' ] );
 				add_action( 'rbfw_meta_box_tab_content', [ $this, 'faq_tab_content' ] );
 				add_action( 'admin_enqueue_scripts', [ $this, 'custom_editor_enqueue' ] );
+
 				// save faq data
 				add_action( 'wp_ajax_rbfw_faq_data_save', [ $this, 'save_faq_data_settings' ] );
-				add_action( 'wp_ajax_nopriv_rbfw_faq_data_save', [ $this, 'save_faq_data_settings' ] );
 				// update faq data
 				add_action( 'wp_ajax_rbfw_faq_data_update', [ $this, 'faq_data_update' ] );
-				add_action( 'wp_ajax_nopriv_rbfw_faq_data_update', [ $this, 'faq_data_update' ] );
 				// rbfw_delete_faq_data
 				add_action( 'wp_ajax_rbfw_faq_delete_item', [ $this, 'faq_delete_item' ] );
-				add_action( 'wp_ajax_nopriv_rbfw_faq_delete_item', [ $this, 'faq_delete_item' ] );
+
 				add_action( 'save_post', array( $this, 'settings_save' ), 99 );
 			}
 
@@ -164,92 +163,202 @@
 			}
 
 			public function faq_data_update() {
-				if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
-					$post_id  = intval( $_POST['rbfw_faq_postID'] );
-					$rbfw_faq = get_post_meta( $post_id, 'mep_event_faq', true );
-					$rbfw_faq = is_array( $rbfw_faq ) ? $rbfw_faq : [];
-					$new_data = [
-						'rbfw_faq_title'   => sanitize_text_field( $_POST['rbfw_faq_title'] ),
-						'rbfw_faq_content' => wp_kses_post( $_POST['rbfw_faq_content'] )
-					];
-					if ( ! empty( $rbfw_faq ) ) {
-						if ( isset( $_POST['rbfw_faq_itemID'] ) ) {
-							$rbfw_faq[ $_POST['rbfw_faq_itemID'] ] = $new_data;
-						}
-					}
-					update_post_meta( $post_id, 'mep_event_faq', $rbfw_faq );
+				// Ensure required POST fields are present
+				if (
+					! isset( $_POST['nonce'], $_POST['rbfw_faq_postID'], $_POST['rbfw_faq_itemID'], $_POST['rbfw_faq_title'], $_POST['rbfw_faq_content'] )
+				) {
+					wp_send_json_error( [ 'message' => __( 'Missing required fields.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}
+			
+				// Verify nonce
+				if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
+					wp_send_json_error( [ 'message' => __( 'Invalid nonce.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}
+			
+				// Sanitize and validate inputs
+				$post_id      = intval( $_POST['rbfw_faq_postID'] );
+				$faq_item_id  = intval( $_POST['rbfw_faq_itemID'] );
+			
+				// Check user capability
+				if ( ! current_user_can( 'edit_post', $post_id ) ) {
+					wp_send_json_error( [ 'message' => __( 'Permission denied.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}
+			
+				// Optional: Ensure correct post type
+				if ( get_post_type( $post_id ) !== 'rbfw_item' ) {
+					wp_send_json_error( [ 'message' => __( 'Invalid post type.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}
+			
+				// Fetch existing FAQs
+				$rbfw_faq = get_post_meta( $post_id, 'mep_event_faq', true );
+				$rbfw_faq = is_array( $rbfw_faq ) ? $rbfw_faq : [];
+			
+				// Validate item exists
+				if ( ! isset( $rbfw_faq[ $faq_item_id ] ) ) {
+					wp_send_json_error( [ 'message' => __( 'FAQ item not found.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}
+			
+				// Sanitize and update data
+				$new_data = [
+					'rbfw_faq_title'   => sanitize_text_field( $_POST['rbfw_faq_title'] ),
+					'rbfw_faq_content' => wp_kses_post( $_POST['rbfw_faq_content'] ),
+				];
+			
+				$rbfw_faq[ $faq_item_id ] = $new_data;
+			
+				// Update post meta
+				$result = update_post_meta( $post_id, 'mep_event_faq', $rbfw_faq );
+			
+				if ( $result ) {
 					ob_start();
-					$resultMessage = __( 'Data Updated Successfully', 'booking-and-rental-manager-for-woocommerce' );
+					$resultMessage = __( 'Data updated successfully.', 'booking-and-rental-manager-for-woocommerce' );
 					$this->show_faq_data( $post_id );
 					$html_output = ob_get_clean();
+			
 					wp_send_json_success( [
 						'message' => $resultMessage,
 						'html'    => $html_output,
 					] );
-					die;
+				} else {
+					wp_send_json_error( [ 'message' => __( 'Update failed.', 'booking-and-rental-manager-for-woocommerce' ) ] );
 				}
+			
+				wp_die(); // safer than die
 			}
+			
+
 
 			public function save_faq_data_settings() {
-				if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
-					$post_id  = intval( $_POST['rbfw_faq_postID'] );
-					$rbfw_faq = get_post_meta( $post_id, 'mep_event_faq', true );
-					$rbfw_faq = is_array( $rbfw_faq ) ? $rbfw_faq : [];
-					$new_data = [
-						'rbfw_faq_title'   => sanitize_text_field( $_POST['rbfw_faq_title'] ),
-						'rbfw_faq_content' => wp_kses_post( $_POST['rbfw_faq_content'] )
-					];
-					array_push( $rbfw_faq, $new_data );
-					$result = update_post_meta( $post_id, 'mep_event_faq', $rbfw_faq );
-					if ( $result ) {
-						ob_start();
-						$resultMessage = __( 'Data Added Successfully', 'booking-and-rental-manager-for-woocommerce' );
-						$this->show_faq_data( $post_id );
-						$html_output = ob_get_clean();
-						wp_send_json_success( [
-							'message' => $resultMessage,
-							'html'    => $html_output,
-						] );
-					} else {
-						wp_send_json_success( [
-							'message' => 'Data not inserted',
-							'html'    => 'error',
-						] );
-					}
+				// Check required POST fields exist
+				if (
+					! isset( $_POST['nonce'], $_POST['rbfw_faq_postID'], $_POST['rbfw_faq_title'], $_POST['rbfw_faq_content'] )
+				) {
+					wp_send_json_error( [ 'message' => __( 'Missing required fields.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
 				}
-				die;
+			
+				// Verify nonce
+				if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
+					wp_send_json_error( [ 'message' => __( 'Nonce verification failed.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}
+			
+				// Sanitize and validate post ID
+				$post_id = intval( $_POST['rbfw_faq_postID'] );
+			
+				// Check user capability
+				if ( ! current_user_can( 'edit_post', $post_id ) ) {
+					wp_send_json_error( [ 'message' => __( 'You do not have permission to perform this action.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}
+			
+				// Ensure correct post type (optional, adjust as needed)
+				if ( get_post_type( $post_id ) !== 'rbfw_item' ) {
+					wp_send_json_error( [ 'message' => __( 'Invalid post type.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}
+			
+				// Sanitize user inputs
+				$new_data = [
+					'rbfw_faq_title'   => sanitize_text_field( $_POST['rbfw_faq_title'] ),
+					'rbfw_faq_content' => wp_kses_post( $_POST['rbfw_faq_content'] ),
+				];
+			
+				// Retrieve existing FAQ meta
+				$rbfw_faq = get_post_meta( $post_id, 'mep_event_faq', true );
+				$rbfw_faq = is_array( $rbfw_faq ) ? $rbfw_faq : [];			
+			
+				// Append new FAQ
+				$rbfw_faq[] = $new_data;
+			
+				// Save back to post meta
+				$result = update_post_meta( $post_id, 'mep_event_faq', $rbfw_faq );			
+				if ( $result ) {
+					ob_start();
+					$resultMessage = __( 'Data added successfully.', 'booking-and-rental-manager-for-woocommerce' );
+					$this->show_faq_data( $post_id );
+					$html_output = ob_get_clean();
+			
+					wp_send_json_success( [
+						'message' => $resultMessage,
+						'html'    => $html_output,
+					] );
+				} else {
+					wp_send_json_error( [
+						'message' => __( 'Failed to save data.', 'booking-and-rental-manager-for-woocommerce' ),
+					] );
+				}			
+				wp_die(); // safer than die;
 			}
+			
 
 			public function faq_delete_item() {
-				if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
-					$post_id  = intval( $_POST['rbfw_faq_postID'] );
-					$rbfw_faq = get_post_meta( $post_id, 'mep_event_faq', true );
-					$rbfw_faq = is_array( $rbfw_faq ) ? $rbfw_faq : [];
-					if ( ! empty( $rbfw_faq ) ) {
-						if ( isset( $_POST['itemId'] ) ) {
-							unset( $rbfw_faq[ $_POST['itemId'] ] );
-							$rbfw_faq = array_values( $rbfw_faq );
-						}
-					}
-					$result = update_post_meta( $post_id, 'mep_event_faq', $rbfw_faq );
-					if ( $result ) {
-						ob_start();
-						$resultMessage = __( 'Data Deleted Successfully', 'booking-and-rental-manager-for-woocommerce' );
-						$this->show_faq_data( $post_id );
-						$html_output = ob_get_clean();
-						wp_send_json_success( [
-							'message' => $resultMessage,
-							'html'    => $html_output,
-						] );
-					} else {
-						wp_send_json_success( [
-							'message' => 'Data not inserted',
-							'html'    => '',
-						] );
-					}
+				// Check required fields
+				if (! isset( $_POST['nonce'], $_POST['rbfw_faq_postID'], $_POST['itemId'] )) {
+					wp_send_json_error( [ 'message' => __( 'Missing required fields.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}			
+				// Verify nonce
+				if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
+					wp_send_json_error( [ 'message' => __( 'Invalid nonce.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
 				}
-				die;
+
+				// Sanitize and validate inputs
+				$post_id  = intval( $_POST['rbfw_faq_postID'] );
+				$item_id  = intval( $_POST['itemId'] );
+			
+				// Check user capabilities
+				if ( ! current_user_can( 'edit_post', $post_id ) ) {
+					wp_send_json_error( [ 'message' => __( 'Permission denied.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}
+			
+				// Optional: Ensure correct post type
+				if ( get_post_type( $post_id ) !== 'rbfw_item' ) {
+					wp_send_json_error( [ 'message' => __( 'Invalid post type.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}
+			
+				// Fetch and validate FAQ data
+				$rbfw_faq = get_post_meta( $post_id, 'mep_event_faq', true );
+				$rbfw_faq = is_array( $rbfw_faq ) ? $rbfw_faq : [];
+			
+				if ( ! isset( $rbfw_faq[ $item_id ] ) ) {
+					wp_send_json_error( [ 'message' => __( 'FAQ item not found.', 'booking-and-rental-manager-for-woocommerce' ) ] );
+					wp_die();
+				}
+			
+				// Remove the item and reindex the array
+				unset( $rbfw_faq[ $item_id ] );
+				$rbfw_faq = array_values( $rbfw_faq );
+			
+				// Update the post meta
+				$result = update_post_meta( $post_id, 'mep_event_faq', $rbfw_faq );
+			
+				if ( $result ) {
+					ob_start();
+					$resultMessage = __( 'Data deleted successfully.', 'booking-and-rental-manager-for-woocommerce' );
+					$this->show_faq_data( $post_id );
+					$html_output = ob_get_clean();
+			
+					wp_send_json_success( [
+						'message' => $resultMessage,
+						'html'    => $html_output,
+					] );
+				} else {
+					wp_send_json_error( [
+						'message' => __( 'Failed to delete data.', 'booking-and-rental-manager-for-woocommerce' ),
+					] );
+				}			
+				wp_die(); // safer alternative to die
 			}
+			
 		}
 		new RBFW_Faq_Settings();
 	}
