@@ -389,6 +389,9 @@
     /*color: #333333;*/
     margin: 10px 0;
 }
+.rbfw_popup_fearure_title.rbfw_popup_fearure_title_color{
+    color: #333333;
+}
 ul.rbfw_popup_fearure_lists{
     margin: 0;
     padding: 0;
