@@ -250,9 +250,9 @@
                                     <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                 </span>
 
-                                <?php if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) || is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) ) { ?>
-                                    <span id="sync-with-sessional-price-sd" data-post_id="<?php echo esc_attr( $post_id ) ?>" class="ppof-button" >
-                                        <?php esc_html_e( 'Sync', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                <?php if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) { ?>
+                                    <span id="sync-with-sessional-price-sd" data-post_id="<?php echo esc_attr( $post_id ) ?>" class="ppof-button sync-with-sessional-price-sd" >
+                                        <?php esc_html_e( 'Sync with sessional price', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                     </span>
                                 <?php } ?>
                             </p>
