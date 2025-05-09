@@ -375,11 +375,13 @@
 				$target     = date_create( $end_date );
 				$interval   = date_diff( $origin, $target );
 				$total_days = $interval->format( '%a' );
+
 				if ( $total_days ) {
 					$price_type = 'daynight';
 				} else {
 					$price_type = 'daylong';
 				}
+
 				$this->rbfw_get_active_price_table( $post_id, $price_type, $start_date, $end_date );
 			}
 
@@ -426,22 +428,21 @@
 
                     if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) || is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' )) {
 
-                        if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' )){
-                            $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
+                        $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
+                        $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
 
 
+                        if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) && !empty($rbfw_resort_data_mds)){
                             foreach ( $room_price_arr as $key => $value ) {
-
                                 if (($sp_price = check_seasonal_price_resort_mds($total_days, $rbfw_resort_data_mds, $key, $active_tab)) != 'not_found') {
                                     $room_price += (float)$value['data_qty'] * (float)$sp_price;
                                 } else {
                                     $room_price += (float)$value['data_qty'] * (float)$value['data_price'];
                                 }
-
                             }
                             $total_room_price = $room_price * (int) $total_days;
-                        }else{
-                            $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
+
+                        }elseif(is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) && !empty($rbfw_resort_data_sp)){
                             $book_dates = getAllDates( $checkin_date, $checkout_date );
                             foreach ( $room_price_arr as $key => $value ) {
                                 for($d = 0; $d < $total_days; $d++) {
@@ -453,11 +454,16 @@
                                 }
                             }
                             $total_room_price = $room_price;
+                        }else{
+                            foreach ( $room_price_arr as $key => $value ) {
+                                $room_price += (float) $value['data_qty'] * (float) $value['data_price'];
+                            }
+                            if ( $room_price > 0 && $total_days > 0 ):
+                                $total_room_price = (float) $room_price * (int) $total_days;
+                            else:
+                                $total_room_price = (float) $room_price;
+                            endif;
                         }
-
-
-
-
                     }else{
                         foreach ( $room_price_arr as $key => $value ) {
                             $room_price += (float) $value['data_qty'] * (float) $value['data_price'];
@@ -468,12 +474,6 @@
                             $total_room_price = (float) $room_price;
                         endif;
                     }
-
-
-
-
-
-
 
 
 					if ( ! empty( $service_price_arr ) ) {
@@ -555,18 +555,7 @@
                     $all_infos      = '<div class="rbfw_container">';
                     $all_infos .= '<div class="rbfw_header">Price Details</div>';
 
-                    if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' )){
-                        $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
-                        for($d = 1; $d <= $total_days; $d++) {
-                            $all_infos .='<div class="rbfw_entry">';
-                            if (($sp_price = check_seasonal_price_resort_mds($d, $rbfw_resort_data_mds, $room_type, $active_tab)) != 'not_found') {
-                                $all_infos .= '<span class="rbfw_date">'.numberToOrdinal($d).'</span><span class="rbfw_amount">'.wp_kses(wc_price($sp_price) , rbfw_allowed_html()).'</span>';
-                            } else {
-                                $all_infos .= '<span class="rbfw_date">'.numberToOrdinal($d).'</span> <span class="rbfw_amount">'.wp_kses(wc_price($price) , rbfw_allowed_html()).'</span>';
-                            }
-                            $all_infos .='</div>';
-                        }
-                    }else{
+
                         $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
                         $book_dates = getAllDates( $checkin_date, $checkout_date );
 
@@ -579,7 +568,7 @@
                             }
                             $all_infos .='</div>';
                         }
-                    }
+
                     $all_infos .= '</div>';
                 }
                 wp_send_json_success( $all_infos );
