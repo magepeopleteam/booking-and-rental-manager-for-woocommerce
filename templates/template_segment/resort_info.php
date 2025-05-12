@@ -86,6 +86,7 @@ if(isset($post_id) && isset($active_tab)){
                     $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $checkin_date, $checkout_date, $value['room_type'], '', '');
                     $max_available_qty = $max_available_qty['remaining_stock'];
                 }
+
                 ?>
 
                 <tr>
@@ -110,6 +111,8 @@ if(isset($post_id) && isset($active_tab)){
                         <?php
                         $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
                         $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
+
+
 
 
                         if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) && !empty($rbfw_resort_data_mds)){  ?>
@@ -148,7 +151,7 @@ if(isset($post_id) && isset($active_tab)){
                             </td>
 
                         <?php }else{ ?>
-                            <td>jj
+                            <td>
                                 <?php echo wp_kses(wc_price($price) , rbfw_allowed_html()); ?>
                                 <input type="hidden" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]" value="<?php echo esc_attr($price); ?>"/>
                             </td>
