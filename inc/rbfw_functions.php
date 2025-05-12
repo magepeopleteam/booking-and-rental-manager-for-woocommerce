@@ -2766,26 +2766,6 @@ function check_seasonal_price_resort_mds( $day_number, $rbfw_sp_prices, $room_ty
         return $price;
 
 
-
-
-        /*foreach ( $rbfw_sp_prices as $key=>$rbfw_sp_price ) {
-            if(isset($rbfw_sp_price['start_day']) && isset($rbfw_sp_price['end_day'])){
-                $rbfw_start_day = $rbfw_sp_price['start_day'];
-
-                if ( $day_number < $rbfw_start_day  ) {
-                    foreach ($rbfw_sp_price['room_price'] as $key=>$room_price){
-                        if($room_type == $room_price['room_type']){
-                            if($active_tab=='daylong'){
-                                return $room_price['day_long_price'];
-                            }else{
-                                return $room_price['price'];
-                            }
-                        }
-                    }
-                }
-            }
-        }*/
-    return 'not_found';
 }
 
 

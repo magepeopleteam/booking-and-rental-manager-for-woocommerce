@@ -19,9 +19,20 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 <?php if($rbfw_rent_type == 'resort'){
 
     $start_datetime    = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
-
-
     $end_datetime 		= $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
+
+
+
+    $origin              = date_create( $start_datetime );
+    $target              = date_create( $end_datetime );
+    $interval            = date_diff( $origin, $target );
+    $total_days          = $interval->format( '%a' );
+    $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+    if ($rbfw_count_extra_day_enable == 'on') {
+        $total_days = $total_days + 1;
+    }
+
+
     $rbfw_room_price_category 	= $cart_item['rbfw_room_price_category'] ? $cart_item['rbfw_room_price_category'] : '';
 
     $rbfw_room_info 			= $cart_item['rbfw_room_info'] ? $cart_item['rbfw_room_info'] : [];
