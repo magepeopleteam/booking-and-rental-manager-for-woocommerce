@@ -145,6 +145,9 @@ if(isset($_POST['post_id'])){
                                     <th>
                                         <?php esc_html_e( 'Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                     </th>
+                                    <th class="resort_day_long_price">
+                                        <?php echo wp_kses( sprintf( 'Day-long price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ), array( 'b' => array( 'class' => array() ), ) ); ?>
+                                    </th>
                                     <th>
                                         <?php echo wp_kses( sprintf( 'Price <b class="required">*</b>', 'booking-and-rental-manager-for-woocommerce' ), array( 'b' => array( 'class' => array() ), ) ); ?>
                                     </th>

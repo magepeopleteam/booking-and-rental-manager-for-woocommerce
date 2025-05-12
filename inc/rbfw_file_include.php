@@ -67,7 +67,7 @@ add_action('wp_loaded', 'rbfw_free_woocommerce_integrate');
 function rbfw_free_woocommerce_integrate(){
 
     require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_wc_notice.php");
-    require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_functions.php");
+    require_once(RBFW_PLUGIN_DIR . "/Frontend/RBFW_Woocommerse.php");
     require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-status.php");
     require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-meta.php");
     require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_cart_price_function.php");
