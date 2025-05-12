@@ -169,8 +169,11 @@ function fetch_order_details_callback() {
                         <?php } ?>
                         <?php if ( $rent_type == 'resort' ) { ?>
                             <tr>
-                                <td><strong><?php rbfw_string( 'rbfw_text_room_information', __( 'Room Information', 'booking-and-rental-manager-for-woocommerce' ) );
-                                        echo ':'; ?></strong></td>
+                                <td>
+                                    <strong>
+                                        <?php rbfw_string( 'rbfw_text_room_information', __( 'Room Information', 'booking-and-rental-manager-for-woocommerce' ) ); ?>:
+                                    </strong>
+                                </td>
                                 <td>
                                     <table class="wp-list-table widefat fixed striped table-view-list">
                                         <?php
@@ -179,7 +182,7 @@ function fetch_order_details_callback() {
                                                 ?>
                                                 <tr>
                                                     <td><strong><?php echo esc_html( $key ); ?></strong></td>
-                                                    <td><?php echo esc_html( $value ); ?></td>
+                                                    <td><?php echo wp_kses( $value, rbfw_allowed_html() ); ?></td>
                                                 </tr>
                                                 <?php
                                             }
