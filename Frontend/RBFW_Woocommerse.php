@@ -5,8 +5,6 @@
 if (!class_exists('MPTBM_Woocommerce')) {
     class MPTBM_Woocommerce
     {
-        private $custom_order_data = array(); // Property to store the data
-        private $ordered_item_name;
 
         public function __construct()
         {
@@ -39,6 +37,11 @@ if (!class_exists('MPTBM_Woocommerce')) {
             $sd_input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
 
             $rbfw_rent_type     = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
+
+
+
+
+
             $rbfw_item_quantity = isset( $sd_input_data_sabitized['rbfw_item_quantity'] ) ? intval( $sd_input_data_sabitized['rbfw_item_quantity'] ) : 1;
             $rbfw_service_info_all = (isset( $sd_input_data_sabitized['rbfw_service_info'] ) && is_array( $sd_input_data_sabitized['rbfw_service_info'] ) ) ? $sd_input_data_sabitized['rbfw_service_info'] : [];
 
@@ -875,6 +878,7 @@ if (!class_exists('MPTBM_Woocommerce')) {
             }
         }
     }
+    new MPTBM_Woocommerce();
 }
 
 
