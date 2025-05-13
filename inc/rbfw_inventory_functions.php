@@ -405,17 +405,25 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
 
     /*start extra service inventory*/
+
     $extra_service_instock = [];
     $rbfw_extra_service_info = get_post_meta($post_id, 'rbfw_extra_service_data', true);
-    if(!empty($rbfw_extra_service_info)){
-        $service_q = [];
-        foreach($rbfw_extra_service_info as $service=>$es){
-            foreach($date_range as $date){
-                $service_q[] = array('date'=>$date,$es['service_name']=>total_extra_service_quantity($es['service_name'],$date,$rbfw_inventory,$inventory_based_on_return));
+
+    if (!empty($rbfw_extra_service_info)) {
+        foreach ($rbfw_extra_service_info as $service => $es) {
+            $service_q = [];
+
+            foreach ($date_range as $date) {
+                $qty = total_extra_service_quantity($es['service_name'], $date, $rbfw_inventory, $inventory_based_on_return);
+                $service_q[] = $qty;
             }
-            $extra_service_instock[$service] = $es['service_qty'] - max(array_column($service_q, $es['service_name']));
+
+            $max_qty = !empty($service_q) ? max($service_q) : 0;
+            $extra_service_instock[$service] = $es['service_qty'] - $max_qty;
         }
     }
+
+
     /*end extra service inventory*/
 
     return array('remaining_stock'=>$remaining_stock,
