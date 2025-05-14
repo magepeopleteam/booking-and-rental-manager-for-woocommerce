@@ -152,10 +152,7 @@
 					endif;
 
 
-
                     foreach ( $rbfw_room_info as $key => $value ) {
-
-
 
                         $room_type = $key; //Type1
                         if (array_key_exists($room_type, $room_types)) {
@@ -209,18 +206,8 @@
                                     $total_room_price = (float) $room_price;
                                 endif;
                             }
-
-
-
                         }
-
-
-
                     }
-
-
-
-
 
 					foreach ( $rbfw_service_info as $key => $value ):
 						$service_name = $key; //Service1
@@ -269,7 +256,6 @@
 					$main_array[0]['rbfw_type_info']          = [];
 					$main_array[0]['rbfw_service_info']       = [];
 					$main_array[0]['rbfw_room_price']         = $rbfw_room_price;
-					$main_array[0]['duration_cost']           = $total_room_price;
 					$main_array[0]['rbfw_rent_type']          = $rbfw_rent_type;
 					$main_array[0]['rbfw_id']                 = $product_id;
 					if ( ! empty( $rbfw_room_info ) ) {

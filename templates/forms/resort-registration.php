@@ -71,7 +71,7 @@
                                                     <td><?php echo esc_attr($value['room_type']); ?></td>
 
                                                     <?php if(!empty($value['rbfw_room_daylong_rate'])){ ?>
-                                                        <td style="display: <?php if (($rbfw_item_type == 'resort') && $rbfw_enable_resort_daylong_price == 'yes') { echo esc_attr( 'block' ); } else { echo esc_attr( 'none' ); } ?>;"><?php echo wp_kses(wc_price( $value['rbfw_room_daylong_rate'] ),rbfw_allowed_html()); ?></td>
+                                                        <td style="display: <?php ($rbfw_enable_resort_daylong_price == 'yes')?'block':'none'  ?>"><?php echo wp_kses(wc_price( $value['rbfw_room_daylong_rate'] ),rbfw_allowed_html()); ?></td>
                                                     <?php } ?>
 
                                                     <td><?php echo wp_kses(wc_price( $value['rbfw_room_daynight_rate'] ),rbfw_allowed_html()); ?></td>
@@ -85,6 +85,89 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <?php
+
+                            if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php') || is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') ) {
+
+                                $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
+                                $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
+
+                                if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) && !empty($rbfw_resort_data_mds)){
+                                    ?>
+
+                                    <?php foreach ($rbfw_resort_data_mds as $mds_single){ ?>
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td colspan="2">Over <strong><?php echo esc_html($mds_single['start_day']) ?></strong> Days</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="rbfw_day_wise_price">
+                                                        <table>
+                                                            <tbody>
+                                                            <?php foreach ($mds_single['room_price'] as $room_price){  ?>
+                                                                <tr>
+                                                                    <td>
+                                                                        <?php echo esc_html($room_price['room_type']) ?>
+                                                                    </td>
+                                                                    <td style="display: <?php ($rbfw_enable_resort_daylong_price == 'yes')?'block':'none'  ?>">
+                                                                        <?php echo wc_price($room_price['day_long_price']) ?>
+                                                                    </td>
+                                                                    <td>
+                                                                        <?php echo wc_price($room_price['price']) ?>
+                                                                    </td>
+                                                                </tr>
+                                                            <?php } ?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    <?php } ?>
+
+                                    <?php
+
+                                }elseif(is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php') && !empty($rbfw_resort_data_sp)){
+                                    ?>
+                                    <?php foreach ($rbfw_resort_data_sp as $sp_single){ ?>
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td>From <strong><?php echo esc_html( rbfw_date_format($sp_single['start_date'])) ?></strong> To  <strong><?php echo esc_html( rbfw_date_format($sp_single['end_date'])) ?></strong> </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="rbfw_day_wise_price">
+                                                        <table>
+                                                            <tbody>
+                                                            <?php foreach ($sp_single['room_price'] as $room_price){  ?>
+                                                                <tr>
+                                                                    <td>
+                                                                        <?php echo esc_html($room_price['room_type']) ?>
+                                                                    </td>
+                                                                    <td style="display: <?php ($rbfw_enable_resort_daylong_price == 'yes')?'block':'none'  ?>">
+                                                                        <?php echo wc_price($room_price['day_long_price']) ?>
+                                                                    </td>
+                                                                    <td>
+                                                                        <?php echo wc_price($room_price['price']) ?>
+                                                                    </td>
+                                                                </tr>
+                                                            <?php } ?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    <?php } ?>
+                                    <?php
+                                }
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>
