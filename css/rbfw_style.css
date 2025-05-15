@@ -7306,7 +7306,7 @@ i.fas.fa-minus {
 div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
 .entry-content ul, .entry-content ol {
     padding: 0 !important;
-    margin: 0 !importnt;
+    margin: 0 !important;
 }
 .rbfw-related-product-title-wrap a{color:#333;}
 .sliderItem.activeSlide{border-radius:8px;}
@@ -7314,3 +7314,7 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
     border-radius: 8px;
 }
 [data-bg-image] {border-radius:5px;}
+
+#rbfw_add_meta_box .mds_for_mds input[type=number]{
+    width: 100%;
+}

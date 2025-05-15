@@ -176,7 +176,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                                 <td><?php echo wp_kses_post(wc_price($daily_rate)); ?> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_day', 'rbfw_basic_translation_settings', __('day', 'booking-and-rental-manager-for-woocommerce'))); ?></td>
                                             </tr>
                                         <?php } ?>
-                                        <?php if ($enable_hourly_rate == 'yes') { ?>
+                                        <?php if ($time_picker == 'on') { ?>
                                             <tr>
                                                 <td><strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly Rate', 'booking-and-rental-manager-for-woocommerce'))); ?></strong></td>
                                                 <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_hour', 'rbfw_basic_translation_settings', __('hour', 'booking-and-rental-manager-for-woocommerce'))); ?></td>
@@ -188,43 +188,73 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                             <?php } ?>
 
                             <?php
+                            $rbfw_md_data_mds = get_post_meta( $post_id, 'rbfw_md_data_mds', true ) ? get_post_meta( $post_id, 'rbfw_md_data_mds', true ) : [];
 
-                            $seasonal_prices = [];
-                            if (is_plugin_active('booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php')){
-                                $seasonal_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) ? get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) : [];
-                            }
-                            if(!empty($seasonal_prices)){
+                            if (is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && (!(empty($rbfw_md_data_mds)))) {
+                                foreach ($rbfw_md_data_mds as $item){
                                 ?>
-                                <div class="mp_settings_area mpStyle rbfw_seasonal_price_config_wrapper rbfw_seasonal_price_info">
-                                    <section>
-                                        <div class="w-100">
-                                            <div class="mp_item_insert ">
-                                                <table>
-                                                    <?php
-                                                    if ( sizeof( $seasonal_prices ) > 0 ) {
-                                                        foreach ( $seasonal_prices as $sp ) {
-                                                            $start_date = array_key_exists( 'rbfw_sp_start_date', $sp ) ? $sp['rbfw_sp_start_date'] : '';
-                                                            $end_date   = array_key_exists( 'rbfw_sp_end_date', $sp ) ? $sp['rbfw_sp_end_date'] : '';
-                                                            $sp_price_h = array_key_exists( 'rbfw_sp_price_h', $sp ) ? $sp['rbfw_sp_price_h'] : '0';
-                                                            $sp_price_d = array_key_exists( 'rbfw_sp_price_d', $sp ) ? $sp['rbfw_sp_price_d'] : '0';
-                                                            ?>
-                                                            <tr>
-                                                                <td colspan="2"><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format($start_date) ); ?></strong> <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>  <strong><?php echo esc_html( rbfw_date_format($end_date) ); ?></strong> </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td><strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo  wp_kses(wc_price($sp_price_d) , rbfw_allowed_html()); ?></td>
-                                                                <td><strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>  <?php echo  wp_kses(wc_price($sp_price_h) , rbfw_allowed_html()); ?></td>
-                                                            </tr>
-                                                            <?php
+                                    <div class="mp_item_insert ">
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <td <?php echo ($time_picker == 'on')?'colspan="2"':'' ?>>Over <strong><?php echo esc_html($item['rbfw_start_day']) ?></strong> Days </td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><?php echo wc_price($item['rbfw_daily_price']) ?>
+                                                </td>
+                                                <?php if($time_picker == 'on'){ ?>
+                                                <td>
+                                                    <strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><?php echo wc_price($item['rbfw_hourly_price']) ?>
+                                                </td>
+                                                <?php } ?>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <?php } ?>
+                            <?php   }else{
+
+                                $seasonal_prices = [];
+                                if (is_plugin_active('booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php')){
+                                    $seasonal_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) ? get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) : [];
+                                }
+                                if(!empty($seasonal_prices)){
+                                    ?>
+                                    <div class="mp_settings_area mpStyle rbfw_seasonal_price_config_wrapper rbfw_seasonal_price_info">
+                                        <section>
+                                            <div class="w-100">
+                                                <div class="mp_item_insert ">
+                                                    <table>
+                                                        <?php
+                                                        if ( sizeof( $seasonal_prices ) > 0 ) {
+                                                            foreach ( $seasonal_prices as $sp ) {
+                                                                $start_date = array_key_exists( 'rbfw_sp_start_date', $sp ) ? $sp['rbfw_sp_start_date'] : '';
+                                                                $end_date   = array_key_exists( 'rbfw_sp_end_date', $sp ) ? $sp['rbfw_sp_end_date'] : '';
+                                                                $sp_price_h = array_key_exists( 'rbfw_sp_price_h', $sp ) ? $sp['rbfw_sp_price_h'] : '0';
+                                                                $sp_price_d = array_key_exists( 'rbfw_sp_price_d', $sp ) ? $sp['rbfw_sp_price_d'] : '0';
+                                                                ?>
+                                                                <tr>
+                                                                    <td <?php echo ($time_picker == 'on')?'colspan="2"':'' ?>><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format($start_date) ); ?></strong> <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>  <strong><?php echo esc_html( rbfw_date_format($end_date) ); ?></strong> </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo  wp_kses(wc_price($sp_price_d) , rbfw_allowed_html()); ?></td>
+                                                                    <?php if($time_picker == 'on'){ ?>
+                                                                        <td><strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>  <?php echo  wp_kses(wc_price($sp_price_h) , rbfw_allowed_html()); ?></td>
+                                                                    <?php } ?>
+                                                                </tr>
+                                                                <?php
+                                                            }
                                                         }
-                                                    }
-                                                    ?>
-                                                </table>
+                                                        ?>
+                                                    </table>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </section>
-                                </div>
-                            <?php } ?>
+                                        </section>
+                                    </div>
+                                <?php }
+                            }
+                            ?>
 
                         </div>
                     </div>

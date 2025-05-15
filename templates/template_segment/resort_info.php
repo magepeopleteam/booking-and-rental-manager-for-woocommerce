@@ -134,15 +134,15 @@ if(isset($post_id) && isset($active_tab)){
                             <td>
                                 <?php
                                 $book_dates = getAllDates( $checkin_date, $checkout_date );
-                                $room_price =0;
+                                $total_room_price =0;
                                 for($d = 0; $d < $total_days; $d++) {
                                     if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $value['room_type'], $active_tab)) != 'not_found') {
-                                        $room_price += (float)$sp_price;
+                                        $total_room_price += (float)$sp_price;
                                     } else {
-                                        $room_price += (float)$price;
+                                        $total_room_price += (float)$price;
                                     }
                                 }
-                                $total_room_price = $room_price;
+                                $room_price = $total_room_price/$total_days;
                                 ?>
                                 <p><?php esc_html_e('Avg price','booking-and-rental-manager-for-woocommerce'); ?>: <?php echo wp_kses(wc_price($total_room_price/$total_days) , rbfw_allowed_html()); ?></p>
                                 <a class="rbfw_see_resort_datewise_price" data-checkin_date="<?php echo esc_attr($checkin_date) ?>" data-checkout_date="<?php echo esc_attr($checkout_date) ?>" data-total_days="<?php echo esc_attr($total_days) ?>" data-price="<?php echo esc_attr($price) ?>" data-post_id="<?php echo esc_attr( $post_id ); ?>" data-room_type="<?php echo esc_attr($value['room_type']) ?>" data-active_tab="<?php echo esc_attr($active_tab) ?>" href="#">
@@ -164,9 +164,10 @@ if(isset($post_id) && isset($active_tab)){
                             <input type="hidden" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]" value="<?php echo esc_attr($price); ?>"/>
                         </td>
                     <?php } ?>
-
+                    <?php $price = isset($room_price)?$room_price:$price ?>
                     <td>
                         <div class="rbfw_service_price_wrap">
+                            <input type="hidden" value="<?php echo esc_attr($price); ?>" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]"/>
                             <div class="rbfw_qty_input">
                                 <a class="rbfw_qty_minus rbfw_room_qty_minus"><i class="fas fa-minus"></i></a>
                                 <input type="number" min="0" max="<?php echo esc_attr($max_available_qty) ?>" value="0" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_qty]" class="rbfw_room_qty" data-price="<?php echo esc_attr($price); ?>" data-type="<?php echo esc_attr($value['room_type']); ?>" data-active_tab="<?php echo esc_attr($active_tab); ?>" data-cat="room"/>

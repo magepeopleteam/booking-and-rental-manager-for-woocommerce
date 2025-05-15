@@ -21,27 +21,29 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $start_datetime    = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
     $end_datetime 		= $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
 
-
-
     $origin              = date_create( $start_datetime );
     $target              = date_create( $end_datetime );
     $interval            = date_diff( $origin, $target );
     $total_days          = $interval->format( '%a' );
     $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
     if ($rbfw_count_extra_day_enable == 'on') {
-        $total_days = $total_days + 1;
+        $total_days++;
     }
 
 
     $rbfw_room_price_category 	= $cart_item['rbfw_room_price_category'] ? $cart_item['rbfw_room_price_category'] : '';
 
     $rbfw_room_info 			= $cart_item['rbfw_room_info'] ? $cart_item['rbfw_room_info'] : [];
+
     $rbfw_type_info 			= $cart_item['rbfw_type_info'] ? $cart_item['rbfw_type_info'] : [];
 
 
 
     $rbfw_resort_room_data 		= get_post_meta( $rbfw_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_resort_room_data', true ) : array();
+
     $rbfw_resort_ticket_info 	= $cart_item['rbfw_ticket_info'] ? $cart_item['rbfw_ticket_info'] : [];
+    $rbfw_room_price 	= $cart_item['rbfw_room_price'] ? $cart_item['rbfw_room_price'] : [];
+
     $rbfw_item_quantity = 1;
     if($rbfw_room_price_category == 'daynight'):
         $room_types = array_column($rbfw_resort_room_data,'rbfw_room_daynight_rate','room_type');
@@ -50,6 +52,8 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     else:
         $room_types = array();
     endif;
+
+    //echo '<pre>';print_r($room_types);echo '<pre>';exit;
 
     $room_desc = array_column($rbfw_resort_room_data,'rbfw_room_desc','room_type');
 
@@ -92,11 +96,10 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
         <?php endif; ?>
 
         <?php if ( ! empty( $rbfw_room_info ) ):
-
             foreach ($rbfw_room_info as $key => $value):
                 $room_type = $key; //Type
                 if(array_key_exists($room_type, $room_types)){ // if Type exist in array
-                    $room_price = $room_types[$room_type]; // get type price from array
+                    $room_price = $rbfw_room_price[$room_type]; // get type price from array
                     $room_qty = $value;
                     $total_price = (float)$room_price * (float)$room_qty;
                     $room_description = $room_desc[$room_type]; // get type description from array

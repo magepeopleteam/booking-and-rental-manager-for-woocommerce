@@ -1004,7 +1004,7 @@
         e.preventDefault();
         let current_time = jQuery.now();
         if ($('.rbfw_resort_price_table .rbfw_resort_price_table_row').length) {
-            let resort_last_row = $('.rbfw_resort_price_table .rbfw_resort_price_table_row:last-child()');
+            let resort_last_row = $('.rbfw_resort_price_table .rbfw_resort_price_table_row:last-child');
             let resort_type_last_data_key = parseInt(resort_last_row.attr('data-key'));
             let resort_type_new_data_key = resort_type_last_data_key + 1;
             let resort_type_row = '<tr class="rbfw_resort_price_table_row" data-key="' + resort_type_new_data_key + '">'
@@ -1041,7 +1041,8 @@
         });
         $(".rbfw_resort_price_table_body").sortable();
 
-        var daylong_price_label_val = $('.rbfw_resort_daylong_price_switch label.active').find('input').val();
+        var daylong_price_label_val = $('input[name="rbfw_enable_resort_daylong_price"]').val();
+
         if (daylong_price_label_val === 'yes') {
             $('.resort_day_long_price').show();
         } else {
