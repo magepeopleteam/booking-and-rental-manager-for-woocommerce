@@ -86,7 +86,7 @@ function mp_load_date_picker(parent = jQuery('.mpStyle')) {
 	}).promise().done(function () {
 		parent.find(".date_type").datepicker({
 			dateFormat: js_date_format,
-			//showButtonPanel: true,
+			minDate: 0,
 			autoSize: true,
 			changeMonth: true,
 			changeYear: true,
@@ -94,12 +94,6 @@ function mp_load_date_picker(parent = jQuery('.mpStyle')) {
 				let date = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
 				jQuery(this).closest('label').find('input[type="hidden"]').val(date).trigger('change');
 			},
-			// closeText: 'Clear Date',
-			// onClose: function (dateText, inst) {
-			// 	if (jQuery(this).hasClass('ui-datepicker-close')) {
-			// 		document.getElementById(this.id).reset();
-			// 	}
-			// }
 		});
 	});
 	parent.find(".date_type_without_year.hasDatepicker").each(function () {
