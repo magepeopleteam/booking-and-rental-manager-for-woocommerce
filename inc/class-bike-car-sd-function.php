@@ -452,7 +452,8 @@
 					$bikecarsd_price += (float) $value['data_qty'] * (float) $value['data_price'];
 				endforeach;
 				$total_bikecarsd_price = (float) $bikecarsd_price;
-				if ( ! empty( $sd_input_data_sabitized['service_price_arr'] ) ) {
+                $service_price_arr = $sd_input_data_sabitized['service_price_arr'];
+				if ( ! empty( $service_price_arr ) ) {
 					foreach ( $sd_input_data_sabitized['service_price_arr'] as $key => $value ):
 						$service_price += (float) $value['data_qty'] * (float) $value['data_price'];
 					endforeach;

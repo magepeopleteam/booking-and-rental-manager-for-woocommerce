@@ -137,6 +137,7 @@ if (!class_exists('RBFW_Hidden_Product')) {
         }
         public function hide_hidden_wc_product_from_frontend() {
             global $post, $wp_query;
+
             if(rbfw_woo_install_check() == 'Yes' ){
                 if (is_product()) {
                     $post_id = $post->ID;
