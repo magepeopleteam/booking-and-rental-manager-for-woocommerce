@@ -36,6 +36,7 @@ require_once RBFW_PLUGIN_DIR . '/support/blocks/block-support.php';
 //require_once RBFW_PLUGIN_DIR . '/lib/classes/class-quick-setup.php';
 
 
+
 add_action('init', 'rbfw_category_update');
 function rbfw_category_update(){
     $rbfw_category_update = get_option('rbfw_category_update');

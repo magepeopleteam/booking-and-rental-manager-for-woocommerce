@@ -92,7 +92,7 @@
 
 			public function plugin_action_link( $links_array, $plugin_file_name ) {
 				if ( strpos( $plugin_file_name, basename( __FILE__ ) ) ) {
-					if ( ! is_plugin_active( 'booking-and-rental-manager-for-woocommerce/rent-pro.php' ) ) {
+					if ( ! is_plugin_active( 'booking-and-rental-manager-for-woocommerce-pro/rent-pro.php' ) ) {
 						array_unshift( $links_array, '<a href="' . esc_url( admin_url() ) . 'edit.php?post_type=rbfw_item&page=rbfw_settings_page">' . __( 'Settings', 'booking-and-rental-manager-for-woocommerce' ) . '</a>' );
 						array_unshift( $links_array, '<a href="' . esc_url( "https://mage-people.com/product/booking-and-rental-manager-for-woocommerce/" ) . '" target="_blank" class="rbfw_plugin_pro_meta_link">' . __( 'Get Booking and Rental Manager Pro', 'booking-and-rental-manager-for-woocommerce' ) . '</a>' );
 					} else {
