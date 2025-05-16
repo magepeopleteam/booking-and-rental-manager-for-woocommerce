@@ -1419,6 +1419,7 @@ a.rbfw_qty_plus.rbfw_timely_es_qty_plus {
 .pricing-content .rbfw_pricing_info_heading {
     border-bottom: 1px solid #e7dede !important;
     padding-bottom: 10px;
+    width: 100%;
 }
 
 .rbfw_alert_warning {
