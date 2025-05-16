@@ -287,7 +287,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                     <tr>
                         <th>
                             <?php echo esc_html($service_name); ?>:
-
                         </th>
                         <td>(<?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?> x <?php echo esc_html($service_qty); ?>) = <?php echo wp_kses(wc_price($total_service_price),rbfw_allowed_html()); ?></td>
                     </tr>
@@ -426,26 +425,32 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
         <?php } ?>
 
 
-            <?php if ( ! empty( $start_datetime ) && ! empty( $end_datetime ) && $rbfw_duration_price_individual ){ ?>
-                <tr>
-                    <th>
-                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost:','booking-and-rental-manager-for-woocommerce'))); ?>
-                    </th>
-                    <td>
-                        <?php echo wp_kses('('.wc_price((float)$rbfw_duration_price_individual) .' x '.$rbfw_item_quantity.')'. ' = '.wc_price((float)$rbfw_duration_price_individual * $rbfw_item_quantity),rbfw_allowed_html());?>
-                    </td>
-                </tr>
-            <?php } ?>
-
+        <?php if ( ! empty( $start_datetime ) && ! empty( $end_datetime ) && $rbfw_duration_price_individual ){ ?>
             <tr>
                 <th>
-                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?>
+                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost:','booking-and-rental-manager-for-woocommerce'))); ?>
                 </th>
                 <td>
-                    <?php echo esc_html($cart_item['total_days'].' '.(($cart_item['total_days']==1) ? $rbfw->get_option_trans('rbfw_text_days','rbfw_basic_translation_settings',__('Days','booking-and-rental-manager-for-woocommerce')) : $rbfw->get_option_trans('rbfw_text_days','rbfw_basic_translation_settings',__('Days','booking-and-rental-manager-for-woocommerce')))); ?>
+                    <?php echo wp_kses('('.wc_price((float)$rbfw_duration_price_individual) .' x '.$rbfw_item_quantity.')'. ' = '.wc_price((float)$rbfw_duration_price_individual * $rbfw_item_quantity),rbfw_allowed_html());?>
                 </td>
             </tr>
+        <?php } ?>
 
+
+        <tr>
+            <th>
+                <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?>
+            </th>
+            <td>
+                <?php
+                $diff                    = date_diff( new DateTime( $start_datetime ), new DateTime( $end_datetime ) );
+                $total_days = $diff->days;
+                $hours = $diff->h + ($diff->i / 60);
+                ?>
+                <?php echo esc_html($total_days.' '.(($total_days==1) ? $rbfw->get_option_trans('rbfw_text_days','rbfw_basic_translation_settings',__('Day','booking-and-rental-manager-for-woocommerce')) : $rbfw->get_option_trans('rbfw_text_days','rbfw_basic_translation_settings',__('Days','booking-and-rental-manager-for-woocommerce')))); ?>
+                <?php echo esc_html($hours); ?> <?php echo (($hours==1) ? esc_html_e( 'Hour', 'booking-and-rental-manager-for-woocommerce' ) : esc_html_e( 'Hour', 'booking-and-rental-manager-for-woocommerce' )) ?>
+            </td>
+        </tr>
 
         <?php if ( ! empty( $rbfw_service_infos ) ){ ?>
             <?php foreach ($rbfw_service_infos as $key => $value){ ?>

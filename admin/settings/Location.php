@@ -13,9 +13,12 @@
 				add_action( 'save_post', array( $this, 'settings_save' ), 99, 1 );
 			}
 
-			public function add_tab_menu() {
+			public function add_tab_menu($rbfw_id) {
+                $rbfw_item_type         = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				?>
-                <li data-target-tabs="#rbfw_location_config"><i class="fas fa-location-dot"></i><?php esc_html_e( 'Location', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                <li data-target-tabs="#rbfw_location_config" <?php echo ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' )?'style="display:none"':'' ?>>
+                    <i class="fas fa-location-dot"></i><?php esc_html_e( 'Location', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                </li>
 				<?php
 			}
 

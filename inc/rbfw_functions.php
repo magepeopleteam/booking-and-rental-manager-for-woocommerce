@@ -2695,10 +2695,10 @@
            // echo '<pre>';print_r($sp_dates_array);echo '<pre>';
 			if ( in_array( $Book_date, $sp_dates_array ) ) {
 				if ( $hours ) {
-					return $rbfw_sp_price['rbfw_sp_price_h']*$hours;
+					return (float)$rbfw_sp_price['rbfw_sp_price_h'] * $hours;
 				} else {
 					if ( $rbfw_enable_daily_rate == 'no' ) {
-						return $rbfw_sp_price['rbfw_sp_price_h'] * 24;
+						return (float)$rbfw_sp_price['rbfw_sp_price_h'] * 24;
 					} else {
 						return $rbfw_sp_price['rbfw_sp_price_d'];
 					}

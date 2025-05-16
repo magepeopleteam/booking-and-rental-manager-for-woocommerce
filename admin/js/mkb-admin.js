@@ -172,24 +172,7 @@
             return false;
         });
 
-        jQuery('.rbfw_switch_variations label').on('click', function() {
 
-            var item_type = jQuery(this).find('input').val();
-
-            if (item_type == 'yes') {
-                jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_variations"]').show();
-                jQuery('.rbfw_variations_table_wrap').show();
-                jQuery('.rbfw_item_stock_quantity_row').hide();
-                jQuery('.rbfw_variation_tab_notice').hide();
-            } else {
-                jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_variations"]').hide();
-                jQuery('.rbfw_variations_table_wrap').hide();
-                jQuery('.rbfw_item_stock_quantity_row').show();
-                jQuery('.rbfw_variation_tab_notice').show();
-            }
-
-            return false;
-        });
 
         jQuery('#field-wrapper-rbfw_time_slot_switch label').click(function(e) {
             let this_attr = jQuery(this).attr('for');
@@ -213,12 +196,10 @@
                 jQuery('.mds_price_resort').hide();
 
             }else if(current_item_type == 'resort'){
-
                 jQuery('.sessional_price_resort').show();
                 jQuery('.mds_price_resort').show();
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
-
             }else{
 
                 jQuery('.sessional_price_multi_day').show();
