@@ -564,10 +564,19 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                 <div class="rbfw_bikecarmd_price_result" style="display: none">
                     <div class="item-content rbfw-costing">
                         <ul class="rbfw-ul">
+
                             <li class="duration-costing rbfw-cond">
-                                <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce'))); ?>
-                                <span class="price-figure" data-price="">
+                                <span>
+                                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce'))); ?>
+                                    <span class="rbfw_pricing_applied sessional">
+                                        (<?php esc_html_e( 'Sessional pricing applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
                                     </span>
+                                    <span class="rbfw_pricing_applied mds">
+                                        (<?php esc_html_e( 'Multi day pricing saver applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
+                                    </span>
+                                </span>
+                                <span class="price-figure" data-price="">
+                                </span>
                             </li>
                             <li class="resource-costing rbfw-cond">
                                 <?php echo esc_html($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce'))); ?>

@@ -498,6 +498,11 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             jQuery('.resource-costing .price-figure').html(response.service_cost_html);
             jQuery('.subtotal .price-figure').html(response.sub_total_price_html);
 
+            jQuery('.rbfw_pricing_applied').hide();
+            if(response.pricing_applied != 'No'){
+                jQuery('.rbfw_pricing_applied.'+response.pricing_applied).show();
+            }
+
 
 
             if(response.duration_price_number){
