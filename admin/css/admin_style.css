@@ -3513,7 +3513,7 @@ div.mpStyle [class*="_bgColor_1"] i {
     
 }
 #rbfw_add_meta_box .rbfw_feature_category_table{
-    width: 85%;
+    width: 100%;
     margin: auto;
 }
 
@@ -5568,3 +5568,4 @@ span.ppof-button.add-service-category.mt-1{
 .rbfw_es_price_config_wrapper section.bg-light.mt-5 {
     padding-left: 20px !important;
 }
+.feature_category_inner_item_wrap [name^="rbfw_feature_category"][name*="[cat_features]"][name$="[title]"]{width:52em !important;}
