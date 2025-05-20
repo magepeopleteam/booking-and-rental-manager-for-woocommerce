@@ -5590,4 +5590,4 @@ table.form-table.rbfw_service_category_table {
     background: #fff !important;
 }
 #rbfw_add_meta_box section{border:1px solid var(--mage-light) !important; }
-.rbfw_feature_category_table table td{border:none !important;}
+.rbfw_feature_category_table table td{border-top: 1px solid var(--color_border) !important;}
