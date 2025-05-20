@@ -5585,3 +5585,6 @@ table.rbfw_pricing_table input[name="service_name[]"], table.rbfw_pricing_table 
 #rbfw_add_meta_box section{background-color: #fff; }
 .booking-container{background: #fff !important;}
 #rbfw_add_meta_box .field-text-multi-wrapper .field-list .item{background:#fff !important;}
+table.form-table.rbfw_service_category_table {
+    background: #fff !important;
+}
