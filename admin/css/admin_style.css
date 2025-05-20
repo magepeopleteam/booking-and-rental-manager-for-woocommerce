@@ -5569,3 +5569,4 @@ span.ppof-button.add-service-category.mt-1{
     padding-left: 20px !important;
 }
 .feature_category_inner_item_wrap [name^="rbfw_feature_category"][name*="[cat_features]"][name$="[title]"]{width:52em !important;}
+field-text-multi-wrapper-rbfw_feature_category section{ padding: 0px !important;}
