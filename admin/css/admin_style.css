@@ -5578,4 +5578,4 @@ span.ppof-button.add-service-category.mt-1{
     border: 1px solid #ddd !important;
     padding: 10px;  
 }
-table.rbfw_pricing_table[name*="service_name[]"][name$="service_desc[]"]{width:60em !important;}
+table.rbfw_pricing_table input[name="service_name[]"], table.rbfw_pricing_table input[name="service_desc[]"] {width:28em !important;}
