@@ -5573,3 +5573,8 @@ span.ppof-button.add-service-category.mt-1{
 #rbfw_add_meta_box .bg-light {
     border-radius: 10px;
 }
+#rbfw_add_meta_box .feature_category_title{
+    border-radius: 10px;
+    border: 1px solid #ddd !important;
+    padding: 10px;  
+}
