@@ -5595,3 +5595,8 @@ table.form-table.rbfw_service_category_table {
 .rbfw_es_price_config_wrapper  section{padding: 0px !important;}
 #rbfw_add_meta_box .service_category_title{background: #eee; padding: 5px;}
 table.rbfw_pricing_table thead th{background-color: #fff3f3 !important;}
+
+#rbfw_add_meta_box textarea, #rbfw_add_meta_box select, #rbfw_add_meta_box input[type=text], #rbfw_add_meta_box input[type=email], #rbfw_add_meta_box input[type=search], #rbfw_add_meta_box input[type=tel], #rbfw_add_meta_box input[type=url], #rbfw_add_meta_box input[type=password], #rbfw_add_meta_box input[type=file], #rbfw_add_meta_box input[type=color], #rbfw_add_meta_box input[type=number], #rbfw_add_meta_box input[type=range], #rbfw_add_meta_box input[type=date], #rbfw_add_meta_box input[type=month], #rbfw_add_meta_box input[type=week], #rbfw_add_meta_box input[type=time], #rbfw_add_meta_box input[type=datetime], #rbfw_add_meta_box input[type=datetime-local]
+{
+border: 1px solid #d4dadf !important;
+}
