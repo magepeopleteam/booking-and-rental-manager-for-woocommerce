@@ -5579,3 +5579,4 @@ span.ppof-button.add-service-category.mt-1, .field-text-multi-wrapper-rbfw_featu
     padding: 10px;  
 }
 table.rbfw_pricing_table input[name="service_name[]"], table.rbfw_pricing_table input[name="service_desc[]"] {width:22em !important;}
+.rbfw_min_max_booking_day_row .booking-input-group{margin:20px !important;}
