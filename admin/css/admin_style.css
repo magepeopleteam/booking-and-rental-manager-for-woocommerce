@@ -5520,9 +5520,9 @@ input.rbfw_time_slot_edit_slot_label {
 section.rbfw_item_quantiry_duration{
     gap: 30px;
 }
-.service_category_inner_wrap input[name="rbfw_service_category_price[0][cat_services][0][title]"] {
-  width: 100%;
-  max-width: 28em;
+.service_category_inner_wrap input[name^="rbfw_service_category_price"][name*="[cat_services]"][name$="[title]"] {
+  width: 25em !important;
+  max-width: 400px;
   padding: 10px 14px;
   font-size: 16px;
   color: #333;
@@ -5531,4 +5531,4 @@ section.rbfw_item_quantiry_duration{
   border-radius: 6px;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-} 
+}
