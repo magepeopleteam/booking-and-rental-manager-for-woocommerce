@@ -5524,7 +5524,6 @@ section.rbfw_item_quantiry_duration{
   width: 25em !important;
   max-width: 400px;
   padding: 10px 14px;
-  font-size: 16px;
   color: #333;
   background-color: #fff;
   border: 1px solid #ccc;
@@ -5532,3 +5531,9 @@ section.rbfw_item_quantiry_duration{
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
+section.service_category_title.sss{
+    background: #e1e1e1;
+    padding: 5px 10px;
+    border-radius: 5px;   
+}
+.service_category_inner_wrap .item{justify-content: normal !important;}
