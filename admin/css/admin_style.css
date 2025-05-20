@@ -5539,7 +5539,7 @@ section.service_category_title.sss{
 .service_category_inner_wrap .item{justify-content: normal !important;}
 .rbfw_es_price_config_wrapper button#add-row, span.ppof-button.add-new-service{
   display: block;
-  margin: 20px auto 0 auto;
+  margin: 0px auto;
   padding: 10px 20px;
   font-size: 16px;
   background-color: #0073aa;
@@ -5549,7 +5549,7 @@ section.service_category_title.sss{
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-align: center;
-  width:220px;
+  width: 220px;
  }
 span.ppof-button.add-service-category.mt-1{
   display: block;
@@ -5562,5 +5562,5 @@ span.ppof-button.add-service-category.mt-1{
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-align: center;
-  width:220px;
+  width:240px;
  }
