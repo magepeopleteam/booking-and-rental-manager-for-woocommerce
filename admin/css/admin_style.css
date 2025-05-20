@@ -5571,7 +5571,7 @@ span.ppof-button.add-service-category.mt-1, .field-text-multi-wrapper-rbfw_featu
 .feature_category_inner_item_wrap [name^="rbfw_feature_category"][name*="[cat_features]"][name$="[title]"]{width:60em !important;}
 .field-text-multi-wrapper-rbfw_feature_category section{ padding: 0px 0px !important;}
 #rbfw_add_meta_box .bg-light {
-    border-radius: 10px;
+    border-radius: 10px 10px 0px 0px;
     background-color: #fff !important;
     border-bottom: 3px solid #dbd8d8 !important;
 }
