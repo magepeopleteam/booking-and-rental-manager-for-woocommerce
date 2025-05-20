@@ -3508,7 +3508,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 #rbfw_add_meta_box table.form-table {
     margin-bottom: 0px;
     border-collapse: collapse;
-    border: 5px solid var(--mage-light);
+    border: 1px solid var(--mage-light);
     overflow: scroll;
     
 }
