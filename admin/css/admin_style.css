@@ -5551,7 +5551,7 @@ section.service_category_title.sss{
   text-align: center;
   width: 220px;
  }
-span.ppof-button.add-service-category.mt-1{
+span.ppof-button.add-service-category.mt-1, #rbfw_add_meta_box .add-feature-category{
   display: block;
   margin: 0px auto;
   padding: 10px 20px;
