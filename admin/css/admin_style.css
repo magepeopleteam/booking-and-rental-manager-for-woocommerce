@@ -5537,7 +5537,7 @@ section.service_category_title.sss{
     border-radius: 5px !important;   
 }
 .service_category_inner_wrap .item{justify-content: normal !important;}
-.rbfw_es_price_config_wrapper button#add-row{
+.rbfw_es_price_config_wrapper button#add-row, span.ppof-button.add-new-service{
   display: block;
   margin: 20px auto 0 auto;
   padding: 10px 20px;
