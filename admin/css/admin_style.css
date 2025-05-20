@@ -5594,3 +5594,4 @@ table.form-table.rbfw_service_category_table {
 .rbfw_es_price_config_wrapper section.bg-light.mt-5 { padding: 20px !important;}
 .rbfw_es_price_config_wrapper  section{padding: 0px !important;}
 #rbfw_add_meta_box .service_category_title{background: #eee; padding: 5px;}
+table.rbfw_pricing_table thead th{background-color: #fff3f3 !important;}
