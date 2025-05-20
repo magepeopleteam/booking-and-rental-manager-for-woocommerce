@@ -131,17 +131,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                     'no'  => 'No'
                 )
             ),
-            /*array(
-                'name' => 'display_default_time_enable_time_slot',
-                'label' => esc_html__( 'Dispaly default time while time slot disable', 'booking-and-rental-manager-for-woocommerce' ),
-                'desc' => esc_html__( "If you want to Dispaly default time while time slot disable, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
-                'type' => 'select',
-                'default' => 'no',
-                'options' => array(
-                    'yes' => 'Yes',
-                    'no'  => 'No'
-                )
-            ),*/
+
             array(
                 'name' => 'inventory_based_on_return',
                 'label' => esc_html__( 'Inventory manage based on return', 'booking-and-rental-manager-for-woocommerce' ),
@@ -152,6 +142,12 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                     'yes' => 'Yes',
                     'no'  => 'No'
                 )
+            ),
+            array(
+                'name' => 'first_day_count_hour_over',
+                'label' => esc_html__( '1st day count hour over', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( "1st day count hour over", 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'number',
             ),
 		),
 		'rbfw_basic_translation_settings' => array(
