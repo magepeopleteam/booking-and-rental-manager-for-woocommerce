@@ -5520,3 +5520,6 @@ input.rbfw_time_slot_edit_slot_label {
 section.rbfw_item_quantiry_duration{
     gap: 30px;
 }
+.service_category_inner_wrap input[type="text"] {
+    width: 28em;
+}
