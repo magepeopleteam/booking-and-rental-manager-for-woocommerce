@@ -63,6 +63,8 @@ if(isset($post_id) && isset($active_tab)){
             <?php
             $i = 0;
 
+            setcookie("pricing_applied", "No");
+
             //echo '<pre>';print_r($rbfw_resort_room_data);echo '<pre>';
 
             foreach ($rbfw_resort_room_data as $key => $value) {
@@ -266,7 +268,19 @@ if(isset($post_id) && isset($active_tab)){
 <div class="item rbfw_room_price_summary">
     <div class="item-content rbfw-costing">
         <ul class="rbfw-ul">
-            <li class="duration-costing rbfw-cond"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce'))); ?> <span><?php echo esc_html($currency_symbol); ?><span class="price-figure" data-price="0">0</span></span></li>
+            <li class="duration-costing rbfw-cond">
+                <span>
+                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce'))); ?>
+                    <span class="rbfw_pricing_applied">
+                        <?php if($_COOKIE['pricing_applied']=='sessional'){ ?>
+                            (<?php esc_html_e( 'Sessional pricing applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
+                        <?php }elseif ($_COOKIE['pricing_applied']=='mds'){ ?>
+                            (<?php esc_html_e( 'Multi day pricing saver applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
+                        <?php } ?>
+                    </span>
+                </span>
+                <span><?php echo esc_html($currency_symbol); ?><span class="price-figure" data-price="0">0</span></span>
+            </li>
             <li class="resource-costing rbfw-cond"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce'))); ?>  <span><?php echo esc_html($currency_symbol); ?><span class="price-figure" data-price="0">0</span></span></li>
             <li class="subtotal"> <?php echo esc_html($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce'))); ?><span><?php echo esc_html($currency_symbol); ?><span class="price-figure">0.00</span></span></li>
             <li class="total"><strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce'))); ?></strong> <span><?php echo esc_html($currency_symbol); ?><span class="price-figure">0.00</span></span></li>
