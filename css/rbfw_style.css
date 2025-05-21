@@ -7323,3 +7323,188 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
     font-size: 10px;
     color: var(--rbfw_color_primary);
 }
+.rbfw_multi_day_price_conf .section {
+    background-color: #f5f5f5;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.rbfw_multi_day_price_conf .section h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.rbfw_multi_day_price_conf .section p {
+    margin-top: 0;
+    color: #666;
+}
+
+/* Item styles */
+.rbfw_multi_day_price_conf .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 2px;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.rbfw_multi_day_price_conf .item-left {
+    flex: 1;
+}
+
+.rbfw_multi_day_price_conf .item-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rbfw_multi_day_price_conf .label {
+    font-weight: bold;
+}
+
+.rbfw_multi_day_price_conf .description {
+    color: #666;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* Toggle switch styles */
+.rbfw_multi_day_price_conf .toggle {
+    position: relative;
+    width: 54px;
+    height: 28px;
+    background-color: #ccc;
+    border-radius: 28px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.rbfw_multi_day_price_conf .toggle.active {
+    background-color: #ff4081;
+}
+
+.rbfw_multi_day_price_conf .toggle-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: white;
+    transition: left 0.3s;
+}
+
+.rbfw_multi_day_price_conf .toggle.active .toggle-knob {
+    left: 28px;
+}
+
+/* Input styles */
+.rbfw_multi_day_price_conf input[type="number"],
+.rbfw_multi_day_price_conf input[type="time"] {
+    width: 150px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* Button styles */
+.rbfw_multi_day_price_conf button {
+    padding: 8px 12px;
+    background-color: #ff4081;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.rbfw_multi_day_price_conf button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.rbfw_multi_day_price_conf button.remove {
+    background-color: #f44336;
+}
+
+/* Time slots styles */
+.rbfw_multi_day_price_conf .time-slots-container {
+    margin-top: 15px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.rbfw_multi_day_price_conf .time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.rbfw_multi_day_price_conf .time-slot {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.rbfw_multi_day_price_conf .time-slot.enabled {
+    background-color: #e8f5e9;
+}
+
+.rbfw_multi_day_price_conf .time-slot-time {
+    margin-right: 8px;
+}
+
+.rbfw_multi_day_price_conf .time-slot-indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #ccc;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.rbfw_multi_day_price_conf .time-slot.enabled .time-slot-indicator {
+    background-color: #4caf50;
+}
+
+.rbfw_multi_day_price_conf .time-slot-remove {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #f44336;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.rbfw_multi_day_price_conf .add-slot-container {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.rbfw_multi_day_price_conf .add-slot-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.rbfw_multi_day_price_conf .add-slot-form label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    display: block;
+}
