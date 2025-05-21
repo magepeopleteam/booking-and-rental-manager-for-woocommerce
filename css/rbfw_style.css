@@ -7319,7 +7319,7 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
 #rbfw_add_meta_box .mds_for_mds input[type=number]{
     width: 100%;
 }
-.item-content.rbfw-costing .rbfw_pricing_applied{
+.item-content.rbfw-costing .rbfw_pricing_applied, .rbfw_room_price_summary .rbfw_pricing_applied{
     font-size: 10px;
     color: var(--rbfw_color_primary);
 }
