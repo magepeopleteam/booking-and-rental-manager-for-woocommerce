@@ -1051,6 +1051,86 @@
         $('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_type_image_preview img').remove();
         $('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_image').val('');
     });
+
+    jQuery(document).on('click', '#add-particular-row', function() {
+        let parent = jQuery(this).closest('.available-particular');
+        let item = parent.find('.mp_hidden_content').first().find('.mp_hidden_item').html();
+        let total_element = jQuery(".rbfw_pdwt_insert").children().length;
+        let tempDiv = jQuery(item);
+
+        /* tempDiv.find(".rbfw_start_day_md").attr({"name": "rbfw_md_data_mds["+total_element+"][rbfw_start_day]"});
+        tempDiv.find(".rbfw_end_day_md").attr({"name": "rbfw_md_data_mds["+total_element+"][rbfw_end_day]"});
+        tempDiv.find(".rbfw_daily_price_md").attr({"name": "rbfw_md_data_mds["+total_element+"][rbfw_daily_price]"});
+        tempDiv.find(".rbfw_hourly_price_md").attr({"name": "rbfw_md_data_mds["+total_element+"][rbfw_hourly_price]"});*/
+
+        parent.find(".rbfw_pdwt_insert").first().append(tempDiv);
+
+    });
+
+    $(document).on('click', '.time-slot-remove', function () {
+        $(this).closest('.time-slot').remove();
+    });
+
+    $(document).on('click', '.time-slot-indicator', function () {
+        const $indicator = $(this);
+        const $timeSlot = $indicator.closest('.time-slot');
+        const $statusInput = $timeSlot.find('input[name*="[status]"]');
+
+        // Toggle active class
+        $indicator.toggleClass('active');
+
+        // Set input value based on class presence
+        if ($indicator.hasClass('active')) {
+            $statusInput.val('enabled');
+            $timeSlot.removeClass('disabled').addClass('enabled');
+        } else {
+            $statusInput.val('');
+            $timeSlot.removeClass('enabled').addClass('disabled');
+        }
+    });
+
+    $(document).on('change', '.new-slot-time', function () {
+        const timeValue = $(this).val();
+        if (timeValue) {
+            $(this).closest('.add-slot-form').find('.add-slot-btn').prop('disabled', false);
+        } else {
+            $(this).closest('.add-slot-form').find('.add-slot-btn').prop('disabled', true);
+        }
+    });
+
+
+    $(document).on('click', '.add-slot-btn', function (e) {
+
+        e.preventDefault(); // prevent form submission if inside form
+
+        const time = $(this).closest('.add-slot-form').find('.new-slot-time').val();
+        if (!time) return;
+
+        // Get a unique index (based on existing slots)
+        const $timeSlotsContainer = $(this).closest('.add-slot-container').prevAll('.time-slots-container').first().find('.time-slots');
+        const index = $timeSlotsContainer.children('.time-slot').length + 1;
+        const dataId = $('.rbfw_pdwt_insert').children('.time-slot').length + 1; // Use your actual ID logic here
+
+        // Build time slot HTML
+        const newSlot = `
+        <div class="time-slot enabled" data-id="${dataId}">
+          <span class="time-slot-time">${time}</span>
+          <input type="hidden" name="rbfw_particulars[${dataId}][available_time][${index}][id]" value="${dataId}">
+          <input type="hidden" name="rbfw_particulars[${dataId}][available_time][${index}][time]" value="${time}">
+          <input type="hidden" name="rbfw_particulars[${dataId}][available_time][${index}][status]" value="enabled">
+          <div class="time-slot-indicator active" title="Click to disable"></div>
+          <div class="time-slot-remove" title="Remove time slot">×</div>
+        </div>
+      `;
+
+        console.log('newSlot',newSlot);
+        // Append to container
+        $timeSlotsContainer.append(newSlot);
+
+        // Clear input & disable button
+        $('.new-slot-time').val('');
+        $('.add-slot-btn').prop('disabled', true);
+    });
     
     // ===========resort===========
 }(jQuery));
@@ -1095,5 +1175,4 @@ function getPostIdFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('post'); // returns the post ID as a string
 }
-
 
