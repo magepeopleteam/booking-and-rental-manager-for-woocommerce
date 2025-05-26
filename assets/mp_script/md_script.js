@@ -48,16 +48,6 @@ jQuery(window).on('load', function() {
 
 jQuery('body').on('focusin', '.pickup_date', function(e) { 
 
-   
-
-  
-
-    // alert(jQuery('.ui-datepicker-title .ui-datepicker-month').text());
-    // alert(jQuery('.ui-datepicker-title .ui-datepicker-year').text());
-
-    
-
-
     jQuery(this).datepicker({
         dateFormat: js_date_format,
         minDate: '',
@@ -99,7 +89,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             }
             
 
-            if(rbfw_enable_time_slot=='on'){
+            if(rbfw_enable_time_slot=='yes'){
                 particular_time_date_dependent_ajax(post_id,date_ymd,'time_enable',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.pickup_time');
             }
         },
@@ -131,7 +121,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
             let post_id = jQuery('#rbfw_post_id').val();
             let rbfw_enable_time_slot = jQuery('#rbfw_enable_time_slot').val();
 
-            if(rbfw_enable_time_slot=='on'){
+            if(rbfw_enable_time_slot=='yes'){
                 particular_time_date_dependent_ajax(post_id,date_ymd_drop,'',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.dropoff_time');
             }
         },

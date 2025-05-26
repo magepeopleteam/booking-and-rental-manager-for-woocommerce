@@ -775,7 +775,6 @@
 
                     <div class="time-slots-container">
                         <div class="time-slots" id="time-slots-container">
-
                             <?php
                             $rdfw_available_time        = get_post_meta( $post_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rdfw_available_time', true ) ) : [];
                             $array_dimension = RBFW_Frontend::count_array_dimensions($rdfw_available_time);
@@ -788,14 +787,9 @@
                                 }
                                 $rdfw_available_time = $result;
                             }
-
-
-                            $i = 1;
-
+                            $i = 0;
                             foreach ($rdfw_available_time as $key => $item) { if(is_array($item)){
-
                                 ?>
-
                                 <div class="time-slot <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
                                     <span class="time-slot-time"><?php echo $item['time'] ?></span>
                                     <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][id]" value="<?php echo $i ?>">
@@ -804,9 +798,7 @@
                                     <div class="time-slot-indicator" title="Click to disable"></div>
                                     <div class="time-slot-remove" title="Remove time slot">×</div>
                                 </div>
-
                                 <?php $i++; } } ?>
-
                         </div>
                     </div>
 
@@ -817,85 +809,126 @@
                                 <label for="new-slot-time">Time (30 min slot)</label>
                                 <input type="time" class="new-slot-time">
                             </div>
-                            <button class="add-slot-btn" disabled>Add Slot</button>
+                            <button class="add-slot-btn" data-name_attr="rdfw_available_time" disabled>Add Slot</button>
                         </div>
                     </div>
-                </div>
-                <?php
-                $particulars_data = get_post_meta( $post_id, 'rbfw_particulars_data', true );
 
 
+                    <?php $particulars_data = get_post_meta( $post_id, 'rbfw_particulars_data', true );
 
-
-                ?>
-                <div class="mpStyle" data-tab-item="#rbfw_date_settings_meta_boxes">
-                    <?php $this->panel_header( 'Particular Settings', 'Here you can set Particulars' ); ?>
-                    <section>
-                        <div>
-                            <label>
-                                <?php echo esc_html__( 'Particular date time slots', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                            </label>
-                            <p><?php echo esc_html__( 'It enables/disables the particulars for selection.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                        </div>
-                        <?php $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off'; ?>
-                        <label class="switch">
-                            <input type="checkbox" name="rbfw_particular_switch" value="<?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? $rbfw_particular_switch : 'off' ); ?>" <?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'checked' : '' ); ?>>
-                            <span class="slider round"></span>
-                        </label>
-                    </section>
-                    <!-- Multiple Particular Section -->
-                    <div class="available-particular <?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'show' : 'hide' ); ?>">
+                    ?>
+                    <div class="mpStyle">
+                        <?php $this->panel_header( 'Particular Settings', 'Here you can set Particulars' ); ?>
                         <section>
-                            <div class="">
-                                <div class="d-flex justify-content-between row header">
-                                    <div><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                    <div><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                    <div><?php esc_html_e( 'Available Time Slots', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                    <div><?php esc_html_e( 'Actions', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                            <div>
+                                <label>
+                                    <?php echo esc_html__( 'Particular date time slots', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                </label>
+                                <p><?php echo esc_html__( 'It enables/disables the particulars for selection.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                            </div>
+                            <?php $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off'; ?>
+                            <label class="switch">
+                                <input type="checkbox" name="rbfw_particular_switch" value="<?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? $rbfw_particular_switch : 'off' ); ?>" <?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'checked' : '' ); ?>>
+                                <span class="slider round"></span>
+                            </label>
+                        </section>
+                        <!-- Multiple Particular Section -->
+                        <div class="available-particular <?php $rbfw_particular_switch='on'; echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'show' : 'hide' ); ?>">
+                            <section>
+                                <div class="">
+                                    <div class="d-flex justify-content-between row header">
+                                        <div><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                        <div><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                        <div><?php esc_html_e( 'Available Time Slots', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                        <div><?php esc_html_e( 'Actions', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    </div>
+                                    <div class="rbfw_pdwt_insert">
+                                        <?php $i=0;  foreach ( $particulars_data as $index => $particular ){ if( $particular['start_date'] && $particular['end_date']){ ?>
+                                            <div class="rbfw_pdwt_row d-flex justify-content-between">
+                                                <div>
+                                                    <input type="text" class="date_type" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
+                                                </div>
+                                                <div>
+                                                    <input type="text" class="date_type" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
+                                                </div>
+                                                <div>
+                                                    <div class="time-slots-container">
+                                                        <div class="time-slots" id="time-slots-container">
+
+                                                            <?php
+                                                            $particular_available_time        = $particular['available_time'];
+                                                            $array_dimension = RBFW_Frontend::count_array_dimensions($particular_available_time);
+                                                            if($array_dimension == 1){
+                                                                $k = 1;
+                                                                $result = [];
+                                                                foreach ($particular_available_time as $time) {
+                                                                    $result[] = ['id'=>$k, 'time'=>$time, 'status'=>'enabled'];
+                                                                    $k++;
+                                                                }
+                                                                $particular_available_time = $result;
+                                                            }
+
+
+                                                            $j = 1;
+
+
+
+
+                                                            foreach ($particular_available_time as $key => $item) { if(is_array($item)){
+
+                                                                ?>
+
+                                                                <div class="time-slot <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
+                                                                    <span class="time-slot-time"><?php echo $item['time'] ?></span>
+                                                                    <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][id]" value="<?php echo $i ?>">
+                                                                    <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][time]" value="<?php echo $item['time'] ?>">
+                                                                    <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][status]" value="<?php echo $item['status'] ?>">
+                                                                    <div class="time-slot-indicator" title="Click to disable"></div>
+                                                                    <div class="time-slot-remove" title="Remove time slot">×</div>
+                                                                </div>
+
+                                                                <?php $j++; } } ?>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="add-slot-container">
+                                                        <div class="label">Add New Time Slot</div>
+                                                        <div class="add-slot-form">
+                                                            <div>
+                                                                <label for="new-slot-time">Time (30 min slot)</label>
+                                                                <input type="time" class="new-slot-time">
+                                                            </div>
+                                                            <button class="add-slot-btn" data-name_attr="rbfw_particulars" data-particular_id="<?php echo $i ?>" disabled>Add Slot</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <button type="button" class="remove-row button"><?php echo esc_html__( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                                </div>
+                                            </div>
+                                            <?php $i++; } } ?>
+                                    </div>
+                                    <div class="footer">
+                                        <button type="button" id="add-particular-row" class="button ss"><?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                    </div>
                                 </div>
-                                <div class="rbfw_pdwt_insert">
-                                    <?php $i; foreach ( $particulars_data as $index => $particular ){ ?>
+                            </section>
+
+
+                            <div class="mp_hidden_content">
+                                <div class="mp_hidden_item" >
                                     <div class="rbfw_pdwt_row d-flex justify-content-between">
                                         <div>
-                                            <input type="text" class="date_type" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
+                                            <input type="text" class="rbfw_start_date date_type">
                                         </div>
                                         <div>
-                                            <input type="text" class="date_type" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
+                                            <input type="text" class="rbfw_end_date date_type">
                                         </div>
                                         <div>
                                             <div class="time-slots-container">
                                                 <div class="time-slots" id="time-slots-container">
 
-                                                    <?php
-                                                    $rdfw_available_time        = get_post_meta( $post_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rdfw_available_time', true ) ) : [];
-                                                    $array_dimension = RBFW_Frontend::count_array_dimensions($rdfw_available_time);
-                                                    if($array_dimension == 1){
-                                                        $i = 1;
-                                                        $result = [];
-                                                        foreach ($rdfw_available_time as $time) {
-                                                            $result[] = ['id'=>$i, 'time'=>$time, 'status'=>'enabled'];
-                                                            $i++;
-                                                        }
-                                                        $rdfw_available_time = $result;
-                                                    }
-
-
-                                                    $j = 1;
-
-                                                    foreach ($particular['available_time'] as $key => $item) { if(is_array($item)){
-
-                                                        ?>
-
-                                                        <div class="time-slot <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
-                                                            <span class="time-slot-time"><?php echo $item['time'] ?></span>
-                                                            <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][id]" value="<?php echo $i ?>">
-                                                            <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][time]" value="<?php echo $item['time'] ?>">
-                                                            <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][status]" value="<?php echo $item['status'] ?>">
-                                                            <div class="time-slot-indicator" title="Click to disable"></div>
-                                                            <div class="time-slot-remove" title="Remove time slot">×</div>
-                                                        </div>
-
-                                                        <?php $j++; } } ?>
 
                                                 </div>
                                             </div>
@@ -907,59 +940,23 @@
                                                         <label for="new-slot-time">Time (30 min slot)</label>
                                                         <input type="time" class="new-slot-time">
                                                     </div>
-                                                    <button class="add-slot-btn" disabled>Add Slot</button>
+                                                    <button class="add-slot-btn" data-name_attr="rbfw_particulars" disabled="">Add Slot</button>
                                                 </div>
                                             </div>
+
                                         </div>
-                                        <div>
-                                            <button type="button" class="remove-row button"><?php echo esc_html__( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
-                                        </div>
+                                        <div><button class="remove-row button">Remove</button></div>
                                     </div>
-                                    <?php $i++; } ?>
-                                </div>
-                                <div class="footer">
-                                    <button type="button" id="add-particular-row" class="button ss"><?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                 </div>
                             </div>
-                        </section>
 
-
-                        <div class="mp_hidden_content">
-                            <div class="mp_hidden_item" >
-                                <div class="rbfw_pdwt_row d-flex justify-content-between">
-                                    <div>
-                                        <input type="text" class="date_type" name="" class="rbfw_days_range" value="" autocomplete="off">
-                                    </div>
-                                    <div>
-                                        <input type="text" class="date_type" name="" class="rbfw_days_range" value="" autocomplete="off">
-                                    </div>
-                                    <div>
-                                        <div class="time-slots-container">
-                                            <div class="time-slots" id="time-slots-container">
-
-
-                                            </div>
-                                        </div>
-
-                                        <div class="add-slot-container">
-                                            <div class="label">Add New Time Slot</div>
-                                            <div class="add-slot-form">
-                                                <div>
-                                                    <label for="new-slot-time">Time (30 min slot)</label>
-                                                    <input type="time" id="new-slot-time">
-                                                </div>
-                                                <button id="add-slot-btn" disabled="">Add Slot</button>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div><button class="remove-btn">Remove</button></div>
-                                </div>
-                            </div>
                         </div>
-
                     </div>
+
+
+
                 </div>
+
 
 
 
@@ -976,7 +973,7 @@
                     const timeSlotsSection = document.querySelector('.time-slots-section');
                     const timeSlotsContainer = document.getElementById('time-slots-container');
                     const newSlotTimeInput = document.getElementById('new-slot-time');
-                    const addSlotBtn = document.getElementById('add-slot-btn');
+
                     const dailyPriceInput = document.getElementById('daily-price-input');
                     const hourlyPriceInput = document.getElementById('hourly-price-input');
                     const hourThresholdInput = document.getElementById('hour-threshold-input');
@@ -1015,8 +1012,6 @@
                                 enabled: true
                             });
                         }
-
-                        console.log('fffff',slots)
 
                         return slots;
                     }
@@ -1123,64 +1118,6 @@
 
 
 
-                    function addTimeSlot(event) {
-                        event.preventDefault();
-                        const newSlotTime = newSlotTimeInput.value;
-                        if (!newSlotTime) return;
-
-                        const timeSlots = document.querySelectorAll('#time-slots-container .time-slot');
-                        const numberOfTimeSlots = timeSlots.length + 1;
-                        const timeSlotElement = document.createElement('div');
-                        timeSlotElement.className = 'time-slot enabled';
-                        timeSlotElement.dataset.id = numberOfTimeSlots;
-
-
-                        const timeElement = document.createElement('span');
-                        timeElement.className = 'time-slot-time';
-                        timeElement.textContent = newSlotTime;
-
-                        const idImputElement = document.createElement('input');
-                        idImputElement.type  = 'hidden';
-                        idImputElement.name  = 'rdfw_available_time['+numberOfTimeSlots+'][id]';
-                        idImputElement.value = numberOfTimeSlots;
-
-                        const timeImputElement = document.createElement('input');
-                        timeImputElement.type  = 'hidden';
-                        timeImputElement.name  = 'rdfw_available_time['+numberOfTimeSlots+'][time]';
-                        timeImputElement.value = newSlotTime;
-
-                        const statusImputElement = document.createElement('input');
-                        statusImputElement.type  = 'hidden';
-                        statusImputElement.name  = 'rdfw_available_time['+numberOfTimeSlots+'][status]';
-                        statusImputElement.value = 'enabled';
-
-                        const indicatorElement = document.createElement('div');
-                        indicatorElement.className = 'time-slot-indicator';
-                        indicatorElement.title = 'Click to disable';
-
-                        const removeElement = document.createElement('div');
-                        removeElement.className = 'time-slot-remove';
-                        removeElement.textContent = '×';
-                        removeElement.title = 'Remove time slot';
-
-                        timeSlotElement.appendChild(timeElement);
-                        timeSlotElement.appendChild(idImputElement);
-                        timeSlotElement.appendChild(timeImputElement);
-                        timeSlotElement.appendChild(statusImputElement);
-                        timeSlotElement.appendChild(indicatorElement);
-                        timeSlotElement.appendChild(removeElement);
-
-                        // Add event listeners
-                        indicatorElement.addEventListener('click', () => toggleTimeSlot(numberOfTimeSlots));
-                        removeElement.addEventListener('click', () => removeTimeSlot(numberOfTimeSlots));
-
-                        timeSlotsContainer.appendChild(timeSlotElement);
-
-
-
-                        newSlotTimeInput.value = '';
-                        addSlotBtn.disabled = true;
-                    }
 
 
 
@@ -1217,7 +1154,7 @@
                     hourThresholdToggle.addEventListener('click', toggleHourThreshold);
                     timePickerToggle.addEventListener('click', toggleTimePicker);
                     hourlyPriceToggle.addEventListener('click', toggleHourlyPrice);
-                    addSlotBtn.addEventListener('click', addTimeSlot);
+
 
 
                 </script>
