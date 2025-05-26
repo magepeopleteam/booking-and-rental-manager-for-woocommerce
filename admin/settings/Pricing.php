@@ -833,7 +833,7 @@
                             </label>
                         </section>
                         <!-- Multiple Particular Section -->
-                        <div class="available-particular <?php $rbfw_particular_switch='on'; echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'show' : 'hide' ); ?>">
+                        <div class="available-particular <?php  echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'show' : 'hide' ); ?>">
                             <section>
                                 <div class="">
                                     <div class="d-flex justify-content-between row header">

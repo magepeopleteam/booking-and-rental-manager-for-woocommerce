@@ -1062,6 +1062,7 @@
 
         tempDiv.find(".rbfw_start_date").attr({"name": "rbfw_particulars["+total_element+"][start_date]"});
         tempDiv.find(".rbfw_end_date").attr({"name": "rbfw_particulars["+total_element+"][end_date]"});
+        tempDiv.find(".add-slot-btn").attr({"data-particular_id": total_element});
 
 
         tempDiv.find(".date_type").removeClass('hasDatepicker').datepicker({
@@ -1162,6 +1163,19 @@
         // Clear input & disable button
         $('.new-slot-time').val('');
         $('.add-slot-btn').prop('disabled', true);
+    });
+
+
+    $(document).on('click', 'input[name=rbfw_particular_switch]', function (e) {
+        var status = $(this).val();
+        if (status === 'on') {
+            $(this).val('off');
+            $('.available-particular').slideUp().removeClass('show').addClass('hide');
+        }
+        if (status === 'off') {
+            $(this).val('on');
+            $('.available-particular').slideDown().removeClass('hide').addClass('show');
+        }
     });
     
     // ===========resort===========
