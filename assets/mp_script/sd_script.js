@@ -6,7 +6,7 @@
 
         datepicker_inline();
 
-        jQuery('body').on('focusin', '.pickup_date_timely', function(e) {  alert(12);
+        jQuery('body').on('focusin', '.pickup_date_timely', function(e) {
             jQuery(this).datepicker({
                 dateFormat: js_date_format,
                 minDate: 0,
@@ -113,7 +113,7 @@
         /*start single day hourly inventory managed*/
 
 
-        jQuery('body').on('change',  '.rbfw_bikecarsd_pricing_table_wrap #pickup_time',function (e) { alert(12);
+        jQuery('body').on('change',  '.rbfw_bikecarsd_pricing_table_wrap #pickup_time',function (e) {
 
             let post_id = jQuery('.rbfw_post_id').val();
             let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
@@ -138,7 +138,7 @@
 
 
 
-        jQuery('body').on('click', '.rbfw_service_type .single-type-timely', function(e) { alert(12);
+        jQuery('body').on('click', '.rbfw_service_type .single-type-timely', function(e) {
 
             let post_id = jQuery('.rbfw_post_id').val();
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();

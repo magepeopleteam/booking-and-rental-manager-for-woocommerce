@@ -1160,6 +1160,21 @@
         // Append to container
         $timeSlotsContainer.append(newSlot);
 
+
+
+        var $slots = $timeSlotsContainer.children('.time-slot');
+        $slots.sort(function(a, b) {
+            var timeA = $(a).find('.time-slot-time').text();
+            var timeB = $(b).find('.time-slot-time').text();
+            return timeA.localeCompare(timeB);
+        });
+
+        console.log('lllll',$slots);
+
+
+        //$(this).closest('.add-slot-container').prevAll('.time-slots-container').append($slots);
+
+
         // Clear input & disable button
         $('.new-slot-time').val('');
         $('.add-slot-btn').prop('disabled', true);
