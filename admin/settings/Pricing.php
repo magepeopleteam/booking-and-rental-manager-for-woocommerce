@@ -488,6 +488,9 @@
                             </p>
 
 							<?php do_action( 'rbfw_after_resort_price_table' ); ?>
+
+
+
                         </div>
                     </section>
                 </div>
@@ -640,7 +643,7 @@
                                 <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
-                                <input type="hidden" name="rbfw_enable_time_picker" id="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
+                                <input type="hidden" name="rbfw_enable_time_picker" class="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
                             </div>
                         </div>
 
@@ -741,9 +744,41 @@
 					<?php do_action( 'rbfw_after_general_price_table', $post_id ); ?>
                 </div>
                 <?php do_action( 'rbfw_after_rent_item_type_table_row' ); ?>
+
 				<?php do_action( 'rbfw_after_week_price_table', $post_id ); ?>
+
+
                 <?php do_action( 'rbfw_after_room_type_price_saver_price_table', $post_id ); ?>
 				<?php do_action( 'rbfw_after_extra_service_table' ); ?>
+
+
+                <div class="rbfw_multi_day_price_conf rbfw_bike_car_sd_wrapper <?php echo esc_attr( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) ? 'show' : 'hide'; ?>">
+                    <div class="item">
+                        <div class="item-left">
+                            <div class="label">Enable Time Picker</div>
+                            <div class="description">
+                                Toggle to enable time selection for more precise rental periods.
+                            </div>
+                        </div>
+                        <div class="item-right">
+                            <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">
+                                <div class="toggle-knob"></div>
+                            </div>
+                            <input type="hidden" name="rbfw_enable_time_picker" class="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
+                        </div>
+                    </div>
+
+
+
+
+
+                    <!-- Time Slots (conditional) -->
+
+                    <?php $this->multiple_time_slot_with_particular( $post_id, $rbfw_enable_time_picker ); ?>
+
+
+                </div>
+
 				<?php
 			}
 
@@ -758,9 +793,9 @@
                     <?php $this->resort_price_config( $post_id ); ?>
 					<?php $this->general_price_config( $post_id ); ?>
 
-					
+
                 </div>
-                
+
 				<?php
 			}
 
@@ -859,7 +894,7 @@
                                                             $particular_available_time        = $particular['available_time'];
                                                             $array_dimension = RBFW_Frontend::count_array_dimensions($particular_available_time);
                                                             if($array_dimension == 1){
-                                                                $k = 1;
+                                                                $k = 0;
                                                                 $result = [];
                                                                 foreach ($particular_available_time as $time) {
                                                                     $result[] = ['id'=>$k, 'time'=>$time, 'status'=>'enabled'];
@@ -869,9 +904,7 @@
                                                             }
 
 
-                                                            $j = 1;
-
-
+                                                            $j = 0;
 
 
                                                             foreach ($particular_available_time as $key => $item) { if(is_array($item)){
@@ -958,203 +991,105 @@
                 </div>
 
 
-
-
-
                 <script>
 
-                    // DOM Elements
-                    const dailyPriceToggle = document.querySelector('.daily-price-toggle');
-                    const hourThresholdToggle = document.querySelector('.hour-threshold-toggle');
-                    const timePickerToggle = document.querySelector('.time-picker-toggle');
-                    const hourlyPriceToggle = document.querySelector('.hourly-price-toggle');
-                    const hourlyPriceItem = document.querySelector('.hourly-price-item');
-                    const hourThresholdItem = document.querySelector('.hour-threshold-item');
-                    const timeSlotsSection = document.querySelector('.time-slots-section');
-                    const timeSlotsContainer = document.getElementById('time-slots-container');
-                    const newSlotTimeInput = document.getElementById('new-slot-time');
 
-                    const dailyPriceInput = document.getElementById('daily-price-input');
-                    const hourlyPriceInput = document.getElementById('hourly-price-input');
-                    const hourThresholdInput = document.getElementById('hour-threshold-input');
-                    const hourThresholdDisplay = document.getElementById('hour-threshold-display');
-                    const rbfw_enable_daily_rate = document.getElementById('rbfw_enable_daily_rate');
-                    const rbfw_enable_time_picker = document.getElementById('rbfw_enable_time_picker');
-                    const rbfw_enable_hourly_rate = document.getElementById('rbfw_enable_hourly_rate');
-                    const rbfw_enable_hourly_threshold = document.getElementById('rbfw_enable_hourly_threshold');
+                    jQuery(document).ready(function () {
+                        const dailyPriceToggle = jQuery('.daily-price-toggle');
+                        const hourThresholdToggle = jQuery('.hour-threshold-toggle');
+                        const timePickerToggle = jQuery('.time-picker-toggle');
+                        const hourlyPriceToggle = jQuery('.hourly-price-toggle');
+                        const hourlyPriceItem = jQuery('.hourly-price-item');
+                        const hourThresholdItem = jQuery('.hour-threshold-item');
+                        const timeSlotsSection = jQuery('.time-slots-section');
 
-                    // State
-                    let dailyPriceEnabled = (rbfw_enable_daily_rate.value=='yes')?true:false;
-                    let hourlyPriceEnabled = (rbfw_enable_time_picker.value=='yes')?true:false;
-                    let hourThresholdEnabled = (rbfw_enable_time_picker.value=='yes')?true:false;
-                    let timePickerEnabled = (rbfw_enable_time_picker.value=='yes')?true:false;
-                    let timeSlots = [];
 
-                    // Generate time slots (30-minute intervals)
-                    function generateTimeSlots() {
-                        const slots = [];
-                        const startHour = 9; // Starting at 9:00 AM
-                        const endHour = 10; // Ending at 9:00 PM
+                        const dailyPriceInput = jQuery('#daily-price-input');
+                        const hourlyPriceInput = jQuery('#hourly-price-input');
+                        const hourThresholdInput = jQuery('#hour-threshold-input');
+                        const hourThresholdDisplay = jQuery('#hour-threshold-display');
+                        const rbfw_enable_daily_rate = jQuery('#rbfw_enable_daily_rate');
+                        const rbfw_enable_time_picker = jQuery('#rbfw_enable_time_picker');
+                        const rbfw_enable_hourly_rate = jQuery('#rbfw_enable_hourly_rate');
+                        const rbfw_enable_hourly_threshold = jQuery('#rbfw_enable_hourly_threshold');
 
-                        let id = 1;
-                        for (let hour = startHour; hour < endHour; hour++) {
-                            // Add the hour:00 slot
-                            slots.push({
-                                id: id++,
-                                time: `${hour.toString().padStart(2, '0')}:00`,
-                                enabled: true
-                            });
+                        // State
+                        let dailyPriceEnabled = rbfw_enable_daily_rate.val() === 'yes';
+                        let timePickerEnabled = rbfw_enable_time_picker.val() === 'yes';
+                        let hourlyPriceEnabled = rbfw_enable_time_picker.val() === 'yes';
+                        let hourThresholdEnabled = rbfw_enable_time_picker.val() === 'yes';
+                        let timeSlots = [];
 
-                            // Add the hour:30 slot
-                            slots.push({
-                                id: id++,
-                                time: `${hour.toString().padStart(2, '0')}:30`,
-                                enabled: true
-                            });
+                        // Toggle functions
+                        function toggleDailyPrice() {
+                            dailyPriceEnabled = !dailyPriceEnabled;
+                            dailyPriceToggle.toggleClass('active', dailyPriceEnabled);
+                            dailyPriceInput.prop('disabled', !dailyPriceEnabled);
+                            rbfw_enable_daily_rate.val(dailyPriceEnabled ? 'yes' : 'no');
                         }
 
-                        return slots;
-                    }
-
-                    // Initialize time slots
-                    timeSlots = generateTimeSlots();
-
-                    // Toggle functions
-                    function toggleDailyPrice() {
-                        dailyPriceEnabled = !dailyPriceEnabled;
-                        dailyPriceToggle.classList.toggle('active', dailyPriceEnabled);
-                        dailyPriceInput.disabled = !dailyPriceEnabled;
-
-                        if(dailyPriceEnabled){
-                            rbfw_enable_daily_rate.value = 'yes';
-                        }else{
-                            rbfw_enable_daily_rate.value = 'no';
+                        function toggleHourThreshold() {
+                            hourThresholdEnabled = !hourThresholdEnabled;
+                            hourThresholdToggle.toggleClass('active', hourThresholdEnabled);
+                            hourThresholdInput.prop('disabled', !hourThresholdEnabled);
+                            rbfw_enable_hourly_threshold.val(hourThresholdEnabled ? 'yes' : 'no');
                         }
 
+                        jQuery('.time-picker-toggle').on('click', function() {
+                            timePickerEnabled = !timePickerEnabled;
+                            timePickerToggle.toggleClass('active', timePickerEnabled);
+                            hourlyPriceItem.css('display', timePickerEnabled ? 'flex' : 'none');
+                            hourThresholdItem.css('display', timePickerEnabled ? 'flex' : 'none');
+                            timeSlotsSection.css('display', timePickerEnabled ? 'block' : 'none');
 
-                    }
+                            const $toggle = jQuery(this);
+                            const $input = jQuery('.rbfw_enable_time_picker');
+                            if ($toggle.hasClass('active')) {
+                                $input.val('yes');
+                            } else {
+                                $input.val('no');
+                            }
 
-                    function toggleHourThreshold() {
-                        hourThresholdEnabled = !hourThresholdEnabled;
-                        hourThresholdToggle.classList.toggle('active', hourThresholdEnabled);
-                        hourThresholdInput.disabled = !hourThresholdEnabled;
+                        })
 
-                        if(hourThresholdEnabled){
-                            rbfw_enable_hourly_threshold.value = 'yes';
-                        }else{
-                            rbfw_enable_hourly_threshold.value = 'no';
+
+
+
+                        function toggleHourlyPrice() {
+                            hourlyPriceEnabled = !hourlyPriceEnabled;
+                            hourlyPriceToggle.toggleClass('active', hourlyPriceEnabled);
+                            hourlyPriceInput.prop('disabled', !hourlyPriceEnabled);
+                            rbfw_enable_hourly_rate.val(hourlyPriceEnabled ? 'yes' : 'no');
                         }
 
-                    }
-
-                    function toggleTimePicker() {
-                        timePickerEnabled = !timePickerEnabled;
-                        timePickerToggle.classList.toggle('active', timePickerEnabled);
-
-                        // Show/hide time-dependent elements
-                        hourlyPriceItem.style.display = timePickerEnabled ? 'flex' : 'none';
-                        hourThresholdItem.style.display = timePickerEnabled ? 'flex' : 'none';
-                        timeSlotsSection.style.display = timePickerEnabled ? 'block' : 'none';
-
-                        if(timePickerEnabled){
-                            rbfw_enable_time_picker.value = 'yes';
-                        }else{
-                            rbfw_enable_time_picker.value = 'no';
-                        }
-
-
-
-                        // Render time slots if enabled
-                        if (timePickerEnabled) {
-                            renderTimeSlots();
-                        }
-                    }
-
-                    function toggleHourlyPrice() {
-                        hourlyPriceEnabled = !hourlyPriceEnabled;
-                        hourlyPriceToggle.classList.toggle('active', hourlyPriceEnabled);
-                        hourlyPriceInput.disabled = !hourlyPriceEnabled;
-
-                        if(hourlyPriceEnabled){
-                            rbfw_enable_hourly_rate.value = 'yes';
-                        }else{
-                            rbfw_enable_hourly_rate.value = 'no';
-                        }
-                    }
-
-                    // Time slot functions
-                    function renderTimeSlots() {
-                        timeSlotsContainer.innerHTML = '';
-
-                        timeSlots.forEach(slot => {
-                            const timeSlotElement = document.createElement('div');
-                            timeSlotElement.className = `time-slot ${slot.enabled ? 'enabled' : ''}`;
-                            timeSlotElement.dataset.id = slot.id;
-
-                            const timeElement = document.createElement('span');
-                            timeElement.className = 'time-slot-time';
-                            timeElement.textContent = slot.time;
-
-                            const indicatorElement = document.createElement('div');
-                            indicatorElement.className = 'time-slot-indicator';
-                            indicatorElement.title = slot.enabled ? 'Click to disable' : 'Click to enable';
-
-                            const removeElement = document.createElement('div');
-                            removeElement.className = 'time-slot-remove';
-                            removeElement.textContent = '×';
-                            removeElement.title = 'Remove time slot';
-
-                            timeSlotElement.appendChild(timeElement);
-                            timeSlotElement.appendChild(indicatorElement);
-                            timeSlotElement.appendChild(removeElement);
-
-                            // Add event listeners
-                            indicatorElement.addEventListener('click', () => toggleTimeSlot(slot.id));
-                            removeElement.addEventListener('click', () => removeTimeSlot(slot.id));
-
-                            timeSlotsContainer.appendChild(timeSlotElement);
+                        // Input change handlers
+                        dailyPriceInput.on('change', function () {
+                            const value = parseFloat(jQuery(this).val());
+                            if (isNaN(value) || value < 0) {
+                                jQuery(this).val(0);
+                            }
                         });
-                    }
 
+                        hourlyPriceInput.on('change', function () {
+                            const value = parseFloat(jQuery(this).val());
+                            if (isNaN(value) || value < 0) {
+                                jQuery(this).val(0);
+                            }
+                        });
 
+                        hourThresholdInput.on('change', function () {
+                            const value = parseFloat(jQuery(this).val());
+                            if (isNaN(value) || value < 0) {
+                                jQuery(this).val(0);
+                            }
+                            hourThresholdDisplay.text(jQuery(this).val());
+                        });
 
-
-
-
-
-
-
-                    // Input change handlers
-                    dailyPriceInput.addEventListener('change', function() {
-                        const value = parseFloat(this.value);
-                        if (isNaN(value) || value < 0) {
-                            this.value = 0;
-                        }
+                        // Event listeners for toggles
+                        dailyPriceToggle.on('click', toggleDailyPrice);
+                        hourThresholdToggle.on('click', toggleHourThreshold);
+                        hourlyPriceToggle.on('click', toggleHourlyPrice);
                     });
-
-                    hourlyPriceInput.addEventListener('change', function() {
-                        const value = parseFloat(this.value);
-                        if (isNaN(value) || value < 0) {
-                            this.value = 0;
-                        }
-                    });
-
-                    hourThresholdInput.addEventListener('change', function() {
-                        const value = parseFloat(this.value);
-                        if (isNaN(value) || value < 0) {
-                            this.value = 0;
-                        }
-                        hourThresholdDisplay.textContent = this.value;
-                    });
-
-
-
-                    // Event listeners for toggles
-                    dailyPriceToggle.addEventListener('click', toggleDailyPrice);
-                    hourThresholdToggle.addEventListener('click', toggleHourThreshold);
-                    timePickerToggle.addEventListener('click', toggleTimePicker);
-                    hourlyPriceToggle.addEventListener('click', toggleHourlyPrice);
-
 
 
                 </script>

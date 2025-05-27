@@ -379,7 +379,7 @@
 					$selected_date      = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
 					$is_muffin_template = isset( $_POST['is_muffin_template'] ) ? sanitize_text_field( wp_unslash( $_POST['is_muffin_template'] ) ) : '';
 					$time_slot_switch   = isset( $_POST['time_slot_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['time_slot_switch'] ) ) : '';
-					if ( $time_slot_switch == 'on' ) {
+					if ( $time_slot_switch == 'yes' ) {
 						$available_times  = rbfw_get_available_times_particulars( $id, $selected_date, 'time_enable', '' );
 						$default_timezone = wp_timezone_string();
 						$date             = new DateTime( "now", new DateTimeZone( $default_timezone ) );

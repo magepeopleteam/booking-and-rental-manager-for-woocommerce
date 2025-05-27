@@ -39,7 +39,7 @@ require_once RBFW_PLUGIN_DIR . '/support/blocks/block-support.php';
 
 add_action('init', 'rbfw_category_update');
 function rbfw_category_update(){
-    $rbfw_category_update = get_option('rbfw_category_update');
+    $rbfw_category_update = get_option('rbfw_enable_time_picker_option');
 
     if($rbfw_category_update != 'yes'){
 
@@ -50,13 +50,25 @@ function rbfw_category_update(){
         $query = new WP_Query($args);
 
         if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
-            $rbfw_category_name = get_post_meta(get_the_ID(),'rbfw_category_name',true);
-            $category_name=isset(get_term($rbfw_category_name)->name) ? get_term($rbfw_category_name)->name : '';
-            $rbfw_categories = array(0=>$category_name);
-            update_post_meta(get_the_ID(),'rbfw_categories',$rbfw_categories);
-        endwhile;
+
+
+            $manage_inventory_as_timely =  get_post_meta(get_the_ID(), 'manage_inventory_as_timely', true) ? get_post_meta(get_the_ID(), 'manage_inventory_as_timely', true) : 'off';
+            $enable_specific_duration =  get_post_meta(get_the_ID(), 'enable_specific_duration', true) ? get_post_meta(get_the_ID(), 'enable_specific_duration', true) : 'off';
+            $rbfw_time_slot_switch = !empty(get_post_meta(get_the_ID(),'rbfw_time_slot_switch',true)) ? get_post_meta(get_the_ID(),'rbfw_time_slot_switch',true) : 'off';
+            $available_times = get_post_meta(get_the_ID(), 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta(get_the_ID(), 'rdfw_available_time', true)) : [];
+            $enable_hourly_rate = get_post_meta(get_the_ID(), 'rbfw_enable_hourly_rate', true) ? get_post_meta(get_the_ID(), 'rbfw_enable_hourly_rate', true) : 'no';
+
+            if($rbfw_time_slot_switch == 'on' && !empty($available_times) && ($manage_inventory_as_timely=='on' && $enable_specific_duration =='off') ){
+                update_post_meta(get_the_ID(),'rbfw_enable_time_picker','yes');
+            }
+
+            if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_rate == 'yes' ){
+                update_post_meta(get_the_ID(),'rbfw_enable_time_picker','yes');
+            }
+
+            endwhile;
         endif;
-        update_option( 'rbfw_category_update', 'yes' );
+        update_option( 'rbfw_enable_time_picker_option', 'yes' );
     }
 }
 
