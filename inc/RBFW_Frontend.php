@@ -105,6 +105,23 @@
 				</div>
 				<?php
 			}
+
+            public static function count_array_dimensions($array) {
+                if (is_array($array)) {
+                    $maxDepth = 0;
+                    foreach ($array as $value) {
+                        $depth = RBFW_Frontend::count_array_dimensions($value);
+                        if ($depth > $maxDepth) {
+                            $maxDepth = $depth;
+                        }
+                    }
+                    return $maxDepth + 1;
+                } else {
+                    return 0;
+                }
+            }
+
+
 		}
 		new RBFW_Frontend();
 	}

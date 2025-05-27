@@ -57,9 +57,10 @@
             return false;
         });
 
-        jQuery('.remove-row').on('click', function() {
+        jQuery(document).on('click', '.remove-row',function(e){
             if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
                 jQuery(this).parents('tr').remove();
+                jQuery(this).parents('.rbfw_pdwt_row').remove();
             } else {
                 return false;
             }
@@ -1051,6 +1052,131 @@
         $('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_type_image_preview img').remove();
         $('.rbfw_resort_price_table_row[data-key=' + parent_data_key + '] .rbfw_room_image').val('');
     });
+
+    jQuery(document).on('click', '#add-particular-row', function() {
+        let parent = jQuery(this).closest('.available-particular');
+        let item = parent.find('.mp_hidden_content').first().find('.mp_hidden_item').html();
+        let total_element = jQuery(".rbfw_pdwt_insert").children().length;
+
+        let tempDiv = jQuery(item);
+
+        tempDiv.find(".rbfw_start_date").attr({"name": "rbfw_particulars["+total_element+"][start_date]"});
+        tempDiv.find(".rbfw_end_date").attr({"name": "rbfw_particulars["+total_element+"][end_date]"});
+        tempDiv.find(".add-slot-btn").attr({"data-particular_id": total_element});
+
+
+        tempDiv.find(".date_type").removeClass('hasDatepicker').datepicker({
+            dateFormat: 'yy-mm-dd',
+            minDate: 0
+        });
+
+        /*tempDiv.find(".rbfw_daily_price_md").attr({"name": "rbfw_md_data_mds["+total_element+"][rbfw_daily_price]"});
+        tempDiv.find(".rbfw_hourly_price_md").attr({"name": "rbfw_md_data_mds["+total_element+"][rbfw_hourly_price]"});*/
+
+        parent.find(".rbfw_pdwt_insert").first().append(tempDiv);
+
+        jQuery(".date_type").datepicker({
+
+        })
+
+    });
+
+    $(document).on('click', '.time-slot-remove', function () {
+        $(this).closest('.time-slot').remove();
+    });
+
+    $(document).on('click', '.time-slot-indicator', function () {
+        const $indicator = $(this);
+        const $timeSlot = $indicator.closest('.time-slot');
+        const $statusInput = $timeSlot.find('input[name*="[status]"]');
+
+        // Toggle active class
+        $indicator.toggleClass('active');
+
+        // Set input value based on class presence
+        if ($indicator.hasClass('active')) {
+            $statusInput.val('enabled');
+            $timeSlot.removeClass('disabled').addClass('enabled');
+        } else {
+            $statusInput.val('');
+            $timeSlot.removeClass('enabled').addClass('disabled');
+        }
+    });
+
+    $(document).on('change', '.new-slot-time', function () {
+        const timeValue = $(this).val();
+        if (timeValue) {
+            $(this).closest('.add-slot-form').find('.add-slot-btn').prop('disabled', false);
+        } else {
+            $(this).closest('.add-slot-form').find('.add-slot-btn').prop('disabled', true);
+        }
+    });
+
+
+    $(document).on('click', '.add-slot-btn', function (e) {
+
+        e.preventDefault(); // prevent form submission if inside form
+
+        const time = $(this).closest('.add-slot-form').find('.new-slot-time').val();
+        if (!time) return;
+
+        const name_attr = $(this).data('name_attr');
+
+
+
+        // Get a unique index (based on existing slots)
+        const $timeSlotsContainer = $(this).closest('.add-slot-container').prevAll('.time-slots-container').first().find('.time-slots');
+        const index = $timeSlotsContainer.children('.time-slot').length;
+        const dataId = $('.rbfw_pdwt_insert').children('.time-slot').length; // Use your actual ID logic here
+
+        // Build time slot HTML
+        let newSlot = '';
+        if(name_attr == 'rdfw_available_time'){
+
+            newSlot = `
+        <div class="time-slot enabled" data-id="${index}">
+          <span class="time-slot-time">${time}</span>
+          <input type="hidden" name="${name_attr}[${index}][id]" value="${dataId}">
+          <input type="hidden" name="${name_attr}[${index}][time]" value="${time}">
+          <input type="hidden" name="${name_attr}[${index}][status]" value="enabled">
+          <div class="time-slot-indicator active" title="Click to disable"></div>
+          <div class="time-slot-remove" title="Remove time slot">×</div>
+        </div>
+      `;
+
+        }else{
+            const dataId = $(this).data('particular_id');
+            newSlot = `
+        <div class="time-slot enabled" data-id="${dataId}">
+          <span class="time-slot-time">${time}</span>
+          <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][id]" value="${dataId}">
+          <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][time]" value="${time}">
+          <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][status]" value="enabled">
+          <div class="time-slot-indicator active" title="Click to disable"></div>
+          <div class="time-slot-remove" title="Remove time slot">×</div>
+        </div>
+           `;
+        }
+        // Append to container
+        $timeSlotsContainer.append(newSlot);
+
+        // Clear input & disable button
+        $('.new-slot-time').val('');
+        $('.add-slot-btn').prop('disabled', true);
+    });
+
+
+    $(document).on('click', 'input[name=rbfw_particular_switch]', function (e) {
+        var status = $(this).val();
+        if (status === 'on') {
+            $(this).val('off');
+            $('.available-particular').slideUp().removeClass('show').addClass('hide');
+        }
+        if (status === 'off') {
+            $(this).val('on');
+            $('.available-particular').slideDown().removeClass('hide').addClass('show');
+        }
+    });
     
     // ===========resort===========
 }(jQuery));
@@ -1095,5 +1221,4 @@ function getPostIdFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('post'); // returns the post ID as a string
 }
-
 

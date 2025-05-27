@@ -72,8 +72,14 @@ $rbfw_event_end_time  = gmdate('h:i a', strtotime($rbfw_event_end_time));
 $rbfw_event_last_date = strtotime(date_i18n('Y-m-d h:i a', strtotime($rbfw_event_end_date.' '.$rbfw_event_end_time)));
 $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
 
+$rbfw_time_slot_switch = !empty(get_post_meta($rbfw_id,'rbfw_time_slot_switch',true)) ? get_post_meta($rbfw_id,'rbfw_time_slot_switch',true) : 'off';
 
-$rbfw_time_slot_switch = get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true) ? get_post_meta($rbfw_id, 'rbfw_time_slot_switch', true) : 'off';
+if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_rate == 'yes' ){
+    update_post_meta($rbfw_id,'rbfw_enable_time_picker','yes');
+}
+
+
+$rbfw_enable_time_picker = get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) ? get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) : 'no';
 
 $expire = 'no';
 if($rbfw_enable_start_end_date=='no'){
@@ -82,10 +88,7 @@ if($rbfw_enable_start_end_date=='no'){
     }
 }
 
-$time_picker = 'off';
-if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_rate == 'yes' ){
-    $time_picker = 'on';
-}
+
 
 $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($rbfw_id, 'rbfw_available_qty_info_switch', true) : 'no';
 
@@ -176,7 +179,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                                 <td><?php echo wp_kses_post(wc_price($daily_rate)); ?> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_day', 'rbfw_basic_translation_settings', __('day', 'booking-and-rental-manager-for-woocommerce'))); ?></td>
                                             </tr>
                                         <?php } ?>
-                                        <?php if ($time_picker == 'on') { ?>
+                                        <?php if ($rbfw_enable_time_picker == 'yes') { ?>
                                             <tr>
                                                 <td><strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly Rate', 'booking-and-rental-manager-for-woocommerce'))); ?></strong></td>
                                                 <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_hour', 'rbfw_basic_translation_settings', __('hour', 'booking-and-rental-manager-for-woocommerce'))); ?></td>
@@ -197,13 +200,13 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                         <table>
                                             <tbody>
                                             <tr>
-                                                <td <?php echo ($time_picker == 'on')?'colspan="2"':'' ?>>Over <strong><?php echo esc_html($item['rbfw_start_day']) ?></strong> Days </td>
+                                                <td <?php echo ($rbfw_enable_time_picker == 'yes')?'colspan="2"':'' ?>>Over <strong><?php echo esc_html($item['rbfw_start_day']) ?></strong> Days </td>
                                             </tr>
                                             <tr>
                                                 <td>
                                                     <strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><?php echo wc_price($item['rbfw_daily_price']) ?>
                                                 </td>
-                                                <?php if($time_picker == 'on'){ ?>
+                                                <?php if($rbfw_enable_time_picker == 'yes'){ ?>
                                                 <td>
                                                     <strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><?php echo wc_price($item['rbfw_hourly_price']) ?>
                                                 </td>
@@ -235,11 +238,11 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                                                 $sp_price_d = array_key_exists( 'rbfw_sp_price_d', $sp ) ? $sp['rbfw_sp_price_d'] : '0';
                                                                 ?>
                                                                 <tr>
-                                                                    <td <?php echo ($time_picker == 'on')?'colspan="2"':'' ?>><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format($start_date) ); ?></strong> <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>  <strong><?php echo esc_html( rbfw_date_format($end_date) ); ?></strong> </td>
+                                                                    <td <?php echo ($rbfw_enable_time_picker == 'yes')?'colspan="2"':'' ?>><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format($start_date) ); ?></strong> <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>  <strong><?php echo esc_html( rbfw_date_format($end_date) ); ?></strong> </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td><strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo  wp_kses(wc_price($sp_price_d) , rbfw_allowed_html()); ?></td>
-                                                                    <?php if($time_picker == 'on'){ ?>
+                                                                    <?php if($rbfw_enable_time_picker == 'yes'){ ?>
                                                                         <td><strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>  <?php echo  wp_kses(wc_price($sp_price_h) , rbfw_allowed_html()); ?></td>
                                                                     <?php } ?>
                                                                 </tr>
@@ -297,7 +300,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                     <?php if($rbfw_enable_start_end_date == 'yes'){ ?>
                         <div class="item">
                             <div class="item-content rbfw-datetime">
-                                <div class="<?php echo esc_attr(($time_picker == 'on')?'left':''); ?> date">
+                                <div class="<?php echo esc_attr(($rbfw_enable_time_picker == 'yes')?'left':''); ?> date">
                                     <div class="rbfw-single-right-heading">
                                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                     </div>
@@ -308,7 +311,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                         <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                     </div>
                                 </div>
-                                <?php if($time_picker == 'on'){ ?>
+                                <?php if($rbfw_enable_time_picker == 'yes'){ ?>
                                     <div class="right time">
                                         <div class="rbfw-single-right-heading">
                                             <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
@@ -330,7 +333,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
 
                         <div class="item">
                             <div class="item-content rbfw-datetime">
-                                <div class="<?php echo ($time_picker == 'on')?'left':'' ?> date">
+                                <div class="<?php echo ($rbfw_enable_time_picker == 'yes')?'left':'' ?> date">
                                     <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_date', 'rbfw_basic_translation_settings')); ?></div>
                                     <div class="rbfw-p-relative">
                                         <span class="calendar"><i class="fas fa-calendar-days"></i></span>
@@ -339,7 +342,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                         <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                     </div>
                                 </div>
-                                <?php if($time_picker == 'on'){ ?>
+                                <?php if($rbfw_enable_time_picker == 'yes'){ ?>
                                     <input name="rbfw_available_time"  id="rbfw_available_time" value="yes" type="hidden">
                                     <div class="right time">
                                         <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_return_time', 'rbfw_basic_translation_settings')); ?></div>
@@ -622,7 +625,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
 
                 $day_wise_imventory = '';
 
-                if($time_picker != 'on') {
+                if($rbfw_enable_time_picker != 'yes') {
 
                     $year = Date('Y');
                     $month = Date('n');
@@ -666,7 +669,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo esc_attr($rbfw_enable_variations); ?>">
                 <input type="hidden" name="rbfw_input_stock_quantity" id="rbfw_input_stock_quantity"  value="<?php echo esc_attr($input_stock_quantity); ?>">
-                <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_attr($time_picker); ?>">
+                <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_attr($rbfw_enable_time_picker); ?>">
                 <input type="hidden" name="total_days" value="0">
                 <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_attr($rbfw_minimum_booking_day); ?>">
                 <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo esc_attr($rbfw_maximum_booking_day); ?>">

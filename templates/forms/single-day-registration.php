@@ -19,15 +19,11 @@
 
     $available_times = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
 
-    $pickup_time = 'off';
 
-    if($rbfw_time_slot_switch == 'on' && !empty($available_times) && ($manage_inventory_as_timely=='on' && $enable_specific_duration =='off') ){
-        $pickup_time = 'on';
-    }elseif ($rbfw_time_slot_switch == 'on' && !empty($available_times) && $manage_inventory_as_timely=='off'){
-        $pickup_time = 'on';
-    }
+    $rbfw_enable_time_picker = get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) ? get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) : 'no';
 
-    ?>
+
+?>
 
 	<!--    Main Layout-->
 	<div class="rbfw-single-container" data-service-id="<?php echo esc_attr($rbfw_id); ?>">
@@ -101,7 +97,7 @@
                 ?>
                     <div class="item">
                         <div class="item-content rbfw-datetime">
-                            <div class="<?php echo ($pickup_time == 'on' )?'left':'' ?> date">
+                            <div class="<?php echo ($rbfw_enable_time_picker == 'yes' )?'left':'' ?> date">
                                 <div class="rbfw-single-right-heading">
                                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                 </div>
@@ -112,7 +108,7 @@
                                 </div>
                             </div>
 
-                            <?php if($pickup_time == 'on'){ ?>
+                            <?php if($rbfw_enable_time_picker == 'yes'){ ?>
                                 <div class="right time">
                                     <div class="rbfw-single-right-heading">
                                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
@@ -211,7 +207,7 @@
 
                 <?php wp_nonce_field('rbfw_ajax_action', 'nonce'); ?>
 
-                <input type="hidden" name="rbfw_time_slot_switch" id="rbfw_time_slot_switch" value="<?php echo esc_attr($pickup_time); ?>">
+                <input type="hidden" name="rbfw_time_slot_switch" id="rbfw_time_slot_switch" value="<?php echo esc_attr($rbfw_enable_time_picker); ?>">
                 <input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
                 <input type="hidden" name="enable_specific_duration" id="enable_specific_duration" value="<?php echo esc_attr($enable_specific_duration); ?>">
                 <input type="hidden" name="rbfw_start_time" id="rbfw_start_time" value="00:00">

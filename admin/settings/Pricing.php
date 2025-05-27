@@ -488,6 +488,9 @@
                             </p>
 
 							<?php do_action( 'rbfw_after_resort_price_table' ); ?>
+
+
+
                         </div>
                     </section>
                 </div>
@@ -592,61 +595,108 @@
 			}
 
 			public function general_price_config( $post_id ) {
-				$rbfw_enable_hourly_rate   = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
 				$rbfw_enable_daily_rate    = get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) : 'yes';
-				$rbfw_daily_rate           = get_post_meta( $post_id, 'rbfw_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_daily_rate', true ) : 0;
+
+                $rbfw_enable_time_picker    = get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) : 'no';
+                $rbfw_enable_hourly_rate   = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
+
+                $rbfw_hourly_threshold   = get_post_meta( $post_id, 'rbfw_hourly_threshold', true ) ? get_post_meta( $post_id, 'rbfw_hourly_threshold', true ) : '0';
+                $rbfw_enable_hourly_threshold    = get_post_meta( $post_id, 'rbfw_enable_hourly_threshold', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_threshold', true ) : 'no';
+
+
+                $rbfw_daily_rate           = get_post_meta( $post_id, 'rbfw_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_daily_rate', true ) : 0;
 				$rbfw_hourly_rate          = get_post_meta( $post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_hourly_rate', true ) : 0;
 				$rbfw_item_type            = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$mdedo                     = ( $rbfw_item_type != 'resort' && $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment' ) ? 'block' : 'none';
 				$rbfw_enable_daywise_price = get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) : 'no';
 				?>
                 <div class="rbfw_general_price_config_wrapper " style="display: <?php echo esc_attr( $mdedo ) ?>;">
-					<?php do_action( 'rbfw_before_general_price_table' ); ?>
-					<?php $this->panel_header( 'General Price Configuration', 'General Price Configuration' ); ?>
-					<?php do_action( 'rbfw_before_general_price_table_row' ); ?>
-                    <section>
-                        <div>
-                            <label for=""><?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                            <p for=""><?php esc_html_e( 'Pricing will be calculated based on number of day.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                        </div>
-                        <div>
-                            <label class="switch">
-                                <input type="checkbox" name="rbfw_enable_daily_rate" value="<?php echo esc_attr( $rbfw_enable_daily_rate ); ?>" <?php echo esc_attr( ( $rbfw_enable_daily_rate == 'yes' ) ? 'checked' : '' ); ?>>
-                                <span class="slider round"></span>
-                            </label>
-                            <span class="rbfw_daily_rate_input ms-2">
-							<input
-                                type="number"
-                                name="rbfw_daily_rate"
-                                step="0.01"
-                                value="<?php echo esc_attr( $rbfw_daily_rate ); ?>"
-                                placeholder="<?php esc_attr_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"
-                            <?php echo esc_attr( $rbfw_enable_daily_rate == 'no' ? 'disabled' : '' ); ?>>
 
-						</span>
+                    <?php $this->panel_header( 'General Price Configuration', 'General Price Configuration' ); ?>
+
+                    <div class="rbfw_multi_day_price_conf">
+                        <!-- Daily Price -->
+                        <div class="item">
+                            <div class="item-left">
+                                <div class="label">Daily Price</div>
+                                <div class="description">Pricing will be calculated based on number of day.</div>
+                            </div>
+                            <div class="item-right">
+                                <div class="toggle daily-price-toggle <?php echo esc_attr( $rbfw_enable_daily_rate == 'yes' ? 'active' : '' ); ?>">
+                                    <div class="toggle-knob"></div>
+                                </div>
+                                <input type="number" name="rbfw_daily_rate" step="0.01" value="<?php echo esc_attr( $rbfw_daily_rate ); ?>" placeholder="<?php esc_attr_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_daily_rate == 'no' ? 'disabled' : '' ); ?> id="daily-price-input" class="price-input">
+                                <input type="hidden" name="rbfw_enable_daily_rate" id="rbfw_enable_daily_rate" value="<?php echo esc_attr( $rbfw_enable_daily_rate ); ?>">
+                            </div>
                         </div>
-                    </section>
-                    <section>
-                        <div>
-                            <label for=""><?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                            <p><?php esc_html_e( 'Pricing will be calculated as per hour.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+
+
+                        <!-- Time Picker Toggle -->
+                        <div class="item">
+                            <div class="item-left">
+                                <div class="label">Enable Time Picker</div>
+                                <div class="description">
+                                    Toggle to enable time selection for more precise rental periods.
+                                </div>
+                            </div>
+                            <div class="item-right">
+                                <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">
+                                    <div class="toggle-knob"></div>
+                                </div>
+                                <input type="hidden" name="rbfw_enable_time_picker" class="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
+                            </div>
                         </div>
-                        <div>
-                            <label class="switch">
-                                <input type="checkbox" name="rbfw_enable_hourly_rate" value="<?php echo esc_attr( $rbfw_enable_hourly_rate ); ?>" <?php echo esc_attr( ( $rbfw_enable_hourly_rate == 'yes' ) ? 'checked' : '' ); ?>>
-                                <span class="slider round"></span>
-                            </label>
-                            <span class="rbfw_hourly_rate ms-2">
-							<input
-                                type="number"
-                                name="rbfw_hourly_rate"
-                                step="0.01"
-                                value="<?php echo esc_attr( $rbfw_hourly_rate ); ?>"
-                                placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"
-                                <?php echo esc_attr( $rbfw_enable_hourly_rate == 'no' ? 'disabled' : '' ); ?>>
-						</span>
+
+                        <!-- Hourly Price (conditional) -->
+                        <div class="item hourly-price-item" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'flex' : 'none' ); ?>;">
+                            <div class="item-left">
+                                <div class="label">Hourly Price</div>
+                                <div class="description">Pricing will be calculated as per hour.</div>
+                            </div>
+                            <div class="item-right">
+                                <div class="toggle hourly-price-toggle <?php echo esc_attr( $rbfw_enable_hourly_rate == 'yes' ? 'active' : '' ); ?>">
+                                    <div class="toggle-knob"></div>
+                                </div>
+                                <input type="number" name="rbfw_hourly_rate" step="0.01" value="<?php echo esc_attr( $rbfw_hourly_rate ); ?>" placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_hourly_rate == 'no' ? 'disabled' : '' ); ?> id="hourly-price-input" class="price-input">
+                                <input type="hidden" name="rbfw_enable_hourly_rate" id="rbfw_enable_hourly_rate" value="<?php echo esc_attr( $rbfw_enable_hourly_rate ); ?>">
+                            </div>
                         </div>
-                    </section>
+
+                        <!-- Hour Threshold (conditional) -->
+                        <div class="item hour-threshold-item" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'flex' : 'none' ); ?>;">
+                            <div class="item-left">
+                                <div class="label">Hour Threshold</div>
+                                <div class="description">
+                                    If total hours are more than <span id="hour-threshold-display">6</span>, count as full day. If less, day will not count.
+                                </div>
+                            </div>
+                            <div class="item-right">
+                                <div class="toggle hour-threshold-toggle <?php echo esc_attr( $rbfw_enable_hourly_threshold == 'yes' ? 'active' : '' ); ?>">
+                                    <div class="toggle-knob"></div>
+                                </div>
+                                <input type="number" name="rbfw_hourly_threshold" step="0.01" value="<?php echo esc_attr( $rbfw_hourly_threshold ); ?>" placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_hourly_threshold == 'no' ? 'disabled' : '' ); ?> id="hour-threshold-input" class="price-input">
+                                <input type="hidden" name="rbfw_enable_hourly_threshold" id="rbfw_enable_hourly_threshold" value="<?php echo esc_attr( $rbfw_enable_hourly_threshold ); ?>">
+                            </div>
+                        </div>
+
+                        <!-- Time Slots (conditional) -->
+
+                        <?php $this->multiple_time_slot_with_particular( $post_id, $rbfw_enable_time_picker ); ?>
+
+
+
+
+                    </div>
+
+
+
+
+
+                    <?php do_action( 'rbfw_before_general_price_table' ); ?>
+
+                    <?php do_action( 'rbfw_before_general_price_table_row' ); ?>
+
+
 					<?php $this->panel_header( 'Day-wise Price Configuration ', 'Day-wise Price Configuration lets you set different prices for each day of the week' ); ?>
                     <section>
                         <div>
@@ -694,9 +744,41 @@
 					<?php do_action( 'rbfw_after_general_price_table', $post_id ); ?>
                 </div>
                 <?php do_action( 'rbfw_after_rent_item_type_table_row' ); ?>
+
 				<?php do_action( 'rbfw_after_week_price_table', $post_id ); ?>
+
+
                 <?php do_action( 'rbfw_after_room_type_price_saver_price_table', $post_id ); ?>
 				<?php do_action( 'rbfw_after_extra_service_table' ); ?>
+
+
+                <div class="rbfw_multi_day_price_conf rbfw_bike_car_sd_wrapper <?php echo esc_attr( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) ? 'show' : 'hide'; ?>">
+                    <div class="item">
+                        <div class="item-left">
+                            <div class="label">Enable Time Picker</div>
+                            <div class="description">
+                                Toggle to enable time selection for more precise rental periods.
+                            </div>
+                        </div>
+                        <div class="item-right">
+                            <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">
+                                <div class="toggle-knob"></div>
+                            </div>
+                            <input type="hidden" name="rbfw_enable_time_picker" class="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
+                        </div>
+                    </div>
+
+
+
+
+
+                    <!-- Time Slots (conditional) -->
+
+                    <?php $this->multiple_time_slot_with_particular( $post_id, $rbfw_enable_time_picker ); ?>
+
+
+                </div>
+
 				<?php
 			}
 
@@ -711,11 +793,332 @@
                     <?php $this->resort_price_config( $post_id ); ?>
 					<?php $this->general_price_config( $post_id ); ?>
 
-					
+
                 </div>
-                
+
 				<?php
 			}
+
+            public function multiple_time_slot_with_particular($post_id, $rbfw_enable_time_picker)
+            {
+                ?>
+                <div class="time-slots-section" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'block' : 'none' ); ?>;">
+                    <div class="section">
+                        <h2>Time Slots Configuration</h2>
+                        <p>Configure available 30-minute time slots for booking</p>
+                    </div>
+
+                    <div class="time-slots-container">
+                        <div class="time-slots" id="time-slots-container">
+                            <?php
+                            $rdfw_available_time        = get_post_meta( $post_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rdfw_available_time', true ) ) : [];
+                            $array_dimension = RBFW_Frontend::count_array_dimensions($rdfw_available_time);
+                            if($array_dimension == 1){
+                                $i = 1;
+                                $result = [];
+                                foreach ($rdfw_available_time as $time) {
+                                    $result[] = ['id'=>$i, 'time'=>$time, 'status'=>'enabled'];
+                                    $i++;
+                                }
+                                $rdfw_available_time = $result;
+                            }
+                            $i = 0;
+                            foreach ($rdfw_available_time as $key => $item) { if(is_array($item)){
+                                ?>
+                                <div class="time-slot <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
+                                    <span class="time-slot-time"><?php echo $item['time'] ?></span>
+                                    <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][id]" value="<?php echo $i ?>">
+                                    <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
+                                    <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
+                                    <div class="time-slot-indicator" title="Click to disable"></div>
+                                    <div class="time-slot-remove" title="Remove time slot">×</div>
+                                </div>
+                                <?php $i++; } } ?>
+                        </div>
+                    </div>
+
+                    <div class="add-slot-container">
+                        <div class="label">Add New Time Slot</div>
+                        <div class="add-slot-form">
+                            <div>
+                                <label for="new-slot-time">Time (30 min slot)</label>
+                                <input type="time" class="new-slot-time">
+                            </div>
+                            <button class="add-slot-btn" data-name_attr="rdfw_available_time" disabled>Add Slot</button>
+                        </div>
+                    </div>
+
+
+                    <?php $particulars_data = get_post_meta( $post_id, 'rbfw_particulars_data', true );
+
+                    ?>
+                    <div class="mpStyle">
+                        <?php $this->panel_header( 'Particular Settings', 'Here you can set Particulars' ); ?>
+                        <section>
+                            <div>
+                                <label>
+                                    <?php echo esc_html__( 'Particular date time slots', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                </label>
+                                <p><?php echo esc_html__( 'It enables/disables the particulars for selection.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                            </div>
+                            <?php $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off'; ?>
+                            <label class="switch">
+                                <input type="checkbox" name="rbfw_particular_switch" value="<?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? $rbfw_particular_switch : 'off' ); ?>" <?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'checked' : '' ); ?>>
+                                <span class="slider round"></span>
+                            </label>
+                        </section>
+                        <!-- Multiple Particular Section -->
+                        <div class="available-particular <?php  echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'show' : 'hide' ); ?>">
+                            <section>
+                                <div class="">
+                                    <div class="d-flex justify-content-between row header">
+                                        <div><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                        <div><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                        <div><?php esc_html_e( 'Available Time Slots', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                        <div><?php esc_html_e( 'Actions', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    </div>
+                                    <div class="rbfw_pdwt_insert">
+                                        <?php $i=0;  foreach ( $particulars_data as $index => $particular ){ if( $particular['start_date'] && $particular['end_date']){ ?>
+                                            <div class="rbfw_pdwt_row d-flex justify-content-between">
+                                                <div>
+                                                    <input type="text" class="date_type" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
+                                                </div>
+                                                <div>
+                                                    <input type="text" class="date_type" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
+                                                </div>
+                                                <div>
+                                                    <div class="time-slots-container">
+                                                        <div class="time-slots" id="time-slots-container">
+
+                                                            <?php
+                                                            $particular_available_time        = $particular['available_time'];
+                                                            $array_dimension = RBFW_Frontend::count_array_dimensions($particular_available_time);
+                                                            if($array_dimension == 1){
+                                                                $k = 0;
+                                                                $result = [];
+                                                                foreach ($particular_available_time as $time) {
+                                                                    $result[] = ['id'=>$k, 'time'=>$time, 'status'=>'enabled'];
+                                                                    $k++;
+                                                                }
+                                                                $particular_available_time = $result;
+                                                            }
+
+
+                                                            $j = 0;
+
+
+                                                            foreach ($particular_available_time as $key => $item) { if(is_array($item)){
+
+                                                                ?>
+
+                                                                <div class="time-slot <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
+                                                                    <span class="time-slot-time"><?php echo $item['time'] ?></span>
+                                                                    <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][id]" value="<?php echo $i ?>">
+                                                                    <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][time]" value="<?php echo $item['time'] ?>">
+                                                                    <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][status]" value="<?php echo $item['status'] ?>">
+                                                                    <div class="time-slot-indicator" title="Click to disable"></div>
+                                                                    <div class="time-slot-remove" title="Remove time slot">×</div>
+                                                                </div>
+
+                                                                <?php $j++; } } ?>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="add-slot-container">
+                                                        <div class="label">Add New Time Slot</div>
+                                                        <div class="add-slot-form">
+                                                            <div>
+                                                                <label for="new-slot-time">Time (30 min slot)</label>
+                                                                <input type="time" class="new-slot-time">
+                                                            </div>
+                                                            <button class="add-slot-btn" data-name_attr="rbfw_particulars" data-particular_id="<?php echo $i ?>" disabled>Add Slot</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <button type="button" class="remove-row button"><?php echo esc_html__( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                                </div>
+                                            </div>
+                                            <?php $i++; } } ?>
+                                    </div>
+                                    <div class="footer">
+                                        <button type="button" id="add-particular-row" class="button ss"><?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                    </div>
+                                </div>
+                            </section>
+
+
+                            <div class="mp_hidden_content">
+                                <div class="mp_hidden_item" >
+                                    <div class="rbfw_pdwt_row d-flex justify-content-between">
+                                        <div>
+                                            <input type="text" class="rbfw_start_date date_type">
+                                        </div>
+                                        <div>
+                                            <input type="text" class="rbfw_end_date date_type">
+                                        </div>
+                                        <div>
+                                            <div class="time-slots-container">
+                                                <div class="time-slots" id="time-slots-container">
+
+
+                                                </div>
+                                            </div>
+
+                                            <div class="add-slot-container">
+                                                <div class="label">Add New Time Slot</div>
+                                                <div class="add-slot-form">
+                                                    <div>
+                                                        <label for="new-slot-time">Time (30 min slot)</label>
+                                                        <input type="time" class="new-slot-time">
+                                                    </div>
+                                                    <button class="add-slot-btn" data-name_attr="rbfw_particulars" disabled="">Add Slot</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div><button class="remove-row button">Remove</button></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+
+                <script>
+
+
+                    jQuery(document).ready(function () {
+                        const dailyPriceToggle = jQuery('.daily-price-toggle');
+                        const hourThresholdToggle = jQuery('.hour-threshold-toggle');
+                        const timePickerToggle = jQuery('.time-picker-toggle');
+                        const hourlyPriceToggle = jQuery('.hourly-price-toggle');
+                        const hourlyPriceItem = jQuery('.hourly-price-item');
+                        const hourThresholdItem = jQuery('.hour-threshold-item');
+                        const timeSlotsSection = jQuery('.time-slots-section');
+
+
+                        const dailyPriceInput = jQuery('#daily-price-input');
+                        const hourlyPriceInput = jQuery('#hourly-price-input');
+                        const hourThresholdInput = jQuery('#hour-threshold-input');
+                        const hourThresholdDisplay = jQuery('#hour-threshold-display');
+                        const rbfw_enable_daily_rate = jQuery('#rbfw_enable_daily_rate');
+                        const rbfw_enable_time_picker = jQuery('#rbfw_enable_time_picker');
+                        const rbfw_enable_hourly_rate = jQuery('#rbfw_enable_hourly_rate');
+                        const rbfw_enable_hourly_threshold = jQuery('#rbfw_enable_hourly_threshold');
+
+                        // State
+                        let dailyPriceEnabled = rbfw_enable_daily_rate.val() === 'yes';
+                        let timePickerEnabled = rbfw_enable_time_picker.val() === 'yes';
+                        let hourlyPriceEnabled = rbfw_enable_time_picker.val() === 'yes';
+                        let hourThresholdEnabled = rbfw_enable_time_picker.val() === 'yes';
+                        let timeSlots = [];
+
+                        // Toggle functions
+                        function toggleDailyPrice() {
+                            dailyPriceEnabled = !dailyPriceEnabled;
+                            dailyPriceToggle.toggleClass('active', dailyPriceEnabled);
+                            dailyPriceInput.prop('disabled', !dailyPriceEnabled);
+                            rbfw_enable_daily_rate.val(dailyPriceEnabled ? 'yes' : 'no');
+                        }
+
+                        function toggleHourThreshold() {
+                            hourThresholdEnabled = !hourThresholdEnabled;
+                            hourThresholdToggle.toggleClass('active', hourThresholdEnabled);
+                            hourThresholdInput.prop('disabled', !hourThresholdEnabled);
+                            rbfw_enable_hourly_threshold.val(hourThresholdEnabled ? 'yes' : 'no');
+                        }
+
+                        jQuery('.time-picker-toggle').on('click', function() {
+                            timePickerEnabled = !timePickerEnabled;
+                            timePickerToggle.toggleClass('active', timePickerEnabled);
+                            hourlyPriceItem.css('display', timePickerEnabled ? 'flex' : 'none');
+                            hourThresholdItem.css('display', timePickerEnabled ? 'flex' : 'none');
+                            timeSlotsSection.css('display', timePickerEnabled ? 'block' : 'none');
+
+                            const $toggle = jQuery(this);
+                            const $input = jQuery('.rbfw_enable_time_picker');
+                            if ($toggle.hasClass('active')) {
+                                $input.val('yes');
+                            } else {
+                                $input.val('no');
+                            }
+
+                        })
+
+
+
+
+                        function toggleHourlyPrice() {
+                            hourlyPriceEnabled = !hourlyPriceEnabled;
+                            hourlyPriceToggle.toggleClass('active', hourlyPriceEnabled);
+                            hourlyPriceInput.prop('disabled', !hourlyPriceEnabled);
+                            rbfw_enable_hourly_rate.val(hourlyPriceEnabled ? 'yes' : 'no');
+                        }
+
+                        // Input change handlers
+                        dailyPriceInput.on('change', function () {
+                            const value = parseFloat(jQuery(this).val());
+                            if (isNaN(value) || value < 0) {
+                                jQuery(this).val(0);
+                            }
+                        });
+
+                        hourlyPriceInput.on('change', function () {
+                            const value = parseFloat(jQuery(this).val());
+                            if (isNaN(value) || value < 0) {
+                                jQuery(this).val(0);
+                            }
+                        });
+
+                        hourThresholdInput.on('change', function () {
+                            const value = parseFloat(jQuery(this).val());
+                            if (isNaN(value) || value < 0) {
+                                jQuery(this).val(0);
+                            }
+                            hourThresholdDisplay.text(jQuery(this).val());
+                        });
+
+                        // Event listeners for toggles
+                        dailyPriceToggle.on('click', toggleDailyPrice);
+                        hourThresholdToggle.on('click', toggleHourThreshold);
+                        hourlyPriceToggle.on('click', toggleHourlyPrice);
+                    });
+
+
+                </script>
+
+                <?php
+
+            }
+
+
+            public function multiple_time_slot_select_for_particular_date( $rbfw_time_slots, $available_times, $index, $post_id ) {
+                global $RBFW_Timeslots_Page;
+                $rbfw_time_slots = $RBFW_Timeslots_Page->rbfw_format_time_slot( $rbfw_time_slots );
+                asort( $rbfw_time_slots );
+                $rdfw_available_time_update = [];
+                foreach ( $available_times as $single ) {
+                    $rdfw_available_time_update[] = gmdate( 'H:i', strtotime( $single ) );
+                }
+                ?>
+                <select name="rbfw_particulars[<?php echo esc_attr( $index ); ?>][available_time][]" multiple class="select2-hidden-accessible">
+                    <?php foreach ( $rbfw_time_slots as $key => $value ): ?>
+                        <?php if ( get_the_title( $post_id ) == 'Auto Draft' ) { ?>
+                            <option selected value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_attr( $key ); ?> </option>
+                        <?php } else { ?>
+                            <option <?php echo esc_attr( in_array( gmdate( 'H:i', strtotime( $value ) ), $rdfw_available_time_update ) ) ? 'selected' : '' ?> value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_html( gmdate( 'H:i', strtotime( $value ) ) ); ?> </option>
+                        <?php } ?>
+                    <?php endforeach; ?>
+                </select>
+                <?php
+            }
 
 			public function settings_save( $post_id ) {
 				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
@@ -732,13 +1135,20 @@
 					$rbfw_item_type = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : [];
 					$rbfw_enable_daily_rate             = isset( $_POST['rbfw_enable_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daily_rate'] ) ) : 'no';
 					$daily_rate                         = isset( $_POST['rbfw_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_daily_rate'] ) ) : 0;
-					$rbfw_enable_hourly_rate            = isset( $_POST['rbfw_enable_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_hourly_rate'] ) ) : 'no';
-					$hourly_rate                        = isset( $_POST['rbfw_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_hourly_rate'] ) ) : 0;
-					$rbfw_enable_daywise_price          = isset( $_POST['rbfw_enable_daywise_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daywise_price'] ) ) : 'no';
-					
+
+                    $rbfw_enable_time_picker            = isset( $_POST['rbfw_enable_time_picker'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_time_picker'] ) ) : 'no';
+
+                    $rbfw_hourly_threshold       = isset( $_POST['rbfw_hourly_threshold'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_hourly_threshold'] ) ) : '0';
+                    $rbfw_enable_hourly_threshold       = isset( $_POST['rbfw_enable_hourly_threshold'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_hourly_threshold'] ) ) : 'no';
+
+                    $rbfw_enable_hourly_rate            = isset( $_POST['rbfw_enable_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_hourly_rate'] ) ) : 'no';
+                    $hourly_rate                        = isset( $_POST['rbfw_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_hourly_rate'] ) ) : 0;
+
+                    $rbfw_enable_daywise_price          = isset( $_POST['rbfw_enable_daywise_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daywise_price'] ) ) : 'no';
+
+                    $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time'] ) ? $input_data_sabitized['rdfw_available_time'] : [];
 					
 					$rbfw_bike_car_sd_data              = isset( $input_data_sabitized['rbfw_bike_car_sd_data'] ) ? $input_data_sabitized['rbfw_bike_car_sd_data'] : [];
-					// echo '<pre>';print_r($rbfw_bike_car_sd_data );echo '<pre>';exit;
 					$rbfw_enable_resort_daylong_price = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_resort_daylong_price'] ) ) : 'no';
 					$rbfw_resort_room_data = isset( $input_data_sabitized['rbfw_resort_room_data'] ) ? $input_data_sabitized['rbfw_resort_room_data'] : [];
 					$rbfw_sd_appointment_max_qty_per_session = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ) : '';
@@ -775,15 +1185,38 @@
 					$enabled_sat                = isset( $_POST['rbfw_enable_sat_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_sat_day'] ) ) : 'no';
 					$manage_inventory_as_timely = isset( $_POST['manage_inventory_as_timely'] ) ? sanitize_text_field( wp_unslash( $_POST['manage_inventory_as_timely'] ) ) : 'off';
 					$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : 'off';
-					
-					
+
+                    $rbfw_particular_switch     = isset( $_POST['rbfw_particular_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_particular_switch'] ) ) : 'off';
+                    $particulars_data           = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars'] ) : [];
+
+
+
 					update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
-					update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
+
+                    update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
 					update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );
-					update_post_meta( $post_id, 'rbfw_enable_hourly_rate', $rbfw_enable_hourly_rate );
-					update_post_meta( $post_id, 'rbfw_hourly_rate', $hourly_rate );
+
+					update_post_meta( $post_id, 'rbfw_enable_time_picker', $rbfw_enable_time_picker );
+
+                    update_post_meta( $post_id, 'rbfw_hourly_threshold', $rbfw_hourly_threshold );
+                    update_post_meta( $post_id, 'rbfw_enable_hourly_threshold', $rbfw_enable_hourly_threshold );
+
+
+                    update_post_meta( $post_id, 'rbfw_enable_hourly_rate', $rbfw_enable_hourly_rate );
+                    update_post_meta( $post_id, 'rbfw_hourly_rate', $hourly_rate );
+
+
+
 					update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
-					update_post_meta( $post_id, 'rbfw_bike_car_sd_data', $rbfw_bike_car_sd_data );
+
+                    update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
+
+
+
+                    update_post_meta( $post_id, 'rbfw_particular_switch', $rbfw_particular_switch );
+                    update_post_meta( $post_id, 'rbfw_particulars_data', $particulars_data );
+
+                    update_post_meta( $post_id, 'rbfw_bike_car_sd_data', $rbfw_bike_car_sd_data );
 					update_post_meta( $post_id, 'rbfw_resort_room_data', $rbfw_resort_room_data );
 					update_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', $rbfw_enable_resort_daylong_price );
 					update_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', $rbfw_sd_appointment_max_qty_per_session );

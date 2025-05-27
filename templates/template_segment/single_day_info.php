@@ -21,7 +21,6 @@ if(isset($_POST['post_id'])){
 
     $selected_date = isset($_POST['selected_date']) ? sanitize_text_field(wp_unslash($_POST['selected_date'])) : '';
 
-    $available_times = rbfw_get_available_times($id);
 
     $default_timezone = wp_timezone_string();
     $date = new DateTime("now", new DateTimeZone($default_timezone));
@@ -36,6 +35,15 @@ if(isset($_POST['post_id'])){
 
     $rbfw_enable_extra_service_qty = get_post_meta( $id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
+    $manage_inventory_as_timely =  get_post_meta($id, 'manage_inventory_as_timely', true) ? get_post_meta($id, 'manage_inventory_as_timely', true) : 'off';
+    $enable_specific_duration =  get_post_meta($id, 'enable_specific_duration', true) ? get_post_meta($id, 'enable_specific_duration', true) : 'off';
+    $rbfw_time_slot_switch = !empty(get_post_meta($id,'rbfw_time_slot_switch',true)) ? get_post_meta($id,'rbfw_time_slot_switch',true) : 'off';
+    $available_times = get_post_meta($id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($id, 'rdfw_available_time', true)) : [];
+
+
+    if($rbfw_time_slot_switch == 'on' && !empty($available_times) && ($manage_inventory_as_timely=='on' && $enable_specific_duration =='off') ){
+        update_post_meta($id,'rbfw_enable_time_picker','yes');
+    }
 
     ?>
 

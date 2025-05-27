@@ -8,18 +8,18 @@
 	if ( ! class_exists( 'RBFW_Date_Time' ) ) {
 		class RBFW_Date_Time {
 			public function __construct() {
-				add_action( 'rbfw_meta_box_tab_name', [ $this, 'add_tab_menu' ] );
-				add_action( 'rbfw_meta_box_tab_content', [ $this, 'add_tabs_content' ] );
-				add_action( 'rbfw_meta_box_tab_content', [ $this, 'add_particular_tabs_content' ] );
+				//add_action( 'rbfw_meta_box_tab_name', [ $this, 'add_tab_menu' ] );
+				//add_action( 'rbfw_meta_box_tab_content', [ $this, 'add_tabs_content' ] );
+				//add_action( 'rbfw_meta_box_tab_content', [ $this, 'add_particular_tabs_content' ] );
 				add_action( 'save_post', array( $this, 'settings_save' ), 99, 1 );
 			}
 
 			public function add_tab_menu($rbfw_id) {
                 $rbfw_item_type         = get_post_meta( $rbfw_id, 'rbfw_item_type', true ) ? get_post_meta( $rbfw_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				?>
-                <li data-target-tabs="#rbfw_date_settings_meta_boxes" <?php echo ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' )?'style="display:none"':'' ?>>
-                    <i class="fas fa-calendar-days"></i><?php esc_html_e( 'Date & Time', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                </li>
+                <!--<li data-target-tabs="#rbfw_date_settings_meta_boxes" <?php /*echo ( $rbfw_item_type == 'resort' || $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' )?'style="display:none"':'' */?>>
+                    <i class="fas fa-calendar-days"></i><?php /*esc_html_e( 'Date & Time', 'booking-and-rental-manager-for-woocommerce' ); */?>
+                </li>-->
 				<?php
 			}
 
@@ -47,18 +47,20 @@
 				$rbfw_time_slots = $RBFW_Timeslots_Page->rbfw_format_time_slot( $rbfw_time_slots );
 				asort( $rbfw_time_slots );
 				$rdfw_available_time        = get_post_meta( $post_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rdfw_available_time', true ) ) : [];
-				$rdfw_available_time_update = [];
+
+                //echo '<pre>';print_r($rdfw_available_time);echo '<pre>';
+                $rdfw_available_time_update = [];
 				foreach ( $rdfw_available_time as $single ) {
-					$rdfw_available_time_update[] = gmdate( 'H:i', strtotime( $single ) );
+					//$rdfw_available_time_update[] = gmdate( 'H:i', strtotime( $single ) );
 				}
 				?>
-                <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
-                    <select name="rdfw_available_time[]" id="rdfw_available_time" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
-						<?php foreach ( $rbfw_time_slots as $key => $value ): ?>
-                            <option <?php echo esc_attr( in_array( gmdate( 'H:i', strtotime( $value ) ), $rdfw_available_time_update ) ) ? 'selected' : '' ?> value="<?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?>"> <?php echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); ?> </option>
-						<?php endforeach; ?>
+                <!--<div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
+                    <select name="rdfw_available_time_old[]" id="rdfw_available_time" multiple="" tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
+						<?php /*foreach ( $rbfw_time_slots as $key => $value ): */?>
+                            <option <?php /*echo esc_attr( in_array( gmdate( 'H:i', strtotime( $value ) ), $rdfw_available_time_update ) ) ? 'selected' : '' */?> value="<?php /*echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); */?>"> <?php /*echo esc_attr( gmdate( 'H:i', strtotime( $value ) ) ); */?> </option>
+						<?php /*endforeach; */?>
                     </select>
-                </div>
+                </div>-->
 				<?php
 			}
 
@@ -205,75 +207,7 @@
                         <button type="button" id="add-particular-row" class="button ss"><?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                     </div>
                 </div>
-                <script>
-                    jQuery(document).ready(function ($) {
-                        $(".select2-hidden-accessible").select2();
-                        function initializeDatepickers() {
-                            $(".rbfw_days_range").each(function () {
-                                var isEndDate = $(this).attr('name').includes('[end_date]');
-                                $(this).datepicker({
-                                    dateFormat: 'yy-mm-dd',
-                                    minDate: isEndDate ? null : 0,
-                                    onSelect: function (selectedDate) {
-                                        if (!isEndDate) {
-                                            var startDate = $(this).datepicker("getDate");
-                                            $(this).closest('tr').find('input[name*="[end_date]"]').datepicker("option", "minDate", startDate || 0);
-                                        }
-                                    }
-                                }); // Removed .attr('required', true);
-                            });
-                        }
-                        initializeDatepickers();
-                        $('#add-particular-row').click(function () {
-                            var availableTimeSlots = '<?php
-								$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
 
-								global  $RBFW_Timeslots_Page;
-								$rbfw_time_slots = $RBFW_Timeslots_Page->rbfw_format_time_slot( $rbfw_time_slots );
-								asort( $rbfw_time_slots );
-
-								$options = '';
-								foreach ( $rbfw_time_slots as $key => $time_slot ) {
-									$options .= '<option  value="' . gmdate( 'H:i', strtotime( $time_slot ) ) . '">' . gmdate( 'H:i', strtotime( $time_slot ) ) . '</option>';
-								}
-								echo wp_kses( addslashes( $options ), rbfw_allowed_html() );
-								?>';
-                            var newRow = `
-                <tr class="particular-row">
-                    <td><input type="text" name="rbfw_particulars[new][start_date]" class="rbfw_days_range"></td>
-                    <td><input type="text" name="rbfw_particulars[new][end_date]" class="rbfw_days_range"></td>
-                    <td>
-                        <div class="w-100">
-                            <select name="rbfw_particulars[new][available_time][]" multiple class="select2-hidden-accessible">
-                                ${availableTimeSlots}
-                            </select>
-                        </div>
-                    </td>
-                    <td><button type="button" class="remove-row button">Remove</button></td>
-                </tr>`;
-                            $('#particulars-table').append(newRow);
-                            // Reinitialize datepickers and select2 for new row
-                            initializeDatepickers();
-                            $('#particulars-table').find('tr:last select').select2();
-                        });
-                        // Remove row
-                        $(document).on('click', '.remove-row', function () {
-                            $(this).closest('.particular-row').remove();
-                        });
-                        // Toggle available-particular section
-                        $('input[name=rbfw_particular_switch]').click(function () {
-                            var status = $(this).val();
-                            if (status === 'on') {
-                                $(this).val('off');
-                                $('.available-particular').slideUp().removeClass('show').addClass('hide');
-                            }
-                            if (status === 'off') {
-                                $(this).val('on');
-                                $('.available-particular').slideDown().removeClass('hide').addClass('show');
-                            }
-                        });
-                    });
-                </script>
 				<?php
 			}
 
@@ -297,20 +231,11 @@
 					$rbfw_event_start_time      = isset( $_POST['rbfw_event_start_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_event_start_time'] ) ) : '';
 					$rbfw_event_end_date        = isset( $_POST['rbfw_event_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_event_end_date'] ) ) : '';
 					$rbfw_event_end_time        = isset( $_POST['rbfw_event_end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_event_end_time'] ) ) : '';
-					$rbfw_particular_switch     = isset( $_POST['rbfw_particular_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_particular_switch'] ) ) : 'off';
-					$particulars_data           = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars'] ) : [];
-					$clean_particulars_data = [];
-					foreach ( $particulars_data as $index => $particular ) {
-						$clean_particulars_data[] = [
-							'start_date'     => sanitize_text_field( $particular['start_date'] ),
-							'end_date'       => sanitize_text_field( $particular['end_date'] ),
-							'available_time' => $particular['available_time'] ?? [],
-						];
-					}
-					update_post_meta( $post_id, 'rbfw_particular_switch', $rbfw_particular_switch );
-					update_post_meta( $post_id, 'rbfw_particulars_data', $clean_particulars_data );
+
+
+
 					update_post_meta( $post_id, 'rbfw_time_slot_switch', $rbfw_time_slot );
-					update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
+					//update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
 					update_post_meta( $post_id, 'rbfw_enable_start_end_date', $rbfw_enable_start_end_date );
 					update_post_meta( $post_id, 'rbfw_event_start_date', $rbfw_event_start_date );
 					update_post_meta( $post_id, 'rbfw_event_start_time', $rbfw_event_start_time );
