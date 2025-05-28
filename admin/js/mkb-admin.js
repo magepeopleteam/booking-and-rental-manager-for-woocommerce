@@ -1057,12 +1057,19 @@
         let parent = jQuery(this).closest('.available-particular');
         let item = parent.find('.mp_hidden_content').first().find('.mp_hidden_item').html();
         let total_element = jQuery(".rbfw_pdwt_insert").children().length;
+        const rent_type = $(this).data('rent_type');
 
         let tempDiv = jQuery(item);
+        if(rent_type=='md'){
+            tempDiv.find(".rbfw_start_date").attr({"name": "rbfw_particulars["+total_element+"][start_date]"});
+            tempDiv.find(".rbfw_end_date").attr({"name": "rbfw_particulars["+total_element+"][end_date]"});
+            tempDiv.find(".add-slot-btn").attr({"data-particular_id": total_element});
+        }else{
+            tempDiv.find(".rbfw_start_date").attr({"name": "rbfw_particulars_sd["+total_element+"][start_date]"});
+            tempDiv.find(".rbfw_end_date").attr({"name": "rbfw_particulars_sd["+total_element+"][end_date]"});
+            tempDiv.find(".add-slot-btn").attr({"data-particular_id": total_element});
+        }
 
-        tempDiv.find(".rbfw_start_date").attr({"name": "rbfw_particulars["+total_element+"][start_date]"});
-        tempDiv.find(".rbfw_end_date").attr({"name": "rbfw_particulars["+total_element+"][end_date]"});
-        tempDiv.find(".add-slot-btn").attr({"data-particular_id": total_element});
 
 
         tempDiv.find(".date_type").removeClass('hasDatepicker').datepicker({
@@ -1121,6 +1128,7 @@
         if (!time) return;
 
         const name_attr = $(this).data('name_attr');
+        const rent_type = $(this).data('rent_type');
 
 
 
@@ -1133,7 +1141,8 @@
         let newSlot = '';
         if(name_attr == 'rdfw_available_time'){
 
-            newSlot = `
+            if(rent_type=='md'){
+                newSlot = `
         <div class="time-slot enabled" data-id="${index}">
           <span class="time-slot-time">${time}</span>
           <input type="hidden" name="${name_attr}[${index}][id]" value="${dataId}">
@@ -1143,10 +1152,26 @@
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
       `;
+            }else{
+                newSlot = `
+        <div class="time-slot enabled" data-id="${index}">
+          <span class="time-slot-time">${time}</span>
+          <input type="hidden" name="rdfw_available_time_sd[${index}][id]" value="${dataId}">
+          <input type="hidden" name="rdfw_available_time_sd[${index}][time]" value="${time}">
+          <input type="hidden" name="rdfw_available_time_sd[${index}][status]" value="enabled">
+          <div class="time-slot-indicator active" title="Click to disable"></div>
+          <div class="time-slot-remove" title="Remove time slot">×</div>
+        </div>
+      `;
+            }
+
+
+
 
         }else{
             const dataId = $(this).data('particular_id');
-            newSlot = `
+            if(rent_type=='md'){
+                newSlot = `
         <div class="time-slot enabled" data-id="${dataId}">
           <span class="time-slot-time">${time}</span>
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][id]" value="${dataId}">
@@ -1156,6 +1181,19 @@
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
            `;
+            }else{
+                newSlot = `
+        <div class="time-slot enabled" data-id="${dataId}">
+          <span class="time-slot-time">${time}</span>
+          <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][id]" value="${dataId}">
+          <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][time]" value="${time}">
+          <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][status]" value="enabled">
+          <div class="time-slot-indicator active" title="Click to disable"></div>
+          <div class="time-slot-remove" title="Remove time slot">×</div>
+        </div>
+           `;
+            }
+
         }
         // Append to container
         $timeSlotsContainer.append(newSlot);
@@ -1172,7 +1210,7 @@
         console.log('lllll',$slots);
 
 
-        //$(this).closest('.add-slot-container').prevAll('.time-slots-container').append($slots);
+        $(this).closest('.add-slot-container').prevAll('.time-slots-container').append($slots);
 
 
         // Clear input & disable button
