@@ -681,7 +681,7 @@
 
                         <!-- Time Slots (conditional) -->
 
-                        <?php $this->multiple_time_slot_with_particular( $post_id, $rbfw_enable_time_picker ); ?>
+                        <?php $this->multiple_time_slot_with_particular( $post_id, $rbfw_enable_time_picker,'md' ); ?>
 
 
 
@@ -774,7 +774,7 @@
 
                     <!-- Time Slots (conditional) -->
 
-                    <?php $this->multiple_time_slot_with_particular( $post_id, $rbfw_enable_time_picker ); ?>
+                    <?php $this->multiple_time_slot_with_particular( $post_id, $rbfw_enable_time_picker,'sd' ); ?>
 
 
                 </div>
@@ -799,7 +799,7 @@
 				<?php
 			}
 
-            public function multiple_time_slot_with_particular($post_id, $rbfw_enable_time_picker)
+            public function multiple_time_slot_with_particular($post_id, $rbfw_enable_time_picker,$type='sd')
             {
                 ?>
                 <div class="time-slots-section" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'block' : 'none' ); ?>;">
@@ -827,9 +827,15 @@
                                 ?>
                                 <div class="time-slot <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
                                     <span class="time-slot-time"><?php echo $item['time'] ?></span>
-                                    <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][id]" value="<?php echo $i ?>">
-                                    <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
-                                    <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
+                                    <?php if($type=='md'){ ?>
+                                        <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][id]" value="<?php echo $i ?>">
+                                        <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
+                                        <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
+                                    <?php }else{ ?>
+                                        <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][id]" value="<?php echo $i ?>">
+                                        <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
+                                        <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
+                                    <?php } ?>
                                     <div class="time-slot-indicator" title="Click to disable"></div>
                                     <div class="time-slot-remove" title="Remove time slot">×</div>
                                 </div>
@@ -844,12 +850,13 @@
                                 <label for="new-slot-time">Time (30 min slot)</label>
                                 <input type="time" class="new-slot-time">
                             </div>
-                            <button class="add-slot-btn" data-name_attr="rdfw_available_time" disabled>Add Slot</button>
+                            <button class="add-slot-btn" data-name_attr="rdfw_available_time" data-rent_type="<?php echo $type ?>" disabled>Add Slot</button>
                         </div>
                     </div>
 
 
                     <?php $particulars_data = get_post_meta( $post_id, 'rbfw_particulars_data', true );
+
 
                     ?>
                     <div class="mpStyle">
@@ -880,12 +887,22 @@
                                     <div class="rbfw_pdwt_insert">
                                         <?php $i=0;  foreach ( $particulars_data as $index => $particular ){ if( $particular['start_date'] && $particular['end_date']){ ?>
                                             <div class="rbfw_pdwt_row d-flex justify-content-between">
-                                                <div>
-                                                    <input type="text" class="date_type" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
-                                                </div>
-                                                <div>
-                                                    <input type="text" class="date_type" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
-                                                </div>
+                                                <?php if($type=='md'){ ?>
+                                                    <div>
+                                                        <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
+                                                    </div>
+                                                    <?php } else{ ?>
+                                                    <div>
+                                                        <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars_sd[<?php echo esc_attr( $i ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars_sd[<?php echo esc_attr( $i ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
+                                                    </div>
+                                                <?php } ?>
+
                                                 <div>
                                                     <div class="time-slots-container">
                                                         <div class="time-slots" id="time-slots-container">
@@ -913,9 +930,15 @@
 
                                                                 <div class="time-slot <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
                                                                     <span class="time-slot-time"><?php echo $item['time'] ?></span>
-                                                                    <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][id]" value="<?php echo $i ?>">
-                                                                    <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][time]" value="<?php echo $item['time'] ?>">
-                                                                    <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][status]" value="<?php echo $item['status'] ?>">
+                                                                    <?php if($type=='md'){ ?>
+                                                                        <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][id]" value="<?php echo $i ?>">
+                                                                        <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][time]" value="<?php echo $item['time'] ?>">
+                                                                        <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][status]" value="<?php echo $item['status'] ?>">
+                                                                    <?php }else{ ?>
+                                                                        <input type="hidden" name="rbfw_particulars_sd[<?php echo $i ?>][available_time][<?php echo $j ?>][id]" value="<?php echo $i ?>">
+                                                                        <input type="hidden" name="rbfw_particulars_sd[<?php echo $i ?>][available_time][<?php echo $j ?>][time]" value="<?php echo $item['time'] ?>">
+                                                                        <input type="hidden" name="rbfw_particulars_sd[<?php echo $i ?>][available_time][<?php echo $j ?>][status]" value="<?php echo $item['status'] ?>">
+                                                                    <?php } ?>
                                                                     <div class="time-slot-indicator" title="Click to disable"></div>
                                                                     <div class="time-slot-remove" title="Remove time slot">×</div>
                                                                 </div>
@@ -932,7 +955,7 @@
                                                                 <label for="new-slot-time">Time (30 min slot)</label>
                                                                 <input type="time" class="new-slot-time">
                                                             </div>
-                                                            <button class="add-slot-btn" data-name_attr="rbfw_particulars" data-particular_id="<?php echo $i ?>" disabled>Add Slot</button>
+                                                            <button class="add-slot-btn" data-name_attr="rbfw_particulars" data-rent_type="<?php echo $type ?>" data-particular_id="<?php echo $i ?>" disabled>Add Slot</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -943,7 +966,7 @@
                                             <?php $i++; } } ?>
                                     </div>
                                     <div class="footer">
-                                        <button type="button" id="add-particular-row" class="button ss"><?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                        <button type="button" id="add-particular-row" data-rent_type="<?php echo $type ?>" class="button ss"><?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                     </div>
                                 </div>
                             </section>
@@ -953,10 +976,10 @@
                                 <div class="mp_hidden_item" >
                                     <div class="rbfw_pdwt_row d-flex justify-content-between">
                                         <div>
-                                            <input type="text" class="rbfw_start_date date_type">
+                                            <input type="text" class="rbfw_start_date date_type rbfw_particulars_date">
                                         </div>
                                         <div>
-                                            <input type="text" class="rbfw_end_date date_type">
+                                            <input type="text" class="rbfw_end_date date_type rbfw_particulars_date">
                                         </div>
                                         <div>
                                             <div class="time-slots-container">
@@ -985,7 +1008,6 @@
 
                         </div>
                     </div>
-
 
 
                 </div>
@@ -1146,9 +1168,18 @@
 
                     $rbfw_enable_daywise_price          = isset( $_POST['rbfw_enable_daywise_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daywise_price'] ) ) : 'no';
 
-                    $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time'] ) ? $input_data_sabitized['rdfw_available_time'] : [];
-					
-					$rbfw_bike_car_sd_data              = isset( $input_data_sabitized['rbfw_bike_car_sd_data'] ) ? $input_data_sabitized['rbfw_bike_car_sd_data'] : [];
+                    $rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
+
+                    if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others'){
+                        $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time'] ) ? $input_data_sabitized['rdfw_available_time'] : [];
+                        $particulars_data           = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars'] ) : [];
+
+                    }else{
+                        $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time_sd'] ) ? $input_data_sabitized['rdfw_available_time_sd'] : [];
+                        $particulars_data           = isset( $_POST['rbfw_particulars_sd'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars_sd'] ) : [];
+                    }
+
+                    $rbfw_bike_car_sd_data              = isset( $input_data_sabitized['rbfw_bike_car_sd_data'] ) ? $input_data_sabitized['rbfw_bike_car_sd_data'] : [];
 					$rbfw_enable_resort_daylong_price = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_resort_daylong_price'] ) ) : 'no';
 					$rbfw_resort_room_data = isset( $input_data_sabitized['rbfw_resort_room_data'] ) ? $input_data_sabitized['rbfw_resort_room_data'] : [];
 					$rbfw_sd_appointment_max_qty_per_session = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ) : '';
@@ -1187,7 +1218,6 @@
 					$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : 'off';
 
                     $rbfw_particular_switch     = isset( $_POST['rbfw_particular_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_particular_switch'] ) ) : 'off';
-                    $particulars_data           = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars'] ) : [];
 
 
 
@@ -1209,11 +1239,9 @@
 
 					update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
 
-                    update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
-
-
-
                     update_post_meta( $post_id, 'rbfw_particular_switch', $rbfw_particular_switch );
+
+                    update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
                     update_post_meta( $post_id, 'rbfw_particulars_data', $particulars_data );
 
                     update_post_meta( $post_id, 'rbfw_bike_car_sd_data', $rbfw_bike_car_sd_data );
