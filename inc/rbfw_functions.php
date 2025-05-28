@@ -2644,7 +2644,6 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
             }else{
                 $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
             }
-
         } else {
             $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
         }

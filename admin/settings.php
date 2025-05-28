@@ -143,12 +143,6 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                     'no'  => 'No'
                 )
             ),
-            array(
-                'name' => 'first_day_count_hour_over',
-                'label' => esc_html__( '1st day count hour over', 'booking-and-rental-manager-for-woocommerce' ),
-                'desc' => esc_html__( "1st day count hour over", 'booking-and-rental-manager-for-woocommerce' ),
-                'type' => 'number',
-            ),
 		),
 		'rbfw_basic_translation_settings' => array(
 			array(
