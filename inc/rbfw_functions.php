@@ -2618,9 +2618,12 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
     $price = 0;
 
     if ($hours) {
-        $first_day_count_hour_over = rbfw_get_option('first_day_count_hour_over','rbfw_basic_gen_settings');
+
+        $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
+
         if ($start_date != $end_date && $total_days == 1) {
-            if($first_day_count_hour_over && $hours>$first_day_count_hour_over){
+            if($rbfw_hourly_threshold && $hours > $rbfw_hourly_threshold){
+
                 $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
             }else{
                 $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, rbfw_get_time_diff_in_hours($pickup_datetime, "$start_date 24:00:00"));
@@ -2629,14 +2632,19 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
 
         } elseif ($start_date === $end_date && $total_days == 1) {
 
-            if($first_day_count_hour_over && $hours>$first_day_count_hour_over) {
+            if($rbfw_hourly_threshold && $hours > $rbfw_hourly_threshold) {
                 $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
             }else{
                 $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
             }
 
         } elseif ($i == $total_days - 1) {
-            $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
+            if($rbfw_hourly_threshold && $hours > $rbfw_hourly_threshold) {
+                $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
+            }else{
+                $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
+            }
+
         } else {
             $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
         }
