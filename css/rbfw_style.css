@@ -7508,3 +7508,7 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
     margin-bottom: 5px;
     display: block;
 }
+#rbfw_add_meta_box input.rbfw_particulars_date{
+    width: 100% !important;
+    min-width: 70px;
+}
