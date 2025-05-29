@@ -976,10 +976,10 @@
                                 <div class="mp_hidden_item" >
                                     <div class="rbfw_pdwt_row d-flex justify-content-between">
                                         <div>
-                                            <input type="text" class="rbfw_start_date date_type rbfw_particulars_date">
+                                            <input type="text" class="rbfw_start_date rbfw_particulars_date">
                                         </div>
                                         <div>
-                                            <input type="text" class="rbfw_end_date date_type rbfw_particulars_date">
+                                            <input type="text" class="rbfw_end_date  rbfw_particulars_date">
                                         </div>
                                         <div>
                                             <div class="time-slots-container">
