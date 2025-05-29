@@ -20,9 +20,6 @@
     $available_times = get_post_meta($rbfw_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($rbfw_id, 'rdfw_available_time', true)) : [];
 
 
-    if($rbfw_time_slot_switch == 'on' && !empty($available_times) &&  $enable_specific_duration =='off' ){
-        update_post_meta(get_the_ID(),'rbfw_enable_time_picker','yes');
-    }
 
     $rbfw_enable_time_picker = get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) ? get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) : 'no';
 

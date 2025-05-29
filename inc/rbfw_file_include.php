@@ -51,14 +51,12 @@ function rbfw_category_update(){
 
         if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
 
-
-            $manage_inventory_as_timely =  get_post_meta(get_the_ID(), 'manage_inventory_as_timely', true) ? get_post_meta(get_the_ID(), 'manage_inventory_as_timely', true) : 'off';
-            $enable_specific_duration =  get_post_meta(get_the_ID(), 'enable_specific_duration', true) ? get_post_meta(get_the_ID(), 'enable_specific_duration', true) : 'off';
+         $enable_specific_duration =  get_post_meta(get_the_ID(), 'enable_specific_duration', true) ? get_post_meta(get_the_ID(), 'enable_specific_duration', true) : 'off';
             $rbfw_time_slot_switch = !empty(get_post_meta(get_the_ID(),'rbfw_time_slot_switch',true)) ? get_post_meta(get_the_ID(),'rbfw_time_slot_switch',true) : 'off';
             $available_times = get_post_meta(get_the_ID(), 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta(get_the_ID(), 'rdfw_available_time', true)) : [];
             $enable_hourly_rate = get_post_meta(get_the_ID(), 'rbfw_enable_hourly_rate', true) ? get_post_meta(get_the_ID(), 'rbfw_enable_hourly_rate', true) : 'no';
 
-            if($rbfw_time_slot_switch == 'on' && !empty($available_times) && ($manage_inventory_as_timely=='on' && $enable_specific_duration =='off') ){
+            if($rbfw_time_slot_switch == 'on' && !empty($available_times) &&  $enable_specific_duration =='off' ){
                 update_post_meta(get_the_ID(),'rbfw_enable_time_picker','yes');
             }
 

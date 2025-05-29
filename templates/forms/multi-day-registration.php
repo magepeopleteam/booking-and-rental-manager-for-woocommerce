@@ -74,11 +74,6 @@ $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
 
 $rbfw_time_slot_switch = !empty(get_post_meta($rbfw_id,'rbfw_time_slot_switch',true)) ? get_post_meta($rbfw_id,'rbfw_time_slot_switch',true) : 'off';
 
-if($rbfw_time_slot_switch == 'on' && !empty($availabe_time) && $enable_hourly_rate == 'yes' ){
-    update_post_meta($rbfw_id,'rbfw_enable_time_picker','yes');
-}
-
-
 $rbfw_enable_time_picker = get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) ? get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) : 'no';
 
 $expire = 'no';
