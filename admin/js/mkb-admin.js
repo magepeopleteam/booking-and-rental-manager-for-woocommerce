@@ -1210,7 +1210,7 @@
         console.log('lllll',$slots);
 
 
-        $(this).closest('.add-slot-container').prevAll('.time-slots-container').append($slots);
+        $timeSlotsContainer.html($slots);
 
 
         // Clear input & disable button

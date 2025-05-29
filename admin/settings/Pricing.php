@@ -804,8 +804,8 @@
                 ?>
                 <div class="time-slots-section" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'block' : 'none' ); ?>;">
                     <div class="section">
-                        <h2>Time Slots Configuration</h2>
-                        <p>Configure available 30-minute time slots for booking</p>
+                        <h2><?php echo esc_html__( 'Time Slots Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                        <p><?php echo esc_html__( 'Configure available 30-minute time slots for booking', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
 
                     <div class="time-slots-container">
@@ -844,13 +844,13 @@
                     </div>
 
                     <div class="add-slot-container">
-                        <div class="label">Add New Time Slot</div>
+                        <div class="label"><?php echo esc_html__( 'Add New Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                         <div class="add-slot-form">
                             <div>
-                                <label for="new-slot-time">Time (30 min slot)</label>
+                                <label for="new-slot-time"><?php echo esc_html__( 'Time (30 min slot)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                 <input type="time" class="new-slot-time">
                             </div>
-                            <button class="add-slot-btn" data-name_attr="rdfw_available_time" data-rent_type="<?php echo $type ?>" disabled>Add Slot</button>
+                            <button class="add-slot-btn" data-name_attr="rdfw_available_time" data-rent_type="<?php echo $type ?>" disabled><?php echo esc_html__( 'Add Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                         </div>
                     </div>
 
@@ -876,8 +876,7 @@
                         </section>
                         <!-- Multiple Particular Section -->
                         <div class="available-particular <?php  echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'show' : 'hide' ); ?>">
-                            <section>
-                                <div class="">
+                                 <div class="">
                                     <div class="d-flex justify-content-between row header">
                                         <div><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                         <div><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
@@ -885,7 +884,7 @@
                                         <div><?php esc_html_e( 'Actions', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                     </div>
                                     <div class="rbfw_pdwt_insert">
-                                        <?php $i=0;  foreach ( $particulars_data as $index => $particular ){ if( $particular['start_date'] && $particular['end_date']){ ?>
+                                        <?php $i=0;  foreach ( $particulars_data as $index => $particular ){ if( $particular['start_date'] && $particular['end_date'] && isset($particular['available_time'])){ ?>
                                             <div class="rbfw_pdwt_row d-flex justify-content-between">
                                                 <?php if($type=='md'){ ?>
                                                     <div>
@@ -920,9 +919,7 @@
                                                                 $particular_available_time = $result;
                                                             }
 
-
                                                             $j = 0;
-
 
                                                             foreach ($particular_available_time as $key => $item) { if(is_array($item)){
 
@@ -949,13 +946,13 @@
                                                     </div>
 
                                                     <div class="add-slot-container">
-                                                        <div class="label">Add New Time Slot</div>
+                                                        <div class="label"><?php echo esc_html__( 'Add New Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                                         <div class="add-slot-form">
                                                             <div>
-                                                                <label for="new-slot-time">Time (30 min slot)</label>
+                                                                <label for="new-slot-time"><?php echo esc_html__( 'Time (30 min slot)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                                                 <input type="time" class="new-slot-time">
                                                             </div>
-                                                            <button class="add-slot-btn" data-name_attr="rbfw_particulars" data-rent_type="<?php echo $type ?>" data-particular_id="<?php echo $i ?>" disabled>Add Slot</button>
+                                                            <button class="add-slot-btn" data-name_attr="rbfw_particulars" data-rent_type="<?php echo $type ?>" data-particular_id="<?php echo $i ?>" disabled><?php echo esc_html__( 'Add Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -965,11 +962,14 @@
                                             </div>
                                             <?php $i++; } } ?>
                                     </div>
-                                    <div class="footer">
-                                        <button type="button" id="add-particular-row" data-rent_type="<?php echo $type ?>" class="button ss"><?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                    <div>
+                                        <button type="button" id="add-particular-row" data-rent_type="<?php echo $type ?>" class="ppof-button">
+                                            <i class="fa-solid fa-circle-plus"></i>&nbsp;
+                                            <?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                        </button>
                                     </div>
                                 </div>
-                            </section>
+
 
 
                             <div class="mp_hidden_content">
@@ -990,26 +990,23 @@
                                             </div>
 
                                             <div class="add-slot-container">
-                                                <div class="label">Add New Time Slot</div>
+                                                <div class="label"><?php echo esc_html__( 'Add New Time Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                                 <div class="add-slot-form">
                                                     <div>
-                                                        <label for="new-slot-time">Time (30 min slot)</label>
+                                                        <label for="new-slot-time"><?php echo esc_html__( 'Time (30 min slot)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                                         <input type="time" class="new-slot-time">
                                                     </div>
-                                                    <button class="add-slot-btn" data-name_attr="rbfw_particulars" disabled="">Add Slot</button>
+                                                    <button class="add-slot-btn" data-name_attr="rbfw_particulars" data-rent_type="<?php echo $type ?>" disabled=""><?php echo esc_html__( 'Add Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                                 </div>
                                             </div>
 
                                         </div>
-                                        <div><button class="remove-row button">Remove</button></div>
+                                        <div><button class="remove-row button"><?php echo esc_html__( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button></div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
-
                 </div>
 
 
@@ -1238,6 +1235,7 @@
 
 
 					update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
+
 
                     update_post_meta( $post_id, 'rbfw_particular_switch', $rbfw_particular_switch );
                     update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
