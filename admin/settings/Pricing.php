@@ -1234,14 +1234,7 @@
 					update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
 
 
-
-
-                    update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
-
-
-
                     update_post_meta( $post_id, 'rbfw_particular_switch', $rbfw_particular_switch );
-
                     update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
                     update_post_meta( $post_id, 'rbfw_particulars_data', $particulars_data );
 
