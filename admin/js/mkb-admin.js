@@ -1071,14 +1071,11 @@
         }
 
 
-
-        tempDiv.find(".date_type").removeClass('hasDatepicker').datepicker({
+        tempDiv.find(".rbfw_particulars_date").datepicker({
             dateFormat: 'yy-mm-dd',
             minDate: 0
         });
 
-        /*tempDiv.find(".rbfw_daily_price_md").attr({"name": "rbfw_md_data_mds["+total_element+"][rbfw_daily_price]"});
-        tempDiv.find(".rbfw_hourly_price_md").attr({"name": "rbfw_md_data_mds["+total_element+"][rbfw_hourly_price]"});*/
 
         parent.find(".rbfw_pdwt_insert").first().append(tempDiv);
 

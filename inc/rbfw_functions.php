@@ -2594,17 +2594,8 @@ function rbfw_calculate_day_price($i, $post_id, $Book_dates_array, $day, $start_
 
             $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
 
-            if ($start_date != $end_date && $total_days == 1) {
-                if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold){
-                    $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
-                }
-
-            } elseif ($start_date === $end_date && $total_days == 1) {
-
-                if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
-                    $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
-                }
-
+            if ( $total_days == 1) {
+                $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
             } elseif ($i == $total_days - 1) {
                 if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
                     $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
