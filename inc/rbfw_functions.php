@@ -2588,7 +2588,37 @@ function rbfw_calculate_day_price($i, $post_id, $Book_dates_array, $day, $start_
     }
     // Case: Daily rate only
     elseif ($enable_daily === 'yes' && $enable_hourly === 'no') {
-        $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily);
+
+
+        if ($hours) {
+
+            $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
+
+            if ($start_date != $end_date && $total_days == 1) {
+                if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold){
+                    $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
+                }
+
+            } elseif ($start_date === $end_date && $total_days == 1) {
+
+                if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
+                    $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
+                }
+
+            } elseif ($i == $total_days - 1) {
+                if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
+                    $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
+                }
+            } else {
+                $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
+            }
+        } else {
+            $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
+        }
+
+
+
+
     }
     // Case: Both enabled (hybrid)
     else {
@@ -2622,7 +2652,7 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
         $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
 
         if ($start_date != $end_date && $total_days == 1) {
-            if($rbfw_hourly_threshold && $hours > $rbfw_hourly_threshold){
+            if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold){
 
                 $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
             }else{
@@ -2632,14 +2662,14 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
 
         } elseif ($start_date === $end_date && $total_days == 1) {
 
-            if($rbfw_hourly_threshold && $hours > $rbfw_hourly_threshold) {
+            if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
                 $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
             }else{
                 $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
             }
 
         } elseif ($i == $total_days - 1) {
-            if($rbfw_hourly_threshold && $hours > $rbfw_hourly_threshold) {
+            if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
                 $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
             }else{
                 $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);

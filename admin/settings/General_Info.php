@@ -144,7 +144,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <span class="ppof-button add-new-feature"><i class="fas fa-circle-plus"></i> <?php echo esc_html__( 'Add New Feature', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                                        <button class="ppof-button add-new-feature"><i class="fas fa-circle-plus"></i> <?php echo esc_html__( 'Add New Feature', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                                     </div>
                                                 </td>
                                                 <td>

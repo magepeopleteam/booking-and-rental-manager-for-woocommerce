@@ -962,8 +962,11 @@
                                             </div>
                                             <?php $i++; } } ?>
                                     </div>
-                                    <div class="footer">
-                                        <button type="button" id="add-particular-row" data-rent_type="<?php echo $type ?>" class="button ss"><?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                                    <div>
+                                        <button type="button" id="add-particular-row" data-rent_type="<?php echo $type ?>" class="ppof-button">
+                                            <i class="fa-solid fa-circle-plus"></i>&nbsp;
+                                            <?php echo esc_html__( 'Add Another', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                        </button>
                                     </div>
                                 </div>
 

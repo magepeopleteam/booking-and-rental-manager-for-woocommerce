@@ -5549,7 +5549,6 @@ section.service_category_title.sss{
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-align: center;
-  width: 220px;
  }
 span.ppof-button.add-service-category.mt-1, .field-text-multi-wrapper-rbfw_feature_category .add-feature-category{
   display: block;
@@ -5694,15 +5693,7 @@ border: 1px solid #d4dadf !important;
 }
 
 /* Button styles */
-.rbfw_multi_day_price_conf button {
-    padding: 8px 12px;
-    background-color: #ff4081;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
+
 
 .rbfw_multi_day_price_conf button:disabled {
     background-color: #ccc;
@@ -5868,4 +5859,5 @@ border: 1px solid #d4dadf !important;
     border-radius: 4px;
     cursor: pointer;
 }
+
 
