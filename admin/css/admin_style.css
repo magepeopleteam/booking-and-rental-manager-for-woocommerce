@@ -3508,7 +3508,7 @@ div.mpStyle [class*="_bgColor_1"] i {
 #rbfw_add_meta_box table.form-table {
     margin-bottom: 0px;
     border-collapse: collapse;
-    border: 5px solid var(--mage-light);
+    border: 1px solid var(--mage-light);
     overflow: scroll;
     
 }
@@ -5537,7 +5537,7 @@ section.service_category_title.sss{
     border-radius: 5px !important;   
 }
 .service_category_inner_wrap .item{justify-content: normal !important;}
-.rbfw_es_price_config_wrapper button#add-row, span.ppof-button.add-new-service, span.ppof-button.add-new-feature, #add-date-range-row{
+.rbfw_es_price_config_wrapper button#add-row, span.ppof-button.add-new-service, span.ppof-button.add-new-feature, #add-date-range-row,.ppof-button{
   display: block;
   margin: 0px auto;
   padding: 10px 20px;
@@ -5568,18 +5568,304 @@ span.ppof-button.add-service-category.mt-1, .field-text-multi-wrapper-rbfw_featu
 .rbfw_es_price_config_wrapper section.bg-light.mt-5 {
     padding-left: 20px !important;
 }
-.feature_category_inner_item_wrap [name^="rbfw_feature_category"][name*="[cat_features]"][name$="[title]"]{width:60em !important;}
+.feature_category_inner_item_wrap [name^="rbfw_feature_category"][name*="[cat_features]"][name$="[title]"]{width:80% !important;}
 .field-text-multi-wrapper-rbfw_feature_category section{ padding: 0px 0px !important;}
 #rbfw_add_meta_box .bg-light {
-    border-radius: 10px;
+    border-radius: 10px 10px 0px 0px;
     background-color: #fff !important;
+    border-bottom: 3px solid #dbd8d8 !important;
 }
 #rbfw_add_meta_box .feature_category_title{
     border-radius: 10px;
     border: 1px solid #ddd !important;
     padding: 10px;  
 }
-table.rbfw_pricing_table input[name="service_name[]"], table.rbfw_pricing_table input[name="service_desc[]"] {width:22em !important;}
 .rbfw_min_max_booking_day_row .booking-input-group{margin:20px !important;}
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_details{background: #eaeaef; }
 #rbfw_add_meta_box section{background-color: #fff; }
+.booking-container{background: #fff !important;}
+#rbfw_add_meta_box .field-text-multi-wrapper .field-list .item{background:#fff !important;}
+table.form-table.rbfw_service_category_table {
+    background: #fff !important;
+}
+#rbfw_add_meta_box section{border:1px solid var(--mage-light) !important; }
+.rbfw_feature_category_table table td{border-top: 1px solid var(--color_border) !important;}
+.rbfw_es_price_config_wrapper section.bg-light.mt-5 { padding: 20px !important;}
+.rbfw_es_price_config_wrapper  section{padding: 0px !important;}
+#rbfw_add_meta_box .service_category_title{background: #eee; padding: 5px;}
+table.rbfw_pricing_table thead th{background-color: #fff3f3 !important;}
+
+#rbfw_add_meta_box textarea, #rbfw_add_meta_box select, #rbfw_add_meta_box input[type=text], #rbfw_add_meta_box input[type=email], #rbfw_add_meta_box input[type=search], #rbfw_add_meta_box input[type=tel], #rbfw_add_meta_box input[type=url], #rbfw_add_meta_box input[type=password], #rbfw_add_meta_box input[type=file], #rbfw_add_meta_box input[type=color], #rbfw_add_meta_box input[type=number], #rbfw_add_meta_box input[type=range], #rbfw_add_meta_box input[type=date], #rbfw_add_meta_box input[type=month], #rbfw_add_meta_box input[type=week], #rbfw_add_meta_box input[type=time], #rbfw_add_meta_box input[type=datetime], #rbfw_add_meta_box input[type=datetime-local]
+{
+border: 1px solid #d4dadf !important;
+}
+.feature_category_inner_wrap label{padding-top: 8px !important; padding-left: 10px !important;}
+#rbfw_add_meta_box .postbox-header h2{color:#fff !important;}
+.add-slot-form button.add-slot-btn{margin-top:25px;}
+#rbfw_add_meta_box .add-feature-category{margin-bottom:20px;}
+.rbfw_es_price_config_wrapper .ppof-button{margin-bottom:20px; }
+
+
+.rbfw_multi_day_price_conf .section {
+    background-color: #fff;
+    padding: 15px;
+    margin-bottom: 1px;
+    border-radius: 4px;
+}
+
+.rbfw_multi_day_price_conf .section h2 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.rbfw_multi_day_price_conf .section p {
+    margin-top: 0;
+    color: #666;
+}
+
+/* Item styles */
+.rbfw_multi_day_price_conf .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 2px;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.rbfw_multi_day_price_conf .item-left {
+    flex: 1;
+}
+
+.rbfw_multi_day_price_conf .item-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rbfw_multi_day_price_conf .label {
+    font-weight: bold;
+}
+
+.rbfw_multi_day_price_conf .description {
+    color: #666;
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+/* Toggle switch styles */
+.rbfw_multi_day_price_conf .toggle {
+    position: relative;
+    width: 54px;
+    height: 28px;
+    background-color: #ccc;
+    border-radius: 28px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.rbfw_multi_day_price_conf .toggle.active {
+    background-color: #ff4081;
+}
+
+.rbfw_multi_day_price_conf .toggle-knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: white;
+    transition: left 0.3s;
+}
+
+.rbfw_multi_day_price_conf .toggle.active .toggle-knob {
+    left: 28px;
+}
+
+/* Input styles */
+.rbfw_multi_day_price_conf input[type="number"],
+.rbfw_multi_day_price_conf input[type="time"] {
+    width: 150px;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* Button styles */
+.rbfw_multi_day_price_conf button {
+    padding: 8px 12px;
+    background-color: #ff4081;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.rbfw_multi_day_price_conf button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.rbfw_multi_day_price_conf button.remove {
+    background-color: #f44336;
+}
+
+/* Time slots styles */
+.rbfw_multi_day_price_conf .time-slots-container {
+    margin-top: 0px;
+    background-color: white;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.rbfw_multi_day_price_conf .time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.rbfw_multi_day_price_conf .time-slot {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 5px 10px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.rbfw_multi_day_price_conf .time-slot.enabled {
+    background-color: #e8f5e9;
+}
+
+.rbfw_multi_day_price_conf .time-slot-time {
+    margin-right: 8px;
+}
+
+.rbfw_multi_day_price_conf .time-slot-indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #ccc;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.rbfw_multi_day_price_conf .time-slot.enabled .time-slot-indicator {
+    background-color: #4caf50;
+}
+
+.rbfw_multi_day_price_conf .time-slot-remove {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #f44336;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.rbfw_multi_day_price_conf .add-slot-container {
+    margin-top: 1px;
+    padding: 15px;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.rbfw_multi_day_price_conf .add-slot-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.rbfw_multi_day_price_conf .add-slot-form label {
+    font-size: 14px;
+    margin-bottom: 5px;
+    display: block;
+}
+#rbfw_add_meta_box input.rbfw_particulars_date{
+    width: 100% !important;
+}
+
+/* Container Styling */
+.available-particular {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* Header Row */
+.available-particular .header {
+    font-weight: 600;
+    color: #444;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+/* Date Inputs */
+.rbfw_particulars_date {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 130px;
+}
+
+/* Time Slot Container */
+.time-slots-container {
+    margin-top: 10px;
+}
+
+.time-slot {
+    display: inline-block;
+    background: #e0f7fa;
+    color: #00796b;
+    padding: 6px 12px;
+    margin: 5px 5px 0 0;
+    border-radius: 20px;
+    position: relative;
+    font-size: 14px;
+}
+
+
+
+/* Add Slot Button */
+
+
+.add-slot-btn {
+    background: #00796b;
+    color: white;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.add-slot-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Remove Row Button */
+.remove-row.button {
+    background: #e53935;
+    color: white;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
