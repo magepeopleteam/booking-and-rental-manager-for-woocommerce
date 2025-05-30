@@ -635,15 +635,18 @@ function total_extra_service_quantity($service,$date,$inventory,$inventory_based
 function total_variant_quantity($field_label,$variation,$date,$inventory,$inventory_based_on_return){
 
     $total_single_service = 0;
-    foreach($inventory as $item){
-        if(!empty($item['rbfw_variation_info'])){
-            foreach ($item['rbfw_variation_info'] as $key=>$single){
-                if(in_array($date,$item['booked_dates']) && in_array($variation,$single) && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'')  )){
-                    $total_single_service += $item['rbfw_item_quantity'];
+    if(is_array($inventory)){
+        foreach($inventory as $item){
+            if(!empty($item['rbfw_variation_info'])){
+                foreach ($item['rbfw_variation_info'] as $key=>$single){
+                    if(in_array($date,$item['booked_dates']) && in_array($variation,$single) && ($item['rbfw_order_status'] == 'completed' || $item['rbfw_order_status'] == 'processing' || $item['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$item['rbfw_order_status'] == 'returned':'')  )){
+                        $total_single_service += $item['rbfw_item_quantity'];
+                    }
                 }
             }
         }
     }
+
     return $total_single_service;
 }
 
