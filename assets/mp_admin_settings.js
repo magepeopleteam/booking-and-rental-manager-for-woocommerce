@@ -130,7 +130,8 @@ function load_sortable_datepicker(parent, item) {
         // ====
     }
     //=========Add Setting Item==============//
-    $(document).on("click", ".mp_add_item", function () {
+    $(document).on("click", ".mp_add_item", function (e) {
+        e.preventDefault();
         // on click event. add collpase id for last child
         addCollapseId();
         $(".wbtm_stop_item:last-child .wbtm_stop_item_content").css(
