@@ -108,6 +108,42 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
     });
 });
 
+
+
+jQuery('body').on('focusin', '.pickup_date_search', function(e) {
+
+    jQuery(this).datepicker({
+        dateFormat: js_date_format,
+        minDate: '',
+        onSelect: function (dateString, data) {
+            let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+            jQuery('input[name="rbfw_pickup_date_search"]').val(date_ymd).trigger('change');
+
+            let selected_date_array = date_ymd.split('-');
+            let gYear = selected_date_array[0];
+            let gMonth = selected_date_array[1];
+            let gDay = selected_date_array[2];
+
+            let minDate = new Date(gYear,  gMonth - 1, gDay );
+
+            jQuery(".dropoff_date_search").datepicker("option", "minDate", minDate);
+
+        },
+    });
+});
+
+
+jQuery('body').on('change', 'input[name="rbfw_pickup_date_search"]', function(e) {
+    jQuery('.dropoff_date_search').datepicker({
+        dateFormat: js_date_format,
+        onSelect: function (dateString, data) {
+            let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+            jQuery('input[name="rbfw_dropoff_date_search"]').val(date_ymd_drop).trigger('change');
+        },
+
+    });
+});
+
 jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {
 
     jQuery(".dropoff_date").val("");
@@ -131,38 +167,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
         }
     });
 });
-/*
-jQuery('body').on('change', '.pickup_time, #hidden_dropoff_date', function(e) {
-    let pickup_date = jQuery('#hidden_pickup_date').val();
-    let dropoff_date = jQuery('#hidden_dropoff_date').val();
 
-
-    if (pickup_date == dropoff_date) {
-        let selected_time = jQuery('.pickup_time').val();
-        selected_time = new Date (pickup_date +' '+ selected_time);
-        jQuery(".dropoff_time").val("").trigger("change");
-
-        jQuery("#dropoff_time option").each(function() {
-            var thisOptionValue = jQuery(this).val();
-            thisOptionValue = new Date(pickup_date +' '+ thisOptionValue);
-            if (thisOptionValue <= selected_time) {
-                jQuery(this).attr('disabled', true);
-            } else {
-                jQuery(this).attr('disabled', false);
-            }
-        });
-
-    } else {
-        jQuery("#dropoff_time option").each(function() {
-            var thisOptionValue = jQuery(this).val();
-            if (thisOptionValue != '') {
-                jQuery(this).attr('disabled', false);
-            } else {
-                jQuery(this).attr('disabled', true);
-            }
-        });
-    }
-});*/
 
 jQuery('.dropoff_date').change(function(e) {
     jQuery(".pickup_time").trigger("change");

@@ -534,57 +534,88 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
     ob_start();
     ?>
-    <section class="rbfw_rent_item_search_elementor_section">
-        <div class="rbfw_rent_item_search_elementor_container">
-            <form class="rbfw_search_form_new" action="<?php echo esc_url( get_home_url() . '/search-item-list/' ); ?>" method="GET">
-                <?php wp_nonce_field('rbfw_nonce_action', 'nonce'); ?>
-                <div class="rbfw_search_container">
-                    <div class="rbfw_search_item">
-                        <?php rbfw_get_dropdown_new( 'rbfw_search_type', $type,  'rbfw_rent_item_search_type_location', 'category' );?>
-                    </div>
-                    <div class="rbfw_search_item">
-                        <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location' );?>
-                    </div>
-                    <div class="rbfw_search_item rbfw_flatpicker">
-                        <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
-                        <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
-                    </div>
-                    <div class="rbfw_search_item">
-                        <input type="submit" class="rbfw_rent_item_search_submit" value="Search">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
+    <?php if($search_type=='item'){ ?>
 
-    <section class="rbfw_rent_item_search_elementor_section">
-        <div class="rbfw_rent_item_search_elementor_container">
-            <form class="rbfw_search_form_new" action="<?php echo esc_url( get_home_url() . '/search-item-list/' ); ?>" method="GET">
-                <?php wp_nonce_field('rbfw_nonce_action', 'nonce'); ?>
-                <div class="rbfw_search_container">
-                    <div class="rbfw_search_item">
-                        <?php rbfw_get_dropdown_new( 'rbfw_search_type', $type,  'rbfw_rent_item_search_type_location', 'category' );?>
-                    </div>
-
-                    <div class="rbfw_search_item rbfw_flatpicker">
-                        <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
-                        <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
-                    </div>
-
-                    <div class="rbfw_search_item rbfw_flatpicker">
-                        <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
-                        <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
-                    </div>
-
-                    <div class="rbfw_search_item">
-                        <input type="submit" class="rbfw_rent_item_search_submit" value="Search">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </section>
+        <?php
+        $args = array(
+            'post_type' => 'rbfw_item',
+            'posts_per_page' => -1,
+            'meta_query'     => array(
+                array(
+                    'key'     => 'rbfw_item_type',
+                    'value'   => array( 'bike_car_md', 'equipment ', 'dress', 'others' ),
+                    'compare' => 'IN'
+                )
+            )
+        );
+        $query = new WP_Query($args);
 
 
+        ?>
+
+        <section class="rbfw_rent_item_search_elementor_section">
+            <div class="rbfw_rent_item_search_elementor_container">
+                <form class="rbfw_search_form_new" action="<?php echo esc_url( get_home_url() . '/search-item-list/' ); ?>" method="GET">
+                    <?php wp_nonce_field('rbfw_nonce_action', 'nonce'); ?>
+                    <div class="rbfw_search_container">
+                        <div class="rbfw_search_item">
+                            <select name="rbfw_search_type" class="rbfw_rent_item_search_type_location">
+                                <option value="">Select Rent Item</option>
+                                <?php if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post(); ?>
+                                    <option value="<?php the_permalink(); ?>"><?php the_title(); ?></option>
+                                <?php
+                                endwhile;
+                                endif;
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="rbfw_search_item">
+                            <input type="hidden" name="rbfw_pickup_date_search">
+                            <input type="text" name="rbfw-pickup" class="pickup_date_search" id="pickup_date_search" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
+                            <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
+                        </div>
+
+                        <div class="rbfw_search_item ">
+                            <input type="hidden" name="rbfw_dropoff_date_search">
+                            <input type="text" name="" id="dropoff_date_search" class="dropoff_date_search" id="dropoff_date_search" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
+                            <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
+                        </div>
+
+                        <div class="rbfw_search_item">
+                            <input type="submit" class="rbfw_rent_item_search_submit" value="Search">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+
+
+    <?php }else{ ?>
+        <section class="rbfw_rent_item_search_elementor_section">
+            <div class="rbfw_rent_item_search_elementor_container">
+                <form class="rbfw_search_form_new" action="<?php echo esc_url( get_home_url() . '/search-item-list/' ); ?>" method="GET">
+                    <?php wp_nonce_field('rbfw_nonce_action', 'nonce'); ?>
+                    <div class="rbfw_search_container">
+                        <div class="rbfw_search_item">
+                            <?php rbfw_get_dropdown_new( 'rbfw_search_type', $type,  'rbfw_rent_item_search_type_location', 'category' );?>
+                        </div>
+                        <div class="rbfw_search_item">
+                            <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location' );?>
+                        </div>
+                        <div class="rbfw_search_item rbfw_flatpicker">
+                            <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
+                            <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
+                        </div>
+                        <div class="rbfw_search_item">
+                            <input type="submit" class="rbfw_rent_item_search_submit" value="Search">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    <?php } ?>
 
 <?php
     $search_content = ob_get_clean();

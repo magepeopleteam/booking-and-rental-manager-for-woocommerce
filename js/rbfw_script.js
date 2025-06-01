@@ -193,6 +193,8 @@
                 calendar.open();
             });
         }
+
+
         rbfw_pick_date_from_flatpicker();
 
         $('#rbfw_popup_close_btn').on('click', function() {
