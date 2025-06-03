@@ -201,6 +201,9 @@ jQuery('body').on('change', '#rbfw_search_type', function (e) {
             jQuery('#rbfw_off_days').attr('value',response.rbfw_off_days);
             jQuery('#rbfw_offday_range').attr('value',response.rbfw_offday_range);
 
+            jQuery('.rbfw_bike_car_md_item_wrapper').removeClass('rbfw_loader_in');
+            jQuery('.rbfw_bike_car_md_item_wrapper i.fa-spinner').remove();
+
         },
         error : function(response){
             console.log(response);
@@ -249,24 +252,6 @@ jQuery('body').on('focusin', '.pickup_date_search', function(e) {
         },
     });
 
-    jQuery(this).datepicker({
-        dateFormat: js_date_format,
-        minDate: '',
-        onSelect: function (dateString, data) {
-            let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-            jQuery('input[name="rbfw_pickup_date_search"]').val(date_ymd).trigger('change');
-
-            let selected_date_array = date_ymd.split('-');
-            let gYear = selected_date_array[0];
-            let gMonth = selected_date_array[1];
-            let gDay = selected_date_array[2];
-
-            let minDate = new Date(gYear,  gMonth - 1, gDay );
-
-            jQuery(".dropoff_date_search").datepicker("option", "minDate", minDate);
-
-        },
-    });
 });
 
 
@@ -277,6 +262,10 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_date_search"]', function(e)
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
             jQuery('input[name="rbfw_dropoff_date_search"]').val(date_ymd_drop).trigger('change');
         },
+        beforeShowDay: function(date)
+        {
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+        }
 
     });
 });

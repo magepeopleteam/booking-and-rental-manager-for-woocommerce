@@ -572,7 +572,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
         ?>
 
-        <section class="rbfw_rent_item_search_elementor_section">
+        <section class="rbfw_rent_item_search_elementor_section rbfw_bike_car_md_item_wrapper">
             <div class="rbfw_rent_item_search_elementor_container">
                 <form class="rbfw_search_form_new" action="" method="GET">
                     <?php wp_nonce_field('rbfw_nonce_action', 'nonce'); ?>
@@ -580,8 +580,8 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
                     <input type="hidden" id="rbfw_minimum_booking_day" value="0">
                     <input type="hidden" id="rbfw_maximum_booking_day" value="0">
-                    <input type="hidden" name="rbfw_off_days" id="rbfw_off_days_search">
-                    <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range_search">
+                    <input type="hidden" name="rbfw_off_days" id="rbfw_off_days" value="[]">
+                    <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range" value="[]">
 
                     <div class="rbfw_search_container">
                         <div class="rbfw_search_item">
