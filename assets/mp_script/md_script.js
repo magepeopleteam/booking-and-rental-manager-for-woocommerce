@@ -62,12 +62,8 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             let post_id = jQuery('#rbfw_post_id').val();
             let rbfw_enable_time_slot = jQuery('#rbfw_enable_time_slot').val();
 
-
             let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
             let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
-
-
-
 
             let selected_date_array = date_ymd.split('-');
             let gYear = selected_date_array[0];
@@ -76,8 +72,6 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
             let minDate = new Date(gYear,  gMonth - 1, gDay );
             minDate.setDate(minDate.getDate() + rbfw_minimum_booking_day);
-
-
 
             jQuery(".dropoff_date").datepicker("option", "minDate", minDate);
 
@@ -110,46 +104,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
 
 
-jQuery('body').on('focusin', '.pickup_date_search', function(e) {
 
-    jQuery(this).datepicker({
-        dateFormat: js_date_format,
-        minDate: '',
-        onSelect: function (dateString, data) {
-            let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-            jQuery('input[name="rbfw_pickup_date_search"]').val(date_ymd).trigger('change');
-
-            let selected_date_array = date_ymd.split('-');
-            let gYear = selected_date_array[0];
-            let gMonth = selected_date_array[1];
-            let gDay = selected_date_array[2];
-
-            let minDate = new Date(gYear,  gMonth - 1, gDay );
-
-            jQuery(".dropoff_date_search").datepicker("option", "minDate", minDate);
-
-        },
-    });
-});
-
-
-jQuery('body').on('change', 'input[name="rbfw_pickup_date_search"]', function(e) {
-    jQuery('.dropoff_date_search').datepicker({
-        dateFormat: js_date_format,
-        onSelect: function (dateString, data) {
-            let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-            jQuery('input[name="rbfw_dropoff_date_search"]').val(date_ymd_drop).trigger('change');
-        },
-
-    });
-});
-
-jQuery('#dropoff_date_search').on('change blur', function () {
-    const val = $(this).val();
-    alert(val);
-    console.log('Value changed:', val);
-    alert('Input changed manually or by other script: ' + val);
-});
 
 
 jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {
@@ -159,9 +114,6 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
     if(jQuery('#hidden_pickup_date').val() > jQuery('#hidden_dropoff_date').val()){
         jQuery(".dropoff_date").val('');
     }
-
-
-
 
     jQuery('.dropoff_date').datepicker({
         dateFormat: js_date_format,
@@ -222,6 +174,113 @@ jQuery('body').on('change', '#hidden_pickup_date, #hidden_dropoff_date, .pickup_
         }
     }
 });
+
+
+jQuery('body').on('change', '#rbfw_search_type', function (e) {
+    var selectedOption = jQuery(this).find('option:selected');
+    var post_id = selectedOption.data('post_id');
+
+    jQuery.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: rbfw_ajax.rbfw_ajaxurl,
+        data: {
+            'action' : 'rbfw_bikecarmd_ajax_min_max_and_offdays_info',
+            'post_id': post_id,
+            'nonce' : rbfw_ajax.nonce
+
+        },
+        beforeSend: function() {
+            jQuery('.rbfw_bike_car_md_item_wrapper').addClass('rbfw_loader_in');
+            jQuery('.rbfw_bike_car_md_item_wrapper').append('<i class="fas fa-spinner fa-spin"></i>');
+        },
+        success: function (response) {
+
+            jQuery('#rbfw_minimum_booking_day').attr('value',response.rbfw_maximum_booking_day);
+            jQuery('#rbfw_maximum_booking_day').attr('value',response.rbfw_maximum_booking_day);
+            jQuery('#rbfw_off_days').attr('value',response.rbfw_off_days);
+            jQuery('#rbfw_offday_range').attr('value',response.rbfw_offday_range);
+
+        },
+        error : function(response){
+            console.log(response);
+        }
+    });
+})
+
+
+jQuery('body').on('focusin', '.pickup_date_search', function(e) {
+
+
+    jQuery(this).datepicker({
+        dateFormat: js_date_format,
+        minDate: '',
+        beforeShowDay: function(date)
+        {
+            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+        },
+        onSelect: function (dateString, data) {
+            let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+            jQuery('input[name="rbfw_pickup_date_search"]').val(date_ymd).trigger('change');
+
+            let post_id = jQuery('#rbfw_post_id').val();
+
+
+            let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
+            let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
+
+            let selected_date_array = date_ymd.split('-');
+            let gYear = selected_date_array[0];
+            let gMonth = selected_date_array[1];
+            let gDay = selected_date_array[2];
+
+            let minDate = new Date(gYear,  gMonth - 1, gDay );
+            minDate.setDate(minDate.getDate() + rbfw_minimum_booking_day);
+
+            jQuery(".dropoff_date_search").datepicker("option", "minDate", minDate);
+
+
+            if(rbfw_minimum_booking_day){
+                let maxDate = new Date(gYear,  gMonth - 1, gDay - 1 );
+                maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
+                jQuery(".dropoff_date_search").datepicker("option", "maxDate", maxDate );
+            }
+
+        },
+    });
+
+    jQuery(this).datepicker({
+        dateFormat: js_date_format,
+        minDate: '',
+        onSelect: function (dateString, data) {
+            let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+            jQuery('input[name="rbfw_pickup_date_search"]').val(date_ymd).trigger('change');
+
+            let selected_date_array = date_ymd.split('-');
+            let gYear = selected_date_array[0];
+            let gMonth = selected_date_array[1];
+            let gDay = selected_date_array[2];
+
+            let minDate = new Date(gYear,  gMonth - 1, gDay );
+
+            jQuery(".dropoff_date_search").datepicker("option", "minDate", minDate);
+
+        },
+    });
+});
+
+
+jQuery('body').on('change', 'input[name="rbfw_pickup_date_search"]', function(e) {
+    jQuery('.dropoff_date_search').datepicker({
+        dateFormat: js_date_format,
+        onSelect: function (dateString, data) {
+            let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+            jQuery('input[name="rbfw_dropoff_date_search"]').val(date_ymd_drop).trigger('change');
+        },
+
+    });
+});
+
 
 jQuery(window).on('load', function() {
 

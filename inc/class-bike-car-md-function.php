@@ -13,8 +13,14 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
     class RBFW_BikeCarMd_Function {
         public function __construct(){
             add_action('wp_footer', array($this, 'rbfw_bike_car_md_frontend_scripts'));
+
             add_action('wp_ajax_rbfw_bikecarmd_ajax_price_calculation', array($this, 'rbfw_md_duration_price_calculation_ajax'));
             add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_price_calculation', array($this,'rbfw_md_duration_price_calculation_ajax'));
+
+            add_action('wp_ajax_rbfw_bikecarmd_ajax_min_max_and_offdays_info', array($this, 'rbfw_bikecarmd_ajax_min_max_and_offdays_info'));
+            add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_min_max_and_offdays_info', array($this,'rbfw_bikecarmd_ajax_min_max_and_offdays_info'));
+
+
 
             add_action('wp_ajax_rbfw_day_wise_sold_out_check', array($this, 'rbfw_day_wise_sold_out_check'));
             add_action('wp_ajax_nopriv_rbfw_day_wise_sold_out_check', array($this,'rbfw_day_wise_sold_out_check'));
@@ -198,6 +204,37 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             wp_die();
         }
+
+        function rbfw_bikecarmd_ajax_min_max_and_offdays_info(){
+
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
+
+            $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
+
+            $rbfw_minimum_booking_day = 0;
+            $rbfw_maximum_booking_day = 0;
+            if(rbfw_check_min_max_booking_day_active()){
+                $rbfw_minimum_booking_day = (int)get_post_meta($post_id, 'rbfw_minimum_booking_day', true);
+                if(get_post_meta($post_id, 'rbfw_maximum_booking_day', true)){
+                    $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';
+                }
+            }
+
+            echo wp_json_encode( array(
+                'rbfw_minimum_booking_day' => $rbfw_minimum_booking_day,
+                'rbfw_maximum_booking_day' => $rbfw_maximum_booking_day,
+                'rbfw_off_days' => rbfw_off_days($post_id),
+                'rbfw_offday_range' => rbfw_off_dates($post_id),
+
+            ));
+
+            wp_die();
+        }
+
+
+
 
 
         public function rbfw_bike_car_md_frontend_scripts($rbfw_post_id){
