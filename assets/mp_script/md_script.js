@@ -144,9 +144,24 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_date_search"]', function(e)
     });
 });
 
+jQuery('#dropoff_date_search').on('change blur', function () {
+    const val = $(this).val();
+    alert(val);
+    console.log('Value changed:', val);
+    alert('Input changed manually or by other script: ' + val);
+});
+
+
 jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {
 
-    jQuery(".dropoff_date").val("");
+    //const endDate = getURLParameter('rbfw_end_date');
+
+    if(jQuery('#hidden_pickup_date').val() > jQuery('#hidden_dropoff_date').val()){
+        jQuery(".dropoff_date").val('');
+    }
+
+
+
 
     jQuery('.dropoff_date').datepicker({
         dateFormat: js_date_format,
@@ -169,9 +184,6 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
 });
 
 
-jQuery('.dropoff_date').change(function(e) {
-    jQuery(".pickup_time").trigger("change");
-});
 
 
 jQuery('.dropoff_date').click(function(e) {
@@ -210,6 +222,30 @@ jQuery('body').on('change', '#hidden_pickup_date, #hidden_dropoff_date, .pickup_
         }
     }
 });
+
+jQuery(window).on('load', function() {
+
+    if(jQuery('#body-class').val()=='single-rbfw_item'){
+        jQuery('body').addClass('single-rbfw_item');
+    }
+
+
+    let pickup_date = jQuery('#pickup_date').val();
+    let dropoff_date = jQuery('#dropoff_date').val();
+    if(pickup_date && dropoff_date){
+
+        const date = new Date(pickup_date);
+
+        const year = date.getFullYear();
+        const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are 0-based
+        const day = ('0' + date.getDate()).slice(-2);
+        const date_ymd = `${year}-${month}-${day}`;
+        jQuery('input[name="rbfw_pickup_start_date"]').val(date_ymd).trigger('change');
+
+
+        rbfw_bikecarmd_ajax_price_calculation();
+    }
+})
 
 
 /*day wise service start*/
@@ -648,6 +684,12 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             console.log(response);
         }
     });
+}
+
+
+function getURLParameter(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
 }
 
 

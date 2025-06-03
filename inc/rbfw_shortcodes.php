@@ -515,6 +515,24 @@ function rbfw_rent_search_shortcode_func() {
 
 function rbfw_rent_search_shortcode( $atts = null ){
 
+    if(isset($_GET['rbfw_search_type'])){
+        $search_type = $_GET['rbfw_search_type'] ?? '';
+        $start_date = $_GET['rbfw_pickup_date_search'] ?? '';
+        $end_date = $_GET['rbfw-dropoff-search'] ?? '';
+
+        $end_date = DateTime::createFromFormat('d M Y', $end_date);
+
+
+        $redirect_url = add_query_arg(
+            array(
+                'rbfw_start_date' => $start_date,
+                'rbfw_end_date' => $end_date->format('Y-m-d')
+            ),
+            $search_type
+        );
+        wp_redirect($redirect_url);
+    }
+
 
     $attributes = shortcode_atts( array(
         'search-type'  => '',
@@ -537,6 +555,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
     <?php if($search_type=='item'){ ?>
 
         <?php
+
         $args = array(
             'post_type' => 'rbfw_item',
             'posts_per_page' => -1,
@@ -555,11 +574,12 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
         <section class="rbfw_rent_item_search_elementor_section">
             <div class="rbfw_rent_item_search_elementor_container">
-                <form class="rbfw_search_form_new" action="<?php echo esc_url( get_home_url() . '/search-item-list/' ); ?>" method="GET">
+                <form class="rbfw_search_form_new" action="" method="GET">
                     <?php wp_nonce_field('rbfw_nonce_action', 'nonce'); ?>
+                    <input type="hidden" id="body-class" value="single-rbfw_item">
                     <div class="rbfw_search_container">
                         <div class="rbfw_search_item">
-                            <select name="rbfw_search_type" class="rbfw_rent_item_search_type_location">
+                            <select name="rbfw_search_type" required class="rbfw_rent_item_search_type_location">
                                 <option value="">Select Rent Item</option>
                                 <?php if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post(); ?>
                                     <option value="<?php the_permalink(); ?>"><?php the_title(); ?></option>
@@ -572,13 +592,13 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
                         <div class="rbfw_search_item">
                             <input type="hidden" name="rbfw_pickup_date_search">
-                            <input type="text" name="rbfw-pickup" class="pickup_date_search" id="pickup_date_search" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
+                            <input type="text" name="rbfw-pickup-search" required class="pickup_date_search" id="pickup_date_search" placeholder="dd-mm-yyyy">
                             <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
                         </div>
 
                         <div class="rbfw_search_item ">
                             <input type="hidden" name="rbfw_dropoff_date_search">
-                            <input type="text" name="" id="dropoff_date_search" class="dropoff_date_search" id="dropoff_date_search" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
+                            <input type="text" name="rbfw-dropoff-search" required id="dropoff_date_search" class="dropoff_date_search" id="dropoff_date_search" placeholder="dd-mm-yyyy">
                             <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
                         </div>
 
