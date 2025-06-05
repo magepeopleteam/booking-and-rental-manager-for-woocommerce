@@ -175,9 +175,9 @@ error_log( print_r($post_count_by_category, true));
             <div class="rbfw_rental_lists_header-left">
                 <div class="rbfw_rental_lists_status-tabs">
                     <button data-by-filter="all" class="rbfw_rental_lists_status-tab active"><?php esc_attr_e( 'All ('.$total_event.')', 'booking-and-rental-manager-for-woocommerce' );?></button>
-                    <button data-by-filter="publish" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Published ( ('.$post_counts['publish'].')', 'booking-and-rental-manager-for-woocommerce' );?></button>
-                    <button data-by-filter="draft" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Draft ( ('.$post_counts['draft'].')', 'booking-and-rental-manager-for-woocommerce' );?></button>
-                    <a href="<?php echo esc_url( $trash_url );?>"><button data-by-filter="trash" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Trash ( ('.$post_counts['trash'].')', 'booking-and-rental-manager-for-woocommerce' );?></button></a>
+                    <button data-by-filter="publish" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Published ('.$post_counts['publish'].')', 'booking-and-rental-manager-for-woocommerce' );?></button>
+                    <button data-by-filter="draft" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Draft ('.$post_counts['draft'].')', 'booking-and-rental-manager-for-woocommerce' );?></button>
+                    <a href="<?php echo esc_url( $trash_url );?>"><button data-by-filter="trash" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Trash ('.$post_counts['trash'].')', 'booking-and-rental-manager-for-woocommerce' );?></button></a>
                 </div>
             </div>
             <div class="rbfw_rental_lists_header-right">
