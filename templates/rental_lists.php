@@ -1,57 +1,157 @@
 <?php
 
+$counts = wp_count_posts('rbfw_item');
+// Prepare the count data
+$post_counts = array(
+    'publish' => isset($counts->publish) ? $counts->publish : 0,
+    'draft'   => isset($counts->draft) ? $counts->draft : 0,
+    'trash'   => isset($counts->trash) ? $counts->trash : 0,
+);
+
+
+
+$total_event = $post_counts['publish'] + $post_counts['draft']  + $post_counts['trash'] ;
+
+//error_log( print_r( $total_event, true) );
+
+//$statuses = ['publish', 'draft', 'trash'];
+$statuses = ['publish', 'draft'];
+$posts = get_posts(array(
+    'post_type'   => 'rbfw_item',
+    'post_status' => $statuses,
+    'numberposts' => -1
+));
+$post_type = 'rbfw_item';
+
+$add_new_link = admin_url('post-new.php?post_type=' . $post_type);
+$trash_url = admin_url('edit.php?post_status=trash&post_type=rbfw_item');
+
+function render_mep_events_by_status( $posts ) {
+    ob_start();
+    if (!empty($posts)) {
+        foreach ($posts as $post) {
+            $rental_id    = $post->ID;
+            $title = get_the_title( $rental_id );
+            $rbfw_rent_type = get_post_meta( $rental_id, 'rbfw_item_type', true );
+
+            if( $rbfw_rent_type === 'bike_car_sd' ){
+                $price_type = 'Bike/Car for single day';
+            }else if( $rbfw_rent_type === 'bike_car_md' ){
+                $price_type = 'Bike/Car for multiple day';
+            }else{
+                $price_type = $rbfw_rent_type;
+            }
+
+            $rbfw_categories = get_post_meta( $rental_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $rental_id, 'rbfw_categories', true ) ) : [];
+            $rbfw_categories_items = implode(',', $rbfw_categories);
+
+            $thumbnail_url = get_the_post_thumbnail_url( $rental_id, 'small' );
+            $status = get_post_status( $rental_id );
+
+            $edit_link   = get_edit_post_link( $rental_id );
+            $delete_link = get_delete_post_link( $rental_id ); // Moves to Trash
+            $view_link   = get_permalink( $rental_id );
+
+            ?>
+                <tr class="rbfw_rental_list"
+                    data-rental-status="<?php echo esc_attr( $status );?>"
+                    data-title_search="<?php echo esc_attr( $title );?>"
+                >
+                    <td>
+                        <div class="rbfw_rental_lists_item-title-wrapper">
+                            <a href="#" class="rbfw_rental_lists_item-title"><?php echo esc_attr( $title )?></a>
+
+                            <?php if( $status === 'publish'){?>
+                            <span class="rbfw_rental_lists_status-badge rbfw_rental_lists_live" title="Live">
+                                <span class="rbfw_rental_lists_status-icon">🟢</span>
+                                <span>Live</span>
+                            </span>
+                            <?php }else{?>
+
+                            <span class="status-badge draft" title="Draft">
+                                <span class="status-icon">🟡</span>
+                                <span>Draft</span>
+                            </span>
+                            <?php }?>
+                        </div>
+                    </td>
+                    <td class="rbfw_rental_lists_price-type"><?php echo esc_attr( $price_type )?></td>
+                    <td>
+                        <?php if( $rbfw_categories_items ){?>
+                        <span class="rbfw_rental_lists_rent-type sportkits"><?php echo esc_attr( $rbfw_categories_items )?></span>
+                        <?php }?>
+                    </td>
+                    <td>
+                        <div class="rbfw_rental_lists_actions-cell">
+                            <a href="<?php echo esc_url( $view_link )?>"><button class="rbfw_rental_lists_action-btn rbfw_rental_lists_view" title="View Item">👁️</button></a>
+                            <a href="<?php echo esc_url( $edit_link )?>"><button class="rbfw_rental_lists_action-btn rbfw_rental_lists_edit" title="Edit Item">✏️</button></a>
+
+                            <a title="<?php echo esc_attr__('Duplicate Item ', 'booking-and-rental-manager-for-woocommerce') . ' : ' . get_the_title($rental_id); ?>"  href="<?php echo wp_nonce_url(
+                                admin_url('admin.php?action=rbfw_duplicate_post&post_id=' . $rental_id),
+                                'rbfw_duplicate_post_' . $rental_id
+                            ); ?>"><button class="rbfw_rental_lists_action-btn rbfw_rental_lists_duplicate" title="Duplicate Item">📋</button></a>
+                            <a href="<?php echo esc_url( $delete_link )?>"><button class="rbfw_rental_lists_action-btn rbfw_rental_lists_delete" title="Delete Item">🗑️</button></a>
+                        </div>
+                    </td>
+                </tr>
+        <?php   }
+    } else {
+        echo '<p>No posts found.</p>';
+    }
+
+    return ob_get_clean(); // return the entire buffered content
+}
 ?>
 
-<div class="container">
+<div class="rbfw_rental_lists_container">
     <!-- Analytics Section -->
-    <div class="analytics-section">
-        <h2 class="analytics-title">Rental Analytics</h2>
-        <div class="analytics-grid">
-            <div class="analytics-card">
-                <div class="analytics-number">48</div>
-                <div class="analytics-label">Total Items</div>
+    <div class="rbfw_rental_lists_analytics-section">
+        <h2 class="rbfw_rental_lists_analytics-title"><?php esc_attr_e( 'Rental Analytics', 'booking-and-rental-manager-for-woocommerce' );?></h2>
+        <div class="rbfw_rental_lists_analytics-grid">
+            <div class="rbfw_rental_lists_analytics-card">
+                <div class="rbfw_rental_lists_analytics-number"><?php echo esc_attr( $total_event ); ?></div>
+                <div class="rbfw_rental_lists_analytics-label"><?php esc_attr_e( 'Total Items', 'booking-and-rental-manager-for-woocommerce' );?></div>
             </div>
-            <div class="analytics-card cars">
-                <div class="analytics-number">21</div>
-                <div class="analytics-label">Cars Available</div>
+            <div class="rbfw_rental_lists_analytics-card cars">
+                <div class="rbfw_rental_lists_analytics-number">21</div>
+                <div class="rbfw_rental_lists_analytics-label"><?php esc_attr_e('Cars Available', 'booking-and-rental-manager-for-woocommerce' );?></div>
             </div>
-            <div class="analytics-card sports">
-                <div class="analytics-number">19</div>
-                <div class="analytics-label">Sports Equipment</div>
+            <div class="rbfw_rental_lists_analytics-card sports">
+                <div class="rbfw_rental_lists_analytics-number">19</div>
+                <div class="rbfw_rental_lists_analytics-label"><?php esc_attr_e( 'Sports Equipment', 'booking-and-rental-manager-for-woocommerce' );?></div>
             </div>
-            <div class="analytics-card boats">
-                <div class="analytics-number">8</div>
-                <div class="analytics-label">Boats &amp; Others</div>
+            <div class="rbfw_rental_lists_analytics-card boats">
+                <div class="rbfw_rental_lists_analytics-number">8</div>
+                <div class="arbfw_rental_lists_nalytics-label"><?php esc_attr_e( 'Boats &amp; Others', 'booking-and-rental-manager-for-woocommerce' );?></div>
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
-    <div class="main-content">
-        <div class="header">
-            <div class="header-left">
-                <div class="status-tabs">
-                    <button class="status-tab active">All (48)</button>
-                    <button class="status-tab">Published (42)</button>
-                    <button class="status-tab">Draft (4)</button>
-                    <button class="status-tab">Trash (2)</button>
+    <div class="rbfw_rental_lists_main-content">
+        <div class="rbfw_rental_lists_header">
+            <div class="rbfw_rental_lists_header-left">
+                <div class="rbfw_rental_lists_status-tabs">
+                    <button data-by-filter="all" class="rbfw_rental_lists_status-tab active"><?php esc_attr_e( 'All ('.$total_event.')', 'booking-and-rental-manager-for-woocommerce' );?></button>
+                    <button data-by-filter="publish" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Published ( ('.$post_counts['publish'].')', 'booking-and-rental-manager-for-woocommerce' );?></button>
+                    <button data-by-filter="draft" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Draft ( ('.$post_counts['draft'].')', 'booking-and-rental-manager-for-woocommerce' );?></button>
+                    <a href="<?php echo esc_url( $trash_url );?>"><button data-by-filter="trash" class="rbfw_rental_lists_status-tab"><?php esc_attr_e( 'Trash ( ('.$post_counts['trash'].')', 'booking-and-rental-manager-for-woocommerce' );?></button></a>
                 </div>
             </div>
-            <div class="header-right">
-                <div class="controls">
-                    <button class="btn btn-primary add-new-btn">+ Add New</button>
-                    <div class="search-box">
-                        <input type="text" class="search-input" placeholder="Search Rent Item">
+            <div class="rbfw_rental_lists_header-right">
+                <div class="rbfw_rental_lists_controls">
+                    <a href="<?php echo esc_url( $add_new_link );?>"><button class="rbfw_rental_lists_btn rbfw_rental_lists_btn-primary rbfw_rental_lists_add-new-btn"><?php esc_attr_e( '+ Add New', 'booking-and-rental-manager-for-woocommerce' );?></button></a>
+                    <div class="rbfw_rental_lists_search-box">
+                        <input type="text" class="rbfw_rental_lists_search-input" id="rbfw_rental_lists_search-input" placeholder="<?php esc_attr_e( 'Search Rent Item', 'booking-and-rental-manager-for-woocommerce' )?>">
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="table-container">
+        <div class="rbfw_rental_lists_table-container">
             <table>
                 <thead>
                 <tr>
-                    <th width="40"><input type="checkbox" class="checkbox"></th>
                     <th>Title</th>
                     <th>Price Type</th>
                     <th>Rent Type</th>
@@ -59,241 +159,23 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr style="">
-                    <td><input type="checkbox" class="checkbox"></td>
-                    <td>
-                        <div class="item-title-wrapper">
-                            <a href="#" class="item-title">Water Equipment Rental</a>
-                            <span class="status-badge live" title="Live">
-                                        <span class="status-icon">🟢</span>
-                                        <span>Live</span>
-                                    </span>
-                        </div>
-                    </td>
-                    <td class="price-type">Bike/Car for multiple day</td>
-                    <td><span class="rent-type sportkits">SportKits</span></td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="action-btn view" title="View Item">👁️</button>
-                            <button class="action-btn edit" title="Edit Item">✏️</button>
-                            <button class="action-btn duplicate" title="Duplicate Item">📋</button>
-                            <button class="action-btn delete" title="Delete Item">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="">
-                    <td><input type="checkbox" class="checkbox"></td>
-                    <td>
-                        <div class="item-title-wrapper">
-                            <a href="#" class="item-title">Water Sport Rental</a>
-                            <span class="status-badge live" title="Live">
-                                        <span class="status-icon">🟢</span>
-                                        <span>Live</span>
-                                    </span>
-                        </div>
-                    </td>
-                    <td class="price-type">Bike/Car for multiple day</td>
-                    <td><span class="rent-type sportkits">SportKits</span></td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="action-btn view" title="View Item">👁️</button>
-                            <button class="action-btn edit" title="Edit Item">✏️</button>
-                            <button class="action-btn duplicate" title="Duplicate Item">📋</button>
-                            <button class="action-btn delete" title="Delete Item">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="">
-                    <td><input type="checkbox" class="checkbox"></td>
-                    <td>
-                        <div class="item-title-wrapper">
-                            <a href="#" class="item-title">Kayak Rental</a>
-                            <span class="status-badge live" title="Live">
-                                        <span class="status-icon">🟢</span>
-                                        <span>Live</span>
-                                    </span>
-                        </div>
-                    </td>
-                    <td class="price-type">Bike/Car for single day</td>
-                    <td><span class="rent-type boat">Boat</span></td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="action-btn view" title="View Item">👁️</button>
-                            <button class="action-btn edit" title="Edit Item">✏️</button>
-                            <button class="action-btn duplicate" title="Duplicate Item">📋</button>
-                            <button class="action-btn delete" title="Delete Item">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="">
-                    <td><input type="checkbox" class="checkbox"></td>
-                    <td>
-                        <div class="item-title-wrapper">
-                            <a href="#" class="item-title">Yoga Training</a>
-                            <span class="status-badge live" title="Live">
-                                        <span class="status-icon">🟢</span>
-                                        <span>Live</span>
-                                    </span>
-                        </div>
-                    </td>
-                    <td class="price-type">Appointment</td>
-                    <td><span class="rent-type yoga">Yoga</span></td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="action-btn view" title="View Item">👁️</button>
-                            <button class="action-btn edit" title="Edit Item">✏️</button>
-                            <button class="action-btn duplicate" title="Duplicate Item">📋</button>
-                            <button class="action-btn delete" title="Delete Item">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="">
-                    <td><input type="checkbox" class="checkbox"></td>
-                    <td>
-                        <div class="item-title-wrapper">
-                            <a href="#" class="item-title">Ford Explorer</a>
-                            <span class="status-badge live" title="Live">
-                                        <span class="status-icon">🟢</span>
-                                        <span>Live</span>
-                                    </span>
-                        </div>
-                    </td>
-                    <td class="price-type">Bike/Car for multiple day</td>
-                    <td><span class="rent-type car">Car</span></td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="action-btn view" title="View Item">👁️</button>
-                            <button class="action-btn edit" title="Edit Item">✏️</button>
-                            <button class="action-btn duplicate" title="Duplicate Item">📋</button>
-                            <button class="action-btn delete" title="Delete Item">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="">
-                    <td><input type="checkbox" class="checkbox"></td>
-                    <td>
-                        <div class="item-title-wrapper">
-                            <a href="#" class="item-title">Nissan Frontier</a>
-                            <span class="status-badge live" title="Live">
-                                        <span class="status-icon">🟢</span>
-                                        <span>Live</span>
-                                    </span>
-                        </div>
-                    </td>
-                    <td class="price-type">Bike/Car for multiple day</td>
-                    <td><span class="rent-type car">Car</span></td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="action-btn view" title="View Item">👁️</button>
-                            <button class="action-btn edit" title="Edit Item">✏️</button>
-                            <button class="action-btn duplicate" title="Duplicate Item">📋</button>
-                            <button class="action-btn delete" title="Delete Item">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="">
-                    <td><input type="checkbox" class="checkbox"></td>
-                    <td>
-                        <div class="item-title-wrapper">
-                            <a href="#" class="item-title">Mercedes-Benz AMG C 63</a>
-                            <span class="status-badge live" title="Live">
-                                        <span class="status-icon">🟢</span>
-                                        <span>Live</span>
-                                    </span>
-                        </div>
-                    </td>
-                    <td class="price-type">Bike/Car for multiple day</td>
-                    <td><span class="rent-type car">Car</span></td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="action-btn view" title="View Item">👁️</button>
-                            <button class="action-btn edit" title="Edit Item">✏️</button>
-                            <button class="action-btn duplicate" title="Duplicate Item">📋</button>
-                            <button class="action-btn delete" title="Delete Item">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="">
-                    <td><input type="checkbox" class="checkbox"></td>
-                    <td>
-                        <div class="item-title-wrapper">
-                            <a href="#" class="item-title">BMW M3</a>
-                            <span class="status-badge live" title="Live">
-                                        <span class="status-icon">🟢</span>
-                                        <span>Live</span>
-                                    </span>
-                        </div>
-                    </td>
-                    <td class="price-type">Bike/Car for multiple day</td>
-                    <td><span class="rent-type car">Car</span></td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="action-btn view" title="View Item">👁️</button>
-                            <button class="action-btn edit" title="Edit Item">✏️</button>
-                            <button class="action-btn duplicate" title="Duplicate Item">📋</button>
-                            <button class="action-btn delete" title="Delete Item">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="">
-                    <td><input type="checkbox" class="checkbox"></td>
-                    <td>
-                        <div class="item-title-wrapper">
-                            <a href="#" class="item-title">Ping Pong Table</a>
-                            <span class="status-badge draft" title="Draft">
-                                        <span class="status-icon">🟡</span>
-                                        <span>Draft</span>
-                                    </span>
-                        </div>
-                    </td>
-                    <td class="price-type">Bike/Car for multiple day</td>
-                    <td><span class="rent-type sportkits">SportKits</span></td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="action-btn view" title="View Item">👁️</button>
-                            <button class="action-btn edit" title="Edit Item">✏️</button>
-                            <button class="action-btn duplicate" title="Duplicate Item">📋</button>
-                            <button class="action-btn delete" title="Delete Item">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr style="">
-                    <td><input type="checkbox" class="checkbox"></td>
-                    <td>
-                        <div class="item-title-wrapper">
-                            <a href="#" class="item-title">Football</a>
-                            <span class="status-badge draft" title="Draft">
-                                        <span class="status-icon">🟡</span>
-                                        <span>Draft</span>
-                                    </span>
-                        </div>
-                    </td>
-                    <td class="price-type">Bike/Car for multiple day</td>
-                    <td><span class="rent-type sportkits">SportKits</span></td>
-                    <td>
-                        <div class="actions-cell">
-                            <button class="action-btn view" title="View Item">👁️</button>
-                            <button class="action-btn edit" title="Edit Item">✏️</button>
-                            <button class="action-btn duplicate" title="Duplicate Item">📋</button>
-                            <button class="action-btn delete" title="Delete Item">🗑️</button>
-                        </div>
-                    </td>
-                </tr>
+                <?php
+                echo wp_kses_post( render_mep_events_by_status( $posts ) );
+                ?>
                 </tbody>
             </table>
         </div>
 
-        <!-- Pagination -->
-        <div class="pagination">
-            <div class="pagination-info">
+        <!-- Load More -->
+        <div class="rbfw_rental_lists_pagination">
+            <div class="rbfw_rental_lists_pagination-info">
                 <?php esc_attr_e( 'Showing', 'mage-eventpress' );?> <span id="visibleCount">0</span> of <span id="totalCount">0</span> <?php esc_attr_e( ' git events', 'mage-eventpress' );?>
             </div>
-            <button class="load-more-btn" id="loadMoreBtn">
+            <button class="rbfw_rental_lists_load-more-btn" id="rbfw_loadMoreBtn">
                 <span><?php esc_attr_e( 'Load More Events', 'mage-eventpress' );?></span>
                 <span>↓</span>
             </button>
         </div>
-
 
     </div>
 </div>

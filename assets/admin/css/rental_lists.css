@@ -1,28 +1,28 @@
-.container {
+.rbfw_rental_lists_container {
     max-width: 1400px;
     margin: 0 auto;
     padding: 20px;
 }
-.analytics-section {
+.rbfw_rental_lists_analytics-section {
     background: white;
     border-radius: 12px;
     padding: 24px;
     margin-bottom: 24px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
-.analytics-title {
+.rbfw_rental_lists_analytics-title {
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 20px;
     color: #1e293b;
 }
 
-.analytics-grid {
+.rbfw_rental_lists_analytics-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
 }
-.analytics-card {
+.rbfw_rental_lists_analytics-card {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     padding: 20px;
@@ -30,30 +30,30 @@
     text-align: center;
     transition: transform 0.2s ease;
 }
-.analytics-number {
+.rbfw_rental_lists_analytics-number {
     font-size: 32px;
     font-weight: 700;
     margin-bottom: 8px;
 }
-.analytics-label {
+.rbfw_rental_lists_analytics-label {
     font-size: 14px;
     opacity: 0.9;
 }
-.analytics-card.cars {
+.rbfw_rental_lists_analytics-card.cars {
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
-.analytics-card.sports {
+.rbfw_rental_lists_analytics-card.sports {
     background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
 }
 
-.main-content {
+.rbfw_rental_lists_main-content {
     background: white;
     border-radius: 12px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
-.header {
+.rbfw_rental_lists_header {
     padding: 20px 24px;
     border-bottom: 1px solid #e2e8f0;
     display: flex;
@@ -63,24 +63,24 @@
     gap: 16px;
 }
 
-.header-left {
+.rbfw_rental_lists_header-left {
     display: flex;
     align-items: center;
     gap: 16px;
     flex: 1;
 }
-.status-tabs {
+.rbfw_rental_lists_status-tabs {
     display: flex;
     background: #f1f5f9;
     border-radius: 8px;
     padding: 4px;
 }
-.status-tab.active {
+.rbfw_rental_lists_status-tab.active {
     background: white;
     color: #3b82f6;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
-.status-tab {
+.rbfw_rental_lists_status-tab {
     padding: 8px 16px;
     border-radius: 6px;
     border: none;
@@ -91,32 +91,32 @@
     color: #64748b;
     transition: all 0.2s;
 }
-.controls {
+.rbfw_rental_lists_controls {
     display: flex;
     gap: 12px;
     align-items: center;
 }
-.add-new-btn {
+.rbfw_rental_lists_add-new-btn {
     background: #10b981 !important;
     border-color: #10b981 !important;
     font-weight: 600;
 }
-.btn-primary {
+.rbfw_rental_lists_btn-primary {
     background: #3b82f6;
     color: white;
     border-color: #3b82f6;
 }
 
-.header-right {
+.rbfw_rental_lists_header-right {
     display: flex;
     align-items: center;
     gap: 12px;
 }
-.search-box {
+.rbfw_rental_lists_search-box {
     position: relative;
 }
 
-.search-input {
+.rbfw_rental_lists_search-input {
     padding: 10px 40px 10px 16px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
@@ -124,14 +124,14 @@
     width: 280px;
 }
 
-.table-container {
+.rbfw_rental_lists_table-container {
     overflow-x: auto;
 }
-table {
+.rbfw_rental_lists_container table {
     width: 100%;
     border-collapse: collapse;
 }
-th {
+.rbfw_rental_lists_container th {
     background: #f8fafc;
     padding: 16px 24px;
     text-align: left;
@@ -140,28 +140,28 @@ th {
     color: #475569;
     border-bottom: 1px solid #e2e8f0;
 }
-td {
+.rbfw_rental_lists_container td {
     padding: 16px 24px;
     border-bottom: 1px solid #f1f5f9;
     vertical-align: middle;
 }
-.checkbox {
+.rbfw_rental_lists_checkbox {
     width: 18px;
     height: 18px;
     cursor: pointer;
 }
-.item-title-wrapper {
+.rbfw_rental_lists_item-title-wrapper {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.price-type {
+.rbfw_rental_lists_price-type {
     color: #64748b;
     font-size: 14px;
 }
 
-.rent-type {
+.rbfw_rental_lists_rent-type {
     display: inline-block;
     padding: 4px 12px;
     border-radius: 20px;
@@ -169,29 +169,29 @@ td {
     font-weight: 500;
     text-transform: capitalize;
 }
-.rent-type.sportkits {
+.rbfw_rental_lists_rent-type.sportkits {
     background: #dcfce7;
     color: #166534;
 }
-.rent-type.boat {
+.rbfw_rental_lists_rent-type.boat {
     background: #fef3c7;
     color: #92400e;
 }
-.rent-type.yoga {
+.rbfw_rental_lists_rent-type.yoga {
     background: #f3e8ff;
     color: #7c3aed;
 }
-.rent-type.car {
+.rbfw_rental_lists_rent-type.car {
     background: #dbeafe;
     color: #1d4ed8;
 }
-.actions-cell {
+.rbfw_rental_lists_actions-cell {
     display: flex;
     gap: 6px;
     align-items: center;
 }
 
-.action-btn {
+.rbfw_rental_lists_action-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -203,19 +203,55 @@ td {
     transition: all 0.2s ease;
     font-size: 14px;
 }
-.action-btn.view {
+.rbfw_rental_lists_action-btn.view {
     background: #dbeafe;
     color: #1d4ed8;
 }
-.action-btn.edit {
+.rbfw_rental_lists_action-btn.edit {
     background: #dcfce7;
     color: #166534;
 }
-.action-btn.duplicate {
+.rbfw_rental_lists_action-btn.duplicate {
     background: #fef3c7;
     color: #92400e;
 }
-.action-btn.delete {
+.rbfw_rental_lists_action-btn.delete {
     background: #fee2e2;
     color: #dc2626;
+}
+
+.rbfw_rental_lists_btn {
+    padding: 10px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.rbfw_rental_lists_pagination-info {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+}
+.rbfw_rental_lists_pagination {
+    padding: 32px;
+    text-align: center;
+    background: #f8fafc;
+    border-top: 1px solid #f1f5f9;
+    margin-top: 20px;
+}
+.rbfw_rental_lists_load-more-btn {
+    background: white;
+    border: 2px solid #e2e8f0;
+    color: #374151;
+    padding: 12px 32px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
