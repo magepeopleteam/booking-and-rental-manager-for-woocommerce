@@ -101,6 +101,44 @@ function render_mep_events_by_status( $posts ) {
 
     return ob_get_clean(); // return the entire buffered content
 }
+
+
+function fount_post_number_by_category(){
+
+    global $wpdb;
+    $results = $wpdb->get_results("
+    SELECT post_id, meta_value 
+    FROM {$wpdb->prefix}postmeta 
+    WHERE meta_key = 'rbfw_categories'
+");
+
+    $category_counts = [];
+
+    foreach ( $results as $row ) {
+        $categories = maybe_unserialize( $row->meta_value );
+        if ( is_array($categories) && count($categories) === 1 ) {
+            $cat = strtolower(trim($categories[0]));
+
+            if ( !empty($cat) ) {
+                if ( !isset($category_counts[$cat]) ) {
+                    $category_counts[$cat] = 0;
+                }
+                $category_counts[$cat]++;
+            }
+        }
+
+    }
+
+    return $category_counts;
+}
+
+$post_count_by_category = fount_post_number_by_category();
+$bike_count = isset( $post_count_by_category['bike'] ) ? $post_count_by_category['bike'] : 0;
+$boat_count = isset( $post_count_by_category['boat'] ) ? $post_count_by_category['boat'] : 0;
+$car_count = isset( $post_count_by_category['car'] ) ? $post_count_by_category['car'] : 0;
+error_log( print_r($post_count_by_category, true));
+
+
 ?>
 
 <div class="rbfw_rental_lists_container">
@@ -113,16 +151,20 @@ function render_mep_events_by_status( $posts ) {
                 <div class="rbfw_rental_lists_analytics-label"><?php esc_attr_e( 'Total Items', 'booking-and-rental-manager-for-woocommerce' );?></div>
             </div>
             <div class="rbfw_rental_lists_analytics-card cars">
-                <div class="rbfw_rental_lists_analytics-number">21</div>
+                <div class="rbfw_rental_lists_analytics-number"><?php echo esc_attr( $car_count )?></div>
                 <div class="rbfw_rental_lists_analytics-label"><?php esc_attr_e('Cars Available', 'booking-and-rental-manager-for-woocommerce' );?></div>
             </div>
-            <div class="rbfw_rental_lists_analytics-card sports">
-                <div class="rbfw_rental_lists_analytics-number">19</div>
-                <div class="rbfw_rental_lists_analytics-label"><?php esc_attr_e( 'Sports Equipment', 'booking-and-rental-manager-for-woocommerce' );?></div>
-            </div>
             <div class="rbfw_rental_lists_analytics-card boats">
-                <div class="rbfw_rental_lists_analytics-number">8</div>
-                <div class="arbfw_rental_lists_nalytics-label"><?php esc_attr_e( 'Boats &amp; Others', 'booking-and-rental-manager-for-woocommerce' );?></div>
+                <div class="rbfw_rental_lists_analytics-number"><?php echo esc_attr( $boat_count )?></div>
+                <div class="arbfw_rental_lists_nalytics-label"><?php esc_attr_e( 'Boats Available', 'booking-and-rental-manager-for-woocommerce' );?></div>
+            </div>
+            <!--<div class="rbfw_rental_lists_analytics-card boats">
+                <div class="rbfw_rental_lists_analytics-number"><?php /*echo esc_attr( $bike_count )*/?></div>
+                <div class="arbfw_rental_lists_nalytics-label"><?php /*esc_attr_e( 'Bike Available', 'booking-and-rental-manager-for-woocommerce' );*/?></div>
+            </div>-->
+            <div class="rbfw_rental_lists_analytics-card sports">
+                <div class="rbfw_rental_lists_analytics-number"><?php echo esc_attr( $bike_count )?></div>
+                <div class="rbfw_rental_lists_analytics-label"><?php esc_attr_e( 'Bike Available', 'booking-and-rental-manager-for-woocommerce' );?></div>
             </div>
         </div>
     </div>
