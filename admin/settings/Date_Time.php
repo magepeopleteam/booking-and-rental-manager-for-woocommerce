@@ -235,7 +235,6 @@
 
 
 					update_post_meta( $post_id, 'rbfw_time_slot_switch', $rbfw_time_slot );
-					//update_post_meta( $post_id, 'rdfw_available_time', $rdfw_available_time );
 					update_post_meta( $post_id, 'rbfw_enable_start_end_date', $rbfw_enable_start_end_date );
 					update_post_meta( $post_id, 'rbfw_event_start_date', $rbfw_event_start_date );
 					update_post_meta( $post_id, 'rbfw_event_start_time', $rbfw_event_start_time );
