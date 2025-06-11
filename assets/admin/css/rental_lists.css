@@ -141,7 +141,7 @@
     border-bottom: 1px solid #e2e8f0;
 }
 .rbfw_rental_lists_container td {
-    padding: 16px 24px;
+    padding: 10px 6px;
     border-bottom: 1px solid #f1f5f9;
     vertical-align: middle;
 }
@@ -254,4 +254,22 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+}
+.rbfw_rental_feature_image{
+    padding: 10px;
+    border-radius: 10px;
+    width: 70px;
+    height: 65px;
+}
+
+.rbfw_rental_lists_container tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.rbfw_rental_lists_container tr:nth-child(even) {
+    background-color: #e9f5ff;
+}
+
+.rbfw_rental_lists_container tr:hover {
+    background-color: #d1eaff;
 }

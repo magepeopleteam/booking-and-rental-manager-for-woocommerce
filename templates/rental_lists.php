@@ -11,9 +11,6 @@ $post_counts = array(
 
 
 $total_event = $post_counts['publish'] + $post_counts['draft']  + $post_counts['trash'] ;
-
-//error_log( print_r( $total_event, true) );
-
 //$statuses = ['publish', 'draft', 'trash'];
 $statuses = ['publish', 'draft'];
 $posts = get_posts(array(
@@ -34,6 +31,10 @@ function render_mep_events_by_status( $posts ) {
             $title = get_the_title( $rental_id );
             $rbfw_rent_type = get_post_meta( $rental_id, 'rbfw_item_type', true );
 
+            $single_template = get_post_meta( $rental_id, 'rbfw_single_template', true );
+            $rental_shortcode = "[rent-add-to-cart id=$rental_id]";
+            $featured_image_url = get_the_post_thumbnail_url( $rental_id, 'medium' );
+
             if( $rbfw_rent_type === 'bike_car_sd' ){
                 $price_type = 'Bike/Car for single day';
             }else if( $rbfw_rent_type === 'bike_car_md' ){
@@ -44,10 +45,7 @@ function render_mep_events_by_status( $posts ) {
 
             $rbfw_categories = get_post_meta( $rental_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $rental_id, 'rbfw_categories', true ) ) : [];
             $rbfw_categories_items = implode(',', $rbfw_categories);
-
-            $thumbnail_url = get_the_post_thumbnail_url( $rental_id, 'small' );
             $status = get_post_status( $rental_id );
-
             $edit_link   = get_edit_post_link( $rental_id );
             $delete_link = get_delete_post_link( $rental_id ); // Moves to Trash
             $view_link   = get_permalink( $rental_id );
@@ -57,6 +55,7 @@ function render_mep_events_by_status( $posts ) {
                     data-rental-status="<?php echo esc_attr( $status );?>"
                     data-title_search="<?php echo esc_attr( $title );?>"
                 >
+                    <td><img class="rbfw_rental_feature_image" src="<?php echo esc_attr( $featured_image_url);?>" ></td>
                     <td>
                         <div class="rbfw_rental_lists_item-title-wrapper">
                             <a href="#" class="rbfw_rental_lists_item-title"><?php echo esc_attr( $title )?></a>
@@ -75,12 +74,10 @@ function render_mep_events_by_status( $posts ) {
                             <?php }?>
                         </div>
                     </td>
+                    <td><?php echo esc_attr( $single_template );?></td>
+                    <td><?php echo esc_attr( $rental_shortcode );?></td>
                     <td class="rbfw_rental_lists_price-type"><?php echo esc_attr( $price_type )?></td>
-                    <td>
-                        <?php if( $rbfw_categories_items ){?>
-                        <span class="rbfw_rental_lists_rent-type sportkits"><?php echo esc_attr( $rbfw_categories_items )?></span>
-                        <?php }?>
-                    </td>
+
                     <td>
                         <div class="rbfw_rental_lists_actions-cell">
                             <a href="<?php echo esc_url( $view_link )?>"><button class="rbfw_rental_lists_action-btn rbfw_rental_lists_view" title="View Item">👁️</button></a>
@@ -136,13 +133,9 @@ $post_count_by_category = fount_post_number_by_category();
 $bike_count = isset( $post_count_by_category['bike'] ) ? $post_count_by_category['bike'] : 0;
 $boat_count = isset( $post_count_by_category['boat'] ) ? $post_count_by_category['boat'] : 0;
 $car_count = isset( $post_count_by_category['car'] ) ? $post_count_by_category['car'] : 0;
-error_log( print_r($post_count_by_category, true));
-
-
 ?>
 
 <div class="rbfw_rental_lists_container">
-    <!-- Analytics Section -->
     <div class="rbfw_rental_lists_analytics-section">
         <h2 class="rbfw_rental_lists_analytics-title"><?php esc_attr_e( 'Rental Analytics', 'booking-and-rental-manager-for-woocommerce' );?></h2>
         <div class="rbfw_rental_lists_analytics-grid">
@@ -158,10 +151,6 @@ error_log( print_r($post_count_by_category, true));
                 <div class="rbfw_rental_lists_analytics-number"><?php echo esc_attr( $boat_count )?></div>
                 <div class="arbfw_rental_lists_nalytics-label"><?php esc_attr_e( 'Boats Available', 'booking-and-rental-manager-for-woocommerce' );?></div>
             </div>
-            <!--<div class="rbfw_rental_lists_analytics-card boats">
-                <div class="rbfw_rental_lists_analytics-number"><?php /*echo esc_attr( $bike_count )*/?></div>
-                <div class="arbfw_rental_lists_nalytics-label"><?php /*esc_attr_e( 'Bike Available', 'booking-and-rental-manager-for-woocommerce' );*/?></div>
-            </div>-->
             <div class="rbfw_rental_lists_analytics-card sports">
                 <div class="rbfw_rental_lists_analytics-number"><?php echo esc_attr( $bike_count )?></div>
                 <div class="rbfw_rental_lists_analytics-label"><?php esc_attr_e( 'Bike Available', 'booking-and-rental-manager-for-woocommerce' );?></div>
@@ -194,10 +183,12 @@ error_log( print_r($post_count_by_category, true));
             <table>
                 <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Price Type</th>
-                    <th>Rent Type</th>
-                    <th width="120">Actions</th>
+                    <th class="rbfw_rental_image"><?php esc_attr_e( 'Image', 'booking-and-rental-manager-for-woocommerce' );?></th>
+                    <th><?php esc_attr_e( 'Title', 'booking-and-rental-manager-for-woocommerce' );?></th>
+                    <th><?php esc_attr_e( 'Template', 'booking-and-rental-manager-for-woocommerce' );?></th>
+                    <th><?php esc_attr_e( 'Shortcode', 'booking-and-rental-manager-for-woocommerce' );?></th>
+                    <th><?php esc_attr_e( 'Price Type', 'booking-and-rental-manager-for-woocommerce' );?></th>
+                    <th width="120"><?php esc_attr_e( 'Actions', 'booking-and-rental-manager-for-woocommerce' );?></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -211,7 +202,7 @@ error_log( print_r($post_count_by_category, true));
         <!-- Load More -->
         <div class="rbfw_rental_lists_pagination">
             <div class="rbfw_rental_lists_pagination-info">
-                <?php esc_attr_e( 'Showing', 'mage-eventpress' );?> <span id="visibleCount">0</span> of <span id="totalCount">0</span> <?php esc_attr_e( ' git events', 'mage-eventpress' );?>
+                <?php esc_attr_e( 'Showing', 'mage-eventpress' );?> <span id="visibleCount">0</span> of <span id="totalCount">0</span> <?php esc_attr_e( ' events', 'mage-eventpress' );?>
             </div>
             <button class="rbfw_rental_lists_load-more-btn" id="rbfw_loadMoreBtn">
                 <span><?php esc_attr_e( 'Load More Events', 'mage-eventpress' );?></span>

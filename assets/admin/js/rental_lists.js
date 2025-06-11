@@ -16,14 +16,11 @@
         });
     });
 
-    // alert('ok');
+
     const itemsPerPage = 20;
     let currentFilteredItems = $('.rbfw_rental_list');
-    let totalVisible = 0;
-    function rbfw_showNextItems() {
-        let hiddenItems = currentFilteredItems.filter(':hidden');
-        hiddenItems.slice(0, itemsPerPage).fadeIn();
 
+    function updateCounts() {
         let currentlyVisible = currentFilteredItems.filter(':visible').length;
         $('#visibleCount').text(currentlyVisible);
         $('#totalCount').text(currentFilteredItems.length);
@@ -34,13 +31,30 @@
             $('#rbfw_loadMoreBtn').show();
         }
     }
+
+    function rbfw_showNextItems() {
+        let hiddenItems = currentFilteredItems.filter(':hidden');
+        let itemsToShow = hiddenItems.slice(0, itemsPerPage);
+
+        itemsToShow.fadeIn(200, function() {
+            // Only run once when the last item is shown
+            if ($(this).is(itemsToShow.last())) {
+                updateCounts();
+            }
+        });
+    }
+
     function initialLoad() {
         $('.rbfw_rental_list').hide();
         currentFilteredItems = $('.rbfw_rental_list');
-        rbfw_showNextItems();
+        rbfw_showNextItems(); // Show the first batch
     }
+
     initialLoad();
-    $('#rbfw_loadMoreBtn').on('click', function() {
+
+
+
+    $(document).on('click', '#rbfw_loadMoreBtn', function () {
         rbfw_showNextItems();
     });
     $(document).on('click', '.mpwem_filter_by_status', function () {
