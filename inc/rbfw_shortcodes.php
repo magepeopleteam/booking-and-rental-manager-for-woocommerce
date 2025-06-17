@@ -515,12 +515,14 @@ function rbfw_rent_search_shortcode_func() {
 
 function rbfw_rent_search_shortcode( $atts = null ){
 
-    if(isset($_GET['rbfw_search_type'])){
-        $search_type = $_GET['rbfw_search_type'] ?? '';
+    if(isset($_GET['rbfw_search_item'])){
+        $search_type = $_GET['rbfw_search_item'] ?? '';
         $start_date = $_GET['rbfw_pickup_date_search'] ?? '';
-        $end_date = $_GET['rbfw-dropoff-search'] ?? '';
+        $end_date = $_GET['rbfw_dropoff_date_search'] ?? '';
 
-        $end_date = DateTime::createFromFormat('d M Y', $end_date);
+        //$end_date = DateTime::createFromFormat('d M Y', $end_date);
+
+
 
 
         $redirect_url = add_query_arg(
@@ -585,7 +587,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
                     <div class="rbfw_search_container">
                         <div class="rbfw_search_item">
-                            <select name="rbfw_search_type" id="rbfw_search_type" required class="rbfw_rent_item_search_type_location">
+                            <select name="rbfw_search_item" id="rbfw_search_type" required class="rbfw_rent_item_search_type_location">
                                 <option value="">Select Rent Item</option>
                                 <?php if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post(); ?>
                                     <option data-post_id="<?php echo get_the_ID(); ?>" value="<?php the_permalink(); ?>"><?php the_title(); ?></option>
