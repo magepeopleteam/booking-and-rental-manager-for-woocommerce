@@ -596,17 +596,17 @@
 
 			public function general_price_config( $post_id ) {
 
+                $rbfw_enable_monthly_rate           = get_post_meta( $post_id, 'rbfw_enable_monthly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_monthly_rate', true ) : 'no';
                 $rbfw_monthly_rate           = get_post_meta( $post_id, 'rbfw_monthly_rate', true ) ? get_post_meta( $post_id, 'rbfw_monthly_rate', true ) : 0;
-                $rbfw_enable_monthly_rate           = get_post_meta( $post_id, 'rbfw_monthly_rate', true ) ? get_post_meta( $post_id, 'rbfw_monthly_rate', true ) : 'no';
 
-                $rbfw_day_threshold_for_monthly   = get_post_meta( $post_id, 'rbfw_day_threshold', true ) ? get_post_meta( $post_id, 'rbfw_day_threshold', true ) : '0';
-                $rbfw_enable_day_threshold_for_monthly   = get_post_meta( $post_id, 'rbfw_day_threshold', true ) ? get_post_meta( $post_id, 'rbfw_day_threshold', true ) : 'no';
+                $rbfw_enable_day_threshold_for_monthly   = get_post_meta( $post_id, 'rbfw_enable_day_threshold_for_monthly', true ) ? get_post_meta( $post_id, 'rbfw_enable_day_threshold_for_monthly', true ) : 'no';
+                $rbfw_day_threshold_for_monthly   = get_post_meta( $post_id, 'rbfw_day_threshold_for_monthly', true ) ? get_post_meta( $post_id, 'rbfw_day_threshold_for_monthly', true ) : '0';
 
-                $rbfw_weekly_rate           = get_post_meta( $post_id, 'rbfw_weekly_rate', true ) ? get_post_meta( $post_id, 'rbfw_weekly_rate', true ) : 0;
-                $rbfw_enable_weekly_rate           = get_post_meta( $post_id, 'rbfw_weekly_rate', true ) ? get_post_meta( $post_id, 'rbfw_weekly_rate', true ) : 'no';
+                $rbfw_enable_weekly_rate           = get_post_meta( $post_id, 'rbfw_enable_weekly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_weekly_rate', true ) : 'no';
+                $rbfw_weekly_rate           = get_post_meta( $post_id, 'rbfw_weekly_rate', true ) ? get_post_meta( $post_id, 'rbfw_weekly_rate', true ) : '0';
 
-                $rbfw_day_threshold_for_weekly   = get_post_meta( $post_id, 'rbfw_day_threshold', true ) ? get_post_meta( $post_id, 'rbfw_day_threshold', true ) : '0';
-                $rbfw_enable_day_threshold_for_weekly   = get_post_meta( $post_id, 'rbfw_day_threshold', true ) ? get_post_meta( $post_id, 'rbfw_day_threshold', true ) : 'no';
+                $rbfw_enable_day_threshold_for_weekly   = get_post_meta( $post_id, 'rbfw_enable_day_threshold_for_weekly', true ) ? get_post_meta( $post_id, 'rbfw_enable_day_threshold_for_weekly', true ) : 'no';
+                $rbfw_day_threshold_for_weekly   = get_post_meta( $post_id, 'rbfw_day_threshold_for_weekly', true ) ? get_post_meta( $post_id, 'rbfw_day_threshold_for_weekly', true ) : '0';
 
 
 
@@ -1122,9 +1122,23 @@
 					return;
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
+
 					$input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
-					$rbfw_item_type = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : [];
-					$rbfw_enable_daily_rate             = isset( $_POST['rbfw_enable_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daily_rate'] ) ) : 'no';
+
+                    $rbfw_enable_monthly_rate                  = isset( $_POST['rbfw_enable_monthly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_monthly_rate'] ) ) : 'no';
+                    $rbfw_monthly_rate                         = isset( $_POST['rbfw_monthly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_monthly_rate'] ) ) : 0;
+
+                    $rbfw_enable_day_threshold_for_monthly     = isset( $_POST['rbfw_enable_day_threshold_for_monthly'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_day_threshold_for_monthly'] ) ) : 0;
+                    $rbfw_day_threshold_for_monthly            = isset( $_POST['rbfw_day_threshold_for_monthly'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_day_threshold_for_monthly'] ) ) : 'no';
+
+                    $rbfw_enable_weekly_rate                   = isset( $_POST['rbfw_enable_monthly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_monthly_rate'] ) ) : 'no';
+                    $rbfw_weekly_rate                          = isset( $_POST['rbfw_weekly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_weekly_rate'] ) ) : 0;
+
+                    $rbfw_enable_day_threshold_for_weekly      = isset( $_POST['rbfw_enable_day_threshold_for_weekly'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_day_threshold_for_weekly'] ) ) : 'no';
+                    $rbfw_day_threshold_for_weekly             = isset( $_POST['rbfw_day_threshold_for_weekly'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_day_threshold_for_weekly'] ) ) : 0;
+
+
+                    $rbfw_enable_daily_rate             = isset( $_POST['rbfw_enable_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daily_rate'] ) ) : 'no';
 					$daily_rate                         = isset( $_POST['rbfw_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_daily_rate'] ) ) : 0;
 
                     $rbfw_enable_time_picker            = isset( $_POST['rbfw_enable_time_picker'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_time_picker'] ) ) : 'no';
@@ -1142,7 +1156,6 @@
                     if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others'){
                         $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time'] ) ? $input_data_sabitized['rdfw_available_time'] : [];
                         $particulars_data           = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars'] ) : [];
-
                     }else{
                         $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time_sd'] ) ? $input_data_sabitized['rdfw_available_time_sd'] : [];
                         $particulars_data           = isset( $_POST['rbfw_particulars_sd'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars_sd'] ) : [];
@@ -1191,6 +1204,15 @@
 
 
 					update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
+
+                    update_post_meta( $post_id, 'rbfw_enable_monthly_rate', $rbfw_enable_monthly_rate );
+                    update_post_meta( $post_id, 'rbfw_monthly_rate', $rbfw_monthly_rate );
+                    update_post_meta( $post_id, 'rbfw_enable_day_threshold_for_monthly', $rbfw_enable_day_threshold_for_monthly );
+                    update_post_meta( $post_id, 'rbfw_day_threshold_for_monthly', $rbfw_day_threshold_for_monthly );
+                    update_post_meta( $post_id, 'rbfw_enable_weekly_rate', $rbfw_enable_weekly_rate );
+                    update_post_meta( $post_id, 'rbfw_weekly_rate', $rbfw_weekly_rate );
+                    update_post_meta( $post_id, 'rbfw_enable_day_threshold_for_weekly', $rbfw_enable_day_threshold_for_weekly );
+                    update_post_meta( $post_id, 'rbfw_day_threshold_for_weekly', $rbfw_day_threshold_for_weekly );
 
                     update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
 					update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );
