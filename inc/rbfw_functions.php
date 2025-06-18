@@ -2518,6 +2518,27 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
     if (!$diff) return ['duration_price' => 0, 'total_days' => 0, 'actual_days' => 0, 'hours' => 0];
 
+    /*$interval = $start->diff($end);
+
+// Calculate total months first (years converted to months)
+    $totalMonths = ($interval->y * 12) + $interval->m;
+
+// Remaining days -> convert to weeks and days
+    $remainingDays = $interval->d;
+    $weeks = floor($remainingDays / 7);
+    $days = $remainingDays % 7;
+
+    $hours = $interval->h;
+
+// Generate readable output
+    $output = [];
+    if ($totalMonths > 0) $output[] = "$totalMonths month" . ($totalMonths > 1 ? 's' : '');
+    if ($weeks > 0)       $output[] = "$weeks week" . ($weeks > 1 ? 's' : '');
+    if ($days > 0)        $output[] = "$days day" . ($days > 1 ? 's' : '');
+    if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
+
+    echo implode(' ', $output);*/
+
     $total_days = $diff->days;
     $actual_days = $total_days;
     $hours = $diff->h + ($diff->i / 60);
