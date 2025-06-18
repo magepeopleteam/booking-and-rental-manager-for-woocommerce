@@ -132,6 +132,12 @@
 						'rent_type'        => $rent_type,
 					)
 				);
+
+                wp_localize_script('rbfw-script-translate', 'rbfw_translation', array(
+                    'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
+                    'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
+                ));
+
 				if ( rbfw_woo_install_check() == 'Yes' ) {
 					$view_more_feature_btn_text = $rbfw->get_option_trans( 'rbfw_text_view_more_features', 'rbfw_basic_translation_settings', esc_html__( 'Hide More', 'booking-and-rental-manager-for-woocommerce' ) );
 					$hide_more_feature_btn_text = $rbfw->get_option_trans( 'rbfw_text_hide_more_features', 'rbfw_basic_translation_settings', esc_html__( 'Load More', 'booking-and-rental-manager-for-woocommerce' ) );
