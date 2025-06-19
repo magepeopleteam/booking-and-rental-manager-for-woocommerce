@@ -3418,3 +3418,13 @@ if (!function_exists('rbfw_day_row_md')) {
         return array('enable'=>$enable,'day_name'=>$day_name,'daily_rate'=>$daily_rate,'hourly_rate'=>$hourly_rate);
     }
 }
+
+function rbfw_end_time(){
+    global $rbfw;
+    $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+    if($rbfw_count_extra_day_enable=='on'){
+        return '24:00:00';
+    }else{
+        return '00:00:00';
+    }
+}
