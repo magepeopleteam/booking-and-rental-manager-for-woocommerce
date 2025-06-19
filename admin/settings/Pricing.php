@@ -887,25 +887,24 @@
                                         <?php $i=0;  foreach ( $particulars_data as $index => $particular ){ if( $particular['start_date'] && $particular['end_date'] && isset($particular['available_time'])){ ?>
                                             <div class="rbfw_pdwt_row d-flex justify-content-between">
                                                 <?php if($type=='md'){ ?>
-                                                    <div>
+                                                    <div class="rbfw-particular-date">
                                                         <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
                                                     </div>
-                                                    <div>
+                                                    <div class="rbfw-particular-date">
                                                         <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
                                                     </div>
                                                     <?php } else{ ?>
-                                                    <div>
+                                                    <div class="rbfw-particular-date">
                                                         <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars_sd[<?php echo esc_attr( $i ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
                                                     </div>
-                                                    <div>
+                                                    <div class="rbfw-particular-date">
                                                         <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars_sd[<?php echo esc_attr( $i ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
                                                     </div>
                                                 <?php } ?>
 
-                                                <div>
+                                                <div class="rbfw-time-slots-wrapper">
                                                     <div class="time-slots-container">
                                                         <div class="time-slots" id="time-slots-container">
-
                                                             <?php
                                                             $particular_available_time        = $particular['available_time'];
                                                             $array_dimension = RBFW_Frontend::count_array_dimensions($particular_available_time);
@@ -956,7 +955,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div>
+                                                <div class="rbfw-particular-time-action">
                                                     <button type="button" class="remove-row button"><?php echo esc_html__( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                                 </div>
                                             </div>

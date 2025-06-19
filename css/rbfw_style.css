@@ -7323,5 +7323,14 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
     font-size: 10px;
     color: var(--rbfw_color_primary);
 }
-
+.rbfw-particular-date{
+    width: 15%;
+    padding-right: 5px;
+}
+.rbfw-time-slots-wrapper{
+    width: 60%;
+}
+.rbfw-particular-time-action{
+    width: 10%;
+}
 

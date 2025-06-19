@@ -423,10 +423,10 @@ function particular_time_date_dependent_ajax(post_id,date_ymd,type='',rbfw_enabl
             jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
             jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
 
-            if(response[1] == ".rbfw-select.rbfw-time-price.dropoff_time"){
-                var quantity_options = "<option value=''>Return Time</option>";
-            }else{
-                var quantity_options = "<option value=''>Pickup Time</option>";
+            if (response[1] == ".rbfw-select.rbfw-time-price.dropoff_time") {
+                var quantity_options = "<option value=''>" + rbfw_translation.return_time + "</option>";
+            } else {
+                var quantity_options = "<option value=''>" + rbfw_translation.pickup_time + "</option>";
             }
 
             jQuery.each(response[0], function(i, item) {
