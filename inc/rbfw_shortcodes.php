@@ -516,7 +516,9 @@ function rbfw_rent_search_shortcode_func() {
 function rbfw_rent_search_shortcode( $atts = null ){
 
     if(isset($_GET['rbfw_search_item'])){
-        $search_type = $_GET['rbfw_search_item'] ?? '';
+
+        $search_item = $_GET['rbfw_search_item'] ?? '';
+
         $start_date = $_GET['rbfw_pickup_date_search'] ?? '';
         $end_date = $_GET['rbfw_dropoff_date_search'] ?? '';
 
@@ -530,7 +532,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
                 'rbfw_start_date' => $start_date,
                 'rbfw_end_date' => $end_date->format('Y-m-d')
             ),
-            $search_type
+            $search_item
         );
         wp_redirect($redirect_url);
     }

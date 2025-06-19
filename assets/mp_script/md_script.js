@@ -65,6 +65,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
             let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
 
+
             let selected_date_array = date_ymd.split('-');
             let gYear = selected_date_array[0];
             let gMonth = selected_date_array[1];
@@ -196,7 +197,7 @@ jQuery('body').on('change', '#rbfw_search_type', function (e) {
         },
         success: function (response) {
 
-            jQuery('#rbfw_minimum_booking_day').attr('value',response.rbfw_maximum_booking_day);
+            jQuery('#rbfw_minimum_booking_day').attr('value',response.rbfw_minimum_booking_day);
             jQuery('#rbfw_maximum_booking_day').attr('value',response.rbfw_maximum_booking_day);
             jQuery('#rbfw_off_days').attr('value',response.rbfw_off_days);
             jQuery('#rbfw_offday_range').attr('value',response.rbfw_offday_range);
@@ -231,7 +232,6 @@ jQuery('body').on('focusin', '.pickup_date_search', function(e) {
 
             let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
             let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
-
             let selected_date_array = date_ymd.split('-');
             let gYear = selected_date_array[0];
             let gMonth = selected_date_array[1];
@@ -243,11 +243,11 @@ jQuery('body').on('focusin', '.pickup_date_search', function(e) {
             jQuery(".dropoff_date_search").datepicker("option", "minDate", minDate);
 
 
-            if(rbfw_minimum_booking_day){
+          /*  if(rbfw_minimum_booking_day){
                 let maxDate = new Date(gYear,  gMonth - 1, gDay - 1 );
                 maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
                 jQuery(".dropoff_date_search").datepicker("option", "maxDate", maxDate );
-            }
+            }*/
 
         },
     });

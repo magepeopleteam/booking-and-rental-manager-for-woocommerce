@@ -20,7 +20,7 @@
                     let rbfw_time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
                     if(rbfw_time_slot_switch=='yes'){
                         let post_id = jQuery('.rbfw_post_id').val();
-                        particular_time_date_dependent_ajax(post_id,date_ymd);
+                        particular_time_date_dependent_ajax(post_id,date_ymd,'time_enable');
                     }
                 },
             });
