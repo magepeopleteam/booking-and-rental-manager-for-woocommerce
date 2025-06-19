@@ -2525,10 +2525,8 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
     $interval = $start->diff($end);
 
-// Calculate total months first (years converted to months)
     $totalMonths = ($interval->y * 12) + $interval->m;
 
-// Remaining days -> convert to weeks and days
     $remainingDays = $interval->d;
     $weeks = floor($remainingDays / 7);
     $days = $remainingDays % 7;
@@ -2553,39 +2551,52 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
             $duration_price += $rbfw_monthly_rate * $totalMonths;
 
             $rbfw_enable_weekly_rate           = get_post_meta( $post_id, 'rbfw_enable_weekly_rate', true );
-            $rbfw_weekly_rate   = get_post_meta( $post_id, 'rbfw_weekly_rate', true );
+
 
             if ($weeks > 0 && $rbfw_enable_weekly_rate=='yes'){
 
                 $rbfw_enable_day_threshold_for_weekly   = get_post_meta( $post_id, 'rbfw_enable_day_threshold_for_weekly', true ) ? get_post_meta( $post_id, 'rbfw_enable_day_threshold_for_weekly', true ) : 'no';
                 $rbfw_day_threshold_for_weekly   = get_post_meta( $post_id, 'rbfw_day_threshold_for_weekly', true ) ? get_post_meta( $post_id, 'rbfw_day_threshold_for_weekly', true ) : '0';
+                $rbfw_weekly_rate   = get_post_meta( $post_id, 'rbfw_weekly_rate', true );
 
                 if($rbfw_enable_day_threshold_for_weekly=='yes' && $days > $rbfw_day_threshold_for_weekly){
                     $weeks++;
                     $duration_price += $rbfw_weekly_rate * $weeks;
                 }else{
                     $duration_price += $rbfw_weekly_rate * $weeks;
-                    
-                }
 
+                    if ($days > 0 && $rbfw_enable_daily_rate == 'yes'){
+
+                        $rbfw_daily_rate = get_post_meta( $post_id, 'rbfw_daily_rate', true );
+                        $rbfw_enable_hourly_threshold = get_post_meta( $post_id, 'rbfw_enable_hourly_threshold', true );
+                        $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
+
+                        if($rbfw_enable_hourly_threshold=='yes' && $hours > $rbfw_hourly_threshold){
+                            $days++;
+                            $duration_price += $rbfw_daily_rate * $days;
+                        }else{
+                            $rbfw_hourly_rate = get_post_meta( $post_id, 'rbfw_hourly_rate', true );
+                            $duration_price += $rbfw_daily_rate * $days + $rbfw_hourly_rate * $hours;
+                        }
+                    }
+                }
             }
         }
+        $output[] = "$totalMonths month" . ($totalMonths > 1 ? 's' : '');
+        if ($weeks > 0)       $output[] = "$weeks week" . ($weeks > 1 ? 's' : '');
+        if ($days > 0)        $output[] = "$days day" . ($days > 1 ? 's' : '');
+        if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
 
 
+        return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'pricing_applied'=>$_COOKIE['pricing_applied']];
 
-
-
-
-        //$output[] = "$totalMonths month" . ($totalMonths > 1 ? 's' : '');
     }else{
         if ($weeks > 0 && $rbfw_enable_monthly_rate=='yes'){
 
         }
     }
 
-    if ($weeks > 0)       $output[] = "$weeks week" . ($weeks > 1 ? 's' : '');
-    if ($days > 0)        $output[] = "$days day" . ($days > 1 ? 's' : '');
-    if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
+
 
 
 
