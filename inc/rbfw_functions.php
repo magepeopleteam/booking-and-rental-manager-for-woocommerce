@@ -2544,9 +2544,12 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         $rbfw_enable_day_threshold_for_monthly   = get_post_meta( $post_id, 'rbfw_enable_day_threshold_for_monthly', true );
         $rbfw_day_threshold_for_monthly   = get_post_meta( $post_id, 'rbfw_day_threshold_for_monthly', true );
 
+
+
         if($rbfw_enable_day_threshold_for_monthly=='yes' && $remainingDays > $rbfw_day_threshold_for_monthly){
-            $totalMonths++;
+
             $duration_price += $rbfw_monthly_rate * $totalMonths;
+            echo $rbfw_monthly_rate.'*'.$totalMonths.'='.$rbfw_monthly_rate * $totalMonths;exit;
         }else{
             $duration_price += $rbfw_monthly_rate * $totalMonths;
 
