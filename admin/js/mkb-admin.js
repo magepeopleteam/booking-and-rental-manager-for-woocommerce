@@ -686,7 +686,194 @@
             });
         });
         /* end inventory filter and view details */
+
+
+        const monthlyPriceToggle = jQuery('.monthly-price-toggle');
+        const weeklyPriceToggle = jQuery('.weekly-price-toggle');
+        const dailyPriceToggle = jQuery('.daily-price-toggle');
+
+        const rbfw_enable_monthly_rate = jQuery('#rbfw_enable_monthly_rate');
+        const rbfw_enable_weekly_rate = jQuery('#rbfw_enable_weekly_rate');
+        const rbfw_enable_daily_rate = jQuery('#rbfw_enable_daily_rate');
+
+        let monthlyPriceEnabled = rbfw_enable_monthly_rate.val() === 'yes';
+        let weeklyPriceEnabled = rbfw_enable_weekly_rate.val() === 'yes';
+        let dailyPriceEnabled = rbfw_enable_daily_rate.val() === 'yes';
+
+        const monthlyPriceItem = jQuery('.day-threshold-item-for-month');
+        const weeklyPriceItem = jQuery('.day-threshold-item-for-week');
+        const hourlyPriceItem = jQuery('.hourly-price-item');
+
+        const monthlyPriceInput = jQuery('#monthly-price-input');
+        const weeklyPriceInput = jQuery('#weekly-price-input');
+        const dailyPriceInput = jQuery('#daily-price-input');
+
+
+        monthlyPriceToggle.on('click', toggleMonthlyPrice);
+        weeklyPriceToggle.on('click', toggleWeeklyPrice);
+        dailyPriceToggle.on('click', toggleDailyPrice);
+
+
+
+        const monthThresholdToggle = jQuery('.day-threshold-toggle-for-month');
+        const weekThresholdToggle = jQuery('.day-threshold-toggle-for-week');
+        const hourThresholdToggle = jQuery('.hour-threshold-toggle');
+
+        const rbfw_enable_day_threshold_for_monthly = jQuery('#rbfw_enable_day_threshold_for_monthly');
+        const rbfw_enable_day_threshold_for_weekly = jQuery('#rbfw_enable_day_threshold_for_weekly');
+        const rbfw_enable_time_picker = jQuery('#rbfw_enable_time_picker');
+
+        let monthThresholdEnabled = rbfw_enable_day_threshold_for_monthly.val() === 'yes';
+        let weekThresholdEnabled = rbfw_enable_day_threshold_for_weekly.val() === 'yes';
+        let hourThresholdEnabled = rbfw_enable_time_picker.val() === 'yes';
+
+        const monthlyThresholdInput = jQuery('#day-threshold-input-for-monthly');
+        const weeklyThresholdInput = jQuery('#day-threshold-input-for-weekly');
+        const hourThresholdDisplay = jQuery('#hour-threshold-display');
+
+
+
+        monthThresholdToggle.on('click', toggleMonthThreshold);
+        weekThresholdToggle.on('click', toggleWeekThreshold);
+        hourThresholdToggle.on('click', toggleHourThreshold);
+
+
+        const timePickerToggle = jQuery('.time-picker-toggle');
+        const hourlyPriceToggle = jQuery('.hourly-price-toggle');
+
+
+        const hourlyPriceInput = jQuery('#hourly-price-input');
+        const hourThresholdInput = jQuery('#hour-threshold-input');
+
+        hourlyPriceToggle.on('click', toggleHourlyPrice);
+
+
+
+        const hourThresholdItem = jQuery('.hour-threshold-item');
+        const timeSlotsSection = jQuery('.time-slots-section');
+
+
+
+
+        const rbfw_enable_hourly_rate = jQuery('#rbfw_enable_hourly_rate');
+        const rbfw_enable_hourly_threshold = jQuery('#rbfw_enable_hourly_threshold');
+
+        // State
+
+
+        let timePickerEnabled = rbfw_enable_time_picker.val() === 'yes';
+        let hourlyPriceEnabled = rbfw_enable_time_picker.val() === 'yes';
+
+
+
+        let timeSlots = [];
+
+        // Toggle functions
+        function toggleMonthlyPrice() {
+            monthlyPriceEnabled = !monthlyPriceEnabled;
+            monthlyPriceToggle.toggleClass('active', monthlyPriceEnabled);
+            monthlyPriceInput.prop('disabled', !monthlyPriceEnabled);
+            rbfw_enable_monthly_rate.val(monthlyPriceEnabled ? 'yes' : 'no');
+            monthlyPriceItem.css('display', monthlyPriceEnabled ? 'flex' : 'none');
+        }
+
+        function toggleWeeklyPrice() {
+            weeklyPriceEnabled = !weeklyPriceEnabled;
+            weeklyPriceToggle.toggleClass('active', weeklyPriceEnabled);
+            weeklyPriceInput.prop('disabled', !weeklyPriceEnabled);
+            rbfw_enable_monthly_rate.val(weeklyPriceEnabled ? 'yes' : 'no');
+            weeklyPriceItem.css('display', weeklyPriceEnabled ? 'flex' : 'none');
+        }
+
+        function toggleDailyPrice() {
+            dailyPriceEnabled = !dailyPriceEnabled;
+            dailyPriceToggle.toggleClass('active', dailyPriceEnabled);
+            dailyPriceInput.prop('disabled', !dailyPriceEnabled);
+            rbfw_enable_daily_rate.val(dailyPriceEnabled ? 'yes' : 'no');
+        }
+
+        function toggleMonthThreshold() {
+            monthThresholdEnabled = !monthThresholdEnabled;
+            monthThresholdToggle.toggleClass('active', monthThresholdEnabled);
+            monthlyThresholdInput.prop('disabled', !monthThresholdEnabled);
+            rbfw_enable_day_threshold_for_monthly.val(monthThresholdEnabled ? 'yes' : 'no');
+        }
+
+        function toggleWeekThreshold() {
+            weekThresholdEnabled = !weekThresholdEnabled;
+            weekThresholdToggle.toggleClass('active', weekThresholdEnabled);
+            weeklyThresholdInput.prop('disabled', !weekThresholdEnabled);
+            rbfw_enable_day_threshold_for_weekly.val(weekThresholdEnabled ? 'yes' : 'no');
+        }
+
+        function toggleHourThreshold() {
+            hourThresholdEnabled = !hourThresholdEnabled;
+            hourThresholdToggle.toggleClass('active', hourThresholdEnabled);
+            hourThresholdInput.prop('disabled', !hourThresholdEnabled);
+            rbfw_enable_hourly_threshold.val(hourThresholdEnabled ? 'yes' : 'no');
+        }
+
+
+        jQuery('.time-picker-toggle').on('click', function() {
+            timePickerEnabled = !timePickerEnabled;
+            timePickerToggle.toggleClass('active', timePickerEnabled);
+            hourlyPriceItem.css('display', timePickerEnabled ? 'flex' : 'none');
+            hourThresholdItem.css('display', timePickerEnabled ? 'flex' : 'none');
+            timeSlotsSection.css('display', timePickerEnabled ? 'block' : 'none');
+
+            const $toggle = jQuery(this);
+            const $input = jQuery('.rbfw_enable_time_picker');
+            if ($toggle.hasClass('active')) {
+                $input.val('yes');
+            } else {
+                $input.val('no');
+            }
+
+        })
+
+
+
+
+        function toggleHourlyPrice() {
+            hourlyPriceEnabled = !hourlyPriceEnabled;
+            hourlyPriceToggle.toggleClass('active', hourlyPriceEnabled);
+            hourlyPriceInput.prop('disabled', !hourlyPriceEnabled);
+            rbfw_enable_hourly_rate.val(hourlyPriceEnabled ? 'yes' : 'no');
+        }
+
+        // Input change handlers
+        dailyPriceInput.on('change', function () {
+            const value = parseFloat(jQuery(this).val());
+            if (isNaN(value) || value < 0) {
+                jQuery(this).val(0);
+            }
+        });
+
+        hourlyPriceInput.on('change', function () {
+            const value = parseFloat(jQuery(this).val());
+            if (isNaN(value) || value < 0) {
+                jQuery(this).val(0);
+            }
+        });
+
+        hourThresholdInput.on('change', function () {
+            const value = parseFloat(jQuery(this).val());
+            if (isNaN(value) || value < 0) {
+                jQuery(this).val(0);
+            }
+            hourThresholdDisplay.text(jQuery(this).val());
+        });
+
+        // Event listeners for toggles
+
+
+
+
     });
+
+
+
+
     
     // =====================sidebar modal open close=============
 	$(document).on('click', '[data-modal]', function (e) {
