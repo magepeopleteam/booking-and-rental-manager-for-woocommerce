@@ -1130,7 +1130,7 @@
                     $rbfw_enable_day_threshold_for_monthly     = isset( $_POST['rbfw_enable_day_threshold_for_monthly'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_day_threshold_for_monthly'] ) ) : 0;
                     $rbfw_day_threshold_for_monthly            = isset( $_POST['rbfw_day_threshold_for_monthly'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_day_threshold_for_monthly'] ) ) : 'no';
 
-                    $rbfw_enable_weekly_rate                   = isset( $_POST['rbfw_enable_monthly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_monthly_rate'] ) ) : 'no';
+                    $rbfw_enable_weekly_rate                   = isset( $_POST['rbfw_enable_weekly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_weekly_rate'] ) ) : 'no';
                     $rbfw_weekly_rate                          = isset( $_POST['rbfw_weekly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_weekly_rate'] ) ) : 0;
 
                     $rbfw_enable_day_threshold_for_weekly      = isset( $_POST['rbfw_enable_day_threshold_for_weekly'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_day_threshold_for_weekly'] ) ) : 'no';

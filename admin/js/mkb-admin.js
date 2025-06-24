@@ -781,7 +781,7 @@
             weeklyPriceEnabled = !weeklyPriceEnabled;
             weeklyPriceToggle.toggleClass('active', weeklyPriceEnabled);
             weeklyPriceInput.prop('disabled', !weeklyPriceEnabled);
-            rbfw_enable_monthly_rate.val(weeklyPriceEnabled ? 'yes' : 'no');
+            rbfw_enable_weekly_rate.val(weeklyPriceEnabled ? 'yes' : 'no');
             weeklyPriceItem.css('display', weeklyPriceEnabled ? 'flex' : 'none');
         }
 
