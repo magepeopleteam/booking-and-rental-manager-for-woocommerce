@@ -363,6 +363,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                 <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?>
                             </div>
                             <div class="item-content"></div>
+                            <input type="hidden" class="rbfw_duration_md" name="rbfw_duration_md">
                         </div>
 
                     <?php } else { ?>

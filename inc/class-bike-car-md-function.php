@@ -139,14 +139,14 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $duration_price = $duration_price_info['duration_price'] * $item_quantity;
 
+            $total_days = $duration_price_info['total_days'];
+            $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):'';
+            $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_service_price;
+            $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
+
             if(isset($duration_price_info['duration'])){
                 $duration =  $duration_price_info['duration'];
-                $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):'';
-
-                $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_service_price;
-                $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
             }else{
-                $total_days = $duration_price_info['total_days'];
                 $actual_days = $duration_price_info['actual_days'];
                 $hours = $duration_price_info['hours'];
                 $pricing_applied = $duration_price_info['pricing_applied'];
@@ -158,12 +158,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     }
                     $hours = 0;
                 }
-
-
-                $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):'';
-
-                $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_service_price;
-                $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
 
 
                 $discount_amount = 0;

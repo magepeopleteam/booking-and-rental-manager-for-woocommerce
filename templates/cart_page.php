@@ -335,6 +335,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $end_time           = $cart_item['rbfw_end_time'] ? $cart_item['rbfw_end_time'] : '';
     $rbfw_pickup_point  = $cart_item['rbfw_pickup_point'] ? $cart_item['rbfw_pickup_point'] : '';
     $rbfw_dropoff_point = $cart_item['rbfw_dropoff_point'] ? $cart_item['rbfw_dropoff_point'] : '';
+    $rbfw_duration_md = $cart_item['rbfw_duration_md'] ? $cart_item['rbfw_duration_md'] : '';
 
     $rbfw_duration_price_individual = isset($cart_item['rbfw_duration_price_individual'] )? $cart_item['rbfw_duration_price_individual'] : 0;
 
@@ -442,13 +443,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?>
             </th>
             <td>
-                <?php
-                $diff                    = date_diff( new DateTime( $start_datetime ), new DateTime( $end_datetime ) );
-                $total_days = $diff->days;
-                $hours = $diff->h + ($diff->i / 60);
-                ?>
-                <?php echo esc_html($total_days.' '.(($total_days==1) ? $rbfw->get_option_trans('rbfw_text_days','rbfw_basic_translation_settings',__('Day','booking-and-rental-manager-for-woocommerce')) : $rbfw->get_option_trans('rbfw_text_days','rbfw_basic_translation_settings',__('Days','booking-and-rental-manager-for-woocommerce')))); ?>
-                <?php echo esc_html($hours); ?> <?php echo (($hours==1) ? esc_html_e( 'Hour', 'booking-and-rental-manager-for-woocommerce' ) : esc_html_e( 'Hour', 'booking-and-rental-manager-for-woocommerce' )) ?>
+                <?php echo esc_html($rbfw_duration_md); ?>
             </td>
         </tr>
 
