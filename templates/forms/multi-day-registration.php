@@ -14,8 +14,13 @@ if($cart_backend){
     $submit_name = 'add-to-cart';
 }
 
+$rbfw_monthly_rate = get_post_meta($rbfw_id, 'rbfw_monthly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_monthly_rate', true) : 0;
+$rbfw_weekly_rate = get_post_meta($rbfw_id, 'rbfw_weekly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_weekly_rate', true) : 0;
 $daily_rate = get_post_meta($rbfw_id, 'rbfw_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_daily_rate', true) : 0;
 $hourly_rate = get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_hourly_rate', true) : 0;
+
+$rbfw_enable_monthly_rate           = get_post_meta( $rbfw_id, 'rbfw_enable_monthly_rate', true ) ;
+$rbfw_enable_weekly_rate           = get_post_meta( $rbfw_id, 'rbfw_enable_weekly_rate', true );
 $enable_daily_rate = get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daily_rate', true) : 'yes';
 $enable_hourly_rate = get_post_meta($rbfw_id, 'rbfw_enable_hourly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_enable_hourly_rate', true) : 'no';
 $rbfw_enable_daywise_price = get_post_meta($rbfw_id, 'rbfw_enable_daywise_price', true) ? get_post_meta($rbfw_id, 'rbfw_enable_daywise_price', true) : 'no';
@@ -109,146 +114,201 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                         </div>
 
                         <div class="price-item-container pricing-content_dh  mpStyle  <?php echo ($rbfw_pricing_info_display=='yes')?'open':'' ?>" style="display: <?php echo ($rbfw_pricing_info_display=='yes')?'block':'none' ?>">
-                            <?php if($rbfw_enable_daywise_price == 'yes'){ ?>
+
+                            <?php
+
+                            if($rbfw_enable_monthly_rate=='yes'){
+                                ?>
+
+                                <div class="rbfw_day_wise_price">
+                                    <table>
+                                        <tbody>
+                                        <tr>
+                                            <td><strong>Monthly Rate</strong></td>
+                                            <td><?php echo wp_kses_post(wc_price($rbfw_monthly_rate)); ?> / Month</td>
+                                        </tr>
+                                        <?php if($rbfw_enable_weekly_rate=='yes'){ ?>
+                                        <tr>
+                                            <td><strong>Weekly Rate</strong></td>
+                                            <td><?php echo wp_kses_post(wc_price($rbfw_weekly_rate)); ?> / week</td>
+                                        </tr>
+                                        <?php } ?>
+                                        <?php if ($enable_daily_rate == 'yes') { ?>
+                                        <tr>
+                                            <td><strong>Daily Rate</strong></td>
+                                            <td><?php echo wp_kses_post(wc_price($daily_rate)); ?> / Day</td>
+                                        </tr>
+                                        <?php } ?>
+                                        <?php if ($enable_hourly_rate == 'yes') { ?>
+                                        <tr>
+                                            <td><strong>Hourly rate</strong></td>
+                                            <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / Hour</td>
+                                        </tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+
                                 <?php
-
-                                $sunday = rbfw_day_row_md( __( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun' );
-                                $monday = rbfw_day_row_md( __( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon' );
-                                $tueday = rbfw_day_row_md( __( 'Tuesday:', 'booking-and-rental-manager-for-woocommerce' ), 'tue' );
-                                $wedday = rbfw_day_row_md( __( 'Wednesday:', 'booking-and-rental-manager-for-woocommerce' ), 'wed' );
-                                $thuday = rbfw_day_row_md( __( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu' );
-                                $friday = rbfw_day_row_md( __( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri' );
-                                $satday = rbfw_day_row_md( __( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat' );
-
+                            }elseif ($rbfw_enable_weekly_rate=='yes'){
                                 ?>
                                 <div class="rbfw_day_wise_price">
                                     <table>
+                                        <tbody>
                                         <tr>
-                                            <th><?php esc_html_e( 'Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                            <th><?php esc_html_e( 'S', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                            <th><?php esc_html_e( 'M', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                            <th><?php esc_html_e( 'T', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                            <th><?php esc_html_e( 'W', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                            <th><?php esc_html_e( 'T', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                            <th><?php esc_html_e( 'F', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                            <th><?php esc_html_e( 'S', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                            <td><strong>Weekly Rate</strong></td>
+                                            <td><?php echo wp_kses_post(wc_price($rbfw_weekly_rate)); ?> / week</td>
                                         </tr>
                                         <?php if ($enable_daily_rate == 'yes') { ?>
                                             <tr>
-                                                <td><?php echo esc_html($rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily','booking-and-rental-manager-for-woocommerce'))); ?>(<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
-                                                <td><?php echo esc_html(($sunday['enable'] =='yes' && $sunday['daily_rate'])? $sunday['daily_rate'] :$daily_rate); ?></td>
-                                                <td><?php echo esc_html(($monday['enable'] =='yes' && $monday['daily_rate'])? $monday['daily_rate'] :$daily_rate); ?></td>
-                                                <td><?php echo esc_html(($tueday['enable'] =='yes' && $tueday['daily_rate'])? $tueday['daily_rate'] :$daily_rate); ?></td>
-                                                <td><?php echo esc_html(($wedday['enable'] =='yes' && $wedday['daily_rate'])? $wedday['daily_rate'] :$daily_rate); ?></td>
-                                                <td><?php echo esc_html(($thuday['enable'] =='yes' && $thuday['daily_rate'])? $thuday['daily_rate'] :$daily_rate); ?></td>
-                                                <td><?php echo esc_html(($friday['enable'] =='yes' && $friday['daily_rate'])? $friday['daily_rate'] :$daily_rate); ?></td>
-                                                <td><?php echo esc_html(($satday['enable'] =='yes' && $satday['daily_rate'])? $satday['daily_rate'] :$daily_rate); ?></td>
+                                                <td><strong>Daily Rate</strong></td>
+                                                <td><?php echo wp_kses_post(wc_price($daily_rate)); ?> / Day</td>
                                             </tr>
                                         <?php } ?>
                                         <?php if ($enable_hourly_rate == 'yes') { ?>
                                             <tr>
-                                                <td><?php echo esc_html($rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly','booking-and-rental-manager-for-woocommerce'))); ?>(<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
-                                                <td><?php echo esc_html(($sunday['enable'] =='yes' && $sunday['hourly_rate'])? $sunday['hourly_rate'] :$hourly_rate); ?></td>
-                                                <td><?php echo esc_html(($monday['enable'] =='yes' && $monday['hourly_rate'])? $monday['hourly_rate'] :$hourly_rate); ?></td>
-                                                <td><?php echo esc_html(($tueday['enable'] =='yes' && $tueday['hourly_rate'])? $tueday['hourly_rate'] :$hourly_rate); ?></td>
-                                                <td><?php echo esc_html(($wedday['enable'] =='yes' && $wedday['hourly_rate'])? $wedday['hourly_rate'] :$hourly_rate); ?></td>
-                                                <td><?php echo esc_html(($thuday['enable'] =='yes' && $thuday['hourly_rate'])? $thuday['hourly_rate'] :$hourly_rate); ?></td>
-                                                <td><?php echo esc_html(($friday['enable'] =='yes' && $friday['hourly_rate'])? $friday['hourly_rate'] :$hourly_rate); ?></td>
-                                                <td><?php echo esc_html(($satday['enable'] =='yes' && $satday['hourly_rate'])? $satday['hourly_rate'] :$hourly_rate); ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                    </table>
-                                </div>
-                            <?php }else{ ?>
-                                <div class="rbfw_day_wise_price">
-                                    <table>
-                                        <tbody>
-                                        <?php if ($enable_daily_rate == 'yes') { ?>
-                                            <tr>
-                                                <td><strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily Rate', 'booking-and-rental-manager-for-woocommerce'))); ?></strong></td>
-                                                <td><?php echo wp_kses_post(wc_price($daily_rate)); ?> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_day', 'rbfw_basic_translation_settings', __('day', 'booking-and-rental-manager-for-woocommerce'))); ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                        <?php if ($rbfw_enable_time_picker == 'yes') { ?>
-                                            <tr>
-                                                <td><strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly Rate', 'booking-and-rental-manager-for-woocommerce'))); ?></strong></td>
-                                                <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_hour', 'rbfw_basic_translation_settings', __('hour', 'booking-and-rental-manager-for-woocommerce'))); ?></td>
+                                                <td><strong>Hourly rate</strong></td>
+                                                <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / Hour</td>
                                             </tr>
                                         <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
-                            <?php } ?>
-
                             <?php
-                            $rbfw_md_data_mds = get_post_meta( $post_id, 'rbfw_md_data_mds', true ) ? get_post_meta( $post_id, 'rbfw_md_data_mds', true ) : [];
-
-                            if (is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && (!(empty($rbfw_md_data_mds)))) {
-                                foreach ($rbfw_md_data_mds as $item){
-                                ?>
-                                    <div class="mp_item_insert ">
+                            }else{
+                                if($rbfw_enable_daywise_price == 'yes'){
+                                    $sunday = rbfw_day_row_md( __( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun' );
+                                    $monday = rbfw_day_row_md( __( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon' );
+                                    $tueday = rbfw_day_row_md( __( 'Tuesday:', 'booking-and-rental-manager-for-woocommerce' ), 'tue' );
+                                    $wedday = rbfw_day_row_md( __( 'Wednesday:', 'booking-and-rental-manager-for-woocommerce' ), 'wed' );
+                                    $thuday = rbfw_day_row_md( __( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu' );
+                                    $friday = rbfw_day_row_md( __( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri' );
+                                    $satday = rbfw_day_row_md( __( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat' );
+                                    ?>
+                                    <div class="rbfw_day_wise_price">
+                                        <table>
+                                            <tr>
+                                                <th><?php esc_html_e( 'Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                                <th><?php esc_html_e( 'S', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                                <th><?php esc_html_e( 'M', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                                <th><?php esc_html_e( 'T', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                                <th><?php esc_html_e( 'W', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                                <th><?php esc_html_e( 'T', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                                <th><?php esc_html_e( 'F', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                                <th><?php esc_html_e( 'S', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                            </tr>
+                                            <?php if ($enable_daily_rate == 'yes') { ?>
+                                                <tr>
+                                                    <td><?php echo esc_html($rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily','booking-and-rental-manager-for-woocommerce'))); ?>(<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
+                                                    <td><?php echo esc_html(($sunday['enable'] =='yes' && $sunday['daily_rate'])? $sunday['daily_rate'] :$daily_rate); ?></td>
+                                                    <td><?php echo esc_html(($monday['enable'] =='yes' && $monday['daily_rate'])? $monday['daily_rate'] :$daily_rate); ?></td>
+                                                    <td><?php echo esc_html(($tueday['enable'] =='yes' && $tueday['daily_rate'])? $tueday['daily_rate'] :$daily_rate); ?></td>
+                                                    <td><?php echo esc_html(($wedday['enable'] =='yes' && $wedday['daily_rate'])? $wedday['daily_rate'] :$daily_rate); ?></td>
+                                                    <td><?php echo esc_html(($thuday['enable'] =='yes' && $thuday['daily_rate'])? $thuday['daily_rate'] :$daily_rate); ?></td>
+                                                    <td><?php echo esc_html(($friday['enable'] =='yes' && $friday['daily_rate'])? $friday['daily_rate'] :$daily_rate); ?></td>
+                                                    <td><?php echo esc_html(($satday['enable'] =='yes' && $satday['daily_rate'])? $satday['daily_rate'] :$daily_rate); ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($enable_hourly_rate == 'yes') { ?>
+                                                <tr>
+                                                    <td><?php echo esc_html($rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly','booking-and-rental-manager-for-woocommerce'))); ?>(<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
+                                                    <td><?php echo esc_html(($sunday['enable'] =='yes' && $sunday['hourly_rate'])? $sunday['hourly_rate'] :$hourly_rate); ?></td>
+                                                    <td><?php echo esc_html(($monday['enable'] =='yes' && $monday['hourly_rate'])? $monday['hourly_rate'] :$hourly_rate); ?></td>
+                                                    <td><?php echo esc_html(($tueday['enable'] =='yes' && $tueday['hourly_rate'])? $tueday['hourly_rate'] :$hourly_rate); ?></td>
+                                                    <td><?php echo esc_html(($wedday['enable'] =='yes' && $wedday['hourly_rate'])? $wedday['hourly_rate'] :$hourly_rate); ?></td>
+                                                    <td><?php echo esc_html(($thuday['enable'] =='yes' && $thuday['hourly_rate'])? $thuday['hourly_rate'] :$hourly_rate); ?></td>
+                                                    <td><?php echo esc_html(($friday['enable'] =='yes' && $friday['hourly_rate'])? $friday['hourly_rate'] :$hourly_rate); ?></td>
+                                                    <td><?php echo esc_html(($satday['enable'] =='yes' && $satday['hourly_rate'])? $satday['hourly_rate'] :$hourly_rate); ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                        </table>
+                                    </div>
+                                <?php }else{ ?>
+                                    <div class="rbfw_day_wise_price">
                                         <table>
                                             <tbody>
-                                            <tr>
-                                                <td <?php echo ($rbfw_enable_time_picker == 'yes')?'colspan="2"':'' ?>>Over <strong><?php echo esc_html($item['rbfw_start_day']) ?></strong> Days </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><?php echo wc_price($item['rbfw_daily_price']) ?>
-                                                </td>
-                                                <?php if($rbfw_enable_time_picker == 'yes'){ ?>
-                                                <td>
-                                                    <strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><?php echo wc_price($item['rbfw_hourly_price']) ?>
-                                                </td>
-                                                <?php } ?>
-                                            </tr>
+                                            <?php if ($enable_daily_rate == 'yes') { ?>
+                                                <tr>
+                                                    <td><strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily Rate', 'booking-and-rental-manager-for-woocommerce'))); ?></strong></td>
+                                                    <td><?php echo wp_kses_post(wc_price($daily_rate)); ?> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_day', 'rbfw_basic_translation_settings', __('day', 'booking-and-rental-manager-for-woocommerce'))); ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                            <?php if ($rbfw_enable_time_picker == 'yes') { ?>
+                                                <tr>
+                                                    <td><strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly Rate', 'booking-and-rental-manager-for-woocommerce'))); ?></strong></td>
+                                                    <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / <?php echo esc_html($rbfw->get_option_trans('rbfw_text_hour', 'rbfw_basic_translation_settings', __('hour', 'booking-and-rental-manager-for-woocommerce'))); ?></td>
+                                                </tr>
+                                            <?php } ?>
                                             </tbody>
                                         </table>
                                     </div>
-                                <?php } ?>
-                            <?php   }else{
-
-                                $seasonal_prices = [];
-                                if (is_plugin_active('booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php')){
-                                    $seasonal_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) ? get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) : [];
-                                }
-                                if(!empty($seasonal_prices)){
-                                    ?>
-                                    <div class="mp_settings_area mpStyle rbfw_seasonal_price_config_wrapper rbfw_seasonal_price_info">
-                                        <section>
-                                            <div class="w-100">
-                                                <div class="mp_item_insert ">
-                                                    <table>
-                                                        <?php
-                                                        if ( sizeof( $seasonal_prices ) > 0 ) {
-                                                            foreach ( $seasonal_prices as $sp ) {
-                                                                $start_date = array_key_exists( 'rbfw_sp_start_date', $sp ) ? $sp['rbfw_sp_start_date'] : '';
-                                                                $end_date   = array_key_exists( 'rbfw_sp_end_date', $sp ) ? $sp['rbfw_sp_end_date'] : '';
-                                                                $sp_price_h = array_key_exists( 'rbfw_sp_price_h', $sp ) ? $sp['rbfw_sp_price_h'] : '0';
-                                                                $sp_price_d = array_key_exists( 'rbfw_sp_price_d', $sp ) ? $sp['rbfw_sp_price_d'] : '0';
-                                                                ?>
-                                                                <tr>
-                                                                    <td <?php echo ($rbfw_enable_time_picker == 'yes')?'colspan="2"':'' ?>><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format($start_date) ); ?></strong> <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>  <strong><?php echo esc_html( rbfw_date_format($end_date) ); ?></strong> </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo  wp_kses(wc_price($sp_price_d) , rbfw_allowed_html()); ?></td>
-                                                                    <?php if($rbfw_enable_time_picker == 'yes'){ ?>
-                                                                        <td><strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>  <?php echo  wp_kses(wc_price($sp_price_h) , rbfw_allowed_html()); ?></td>
-                                                                    <?php } ?>
-                                                                </tr>
-                                                                <?php
+                            <?php } ?>
+                                <?php
+                                $rbfw_md_data_mds = get_post_meta( $post_id, 'rbfw_md_data_mds', true ) ? get_post_meta( $post_id, 'rbfw_md_data_mds', true ) : [];
+                                if (is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && (!(empty($rbfw_md_data_mds)))) {
+                                    foreach ($rbfw_md_data_mds as $item){
+                                        ?>
+                                        <div class="mp_item_insert ">
+                                            <table>
+                                                <tbody>
+                                                <tr>
+                                                    <td <?php echo ($rbfw_enable_time_picker == 'yes')?'colspan="2"':'' ?>>Over <strong><?php echo esc_html($item['rbfw_start_day']) ?></strong> Days </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><?php echo wc_price($item['rbfw_daily_price']) ?>
+                                                    </td>
+                                                    <?php if($rbfw_enable_time_picker == 'yes'){ ?>
+                                                    <td>
+                                                        <strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><?php echo wc_price($item['rbfw_hourly_price']) ?>
+                                                    </td>
+                                                    <?php } ?>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    <?php } ?>
+                                <?php }else{
+                                    $seasonal_prices = [];
+                                    if (is_plugin_active('booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php')){
+                                        $seasonal_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) ? get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) : [];
+                                    }
+                                    if(!empty($seasonal_prices)){
+                                        ?>
+                                        <div class="mp_settings_area mpStyle rbfw_seasonal_price_config_wrapper rbfw_seasonal_price_info">
+                                            <section>
+                                                <div class="w-100">
+                                                    <div class="mp_item_insert ">
+                                                        <table>
+                                                            <?php
+                                                            if ( sizeof( $seasonal_prices ) > 0 ) {
+                                                                foreach ( $seasonal_prices as $sp ) {
+                                                                    $start_date = array_key_exists( 'rbfw_sp_start_date', $sp ) ? $sp['rbfw_sp_start_date'] : '';
+                                                                    $end_date   = array_key_exists( 'rbfw_sp_end_date', $sp ) ? $sp['rbfw_sp_end_date'] : '';
+                                                                    $sp_price_h = array_key_exists( 'rbfw_sp_price_h', $sp ) ? $sp['rbfw_sp_price_h'] : '0';
+                                                                    $sp_price_d = array_key_exists( 'rbfw_sp_price_d', $sp ) ? $sp['rbfw_sp_price_d'] : '0';
+                                                                    ?>
+                                                                    <tr>
+                                                                        <td <?php echo ($rbfw_enable_time_picker == 'yes')?'colspan="2"':'' ?>><?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html( rbfw_date_format($start_date) ); ?></strong> <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>  <strong><?php echo esc_html( rbfw_date_format($end_date) ); ?></strong> </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong> <?php echo  wp_kses(wc_price($sp_price_d) , rbfw_allowed_html()); ?></td>
+                                                                        <?php if($rbfw_enable_time_picker == 'yes'){ ?>
+                                                                            <td><strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>  <?php echo  wp_kses(wc_price($sp_price_h) , rbfw_allowed_html()); ?></td>
+                                                                        <?php } ?>
+                                                                    </tr>
+                                                                    <?php
+                                                                }
                                                             }
-                                                        }
-                                                        ?>
-                                                    </table>
+                                                            ?>
+                                                        </table>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </section>
-                                    </div>
-                                <?php }
-                            }
-                            ?>
-
+                                            </section>
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
+                            <?php } ?>
                         </div>
                     </div>
 

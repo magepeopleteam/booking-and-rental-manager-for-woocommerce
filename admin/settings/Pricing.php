@@ -648,9 +648,9 @@
 
                         <div class="item day-threshold-item-for-month" style="display: <?php echo esc_attr( $rbfw_enable_monthly_rate == 'yes' ? 'flex' : 'none' ); ?>;">
                             <div class="item-left">
-                                <div class="label">Day threshold for monthly price</div>
+                                <div class="label">Monthly threshold: Number of day consider as a month</div>
                                 <div class="description">
-                                    If total hours are more than <span id="hour-threshold-display">6</span>, count as full day. If less, day will not count.
+                                    If total day more than monthly threshold or less than 30 days it will calculate as month
                                 </div>
                             </div>
                             <div class="item-right">
