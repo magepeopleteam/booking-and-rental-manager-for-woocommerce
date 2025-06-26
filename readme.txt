@@ -214,6 +214,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.4.4
+Monthly and weekly price implemented for multi day.
+bug fixing.
+
 2.4.3
 Search by rent type, pickup date and dropoff date by using "[rbfw_search search-type='item']" this shortcode.
 

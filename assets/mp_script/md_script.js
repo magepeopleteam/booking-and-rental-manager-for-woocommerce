@@ -645,7 +645,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             /*multiple service price day wise*/
             jQuery(".service-price-item").each(function(index, value) {
                 if(response.max_available_qty.service_stock[index]==0){
-                    jQuery(this).find(".rbfw-sold-out").show();
+                    jQuery(this).find(".rbfw-sold-out").show().addClass("rbfw_sold_out");
                     jQuery(this).find(".rbfw-checkbox").hide();
                     jQuery(this).find(".rbfw_service_price_data").data('quantity',0);
                 }else{
@@ -670,14 +670,14 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             });
             jQuery(".es_stock").each(function(index, value) {
                 if(response.max_available_qty.extra_service_instock[index]==0){
-                    jQuery(this).find(".rbfw-sold-out").show();
+                    jQuery(this).find(".rbfw-sold-out").show().addClass("rbfw_sold_out");
                     jQuery(this).find(".rbfw-checkbox").hide();
                 }
                 jQuery(this).text(response.max_available_qty.extra_service_instock[index]);
             });
             jQuery(".rbfw_bikecarmd_es_hidden_input_box").each(function(index, value) {
                 if(response.max_available_qty.extra_service_instock[index]==0){
-                    jQuery(this).find(".rbfw-sold-out").show();
+                    jQuery(this).find(".rbfw-sold-out").show().addClass("rbfw_sold_out");
                     jQuery(this).find(".rbfw-checkbox").hide();
                 }else{
                     jQuery(this).find(".rbfw-sold-out").hide();

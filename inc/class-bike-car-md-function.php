@@ -127,7 +127,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
             $item_quantity = isset($_POST['item_quantity'])?absint($_POST['item_quantity']):'';
-            $rbfw_enable_variations = isset($_POST['rbfw_enable_variations'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_variations'])):'';
             $rbfw_service_price = isset($_POST['rbfw_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_price']))):'' * $item_quantity;
 
             $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_time_slot'])):'off';
