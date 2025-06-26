@@ -138,47 +138,54 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
 
             $duration_price = $duration_price_info['duration_price'] * $item_quantity;
+
             $total_days = $duration_price_info['total_days'];
-            $actual_days = $duration_price_info['actual_days'];
-            $hours = $duration_price_info['hours'];
-            $pricing_applied = $duration_price_info['pricing_applied'];
-
-            if($rbfw_enable_time_slot=='off'){
-                $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
-                if($rbfw_count_extra_day_enable=='on'){
-                    $actual_days = $actual_days + 1;
-                }
-                $hours = 0;
-            }
-
-
             $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):'';
-
             $sub_total_price = (float)$duration_price + (float)$service_cost + (float)$rbfw_service_price;
             $security_deposit = rbfw_security_deposit($post_id,$sub_total_price);
 
+            if(isset($duration_price_info['duration'])){
+                $duration =  $duration_price_info['duration'];
+            }else{
+                $actual_days = $duration_price_info['actual_days'];
+                $hours = $duration_price_info['hours'];
+                $pricing_applied = $duration_price_info['pricing_applied'];
 
-            $discount_amount = 0;
-            if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
-                if(function_exists('rbfw_get_discount_array')){
-                    $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price,$item_quantity);
-                    $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
+                if($rbfw_enable_time_slot=='off'){
+                    $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+                    if($rbfw_count_extra_day_enable=='on'){
+                        $actual_days = $actual_days + 1;
+                    }
+                    $hours = 0;
                 }
+
+
+                $discount_amount = 0;
+                if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
+                    if(function_exists('rbfw_get_discount_array')){
+                        $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price,$item_quantity);
+                        $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
+                    }
+                }
+
+                $duration = '';
+
+                if ( $actual_days > 0 ) {
+                    $duration .= $actual_days > 1 ? $actual_days.' '.esc_html__($rbfw->get_option_trans('rbfw_text_days','rbfw_basic_translation_settings',__('Days','booking-and-rental-manager-for-woocommerce'))).' ' : $actual_days.' '.esc_html__($rbfw->get_option_trans('rbfw_text_day','rbfw_basic_translation_settings',__('Day','booking-and-rental-manager-for-woocommerce'))).' ';
+                }
+                if ( $hours > 0 ) {
+                    $duration .= $hours > 1 ? $hours.' '.rbfw_string_return('rbfw_text_hours',esc_html__('Hours','booking-and-rental-manager-for-woocommerce')) : $hours.' '.rbfw_string_return('rbfw_text_hour',esc_html__('Hour','booking-and-rental-manager-for-woocommerce'));
+                }
+
+                if($actual_days == 0 && $hours == 0){
+                    $actual_days = 1;
+                    $duration .= $actual_days > 1 ? $actual_days.' '.rbfw_string_return('rbfw_text_days',esc_html__('Days','booking-and-rental-manager-for-woocommerce')).' ' : $actual_days.' '.rbfw_string_return('rbfw_text_day',esc_html__('Day','booking-and-rental-manager-for-woocommerce')).' ';
+                }
+
             }
 
-            $duration = '';
 
-            if ( $actual_days > 0 ) {
-                $duration .= $actual_days > 1 ? $actual_days.' '.esc_html__($rbfw->get_option_trans('rbfw_text_days','rbfw_basic_translation_settings',__('Days','booking-and-rental-manager-for-woocommerce'))).' ' : $actual_days.' '.esc_html__($rbfw->get_option_trans('rbfw_text_day','rbfw_basic_translation_settings',__('Day','booking-and-rental-manager-for-woocommerce'))).' ';
-            }
-            if ( $hours > 0 ) {
-                $duration .= $hours > 1 ? $hours.' '.rbfw_string_return('rbfw_text_hours',esc_html__('Hours','booking-and-rental-manager-for-woocommerce')) : $hours.' '.rbfw_string_return('rbfw_text_hour',esc_html__('Hour','booking-and-rental-manager-for-woocommerce'));
-            }
 
-            if($actual_days == 0 && $hours == 0){
-                $actual_days = 1;
-                $duration .= $actual_days > 1 ? $actual_days.' '.rbfw_string_return('rbfw_text_days',esc_html__('Days','booking-and-rental-manager-for-woocommerce')).' ' : $actual_days.' '.rbfw_string_return('rbfw_text_day',esc_html__('Day','booking-and-rental-manager-for-woocommerce')).' ';
-            }
 
             echo wp_json_encode( array(
                 'duration_price' => $duration_price,

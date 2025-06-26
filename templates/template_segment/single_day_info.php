@@ -148,7 +148,7 @@ if(isset($_POST['post_id'])){
                                                             </label>
                                                         <?php } ?>
                                                     <?php }else{ ?>
-                                                        <div style="width: 120px">Sold Out</div>
+                                                        <div class="rbfw_sold_out" style="width: 120px"><?php echo esc_html('Sold Out','booking-and-rental-manager-for-woocommerce'); ?></div>
                                                     <?php } ?>
                                                 </div>
                                             </div>
@@ -235,7 +235,7 @@ if(isset($_POST['post_id'])){
                                                             </label>
                                                         <?php } ?>
                                                     <?php }else{ ?>
-                                                        <div style="width: 120px"><?php echo esc_html('Sold Out','booking-and-rental-manager-for-woocommerce'); ?></div>
+                                                        <div class="rbfw_sold_out" style="width: 120px"><?php echo esc_html('Sold Out','booking-and-rental-manager-for-woocommerce'); ?></div>
                                                     <?php } ?>
                                                 </div>
                                             </div>

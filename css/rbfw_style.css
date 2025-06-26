@@ -7333,4 +7333,7 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
 .rbfw-particular-time-action{
     width: 10%;
 }
+.item.day-threshold-item-for-month, .item.day-threshold-item-for-week {
+    background: #ebffeb !important;
+}
 
