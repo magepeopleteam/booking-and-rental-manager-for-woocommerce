@@ -43,7 +43,14 @@
 				wp_enqueue_script( 'jquery.modal.min', plugin_dir_url( __DIR__ ) . 'admin/js/jquery.modal.min.js', array( 'jquery' ), '0.9.1', false );
 				wp_enqueue_script( 'rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true );
 				wp_enqueue_script( 'md_script', RBFW_PLUGIN_URL . '/assets/mp_script/md_script.js', array(), time(), true );
-				wp_enqueue_script( 'sd_script', RBFW_PLUGIN_URL . '/assets/mp_script/sd_script.js', array(), time(), true );
+
+                wp_enqueue_script( 'sd_script', RBFW_PLUGIN_URL . '/assets/mp_script/sd_script.js', array(), time(), true );
+
+                wp_localize_script('rbfw_script', 'rbfw_translation', array(
+                    'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
+                    'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
+                ));
+
 				wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
 				do_action( 'rbfw_frontend_enqueue_scripts' );
 				/**************************
@@ -107,10 +114,7 @@
 
                 wp_enqueue_script( 'rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true );
 
-                wp_localize_script('rbfw_script', 'rbfw_translation', array(
-                    'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
-                    'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
-                ));
+
 
 
 				wp_enqueue_script( 'md_script', RBFW_PLUGIN_URL . '/assets/mp_script/md_script.js', array(), time(), true );

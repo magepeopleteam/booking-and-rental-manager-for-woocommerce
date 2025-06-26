@@ -34,7 +34,6 @@ add_shortcode('rbfw_left_filter', 'rbfw_rent_left_filter' );
 
 function rbfw_rent_list_shortcode_func($atts = null) {
 
-
     $attributes = shortcode_atts( array(
         'style' => 'grid',
         'show'  => -1,
@@ -67,111 +66,134 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $columns   = $attributes['columns'];
     $left_filter   = $attributes['left-filter'];
     $left_filter_control = array(
-            'title_filter_shown'    => $attributes['left-title-filter'],
-            'price_filter_shown'    => $attributes['left-price-filter'],
-            'location_filter_shown' => $attributes['left-location-filter'],
-            'category_filter_shown' => $attributes['left-category-filter'],
-            'type_filter_shown'     => $attributes['left-type-filter'],
-            'feature_filter_shown'  => $attributes['left-feature-filter'],
+        'title_filter_shown'    => $attributes['left-title-filter'],
+        'price_filter_shown'    => $attributes['left-price-filter'],
+        'location_filter_shown' => $attributes['left-location-filter'],
+        'category_filter_shown' => $attributes['left-category-filter'],
+        'type_filter_shown'     => $attributes['left-type-filter'],
+        'feature_filter_shown'  => $attributes['left-feature-filter'],
     );
 
-    if(!$category){
-        $category  = $cat_ids;
-    }
 
-    $rbfw_search_location = isset($atts['rbfw_search_location'])?$atts['rbfw_search_location']:'';
-    $rbfw_search_type = isset($atts['rbfw_search_type'])?$atts['rbfw_search_type']:'';
-    $rbfw_pickup_date = isset($atts['rbfw_pickup_date'])?$atts['rbfw_pickup_date']:'';
-
-    $location = ( $rbfw_search_location != '') ? $rbfw_search_location : $location;
-    if( $category ){
-        $category = ( $rbfw_search_type != '' ) ? $rbfw_search_type : $category ;
-    }else{
-        $search_category = ( $rbfw_search_type != '' ) ? $rbfw_search_type  : '' ;
-    }
+    if(isset($atts['rbfw_search_type'])){
 
 
-    $pickup_date = ( $rbfw_pickup_date != '' ) ? $rbfw_pickup_date : '';
+        $rbfw_search_location = isset($atts['rbfw_search_location'])?$atts['rbfw_search_location']:'';
+        $rbfw_search_type = isset($atts['rbfw_search_type'])?$atts['rbfw_search_type']:'';
+        $rbfw_pickup_date = isset($atts['rbfw_pickup_date'])?$atts['rbfw_pickup_date']:'';
 
 
-    if( $pickup_date !== 'Pickup date' && !empty( $pickup_date )) {
-        $date = DateTime::createFromFormat('F j, Y', $pickup_date );
-        $pickup_date = $date->format('d-m-Y');
-    }
 
-    if( !empty( $pickup_date ) && $pickup_date !== 'Pickup date' ){
-        $date_time = new DateTime( $pickup_date );
-        $day_of_week = strtolower( $date_time->format('l' ) );
-        $date_range_query = array(
-            'relation' => 'OR', // Either condition can be true
-            array(
-                'key'     => 'rbfw_off_days',
-                'compare' => 'NOT EXISTS', // Meta key doesn't exist
-            ),
-            array(
-                'key'     => 'rbfw_off_days',
-                'value'   => $day_of_week,
-                'compare' => 'NOT LIKE', // Meta key exists, but doesn't contain the day of the week
-            ),
+        $pickup_date = ( $rbfw_pickup_date != '' ) ? $rbfw_pickup_date : '';
+
+
+        if( $pickup_date !== 'Pickup date' && !empty( $pickup_date )) {
+            $date = DateTime::createFromFormat('F j, Y', $pickup_date );
+            $pickup_date = $date->format('d-m-Y');
+        }
+
+        if( !empty( $pickup_date ) && $pickup_date !== 'Pickup date' ){
+            $date_time = new DateTime( $pickup_date );
+            $day_of_week = strtolower( $date_time->format('l' ) );
+            $date_range_query = array(
+                'relation' => 'OR', // Either condition can be true
+                array(
+                    'key'     => 'rbfw_off_days',
+                    'compare' => 'NOT EXISTS', // Meta key doesn't exist
+                ),
+                array(
+                    'key'     => 'rbfw_off_days',
+                    'value'   => $day_of_week,
+                    'compare' => 'NOT LIKE', // Meta key exists, but doesn't contain the day of the week
+                ),
+            );
+        } else {
+            $date_range_query = '';
+        }
+
+
+        $location_query = !empty($rbfw_search_location) ? array(
+            'key' => 'rbfw_pickup_data',
+            'value' => $rbfw_search_location,
+            'compare' => 'LIKE'
+        ) : '';
+
+        $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+        $args = array(
+            'post_type' => 'rbfw_item',
+            'posts_per_page' => $show,
+            'paged' => $paged,
+            'meta_key' => $meta_key,
+            'orderby' => $orderby,
+            'order' => $order,
+            'meta_query' => array(
+                'relation' => 'AND',
+                $location_query,
+                $date_range_query,
+            )
         );
-    } else {
-        $date_range_query = '';
-    }
 
-    $rent_type = !empty($type) ? array(
-        'key' => 'rbfw_item_type',
-        'value' => $type,
-        'compare' => '==',
-    ) : '';
-    $location_query = !empty($location) ? array(
-        'key' => 'rbfw_pickup_data',
-        'value' => $location,
-        'compare' => 'LIKE'
-    ) : '';
 
-    $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
-    $args = array(
-        'post_type' => 'rbfw_item',
-        'posts_per_page' => $show,
-        'paged' => $paged,
-        'meta_key' => $meta_key,
-        'orderby' => $orderby,
-        'order' => $order,
-        'meta_query' => array(
-            'relation' => 'OR',
-            $rent_type,
-            $location_query,
-            $date_range_query,
-        )
-    );
+        if( !empty( $rbfw_search_type ) ) {
+            $search_category_name = $rbfw_search_type;
+            $args['meta_query'][] = array(
+                    'key' => 'rbfw_categories',
+                'value' => $search_category_name,
+                'compare' => 'LIKE'
+            );
+        }
 
 
 
-    if( $category ){
-        if(!empty($category)):
+    }else{
+
+
+        if(!$category){
+            $category  = $cat_ids;
+        }
+
+        $rent_type = !empty($type) ? array(
+            'key' => 'rbfw_item_type',
+            'value' => $type,
+            'compare' => '==',
+        ) : '';
+        $location_query = !empty($location) ? array(
+            'key' => 'rbfw_pickup_data',
+            'value' => $location,
+            'compare' => 'LIKE'
+        ) : '';
+
+        $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+        $args = array(
+            'post_type' => 'rbfw_item',
+            'posts_per_page' => $show,
+            'paged' => $paged,
+            'meta_key' => $meta_key,
+            'orderby' => $orderby,
+            'order' => $order,
+            'meta_query' => array(
+                'relation' => 'OR',
+                $rent_type,
+                $location_query,
+            )
+        );
+
+        if(!empty($category)) {
             $category = explode(',', $category);
-            foreach ($category as $cat){
-                $category_name=isset(get_term($cat)->name) ? get_term($cat)->name : '';
+            foreach ($category as $cat) {
+                $category_name = isset(get_term($cat)->name) ? get_term($cat)->name : '';
                 $args['meta_query'][] = array(
                     'key' => 'rbfw_categories',
                     'value' => serialize($category_name),
                     'compare' => 'LIKE'
                 );
             }
-        endif;
-    }else{
-        if( !empty( $search_category ) ):
-            $search_category_name = $search_category;
-            $args['meta_query'][] = array(
-                'key' => 'rbfw_categories',
-                'value' => $search_category_name,
-                'compare' => 'LIKE'
-            );
-        endif;
+        }
+
     }
 
 
-   // echo '<pre>';print_r($args);echo '<pre>';exit;
+
 
     $query = new WP_Query($args);
     $total_posts = $query->found_posts;
@@ -385,6 +407,7 @@ function rbfw_rent_search_result_shortcode_func($atts = null)
     $atts['rbfw_search_location'] = $rbfw_search_location;
     $atts['rbfw_search_type'] = $rbfw_search_type;
     $atts['rbfw_pickup_date'] = $rbfw_pickup_date;
+    $atts['search_result'] = 'yes';
 
 
     return rbfw_rent_list_shortcode_func($atts);
