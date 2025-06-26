@@ -116,6 +116,12 @@
 
 
 
+                wp_localize_script('rbfw_script', 'rbfw_translation', array(
+                    'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
+                    'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
+                ));
+
+
                 
 
 				wp_enqueue_script( 'md_script', RBFW_PLUGIN_URL . '/assets/mp_script/md_script.js', array(), time(), true );
