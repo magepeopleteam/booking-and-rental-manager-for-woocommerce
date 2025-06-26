@@ -107,6 +107,7 @@
 
                 wp_enqueue_script( 'rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true );
 
+
                 wp_localize_script('rbfw_script', 'rbfw_translation', array(
                     'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
                     'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
