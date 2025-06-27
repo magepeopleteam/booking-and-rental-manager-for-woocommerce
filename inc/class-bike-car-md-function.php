@@ -20,13 +20,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             add_action('wp_ajax_rbfw_bikecarmd_ajax_min_max_and_offdays_info', array($this, 'rbfw_bikecarmd_ajax_min_max_and_offdays_info'));
             add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_min_max_and_offdays_info', array($this,'rbfw_bikecarmd_ajax_min_max_and_offdays_info'));
 
-
-
             add_action('wp_ajax_rbfw_day_wise_sold_out_check', array($this, 'rbfw_day_wise_sold_out_check'));
             add_action('wp_ajax_nopriv_rbfw_day_wise_sold_out_check', array($this,'rbfw_day_wise_sold_out_check'));
-
-
-            
         }
 
 
