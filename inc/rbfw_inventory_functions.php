@@ -720,6 +720,58 @@ function rbfw_inventory_page(){
     <?php
 }
 
+function rbfw_check_available_by_specific_date_md($post_id, $specific_date = null){
+
+    $rbfw_enable_variations = !empty(get_post_meta($post_id, 'rbfw_enable_variations', true)) ? get_post_meta($post_id, 'rbfw_enable_variations', true) : 'no';
+    $rbfw_variations_data = !empty(get_post_meta($post_id, 'rbfw_variations_data', true)) ? get_post_meta($post_id, 'rbfw_variations_data', true) : [];
+
+    $rbfw_item_stock_quantity = 0;
+
+    if($rbfw_enable_variations=='yes'){
+        foreach ($rbfw_variations_data as $_variations_data) {
+            if(!empty($_variations_data['value'])){
+                foreach ($_variations_data['value'] as $value) {
+                    if(empty($value['quantity']) || $value['quantity'] <= 0){
+                        ////
+                    } else{
+                        $rbfw_item_stock_quantity =  $value['quantity'] + $rbfw_item_stock_quantity;
+                    }
+                }
+            }
+        }
+    }else{
+        $rbfw_item_stock_quantity = !empty(get_post_meta($post_id, 'rbfw_item_stock_quantity', true)) ? get_post_meta($post_id, 'rbfw_item_stock_quantity', true) : 0;
+    }
+
+
+    $rbfw_inventory = !empty(get_post_meta($post_id, 'rbfw_inventory', true)) ? get_post_meta($post_id, 'rbfw_inventory', true) : [];
+
+    $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
+
+    $remaining_item_stock = $rbfw_item_stock_quantity;
+    $sold_item_qty = 0;
+
+    if(!empty($rbfw_inventory)){
+        foreach ($rbfw_inventory as $key => $inventory) {
+            $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
+
+            $partial_stock = true;
+            if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
+                $partial_stock = false;
+            }
+
+            if ( in_array($specific_date, $booked_dates) && ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || (($inventory_based_on_return=='yes')?$inventory['rbfw_order_status'] == 'returned':'')) && $partial_stock ){
+                $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
+                $sold_item_qty += $rbfw_item_quantity;
+            }
+        }
+        $remaining_item_stock = $rbfw_item_stock_quantity - (int)$sold_item_qty;
+
+    }
+
+    return $remaining_item_stock;
+}
+
 
 
 function rbfw_inventory_page_table($query, $date = null, $start_time = null, $end_time = null){

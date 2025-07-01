@@ -216,6 +216,8 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 2.4.4
 Monthly and weekly price implemented for multi day.
+Search result update.
+Search form update.
 bug fixing.
 
 2.4.3
