@@ -74,7 +74,7 @@ function rbfw_page_create() {
         ],
         'search-item-list' => [
             'title' => 'Search Item List',
-            'content' => '[rbfw_search] [search-result]'
+            'content' => '[rbfw_search_ac] [search-result]'
         ]
     ];
 
