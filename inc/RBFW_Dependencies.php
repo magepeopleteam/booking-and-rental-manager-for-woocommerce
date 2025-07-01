@@ -26,7 +26,9 @@
 				// wp_enqueue_script( 'mp_plugin_global_rbfw', RBFW_PLUGIN_URL . '/assets/mp_script.js', array(), time(), true );
 				//mp style
 				wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
+				wp_enqueue_style( 'rental_lists', RBFW_PLUGIN_URL . '/assets/admin/css/rental_lists.css', array(), time(), 'all' );
 				wp_enqueue_script( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_script.js', array(), time(), true );
+				wp_enqueue_script( 'rental_lists', RBFW_PLUGIN_URL . '/assets/admin/js/rental_lists.js', array(), time(), true );
 				//loading owl carousel css
 				wp_enqueue_style( 'owl.carousel.min', RBFW_PLUGIN_URL . '/css/owl.carousel.min.css' );
 				wp_enqueue_style( 'owl.theme.default', RBFW_PLUGIN_URL . '/css/owl.theme.default.min.css' );
