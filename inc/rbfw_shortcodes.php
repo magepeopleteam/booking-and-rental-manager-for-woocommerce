@@ -74,9 +74,6 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'feature_filter_shown'  => $attributes['left-feature-filter'],
     );
 
-    if(!$category){
-        $category  = $cat_ids;
-    }
 
     if(isset($atts['rbfw_search_type'])){
 
@@ -147,6 +144,10 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     }else{
 
 
+        if(!$category){
+            $category  = $cat_ids;
+        }
+
         $rent_type = !empty($type) ? array(
             'key' => 'rbfw_item_type',
             'value' => $type,
@@ -172,23 +173,19 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 $location_query,
             )
         );
-    }
 
-    if(!empty($category)) {
-        $category = explode(',', $category);
-        foreach ($category as $cat) {
-            $category_name = isset(get_term($cat)->name) ? get_term($cat)->name : '';
-            $args['meta_query'][] = array(
-                'key' => 'rbfw_categories',
-                'value' => serialize($category_name),
-                'compare' => 'LIKE'
-            );
+        if(!empty($category)) {
+            $category = explode(',', $category);
+            foreach ($category as $cat) {
+                $category_name = isset(get_term($cat)->name) ? get_term($cat)->name : '';
+                $args['meta_query'][] = array(
+                    'key' => 'rbfw_categories',
+                    'value' => serialize($category_name),
+                    'compare' => 'LIKE'
+                );
+            }
         }
     }
-
-
-
-
 
     $query = new WP_Query($args);
     $total_posts = $query->found_posts;
@@ -309,7 +306,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post();
                 $rbfw_id = get_the_id();
 
-                if(!(isset($pickup_date) && ($pickup_date != 'Pickup date') && rbfw_check_available_by_specific_date_md($rbfw_id,$pickup_date))){
+                if((isset($pickup_date) && ($pickup_date != 'Pickup date') && rbfw_check_available_by_specific_date_md($rbfw_id,$pickup_date)==0)){
                    continue;
                 }
 
@@ -558,7 +555,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
     $search_type  = $attributes['search-type'];
 
-    
+
 
 
     $search_page_id = rbfw_get_option('search-item-list','rbfw_basic_gen_settings');
