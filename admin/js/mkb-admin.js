@@ -332,6 +332,8 @@
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
 
+            }else if (item_type == 'resort') {
+                jQuery('.rbfw_bike_car_sd_wrapper').show();
             } else {
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
