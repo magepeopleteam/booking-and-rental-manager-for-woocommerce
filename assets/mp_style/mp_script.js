@@ -130,22 +130,75 @@ function mp_alert($this, attr = 'alert') {
 }(jQuery));
 //====================================================================Load Bg Image=================//
 function loadBgImage() {
-	jQuery('body').find('[data-bg-image]:visible').each(function () {
+	jQuery('body').find('div.mpStyle [data-bg-image]:visible').each(function () {
 		let target = jQuery(this);
-		let width = target.outerWidth();
-		let height = target.outerHeight();
-		if (target.css('background-image') === 'none' || width === 0 || height === 0) {
-			let bg_url = target.data('bg-image');
+		if (target.closest('.sliderAllItem').length === 0) {
+			let width = target.outerWidth();
+			let height = target.outerHeight();
+			if (target.css('background-image') === 'none' || width === 0 || height === 0) {
+				let bg_url = target.data('bg-image');
+				if (!bg_url || bg_url.width === 0 || bg_url.width === 'undefined') {
+					bg_url = mp_empty_image_url;
+				}
+				mp_resize_bg_image_area(target, bg_url);
+				target.css('background-image', 'url("' + bg_url + '")').promise().done(function () {
+					dLoaderRemove(jQuery(this));
+				});
+			}
+		}
+	});
+	jQuery('body').find('div.mpStyle .sliderAllItem').each(function () {
+		let target = jQuery(this);
+		mpwem_slider_resize(target)
+	});
+	return true;
+}
+function mpwem_slider_resize(target) {
+	let all_height = [];
+	let totalHeight = 0;
+	let imgCount = 0;
+	let main_div_width = target.innerWidth();
+	let item_count = target.find('.sliderItem').length;
+	target.find('[data-bg-image]').each(function () {
+		let width = jQuery(this).outerWidth();
+		let height = jQuery(this).outerHeight();
+		if (jQuery(this).css('background-image') === 'none' || width === 0 || height === 0) {
+			let bg_url = jQuery(this).data('bg-image');
 			if (!bg_url || bg_url.width === 0 || bg_url.width === 'undefined') {
 				bg_url = mp_empty_image_url;
 			}
-			mp_resize_bg_image_area(target, bg_url);
-			target.css('background-image', 'url("' + bg_url + '")').promise().done(function () {
+			let tmpImg = new Image();
+			tmpImg.src = bg_url;
+			jQuery(tmpImg).one('load', function () {
+				let imgWidth = tmpImg.width;
+				let imgHeight = tmpImg.height;
+				all_height.push(imgHeight);
+				totalHeight = totalHeight + (imgHeight * main_div_width) / imgWidth;
+				imgCount++;
+				if (imgCount === item_count) {
+					let slider_height_type = target.closest('.superSlider').find('input[name="slider_height_type"]').val();
+					let height_content=totalHeight / imgCount;
+					if (slider_height_type === 'min') {
+						height_content=Math.min(...all_height);
+						target.find('.sliderItem').css({"min-height":height_content });
+						target.find('.sliderItem').css({"max-height": height_content});
+					} else if (slider_height_type === 'max') {
+						height_content=Math.max(...all_height);
+						target.find('.sliderItem').css({"min-height": height_content});
+						target.find('.sliderItem').css({"max-height": height_content});
+					} else {
+						target.find('.sliderItem').css({"min-height":height_content });
+						target.find('.sliderItem').css({"max-height": height_content});
+					}
+					target.css({"max-height": height_content});
+					target.siblings('.sliderShowcase').css({"max-height": height_content});
+				}
+			});
+			jQuery(this).css('background-image', 'url("' + bg_url + '")').promise().done(function () {
 				dLoaderRemove(jQuery(this));
 			});
 		}
 	});
-	return true;
 }
 function mp_resize_bg_image_area(target, bg_url) {
 	let tmpImg = new Image();
