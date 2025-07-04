@@ -624,7 +624,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
                         </div>
 
                         <div class="rbfw_search_item">
-                            <input type="submit" class="rbfw_rent_item_search_submit" value="<?php echo esc_html( 'Search', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                            <input type="submit" class="rbfw_rent_item_search_submit" value="<?php echo esc_html__( 'Search', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                         </div>
                     </div>
                 </form>
@@ -650,7 +650,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
                             <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
                         </div>
                         <div class="rbfw_search_item">
-                            <input type="submit" class="rbfw_rent_item_search_submit" value="<?php echo esc_html( 'Search', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                            <input type="submit" class="rbfw_rent_item_search_submit" value="<?php echo esc_html__( 'Search', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                         </div>
                     </div>
                 </form>
