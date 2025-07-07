@@ -264,7 +264,6 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
     ?>
     <div class="rbfw_rent_show_result_list_grid_icon_holder">
-
         <div class="rbfw_popup_wrapper" id="rbfw_popup_wrapper">
             <div class="rbfw_rent_cat_info_popup">
                 <span class="rbfw_popup_close_btn" id="rbfw_popup_close_btn">&times;</span>

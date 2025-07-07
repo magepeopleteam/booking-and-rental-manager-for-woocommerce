@@ -307,11 +307,11 @@
                                             <label for="enableHourly">Enable Hourly</label>
                                         </div>
                                         <div class="price-toggle">
-                                            <input type="checkbox" name="pricing_types[daily]" <?php echo (isset($pricing_types['hourly']) && $pricing_types['daily']=='on')?'checked':'' ?> id="enableDaily" checked onchange="toggleGlobalPricing('daily')">
+                                            <input type="checkbox" name="pricing_types[daily]" <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'checked':'' ?> id="enableDaily" checked onchange="toggleGlobalPricing('daily')">
                                             <label for="enableDaily">Enable Daily</label>
                                         </div>
                                         <div class="price-toggle">
-                                            <input type="checkbox" name="pricing_types[weekly]" id="enableWeekly" <?php echo (isset($pricing_types['weekly']) && $pricing_types['hourly']=='on')?'checked':'' ?> onchange="toggleGlobalPricing('weekly')">
+                                            <input type="checkbox" name="pricing_types[weekly]" id="enableWeekly" <?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?'checked':'' ?> onchange="toggleGlobalPricing('weekly')">
                                             <label for="enableWeekly">Enable Weekly</label>
                                         </div>
                                         <div class="price-toggle">
@@ -332,34 +332,34 @@
 
                                             <div class="form-group">
                                                 <label>Available Qty</label>
-                                                <input type="number" name="multiple_items_info[<?php echo $i ?>][available_qty]" class="qty-input" min="0" value="1" placeholder="1">
+                                                <input type="number" name="multiple_items_info[<?php echo $i ?>][available_qty]" class="qty-input" min="0" value="<?php echo $item_price['available_qty'] ?>" placeholder="1">
                                             </div>
 
-                                            <div class="form-group hourly-field">
+                                            <div class="form-group hourly-field <?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?'':'disabled-field' ?>">
                                                 <label>Hourly Price</label>
                                                 <div class="price-input">
-                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][hourly_price]" class="hourly-price-input" step="0.01" min="0" placeholder="0.00">
+                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][hourly_price]" class="hourly-price-input" step="0.01" min="0" value="<?php echo $item_price['hourly_price'] ?>" placeholder="0.00">
                                                 </div>
                                             </div>
 
-                                            <div class="form-group daily-field">
+                                            <div class="form-group daily-field <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'':'disabled-field' ?>">
                                                 <label>Daily Price</label>
                                                 <div class="price-input">
-                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][daily_price]" class="daily-price-input" step="0.01" min="0" placeholder="0.00">
+                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][daily_price]" class="daily-price-input" step="0.01" min="0" value="<?php echo $item_price['daily_price'] ?>" placeholder="0.00">
                                                 </div>
                                             </div>
 
-                                            <div class="form-group weekly-field disabled-field">
+                                            <div class="form-group weekly-field <?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?'':'disabled-field' ?>">
                                                 <label>Weekly Price</label>
                                                 <div class="price-input">
-                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][weekly_price]" class="weekly-price-input" step="0.01" min="0" placeholder="0.00">
+                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][weekly_price]" class="weekly-price-input" step="0.01" min="0" value="<?php echo $item_price['weekly_price'] ?>"  placeholder="0.00">
                                                 </div>
                                             </div>
 
-                                            <div class="form-group monthly-field disabled-field">
+                                            <div class="form-group monthly-field">
                                                 <label>Monthly Price</label>
                                                 <div class="price-input">
-                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][monthly_price]" class="monthly-price-input" step="0.01" min="0" placeholder="0.00">
+                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][monthly_price]" class="monthly-price-input" step="0.01" min="0" value="<?php echo $item_price['monthly_price'] ?>" placeholder="0.00">
                                                 </div>
                                             </div>
 
