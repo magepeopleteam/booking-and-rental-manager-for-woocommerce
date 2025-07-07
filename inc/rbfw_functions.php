@@ -69,6 +69,7 @@
 			'span'    => array(
 				'style'   => true, // Allows inline styles
 				'class'   => true,
+				'id'   => true,
 				'onclick' => true, // Allows inline JavaScript
 				'data-price' => true, // Allows inline JavaScript
                 'title' => true,
