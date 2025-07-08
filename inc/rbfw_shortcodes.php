@@ -251,10 +251,10 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
     global $rbfw;
 
-    $show_result = '<span id="rbfw_total_post">'.$total_posts.'</span> ';
+    $show_result = '<span id="rbfw_total_post">'.$post_count.'</span> ';
     $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_results', 'rbfw_basic_translation_settings', __('results','booking-and-rental-manager-for-woocommerce'))).'. ';
     $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_showings', 'rbfw_basic_translation_settings', __('Showing','booking-and-rental-manager-for-woocommerce'))).' ';
-    $show_result .= $post_count.' ';
+    $show_result .= '<span id="rbfw_total_post2">'.$post_count.'</span> ';
     $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_of', 'rbfw_basic_translation_settings', __('of','booking-and-rental-manager-for-woocommerce'))).' ';
     $show_result .=  $total_posts.' ' ;
     $show_result .= esc_html($rbfw->get_option_trans('rbfw_text_of', 'rbfw_basic_translation_settings', __('of','booking-and-rental-manager-for-woocommerce'))).' ';
@@ -371,6 +371,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         <script>
             const total_actual_post = "<?php echo $total_actual_post ?>";
             document.getElementById("rbfw_total_post").innerHTML = `${total_actual_post}`;
+            document.getElementById("rbfw_total_post2").innerHTML = `${total_actual_post}`;
         </script>
     </div>
 
@@ -766,12 +767,12 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
                         $category_display_count = 1;
                         foreach ( $rbfw_categorys as $category ) {
                             if( $category_display_count <= $type_display ){
-                            ?>
-                            <div class="rbfw_rent_item_left_feature_title">
-                                <input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>">
-                                <span><?php echo esc_attr( $category )?></span>
-                            </div>
-                        <?php
+                                ?>
+                                <div class="rbfw_rent_item_left_feature_title">
+                                    <input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>">
+                                    <span><?php echo esc_attr( $category )?></span>
+                                </div>
+                                <?php
                             }
                             $category_display_count++;
                         }
