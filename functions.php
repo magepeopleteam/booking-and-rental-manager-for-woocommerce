@@ -56,9 +56,9 @@ function rbfw_exist_page_by_title( $title ) {
     $result = $query->post_count;
 
     if(  $result > 0 ) {
-        return false;
-    } else {
         return true;
+    } else {
+        return false;
     }
 }
 
