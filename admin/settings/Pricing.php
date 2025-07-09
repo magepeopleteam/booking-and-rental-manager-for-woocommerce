@@ -379,6 +379,11 @@
                                     ➕ Add More Item
                                 </button>
                             </div>
+
+                            <input type="hidden" name="rbfw_enable_time_picker" value="yes">
+
+                            <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','md' ); ?>
+
                         </div>
                     </div>
 
@@ -1819,7 +1824,7 @@
 
                     $rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
 
-                    if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others'){
+                    if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others' || $rbfw_item_type=='multiple_items'){
                         $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time'] ) ? $input_data_sabitized['rdfw_available_time'] : [];
                         $particulars_data           = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars'] ) : [];
                     }else{

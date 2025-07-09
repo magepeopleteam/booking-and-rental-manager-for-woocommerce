@@ -71,7 +71,7 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 				</div>
                 <?php } ?>
 				<div class="mp_right_section">
-                    <?php include( RBFW_Function::get_template_path( 'forms/multi-day-registration.php' ) ); ?>
+                    <?php include( RBFW_Function::get_template_path( 'forms/multi-items-registration.php' ) ); ?>
 				</div>
 			</div>
 		</div>
