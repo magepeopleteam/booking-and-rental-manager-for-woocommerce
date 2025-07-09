@@ -284,29 +284,31 @@ class RBFW_Setting_API {
         echo "</div>";
 
 		echo "</div>";
-        echo wp_kses_post( '<input type="hidden" id="media_input_'.$id.'" name="'.$args['section'].'['.$id.']" value="'.$value.'"/>');
-		echo  wp_kses_post("<div class='rbfw_green_btn' id='media_upload_$id' style='margin-right:5px'>".__('Upload','booking-and-rental-manager-for-woocommerce')."</div>");
-		echo  wp_kses_post("<div class='rbfw_red_btn' id='media_remove_$id'>".__('Remove','booking-and-rental-manager-for-woocommerce')."</div>");
 
-		echo '<script>' . esc_js('
-            jQuery(document).ready(function($) {
-                jQuery("#media_upload_' . esc_attr($id) . '").click(function() {
-                    var send_attachment_bkp = wp.media.editor.send.attachment;
-                    wp.media.editor.send.attachment = function(props, attachment) {
-                        jQuery("#media_preview_' . esc_attr($id) . '").attr("src", attachment.url);
-                        jQuery("#media_input_' . esc_attr($id) . '").val(attachment.id);
-                        wp.media.editor.send.attachment = send_attachment_bkp;
-                    };
-                    wp.media.editor.open(jQuery(this));
-                    return false;
-                });
 
-                jQuery("#media_remove_' . esc_attr($id) . '").click(function() {
-                    jQuery("#media_preview_' . esc_attr($id) . '").attr("src", "");
-                    jQuery("#media_input_' . esc_attr($id) . '").val("");
-                });
-            });
-        ') . '</script>';
+        echo '<input type="hidden" id="media_input_' . esc_attr($id) . '" name="' . esc_attr($args['section'] . '[' . $id . ']') . '" value="' . esc_attr($value) . '" />';
+
+        echo '<div class="rbfw_green_btn" id="media_upload_' . esc_attr($id) . '" style="margin-right:5px;">' . esc_html__('Upload', 'booking-and-rental-manager-for-woocommerce') . '</div>';
+
+        echo '<div class="rbfw_red_btn" id="media_remove_' . esc_attr($id) . '">' . esc_html__('Remove', 'booking-and-rental-manager-for-woocommerce') . '</div>';
+
+
+        echo "<script>jQuery(document).ready(function($){
+		jQuery('#media_upload_$id').click(function() {
+			var send_attachment_bkp = wp.media.editor.send.attachment;
+			wp.media.editor.send.attachment = function(props, attachment) {
+				jQuery('#media_preview_$id').attr('src', attachment.url);
+				jQuery('#media_input_$id').val(attachment.id);
+				wp.media.editor.send.attachment = send_attachment_bkp;
+			}
+			wp.media.editor.open(jQuery(this));
+			return false;
+		});
+        jQuery('#media_remove_$id').click(function() {
+            jQuery('#media_preview_$id').attr('src','');
+            jQuery('#media_input_$id').val('');
+        });
+		});	</script>";
 	}
 
     function callback_multicheck( $args ) {
