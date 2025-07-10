@@ -28,7 +28,6 @@
 
 				$template_path = 'single/'. $template_name .'/'.$rent_type_template.'.php';
 				$template_path = RBFW_Function::get_template_path($template_path);
-                echo $template_path;
 				include( $template_path );
 			}
 

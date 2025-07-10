@@ -187,6 +187,10 @@
         });
 
         var current_item_type = jQuery('#rbfw_item_type').val();
+
+
+
+
         if ( current_item_type != 'appointment') {
             jQuery('.rbfw_seasonal_price_config_wrapper').show();
             if(current_item_type == 'bike_car_sd'){

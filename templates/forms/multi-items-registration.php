@@ -386,6 +386,42 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                     </div>
 
 
+                    <div class="item">
+                        <div class="item-content rbfw-datetime">
+                            <div class="left">
+                                <div class="rbfw-single-right-heading">
+                                    Duration Type
+                                </div>
+                                <div class="rbfw-p-relative">
+                                    <select class="rbfw-select" id="durationType" required>
+                                        <option value="">Select duration type</option>
+                                        <option value="hourly">Hourly</option>
+                                        <option value="daily">Daily</option>
+                                        <option value="weekly">Weekly</option>
+                                        <option value="monthly">Monthly</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="right time">
+                                <div class="rbfw-single-right-heading" id="qtyLabel">
+                                    Number of Duration
+                                </div>
+                                <div class="rbfw-p-relative">
+                                    <div class="qty-input">
+                                        <button type="button" class="qty-btn" onclick="changeQty('durationQty', -1)">−</button>
+                                        <input type="number" id="durationQty" class="qty-value" min="1" value="1" readonly>
+                                        <button type="button" class="qty-btn" onclick="changeQty('durationQty', 1)">+</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+
 
 
                         <div class="item rbfw-duration">

@@ -460,6 +460,62 @@ jQuery('body').on('change','.rbfw_bikecarmd_es_qty',function (e) {
 
 });
 
+jQuery(document).ready(function () {
+    const durationTypeSelect = jQuery('#durationType');
+    const pickupDateInput = jQuery('#pickupDate');
+    const pickupTimeInput = jQuery('#pickupTime');
+    const qtyLabel = jQuery('#qtyLabel');
+
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    pickupDateInput.attr('min', today).val(today);
+
+    // Set default time to current time + 1 hour
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    pickupTimeInput.val(now.toTimeString().slice(0, 5));
+
+    // Change quantity functions
+    window.changeQty = function (inputId, delta) {
+        const input = jQuery('#' + inputId);
+        const currentValue = parseInt(input.val()) || 1;
+        const newValue = Math.max(1, currentValue + delta);
+        input.val(newValue);
+    }
+
+    window.changeItemQty = function (itemType, delta) {
+        const input = jQuery(`[data-item="${itemType}"]`);
+        const currentValue = parseInt(input.val()) || 0;
+        const newValue = Math.max(0, currentValue + delta);
+        input.val(newValue);
+        updatePricing();
+    }
+
+    function updateQtyLabel() {
+        const durationType = durationTypeSelect.val();
+        if (durationType) {
+            const typeMap = {
+                hourly: 'Hours',
+                daily: 'Days',
+                weekly: 'Weeks',
+                monthly: 'Months'
+            };
+            qtyLabel.text(`Number of ${typeMap[durationType]}`);
+        } else {
+            qtyLabel.text('Number of Duration');
+        }
+    }
+
+    // Add event listener
+    durationTypeSelect.on('change', function () {
+        updateQtyLabel();
+        updatePricing();
+    });
+
+    // Initial label update
+    updateQtyLabel();
+});
+
 
 /*Extra service end*/
 
