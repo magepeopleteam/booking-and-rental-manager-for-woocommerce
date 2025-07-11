@@ -187,6 +187,10 @@
         });
 
         var current_item_type = jQuery('#rbfw_item_type').val();
+
+
+
+
         if ( current_item_type != 'appointment') {
             jQuery('.rbfw_seasonal_price_config_wrapper').show();
             if(current_item_type == 'bike_car_sd'){
@@ -332,6 +336,8 @@
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
 
+            }else if (item_type == 'resort') {
+                jQuery('.rbfw_bike_car_sd_wrapper').show();
             } else {
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();

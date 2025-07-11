@@ -33,6 +33,7 @@ if( ! class_exists('RBFW_Custom_Post')){
 						'dress' => 'Dress',
 						'appointment' => 'Appointment',
 						'others' => 'Others',
+						'multiple_items' => ' Multiple day for multiple items',
 					];
                     foreach($item_type as $kay => $value):
                         echo $kay==$rbfw_item_type ? esc_html($value) : '';

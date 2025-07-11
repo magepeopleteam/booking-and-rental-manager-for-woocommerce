@@ -43,6 +43,7 @@ function render_mep_events_by_status( $posts ) {
                 $price_type = $rbfw_rent_type;
             }
 
+
             $rbfw_categories = get_post_meta( $rental_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $rental_id, 'rbfw_categories', true ) ) : [];
             $rbfw_categories_items = implode(',', $rbfw_categories);
             $status = get_post_status( $rental_id );
