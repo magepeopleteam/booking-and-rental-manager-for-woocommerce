@@ -442,6 +442,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                     <tbody>
                                     <?php
                                     $c = 0;
+                                    //echo '<pre>';print_r($multiple_items_info);echo '<pre>';
                                     foreach ($multiple_items_info as $key=>$item) { ?>
                                         <?php if(isset($item['item_name']) && $item['available_qty'] > 0){ ?>
                                             <tr>
@@ -455,7 +456,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                                         <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_price]"  value="<?php echo esc_attr($item['item_name']); ?>">
 
                                                         <label class="switch">
-                                                            <input type="checkbox" max="4"  class="rbfw-resource-price rbfw-multiple_items-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>" data-status="0" value="1" data-cat="service"  data-quantity="1"  data-price="<?php //echo esc_attr($item['service_price']); ?>" data-name="<?php echo esc_attr($item['item_name']); ?>">
+                                                            <input type="checkbox" max="4"  class="rbfw-resource-price rbfw-multiple_items-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>" data-status="0" value="1" data-cat="service"  data-quantity="1"  data-price-hourly="<?php echo esc_attr($item['hourly_price']); ?>" data-price-daily="<?php echo esc_attr($item['daily_price']); ?>" data-price-weekly="<?php echo esc_attr($item['weekly_price']); ?>" data-price-monthly="<?php echo esc_attr($item['monthly_price']); ?>" data-name="<?php echo esc_attr($item['item_name']); ?>">
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
@@ -470,9 +471,9 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                                 <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>
                                                     <td class="rbfw_bikecarmd_es_input_box" style="display:none">
                                                         <div class="rbfw_qty_input">
-                                                            <a class="rbfw_qty_minus rbfw_bikecarmd_es_qty_minus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-minus"></i></a>
-                                                            <input type="number" min="0" max="" value="1" class="rbfw_bikecarmd_es_qty"  data-cat="service" data-item="<?php echo esc_attr($key+1); ?>" data-price="<?php //echo esc_attr($item['service_price']); ?>" data-name="<?php echo esc_attr($item['item_name']); ?>"/>
-                                                            <a class="rbfw_qty_plus rbfw_bikecarmd_es_qty_plus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-plus"></i></a>
+                                                            <a class="rbfw_qty_minus rbfw_multi_items_qty__minus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-minus"></i></a>
+                                                            <input type="number" min="0" max="" value="1" class="rbfw_muiti_items_qty"  data-cat="service" data-item="<?php echo esc_attr($key+1); ?>" data-price="<?php //echo esc_attr($item['service_price']); ?>" data-name="<?php echo esc_attr($item['item_name']); ?>"/>
+                                                            <a class="rbfw_qty_plus rbfw_multi_items_qty_plus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-plus"></i></a>
                                                         </div>
                                                     </td>
                                                 <?php } ?>

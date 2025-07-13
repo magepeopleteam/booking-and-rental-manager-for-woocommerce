@@ -631,7 +631,6 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             'rbfw_available_time': rbfw_available_time,
             'rbfw_enable_time_slot': rbfw_enable_time_slot,
             'nonce' : rbfw_ajax.nonce
-
         },
         beforeSend: function() {
             jQuery('.rbfw_bike_car_md_item_wrapper').addClass('rbfw_loader_in');
@@ -808,6 +807,114 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
 
 
 jQuery('body').on('change','.rbfw-multiple_items-price-multiple-qty',function(e) {
+
+
+    function calculateTotal() {
+        let total = 0;
+
+        jQuery('.rbfw-resource-price:checked').each(function () {
+            var durationType = jQuery('#durationType').val();
+
+            const price = parseFloat(jQuery(this).data('price-'+durationType)) || 0;
+            const row = jQuery(this).closest('tr');
+            const quantity = parseInt(row.find('.rbfw_bikecarmd_es_qty').val()) || 0;
+            total += price * quantity;
+        });
+
+        // Display the total (you can update this selector to your actual element)
+        jQuery('#total-display').text("$" + total.toFixed(2));
+    }
+
+    // Handle checkbox toggle
+    jQuery(document).on('change', '.rbfw-resource-price', function () {
+        const row = jQuery(this).closest('tr');
+        const inputBox = row.find('.rbfw_bikecarmd_es_input_box');
+
+        if (jQuery(this).is(':checked')) {
+            inputBox.show();
+            row.find('.rbfw_bikecarmd_es_qty').val(1); // default qty
+        } else {
+            inputBox.hide();
+            row.find('.rbfw_bikecarmd_es_qty').val(0); // reset qty
+        }
+
+        calculateTotal();
+    });
+
+    // Handle quantity change (manual input)
+    jQuery(document).on('input', '.rbfw_bikecarmd_es_qty', function () {
+        calculateTotal();
+    });
+
+    // Handle plus button
+    jQuery(document).on('click', '.rbfw_qty_plus', function () {
+        const row = jQuery(this).closest('tr');
+        const input = row.find('.rbfw_bikecarmd_es_qty');
+        const max = parseInt(input.attr('max')) || 100;
+        let value = parseInt(input.val()) || 0;
+
+        if (value < max) {
+            input.val(value + 1).trigger('input');
+        }
+    });
+
+    // Handle minus button
+    jQuery(document).on('click', '.rbfw_qty_minus', function () {
+        const row = jQuery(this).closest('tr');
+        const input = row.find('.rbfw_bikecarmd_es_qty');
+        let value = parseInt(input.val()) || 0;
+
+        if (value > 1) {
+            input.val(value - 1).trigger('input');
+        }
+    });
+
+    // Initial calculation on page load
+    calculateTotal();
+
+
+    /*function calculateTotal() {
+        let total = 0;
+
+        // Loop through each checked checkbox
+        jQuery('.rbfw-resource-price:checked').each(function () {
+
+            var durationType = jQuery('#durationType').val();
+
+            const price = parseFloat(jQuery(this).data('price-'+durationType)) || 0;
+
+
+            const qtyInput = jQuery(this).closest('tr').find('.rbfw_bikecarmd_es_qty');
+            const quantity = parseInt(qtyInput.val()) || 1;
+            total += price * quantity;
+        });
+
+        // Output total to console or DOM
+        console.log("Total: $" + total.toFixed(2));
+        jQuery('#total-display').text("$" + total.toFixed(2)); // Optional: Show in your UI
+    }
+
+    // Trigger calculation when checkbox or quantity changes
+    jQuery(document).on('change', '.rbfw-resource-price, .rbfw_muiti_items_qty', function () {
+        // Show or hide quantity input row
+        const tr = jQuery(this).closest('tr');
+        const inputBox = tr.find('.rbfw_bikecarmd_es_input_box');
+
+        if (jQuery(this).is(':checked')) {
+            inputBox.show();
+        } else {
+            inputBox.hide();
+        }
+
+        calculateTotal();
+    });
+
+    // Initial calculation on page load
+    calculateTotal();*/
+
+
+
+/*
     e.preventDefault();
     e.stopImmediatePropagation();
 
@@ -844,7 +951,7 @@ jQuery('body').on('change','.rbfw-multiple_items-price-multiple-qty',function(e)
     if(status != '1'){
         delete service_price_arr_md[data_name];
     }
-    rbfw_multi_items_price_calculation();
+    rbfw_multi_items_price_calculation();*/
 });
 
 function rbfw_multi_items_price_calculation(total_days){
