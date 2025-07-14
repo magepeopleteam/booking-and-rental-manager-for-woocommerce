@@ -798,17 +798,34 @@
                         </div>
                     </div>
                 `;
+                            }else{
+                                priceFields += `
+                    <div class="form-group weekly-field disabled-field">
+                        <label>Weekly Price</label>
+                        <div class="price-input">
+                            <input type="number" name="multiple_items_info[${itemRowsCount}][weekly_price]" class="weekly-price-input" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+                `;
                             }
 
                             if (enabledPriceTypes.monthly) {
                                 priceFields += `
-                    <div class="form-group monthly-field">
-                        <label>Monthly Price</label>
-                        <div class="price-input">
-                            <input type="number" name="multiple_items_info[${itemRowsCount}][monthly_price]" class="monthly-price-input" step="0.01" min="0" placeholder="0.00">
-                        </div>
-                    </div>
-                `;
+        <div class="form-group monthly-field">
+            <label>Monthly Price</label>
+            <div class="price-input">
+                <input type="number" name="multiple_items_info[${itemRowsCount}][monthly_price]" class="monthly-price-input" step="0.01" min="0" placeholder="0.00">
+            </div>
+        </div>`;
+
+                            } else {
+                                priceFields += `
+        <div class="form-group monthly-field disabled-field">
+            <label>Monthly Price</label>
+            <div class="price-input">
+                <input type="number" name="multiple_items_info[${itemRowsCount}][monthly_price]" class="monthly-price-input" step="0.01" min="0" placeholder="0.00">
+            </div>
+        </div>`;
                             }
 
                             return `

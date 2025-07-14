@@ -370,7 +370,6 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
     display: flex;
 }
 
-.rbfw-datetime input,
 .rbfw-datetime select,
 .rbfw-datetime select.rbfw-select,
 .rbfw-datetime input[type=text].rbfw-input {
