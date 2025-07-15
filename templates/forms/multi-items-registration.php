@@ -396,7 +396,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                     Duration Type
                                 </div>
                                 <div class="rbfw-p-relative">
-                                    <select class="rbfw-select" id="durationType" required>
+                                    <select class="rbfw-select" name="durationType" id="durationType" required>
                                         <option value="">Select duration type</option>
                                         <option value="hourly">Hourly</option>
                                         <option value="daily">Daily</option>
@@ -413,7 +413,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                 <div class="rbfw-p-relative">
                                     <div class="qty-input rbfw_qty_input">
                                         <a type="button" class="qty-btn rbfw_qty_minus" onclick="changeQty('durationQty', -1)">−</a>
-                                        <input type="number" id="durationQty" class="qty-value" min="1" value="1" readonly>
+                                        <input type="number" id="durationQty" name="durationQty" class="qty-value" min="1" value="1" readonly>
                                         <a type="button" class="qty-btn rbfw_qty_plus" onclick="changeQty('durationQty', 1)">+</a>
                                     </div>
                                 </div>
@@ -451,9 +451,8 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                                         Sold Out
                                                     </div>
                                                     <div class="label rbfw-checkbox">
-                                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_name]" value="<?php echo esc_attr($item['item_name']); ?>">
-                                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_qty]" class="rbfw-resource-qty key_value_cart_<?php echo esc_attr($key+1); ?>" value="">
-                                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_price]"  value="<?php echo esc_attr($item['item_name']); ?>">
+                                                        <input type="hidden" name="multiple_items_info[<?php echo esc_attr($c); ?>][item_name]" value="<?php echo esc_attr($item['item_name']); ?>">
+                                                        <input type="hidden" name="multiple_items_info[<?php echo esc_attr($c); ?>][item_qty]" class="rbfw-resource-qty key_value_cart_<?php echo esc_attr($key+1); ?>" value="">
 
                                                         <label class="switch">
                                                             <input type="checkbox" max="4"  class="rbfw-resource-price rbfw-multiple_items-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>" data-status="0" value="1" data-cat="service"  data-quantity="1"  data-price-hourly="<?php echo esc_attr($item['hourly_price']); ?>" data-price-daily="<?php echo esc_attr($item['daily_price']); ?>" data-price-weekly="<?php echo esc_attr($item['weekly_price']); ?>" data-price-monthly="<?php echo esc_attr($item['monthly_price']); ?>" data-name="<?php echo esc_attr($item['item_name']); ?>">

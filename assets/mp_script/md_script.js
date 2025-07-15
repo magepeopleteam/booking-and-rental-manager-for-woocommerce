@@ -856,9 +856,12 @@ jQuery('body').on('change','.rbfw-multiple_items-price-multiple-qty',function(e)
         const max = parseInt(input.attr('max')) || 100;
         let value = parseInt(input.val()) || 0;
 
+
         if (value < max) {
             input.val(value + 1).trigger('input');
         }
+
+        row.find('.rbfw-resource-qty').val(value);
     });
 
     // Handle minus button

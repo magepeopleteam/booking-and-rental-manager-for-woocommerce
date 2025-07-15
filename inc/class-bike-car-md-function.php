@@ -269,27 +269,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 }
 
 
-                /*$discount_amount = 0;
-                if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
-                    if(function_exists('rbfw_get_discount_array')){
-                        $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price,$item_quantity);
-                        $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
-                    }
-                }*/
-
-                $duration = '';
-
-                if ( $actual_days > 0 ) {
-                    $duration .= $actual_days > 1 ? $actual_days.' '.esc_html__($rbfw->get_option_trans('rbfw_text_days','rbfw_basic_translation_settings',__('Days','booking-and-rental-manager-for-woocommerce'))).' ' : $actual_days.' '.esc_html__($rbfw->get_option_trans('rbfw_text_day','rbfw_basic_translation_settings',__('Day','booking-and-rental-manager-for-woocommerce'))).' ';
-                }
-                if ( $hours > 0 ) {
-                    $duration .= $hours > 1 ? $hours.' '.rbfw_string_return('rbfw_text_hours',esc_html__('Hours','booking-and-rental-manager-for-woocommerce')) : $hours.' '.rbfw_string_return('rbfw_text_hour',esc_html__('Hour','booking-and-rental-manager-for-woocommerce'));
-                }
-
-                if($actual_days == 0 && $hours == 0){
-                    $actual_days = 1;
-                    $duration .= $actual_days > 1 ? $actual_days.' '.rbfw_string_return('rbfw_text_days',esc_html__('Days','booking-and-rental-manager-for-woocommerce')).' ' : $actual_days.' '.rbfw_string_return('rbfw_text_day',esc_html__('Day','booking-and-rental-manager-for-woocommerce')).' ';
-                }
 
             }
 
@@ -313,7 +292,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'total_price_html' => wc_price((float)$rbfw_multi_item_price + (float)$security_deposit['security_deposit_amount']),
                 'max_available_qty' => $max_available_qty,
                 'total_days' => $total_days,
-                'total_duration' => $duration,
+                'total_duration' => $durationQty.' '.$durationType,
                 'ticket_item_quantity' => '',
                 'pricing_applied' => $pricing_applied,
             ));
