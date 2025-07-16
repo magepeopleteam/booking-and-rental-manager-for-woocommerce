@@ -70,7 +70,7 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 					<div class="rbfw-related-products-wrapper"><?php do_action( 'rbfw_related_products', $post_id ); ?></div>
 				</div>
                 <?php } ?>
-				<div class="mp_right_section">
+				<div class="mp_right_section rbfw_multi_items_right">
                     <?php include( RBFW_Function::get_template_path( 'forms/multi-items-registration.php' ) ); ?>
 				</div>
 			</div>
