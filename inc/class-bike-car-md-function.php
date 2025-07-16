@@ -259,17 +259,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $actual_days = $duration_price_info['actual_days'];
                 $hours = $duration_price_info['hours'];
                 $pricing_applied = $duration_price_info['pricing_applied'];
-
-                if($rbfw_enable_time_slot=='off'){
-                    $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
-                    if($rbfw_count_extra_day_enable=='on'){
-                        $actual_days = $actual_days + 1;
-                    }
-                    $hours = 0;
-                }
-
-
-
             }
 
 

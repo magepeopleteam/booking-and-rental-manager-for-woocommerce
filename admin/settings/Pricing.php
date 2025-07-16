@@ -356,7 +356,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group monthly-field">
+                                            <div class="form-group monthly-field <?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?'':'disabled-field' ?>">
                                                 <label>Monthly Price</label>
                                                 <div class="price-input">
                                                     <input type="number" name="multiple_items_info[<?php echo $i ?>][monthly_price]" class="monthly-price-input" step="0.01" min="0" value="<?php echo $item_price['monthly_price'] ?>" placeholder="0.00">

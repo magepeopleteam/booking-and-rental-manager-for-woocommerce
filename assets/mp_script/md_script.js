@@ -185,6 +185,13 @@ jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType', 
     let durationType = jQuery('#durationType').val();
     let durationQty = jQuery('#durationQty').val();
 
+    const changedElement = e.target.id || e.target.className;
+
+    if(changedElement == 'durationType'){
+        jQuery('.item-price').children('span').hide();
+        jQuery('.item-price .rbfw_'+durationType+'_price').show();
+    }
+
     if (!pickup_date) {
         jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
     }
@@ -835,9 +842,11 @@ jQuery('body').on('change','.rbfw-multiple_items-price-multiple-qty',function(e)
         if (jQuery(this).is(':checked')) {
             inputBox.show();
             row.find('.rbfw_muiti_items_qty').val(1); // default qty
+            row.find('.rbfw-resource-qty').val(1);
         } else {
             inputBox.hide();
             row.find('.rbfw_muiti_items_qty').val(0); // reset qty
+            row.find('.rbfw-resource-qty').val(0);
         }
 
         calculateTotal();
@@ -849,7 +858,7 @@ jQuery('body').on('change','.rbfw-multiple_items-price-multiple-qty',function(e)
     });
 
     // Handle plus button
-    jQuery(document).on('click', '.rbfw_qty_plus', function () {
+    jQuery(document).off('click', '.rbfw_qty_plus').on('click', '.rbfw_qty_plus', function () {
         const row = jQuery(this).closest('tr');
         const input = row.find('.rbfw_muiti_items_qty');
 
@@ -865,7 +874,7 @@ jQuery('body').on('change','.rbfw-multiple_items-price-multiple-qty',function(e)
     });
 
     // Handle minus button
-    jQuery(document).on('click', '.rbfw_qty_minus', function () {
+    jQuery(document).off('click', '.rbfw_qty_minus').on('click', '.rbfw_qty_minus', function () {
         const row = jQuery(this).closest('tr');
         const input = row.find('.rbfw_muiti_items_qty');
         let value = parseInt(input.val()) || 0;

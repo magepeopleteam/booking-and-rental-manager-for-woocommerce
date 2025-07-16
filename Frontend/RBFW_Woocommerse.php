@@ -659,6 +659,109 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 }
                 $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
 
+            } elseif ( $rbfw_rent_type == 'multiple_items'  ) {
+
+                $pickup_location     = $values['rbfw_pickup_point'] ? $values['rbfw_pickup_point'] : '';
+                $dropoff_location    = $values['rbfw_dropoff_point'] ? $values['rbfw_dropoff_point'] : '';
+                $rbfw_start_datetime = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
+                $rbfw_start_time     = $values['rbfw_start_time'] ? $values['rbfw_start_time'] : '';
+                $rbfw_ticket_info    = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
+                $rbfw_type_info      = $values['rbfw_type_info'] ? $values['rbfw_type_info'] : [];
+                $rbfw_bikecarsd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : array();
+                if ( ! empty( $rbfw_bikecarsd_data ) ):
+                    $rent_types = array_column( $rbfw_bikecarsd_data, 'price', 'rent_type' );
+                else:
+                    $rent_types = array();
+                endif;
+                $rbfw_service_info       = $values['rbfw_service_info'] ? $values['rbfw_service_info'] : [];
+                $rbfw_extra_service_data = get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
+                if ( ! empty( $rbfw_extra_service_data ) ):
+                    $extra_services = array_column( $rbfw_extra_service_data, 'service_price', 'service_name' );
+                else:
+                    $extra_services = array();
+                endif;
+                $rbfw_bikecarsd_duration_price = $values['rbfw_bikecarsd_duration_price'] ? $values['rbfw_bikecarsd_duration_price'] : '';
+                $rbfw_bikecarsd_service_price  = $values['rbfw_bikecarsd_service_price'] ? $values['rbfw_bikecarsd_service_price'] : '';
+                if ( $rbfw_start_time != '00:00' ) {
+                    $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings', esc_html__( 'Start Date and Time', 'booking-and-rental-manager-for-woocommerce' ) ), rbfw_date_format( $rbfw_start_datetime ) . ' ' . gmdate( get_option( 'time_format' ), strtotime( $rbfw_start_time ) ) );
+                } else {
+                    $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_start_date', 'rbfw_basic_translation_settings', esc_html__( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ) ), rbfw_date_format( $rbfw_start_datetime ) );
+                }
+                if ( ! empty( $pickup_location ) ) {
+                    $item->add_meta_data( rbfw_string_return( 'rbfw_text_pickup_location', esc_html__( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' ) ), $pickup_location );
+                }
+                if ( ! empty( $dropoff_location ) ) {
+                    $item->add_meta_data( rbfw_string_return( 'rbfw_text_dropoff_location', esc_html__( 'Drop-off Location', 'booking-and-rental-manager-for-woocommerce' ) ), $dropoff_location );
+                }
+
+
+                foreach ( $rbfw_bikecarsd_data as $key => $value ){
+                    $rent_type = $value['rent_type'];
+                    if ( array_key_exists( $rent_type, $rbfw_type_info ) ) {
+
+                        if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
+                            $rbfw_sp_prices = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data_sp', true );
+                            if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices  ) {
+                                $sp_price = check_seasonal_price_sd( $values['rbfw_start_date'], $rbfw_sp_prices, $rent_type );
+                            }
+                        }
+                        $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
+
+                        $rent_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
+                        $rent_content .= '<tr>';
+                        $rent_content .= '<td style="border:1px solid #f5f5f5;">';
+                        $rent_content .= '<strong>' . $rent_type . '</strong>';
+                        $rent_content .= '<br>';
+                        $rent_content .= '<span>' . $value['short_desc'] . '</span>';
+                        $rent_content .= '</td>';
+                        $rent_content .= '<td style="border:1px solid #f5f5f5;">';
+                        $rent_content .= '(' . wc_price( $type_price ) . ' x ' . $rbfw_type_info[ $rent_type ] . ') = ' . wc_price( $rbfw_type_info[ $rent_type ] * $type_price );
+                        $rent_content .= '</td>';
+                        $rent_content .= '</tr>';
+                        $rent_content .= '</table>';
+                        if ( $rbfw_type_info[ $rent_type ] > 0 ):
+                            $item->add_meta_data( rbfw_string_return( 'rbfw_text_rent_information', esc_html__( 'Rent Information', 'booking-and-rental-manager-for-woocommerce' ) ), $rent_content );
+                        endif;
+                    }
+                }
+
+                $bikecarsd_service_arr = [];
+                if ( ! empty( $rbfw_service_info ) ):
+                    foreach ( $rbfw_service_info as $key => $value ):
+                        $service_name = $key; //service name
+                        if ( array_key_exists( $service_name, $extra_services ) ) { // if service name exist in array
+                            $service_price           = $extra_services[ $service_name ]; // get type price from array
+                            $service_qty             = $value;
+                            $total_service_price     = (float) $service_price * (float) $service_qty;
+                            $bikecarsd_service_arr[] = array(
+                                $service_name => $service_qty
+                            );
+                            $rent_service_content    = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
+                            $rent_service_content    .= '<tr>';
+                            $rent_service_content    .= '<td style="border:1px solid #f5f5f5;">';
+                            $rent_service_content    .= '<strong>' . $service_name . '</strong>';
+                            $rent_service_content    .= '</td>';
+                            $rent_service_content    .= '<td style="border:1px solid #f5f5f5;">';
+                            $rent_service_content    .= '(' . wc_price( $service_price ) . ' x ' . $service_qty . ') = ' . wc_price( $total_service_price );
+                            $rent_service_content    .= '</td>';
+                            $rent_service_content    .= '</tr>';
+                            $rent_service_content    .= '</table>';
+                            if ( $service_qty > 0 ):
+                                $item->add_meta_data( rbfw_string_return( 'rbfw_text_extra_service_information', esc_html__( 'Extra Service Information', 'booking-and-rental-manager-for-woocommerce' ) ), $rent_service_content );
+                            endif;
+                        }
+                    endforeach;
+                endif;
+                $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings', esc_html__( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' ) ), wc_price( $rbfw_bikecarsd_duration_price ) );
+                if ( $rbfw_bikecarsd_service_price ) {
+                    $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings', esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) ), wc_price( $rbfw_bikecarsd_service_price ) );
+                }
+                $security_deposit = rbfw_security_deposit( $rbfw_id, ( (int) $rbfw_bikecarsd_duration_price + (int) $rbfw_bikecarsd_service_price ) );
+                if ( $security_deposit['security_deposit_amount'] ) {
+                    $item->add_meta_data( $rbfw_security_deposit_label, wc_price( $security_deposit['security_deposit_amount'] ) );
+                }
+                $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
+
             } else {
                 $rbfw_extra_service_data = get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
                 if ( ! empty( $rbfw_extra_service_data ) ) {
@@ -756,6 +859,8 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 }
                 $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
             }
+
+
             $item->add_meta_data( '_rbfw_id', $rbfw_id );
             $rbfw_regf_info = isset( $values['rbfw_regf_info'] ) ? $values['rbfw_regf_info'] : [];
             if ( ! empty( $rbfw_regf_info ) ) {
