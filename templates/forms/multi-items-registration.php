@@ -105,7 +105,7 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
     <div class="rbfw-single-right-container">
         <form action="" method='post' class="mp_rbfw_ticket_form">
             <div class="rbfw_bike_car_md_item_wrapper">
-                <div class="rbfw_bike_car_md_item_wrapper_inner">
+                <div class="rbfw_multi_items_wrapper_inner">
                     <?php do_action('rbfw_discount_ad', $rbfw_id); ?>
                     <div class="item pricing-content-collapse">
                         <div class="item-content pricing-content">
@@ -386,24 +386,10 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                         <div class="item-content rbfw-costing">
                             <ul class="rbfw-ul">
 
-                                <li class="duration-costing rbfw-cond">
-                                <span>
-                                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce'))); ?>
-                                    <span class="rbfw_pricing_applied sessional">
-                                        (<?php esc_html_e( 'Sessional pricing applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
-                                    </span>
-                                    <span class="rbfw_pricing_applied mds">
-                                        (<?php esc_html_e( 'Multi day pricing saver applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
-                                    </span>
-                                </span>
-                                    <span class="price-figure" data-price="">
-                                </span>
-                                </li>
-
                                 <li class="subtotal">
                                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce'))); ?>
                                     <span class="price-figure" data-price="">
-                                </span>
+                                    </span>
                                 </li>
 
                                 <li class="discount" style="display:none;">
