@@ -100,7 +100,7 @@
 
 			public function quantity_display( $post_id ) {
 				$rbfw_available_qty_info_switch = get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) ? get_post_meta( $post_id, 'rbfw_available_qty_info_switch', true ) : 'no';
-				?>
+                ?>
                 <section>
                     <div>
                         <label><?php esc_html_e( 'Display item available quantity', 'booking-and-rental-manager-for-woocommerce' ); ?></label>

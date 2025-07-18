@@ -10,16 +10,33 @@
 			public function __construct() {
 				add_action( 'rbfw_meta_box_tab_name', [ $this, 'add_tab_menu' ] );
 				add_action( 'rbfw_meta_box_tab_content', [ $this, 'add_tabs_content' ] );
-				add_action( 'save_post', array( $this, 'settings_save' ), 99, 1 );
 				add_action( 'wp_ajax_rbfw_load_duration_form', [ $this, 'rbfw_load_duration_form' ] );
 				add_action( 'wp_ajax_nopriv_rbfw_load_duration_form', [ $this, 'rbfw_load_duration_form' ] );
+                add_action( 'save_post', array( $this, 'settings_save' ), 99, 1 );
 			}
 
 			public function add_tab_menu() {
-				?>
-                <li data-target-tabs="#travel_pricing"><i class="fas fa-pager"></i><?php esc_html_e( 'Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?></li>
+                ?>
+                <li data-target-tabs="#travel_pricing">
+                    <i class="fas fa-pager"></i><?php esc_html_e( 'Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                </li>
 				<?php
 			}
+
+            public function add_tabs_content( $post_id ) {
+                ?>
+                <div class="mpStyle mp_tab_item" data-tab-item="#travel_pricing">
+                    <?php $this->section_header(); ?>
+                    <?php $this->rent_type( $post_id ); ?>
+                    <?php $this->appointment( $post_id ); ?>
+                    <?php $this->bike_car_single_day( $post_id ); ?>
+                    <?php $this->resort_price_config( $post_id ); ?>
+                    <?php $this->multiple_items( $post_id ); ?>
+                    <?php $this->md_price_config( $post_id ); ?>
+                </div>
+
+                <?php
+            }
 
 			public function rbfw_load_duration_form() {
 				if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
@@ -44,8 +61,12 @@
 				?>
                 <section class="bg-light mt-5">
                     <div>
-                        <label><?php echo esc_html( $title ); ?></label>
-                        <p><?php echo esc_html( $description ); ?></p>
+                        <label>
+                            <?php echo esc_html( $title ); ?>
+                        </label>
+                        <p>
+                            <?php echo esc_html( $description ); ?>
+                        </p>
                     </div>
                 </section>
 				<?php
@@ -70,6 +91,7 @@
 						'dress'       => 'Dress',
 						'appointment' => 'Appointment',
 						'others'      => 'Others',
+                        'multiple_items' => 'Multiple day for multiple items',
 					]; ?>
                     <select name="rbfw_item_type" id="rbfw_item_type">
 						<?php foreach ( $item_type as $kay => $value ): ?>
@@ -261,6 +283,700 @@
                 </div>
 				<?php
 			}
+
+
+
+            public function multiple_items( $post_id ) {
+                $rbfw_item_type                  = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+
+                $pricing_types           = get_post_meta( $post_id, 'pricing_types', true ) ? get_post_meta( $post_id, 'pricing_types', true ) : [];
+                $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info', true ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
+
+                ?>
+                <div class="rbfw_multiple_items <?php echo esc_attr( $rbfw_item_type == 'multiple_items') ? 'show' : 'hide'; ?>">
+                    <div class="container">
+                        <div class="content">
+                            <div class="form-container">
+                                <!-- Global Pricing Options -->
+                                <div class="pricing-options">
+                                    <h3>🔧 Enable Price Types (applies to all items)</h3>
+                                    <div class="pricing-toggles">
+
+                                        <div class="price-toggle">
+                                            <input type="checkbox" name="pricing_types[hourly]" id="enableHourly" <?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?'checked':'' ?>  onchange="toggleGlobalPricing('hourly')">
+                                            <label for="enableHourly">Enable Hourly</label>
+                                        </div>
+                                        <div class="price-toggle">
+                                            <input type="checkbox" name="pricing_types[daily]" <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'checked':'' ?> id="enableDaily" checked onchange="toggleGlobalPricing('daily')">
+                                            <label for="enableDaily">Enable Daily</label>
+                                        </div>
+                                        <div class="price-toggle">
+                                            <input type="checkbox" name="pricing_types[weekly]" id="enableWeekly" <?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?'checked':'' ?> onchange="toggleGlobalPricing('weekly')">
+                                            <label for="enableWeekly">Enable Weekly</label>
+                                        </div>
+                                        <div class="price-toggle">
+                                            <input type="checkbox" name="pricing_types[monthly]" id="enableMonthly" <?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?'checked':'' ?> onchange="toggleGlobalPricing('monthly')">
+                                            <label for="enableMonthly">Enable Monthly</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="itemRows">
+                                    <!-- First item row -->
+                                    <?php $i=0; foreach ($multiple_items_info as $key=>$item_price){   ?>
+                                        <div class="item-row">
+                                            <div class="form-group">
+                                                <label>Item Name</label>
+                                                <input type="text" value="<?php echo $item_price['item_name'] ?>" name="multiple_items_info[<?php echo $i ?>][item_name]" class="item-name-input" placeholder="Enter item name">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>Available Qty</label>
+                                                <input type="number" name="multiple_items_info[<?php echo $i ?>][available_qty]" class="qty-input" min="0" value="<?php echo $item_price['available_qty'] ?>" placeholder="1">
+                                            </div>
+
+                                            <div class="form-group hourly-field <?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?'':'disabled-field' ?>">
+                                                <label>Hourly Price</label>
+                                                <div class="price-input">
+                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][hourly_price]" class="hourly-price-input" step="0.01" min="0" value="<?php echo $item_price['hourly_price'] ?>" placeholder="0.00">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group daily-field <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'':'disabled-field' ?>">
+                                                <label>Daily Price</label>
+                                                <div class="price-input">
+                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][daily_price]" class="daily-price-input" step="0.01" min="0" value="<?php echo $item_price['daily_price'] ?>" placeholder="0.00">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group weekly-field <?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?'':'disabled-field' ?>">
+                                                <label>Weekly Price</label>
+                                                <div class="price-input">
+                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][weekly_price]" class="weekly-price-input" step="0.01" min="0" value="<?php echo $item_price['weekly_price'] ?>"  placeholder="0.00">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group monthly-field <?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?'':'disabled-field' ?>">
+                                                <label>Monthly Price</label>
+                                                <div class="price-input">
+                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][monthly_price]" class="monthly-price-input" step="0.01" min="0" value="<?php echo $item_price['monthly_price'] ?>" placeholder="0.00">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>&nbsp;</label>
+                                                <button type="button" class="btn btn-danger" onclick="removeItemRow(this)" style="visibility: hidden;">
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    <?php $i++; } ?>
+
+
+                                </div>
+
+                                <button type="button" class="add-more-btn" onclick="addItemRow()">
+                                    ➕ Add More Item
+                                </button>
+                            </div>
+
+                            <input type="hidden" name="rbfw_enable_time_picker" value="yes">
+
+                            <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','md' ); ?>
+
+                        </div>
+                    </div>
+
+                    <style>
+                        * {
+                            margin: 0;
+                            padding: 0;
+                            box-sizing: border-box;
+                        }
+
+                        body {
+                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                            background: #f8fafc;
+                            color: #334155;
+                            padding: 20px;
+                        }
+
+                        .container {
+                            margin: 0 auto;
+                            background: white;
+                            border-radius: 8px;
+                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                            overflow: hidden;
+                        }
+
+                        .header {
+                            background: #3b82f6;
+                            color: white;
+                            padding: 20px;
+                            text-align: center;
+                        }
+
+                        .header h1 {
+                            font-size: 20px;
+                            font-weight: 600;
+                        }
+
+                        .content {
+                            padding: 24px;
+                        }
+
+                        .form-container {
+                            background: #f8fafc;
+                            border-radius: 8px;
+                            padding: 20px;
+                            margin-bottom: 24px;
+                            border: 1px solid #e2e8f0;
+                        }
+
+                        .pricing-options {
+                            background: #f1f5f9;
+                            color: #334155;
+                            padding: 16px;
+                            border-radius: 6px;
+                            margin-bottom: 20px;
+                            border: 1px solid #e2e8f0;
+                        }
+
+                        #rbfw_add_meta_box .mp_tab_item .pricing-options h3 {
+                            font-size: 14px;
+                            margin-bottom: 12px;
+                            text-align: center;
+                            color: #1e293b;
+                            background: inherit;
+                        }
+
+                        .pricing-toggles {
+                            display: grid;
+                            grid-template-columns: repeat(4, 1fr);
+                            gap: 16px;
+                        }
+
+                        .price-toggle {
+                            display: flex;
+                            align-items: center;
+                            gap: 6px;
+                            justify-content: center;
+                        }
+
+                        .price-toggle input[type="checkbox"] {
+                            width: 16px;
+                            height: 16px;
+                            accent-color: #3b82f6;
+                        }
+
+                        .price-toggle label {
+                            font-size: 13px;
+                            cursor: pointer;
+                            font-weight: 500;
+                            color: #475569;
+                        }
+
+                        .item-row {
+                            display: grid;
+                            gap: 12px;
+                            align-items: end;
+                            margin-bottom: 16px;
+                            padding: 12px;
+                            background: white;
+                            border-radius: 6px;
+                            border: 1px solid #e5e7eb;
+                        }
+
+                        .form-group {
+                            display: flex;
+                            flex-direction: column;
+                        }
+
+                        label {
+                            font-weight: 500;
+                            color: #374151;
+                            margin-bottom: 4px;
+                            font-size: 12px;
+                        }
+
+                        input[type="text"], input[type="number"] {
+                            padding: 8px 10px;
+                            border: 1px solid #d1d5db;
+                            border-radius: 4px;
+                            font-size: 13px;
+                            transition: border-color 0.2s;
+                        }
+
+                        input[type="text"]:focus, input[type="number"]:focus {
+                            outline: none;
+                            border-color: #3b82f6;
+                            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+                        }
+
+                        .price-input {
+                            position: relative;
+                        }
+
+                        .price-input input {
+                            padding-left: 18px;
+                            width: 100%;
+                        }
+
+                        .price-input input:disabled {
+                            background: #f1f5f9;
+                            color: #94a3b8;
+                            cursor: not-allowed;
+                        }
+
+
+
+                        .disabled-field {
+                            display: none;
+                        }
+
+                        .btn {
+                            padding: 8px 12px;
+                            border: none;
+                            border-radius: 4px;
+                            font-size: 11px;
+                            font-weight: 500;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                        }
+
+                        .btn-primary {
+                            background: #3b82f6;
+                            color: white;
+                        }
+
+                        .btn-primary:hover {
+                            background: #2563eb;
+                        }
+
+                        .btn-secondary {
+                            background: #10b981;
+                            color: white;
+                        }
+
+                        .btn-secondary:hover {
+                            background: #059669;
+                        }
+
+                        .btn-danger {
+                            background: #ef4444;
+                            color: white;
+                        }
+
+                        .btn-danger:hover {
+                            background: #dc2626;
+                        }
+
+                        .add-more-btn {
+                            width: 100%;
+                            padding: 12px;
+                            background: #10b981;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            font-size: 14px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: background-color 0.2s;
+                            margin-top: 12px;
+                        }
+
+                        .add-more-btn:hover {
+                            background: #059669;
+                        }
+
+                        .items-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-top: 8px;
+                        }
+
+                        .items-table th {
+                            background: #f1f5f9;
+                            padding: 12px 8px;
+                            text-align: left;
+                            font-weight: 600;
+                            font-size: 11px;
+                            color: #475569;
+                            border-bottom: 1px solid #e2e8f0;
+                        }
+
+                        .items-table th.hidden-column {
+                            display: none;
+                        }
+
+                        .items-table td {
+                            padding: 12px 8px;
+                            border-bottom: 1px solid #e2e8f0;
+                            font-size: 12px;
+                        }
+
+                        .items-table td.hidden-column {
+                            display: none;
+                        }
+
+                        .items-table tr:hover {
+                            background: #f8fafc;
+                        }
+
+                        .item-name {
+                            font-weight: 500;
+                            color: #1e293b;
+                        }
+
+                        .price-cell {
+                            color: #059669;
+                            font-weight: 500;
+                        }
+
+                        .price-cell.empty {
+                            color: #94a3b8;
+                        }
+
+                        .qty-cell {
+                            color: #7c3aed;
+                            font-weight: 500;
+                        }
+
+                        .no-items {
+                            text-align: center;
+                            color: #64748b;
+                            padding: 40px;
+                            font-style: italic;
+                        }
+
+                        .success-message {
+                            background: #dcfce7;
+                            color: #166534;
+                            padding: 8px 12px;
+                            border-radius: 4px;
+                            font-size: 13px;
+                            margin-bottom: 16px;
+                            display: none;
+                        }
+
+                        .item-counter {
+                            background: #1e293b;
+                            color: white;
+                            padding: 6px 12px;
+                            border-radius: 4px;
+                            font-size: 12px;
+                            font-weight: 500;
+                            margin-bottom: 16px;
+                            text-align: center;
+                        }
+
+                        @media (max-width: 768px) {
+                            .pricing-toggles {
+                                grid-template-columns: repeat(2, 1fr);
+                                gap: 12px;
+                            }
+
+                            .item-row {
+                                grid-template-columns: 1fr;
+                                gap: 8px;
+                            }
+
+                            .items-table {
+                                font-size: 10px;
+                            }
+
+                            .items-table th,
+                            .items-table td {
+                                padding: 6px 4px;
+                            }
+                        }
+                        #rbfw_add_meta_box .rbfw_multiple_items input[type=text], #rbfw_add_meta_box .rbfw_multiple_items input[type=number]{
+                            width: 100%;
+                            padding: 8px 10px;
+                        }
+                    </style>
+
+
+                    <script>
+                        let items = [];
+                        let rowCounter = 1;
+                        let enabledPriceTypes = {
+                            hourly: true,
+                            daily: true,
+                            weekly: false,
+                            monthly: false
+                        };
+
+                        // Toggle global pricing options
+                        function toggleGlobalPricing(priceType) {
+                            const checkbox = document.getElementById(`enable${priceType.charAt(0).toUpperCase() + priceType.slice(1)}`);
+                            enabledPriceTypes[priceType] = checkbox.checked;
+
+                            // Update all existing rows
+                            const fields = document.querySelectorAll(`.${priceType}-field`);
+                            const tableColumns = document.querySelectorAll(`.${priceType}-column`);
+
+                            if (checkbox.checked) {
+                                fields.forEach(field => {
+                                    field.classList.remove('disabled-field');
+                                    field.style.display = 'flex';
+                                });
+                                tableColumns.forEach(col => {
+                                    col.classList.remove('hidden-column');
+                                    col.style.display = '';
+                                });
+                            } else {
+                                fields.forEach(field => {
+                                    field.classList.add('disabled-field');
+                                    field.style.display = 'none';
+                                    // Clear values when disabling
+                                    const input = field.querySelector('input');
+                                    if (input) input.value = '';
+                                });
+                                tableColumns.forEach(col => {
+                                    col.classList.add('hidden-column');
+                                    col.style.display = 'none';
+                                });
+                            }
+
+                            // Update grid layout for item rows
+                            updateRowGridLayout();
+                            updateTableColspan();
+                        }
+
+                        // Update grid layout based on enabled price types
+                        function updateRowGridLayout() {
+                            const enabledCount = Object.values(enabledPriceTypes).filter(Boolean).length;
+                            const totalColumns = 3 + enabledCount; // item name + qty + enabled prices + delete button
+
+                            const rows = document.querySelectorAll('.item-row');
+                            rows.forEach(row => {
+                                row.style.gridTemplateColumns = `180px 80px ${'120px '.repeat(enabledCount)}80px`;
+                            });
+                        }
+
+                        // Update table colspan for no-items message
+                        function updateTableColspan() {
+                            // No longer needed since we removed the no-items message
+                        }
+
+                        // Generate item row HTML based on enabled price types
+                        function generateItemRowHTML() {
+                            let priceFields = '';
+
+                            var itemRowsCount  = document.querySelectorAll('#itemRows .item-row').length;
+
+
+                            if (enabledPriceTypes.hourly) {
+                                priceFields += `
+                    <div class="form-group hourly-field">
+                        <label>Hourly Price</label>
+                        <div class="price-input">
+                            <input type="number" name="multiple_items_info[${itemRowsCount}][hourly_price]" class="hourly-price-input" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+                `;
+                            }
+
+                            if (enabledPriceTypes.daily) {
+                                priceFields += `
+                    <div class="form-group daily-field">
+                        <label>Daily Price</label>
+                        <div class="price-input">
+                            <input type="number" name="multiple_items_info[${itemRowsCount}][daily_price]" class="daily-price-input" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+                `;
+                            }
+
+                            if (enabledPriceTypes.weekly) {
+                                priceFields += `
+                    <div class="form-group weekly-field">
+                        <label>Weekly Price</label>
+                        <div class="price-input">
+                            <input type="number" name="multiple_items_info[${itemRowsCount}][weekly_price]" class="weekly-price-input" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+                `;
+                            }else{
+                                priceFields += `
+                    <div class="form-group weekly-field disabled-field">
+                        <label>Weekly Price</label>
+                        <div class="price-input">
+                            <input type="number" name="multiple_items_info[${itemRowsCount}][weekly_price]" class="weekly-price-input" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+                `;
+                            }
+
+                            if (enabledPriceTypes.monthly) {
+                                priceFields += `
+        <div class="form-group monthly-field">
+            <label>Monthly Price</label>
+            <div class="price-input">
+                <input type="number" name="multiple_items_info[${itemRowsCount}][monthly_price]" class="monthly-price-input" step="0.01" min="0" placeholder="0.00">
+            </div>
+        </div>`;
+
+                            } else {
+                                priceFields += `
+        <div class="form-group monthly-field disabled-field">
+            <label>Monthly Price</label>
+            <div class="price-input">
+                <input type="number" name="multiple_items_info[${itemRowsCount}][monthly_price]" class="monthly-price-input" step="0.01" min="0" placeholder="0.00">
+            </div>
+        </div>`;
+                            }
+
+                            return `
+                <div class="form-group">
+                    <label>Item Name</label>
+                    <input type="text" name="multiple_items_info[${itemRowsCount}][item_name]" class="item-name-input" placeholder="Enter item name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Available Qty</label>
+                    <input type="number" name="multiple_items_info[${itemRowsCount}][available_qty]" class="qty-input" min="0" value="1" placeholder="1">
+                </div>
+
+                ${priceFields}
+
+                <div class="form-group">
+                    <label>&nbsp;</label>
+                    <button type="button" class="btn btn-danger" onclick="removeItemRow(this)">
+                        Delete
+                    </button>
+                </div>
+            `;
+                        }
+
+                        // Add new item row
+                        function addItemRow() {
+                            rowCounter++;
+                            const itemRows = document.getElementById('itemRows');
+
+                            const newRow = document.createElement('div');
+                            newRow.className = 'item-row';
+                            newRow.innerHTML = generateItemRowHTML();
+
+                            itemRows.appendChild(newRow);
+
+                            // Update grid layout
+                            updateRowGridLayout();
+
+                            // Focus on the new item name input
+                            newRow.querySelector('.item-name-input').focus();
+
+                            // Show remove buttons for all rows if more than one
+                            updateRemoveButtons();
+                        }
+
+                        // Remove item row
+                        function removeItemRow(button) {
+                            const row = button.closest('.item-row');
+                            row.remove();
+                            updateRemoveButtons();
+                        }
+
+                        // Update remove button visibility
+                        function updateRemoveButtons() {
+                            const rows = document.querySelectorAll('.item-row');
+                            rows.forEach((row, index) => {
+                                const removeBtn = row.querySelector('.btn-danger');
+                                if (rows.length === 1) {
+                                    removeBtn.style.visibility = 'hidden';
+                                } else {
+                                    removeBtn.style.visibility = 'visible';
+                                }
+                            });
+                        }
+
+
+
+                        // Show success message
+                        function showSuccess(message) {
+                            const successMsg = document.getElementById('successMessage');
+                            successMsg.textContent = message;
+                            successMsg.style.display = 'block';
+                            setTimeout(() => {
+                                successMsg.style.display = 'none';
+                            }, 3000);
+                        }
+
+                        // Update item counter
+                        function updateItemCounter() {
+                            // Counter removed - no longer needed
+                        }
+
+                        // Render items table
+                        function renderItemsTable() {
+                            const tbody = document.getElementById('itemsTableBody');
+
+                            if (items.length === 0) {
+                                tbody.innerHTML = '';
+                                return;
+                            }
+
+                            tbody.innerHTML = items.map(item => {
+                                let cells = `
+                    <td class="item-name">${item.name}</td>
+                    <td class="qty-cell">${item.qty}</td>
+                `;
+
+                                // Add price cells only for enabled types
+                                if (enabledPriceTypes.hourly) {
+                                    const hourlyPrice = item.pricing.hourly ? `${item.pricing.hourly}` : '-';
+                                    cells += `<td class="price-cell ${item.pricing.hourly ? '' : 'empty'}">${hourlyPrice}</td>`;
+                                }
+
+                                if (enabledPriceTypes.daily) {
+                                    const dailyPrice = item.pricing.daily ? `${item.pricing.daily}` : '-';
+                                    cells += `<td class="price-cell ${item.pricing.daily ? '' : 'empty'}">${dailyPrice}</td>`;
+                                }
+
+                                if (enabledPriceTypes.weekly) {
+                                    const weeklyPrice = item.pricing.weekly ? `${item.pricing.weekly}` : '-';
+                                    cells += `<td class="price-cell ${item.pricing.weekly ? '' : 'empty'}">${weeklyPrice}</td>`;
+                                }
+
+                                if (enabledPriceTypes.monthly) {
+                                    const monthlyPrice = item.pricing.monthly ? `${item.pricing.monthly}` : '-';
+                                    cells += `<td class="price-cell ${item.pricing.monthly ? '' : 'empty'}">${monthlyPrice}</td>`;
+                                }
+
+                                cells += `
+                    <td>
+                        <button class="btn btn-danger" onclick="deleteItem(${item.id})" style="padding: 4px 8px; font-size: 11px;">
+                            Delete
+                        </button>
+                    </td>
+                `;
+
+                                return `<tr>${cells}</tr>`;
+                            }).join('');
+                        }
+
+                        // Delete item
+                        function deleteItem(id) {
+                            if (confirm('Are you sure you want to delete this item?')) {
+                                items = items.filter(i => i.id !== id);
+                                renderItemsTable();
+                                showSuccess('Item deleted successfully!');
+                            }
+                        }
+
+                        // Initialize
+                        updateRowGridLayout();
+                        updateRemoveButtons();
+                    </script>
+
+                </div>
+                <?php
+            }
+
+
+
+
 
 			public function rbfw_appointment( $post_id ) {
 				$rbfw_item_type        = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
@@ -594,7 +1310,7 @@
 				<?php
 			}
 
-			public function general_price_config( $post_id ) {
+			public function md_price_config( $post_id ) {
 
                 $rbfw_enable_monthly_rate           = get_post_meta( $post_id, 'rbfw_enable_monthly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_monthly_rate', true ) : 'no';
                 $rbfw_monthly_rate           = get_post_meta( $post_id, 'rbfw_monthly_rate', true ) ? get_post_meta( $post_id, 'rbfw_monthly_rate', true ) : 0;
@@ -622,7 +1338,7 @@
 
                 $rbfw_hourly_rate          = get_post_meta( $post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_hourly_rate', true ) : 0;
 				$rbfw_item_type            = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
-				$mdedo                     = ( $rbfw_item_type != 'resort' && $rbfw_item_type != 'bike_car_sd' && $rbfw_item_type != 'appointment' ) ? 'block' : 'none';
+				$mdedo                     = ( $rbfw_item_type == 'bike_car_md' || $rbfw_item_type == 'equipment' || $rbfw_item_type == 'dress' || $rbfw_item_type == 'others') ? 'block' : 'none';
 				$rbfw_enable_daywise_price = get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) : 'no';
 				?>
                 <div class="rbfw_general_price_config_wrapper " style="display: <?php echo esc_attr( $mdedo ) ?>;">
@@ -759,20 +1475,12 @@
                         <!-- Time Slots (conditional) -->
 
                         <?php $this->multiple_time_slot_with_particular( $post_id, $rbfw_enable_time_picker,'md' ); ?>
-
-
-
-
                     </div>
-
-
-
 
 
                     <?php do_action( 'rbfw_before_general_price_table' ); ?>
 
                     <?php do_action( 'rbfw_before_general_price_table_row' ); ?>
-
 
 					<?php $this->panel_header( 'Day-wise Price Configuration ', 'Day-wise Price Configuration lets you set different prices for each day of the week' ); ?>
                     <section>
@@ -845,10 +1553,6 @@
                         </div>
                     </div>
 
-
-
-
-
                     <!-- Time Slots (conditional) -->
 
                     <?php $this->multiple_time_slot_with_particular( $post_id, $rbfw_enable_time_picker,'sd' ); ?>
@@ -859,22 +1563,7 @@
 				<?php
 			}
 
-			public function add_tabs_content( $post_id ) {
-				?>
-                <div class="mpStyle mp_tab_item" data-tab-item="#travel_pricing">
-					<?php $this->section_header(); ?>
-					<?php $this->rent_type( $post_id ); ?>
-					<?php $this->appointment( $post_id ); ?>
-					<?php $this->bike_car_single_day( $post_id ); ?>
-					<?php //$this->rbfw_appointment($post_id); ?>
-                    <?php $this->resort_price_config( $post_id ); ?>
-					<?php $this->general_price_config( $post_id ); ?>
 
-
-                </div>
-
-				<?php
-			}
 
             public function multiple_time_slot_with_particular($post_id, $rbfw_enable_time_picker,$type='sd')
             {
@@ -1152,7 +1841,7 @@
 
                     $rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
 
-                    if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others'){
+                    if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others' || $rbfw_item_type=='multiple_items'){
                         $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time'] ) ? $input_data_sabitized['rdfw_available_time'] : [];
                         $particulars_data           = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars'] ) : [];
                     }else{
@@ -1161,7 +1850,12 @@
                     }
 
                     $rbfw_bike_car_sd_data              = isset( $input_data_sabitized['rbfw_bike_car_sd_data'] ) ? $input_data_sabitized['rbfw_bike_car_sd_data'] : [];
-					$rbfw_enable_resort_daylong_price = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_resort_daylong_price'] ) ) : 'no';
+
+                    $pricing_types                    = isset( $input_data_sabitized['pricing_types'] ) ? $input_data_sabitized['pricing_types'] : [];
+                    $multiple_items_info              = isset( $input_data_sabitized['multiple_items_info'] ) ? $input_data_sabitized['multiple_items_info'] : [];
+
+
+                    $rbfw_enable_resort_daylong_price = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_resort_daylong_price'] ) ) : 'no';
 					$rbfw_resort_room_data = isset( $input_data_sabitized['rbfw_resort_room_data'] ) ? $input_data_sabitized['rbfw_resort_room_data'] : [];
 					$rbfw_sd_appointment_max_qty_per_session = isset( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sd_appointment_max_qty_per_session'] ) ) : '';
 					$rbfw_sd_appointment_ondays              = isset( $input_data_sabitized['rbfw_sd_appointment_ondays'] ) ? $input_data_sabitized['rbfw_sd_appointment_ondays'] : [];
@@ -1237,6 +1931,11 @@
                     update_post_meta( $post_id, 'rbfw_particulars_data', $particulars_data );
 
                     update_post_meta( $post_id, 'rbfw_bike_car_sd_data', $rbfw_bike_car_sd_data );
+
+                    update_post_meta( $post_id, 'pricing_types', $pricing_types );
+                    update_post_meta( $post_id, 'multiple_items_info', $multiple_items_info );
+
+
 					update_post_meta( $post_id, 'rbfw_resort_room_data', $rbfw_resort_room_data );
 					update_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', $rbfw_enable_resort_daylong_price );
 					update_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', $rbfw_sd_appointment_max_qty_per_session );
