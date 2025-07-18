@@ -858,11 +858,9 @@ jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #
 
         const max = parseInt(input.attr('max')) || 100;
         let value = parseInt(input.val()) || 0;
-
         if (value < max) {
             input.val(value + 1).trigger('input');
         }
-
         row.find('.rbfw-resource-qty').val(value);
         calculateTotal(true);
     });
@@ -872,7 +870,6 @@ jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #
         const row = jQuery(this).closest('tr');
         const input = row.find('.rbfw_muiti_items_qty');
         let value = parseInt(input.val()) || 0;
-
         if (value > 1) {
             input.val(value - 1).trigger('input');
         }
@@ -880,10 +877,6 @@ jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #
     });
 
     // Initial calculation on page load
-
-
-
-
 
 
 function calculateTotal(only_calculation=false) {
@@ -896,6 +889,14 @@ function calculateTotal(only_calculation=false) {
         total += price * quantity * durationQty;
     });
     // Display the total (you can update this selector to your actual element)
+
+    if(total){
+        jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',false);
+    }else{
+        jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
+    }
+
+
     jQuery('#rbfw_multi_item_price').val(total.toFixed(2));
     if(only_calculation){
         jQuery('.price-figure').text(rbfw_translation.currency+total.toFixed(2))
@@ -906,28 +907,18 @@ function calculateTotal(only_calculation=false) {
 
 function rbfw_multi_items_ajax_price_calculation(){
 
-
-
     let post_id = jQuery('[data-service-id]').data('service-id');
-
     let date_format = jQuery('#wp_date_format').val();
     let rbfw_available_time = jQuery('#rbfw_available_time').val();
-
-
     let rbfw_multi_item_price = jQuery('#rbfw_multi_item_price').val();
-
-
     let pickup_date = jQuery('#pickup_date').val();
     let pickup_time = jQuery('#pickup_time').find(':selected').val();
     let durationType = jQuery('#durationType').val();
     let durationQty = jQuery('#durationQty').val();
 
-
     if(pickup_date == ''){
         return false;
     }
-
-
 
     jQuery.ajax({
         type: 'POST',

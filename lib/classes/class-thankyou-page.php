@@ -126,6 +126,8 @@
 							update_post_meta( $order_id, 'rbfw_payer_id', $payer_id );
 							update_post_meta( $order_id, 'rbfw_payment_status', $paymentStatus );
 							update_post_meta( $order_id, 'rbfw_order_status', 'processing' );
+
+
 							if ( $rent_type == 'bike_car_sd' || $rent_type == 'appointment' ) {
 								$BikeCarSdClass = new RBFW_BikeCarSd_Function();
 								$rent_info      = ! empty( $ticket_info['rbfw_type_info'] ) ? $ticket_info['rbfw_type_info'] : [];
@@ -137,7 +139,13 @@
 								$service_info   = ! empty( $ticket_info['rbfw_service_info'] ) ? $ticket_info['rbfw_service_info'] : [];
 								$service_info   = $BikeCarMdClass->rbfw_get_bikecarmd_service_info( $item_id, $service_info );
 								$item_quantity  = ! empty( $ticket_info['rbfw_item_quantity'] ) ? $ticket_info['rbfw_item_quantity'] : '';
-							} elseif ( $rent_type == 'resort' ) {
+							}elseif ( $rent_type == 'multiple_items' ) {
+                                $BikeCarMdClass = new RBFW_BikeCarMd_Function();
+                                $service_info   = ! empty( $ticket_info['rbfw_service_info'] ) ? $ticket_info['rbfw_service_info'] : [];
+                                $service_info   = $BikeCarMdClass->rbfw_get_bikecarmd_service_info( $item_id, $service_info );
+                                $item_quantity  = ! empty( $ticket_info['rbfw_item_quantity'] ) ? $ticket_info['rbfw_item_quantity'] : '';
+                            }
+                            elseif ( $rent_type == 'resort' ) {
 								$ResortClass  = new RBFW_Resort_Function();
 								$package      = ! empty( $ticket_info['rbfw_resort_package'] ) ? $ticket_info['rbfw_resort_package'] : '';
 								$rent_info    = ! empty( $ticket_info['rbfw_type_info'] ) ? $ticket_info['rbfw_type_info'] : [];
@@ -263,8 +271,11 @@
                                         </tr>
 									<?php } ?>
                                     <tr>
-                                        <td><strong><?php rbfw_string( 'rbfw_text_extra_service_information', __( 'Extra Service Information', 'booking-and-rental-manager-for-woocommerce' ) );
-													echo ':'; ?></strong></td>
+                                        <td>
+                                            <strong>
+                                                llll<?php rbfw_string( 'rbfw_text_extra_service_information', __( 'Extra Service Information', 'booking-and-rental-manager-for-woocommerce' ) );echo ':'; ?>
+                                            </strong>
+                                        </td>
                                         <td>
                                             <table>
 												<?php
@@ -290,7 +301,20 @@
 																<?php
 															}
 														}
-													} elseif ( $rent_type == 'resort' ) {
+													} elseif ( $rent_type == 'multiple_items'  ) { echo 'fff';
+                                                        if ( ! empty( $service_info ) ) {
+                                                            foreach ( $service_info as $key => $value ) {
+                                                                ?>
+                                                                <tr>
+                                                                    <td><strong><?php echo esc_html( $key ); ?></strong></td>
+                                                                    <td><?php echo esc_html( $value ); ?></td>
+                                                                </tr>
+                                                                <?php
+                                                            }
+                                                        }
+                                                    }
+
+                                                    elseif ( $rent_type == 'resort' ) {
 														if ( ! empty( $service_info ) ) {
 															foreach ( $service_info as $key => $value ) {
 																?>
@@ -306,6 +330,7 @@
                                             </table>
                                         </td>
                                     </tr>
+
 									<?php if ( ! empty( $rbfw_regf_info ) ) { ?>
                                         <tr>
                                             <td><strong><?php rbfw_string( 'rbfw_text_customer_information', __( 'Customer Information', 'booking-and-rental-manager-for-woocommerce' ) );

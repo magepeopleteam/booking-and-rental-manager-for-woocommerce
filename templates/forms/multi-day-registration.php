@@ -613,7 +613,6 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                 </table>
                             </div>
                         </div>
-
                     <?php } ?>
                 </div>
 
