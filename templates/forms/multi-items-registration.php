@@ -543,8 +543,7 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                 <input type="hidden" name="rbfw_multi_item_price" id="rbfw_multi_item_price" value="0">
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="multiple_items">
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
-                <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo esc_attr($rbfw_enable_variations); ?>">
-                <input type="hidden" name="rbfw_input_stock_quantity" id="rbfw_input_stock_quantity"  value="<?php echo esc_attr($input_stock_quantity); ?>">
+                <input type="hidden" name="rbfw_service_category_price" id="rbfw_service_category_price"  value="0">
                 <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_attr($rbfw_enable_time_picker); ?>">
                 <input type="hidden" name="total_days" value="0">
                 <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_attr($rbfw_minimum_booking_day); ?>">
