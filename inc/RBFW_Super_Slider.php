@@ -44,6 +44,7 @@
 					$slider_style      = RBFW_Function::get_settings( 'super_slider_style', 'super_slider_settings', 'style_1' );
 					?>
                     <div class="superSlider placeholder_area fdColumn">
+                        <input type="hidden" name="slider_height_type" value="<?php echo esc_attr(RBFW_Function::get_settings( 'slider_height', 'super_slider_settings','avg' )); ?>" />
                         <div class="dFlex  <?php echo esc_attr( $column_class ); ?>">
 							<?php
 								if ( $showcase_position == 'top' || $showcase_position == 'left' ) {
@@ -351,6 +352,18 @@
 							'options' => array(
 								'on'  => esc_html__( 'ON', 'booking-and-rental-manager-for-woocommerce' ),
 								'off' => esc_html__( 'Off', 'booking-and-rental-manager-for-woocommerce' )
+							)
+						),
+						array(
+							'name' => 'slider_height',
+							'label' => esc_html__('Slider height', 'booking-and-rental-manager-for-woocommerce'),
+							'desc' => esc_html__('Please Select Slider Height', 'booking-and-rental-manager-for-woocommerce'),
+							'type' => 'select',
+							'default' => 'avg',
+							'options' => array(
+								'min' => esc_html__('Minimum', 'booking-and-rental-manager-for-woocommerce'),
+								'avg' => esc_html__('Average', 'booking-and-rental-manager-for-woocommerce'),
+								'max' => esc_html__('Maximum', 'booking-and-rental-manager-for-woocommerce')
 							)
 						)
 					)
