@@ -831,7 +831,7 @@ jQuery(document).on('input', '.rbfw_muiti_items_qty', function () {
 });
 
     // Handle plus button
-jQuery(document).off('click', '.rbfw_qty_plus').on('click', '.rbfw_qty_plus', function () {
+jQuery(document).on('click', '.rbfw_multi_items_qty_plus', function () {
     const row = jQuery(this).closest('tr');
     const input = row.find('.rbfw_muiti_items_qty');
     const max = parseInt(input.attr('max')) || 100;
@@ -844,11 +844,11 @@ jQuery(document).off('click', '.rbfw_qty_plus').on('click', '.rbfw_qty_plus', fu
 });
 
     // Handle minus button
-jQuery(document).off('click', '.rbfw_qty_minus').on('click', '.rbfw_qty_minus', function () {
+jQuery(document).on('click', '.rbfw_multi_items_qty_minus', function () {
     const row = jQuery(this).closest('tr');
     const input = row.find('.rbfw_muiti_items_qty');
     let value = parseInt(input.val()) || 0;
-    if (value > 1) {
+    if (value > 0) {
         input.val(value - 1).trigger('input');
     }
     calculateTotal(true);
@@ -876,6 +876,10 @@ function calculateTotal(only_calculation=false) {
 
 
     jQuery('#rbfw_multi_item_price').val(total.toFixed(2));
+
+    total = total + parseInt(jQuery('#rbfw_service_category_price').val());
+
+
     if(only_calculation){
         jQuery('.price-figure').text(rbfw_translation.currency+total.toFixed(2))
     }else{
@@ -942,8 +946,6 @@ function rbfw_multi_items_ajax_price_calculation(){
                 jQuery('.duration-costing').hide();
             }
 
-
-
             if(response.security_deposit_amount){
                 jQuery('.security_deposit').show();
                 jQuery('.security_deposit span').html(response.security_deposit_desc);
@@ -955,25 +957,6 @@ function rbfw_multi_items_ajax_price_calculation(){
             jQuery('.rbfw-duration').show();
             jQuery('.rbfw-duration .item-content').html(response.total_duration);
             jQuery('.rbfw-duration .rbfw_duration_md').val(response.total_duration);
-
-
-            var remaining_stock =  response.max_available_qty.remaining_stock;
-            var ticket_item_quantity =  response.ticket_item_quantity;
-
-            var  quantity_options = '';
-            for (let i = 0; i <= remaining_stock; i++) {
-                var selected = '';
-                if(ticket_item_quantity == i){
-                    var selected = 'selected';
-                }
-                if(i==0){
-                    quantity_options += "<option "+selected+" value="+i+">Choose number of quantity</option>";
-                }else{
-                    quantity_options += "<option "+selected+" value="+i+">"+i+"</option>";
-                }
-            }
-
-            jQuery('#rbfw_item_quantity').html(quantity_options);
 
 
             jQuery('.rbfw_quantity_md').show();
@@ -994,11 +977,10 @@ function rbfw_multi_items_ajax_price_calculation(){
                     jQuery(this).find(".rbfw-checkbox").show();
                 }
                 if(response.max_available_qty.service_stock[index]==0){
-                    jQuery(this).find(".rbfw_service_info_stock").attr('value',response.max_available_qty.service_stock[index]);
+                    jQuery(this).find(".rbfw_muiti_items_additional_service_qty").attr('value',response.max_available_qty.service_stock[index]);
                 }
-                jQuery(this).find(".rbfw_service_info_stock").attr('max',response.max_available_qty.service_stock[index]);
+                jQuery(this).find(".rbfw_muiti_items_additional_service_qty").attr('max',response.max_available_qty.service_stock[index]);
 
-                jQuery(this).find(".remaining_stock").text('('+response.max_available_qty.service_stock[index]+')');
             });
 
             /*extra service */
@@ -1010,23 +992,6 @@ function rbfw_multi_items_ajax_price_calculation(){
                 jQuery(this).attr('max',response.max_available_qty.extra_service_instock[index]);
             });
 
-            jQuery(".es_stock").each(function(index, value) {
-                if(response.max_available_qty.extra_service_instock[index]==0){
-                    jQuery(this).find(".rbfw-sold-out").show().addClass("rbfw_sold_out");
-                    jQuery(this).find(".rbfw-checkbox").hide();
-                }
-                jQuery(this).text(response.max_available_qty.extra_service_instock[index]);
-            });
-
-            jQuery(".rbfw_bikecarmd_es_hidden_input_box").each(function(index, value) {
-                if(response.max_available_qty.extra_service_instock[index]==0){
-                    jQuery(this).find(".rbfw-sold-out").show().addClass("rbfw_sold_out");
-                    jQuery(this).find(".rbfw-checkbox").hide();
-                }else{
-                    jQuery(this).find(".rbfw-sold-out").hide().removeClass("rbfw_sold_out");
-                    jQuery(this).find(".rbfw-checkbox").show();
-                }
-            });
 
         },
         error : function(response){
@@ -1045,55 +1010,48 @@ jQuery(document).on('input', '.rbfw_muiti_items_additional_service_qty', functio
         val = max;
         jQuery(this).val(val); // Set it back to max
     }
-    calculateTotal(true);
+    calculateAdditional(true);
 });
 
 // Handle plus button
-jQuery(document).off('click', '.rbfw_additional_service_qty_plus').on('click', '.rbfw_qty_plus', function () {
+jQuery(document).on('click', '.rbfw_additional_service_qty_plus', function () {
     const row = jQuery(this).closest('tr');
-    const input = row.find('.rbfw_muiti_items_qty');
+    const input = row.find('.rbfw_muiti_items_additional_service_qty');
     const max = parseInt(input.attr('max')) || 100;
     let value = parseInt(input.val()) || 0;
     if (value < max) {
         input.val(value + 1).trigger('input');
     }
-    row.find('.rbfw-resource-qty').val(value);
-    calculateTotal(true);
+    calculateAdditional(true);
 });
 
 // Handle minus button
-jQuery(document).off('click', '.rbfw_additional_service_qty_minus').on('click', '.rbfw_qty_minus', function () {
+jQuery(document).on('click', '.rbfw_additional_service_qty_minus', function () {
+
     const row = jQuery(this).closest('tr');
-    const input = row.find('.rbfw_muiti_items_qty');
-    let value = parseInt(input.val()) || 0;
-    if (value > 1) {
-        input.val(value - 1).trigger('input');
+    const input = row.find('.rbfw_muiti_items_additional_service_qty');
+    let value1 = parseInt(input.val()) || 0;
+
+    if (value1 > 0) {
+        input.val(value1 -1).trigger('input');
     }
-    calculateTotal(true);
+    calculateAdditional(true);
 });
 
 // Initial calculation on page load
 
 
-function calculateTotal(only_calculation=false) {
+function calculateAdditional(only_calculation=false) {
     let total = 0;
-    jQuery('.rbfw_muiti_items_qty').each(function () {
-        var durationType = jQuery('#durationType').val();
-        var durationQty = jQuery('#durationQty').val();
-        const price = parseFloat(jQuery(this).data('price-'+durationType)) || 0;
+    jQuery('.rbfw_muiti_items_additional_service_qty').each(function () {
+        const price = parseFloat(jQuery(this).data('price')) || 0;
         const quantity = jQuery(this).val() || 0;
-        total += price * quantity * durationQty;
+        total += price * quantity;
     });
-    // Display the total (you can update this selector to your actual element)
+    jQuery('#rbfw_service_category_price').val(total.toFixed(2));
 
-    if(total){
-        jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',false);
-    }else{
-        jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
-    }
+    total = total + parseInt(jQuery('#rbfw_multi_item_price').val());
 
-
-    jQuery('#rbfw_multi_item_price').val(total.toFixed(2));
     if(only_calculation){
         jQuery('.price-figure').text(rbfw_translation.currency+total.toFixed(2))
     }else{

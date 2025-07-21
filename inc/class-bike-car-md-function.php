@@ -217,7 +217,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                 return;
             }
-            global $rbfw;
+
             $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
 
             $start_date = isset($_POST['pickup_date'])?sanitize_text_field(wp_unslash($_POST['pickup_date'])):'';
