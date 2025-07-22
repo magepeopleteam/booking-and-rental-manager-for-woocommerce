@@ -301,8 +301,8 @@ CSS for Single Page Template
     color:#000;
 }
 .rbfw-single-right-heading {
-    margin:20px 0 5px 0;
-    display: inline-block;
+    margin:20px 0 10px 0;
+    display: block;
 }
 .rbfw_room_price_category_tabs .rbfw-single-right-heading{
     text-align: center;
@@ -679,8 +679,8 @@ div.mp_left_section {
 }
 
 .rbfw-header-container {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 0px;
     border-radius: 4px;
     padding-left: 0;
     padding-right: 0;
@@ -749,14 +749,14 @@ div.mp_left_section {
 .rbfw-post-sharing {
     display: flex;
     flex-direction: row;
-    justify-content: end;
     gap: 8px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
 }
 
 .rbfw-post-sharing a {
     width: 40px;
-    height: 40px;
-    background: #f5f5f5;
     text-align: center;
     line-height: 30px;
     display: flex;
@@ -766,8 +766,7 @@ div.mp_left_section {
 }
 
 .rbfw-post-sharing a:hover {
-    background: var(--rbfw_color_primary);
-    color: #fff;
+    color: var(--rbfw_primary_opacity);
     opacity: 1;
 }
 
@@ -963,34 +962,11 @@ a.rbfw-related-product-btn:hover {
         display: flex;
         align-items: center;
     }
-
-    .rbfw-post-title {
-        width: 70%;
-        font-size: 22px;
-        font-weight: 600;
-    }
-
-    .rbfw-post-meta {
-        width: 30%;
-        text-align: right;
-    }
 }
 
 @media only screen and (max-width: 899px) {
     .rbfw-header-container {
         display: block;
-    }
-
-    .rbfw-post-title {
-        width: 100%;
-        font-size: 22px;
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
-
-    .rbfw-post-meta {
-        width: 100%;
-        text-align: left;
     }
 }
 
@@ -1379,6 +1355,9 @@ table.rbfw_room_price_table tbody td img {
 
 .rbfw-bikecarsd-calendar-header {
     margin-bottom: 10px;
+    background-color: #ECFDF5;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 
@@ -2546,7 +2525,7 @@ div.rbfw_bikecarsd_price_table {
     justify-content: space-between;
     align-items: center;
     border: 1px solid #ddd;
-    background-color: #f9f9f9;
+    background-color: #fff;
     padding:5px 10px;
     margin-bottom: 10px;
     border-radius: 5px;
@@ -7114,7 +7093,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     transition: all 0.3s ease;
     user-select: none;
     text-align: center;
-    padding:12px;
+    padding:5px 10px;
     font-size: 15px;
     border-radius:5px;
     border:1px solid #ddd;

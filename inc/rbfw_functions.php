@@ -394,7 +394,9 @@
 			$pinterestURL .= $rbfwThumbnail[0];
 		}
 		$pinterestURL .= '&amp;description=' . $rbfwTitle; ?>
+		
         <div class="rbfw-post-sharing">
+			<span><?php _e('Share','booking-and-rental-manager-for-woocommerce') ?></span>
             <a href="<?php echo esc_url( $facebookURL ); ?>">
                 <i class="fab fa-facebook-f"></i>
             </a>

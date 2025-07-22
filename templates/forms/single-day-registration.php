@@ -29,13 +29,6 @@
         <!--    Right Side-->
 		<div class="rbfw-single-right-container rbfw_bikecarsd_pricing_table_wrap">
 			<form action="" method='post' class="mp_rbfw_ticket_form">
-                <!-- Header -->
-				<div class="rbfw-bikecarsd-calendar-header">
-					<h3 class="rbfw-bikecarsd-calendar-header-title"><?php rbfw_string('rbfw_text_book_online',__('Book online','booking-and-rental-manager-for-woocommerce')); ?></h3>
-					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-clock"></i> <?php rbfw_string('rbfw_text_real_time_availability',__('Real-time availability','booking-and-rental-manager-for-woocommerce')); ?></div>
-					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-bolt"></i> <?php rbfw_string('rbfw_text_instant_confirmation',__('Instant confirmation','booking-and-rental-manager-for-woocommerce')); ?></div>
-				</div>
-
                 <?php if ($location_switch == 'yes' && !empty($pickup_location)) : ?>
                     <div class="item">
                         <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_location', 'rbfw_basic_translation_settings', __('Pickup Location','booking-and-rental-manager-for-woocommerce'))); ?></div>
@@ -97,9 +90,6 @@
                     <div class="item">
                         <div class="item-content rbfw-datetime">
                             <div class="<?php echo ($rbfw_enable_time_picker == 'yes' )?'left':'' ?> date">
-                                <div class="rbfw-single-right-heading">
-                                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
-                                </div>
                                 <label class="rbfw-single-right-heading"><?php _e('Rental Start Date','booking-and-rental-manager-for-woocommerce'); ?></label>
                                 <div class="rbfw-p-relative">
                                     <span class="calendar"><i class="fas fa-calendar-days"></i></span>
@@ -177,7 +167,11 @@
                     </div>
                 <?php } ?>
 
-
+                 <!-- Header -->
+				<div class="rbfw-bikecarsd-calendar-header">
+					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-clock"></i> <?php rbfw_string('rbfw_text_real_time_availability',__('Real-time availability','booking-and-rental-manager-for-woocommerce')); ?></div>
+					<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-bolt"></i> <?php rbfw_string('rbfw_text_instant_confirmation',__('Instant confirmation','booking-and-rental-manager-for-woocommerce')); ?></div>
+				</div>
 				<!-- Button -->
 				
 				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
