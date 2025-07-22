@@ -184,6 +184,9 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
 
     $rbfw_service_info 	= $cart_item['rbfw_service_info'] ? $cart_item['rbfw_service_info'] : [];
+
+
+
     $rbfw_bikecarsd_ticket_info = $cart_item['rbfw_ticket_info'] ? $cart_item['rbfw_ticket_info'] : [];
 
     $rbfw_bikecarsd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : array();
@@ -447,7 +450,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
             </td>
         </tr>
 
-        <?php if ( ! empty( $rbfw_service_infos ) ){ ?>
+        <?php  if ( ! empty( $rbfw_service_infos ) ){ ?>
             <?php foreach ($rbfw_service_infos as $key => $value){ ?>
                     <?php if(count($value)){ ?>
                         <tr>
@@ -539,6 +542,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
     $rbfw_service_info 	= $cart_item['rbfw_service_info'] ? $cart_item['rbfw_service_info'] : [];
 
+    $rbfw_service_infos 	= $cart_item['rbfw_service_infos'] ? $cart_item['rbfw_service_infos'] : [];
 
 
     $multiple_items_info = get_post_meta( $rbfw_id, 'multiple_items_info', true ) ? get_post_meta( $rbfw_id, 'multiple_items_info', true ) : array();
@@ -555,6 +559,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
     $pricing_type = ($duration_type == 'hourly' ? 'hourly_price' : ($duration_type == 'daily' ? 'daily_price' : ($duration_type == 'weekly' ? 'weekly_price':'monthly_price')));
 
+    $total_days = $cart_item['total_days'];
 
     if(! empty($multiple_items_info)):
         $all_services = array_column($multiple_items_info,$pricing_type,'item_name');
@@ -624,6 +629,33 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
             endforeach;
 
         endif; ?>
+
+        <?php  if ( ! empty( $rbfw_service_infos ) ){ ?>
+            <?php foreach ($rbfw_service_infos as $key => $value){ ?>
+                <?php if(count($value)){ ?>
+                    <tr>
+                        <th><?php echo esc_html($key); ?> </th>
+                        <td>
+                            <table>
+                                <?php foreach ($value as $key1=>$item){ ?>
+                                    <tr>
+                                        <td><?php echo esc_html($item['name']); ?></td>
+                                        <td><?php
+                                            if($item['service_price_type']=='day_wise'){
+                                                echo '('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) . 'x' .esc_html($total_days) .'='.wp_kses(wc_price($item['price']*(int)$item['quantity']*$total_days),rbfw_allowed_html()).')';
+                                            }else{
+                                                echo ('('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) .'='.wp_kses(wc_price($item['price']*$item['quantity']),rbfw_allowed_html())).')';
+                                            }
+                                            ?>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </table>
+                        </td>
+                    </tr>
+                <?php } ?>
+            <?php } ?>
+        <?php } ?>
 
 
 
