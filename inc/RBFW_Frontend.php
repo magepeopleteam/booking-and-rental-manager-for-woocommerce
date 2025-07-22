@@ -24,10 +24,11 @@
 			}
 
 			public function booking_form_header($post_id) {
+				$sub_title = get_post_meta($post_id , 'rbfw_item_sub_title', true);
 				?>
 					<div class="rbfw-booking-header">
 						<h1><?php the_title(); ?></h1>
-						<span><?php esc_html_e('Premium equipment rental with flexible timing','booking-and-rental-manager-for-woocommerce') ?></span>
+						<div><?php echo esc_html($sub_title); ?></div>
 					</div>
 				<?php
 			}
