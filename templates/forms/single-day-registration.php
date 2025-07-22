@@ -127,9 +127,9 @@
                         </div>
                     </div>
 
-                    <div class="rbfw-single-right-heading">
+                    <label class="rbfw-single-right-heading">
                         <?php esc_html_e('Rental Duration', 'booking-and-rental-manager-for-woocommerce'); ?>
-                    </div>
+                    </label>
 
                     <div class="rbfw_service_type rbfw_service_type_timely">
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
@@ -137,7 +137,11 @@
                                 <label>
                                     <input type="radio" name="option" class="radio-input">
                                     <span class="rent-type"><?php echo esc_html($value['rent_type']); ?></span>
+                                    <?php if($enable_specific_duration=='on'): ?>
                                     <div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
+                                    <?php else: ?>
+                                    <div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
+                                    <?php endif; ?>
                                 </label>
                                 <div class="price"><?php echo esc_html('$'.$value['price']); ?></div>
                             </div>

@@ -35,34 +35,20 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
     ?>
 
     <div class="rbfw_bikecarsd_pricing_table_container">
-        <div class="">
-            <table class="rbfw_bikecarsd_price_table timely_quqntity_table" cellspacing="0" cellpadding="0" style="width: 100%">
-                <tbody>
-                <tr>
-                    <td class="w_30_pc">
-                        <div>
-                            <span class="rbfw_bikecarsd_type_title">
-                                <?php echo esc_html($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Quantity','booking-and-rental-manager-for-woocommerce'))); ?>
-                            </span>
-                        </div>
-                    </td>
-                    <td class="w_30_pc">
-                        <div class="rbfw_regf_group">
-                            <select name="rbfw_item_quantity" id="rbfw_item_quantity">
-                                <?php for ($qty = 1; $qty <= $available_quantity; $qty++) { ?>
-                                    <option value="<?php echo esc_attr($qty); ?>">
-                                        <?php echo esc_html($qty); ?>
-                                    </option>
-                                <?php } ?>
-                            </select>
-                            <?php echo esc_html_e('x','booking-and-rental-manager-for-woocommerce') . wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
-                        </div>
-                    </td>
-
-                </tr>
-
-                </tbody>
-            </table>
+        <div class="rbfw_bikecarsd_price_table timely_quqntity_table">
+            <span class="rbfw_bikecarsd_type_title">
+                <?php echo esc_html($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings', __('Number of Items','booking-and-rental-manager-for-woocommerce'))); ?>
+            </span>
+            <div class="rbfw_regf_group">
+                <select name="rbfw_item_quantity" id="rbfw_item_quantity">
+                    <?php for ($qty = 1; $qty <= $available_quantity; $qty++) { ?>
+                        <option value="<?php echo esc_attr($qty); ?>">
+                            <?php echo esc_html($qty); ?>
+                        </option>
+                    <?php } ?>
+                </select>
+                <?php echo esc_html_e('x','booking-and-rental-manager-for-woocommerce') . wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
+            </div>
         </div>
     </div>
 
@@ -73,7 +59,7 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step">
         <div class="">
             <?php if(!empty($rbfw_extra_service_data)){ ?>
-                    <div class="rbfw-single-right-heading"><?php esc_html_e('Additional Services You may like.','booking-and-rental-manager-for-woocommerce'); ?></div>
+                <label class="rbfw-single-right-heading"><?php esc_html_e('Optional Add-ons','booking-and-rental-manager-for-woocommerce'); ?></label>
                 <table class="rbfw_bikecarsd_price_table">
                     <thead>
                     <tr>

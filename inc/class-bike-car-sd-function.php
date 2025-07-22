@@ -557,7 +557,11 @@
 								<label>
 									<input type="radio" name="option" class="radio-input">
 									<span><?php echo esc_attr($value['rent_type']); ?></span>
-                                	<div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
+                                	<?php if($enable_specific_duration=='on'): ?>
+                                    	<div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
+                                    <?php else: ?>
+                                    	<div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
+                                    <?php endif; ?>
 								</label>
 								<div class="price"><?php echo esc_html('$'.$value['price']); ?></div>
 							</div>
@@ -566,7 +570,11 @@
 								<label>
 									<input type="radio" name="option" class="radio-input">
 									<span class="rent-type"><?php echo esc_attr($value['rent_type'])?></span>
-                                	<div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
+                                	<?php if($enable_specific_duration=='on'): ?>
+                                    	<div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
+                                    <?php else: ?>
+                                    	<div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
+                                    <?php endif; ?>
 								</label>
 								<div class="price"><?php echo esc_html('$'.$value['price']); ?></div>
 							</div>

@@ -289,12 +289,20 @@ CSS for Single Page Template
     margin-top: 0px;
 }
 
-
+.timely_quqntity_table{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    padding: 15px 10px;
+    border: 1px solid #dddddd;
+    background: #fff;
+    border-radius: 4px;
+    color:#000;
+}
 .rbfw-single-right-heading {
-    font-size: 16px;
-    margin: 10px 0px;
-    font-weight:600;
-    color: #0a0a0a;
+    margin-top:20px;
+    display: inline-block;
 }
 .rbfw_room_price_category_tabs .rbfw-single-right-heading{
     text-align: center;
@@ -2529,7 +2537,6 @@ a.rbfw_back_step_btn i {
 table.rbfw_bikecarsd_price_table {
     border-collapse: collapse;
     border: 1px solid #dedede;
-    margin-top: 20px;
     margin-bottom: 20px;
     box-shadow: none;
     border-radius:5px;
@@ -6380,16 +6387,13 @@ span.rbfw_item_absolute:hover {
 }
 
 .rbfw_regf_group {
-    margin-bottom: 15px;
     position: relative;
-    padding: 0 10px;
 }
 
 .rbfw_regf_group input[type="text"],
 .rbfw_regf_group input[type="email"],
 .rbfw_regf_group input[type="date"],
 .rbfw_regf_group input[type="file"],
-.rbfw_regf_group select,
 .rbfw_regf_group textarea {
     display: block;
     width: 100%;
@@ -7144,15 +7148,13 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     display: flex;
     justify-content: end;
     align-items: center;
-    gap:5px;
-    margin:0;
-    padding: 5px 0;
-    font-size: 16px;
+    gap:15px;
     font-weight: bold;
 }
 .timely_quqntity_table .rbfw_regf_group select{
     width: 60px;
     text-align: center;
+    padding: 5px;
 }
 .price-item-container.pricing-content_dh.mpStyle.open {
     background: #fff;
@@ -7271,7 +7273,7 @@ select#rbfw_variation_id_0,select#rbfw_variation_id_1,select#rbfw_variation_id_2
     background: #f5f5f5;
 }
 .item.rbfw_bikecarsd_price_summary {
-    margin-top: 20px; 
+    margin-top: 8px; 
 }
 .item-content rbfw-costing{border-radius:5px; border: 1px solid #dbd5d5; }
 
