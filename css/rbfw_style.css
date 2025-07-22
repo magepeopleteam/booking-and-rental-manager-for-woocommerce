@@ -303,6 +303,8 @@ CSS for Single Page Template
 .rbfw-single-right-heading {
     margin:20px 0 10px 0;
     display: block;
+    font-size: 16px;
+    font-weight: bold;
 }
 .rbfw_room_price_category_tabs .rbfw-single-right-heading{
     text-align: center;
@@ -315,8 +317,8 @@ CSS for Single Page Template
     margin-bottom:10px;
 }
 
-.rbfw-single-right-container .item:first-child .rbfw-single-right-heading {
-    width: 100%;
+.rbfw-single-right-container .date .rbfw-single-right-heading{
+    margin-top:7px;
 }
 
 .rbfw_room_price_category_tabs .rbfw-single-right-heading p{margin-bottom:0px;}
@@ -2520,6 +2522,7 @@ div.rbfw_bikecarsd_price_table {
     margin-bottom: 20px;
     border-radius:5px;
 }
+
 .rbfw-optional-add-ons{
     display: flex;
     justify-content: space-between;
@@ -2529,6 +2532,9 @@ div.rbfw_bikecarsd_price_table {
     padding:5px 10px;
     margin-bottom: 10px;
     border-radius: 5px;
+}
+.rbfw-optional-add-ons:hover{
+    border: 1px solid var(--rbfw_color_primary);
 }
 .rbfw_donut_template table.rbfw_bikecarsd_price_table {
     width: 100%;

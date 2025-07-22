@@ -93,7 +93,7 @@
                                 <label class="rbfw-single-right-heading"><?php _e('Rental Start Date','booking-and-rental-manager-for-woocommerce'); ?></label>
                                 <div class="rbfw-p-relative">
                                     <span class="calendar"><i class="fas fa-calendar-days"></i></span>
-                                    <input class="rbfw-input rbfw-time-price pickup_date_timely" type="text"   placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" style="background-position: 95% center">
+                                    <input class="rbfw-input rbfw-time-price pickup_date_timely" type="text"   placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Select Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" style="background-position: 95% center">
                                     <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                 </div>
                             </div>
