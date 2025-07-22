@@ -150,6 +150,7 @@
 
 
                     <div class="item rbfw_bikecarsd_price_summary">
+                        <label class="rbfw-single-right-heading"><?php _e('Booking Summary','booking-and-rental-manager-for-woocommerce'); ?></label>
                         <div class="item-content rbfw-costing">
                             <ul class="rbfw-ul">
                                 <li class="duration-costing rbfw-cond">

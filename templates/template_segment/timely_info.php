@@ -120,6 +120,7 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
                 </div>
             <?php } ?>
             <div class="item rbfw_bikecarsd_price_summary_only">
+                <label class="rbfw-single-right-heading"><?php _e('Booking Summary','booking-and-rental-manager-for-woocommerce'); ?></label>
                 <div class="item-content rbfw-costing">
                     <ul class="rbfw-ul">
                         <li class="duration-costing rbfw-cond">

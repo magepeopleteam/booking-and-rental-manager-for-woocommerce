@@ -301,7 +301,7 @@ CSS for Single Page Template
     color:#000;
 }
 .rbfw-single-right-heading {
-    margin-top:20px;
+    margin:20px 0 5px 0;
     display: inline-block;
 }
 .rbfw_room_price_category_tabs .rbfw-single-right-heading{
@@ -7118,7 +7118,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     font-size: 15px;
     border-radius:5px;
     border:1px solid #ddd;
-    background-color: #f9f9f9;
+    background-color: #f9fafb;
 }
 .rbfw_service_type .radio-button label{
     text-align: left;
