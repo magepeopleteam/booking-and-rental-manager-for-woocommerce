@@ -55,6 +55,7 @@
                 </div>
 			<?php } ?>
             <div class="mp_right_section">
+                <?php do_action('booking_form_header',$post_id); ?>
 				<?php include( RBFW_Function::get_template_path( 'forms/resort-registration.php' ) ); ?>
             </div>
         </div>

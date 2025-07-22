@@ -100,9 +100,10 @@
                                 <div class="rbfw-single-right-heading">
                                     <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
                                 </div>
+                                <label><?php _e('Rental Start Date','booking-and-rental-manager-for-woocommerce'); ?></label>
                                 <div class="rbfw-p-relative">
                                     <span class="calendar"><i class="fas fa-calendar-days"></i></span>
-                                    <input class="rbfw-input rbfw-time-price pickup_date_timely" type="text"   placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" style="background-position: 95% center">
+                                    <input class="rbfw-input rbfw-time-price pickup_date_timely" type="text"   placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Pickup Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" style="background-position: 95% center">
                                     <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                 </div>
                             </div>
@@ -127,15 +128,19 @@
                     </div>
 
                     <div class="rbfw-single-right-heading">
-                        <?php esc_html_e('Choose Duration', 'booking-and-rental-manager-for-woocommerce'); ?>
+                        <?php esc_html_e('Rental Duration', 'booking-and-rental-manager-for-woocommerce'); ?>
                     </div>
 
                     <div class="rbfw_service_type rbfw_service_type_timely">
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
-                            <label>
-                                <input type="radio" name="option" class="radio-input">
-                                <span title="<?php echo esc_attr($value['short_desc']); ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($value['price']); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']) ?? '' ?>" data-end_time="<?php echo esc_attr($value['end_time']) ?? '' ?>" class="radio-button single-type-timely"><?php echo esc_html($value['rent_type']); ?></span>
-                            </label>
+                            <div title="<?php echo esc_attr($value['short_desc']); ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($value['price']); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']) ?? '' ?>" data-end_time="<?php echo esc_attr($value['end_time']) ?? '' ?>" class="radio-button single-type-timely">
+                                <label>
+                                    <input type="radio" name="option" class="radio-input">
+                                    <span class="rent-type"><?php echo esc_html($value['rent_type']); ?></span>
+                                    <div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
+                                </label>
+                                <div class="price"><?php echo esc_html('$'.$value['price']); ?></div>
+                            </div>
                         <?php } ?>
                     </div>
 

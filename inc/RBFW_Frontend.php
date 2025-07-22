@@ -11,6 +11,7 @@
 			
 			public function __construct() {
 				add_filter( 'single_template', array( $this, 'single_template' ) );	
+				add_action( 'booking_form_header', array( $this, 'booking_form_header' ) );	
 				add_action( 'rbfw_product_feature_lists',[$this,'feature_lists']);			
 			}
 
@@ -20,6 +21,15 @@
 					$single_template = RBFW_Function::get_template_path('single/single-rbfw.php');
 				}
 				return $single_template;
+			}
+
+			public function booking_form_header($post_id) {
+				?>
+					<div class="rbfw-booking-header">
+						<h1><?php the_title(); ?></h1>
+						<span><?php esc_html_e('Premium equipment rental with flexible timing','booking-and-rental-manager-for-woocommerce') ?></span>
+					</div>
+				<?php
 			}
 
 			public static function load_template($post_id) {

@@ -516,6 +516,30 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
     margin-bottom: 5px;
 }
 
+div.mp_right_section {
+    border: 1px solid #f5f5f5;
+    border-radius: 12px;
+    background: #fff;
+    position: sticky;
+    top: 25px;
+    height: max-content;
+}
+
+.mp_right_section .rbfw-booking-header{
+    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    padding: 10px;
+    color:#fff;
+    border-radius: 12px  12px 0 0;
+}
+.rbfw-booking-header h1{
+    color:#fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+.mp_right_section .rbfw-booking-form{
+    padding: 10px;
+}
 .mp_right_section button.rbfw-book-now-btn {
     text-decoration: none;
     background: var(--rbfw_color_primary);
@@ -624,15 +648,7 @@ div.mp_left_section {
     padding-top: 0;
 }
 
-div.mp_right_section {
-    border: 1px solid #f5f5f5;
-    padding: 10px;
-    border-radius: 0;
-    background: #fff;
-    position: sticky;
-    top: 25px;
-    height: max-content;
-}
+
 
 .rbfw-tab {
     padding-left: 20px;
@@ -7071,42 +7087,45 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     flex-wrap: wrap;
     gap:8px 0px;
 }
-.rbfw_service_type_timely label{
-    width: 49%;
-    display: block;
-}
+
 /* Base style for the text radio button */
-.rbfw_service_type .radio-button {
-    display: block;
+.rbfw_service_type .radio-button{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap:10px;
     cursor: pointer;
     color: #333;
     transition: all 0.3s ease;
     user-select: none;
     text-align: center;
-    padding:5px 12px;
+    padding:12px;
     font-size: 15px;
     border-radius:5px;
     border:1px solid #ddd;
     background-color: #f9f9f9;
 }
-
+.rbfw_service_type .radio-button label{
+    text-align: left;
+}
+.rbfw_service_type .radio-button{
+    font-weight: bold;
+}
+.rbfw_service_type .radio-button .price,.rbfw_service_type .radio-button .rent-type{
+    font-weight: bold;
+}
 /* Hover effect */
 .rbfw_service_type .radio-button:hover {
-    background-color: var(--rbfw_color_primary);
+    border:1px solid var(--rbfw_color_primary);
+    background-color:var(--rbfw_primary_opacity);
     border-radius: 5px;
-    color: var(--rbfw_color_primary);
 }
 
 /* Selected state for the radio button */
 .rbfw_service_type .radio-button.selected {
-    background-color: var(--rbfw_color_primary);
-    color: white;
-    border-radius: 5px;
-}
-
-/* Label styles (when selected or hovered) */
-.rbfw_service_type .radio-button:hover, .rbfw_service_type .radio-button.selected {
-    color: white;
+    border:1px solid var(--rbfw_color_primary);
+    background-color:var(--rbfw_primary_opacity);
 }
 
 /* Make it easier to click and select by using the label */
