@@ -294,7 +294,7 @@ CSS for Single Page Template
     align-items: center;
     justify-content: space-between;
     gap: 5px;
-    padding: 15px 10px;
+    padding: 5px 10px;
     border: 1px solid #dddddd;
     background: #fff;
     border-radius: 4px;
@@ -493,10 +493,11 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
 }
 
 .rbfw-costing {
-    background: #f5f5f5;
-    padding: 20px;
+    background: #f9fafb;
+    padding:10px;
     position: relative;
     border-radius:5px;
+    margin-bottom: 20px;
 }
 
 /*
@@ -1383,12 +1384,11 @@ table.rbfw_room_price_table tbody td img {
 
 .rbfw_qty_input input[type="number"] {
     appearance: textfield;
-    border: 1px solid #ddd !important;
+    border: none;
+    background: transparent;
     font-size: 16px;
     font-weight: normal;
     text-align: center;
-    width: 30px;
-    border-radius: 0;
     margin: 0 !important;
     padding: 4px !important;
     margin-bottom: 0;
@@ -1400,18 +1400,20 @@ table.rbfw_room_price_table tbody td img {
 }
 
 a.rbfw_qty_minus.rbfw_timely_es_qty_minus{
-    border-radius:5px 0px 0px 5px;
+    border-radius:5px;
     color: #333;
     background-color: #fff;
     border: 1px solid #ddd;
 }
 
 a.rbfw_qty_plus.rbfw_timely_es_qty_plus {
-    border-radius:0px 5px 5px 0px;
-    background-color: var(--rbfw_color_primary);
+    border-radius:5px;
+    background-color: #fff;
     border: 1px solid #ddd;
 }
-
+a.rbfw_qty_plus.rbfw_timely_es_qty_plus i{
+    color: #333;
+}
 
 .rbfw_selected_room_dates {
     margin-top: 20px;
@@ -2534,14 +2536,21 @@ a.rbfw_back_step_btn i {
     color: var(--rbfw_color_primary);
 }
 
-table.rbfw_bikecarsd_price_table {
-    border-collapse: collapse;
-    border: 1px solid #dedede;
+div.rbfw_bikecarsd_price_table {
+
     margin-bottom: 20px;
-    box-shadow: none;
     border-radius:5px;
 }
-
+.rbfw-optional-add-ons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    padding:5px 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
 .rbfw_donut_template table.rbfw_bikecarsd_price_table {
     width: 100%;
 }
@@ -6388,6 +6397,7 @@ span.rbfw_item_absolute:hover {
 
 .rbfw_regf_group {
     position: relative;
+    padding: 5px;
 }
 
 .rbfw_regf_group input[type="text"],
