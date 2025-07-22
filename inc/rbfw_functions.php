@@ -157,6 +157,11 @@
 				'src'          => true,
             ),
 
+            'strong'   => array(
+                'id'          => true,
+                'class'          => true,
+            ),
+
 		);
 
 		return $allowed_html;

@@ -498,12 +498,16 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                                                         <span class="day-time-wise"><?php echo (isset($service['service_price_type'] ) && $service['service_price_type'] === 'day_wise') ? esc_html__('Day Wise', 'booking-and-rental-manager-for-woocommerce') : esc_html__('One Time', 'booking-and-rental-manager-for-woocommerce'); ?></span>
                                                     </td>
 
+                                                    <input type="hidden" value="<?php echo $service['title'] ?>" name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][name]"/>
+                                                    <input type="hidden" value="<?php echo $service['service_price_type'] ?>" name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][service_price_type]"/>
+                                                    <input type="hidden" value="<?php echo $service['price'] ?>" name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][price]"/>
+
                                                     <td class="item_<?php echo esc_attr($cat . $serkey); ?>">
                                                         <div class="rbfw_qty_input">
                                                             <a class="rbfw_additional_service_qty_minus rbfw_qty_minus" data-item="<?php echo esc_attr($cat . $serkey); ?>">
                                                                 <i class="fas fa-minus"></i>
                                                             </a>
-                                                            <input type="number" value="0" name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][quantity]" min="0" class="rbfw_muiti_items_additional_service_qty" data-price="<?php echo esc_attr($service['price']); ?>" data-item="<?php echo esc_attr($cat . $serkey); ?>" autocomplete="off"/>
+                                                            <input type="number" value="0" name="rbfw_service_price_data[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][quantity]" min="0" class="rbfw_muiti_items_additional_service_qty" data-price="<?php echo esc_attr($service['price']); ?>" data-service_price_type="<?php echo esc_attr($service['service_price_type']); ?>" data-item="<?php echo esc_attr($cat . $serkey); ?>" autocomplete="off"/>
                                                             <a class="rbfw_additional_service_qty_plus rbfw_qty_plus" data-item="<?php echo esc_attr($cat . $serkey); ?>">
                                                                 <i class="fas fa-plus"></i>
                                                             </a>
@@ -529,7 +533,7 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
                 <input type="hidden" name="rbfw_service_category_price" id="rbfw_service_category_price"  value="0">
                 <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_attr($rbfw_enable_time_picker); ?>">
-                <input type="hidden" name="total_days" value="0">
+                <input type="hidden" name="total_days" id="rbfw_total_days">
                 <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_attr($rbfw_minimum_booking_day); ?>">
                 <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo esc_attr($rbfw_maximum_booking_day); ?>">
                 <input type="hidden" id="rbfw_month_wise_inventory" value="<?php echo esc_attr($day_wise_imventory); ?>">

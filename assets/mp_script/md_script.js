@@ -933,10 +933,6 @@ function rbfw_multi_items_ajax_price_calculation(){
             jQuery('.subtotal .price-figure').html(response.sub_total_price_html);
 
             jQuery('.rbfw_pricing_applied').hide();
-            if(response.pricing_applied != 'No'){
-                jQuery('.rbfw_pricing_applied.'+response.pricing_applied).show();
-            }
-
 
 
             if(response.duration_price_number){
@@ -1045,8 +1041,15 @@ function calculateAdditional(only_calculation=false) {
     let total = 0;
     jQuery('.rbfw_muiti_items_additional_service_qty').each(function () {
         const price = parseFloat(jQuery(this).data('price')) || 0;
+        const service_price_type = jQuery(this).data('service_price_type');
         const quantity = jQuery(this).val() || 0;
-        total += price * quantity;
+        if(service_price_type=='day_wise'){
+            const rbfw_total_days = jQuery('#rbfw_total_days').val();
+            total += price * quantity * rbfw_total_days;
+        }else{
+            total += price * quantity;
+        }
+
     });
     jQuery('#rbfw_service_category_price').val(total.toFixed(2));
 
