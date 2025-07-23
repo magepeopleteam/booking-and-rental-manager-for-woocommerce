@@ -317,7 +317,7 @@ CSS for Single Page Template
     margin-bottom:10px;
 }
 
-.rbfw-single-right-container .date .rbfw-single-right-heading{
+.rbfw-single-right-container .rbfw-datetime .rbfw-single-right-heading{
     margin-top:7px;
 }
 
@@ -378,6 +378,7 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
 
 .rbfw-datetime {
     display: flex;
+    align-items: end;
 }
 
 .rbfw-datetime input,
@@ -7099,12 +7100,27 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     transition: all 0.3s ease;
     user-select: none;
     text-align: center;
-    padding:5px 10px;
+    padding:5px 10px 5px 35px;
     font-size: 15px;
     border-radius:5px;
     border:1px solid #ddd;
     background-color: #f9fafb;
 }
+.rbfw_service_type .radio-button::before{
+    position: absolute;
+    content: "";
+    width: 15px;
+    height: 15px;
+    left:10px;
+    border-radius: 100px;
+    border:1px solid #999;
+    background-color:#fff;
+}
+.rbfw_service_type .radio-button.selected::before{
+    background-color: var(--rbfw_color_primary);
+    border:1px solid #000;
+}
+
 .rbfw_service_type .radio-button label{
     text-align: left;
 }
@@ -7113,6 +7129,10 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 }
 .rbfw_service_type .radio-button .price,.rbfw_service_type .radio-button .rent-type{
     font-weight: bold;
+}
+.rbfw_service_type .radio-button .time{
+    font-weight: normal;
+    color:#666;
 }
 /* Hover effect */
 .rbfw_service_type .radio-button:hover {
