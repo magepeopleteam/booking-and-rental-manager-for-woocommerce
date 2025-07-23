@@ -572,7 +572,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                     <?php if(!empty($extra_service_list)){ ?>
                         <div class="item rbfw_resourse_md" style="display: none">
                             <div class="rbfw-single-right-heading">
-                                <?php esc_html_e('Additional Services You may like.','booking-and-rental-manager-for-woocommerce'); ?>
+                                <?php esc_html_e('Optional Add-ons','booking-and-rental-manager-for-woocommerce'); ?>
                             </div>
                             <div class="item-content rbfw-resource">
 

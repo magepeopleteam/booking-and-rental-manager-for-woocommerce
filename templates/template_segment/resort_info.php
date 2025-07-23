@@ -293,8 +293,7 @@ if(isset($post_id) && isset($active_tab)){
 /* Include Custom Registration Form */
 if(class_exists('Rbfw_Reg_Form')){
     $reg_form = new Rbfw_Reg_Form();
-    $reg_fields = $reg_form->rbfw_generate_regf_fields($post_id);
-    echo esc_html($reg_fields);
+    echo wp_kses($reg_form->rbfw_generate_regf_fields($post_id),rbfw_allowed_html());
 }
 ?>
     <div class="item rbfw_text_book_now">
