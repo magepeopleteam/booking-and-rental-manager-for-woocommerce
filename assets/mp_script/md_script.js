@@ -613,6 +613,8 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             jQuery('.total .price-figure').html(response.total_price_html);
             jQuery('.rbfw-duration').show();
             jQuery('.rbfw-duration .item-content').html(response.total_duration);
+            jQuery('.rbfw-duration .item-price').html(response.duration_price_html);
+            console.log(response);
             jQuery('.rbfw-duration .rbfw_duration_md').val(response.total_duration);
 
 

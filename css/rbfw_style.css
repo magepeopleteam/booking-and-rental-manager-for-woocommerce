@@ -500,7 +500,7 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
     padding:10px;
     position: relative;
     border-radius:5px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 /*
@@ -583,16 +583,42 @@ button.rbfw-book-now-btn:focus {
 
 .rbfw-duration {
     display: none;
+    padding: 10px;
+    background: #edf7ff;
+    border: 1px solid #41a6ff;
+    margin-top:10px;
+    border-radius: 5px;
 }
 
-
+.rbfw-duration .rbfw-single-right-heading{
+    margin:0;
+    display: flex;
+    justify-content: space-between;
+}
 .rbfw-duration .item-content {
-    background: #f7f7f7 !important;
-    padding: 5px 10px;
-    border: 1px solid #dedede;
-    font-size: 14px;
+    font-weight: normal;
 }
 
+.rbfw-duration .item-price {
+    border-radius: 5px;
+    font-weight: bold;
+    color:#41a6ff;
+}
+
+.mp_rbfw_ticket_form .rbfw_resourse_md{
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    margin-top:10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.rbfw_resourse_md .rbfw-single-right-heading{
+    margin-top:7px;
+}
+.rbfw_bikecarmd_es_table{
+    margin-bottom:0;
+}
 /*********************************/
 
 div.rbfw_faq_item .rbfw_faq_title {
@@ -1442,6 +1468,15 @@ a.rbfw_qty_plus.rbfw_timely_es_qty_plus i{
 .rbfw_alert_warning i {
     color: var(--rbfw_color_primary);
 }
+
+.rbfw-multiple-date-time{
+    padding:10px;
+    border:1px solid #ddd;
+    background: #f8f8f8;
+    border-radius: 5px;
+}
+
+
 
 .woocommerce-cart-form table.rbfw_room_cart_table,
 table.rbfw_room_cart_table {
@@ -7058,7 +7093,7 @@ div.rbfw_day_wise_price table{
 }
 
 .pricing-content-collapse{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
