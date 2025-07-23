@@ -133,7 +133,7 @@
                                     <div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
                                     <?php endif; ?>
                                 </label>
-                                <div class="price"><?php echo esc_html('$'.$value['price']); ?></div>
+                                <div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
                             </div>
                         <?php } ?>
                     </div>

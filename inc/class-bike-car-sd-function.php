@@ -563,7 +563,7 @@
                                     	<div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
                                     <?php endif; ?>
 								</label>
-								<div class="price"><?php echo esc_html('$'.$value['price']); ?></div>
+								<div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
 							</div>
 						<?php else: ?>
 							<div style="text-decoration: line-through;cursor:text" title="<?php echo esc_attr($value['short_desc']) ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($type_price); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']); ?>" data-end_time="<?php echo esc_attr($value['end_time']); ?>" data-available_quantity="<?php echo esc_attr($rbfw_timely_available_quantity); ?>" class="radio-button">
@@ -576,7 +576,7 @@
                                     	<div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
                                     <?php endif; ?>
 								</label>
-								<div class="price"><?php echo esc_html('$'.$value['price']); ?></div>
+								<div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
 							</div>
 						<?php endif;?>
 					
