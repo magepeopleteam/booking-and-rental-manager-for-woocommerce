@@ -381,7 +381,6 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
     align-items: end;
 }
 
-.rbfw-datetime input,
 .rbfw-datetime select,
 .rbfw-datetime select.rbfw-select,
 .rbfw-datetime input[type=text].rbfw-input {
@@ -6693,7 +6692,6 @@ body.single-rbfw_item div.ast-container {
 
 /* booking form resourse service */
 .resource-qty {
-    display: none;
     font-size: 12px;
 }
 
@@ -7410,3 +7408,35 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
     background: #ebffeb !important;
 }
 
+/* =============shamim for multiple day multiple item=========== */
+
+
+@media only screen and (min-width: 600px) {
+    div.mp_right_section .rbfw_multi_items_right {
+        width: 500px;
+    }
+}
+.rbfw_multi_items_right .rbfw_select_rental_period
+ {
+    background: #f7f6f6;
+    padding: 20px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+.rbfw_multi_items_right .rbfw_rental_duration {
+    background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+    padding: 20px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #bfdbfe;
+}
+.rbfw_multi_items_right .rbfw_rental_pricing_rates {
+    background: #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.rbfw_multi_items_right .rbfw_bikecarmd_es_table tr {
+    background: none; 
+}

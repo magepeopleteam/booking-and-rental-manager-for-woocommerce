@@ -474,8 +474,6 @@
 
 					$rbfw_id          = $meta_data['rbfw_id'];
 					$wc_order_id      = $meta_data['rbfw_order_id'];
-					$duration_cost    = $meta_data['rbfw_ticket_info'][0]['duration_cost'];
-					$service_cost     = $meta_data['rbfw_ticket_info'][0]['service_cost'];
 					$order_tax        = ! empty( get_post_meta( $wc_order_id, '_order_tax', true ) ) ? get_post_meta( $wc_order_id, '_order_tax', true ) : 0;
 					$is_tax_inclusive = get_option( 'woocommerce_prices_include_tax', true );
 					$args             = array(
@@ -542,7 +540,7 @@
 						if ( ! empty( $order_tax ) ) {
 							update_post_meta( $post_id, 'rbfw_order_tax', $order_tax );
 						}
-						$total_price = $duration_cost + $service_cost;
+
 						if ( $is_tax_inclusive != 'yes' ) {
 							$total_price = $total_price + $order_tax;
 						}

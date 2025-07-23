@@ -114,12 +114,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                         </div>
 
                         <div class="price-item-container pricing-content_dh  mpStyle  <?php echo ($rbfw_pricing_info_display=='yes')?'open':'' ?>" style="display: <?php echo ($rbfw_pricing_info_display=='yes')?'block':'none' ?>">
-
-                            <?php
-
-                            if($rbfw_enable_monthly_rate=='yes'){
-                                ?>
-
+                            <?php if($rbfw_enable_monthly_rate=='yes'){ ?>
                                 <div class="rbfw_day_wise_price">
                                     <table>
                                         <tbody>
@@ -149,9 +144,8 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                     </table>
                                 </div>
 
-                                <?php
-                            }elseif ($rbfw_enable_weekly_rate=='yes'){
-                                ?>
+                            <?php }elseif ($rbfw_enable_weekly_rate=='yes'){ ?>
+
                                 <div class="rbfw_day_wise_price">
                                     <table>
                                         <tbody>
@@ -174,8 +168,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                         </tbody>
                                     </table>
                                 </div>
-                            <?php
-                            }else{
+                            <?php }else{
                                 if($rbfw_enable_daywise_price == 'yes'){
                                     $sunday = rbfw_day_row_md( __( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun' );
                                     $monday = rbfw_day_row_md( __( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon' );
@@ -242,7 +235,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                             </tbody>
                                         </table>
                                     </div>
-                            <?php } ?>
+                                <?php } ?>
                                 <?php
                                 $rbfw_md_data_mds = get_post_meta( $post_id, 'rbfw_md_data_mds', true ) ? get_post_meta( $post_id, 'rbfw_md_data_mds', true ) : [];
                                 if (is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && (!(empty($rbfw_md_data_mds)))) {
@@ -621,7 +614,6 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                 </table>
                             </div>
                         </div>
-
                     <?php } ?>
                 </div>
 

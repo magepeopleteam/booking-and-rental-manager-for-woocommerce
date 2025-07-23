@@ -17,6 +17,12 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             add_action('wp_ajax_rbfw_bikecarmd_ajax_price_calculation', array($this, 'rbfw_md_duration_price_calculation_ajax'));
             add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_price_calculation', array($this,'rbfw_md_duration_price_calculation_ajax'));
 
+            add_action('wp_ajax_rbfw_multi_items_ajax_price_calculation', array($this, 'rbfw_multi_items_ajax_price_calculation'));
+            add_action('wp_ajax_nopriv_rbfw_multi_items_ajax_price_calculation', array($this,'rbfw_multi_items_ajax_price_calculation'));
+
+
+
+
             add_action('wp_ajax_rbfw_bikecarmd_ajax_min_max_and_offdays_info', array($this, 'rbfw_bikecarmd_ajax_min_max_and_offdays_info'));
             add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_min_max_and_offdays_info', array($this,'rbfw_bikecarmd_ajax_min_max_and_offdays_info'));
 
@@ -205,6 +211,77 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             wp_die();
         }
+
+        function rbfw_multi_items_ajax_price_calculation(){
+
+            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                return;
+            }
+
+            $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
+
+            $start_date = isset($_POST['pickup_date'])?sanitize_text_field(wp_unslash($_POST['pickup_date'])):'';
+            $start_time = isset($_POST['pickup_time'])?sanitize_text_field(wp_unslash($_POST['pickup_time'])):'';
+
+            $pickup_datetime = gmdate('Y-m-d H:i', strtotime($start_date . ' ' . $start_time));
+
+            $durationType = isset($_POST['durationType'])?sanitize_text_field(wp_unslash($_POST['durationType'])):'';
+            $durationQty = isset($_POST['durationQty'])?sanitize_text_field(wp_unslash($_POST['durationQty'])):'';
+
+            $start_date_time = new DateTime($start_date.' '.$start_time);
+            $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 : $durationQty * 24 * 7));
+            $start_date_time->modify("+$total_hours hours");
+            $end_date = $start_date_time->format('Y-m-d');
+            $end_time = $start_date_time->format('H:i:s');
+
+            $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
+
+
+            // Create DateTime objects
+            $pickup = new DateTime($pickup_datetime);
+            $dropoff = new DateTime($dropoff_datetime);
+            $interval = $pickup->diff($dropoff);
+            $total_days = $interval->days;
+
+            if(!$total_days){
+                $total_days = 1;
+            }
+
+            $rbfw_multi_item_price = isset($_POST['rbfw_multi_item_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_multi_item_price']))):'';
+
+            $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_time_slot'])):'off';
+
+            $max_available_qty = rbfw_get_multi_items_available_qty($post_id, $start_date, $end_date,'',$pickup_datetime,$dropoff_datetime,$rbfw_enable_time_slot);
+
+            $security_deposit = rbfw_security_deposit($post_id,$rbfw_multi_item_price);
+
+            echo wp_json_encode( array(
+                'duration_price' => '',
+                'duration_price_html' => '',
+                'duration_price_number' => '',
+                'rbfw_service_price' => $rbfw_multi_item_price,
+                'rbfw_service_price_html' => wc_price($rbfw_multi_item_price),
+                'service_cost' => 0,
+                'service_cost_html' => wc_price(0),
+                'sub_total_price_html' => wc_price($rbfw_multi_item_price),
+                'discount' => '',
+                'discount_html' => '',
+                'security_deposit_desc' => $security_deposit['security_deposit_desc'],
+                'security_deposit_amount' => $security_deposit['security_deposit_amount'],
+                'total_price' => (float)$rbfw_multi_item_price + (float)$security_deposit['security_deposit_amount'],
+                'total_price_html' => wc_price((float)$rbfw_multi_item_price + (float)$security_deposit['security_deposit_amount']),
+                'max_available_qty' => $max_available_qty,
+                'total_days' => $total_days,
+                'total_duration' => $durationQty.' '.$durationType,
+                'ticket_item_quantity' => '',
+                'pricing_applied' => '',
+            ));
+
+            wp_die();
+        }
+
+
+
 
         function rbfw_bikecarmd_ajax_min_max_and_offdays_info(){
 

@@ -435,6 +435,70 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
 
 
+function rbfw_get_multi_items_available_qty($post_id, $start_date, $end_date, $type = null,$pickup_datetime=null,$dropoff_datetime=null,$rbfw_enable_time_slot='off'){
+
+
+    if (empty($post_id) || empty($start_date) || empty($end_date)) {
+        return;
+    }
+
+    $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
+    $date_range = [];
+
+    for ($currentDate = strtotime($start_date); $currentDate <= strtotime($end_date); $currentDate += (86400)) {
+        $date = gmdate('d-m-Y', $currentDate);
+        $date_range[] = $date;
+    }
+
+    $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
+
+
+    /*start extra service inventory*/
+
+    $multiple_items_instock = [];
+    $multiple_items_info = get_post_meta($post_id, 'multiple_items_info', true);
+
+    if (!empty($multiple_items_info)) {
+        foreach ($multiple_items_info as $service => $es) {
+            $service_q = [];
+            foreach ($date_range as $date) {
+                $qty = total_extra_service_quantity($es['item_name'], $date, $rbfw_inventory, $inventory_based_on_return);
+                $service_q[] = $qty;
+            }
+            $max_qty = !empty($service_q) ? max($service_q) : 0;
+            $extra_service_instock[$service] = $es['available_qty'] - $max_qty;
+        }
+    }
+    /*end extra service inventory*/
+
+    /*start service inventory*/
+    $rbfw_service_category_price = get_post_meta($post_id, 'rbfw_service_category_price', true);
+    $service_stock = [];
+    if (!empty($rbfw_service_category_price)) {
+        foreach($rbfw_service_category_price as $key=>$item1){
+            $cat_title = $item1['cat_title'];
+
+            foreach ($item1['cat_services'] as $key1=>$single){
+                if($single['title']){
+                    $service_q = [];
+                    foreach($date_range as $date){
+                        $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return));
+                    }
+                    $service_stock[] = (int)$single['stock_quantity'] - max(array_column($service_q, $single['title']));
+                }
+            }
+        }
+    }
+    /*end service inventory*/
+
+    return array(
+        'extra_service_instock' => $extra_service_instock,
+        'service_stock' => $service_stock,
+    );
+}
+
+
+
 
 
 function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_days){
