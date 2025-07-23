@@ -1049,7 +1049,6 @@ function calculateAdditional(only_calculation=false) {
         }else{
             total += price * quantity;
         }
-
     });
     jQuery('#rbfw_service_category_price').val(total.toFixed(2));
 
