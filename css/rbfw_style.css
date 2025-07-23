@@ -495,7 +495,7 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
 }
 
 .rbfw-costing {
-    background: #f9fafb;
+    background: #e8ecf1;
     padding:10px;
     position: relative;
     border-radius:5px;
@@ -1386,6 +1386,7 @@ table.rbfw_room_price_table tbody td img {
     background-color: #ECFDF5;
     padding: 10px;
     border-radius: 5px;
+    border: 1px solid #dbede5;
 }
 
 

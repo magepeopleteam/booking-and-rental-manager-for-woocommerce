@@ -968,7 +968,12 @@
 
 	function update_faq(){
 		var title   = $('input[name="rbfw_faq_title"]');
-		var content = tinyMCE.get('rbfw_faq_content').getContent();
+		var content;
+        if ($("#wp-rbfw_faq_content-wrap").hasClass('html-active')){
+            content = $('#rbfw_faq_content').val()
+        } else {
+            content = tinyMCE.get('rbfw_faq_content').getContent();
+        }
 		var postID  = $('input[name="rbfw_post_id"]');
 		var itemId = $('input[name="rbfw_faq_item_id"]');
 		$.ajax({
@@ -1000,7 +1005,12 @@
 
 	function save_faq(){
 		var title   = $('input[name="rbfw_faq_title"]');
-		var content = tinyMCE.get('rbfw_faq_content').getContent();
+        var content;
+        if ($("#wp-rbfw_faq_content-wrap").hasClass('html-active')){
+            content = $('#rbfw_faq_content').val()
+        } else {
+            content = tinyMCE.get('rbfw_faq_content').getContent();
+        }
 		var postID  = $('input[name="rbfw_post_id"]');
 		$.ajax({
 			url: rbfw_ajax_url,
