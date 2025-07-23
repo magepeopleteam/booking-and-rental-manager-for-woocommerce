@@ -82,6 +82,22 @@
 				}
 			}
 
+			public static function get_template_file_url($path=''){
+				$theme_path = get_stylesheet_directory_uri().'/templates/'.$path;
+				$default_path = RBFW_PLUGIN_URL.'/templates/'. $path;
+				if (is_dir($theme_path)) {
+					return $theme_path;
+				} elseif (is_dir($default_path)) {
+					return $default_path;
+				} elseif(file_exists($theme_path)){
+					return $theme_path;
+				}elseif(file_exists($default_path)){
+					return $default_path;
+				}else{
+					return $default_path;
+				}
+			}
+
 			//*******************************//
 			public static function get_thumbnail( $post_id = '', $image_id = '', $size = 'full' ){
 				return self::get_image_url( $post_id, $image_id, $size );

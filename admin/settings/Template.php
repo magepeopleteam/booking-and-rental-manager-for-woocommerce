@@ -59,16 +59,21 @@
 			}
 
 			public function select_template( $post_id ) {
+                $template = get_post_meta( $post_id, 'rbfw_single_template', true ) ;
+                $_current_template = $template?$template: 'Default';
 				?>
                 <section>
-                    <label for=""><?php echo esc_html__( 'Template Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-					<?php $template = get_post_meta( $post_id, 'rbfw_single_template', true ) ? get_post_meta( $post_id, 'rbfw_single_template', true ) : 'Default'; ?>
-					<?php $the_template = RBFW_Function::get_all_template(); ?>
-                    <select name="rbfw_single_template" id="rbfw_single_template">
-						<?php foreach ( $the_template as $kay => $value ): ?>
-                            <option <?php echo esc_html( $kay == $template ) ? 'selected' : '' ?> value="<?php echo esc_attr( $kay ); ?>"> <?php echo esc_html( $value ); ?> </option>
-						<?php endforeach; ?>
-                    </select>
+                    <input type="hidden" name="rbfw_single_template" id="rbfw_single_template" value="<?php echo esc_attr($_current_template); ?>" />
+                    <?php $templates = RBFW_Function::get_all_template(); ?>
+                    <?php foreach ( $templates as $key => $value ):  ?>
+                        <?php 
+                            $image = RBFW_Function::get_template_file_url('screenshot/').strtolower($key);
+                        ?>
+                        <div class="rbfw-single-template <?php echo $_current_template == $key?'active':''; ?>" data-rbfw-template="<?php echo $key; ?>">
+                            <img src="<?php echo $image.'.png'; ?>" >
+                            <h5><?php echo $value; ?></h5>
+                        </div>
+                    <?php endforeach; ?>
                 </section>
 				<?php
 			}

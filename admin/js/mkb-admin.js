@@ -1435,6 +1435,11 @@
         }
     });
     
+    $(document).on('click', '.rbfw-single-template', function (e) {
+        $('#rbfw_single_template').val($(this).data('rbfw-template'));
+        $('.rbfw-single-template').removeClass('active')
+        $(this).addClass('active');
+    });
     // ===========resort===========
 }(jQuery));
 
