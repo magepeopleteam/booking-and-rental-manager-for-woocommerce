@@ -337,13 +337,10 @@
                     </div>
                 </section>
                 <section class="rbfw-sub-title">
-                    <div>
-                        <label><?php echo esc_html( "Sub Title",'booking-and-rental-manager-for-woocommerce'); ?></label>
-                        <p><?php echo esc_html( "Add a sub title",'booking-and-rental-manager-for-woocommerce'); ?></p>
-                    </div>
-                    <div class="item_stock_quantity">
-                        <input type="text" name="rbfw_item_sub_title" value="<?php echo esc_attr($sub_title); ?>" placeholder="<?php echo esc_attr($sub_title); ?>">
-                    </div>
+                    
+                    
+                    <input type="text" name="rbfw_item_sub_title" value="<?php echo esc_attr($sub_title); ?>" placeholder="<?php echo esc_attr($sub_title); ?>" style="width:100%;">
+                    
                 </section>
                 <?php
             }
