@@ -335,7 +335,7 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
     font-family: FontAwesome;
     position: absolute;
     top: 50%;
-    right: 15px;
+    right: 10px;
     transform: translateY(-50%);
     font-size: 14px;
 }
@@ -1371,6 +1371,7 @@ table.rbfw_room_price_table tbody td img {
     font-size: 16px;
     font-weight: normal;
     text-align: center;
+    width:40px;
     margin: 0 !important;
     padding: 4px !important;
     margin-bottom: 0;
@@ -1427,6 +1428,7 @@ a.rbfw_qty_plus.rbfw_timely_es_qty_plus i{
 .pricing-content .rbfw_pricing_info_heading {
     border-bottom: 1px solid #e7dede !important;
     padding-bottom: 10px;
+    padding-left: 10px;
     width: 100%;
 }
 
