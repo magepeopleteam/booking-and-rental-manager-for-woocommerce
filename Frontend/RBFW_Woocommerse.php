@@ -216,44 +216,39 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 $rbfw_dropoff_point        = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
                 $rbfw_duration_md       = isset( $sd_input_data_sabitized['rbfw_duration_md'] ) ? $sd_input_data_sabitized['rbfw_duration_md'] : '';
 
-                $rbfw_multi_item_price = isset($_POST['rbfw_multi_item_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_multi_item_price']))):'';
-                $rbfw_service_category_price = isset($_POST['rbfw_service_category_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_category_price']))):'';
-                $multiple_items_info = (isset( $sd_input_data_sabitized['multiple_items_info'] ) && is_array( $sd_input_data_sabitized['multiple_items_info'] ) ) ? $sd_input_data_sabitized['multiple_items_info'] : [];
-                $rbfw_service_info             = array();
-                if ( ! empty( $multiple_items_info ) ) {
-                    foreach ( $multiple_items_info as $key => $value ) {
-                        $item_name = ! empty( $value['item_name'] ) ? $value['item_name'] : '';
-                        $item_qty  = ! empty( $value['item_qty'] ) ? $value['item_qty'] : 0;
-                        if ( $item_qty > 0 ) {
-                            $rbfw_service_info[ $item_name ] = $item_qty;
-                        }
-                    }
-                }
-
                 $total_days = isset($_POST['total_days'])?sanitize_text_field(wp_unslash($_POST['total_days'])):'';
-                $rbfw_multi_items_additional_service_price = 0;
-                $rbfw_service_infos_post = isset( $sd_input_data_sabitized['rbfw_service_price_data'] ) ? $sd_input_data_sabitized['rbfw_service_price_data'] : [];
-                $rbfw_multi_items_additional_service_info = [];
-                if ( ! empty( $rbfw_service_infos_post ) ) {
-                    foreach ( $rbfw_service_infos_post as $key_cat => $value ) {
-                        $rbfw_multi_items_additional_service_info[ $value['cat_title'] ] = [];
-                        foreach ( $value as $key_ser => $item ) {
-                            if ( isset( $item['name'] ) && $item['name'] && $item['quantity'] ) {
-                                $rbfw_multi_items_additional_service_info[ $value['cat_title'] ][] = $item;
-                                if ( $item['service_price_type'] == 'day_wise' ) {
-                                    $rbfw_multi_items_additional_service_price = $rbfw_multi_items_additional_service_price + $item['price'] * $item['quantity'] * $total_days;
-                                } else {
-                                    $rbfw_multi_items_additional_service_price = $rbfw_multi_items_additional_service_price + $item['price'] * $item['quantity'];
-                                }
-                            }
+
+                $rbfw_multi_item_price = isset($_POST['rbfw_multi_item_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_multi_item_price']))):'';
+                $rbfw_category_wise_price = isset($_POST['rbfw_service_category_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_category_price']))):'';
+
+
+                $multiple_items_info = (isset( $sd_input_data_sabitized['multiple_items_info'] ) && is_array( $sd_input_data_sabitized['multiple_items_info'] ) ) ? $sd_input_data_sabitized['multiple_items_info'] : [];
+                $filteredItems = array_filter($multiple_items_info, function($multiple_items_info) {
+                    return $multiple_items_info['item_qty'] > 0;
+                });
+                $multiple_items_info = array_values($filteredItems);
+
+
+                $rbfw_category_wise_info = isset( $sd_input_data_sabitized['rbfw_category_wise_info'] ) ? $sd_input_data_sabitized['rbfw_category_wise_info'] : [];
+                foreach ($rbfw_category_wise_info as $category) {
+                    $newCategory = ['cat_title' => $category['cat_title']];
+                    foreach ($category as $key => $item) {
+                        if (is_array($item) && isset($item['quantity']) && $item['quantity'] > 0) {
+                            $newCategory[] = $item;
                         }
                     }
+                    if (count($newCategory) > 1) {
+                        $filtered[] = $newCategory;
+                    }
                 }
+                $rbfw_category_wise_info = $filtered;
 
-                $sub_total_price = $rbfw_multi_item_price + $rbfw_service_category_price;
+
+
+                $sub_total_price = $rbfw_multi_item_price + $rbfw_category_wise_price;
 
                 $security_deposit                                 = rbfw_security_deposit( $rbfw_id, $sub_total_price );
-                $total_price                                      = $sub_total_price + $rbfw_multi_items_additional_service_price - $discount_amount;
+                $total_price                                      = $sub_total_price + $rbfw_category_wise_price - $discount_amount;
                 $rbfw_ticket_info                                 = $this->rbfw_cart_multi_items_ticket_info( $rbfw_id, $start_date, $end_date, $start_time, $end_time, $rbfw_pickup_point, $rbfw_dropoff_point,$total_price, $rbfw_service_info , $rbfw_multi_items_additional_service_info, $rbfw_regf_info, $security_deposit);
                 $cart_item_data['rbfw_pickup_point']              = $rbfw_pickup_point;
                 $cart_item_data['rbfw_dropoff_point']             = $rbfw_dropoff_point;
@@ -264,11 +259,13 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 $cart_item_data['rbfw_end_time']                  = $end_time;
                 $cart_item_data['rbfw_start_datetime']            = $pickup_datetime;
                 $cart_item_data['rbfw_end_datetime']              = $dropoff_datetime;
-                $cart_item_data['rbfw_item_quantity']             = $rbfw_item_quantity;
-                $cart_item_data['rbfw_service_info']              = $rbfw_service_info;
-                $cart_item_data['rbfw_service_infos']             = $rbfw_multi_items_additional_service_info;
+
+
+                $cart_item_data['multiple_items_info']          = $multiple_items_info;
                 $cart_item_data['rbfw_multi_item_price']          = $rbfw_multi_item_price;
-                $cart_item_data['rbfw_service_category_price']    = $rbfw_service_category_price;
+
+                $cart_item_data['rbfw_category_wise_info']    = $rbfw_category_wise_info;
+
                 $cart_item_data['duration_type']              = $durationType;
                 $cart_item_data['duration_qty']              = $durationQty;
                 $cart_item_data['rbfw_ticket_info']               = $rbfw_ticket_info;
@@ -656,10 +653,12 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 }
                 $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
 
-            } elseif ( $rbfw_rent_type == 'multiple_items'  ) {
 
 
 
+
+
+            }elseif ( $rbfw_rent_type == 'multiple_items'  ) {
 
                 $pickup_location     = $values['rbfw_pickup_point'] ? $values['rbfw_pickup_point'] : '';
                 $dropoff_location    = $values['rbfw_dropoff_point'] ? $values['rbfw_dropoff_point'] : '';
@@ -667,32 +666,20 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 $rbfw_start_time     = $values['rbfw_start_time'] ? $values['rbfw_start_time'] : '';
                 $rbfw_ticket_info    = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
 
-                $rbfw_multi_item_price    = $values['rbfw_multi_item_price'] ? $values['rbfw_multi_item_price'] : [];
+                $rbfw_multi_item_price    = $values['rbfw_multi_item_price'] ? $values['rbfw_multi_item_price'] : 0;
                 $rbfw_service_category_price    = $values['rbfw_service_category_price'] ? $values['rbfw_service_category_price'] : [];
 
 
                 $duration_type     = $values['duration_type'] ? $values['duration_type'] : '';
                 $duration_qty      = $values['duration_qty'] ? $values['duration_qty'] : '';
 
-                $rbfw_bikecarsd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : array();
-                if ( ! empty( $rbfw_bikecarsd_data ) ):
-                    $rent_types = array_column( $rbfw_bikecarsd_data, 'price', 'rent_type' );
-                else:
-                    $rent_types = array();
-                endif;
+
                 $rbfw_service_info       = $values['rbfw_service_info'] ? $values['rbfw_service_info'] : [];
 
 
                 $multiple_items_info = get_post_meta( $rbfw_id, 'multiple_items_info', true ) ? get_post_meta( $rbfw_id, 'multiple_items_info', true ) : array();
-
-
                 $pricing_type = ($duration_type == 'hourly' ? 'hourly_price' : ($duration_type == 'daily' ? 'daily_price' : ($duration_type == 'weekly' ? 'weekly_price':'monthly_price')));
 
-                if(! empty($multiple_items_info)):
-                    $all_services = array_column($multiple_items_info,$pricing_type,'item_name');
-                else:
-                    $all_services = array();
-                endif;
 
 
                 if ( $rbfw_start_time != '00:00' ) {
@@ -708,37 +695,18 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 }
 
 
-                if ( ! empty( $rbfw_service_info ) ) {
-                    foreach ( $rbfw_service_info as $key => $value ) {
-                        $service_name = $key; //service name
-                        if ( array_key_exists( $service_name, $all_services ) ) { // if service name exist in array
-                            $service_price        = $all_services[ $service_name ]; // get type price from array
-                            $service_qty          = $value;
-                            $total_service_price  = (float) $service_price * (float) $service_qty;
-                            $rent_service_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
-                            $rent_service_content .= '<tr>';
-                            $rent_service_content .= '<td style="border:1px solid #f5f5f5;">';
-                            $rent_service_content .= '<strong>' . $service_name . '</strong>';
-                            $rent_service_content .= '</td>';
-                            $rent_service_content .= '<td style="border:1px solid #f5f5f5;">';
-                            $rent_service_content .= '(' . wc_price( $service_price ) . ' x ' . $service_qty . ') = ' . wc_price( $total_service_price );
-                            $rent_service_content .= '</td>';
-                            $rent_service_content .= '</tr>';
-                            $rent_service_content .= '</table>';
-                            if ( $service_qty > 0 ):
-                                $item->add_meta_data( rbfw_string_return( 'rbfw_text_extra_service_information', esc_html__( 'Extra Service Information', 'booking-and-rental-manager-for-woocommerce' ) ), $rent_service_content );
-                            endif;
-                        }
-                    }
-                }
-
                 $security_deposit = rbfw_security_deposit( $rbfw_id, ( (int) $rbfw_multi_item_price + (int) $rbfw_service_category_price ) );
 
 
                 if ( $security_deposit['security_deposit_amount'] ) {
                     $item->add_meta_data( $rbfw_security_deposit_label, wc_price( $security_deposit['security_deposit_amount'] ) );
                 }
+
+
+                $item->add_meta_data( esc_html__('Items Informations','booking-and-rental-manager-for-woocommerce'), $multiple_items_info );
                 $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
+
+
 
             } else {
                 $rbfw_extra_service_data = get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();

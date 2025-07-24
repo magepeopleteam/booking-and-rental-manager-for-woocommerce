@@ -61,7 +61,7 @@
         </div>
         <div class="rbfw_dt_content_col2">
             <div class="rbfw_dt_post_content">
-				<?php echo esc_html( $post_content ); ?>
+				<?php echo wp_kses( $post_content , rbfw_allowed_html() ); ?>
             </div>
             <div class="rbfw_dt_highlighted_features">
 				<?php if ( $rbfw_feature_category ) :

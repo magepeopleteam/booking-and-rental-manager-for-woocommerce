@@ -72,6 +72,8 @@ function fetch_order_details_callback() {
                         $dropoff_point  = ! empty( $ticket_info['rbfw_dropoff_point'] ) ? $ticket_info['rbfw_dropoff_point'] : '';
                     } elseif ( $rent_type == 'multiple_items') {
                         $service_info   = ! empty( $ticket_info['rbfw_service_info'] ) ? $ticket_info['rbfw_service_info'] : [];
+
+                        print_r($service_info);
                         $total_days     = ! empty( $ticket_info['total_days'] ) ? $ticket_info['total_days'] : 1;
                         $pickup_point   = ! empty( $ticket_info['rbfw_pickup_point'] ) ? $ticket_info['rbfw_pickup_point'] : '';
                         $dropoff_point  = ! empty( $ticket_info['rbfw_dropoff_point'] ) ? $ticket_info['rbfw_dropoff_point'] : '';

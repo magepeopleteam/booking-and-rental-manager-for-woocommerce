@@ -539,34 +539,20 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $rbfw_start_datetime = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
     $rbfw_end_datetime = $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
 
+    $multiple_items_info 	= $cart_item['multiple_items_info'] ? $cart_item['multiple_items_info'] : [];
 
-    $rbfw_service_info 	= $cart_item['rbfw_service_info'] ? $cart_item['rbfw_service_info'] : [];
-
-    $rbfw_service_infos 	= $cart_item['rbfw_service_infos'] ? $cart_item['rbfw_service_infos'] : [];
+    $rbfw_category_wise_info 	= $cart_item['rbfw_category_wise_info'] ? $cart_item['rbfw_category_wise_info'] : [];
 
 
-    $multiple_items_info = get_post_meta( $rbfw_id, 'multiple_items_info', true ) ? get_post_meta( $rbfw_id, 'multiple_items_info', true ) : array();
 
     $rbfw_pickup_point  = isset($cart_item['rbfw_pickup_point']) ? $cart_item['rbfw_pickup_point'] : '';
     $rbfw_dropoff_point = isset($cart_item['rbfw_dropoff_point']) ? $cart_item['rbfw_dropoff_point'] : '';
 
-    $rbfw_item_quantity = 1;
-
     $duration_type  = isset($cart_item['duration_type']) ? $cart_item['duration_type'] : '';
     $duration_qty  = isset($cart_item['duration_qty']) ? $cart_item['duration_qty'] : '';
 
-   // echo '<pre>'; print_r($cart_item);echo '<pre>';exit;
-
     $pricing_type = ($duration_type == 'hourly' ? 'hourly_price' : ($duration_type == 'daily' ? 'daily_price' : ($duration_type == 'weekly' ? 'weekly_price':'monthly_price')));
-
     $total_days = $cart_item['total_days'];
-
-    if(! empty($multiple_items_info)):
-        $all_services = array_column($multiple_items_info,$pricing_type,'item_name');
-    else:
-        $all_services = array();
-    endif;
-
 
     ?>
     <table class="rbfw_bikecarsd_cart_table rbfw_room_cart_table">
@@ -606,38 +592,27 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
         <?php endif; ?>
 
 
+        <?php if ( ! empty( $multiple_items_info ) ){
+            foreach ($multiple_items_info as $key => $value){
+                ?>
+                <tr>
+                    <th>
+                        <?php echo esc_html($value['item_name']); ?>:
+                    </th>
+                    <td>(<?php echo wp_kses(wc_price($value['item_price']),rbfw_allowed_html()); ?> x <?php echo esc_html($value['item_qty']); ?> x <?php echo esc_html($duration_qty); ?>) = <?php echo wp_kses(wc_price($value['item_price'] * $value['item_qty']),rbfw_allowed_html()); ?></td>
+                </tr>
+                <?php
+            }
+        } ?>
 
-
-        <?php if ( ! empty( $rbfw_service_info ) ):
-            foreach ($rbfw_service_info as $key => $value):
-                $service_name = $key; //service name
-
-                if(array_key_exists($service_name, $all_services)){ // if service name exist in array
-                    $service_price = $all_services[$service_name]; // get type price from array
-                    $service_qty = $value;
-                    $total_service_price = (float)$service_price * (float)$service_qty * $duration_qty;
-                    ?>
-                    <tr>
-                        <th>
-                            <?php echo esc_html($service_name); ?>:
-                        </th>
-                        <td>(<?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?> x <?php echo esc_html($service_qty); ?> x <?php echo esc_html($duration_qty); ?>) = <?php echo wp_kses(wc_price($total_service_price),rbfw_allowed_html()); ?></td>
-                    </tr>
-                    <?php
-                }
-
-            endforeach;
-
-        endif; ?>
-
-        <?php  if ( ! empty( $rbfw_service_infos ) ){ ?>
-            <?php foreach ($rbfw_service_infos as $key => $value){ ?>
-                <?php if(count($value)){ ?>
-                    <tr>
-                        <th><?php echo esc_html($key); ?> </th>
-                        <td>
-                            <table>
-                                <?php foreach ($value as $key1=>$item){ ?>
+        <?php  if ( ! empty( $rbfw_category_wise_info ) ){ ?>
+            <?php foreach ($rbfw_category_wise_info as $key => $value){ ?>
+                <tr>
+                    <th><?php echo esc_html($value['cat_title']); ?> </th>
+                    <td>
+                        <table>
+                            <?php foreach ($value as $item){ ?>
+                                <?php if(isset($item['name'])){ ?>
                                     <tr>
                                         <td><?php echo esc_html($item['name']); ?></td>
                                         <td><?php
@@ -650,14 +625,12 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                                         </td>
                                     </tr>
                                 <?php } ?>
-                            </table>
-                        </td>
-                    </tr>
-                <?php } ?>
+                            <?php } ?>
+                        </table>
+                    </td>
+                </tr>
             <?php } ?>
         <?php } ?>
-
-
 
         <?php if ( ! empty( $security_deposit_amount ) ): ?>
             <tr>
