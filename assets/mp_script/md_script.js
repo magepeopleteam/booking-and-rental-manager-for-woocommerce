@@ -880,8 +880,10 @@ function calculateTotal(only_calculation=false) {
 
     if(total){
         jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',false);
+        jQuery('.multi-service-category-section').show();
     }else{
         jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
+        jQuery('.multi-service-category-section').hide();
     }
 
 
@@ -967,7 +969,7 @@ function rbfw_multi_items_ajax_price_calculation(){
 
 
             jQuery('.rbfw_quantity_md').show();
-            jQuery('.multi-service-category-section').show();
+
             jQuery('.rbfw-variations-content-wrapper').show();
             jQuery('.rbfw_resourse_md').show();
             jQuery('.rbfw_bikecarmd_price_result').show();

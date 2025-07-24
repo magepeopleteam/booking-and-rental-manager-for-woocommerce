@@ -476,7 +476,7 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                 $option_value  = get_post_meta($post_id, 'rbfw_service_category_price', true);
                 $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
                 if (!empty($option_value) && $enable_service_price === 'on') { ?>
-                    <div class="multi-service-category-section">
+                    <div class="multi-service-category-section" style="display: none">
                         <?php foreach ($option_value as $cat => $item) { ?>
                             <div class="servise-item">
                                 <div class="rbfw-single-right-heading"><?php echo esc_html($item['cat_title']); ?></div>

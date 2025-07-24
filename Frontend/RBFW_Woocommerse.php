@@ -248,7 +248,7 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 $sub_total_price = $rbfw_multi_item_price + $rbfw_category_wise_price;
 
                 $security_deposit                                 = rbfw_security_deposit( $rbfw_id, $sub_total_price );
-                $total_price                                      = $sub_total_price + $rbfw_category_wise_price - $discount_amount;
+                $total_price                                      = $sub_total_price - $discount_amount;
                 $rbfw_ticket_info                                 = $this->rbfw_cart_multi_items_ticket_info( $rbfw_id, $start_date, $end_date, $start_time, $end_time, $rbfw_pickup_point, $rbfw_dropoff_point,$total_price, $rbfw_service_info , $rbfw_multi_items_additional_service_info, $rbfw_regf_info, $security_deposit);
                 $cart_item_data['rbfw_pickup_point']              = $rbfw_pickup_point;
                 $cart_item_data['rbfw_dropoff_point']             = $rbfw_dropoff_point;

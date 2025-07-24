@@ -615,7 +615,8 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                                 <?php if(isset($item['name'])){ ?>
                                     <tr>
                                         <td><?php echo esc_html($item['name']); ?></td>
-                                        <td><?php
+                                        <td>
+                                            <?php
                                             if($item['service_price_type']=='day_wise'){
                                                 echo '('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) . 'x' .esc_html($total_days) .'='.wp_kses(wc_price($item['price']*(int)$item['quantity']*$total_days),rbfw_allowed_html()).')';
                                             }else{
