@@ -1436,9 +1436,23 @@
     });
     
     $(document).on('click', '.rbfw-single-template', function (e) {
-        $('#rbfw_single_template').val($(this).data('rbfw-template'));
+        var currentTemplate = $(this).data('rbfw-template');
+        $('#rbfw_single_template').val(currentTemplate);
         $('.rbfw-single-template').removeClass('active')
         $(this).addClass('active');
+
+        $('.donut-template-sidebar-switch').slideUp();
+        $('.sidebar-testimonial-settigns').slideUp();
+        $('.donut-template-sidebar-content').slideUp();
+        $('.additional-gallery').slideUp();
+        if(currentTemplate=='Donut'){
+            $('.donut-template-sidebar-switch').slideDown();
+            $('.sidebar-testimonial-settigns').slideDown();
+            $('.donut-template-sidebar-content').slideDown();
+        }
+        if(currentTemplate=='Muffin'){
+            $('.additional-gallery').slideDown();
+        }
     });
     // ===========resort===========
 }(jQuery));

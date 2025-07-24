@@ -70,7 +70,7 @@
                             $image = RBFW_Function::get_template_file_url('screenshot/').strtolower($key);
                         ?>
                         <div class="rbfw-single-template <?php echo $_current_template == $key?'active':''; ?>" data-rbfw-template="<?php echo $key; ?>">
-                            <img src="<?php echo $image.'.png'; ?>" >
+                            <img src="<?php echo $image.'.webp'; ?>" >
                             <h5><?php echo $value; ?></h5>
                         </div>
                     <?php endforeach; ?>
