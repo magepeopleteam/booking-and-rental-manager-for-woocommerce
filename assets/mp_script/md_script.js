@@ -812,6 +812,7 @@ jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #
 
     if(pickup_date && pickup_time && durationType && durationQty){
         calculateTotal();
+
     }
 
 });
@@ -860,27 +861,37 @@ jQuery(document).on('click', '.rbfw_multi_items_qty_minus', function () {
 
 
 function calculateTotal(only_calculation=false) {
-    let total = 0;
+
+    var durationType = jQuery('#durationType').val();
+    var durationQty = parseInt(jQuery('#durationQty').val()) || 1;
+    var total = 0;
     jQuery('.rbfw_muiti_items_qty').each(function () {
-        var durationType = jQuery('#durationType').val();
-        var durationQty = jQuery('#durationQty').val();
-        const price = parseFloat(jQuery(this).data('price-'+durationType)) || 0;
-        const quantity = jQuery(this).val() || 0;
-        total += price * quantity * durationQty;
+        var $qtyInput = jQuery(this);
+        var pricePerUnit = parseFloat($qtyInput.data('price-' + durationType)) || 0;
+        var quantity = parseInt($qtyInput.val()) || 0;
+
+        var itemTotal = pricePerUnit * quantity * durationQty;
+        $qtyInput
+            .closest('.rbfw_qty_input')
+            .find('.rbfw_item_peice')
+            .val(pricePerUnit.toFixed(2));
+
+        total += itemTotal;
     });
-    // Display the total (you can update this selector to your actual element)
+
 
     if(total){
         jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',false);
+        jQuery('.multi-service-category-section').show();
     }else{
         jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
+        jQuery('.multi-service-category-section').hide();
     }
 
 
     jQuery('#rbfw_multi_item_price').val(total.toFixed(2));
 
     total = total + parseInt(jQuery('#rbfw_service_category_price').val());
-
 
     if(only_calculation){
         jQuery('.price-figure').text(rbfw_translation.currency+total.toFixed(2))
@@ -895,6 +906,7 @@ function rbfw_multi_items_ajax_price_calculation(){
     let date_format = jQuery('#wp_date_format').val();
     let rbfw_available_time = jQuery('#rbfw_available_time').val();
     let rbfw_multi_item_price = jQuery('#rbfw_multi_item_price').val();
+    let rbfw_service_category_price = jQuery('#rbfw_service_category_price').val();
     let pickup_date = jQuery('#pickup_date').val();
     let pickup_time = jQuery('#pickup_time').find(':selected').val();
     let durationType = jQuery('#durationType').val();
@@ -917,6 +929,7 @@ function rbfw_multi_items_ajax_price_calculation(){
             'durationType': durationType,
             'durationQty': durationQty,
             'rbfw_multi_item_price': rbfw_multi_item_price,
+            'rbfw_service_category_price': rbfw_service_category_price,
             'rbfw_available_time': rbfw_available_time,
             'nonce' : rbfw_ajax.nonce
         },
@@ -958,7 +971,7 @@ function rbfw_multi_items_ajax_price_calculation(){
 
 
             jQuery('.rbfw_quantity_md').show();
-            jQuery('.multi-service-category-section').show();
+
             jQuery('.rbfw-variations-content-wrapper').show();
             jQuery('.rbfw_resourse_md').show();
             jQuery('.rbfw_bikecarmd_price_result').show();
@@ -989,6 +1002,8 @@ function rbfw_multi_items_ajax_price_calculation(){
                 }
                 jQuery(this).attr('max',response.max_available_qty.extra_service_instock[index]);
             });
+
+            calculateAdditional(true);
 
 
         },
@@ -1052,6 +1067,15 @@ function calculateAdditional(only_calculation=false) {
             total += price * quantity;
         }
     });
+
+    if(total){
+        jQuery('#AddonsPrice span').text(rbfw_translation.currency + total.toFixed(2));
+        jQuery('#AddonsPrice').show();
+    }else{
+        jQuery('#AddonsPrice').hide();
+    }
+
+
     jQuery('#rbfw_service_category_price').val(total.toFixed(2));
 
     total = total + parseInt(jQuery('#rbfw_multi_item_price').val());
@@ -1062,6 +1086,59 @@ function calculateAdditional(only_calculation=false) {
         rbfw_multi_items_ajax_price_calculation();
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const qtyInputs = document.querySelectorAll('.rbfw_muiti_items_qty');
+    const summaryDiv = document.getElementById('summary');
+
+    function updateSummary() {
+        let summaryHtml = '<ul>';
+        let hasItems = false;
+        var durationType = jQuery('#durationType').val();
+        var durationQty = parseInt(jQuery('#durationQty').val()) || 1;
+
+        qtyInputs.forEach(input => {
+            const qty = parseInt(input.value);
+            if (qty > 0) {
+                const itemName = input.dataset.name;
+                const pricePerUnit = parseFloat(input.dataset[`price${durationType.charAt(0).toUpperCase() + durationType.slice(1)}`]) || 0;
+
+                const total = (qty * durationQty *  pricePerUnit).toFixed(2);
+                summaryHtml += `<li>${itemName} -  ${qty} x ${durationQty} x €${pricePerUnit} = €${total}</li>`;
+                hasItems = true;
+            }
+        });
+
+        summaryHtml += '</ul>';
+        summaryDiv.innerHTML = hasItems ? summaryHtml : '';
+    }
+
+    // Attach event listeners to quantity inputs
+    qtyInputs.forEach(input => {
+        input.addEventListener('input', updateSummary);
+    });
+
+    // Also trigger update when clicking plus or minus buttons
+    const plusButtons = document.querySelectorAll('.rbfw_qty_plus');
+    const minusButtons = document.querySelectorAll('.rbfw_qty_minus');
+    const durationType = document.querySelectorAll('#durationType');
+
+    [...plusButtons, ...minusButtons].forEach(btn => {
+        btn.addEventListener('click', function () {
+            // Slight delay to ensure value updates first
+            setTimeout(updateSummary, 50);
+        });
+    });
+
+    [...durationType].forEach(btn => {
+        btn.addEventListener('change', function () {
+            // Slight delay to ensure value updates first
+            setTimeout(updateSummary, 50);
+        });
+    });
+
+
+});
 
 
 function getURLParameter(name) {
