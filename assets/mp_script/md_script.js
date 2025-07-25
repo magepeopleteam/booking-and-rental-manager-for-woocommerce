@@ -1028,7 +1028,7 @@ jQuery(document).on('input', '.rbfw_muiti_items_additional_service_qty', functio
 
 // Handle plus button
 jQuery(document).on('click', '.rbfw_additional_service_qty_plus', function () {
-    const row = jQuery(this).closest('tr');
+    const row = jQuery(this).closest('.service-price-item');
     const input = row.find('.rbfw_muiti_items_additional_service_qty');
     const max = parseInt(input.attr('max')) || 100;
     let value = parseInt(input.val()) || 0;
@@ -1041,7 +1041,7 @@ jQuery(document).on('click', '.rbfw_additional_service_qty_plus', function () {
 // Handle minus button
 jQuery(document).on('click', '.rbfw_additional_service_qty_minus', function () {
 
-    const row = jQuery(this).closest('tr');
+    const row = jQuery(this).closest('.service-price-item');
     const input = row.find('.rbfw_muiti_items_additional_service_qty');
     let value1 = parseInt(input.val()) || 0;
 

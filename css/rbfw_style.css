@@ -7473,3 +7473,13 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
 .rbfw-costing .rbfw-single-right-heading{
     margin-top:7px;
 }
+
+.rbfw_bikecarmd_es_table .service-price-item{
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    padding:5px 0;
+}
+.rbfw_bikecarmd_es_table .service-price-item:last-child{
+    border:0;
+}
