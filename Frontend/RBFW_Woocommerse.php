@@ -280,7 +280,7 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 $start_date                = isset( $sd_input_data_sabitized['rbfw_pickup_start_date'] ) ? $sd_input_data_sabitized['rbfw_pickup_start_date'] : '';
                 $end_date                  = isset( $sd_input_data_sabitized['rbfw_pickup_end_date'] ) ? $sd_input_data_sabitized['rbfw_pickup_end_date'] : '';
                 $start_time                = isset( $sd_input_data_sabitized['rbfw_pickup_start_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_start_time'] : '';
-                $end_time                  = isset( $sd_input_data_sabitized['rbfw_pickup_end_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_end_time'] : rbfw_end_time();
+                $end_time                  = isset( $sd_input_data_sabitized['rbfw_pickup_end_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_end_time'] : '';
                 $pickup_datetime           = gmdate( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
                 $dropoff_datetime          = gmdate( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
                 $rbfw_pickup_point         = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
