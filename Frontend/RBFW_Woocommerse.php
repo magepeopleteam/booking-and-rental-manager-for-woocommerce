@@ -205,7 +205,7 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 $start_time                = isset( $sd_input_data_sabitized['rbfw_pickup_start_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_start_time'] : '';
                 $pickup_datetime           = gmdate( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
                 $durationType = isset($_POST['durationType'])?sanitize_text_field(wp_unslash($_POST['durationType'])):'';
-                $durationQty = isset($_POST['durationQty'])?sanitize_text_field(wp_unslash($_POST['durationQty'])):'';
+                $durationQty = isset($_POST['durationQty'])?sanitize_text_field(wp_unslash($_POST['durationQty'])):0;
                 $start_date_time = new DateTime($start_date.' '.$start_time);
                 $total_hours = ($durationType == 'Hours' ? $durationQty : ($durationType == 'Days' ? $durationQty * 24 : $durationQty * 24 * 7));
                 $start_date_time->modify("+$total_hours hours");
@@ -218,8 +218,8 @@ if (!class_exists('MPTBM_Woocommerce')) {
 
                 $total_days = isset($_POST['total_days'])?sanitize_text_field(wp_unslash($_POST['total_days'])):'';
 
-                $rbfw_multi_item_price = isset($_POST['rbfw_multi_item_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_multi_item_price']))):'';
-                $rbfw_category_wise_price = isset($_POST['rbfw_service_category_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_category_price']))):'';
+                $rbfw_multi_item_price = isset($_POST['rbfw_multi_item_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_multi_item_price']))):0;
+                $rbfw_category_wise_price = isset($_POST['rbfw_service_category_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_category_price']))):0;
 
 
                 $multiple_items_info = (isset( $sd_input_data_sabitized['multiple_items_info'] ) && is_array( $sd_input_data_sabitized['multiple_items_info'] ) ) ? $sd_input_data_sabitized['multiple_items_info'] : [];
@@ -667,19 +667,14 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 $rbfw_ticket_info    = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
 
                 $rbfw_multi_item_price    = $values['rbfw_multi_item_price'] ? $values['rbfw_multi_item_price'] : 0;
-                $rbfw_service_category_price    = $values['rbfw_service_category_price'] ? $values['rbfw_service_category_price'] : [];
+                $rbfw_service_category_price    = '0';
 
 
                 $duration_type     = $values['duration_type'] ? $values['duration_type'] : '';
                 $duration_qty      = $values['duration_qty'] ? $values['duration_qty'] : '';
 
 
-                $rbfw_service_info       = $values['rbfw_service_info'] ? $values['rbfw_service_info'] : [];
-
-
                 $multiple_items_info = get_post_meta( $rbfw_id, 'multiple_items_info', true ) ? get_post_meta( $rbfw_id, 'multiple_items_info', true ) : array();
-                $pricing_type = ($duration_type == 'hourly' ? 'hourly_price' : ($duration_type == 'daily' ? 'daily_price' : ($duration_type == 'weekly' ? 'weekly_price':'monthly_price')));
-
 
 
                 if ( $rbfw_start_time != '00:00' ) {
@@ -703,7 +698,120 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 }
 
 
-                $item->add_meta_data( esc_html__('Items Informations','booking-and-rental-manager-for-woocommerce'), $multiple_items_info );
+                ?>
+
+
+
+
+                <?php  if ( ! empty( $rbfw_category_wise_info ) ){ ?>
+                    <?php foreach ($rbfw_category_wise_info as $key => $value){ ?>
+                        <tr>
+                            <th><?php echo esc_html($value['cat_title']); ?> </th>
+                            <td>
+                                <table>
+                                    <?php foreach ($value as $item){ ?>
+                                        <?php if(isset($item['name'])){ ?>
+                                            <tr>
+                                                <td><?php echo esc_html($item['name']); ?></td>
+                                                <td>
+                                                    <?php
+                                                    if($item['service_price_type']=='day_wise'){
+                                                        echo '('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) . 'x' .esc_html($total_days) .'='.wp_kses(wc_price($item['price']*(int)$item['quantity']*$total_days),rbfw_allowed_html()).')';
+                                                    }else{
+                                                        echo ('('.wp_kses(wc_price($item['price']),rbfw_allowed_html()). 'x'. esc_html($item['quantity']) .'='.wp_kses(wc_price($item['price']*$item['quantity']),rbfw_allowed_html())).')';
+                                                    }
+                                                    ?>
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </table>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                <?php } ?>
+
+
+                <?php
+
+
+                $multiple_items_info = $values['multiple_items_info'] ?? [];
+                $multiple_items_info_meta = '';
+
+                if ( ! empty( $multiple_items_info ) ) {
+                    $multiple_items_info_meta .= '<table>';
+                    foreach ( $multiple_items_info as $key => $value ) {
+                        $item_name = esc_html( $value['item_name'] );
+                        $item_price = floatval( $value['item_price'] );
+                        $item_qty = intval( $value['item_qty'] );
+                        $total_days = intval( $duration_qty );
+                        $total_price = $item_price * $item_qty * $total_days;
+
+                        $price_string = '(' .
+                            wp_kses( wc_price( $item_price ), rbfw_allowed_html() ) .
+                            ' x ' . esc_html( $item_qty ) .
+                            ' x ' . esc_html( $total_days ) .
+                            ') = ' . wp_kses( wc_price( $total_price ), rbfw_allowed_html() );
+
+                        $multiple_items_info_meta .= '<tr>';
+                        $multiple_items_info_meta .= '<th>' . $item_name . '</th>';
+                        $multiple_items_info_meta .= '<td>' . $price_string . '</td>';
+                        $multiple_items_info_meta .= '</tr>';
+                    }
+                    $multiple_items_info_meta .= '</table>';
+
+                    $item->add_meta_data(esc_html__( 'Items Informations', 'booking-and-rental-manager-for-woocommerce' ), $multiple_items_info_meta);
+                }
+
+
+                $rbfw_category_wise_info 	= $values['rbfw_category_wise_info'] ? $values['rbfw_category_wise_info'] : [];
+
+
+
+
+                $rbfw_category_wise_info_meta = '';
+
+                if ( ! empty( $rbfw_category_wise_info ) ) {
+                    $rbfw_category_wise_info_meta .= '<table>';
+                    foreach ( $rbfw_category_wise_info as $key => $value ) {
+                        $rbfw_category_wise_info_meta .= '<tr>';
+                        $rbfw_category_wise_info_meta .= '<th>' . esc_html( $value['cat_title'] ) . '</th>';
+                        $rbfw_category_wise_info_meta .= '<td>';
+                        $rbfw_category_wise_info_meta .= '<table>';
+
+                        foreach ( $value as $single ) {
+
+                            if ( isset( $single['name'] ) ) {
+                                $rbfw_category_wise_info_meta .= '<tr>';
+                                $rbfw_category_wise_info_meta .= '<td>' . esc_html( $single['name'] ) . '</td>';
+                                $rbfw_category_wise_info_meta .= '<td>';
+
+                                if ( $single['service_price_type'] == 'day_wise' ) {
+                                    $price = $single['price'];
+                                    $quantity = (int) $single['quantity'];
+                                    $total_price = $price * $quantity * $total_days;
+                                    $rbfw_category_wise_info_meta .= '(' . wp_kses( wc_price( $price ), rbfw_allowed_html() ) . ' x ' . esc_html( $quantity ) . ' x ' . esc_html( $total_days ) . ' = ' . wp_kses( wc_price( $total_price ), rbfw_allowed_html() ) . ')';
+                                } else {
+                                    $price = $single['price'];
+                                    $quantity = (int) $single['quantity'];
+                                    $total_price = $price * $quantity;
+                                    $rbfw_category_wise_info_meta .= '(' . wp_kses( wc_price( $price ), rbfw_allowed_html() ) . ' x ' . esc_html( $quantity ) . ' = ' . wp_kses( wc_price( $total_price ), rbfw_allowed_html() ) . ')';
+                                }
+
+                                $rbfw_category_wise_info_meta .= '</td>';
+                                $rbfw_category_wise_info_meta .= '</tr>';
+                            }
+                        }
+
+                        $rbfw_category_wise_info_meta .= '</table>';
+                        $rbfw_category_wise_info_meta .= '</td>';
+                        $rbfw_category_wise_info_meta .= '</tr>';
+                    }
+                    $rbfw_category_wise_info_meta .= '</table>';
+                    $item->add_meta_data( esc_html__('Additional Informations','booking-and-rental-manager-for-woocommerce'), $rbfw_category_wise_info_meta );
+
+                }
+
                 $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
 
 
@@ -770,7 +878,13 @@ if (!class_exists('MPTBM_Woocommerce')) {
                     }
                     $rbfw_service_infos_order .= '</table>';
                 }
+
+               
                 $item->add_meta_data( rbfw_string_return( 'rbfw_text_service_info', esc_html__( 'Service Info', 'booking-and-rental-manager-for-woocommerce' ) ), $rbfw_service_infos_order );
+
+                echo '<pre>';print_r($rbfw_service_info);echo '<pre>';exit;
+
+
                 if ( ! empty( $rbfw_service_info ) ) {
                     foreach ( $rbfw_service_info as $key => $value ) {
                         $service_name = $key; //service name
