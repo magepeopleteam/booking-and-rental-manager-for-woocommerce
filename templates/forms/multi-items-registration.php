@@ -304,14 +304,13 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                                 </div>
                                 <div class="item-content rbfw-resource">
 
-                                    <table class="rbfw_bikecarmd_es_table">
-                                        <tbody>
+                                    <div class="rbfw_bikecarmd_es_table">
                                         <?php
                                         $c = 0;
                                         foreach ($multiple_items_info as $key=>$item) { ?>
                                             <?php if(isset($item['item_name']) && $item['available_qty'] > 0){ ?>
-                                                <tr>
-                                                    <td class="resource-title-qty">
+                                                <div class="rbfw-resource-item">
+                                                    <div class="resource-title-qty">
                                                         <?php echo esc_html($item['item_name']); ?>
                                                         <div style="font-size: 12px" class="item-price">
                                                             <?php if(isset($pricing_types['hourly']) && $pricing_types['hourly']=='on'){ ?>
@@ -327,30 +326,29 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                                                                 <span class="rbfw_weekly_price" style="display: none"><?php echo wc_price($item['monthly_price']) ?> / Hour</span>
                                                             <?php } ?>
                                                         </div>
-                                                    </td>
+                                                    </div>
 
-                                                    <td>
+                                                    <div>
                                                         <?php  if($available_qty_info_switch == 'yes'){ ?>
                                                             <i class="resource-qty"><?php esc_html_e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo '('.esc_html($item['available_qty']).')'; ?></span></i>
                                                         <?php } ?>
-                                                    </td>
+                                                    </div>
 
 
-                                                    <td class="rbfw_multi_items_input_box">
+                                                    <div class="rbfw_multi_items_input_box">
                                                         <div class="rbfw_qty_input">
                                                             <a class="rbfw_qty_minus rbfw_multi_items_qty_minus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-minus"></i></a>
                                                             <input type="hidden" name="multiple_items_info[<?php echo esc_attr($c); ?>][item_price]" class="rbfw_item_peice">
                                                             <input name="multiple_items_info[<?php echo esc_attr($c); ?>][item_qty]" type="number" min="0" max="<?php echo esc_html($item['available_qty']); ?>" value="0" class="rbfw_muiti_items_qty"  data-cat="service" data-item="<?php echo esc_attr($key+1); ?>" data-price-hourly="<?php echo esc_attr($item['hourly_price']); ?>" data-price-daily="<?php echo esc_attr($item['daily_price']); ?>" data-price-weekly="<?php echo esc_attr($item['weekly_price']); ?>" data-price-monthly="<?php echo esc_attr($item['monthly_price']); ?>" data-name="<?php echo esc_attr($item['item_name']); ?>"/>
                                                             <a class="rbfw_qty_plus rbfw_multi_items_qty_plus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-plus"></i></a>
                                                         </div>
-                                                    </td>
+                                                    </div>
 
                                                     <input type="hidden" name="multiple_items_info[<?php echo esc_attr($c); ?>][item_name]" value="<?php echo esc_attr($item['item_name']); ?>">
-                                                </tr>
+                                                </div>
                                             <?php } ?>
                                             <?php $c++; } ?>
-                                        </tbody>
-                                    </table>
+                                    </div>
                                 </div>
                             </div>
                     <?php } ?>
@@ -359,7 +357,12 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
 
                 <div class="rbfw_rental_pricing_breakdown">
                     <div class="rbfw_bikecarmd_price_result" style="display: none">
+                        
                         <div class="item-content rbfw-costing">
+                            <div class="rbfw-single-right-heading">
+                                <?php esc_html_e('Summery','booking-and-rental-manager-for-woocommerce'); ?>
+                            </div>
+                            
                             <ul class="rbfw-ul" id="rbfw-items-summary">
 
                             </ul>
