@@ -316,7 +316,18 @@ jQuery(document).on('click','.single-type-timely',function (){
     jQuery('.single-type-timely').each(function(index, element) {
         jQuery('.single-type-timely').removeClass('selected');
     });
-    jQuery(this).addClass('selected');
+    
+    let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
+    let rbfw_time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
+    if(rbfw_bikecarsd_selected_date!=''){
+        jQuery(this).addClass('selected');
+    }
+    if(rbfw_time_slot_switch == 'yes'){
+        if(start_time!=''){
+            jQuery(this).addClass('selected');
+        }
+    }
+    
 })
 
 function datepicker_inline(){

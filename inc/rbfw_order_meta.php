@@ -70,7 +70,14 @@ function fetch_order_details_callback() {
                         $total_days     = ! empty( $ticket_info['total_days'] ) ? $ticket_info['total_days'] : 1;
                         $pickup_point   = ! empty( $ticket_info['rbfw_pickup_point'] ) ? $ticket_info['rbfw_pickup_point'] : '';
                         $dropoff_point  = ! empty( $ticket_info['rbfw_dropoff_point'] ) ? $ticket_info['rbfw_dropoff_point'] : '';
-                    } elseif ( $rent_type == 'resort' ) {
+                    } elseif ( $rent_type == 'multiple_items') {
+                        $service_info   = ! empty( $ticket_info['rbfw_service_info'] ) ? $ticket_info['rbfw_service_info'] : [];
+
+                        print_r($service_info);
+                        $total_days     = ! empty( $ticket_info['total_days'] ) ? $ticket_info['total_days'] : 1;
+                        $pickup_point   = ! empty( $ticket_info['rbfw_pickup_point'] ) ? $ticket_info['rbfw_pickup_point'] : '';
+                        $dropoff_point  = ! empty( $ticket_info['rbfw_dropoff_point'] ) ? $ticket_info['rbfw_dropoff_point'] : '';
+                    }elseif ( $rent_type == 'resort' ) {
                         $ResortClass  = new RBFW_Resort_Function();
                         $package      = $ticket_info['rbfw_resort_package'];
                         $rent_info    = ! empty( $ticket_info['rbfw_type_info'] ) ? $ticket_info['rbfw_type_info'] : [];
@@ -101,20 +108,28 @@ function fetch_order_details_callback() {
                         <tbody>
                         <?php if ( $rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others' ) { ?>
                             <tr>
-                                <td><strong><?php rbfw_string( 'rbfw_text_item_name', __( 'Item Name', 'booking-and-rental-manager-for-woocommerce' ) );
-                                        echo ':'; ?></strong></td>
+                                <td>
+                                    <strong><?php rbfw_string( 'rbfw_text_item_name', __( 'Item Name', 'booking-and-rental-manager-for-woocommerce' ) ); echo ':'; ?>
+                                    </strong>
+                                </td>
                                 <td><?php echo esc_html( $item_name ) . ' * ' . esc_html( $item_quantity ); ?></td>
                             </tr>
                         <?php } else { ?>
                             <tr>
-                                <td><strong><?php rbfw_string( 'rbfw_text_item_name', __( 'Item Name', 'booking-and-rental-manager-for-woocommerce' ) );
-                                        echo ':'; ?></strong></td>
+                                <td>
+                                    <strong>
+                                        <?php rbfw_string( 'rbfw_text_item_name', __( 'Item Name', 'booking-and-rental-manager-for-woocommerce' ) ); echo ':'; ?>
+                                    </strong>
+                                </td>
                                 <td><?php echo esc_html( $item_name ); ?></td>
                             </tr>
                         <?php } ?>
                         <tr>
-                            <td><strong><?php rbfw_string( 'rbfw_text_item_type', __( 'Item Type', 'booking-and-rental-manager-for-woocommerce' ) );
-                                    echo ':'; ?></strong></td>
+                            <td>
+                                <strong>
+                                    <?php rbfw_string( 'rbfw_text_item_type', __( 'Item Type', 'booking-and-rental-manager-for-woocommerce' ) ); echo ':'; ?>
+                                </strong>
+                            </td>
                             <td><?php echo esc_html( rbfw_get_type_label( $rent_type ) ); ?></td>
                         </tr>
                         <?php if ( $rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others' ) { ?>
@@ -202,6 +217,7 @@ function fetch_order_details_callback() {
                                 </td>
                             </tr>
                         <?php } ?>
+
                         <?php if ( ! empty( $service_info ) ) { ?>
                             <tr>
                                 <td>
@@ -229,6 +245,17 @@ function fetch_order_details_callback() {
                                                     ?>
                                                     <tr>
                                                         <td><strong><?php echo esc_html( $key ); ?></strong></td>
+                                                        <td><?php echo wp_kses( $value, rbfw_allowed_html() ); ?></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            }
+                                        }elseif ( $rent_type == 'multiple_items' ) {
+                                            if ( ! empty( $service_info ) ) {
+                                                foreach ( $service_info as $key => $value ) {
+                                                    ?>
+                                                    <tr>
+                                                        <td><strong><?php echo esc_html( $key ); ?></strong></td>
                                                         <td><?php echo esc_html( $value ); ?></td>
                                                     </tr>
                                                     <?php
@@ -251,6 +278,7 @@ function fetch_order_details_callback() {
                                 </td>
                             </tr>
                         <?php } ?>
+
                         <?php if ( ! empty( $rbfw_regf_info ) ) { ?>
                             <tr>
                                 <td>
@@ -561,6 +589,12 @@ function rbfw_order_meta_box_callback() {
                     $service_infos  = ! empty( $ticket_info['rbfw_service_infos'] ) ? $ticket_info['rbfw_service_infos'] : [];
                     $pickup_point   = ! empty( $ticket_info['rbfw_pickup_point'] ) ? $ticket_info['rbfw_pickup_point'] : '';
                     $dropoff_point  = ! empty( $ticket_info['rbfw_dropoff_point'] ) ? $ticket_info['rbfw_dropoff_point'] : '';
+                }elseif ( $rent_type == 'multiple_items' ) {
+                    $BikeCarMdClass = new RBFW_BikeCarMd_Function();
+                    $service_info   = ! empty( $ticket_info['rbfw_service_info'] ) ? $ticket_info['rbfw_service_info'] : [];
+                    $service_infos  = ! empty( $ticket_info['rbfw_service_infos'] ) ? $ticket_info['rbfw_service_infos'] : [];
+                    $pickup_point   = ! empty( $ticket_info['rbfw_pickup_point'] ) ? $ticket_info['rbfw_pickup_point'] : '';
+                    $dropoff_point  = ! empty( $ticket_info['rbfw_dropoff_point'] ) ? $ticket_info['rbfw_dropoff_point'] : '';
                 } elseif ( $rent_type == 'resort' ) {
                     $ResortClass  = new RBFW_Resort_Function();
                     $package      = $ticket_info['rbfw_resort_package'];
@@ -589,8 +623,9 @@ function rbfw_order_meta_box_callback() {
                 <table class="wp-list-table widefat fixed striped table-view-list" style="display: none">
                     <thead>
                     <tr>
-                        <th colspan="2"><?php rbfw_string( 'rbfw_text_item_information', esc_html__( 'Item Information', 'booking-and-rental-manager-for-woocommerce' ) );
-                            echo ':'; ?></th>
+                        <th colspan="2">
+                            <?php rbfw_string( 'rbfw_text_item_information', esc_html__( 'Item Information', 'booking-and-rental-manager-for-woocommerce' ) ); echo ':'; ?>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>

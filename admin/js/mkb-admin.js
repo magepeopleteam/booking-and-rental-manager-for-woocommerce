@@ -19,36 +19,12 @@
         }
         return false;
     });
-    jQuery(document).on('click', 'label.mp_event_virtual_type_des_switch input', function() {
-        if (jQuery(this).is(":checked")) {
-            jQuery(this).parents('label.mp_event_virtual_type_des_switch').siblings('label.mp_event_virtual_type_des').slideDown(200);
-        } else {
-            jQuery(this).parents('label.mp_event_virtual_type_des_switch').siblings('label.mp_event_virtual_type_des').val('').slideUp(200);
-        }
-    });
-    jQuery(document).ready(function() {
-        jQuery('#add-row-t').on('click', function() {
-            var row = jQuery('.empty-row-t.screen-reader-text').clone(true);
-            row.removeClass('empty-row-t screen-reader-text');
-            row.insertBefore('#repeatable-fieldset-one-t tbody>tr:last');
-            jQuery('#mep_ticket_type_empty option[value=inputbox]').attr('selected', 'selected');
-            jQuery('.empty-row-t #mep_ticket_type_empty option[value=inputbox]').removeAttr('selected');
-            return false;
-        });
 
-        jQuery('.remove-row-t').on('click', function() {
-            if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
-                jQuery(this).parents('tr').remove();
-                jQuery('#mep_ticket_type_empty option[value=inputbox]').removeAttr('selected');
-                jQuery('#mep_ticket_type_empty option[value=dropdown]').removeAttr('selected');
-            } else {
-                return false;
-            }
-        });
+    jQuery(document).ready(function() {
+
         jQuery(document).find('.mp_event_type_sortable').sortable({
             handle: jQuery(this).find('.mp_event_type_sortable_button')
         });
-
 
         jQuery('#add-row').on('click', function() {
             var row = jQuery('.empty-row.screen-reader-text').clone(true);
@@ -66,12 +42,7 @@
             }
         });
 
-        jQuery('#add-row-size').on('click', function() {
-            var row = jQuery('#size-hidden-row').clone(true);
-            row.removeClass('empty-row screen-reader-text-size');
-            row.insertBefore('#repeatable-fieldset-one-size tbody>tr:last');
-            return false;
-        });
+
 
         jQuery('.remove-row-size,.remove-rbfw_variations_table_row').on('click', function() {
             if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
@@ -135,41 +106,32 @@
         });
 
         jQuery('.rbfw_switch_daywise_price label').on('click', function() {
-
             var item_type = jQuery(this).find('input').val();
-
             if (item_type == 'yes') {
                 jQuery('.rbfw_week_table').show();
             } else {
                 jQuery('.rbfw_week_table').hide();
             }
-
             return false;
         });
 
         jQuery('.rbfw_switch_hourly_rate label').on('click', function() {
-
             var item_type = jQuery(this).find('input').val();
-
             if (item_type == 'yes') {
                 jQuery('.rbfw_hourly_rate_input').show();
             } else {
                 jQuery('.rbfw_hourly_rate_input').hide();
             }
-
             return false;
         });
 
         jQuery('.rbfw_switch_daily_rate label').on('click', function() {
-
             var item_type = jQuery(this).find('input').val();
-
             if (item_type == 'yes') {
                 jQuery('.rbfw_daily_rate_input').show();
             } else {
                 jQuery('.rbfw_daily_rate_input').hide();
             }
-
             return false;
         });
 
@@ -177,16 +139,16 @@
 
         jQuery('#field-wrapper-rbfw_time_slot_switch label').click(function(e) {
             let this_attr = jQuery(this).attr('for');
-
             if (jQuery(this).hasClass('checked') && this_attr == 'rbfw_time_slot_switch-on') {
                 jQuery('tr[data-row=rdfw_available_time]').show();
             } else if (jQuery(this).hasClass('checked') && this_attr == 'rbfw_time_slot_switch-off') {
                 jQuery('tr[data-row=rdfw_available_time]').hide();
             }
-
         });
 
         var current_item_type = jQuery('#rbfw_item_type').val();
+
+
         if ( current_item_type != 'appointment') {
             jQuery('.rbfw_seasonal_price_config_wrapper').show();
             if(current_item_type == 'bike_car_sd'){
@@ -268,6 +230,8 @@
                     jQuery('.rbfw_time_inventory').hide();
                     jQuery('.rbfw_without_time_inventory').show();
                 }
+                jQuery('.rbfw_multiple_items').hide();
+
             } else if (item_type == 'appointment') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
                 jQuery('.rbfw_general_price_config_wrapper').addClass('rbfw-d-none');
@@ -305,6 +269,7 @@
                         jQuery('.rbfw_bike_car_sd_price_table_row[data-key="' + index + '"]').remove();
                     }
                 }
+                jQuery('.rbfw_multiple_items').hide();
 
             } else if (item_type == 'resort') {
                 jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').hide();
@@ -332,6 +297,50 @@
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
 
+                jQuery('.rbfw_multiple_items').hide();
+
+            }else if (item_type == 'resort') {
+                jQuery('.rbfw_bike_car_sd_wrapper').show();
+            }else if (item_type == 'multiple_items') {
+
+                jQuery('.rbfw_bike_car_sd_wrapper').hide();
+                jQuery('.rbfw_general_price_config_wrapper').addClass('rbfw-d-none');
+                jQuery('.rbfw_switch_extra_service_qty').hide();
+                jQuery('li[data-target-tabs="#rbfw_variations"]').hide();
+                jQuery('.rbfw_switch_md_type_item_qty').hide();
+                jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').show();
+                jQuery('.rbfw_resort_price_config_wrapper').hide();
+                jQuery('.rbfw_seasonal_price_config_wrapper').hide();
+                jQuery('.rbfw_switch_sd_appointment_row').hide();
+                jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
+                jQuery('.rbfw_es_price_config_wrapper').hide();
+                jQuery('.rbfw_discount_price_config_wrapper').hide();
+                jQuery('.rbfw_min_max_booking_day_row').hide();
+                jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
+                jQuery('.rbfw_enable_start_end_date_switch_row').hide();
+                jQuery('.rbfw_enable_start_end_date_field_row').hide();
+                jQuery('.regular_fixed_date').hide();
+                jQuery('.rbfw_off_days').show();
+                jQuery('.wervice_quantity_input_box').show();
+                jQuery('#add-bike-car-sd-type-row').show();
+
+                jQuery('.manage_inventory_as_timely').show();
+
+                jQuery('.sessional_price_single_day').show();
+                jQuery('.sessional_price_multi_day').hide();
+                jQuery('.sessional_price_resort').hide();
+                jQuery('.mds_price_resort').hide();
+
+                if(jQuery('[name="manage_inventory_as_timely"]').val()=='on'){
+                    jQuery('.rbfw_time_inventory').show();
+                    jQuery('.rbfw_without_time_inventory').hide();
+                }else{
+                    jQuery('.rbfw_time_inventory').hide();
+                    jQuery('.rbfw_without_time_inventory').show();
+                }
+
+                jQuery('.rbfw_multiple_items').show();
+
             } else {
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
@@ -357,7 +366,7 @@
                 jQuery('.rbfw_off_days').show();
                 jQuery('.wervice_quantity_input_box').show();
 
-                jQuery('.sessional_price_multi_day').show();
+                jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
 
                 var status = $('.rbfw_es_price_config_wrapper').data('status');
@@ -370,6 +379,7 @@
                 jQuery('.sessional_price_single_day').hide();
                 jQuery('.sessional_price_resort').hide();
                 jQuery('.mds_price_resort').hide();
+                jQuery('.rbfw_multiple_items').hide();
 
             }
 
@@ -958,7 +968,12 @@
 
 	function update_faq(){
 		var title   = $('input[name="rbfw_faq_title"]');
-		var content = tinyMCE.get('rbfw_faq_content').getContent();
+		var content;
+        if ($("#wp-rbfw_faq_content-wrap").hasClass('html-active')){
+            content = $('#rbfw_faq_content').val()
+        } else {
+            content = tinyMCE.get('rbfw_faq_content').getContent();
+        }
 		var postID  = $('input[name="rbfw_post_id"]');
 		var itemId = $('input[name="rbfw_faq_item_id"]');
 		$.ajax({
@@ -990,7 +1005,12 @@
 
 	function save_faq(){
 		var title   = $('input[name="rbfw_faq_title"]');
-		var content = tinyMCE.get('rbfw_faq_content').getContent();
+        var content;
+        if ($("#wp-rbfw_faq_content-wrap").hasClass('html-active')){
+            content = $('#rbfw_faq_content').val()
+        } else {
+            content = tinyMCE.get('rbfw_faq_content').getContent();
+        }
 		var postID  = $('input[name="rbfw_post_id"]');
 		$.ajax({
 			url: rbfw_ajax_url,
@@ -1415,6 +1435,25 @@
         }
     });
     
+    $(document).on('click', '.rbfw-single-template', function (e) {
+        var currentTemplate = $(this).data('rbfw-template');
+        $('#rbfw_single_template').val(currentTemplate);
+        $('.rbfw-single-template').removeClass('active')
+        $(this).addClass('active');
+
+        $('.donut-template-sidebar-switch').slideUp();
+        $('.sidebar-testimonial-settigns').slideUp();
+        $('.donut-template-sidebar-content').slideUp();
+        $('.additional-gallery').slideUp();
+        if(currentTemplate=='Donut'){
+            $('.donut-template-sidebar-switch').slideDown();
+            $('.sidebar-testimonial-settigns').slideDown();
+            $('.donut-template-sidebar-content').slideDown();
+        }
+        if(currentTemplate=='Muffin'){
+            $('.additional-gallery').slideDown();
+        }
+    });
     // ===========resort===========
 }(jQuery));
 

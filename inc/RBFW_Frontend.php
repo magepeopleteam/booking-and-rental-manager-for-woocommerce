@@ -11,6 +11,7 @@
 			
 			public function __construct() {
 				add_filter( 'single_template', array( $this, 'single_template' ) );	
+				add_action( 'booking_form_header', array( $this, 'booking_form_header' ) );	
 				add_action( 'rbfw_product_feature_lists',[$this,'feature_lists']);			
 			}
 
@@ -20,6 +21,16 @@
 					$single_template = RBFW_Function::get_template_path('single/single-rbfw.php');
 				}
 				return $single_template;
+			}
+
+			public function booking_form_header($post_id) {
+				$sub_title = get_post_meta($post_id , 'rbfw_item_sub_title', true);
+				?>
+					<div class="rbfw-booking-header">
+						<h1><?php the_title(); ?></h1>
+						<div><?php echo esc_html($sub_title); ?></div>
+					</div>
+				<?php
 			}
 
 			public static function load_template($post_id) {
@@ -46,25 +57,28 @@
 			public static function get_rent_type_template($post_id) {
 
 				$rent_type = RBFW_Frontend::get_rent_type($post_id);
-				
-				switch($rent_type){
-					case 'bike_car_sd':
-					case 'appointment':
-						$file_name = 'single-day';
-					break;
-					case 'bike_car_md':
-					case 'equipment':
-					case 'dress':
-					case 'others':
-						$file_name = 'multi-day';
-					break;
-					case 'resort':
-						$file_name = 'resort';
-					break;
-					default:
-						$file_name = 'multi-day';
-				}
-				return $file_name;
+
+                switch($rent_type){
+                    case 'bike_car_sd':
+                        case 'appointment':
+                            $file_name = 'single-day';
+                            break;
+                            case 'bike_car_md':
+                                case 'equipment':
+                                    case 'dress':
+                                        case 'others':
+                                            $file_name = 'multi-day';
+                                            break;
+                                            case 'resort':
+                                                $file_name = 'resort';
+                                                break;
+                                                case 'multiple_items':
+                                                    $file_name = 'multiple-items';
+                                                    break;
+                                                    default:
+                                                        $file_name = 'multi-day';
+                }
+                return $file_name;
 			}
 
 			public function feature_lists($post_id){

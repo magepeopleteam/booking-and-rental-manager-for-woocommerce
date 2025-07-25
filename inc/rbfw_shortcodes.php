@@ -264,7 +264,6 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     ?>
 
     <div class="rbfw_rent_show_result_list_grid_icon_holder">
-
         <div class="rbfw_popup_wrapper" id="rbfw_popup_wrapper">
             <div class="rbfw_rent_cat_info_popup">
                 <span class="rbfw_popup_close_btn" id="rbfw_popup_close_btn">&times;</span>
@@ -633,7 +632,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
                         </div>
 
                         <div class="rbfw_search_item">
-                            <input type="submit" class="rbfw_rent_item_search_submit" value="<?php echo esc_html( 'Search', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                            <input type="submit" class="rbfw_rent_item_search_submit" value="<?php echo esc_html__( 'Search', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                         </div>
                     </div>
                 </form>
@@ -659,7 +658,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
                             <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
                         </div>
                         <div class="rbfw_search_item">
-                            <input type="submit" class="rbfw_rent_item_search_submit" value="<?php echo esc_html( 'Search', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                            <input type="submit" class="rbfw_rent_item_search_submit" value="<?php echo esc_html__( 'Search', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                         </div>
                     </div>
                 </form>

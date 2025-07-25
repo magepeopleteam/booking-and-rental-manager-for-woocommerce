@@ -50,16 +50,12 @@
                 $rbfw_categories_items = implode(',', $rbfw_categories);
                 $rbfw_categories_array = $rbfw_categories_items ? explode(',', $rbfw_categories_items) : [];
 				?>
-                <section>
+                <section class="bg-light mt-5">
                     <div>
                         <label>
-							<?php
-								echo esc_html__( 'Select ', 'booking-and-rental-manager-for-woocommerce' ) .
-								esc_html( $label ) .
-								esc_html__( ' Type', 'booking-and-rental-manager-for-woocommerce' );
-							?>
+							<?php echo esc_html__( "Category Settings",'booking-and-rental-manager-for-woocommerce'); ?>
                         </label>
-                        <p><?php esc_html_e( 'Choose a type that is related with this item', 'booking-and-rental-manager-for-woocommerce' ) ?></p>
+                        <p><?php echo esc_html__( "Here you can check categories",'booking-and-rental-manager-for-woocommerce'); ?></p>
                     </div>
                 </section>
                 <section class="rbfw_off_days justify-content-center">
@@ -322,11 +318,32 @@
 				?>
                 <div class="mpStyle mp_tab_item " data-tab-item="#rbfw_gen_info">
 					<?php $this->section_header(); ?>
-					<?php $this->panel_header( 'Category Settings', 'Here you can assign categories ot each items' ); ?>
+                    <?php $this->sub_title( $post_id ); ?>
 					<?php $this->select_category( $post_id ); ?>
 					<?php $this->features_category( $post_id ); ?>
                 </div>
 			<?php }
+
+			public function sub_title( $post_id ) {
+                $sub_title = get_post_meta($post_id , 'rbfw_item_sub_title', true);
+                $sub_title = $sub_title ? $sub_title : "Premium equipment rental with flexible timing";
+                ?>
+                <section class="bg-light mt-5">
+                    <div>
+                        <label>
+							<?php echo esc_html( "Sub Title",'booking-and-rental-manager-for-woocommerce'); ?>
+                        </label>
+                        <p><?php echo esc_html( "Add sub title",'booking-and-rental-manager-for-woocommerce'); ?></p>
+                    </div>
+                </section>
+                <section class="rbfw-sub-title">
+                    
+                    
+                    <input type="text" name="rbfw_item_sub_title" value="<?php echo esc_attr($sub_title); ?>" placeholder="<?php echo esc_attr($sub_title); ?>" style="width:100%;">
+                    
+                </section>
+                <?php
+            }
 
 			public function settings_save( $post_id ) {
 				if ( ! isset( $_POST['rbfw_ticket_type_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['rbfw_ticket_type_nonce'] ) ), 'rbfw_ticket_type_nonce' ) ) {
@@ -342,6 +359,8 @@
 					$rbfw_categories = isset( $_POST['rbfw_categories'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_categories'] ) : [];
 					wp_set_object_terms( $post_id, $rbfw_categories, 'rbfw_item_caregory' );
 					$feature_category = isset( $_POST['rbfw_feature_category'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_feature_category'] ) : [];
+					$sub_title = isset( $_POST['rbfw_item_sub_title'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_item_sub_title'] ) : '';
+					update_post_meta( $post_id, 'rbfw_item_sub_title', $sub_title );
 					update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
 					update_post_meta( $post_id, 'rbfw_feature_category', $feature_category );
 				}

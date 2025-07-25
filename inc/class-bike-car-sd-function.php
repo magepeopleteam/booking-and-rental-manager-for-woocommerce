@@ -551,14 +551,35 @@
 					}
 					$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration );
 					?>
-					<label>
-						<input type="radio" name="option" class="radio-input">
+					
 						<?php if ( $rbfw_timely_available_quantity > 0 ):?>
-							<span title="<?php echo esc_attr($value['short_desc']) ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($type_price); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']); ?>" data-end_time="<?php echo esc_attr($value['end_time']); ?>" data-available_quantity="<?php echo esc_attr($rbfw_timely_available_quantity); ?>" class="radio-button single-type-timely"><?php echo esc_attr($value['rent_type']); ?></span>
+							<div title="<?php echo esc_attr($value['short_desc']) ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($type_price); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']); ?>" data-end_time="<?php echo esc_attr($value['end_time']); ?>" data-available_quantity="<?php echo esc_attr($rbfw_timely_available_quantity); ?>" class="radio-button single-type-timely">
+								<label>
+									<input type="radio" name="option" class="radio-input">
+									<span><?php echo esc_attr($value['rent_type']); ?></span>
+                                	<?php if($enable_specific_duration=='on'): ?>
+                                    	<div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
+                                    <?php else: ?>
+                                    	<div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
+                                    <?php endif; ?>
+								</label>
+								<div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
+							</div>
 						<?php else: ?>
-							<span style="text-decoration: line-through;cursor:text" title="<?php echo esc_attr($value['short_desc']); ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($type_price); ?>" data-d_type="<?php echo esc_attr($value['d_type']);?>" class="radio-button"><?php echo esc_attr($value['rent_type'])?></span>
+							<div style="text-decoration: line-through;cursor:text" title="<?php echo esc_attr($value['short_desc']) ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($type_price); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']); ?>" data-end_time="<?php echo esc_attr($value['end_time']); ?>" data-available_quantity="<?php echo esc_attr($rbfw_timely_available_quantity); ?>" class="radio-button">
+								<label>
+									<input type="radio" name="option" class="radio-input">
+									<span class="rent-type"><?php echo esc_attr($value['rent_type'])?></span>
+                                	<?php if($enable_specific_duration=='on'): ?>
+                                    	<div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
+                                    <?php else: ?>
+                                    	<div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
+                                    <?php endif; ?>
+								</label>
+								<div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
+							</div>
 						<?php endif;?>
-					</label>
+					
 					<?php
 				}
 				wp_die();
