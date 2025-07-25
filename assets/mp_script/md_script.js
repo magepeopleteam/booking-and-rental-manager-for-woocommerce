@@ -835,7 +835,7 @@ jQuery(document).on('input', '.rbfw_muiti_items_qty', function () {
 
     // Handle plus button
 jQuery(document).on('click', '.rbfw_multi_items_qty_plus', function () {
-    const row = jQuery(this).closest('tr');
+    const row = jQuery(this).closest('.rbfw-resource-item');
     const input = row.find('.rbfw_muiti_items_qty');
     const max = parseInt(input.attr('max')) || 100;
     let value = parseInt(input.val()) || 0;
@@ -848,7 +848,7 @@ jQuery(document).on('click', '.rbfw_multi_items_qty_plus', function () {
 
     // Handle minus button
 jQuery(document).on('click', '.rbfw_multi_items_qty_minus', function () {
-    const row = jQuery(this).closest('tr');
+    const row = jQuery(this).closest('.rbfw-resource-item');
     const input = row.find('.rbfw_muiti_items_qty');
     let value = parseInt(input.val()) || 0;
     if (value > 0) {
