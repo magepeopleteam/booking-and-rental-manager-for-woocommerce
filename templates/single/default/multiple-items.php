@@ -27,7 +27,6 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 					<div class="rbfw-single-left-container">
 						<div class="rbfw-single-left-information">
 						<div class="rbfw-header-container">
-							<h2 class="rbfw-post-title"><?php echo esc_html(get_the_title()); ?></h2>
 							<div class="rbfw-post-meta">
 								<?php do_action( 'rbfw_product_meta', $post_id ); ?>
 							</div>
@@ -71,7 +70,10 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 				</div>
                 <?php } ?>
 				<div class="mp_right_section rbfw_multi_items_right">
-                    <?php include( RBFW_Function::get_template_path( 'forms/multi-items-registration.php' ) ); ?>
+					<?php do_action('booking_form_header',$post_id); ?>
+					<div class="rbfw-booking-form">
+						<?php include( RBFW_Function::get_template_path( 'forms/multi-items-registration.php' ) ); ?>
+					</div>
 				</div>
 			</div>
 		</div>

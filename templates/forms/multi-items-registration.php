@@ -211,7 +211,7 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                             <div class="item-content rbfw-datetime">
                                 <div class="left date">
                                     <div class="rbfw-single-right-heading">
-                                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
+                                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings',"Pickup Date")); ?>
                                     </div>
                                     <div class="rbfw-p-relative">
                                         <span class="calendar"><i class="fas fa-calendar-days"></i></span>
@@ -228,7 +228,7 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
 
                                 <div class="right time">
                                     <div class="rbfw-single-right-heading">
-                                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
+                                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings','Pickup Time')); ?>
                                     </div>
                                     <div class="rbfw-p-relative">
                                     <span class="clock">
@@ -286,27 +286,19 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                             </div>
                         </div>
                     </div>
-
-
-
-
-                    <div class="rbfw_rental_duration">
-                        <div class="item rbfw-duration">
-                            <div class="rbfw-single-right-heading">
-                                <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?>
-                            </div>
+    
+                    <div class="item rbfw-duration">
+                        <div class="rbfw-single-right-heading">
+                            <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?>
                             <div class="item-content"></div>
-                            <input type="hidden" class="rbfw_duration_md" name="rbfw_duration_md">
                         </div>
+                        
+                        <input type="hidden" class="rbfw_duration_md" name="rbfw_duration_md">
                     </div>
-
-
-
-
+                    
                     <?php  if(!empty($multiple_items_info)){ ?>
 
-                        <div class="rbfw_rental_pricing_rates">
-                            <div class="item rbfw_resourse_md" style="display: none">
+                        <div class="item rbfw_resourse_md" style="display: none">
                                 <div class="rbfw-single-right-heading">
                                     <?php esc_html_e('Select Item to Rent','booking-and-rental-manager-for-woocommerce'); ?>
                                 </div>
@@ -361,7 +353,6 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                                     </table>
                                 </div>
                             </div>
-                        </div>
                     <?php } ?>
                 </div>
 
@@ -369,11 +360,11 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                 <div class="rbfw_rental_pricing_breakdown">
                     <div class="rbfw_bikecarmd_price_result" style="display: none">
                         <div class="item-content rbfw-costing">
+                            <ul class="rbfw-ul" id="rbfw-items-summary">
+
+                            </ul>
+                            
                             <ul class="rbfw-ul">
-
-                                <li id="summary">
-
-                                </li>
 
                                 <li id="AddonsPrice" style="display: none">
                                     Add Ond Price <span></span>

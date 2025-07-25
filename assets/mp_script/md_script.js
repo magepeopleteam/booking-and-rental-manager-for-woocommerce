@@ -1089,10 +1089,10 @@ function calculateAdditional(only_calculation=false) {
 
 document.addEventListener('DOMContentLoaded', function () {
     const qtyInputs = document.querySelectorAll('.rbfw_muiti_items_qty');
-    const summaryDiv = document.getElementById('summary');
+    const summaryDiv = document.getElementById('rbfw-items-summary');
 
     function updateSummary() {
-        let summaryHtml = '<ul>';
+        let summaryHtml = '';
         let hasItems = false;
         var durationType = jQuery('#durationType').val();
         var durationQty = parseInt(jQuery('#durationQty').val()) || 1;
@@ -1104,12 +1104,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 const pricePerUnit = parseFloat(input.dataset[`price${durationType.charAt(0).toUpperCase() + durationType.slice(1)}`]) || 0;
 
                 const total = (qty * durationQty *  pricePerUnit).toFixed(2);
-                summaryHtml += `<li>${itemName} -  ${qty} x ${durationQty} x €${pricePerUnit} = €${total}</li>`;
+               
+                summaryHtml += `<li class="item-type"><span>${itemName}</span> <span>${qty} x ${durationQty} x <span>${rbfw_translation.currency}${pricePerUnit}</span> = <span>${rbfw_translation.currency}${total}</span></li>`;
+                 
                 hasItems = true;
             }
         });
 
-        summaryHtml += '</ul>';
+       
         summaryDiv.innerHTML = hasItems ? summaryHtml : '';
     }
 

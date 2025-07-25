@@ -1352,7 +1352,9 @@ table.rbfw_room_price_table tbody td img {
     text-align: center;
 }
 .rbfw_qty_input a.rbfw_qty_plus{
-    background: var(--rbfw_color_primary);
+    background: #fff;
+    border: 1px solid #e3e0e0;
+    color: #666;
     transition: 0.2s;
     opacity: 1;
     border-radius: 0 5px 5px 0px;
@@ -1374,7 +1376,7 @@ table.rbfw_room_price_table tbody td img {
 
 .rbfw_qty_input a i {
     font-size: 12px;
-    color: #fff;
+    color: #666;
 }
 
 .rbfw_qty_input a.rbfw_timely_es_qty_minus i {
@@ -7420,18 +7422,12 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
 }
 .rbfw_multi_items_right .rbfw_select_rental_period
  {
-    background: #f7f6f6;
-    padding: 20px;
-    border: 1px solid #e2e8f0;
-    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    border-radius: 5px;
 }
-.rbfw_multi_items_right .rbfw_rental_duration {
-    background: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
-    padding: 20px;
-    margin-top: 10px;
-    border-radius: 10px;
-    border: 1px solid #bfdbfe;
-}
+
 .rbfw_multi_items_right .rbfw_rental_pricing_rates {
     background: #f1f1f1;
     padding: 20px;
@@ -7441,4 +7437,26 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
 
 .rbfw_multi_items_right .rbfw_bikecarmd_es_table tr {
     background: none; 
+}
+
+#rbfw-items-summary {
+    margin-bottom:10px;
+}
+#rbfw-items-summary .item-type{
+     margin-bottom:10px;
+}
+#rbfw-items-summary .item-type:last-child{
+   border-bottom: 1px solid #ddd;
+   padding-bottom: 10px;
+}
+
+.multi-service-category-section{
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+.multi-service-category-section .rbfw-single-right-heading{
+    margin-top:7px;
 }
