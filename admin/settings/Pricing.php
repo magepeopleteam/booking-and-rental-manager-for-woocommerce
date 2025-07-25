@@ -701,16 +701,18 @@
                         let items = [];
                         let rowCounter = 1;
                         let enabledPriceTypes = {
-                            hourly: true,
-                            daily: true,
-                            weekly: false,
-                            monthly: false
+                            hourly: '<?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?'true':'false' ?> ',
+                            daily: '<?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'true':'false' ?> ',
+                            weekly: '<?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?'true':'false' ?> ',
+                            monthly: '<?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?'true':'false' ?> '
                         };
 
                         // Toggle global pricing options
                         function toggleGlobalPricing(priceType) {
                             const checkbox = document.getElementById(`enable${priceType.charAt(0).toUpperCase() + priceType.slice(1)}`);
                             enabledPriceTypes[priceType] = checkbox.checked;
+
+
 
                             // Update all existing rows
                             const fields = document.querySelectorAll(`.${priceType}-field`);
@@ -747,6 +749,8 @@
                         // Update grid layout based on enabled price types
                         function updateRowGridLayout() {
                             const enabledCount = Object.values(enabledPriceTypes).filter(Boolean).length;
+
+
                             const totalColumns = 3 + enabledCount; // item name + qty + enabled prices + delete button
 
                             const rows = document.querySelectorAll('.item-row');
