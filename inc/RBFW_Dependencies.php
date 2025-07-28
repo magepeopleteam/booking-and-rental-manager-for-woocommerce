@@ -48,7 +48,9 @@
 
                 wp_enqueue_script( 'sd_script', RBFW_PLUGIN_URL . '/assets/mp_script/sd_script.js', array(), time(), true );
 
-
+				wp_enqueue_style( 'select2css', RBFW_PLUGIN_URL . '/admin/css/select2.min.css', false, '1.0', 'all' );
+				wp_enqueue_script( 'select2', RBFW_PLUGIN_URL . '/admin/js/select2.min.js', array( 'jquery' ), null, true );
+				
                 wp_localize_script('rbfw_script', 'rbfw_translation', array(
                     'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
                     'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
