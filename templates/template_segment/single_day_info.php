@@ -168,7 +168,7 @@ if(isset($_POST['post_id'])){
 
                     <div class="rbfw_bikecarsd_es_price_table">
                         <div class="rbfw-single-right-heading">
-                            <?php esc_html_e('Additional Services You may like.','booking-and-rental-manager-for-woocommerce'); ?>
+                            <?php esc_html_e('Optional Add-ons','booking-and-rental-manager-for-woocommerce'); ?>
                         </div>
                         <table class="rbfw_bikecarsd_price_table">
                             <thead>

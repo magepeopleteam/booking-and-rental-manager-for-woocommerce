@@ -537,7 +537,7 @@ div.mp_right_section {
 }
 
 .mp_right_section .rbfw-booking-header{
-    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    background: linear-gradient(135deg, var(--rbfw_color_primary) 0%, var(--rbfw_color_primary) 100%);
     padding: 10px;
     color:#fff;
     border-radius: 12px  12px 0 0;
@@ -552,6 +552,12 @@ div.mp_right_section {
 .mp_right_section .rbfw-booking-form{
     padding: 10px;
 }
+.mp_right_section .single-day-booking .rbfw-bikecarsd-calendar{
+    margin: -10px;
+    margin-bottom: 10px;
+}
+
+
 .mp_right_section button.rbfw-book-now-btn {
     text-decoration: none;
     background: var(--rbfw_color_primary);
@@ -4516,12 +4522,12 @@ span {
 /* =======================Single day booking calendar=========================== */
 .single-rbfw_item .ui-datepicker .ui-datepicker-header{
     background: none;
-    background-color:var(--rbfw_primary_opacity);
+    background-color:#8cfff7;
     color: #333;
     border: 0;
     padding: .7em 0;
     position: relative;
-    border-radius: 20px 20px 0 0;
+    border-radius:0;
 }
 
 .single-rbfw_item .ui-datepicker .ui-datepicker-title{
@@ -4610,7 +4616,7 @@ span {
 }
 
 .single-rbfw_item  .ui-widget-content {
-    border-radius: 20px 20px 0 0;
+    border-radius:0;
     border: 1px solid #dfdedd;
     padding: 0;
 }
