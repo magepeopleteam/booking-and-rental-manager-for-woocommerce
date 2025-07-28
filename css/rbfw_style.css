@@ -612,9 +612,6 @@ button.rbfw-book-now-btn:focus {
 }
 
 .mp_rbfw_ticket_form .rbfw_resourse_md{
-    padding: 10px;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
     margin-top:10px;
     border-radius: 5px;
     margin-bottom: 10px;
@@ -1345,6 +1342,7 @@ table.rbfw_room_price_table tbody td img {
 .rbfw_qty_input {
     display:flex;
     align-items: center;
+    gap:2px;
 }
 
 .rbfw_qty_input a {
@@ -1401,15 +1399,14 @@ table.rbfw_room_price_table tbody td img {
 
 .rbfw_qty_input input[type="number"] {
     appearance: textfield;
-    border: none;
-    background: transparent;
+    border: 1px solid #ddd;
+    background: #fff;
     font-size: 16px;
     font-weight: normal;
     text-align: center;
     width:40px;
-    margin: 0 !important;
-    padding: 4px !important;
-    margin-bottom: 0;
+    padding: 4px;
+    height:34px;
 }
 
 .rbfw_qty_input input[type="number"]::-webkit-inner-spin-button,
@@ -7457,13 +7454,7 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
    padding-bottom: 10px;
 }
 
-.multi-service-category-section{
-    padding: 10px;
-    border: 1px solid #ddd;
-    background: #f8f8f8;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
+
 .multi-service-category-section .rbfw-single-right-heading{
     margin-top:7px;
 }
@@ -7471,12 +7462,14 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
 .rbfw_bikecarmd_es_table .rbfw-resource-item{
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid #ddd;
-    padding:5px 0;
+    align-items: center;
+    padding: 10px;
+    background: #f5f7fa;
+    border:1px solid #dce3ea;
+    margin-bottom: 5px;
+    border-radius: 5px;
 }
-.rbfw_bikecarmd_es_table .rbfw-resource-item:last-child{
-    border:0;
-}
+
 .rbfw-costing .rbfw-single-right-heading{
     margin-top:7px;
 }
@@ -7484,9 +7477,12 @@ div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
 .rbfw_bikecarmd_es_table .service-price-item{
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid #ddd;
-    padding:5px 0;
+    align-items: center;
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding:10px;
 }
-.rbfw_bikecarmd_es_table .service-price-item:last-child{
-    border:0;
-}
+
+
