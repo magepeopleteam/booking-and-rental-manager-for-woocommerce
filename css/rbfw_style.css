@@ -1955,6 +1955,7 @@ table.rbfw_room_cart_table th span {
 .rbfw_rent_list_style_grid .rbfw_rent_list_inner_wrapper {
     border: 1px solid #d0d7de;
     border-radius:5px;
+    height: 100%;
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_highlighted_features ul {
