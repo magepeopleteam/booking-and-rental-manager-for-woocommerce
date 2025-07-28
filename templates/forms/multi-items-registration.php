@@ -320,10 +320,10 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                                                                 <span class="rbfw_daily_price" style="display: none"><?php echo wc_price($item['daily_price']) ?> / Day</span>
                                                             <?php } ?>
                                                             <?php if(isset($pricing_types['weekly']) && $pricing_types['weekly']=='on'){ ?>
-                                                                <span class="rbfw_weekly_price" style="display: none"><?php echo wc_price($item['weekly_price']) ?> / Hour</span>
+                                                                <span class="rbfw_weekly_price" style="display: none"><?php echo wc_price($item['weekly_price']) ?> / Week</span>
                                                             <?php } ?>
                                                             <?php if(isset($pricing_types['monthly']) && $pricing_types['monthly']=='on'){ ?>
-                                                                <span class="rbfw_weekly_price" style="display: none"><?php echo wc_price($item['monthly_price']) ?> / Hour</span>
+                                                                <span class="rbfw_monthly_price" style="display: none"><?php echo wc_price($item['monthly_price']) ?> / Month</span>
                                                             <?php } ?>
                                                         </div>
                                                     </div>

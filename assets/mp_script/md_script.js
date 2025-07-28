@@ -812,7 +812,6 @@ jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #
 
     if(pickup_date && pickup_time && durationType && durationQty){
         calculateTotal();
-
     }
 
 });

@@ -292,6 +292,11 @@
                 $pricing_types           = get_post_meta( $post_id, 'pricing_types', true ) ? get_post_meta( $post_id, 'pricing_types', true ) : [];
                 $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info', true ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
 
+                $checked = (get_the_title($post_id)=='Auto Draft')?'checked':'';
+                $checked_item = (get_the_title($post_id)=='Auto Draft')?true:false;
+
+
+
                 ?>
                 <div class="rbfw_multiple_items <?php echo esc_attr( $rbfw_item_type == 'multiple_items') ? 'show' : 'hide'; ?>">
                     <div class="container">
@@ -303,17 +308,20 @@
                                     <div class="pricing-toggles">
 
                                         <div class="price-toggle">
-                                            <input type="checkbox" name="pricing_types[hourly]" id="enableHourly" <?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?'checked':'' ?>  onchange="toggleGlobalPricing('hourly')">
+                                            <input type="checkbox" name="pricing_types[hourly]" id="enableHourly" <?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?'checked':$checked ?>  onchange="toggleGlobalPricing('hourly')">
                                             <label for="enableHourly">Enable Hourly</label>
                                         </div>
+
                                         <div class="price-toggle">
-                                            <input type="checkbox" name="pricing_types[daily]" <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'checked':'' ?> id="enableDaily" checked onchange="toggleGlobalPricing('daily')">
+                                            <input type="checkbox" name="pricing_types[daily]" id="enableDaily" <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'checked':$checked ?>  onchange="toggleGlobalPricing('daily')">
                                             <label for="enableDaily">Enable Daily</label>
                                         </div>
+
                                         <div class="price-toggle">
                                             <input type="checkbox" name="pricing_types[weekly]" id="enableWeekly" <?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?'checked':'' ?> onchange="toggleGlobalPricing('weekly')">
                                             <label for="enableWeekly">Enable Weekly</label>
                                         </div>
+
                                         <div class="price-toggle">
                                             <input type="checkbox" name="pricing_types[monthly]" id="enableMonthly" <?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?'checked':'' ?> onchange="toggleGlobalPricing('monthly')">
                                             <label for="enableMonthly">Enable Monthly</label>
@@ -701,16 +709,18 @@
                         let items = [];
                         let rowCounter = 1;
                         let enabledPriceTypes = {
-                            hourly: true,
-                            daily: true,
-                            weekly: false,
-                            monthly: false
+                            hourly: '<?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?true:$checked_item ?> ',
+                            daily: '<?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?true:$checked_item ?> ',
+                            weekly: '<?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?true:false ?> ',
+                            monthly: '<?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?true:false ?> '
                         };
 
                         // Toggle global pricing options
                         function toggleGlobalPricing(priceType) {
                             const checkbox = document.getElementById(`enable${priceType.charAt(0).toUpperCase() + priceType.slice(1)}`);
                             enabledPriceTypes[priceType] = checkbox.checked;
+
+
 
                             // Update all existing rows
                             const fields = document.querySelectorAll(`.${priceType}-field`);
@@ -747,6 +757,8 @@
                         // Update grid layout based on enabled price types
                         function updateRowGridLayout() {
                             const enabledCount = Object.values(enabledPriceTypes).filter(Boolean).length;
+
+
                             const totalColumns = 3 + enabledCount; // item name + qty + enabled prices + delete button
 
                             const rows = document.querySelectorAll('.item-row');
@@ -767,7 +779,10 @@
                             var itemRowsCount  = document.querySelectorAll('#itemRows .item-row').length;
 
 
-                            if (enabledPriceTypes.hourly) {
+
+
+
+                            if (enabledPriceTypes.hourly==true) {
                                 priceFields += `
                     <div class="form-group hourly-field">
                         <label>Hourly Price</label>
@@ -776,9 +791,18 @@
                         </div>
                     </div>
                 `;
+                            }else{
+                                priceFields += `
+                    <div class="form-group hourly-field disabled-field">
+                        <label>Hourly Price</label>
+                        <div class="price-input">
+                            <input type="number" name="multiple_items_info[${itemRowsCount}][hourly_price]" class="hourly-price-input" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+                `;
                             }
 
-                            if (enabledPriceTypes.daily) {
+                            if (enabledPriceTypes.daily==true) {
                                 priceFields += `
                     <div class="form-group daily-field">
                         <label>Daily Price</label>
@@ -787,9 +811,20 @@
                         </div>
                     </div>
                 `;
+                            }else{
+
+                                priceFields += `
+                    <div class="form-group daily-field disabled-field">
+                        <label>Daily Price</label>
+                        <div class="price-input">
+                            <input type="number" name="multiple_items_info[${itemRowsCount}][daily_price]" class="daily-price-input" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+                `;
+
                             }
 
-                            if (enabledPriceTypes.weekly) {
+                            if (enabledPriceTypes.weekly==true) {
                                 priceFields += `
                     <div class="form-group weekly-field">
                         <label>Weekly Price</label>
@@ -809,7 +844,7 @@
                 `;
                             }
 
-                            if (enabledPriceTypes.monthly) {
+                            if (enabledPriceTypes.monthly==true) {
                                 priceFields += `
         <div class="form-group monthly-field">
             <label>Monthly Price</label>
