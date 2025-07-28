@@ -370,7 +370,7 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                             <ul class="rbfw-ul">
 
                                 <li id="AddonsPrice" style="display: none">
-                                    Add Ond Price <span></span>
+                                    <?php esc_html_e('Add-ons Price','booking-and-rental-manager-for-woocommerce') ?> <span></span>
                                 </li>
 
 
@@ -473,41 +473,34 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                     <div class="multi-service-category-section" style="display: none">
                         <?php foreach ($option_value as $cat => $item) { ?>
                             <div class="servise-item">
-                                <div class="rbfw-single-right-heading"><?php echo esc_html($item['cat_title']); ?></div>
+                                <div class="rbfw-single-right-heading"><?php echo esc_html__('Optional Add-ons','booking-and-rental-manager-for-woocommerce'); ?></div>
                                 <input type="hidden" name="rbfw_category_wise_info[<?php echo esc_attr($cat); ?>][cat_title]" value="<?php echo esc_attr($item['cat_title']); ?>">
                                 <div class="item-content rbfw-resource">
-                                    <table class="rbfw_bikecarmd_es_table">
-                                        <tbody>
+                                    <div class="rbfw_bikecarmd_es_table">
                                         <?php foreach ($item['cat_services'] as $serkey => $service) { ?>
-
                                             <?php if (!empty($service['title'])) { ?>
-                                                <tr class="service-price-item">
-
-                                                    <td>
+                                                <div class="service-price-item">
+                                                    <div>
                                                         <div class="title">
                                                             <?php if($service['icon']){ ?>
                                                                 <i class="sc-icon <?php echo esc_attr($service['icon']); ?>"></i>
                                                             <?php } ?>
                                                             <?php echo esc_html($service['title']); ?>
-
                                                             <?php if($available_qty_info_switch == 'yes'){ ?>
                                                                 <i class="available-stock item_<?php echo esc_attr($cat . $serkey); ?>">
                                                                     <?php esc_html_e('Available Qty ', 'booking-and-rental-manager-for-woocommerce'); ?><span class="remaining_stock"></span>
                                                                 </i>
                                                             <?php } ?>
                                                         </div>
-                                                    </td>
-
-                                                    <td class="w_20">
-                                                        <div class="title"><?php echo wp_kses(wc_price($service['price']),rbfw_allowed_html()); ?></div>
-                                                        <span class="day-time-wise"><?php echo (isset($service['service_price_type'] ) && $service['service_price_type'] === 'day_wise') ? esc_html__('Day Wise', 'booking-and-rental-manager-for-woocommerce') : esc_html__('One Time', 'booking-and-rental-manager-for-woocommerce'); ?></span>
-                                                    </td>
-
+                                                        <div style="font-size: 12px;">
+                                                            <span class="title"><?php echo wp_kses(wc_price($service['price']),rbfw_allowed_html()); ?></span>
+                                                            <span class="day-time-wise"><?php echo (isset($service['service_price_type'] ) && $service['service_price_type'] === 'day_wise') ? esc_html__('Day Wise', 'booking-and-rental-manager-for-woocommerce') : esc_html__('One Time', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                                                        </div>
+                                                    </div>
                                                     <input type="hidden" value="<?php echo $service['title'] ?>" name="rbfw_category_wise_info[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][name]"/>
                                                     <input type="hidden" value="<?php echo $service['service_price_type'] ?>" name="rbfw_category_wise_info[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][service_price_type]"/>
                                                     <input type="hidden" value="<?php echo $service['price'] ?>" name="rbfw_category_wise_info[<?php echo esc_attr($cat); ?>][<?php echo esc_attr($serkey); ?>][price]"/>
-
-                                                    <td class="item_<?php echo esc_attr($cat . $serkey); ?>">
+                                                    <div class="item_<?php echo esc_attr($cat . $serkey); ?>">
                                                         <div class="rbfw_qty_input">
                                                             <a class="rbfw_additional_service_qty_minus rbfw_qty_minus" data-item="<?php echo esc_attr($cat . $serkey); ?>">
                                                                 <i class="fas fa-minus"></i>
@@ -517,12 +510,11 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                                                                 <i class="fas fa-plus"></i>
                                                             </a>
                                                         </div>
-                                                    </td>
-                                                </tr>
+                                                    </div>
+                                                </div>
                                             <?php } ?>
                                         <?php } ?>
-                                        </tbody>
-                                    </table>
+                                    </div>
                                 </div>
                             </div>
                         <?php } ?>
