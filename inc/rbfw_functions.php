@@ -700,14 +700,16 @@
 				let data_loaded = parseInt(jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded'));
 				var data = {
 					'action': 'rbfw_load_more_icons',
-					'data_loaded': data_loaded
+					'data_loaded': data_loaded,
+                    'nonce': rbfw_ajax.nonce
 				};
 				jQuery.ajax({
 					type: 'POST',
 					url: <?php echo json_encode(esc_url(admin_url('admin-ajax.php'))); ?>, // Escape URL
 					data: {
 						'action': 'rbfw_load_more_icons',
-						'data_loaded': data_loaded
+						'data_loaded': data_loaded,
+                        'nonce': rbfw_ajax.nonce
 					},
 					beforeSend: function () {
 						jQuery('.rbfw_load_more_icons').append('<span class="rbfw_load_more_icons_loader"><i class="fas fa-spinner fa-spin"></i></span>');
@@ -716,7 +718,7 @@
 						console.log('response', response);
 						jQuery('.rbfw_load_more_icons_loader').remove();
 						// Escape response to ensure no unwanted HTML or scripts
-						jQuery('.rbfw_features_icon_list_body').append(esc_html(response));
+						jQuery('.rbfw_features_icon_list_body').append(response);
 						data_loaded = data_loaded + 100;
 						jQuery('#rbfw_features_icon_list_wrapper').attr('data-loaded', data_loaded);
 						if (response == '') {
@@ -786,12 +788,14 @@
 	}
 	add_action( 'wp_ajax_rbfw_load_more_icons', 'rbfw_load_more_icons_func' );
 	function rbfw_load_more_icons_func() {
+
 		if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
 			return;
 		}
-		$data_loaded       = isset( $_POST['data_loaded'] ) ? sanitize_text_field( sanitize_text_field( wp_unslash( $_POST['data_loaded'] ) ) ) : '';
+        $data_loaded       = isset( $_POST['data_loaded'] ) ? sanitize_text_field( sanitize_text_field( wp_unslash( $_POST['data_loaded'] ) ) ) : '';
 		$icon_library      = new rbfw_icon_library();
 		$icon_library_list = $icon_library->rbfw_fontawesome_icons();
+
 		ob_start();
 		$i      = 0;
 		$target = $data_loaded + 100;
