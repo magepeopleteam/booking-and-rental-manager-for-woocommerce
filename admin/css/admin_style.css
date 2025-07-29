@@ -5521,7 +5521,6 @@ section.rbfw_item_quantiry_duration{
     gap: 30px;
 }
 .service_category_inner_wrap input[name^="rbfw_service_category_price"][name*="[cat_services]"][name$="[title]"] {
-  width: 25em !important;
   max-width: 400px;
   padding: 10px 14px;
   color: #333;
