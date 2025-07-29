@@ -493,6 +493,7 @@
                             background: white;
                             border-radius: 6px;
                             border: 1px solid #e5e7eb;
+                            overflow-x: auto;
                         }
 
                         .form-group {
@@ -763,7 +764,7 @@
 
                             const rows = document.querySelectorAll('.item-row');
                             rows.forEach(row => {
-                                row.style.gridTemplateColumns = `180px 80px ${'120px '.repeat(enabledCount)}80px`;
+                                row.style.gridTemplateColumns = `180px 80px ${'100px '.repeat(enabledCount)}80px`;
                             });
                         }
 
