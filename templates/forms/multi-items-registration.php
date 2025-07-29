@@ -127,16 +127,16 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                                     <tr>
                                         <td><strong>Items</strong></td>
                                         <?php if(isset($pricing_types['hourly']) && $pricing_types['hourly']=='on'){ ?>
-                                            <td>Hourly Price</td>
+                                            <td><?php esc_html_e('Hourly Price','booking-and-rental-manager-for-woocommerce'); ?> </td>
                                         <?php } ?>
                                         <?php if(isset($pricing_types['daily']) && $pricing_types['daily']=='on'){ ?>
-                                            <td>Daily Price</td>
+                                            <td><?php esc_html_e('Daily Price','booking-and-rental-manager-for-woocommerce'); ?> </td>
                                         <?php } ?>
                                         <?php if(isset($pricing_types['weekly']) && $pricing_types['weekly']=='on'){ ?>
-                                            <td>Weekly Price</td>
+                                            <td><?php esc_html_e('Weekly Price','booking-and-rental-manager-for-woocommerce'); ?></td>
                                         <?php } ?>
                                         <?php if(isset($pricing_types['monthly']) && $pricing_types['monthly']=='on'){ ?>
-                                            <td>Monthly Price</td>
+                                            <td><?php esc_html_e('Monthly Price','booking-and-rental-manager-for-woocommerce'); ?></td>
                                         <?php } ?>
                                     </tr>
 
@@ -145,16 +145,16 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                                     <tr>
                                         <td><strong><?php echo $item_price['item_name'] ?></strong></td>
                                         <?php if(isset($pricing_types['hourly']) && $pricing_types['hourly']=='on'){ ?>
-                                            <td><?php echo wc_price($item_price['hourly_price']) ?> / Hour</td>
+                                            <td><?php echo wc_price($item_price['hourly_price']) ?> / <?php esc_html_e('Hour','booking-and-rental-manager-for-woocommerce'); ?></td>
                                         <?php } ?>
                                         <?php if(isset($pricing_types['daily']) && $pricing_types['daily']=='on'){ ?>
-                                            <td><?php echo wc_price($item_price['daily_price']) ?> / Day</td>
+                                            <td><?php echo wc_price($item_price['daily_price']) ?> / <?php esc_html_e('Day','booking-and-rental-manager-for-woocommerce'); ?></td>
                                         <?php } ?>
                                         <?php if(isset($pricing_types['weekly']) && $pricing_types['weekly']=='on'){ ?>
-                                            <td><?php echo wc_price($item_price['weekly_price']) ?> / Week</td>
+                                            <td><?php echo wc_price($item_price['weekly_price']) ?> / <?php esc_html_e('Week','booking-and-rental-manager-for-woocommerce'); ?></td>
                                         <?php } ?>
                                         <?php if(isset($pricing_types['monthly']) && $pricing_types['monthly']=='on'){ ?>
-                                            <td><?php echo wc_price($item_price['monthly_price']) ?> / Month</td>
+                                            <td><?php echo wc_price($item_price['monthly_price']) ?> / <?php esc_html_e('Month','booking-and-rental-manager-for-woocommerce'); ?></td>
                                         <?php } ?>
 
 
