@@ -51,7 +51,6 @@
 			}
 
 			public function category_service_price( $post_id ) {
-				$rbfw_item_type       = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$enable_service_price = get_post_meta( $post_id, 'rbfw_enable_category_service_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_category_service_price', true ) : 'off';
                 ?>
                 <div class="rbfw_general_price_config_wrapper">
