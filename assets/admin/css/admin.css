@@ -1195,4 +1195,8 @@
   box-shadow: 0 0 10px var(--mage-primary);
 }
 
-/*# sourceMappingURL=admin.css.map */
+.rbfw-service-category-table {
+  overflow: auto;
+}
+
+
