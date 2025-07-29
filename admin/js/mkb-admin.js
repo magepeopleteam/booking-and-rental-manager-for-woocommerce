@@ -279,7 +279,7 @@
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_date_settings_meta_boxes"]').hide();
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
-                jQuery('.rbfw_general_price_config_wrapper').hide();
+                jQuery('.rbfw_general_price_config_wrapper').show();
                 jQuery('.rbfw_resort_price_config_wrapper').show();
                 jQuery('.rbfw_location_switch').hide();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
