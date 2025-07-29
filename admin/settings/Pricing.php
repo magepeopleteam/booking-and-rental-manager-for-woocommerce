@@ -374,7 +374,7 @@
                                             <div class="form-group">
                                                 <label>&nbsp;</label>
                                                 <button type="button" class="btn btn-danger" onclick="removeItemRow(this)" style="visibility: hidden;">
-                                                    <?php esc_html_e('Item Name','booking-and-rental-manager-for-woocommerce'); ?>Delete
+                                                    <?php esc_html_e('Delete','booking-and-rental-manager-for-woocommerce'); ?>
                                                 </button>
                                             </div>
                                         </div>
