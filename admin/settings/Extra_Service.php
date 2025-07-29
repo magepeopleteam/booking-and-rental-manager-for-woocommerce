@@ -385,12 +385,12 @@
 				$rbfw_extra_service_data       = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 				
 				?>
-					<section class="bg-light mt-5">
-						<div>
-							<label><?php echo esc_html__('Extra Service Price Settings','booking-and-rental-manager-for-woocommerce'); ?></label>
-							<p><?php echo esc_html__( 'Extra Service Price Settings','booking-and-rental-manager-for-woocommerce'); ?></p>
-						</div>
-					</section>
+				<section class="bg-light mt-5">
+							<div>
+								<label><?php echo esc_html__('Extra Service Price Settings','booking-and-rental-manager-for-woocommerce'); ?></label>
+								<p><?php echo esc_html__( 'Here you can set extra service price.','booking-and-rental-manager-for-woocommerce'); ?></p>
+							</div>
+						</section>
 						<section>
 							<div class="w-100">
 								<div style="overflow-x: auto;">
