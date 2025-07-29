@@ -72,7 +72,7 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
                 <?php } ?>
 				<div class="mp_right_section">
 					<?php do_action('booking_form_header',$post_id); ?>
-					<div class="rbfw-booking-form">
+					<div class="rbfw-booking-form single-day-booking">
                     	<?php include( RBFW_Function::get_template_path( 'forms/single-day-registration.php' ) ); ?>
 					</div>
 				</div>
