@@ -248,23 +248,24 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                             <div class="item-content rbfw-datetime">
                                 <div class="left">
                                     <div class="rbfw-single-right-heading">
-                                        Duration Type
+                                        <?php _e('Duration Type','booking-and-rental-manager-for-woocommerce'); ?>
                                     </div>
                                     <div class="rbfw-p-relative">
+                                        <span class="calendar"><i class="fas fa-stopwatch"></i></span>
                                         <select class="rbfw-select" name="durationType" id="durationType" required>
-                                            <option value="">Select duration type</option>
+                                            <option value=""><?php _e('Select duration type','booking-and-rental-manager'); ?></option>
 
                                             <?php if(isset($pricing_types['hourly']) && $pricing_types['hourly']=='on'){ ?>
-                                                <option value="hourly">Hourly</option>
+                                                <option value="hourly"><?php _e('Hourly','booking-and-rental-manager'); ?></option>
                                             <?php } ?>
                                             <?php if(isset($pricing_types['daily']) && $pricing_types['daily']=='on'){ ?>
-                                                <option value="daily">Daily</option>
+                                                <option value="daily"><?php _e('Daily','booking-and-rental-manager'); ?></option>
                                             <?php } ?>
                                             <?php if(isset($pricing_types['weekly']) && $pricing_types['weekly']=='on'){ ?>
-                                                <option value="weekly">Weekly</option>
+                                                <option value="weekly"><?php _e('Weekly','booking-and-rental-manager'); ?></option>
                                             <?php } ?>
                                             <?php if(isset($pricing_types['monthly']) && $pricing_types['monthly']=='on'){ ?>
-                                                <option value="monthly">Monthly</option>
+                                                <option value="monthly"><?php _e('Monthly','booking-and-rental-manager'); ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>

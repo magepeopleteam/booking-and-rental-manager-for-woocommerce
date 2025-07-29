@@ -438,13 +438,14 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
     position: relative;
 }
 
-.rbfw-datetime .date .calendar,
+.rbfw-datetime .calendar,
 .rbfw-datetime .time .clock {
     position: absolute;
     top: 50%;
     left: 2px;
     transform: translateY(-50%);
     padding: 12px;
+    color: var(--rbfw_color_primary);
 }
 
 .rbfw-datetime .time i.fa-angle-down {
@@ -6355,6 +6356,7 @@ span:not(.week .day[disabled="disabled"] span):hover {
 .mp_default_theme .rbfw-datetime .time .clock {
     color: var(--rbfw_color_primary) !important;
 }
+
 
 .mp_default_theme .rbfw_bikecarmd_backstep1_btn {
     background: rgba(0, 0, 0, 0.6);
