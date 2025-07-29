@@ -248,23 +248,23 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                             <div class="item-content rbfw-datetime">
                                 <div class="left">
                                     <div class="rbfw-single-right-heading">
-                                        Duration Type
+                                        <?php esc_html_e('Duration Type','booking-and-rental-manager-for-woocommerce'); ?>
                                     </div>
                                     <div class="rbfw-p-relative">
-                                        <select class="rbfw-select" name="durationType" id="durationType" required>
-                                            <option value="">Select duration type</option>
+                                        <select class="rbfw-select rbfw_duration_select" name="durationType" id="durationType" required>
+                                            <option value=""><?php esc_html_e('Select duration type','booking-and-rental-manager-for-woocommerce'); ?></option>
 
                                             <?php if(isset($pricing_types['hourly']) && $pricing_types['hourly']=='on'){ ?>
-                                                <option value="hourly">Hourly</option>
+                                                <option value="hourly"><?php esc_html_e('Hourly','booking-and-rental-manager-for-woocommerce'); ?></option>
                                             <?php } ?>
                                             <?php if(isset($pricing_types['daily']) && $pricing_types['daily']=='on'){ ?>
-                                                <option value="daily">Daily</option>
+                                                <option value="daily"><?php esc_html_e('Daily','booking-and-rental-manager-for-woocommerce'); ?></option>
                                             <?php } ?>
                                             <?php if(isset($pricing_types['weekly']) && $pricing_types['weekly']=='on'){ ?>
-                                                <option value="weekly">Weekly</option>
+                                                <option value="weekly"><?php esc_html_e('Weekly','booking-and-rental-manager-for-woocommerce'); ?></option>
                                             <?php } ?>
                                             <?php if(isset($pricing_types['monthly']) && $pricing_types['monthly']=='on'){ ?>
-                                                <option value="monthly">Monthly</option>
+                                                <option value="monthly"><?php esc_html_e('Monthly','booking-and-rental-manager-for-woocommerce'); ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
@@ -272,7 +272,7 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
 
                                 <div class="right time">
                                     <div class="rbfw-single-right-heading" id="qtyLabel">
-                                        Number of Duration
+                                        <?php esc_html_e('Number of Duration','booking-and-rental-manager-for-woocommerce'); ?>
                                     </div>
                                     <div class="rbfw-p-relative">
                                         <div class="qty-input rbfw_qty_input">
