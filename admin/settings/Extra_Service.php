@@ -385,7 +385,7 @@
 				<section class="bg-light mt-5">
 							<div>
 								<label><?php echo esc_html__('Extra Service Price Settings','booking-and-rental-manager-for-woocommerce'); ?></label>
-								<p><?php echo esc_html__( 'Extra Service Price Settings','booking-and-rental-manager-for-woocommerce'); ?></p>
+								<p><?php echo esc_html__( 'Here you can set extra service price.','booking-and-rental-manager-for-woocommerce'); ?></p>
 							</div>
 						</section>
 						<section>
