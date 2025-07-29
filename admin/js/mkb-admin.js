@@ -304,7 +304,7 @@
             }else if (item_type == 'multiple_items') {
 
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
-                
+                jQuery('.rbfw_general_price_config_wrapper').addClass('rbfw-d-none');
                 jQuery('.rbfw_switch_extra_service_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_variations"]').hide();
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
@@ -314,7 +314,7 @@
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
                 jQuery('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
                 jQuery('.rbfw_es_price_config_wrapper').hide();
-                jQuery('.rbfw_general_price_config_wrapper').show();
+                jQuery('.additional-service-item-price').show();
                 jQuery('.rbfw_discount_price_config_wrapper').hide();
                 jQuery('.rbfw_min_max_booking_day_row').hide();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
