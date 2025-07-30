@@ -177,10 +177,14 @@
 
         if (current_item_type == 'bike_car_sd' || current_item_type == 'appointment') {
             jQuery('tr[data-row=rbfw_time_slot_switch]').show();
+        }else if(current_item_type == 'multiple_items'){
+            jQuery('.rbfw_min_max_booking_day_row').hide();
+            jQuery('.rbfw_seasonal_price_config_wrapper').hide();
         } else {
             jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
             jQuery('tr[data-row=rdfw_available_time]').show();
         }
+        
 
         var status = $('.rbfw_es_price_config_wrapper').data('status');
 
