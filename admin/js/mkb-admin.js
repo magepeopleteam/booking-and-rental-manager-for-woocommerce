@@ -157,12 +157,14 @@
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_resort').hide();
                 jQuery('.mds_price_resort').hide();
+                jQuery('.additional-service-item-price').hide();
 
             }else if(current_item_type == 'resort'){
                 jQuery('.sessional_price_resort').show();
                 jQuery('.mds_price_resort').show();
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
+                jQuery('.additional-service-item-price').hide();
             }else{
 
                 jQuery('.sessional_price_multi_day').show();
@@ -173,6 +175,7 @@
             }
         } else {
             jQuery('.rbfw_seasonal_price_config_wrapper').hide();
+            jQuery('.additional-service-item-price').hide();
         }
 
         if (current_item_type == 'bike_car_sd' || current_item_type == 'appointment') {
@@ -184,7 +187,7 @@
             jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
             jQuery('tr[data-row=rdfw_available_time]').show();
         }
-        
+
 
         var status = $('.rbfw_es_price_config_wrapper').data('status');
 
@@ -219,6 +222,8 @@
                 jQuery('.rbfw_off_days').show();
                 jQuery('.wervice_quantity_input_box').show();
                 jQuery('#add-bike-car-sd-type-row').show();
+
+                jQuery('.additional-service-item-price').hide();
 
                 jQuery('.manage_inventory_as_timely').show();
 
@@ -275,6 +280,8 @@
                 }
                 jQuery('.rbfw_multiple_items').hide();
 
+                jQuery('.additional-service-item-price').hide();
+
             } else if (item_type == 'resort') {
                 jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').hide();
                 jQuery('.mp_tab_item[data-target-tabs="#rbfw_location_config"]').hide();
@@ -303,8 +310,11 @@
 
                 jQuery('.rbfw_multiple_items').hide();
 
+                jQuery('.additional-service-item-price').hide();
+
             }else if (item_type == 'resort') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
+                jQuery('.additional-service-item-price').hide();
             }else if (item_type == 'multiple_items') {
 
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
