@@ -370,7 +370,7 @@
                 jQuery('.rbfw_general_price_config_wrapper').show();
                 jQuery('.rbfw_seasonal_price_config_wrapper').show();
                 jQuery('.rbfw_switch_sd_appointment_row').hide();
-                jQuery('.rbfw_es_price_config_wrapper').show();
+
                 jQuery('.rbfw_discount_price_config_wrapper').show();
                 jQuery('.rbfw_min_max_booking_day_row').show();
                 jQuery('tr[data-row=rbfw_time_slot_switch]').hide();
@@ -384,12 +384,15 @@
                 jQuery('.sessional_price_multi_day').hide();
                 jQuery('.sessional_price_single_day').hide();
 
-                var status = $('.rbfw_es_price_config_wrapper').data('status');
+                jQuery('.rbfw_es_price_config_wrapper').show();
+                jQuery('.additional-service-item-price').show();
+
+           /*     var status = $('.rbfw_es_price_config_wrapper').data('status');
                 if(status=='yes'){
                     $('.rbfw_es_price_config_wrapper').show();
                 }else{
                     $('.rbfw_es_price_config_wrapper').hide();
-                }
+                }*/
                 jQuery('.sessional_price_multi_day').show();
                 jQuery('.sessional_price_single_day').hide();
                 jQuery('.sessional_price_resort').hide();
