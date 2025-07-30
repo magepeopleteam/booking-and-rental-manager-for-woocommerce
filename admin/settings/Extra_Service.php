@@ -371,13 +371,13 @@
 			public function extra_service_table( $post_id ) {
 				$rbfw_item_type                = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$rbfw_extra_service_data       = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
-				
+
 				?>
-				<div class="rbfw_es_price_config_wrapper" <?php if ( $rbfw_item_type == 'appointment' ) { echo 'style="display:none"'; } ?>">
+				<div class="rbfw_es_price_config_wrapper" <?php if ( $rbfw_item_type == 'appointment' || $rbfw_item_type == 'multiple_items') { echo 'style="display:none"'; } ?>">
 					<?php $this->show_extra_service( $post_id ) ?>
 				</div>
 				<?php
-				
+
 			}
 			public function show_extra_service( $post_id ){
 				$rbfw_item_type                = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
