@@ -328,7 +328,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div id="itemRows">
                                     <!-- First item row -->
                                     <?php $i=0; foreach ($multiple_items_info as $key=>$item_price){   ?>
@@ -351,7 +350,7 @@
                                             </div>
 
                                             <div class="form-group daily-field <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'':'disabled-field' ?>">
-                                                <label><?php esc_html_e('Item Name','booking-and-rental-manager-for-woocommerce'); ?>Daily Price</label>
+                                                <label><?php esc_html_e('Daily Price','booking-and-rental-manager-for-woocommerce'); ?></label>
                                                 <div class="price-input">
                                                     <input type="number" name="multiple_items_info[<?php echo $i ?>][daily_price]" class="daily-price-input" step="0.01" min="0" value="<?php echo $item_price['daily_price'] ?>" placeholder="0.00">
                                                 </div>
@@ -379,8 +378,6 @@
                                             </div>
                                         </div>
                                     <?php $i++; } ?>
-
-
                                 </div>
 
                                 <button type="button" class="add-more-btn" onclick="addItemRow()">
