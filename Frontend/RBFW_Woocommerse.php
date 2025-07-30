@@ -882,7 +882,7 @@ if (!class_exists('MPTBM_Woocommerce')) {
                
                 $item->add_meta_data( rbfw_string_return( 'rbfw_text_service_info', esc_html__( 'Service Info', 'booking-and-rental-manager-for-woocommerce' ) ), $rbfw_service_infos_order );
 
-                echo '<pre>';print_r($rbfw_service_info);echo '<pre>';exit;
+
 
 
                 if ( ! empty( $rbfw_service_info ) ) {

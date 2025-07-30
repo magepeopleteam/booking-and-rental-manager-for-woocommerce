@@ -5560,7 +5560,7 @@ span.ppof-button.add-service-category.mt-1, .field-text-multi-wrapper-rbfw_featu
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-align: center;
-  width:240px;
+  max-width:256px;
  }
 .rbfw_es_price_config_wrapper section{padding: 20px 0px !important;}
 .rbfw_es_price_config_wrapper section.bg-light.mt-5 {

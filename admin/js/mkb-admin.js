@@ -196,7 +196,7 @@
 
             if (item_type == 'bike_car_sd') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
-                jQuery('.rbfw_general_price_config_wrapper').show();
+                jQuery('.rbfw_general_price_config_wrapper').hide();
                 jQuery('.rbfw_switch_extra_service_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_variations"]').hide();
                 jQuery('.rbfw_switch_md_type_item_qty').hide();
