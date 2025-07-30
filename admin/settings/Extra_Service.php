@@ -53,7 +53,7 @@
 			public function category_service_price( $post_id ) {
 				$enable_service_price = get_post_meta( $post_id, 'rbfw_enable_category_service_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_category_service_price', true ) : 'off';
                 ?>
-                <div class="rbfw_general_price_config_wrapper">
+                <div class="additional-service-item-price">
 					<?php $this->panel_header( 'Additional Service item price settings ', 'Additional Service item and price settings' ); ?>
                     <section>
                         <div>
