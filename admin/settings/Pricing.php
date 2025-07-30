@@ -350,7 +350,9 @@
                                             </div>
 
                                             <div class="form-group daily-field <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'':'disabled-field' ?>">
+
                                                 <label><?php esc_html_e('Daily Price','booking-and-rental-manager-for-woocommerce'); ?></label>
+
                                                 <div class="price-input">
                                                     <input type="number" name="multiple_items_info[<?php echo $i ?>][daily_price]" class="daily-price-input" step="0.01" min="0" value="<?php echo $item_price['daily_price'] ?>" placeholder="0.00">
                                                 </div>
@@ -373,7 +375,9 @@
                                             <div class="form-group">
                                                 <label>&nbsp;</label>
                                                 <button type="button" class="btn btn-danger" onclick="removeItemRow(this)" style="visibility: hidden;">
+
                                                     <?php esc_html_e('Delete','booking-and-rental-manager-for-woocommerce'); ?>
+
                                                 </button>
                                             </div>
                                         </div>
