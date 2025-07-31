@@ -898,6 +898,9 @@
 			case 'others':
 				return 'Others';
 				break;
+            case 'multiple_items':
+                return 'Multiple day for multiple items';
+                break;
 			default:
 				return;
 		}

@@ -1007,7 +1007,7 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                                     $sold_item_qty += $rbfw_item_quantity;
                                     if (!empty($rbfw_service_info)) {
                                         foreach ($rbfw_service_info as $key => $service_info) {
-                                            $sold_es_qty += $service_info;
+                                            $sold_es_qty += (int)$service_info;
                                         }
                                     }
                                 }
