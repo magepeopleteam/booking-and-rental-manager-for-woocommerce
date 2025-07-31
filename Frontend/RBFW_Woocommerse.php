@@ -207,11 +207,13 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 $durationType = isset($_POST['durationType'])?sanitize_text_field(wp_unslash($_POST['durationType'])):'';
                 $durationQty = isset($_POST['durationQty'])?sanitize_text_field(wp_unslash($_POST['durationQty'])):0;
                 $start_date_time = new DateTime($start_date.' '.$start_time);
-                $total_hours = ($durationType == 'Hours' ? $durationQty : ($durationType == 'Days' ? $durationQty * 24 : $durationQty * 24 * 7));
+                $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 :($durationType == 'weekly'?$durationQty * 24 * 7: $durationQty * 24 * 30)));
+
                 $start_date_time->modify("+$total_hours hours");
                 $end_date = $start_date_time->format('Y-m-d');
                 $end_time = $start_date_time->format('H:i:s');
                 $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
+
                 $rbfw_pickup_point         = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
                 $rbfw_dropoff_point        = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
                 $rbfw_duration_md       = isset( $sd_input_data_sabitized['rbfw_duration_md'] ) ? $sd_input_data_sabitized['rbfw_duration_md'] : '';
@@ -253,6 +255,7 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 $cart_item_data['rbfw_pickup_point']              = $rbfw_pickup_point;
                 $cart_item_data['rbfw_dropoff_point']             = $rbfw_dropoff_point;
                 $cart_item_data['rbfw_duration_md']               = $rbfw_duration_md;
+
                 $cart_item_data['rbfw_start_date']                = $start_date;
                 $cart_item_data['rbfw_start_time']                = $start_time;
                 $cart_item_data['rbfw_end_date']                  = $end_date;
