@@ -224,9 +224,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $start_time = isset($_POST['pickup_time'])?sanitize_text_field(wp_unslash($_POST['pickup_time'])):'';
 
             $pickup_datetime = gmdate('Y-m-d H:i', strtotime($start_date . ' ' . $start_time));
-
-            $durationType = isset($_POST['durationType'])?sanitize_text_field(wp_unslash($_POST['durationType'])):'';
             $durationQty = isset($_POST['durationQty'])?sanitize_text_field(wp_unslash($_POST['durationQty'])):'';
+            $durationType = isset($_POST['durationType'])?sanitize_text_field(wp_unslash($_POST['durationType'])):'';
+            $durationType_display = ($durationType == 'hourly' ? 'Hour' : ($durationType == 'daily' ? 'Day' :($durationType == 'weekly'?'Week': 'Month')));
+
+            $durationType_display = ($durationQty==1)?$durationType_display:$durationType_display.'s';
 
             $start_date_time = new DateTime($start_date.' '.$start_time);
             $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 : $durationQty * 24 * 7));
@@ -235,7 +237,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $end_time = $start_date_time->format('H:i:s');
 
             $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
-
 
             // Create DateTime objects
             $pickup = new DateTime($pickup_datetime);
@@ -273,7 +274,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'total_price_html' => wc_price((float)$rbfw_multi_item_price + (float)$rbfw_service_category_price + (float)$security_deposit['security_deposit_amount']),
                 'max_available_qty' => $max_available_qty,
                 'total_days' => $total_days,
-                'total_duration' => $durationQty.' '.$durationType,
+                'total_duration' => $durationQty.' '.$durationType_display,
                 'ticket_item_quantity' => '',
                 'pricing_applied' => '',
             ));

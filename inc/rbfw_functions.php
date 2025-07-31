@@ -188,7 +188,6 @@
 	}
 	function rbfw_get_option( $option, $section, $default = '' ) {
 		global $rbfw;
-
 		return $rbfw->get_option_trans( $option, $section, $default );
 	}
 	function rbfw_string( $option_name, $default_string ) {
