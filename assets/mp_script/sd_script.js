@@ -4,6 +4,7 @@
 
         let rbfw_today_booking_enable = $('.rbfw_today_booking_enable').val();
 
+       //  manage time management
         datepicker_inline();
 
         jQuery('body').on('focusin', '.pickup_date_timely', function(e) {
@@ -38,7 +39,9 @@
             let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
             let is_muffin_template = jQuery('.rbfw_muffin_template').length;
 
-            if(manage_inventory_as_timely=='on' && rbfw_rent_type=='bike_car_sd'){
+            alert(manage_inventory_as_timely);
+/*
+            if(manage_inventory_as_timely=='on'){
                 if(time_slot_switch=='no'){
                     rbfw_service_type_timely_stock_ajax(post_id,start_date,'',enable_specific_duration);
                 }
@@ -47,7 +50,7 @@
                     is_muffin_template = '1';
                 } else {
                     is_muffin_template = '0';
-                }
+                }*/
 
                 jQuery.ajax({
                     type: 'POST',
@@ -106,7 +109,7 @@
                         }, 100);
                     }
                 });
-            }
+
         });
 
 

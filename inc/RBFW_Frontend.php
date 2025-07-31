@@ -36,7 +36,6 @@
 			public static function load_template($post_id) {
 				$rent_type_template = RBFW_Frontend::get_rent_type_template($post_id);
 				$template_name = RBFW_Frontend::get_template_name($post_id);
-
 				$template_path = 'single/'. $template_name .'/'.$rent_type_template.'.php';
 				$template_path = RBFW_Function::get_template_path($template_path);
 				include( $template_path );
@@ -60,8 +59,10 @@
 
                 switch($rent_type){
                     case 'bike_car_sd':
+                        $file_name = 'single-day';
+                        break;
                         case 'appointment':
-                            $file_name = 'single-day';
+                            $file_name = 'appointment';
                             break;
                             case 'bike_car_md':
                                 case 'equipment':

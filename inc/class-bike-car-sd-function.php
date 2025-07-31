@@ -56,31 +56,6 @@
                 }
 
 
-                /*foreach ( $rbfw_type_info as $key => $value ):
-                    $rent_type = $key; //Type1
-                    if ( array_key_exists( $rent_type, $rent_types ) ) { // if Type1 exist in array
-                        $rent_price += (float) $rent_types[ $rent_type ] * (float) $value; // addup price
-                    }
-                endforeach;*/
-
-
-
-
-
-           /*     if ( ! empty( $rent_info ) ) {
-					foreach ( $rent_info as $key => $value ) {
-						$rent_type = $key; //Type1
-						if ( $value > 0 ) {
-							if ( array_key_exists( $rent_type, $rent_types ) ) { // if Type1 exist in array
-								$main_array[ $rent_type ] = '(' . rbfw_mps_price( $rent_types[ $rent_type ] ) . ' x ' . (float) $value . ') = ' . rbfw_mps_price( (float) $rent_types[ $rent_type ] * (float) $value ); // type = quantity
-							}
-						}
-					}
-				}*/
-
-
-
-
 				return $main_array;
 			}
 
@@ -452,8 +427,10 @@
 					$bikecarsd_price += (float) $value['data_qty'] * (float) $value['data_price'];
 				endforeach;
 				$total_bikecarsd_price = (float) $bikecarsd_price;
-                $service_price_arr = $sd_input_data_sabitized['service_price_arr'];
-				if ( ! empty( $service_price_arr ) ) {
+
+                $service_price_arr = (isset( $sd_input_data_sabitized['service_price_arr'] ) && is_array( $sd_input_data_sabitized['service_price_arr'] ) ) ? $sd_input_data_sabitized['service_price_arr'] : [];
+
+                if ( ! empty( $service_price_arr ) ) {
 					foreach ( $sd_input_data_sabitized['service_price_arr'] as $key => $value ):
 						$service_price += (float) $value['data_qty'] * (float) $value['data_price'];
 					endforeach;

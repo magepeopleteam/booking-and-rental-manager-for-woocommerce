@@ -52,7 +52,7 @@
                 </div>
             <?php endif; ?>
 
-            <?php  if($manage_inventory_as_timely !='on'){ ?>
+            <?php  if($manage_inventory_as_timely !='on' || $rbfw_rent_type =='appointment'){ ?>
                 <div class="item rbfw-bikecarsd-step" data-step="1">
                     <div id="rbfw-bikecarsd-calendar" class="rbfw-bikecarsd-calendar">
                     </div>
@@ -66,6 +66,7 @@
                     <div class="rbfw-bikecarsd-result-loader"></div>
                     <div class="rbfw-bikecarsd-result"></div>
                     <div class="rbfw-bikecarsd-result-order-details">
+
                     </div>
                 </div>
             <?php } else{
@@ -151,8 +152,13 @@
                 </div>
             <?php } ?>
 
-
-
+                 <!-- Header -->
+            <div class="rbfw-bikecarsd-calendar-header">
+                <div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-clock"></i> <?php rbfw_string('rbfw_text_real_time_availability',__('Real-time availability','booking-and-rental-manager-for-woocommerce')); ?></div>
+                <div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-bolt"></i> <?php rbfw_string('rbfw_text_instant_confirmation',__('Instant confirmation','booking-and-rental-manager-for-woocommerce')); ?></div>
+            </div>
+				<!-- Button -->
+				
             <div class="item rbfw_bikecarsd_book_now_btn_wrap">
                 <button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn rbfw_disabled_button" disabled>
                 <?php
