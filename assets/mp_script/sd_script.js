@@ -162,7 +162,7 @@
 
 
             let available_quantity = jQuery(this).data('available_quantity');
-            let service_type = jQuery(this).text();
+            let service_type = jQuery(this).data('text');
 
             if(rbfw_bikecarsd_selected_date==''){
                 alert("please enter pickup date");

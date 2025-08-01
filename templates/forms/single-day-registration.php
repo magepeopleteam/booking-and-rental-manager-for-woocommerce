@@ -123,7 +123,7 @@
 
                     <div class="rbfw_service_type rbfw_service_type_timely">
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
-                            <div title="<?php echo esc_attr($value['short_desc']); ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($value['price']); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']) ?? '' ?>" data-end_time="<?php echo esc_attr($value['end_time']) ?? '' ?>" class="radio-button single-type-timely">
+                            <div title="<?php echo esc_attr($value['short_desc']); ?>" data-text="<?php echo esc_attr($value['rent_type']); ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($value['price']); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']) ?? '' ?>" data-end_time="<?php echo esc_attr($value['end_time']) ?? '' ?>" class="radio-button single-type-timely">
                                 <label>
                                     <input type="radio" name="option" class="radio-input">
                                     <span class="rent-type"><?php echo esc_html($value['rent_type']); ?></span>
