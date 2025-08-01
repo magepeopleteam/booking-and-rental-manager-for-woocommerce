@@ -537,6 +537,7 @@
                     if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
                         $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_bike_car_sd_data_sp', true );
                         if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices  ) {
+
                             $sp_price = check_seasonal_price_sd( $start_date, $rbfw_sp_prices, $value['rent_type'] );
                         }
                     }
