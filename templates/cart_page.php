@@ -30,14 +30,9 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
         $total_days++;
     }
 
-
     $rbfw_room_price_category 	= $cart_item['rbfw_room_price_category'] ? $cart_item['rbfw_room_price_category'] : '';
-
     $rbfw_room_info 			= $cart_item['rbfw_room_info'] ? $cart_item['rbfw_room_info'] : [];
-
     $rbfw_type_info 			= $cart_item['rbfw_type_info'] ? $cart_item['rbfw_type_info'] : [];
-
-
 
     $rbfw_resort_room_data 		= get_post_meta( $rbfw_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_resort_room_data', true ) : array();
 
@@ -67,6 +62,10 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     endif;
 
     $rbfw_room_duration_price 	= $cart_item['rbfw_room_duration_price'] ? $cart_item['rbfw_room_duration_price'] : '';
+
+
+
+
     $rbfw_room_service_price 	= $cart_item['rbfw_room_service_price'] ? $cart_item['rbfw_room_service_price'] : '';
 
     $discount_type 	= $cart_item['discount_type'] ? $cart_item['discount_type'] : '';
