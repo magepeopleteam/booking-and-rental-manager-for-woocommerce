@@ -205,7 +205,7 @@ if(isset($post_id) && isset($active_tab)){
                     $c = 0;
                     foreach ($rbfw_extra_service_data as $key => $value) {
                         $max_es_available_qty = rbfw_get_multiple_date_es_available_qty($post_id, $checkin_date, $checkout_date, $value['service_name']);
-                        $img_url = wp_get_attachment_url($value['service_img']);
+                        $img_url = isset($value['service_img'])?wp_get_attachment_url($value['service_img']):'';
                         $uniq_id = wp_rand();
                         if ($img_url) {
                             $img = '<a href="#rbfw_room_img_' . $uniq_id . '" rel="mage_modal:open"><img src="' . esc_url($img_url) . '"/></a>';
@@ -228,7 +228,7 @@ if(isset($post_id) && isset($active_tab)){
                                     <?php if ($available_qty_info_switch == 'yes') { ?>
                                         <small class="rbfw_available_qty_notice">(<?php echo esc_html(rbfw_string_return('rbfw_text_available', __('Available:', 'booking-and-rental-manager-for-woocommerce'))) . esc_html($max_es_available_qty); ?>)</small>
                                     <?php } ?>
-                                    <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_desc]" value="<?php echo esc_attr($value['service_desc']); ?>"/>
+                                    <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_desc]" value="<?php echo esc_attr(isset($value['service_desc'])?$value['service_desc']:''); ?>"/>
                                 </td>
                                 <td>
                                     <?php echo wp_kses($img , rbfw_allowed_html()); ?>

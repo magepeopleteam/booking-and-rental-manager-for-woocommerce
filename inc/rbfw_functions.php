@@ -2680,7 +2680,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         );
     }
 
-    return ['duration_price' => $duration_price, 'total_days' => $total_days, 'actual_days' => $actual_days, 'hours' => $hours,'pricing_applied'=>$_COOKIE['pricing_applied']];
+    return ['duration_price' => $duration_price, 'total_days' => $total_days, 'actual_days' => $actual_days, 'hours' => $hours,'pricing_applied'=>isset($_COOKIE['pricing_applied'])?$_COOKIE['pricing_applied']:''];
 }
 
 

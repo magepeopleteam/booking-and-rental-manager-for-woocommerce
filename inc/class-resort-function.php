@@ -354,6 +354,7 @@
 					$total_service_price = 0;
 					$subtotal_price      = 0;
 					$total_price         = 0;
+                    $discount_amount     = 0;
 
 
                     foreach ( $room_price_arr as $key => $value ) {
