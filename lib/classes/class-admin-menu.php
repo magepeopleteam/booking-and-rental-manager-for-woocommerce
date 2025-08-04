@@ -507,7 +507,7 @@
                             $duration_cost = 0;
                             $service_cost = 0;
 
-                            
+
 
 
 							if ( $is_tax_inclusive == 'yes' ) {

@@ -1673,7 +1673,7 @@
                             </div>
                             <?php $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off'; ?>
                             <label class="switch">
-                                <input type="checkbox" name="rbfw_particular_switch" value="<?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? $rbfw_particular_switch : 'off' ); ?>" <?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'checked' : '' ); ?>>
+                                <input type="checkbox" name="rbfw_particular_switch_for_multiple_items" class="rbfw_particular_switch" value="<?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? $rbfw_particular_switch : 'off' ); ?>" <?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'checked' : '' ); ?>>
                                 <span class="slider round"></span>
                             </label>
                         </section>
@@ -1929,7 +1929,14 @@
 					$manage_inventory_as_timely = isset( $_POST['manage_inventory_as_timely'] ) ? sanitize_text_field( wp_unslash( $_POST['manage_inventory_as_timely'] ) ) : 'off';
 					$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : 'off';
 
+
                     $rbfw_particular_switch     = isset( $_POST['rbfw_particular_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_particular_switch'] ) ) : 'off';
+                    if($rbfw_item_type=='multiple_items'){
+                        $rbfw_particular_switch     = isset( $_POST['rbfw_particular_switch_for_multiple_items'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_particular_switch_for_multiple_items'] ) ) : 'off';
+                        echo $rbfw_particular_switch;exit;
+                    }
+
+
 
 
 

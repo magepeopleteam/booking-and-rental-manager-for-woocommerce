@@ -1441,17 +1441,39 @@
     });
 
 
-    $(document).on('click', 'input[name=rbfw_particular_switch]', function (e) {
+
+    var $checkbox = $('input[name="rbfw_particular_switch_for_multiple_items"]');
+
+    // Restore saved value on page load
+    var savedValue = localStorage.getItem('rbfw_particular_switch_for_multiple_items');
+    if (savedValue === 'on') {
+        $checkbox.prop('checked', true);
+    } else if (savedValue === 'off') {
+        $checkbox.prop('checked', false);
+    }
+
+    // Save value on change
+    $checkbox.on('change', function () {
+        var value = $(this).is(':checked') ? 'on' : 'off';
+        localStorage.setItem('rbfw_particular_switch_for_multiple_items', value);
+        console.log('Saved to localStorage:', value);
+    });
+
+
+ /*   $(document).on('click', '.rbfw_particular_switch', function (e) {
         var status = $(this).val();
+
         if (status === 'on') {
+            $(this).prop('checked', false);
             $(this).val('off');
             $('.available-particular').slideUp().removeClass('show').addClass('hide');
         }
         if (status === 'off') {
+            $(this).prop('checked', false);
             $(this).val('on');
             $('.available-particular').slideDown().removeClass('hide').addClass('show');
         }
-    });
+    });*/
     
     $(document).on('click', '.rbfw-single-template', function (e) {
         var currentTemplate = $(this).data('rbfw-template');
