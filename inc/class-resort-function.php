@@ -58,7 +58,7 @@
 				return $main_array;
 			}
 
-			public function rbfw_get_resort_room_info( $product_id, $rent_info, $package, $rbfw_room_price ) {
+			public function rbfw_get_resort_room_info( $product_id, $rent_info, $package, $rbfw_room_price = 0 ) {
 				$rent_price     = 0;
 				$main_array     = [];
 				$rbfw_rent_data = get_post_meta( $product_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $product_id, 'rbfw_resort_room_data', true ) : array();
