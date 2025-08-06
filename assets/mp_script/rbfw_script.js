@@ -74,7 +74,6 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 
 
 
-
             },
             complete:function(response) {
                 jQuery('html, body').animate({
