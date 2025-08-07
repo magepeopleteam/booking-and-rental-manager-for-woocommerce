@@ -44,10 +44,31 @@
 
                 }else{
                     if(time_slot_switch=='no'){
-
+                        rbfw_service_type_timely_stock_ajax(post_id,start_date_ymd,'',enable_specific_duration);
                     }else{
 
+                        jQuery('body').on('change',  '.rbfw_bikecarsd_pricing_table_wrap #pickup_time',function (e) {
 
+                            let post_id = jQuery('.rbfw_post_id').val();
+                            let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
+                            let start_time = jQuery(this).val();
+                            let rbfw_time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
+
+                            jQuery('#rbfw_start_time').val(start_time);
+
+                            if(rbfw_time_slot_switch == 'yes'){
+                                if(start_date=='' || start_time==''){
+                                    alert("please enter date");
+                                    return;
+                                }
+                            }else{
+                                if(start_date==''){
+                                    alert("please enter date");
+                                    return;
+                                }
+                            }
+                            rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time)
+                        })
 
                     }
                 }
@@ -110,30 +131,7 @@
         /*start single day hourly inventory managed*/
 
 
-        jQuery('body').on('change',  '.rbfw_bikecarsd_pricing_table_wrap #pickup_time',function (e) {
 
-            alert(22);
-
-            let post_id = jQuery('.rbfw_post_id').val();
-            let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
-            let start_time = jQuery(this).val();
-            let rbfw_time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
-
-            jQuery('#rbfw_start_time').val(start_time);
-
-            if(rbfw_time_slot_switch == 'yes'){
-                if(start_date=='' || start_time==''){
-                    alert("please enter date");
-                    return;
-                }
-            }else{
-                if(start_date==''){
-                    alert("please enter date");
-                    return;
-                }
-            }
-            rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time)
-        })
 
 
 
