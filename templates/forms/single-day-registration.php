@@ -72,7 +72,10 @@
 
                     <div class="rbfw-bikecarsd-result-wrap">
                         <div class="rbfw-bikecarsd-result-loader"></div>
-                        <div class="rbfw-bikecarsd-result"></div>
+                        <div class="rbfw-bikecarsd-result">
+                            <div class="rbfw_bikecarsd_time_table_wrap">
+                            </div>
+                        </div>
                         <div class="rbfw-bikecarsd-result-order-details">
 
                         </div>

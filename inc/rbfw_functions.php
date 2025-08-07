@@ -163,6 +163,13 @@
                 'class'          => true,
             ),
 
+            'figure'   => array(
+                'id'          => true,
+                'class'          => true,
+            ),
+
+
+
 		);
 
 		return $allowed_html;

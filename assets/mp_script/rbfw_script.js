@@ -422,16 +422,34 @@ function particular_time_date_dependent_ajax(post_id,date_ymd,type='',rbfw_enabl
             jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
             jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
 
-            if (response[1] == ".rbfw-select.rbfw-time-price.dropoff_time") {
-                var quantity_options = "<option value=''>" + rbfw_translation.return_time + "</option>";
+            if(type=='sd'){
+
+                let quantity_options = '';
+
+                jQuery.each(response[0], function(i, item) {
+                        quantity_options += `
+                            <a data-time="${item[1]}" class="rbfw_bikecarsd_time">
+                                <span class="rbfw_bikecarsd_time_span">${item[1]}</span>
+                            </a>
+                        `;
+                });
+                jQuery(response[1]).html(quantity_options);
+
             } else {
-                var quantity_options = "<option value=''>" + rbfw_translation.pickup_time + "</option>";
+                if (response[1] == ".rbfw-select.rbfw-time-price.dropoff_time") {
+                    var quantity_options = "<option value=''>" + rbfw_translation.return_time + "</option>";
+                } else {
+                    var quantity_options = "<option value=''>" + rbfw_translation.pickup_time + "</option>";
+                }
+
+                jQuery.each(response[0], function(i, item) {
+                    quantity_options += "<option "+ item[0] +" value="+i+">"+item[1]+"</option>";
+                });
+                jQuery(response[1]).html(quantity_options);
             }
 
-            jQuery.each(response[0], function(i, item) {
-                quantity_options += "<option "+ item[0] +" value="+i+">"+item[1]+"</option>";
-            });
-            jQuery(response[1]).html(quantity_options);
+
+
 
 
 
