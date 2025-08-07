@@ -85,22 +85,44 @@
 					<?php $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd'; ?>
 					<?php
                         $item_type = [
-                            'bike_car_sd'     => ['name' => 'Single day',       'icon' => 'fa fa-calendar-day'],
-                            'bike_car_md'     => ['name' => 'Multiple day',     'icon' => 'fa fa-calendar-alt'],
-                            'resort'          => ['name' => 'Resort',                         'icon' => 'fa fa-hotel'],
-                            'appointment'     => ['name' => 'Appointment',                    'icon' => 'fa fa-calendar-check'],
-                            'multiple_items'  => ['name' => 'Multiple day for multiple items','icon' => 'fa fa-layer-group'],
+                            'bike_car_sd'     =>[
+                                                    'name' => 'Single day',
+                                                    'desc' => 'Single day booking items for bike,car,etc',
+                                                    'icon' => 'fa fa-calendar-day'
+                                                ],
+                            'bike_car_md'     =>[
+                                                    'name' => 'Multiple day',  
+                                                    'desc' => 'Multiple day booking items for bike,car,etc',   
+                                                    'icon' => 'fa fa-calendar-alt'
+                                                ],
+                            'resort'          =>[
+                                                    'name' => 'Resort',  
+                                                    'desc' => 'Resort booking items',                       
+                                                    'icon' => 'fa fa-hotel'
+                                                ],
+                            'appointment'     =>[
+                                                    'name' => 'Appointment', 
+                                                    'desc' => 'Schedule an appoimntment booking',                   
+                                                    'icon' => 'fa fa-calendar-check'
+                                                ],  
+                            'multiple_items'  =>[
+                                                    'name' => 'Multiple day for multiple items',
+                                                    'desc' => 'Multiple items for multiple day booking',
+                                                    'icon' => 'fa fa-layer-group'
+                                                ],
                         ];
                     ?>
 
                         <div class="rbfw-tent-types">
                             <input type="hidden" name="rbfw_item_type" id="rbfw_item_type" value="<?php echo esc_attr($rbfw_item_type); ?>">
-                            <?php foreach ( $item_type as $kay => $value ): ?>
-                                <div class="rbfw-tent-type <?php echo esc_attr( $kay == $rbfw_item_type ? 'selected' : '' ); ?>" data-rent-type="<?php echo esc_attr( $kay ); ?>"> 
+                            <?php foreach ( $item_type as $key => $value ): ?>
+                                <div class="rbfw-rent-type <?php echo esc_attr( $key == $rbfw_item_type ? 'selected' : '' ); ?>" data-rent-type="<?php echo esc_attr( $key ); ?>" data-rent-type-desc="<?php echo esc_html( $value['desc'] ); ?>"> 
                                     <div class="icon"><i class="<?php echo esc_html( $value['icon'] ); ?>"></i></div>
                                     <?php echo esc_html( $value['name'] ); ?> 
                                 </div>
+                                
                             <?php endforeach; ?>
+                            <div class="rbfw-rent-type-desc"></div>
                         </div>
                     </div>
                 </section>

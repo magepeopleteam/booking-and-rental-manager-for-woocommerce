@@ -198,10 +198,15 @@
             $('.rbfw_es_price_config_wrapper').show();
         }
 
-        jQuery('.rbfw-tent-type').on('click', function() {
+        var type_desc = jQuery('.rbfw-rent-type.selected').data('rent-type-desc');
+        jQuery('.rbfw-rent-type-desc').html(type_desc);
+        
+        jQuery('.rbfw-rent-type').on('click', function() {
             var item_type = jQuery(this).data('rent-type');
+            var type_desc = jQuery(this).data('rent-type-desc');
             jQuery('#rbfw_item_type').val(item_type);
-            jQuery('.rbfw-tent-type').removeClass('selected')
+            jQuery('.rbfw-rent-type-desc').html(type_desc);
+            jQuery('.rbfw-rent-type').removeClass('selected')
             jQuery(this).addClass('selected');
 
             if (item_type == 'bike_car_sd') {
