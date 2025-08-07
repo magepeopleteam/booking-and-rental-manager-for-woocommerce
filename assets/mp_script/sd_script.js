@@ -17,11 +17,6 @@
                 onSelect: function (dateString, data) {
                     let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
                     jQuery('input[name="rbfw_bikecarsd_selected_date"]').val(date_ymd).trigger('change');
-                    let rbfw_time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
-                    if(rbfw_time_slot_switch=='yes'){
-                        let post_id = jQuery('.rbfw_post_id').val();
-                        particular_time_date_dependent_ajax(post_id,date_ymd,'time_enable');
-                    }
                 },
             });
         });
@@ -36,12 +31,9 @@
             let time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
             let start_date_ymd = jQuery('#rbfw_bikecarsd_selected_date').val();
 
-
-
             if(manage_inventory_as_timely=='on'){
                 if(enable_specific_duration=='on'){
-
-
+                    rbfw_service_type_timely_stock_ajax(post_id,start_date_ymd,'','on');
                 }else{
                     if(time_slot_switch=='no'){
                         rbfw_service_type_timely_stock_ajax(post_id,start_date_ymd,'',enable_specific_duration);
@@ -129,15 +121,11 @@
 
 
         /*start single day hourly inventory managed*/
-
-
-
-
-
+        
 
         jQuery('body').on('click', '.rbfw_service_type .single-type-timely', function(e) {
 
-            alert(11);
+
 
             let post_id = jQuery('.rbfw_post_id').val();
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
