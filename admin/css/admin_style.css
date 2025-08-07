@@ -5859,4 +5859,35 @@ border: 1px solid #d4dadf !important;
     cursor: pointer;
 }
 
+.rbfw-tent-types{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap:15px;
+    flex-wrap: wrap;
+    margin:10px 0;
+}
 
+.rbfw-tent-types .rbfw-tent-type{
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid #999;
+    width: 163px;
+    height: 100px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+.rbfw-tent-types .rbfw-tent-type:hover,.rbfw-tent-types .rbfw-tent-type.selected{
+    background-color: #efefef;
+    border: 2px solid var(--mage-primary);
+    box-shadow: 0 0 5px var(--mage-primary);
+}
+.rbfw-tent-type .icon {
+    font-size: 20px;
+    text-align: center;
+    color: var(--mage-primary);
+}

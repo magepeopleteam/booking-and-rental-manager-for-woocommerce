@@ -81,23 +81,28 @@
 							<?php esc_html_e( 'Rent Types', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </label>
                         <p><?php esc_html_e( 'Price will be changed based on this type selection', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-                    </div>
+                    
 					<?php $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd'; ?>
-					<?php $item_type = [
-						'bike_car_sd' => 'Rent item for single day',
-						'bike_car_md' => 'Rent item for multiple day',
-						'resort'      => 'Resort',
-						'equipment'   => 'Equipment',
-						'dress'       => 'Dress',
-						'appointment' => 'Appointment',
-						'others'      => 'Others',
-                        'multiple_items' => 'Multiple day for multiple items',
-					]; ?>
-                    <select name="rbfw_item_type" id="rbfw_item_type">
-						<?php foreach ( $item_type as $kay => $value ): ?>
-                            <option <?php echo esc_attr( $kay == $rbfw_item_type ? 'selected' : '' ); ?> value="<?php echo esc_attr( $kay ); ?>"> <?php echo esc_html( $value ); ?> </option>
-						<?php endforeach; ?>
-                    </select>
+					<?php
+                        $item_type = [
+                            'bike_car_sd'     => ['name' => 'Single day',       'icon' => 'fa fa-calendar-day'],
+                            'bike_car_md'     => ['name' => 'Multiple day',     'icon' => 'fa fa-calendar-alt'],
+                            'resort'          => ['name' => 'Resort',                         'icon' => 'fa fa-hotel'],
+                            'appointment'     => ['name' => 'Appointment',                    'icon' => 'fa fa-calendar-check'],
+                            'multiple_items'  => ['name' => 'Multiple day for multiple items','icon' => 'fa fa-layer-group'],
+                        ];
+                    ?>
+
+                        <div class="rbfw-tent-types">
+                            <input type="hidden" name="rbfw_item_type" id="rbfw_item_type" value="<?php echo esc_attr($rbfw_item_type); ?>">
+                            <?php foreach ( $item_type as $kay => $value ): ?>
+                                <div class="rbfw-tent-type <?php echo esc_attr( $kay == $rbfw_item_type ? 'selected' : '' ); ?>" data-rent-type="<?php echo esc_attr( $kay ); ?>"> 
+                                    <div class="icon"><i class="<?php echo esc_html( $value['icon'] ); ?>"></i></div>
+                                    <?php echo esc_html( $value['name'] ); ?> 
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </section>
 				<?php
 			}

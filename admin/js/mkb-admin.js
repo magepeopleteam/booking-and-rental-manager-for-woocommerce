@@ -198,8 +198,11 @@
             $('.rbfw_es_price_config_wrapper').show();
         }
 
-        jQuery('#rbfw_item_type').on('change', function() {
-            var item_type = jQuery(this).val();
+        jQuery('.rbfw-tent-type').on('click', function() {
+            var item_type = jQuery(this).data('rent-type');
+            jQuery('#rbfw_item_type').val(item_type);
+            jQuery('.rbfw-tent-type').removeClass('selected')
+            jQuery(this).addClass('selected');
 
             if (item_type == 'bike_car_sd') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
@@ -1473,6 +1476,7 @@
         }
     });
     // ===========resort===========
+
 }(jQuery));
 
  // testimonial
