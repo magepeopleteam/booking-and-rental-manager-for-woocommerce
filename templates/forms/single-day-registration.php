@@ -105,16 +105,20 @@
 
                     <div class="rbfw_service_type rbfw_service_type_timely">
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
-                            <div title="<?php echo esc_attr($value['short_desc']); ?>" data-text="<?php echo esc_attr($value['rent_type']); ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($value['price']); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']) ?? '' ?>" data-end_time="<?php echo esc_attr($value['end_time']) ?? '' ?>" class="radio-button single-type-timely">
-                                <label>
+                            <div title="<?php echo esc_attr($value['short_desc']); ?>" data-text="<?php echo esc_attr($value['rent_type']); ?>" data-available_quantity="0" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($value['price']); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']) ?? '' ?>" data-end_time="<?php echo esc_attr($value['end_time']) ?? '' ?>" class="radio-button single-type-timely">
+
                                     <input type="radio" name="option" class="radio-input">
                                     <span class="rent-type"><?php echo esc_html($value['rent_type']); ?></span>
                                     <?php if($enable_specific_duration=='on'): ?>
-                                    <div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
+                                        <div class="rbfw_time">
+                                            <?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?>
+                                        </div>
                                     <?php else: ?>
-                                    <div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
+                                        <div class="rbfw_time">
+                                            <?php echo esc_html($value['duration']." ".$value['d_type']); ?>
+                                        </div>
                                     <?php endif; ?>
-                                </label>
+
                                 <div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
                             </div>
                         <?php } ?>

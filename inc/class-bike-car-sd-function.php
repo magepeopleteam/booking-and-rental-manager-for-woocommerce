@@ -485,10 +485,8 @@
 				$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : '';
 				$start_time               = isset( $_POST['pickup_time'] ) ? sanitize_text_field( wp_unslash( $_POST['pickup_time'] ) ) : '00:00';
 				$rbfw_bike_car_sd_data    = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) : [];
-				
-				foreach ( $rbfw_bike_car_sd_data as $value ) {
-
-
+                $sd_service_info = [];
+                foreach ( $rbfw_bike_car_sd_data as $value ) {
                     if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
                         $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_bike_car_sd_data_sp', true );
                         if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices  ) {
@@ -496,8 +494,7 @@
                         }
                     }
                     $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
-
-					if ( $enable_specific_duration == 'on' ) {
+                    if ( $enable_specific_duration == 'on' ) {
 						$d_type   = $value['start_time'];
 						$duration = $value['end_time'];
 					} else {
@@ -505,39 +502,10 @@
 						$duration = $value['duration'];
 					}
 					$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration );
-					?>
-					
-						<?php if ( $rbfw_timely_available_quantity > 0 ):?>
-							<div title="<?php echo esc_attr($value['short_desc']) ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($type_price); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']); ?>" data-end_time="<?php echo esc_attr($value['end_time']); ?>" data-available_quantity="<?php echo esc_attr($rbfw_timely_available_quantity); ?>" class="radio-button single-type-timely" data-text="<?php echo esc_attr($value['rent_type']); ?>">
-								<label>
-									<input type="radio" name="option" class="radio-input">
-									<span><?php echo esc_attr($value['rent_type']); ?></span>
-                                	<?php if($enable_specific_duration=='on'): ?>
-                                    	<div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
-                                    <?php else: ?>
-                                    	<div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
-                                    <?php endif; ?>
-								</label>
-								<div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
-							</div>
-						<?php else: ?>
-							<div style="text-decoration: line-through;cursor:text" title="<?php echo esc_attr($value['short_desc']) ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($type_price); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']); ?>" data-end_time="<?php echo esc_attr($value['end_time']); ?>" data-available_quantity="<?php echo esc_attr($rbfw_timely_available_quantity); ?>" class="radio-button">
-								<label>
-									<input type="radio" name="option" class="radio-input">
-									<span class="rent-type"><?php echo esc_attr($value['rent_type'])?></span>
-                                	<?php if($enable_specific_duration=='on'): ?>
-                                    	<div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
-                                    <?php else: ?>
-                                    	<div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
-                                    <?php endif; ?>
-								</label>
-								<div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
-							</div>
-						<?php endif;?>
-					
-					<?php
+                    $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'stock'=>$rbfw_timely_available_quantity);
 				}
-				wp_die();
+                echo wp_json_encode($sd_service_info);
+                wp_die();
 			}
 
 			public function rbfw_bike_car_sd_frontend_scripts( $rbfw_post_id ) {
