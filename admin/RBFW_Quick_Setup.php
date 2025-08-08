@@ -138,7 +138,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
             }
 
             ?>
-            <div class="mpStyle">
+            <div class="mpStyle mep-quick-setup">
                 <div class="_dShadow_6_adminLayout">
                     <form method="post" action="">
                         <?php wp_nonce_field('rbfw_quick_setup_nonce', 'rbfw_quick_setup'); ?>
@@ -168,7 +168,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
                                     <h6 class="circleTitle" data-class><?php esc_html_e('Done', 'booking-and-rental-manager-for-woocommerce'); ?></h6>
                                 </div>
                             </div>
-                            <div class="tabsContentNext _infoLayout_mT">
+                            <div class="tabsContentNext _mT">
                                 <?php
                                 $this->setup_welcome_content();
                                 $this->setup_general_content();
@@ -243,8 +243,8 @@ if (!class_exists('RBFW_Quick_Setup')) {
                 <div class="section">
                     <h2><?php esc_html_e('General settings', 'booking-and-rental-manager-for-woocommerce'); ?></h2>
                     <p class="mTB_xs"><?php esc_html_e('Choose some general option.', 'booking-and-rental-manager-for-woocommerce'); ?></p>
-                    <div class="_dLayout_mT">
-                        <label class="fullWidth">
+                    <div class="_mT">
+                        <label class="_fullWidth">
                             <span class="min_200"><?php esc_html_e('Rent Label:', 'booking-and-rental-manager-for-woocommerce'); ?></span>
                             <input style="margin: 7px 0;"  type="text" class="formControl" name="rbfw_rent_label" value='<?php echo esc_attr($label); ?>' />
                         </label>
@@ -252,9 +252,7 @@ if (!class_exists('RBFW_Quick_Setup')) {
                             <span class="fas fa-info-circle"></span>
                             <?php esc_html_e('It will change the Rent post type label on the entire plugin.', 'booking-and-rental-manager-for-woocommerce'); ?>
                         </i>
-                        <br>
-                        <div class="divider"></div>
-                        <label class="fullWidth">
+                        <label class="_fullWidth">
                             <span class="min_200"><?php esc_html_e('Rent Slug:', 'booking-and-rental-manager-for-woocommerce'); ?></span>
                             <input style="margin: 7px 0;" type="text" class="formControl" name="rbfw_rent_slug" value='<?php echo esc_attr($slug); ?>' />
                         </label>
