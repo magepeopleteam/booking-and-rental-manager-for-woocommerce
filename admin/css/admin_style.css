@@ -5910,3 +5910,84 @@ border: 1px solid #d4dadf !important;
     background-color: #efefef;
     border-radius: 5px;
 }
+
+/* Quick setup */
+
+
+div.mpStyle.mep-quick-setup  .formControl{
+	max-width: 100%;
+	margin:8px 0;
+	padding: 14px 16px;
+	border: 2px solid #e5e7eb;
+	border-radius: 12px;
+	font-size: 16px;
+	transition: all 0.3s ease;
+	background: white;
+	color: #374151;
+	font-weight: normal;
+}
+div.mpStyle.mep-quick-setup  select.formControl:focus{
+	background-color: transparent;
+	border: 1px solid #0080F0;
+}
+
+div.mpStyle.mep-quick-setup label{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+
+div.mpStyle.mep-quick-setup .info_text{
+	color: #6b7280;
+	margin-bottom: 28px;
+	font-style:normal;
+}
+
+div.mpStyle.mep-quick-setup .info_text span{
+	color: #b1b4bc;
+}
+
+div.mpStyle.mep-quick-setup .tabsContentNext{
+	padding:20px 0;
+}
+
+div.mpStyle.mep-quick-setup [class*="_adminLayout"]{
+	background-color: #f8f7fc;
+
+}
+
+.mep-quick-setup .mpTabsNext .tabItemNext.active [class*="circleIcon"]::after {
+    border-color: var(--theme-color);
+}
+
+.mep-quick-setup .mpTabsNext .tabItemNext.active [class*="circleIcon"]{
+background-color: var(--theme-color);
+border: 1px solid var(--theme-color);
+}
+
+.mep-quick-setup .mpTabsNext .tabItemNext [class*="circleIcon"]{
+border: 1px solid #d6d6d6;
+}
+
+.mep-quick-setup .mpTabsNext .tabItemNext.active .circleTitle {
+    color: var(--theme-color);
+  }
+
+  .mep-quick-setup .nextTab_prev{
+	border: 1px solid #333;
+  }
+
+.mep-quick-setup .nextTab_prev:hover, .mep-quick-setup .nextTab_prev:focus{
+	background-color: #ddd;
+	color: #000;
+}
+
+.mep-quick-setup .themeButton:hover, .mep-quick-setup .themeButton:focus{
+	opacity: .8;
+	background-color: var(--theme-color);
+	border:2px solid transparent
+}
+
+.mep-quick-setup .nextTab_prev:hover span, .mep-quick-setup .nextTab_prev:focus span{
+	color: #000;
+}
