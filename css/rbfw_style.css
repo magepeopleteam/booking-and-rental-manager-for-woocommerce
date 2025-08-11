@@ -661,13 +661,6 @@ div.rbfw_faq_content {
     overflow: hidden;
 }
 
-div.rbfw_faq_item div.superSlider {
-    min-width: 300px;
-    max-width: 50%;
-    margin: 0 var(--default-mp-xs) var(--default-mp-xs) 0;
-    float: left;
-}
-
 /* css added by ariful */
 
 div.mp_default_theme {
@@ -1025,21 +1018,6 @@ a.rbfw-related-product-btn:hover {
     border-right-color: var(--rbfw_single_page_secondary_color);
 }
 
-div.superSlider .iconIndicator:hover {
-    background-color: var(--rbfw_color_primary);
-}
-
-.rbfw_donut_template div.superSlider .iconIndicator:hover {
-    background-color: var(--rbfw_dt_color7);
-}
-
-.rbfw_muffin_template div.superSlider .iconIndicator:hover {
-    background-color: var(--rbfw_color_primary);
-}
-
-/*.rbfw-single-left-container {*/
-/*    overflow: hidden;*/
-/*}*/
 
 @media only screen and (min-width: 600px) {
     .vertical .rbfw-tab-menu {
@@ -3580,34 +3558,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     text-align: center;
 }
 
-/* Slider Mobile View css */
-
-@media only screen and (max-width: 792px) {
-    .mpStyle.style_1 div.superSlider .sliderShowcase.right,
-    .mpStyle.style_1 div.superSlider .sliderShowcase.left {
-        flex-direction: initial !important;
-        width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-    }
-
-    .mpStyle.style_1 div.superSlider .sliderShowcaseItem {
-        width: 25%;
-        margin: 5px;
-    }
-
-    .mpStyle.style_1 div.superSlider .sliderShowcaseItem [data-bg-image] {
-        height: 100px !important;
-    }
-    div.superSlider [data-bg-image] {
-        border-radius: 10px;
-    }
-
-    .mpStyle.style_1 .dFlex {
-        display: block;
-    }
-}
-
 /* Muffin Template CSS */
 
 .rbfw_muffin_template {
@@ -3728,22 +3678,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin-bottom: 20px;
 }
 
-/*.rbfw_muffin_template [data-bg-image],*/
-/*.rbfw_muffin_template [data-bg-image]:hover {*/
-/*    border-radius: 10px;*/
-/*}*/
-
-/*.rbfw_muffin_template div.superSlider .sliderAllItem {*/
-/*    border-radius: 10px;*/
-/*}*/
-
-/*.rbfw_muffin_template div.superSlider .sliderShowcaseItem {*/
-/*    border-radius: 10px;*/
-/*}*/
-
-.rbfw_muffin_template div.superSlider {
-    background-color: var(--rbfw_muff_color1);
-}
 
 .rbfw_muff_registration_wrapper {
     border:1px solid #e0e0e0;
@@ -3753,8 +3687,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     background-color: #fff;
 }
 
-div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
-div.rbfw_muffin_template div.superSlider .sliderShowcaseItem:last-child{margin-bottom: 0;}
 
 .rbfw_muff_row_slider {
     margin-bottom: 50px;
@@ -7385,7 +7317,7 @@ i.fas.fa-minus {
     padding: 10px;
     border-radius: 10px;
 }
-div.rbfw_muffin_template div.superSlider .sliderShowcaseItem{height: auto;}
+
 .entry-content ul, .entry-content ol {
     padding: 0 !important;
     margin: 0 !important;
