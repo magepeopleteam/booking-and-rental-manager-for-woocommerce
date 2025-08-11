@@ -504,7 +504,18 @@
 					$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration );
                     $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'stock'=>$rbfw_timely_available_quantity);
 				}
-                echo wp_json_encode($sd_service_info);
+
+                $sd_extra_service_info = [];
+
+                $rbfw_extra_service_data = get_post_meta($post_id, 'rbfw_extra_service_data', true) ? get_post_meta($post_id, 'rbfw_extra_service_data', true) : [];
+
+                foreach ($rbfw_extra_service_data as $value) {
+                    $max_es_available_qty = rbfw_get_bike_car_sd_es_available_qty($post_id, $start_date, $value['service_name']);
+                    if($value['service_qty'] > 0){
+                        $sd_extra_service_info[$value['service_name']] = array($max_es_available_qty);
+                    }
+                }
+                echo wp_json_encode(array('service_info'=>$sd_service_info,'extra_service_info'=>$sd_extra_service_info));
                 wp_die();
 			}
 

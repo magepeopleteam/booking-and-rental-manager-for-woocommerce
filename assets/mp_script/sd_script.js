@@ -357,18 +357,21 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
             jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
             jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
 
+            var service_info = response.service_info;
+            var extra_service_info = response.extra_service_info;
+
             jQuery('.single-type-timely').each(function() {
                 var $el = jQuery(this);
 
                 // Get the type from the data-text attribute
                 var type = $el.data('text'); // e.g., "type 1"
 
-                if (response[type]) {
+                if (service_info[type]) {
                     // Update attributes
-                    $el.attr('data-price', response[type].price);
-                    $el.attr('data-available_quantity', response[type].stock);
+                    $el.attr('data-price', service_info[type].price);
+                    $el.attr('data-available_quantity', service_info[type].stock);
                     // (Optional) Update displayed price text
-                    $el.find('.price').text('€' + response[type].price);
+                    $el.find('.price').text('€' + service_info[type].price);
                 }
             });
 

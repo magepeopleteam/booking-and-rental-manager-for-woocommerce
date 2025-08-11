@@ -150,8 +150,10 @@
                     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step">
                         <div class="">
                             <label class="rbfw-single-right-heading">Optional Add-ons</label>
-                            <div class="rbfw_bikecarsd_price_table">
+                            <div class="rbfw_bikecarsd_price_table rbfw_extra_service_info">
                                 <div class="rbfw-optional-add-ons">
+
+
                                     <div>
                                         <div>
                                         </div>
