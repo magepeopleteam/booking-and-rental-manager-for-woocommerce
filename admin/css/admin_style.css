@@ -5884,15 +5884,16 @@ border: 1px solid #d4dadf !important;
     
 }
 .rbfw-tent-types .rbfw-rent-type.selected::after{
+    content: "";
     position: absolute;
-    content: '\f077';
-    font-size: 38px;
-    font-family: "Font Awesome 6 Free";
-    color: var(--mage-primary);
-    font-weight: 900;
-    top:-33px;
-    left:50%;
-    transform: translateX(-50%);
+    top: -11px; /* position arrow above container */
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 20px;
+    height: 20px;
+    border-top: 2px solid var(--mage-primary);
+    border-left: 2px solid var(--mage-primary);
+    background: #efefef; /* match container background */
 }
 .rbfw-tent-types .rbfw-rent-type:hover{
     background-color: #efefef;
