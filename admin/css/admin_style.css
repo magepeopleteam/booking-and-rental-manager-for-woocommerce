@@ -5871,7 +5871,7 @@ border: 1px solid #d4dadf !important;
 .rbfw-tent-types .rbfw-rent-type{
     padding: 10px;
     border-radius: 12px;
-    border: 1px solid #999;
+    border: 1px solid #ddd;
     width: 163px;
     height: 100px;
     cursor: pointer;
@@ -5880,25 +5880,36 @@ border: 1px solid #d4dadf !important;
     justify-content: space-between;
     align-items: center;
     position: relative;
+    text-align: center;
     
 }
 .rbfw-tent-types .rbfw-rent-type.selected::after{
     position: absolute;
-    content: '\f0d8';
+    content: '\f077';
     font-size: 38px;
     font-family: "Font Awesome 6 Free";
-    color: #efefef;
+    color: var(--mage-primary);
     font-weight: 900;
-    bottom:-42px;
+    top:-33px;
     left:50%;
     transform: translateX(-50%);
 }
-
-.rbfw-tent-types .rbfw-rent-type:hover,.rbfw-tent-types .rbfw-rent-type.selected{
+.rbfw-tent-types .rbfw-rent-type:hover{
+    background-color: #efefef;
+    border: 1px solid var(--mage-primary);
+}
+.rbfw-tent-types .rbfw-rent-type.selected{
     background-color: #efefef;
     border: 2px solid var(--mage-primary);
+    color: var(--mage-primary);
+    font-size: 16px;
 }
 .rbfw-rent-type .icon {
+    font-size: 20px;
+    text-align: center;
+    color: #666;
+}
+.rbfw-rent-type.selected .icon {
     font-size: 20px;
     text-align: center;
     color: var(--mage-primary);
@@ -5907,8 +5918,9 @@ border: 1px solid #d4dadf !important;
 .rbfw-rent-type-desc{
     padding: 10px;
     width: 100%;
-    background-color: #efefef;
+    background-color: #e1f1ff;
     border-radius: 5px;
+    border: 1px solid #a7d6ff;
 }
 
 /* Quick setup */
