@@ -311,7 +311,7 @@ CSS for Single Page Template
     background: #ffeeee;
     padding: 10px;
     border: 1px solid #d5b1b1;
-    margin:10px 0px 0px 0px;
+    margin:10px 0px;
 }
 .rbfw-single-right-container .rbfw-location{
     margin-bottom:10px;
@@ -1459,6 +1459,7 @@ a.rbfw_qty_plus.rbfw_timely_es_qty_plus i{
     border:1px solid #ddd;
     background: #f8f8f8;
     border-radius: 5px;
+    margin-bottom: 10px;
 }
 
 
@@ -7364,6 +7365,7 @@ i.fas.fa-minus {
     border: 1px solid #ddd;
     background: #f8f8f8;
     border-radius: 5px;
+    margin-bottom: 10px;
 }
 
 .rbfw_multi_items_right .rbfw_rental_pricing_rates {
