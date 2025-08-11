@@ -292,6 +292,11 @@
                 $pricing_types           = get_post_meta( $post_id, 'pricing_types', true ) ? get_post_meta( $post_id, 'pricing_types', true ) : [];
                 $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info', true ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
 
+                $checked = (get_the_title($post_id)=='Auto Draft')?'checked':'';
+                $checked_item = (get_the_title($post_id)=='Auto Draft')?true:false;
+
+
+
                 ?>
                 <div class="rbfw_multiple_items <?php echo esc_attr( $rbfw_item_type == 'multiple_items') ? 'show' : 'hide'; ?>">
                     <div class="container">
@@ -299,65 +304,69 @@
                             <div class="form-container">
                                 <!-- Global Pricing Options -->
                                 <div class="pricing-options">
-                                    <h3>🔧 Enable Price Types (applies to all items)</h3>
+                                    <h3>🔧 <?php esc_html_e('Enable Price Types (applies to all items)','booking-and-rental-manager-for-woocommerce'); ?></h3>
                                     <div class="pricing-toggles">
 
                                         <div class="price-toggle">
-                                            <input type="checkbox" name="pricing_types[hourly]" id="enableHourly" <?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?'checked':'' ?>  onchange="toggleGlobalPricing('hourly')">
-                                            <label for="enableHourly">Enable Hourly</label>
+                                            <input type="checkbox" name="pricing_types[hourly]" id="enableHourly" <?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?'checked':$checked ?>  onchange="toggleGlobalPricing('hourly')">
+                                            <label for="enableHourly"><?php esc_html_e('Enable Hourly','booking-and-rental-manager-for-woocommerce'); ?></label>
                                         </div>
+
                                         <div class="price-toggle">
-                                            <input type="checkbox" name="pricing_types[daily]" <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'checked':'' ?> id="enableDaily" checked onchange="toggleGlobalPricing('daily')">
-                                            <label for="enableDaily">Enable Daily</label>
+                                            <input type="checkbox" name="pricing_types[daily]" id="enableDaily" <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'checked':$checked ?>  onchange="toggleGlobalPricing('daily')">
+                                            <label for="enableDaily"><?php esc_html_e('Enable Daily','booking-and-rental-manager-for-woocommerce'); ?></label>
                                         </div>
+
                                         <div class="price-toggle">
                                             <input type="checkbox" name="pricing_types[weekly]" id="enableWeekly" <?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?'checked':'' ?> onchange="toggleGlobalPricing('weekly')">
-                                            <label for="enableWeekly">Enable Weekly</label>
+                                            <label for="enableWeekly"><?php esc_html_e('Enable Weekly','booking-and-rental-manager-for-woocommerce'); ?></label>
                                         </div>
+
                                         <div class="price-toggle">
                                             <input type="checkbox" name="pricing_types[monthly]" id="enableMonthly" <?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?'checked':'' ?> onchange="toggleGlobalPricing('monthly')">
-                                            <label for="enableMonthly">Enable Monthly</label>
+                                            <label for="enableMonthly"><?php esc_html_e('Enable Monthly','booking-and-rental-manager-for-woocommerce'); ?></label>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div id="itemRows">
                                     <!-- First item row -->
                                     <?php $i=0; foreach ($multiple_items_info as $key=>$item_price){   ?>
                                         <div class="item-row">
                                             <div class="form-group">
-                                                <label>Item Name</label>
+                                                <label><?php esc_html_e('Item Name','booking-and-rental-manager-for-woocommerce'); ?></label>
                                                 <input type="text" value="<?php echo $item_price['item_name'] ?>" name="multiple_items_info[<?php echo $i ?>][item_name]" class="item-name-input" placeholder="Enter item name">
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Available Qty</label>
+                                                <label><?php esc_html_e('Available Qty','booking-and-rental-manager-for-woocommerce'); ?></label>
                                                 <input type="number" name="multiple_items_info[<?php echo $i ?>][available_qty]" class="qty-input" min="0" value="<?php echo $item_price['available_qty'] ?>" placeholder="1">
                                             </div>
 
                                             <div class="form-group hourly-field <?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?'':'disabled-field' ?>">
-                                                <label>Hourly Price</label>
+                                                <label><?php esc_html_e('Hourly Price','booking-and-rental-manager-for-woocommerce'); ?></label>
                                                 <div class="price-input">
                                                     <input type="number" name="multiple_items_info[<?php echo $i ?>][hourly_price]" class="hourly-price-input" step="0.01" min="0" value="<?php echo $item_price['hourly_price'] ?>" placeholder="0.00">
                                                 </div>
                                             </div>
 
                                             <div class="form-group daily-field <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'':'disabled-field' ?>">
-                                                <label>Daily Price</label>
+
+                                                <label><?php esc_html_e('Daily Price','booking-and-rental-manager-for-woocommerce'); ?></label>
+
                                                 <div class="price-input">
                                                     <input type="number" name="multiple_items_info[<?php echo $i ?>][daily_price]" class="daily-price-input" step="0.01" min="0" value="<?php echo $item_price['daily_price'] ?>" placeholder="0.00">
                                                 </div>
                                             </div>
 
                                             <div class="form-group weekly-field <?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?'':'disabled-field' ?>">
-                                                <label>Weekly Price</label>
+                                                <label><?php esc_html_e('Weekly Price','booking-and-rental-manager-for-woocommerce'); ?></label>
                                                 <div class="price-input">
                                                     <input type="number" name="multiple_items_info[<?php echo $i ?>][weekly_price]" class="weekly-price-input" step="0.01" min="0" value="<?php echo $item_price['weekly_price'] ?>"  placeholder="0.00">
                                                 </div>
                                             </div>
 
                                             <div class="form-group monthly-field <?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?'':'disabled-field' ?>">
-                                                <label>Monthly Price</label>
+                                                <label><?php esc_html_e('Monthly Price','booking-and-rental-manager-for-woocommerce'); ?></label>
                                                 <div class="price-input">
                                                     <input type="number" name="multiple_items_info[<?php echo $i ?>][monthly_price]" class="monthly-price-input" step="0.01" min="0" value="<?php echo $item_price['monthly_price'] ?>" placeholder="0.00">
                                                 </div>
@@ -366,17 +375,17 @@
                                             <div class="form-group">
                                                 <label>&nbsp;</label>
                                                 <button type="button" class="btn btn-danger" onclick="removeItemRow(this)" style="visibility: hidden;">
-                                                    Delete
+
+                                                    <?php esc_html_e('Delete','booking-and-rental-manager-for-woocommerce'); ?>
+
                                                 </button>
                                             </div>
                                         </div>
                                     <?php $i++; } ?>
-
-
                                 </div>
 
                                 <button type="button" class="add-more-btn" onclick="addItemRow()">
-                                    ➕ Add More Item
+                                    ➕ <?php esc_html_e('Add More Item','booking-and-rental-manager-for-woocommerce'); ?>
                                 </button>
                             </div>
 
@@ -485,6 +494,7 @@
                             background: white;
                             border-radius: 6px;
                             border: 1px solid #e5e7eb;
+                            overflow-x: auto;
                         }
 
                         .form-group {
@@ -701,16 +711,18 @@
                         let items = [];
                         let rowCounter = 1;
                         let enabledPriceTypes = {
-                            hourly: true,
-                            daily: true,
-                            weekly: false,
-                            monthly: false
+                            hourly: '<?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?true:$checked_item ?> ',
+                            daily: '<?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?true:$checked_item ?> ',
+                            weekly: '<?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?true:false ?> ',
+                            monthly: '<?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?true:false ?> '
                         };
 
                         // Toggle global pricing options
                         function toggleGlobalPricing(priceType) {
                             const checkbox = document.getElementById(`enable${priceType.charAt(0).toUpperCase() + priceType.slice(1)}`);
                             enabledPriceTypes[priceType] = checkbox.checked;
+
+
 
                             // Update all existing rows
                             const fields = document.querySelectorAll(`.${priceType}-field`);
@@ -747,11 +759,13 @@
                         // Update grid layout based on enabled price types
                         function updateRowGridLayout() {
                             const enabledCount = Object.values(enabledPriceTypes).filter(Boolean).length;
+
+
                             const totalColumns = 3 + enabledCount; // item name + qty + enabled prices + delete button
 
                             const rows = document.querySelectorAll('.item-row');
                             rows.forEach(row => {
-                                row.style.gridTemplateColumns = `180px 80px ${'120px '.repeat(enabledCount)}80px`;
+                                row.style.gridTemplateColumns = `180px 80px ${'100px '.repeat(enabledCount)}80px`;
                             });
                         }
 
@@ -767,7 +781,10 @@
                             var itemRowsCount  = document.querySelectorAll('#itemRows .item-row').length;
 
 
-                            if (enabledPriceTypes.hourly) {
+
+
+
+                            if (enabledPriceTypes.hourly==true) {
                                 priceFields += `
                     <div class="form-group hourly-field">
                         <label>Hourly Price</label>
@@ -776,9 +793,18 @@
                         </div>
                     </div>
                 `;
+                            }else{
+                                priceFields += `
+                    <div class="form-group hourly-field disabled-field">
+                        <label>Hourly Price</label>
+                        <div class="price-input">
+                            <input type="number" name="multiple_items_info[${itemRowsCount}][hourly_price]" class="hourly-price-input" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+                `;
                             }
 
-                            if (enabledPriceTypes.daily) {
+                            if (enabledPriceTypes.daily==true) {
                                 priceFields += `
                     <div class="form-group daily-field">
                         <label>Daily Price</label>
@@ -787,9 +813,20 @@
                         </div>
                     </div>
                 `;
+                            }else{
+
+                                priceFields += `
+                    <div class="form-group daily-field disabled-field">
+                        <label>Daily Price</label>
+                        <div class="price-input">
+                            <input type="number" name="multiple_items_info[${itemRowsCount}][daily_price]" class="daily-price-input" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                    </div>
+                `;
+
                             }
 
-                            if (enabledPriceTypes.weekly) {
+                            if (enabledPriceTypes.weekly==true) {
                                 priceFields += `
                     <div class="form-group weekly-field">
                         <label>Weekly Price</label>
@@ -809,7 +846,7 @@
                 `;
                             }
 
-                            if (enabledPriceTypes.monthly) {
+                            if (enabledPriceTypes.monthly==true) {
                                 priceFields += `
         <div class="form-group monthly-field">
             <label>Monthly Price</label>

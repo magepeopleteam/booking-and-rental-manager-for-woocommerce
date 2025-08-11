@@ -86,6 +86,9 @@ if (!class_exists('MPTBM_Woocommerce')) {
 
 
                 $rbfw_room_duration_price = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_duration_price' );
+
+
+
                 $rbfw_room_service_price  = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_service_price' );
                 $rbfw_room_total_price    = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_total_price' );
                 $origin                   = date_create( $rbfw_checkin_datetime );
@@ -207,11 +210,13 @@ if (!class_exists('MPTBM_Woocommerce')) {
                 $durationType = isset($_POST['durationType'])?sanitize_text_field(wp_unslash($_POST['durationType'])):'';
                 $durationQty = isset($_POST['durationQty'])?sanitize_text_field(wp_unslash($_POST['durationQty'])):0;
                 $start_date_time = new DateTime($start_date.' '.$start_time);
-                $total_hours = ($durationType == 'Hours' ? $durationQty : ($durationType == 'Days' ? $durationQty * 24 : $durationQty * 24 * 7));
+                $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 :($durationType == 'weekly'?$durationQty * 24 * 7: $durationQty * 24 * 30)));
+
                 $start_date_time->modify("+$total_hours hours");
                 $end_date = $start_date_time->format('Y-m-d');
                 $end_time = $start_date_time->format('H:i:s');
                 $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
+
                 $rbfw_pickup_point         = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
                 $rbfw_dropoff_point        = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
                 $rbfw_duration_md       = isset( $sd_input_data_sabitized['rbfw_duration_md'] ) ? $sd_input_data_sabitized['rbfw_duration_md'] : '';
@@ -249,10 +254,11 @@ if (!class_exists('MPTBM_Woocommerce')) {
 
                 $security_deposit                                 = rbfw_security_deposit( $rbfw_id, $sub_total_price );
                 $total_price                                      = $sub_total_price - $discount_amount;
-                $rbfw_ticket_info                                 = $this->rbfw_cart_multi_items_ticket_info( $rbfw_id, $start_date, $end_date, $start_time, $end_time, $rbfw_pickup_point, $rbfw_dropoff_point,$total_price, $rbfw_service_info , $rbfw_multi_items_additional_service_info, $rbfw_regf_info, $security_deposit);
+                $rbfw_ticket_info                                 = $this->rbfw_cart_multi_items_ticket_info( $rbfw_id, $start_date, $end_date, $start_time, $end_time, $rbfw_pickup_point, $rbfw_dropoff_point,$total_price, $multiple_items_info , $rbfw_category_wise_info,$total_days,$durationQty, $rbfw_regf_info, $security_deposit);
                 $cart_item_data['rbfw_pickup_point']              = $rbfw_pickup_point;
                 $cart_item_data['rbfw_dropoff_point']             = $rbfw_dropoff_point;
                 $cart_item_data['rbfw_duration_md']               = $rbfw_duration_md;
+
                 $cart_item_data['rbfw_start_date']                = $start_date;
                 $cart_item_data['rbfw_start_time']                = $start_time;
                 $cart_item_data['rbfw_end_date']                  = $end_date;
@@ -882,7 +888,7 @@ if (!class_exists('MPTBM_Woocommerce')) {
                
                 $item->add_meta_data( rbfw_string_return( 'rbfw_text_service_info', esc_html__( 'Service Info', 'booking-and-rental-manager-for-woocommerce' ) ), $rbfw_service_infos_order );
 
-                echo '<pre>';print_r($rbfw_service_info);echo '<pre>';exit;
+
 
 
                 if ( ! empty( $rbfw_service_info ) ) {
@@ -1003,7 +1009,7 @@ if (!class_exists('MPTBM_Woocommerce')) {
 
 
 
-        public   function rbfw_cart_multi_items_ticket_info( $product_id, $rbfw_pickup_start_date, $rbfw_pickup_end_date, $rbfw_pickup_start_time, $rbfw_pickup_end_time, $rbfw_pickup_point, $rbfw_dropoff_point, $total_price, $rbfw_service_info, $rbfw_multi_items_additional_service_info,  $rbfw_regf_info = array(),  $security_deposit = []) {
+        public   function rbfw_cart_multi_items_ticket_info( $product_id, $rbfw_pickup_start_date, $rbfw_pickup_end_date, $rbfw_pickup_start_time, $rbfw_pickup_end_time, $rbfw_pickup_point, $rbfw_dropoff_point, $total_price, $multiple_items_info, $rbfw_category_wise_info, $total_days, $durationQty,  $rbfw_regf_info = array(),  $security_deposit = []) {
             global $rbfw;
             $rbfw_rent_type  = get_post_meta( $product_id, 'rbfw_item_type', true );
             $names           = [ get_the_title( $product_id ) ];
@@ -1028,10 +1034,12 @@ if (!class_exists('MPTBM_Woocommerce')) {
                         $ticket_type_arr[ $i ]['rbfw_dropoff_point']      = $rbfw_dropoff_point;
                         $ticket_type_arr[ $i ]['rbfw_rent_type']          = $rbfw_rent_type;
                         $ticket_type_arr[ $i ]['rbfw_id']                 = stripslashes( wp_strip_all_tags( $product_id ) );
-                        $ticket_type_arr[ $i ]['rbfw_service_info']       = $rbfw_service_info;
-                        $ticket_type_arr[ $i ]['rbfw_service_infos']      = $rbfw_multi_items_additional_service_info;
-                        $ticket_type_arr[ $i ]['discount_type']           = $discount_type;
-                        $ticket_type_arr[ $i ]['discount_amount']         = $discount_amount;
+                        $ticket_type_arr[ $i ]['multiple_items_info']     = $multiple_items_info;
+                        $ticket_type_arr[ $i ]['rbfw_category_wise_info'] = $rbfw_category_wise_info;
+                        $ticket_type_arr[ $i ]['total_days']              = $total_days;
+                        $ticket_type_arr[ $i ]['duration_qty']              = $durationQty;
+                        $ticket_type_arr[ $i ]['discount_type']           = '';
+                        $ticket_type_arr[ $i ]['discount_amount']         = '';
                         $ticket_type_arr[ $i ]['security_deposit_amount'] = $security_deposit['security_deposit_amount'];
                         $ticket_type_arr[ $i ]['rbfw_regf_info']          = $rbfw_regf_info;
 

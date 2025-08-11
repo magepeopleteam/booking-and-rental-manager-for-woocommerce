@@ -46,6 +46,7 @@
 				require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Hidden_Product.php';
 				require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Quick_Setup.php';
 				require_once RBFW_PLUGIN_DIR . '/inc/rbfw_import_demo.php';
+				
 				add_action( 'admin_init', [ $this, 'activation_redirect' ], 90 );
 			}
 

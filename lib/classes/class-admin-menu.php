@@ -468,29 +468,30 @@
 
 			function rbfw_add_order_data( $meta_data = array(), $ticket_info = array(), $rbfw_service_price_data_actual = array() ) {
 
-				$title               = $meta_data['rbfw_billing_name'];
+
+                $title               = $meta_data['rbfw_billing_name'];
 				$cpt_name            = 'rbfw_order';
 
-
-					$rbfw_id          = $meta_data['rbfw_id'];
-					$wc_order_id      = $meta_data['rbfw_order_id'];
-					$order_tax        = ! empty( get_post_meta( $wc_order_id, '_order_tax', true ) ) ? get_post_meta( $wc_order_id, '_order_tax', true ) : 0;
-					$is_tax_inclusive = get_option( 'woocommerce_prices_include_tax', true );
-					$args             = array(
-						'post_title'   => $title,
+                $rbfw_id          = $meta_data['rbfw_id'];
+                $wc_order_id      = $meta_data['rbfw_order_id'];
+                $order_tax        = ! empty( get_post_meta( $wc_order_id, '_order_tax', true ) ) ? get_post_meta( $wc_order_id, '_order_tax', true ) : 0;
+                $is_tax_inclusive = get_option( 'woocommerce_prices_include_tax', true );
+                $args   = array(
+                        'post_title'   => $title,
 						'post_content' => '',
 						'post_status'  => 'publish',
 						'post_type'    => $cpt_name
-					);
-					$meta_query       = array(
-						'meta_query' => array(
-							'meta_value' => array(
-								'key'     => 'rbfw_order_id',
-								'value'   => $wc_order_id,
-								'compare' => '==',
-							)
-						)
-					);
+                );
+
+                $meta_query       = array(
+                    'meta_query' => array(
+                        'meta_value' => array(
+                            'key'     => 'rbfw_order_id',
+                            'value'   => $wc_order_id,
+                            'compare' => '==',
+                        )
+                    )
+                );
 					$args             = array_merge( $args, $meta_query );
 					$query            = new WP_Query( $args );
 					/* If Order already created, update the order */
@@ -502,6 +503,13 @@
 							$current_ticket_info     = get_post_meta( $post_id, 'rbfw_ticket_info', true );
 							$merged_ticket_info      = array_merge( $ticket_info, $current_ticket_info );
 							$rbfw_ticket_total_price = get_post_meta( $post_id, 'rbfw_ticket_total_price', true );
+
+                            $duration_cost = 0;
+                            $service_cost = 0;
+
+                            
+
+
 							if ( $is_tax_inclusive == 'yes' ) {
 								$total_price = $rbfw_ticket_total_price + $duration_cost + $service_cost;
 							} else {
@@ -520,7 +528,7 @@
 							}
 						}
 					} else {
-						/* If Order not exist, create the order */
+                        $rbfw_ticket_total_price               = $meta_data['rbfw_ticket_total_price'];
 						$args    = array(
 							'post_title'   => $title,
 							'post_content' => '',
@@ -542,7 +550,7 @@
 						}
 
 						if ( $is_tax_inclusive != 'yes' ) {
-							$total_price = $total_price + $order_tax;
+							$total_price = $rbfw_ticket_total_price + $order_tax;
 						}
 						update_post_meta( $post_id, 'ticket_name', $wc_order_id );
 						update_post_meta( $post_id, 'rbfw_ticket_total_price', $total_price );

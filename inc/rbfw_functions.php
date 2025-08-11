@@ -188,7 +188,6 @@
 	}
 	function rbfw_get_option( $option, $section, $default = '' ) {
 		global $rbfw;
-
 		return $rbfw->get_option_trans( $option, $section, $default );
 	}
 	function rbfw_string( $option_name, $default_string ) {
@@ -898,6 +897,9 @@
 			case 'others':
 				return 'Others';
 				break;
+            case 'multiple_items':
+                return 'Multiple day for multiple items';
+                break;
 			default:
 				return;
 		}
@@ -2678,7 +2680,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         );
     }
 
-    return ['duration_price' => $duration_price, 'total_days' => $total_days, 'actual_days' => $actual_days, 'hours' => $hours,'pricing_applied'=>$_COOKIE['pricing_applied']];
+    return ['duration_price' => $duration_price, 'total_days' => $total_days, 'actual_days' => $actual_days, 'hours' => $hours,'pricing_applied'=>isset($_COOKIE['pricing_applied'])?$_COOKIE['pricing_applied']:''];
 }
 
 

@@ -438,13 +438,14 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
     position: relative;
 }
 
-.rbfw-datetime .date .calendar,
+.rbfw-datetime .calendar,
 .rbfw-datetime .time .clock {
     position: absolute;
     top: 50%;
     left: 2px;
     transform: translateY(-50%);
     padding: 12px;
+    color: var(--rbfw_color_primary);
 }
 
 .rbfw-datetime .time i.fa-angle-down {
@@ -537,7 +538,7 @@ div.mp_right_section {
 }
 
 .mp_right_section .rbfw-booking-header{
-    background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+    background: linear-gradient(135deg, var(--rbfw_color_primary) 0%, var(--rbfw_color_primary) 100%);
     padding: 10px;
     color:#fff;
     border-radius: 12px  12px 0 0;
@@ -552,6 +553,12 @@ div.mp_right_section {
 .mp_right_section .rbfw-booking-form{
     padding: 10px;
 }
+.mp_right_section .single-day-booking .rbfw-bikecarsd-calendar{
+    margin: -10px;
+    margin-bottom: 10px;
+}
+
+
 .mp_right_section button.rbfw-book-now-btn {
     text-decoration: none;
     background: var(--rbfw_color_primary);
@@ -606,9 +613,6 @@ button.rbfw-book-now-btn:focus {
 }
 
 .mp_rbfw_ticket_form .rbfw_resourse_md{
-    padding: 10px;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
     margin-top:10px;
     border-radius: 5px;
     margin-bottom: 10px;
@@ -1317,6 +1321,7 @@ table.rbfw_room_price_table tbody td img {
 .rbfw_qty_input {
     display:flex;
     align-items: center;
+    gap:2px;
 }
 
 .rbfw_qty_input a {
@@ -1373,15 +1378,14 @@ table.rbfw_room_price_table tbody td img {
 
 .rbfw_qty_input input[type="number"] {
     appearance: textfield;
-    border: none;
-    background: transparent;
+    border: 1px solid #ddd;
+    background: #fff;
     font-size: 16px;
     font-weight: normal;
     text-align: center;
     width:40px;
-    margin: 0 !important;
-    padding: 4px !important;
-    margin-bottom: 0;
+    padding: 4px;
+    height:34px;
 }
 
 .rbfw_qty_input input[type="number"]::-webkit-inner-spin-button,
@@ -1933,6 +1937,7 @@ table.rbfw_room_cart_table th span {
 .rbfw_rent_list_style_grid .rbfw_rent_list_inner_wrapper {
     border: 1px solid #d0d7de;
     border-radius:5px;
+    height: 100%;
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_highlighted_features ul {
@@ -4447,12 +4452,12 @@ span {
 /* =======================Single day booking calendar=========================== */
 .single-rbfw_item .ui-datepicker .ui-datepicker-header{
     background: none;
-    background-color:var(--rbfw_primary_opacity);
+    background-color:#8cfff7;
     color: #333;
     border: 0;
     padding: .7em 0;
     position: relative;
-    border-radius: 20px 20px 0 0;
+    border-radius:0;
 }
 
 .single-rbfw_item .ui-datepicker .ui-datepicker-title{
@@ -4541,7 +4546,7 @@ span {
 }
 
 .single-rbfw_item  .ui-widget-content {
-    border-radius: 20px 20px 0 0;
+    border-radius:0;
     border: 1px solid #dfdedd;
     padding: 0;
 }
@@ -6284,6 +6289,7 @@ span:not(.week .day[disabled="disabled"] span):hover {
     color: var(--rbfw_color_primary) !important;
 }
 
+
 .mp_default_theme .rbfw_bikecarmd_backstep1_btn {
     background: rgba(0, 0, 0, 0.6);
     display: flex;
@@ -7382,13 +7388,7 @@ i.fas.fa-minus {
    padding-bottom: 10px;
 }
 
-.multi-service-category-section{
-    padding: 10px;
-    border: 1px solid #ddd;
-    background: #f8f8f8;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
+
 .multi-service-category-section .rbfw-single-right-heading{
     margin-top:7px;
 }
@@ -7396,12 +7396,27 @@ i.fas.fa-minus {
 .rbfw_bikecarmd_es_table .rbfw-resource-item{
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid #ddd;
-    padding:5px 0;
+    align-items: center;
+    padding: 10px;
+    background: #f5f7fa;
+    border:1px solid #dce3ea;
+    margin-bottom: 5px;
+    border-radius: 5px;
 }
-.rbfw_bikecarmd_es_table .rbfw-resource-item:last-child{
-    border:0;
-}
+
 .rbfw-costing .rbfw-single-right-heading{
     margin-top:7px;
 }
+
+.rbfw_bikecarmd_es_table .service-price-item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding:10px;
+}
+
+

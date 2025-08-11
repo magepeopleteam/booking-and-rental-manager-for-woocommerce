@@ -119,24 +119,24 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                     <table>
                                         <tbody>
                                         <tr>
-                                            <td><strong>Monthly Rate</strong></td>
+                                            <td><strong><?php esc_html_e( 'Monthly Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
                                             <td><?php echo wp_kses_post(wc_price($rbfw_monthly_rate)); ?> / Month</td>
                                         </tr>
                                         <?php if($rbfw_enable_weekly_rate=='yes'){ ?>
                                         <tr>
-                                            <td><strong>Weekly Rate</strong></td>
+                                            <td><strong><?php esc_html_e( 'Weekly Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
                                             <td><?php echo wp_kses_post(wc_price($rbfw_weekly_rate)); ?> / week</td>
                                         </tr>
                                         <?php } ?>
                                         <?php if ($enable_daily_rate == 'yes') { ?>
                                         <tr>
-                                            <td><strong>Daily Rate</strong></td>
+                                            <td><strong><?php esc_html_e( 'Daily Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
                                             <td><?php echo wp_kses_post(wc_price($daily_rate)); ?> / Day</td>
                                         </tr>
                                         <?php } ?>
                                         <?php if ($enable_hourly_rate == 'yes') { ?>
                                         <tr>
-                                            <td><strong>Hourly rate</strong></td>
+                                            <td><strong><?php esc_html_e( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
                                             <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / Hour</td>
                                         </tr>
                                         <?php } ?>
@@ -150,18 +150,18 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                     <table>
                                         <tbody>
                                         <tr>
-                                            <td><strong>Weekly Rate</strong></td>
+                                            <td><strong><?php esc_html_e( 'Weekly Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
                                             <td><?php echo wp_kses_post(wc_price($rbfw_weekly_rate)); ?> / week</td>
                                         </tr>
                                         <?php if ($enable_daily_rate == 'yes') { ?>
                                             <tr>
-                                                <td><strong>Daily Rate</strong></td>
+                                                <td><strong><?php esc_html_e( 'Daily Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
                                                 <td><?php echo wp_kses_post(wc_price($daily_rate)); ?> / Day</td>
                                             </tr>
                                         <?php } ?>
                                         <?php if ($enable_hourly_rate == 'yes') { ?>
                                             <tr>
-                                                <td><strong>Hourly rate</strong></td>
+                                                <td><strong><?php esc_html_e( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
                                                 <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / Hour</td>
                                             </tr>
                                         <?php } ?>

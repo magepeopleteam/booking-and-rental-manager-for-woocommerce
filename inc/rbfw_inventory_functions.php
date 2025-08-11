@@ -86,8 +86,16 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
     $rbfw_item_quantity = !empty($ticket_info['rbfw_item_quantity']) ? $ticket_info['rbfw_item_quantity'] : 0;
     $rbfw_type_info = !empty($ticket_info['rbfw_type_info']) ? $ticket_info['rbfw_type_info'] : [];
     $rbfw_variation_info = !empty($ticket_info['rbfw_variation_info']) ? $ticket_info['rbfw_variation_info'] : [];
+
     $rbfw_service_info = !empty($ticket_info['rbfw_service_info']) ? $ticket_info['rbfw_service_info'] : [];
     $rbfw_service_infos = !empty($ticket_info['rbfw_service_infos']) ? $ticket_info['rbfw_service_infos'] : [];
+
+
+    if($rbfw_item_type == 'multiple_items'){
+        $rbfw_service_info = !empty($ticket_info['multiple_items_info']) ? $ticket_info['multiple_items_info'] : [];
+        $rbfw_service_infos = !empty($ticket_info['rbfw_category_wise_info']) ? $ticket_info['rbfw_category_wise_info'] : [];
+    }
+
     $date_range = [];
 
 
@@ -187,7 +195,8 @@ function rbfw_create_inventory_meta($ticket_info, $rbfw_id, $order_id){
 
 
 function rbfw_update_inventory($order_id, $current_status = null) {
-    global $wpdb;
+
+
 
     // Retrieve the WooCommerce order object.
     $order = wc_get_order($order_id);
@@ -393,7 +402,9 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                             $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
                         }
                         $booked_quantity = array_column($variant_q, $single['name']);
-                        $variant_instock[] = $single['quantity'] - max($booked_quantity);
+                        if(isset($single['quantity'])){
+                            $variant_instock[] = $single['quantity'] - max($booked_quantity);
+                        }
                     }
                 }
             }
@@ -462,7 +473,7 @@ function rbfw_get_multi_items_available_qty($post_id, $start_date, $end_date, $t
         foreach ($multiple_items_info as $service => $es) {
             $service_q = [];
             foreach ($date_range as $date) {
-                $qty = total_extra_service_quantity($es['item_name'], $date, $rbfw_inventory, $inventory_based_on_return);
+                $qty = total_multi_items_quantity($es['item_name'], $date, $rbfw_inventory, $inventory_based_on_return);
                 $service_q[] = $qty;
             }
             $max_qty = !empty($service_q) ? max($service_q) : 0;
@@ -495,6 +506,28 @@ function rbfw_get_multi_items_available_qty($post_id, $start_date, $end_date, $t
         'extra_service_instock' => $extra_service_instock,
         'service_stock' => $service_stock,
     );
+}
+
+
+function total_multi_items_quantity($service,$date,$inventory,$inventory_based_on_return){
+    $total_single_service = 0;
+    if(!empty($inventory)){
+        foreach($inventory as $item){
+            //echo '<pre>';print_r($item['rbfw_service_info']);echo '<pre>';
+            if(in_array($date,$item['booked_dates']) ){
+                //$total_single_service += $item['rbfw_service_info'][$service];
+
+
+                foreach ($item['rbfw_service_info'] as $single) {
+
+                    if ($single['item_name'] == $service) {
+                        $total_single_service += $single['item_qty'];
+                    }
+                }
+            }
+        }
+    }
+    return $total_single_service;
 }
 
 
@@ -976,7 +1009,7 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                                     $sold_item_qty += $rbfw_item_quantity;
                                     if (!empty($rbfw_service_info)) {
                                         foreach ($rbfw_service_info as $key => $service_info) {
-                                            $sold_es_qty += $service_info;
+                                            $sold_es_qty += (int)$service_info;
                                         }
                                     }
                                 }
