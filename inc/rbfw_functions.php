@@ -3471,3 +3471,14 @@ function rbfw_end_time(){
         return '00:00:00';
     }
 }
+
+
+add_action( 'rbfw_ticket_feature_info', 'rbfw_ticket_feature_info' );
+function rbfw_ticket_feature_info(){
+?>
+<div class="rbfw-bikecarsd-calendar-header">
+	<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-clock"></i> <?php rbfw_string('rbfw_text_real_time_availability',__('Real-time availability','booking-and-rental-manager-for-woocommerce')); ?></div>
+	<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-bolt"></i> <?php rbfw_string('rbfw_text_instant_confirmation',__('Instant confirmation','booking-and-rental-manager-for-woocommerce')); ?></div>
+</div>
+<?php
+}
