@@ -106,7 +106,7 @@
                     <div class="rbfw_service_type rbfw_service_type_timely">
                         <?php foreach ($rbfw_bike_car_sd_data as $value) { ?>
                             <div title="<?php echo esc_attr($value['short_desc']); ?>" data-text="<?php echo esc_attr($value['rent_type']); ?>" data-available_quantity="0" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($value['price']); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']) ?? '' ?>" data-end_time="<?php echo esc_attr($value['end_time']) ?? '' ?>" class="radio-button single-type-timely">
-
+                                <label for="">
                                     <input type="radio" name="option" class="radio-input">
                                     <span class="rent-type"><?php echo esc_html($value['rent_type']); ?></span>
                                     <?php if($enable_specific_duration=='on'): ?>
@@ -118,7 +118,7 @@
                                             <?php echo esc_html($value['duration']." ".$value['d_type']); ?>
                                         </div>
                                     <?php endif; ?>
-
+                                </label>
                                 <div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
                             </div>
                         <?php } ?>
@@ -126,23 +126,20 @@
 
                     <div class="rbfw_bikecarsd_pricing_table_container">
                         <div class="rbfw_bikecarsd_price_table timely_quqntity_table">
-                                <span class="rbfw_bikecarsd_type_title">
-                                    Quantity
-                                </span>
+                            <span class="rbfw_bikecarsd_type_title">
+                                Quantity
+                            </span>
                             <div class="rbfw_regf_group">
                                 <select name="rbfw_item_quantity" id="rbfw_item_quantity">
-                                    <option value="1">
-                                        1                        </option>
-                                    <option value="2">
-                                        2                        </option>
-                                    <option value="3">
-                                        3                        </option>
-                                    <option value="4">
-                                        4                        </option>
-                                    <option value="5">
-                                        5                        </option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
                                 </select>
-                                x<span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">€</span>&nbsp;10,00</span>            </div>
+                                x
+                                <span class="woocommerce-Price-amount amount"><span class="woocommerce-Price-currencySymbol">€</span>&nbsp;10,00</span>
+                            </div>
                         </div>
                     </div>
 
