@@ -148,6 +148,7 @@
             jQuery(".rbfw_extra_service_sd").show();
             var rbfw_service_price = jQuery('#rbfw_item_quantity').val() * service_price;
             jQuery('#rbfw_service_price').val(rbfw_service_price);
+            jQuery('#rbfw_start_time').val(start_time);
 
             jQuery('.single-type-timely').each(function(index, element) {
                 jQuery('.single-type-timely').removeClass('selected');
