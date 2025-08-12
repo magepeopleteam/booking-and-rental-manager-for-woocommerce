@@ -203,6 +203,46 @@
             }
         });
 
+        function calculateServiceTotal() {
+            let total = 0;
+
+            jQuery(".rbfw_servicesd_qty").each(function() {
+                let qty = parseInt(jQuery(this).val()) || 0;
+                let price = parseFloat(jQuery(this).data("price")) || 0;
+                total += qty * price;
+            });
+
+            jQuery("#rbfw_es_service_price").val(total);
+            rbfw_price_calculation_sd();
+        }
+
+        // Plus button click
+        $(document).on("click", ".rbfw_servicesd_qty_plus", function(e) {
+            e.preventDefault();
+            let $input = $(this).siblings(".rbfw_servicesd_qty");
+            let max = parseInt($input.attr("max")) || 999;
+            let value = parseInt($input.val()) || 0;
+            if (value < max) {
+                $input.val(value + 1).trigger("input");
+            }
+        });
+
+        // Minus button click
+        $(document).on("click", ".rbfw_servicesd_qty_minus", function(e) {
+            e.preventDefault();
+            let $input = $(this).siblings(".rbfw_servicesd_qty");
+            let min = parseInt($input.attr("min")) || 0;
+            let value = parseInt($input.val()) || 0;
+            if (value > min) {
+                $input.val(value - 1).trigger("input");
+            }
+        });
+
+        // Input change
+        $(document).on("input", ".rbfw_servicesd_qty", function() {
+            calculateServiceTotal();
+        });
+
 
 
 
@@ -282,7 +322,13 @@ function calculateTotal() {
         }
     });
     if (hasQty) {
-        alert(2);
+        jQuery('.rbfw_bikecarsd_es_price_table').show();
+        jQuery('button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
+        jQuery(' button.rbfw_bikecarsd_book_now_btn').removeClass('rbfw_disabled_button');
+    }else{
+        jQuery('.rbfw_bikecarsd_es_price_table').hide();
+        jQuery('button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
+        jQuery('button.rbfw_bikecarsd_book_now_btn').addClass('rbfw_disabled_button');
     }
     // Display total somewhere (create #total_price element if needed)
     jQuery("#rbfw_service_price").val(total.toFixed(2));

@@ -504,9 +504,9 @@
 							$merged_ticket_info      = array_merge( $ticket_info, $current_ticket_info );
 							$rbfw_ticket_total_price = get_post_meta( $post_id, 'rbfw_ticket_total_price', true );
 							if ( $is_tax_inclusive == 'yes' ) {
-								$total_price = $rbfw_ticket_total_price + $duration_cost + $service_cost;
+								$total_price = $rbfw_ticket_total_price;
 							} else {
-								$total_price = $rbfw_ticket_total_price + $duration_cost + $service_cost + $order_tax;
+								$total_price = $rbfw_ticket_total_price + $order_tax;
 							}
 							if ( sizeof( $meta_data ) > 0 ) {
 								foreach ( $meta_data as $key => $value ) {
