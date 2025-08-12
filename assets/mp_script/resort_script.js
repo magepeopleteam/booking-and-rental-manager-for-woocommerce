@@ -392,14 +392,3 @@ function rbfw_display_resort_es_box_onchange_onclick(){
     });
 }
 // end display extra services box onclick and onchange
-
-
-function rbfw_mps_checkout_header_link(){
-    jQuery('.rbfw_mps_header_action_link').click(function (e) {
-        e.preventDefault();
-        jQuery('.rbfw_mps_user_form_result').empty();
-        jQuery('.rbfw_mps_form_wrap').hide();
-        let this_data_id = jQuery(this).attr('data-id');
-        jQuery('.rbfw_mps_form_wrap[data-id="'+this_data_id+'"]').show();
-    });
-}
