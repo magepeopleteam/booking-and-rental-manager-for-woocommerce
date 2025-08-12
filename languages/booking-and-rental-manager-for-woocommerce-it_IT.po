@@ -1,20 +1,26 @@
+# Copyright (C) 2025
+# This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
 "Project-Id-Version: Booking and Rental Manager for Bike | Car | Resort | "
-"Appointment | Dress | Equipment - WpRently\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-12 01:58+0000\n"
-"PO-Revision-Date: 2025-08-12 02:12+0000\n"
+"Appointment | Dress | Equipment\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/booking-and-rental-"
+"manager-for-woocommerce\n"
+"POT-Creation-Date: 2025-08-12 06:06:15+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2025-08-12 08:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: Italian\n"
 "Language: it_IT\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.8.0; wp-6.8.2; php-8.0.30\n"
-"X-Domain: booking-and-rental-manager-for-woocommerce"
+"X-Loco-Version: 2.8.0; wp-6.8.2; php-8.0.30"
+
+#: templates/rental_lists.php:206
+msgid " events"
+msgstr "eventi"
 
 #: admin/custom_post.php:93
 msgid " Featured Image"
@@ -71,11 +77,6 @@ msgstr " Tipo"
 #: inc/rbfw_shortcodes.php:385
 msgid " »"
 msgstr "»"
-
-#: templates/rental_lists.php:167 templates/rental_lists.php:168
-#: templates/rental_lists.php:169 templates/rental_lists.php:170
-msgid ")"
-msgstr ")"
 
 #: admin/settings/Inventory.php:135 admin/settings/Inventory.php:272
 msgid "*"
@@ -318,10 +319,6 @@ msgstr "9:30 AM"
 msgid "9:30 PM"
 msgstr "21:30"
 
-#. Description of the plugin
-msgid "A complete booking & rental solution for WordPress."
-msgstr "Una soluzione completa per prenotazioni e noleggio per WordPress."
-
 #: lib/classes/class-icon-library.php:1161
 msgid "abc-block"
 msgstr "blocco abc"
@@ -336,16 +333,16 @@ msgstr "icona accessibile"
 msgid "accusoft"
 msgstr "Accusoft"
 
-#: admin/settings.php:1716 admin/settings/Inventory.php:78
-#: admin/settings/Inventory.php:142 admin/settings/Inventory.php:272
-#: admin/settings/Inventory.php:276 admin/settings/Pricing.php:208
-#: admin/settings/Pricing.php:1061 inc/woocommerce/class-status.php:64
+#: admin/settings/Inventory.php:78 admin/settings/Inventory.php:142
+#: admin/settings/Inventory.php:272 admin/settings/Inventory.php:276
+#: admin/settings/Pricing.php:208 admin/settings/Pricing.php:1061
+#: admin/settings.php:1716 inc/woocommerce/class-status.php:64
 #: lib/classes/class-admin-menu.php:75 lib/classes/class-time-slots-page.php:81
 msgid "Action"
 msgstr "Azione"
 
-#: templates/rental_lists.php:192 admin/settings/Date_Time.php:181
-#: admin/settings/Pricing.php:1711
+#: admin/settings/Date_Time.php:181 admin/settings/Pricing.php:1711
+#: templates/rental_lists.php:192
 msgid "Actions"
 msgstr "Azioni"
 
@@ -416,6 +413,10 @@ msgstr "Aggiungi nuova categoria di funzionalità"
 msgid "Add New Item"
 msgstr "Aggiungi nuovo elemento"
 
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:109
+msgid "Add New Multi Day Saver"
+msgstr "Aggiungi nuovo Multi Day Saver"
+
 #: admin/custom_post.php:126 admin/custom_post.php:127
 msgid "Add New Order"
 msgstr "Aggiungi nuovo ordine"
@@ -427,6 +428,11 @@ msgstr "Aggiungi nuovo ordine Meta"
 #: admin/settings/Pricing.php:1257
 msgid "Add New Resort Type"
 msgstr "Aggiungi nuovo tipo di resort"
+
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:117
+#: templates/template_segment/rbfw_sd_types_with_sessional_price_html.php:112
+msgid "Add New Seasonal Pricing"
+msgstr "Aggiungi nuovi prezzi stagionali"
 
 #: admin/settings/Extra_Service.php:284
 msgid "Add New Service"
@@ -543,6 +549,15 @@ msgstr "biglietto da visita"
 #: lib/classes/class-icon-library.php:26
 msgid "adjust"
 msgstr "regolare"
+
+# Additional admin interface strings
+#: lib/classes/class-admin-menu.php:323 lib/classes/class-admin-menu.php:325
+#: lib/classes/class-admin-menu.php:326 lib/classes/class-admin-menu.php:327
+#: lib/classes/class-admin-menu.php:328 lib/classes/class-admin-menu.php:331
+#: lib/classes/class-admin-menu.php:332 lib/classes/class-admin-menu.php:335
+#: lib/classes/class-admin-menu.php:336 lib/classes/class-admin-menu.php:337
+msgid "Admin Wrapper"
+msgstr "Wrapper amministrativo"
 
 #: lib/classes/class-form-fields-generator.php:7325
 #: lib/classes/class-icon-library.php:27
@@ -884,6 +899,11 @@ msgstr "In posizione sinistra"
 msgid "At Right Position"
 msgstr "Nella posizione giusta"
 
+# Cart and checkout strings
+#: templates/cart_page.php:247 templates/cart_page.php:587
+msgid "At Time"
+msgstr "Al momento"
+
 #: inc/RBFW_Super_Slider.php:336
 msgid "At Top Position"
 msgstr "In posizione di vertice"
@@ -929,14 +949,12 @@ msgstr "prefissore automatico"
 msgid "Availabe"
 msgstr "Disponibile"
 
-#: admin/settings/Pricing.php:366
+#: admin/js/mkb-admin.js:1231 admin/js/mkb-admin.js:1243
 msgid "Available Qty"
 msgstr "Quantità disponibile"
 
-#: templates/forms/multi-day-registration.php:526
-#: templates/forms/multi-day-registration.php:597
 #: templates/forms/multi-items-registration.php:334
-#: templates/forms/multi-items-registration.php:492
+#: templates/forms/multi-day-registration.php:597
 msgid "Available Qty "
 msgstr "Quantità disponibile"
 
@@ -961,6 +979,16 @@ msgstr "La quantità disponibile è:"
 #: inc/rbfw_inventory_functions.php:1287
 msgid "Available Quantity:"
 msgstr "Quantità disponibile:"
+
+#: inc/rbfw_functions.php:871 inc/rbfw_functions.php:873
+msgid "Available Time"
+msgstr "Tempo disponibile"
+
+# Date and time related strings
+#: admin/settings/Date_Time.php:51 admin/settings/Date_Time.php:227
+#: admin/settings/Date_Time.php:228
+msgid "Available Time Settings"
+msgstr "Impostazioni di tempo disponibili"
 
 #: admin/settings/Date_Time.php:111
 msgid "Available Time Slot"
@@ -1005,7 +1033,6 @@ msgstr "aws"
 msgid "back"
 msgstr "Indietro"
 
-#: admin/settings.php:1099 inc/class-bike-car-sd-function.php:393
 #: templates/template_segment/single_day_info.php:53
 msgid "Back to Previous Step"
 msgstr "Torna al passaggio precedente"
@@ -1277,6 +1304,12 @@ msgstr "Prenotalo"
 msgid "Book Now"
 msgstr "Prenota ora"
 
+# Additional form validation and UI strings
+#: templates/forms/multi-items-registration.php:559
+#: templates/forms/multi-day-registration.php:766
+msgid "Book Now Button"
+msgstr "Pulsante Prenota ora"
+
 #: admin/settings.php:1043
 msgid "Book online"
 msgstr "Prenota online"
@@ -1296,14 +1329,6 @@ msgstr "Responsabile prenotazioni e noleggio"
 #: support/elementor/elementor-support.php:23
 msgid "Booking and Rental Manager"
 msgstr "Responsabile delle prenotazioni e degli affitti"
-
-#. Name of the plugin
-msgid ""
-"Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | "
-"Equipment"
-msgstr ""
-"Responsabile prenotazioni e noleggio per bici | auto | resort | appuntamenti "
-"| abbigliamento | attrezzatura"
 
 #: lib/classes/class-pro-page.php:43
 msgid ""
@@ -1345,11 +1370,23 @@ msgstr "Calendario delle prenotazioni."
 msgid "Booking Detail"
 msgstr "Dettagli della prenotazione"
 
+#: inc/rbfw_order_meta.php:138 inc/rbfw_order_meta.php:145
+#: inc/rbfw_order_meta.php:593 inc/rbfw_order_meta.php:598
+#: inc/rbfw_order_meta.php:603 inc/rbfw_order_meta.php:617
+#: inc/rbfw_order_meta.php:622
+msgid "Booking Details"
+msgstr "Dettagli della prenotazione"
+
 #: lib/classes/class-admin-menu.php:72
 msgid "Booking End Date"
 msgstr "Data di fine prenotazione"
 
-#: admin/settings.php:1008
+#: lib/classes/class-thankyou-page.php:179
+#: lib/classes/class-thankyou-page.php:184
+#: lib/classes/class-thankyou-page.php:189
+#: lib/classes/class-thankyou-page.php:194
+#: lib/classes/class-thankyou-page.php:199
+#: lib/classes/class-thankyou-page.php:204
 msgid "Booking Information"
 msgstr "Informazioni sulla prenotazione"
 
@@ -1357,7 +1394,6 @@ msgstr "Informazioni sulla prenotazione"
 msgid "Booking Start Date"
 msgstr "Data di inizio della prenotazione"
 
-#: templates/forms/single-day-registration.php:143
 #: templates/template_segment/timely_info.php:123
 msgid "Booking Summary"
 msgstr "Riepilogo della prenotazione"
@@ -1606,6 +1642,10 @@ msgstr "accento circonflesso quadrato"
 msgid "caret-up"
 msgstr "accento circonflesso"
 
+#: inc/rbfw_functions.php:1501 inc/rbfw_functions.php:1726
+msgid "Carousel Display"
+msgstr "Esposizione a carosello"
+
 #: templates/rental_lists.php:149
 msgid "Cars Available"
 msgstr "Auto disponibili"
@@ -1620,12 +1660,17 @@ msgstr "carrello-freccia-giù"
 msgid "cart-plus"
 msgstr "carrello-plus"
 
+#: templates/archive/grid_new.php:176 templates/archive/list_new.php:171
+#: lib/classes/class-search-page.php:466
+msgid "Catalog Image"
+msgstr "Immagine del catalogo"
+
 #: admin/taxonomy_register.php:8 admin/taxonomy_register.php:9
 #: support/elementor/widget/rbfw-rent-list.php:121
 msgid "Category"
 msgstr "Categoria"
 
-#: support/elementor/widget/rbfw-left-filter.php:84
+#: admin/custom_post.php:46 admin/custom_post.php:48
 msgid "Category Filter"
 msgstr "Filtro categoria"
 
@@ -1637,7 +1682,7 @@ msgstr "Categoria Servizio"
 msgid "Category Service Sold Qty"
 msgstr "Categoria Servizio Venduto Quantità"
 
-#: admin/settings/General_Info.php:56
+#: admin/settings/General_Info.php:55
 msgid "Category Settings"
 msgstr "Impostazioni categoria"
 
@@ -1709,6 +1754,11 @@ msgstr "certificato"
 msgid "Change"
 msgstr "Modifica"
 
+# Additional comprehensive strings for better translation coverage
+#: templates/single/single-rbfw.php:10
+msgid "Character Set"
+msgstr "Set di caratteri"
+
 #: lib/classes/class-form-fields-generator.php:7490
 #: lib/classes/class-icon-library.php:192
 msgid "chart-area"
@@ -1743,7 +1793,7 @@ msgstr "controllo"
 
 #: admin/settings.php:1155 templates/forms/resort-registration.php:200
 msgid "Check Availability"
-msgstr "Verifica disponibilità"
+msgstr "Verifica la disponibilità"
 
 #: lib/classes/class-form-fields-generator.php:7496
 #: lib/classes/class-form-fields-generator.php:7497
@@ -1756,12 +1806,12 @@ msgstr "cerchio di controllo"
 msgid "Check-In & Check-Out Date"
 msgstr "Data di check-in e check-out"
 
-#: admin/settings.php:356 Frontend/RBFW_Woocommerse.php:483
+#: Frontend/RBFW_Woocommerse.php:483 admin/settings.php:356
 #: templates/cart_page.php:78 templates/forms/resort-registration.php:188
 msgid "Check-In Date"
 msgstr "Data di check-in"
 
-#: admin/settings.php:363 Frontend/RBFW_Woocommerse.php:484
+#: Frontend/RBFW_Woocommerse.php:484 admin/settings.php:363
 #: templates/cart_page.php:85 templates/forms/resort-registration.php:193
 msgid "Check-Out Date"
 msgstr "Data di partenza"
@@ -1772,6 +1822,10 @@ msgstr "Data di partenza"
 #: lib/classes/class-icon-library.php:201
 msgid "check-square"
 msgstr "quadrato di controllo"
+
+#: lib/classes/class-form-fields-generator.php:182
+msgid "Checked"
+msgstr "Controllato"
 
 #: admin/settings.php:756
 msgid "Checkout"
@@ -1945,6 +1999,17 @@ msgstr "Chiaro"
 #: admin/settings.php:1064 templates/forms/single-day-registration.php:69
 msgid "Click a date to browse availability"
 msgstr "Fai clic su una data per verificare la disponibilità"
+
+#: admin/settings/Pricing.php:1666 admin/settings/Pricing.php:1764
+#: admin/js/mkb-admin.js:1381 admin/js/mkb-admin.js:1392
+#: admin/js/mkb-admin.js:1410 admin/js/mkb-admin.js:1421
+msgid "Click to disable"
+msgstr "Clicca per disabilitare"
+
+#: lib/classes/class-form-fields-generator.php:4463
+#: lib/classes/class-form-fields-generator.php:4737
+msgid "click to remove"
+msgstr "clicca per rimuovere"
 
 #: lib/classes/class-form-fields-generator.php:7521
 #: lib/classes/class-form-fields-generator.php:7522
@@ -2260,7 +2325,7 @@ msgstr "cubi"
 msgid "Custom CSS"
 msgstr "CSS personalizzato"
 
-#: admin/settings.php:1309 Frontend/RBFW_Woocommerse.php:963
+#: Frontend/RBFW_Woocommerse.php:963 admin/settings.php:1309
 #: inc/rbfw_order_meta.php:349 inc/rbfw_order_meta.php:872
 #: lib/classes/class-thankyou-page.php:336
 #: lib/classes/class-thankyou-page.php:620
@@ -2283,6 +2348,7 @@ msgid "d-and-d"
 msgstr "d-e-d"
 
 #: templates/forms/multi-day-registration.php:195
+#: templates/forms/multi-items-registration.php:262
 msgid "Daily"
 msgstr "Quotidiano"
 
@@ -2333,8 +2399,6 @@ msgstr "Dati aggiornati con successo."
 msgid "database"
 msgstr "banca dati"
 
-#: admin/custom_post.php:20 admin/settings.php:1449
-#: inc/rbfw_inventory_functions.php:764 inc/rbfw_inventory_functions.php:882
 #: templates/template_segment/single_day_info.php:66
 msgid "Date"
 msgstr "Data"
@@ -2380,8 +2444,9 @@ msgstr "Giorno per giorno"
 msgid "Day-long Price"
 msgstr "Prezzo giornaliero"
 
-#: admin/settings.php:1071 admin/settings/Pricing.php:1152
-#: templates/forms/resort-registration.php:60
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:75
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:75
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:141
 msgid "Day-long price"
 msgstr "Prezzo giornaliero"
 
@@ -2393,8 +2458,9 @@ msgstr "Configurazione dei prezzi per l'intera giornata"
 msgid "Day-night Price"
 msgstr "Prezzo giorno-notte"
 
-#: admin/settings.php:1078 admin/settings/Pricing.php:1153
-#: templates/forms/resort-registration.php:61
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:78
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:78
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:144
 msgid "Day-night price"
 msgstr "Prezzo giorno-notte"
 
@@ -2432,6 +2498,11 @@ msgstr "giorni"
 msgid "deaf"
 msgstr "sordo"
 
+# Error and validation messages
+#: templates/single/single-rbfw.php:43
+msgid "Debug Information"
+msgstr "Informazioni di debug"
+
 #: lib/classes/class-icon-library.php:1145
 msgid "decreasing"
 msgstr "decrescente"
@@ -2439,6 +2510,10 @@ msgstr "decrescente"
 #: admin/settings/Pricing.php:404
 msgid "Delete"
 msgstr "Eliminare"
+
+#: templates/rental_lists.php:91
+msgid "Delete Item"
+msgstr "Elimina elemento"
 
 #: lib/classes/class-form-fields-generator.php:7579
 #: lib/classes/class-icon-library.php:281
@@ -2448,6 +2523,10 @@ msgstr "delizioso"
 #: lib/classes/class-welcome-page.php:58
 msgid "Demo"
 msgstr "Dimostrazione"
+
+#: admin/settings/Template.php:151
+msgid "Dependency Field"
+msgstr "Campo di dipendenza"
 
 #: lib/classes/class-form-fields-generator.php:7580
 #: lib/classes/class-icon-library.php:282
@@ -2462,9 +2541,8 @@ msgstr "descrizione"
 msgid "Descending"
 msgstr "Discendente"
 
-#: admin/settings.php:157 inc/rbfw_functions.php:644
-#: admin/settings/Extra_Service.php:401
-#: templates/single/default/multi-day.php:52
+#: admin/settings/Extra_Service.php:401 admin/settings.php:157
+#: inc/rbfw_functions.php:644 templates/single/default/multi-day.php:52
 #: templates/single/default/multiple-items.php:52
 #: templates/single/default/resort.php:40
 #: templates/single/default/single-day.php:55
@@ -2483,13 +2561,13 @@ msgstr "deskpro"
 #: lib/classes/class-form-fields-generator.php:7582
 #: lib/classes/class-icon-library.php:284
 msgid "desktop"
-msgstr "tavolo da lavoro"
+msgstr "tavolozza"
 
 #: lib/classes/class-icon-library.php:1036
 msgid "desktop-computer-with-magnifying-lens-focusing-on-data"
 msgstr "computer desktop con lente di ingrandimento che si concentra sui dati"
 
-#: inc/rbfw_order_meta.php:31 admin/settings/Security_Deposit.php:60
+#: admin/settings/Security_Deposit.php:60 inc/rbfw_order_meta.php:31
 msgid "Details"
 msgstr "Dettagli"
 
@@ -2526,13 +2604,12 @@ msgstr "oceano digitale"
 msgid "discord"
 msgstr "discordia"
 
-#: admin/settings.php:1211 Frontend/RBFW_Woocommerse.php:548
-#: Frontend/RBFW_Woocommerse.php:921 inc/class-resort-function.php:412
+#: Frontend/RBFW_Woocommerse.php:548 Frontend/RBFW_Woocommerse.php:921
+#: admin/settings.php:1211 inc/class-resort-function.php:412
 #: inc/rbfw_order_meta.php:438 inc/rbfw_order_meta.php:938
-#: templates/cart_page.php:158 templates/cart_page.php:510
 #: lib/classes/class-thankyou-page.php:394
-#: lib/classes/class-thankyou-page.php:679
-#: templates/forms/multi-day-registration.php:651
+#: lib/classes/class-thankyou-page.php:679 templates/cart_page.php:158
+#: templates/cart_page.php:510 templates/forms/multi-day-registration.php:651
 #: templates/forms/multi-items-registration.php:385
 msgid "Discount"
 msgstr "Sconto"
@@ -2551,6 +2628,11 @@ msgstr "discorso"
 msgid "Display item available quantity"
 msgstr "Visualizza la quantità disponibile dell'articolo"
 
+#: inc/rbfw_functions.php:2105 inc/rbfw_functions.php:2126
+#: inc/rbfw_functions.php:2187
+msgid "Display Style"
+msgstr "Stile di visualizzazione"
+
 #: lib/classes/class-form-fields-generator.php:7589
 #: lib/classes/class-icon-library.php:291
 msgid "dna"
@@ -2563,14 +2645,14 @@ msgstr "Hai già un account con noi?"
 #: lib/classes/class-form-fields-generator.php:7590
 #: lib/classes/class-icon-library.php:292
 msgid "dochub"
-msgstr "Dochub"
+msgstr "dochub"
 
 #: lib/classes/class-form-fields-generator.php:7591
 #: lib/classes/class-icon-library.php:293
 msgid "docker"
 msgstr "scaricatore mobile"
 
-#: rent-manager.php:79 rent-manager.php:84
+#: rent-manager.php:100
 msgid "Docs"
 msgstr "Documenti"
 
@@ -2643,6 +2725,10 @@ msgstr "Scarica la ricevuta in formato PDF per i clienti."
 msgid "Download PRO Version Now"
 msgstr "Scarica subito la versione PRO"
 
+#: templates/rental_lists.php:71
+msgid "Draft"
+msgstr "Bozza"
+
 #: lib/classes/class-form-fields-generator.php:7600
 #: lib/classes/class-icon-library.php:302
 msgid "draft2digital"
@@ -2678,8 +2764,8 @@ msgstr "Data e ora di riconsegna"
 msgid "Drop-Off Location"
 msgstr "Luogo di riconsegna"
 
-#: admin/settings.php:257 Frontend/RBFW_Woocommerse.php:587
-#: Frontend/RBFW_Woocommerse.php:695 Frontend/RBFW_Woocommerse.php:853
+#: Frontend/RBFW_Woocommerse.php:587 Frontend/RBFW_Woocommerse.php:695
+#: Frontend/RBFW_Woocommerse.php:853 admin/settings.php:257
 #: inc/rbfw_order_meta.php:144 inc/rbfw_order_meta.php:715
 #: templates/forms/multi-day-registration.php:326
 #: templates/forms/multi-items-registration.php:191
@@ -2714,26 +2800,28 @@ msgstr "drupal"
 msgid "Duplicate"
 msgstr "Duplicato"
 
+#: templates/rental_lists.php:90
+msgid "Duplicate Item"
+msgstr "Elemento duplicato"
+
 #: templates/rental_lists.php:87
 msgid "Duplicate Item "
 msgstr "Elemento duplicato"
 
-#: admin/settings.php:328 templates/cart_page.php:445
-#: admin/settings/Pricing.php:202
+#: admin/settings/Pricing.php:202 admin/settings.php:328
 #: templates/ajax_form/rbfw_load_duration_form.php:31
-#: templates/forms/multi-day-registration.php:415
+#: templates/cart_page.php:445 templates/forms/multi-day-registration.php:415
 #: templates/forms/multi-items-registration.php:293
 msgid "Duration"
 msgstr "Durata"
 
-#: admin/settings.php:468 Frontend/RBFW_Woocommerse.php:544
-#: Frontend/RBFW_Woocommerse.php:652 Frontend/RBFW_Woocommerse.php:917
+#: Frontend/RBFW_Woocommerse.php:544 Frontend/RBFW_Woocommerse.php:652
+#: Frontend/RBFW_Woocommerse.php:917 admin/settings.php:468
 #: inc/class-bike-car-sd-function.php:476 inc/class-resort-function.php:394
 #: inc/rbfw_order_meta.php:404 inc/rbfw_order_meta.php:416
-#: inc/rbfw_order_meta.php:919 templates/cart_page.php:144
-#: templates/cart_page.php:304 lib/classes/class-thankyou-page.php:382
-#: lib/classes/class-thankyou-page.php:666
-#: templates/forms/multi-day-registration.php:627
+#: inc/rbfw_order_meta.php:919 lib/classes/class-thankyou-page.php:382
+#: lib/classes/class-thankyou-page.php:666 templates/cart_page.php:144
+#: templates/cart_page.php:304 templates/forms/multi-day-registration.php:627
 #: templates/forms/single-day-registration.php:147
 #: templates/template_segment/rbfw_timely_price_calculation.php:18
 #: templates/template_segment/resort_info.php:273
@@ -2785,6 +2873,10 @@ msgstr "modificare"
 #: admin/custom_post.php:86
 msgid "Edit "
 msgstr "Modificare "
+
+#: templates/rental_lists.php:85
+msgid "Edit Item"
+msgstr "Modifica elemento"
 
 #: admin/custom_post.php:129
 msgid "Edit Order"
@@ -2854,6 +2946,11 @@ msgstr "dipendente"
 msgid "employee-1"
 msgstr "dipendente-1"
 
+# Status and action strings
+#: inc/rbfw_inventory_functions.php:1292
+msgid "Empty"
+msgstr "Vuoto"
+
 #: admin/settings/Template.php:141
 msgid "Enable Additional Gallery"
 msgstr "Abilita Galleria aggiuntiva"
@@ -2910,7 +3007,7 @@ msgstr "Abilita/Disabilita"
 
 #: admin/settings/Template.php:142
 msgid "Enable/Disable Additional Gallery"
-msgstr "Abilita/disabilita Galleria aggiuntiva"
+msgstr "Abilita/Disabilita Galleria aggiuntiva"
 
 #: admin/settings.php:54
 msgid "Enable/Disable gutenburg editor."
@@ -2938,20 +3035,20 @@ msgstr ""
 "Abilitando questa opzione i prezzi verranno impostati in base al giorno "
 "della settimana, ignorando il prezzo giornaliero generale"
 
-#: admin/settings.php:742 admin/settings/Date_Time.php:179
-#: admin/settings/Off_Day.php:55 admin/settings/Off_Day.php:71
-#: admin/settings/Pricing.php:1709
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:61
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:61
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:127
 msgid "End Date"
 msgstr "Data di fine"
 
-#: admin/settings.php:959 Frontend/RBFW_Woocommerse.php:848
+#: Frontend/RBFW_Woocommerse.php:848 admin/settings.php:959
 #: inc/rbfw_order_meta.php:384 inc/rbfw_order_meta.php:902
 #: lib/classes/class-thankyou-page.php:362
 #: lib/classes/class-thankyou-page.php:646
 msgid "End Date and Time"
 msgstr "Data e ora di fine"
 
-#: admin/settings.php:749 admin/settings/Pricing.php:199
+#: admin/settings/Pricing.php:199 admin/settings.php:749
 msgid "End Time"
 msgstr "Ora di fine"
 
@@ -2962,6 +3059,14 @@ msgstr "Inserisci -1 per mostrare tutti gli elementi"
 #: admin/settings/Security_Deposit.php:77
 msgid "Enter Amount"
 msgstr "Inserisci l'importo"
+
+#: admin/settings/Pricing.php:362 admin/settings/Pricing.php:895
+msgid "Enter item name"
+msgstr "Inserisci il nome dell'articolo"
+
+#: lib/classes/class-time-slots-page.php:37
+msgid "Enter slot label here"
+msgstr "Inserisci qui l'etichetta dello slot"
 
 #: admin/settings.php:638
 msgid "Enter the translated text of <strong>1 Review.</strong>"
@@ -3930,6 +4035,10 @@ msgstr "gomma per cancellare"
 msgid "erlang"
 msgstr "erlang"
 
+#: inc/rbfw_shortcodes.php:356
+msgid "error"
+msgstr "errore"
+
 #: lib/classes/class-form-fields-generator.php:7624
 #: lib/classes/class-icon-library.php:326
 msgid "ethereum"
@@ -3944,6 +4053,10 @@ msgstr "Etsy"
 #: lib/classes/class-icon-library.php:328
 msgid "euro-sign"
 msgstr "simbolo dell'euro"
+
+#: admin/settings/Pricing.php:162
+msgid "Ex: 10"
+msgstr "Esempio: 10"
 
 #: admin/settings.php:1526
 msgid "Excellent"
@@ -4018,10 +4131,7 @@ msgstr "collegamento-esterno-quadrato-alt"
 msgid "Extra Service"
 msgstr "Servizio extra"
 
-#: admin/settings.php:945 Frontend/RBFW_Woocommerse.php:647
-#: Frontend/RBFW_Woocommerse.php:912 inc/rbfw_order_meta.php:224
-#: inc/rbfw_order_meta.php:788 lib/classes/class-thankyou-page.php:276
-#: lib/classes/class-thankyou-page.php:575
+#: lib/classes/class-thankyou-page.php:276
 msgid "Extra Service Information"
 msgstr "Informazioni sui servizi aggiuntivi"
 
@@ -4040,6 +4150,10 @@ msgstr "Servizio extra di scorta"
 #: inc/rbfw_inventory_functions.php:1401
 msgid "Extra Services:"
 msgstr "Servizi extra:"
+
+#: templates/archive/list.php:264
+msgid "Extra Status"
+msgstr "Stato extra"
 
 #: lib/classes/class-form-fields-generator.php:7636
 #: lib/classes/class-icon-library.php:338
@@ -4171,11 +4285,24 @@ msgstr "Femmina"
 msgid "female"
 msgstr "femmina"
 
+# More form elements
+#: lib/classes/class-form-fields-generator.php:166
+#: lib/classes/class-form-fields-generator.php:286
+#: lib/classes/class-form-fields-generator.php:405
+msgid "Field Dependency"
+msgstr "Dipendenza dal campo"
+
 #: admin/settings/Inventory.php:61 admin/settings/Inventory.php:63
 #: admin/settings/Inventory.php:125 admin/settings/Inventory.php:127
 #: admin/settings/Inventory.php:272 admin/settings/Inventory.php:276
 msgid "Field Label"
 msgstr "Etichetta del campo"
+
+# Form field generator strings
+#: lib/classes/class-form-fields-generator.php:430
+#: lib/classes/class-form-fields-generator.php:444
+msgid "Field Size"
+msgstr "Dimensione del campo"
 
 #: lib/classes/class-form-fields-generator.php:7648
 #: lib/classes/class-icon-library.php:350
@@ -4557,6 +4684,11 @@ msgstr "Galleria"
 msgid "Gallery Configuration"
 msgstr "Configurazione della galleria"
 
+# Gallery and media strings
+#: admin/settings/Gallery.php:49
+msgid "Gallery Dependency"
+msgstr "Dipendenza dalla Galleria"
+
 #: lib/classes/class-form-fields-generator.php:7710
 #: lib/classes/class-icon-library.php:412
 msgid "gamepad"
@@ -4587,7 +4719,7 @@ msgstr "senza genere"
 msgid "General"
 msgstr "Generale"
 
-#: admin/settings/General_Info.php:18
+#: admin/settings/General_Info.php:45
 msgid "General Info"
 msgstr "Informazioni generali"
 
@@ -4595,7 +4727,7 @@ msgstr "Informazioni generali"
 msgid "General Information"
 msgstr "Informazioni generali"
 
-#: admin/settings.php:18 admin/settings/General_Info.php:24
+#: admin/settings/General_Info.php:46
 msgid "General Settings"
 msgstr "Impostazioni generali"
 
@@ -4603,7 +4735,7 @@ msgstr "Impostazioni generali"
 msgid "General settings"
 msgstr "Impostazioni generali"
 
-#: rent-manager.php:98
+#: rent-manager.php:90
 msgid "Get Booking and Rental Manager Pro"
 msgstr "Ottieni Booking and Rental Manager Pro"
 
@@ -4972,7 +5104,12 @@ msgstr "cuore"
 msgid "heartbeat"
 msgstr "battito del cuore"
 
-#: admin/settings/General_Info.php:58
+# More UI elements
+#: lib/classes/class-meta-box.php:92
+msgid "Help"
+msgstr "Aiuto"
+
+#: admin/settings/General_Info.php:56
 msgid "Here you can check categories"
 msgstr "Qui puoi controllare le categorie"
 
@@ -4980,6 +5117,10 @@ msgstr "Qui puoi controllare le categorie"
 msgid "Here you can configure additional extra service with rent item."
 msgstr ""
 "Qui puoi configurare un servizio extra aggiuntivo con l'articolo in affitto."
+
+#: admin/settings/General_Info.php:47
+msgid "Here you can configure basic information"
+msgstr "Qui puoi configurare le informazioni di base"
 
 #: admin/settings/General_Info.php:25
 msgid "Here you can configure basic information."
@@ -5028,6 +5169,15 @@ msgstr "Qui puoi configurare le impostazioni del modello."
 #: admin/settings/Extra_Service.php:390
 msgid "Here you can set extra service price."
 msgstr "Qui puoi impostare il prezzo del servizio extra."
+
+#: admin/settings/Inventory.php:233
+msgid "Hidden"
+msgstr "Nascosto"
+
+# Archive and listing strings
+#: templates/archive/list.php:263
+msgid "Hidden Status"
+msgstr "Stato nascosto"
 
 #: support/elementor/widget/rbfw-left-filter.php:50
 #: support/elementor/widget/rbfw-left-filter.php:63
@@ -5144,6 +5294,7 @@ msgid "hourglass-start"
 msgstr "avvio a clessidra"
 
 #: templates/forms/multi-day-registration.php:207
+#: templates/forms/multi-items-registration.php:259
 msgid "Hourly"
 msgstr "Ogni ora"
 
@@ -5196,14 +5347,6 @@ msgstr "Houzz"
 #: lib/classes/class-icon-library.php:507
 msgid "html5"
 msgstr "HTML5"
-
-#. URI of the plugin
-msgid "https://mage-people.com"
-msgstr "https://mage-people.com"
-
-#. Author URI of the plugin
-msgid "https://www.mage-people.com/"
-msgstr "https://www.mage-people.com/"
 
 #: lib/classes/class-form-fields-generator.php:7806
 #: lib/classes/class-icon-library.php:508
@@ -5302,7 +5445,7 @@ msgstr "Se vuoi abilitare la prenotazione in giornata, allora sì."
 msgid "If you want to inventory manage based on return, then yes it."
 msgstr "Se vuoi gestire l'inventario in base ai resi, allora sì."
 
-#: templates/rental_lists.php:187 admin/settings/Pricing.php:1151
+#: admin/settings/Pricing.php:1151 templates/rental_lists.php:187
 #: templates/template_segment/resort_info.php:56
 #: templates/template_segment/resort_info.php:196
 msgid "Image"
@@ -5315,9 +5458,18 @@ msgstr "Immagine"
 msgid "image"
 msgstr "immagine"
 
+# Final comprehensive additions
+#: inc/rbfw_functions.php:357 inc/rbfw_functions.php:1991
+msgid "Image Display"
+msgstr "Visualizzazione delle immagini"
+
 #: inc/RBFW_Super_Slider.php:315
 msgid "image Indicator"
 msgstr "indicatore di immagine"
+
+#: inc/RBFW_Super_Slider.php:61
+msgid "Images"
+msgstr "Immagini"
 
 #: lib/classes/class-form-fields-generator.php:7815
 #: lib/classes/class-form-fields-generator.php:7816
@@ -5403,8 +5555,8 @@ msgstr "Nonce non valido."
 msgid "Invalid post type."
 msgstr "Tipo di post non valido."
 
-#: inc/rbfw_inventory_functions.php:761 admin/settings/Inventory.php:21
-#: lib/classes/class-admin-menu.php:35 lib/classes/class-admin-menu.php:35
+#: admin/settings/Inventory.php:21 inc/rbfw_inventory_functions.php:761
+#: lib/classes/class-admin-menu.php:35
 msgid "Inventory"
 msgstr "Inventario"
 
@@ -5484,21 +5636,15 @@ msgstr "corsivo"
 msgid "Item"
 msgstr "Articolo"
 
-#: admin/settings.php:917 inc/rbfw_order_meta.php:103
-#: inc/rbfw_order_meta.php:690 lib/classes/class-thankyou-page.php:212
-#: lib/classes/class-thankyou-page.php:513
+#: inc/rbfw_order_meta.php:690
 msgid "Item Information"
 msgstr "Informazioni sull'articolo"
 
-#: admin/settings.php:924 inc/rbfw_inventory_functions.php:883
 #: inc/rbfw_order_meta.php:111 inc/rbfw_order_meta.php:120
-#: inc/rbfw_order_meta.php:696 admin/settings/Pricing.php:361
-#: lib/classes/class-thankyou-page.php:218
-#: lib/classes/class-thankyou-page.php:519
 msgid "Item Name"
 msgstr "Nome dell'articolo"
 
-#: admin/settings.php:1141 Frontend/RBFW_Woocommerse.php:867
+#: Frontend/RBFW_Woocommerse.php:867 admin/settings.php:1141
 msgid "Item Quantity"
 msgstr "Quantità dell'articolo"
 
@@ -5510,10 +5656,13 @@ msgstr "Articolo venduto Quantità"
 msgid "Item Stock"
 msgstr "Articolo in magazzino"
 
-#: admin/settings.php:931 inc/rbfw_order_meta.php:129
-#: inc/rbfw_order_meta.php:701
+#: inc/rbfw_order_meta.php:129
 msgid "Item Type"
 msgstr "Tipo di articolo"
+
+#: inc/rbfw_functions.php:2029
+msgid "Item Value"
+msgstr "Valore dell'articolo"
 
 #: admin/settings/Inventory.php:218
 msgid "Item variation"
@@ -5786,6 +5935,10 @@ msgstr "elenco-ol"
 msgid "list-ul"
 msgstr "elenco-ul"
 
+#: templates/rental_lists.php:65
+msgid "Live"
+msgstr "Vivere"
+
 #: inc/RBFW_Dependencies.php:167 templates/single/donut/multi-day.php:92
 #: templates/single/donut/multiple-items.php:92
 #: templates/single/donut/resort.php:117
@@ -5793,12 +5946,16 @@ msgstr "elenco-ul"
 msgid "Load More"
 msgstr "Carica altro"
 
+#: templates/rental_lists.php:209
+msgid "Load More Events"
+msgstr "Carica altri eventi"
+
 #: inc/rbfw_functions.php:776
 msgid "Load More Icon"
 msgstr "Carica altra icona"
 
-#: admin/taxonomy_register.php:30 admin/taxonomy_register.php:31
-#: admin/taxonomy_register.php:32 admin/settings/Location.php:20
+#: admin/settings/Location.php:20 admin/taxonomy_register.php:30
+#: admin/taxonomy_register.php:31 admin/taxonomy_register.php:32
 #: support/elementor/widget/rbfw-rent-list.php:111
 msgid "Location"
 msgstr "Posizione"
@@ -5810,6 +5967,12 @@ msgstr "Configurazione della posizione"
 #: support/elementor/widget/rbfw-left-filter.php:71
 msgid "Location Filter"
 msgstr "Filtro posizione"
+
+# Location and shipping
+#: admin/settings/Location.php:70 admin/settings/Location.php:73
+#: admin/settings/Location.php:75
+msgid "Location Selection"
+msgstr "Selezione della posizione"
 
 #: lib/classes/class-form-fields-generator.php:7871
 #: lib/classes/class-icon-library.php:573
@@ -5876,10 +6039,6 @@ msgstr "M"
 #: lib/classes/class-icon-library.php:582
 msgid "magento"
 msgstr "Magento"
-
-#. Author of the plugin
-msgid "MagePeople Team"
-msgstr "Squadra MagePeople"
 
 #: lib/classes/class-form-fields-generator.php:7881
 #: lib/classes/class-icon-library.php:583
@@ -5991,6 +6150,14 @@ msgstr "Il numero massimo di giorni prenotabili è"
 msgid "medapps"
 msgstr "applicazioni mediche"
 
+#: lib/classes/class-settings-api.php:276
+#: lib/classes/class-settings-api.php:281
+#: lib/classes/class-settings-api.php:284
+#: lib/classes/class-settings-api.php:286
+#: lib/classes/class-settings-api.php:289
+msgid "Media Preview"
+msgstr "Anteprima multimediale"
+
 #: lib/classes/class-icon-library.php:1062
 msgid "medical"
 msgstr "medico"
@@ -6075,6 +6242,11 @@ msgstr "Minimo"
 #: admin/settings.php:1260
 msgid "Minimum number of days have to book is"
 msgstr "Il numero minimo di giorni da prenotare è"
+
+# Additional comprehensive translatable strings
+#: inc/rbfw_functions.php:857
+msgid "Minor Publishing"
+msgstr "Editoria minore"
 
 #: lib/classes/class-form-fields-generator.php:7909
 #: lib/classes/class-icon-library.php:611
@@ -6166,6 +6338,10 @@ msgstr "monitorare"
 msgid "Month"
 msgstr "Mese"
 
+#: templates/forms/multi-items-registration.php:268
+msgid "Monthly"
+msgstr "Mensile"
+
 #: admin/settings/Pricing.php:394
 #: templates/forms/multi-items-registration.php:139
 msgid "Monthly Price"
@@ -6197,7 +6373,6 @@ msgstr "puntatore del mouse"
 msgid "movie-tickets"
 msgstr "biglietti del cinema"
 
-#: templates/forms/multi-day-registration.php:632
 #: templates/template_segment/resort_info.php:278
 msgid "Multi day pricing saver applied"
 msgstr "Risparmio sui prezzi per più giorni applicato"
@@ -6216,8 +6391,8 @@ msgstr "musica"
 msgid "music-player"
 msgstr "lettore musicale"
 
-#: admin/settings.php:896 inc/rbfw_inventory_functions.php:1367
-#: inc/rbfw_order_meta.php:616 admin/settings/Extra_Service.php:400
+#: admin/settings/Extra_Service.php:400 admin/settings.php:896
+#: inc/rbfw_inventory_functions.php:1367 inc/rbfw_order_meta.php:616
 #: lib/classes/class-thankyou-page.php:188
 #: lib/classes/class-thankyou-page.php:494
 #: lib/classes/class-welcome-page.php:55
@@ -6278,9 +6453,19 @@ msgstr "Nintendo Switch"
 msgid "No"
 msgstr "NO"
 
+# Additional admin strings
+#: admin/rbfw_custom_tables.php:23
+msgid "No Data"
+msgstr "Nessun dato"
+
 #: admin/settings.php:1540
 msgid "No Items Available!"
 msgstr "Nessun articolo disponibile!"
+
+# Additional missing translatable strings found in codebase
+#: templates/rental_lists.php:97
+msgid "No posts found."
+msgstr "Nessun post trovato."
 
 #: admin/settings.php:630
 msgid "No Review Yet"
@@ -6413,10 +6598,9 @@ msgstr "In attesa"
 msgid "On/Off Gutenburg"
 msgstr "Gutenburg acceso/spento"
 
-#: admin/settings.php:342 admin/settings/Extra_Service.php:112
-#: admin/settings/Extra_Service.php:136 admin/settings/Extra_Service.php:261
-#: admin/settings/Extra_Service.php:324
-#: templates/forms/multi-day-registration.php:533
+#: admin/settings/Extra_Service.php:112 admin/settings/Extra_Service.php:136
+#: admin/settings/Extra_Service.php:261 admin/settings/Extra_Service.php:324
+#: admin/settings.php:342 templates/forms/multi-day-registration.php:533
 #: templates/forms/multi-items-registration.php:498
 msgid "One Time"
 msgstr "Una volta"
@@ -6471,6 +6655,10 @@ msgstr "Ordine"
 msgid "order"
 msgstr "ordine"
 
+#: inc/rbfw_order_meta.php:526
+msgid "Order #%s Details"
+msgstr "Dettagli dell'ordine n.%s"
+
 #: lib/classes/class-admin-menu.php:70
 msgid "Order Created Date"
 msgstr "Data di creazione dell'ordine"
@@ -6489,8 +6677,9 @@ msgstr "Dettagli dell'ordine"
 msgid "Order Feature Image"
 msgstr "Ordina l'immagine caratteristica"
 
-#: admin/settings.php:875 lib/classes/class-thankyou-page.php:173
-#: lib/classes/class-thankyou-page.php:479
+#: inc/rbfw_order_meta.php:697 inc/rbfw_order_meta.php:702
+#: inc/rbfw_order_meta.php:709 inc/rbfw_order_meta.php:716
+#: inc/rbfw_order_meta.php:724
 msgid "Order Information"
 msgstr "Informazioni sull'ordine"
 
@@ -6499,8 +6688,7 @@ msgid "Order Item:"
 msgstr "Articolo dell'ordine:"
 
 #: admin/custom_post.php:122 admin/custom_post.php:123
-#: lib/classes/class-admin-menu.php:34 lib/classes/class-admin-menu.php:34
-#: lib/classes/class-admin-menu.php:63
+#: lib/classes/class-admin-menu.php:34 lib/classes/class-admin-menu.php:63
 msgid "Order List"
 msgstr "Elenco degli ordini"
 
@@ -6551,6 +6739,11 @@ msgstr "Ordine non trovato"
 msgid "Order Not found in Trash"
 msgstr "Ordine non trovato nel Cestino"
 
+# Order management strings
+#: inc/rbfw_order_meta.php:30
+msgid "Order Number"
+msgstr "Numero d'ordine"
+
 #: admin/settings.php:882 lib/classes/class-thankyou-page.php:178
 #: lib/classes/class-thankyou-page.php:484
 msgid "Order number"
@@ -6592,12 +6785,12 @@ msgstr "Esaurito"
 #: lib/classes/class-form-fields-generator.php:7949
 #: lib/classes/class-icon-library.php:651
 msgid "outdent"
-msgstr "scollamento"
+msgstr "ammaccatura"
 
-#: admin/settings.php:510 Frontend/RBFW_Woocommerse.php:485
+#: Frontend/RBFW_Woocommerse.php:485 admin/settings.php:510
 #: inc/rbfw_order_meta.php:154 inc/rbfw_order_meta.php:723
-#: templates/cart_page.php:92 lib/classes/class-thankyou-page.php:224
-#: lib/classes/class-thankyou-page.php:525
+#: lib/classes/class-thankyou-page.php:224
+#: lib/classes/class-thankyou-page.php:525 templates/cart_page.php:92
 msgid "Package"
 msgstr "Pacchetto"
 
@@ -6846,10 +7039,10 @@ msgstr "Luogo di ritiro"
 msgid "Picked"
 msgstr "Raccolto"
 
-#: templates/cart_page.php:395 templates/forms/multi-day-registration.php:355
-#: templates/forms/multi-day-registration.php:358
 #: templates/forms/multi-items-registration.php:220
 #: templates/forms/multi-items-registration.php:223
+#: templates/forms/multi-day-registration.php:355
+#: templates/forms/multi-day-registration.php:358
 msgid "Pickup Date"
 msgstr "Data di ritiro"
 
@@ -6861,8 +7054,8 @@ msgstr "Data di ritiro"
 msgid "Pickup Date & Time"
 msgstr "Data e ora del ritiro"
 
-#: admin/settings.php:243 Frontend/RBFW_Woocommerse.php:584
-#: Frontend/RBFW_Woocommerse.php:692 Frontend/RBFW_Woocommerse.php:850
+#: Frontend/RBFW_Woocommerse.php:584 Frontend/RBFW_Woocommerse.php:692
+#: Frontend/RBFW_Woocommerse.php:850 admin/settings.php:243
 #: inc/rbfw_functions.php:3327 inc/rbfw_order_meta.php:137
 #: inc/rbfw_order_meta.php:708 inc/rbfw_shortcodes.php:523
 #: templates/forms/multi-day-registration.php:312
@@ -6870,6 +7063,10 @@ msgstr "Data e ora del ritiro"
 #: templates/forms/single-day-registration.php:34
 msgid "Pickup Location"
 msgstr "Luogo di ritiro"
+
+#: inc/rbfw_order_meta.php:553
+msgid "Pickup Note"
+msgstr "Nota di ritiro"
 
 #: templates/cart_page.php:221 templates/cart_page.php:376
 #: templates/cart_page.php:561
@@ -7048,7 +7245,8 @@ msgstr "Seleziona l'icona predefinita del tipo di indicatore del cursore"
 #: inc/RBFW_Super_Slider.php:299
 msgid "Please Select Slider Indicator Visible or Not? Default ON"
 msgstr ""
-"Selezionare l'indicatore del cursore visibile o meno? Predefinito ATTIVO"
+"Selezionare l'indicatore del cursore visibile o meno? Attivo per "
+"impostazione predefinita"
 
 #: inc/RBFW_Super_Slider.php:356
 msgid "Please Select Slider Popup Indicator Icon ON or Off? Default ON"
@@ -7164,14 +7362,8 @@ msgstr "bottiglia di prescrizione-alt"
 msgid "Previous"
 msgstr "Precedente"
 
-#: admin/settings.php:1092 templates/ajax_form/rbfw_load_duration_form.php:15
-#: templates/ajax_form/rbfw_load_duration_form_sp.php:19
-#: templates/forms/multi-day-registration.php:660
-#: templates/forms/multi-items-registration.php:395
-#: templates/template_segment/resort_info.php:57
-#: templates/template_segment/resort_info.php:197
-#: templates/template_segment/single_day_info.php:85
-#: templates/template_segment/single_day_info.php:177
+#: admin/settings/Extra_Service.php:110 admin/settings/Extra_Service.php:134
+#: admin/settings/Pricing.php:362 admin/settings/Pricing.php:895
 msgid "Price"
 msgstr "Prezzo"
 
@@ -7179,7 +7371,13 @@ msgstr "Prezzo"
 msgid "Price <b class=\"required\">*</b>"
 msgstr "Prezzo <b class=\"required\">*</b>"
 
-#: admin/settings/Pricing.php:55
+#: templates/cart_page.php:465 templates/cart_page.php:620
+#: Frontend/RBFW_Woocommerse.php:725 inc/rbfw_order_meta.php:325
+#: inc/rbfw_order_meta.php:854 inc/rbfw_order_meta.php:856
+msgid "Price Calculation"
+msgstr "Calcolo del prezzo"
+
+#: admin/settings/Extra_Service.php:376
 msgid "Price Configuration"
 msgstr "Configurazione del prezzo"
 
@@ -7211,6 +7409,14 @@ msgstr "I prezzi partono da"
 msgid "Pricing"
 msgstr "Prezzi"
 
+# Additional pricing and calculation strings
+#: admin/settings/Pricing.php:242 admin/settings/Pricing.php:285
+#: admin/settings/Pricing.php:1057 admin/settings/Pricing.php:1060
+#: admin/settings/Pricing.php:1094 admin/settings/Pricing.php:1097
+#: admin/settings/Pricing.php:1111
+msgid "Pricing Display"
+msgstr "Visualizzazione dei prezzi"
+
 #: admin/settings.php:201 templates/forms/multi-day-registration.php:109
 #: templates/forms/multi-items-registration.php:115
 #: templates/forms/resort-registration.php:49
@@ -7220,6 +7426,13 @@ msgstr "Informazioni sui prezzi"
 #: admin/settings.php:113
 msgid "Pricing Info Display"
 msgstr "Visualizzazione delle informazioni sui prezzi"
+
+#: admin/settings/Pricing.php:1329 admin/settings/Pricing.php:1335
+#: admin/settings/Pricing.php:1341 admin/settings/Pricing.php:1347
+#: admin/settings/Pricing.php:1353 admin/settings/Pricing.php:1359
+#: admin/settings/Pricing.php:1365
+msgid "Pricing Options"
+msgstr "Opzioni di prezzo"
 
 #: lib/classes/class-form-fields-generator.php:8004
 #: lib/classes/class-icon-library.php:706
@@ -7284,9 +7497,8 @@ msgstr "Quantità per scatola"
 msgid "Quality"
 msgstr "Qualità"
 
-#: admin/settings.php:567 templates/cart_page.php:425
-#: lib/classes/class-thankyou-page.php:377
-#: lib/classes/class-thankyou-page.php:661
+#: admin/settings.php:567 lib/classes/class-thankyou-page.php:377
+#: lib/classes/class-thankyou-page.php:661 templates/cart_page.php:425
 #: templates/forms/multi-day-registration.php:434
 #: templates/template_segment/resort_info.php:58
 #: templates/template_segment/resort_info.php:198
@@ -7311,7 +7523,7 @@ msgstr "domanda"
 msgid "question-circle"
 msgstr "cerchio di domande"
 
-#: admin/RBFW_Quick_Setup.php:32
+#: admin/RBFW_Quick_Setup.php:65 admin/RBFW_Quick_Setup.php:95
 msgid "Quick Setup"
 msgstr "Configurazione rapida"
 
@@ -7451,6 +7663,11 @@ msgstr "Rimborsato"
 msgid "registered"
 msgstr "registrato"
 
+# Additional missing strings from various files
+#: templates/template_segment/reg_form.php:3
+msgid "Registration Form"
+msgstr "Modulo di registrazione"
+
 #: admin/settings.php:854
 msgid "Registration Information"
 msgstr "Informazioni sulla registrazione"
@@ -7459,8 +7676,8 @@ msgstr "Informazioni sulla registrazione"
 msgid "Related"
 msgstr "Imparentato"
 
-#: admin/settings.php:172 inc/rbfw_functions.php:432
-#: admin/settings/Related.php:24
+#: admin/settings/Related.php:24 admin/settings.php:172
+#: inc/rbfw_functions.php:432
 msgid "Related Items"
 msgstr "Articoli correlati"
 
@@ -7485,6 +7702,12 @@ msgstr "Rimuovi ordine immagine evidenziata"
 msgid "Remove Order Meta featured image"
 msgstr "Rimuovi ordine Meta immagine in evidenza"
 
+#: admin/settings/Pricing.php:1667 admin/settings/Pricing.php:1765
+#: admin/js/mkb-admin.js:1382 admin/js/mkb-admin.js:1393
+#: admin/js/mkb-admin.js:1411 admin/js/mkb-admin.js:1422
+msgid "Remove time slot"
+msgstr "Rimuovi fascia oraria"
+
 #: lib/classes/class-form-fields-generator.php:8034
 #: lib/classes/class-icon-library.php:736
 msgid "rendact"
@@ -7505,7 +7728,7 @@ msgstr "Affitto Aggiungi al carrello"
 
 #: admin/settings.php:1634
 msgid "Rent Booking Page Form Background Color"
-msgstr "Colore di sfondo del modulo della pagina di prenotazione dell'affitto"
+msgstr "Colore di sfondo del modulo di prenotazione dell'affitto"
 
 #: admin/settings.php:1620
 msgid "Rent Booking Page Primary Color"
@@ -7523,7 +7746,7 @@ msgstr "Modulo di filtro dell'affitto"
 msgid "Rent Info:"
 msgstr "Informazioni sull'affitto:"
 
-#: admin/settings.php:938 Frontend/RBFW_Woocommerse.php:616
+#: Frontend/RBFW_Woocommerse.php:616 admin/settings.php:938
 #: inc/rbfw_order_meta.php:172 inc/rbfw_order_meta.php:739
 #: lib/classes/class-thankyou-page.php:231
 #: lib/classes/class-thankyou-page.php:532
@@ -7556,7 +7779,7 @@ msgstr "Elenco degli affitti Colore primario"
 
 #: admin/settings.php:1613
 msgid "Rent List Secondary Color"
-msgstr "Elenco degli affitti Colore secondario"
+msgstr "Colore secondario dell'elenco degli affitti"
 
 #: support/elementor/widget/rbfw-search.php:22
 msgid "Rent Search"
@@ -7651,14 +7874,18 @@ msgstr "Modulo di ripristino"
 msgid "resolving"
 msgstr "risoluzione"
 
-#: admin/settings.php:475 Frontend/RBFW_Woocommerse.php:546
-#: Frontend/RBFW_Woocommerse.php:654 Frontend/RBFW_Woocommerse.php:919
+# Template and layout strings
+#: templates/template_segment/resort_info.php:68
+msgid "Resort Room Data"
+msgstr "Dati delle camere del resort"
+
+#: Frontend/RBFW_Woocommerse.php:546 Frontend/RBFW_Woocommerse.php:654
+#: Frontend/RBFW_Woocommerse.php:919 admin/settings.php:475
 #: inc/class-bike-car-sd-function.php:478 inc/class-resort-function.php:395
 #: inc/rbfw_order_meta.php:428 inc/rbfw_order_meta.php:928
-#: templates/cart_page.php:151 templates/cart_page.php:313
 #: lib/classes/class-thankyou-page.php:387
-#: lib/classes/class-thankyou-page.php:672
-#: templates/forms/multi-day-registration.php:639
+#: lib/classes/class-thankyou-page.php:672 templates/cart_page.php:151
+#: templates/cart_page.php:313 templates/forms/multi-day-registration.php:639
 #: templates/forms/single-day-registration.php:152
 #: templates/template_segment/rbfw_timely_price_calculation.php:23
 #: templates/template_segment/resort_info.php:284
@@ -7685,11 +7912,11 @@ msgstr "Data di ritorno"
 msgid "Return date"
 msgstr "Data di ritorno"
 
-#: inc/rbfw_order_meta.php:556 inc/rbfw_order_meta.php:576
+#: inc/rbfw_order_meta.php:557
 msgid "Return Note"
 msgstr "Nota di reso"
 
-#: inc/rbfw_order_meta.php:560 inc/rbfw_order_meta.php:587
+#: inc/rbfw_order_meta.php:561
 msgid "Return Security Deposit"
 msgstr "Restituire il deposito cauzionale"
 
@@ -7779,7 +8006,7 @@ msgstr "rocketchat"
 #: lib/classes/class-form-fields-generator.php:8045
 #: lib/classes/class-icon-library.php:747
 msgid "rockrms"
-msgstr "rockrms"
+msgstr "rockarms"
 
 #: admin/settings.php:419
 msgid "Room Description"
@@ -7793,7 +8020,7 @@ msgstr "Immagine della stanza"
 msgid "Room Info:"
 msgstr "Informazioni sulla camera:"
 
-#: admin/settings.php:517 Frontend/RBFW_Woocommerse.php:512
+#: Frontend/RBFW_Woocommerse.php:512 admin/settings.php:517
 #: inc/rbfw_order_meta.php:198 inc/rbfw_order_meta.php:763
 #: lib/classes/class-thankyou-page.php:253
 #: lib/classes/class-thankyou-page.php:554
@@ -7824,10 +8051,15 @@ msgstr "Prezzo del servizio in camera"
 msgid "Room Service Qty"
 msgstr "Quantità del servizio in camera"
 
-#: admin/settings.php:412 inc/rbfw_inventory_functions.php:1302
-#: admin/settings/Pricing.php:1150 templates/forms/resort-registration.php:59
+#: admin/settings/Pricing.php:1150 admin/settings.php:412
+#: inc/rbfw_inventory_functions.php:1302
+#: templates/forms/resort-registration.php:59
 #: templates/template_segment/resort_info.php:55
 msgid "Room Type"
+msgstr "Tipologia di camera"
+
+#: admin/js/mkb-admin.js:1226 admin/js/mkb-admin.js:1238
+msgid "Room type"
 msgstr "Tipologia di camera"
 
 #: lib/classes/class-icon-library.php:1035
@@ -7969,10 +8201,8 @@ msgstr "ricerca-plus"
 msgid "searchengin"
 msgstr "motore di ricerca"
 
-#: functions.php:116 admin/settings/Security_Deposit.php:18
-#: admin/settings/Security_Deposit.php:24
-#: admin/settings/Security_Deposit.php:34
-#: admin/settings/Security_Deposit.php:57
+#: templates/template_segment/rbfw_timely_price_calculation.php:37
+#: templates/template_segment/timely_info.php:145
 msgid "Security Deposit"
 msgstr "Deposito cauzionale"
 
@@ -8012,9 +8242,23 @@ msgstr "Seleziona il colore secondario della pagina di prenotazione"
 msgid "Select Date"
 msgstr "Seleziona la data"
 
+#: templates/forms/multi-items-registration.php:256
+msgid "Select duration type"
+msgstr "Seleziona il tipo di durata"
+
 #: templates/forms/multi-items-registration.php:304
 msgid "Select Item to Rent"
 msgstr "Seleziona l'articolo da noleggiare"
+
+# Additional form field labels
+#: admin/settings/Location.php:70
+msgid "Select Location"
+msgstr "Seleziona la posizione"
+
+# Booking form elements
+#: templates/forms/multi-day-registration.php:440
+msgid "Select Quantity"
+msgstr "Seleziona Quantità"
 
 #: admin/settings.php:1614
 msgid "Select Rent List Page Secondary Color"
@@ -8052,6 +8296,10 @@ msgstr "Seleziona la classe fiscale"
 msgid "Select Tax Status"
 msgstr "Seleziona lo stato fiscale"
 
+#: templates/forms/multi-day-registration.php:467
+msgid "Select Variant"
+msgstr "Seleziona variante"
+
 #: inc/rbfw_order_meta.php:274
 msgid "Selected Items"
 msgstr "Elementi selezionati"
@@ -8080,11 +8328,27 @@ msgstr "Etichetta della categoria del servizio"
 msgid "Service Category Title"
 msgstr "Titolo della categoria del servizio"
 
-#: admin/settings.php:1148 Frontend/RBFW_Woocommerse.php:889
+#: admin/settings/Extra_Service.php:440 admin/settings/Extra_Service.php:466
+msgid "Service Description"
+msgstr "Descrizione del servizio"
+
+#: lib/classes/class-thankyou-page.php:213
+#: lib/classes/class-thankyou-page.php:219
+#: lib/classes/class-thankyou-page.php:225
+#: lib/classes/class-thankyou-page.php:232
+msgid "Service Details"
+msgstr "Dettagli del servizio"
+
+# Additional service and pricing strings
+#: admin/settings/Extra_Service.php:252
+msgid "Service Icon"
+msgstr "Icona del servizio"
+
+#: Frontend/RBFW_Woocommerse.php:889 admin/settings.php:1148
 msgid "Service Info"
 msgstr "Informazioni sul servizio"
 
-#: Frontend/RBFW_Woocommerse.php:539
+#: inc/rbfw_inventory_functions.php:516
 msgid "Service Information"
 msgstr "Informazioni sul servizio"
 
@@ -8092,8 +8356,8 @@ msgstr "Informazioni sul servizio"
 msgid "Service Information:"
 msgstr "Informazioni sul servizio:"
 
-#: admin/settings.php:1113 inc/rbfw_inventory_functions.php:1405
-#: admin/settings/Extra_Service.php:133
+#: admin/settings/Extra_Service.php:133 admin/settings.php:1113
+#: inc/rbfw_inventory_functions.php:1405
 #: templates/template_segment/resort_info.php:195
 #: templates/template_segment/single_day_info.php:176
 msgid "Service Name"
@@ -8104,7 +8368,6 @@ msgstr "Nome del servizio"
 msgid "servicestack"
 msgstr "stack di servizi"
 
-#: templates/forms/multi-day-registration.php:629
 #: templates/template_segment/resort_info.php:276
 msgid "Sessional pricing applied"
 msgstr "Prezzi applicati in base alla sessione"
@@ -8125,11 +8388,7 @@ msgstr "Imposta ordine Meta immagine in evidenza"
 msgid "setting"
 msgstr "collocamento"
 
-#: rent-manager.php:97 rent-manager.php:100 admin/settings/Settings.php:24
-#: lib/classes/class-admin-menu.php:37 lib/classes/class-admin-menu.php:37
-#: support/elementor/widget/rbfw-left-filter.php:37
-#: support/elementor/widget/rbfw-rent-add-to-cart.php:59
-#: support/elementor/widget/rbfw-rent-list.php:38
+#: rent-manager.php:89
 msgid "Settings"
 msgstr "Impostazioni"
 
@@ -8191,6 +8450,10 @@ msgstr "scudo-alt"
 msgid "ship"
 msgstr "nave"
 
+#: admin/settings/Settings.php:87
+msgid "Shipping Class"
+msgstr "Classe di spedizione"
+
 #: admin/settings/Tax.php:66 inc/woocommerce/class-meta.php:36
 msgid "Shipping only"
 msgstr "Solo spedizione"
@@ -8229,16 +8492,18 @@ msgstr "carrello-della-spesa-1"
 msgid "shopping-cart-2"
 msgstr "carrello-della-spesa-2"
 
-#: admin/settings/Pricing.php:186 admin/settings/Pricing.php:1054
-#: admin/settings/Pricing.php:1154 admin/settings/Pricing.php:1184
-#: admin/settings/Pricing.php:1233
-#: templates/ajax_form/rbfw_load_duration_form.php:12
+#: admin/js/mkb-admin.js:1230 admin/js/mkb-admin.js:1242
 msgid "Short Description"
 msgstr "Breve descrizione"
 
-#: templates/rental_lists.php:190 lib/classes/class-welcome-page.php:56
+#: lib/classes/class-welcome-page.php:56 templates/rental_lists.php:190
 msgid "Shortcode"
 msgstr "Codice abbreviato"
+
+# Shortcode related strings
+#: inc/rbfw_shortcodes.php:243 inc/rbfw_shortcodes.php:526
+msgid "Shortcode Output"
+msgstr "Output dello shortcode"
 
 #: lib/classes/class-welcome-page.php:34
 msgid "Shortcodes"
@@ -8259,12 +8524,21 @@ msgid "shower"
 msgstr "doccia"
 
 #: inc/rbfw_shortcodes.php:256 lib/classes/class-search-page.php:254
+#: templates/rental_lists.php:206
 msgid "Showing"
 msgstr "Mostrando"
 
 #: admin/settings.php:1589
 msgid "Showing "
 msgstr "Mostrando"
+
+# Additional template strings
+#: templates/single/donut/resort.php:130
+#: templates/single/donut/multiple-items.php:104
+#: templates/single/donut/single-day.php:119
+#: templates/single/donut/multi-day.php:104
+msgid "Sidebar Enabled"
+msgstr "Barra laterale abilitata"
 
 #: lib/classes/class-form-fields-generator.php:8079
 #: lib/classes/class-icon-library.php:781
@@ -8314,11 +8588,11 @@ msgstr "Colore di base della pagina singola-1"
 
 #: admin/settings.php:1648
 msgid "Single Page Base Color-2"
-msgstr "Colore di base pagina singola-2"
+msgstr "Colore di base della pagina singola-2"
 
 #: admin/settings.php:1655
 msgid "Single Page Base Color-3"
-msgstr "Colore di base della pagina singola-3"
+msgstr "Pagina singola Colore base-3"
 
 #: admin/settings.php:1664
 msgid "Single Page Base Color-6"
@@ -8474,7 +8748,8 @@ msgstr "snapchat-square"
 msgid "snowflake"
 msgstr "fiocco di neve"
 
-#: templates/forms/multi-day-registration.php:497
+#: templates/template_segment/single_day_info.php:151
+#: templates/template_segment/single_day_info.php:238
 msgid "Sold Out"
 msgstr "Esaurito"
 
@@ -8551,6 +8826,12 @@ msgstr "ordina numericamente"
 #: lib/classes/class-icon-library.php:811
 msgid "sort-up"
 msgstr "smistamento"
+
+#: lib/classes/class-form-fields-generator.php:170
+#: lib/classes/class-form-fields-generator.php:2480
+#: lib/classes/class-form-fields-generator.php:6954
+msgid "Sortable"
+msgstr "Ordinabile"
 
 #: lib/classes/class-form-fields-generator.php:8110
 #: lib/classes/class-icon-library.php:812
@@ -8649,28 +8930,33 @@ msgstr "stella-metà"
 msgid "stars"
 msgstr "stelle"
 
+#: inc/rbfw_shortcodes.php:719
+msgid "Start"
+msgstr "Inizio"
+
 #: admin/settings.php:1358
 msgid "Start Booking"
 msgstr "Inizia la prenotazione"
 
-#: admin/settings.php:728 Frontend/RBFW_Woocommerse.php:581
-#: Frontend/RBFW_Woocommerse.php:689 templates/cart_page.php:241
-#: templates/cart_page.php:581 admin/settings/Date_Time.php:178
-#: admin/settings/Off_Day.php:51 admin/settings/Off_Day.php:67
-#: admin/settings/Pricing.php:1708
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:55
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:61
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:55
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:61
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:121
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:127
 msgid "Start Date"
 msgstr "Data di inizio"
 
-#: admin/settings.php:952 Frontend/RBFW_Woocommerse.php:579
-#: Frontend/RBFW_Woocommerse.php:687 Frontend/RBFW_Woocommerse.php:847
+#: Frontend/RBFW_Woocommerse.php:579 Frontend/RBFW_Woocommerse.php:687
+#: Frontend/RBFW_Woocommerse.php:847 admin/settings.php:952
 #: inc/rbfw_order_meta.php:376 inc/rbfw_order_meta.php:897
-#: templates/cart_page.php:239 templates/cart_page.php:579
 #: lib/classes/class-thankyou-page.php:357
-#: lib/classes/class-thankyou-page.php:641
+#: lib/classes/class-thankyou-page.php:641 templates/cart_page.php:239
+#: templates/cart_page.php:579
 msgid "Start Date and Time"
 msgstr "Data e ora di inizio"
 
-#: admin/settings.php:735 admin/settings/Pricing.php:196
+#: admin/settings/Pricing.php:196 admin/settings.php:735
 msgid "Start Time"
 msgstr "Ora di inizio"
 
@@ -8681,8 +8967,7 @@ msgid "Start typing..."
 msgstr "Inizia a digitare..."
 
 #: admin/settings.php:994 admin/settings.php:1715 inc/rbfw_order_meta.php:537
-#: inc/woocommerce/class-status.php:24 inc/woocommerce/class-status.php:24
-#: lib/classes/class-admin-menu.php:73
+#: inc/woocommerce/class-status.php:24 lib/classes/class-admin-menu.php:73
 msgid "Status"
 msgstr "Stato"
 
@@ -8733,10 +9018,13 @@ msgstr "mulo adesivo"
 msgid "sticky-note"
 msgstr "post-it"
 
+#: admin/settings/Extra_Service.php:111 admin/settings/Extra_Service.php:135
+msgid "Stock"
+msgstr "Azione"
+
 #: admin/settings/Inventory.php:71 admin/settings/Inventory.php:90
-#: admin/settings/Inventory.php:135 admin/settings/Inventory.php:135
-#: admin/settings/Inventory.php:150 admin/settings/Inventory.php:186
-#: admin/settings/Inventory.php:272 admin/settings/Inventory.php:272
+#: admin/settings/Inventory.php:135 admin/settings/Inventory.php:150
+#: admin/settings/Inventory.php:186 admin/settings/Inventory.php:272
 #: admin/settings/Inventory.php:276 admin/settings/Inventory.php:296
 #: admin/settings/Inventory.php:300 admin/settings/Pricing.php:223
 #: admin/settings/Pricing.php:1155 admin/settings/Pricing.php:1185
@@ -8874,13 +9162,8 @@ msgstr "metropolitana"
 msgid "suitcase"
 msgstr "valigia"
 
-#: admin/settings.php:1575 inc/rbfw_order_meta.php:457
-#: inc/rbfw_order_meta.php:967
-msgid "Summary"
-msgstr "Riepilogo"
-
 #: templates/forms/multi-items-registration.php:364
-msgid "Summery"
+msgid "Summary"
 msgstr "Riepilogo"
 
 #: lib/classes/class-form-fields-generator.php:8149
@@ -8918,7 +9201,7 @@ msgstr "apice"
 msgid "supple"
 msgstr "flessibile"
 
-#: rent-manager.php:80 rent-manager.php:85
+#: rent-manager.php:101
 msgid "Support"
 msgstr "Supporto"
 
@@ -9022,9 +9305,9 @@ msgstr "bersaglio"
 msgid "tasks"
 msgstr "compiti"
 
-#: admin/settings.php:546 inc/rbfw_order_meta.php:472
-#: inc/rbfw_order_meta.php:977 admin/settings/Tax.php:18
-#: inc/woocommerce/class-meta.php:54 inc/woocommerce/class-meta.php:63
+#: admin/settings/Tax.php:18 admin/settings.php:546 inc/rbfw_order_meta.php:472
+#: inc/rbfw_order_meta.php:977 inc/woocommerce/class-meta.php:54
+#: inc/woocommerce/class-meta.php:63
 msgid "Tax"
 msgstr "Tassare"
 
@@ -9083,7 +9366,7 @@ msgstr "aereo-telegramma"
 msgid "telephone"
 msgstr "telefono"
 
-#: templates/rental_lists.php:189 admin/settings/Template.php:18
+#: admin/settings/Template.php:18 templates/rental_lists.php:189
 msgid "Template"
 msgstr "Modello"
 
@@ -9233,7 +9516,7 @@ msgstr ""
 
 #: admin/settings/Settings.php:124
 msgid "This short code you can put anywhere in your content."
-msgstr "Puoi inserire questo codice breve ovunque nel tuo contenuto."
+msgstr "Puoi inserire questo codice breve ovunque nei tuoi contenuti."
 
 #: lib/classes/class-form-fields-generator.php:8184
 #: lib/classes/class-form-fields-generator.php:8185
@@ -9276,7 +9559,7 @@ msgstr "spunta dentro un cerchio"
 msgid "ticket-alt"
 msgstr "biglietto-alt"
 
-#: admin/settings.php:1456 templates/template_segment/single_day_info.php:70
+#: templates/template_segment/single_day_info.php:70
 msgid "Time"
 msgstr "Tempo"
 
@@ -9289,7 +9572,7 @@ msgstr "tempo"
 msgid "Time (30 min slot)"
 msgstr "Tempo (fascia oraria di 30 minuti)"
 
-#: admin/settings/Date_Time.php:96
+#: admin/js/mkb-admin.js:1666
 msgid "Time Slot"
 msgstr "Fascia oraria"
 
@@ -9300,6 +9583,17 @@ msgstr "Fasce orarie"
 #: admin/settings/Pricing.php:1634
 msgid "Time Slots Configuration"
 msgstr "Configurazione degli slot di tempo"
+
+# Time slots and scheduling
+#: lib/classes/class-time-slots-page.php:74
+msgid "Time Slots Data"
+msgstr "Dati degli slot temporali"
+
+#: templates/template_segment/timely_info.php:3
+#: templates/template_segment/timely_info.php:12
+#: templates/template_segment/timely_info.php:23
+msgid "Timely Information"
+msgstr "Informazioni tempestive"
 
 #: lib/classes/class-form-fields-generator.php:8190
 #: lib/classes/class-icon-library.php:892
@@ -9322,9 +9616,17 @@ msgstr "tinta"
 msgid "Title"
 msgstr "Titolo"
 
+#: inc/rbfw_functions.php:1652 inc/rbfw_functions.php:1904
+msgid "Title Display"
+msgstr "Visualizzazione del titolo"
+
 #: support/elementor/widget/rbfw-left-filter.php:45
 msgid "Title Filter"
 msgstr "Filtro titolo"
+
+#: inc/rbfw_shortcodes.php:708
+msgid "Title search"
+msgstr "Ricerca del titolo"
 
 #: templates/forms/multi-day-registration.php:285
 msgid "To"
@@ -9384,7 +9686,7 @@ msgstr "Costo totale"
 
 #: templates/rental_lists.php:145
 msgid "Total Items"
-msgstr "Articoli totali"
+msgstr "Totale articoli"
 
 #: admin/settings.php:700
 msgid "Total Reviews"
@@ -9526,15 +9828,7 @@ msgstr "cinguettio"
 msgid "twitter-square"
 msgstr "twitter-square"
 
-#: admin/settings/Pricing.php:183 admin/settings/Pricing.php:1053
-#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:73
-#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:146
-#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:72
-#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:138
-#: templates/template_segment/rbfw_sd_types_with_sessional_price_html.php:75
-#: templates/template_segment/rbfw_sd_types_with_sessional_price_html.php:141
 #: templates/template_segment/single_day_info.php:82
-#: support/elementor/widget/rbfw-rent-list.php:101
 msgid "Type"
 msgstr "Tipo"
 
@@ -9627,7 +9921,7 @@ msgstr "freccia su"
 
 #: lib/classes/class-icon-library.php:1113
 msgid "up-arrow-inside-circle"
-msgstr "freccia su all'interno del cerchio"
+msgstr "freccia-su-all'interno-del-cerchio"
 
 #: lib/classes/class-icon-library.php:1078
 msgid "up-chevron"
@@ -9699,6 +9993,10 @@ msgstr "Usa come immagine in evidenza dell'ordine"
 msgid "Use as Order Meta featured image"
 msgstr "Usa come immagine in evidenza dell'ordine Meta"
 
+#: js/ttbm_script.js:2
+msgid "Use Strict"
+msgstr "Usa Rigoroso"
+
 #: admin/settings.php:1344
 msgid "User"
 msgstr "Utente"
@@ -9768,13 +10066,12 @@ msgstr "vaadin"
 
 #: admin/settings/Inventory.php:70 admin/settings/Inventory.php:87
 #: admin/settings/Inventory.php:134 admin/settings/Inventory.php:147
-#: admin/settings/Inventory.php:272 admin/settings/Inventory.php:272
-#: admin/settings/Inventory.php:276 admin/settings/Inventory.php:276
+#: admin/settings/Inventory.php:272 admin/settings/Inventory.php:276
 #: admin/settings/Inventory.php:296 admin/settings/Inventory.php:300
 msgid "Value Name"
 msgstr "Nome del valore"
 
-#: admin/settings.php:1134 Frontend/RBFW_Woocommerse.php:865
+#: Frontend/RBFW_Woocommerse.php:865 admin/settings.php:1134
 msgid "Variation Information"
 msgstr "Informazioni sulle variazioni"
 
@@ -9796,6 +10093,10 @@ msgstr "Venere-doppia"
 #: lib/classes/class-icon-library.php:950
 msgid "venus-mars"
 msgstr "Venere-Marte"
+
+#: lib/classes/class-admin-menu.php:330
+msgid "Version"
+msgstr "Versione"
 
 #: admin/settings.php:1519
 msgid "Very Good"
@@ -9845,6 +10146,10 @@ msgstr "video-slash"
 msgid "View "
 msgstr "Visualizzazione "
 
+#: inc/RBFW_Super_Slider.php:61
+msgid "View All"
+msgstr "Visualizza tutto"
+
 #: lib/classes/class-pro-page.php:33 lib/classes/class-welcome-page.php:40
 #: lib/classes/class-welcome-page.php:66 lib/classes/class-welcome-page.php:72
 #: lib/classes/class-welcome-page.php:78
@@ -9865,6 +10170,10 @@ msgstr "Visualizza la documentazione"
 #: lib/classes/class-thankyou-page.php:629
 msgid "View File"
 msgstr "Visualizza file"
+
+#: templates/rental_lists.php:84
+msgid "View Item"
+msgstr "Visualizza elemento"
 
 #: inc/rbfw_functions.php:2109 inc/rbfw_functions.php:2130
 #: inc/rbfw_functions.php:2191
@@ -9963,6 +10272,10 @@ msgstr "Mercoledì:"
 #: templates/forms/multi-items-registration.php:154
 msgid "Week"
 msgstr "Settimana"
+
+#: templates/forms/multi-items-registration.php:265
+msgid "Weekly"
+msgstr "Settimanale"
 
 #: admin/settings/Pricing.php:387
 #: templates/forms/multi-items-registration.php:136
@@ -10251,7 +10564,6 @@ msgstr "Non hai l'autorizzazione per eseguire questa azione."
 msgid "You May Also Like"
 msgstr "Potrebbe anche piacerti"
 
-#: admin/settings.php:1106 inc/class-bike-car-sd-function.php:395
 #: templates/template_segment/single_day_info.php:59
 msgid "You selected"
 msgstr "Hai selezionato"

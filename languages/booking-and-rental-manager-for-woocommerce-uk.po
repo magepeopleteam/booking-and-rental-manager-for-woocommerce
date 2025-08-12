@@ -1,21 +1,27 @@
+# Copyright (C) 2025
+# This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
 "Project-Id-Version: Booking and Rental Manager for Bike | Car | Resort | "
-"Appointment | Dress | Equipment - WpRently\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-12 01:58+0000\n"
-"PO-Revision-Date: 2025-08-12 02:13+0000\n"
+"Appointment | Dress | Equipment\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/booking-and-rental-"
+"manager-for-woocommerce\n"
+"POT-Creation-Date: 2025-08-12 06:06:15+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2025-08-12 08:11+0000\n"
 "Last-Translator: \n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10 >= 2 && "
 "n%10<=4 &&(n%100<10||n%100 >= 20)? 1 : 2);\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.8.0; wp-6.8.2; php-8.0.30\n"
-"X-Domain: booking-and-rental-manager-for-woocommerce"
+"X-Loco-Version: 2.8.0; wp-6.8.2; php-8.0.30"
+
+#: templates/rental_lists.php:206
+msgid " events"
+msgstr "події"
 
 #: admin/custom_post.php:93
 msgid " Featured Image"
@@ -72,11 +78,6 @@ msgstr "Тип"
 #: inc/rbfw_shortcodes.php:385
 msgid " »"
 msgstr "»"
-
-#: templates/rental_lists.php:167 templates/rental_lists.php:168
-#: templates/rental_lists.php:169 templates/rental_lists.php:170
-msgid ")"
-msgstr ")"
 
 #: admin/settings/Inventory.php:135 admin/settings/Inventory.php:272
 msgid "*"
@@ -319,10 +320,6 @@ msgstr "9:30 ранку"
 msgid "9:30 PM"
 msgstr "21:30"
 
-#. Description of the plugin
-msgid "A complete booking & rental solution for WordPress."
-msgstr "Комплексне рішення для бронювання та оренди для WordPress."
-
 #: lib/classes/class-icon-library.php:1161
 msgid "abc-block"
 msgstr "abc-блок"
@@ -337,16 +334,16 @@ msgstr "значок-доступності"
 msgid "accusoft"
 msgstr "аккусофт"
 
-#: admin/settings.php:1716 admin/settings/Inventory.php:78
-#: admin/settings/Inventory.php:142 admin/settings/Inventory.php:272
-#: admin/settings/Inventory.php:276 admin/settings/Pricing.php:208
-#: admin/settings/Pricing.php:1061 inc/woocommerce/class-status.php:64
+#: admin/settings/Inventory.php:78 admin/settings/Inventory.php:142
+#: admin/settings/Inventory.php:272 admin/settings/Inventory.php:276
+#: admin/settings/Pricing.php:208 admin/settings/Pricing.php:1061
+#: admin/settings.php:1716 inc/woocommerce/class-status.php:64
 #: lib/classes/class-admin-menu.php:75 lib/classes/class-time-slots-page.php:81
 msgid "Action"
 msgstr "Дія"
 
-#: templates/rental_lists.php:192 admin/settings/Date_Time.php:181
-#: admin/settings/Pricing.php:1711
+#: admin/settings/Date_Time.php:181 admin/settings/Pricing.php:1711
+#: templates/rental_lists.php:192
 msgid "Actions"
 msgstr "Дії"
 
@@ -417,6 +414,10 @@ msgstr "Додати нову категорію об'єктів"
 msgid "Add New Item"
 msgstr "Додати новий елемент"
 
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:109
+msgid "Add New Multi Day Saver"
+msgstr "Додати нову багатоденну знижку"
+
 #: admin/custom_post.php:126 admin/custom_post.php:127
 msgid "Add New Order"
 msgstr "Додати нове замовлення"
@@ -428,6 +429,11 @@ msgstr "Додати новий метапосилання на замовлен
 #: admin/settings/Pricing.php:1257
 msgid "Add New Resort Type"
 msgstr "Додати новий тип курорту"
+
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:117
+#: templates/template_segment/rbfw_sd_types_with_sessional_price_html.php:112
+msgid "Add New Seasonal Pricing"
+msgstr "Додати нові сезонні ціни"
 
 #: admin/settings/Extra_Service.php:284
 msgid "Add New Service"
@@ -521,8 +527,8 @@ msgstr "Додаткові послуги, які можуть вам сподо
 #: lib/classes/class-pro-page.php:44
 msgid "Addon: Seasonal Pricing extends the date-wise pricing features."
 msgstr ""
-"Доповнення: Сезонне ціноутворення розширює можливості ціноутворення за "
-"датами."
+"Доповнення: Сезонне ціноутворення розширює можливості ціноутворення залежно "
+"від дати."
 
 #: admin/settings.php:1036
 msgid "Address"
@@ -544,6 +550,15 @@ msgstr "адресна картка"
 #: lib/classes/class-icon-library.php:26
 msgid "adjust"
 msgstr "налаштувати"
+
+# Additional admin interface strings
+#: lib/classes/class-admin-menu.php:323 lib/classes/class-admin-menu.php:325
+#: lib/classes/class-admin-menu.php:326 lib/classes/class-admin-menu.php:327
+#: lib/classes/class-admin-menu.php:328 lib/classes/class-admin-menu.php:331
+#: lib/classes/class-admin-menu.php:332 lib/classes/class-admin-menu.php:335
+#: lib/classes/class-admin-menu.php:336 lib/classes/class-admin-menu.php:337
+msgid "Admin Wrapper"
+msgstr "Адміністраторська оболонка"
 
 #: lib/classes/class-form-fields-generator.php:7325
 #: lib/classes/class-icon-library.php:27
@@ -885,6 +900,11 @@ msgstr "У лівій позиції"
 msgid "At Right Position"
 msgstr "У правильному положенні"
 
+# Cart and checkout strings
+#: templates/cart_page.php:247 templates/cart_page.php:587
+msgid "At Time"
+msgstr "У часі"
+
 #: inc/RBFW_Super_Slider.php:336
 msgid "At Top Position"
 msgstr "На найвищій позиції"
@@ -930,14 +950,12 @@ msgstr "автопрефіксатор"
 msgid "Availabe"
 msgstr "Доступно"
 
-#: admin/settings/Pricing.php:366
+#: admin/js/mkb-admin.js:1231 admin/js/mkb-admin.js:1243
 msgid "Available Qty"
 msgstr "Доступна кількість"
 
-#: templates/forms/multi-day-registration.php:526
-#: templates/forms/multi-day-registration.php:597
 #: templates/forms/multi-items-registration.php:334
-#: templates/forms/multi-items-registration.php:492
+#: templates/forms/multi-day-registration.php:597
 msgid "Available Qty "
 msgstr "Доступна кількість"
 
@@ -962,6 +980,16 @@ msgstr "Доступна кількість:"
 #: inc/rbfw_inventory_functions.php:1287
 msgid "Available Quantity:"
 msgstr "Доступна кількість:"
+
+#: inc/rbfw_functions.php:871 inc/rbfw_functions.php:873
+msgid "Available Time"
+msgstr "Доступний час"
+
+# Date and time related strings
+#: admin/settings/Date_Time.php:51 admin/settings/Date_Time.php:227
+#: admin/settings/Date_Time.php:228
+msgid "Available Time Settings"
+msgstr "Доступні налаштування часу"
 
 #: admin/settings/Date_Time.php:111
 msgid "Available Time Slot"
@@ -1006,7 +1034,6 @@ msgstr "AWS"
 msgid "back"
 msgstr "назад"
 
-#: admin/settings.php:1099 inc/class-bike-car-sd-function.php:393
 #: templates/template_segment/single_day_info.php:53
 msgid "Back to Previous Step"
 msgstr "Назад до попереднього кроку"
@@ -1278,6 +1305,12 @@ msgstr "Забронюйте"
 msgid "Book Now"
 msgstr "Забронювати зараз"
 
+# Additional form validation and UI strings
+#: templates/forms/multi-items-registration.php:559
+#: templates/forms/multi-day-registration.php:766
+msgid "Book Now Button"
+msgstr "Кнопка «Забронювати зараз»"
+
 #: admin/settings.php:1043
 msgid "Book online"
 msgstr "Забронювати онлайн"
@@ -1297,14 +1330,6 @@ msgstr "Менеджер з бронювання та оренди"
 #: support/elementor/elementor-support.php:23
 msgid "Booking and Rental Manager"
 msgstr "Менеджер з бронювання та оренди"
-
-#. Name of the plugin
-msgid ""
-"Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | "
-"Equipment"
-msgstr ""
-"Менеджер з бронювання та прокату велосипедів | автомобілів | курортів | "
-"зустрічей | одягу | спорядження"
 
 #: lib/classes/class-pro-page.php:43
 msgid ""
@@ -1346,11 +1371,23 @@ msgstr "Календар бронювання."
 msgid "Booking Detail"
 msgstr "Деталі бронювання"
 
+#: inc/rbfw_order_meta.php:138 inc/rbfw_order_meta.php:145
+#: inc/rbfw_order_meta.php:593 inc/rbfw_order_meta.php:598
+#: inc/rbfw_order_meta.php:603 inc/rbfw_order_meta.php:617
+#: inc/rbfw_order_meta.php:622
+msgid "Booking Details"
+msgstr "Деталі бронювання"
+
 #: lib/classes/class-admin-menu.php:72
 msgid "Booking End Date"
 msgstr "Дата завершення бронювання"
 
-#: admin/settings.php:1008
+#: lib/classes/class-thankyou-page.php:179
+#: lib/classes/class-thankyou-page.php:184
+#: lib/classes/class-thankyou-page.php:189
+#: lib/classes/class-thankyou-page.php:194
+#: lib/classes/class-thankyou-page.php:199
+#: lib/classes/class-thankyou-page.php:204
 msgid "Booking Information"
 msgstr "Інформація про бронювання"
 
@@ -1358,7 +1395,6 @@ msgstr "Інформація про бронювання"
 msgid "Booking Start Date"
 msgstr "Дата початку бронювання"
 
-#: templates/forms/single-day-registration.php:143
 #: templates/template_segment/timely_info.php:123
 msgid "Booking Summary"
 msgstr "Зведення бронювання"
@@ -1607,6 +1643,10 @@ msgstr "каретка-квадрат"
 msgid "caret-up"
 msgstr "карет-ап"
 
+#: inc/rbfw_functions.php:1501 inc/rbfw_functions.php:1726
+msgid "Carousel Display"
+msgstr "Карусельний дисплей"
+
 #: templates/rental_lists.php:149
 msgid "Cars Available"
 msgstr "Доступні автомобілі"
@@ -1621,12 +1661,17 @@ msgstr "стрілка вниз кошика"
 msgid "cart-plus"
 msgstr "кошик-плюс"
 
+#: templates/archive/grid_new.php:176 templates/archive/list_new.php:171
+#: lib/classes/class-search-page.php:466
+msgid "Catalog Image"
+msgstr "Зображення каталогу"
+
 #: admin/taxonomy_register.php:8 admin/taxonomy_register.php:9
 #: support/elementor/widget/rbfw-rent-list.php:121
 msgid "Category"
 msgstr "Категорія"
 
-#: support/elementor/widget/rbfw-left-filter.php:84
+#: admin/custom_post.php:46 admin/custom_post.php:48
 msgid "Category Filter"
 msgstr "Фільтр категорії"
 
@@ -1638,7 +1683,7 @@ msgstr "Категорія послуг"
 msgid "Category Service Sold Qty"
 msgstr "Категорія Послуга Продана кількість"
 
-#: admin/settings/General_Info.php:56
+#: admin/settings/General_Info.php:55
 msgid "Category Settings"
 msgstr "Налаштування категорії"
 
@@ -1710,6 +1755,11 @@ msgstr "сертифікат"
 msgid "Change"
 msgstr "Зміна"
 
+# Additional comprehensive strings for better translation coverage
+#: templates/single/single-rbfw.php:10
+msgid "Character Set"
+msgstr "Набір символів"
+
 #: lib/classes/class-form-fields-generator.php:7490
 #: lib/classes/class-icon-library.php:192
 msgid "chart-area"
@@ -1757,12 +1807,12 @@ msgstr "перевірка колом"
 msgid "Check-In & Check-Out Date"
 msgstr "Дата заїзду та виїзду"
 
-#: admin/settings.php:356 Frontend/RBFW_Woocommerse.php:483
+#: Frontend/RBFW_Woocommerse.php:483 admin/settings.php:356
 #: templates/cart_page.php:78 templates/forms/resort-registration.php:188
 msgid "Check-In Date"
 msgstr "Дата заїзду"
 
-#: admin/settings.php:363 Frontend/RBFW_Woocommerse.php:484
+#: Frontend/RBFW_Woocommerse.php:484 admin/settings.php:363
 #: templates/cart_page.php:85 templates/forms/resort-registration.php:193
 msgid "Check-Out Date"
 msgstr "Дата виїзду"
@@ -1773,6 +1823,10 @@ msgstr "Дата виїзду"
 #: lib/classes/class-icon-library.php:201
 msgid "check-square"
 msgstr "шахівниця"
+
+#: lib/classes/class-form-fields-generator.php:182
+msgid "Checked"
+msgstr "Перевірено"
 
 #: admin/settings.php:756
 msgid "Checkout"
@@ -1946,6 +2000,17 @@ msgstr "Очистити"
 #: admin/settings.php:1064 templates/forms/single-day-registration.php:69
 msgid "Click a date to browse availability"
 msgstr "Натисніть на дату, щоб переглянути наявність місць"
+
+#: admin/settings/Pricing.php:1666 admin/settings/Pricing.php:1764
+#: admin/js/mkb-admin.js:1381 admin/js/mkb-admin.js:1392
+#: admin/js/mkb-admin.js:1410 admin/js/mkb-admin.js:1421
+msgid "Click to disable"
+msgstr "Натисніть, щоб вимкнути"
+
+#: lib/classes/class-form-fields-generator.php:4463
+#: lib/classes/class-form-fields-generator.php:4737
+msgid "click to remove"
+msgstr "натисніть, щоб видалити"
 
 #: lib/classes/class-form-fields-generator.php:7521
 #: lib/classes/class-form-fields-generator.php:7522
@@ -2259,7 +2324,7 @@ msgstr "кубики"
 msgid "Custom CSS"
 msgstr "Користувацький CSS"
 
-#: admin/settings.php:1309 Frontend/RBFW_Woocommerse.php:963
+#: Frontend/RBFW_Woocommerse.php:963 admin/settings.php:1309
 #: inc/rbfw_order_meta.php:349 inc/rbfw_order_meta.php:872
 #: lib/classes/class-thankyou-page.php:336
 #: lib/classes/class-thankyou-page.php:620
@@ -2282,6 +2347,7 @@ msgid "d-and-d"
 msgstr "д-і-д"
 
 #: templates/forms/multi-day-registration.php:195
+#: templates/forms/multi-items-registration.php:262
 msgid "Daily"
 msgstr "Щоденно"
 
@@ -2332,8 +2398,6 @@ msgstr "Дані успішно оновлено."
 msgid "database"
 msgstr "база даних"
 
-#: admin/custom_post.php:20 admin/settings.php:1449
-#: inc/rbfw_inventory_functions.php:764 inc/rbfw_inventory_functions.php:882
 #: templates/template_segment/single_day_info.php:66
 msgid "Date"
 msgstr "Дата"
@@ -2379,8 +2443,9 @@ msgstr "Дей Вайз"
 msgid "Day-long Price"
 msgstr "Ціна за день"
 
-#: admin/settings.php:1071 admin/settings/Pricing.php:1152
-#: templates/forms/resort-registration.php:60
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:75
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:75
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:141
 msgid "Day-long price"
 msgstr "Ціна за день"
 
@@ -2392,8 +2457,9 @@ msgstr "Цінова конфігурація на весь день"
 msgid "Day-night Price"
 msgstr "Ціна день-ніч"
 
-#: admin/settings.php:1078 admin/settings/Pricing.php:1153
-#: templates/forms/resort-registration.php:61
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:78
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:78
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:144
 msgid "Day-night price"
 msgstr "Ціна день-ніч"
 
@@ -2431,6 +2497,11 @@ msgstr "дні"
 msgid "deaf"
 msgstr "глухий"
 
+# Error and validation messages
+#: templates/single/single-rbfw.php:43
+msgid "Debug Information"
+msgstr "Інформація про налагодження"
+
 #: lib/classes/class-icon-library.php:1145
 msgid "decreasing"
 msgstr "зменшення"
@@ -2438,6 +2509,10 @@ msgstr "зменшення"
 #: admin/settings/Pricing.php:404
 msgid "Delete"
 msgstr "Видалити"
+
+#: templates/rental_lists.php:91
+msgid "Delete Item"
+msgstr "Видалити елемент"
 
 #: lib/classes/class-form-fields-generator.php:7579
 #: lib/classes/class-icon-library.php:281
@@ -2447,6 +2522,10 @@ msgstr "смачний"
 #: lib/classes/class-welcome-page.php:58
 msgid "Demo"
 msgstr "Демо"
+
+#: admin/settings/Template.php:151
+msgid "Dependency Field"
+msgstr "Поле залежності"
 
 #: lib/classes/class-form-fields-generator.php:7580
 #: lib/classes/class-icon-library.php:282
@@ -2461,9 +2540,8 @@ msgstr "опис"
 msgid "Descending"
 msgstr "Спадання"
 
-#: admin/settings.php:157 inc/rbfw_functions.php:644
-#: admin/settings/Extra_Service.php:401
-#: templates/single/default/multi-day.php:52
+#: admin/settings/Extra_Service.php:401 admin/settings.php:157
+#: inc/rbfw_functions.php:644 templates/single/default/multi-day.php:52
 #: templates/single/default/multiple-items.php:52
 #: templates/single/default/resort.php:40
 #: templates/single/default/single-day.php:55
@@ -2486,9 +2564,9 @@ msgstr "робочий стіл"
 
 #: lib/classes/class-icon-library.php:1036
 msgid "desktop-computer-with-magnifying-lens-focusing-on-data"
-msgstr "настільний-комп'ютер-зі-збільшувальною-лінзою-що-фокусує-на-даних"
+msgstr "настільний-комп'ютер-зі-з-лупою-що-фокусує-на-даних"
 
-#: inc/rbfw_order_meta.php:31 admin/settings/Security_Deposit.php:60
+#: admin/settings/Security_Deposit.php:60 inc/rbfw_order_meta.php:31
 msgid "Details"
 msgstr "Деталі"
 
@@ -2525,13 +2603,12 @@ msgstr "цифровий океан"
 msgid "discord"
 msgstr "розбрат"
 
-#: admin/settings.php:1211 Frontend/RBFW_Woocommerse.php:548
-#: Frontend/RBFW_Woocommerse.php:921 inc/class-resort-function.php:412
+#: Frontend/RBFW_Woocommerse.php:548 Frontend/RBFW_Woocommerse.php:921
+#: admin/settings.php:1211 inc/class-resort-function.php:412
 #: inc/rbfw_order_meta.php:438 inc/rbfw_order_meta.php:938
-#: templates/cart_page.php:158 templates/cart_page.php:510
 #: lib/classes/class-thankyou-page.php:394
-#: lib/classes/class-thankyou-page.php:679
-#: templates/forms/multi-day-registration.php:651
+#: lib/classes/class-thankyou-page.php:679 templates/cart_page.php:158
+#: templates/cart_page.php:510 templates/forms/multi-day-registration.php:651
 #: templates/forms/multi-items-registration.php:385
 msgid "Discount"
 msgstr "Знижка"
@@ -2549,6 +2626,11 @@ msgstr "дискурс"
 #: admin/settings/Settings.php:106
 msgid "Display item available quantity"
 msgstr "Відображати кількість товарів у наявності"
+
+#: inc/rbfw_functions.php:2105 inc/rbfw_functions.php:2126
+#: inc/rbfw_functions.php:2187
+msgid "Display Style"
+msgstr "Стиль відображення"
 
 #: lib/classes/class-form-fields-generator.php:7589
 #: lib/classes/class-icon-library.php:291
@@ -2569,7 +2651,7 @@ msgstr "дочуб"
 msgid "docker"
 msgstr "докер"
 
-#: rent-manager.php:79 rent-manager.php:84
+#: rent-manager.php:100
 msgid "Docs"
 msgstr "Документи"
 
@@ -2642,6 +2724,10 @@ msgstr "Завантажте PDF-чек для клієнтів."
 msgid "Download PRO Version Now"
 msgstr "Завантажте PRO-версію зараз"
 
+#: templates/rental_lists.php:71
+msgid "Draft"
+msgstr "Чернетка"
+
 #: lib/classes/class-form-fields-generator.php:7600
 #: lib/classes/class-icon-library.php:302
 msgid "draft2digital"
@@ -2677,8 +2763,8 @@ msgstr "Дата та час повернення"
 msgid "Drop-Off Location"
 msgstr "Місце видачі"
 
-#: admin/settings.php:257 Frontend/RBFW_Woocommerse.php:587
-#: Frontend/RBFW_Woocommerse.php:695 Frontend/RBFW_Woocommerse.php:853
+#: Frontend/RBFW_Woocommerse.php:587 Frontend/RBFW_Woocommerse.php:695
+#: Frontend/RBFW_Woocommerse.php:853 admin/settings.php:257
 #: inc/rbfw_order_meta.php:144 inc/rbfw_order_meta.php:715
 #: templates/forms/multi-day-registration.php:326
 #: templates/forms/multi-items-registration.php:191
@@ -2713,26 +2799,28 @@ msgstr "Друпал"
 msgid "Duplicate"
 msgstr "Дублікат"
 
+#: templates/rental_lists.php:90
+msgid "Duplicate Item"
+msgstr "Дублікат елемента"
+
 #: templates/rental_lists.php:87
 msgid "Duplicate Item "
 msgstr "Дублікат елемента"
 
-#: admin/settings.php:328 templates/cart_page.php:445
-#: admin/settings/Pricing.php:202
+#: admin/settings/Pricing.php:202 admin/settings.php:328
 #: templates/ajax_form/rbfw_load_duration_form.php:31
-#: templates/forms/multi-day-registration.php:415
+#: templates/cart_page.php:445 templates/forms/multi-day-registration.php:415
 #: templates/forms/multi-items-registration.php:293
 msgid "Duration"
 msgstr "Тривалість"
 
-#: admin/settings.php:468 Frontend/RBFW_Woocommerse.php:544
-#: Frontend/RBFW_Woocommerse.php:652 Frontend/RBFW_Woocommerse.php:917
+#: Frontend/RBFW_Woocommerse.php:544 Frontend/RBFW_Woocommerse.php:652
+#: Frontend/RBFW_Woocommerse.php:917 admin/settings.php:468
 #: inc/class-bike-car-sd-function.php:476 inc/class-resort-function.php:394
 #: inc/rbfw_order_meta.php:404 inc/rbfw_order_meta.php:416
-#: inc/rbfw_order_meta.php:919 templates/cart_page.php:144
-#: templates/cart_page.php:304 lib/classes/class-thankyou-page.php:382
-#: lib/classes/class-thankyou-page.php:666
-#: templates/forms/multi-day-registration.php:627
+#: inc/rbfw_order_meta.php:919 lib/classes/class-thankyou-page.php:382
+#: lib/classes/class-thankyou-page.php:666 templates/cart_page.php:144
+#: templates/cart_page.php:304 templates/forms/multi-day-registration.php:627
 #: templates/forms/single-day-registration.php:147
 #: templates/template_segment/rbfw_timely_price_calculation.php:18
 #: templates/template_segment/resort_info.php:273
@@ -2784,6 +2872,10 @@ msgstr "редагувати"
 #: admin/custom_post.php:86
 msgid "Edit "
 msgstr "Редагувати"
+
+#: templates/rental_lists.php:85
+msgid "Edit Item"
+msgstr "Редагувати елемент"
 
 #: admin/custom_post.php:129
 msgid "Edit Order"
@@ -2852,6 +2944,11 @@ msgstr "працівник"
 #: lib/classes/class-icon-library.php:1195
 msgid "employee-1"
 msgstr "співробітник-1"
+
+# Status and action strings
+#: inc/rbfw_inventory_functions.php:1292
+msgid "Empty"
+msgstr "Порожній"
 
 #: admin/settings/Template.php:141
 msgid "Enable Additional Gallery"
@@ -2937,20 +3034,20 @@ msgstr ""
 "Увімкнення цієї опції призведе до встановлення цін на основі дня тижня, "
 "замінюючи загальну денну ціну."
 
-#: admin/settings.php:742 admin/settings/Date_Time.php:179
-#: admin/settings/Off_Day.php:55 admin/settings/Off_Day.php:71
-#: admin/settings/Pricing.php:1709
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:61
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:61
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:127
 msgid "End Date"
 msgstr "Дата завершення"
 
-#: admin/settings.php:959 Frontend/RBFW_Woocommerse.php:848
+#: Frontend/RBFW_Woocommerse.php:848 admin/settings.php:959
 #: inc/rbfw_order_meta.php:384 inc/rbfw_order_meta.php:902
 #: lib/classes/class-thankyou-page.php:362
 #: lib/classes/class-thankyou-page.php:646
 msgid "End Date and Time"
 msgstr "Дата та час завершення"
 
-#: admin/settings.php:749 admin/settings/Pricing.php:199
+#: admin/settings/Pricing.php:199 admin/settings.php:749
 msgid "End Time"
 msgstr "Час завершення"
 
@@ -2961,6 +3058,14 @@ msgstr "Введіть -1, щоб показати всі елементи"
 #: admin/settings/Security_Deposit.php:77
 msgid "Enter Amount"
 msgstr "Введіть суму"
+
+#: admin/settings/Pricing.php:362 admin/settings/Pricing.php:895
+msgid "Enter item name"
+msgstr "Введіть назву елемента"
+
+#: lib/classes/class-time-slots-page.php:37
+msgid "Enter slot label here"
+msgstr "Введіть тут мітку слота"
 
 #: admin/settings.php:638
 msgid "Enter the translated text of <strong>1 Review.</strong>"
@@ -3415,7 +3520,7 @@ msgstr "Введіть перекладений текст <strong>Немає в
 
 #: admin/settings.php:511
 msgid "Enter the translated text of <strong>Package.</strong>"
-msgstr "Введіть перекладений текст <strong>Пакету</strong>."
+msgstr "Введіть перекладений текст <strong>Пакету.</strong>"
 
 #: admin/settings.php:834
 msgid "Enter the translated text of <strong>Password.</strong>"
@@ -3752,7 +3857,7 @@ msgstr "Введіть перекладений текст <strong>Надісл�
 
 #: admin/settings.php:483
 msgid "Enter the translated text of <strong>Subtotal.</strong>"
-msgstr "Введіть перекладений текст проміжного підсумку."
+msgstr "Введіть перекладений текст <strong>Проміжного підсумку</strong>."
 
 #: admin/settings.php:1576
 msgid "Enter the translated text of <strong>Summary.</strong>"
@@ -3889,6 +3994,10 @@ msgstr "гумка"
 msgid "erlang"
 msgstr "ерланг"
 
+#: inc/rbfw_shortcodes.php:356
+msgid "error"
+msgstr "помилка"
+
 #: lib/classes/class-form-fields-generator.php:7624
 #: lib/classes/class-icon-library.php:326
 msgid "ethereum"
@@ -3903,6 +4012,10 @@ msgstr "etsy"
 #: lib/classes/class-icon-library.php:328
 msgid "euro-sign"
 msgstr "знак євро"
+
+#: admin/settings/Pricing.php:162
+msgid "Ex: 10"
+msgstr "Наприклад: 10"
 
 #: admin/settings.php:1526
 msgid "Excellent"
@@ -3977,10 +4090,7 @@ msgstr "зовнішнє-посилання-квадрат-альт"
 msgid "Extra Service"
 msgstr "Додаткове обслуговування"
 
-#: admin/settings.php:945 Frontend/RBFW_Woocommerse.php:647
-#: Frontend/RBFW_Woocommerse.php:912 inc/rbfw_order_meta.php:224
-#: inc/rbfw_order_meta.php:788 lib/classes/class-thankyou-page.php:276
-#: lib/classes/class-thankyou-page.php:575
+#: lib/classes/class-thankyou-page.php:276
 msgid "Extra Service Information"
 msgstr "Додаткова інформація про послуги"
 
@@ -3999,6 +4109,10 @@ msgstr "Додатковий запас послуг"
 #: inc/rbfw_inventory_functions.php:1401
 msgid "Extra Services:"
 msgstr "Додаткові послуги:"
+
+#: templates/archive/list.php:264
+msgid "Extra Status"
+msgstr "Додатковий статус"
 
 #: lib/classes/class-form-fields-generator.php:7636
 #: lib/classes/class-icon-library.php:338
@@ -4130,11 +4244,24 @@ msgstr "Жінка"
 msgid "female"
 msgstr "жінка"
 
+# More form elements
+#: lib/classes/class-form-fields-generator.php:166
+#: lib/classes/class-form-fields-generator.php:286
+#: lib/classes/class-form-fields-generator.php:405
+msgid "Field Dependency"
+msgstr "Залежність від поля"
+
 #: admin/settings/Inventory.php:61 admin/settings/Inventory.php:63
 #: admin/settings/Inventory.php:125 admin/settings/Inventory.php:127
 #: admin/settings/Inventory.php:272 admin/settings/Inventory.php:276
 msgid "Field Label"
 msgstr "Мітка поля"
+
+# Form field generator strings
+#: lib/classes/class-form-fields-generator.php:430
+#: lib/classes/class-form-fields-generator.php:444
+msgid "Field Size"
+msgstr "Розмір поля"
 
 #: lib/classes/class-form-fields-generator.php:7648
 #: lib/classes/class-icon-library.php:350
@@ -4516,6 +4643,11 @@ msgstr "Галерея"
 msgid "Gallery Configuration"
 msgstr "Конфігурація галереї"
 
+# Gallery and media strings
+#: admin/settings/Gallery.php:49
+msgid "Gallery Dependency"
+msgstr "Залежність галереї"
+
 #: lib/classes/class-form-fields-generator.php:7710
 #: lib/classes/class-icon-library.php:412
 msgid "gamepad"
@@ -4546,7 +4678,7 @@ msgstr "безстатеві"
 msgid "General"
 msgstr "Загальне"
 
-#: admin/settings/General_Info.php:18
+#: admin/settings/General_Info.php:45
 msgid "General Info"
 msgstr "Загальна інформація"
 
@@ -4554,7 +4686,7 @@ msgstr "Загальна інформація"
 msgid "General Information"
 msgstr "Загальна інформація"
 
-#: admin/settings.php:18 admin/settings/General_Info.php:24
+#: admin/settings/General_Info.php:46
 msgid "General Settings"
 msgstr "Загальні налаштування"
 
@@ -4562,7 +4694,7 @@ msgstr "Загальні налаштування"
 msgid "General settings"
 msgstr "Загальні налаштування"
 
-#: rent-manager.php:98
+#: rent-manager.php:90
 msgid "Get Booking and Rental Manager Pro"
 msgstr "Отримайте Booking and Order Manager Pro"
 
@@ -4931,13 +5063,22 @@ msgstr "серце"
 msgid "heartbeat"
 msgstr "серцебиття"
 
-#: admin/settings/General_Info.php:58
+# More UI elements
+#: lib/classes/class-meta-box.php:92
+msgid "Help"
+msgstr "Допомога"
+
+#: admin/settings/General_Info.php:56
 msgid "Here you can check categories"
 msgstr "Тут ви можете переглянути категорії"
 
 #: admin/settings/Extra_Service.php:25
 msgid "Here you can configure additional extra service with rent item."
 msgstr "Тут ви можете налаштувати додаткові послуги з орендованим товаром."
+
+#: admin/settings/General_Info.php:47
+msgid "Here you can configure basic information"
+msgstr "Тут ви можете налаштувати основну інформацію"
 
 #: admin/settings/General_Info.php:25
 msgid "Here you can configure basic information."
@@ -4986,6 +5127,15 @@ msgstr "Тут ви можете налаштувати параметри ша�
 #: admin/settings/Extra_Service.php:390
 msgid "Here you can set extra service price."
 msgstr "Тут ви можете встановити вартість додаткової послуги."
+
+#: admin/settings/Inventory.php:233
+msgid "Hidden"
+msgstr "Прихований"
+
+# Archive and listing strings
+#: templates/archive/list.php:263
+msgid "Hidden Status"
+msgstr "Прихований статус"
 
 #: support/elementor/widget/rbfw-left-filter.php:50
 #: support/elementor/widget/rbfw-left-filter.php:63
@@ -5102,6 +5252,7 @@ msgid "hourglass-start"
 msgstr "початок пісочного годинника"
 
 #: templates/forms/multi-day-registration.php:207
+#: templates/forms/multi-items-registration.php:259
 msgid "Hourly"
 msgstr "Щогодини"
 
@@ -5154,14 +5305,6 @@ msgstr "houzz"
 #: lib/classes/class-icon-library.php:507
 msgid "html5"
 msgstr "html5"
-
-#. URI of the plugin
-msgid "https://mage-people.com"
-msgstr "https://mage-people.com"
-
-#. Author URI of the plugin
-msgid "https://www.mage-people.com/"
-msgstr "https://www.mage-people.com/"
 
 #: lib/classes/class-form-fields-generator.php:7806
 #: lib/classes/class-icon-library.php:508
@@ -5260,7 +5403,7 @@ msgstr "Якщо ви хочете дозволити бронювання в т
 msgid "If you want to inventory manage based on return, then yes it."
 msgstr "Якщо ви хочете керувати запасами на основі повернення, то так."
 
-#: templates/rental_lists.php:187 admin/settings/Pricing.php:1151
+#: admin/settings/Pricing.php:1151 templates/rental_lists.php:187
 #: templates/template_segment/resort_info.php:56
 #: templates/template_segment/resort_info.php:196
 msgid "Image"
@@ -5273,9 +5416,18 @@ msgstr "Зображення"
 msgid "image"
 msgstr "зображення"
 
+# Final comprehensive additions
+#: inc/rbfw_functions.php:357 inc/rbfw_functions.php:1991
+msgid "Image Display"
+msgstr "Відображення зображення"
+
 #: inc/RBFW_Super_Slider.php:315
 msgid "image Indicator"
 msgstr "Індикатор зображення"
+
+#: inc/RBFW_Super_Slider.php:61
+msgid "Images"
+msgstr "Зображення"
 
 #: lib/classes/class-form-fields-generator.php:7815
 #: lib/classes/class-form-fields-generator.php:7816
@@ -5361,8 +5513,8 @@ msgstr "Недійсний одноразовий номер."
 msgid "Invalid post type."
 msgstr "Недійсний тип публікації."
 
-#: inc/rbfw_inventory_functions.php:761 admin/settings/Inventory.php:21
-#: lib/classes/class-admin-menu.php:35 lib/classes/class-admin-menu.php:35
+#: admin/settings/Inventory.php:21 inc/rbfw_inventory_functions.php:761
+#: lib/classes/class-admin-menu.php:35
 msgid "Inventory"
 msgstr "Інвентаризація"
 
@@ -5441,21 +5593,15 @@ msgstr "курсив"
 msgid "Item"
 msgstr "Елемент"
 
-#: admin/settings.php:917 inc/rbfw_order_meta.php:103
-#: inc/rbfw_order_meta.php:690 lib/classes/class-thankyou-page.php:212
-#: lib/classes/class-thankyou-page.php:513
+#: inc/rbfw_order_meta.php:690
 msgid "Item Information"
 msgstr "Інформація про товар"
 
-#: admin/settings.php:924 inc/rbfw_inventory_functions.php:883
 #: inc/rbfw_order_meta.php:111 inc/rbfw_order_meta.php:120
-#: inc/rbfw_order_meta.php:696 admin/settings/Pricing.php:361
-#: lib/classes/class-thankyou-page.php:218
-#: lib/classes/class-thankyou-page.php:519
 msgid "Item Name"
 msgstr "Назва елемента"
 
-#: admin/settings.php:1141 Frontend/RBFW_Woocommerse.php:867
+#: Frontend/RBFW_Woocommerse.php:867 admin/settings.php:1141
 msgid "Item Quantity"
 msgstr "Кількість товару"
 
@@ -5467,10 +5613,13 @@ msgstr "Проданий товар Кількість"
 msgid "Item Stock"
 msgstr "Товар у наявності"
 
-#: admin/settings.php:931 inc/rbfw_order_meta.php:129
-#: inc/rbfw_order_meta.php:701
+#: inc/rbfw_order_meta.php:129
 msgid "Item Type"
 msgstr "Тип елемента"
+
+#: inc/rbfw_functions.php:2029
+msgid "Item Value"
+msgstr "Значення елемента"
 
 #: admin/settings/Inventory.php:218
 msgid "Item variation"
@@ -5743,6 +5892,10 @@ msgstr "список-ол"
 msgid "list-ul"
 msgstr "список-ул"
 
+#: templates/rental_lists.php:65
+msgid "Live"
+msgstr "Живий"
+
 #: inc/RBFW_Dependencies.php:167 templates/single/donut/multi-day.php:92
 #: templates/single/donut/multiple-items.php:92
 #: templates/single/donut/resort.php:117
@@ -5750,12 +5903,16 @@ msgstr "список-ул"
 msgid "Load More"
 msgstr "Завантажити більше"
 
+#: templates/rental_lists.php:209
+msgid "Load More Events"
+msgstr "Завантажити більше подій"
+
 #: inc/rbfw_functions.php:776
 msgid "Load More Icon"
 msgstr "Значок «Завантажити більше»"
 
-#: admin/taxonomy_register.php:30 admin/taxonomy_register.php:31
-#: admin/taxonomy_register.php:32 admin/settings/Location.php:20
+#: admin/settings/Location.php:20 admin/taxonomy_register.php:30
+#: admin/taxonomy_register.php:31 admin/taxonomy_register.php:32
 #: support/elementor/widget/rbfw-rent-list.php:111
 msgid "Location"
 msgstr "Розташування"
@@ -5767,6 +5924,12 @@ msgstr "Конфігурація розташування"
 #: support/elementor/widget/rbfw-left-filter.php:71
 msgid "Location Filter"
 msgstr "Фільтр місцезнаходження"
+
+# Location and shipping
+#: admin/settings/Location.php:70 admin/settings/Location.php:73
+#: admin/settings/Location.php:75
+msgid "Location Selection"
+msgstr "Вибір місця розташування"
 
 #: lib/classes/class-form-fields-generator.php:7871
 #: lib/classes/class-icon-library.php:573
@@ -5833,10 +5996,6 @@ msgstr "М"
 #: lib/classes/class-icon-library.php:582
 msgid "magento"
 msgstr "Мадженто"
-
-#. Author of the plugin
-msgid "MagePeople Team"
-msgstr "Команда MagePeople"
 
 #: lib/classes/class-form-fields-generator.php:7881
 #: lib/classes/class-icon-library.php:583
@@ -5948,6 +6107,14 @@ msgstr "Максимальна кількість днів, яку можна з
 msgid "medapps"
 msgstr "медичні додатки"
 
+#: lib/classes/class-settings-api.php:276
+#: lib/classes/class-settings-api.php:281
+#: lib/classes/class-settings-api.php:284
+#: lib/classes/class-settings-api.php:286
+#: lib/classes/class-settings-api.php:289
+msgid "Media Preview"
+msgstr "Попередній перегляд медіафайлів"
+
 #: lib/classes/class-icon-library.php:1062
 msgid "medical"
 msgstr "медичний"
@@ -6032,6 +6199,11 @@ msgstr "Мінімум"
 #: admin/settings.php:1260
 msgid "Minimum number of days have to book is"
 msgstr "Мінімальна кількість днів для бронювання"
+
+# Additional comprehensive translatable strings
+#: inc/rbfw_functions.php:857
+msgid "Minor Publishing"
+msgstr "Незначні видавничі справи"
 
 #: lib/classes/class-form-fields-generator.php:7909
 #: lib/classes/class-icon-library.php:611
@@ -6123,6 +6295,10 @@ msgstr "монітор"
 msgid "Month"
 msgstr "Місяць"
 
+#: templates/forms/multi-items-registration.php:268
+msgid "Monthly"
+msgstr "Щомісяця"
+
 #: admin/settings/Pricing.php:394
 #: templates/forms/multi-items-registration.php:139
 msgid "Monthly Price"
@@ -6154,7 +6330,6 @@ msgstr "вказівник миші"
 msgid "movie-tickets"
 msgstr "квитки в кіно"
 
-#: templates/forms/multi-day-registration.php:632
 #: templates/template_segment/resort_info.php:278
 msgid "Multi day pricing saver applied"
 msgstr "Застосовано знижку на багатоденну знижку"
@@ -6173,8 +6348,8 @@ msgstr "музика"
 msgid "music-player"
 msgstr "музичний плеєр"
 
-#: admin/settings.php:896 inc/rbfw_inventory_functions.php:1367
-#: inc/rbfw_order_meta.php:616 admin/settings/Extra_Service.php:400
+#: admin/settings/Extra_Service.php:400 admin/settings.php:896
+#: inc/rbfw_inventory_functions.php:1367 inc/rbfw_order_meta.php:616
 #: lib/classes/class-thankyou-page.php:188
 #: lib/classes/class-thankyou-page.php:494
 #: lib/classes/class-welcome-page.php:55
@@ -6235,9 +6410,19 @@ msgstr "Nintendo Switch"
 msgid "No"
 msgstr "Ні"
 
+# Additional admin strings
+#: admin/rbfw_custom_tables.php:23
+msgid "No Data"
+msgstr "Немає даних"
+
 #: admin/settings.php:1540
 msgid "No Items Available!"
 msgstr "Немає доступних товарів!"
+
+# Additional missing translatable strings found in codebase
+#: templates/rental_lists.php:97
+msgid "No posts found."
+msgstr "Не знайдено жодних публікацій."
 
 #: admin/settings.php:630
 msgid "No Review Yet"
@@ -6370,10 +6555,9 @@ msgstr "На очікуванні"
 msgid "On/Off Gutenburg"
 msgstr "Увімкнення/вимкнення Гутенбурга"
 
-#: admin/settings.php:342 admin/settings/Extra_Service.php:112
-#: admin/settings/Extra_Service.php:136 admin/settings/Extra_Service.php:261
-#: admin/settings/Extra_Service.php:324
-#: templates/forms/multi-day-registration.php:533
+#: admin/settings/Extra_Service.php:112 admin/settings/Extra_Service.php:136
+#: admin/settings/Extra_Service.php:261 admin/settings/Extra_Service.php:324
+#: admin/settings.php:342 templates/forms/multi-day-registration.php:533
 #: templates/forms/multi-items-registration.php:498
 msgid "One Time"
 msgstr "Один раз"
@@ -6428,6 +6612,10 @@ msgstr "Замовлення"
 msgid "order"
 msgstr "замовлення"
 
+#: inc/rbfw_order_meta.php:526
+msgid "Order #%s Details"
+msgstr "Замовлення №%s Деталі"
+
 #: lib/classes/class-admin-menu.php:70
 msgid "Order Created Date"
 msgstr "Дата створення замовлення"
@@ -6446,8 +6634,9 @@ msgstr "Деталі замовлення"
 msgid "Order Feature Image"
 msgstr "Зображення функції замовлення"
 
-#: admin/settings.php:875 lib/classes/class-thankyou-page.php:173
-#: lib/classes/class-thankyou-page.php:479
+#: inc/rbfw_order_meta.php:697 inc/rbfw_order_meta.php:702
+#: inc/rbfw_order_meta.php:709 inc/rbfw_order_meta.php:716
+#: inc/rbfw_order_meta.php:724
 msgid "Order Information"
 msgstr "Інформація про замовлення"
 
@@ -6456,8 +6645,7 @@ msgid "Order Item:"
 msgstr "Товар замовлення:"
 
 #: admin/custom_post.php:122 admin/custom_post.php:123
-#: lib/classes/class-admin-menu.php:34 lib/classes/class-admin-menu.php:34
-#: lib/classes/class-admin-menu.php:63
+#: lib/classes/class-admin-menu.php:34 lib/classes/class-admin-menu.php:63
 msgid "Order List"
 msgstr "Список замовлень"
 
@@ -6508,6 +6696,11 @@ msgstr "Замовлення не знайдено"
 msgid "Order Not found in Trash"
 msgstr "Замовлення не знайдено в кошику"
 
+# Order management strings
+#: inc/rbfw_order_meta.php:30
+msgid "Order Number"
+msgstr "Номер замовлення"
+
 #: admin/settings.php:882 lib/classes/class-thankyou-page.php:178
 #: lib/classes/class-thankyou-page.php:484
 msgid "Order number"
@@ -6551,10 +6744,10 @@ msgstr "Немає в наявності"
 msgid "outdent"
 msgstr "виступ"
 
-#: admin/settings.php:510 Frontend/RBFW_Woocommerse.php:485
+#: Frontend/RBFW_Woocommerse.php:485 admin/settings.php:510
 #: inc/rbfw_order_meta.php:154 inc/rbfw_order_meta.php:723
-#: templates/cart_page.php:92 lib/classes/class-thankyou-page.php:224
-#: lib/classes/class-thankyou-page.php:525
+#: lib/classes/class-thankyou-page.php:224
+#: lib/classes/class-thankyou-page.php:525 templates/cart_page.php:92
 msgid "Package"
 msgstr "Пакет"
 
@@ -6803,10 +6996,10 @@ msgstr "Місце отримання"
 msgid "Picked"
 msgstr "Вибрано"
 
-#: templates/cart_page.php:395 templates/forms/multi-day-registration.php:355
-#: templates/forms/multi-day-registration.php:358
 #: templates/forms/multi-items-registration.php:220
 #: templates/forms/multi-items-registration.php:223
+#: templates/forms/multi-day-registration.php:355
+#: templates/forms/multi-day-registration.php:358
 msgid "Pickup Date"
 msgstr "Дата отримання"
 
@@ -6818,8 +7011,8 @@ msgstr "Дата отримання"
 msgid "Pickup Date & Time"
 msgstr "Дата та час отримання"
 
-#: admin/settings.php:243 Frontend/RBFW_Woocommerse.php:584
-#: Frontend/RBFW_Woocommerse.php:692 Frontend/RBFW_Woocommerse.php:850
+#: Frontend/RBFW_Woocommerse.php:584 Frontend/RBFW_Woocommerse.php:692
+#: Frontend/RBFW_Woocommerse.php:850 admin/settings.php:243
 #: inc/rbfw_functions.php:3327 inc/rbfw_order_meta.php:137
 #: inc/rbfw_order_meta.php:708 inc/rbfw_shortcodes.php:523
 #: templates/forms/multi-day-registration.php:312
@@ -6827,6 +7020,10 @@ msgstr "Дата та час отримання"
 #: templates/forms/single-day-registration.php:34
 msgid "Pickup Location"
 msgstr "Місце отримання"
+
+#: inc/rbfw_order_meta.php:553
+msgid "Pickup Note"
+msgstr "Примітка про отримання"
 
 #: templates/cart_page.php:221 templates/cart_page.php:376
 #: templates/cart_page.php:561
@@ -7125,14 +7322,8 @@ msgstr "рецепт-пляшка-альт"
 msgid "Previous"
 msgstr "Попередній"
 
-#: admin/settings.php:1092 templates/ajax_form/rbfw_load_duration_form.php:15
-#: templates/ajax_form/rbfw_load_duration_form_sp.php:19
-#: templates/forms/multi-day-registration.php:660
-#: templates/forms/multi-items-registration.php:395
-#: templates/template_segment/resort_info.php:57
-#: templates/template_segment/resort_info.php:197
-#: templates/template_segment/single_day_info.php:85
-#: templates/template_segment/single_day_info.php:177
+#: admin/settings/Extra_Service.php:110 admin/settings/Extra_Service.php:134
+#: admin/settings/Pricing.php:362 admin/settings/Pricing.php:895
 msgid "Price"
 msgstr "Ціна"
 
@@ -7140,7 +7331,13 @@ msgstr "Ціна"
 msgid "Price <b class=\"required\">*</b>"
 msgstr "Ціна <b class=\"required\">*</b>"
 
-#: admin/settings/Pricing.php:55
+#: templates/cart_page.php:465 templates/cart_page.php:620
+#: Frontend/RBFW_Woocommerse.php:725 inc/rbfw_order_meta.php:325
+#: inc/rbfw_order_meta.php:854 inc/rbfw_order_meta.php:856
+msgid "Price Calculation"
+msgstr "Розрахунок ціни"
+
+#: admin/settings/Extra_Service.php:376
 msgid "Price Configuration"
 msgstr "Конфігурація ціни"
 
@@ -7172,6 +7369,14 @@ msgstr "Ціни починаються від"
 msgid "Pricing"
 msgstr "Ціноутворення"
 
+# Additional pricing and calculation strings
+#: admin/settings/Pricing.php:242 admin/settings/Pricing.php:285
+#: admin/settings/Pricing.php:1057 admin/settings/Pricing.php:1060
+#: admin/settings/Pricing.php:1094 admin/settings/Pricing.php:1097
+#: admin/settings/Pricing.php:1111
+msgid "Pricing Display"
+msgstr "Відображення цін"
+
 #: admin/settings.php:201 templates/forms/multi-day-registration.php:109
 #: templates/forms/multi-items-registration.php:115
 #: templates/forms/resort-registration.php:49
@@ -7181,6 +7386,13 @@ msgstr "Інформація про ціни"
 #: admin/settings.php:113
 msgid "Pricing Info Display"
 msgstr "Відображення інформації про ціни"
+
+#: admin/settings/Pricing.php:1329 admin/settings/Pricing.php:1335
+#: admin/settings/Pricing.php:1341 admin/settings/Pricing.php:1347
+#: admin/settings/Pricing.php:1353 admin/settings/Pricing.php:1359
+#: admin/settings/Pricing.php:1365
+msgid "Pricing Options"
+msgstr "Варіанти ціноутворення"
 
 #: lib/classes/class-form-fields-generator.php:8004
 #: lib/classes/class-icon-library.php:706
@@ -7245,9 +7457,8 @@ msgstr "Кількість Коробка"
 msgid "Quality"
 msgstr "Якість"
 
-#: admin/settings.php:567 templates/cart_page.php:425
-#: lib/classes/class-thankyou-page.php:377
-#: lib/classes/class-thankyou-page.php:661
+#: admin/settings.php:567 lib/classes/class-thankyou-page.php:377
+#: lib/classes/class-thankyou-page.php:661 templates/cart_page.php:425
 #: templates/forms/multi-day-registration.php:434
 #: templates/template_segment/resort_info.php:58
 #: templates/template_segment/resort_info.php:198
@@ -7272,7 +7483,7 @@ msgstr "питання"
 msgid "question-circle"
 msgstr "коло питань"
 
-#: admin/RBFW_Quick_Setup.php:32
+#: admin/RBFW_Quick_Setup.php:65 admin/RBFW_Quick_Setup.php:95
 msgid "Quick Setup"
 msgstr "Швидке налаштування"
 
@@ -7412,6 +7623,11 @@ msgstr "Повернено кошти"
 msgid "registered"
 msgstr "зареєстрований"
 
+# Additional missing strings from various files
+#: templates/template_segment/reg_form.php:3
+msgid "Registration Form"
+msgstr "Реєстраційна форма"
+
 #: admin/settings.php:854
 msgid "Registration Information"
 msgstr "Інформація про реєстрацію"
@@ -7420,8 +7636,8 @@ msgstr "Інформація про реєстрацію"
 msgid "Related"
 msgstr "Пов'язані"
 
-#: admin/settings.php:172 inc/rbfw_functions.php:432
-#: admin/settings/Related.php:24
+#: admin/settings/Related.php:24 admin/settings.php:172
+#: inc/rbfw_functions.php:432
 msgid "Related Items"
 msgstr "Пов'язані товари"
 
@@ -7445,6 +7661,12 @@ msgstr "Видалити зображення з орнаментом"
 #: admin/custom_post.php:185
 msgid "Remove Order Meta featured image"
 msgstr "Видалити зображення метазамовлення"
+
+#: admin/settings/Pricing.php:1667 admin/settings/Pricing.php:1765
+#: admin/js/mkb-admin.js:1382 admin/js/mkb-admin.js:1393
+#: admin/js/mkb-admin.js:1411 admin/js/mkb-admin.js:1422
+msgid "Remove time slot"
+msgstr "Видалити часовий інтервал"
 
 #: lib/classes/class-form-fields-generator.php:8034
 #: lib/classes/class-icon-library.php:736
@@ -7484,7 +7706,7 @@ msgstr "Форма фільтра орендної плати"
 msgid "Rent Info:"
 msgstr "Інформація про оренду:"
 
-#: admin/settings.php:938 Frontend/RBFW_Woocommerse.php:616
+#: Frontend/RBFW_Woocommerse.php:616 admin/settings.php:938
 #: inc/rbfw_order_meta.php:172 inc/rbfw_order_meta.php:739
 #: lib/classes/class-thankyou-page.php:231
 #: lib/classes/class-thankyou-page.php:532
@@ -7612,14 +7834,18 @@ msgstr "Скинути форму"
 msgid "resolving"
 msgstr "вирішення"
 
-#: admin/settings.php:475 Frontend/RBFW_Woocommerse.php:546
-#: Frontend/RBFW_Woocommerse.php:654 Frontend/RBFW_Woocommerse.php:919
+# Template and layout strings
+#: templates/template_segment/resort_info.php:68
+msgid "Resort Room Data"
+msgstr "Дані про номери курорту"
+
+#: Frontend/RBFW_Woocommerse.php:546 Frontend/RBFW_Woocommerse.php:654
+#: Frontend/RBFW_Woocommerse.php:919 admin/settings.php:475
 #: inc/class-bike-car-sd-function.php:478 inc/class-resort-function.php:395
 #: inc/rbfw_order_meta.php:428 inc/rbfw_order_meta.php:928
-#: templates/cart_page.php:151 templates/cart_page.php:313
 #: lib/classes/class-thankyou-page.php:387
-#: lib/classes/class-thankyou-page.php:672
-#: templates/forms/multi-day-registration.php:639
+#: lib/classes/class-thankyou-page.php:672 templates/cart_page.php:151
+#: templates/cart_page.php:313 templates/forms/multi-day-registration.php:639
 #: templates/forms/single-day-registration.php:152
 #: templates/template_segment/rbfw_timely_price_calculation.php:23
 #: templates/template_segment/resort_info.php:284
@@ -7646,11 +7872,11 @@ msgstr "Дата повернення"
 msgid "Return date"
 msgstr "Дата повернення"
 
-#: inc/rbfw_order_meta.php:556 inc/rbfw_order_meta.php:576
+#: inc/rbfw_order_meta.php:557
 msgid "Return Note"
 msgstr "Повернення Примітки"
 
-#: inc/rbfw_order_meta.php:560 inc/rbfw_order_meta.php:587
+#: inc/rbfw_order_meta.php:561
 msgid "Return Security Deposit"
 msgstr "Повернення гарантійного депозиту"
 
@@ -7754,7 +7980,7 @@ msgstr "Зображення кімнати"
 msgid "Room Info:"
 msgstr "Інформація про кімнату:"
 
-#: admin/settings.php:517 Frontend/RBFW_Woocommerse.php:512
+#: Frontend/RBFW_Woocommerse.php:512 admin/settings.php:517
 #: inc/rbfw_order_meta.php:198 inc/rbfw_order_meta.php:763
 #: lib/classes/class-thankyou-page.php:253
 #: lib/classes/class-thankyou-page.php:554
@@ -7785,10 +8011,15 @@ msgstr "Вартість обслуговування номерів"
 msgid "Room Service Qty"
 msgstr "Кількість послуг з обслуговування номерів"
 
-#: admin/settings.php:412 inc/rbfw_inventory_functions.php:1302
-#: admin/settings/Pricing.php:1150 templates/forms/resort-registration.php:59
+#: admin/settings/Pricing.php:1150 admin/settings.php:412
+#: inc/rbfw_inventory_functions.php:1302
+#: templates/forms/resort-registration.php:59
 #: templates/template_segment/resort_info.php:55
 msgid "Room Type"
+msgstr "Тип кімнати"
+
+#: admin/js/mkb-admin.js:1226 admin/js/mkb-admin.js:1238
+msgid "Room type"
 msgstr "Тип кімнати"
 
 #: lib/classes/class-icon-library.php:1035
@@ -7930,10 +8161,8 @@ msgstr "пошук-плюс"
 msgid "searchengin"
 msgstr "пошукова система"
 
-#: functions.php:116 admin/settings/Security_Deposit.php:18
-#: admin/settings/Security_Deposit.php:24
-#: admin/settings/Security_Deposit.php:34
-#: admin/settings/Security_Deposit.php:57
+#: templates/template_segment/rbfw_timely_price_calculation.php:37
+#: templates/template_segment/timely_info.php:145
 msgid "Security Deposit"
 msgstr "Застава"
 
@@ -7973,9 +8202,23 @@ msgstr "Виберіть додатковий колір сторінки бро
 msgid "Select Date"
 msgstr "Виберіть дату"
 
+#: templates/forms/multi-items-registration.php:256
+msgid "Select duration type"
+msgstr "Виберіть тип тривалості"
+
 #: templates/forms/multi-items-registration.php:304
 msgid "Select Item to Rent"
 msgstr "Виберіть предмет для оренди"
+
+# Additional form field labels
+#: admin/settings/Location.php:70
+msgid "Select Location"
+msgstr "Виберіть місцезнаходження"
+
+# Booking form elements
+#: templates/forms/multi-day-registration.php:440
+msgid "Select Quantity"
+msgstr "Виберіть кількість"
 
 #: admin/settings.php:1614
 msgid "Select Rent List Page Secondary Color"
@@ -8013,6 +8256,10 @@ msgstr "Виберіть податковий клас"
 msgid "Select Tax Status"
 msgstr "Виберіть податковий статус"
 
+#: templates/forms/multi-day-registration.php:467
+msgid "Select Variant"
+msgstr "Виберіть варіант"
+
 #: inc/rbfw_order_meta.php:274
 msgid "Selected Items"
 msgstr "Вибрані елементи"
@@ -8041,11 +8288,27 @@ msgstr "Мітка категорії послуг"
 msgid "Service Category Title"
 msgstr "Назва категорії послуги"
 
-#: admin/settings.php:1148 Frontend/RBFW_Woocommerse.php:889
+#: admin/settings/Extra_Service.php:440 admin/settings/Extra_Service.php:466
+msgid "Service Description"
+msgstr "Опис послуги"
+
+#: lib/classes/class-thankyou-page.php:213
+#: lib/classes/class-thankyou-page.php:219
+#: lib/classes/class-thankyou-page.php:225
+#: lib/classes/class-thankyou-page.php:232
+msgid "Service Details"
+msgstr "Деталі послуги"
+
+# Additional service and pricing strings
+#: admin/settings/Extra_Service.php:252
+msgid "Service Icon"
+msgstr "Значок служби"
+
+#: Frontend/RBFW_Woocommerse.php:889 admin/settings.php:1148
 msgid "Service Info"
 msgstr "Інформація про послугу"
 
-#: Frontend/RBFW_Woocommerse.php:539
+#: inc/rbfw_inventory_functions.php:516
 msgid "Service Information"
 msgstr "Інформація про сервіс"
 
@@ -8053,8 +8316,8 @@ msgstr "Інформація про сервіс"
 msgid "Service Information:"
 msgstr "Інформація про сервіс:"
 
-#: admin/settings.php:1113 inc/rbfw_inventory_functions.php:1405
-#: admin/settings/Extra_Service.php:133
+#: admin/settings/Extra_Service.php:133 admin/settings.php:1113
+#: inc/rbfw_inventory_functions.php:1405
 #: templates/template_segment/resort_info.php:195
 #: templates/template_segment/single_day_info.php:176
 msgid "Service Name"
@@ -8065,7 +8328,6 @@ msgstr "Назва служби"
 msgid "servicestack"
 msgstr "стек послуг"
 
-#: templates/forms/multi-day-registration.php:629
 #: templates/template_segment/resort_info.php:276
 msgid "Sessional pricing applied"
 msgstr "Застосовується сесійне ціноутворення"
@@ -8086,11 +8348,7 @@ msgstr "Встановити порядок Meta обране зображенн
 msgid "setting"
 msgstr "налаштування"
 
-#: rent-manager.php:97 rent-manager.php:100 admin/settings/Settings.php:24
-#: lib/classes/class-admin-menu.php:37 lib/classes/class-admin-menu.php:37
-#: support/elementor/widget/rbfw-left-filter.php:37
-#: support/elementor/widget/rbfw-rent-add-to-cart.php:59
-#: support/elementor/widget/rbfw-rent-list.php:38
+#: rent-manager.php:89
 msgid "Settings"
 msgstr "Налаштування"
 
@@ -8152,6 +8410,10 @@ msgstr "щит-альт"
 msgid "ship"
 msgstr "корабель"
 
+#: admin/settings/Settings.php:87
+msgid "Shipping Class"
+msgstr "Клас доставки"
+
 #: admin/settings/Tax.php:66 inc/woocommerce/class-meta.php:36
 msgid "Shipping only"
 msgstr "Тільки доставка"
@@ -8190,16 +8452,18 @@ msgstr "кошик-1"
 msgid "shopping-cart-2"
 msgstr "кошик-для-покупок-2"
 
-#: admin/settings/Pricing.php:186 admin/settings/Pricing.php:1054
-#: admin/settings/Pricing.php:1154 admin/settings/Pricing.php:1184
-#: admin/settings/Pricing.php:1233
-#: templates/ajax_form/rbfw_load_duration_form.php:12
+#: admin/js/mkb-admin.js:1230 admin/js/mkb-admin.js:1242
 msgid "Short Description"
 msgstr "Короткий опис"
 
-#: templates/rental_lists.php:190 lib/classes/class-welcome-page.php:56
+#: lib/classes/class-welcome-page.php:56 templates/rental_lists.php:190
 msgid "Shortcode"
 msgstr "Короткий код"
+
+# Shortcode related strings
+#: inc/rbfw_shortcodes.php:243 inc/rbfw_shortcodes.php:526
+msgid "Shortcode Output"
+msgstr "Вивід короткого коду"
 
 #: lib/classes/class-welcome-page.php:34
 msgid "Shortcodes"
@@ -8220,12 +8484,21 @@ msgid "shower"
 msgstr "душ"
 
 #: inc/rbfw_shortcodes.php:256 lib/classes/class-search-page.php:254
+#: templates/rental_lists.php:206
 msgid "Showing"
 msgstr "Показ"
 
 #: admin/settings.php:1589
 msgid "Showing "
 msgstr "Показ"
+
+# Additional template strings
+#: templates/single/donut/resort.php:130
+#: templates/single/donut/multiple-items.php:104
+#: templates/single/donut/single-day.php:119
+#: templates/single/donut/multi-day.php:104
+msgid "Sidebar Enabled"
+msgstr "Бічна панель увімкнена"
 
 #: lib/classes/class-form-fields-generator.php:8079
 #: lib/classes/class-icon-library.php:781
@@ -8435,7 +8708,8 @@ msgstr "Snapchat-сквер"
 msgid "snowflake"
 msgstr "сніжинка"
 
-#: templates/forms/multi-day-registration.php:497
+#: templates/template_segment/single_day_info.php:151
+#: templates/template_segment/single_day_info.php:238
 msgid "Sold Out"
 msgstr "Розпродано"
 
@@ -8510,6 +8784,12 @@ msgstr "сортування за числовим принципом"
 #: lib/classes/class-icon-library.php:811
 msgid "sort-up"
 msgstr "сортування"
+
+#: lib/classes/class-form-fields-generator.php:170
+#: lib/classes/class-form-fields-generator.php:2480
+#: lib/classes/class-form-fields-generator.php:6954
+msgid "Sortable"
+msgstr "Сортування"
 
 #: lib/classes/class-form-fields-generator.php:8110
 #: lib/classes/class-icon-library.php:812
@@ -8608,28 +8888,33 @@ msgstr "зірка-половина"
 msgid "stars"
 msgstr "зірки"
 
+#: inc/rbfw_shortcodes.php:719
+msgid "Start"
+msgstr "Початок"
+
 #: admin/settings.php:1358
 msgid "Start Booking"
 msgstr "Почати бронювання"
 
-#: admin/settings.php:728 Frontend/RBFW_Woocommerse.php:581
-#: Frontend/RBFW_Woocommerse.php:689 templates/cart_page.php:241
-#: templates/cart_page.php:581 admin/settings/Date_Time.php:178
-#: admin/settings/Off_Day.php:51 admin/settings/Off_Day.php:67
-#: admin/settings/Pricing.php:1708
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:55
+#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:61
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:55
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:61
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:121
+#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:127
 msgid "Start Date"
 msgstr "Дата початку"
 
-#: admin/settings.php:952 Frontend/RBFW_Woocommerse.php:579
-#: Frontend/RBFW_Woocommerse.php:687 Frontend/RBFW_Woocommerse.php:847
+#: Frontend/RBFW_Woocommerse.php:579 Frontend/RBFW_Woocommerse.php:687
+#: Frontend/RBFW_Woocommerse.php:847 admin/settings.php:952
 #: inc/rbfw_order_meta.php:376 inc/rbfw_order_meta.php:897
-#: templates/cart_page.php:239 templates/cart_page.php:579
 #: lib/classes/class-thankyou-page.php:357
-#: lib/classes/class-thankyou-page.php:641
+#: lib/classes/class-thankyou-page.php:641 templates/cart_page.php:239
+#: templates/cart_page.php:579
 msgid "Start Date and Time"
 msgstr "Дата та час початку"
 
-#: admin/settings.php:735 admin/settings/Pricing.php:196
+#: admin/settings/Pricing.php:196 admin/settings.php:735
 msgid "Start Time"
 msgstr "Час початку"
 
@@ -8640,8 +8925,7 @@ msgid "Start typing..."
 msgstr "Почніть друкувати..."
 
 #: admin/settings.php:994 admin/settings.php:1715 inc/rbfw_order_meta.php:537
-#: inc/woocommerce/class-status.php:24 inc/woocommerce/class-status.php:24
-#: lib/classes/class-admin-menu.php:73
+#: inc/woocommerce/class-status.php:24 lib/classes/class-admin-menu.php:73
 msgid "Status"
 msgstr "Статус"
 
@@ -8692,10 +8976,13 @@ msgstr "наклейка-мул"
 msgid "sticky-note"
 msgstr "стікер-нотатка"
 
+#: admin/settings/Extra_Service.php:111 admin/settings/Extra_Service.php:135
+msgid "Stock"
+msgstr "Запас"
+
 #: admin/settings/Inventory.php:71 admin/settings/Inventory.php:90
-#: admin/settings/Inventory.php:135 admin/settings/Inventory.php:135
-#: admin/settings/Inventory.php:150 admin/settings/Inventory.php:186
-#: admin/settings/Inventory.php:272 admin/settings/Inventory.php:272
+#: admin/settings/Inventory.php:135 admin/settings/Inventory.php:150
+#: admin/settings/Inventory.php:186 admin/settings/Inventory.php:272
 #: admin/settings/Inventory.php:276 admin/settings/Inventory.php:296
 #: admin/settings/Inventory.php:300 admin/settings/Pricing.php:223
 #: admin/settings/Pricing.php:1155 admin/settings/Pricing.php:1185
@@ -8833,14 +9120,9 @@ msgstr "метро"
 msgid "suitcase"
 msgstr "валіза"
 
-#: admin/settings.php:1575 inc/rbfw_order_meta.php:457
-#: inc/rbfw_order_meta.php:967
+#: templates/forms/multi-items-registration.php:364
 msgid "Summary"
 msgstr "Короткий зміст"
-
-#: templates/forms/multi-items-registration.php:364
-msgid "Summery"
-msgstr "Літній"
 
 #: lib/classes/class-form-fields-generator.php:8149
 #: lib/classes/class-form-fields-generator.php:8150
@@ -8877,7 +9159,7 @@ msgstr "надрядковий індекс"
 msgid "supple"
 msgstr "гнучкий"
 
-#: rent-manager.php:80 rent-manager.php:85
+#: rent-manager.php:101
 msgid "Support"
 msgstr "Підтримка"
 
@@ -8981,9 +9263,9 @@ msgstr "ціль"
 msgid "tasks"
 msgstr "завдання"
 
-#: admin/settings.php:546 inc/rbfw_order_meta.php:472
-#: inc/rbfw_order_meta.php:977 admin/settings/Tax.php:18
-#: inc/woocommerce/class-meta.php:54 inc/woocommerce/class-meta.php:63
+#: admin/settings/Tax.php:18 admin/settings.php:546 inc/rbfw_order_meta.php:472
+#: inc/rbfw_order_meta.php:977 inc/woocommerce/class-meta.php:54
+#: inc/woocommerce/class-meta.php:63
 msgid "Tax"
 msgstr "Податок"
 
@@ -9042,7 +9324,7 @@ msgstr "телеграма-літак"
 msgid "telephone"
 msgstr "телефон"
 
-#: templates/rental_lists.php:189 admin/settings/Template.php:18
+#: admin/settings/Template.php:18 templates/rental_lists.php:189
 msgid "Template"
 msgstr "Шаблон"
 
@@ -9066,7 +9348,7 @@ msgstr "Жахливий"
 
 #: lib/classes/class-icon-library.php:1037
 msgid "test-tube-flask-and-drop-of-blood"
-msgstr "пробірка-і-крапля-крові"
+msgstr "пробірка-колба-і-крапля-крові"
 
 #: admin/settings.php:1281 inc/rbfw_functions.php:2025
 msgid "Testimonials"
@@ -9119,7 +9401,7 @@ msgid ""
 "get started."
 msgstr ""
 "Дякуємо, що обрали плагін Booking and Rental Manager для WooCommerce для "
-"свого сайту. Будь ласка, виконайте крок за кроком та виберіть кілька опцій, "
+"свого сайту. Будь ласка, виконайте крок за кроком і виберіть кілька опцій, "
 "щоб розпочати."
 
 #: admin/settings.php:1705
@@ -9232,7 +9514,7 @@ msgstr "галочка-в-колі"
 msgid "ticket-alt"
 msgstr "альтернативний квиток"
 
-#: admin/settings.php:1456 templates/template_segment/single_day_info.php:70
+#: templates/template_segment/single_day_info.php:70
 msgid "Time"
 msgstr "Час"
 
@@ -9245,7 +9527,7 @@ msgstr "час"
 msgid "Time (30 min slot)"
 msgstr "Час (30-хвилинний інтервал)"
 
-#: admin/settings/Date_Time.php:96
+#: admin/js/mkb-admin.js:1666
 msgid "Time Slot"
 msgstr "Часовий інтервал"
 
@@ -9256,6 +9538,17 @@ msgstr "Часові інтервали"
 #: admin/settings/Pricing.php:1634
 msgid "Time Slots Configuration"
 msgstr "Конфігурація часових інтервалів"
+
+# Time slots and scheduling
+#: lib/classes/class-time-slots-page.php:74
+msgid "Time Slots Data"
+msgstr "Дані про часові інтервали"
+
+#: templates/template_segment/timely_info.php:3
+#: templates/template_segment/timely_info.php:12
+#: templates/template_segment/timely_info.php:23
+msgid "Timely Information"
+msgstr "Своєчасна інформація"
 
 #: lib/classes/class-form-fields-generator.php:8190
 #: lib/classes/class-icon-library.php:892
@@ -9278,9 +9571,17 @@ msgstr "відтінок"
 msgid "Title"
 msgstr "Назва"
 
+#: inc/rbfw_functions.php:1652 inc/rbfw_functions.php:1904
+msgid "Title Display"
+msgstr "Відображення заголовка"
+
 #: support/elementor/widget/rbfw-left-filter.php:45
 msgid "Title Filter"
 msgstr "Фільтр заголовків"
+
+#: inc/rbfw_shortcodes.php:708
+msgid "Title search"
+msgstr "Пошук заголовків"
 
 #: templates/forms/multi-day-registration.php:285
 msgid "To"
@@ -9482,15 +9783,7 @@ msgstr "твіттер"
 msgid "twitter-square"
 msgstr "твіттер-сквер"
 
-#: admin/settings/Pricing.php:183 admin/settings/Pricing.php:1053
-#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:73
-#: templates/template_segment/rbfw_room_types_with_sessional_price_html.php:146
-#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:72
-#: templates/template_segment/rbfw_room_types_with_sessional_price_mds_html.php:138
-#: templates/template_segment/rbfw_sd_types_with_sessional_price_html.php:75
-#: templates/template_segment/rbfw_sd_types_with_sessional_price_html.php:141
 #: templates/template_segment/single_day_info.php:82
-#: support/elementor/widget/rbfw-rent-list.php:101
 msgid "Type"
 msgstr "Тип"
 
@@ -9655,6 +9948,10 @@ msgstr "Використати як зображення для замовлен
 msgid "Use as Order Meta featured image"
 msgstr "Використати як зображення в метазамовленні"
 
+#: js/ttbm_script.js:2
+msgid "Use Strict"
+msgstr "Використовувати суворий"
+
 #: admin/settings.php:1344
 msgid "User"
 msgstr "Користувач"
@@ -9724,13 +10021,12 @@ msgstr "ваадін"
 
 #: admin/settings/Inventory.php:70 admin/settings/Inventory.php:87
 #: admin/settings/Inventory.php:134 admin/settings/Inventory.php:147
-#: admin/settings/Inventory.php:272 admin/settings/Inventory.php:272
-#: admin/settings/Inventory.php:276 admin/settings/Inventory.php:276
+#: admin/settings/Inventory.php:272 admin/settings/Inventory.php:276
 #: admin/settings/Inventory.php:296 admin/settings/Inventory.php:300
 msgid "Value Name"
 msgstr "Назва значення"
 
-#: admin/settings.php:1134 Frontend/RBFW_Woocommerse.php:865
+#: Frontend/RBFW_Woocommerse.php:865 admin/settings.php:1134
 msgid "Variation Information"
 msgstr "Інформація про варіації"
 
@@ -9752,6 +10048,10 @@ msgstr "подвійна Венера"
 #: lib/classes/class-icon-library.php:950
 msgid "venus-mars"
 msgstr "Венера-Марс"
+
+#: lib/classes/class-admin-menu.php:330
+msgid "Version"
+msgstr "Версія"
 
 #: admin/settings.php:1519
 msgid "Very Good"
@@ -9801,6 +10101,10 @@ msgstr "відео-слеш"
 msgid "View "
 msgstr "Переглянути"
 
+#: inc/RBFW_Super_Slider.php:61
+msgid "View All"
+msgstr "Переглянути всі"
+
 #: lib/classes/class-pro-page.php:33 lib/classes/class-welcome-page.php:40
 #: lib/classes/class-welcome-page.php:66 lib/classes/class-welcome-page.php:72
 #: lib/classes/class-welcome-page.php:78
@@ -9821,6 +10125,10 @@ msgstr "Переглянути документацію"
 #: lib/classes/class-thankyou-page.php:629
 msgid "View File"
 msgstr "Переглянути файл"
+
+#: templates/rental_lists.php:84
+msgid "View Item"
+msgstr "Переглянути елемент"
 
 #: inc/rbfw_functions.php:2109 inc/rbfw_functions.php:2130
 #: inc/rbfw_functions.php:2191
@@ -9919,6 +10227,10 @@ msgstr "Середа:"
 #: templates/forms/multi-items-registration.php:154
 msgid "Week"
 msgstr "Тиждень"
+
+#: templates/forms/multi-items-registration.php:265
+msgid "Weekly"
+msgstr "Щотижнево"
 
 #: admin/settings/Pricing.php:387
 #: templates/forms/multi-items-registration.php:136
@@ -10208,7 +10520,6 @@ msgstr "У вас немає дозволу на виконання цієї д�
 msgid "You May Also Like"
 msgstr "Вам також може сподобатися"
 
-#: admin/settings.php:1106 inc/class-bike-car-sd-function.php:395
 #: templates/template_segment/single_day_info.php:59
 msgid "You selected"
 msgstr "Ви вибрали"
