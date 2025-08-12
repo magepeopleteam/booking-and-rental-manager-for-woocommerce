@@ -26,7 +26,6 @@
     $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($rbfw_id, 'rbfw_available_qty_info_switch', true) : 'no';
 
 
-
 ?>
 
 	<!--    Main Layout-->
@@ -93,14 +92,35 @@
                     ?>
                     <div class="item">
                         <div class="item-content rbfw-datetime">
-                            <div class="date">
-                                <label class="rbfw-single-right-heading"><?php _e('Rental Start Date','booking-and-rental-manager-for-woocommerce'); ?></label>
+
+                            <div class="<?php echo ($rbfw_enable_time_picker == 'yes' && $enable_specific_duration =='off')?'left':'' ?> date">
+                                <label class="rbfw-single-right-heading">
+                                    <?php _e('Rental Start Date','booking-and-rental-manager-for-woocommerce'); ?>
+                                </label>
                                 <div class="rbfw-p-relative">
                                     <span class="calendar"><i class="fas fa-calendar-days"></i></span>
                                     <input class="rbfw-input rbfw-time-price pickup_date_timely" type="text"   placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Select Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" style="background-position: 95% center">
                                     <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                 </div>
                             </div>
+
+                            <?php if($rbfw_enable_time_picker == 'yes' && $enable_specific_duration =='off'){ ?>
+                                <div class="right time">
+                                    <div class="rbfw-single-right-heading">
+                                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
+                                    </div>
+                                    <div class="rbfw-p-relative">
+                                        <span class="clock">
+                                            <i class="fa-regular fa-clock"></i>
+                                        </span>
+                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time" required>
+                                            <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup Time','booking-and-rental-manager-for-woocommerce'))); ?></option>
+                                        </select>
+                                        <span class="input-picker-icon"></span>
+                                    </div>
+                                </div>
+                            <?php } ?>
+
                         </div>
                     </div>
 

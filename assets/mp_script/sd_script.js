@@ -32,14 +32,18 @@
             let time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
             let start_date_ymd = jQuery('#rbfw_bikecarsd_selected_date').val();
 
+
+
             if(manage_inventory_as_timely=='on'){
                 if(enable_specific_duration=='on'){
+                    /*enable specific time and time slot not factor*/
                     rbfw_service_type_timely_stock_ajax(post_id,start_date_ymd,'','on');
                 }else{
                     if(time_slot_switch=='no'){
+                        /*disable specific time and time slot disable*/
                         rbfw_service_type_timely_stock_ajax(post_id,start_date_ymd,'',enable_specific_duration);
                     }else{
-
+                        /*disable specific time and time slot enable*/
                         jQuery('body').on('change',  '.rbfw_bikecarsd_pricing_table_wrap #pickup_time',function (e) {
 
                             let post_id = jQuery('.rbfw_post_id').val();
