@@ -136,12 +136,14 @@ jQuery(document).on('click','.rbfw_chk_availability_btn',function(e) {
 
 
 
-jQuery('.rbfw_room_qty').on('input', function() {
+/*jQuery('.rbfw_room_qty').on('input', function() {*/
+jQuery(document).on('input','.rbfw_room_qty',function(e) {
     calculateTotalDurationPrice();
 });
 
 // Plus button
-jQuery('.rbfw_room_qty_plus').on('click', function() { alert(12);
+/*jQuery('.rbfw_room_qty_plus').on('click', function() {*/
+jQuery(document).on('click','.rbfw_room_qty_plus',function(e) {
     let input = jQuery(this).siblings('input[type="number"]');
     let max = parseInt(input.attr('max')) || 9999;
     let current = parseInt(input.val()) || 0;
@@ -151,7 +153,8 @@ jQuery('.rbfw_room_qty_plus').on('click', function() { alert(12);
 });
 
 // Minus button
-jQuery('.rbfw_room_qty_plus').on('click', function() {
+/*jQuery('.rbfw_room_qty_minus').on('click', function() {*/
+jQuery(document).on('click','.rbfw_room_qty_minus',function(e) {
     let input = jQuery(this).siblings('input[type="number"]');
     let min = parseInt(input.attr('min')) || 0;
     let current = parseInt(input.val()) || 0;
@@ -163,10 +166,10 @@ jQuery('.rbfw_room_qty_plus').on('click', function() {
 
 function calculateTotalDurationPrice() {
     let room_duration_price = 0;
-
+    let hasQty = false;
     jQuery('.rbfw_room_qty').each(function() {
-        let qty = parseInt($(this).val()) || 0;
-        let price = parseFloat($(this).data('price')) || 0;
+        let qty = parseInt(jQuery(this).val()) || 0;
+        let price = parseFloat(jQuery(this).data('price')) || 0;
         room_duration_price += qty * price;
         if (qty > 0) {
             hasQty = true; // mark that we found one
@@ -187,6 +190,8 @@ function calculateTotalDurationPrice() {
 
     // You can update this in a DOM element, console, or wherever you want
     jQuery('#rbfw_room_duration_price').val(room_duration_price.toFixed(2));
+
+    jQuery('.duration-costing .price-figure').text(rbfw_translation.currency + room_duration_price.toFixed(2));
 }
 
 /*

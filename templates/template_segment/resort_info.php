@@ -278,7 +278,7 @@ if(isset($post_id) && isset($active_tab)){
                         <?php } ?>
                     </span>
                 </span>
-                <span><?php echo esc_html($currency_symbol); ?><span class="price-figure" data-price="0">0</span></span>
+                <span><span class="price-figure" data-price="0"><?php echo esc_html($currency_symbol); ?>0</span></span>
             </li>
             <li class="resource-costing rbfw-cond"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce'))); ?>  <span><?php echo esc_html($currency_symbol); ?><span class="price-figure" data-price="0">0</span></span></li>
             <li class="subtotal"> <?php echo esc_html($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce'))); ?><span><?php echo esc_html($currency_symbol); ?><span class="price-figure">0.00</span></span></li>
@@ -295,7 +295,7 @@ if(class_exists('Rbfw_Reg_Form')){
 }
 ?>
 
-    <input type="hidden" name="rbfw_room_duration_price" value="0"/>
+    <input type="hidden" name="rbfw_room_duration_price" id="rbfw_room_duration_price" value="0"/>
     <input type="hidden" name="rbfw_extra_service_orice" value="0"/>
 
     <div class="item rbfw_text_book_now">
