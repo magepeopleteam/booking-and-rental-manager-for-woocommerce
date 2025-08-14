@@ -33,7 +33,6 @@
             let start_date_ymd = jQuery('#rbfw_bikecarsd_selected_date').val();
 
 
-
             if(manage_inventory_as_timely=='on'){
                 if(enable_specific_duration=='on'){
                     /*enable specific time and time slot not factor*/
@@ -120,8 +119,6 @@
                                 }, 100);
                             }
                     });
-
-
                 }
             }
         });

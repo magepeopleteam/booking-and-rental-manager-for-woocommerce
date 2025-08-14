@@ -238,11 +238,7 @@ jQuery('body').on('focusin', '.pickup_date_search', function(e) {
 
             let minDate = new Date(gYear,  gMonth - 1, gDay );
             minDate.setDate(minDate.getDate() + rbfw_minimum_booking_day);
-
             jQuery(".dropoff_date_search").datepicker("option", "minDate", minDate);
-
-
-
         },
     });
 
@@ -723,7 +719,7 @@ function rbfw_multi_items_ajax_price_calculation(){
     });
 }
 
-function calculateAdditional(only_calculation=false) {
+function calculateAdditional() {
     let total = 0;
     jQuery('.rbfw_muiti_items_additional_service_qty').each(function () {
         const price = parseFloat(jQuery(this).data('price')) || 0;
@@ -744,20 +740,14 @@ function calculateAdditional(only_calculation=false) {
         jQuery('#AddonsPrice').hide();
     }
 
-
     jQuery('#rbfw_service_category_price').val(total.toFixed(2));
-
     total = total + parseInt(jQuery('#rbfw_multi_item_price').val());
+    jQuery('.price-figure').text(rbfw_translation.currency+total.toFixed(2));
 
-    if(only_calculation){
-        jQuery('.price-figure').text(rbfw_translation.currency+total.toFixed(2))
-    }else{
-        rbfw_multi_items_ajax_price_calculation();
-    }
 }
 
 function calculateTotalExtraService() {
-    let total = 0;
+    let extra_service_price = 0;
 
     // Loop through all checked services
     jQuery('.rbfw-resource-price:checked').each(function() {
@@ -767,26 +757,47 @@ function calculateTotalExtraService() {
         let qtyInput = jQuery(this).closest('tr').find('.rbfw_bikecarmd_es_qty');
         let qty = parseInt(qtyInput.val()) || 1;
 
-        total += price * qty;
+        extra_service_price += price * qty;
     });
 
     // Show total in a container with id="total_price"
-    jQuery('#rbfw_es_service_price').val(total.toFixed(2));
+    var rbfw_service_price = jQuery('#rbfw_service_price').val();
+    jQuery('#rbfw_es_service_price').val(extra_service_price.toFixed(2));
+
+    var resourse_cost = parseFloat(rbfw_service_price) + parseFloat(extra_service_price);
+
+    jQuery('.resource-costing span').text(rbfw_translation.currency + resourse_cost.toFixed(2));
+
+    var total_price = resourse_cost + parseFloat(jQuery('#rbfw_duration_price').val());
+
+    jQuery('.subtotal .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
+    jQuery('.total .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
+
 }
 
 function calculateTotalSingleItem() {
-    let total = 0;
+    let service_price = 0;
 
     // Loop through all checked services
     jQuery('.rbfw_service_price_data:checked').each(function() {
         let price = parseFloat(jQuery(this).data('price')) || 0;
         let qtyInput = jQuery('input[name="' + jQuery(this).attr('name').replace('[main_cat_name]', '[quantity]') + '"]');
         let qty = parseInt(qtyInput.val()) || 1;
-        total += price * qty;
+        service_price += price * qty;
     });
 
     // Show total in an element with id="total_price"
-    jQuery('#rbfw_service_price').val(total.toFixed(2));
+    jQuery('#rbfw_service_price').val(service_price.toFixed(2));
+
+    var resourse_cost = service_price + parseInt(jQuery('#rbfw_es_service_price').val());
+
+    jQuery('.resource-costing span').text(rbfw_translation.currency + resourse_cost.toFixed(2));
+    
+    var total_price = resourse_cost + parseFloat(jQuery('#rbfw_duration_price').val());
+
+    jQuery('.subtotal .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
+    jQuery('.total .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
+
 }
 
 
