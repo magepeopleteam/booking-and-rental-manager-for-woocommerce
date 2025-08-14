@@ -82,6 +82,7 @@ function rbfw_free_woocommerce_integrate(){
     require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-status.php");
     require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/class-meta.php");
     require_once(RBFW_PLUGIN_DIR . "/inc/woocommerce/rbfw_cart_price_function.php");
+    require_once(RBFW_PLUGIN_DIR . "/inc/rbfw_woocommerce_products.php");
 
 }
 
