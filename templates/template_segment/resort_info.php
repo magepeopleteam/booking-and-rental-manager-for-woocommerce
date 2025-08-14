@@ -48,6 +48,7 @@ if(isset($post_id) && isset($active_tab)){
     </div>
 
     <input type="hidden" name="rbfw_room_price_category" value="<?php echo esc_attr($active_tab); ?>"/>
+
     <div class="rbfw_resort_rt_price_table_container">
         <table class="rbfw_room_price_table rbfw_resort_rt_price_table">
             <thead>
@@ -64,8 +65,6 @@ if(isset($post_id) && isset($active_tab)){
             $i = 0;
 
             setcookie("pricing_applied", "No");
-
-            //echo '<pre>';print_r($rbfw_resort_room_data);echo '<pre>';
 
             foreach ($rbfw_resort_room_data as $key => $value) {
                 $img_url    = wp_get_attachment_url($value['rbfw_room_image']);
@@ -288,14 +287,17 @@ if(isset($post_id) && isset($active_tab)){
         <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
     </div>
 </div>
-
-<?php
+    <?php
 /* Include Custom Registration Form */
 if(class_exists('Rbfw_Reg_Form')){
     $reg_form = new Rbfw_Reg_Form();
     echo wp_kses($reg_form->rbfw_generate_regf_fields($post_id),rbfw_allowed_html());
 }
 ?>
+
+    <input type="hidden" name="rbfw_room_duration_price" value="0"/>
+    <input type="hidden" name="rbfw_extra_service_orice" value="0"/>
+
     <div class="item rbfw_text_book_now">
         <button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_resort_book_now_btn rbfw_disabled_button" disabled>
             <?php echo esc_html($rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'))); ?>
