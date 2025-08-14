@@ -82,8 +82,10 @@
                         </label>
                         <p><?php esc_html_e( 'Price will be changed based on this type selection', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     
-					<?php $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd'; ?>
-					<?php
+					<?php 
+                        $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+                        $rbfw_item_type = $rbfw_item_type?$rbfw_item_type:'bike_car_sd';
+                        $rbfw_item_type = ($rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others')?"bike_car_md":$rbfw_item_type;
                         $item_type = [
                             'bike_car_sd'     =>[
                                                     'name' => 'Single day',
