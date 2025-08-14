@@ -113,6 +113,7 @@
                 'class'       => true,
                 'name'        => true,
                 'id'          => true,
+                'required'    => true,
             ),
             'option'   => array(
                 'style'       => true, // Allows inline styles
@@ -167,6 +168,8 @@
                 'id'          => true,
                 'class'          => true,
             ),
+
+
 
 
 
