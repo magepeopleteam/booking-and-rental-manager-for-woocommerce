@@ -52,6 +52,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'left-category-filter' => 'on',
         'left-type-filter' => 'on',
         'left-feature-filter' => 'on',
+        'hide-price' => 'no',
     ), $atts );
 
     $style  = $attributes['style'];
@@ -65,6 +66,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     $cat_ids   = $attributes['cat_ids'];
     $columns   = $attributes['columns'];
     $left_filter   = $attributes['left-filter'];
+    $hide_price = $attributes['hide-price'];
     $left_filter_control = array(
         'title_filter_shown'    => $attributes['left-title-filter'],
         'price_filter_shown'    => $attributes['left-price-filter'],
@@ -335,6 +337,9 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                     $grid=RBFW_Function::get_template_path('archive/grid_new.php');
 //                $list=RBFW_Function::get_template_path('archive/list.php');
                     $list=RBFW_Function::get_template_path('archive/list_new.php');
+                    
+                    // Pass hide_price to templates
+                    $rbfw_hide_price = $hide_price;
 
                     if($style == 'grid'){
                         include($grid);

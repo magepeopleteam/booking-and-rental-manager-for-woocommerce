@@ -182,10 +182,12 @@
                             <h2 class="rbfw_rent_list_grid_title">
                                 <a href="<?php echo esc_url( $post_link ); ?>"><?php echo esc_html( $post_title ); ?></a>
                             </h2>
+                            <?php if( !isset($rbfw_hide_price) || $rbfw_hide_price !== 'yes' ): ?>
                             <div class="rbfw_rent_list_grid_row rbfw_pricing-box">
                                 <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo wp_kses( wc_price( $price ) , rbfw_allowed_html() ); ?></span></p>
                                 <span class="rbfw_rent_list_row_price_level">/ <?php echo esc_html( $price_level ); ?></span>
                             </div>
+                            <?php endif; ?>
                         </div>
                         <div class="rbfw_rent_item_description" id="rbfw_rent_item_description">
                             <p class="rbfw_rent_item_description_text" style="display: <?php echo esc_attr( $is_display ) ?>">
