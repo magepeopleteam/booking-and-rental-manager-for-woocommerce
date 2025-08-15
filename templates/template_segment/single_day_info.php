@@ -260,7 +260,7 @@ if(isset($_POST['post_id'])){
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                         </li>
                         <?php if(!empty($rbfw_extra_service_data)){ ?>
-                            <li class="resource-costing rbfw-cond">
+                            <li class="extra_service_cost rbfw-cond">
                                 <?php echo esc_html($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce'))); ?>
                                 <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                             </li>
