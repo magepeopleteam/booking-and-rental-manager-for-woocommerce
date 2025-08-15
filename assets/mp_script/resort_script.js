@@ -314,8 +314,8 @@ jQuery(document).on('change','.rbfw_room_qty,.rbfw_service_qty',function (e) {
         jQuery(target_input).val(update_value);
         jQuery(target_input).attr('value',update_value);
     }else{
-        let notice = "<?php rbfw_string('rbfw_text_available_qty_is',__('Available Quantity is: ','booking-and-rental-manager-for-woocommerce')); ?>";
-        tippy(this, {content: notice + max_value, theme: 'blue',placement: 'top',trigger: 'click'});
+        let notice = rbfw_translation.available_quantity_is;
+        tippy(this, {content: notice +' '+ max_value, theme: 'blue',placement: 'top',trigger: 'click'});
     }
 });*/
 

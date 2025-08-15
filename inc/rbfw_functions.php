@@ -2690,7 +2690,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         );
     }
 
-    return ['duration_price' => $duration_price, 'total_days' => $total_days, 'actual_days' => $actual_days, 'hours' => $hours,'pricing_applied'=>$_COOKIE['pricing_applied']];
+    return ['duration_price' => $duration_price, 'total_days' => $total_days, 'actual_days' => $actual_days, 'hours' => $hours,'pricing_applied'=>isset($_COOKIE['pricing_applied'])?$_COOKIE['pricing_applied']:''];
 }
 
 
@@ -3480,4 +3480,15 @@ function rbfw_end_time(){
     }else{
         return '00:00:00';
     }
+}
+
+
+add_action( 'rbfw_ticket_feature_info', 'rbfw_ticket_feature_info' );
+function rbfw_ticket_feature_info(){
+?>
+<div class="rbfw-bikecarsd-calendar-header">
+	<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-clock"></i> <?php rbfw_string('rbfw_text_real_time_availability',__('Real-time availability','booking-and-rental-manager-for-woocommerce')); ?></div>
+	<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-bolt"></i> <?php rbfw_string('rbfw_text_instant_confirmation',__('Instant confirmation','booking-and-rental-manager-for-woocommerce')); ?></div>
+</div>
+<?php
 }

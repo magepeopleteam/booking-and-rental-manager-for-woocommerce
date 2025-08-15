@@ -665,7 +665,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                         <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
                     </div>
                 </div>
-
+                
                 <?php
 
                 $rbfw_minimum_booking_day = 0;
@@ -746,7 +746,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
 
 
 
-
+                
                 <?php if(rbfw_chk_regf_fields_exist($rbfw_id) === true){ ?>
                     <div class="item">
                         <div class="rbfw_reg_form_rb" style="display: none">
@@ -757,7 +757,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                         </div>
 
                         <?php $rbfw_product_id = get_post_meta( $rbfw_id, 'link_wc_product', true ) ? get_post_meta( $rbfw_id, 'link_wc_product', true ) : get_the_ID(); ?>
-
+                        <?php do_action('rbfw_ticket_feature_info'); ?>
                         <button type="submit" name="<?php echo esc_attr($submit_name); ?>" value="<?php echo esc_attr($rbfw_product_id); ?>" class="rbfw_mps_book_now_btn_regf_____ mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarmd_book_now_btn"  disabled >
                             <?php rbfw_string('rbfw_text_book_now',__('Book Now','booking-and-rental-manager-for-woocommerce')); ?>
                         </button>
@@ -776,7 +776,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                     echo '<div class="mps_alert_warning">'.esc_html(rbfw_string_return('rbfw_text_booking_expired',__('Booking Time Expired!','booking-and-rental-manager-for-woocommerce'))).'</div>';
                 } ?>
             </div>
-
+                
             <div class="rbfw-bikecarmd-result-wrap">
                 <div class="rbfw-bikecarmd-result-loader">
                 </div>

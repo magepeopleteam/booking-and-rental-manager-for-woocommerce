@@ -81,23 +81,53 @@
 							<?php esc_html_e( 'Rent Types', 'booking-and-rental-manager-for-woocommerce' ); ?>
                         </label>
                         <p><?php esc_html_e( 'Price will be changed based on this type selection', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                    
+					<?php 
+                        $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+                        $rbfw_item_type = $rbfw_item_type?$rbfw_item_type:'bike_car_sd';
+                        $rbfw_item_type = ($rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others')?"bike_car_md":$rbfw_item_type;
+                        $item_type = [
+                            'bike_car_sd'     =>[
+                                                    'name' => 'Single day',
+                                                    'desc' => 'This option is ideal for rentals such as <b>bikes</b>, <b>boats</b>, <b>yachts</b>, <b>kayaks</b>, or similar items that can be hired for a full day, by the hour, or for a specific time slot within a single day. It provides flexibility for both hourly and fixed-duration',
+                                                    'icon' => 'fa fa-calendar-day'
+                                                ],
+                            'bike_car_md'     =>[
+                                                    'name' => 'Multiple day',  
+                                                    'desc' => 'This option is perfect for rentals like <b>cars</b>, <b>equipment</b>, <b>dresses</b>, <b>sports kits</b>, or similar items that customers can hire for one day or several days. Customers can select a date range for their booking, and you can set pricing by the hour, per day, or for weekends.',   
+                                                    'icon' => 'fa fa-calendar-alt'
+                                                ],
+                            'resort'          =>[
+                                                    'name' => 'Resort',  
+                                                    'desc' => 'This option is designed for resorts or similar accommodations where you can set <b>day-night</b> price or <b>day-long</b> price. The total price is automatically calculated based on the number of days the customer selects for their stay.',                       
+                                                    'icon' => 'fa fa-hotel'
+                                                ],
+                            'appointment'     =>[
+                                                    'name' => 'Appointment', 
+                                                    'desc' => 'This option is ideal for appointment-based services such as <b>barbers</b>, <b>spas</b>, <b>yoga classes</b>, <b>consultations</b>, <b>hair care</b>, and similar activities. Pricing can be set according to the specific service offered.',                   
+                                                    'icon' => 'fa fa-calendar-check'
+                                                ],  
+                            'multiple_items'  =>[
+                                                    'name' => 'Multiple day for multiple items',
+                                                    'desc' => 'This option is perfect for renting out multiple items over multiple days. You can set pricing by the <b>hour</b>, <b>per day</b>, <b>per week</b>, or <b>per month</b>, giving customers flexible rental choices.',
+                                                    'icon' => 'fa fa-layer-group'
+                                                ],
+                        ];
+                    ?>
+
+                        <div class="rbfw-tent-types">
+                            <div class="rbfw-rent-type-desc"></div>
+                            <input type="hidden" name="rbfw_item_type" id="rbfw_item_type" value="<?php echo esc_attr($rbfw_item_type); ?>">
+                            <?php foreach ( $item_type as $key => $value ): ?>
+                                <div class="rbfw-rent-type <?php echo esc_attr( $key == $rbfw_item_type ? 'selected' : '' ); ?>" data-rent-type="<?php echo esc_attr( $key ); ?>" data-rent-type-desc="<?php echo esc_html( $value['desc'] ); ?>"> 
+                                    <div class="icon"><i class="<?php echo esc_html( $value['icon'] ); ?>"></i></div>
+                                    <?php echo esc_html( $value['name'] ); ?> 
+                                </div>
+                                
+                            <?php endforeach; ?>
+                            
+                        </div>
                     </div>
-					<?php $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd'; ?>
-					<?php $item_type = [
-						'bike_car_sd' => 'Rent item for single day',
-						'bike_car_md' => 'Rent item for multiple day',
-						'resort'      => 'Resort',
-						'equipment'   => 'Equipment',
-						'dress'       => 'Dress',
-						'appointment' => 'Appointment',
-						'others'      => 'Others',
-                        'multiple_items' => 'Multiple day for multiple items',
-					]; ?>
-                    <select name="rbfw_item_type" id="rbfw_item_type">
-						<?php foreach ( $item_type as $kay => $value ): ?>
-                            <option <?php echo esc_attr( $kay == $rbfw_item_type ? 'selected' : '' ); ?> value="<?php echo esc_attr( $kay ); ?>"> <?php echo esc_html( $value ); ?> </option>
-						<?php endforeach; ?>
-                    </select>
                 </section>
 				<?php
 			}
@@ -295,13 +325,10 @@
                 $checked = (get_the_title($post_id)=='Auto Draft')?'checked':'';
                 $checked_item = (get_the_title($post_id)=='Auto Draft')?true:false;
 
-
-
                 ?>
-                <div class="rbfw_multiple_items <?php echo esc_attr( $rbfw_item_type == 'multiple_items') ? 'show' : 'hide'; ?>">
-                    <div class="container">
-                        <div class="content">
-                            <div class="form-container">
+                <section class="rbfw_multiple_items <?php echo esc_attr( $rbfw_item_type == 'multiple_items') ? 'show' : 'hide'; ?>">
+                    <div class="">
+                            <div class="">
                                 <!-- Global Pricing Options -->
                                 <div class="pricing-options">
                                     <h3>🔧 <?php esc_html_e('Enable Price Types (applies to all items)','booking-and-rental-manager-for-woocommerce'); ?></h3>
@@ -394,7 +421,6 @@
                             <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','md' ); ?>
 
                         </div>
-                    </div>
 
                     <style>
                         * {
@@ -1007,7 +1033,7 @@
                         updateRemoveButtons();
                     </script>
 
-                </div>
+                </section>
                 <?php
             }
 
