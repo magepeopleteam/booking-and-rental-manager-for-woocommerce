@@ -240,7 +240,7 @@ if(isset($post_id) && isset($active_tab)){
                                     <div class="rbfw_service_price_wrap">
                                         <div class="rbfw_qty_input">
                                             <a class="rbfw_qty_minus rbfw_service_qty_minus"><i class="fas fa-minus"></i></a>
-                                            <input type="number" min="0" max="<?php echo esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_qty]" class="rbfw_service_qty" data-price="<?php echo esc_attr($value['service_price']); ?>" data-type="<?php echo esc_attr($value['service_name']); ?>" data-cat="service"/>
+                                            <input type="number" min="0" max="<?php echo esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_qty]" class="rbfw_service_qty_resort" data-price="<?php echo esc_attr($value['service_price']); ?>" data-type="<?php echo esc_attr($value['service_name']); ?>" data-cat="service"/>
                                             <a class="rbfw_qty_plus rbfw_service_qty_plus"><i class="fas fa-plus"></i></a>
                                         </div>
                                     </div>
@@ -280,9 +280,9 @@ if(isset($post_id) && isset($active_tab)){
                 </span>
                 <span><span class="price-figure" data-price="0"><?php echo esc_html($currency_symbol); ?>0</span></span>
             </li>
-            <li class="resource-costing rbfw-cond"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce'))); ?>  <span><?php echo esc_html($currency_symbol); ?><span class="price-figure" data-price="0">0</span></span></li>
-            <li class="subtotal"> <?php echo esc_html($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce'))); ?><span><?php echo esc_html($currency_symbol); ?><span class="price-figure">0.00</span></span></li>
-            <li class="total"><strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce'))); ?></strong> <span><?php echo esc_html($currency_symbol); ?><span class="price-figure">0.00</span></span></li>
+            <li class="resource-costing rbfw-cond"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce'))); ?>  <span><span class="price-figure" data-price="0"><?php echo wp_kses_post(wc_price(0)); ?></span></span></li>
+            <li class="subtotal"> <?php echo esc_html($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce'))); ?><span><span class="price-figure"><?php echo wp_kses_post(wc_price(0)); ?></span></span></li>
+            <li class="total"><strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce'))); ?></strong> <span><span class="price-figure"><?php echo wp_kses_post(wc_price(0)); ?></span></span></li>
         </ul>
         <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
     </div>
@@ -296,7 +296,7 @@ if(class_exists('Rbfw_Reg_Form')){
 ?>
 
     <input type="hidden" name="rbfw_room_duration_price" id="rbfw_room_duration_price" value="0"/>
-    <input type="hidden" name="rbfw_extra_service_orice" value="0"/>
+    <input type="hidden" name="rbfw_extra_service_price" id="rbfw_extra_service_price" value="0"/>
 
     <div class="item rbfw_text_book_now">
         <button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_resort_book_now_btn rbfw_disabled_button" disabled>

@@ -164,6 +164,31 @@ jQuery(document).on('click','.rbfw_room_qty_minus',function(e) {
 });
 
 
+jQuery(document).on('input','.rbfw_service_qty_resort',function(e) {
+    calculateTotalResortExtraService();
+});
+
+
+jQuery(document).on('click','.rbfw_service_qty_plus',function(e) {
+    let input = jQuery(this).siblings('input[type="number"]');
+    let max = parseInt(input.attr('max')) || 9999;
+    let current = parseInt(input.val()) || 0;
+    if (current < max) {
+        input.val(current + 1).trigger('input');
+    }
+});
+
+jQuery(document).on('click','.rbfw_service_qty_minus',function(e) {
+    let input = jQuery(this).siblings('input[type="number"]');
+    let min = parseInt(input.attr('min')) || 0;
+    let current = parseInt(input.val()) || 0;
+    if (current > min) {
+        input.val(current - 1).trigger('input');
+    }
+});
+
+
+
 function calculateTotalDurationPrice() {
     let room_duration_price = 0;
     let hasQty = false;
@@ -178,20 +203,40 @@ function calculateTotalDurationPrice() {
 
     if (hasQty) {
         jQuery('.rbfw_resort_es_price_table').show();
-        jQuery('button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
-        jQuery(' button.rbfw_bikecarsd_book_now_btn').removeClass('rbfw_disabled_button');
+        jQuery('button.rbfw_resort_book_now_btn').removeAttr('disabled');
     }else{
         jQuery('.rbfw_resort_es_price_table').hide();
-        jQuery('button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
-        jQuery('button.rbfw_bikecarsd_book_now_btn').addClass('rbfw_disabled_button');
+        jQuery('button.rbfw_resort_book_now_btn').attr('disabled',true);
     }
-
 
 
     // You can update this in a DOM element, console, or wherever you want
     jQuery('#rbfw_room_duration_price').val(room_duration_price.toFixed(2));
 
     jQuery('.duration-costing .price-figure').text(rbfw_translation.currency + room_duration_price.toFixed(2));
+}
+
+
+
+function calculateTotalResortExtraService() {
+    let resort_extra_service = 0;
+
+
+    // Calculate services
+    jQuery('.rbfw_service_qty_resort').each(function() {
+        let qty = parseInt(jQuery(this).val()) || 0;
+        let price = parseFloat(jQuery(this).data('price')) || 0;
+        resort_extra_service += qty * price;
+    });
+
+    // Output total
+    jQuery('#rbfw_extra_service_price').val(resort_extra_service.toFixed(2));
+    jQuery('.resource-costing .price-figure').text(rbfw_translation.currency + resort_extra_service.toFixed(2));
+
+    resort_total_price = parseFloat(jQuery('#rbfw_room_duration_price').val()) + resort_extra_service;
+
+    jQuery('.subtotal .price-figure').text(rbfw_translation.currency + resort_total_price.toFixed(2));
+    jQuery('.total .price-figure').text(rbfw_translation.currency + resort_total_price.toFixed(2));
 }
 
 /*

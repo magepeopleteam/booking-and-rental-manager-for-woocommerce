@@ -162,7 +162,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                         <?php if ($enable_hourly_rate == 'yes') { ?>
                                             <tr>
                                                 <td><strong><?php esc_html_e( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                                                <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / Hour</td>
+                                                <td>rbfw_translation.currency +rbfw_translation.currency + / Hour</td>
                                             </tr>
                                         <?php } ?>
                                         </tbody>
