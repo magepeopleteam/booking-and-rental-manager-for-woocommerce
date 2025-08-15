@@ -178,7 +178,7 @@
                 <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
                 <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_attr($rbfw_minimum_booking_day); ?>">
                 <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo esc_attr($rbfw_maximum_booking_day); ?>">
-
+                <?php do_action('rbfw_ticket_feature_info'); ?>
                 <div class="item">
                     <div class="rbfw-single-right-heading mb-08">
                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_checkin_checkout_date', 'rbfw_basic_translation_settings')); ?>
@@ -202,15 +202,19 @@
                         <?php echo esc_html($rbfw->get_option_trans('rbfw_text_check_availability', 'rbfw_basic_translation_settings', __('Check Availability','booking-and-rental-manager-for-woocommerce'))); ?>
                     </a>
                 </div>
+
                 <div class="rbfw-availability-loader">
                     <i class="fas fa-spinner fa-spin"></i>
                 </div>
+                
                 <div class="rbfw-availability-result">
+                    
                     <div class="rbfw_room_price_category_tabs"></div>
                     <div class="rbfw_room_price_category_details_loader"><i class="fas fa-spinner fa-spin"></i></div>
+                    
                     <div class="rbfw_room_price_category_details"></div>
-                </div>
-
+                    
+                </div> 
                 <div class="rbfw-resort-result-wrap">
                     <div class="rbfw-resort-result-loader"></div>
                     <div class="rbfw-resort-result"></div>

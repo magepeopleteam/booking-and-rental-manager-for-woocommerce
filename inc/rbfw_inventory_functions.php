@@ -402,7 +402,9 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                             $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
                         }
                         $booked_quantity = array_column($variant_q, $single['name']);
-                        $variant_instock[] = $single['quantity'] - max($booked_quantity);
+                        if(isset($single['quantity'])){
+                            $variant_instock[] = $single['quantity'] - max($booked_quantity);
+                        }
                     }
                 }
             }

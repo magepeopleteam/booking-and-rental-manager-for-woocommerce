@@ -60,9 +60,9 @@
 			$price_mon = get_post_meta( $post_id, 'rbfw_mon_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_mon_daily_rate', true ) : 0;
 			$price_tue = get_post_meta( $post_id, 'rbfw_tue_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_tue_daily_rate', true ) : 0;
 			$price_wed = get_post_meta( $post_id, 'rbfw_wed_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_wed_daily_rate', true ) : 0;
-			$price_thu = get_post_meta( $post_id, 'rbfw_thu_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_thu_daily_rate', true ) : 0;
 			$price_fri = get_post_meta( $post_id, 'rbfw_fri_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_fri_daily_rate', true ) : 0;
-			$price_sat = get_post_meta( $post_id, 'rbfw_sat_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_sat_daily_rate', true ) : 0;
+			$price_thu = get_post_meta( $post_id, 'rbfw_thu_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_thu_daily_rate', true ) : 0;
+            $price_sat = get_post_meta( $post_id, 'rbfw_sat_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_sat_daily_rate', true ) : 0;
 		}
 		$price       = (float) $price;
 		$enabled_sun = get_post_meta( $post_id, 'rbfw_enable_sun_day', true ) ? get_post_meta( $post_id, 'rbfw_enable_sun_day', true ) : 'yes';
@@ -72,20 +72,20 @@
 		$enabled_thu = get_post_meta( $post_id, 'rbfw_enable_thu_day', true ) ? get_post_meta( $post_id, 'rbfw_enable_thu_day', true ) : 'yes';
 		$enabled_fri = get_post_meta( $post_id, 'rbfw_enable_fri_day', true ) ? get_post_meta( $post_id, 'rbfw_enable_fri_day', true ) : 'yes';
 		$enabled_sat = get_post_meta( $post_id, 'rbfw_enable_sat_day', true ) ? get_post_meta( $post_id, 'rbfw_enable_sat_day', true ) : 'yes';
-		$current_day = gmdate( 'D' );
-		if ( $current_day == 'Sun' && $enabled_sun == 'yes' ) {
+
+		if ( $enabled_sun == 'yes' ) {
 			$price = (float) $price_sun;
-		} elseif ( $current_day == 'Mon' && $enabled_mon == 'yes' ) {
+		} elseif ( $enabled_mon == 'yes' ) {
 			$price = (float) $price_mon;
-		} elseif ( $current_day == 'Tue' && $enabled_tue == 'yes' ) {
+		} elseif (  $enabled_tue == 'yes' ) {
 			$price = (float) $price_tue;
-		} elseif ( $current_day == 'Wed' && $enabled_wed == 'yes' ) {
+		} elseif ( $enabled_wed == 'yes' ) {
 			$price = (float) $price_wed;
-		} elseif ( $current_day == 'Thu' && $enabled_thu == 'yes' ) {
+		} elseif ( $enabled_thu == 'yes' ) {
 			$price = (float) $price_thu;
-		} elseif ( $current_day == 'Fri' && $enabled_fri == 'yes' ) {
+		} elseif ( $enabled_fri == 'yes' ) {
 			$price = (float) $price_fri;
-		} elseif ( $current_day == 'Sat' && $enabled_sat == 'yes' ) {
+		} elseif ( $enabled_sat == 'yes' ) {
 			$price = (float) $price_sat;
 		} else {
 			$price = (float) $price;
