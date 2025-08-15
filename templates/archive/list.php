@@ -191,6 +191,7 @@ echo '<pre>';*/
 <div class="rbfw_rent_list_col">
     <div class="rbfw_rent_list_inner_wrapper">
 
+        <?php if( !isset($rbfw_hide_price) || $rbfw_hide_price !== 'yes' ): ?>
         <div class="rbfw_rent_list_price_wrap">
             <?php if ($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
                 <div class="rbfw_rent_list_price_badge">
@@ -213,6 +214,7 @@ echo '<pre>';*/
                 </div>
             <?php endif; ?>
         </div>
+        <?php endif; ?>
 
         <div class="rbfw_rent_list_featured_img_wrap">
             <a href="<?php echo esc_url($post_link); ?>">
