@@ -162,7 +162,7 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
                                         <?php if ($enable_hourly_rate == 'yes') { ?>
                                             <tr>
                                                 <td><strong><?php esc_html_e( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                                                <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / Hour</td>
+                                                <td>rbfw_translation.currency +rbfw_translation.currency + / Hour</td>
                                             </tr>
                                         <?php } ?>
                                         </tbody>
@@ -730,8 +730,10 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
 
                 <?php wp_nonce_field('rbfw_ajax_action', 'nonce'); ?>
 
+                <input type="hidden" name="rbfw_duration_price" id="rbfw_duration_price"  value="0">
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price"  value="0">
+
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo esc_attr($rbfw_enable_variations); ?>">

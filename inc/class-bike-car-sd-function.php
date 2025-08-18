@@ -379,53 +379,8 @@
 					$selected_date      = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
 					$is_muffin_template = isset( $_POST['is_muffin_template'] ) ? sanitize_text_field( wp_unslash( $_POST['is_muffin_template'] ) ) : '';
 					$time_slot_switch   = isset( $_POST['time_slot_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['time_slot_switch'] ) ) : '';
-					if ( $time_slot_switch == 'yes' ) {
-						$available_times  = rbfw_get_available_times_particulars( $id, $selected_date, 'time_enable', '' );
-						$default_timezone = wp_timezone_string();
-						$date             = new DateTime( "now", new DateTimeZone( $default_timezone ) );
-						$nowTime          = $date->format( 'H:i' );
-						$nowDate          = $date->format( 'Y-m-d' );
-						$date_to_string   = new DateTime( $selected_date );
-						$result           = $date_to_string->format( get_option( 'date_format' ) );
-						ob_start();
-						$content = '';
-						$content .= '<div class="rbfw_bikecarsd_time_table_container rbfw-bikecarsd-step" data-step="2">';
-						$content .= '<a class="rbfw_back_step_btn" back-step="1" data-step="2"><i class="fas fa-circle-left"></i> ' . rbfw_string_return( 'rbfw_text_back_to_previous_step', esc_html__( 'Back to Previous Step', 'booking-and-rental-manager-for-woocommerce' ) ) . '</a>';
-						if ( $is_muffin_template == 0 ) {
-							$content .= '<div class="rbfw_step_selected_date"><i class="fas fa-calendar-check"></i> ' . rbfw_string_return( 'rbfw_text_you_selected', esc_html__( 'You selected', 'booking-and-rental-manager-for-woocommerce' ) ) . ': ' . $result . '</div>';
-							$content .= '<div class="single-day-notice"><i class="fas fa-circle-info"></i> ' . esc_html__( 'Please pick up a time', 'booking-and-rental-manager-for-woocommerce' ) . '</div>';
-						}
-						if ( $is_muffin_template == 1 ) {
-							$content .= '<div class="rbfw_step_selected_date rbfw_muff_selected_date">';
-							$content .= '<div class="rbfw_muff_selected_date_col"><span class="rbfw_muff_selected_date_value">' . $result . '</span></div>';
-							$content .= '</div>';
-						}
-						$content .= '<div class="rbfw_bikecarsd_time_table_wrap">';
-						if ( ! empty( $available_times[0] ) ) {
-							foreach ( $available_times[0] as $value ) {
-								$converted_time = gmdate( get_option( 'time_format' ), strtotime( $value[1] ) );
-								$ts_time        = $this->rbfw_get_time_slot_by_label( $value[1] );
-								$is_booked      = $this->rbfw_get_time_booking_status( $id, $selected_date, $ts_time );
-								$disabled       = '';
-								if ( ( ( $nowDate == $selected_date ) && ( $converted_time < $nowTime ) ) || ( $is_booked === true ) ) {
-									$disabled = 'disabled';
-								}
-								$content .= '<a data-time="' . gmdate( 'H:i', strtotime( $value[1] ) ) . '" class="rbfw_bikecarsd_time ' . $disabled . '"><span class="rbfw_bikecarsd_time_span">' . $converted_time . '</span>';
-								if ( $is_booked === true ) {
-									$content .= '<span class="rbfw_bikecarsd_time_booked">' . rbfw_string_return( 'rbfw_text_booked', esc_html__( 'Booked', 'booking-and-rental-manager-for-woocommerce' ) ) . '</span>';
-								}
-								$content .= '</a>';
-							}
-						}
-						$content .= '</div>';
-						$content .= '</div>';
-						echo wp_kses( $content, rbfw_allowed_html() );
-						$output = ob_get_clean();
-						echo wp_kses( $output, rbfw_allowed_html() );
-					} else {
-						include( RBFW_Function::get_template_path( 'template_segment/single_day_info.php' ) );
-					}
-				}
+                    include( RBFW_Function::get_template_path( 'template_segment/single_day_info.php' ) );
+                }
 				wp_die();
 			}
 
@@ -530,10 +485,8 @@
 				$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : '';
 				$start_time               = isset( $_POST['pickup_time'] ) ? sanitize_text_field( wp_unslash( $_POST['pickup_time'] ) ) : '00:00';
 				$rbfw_bike_car_sd_data    = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true ) : [];
-				
-				foreach ( $rbfw_bike_car_sd_data as $value ) {
-
-
+                $sd_service_info = [];
+                foreach ( $rbfw_bike_car_sd_data as $value ) {
                     if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
                         $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_bike_car_sd_data_sp', true );
                         if ( isset( $rbfw_sp_prices ) && $rbfw_sp_prices  ) {
@@ -541,8 +494,7 @@
                         }
                     }
                     $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
-
-					if ( $enable_specific_duration == 'on' ) {
+                    if ( $enable_specific_duration == 'on' ) {
 						$d_type   = $value['start_time'];
 						$duration = $value['end_time'];
 					} else {
@@ -550,39 +502,21 @@
 						$duration = $value['duration'];
 					}
 					$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration );
-					?>
-					
-						<?php if ( $rbfw_timely_available_quantity > 0 ):?>
-							<div title="<?php echo esc_attr($value['short_desc']) ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($type_price); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']); ?>" data-end_time="<?php echo esc_attr($value['end_time']); ?>" data-available_quantity="<?php echo esc_attr($rbfw_timely_available_quantity); ?>" class="radio-button single-type-timely" data-text="<?php echo esc_attr($value['rent_type']); ?>">
-								<label>
-									<input type="radio" name="option" class="radio-input">
-									<span><?php echo esc_attr($value['rent_type']); ?></span>
-                                	<?php if($enable_specific_duration=='on'): ?>
-                                    	<div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
-                                    <?php else: ?>
-                                    	<div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
-                                    <?php endif; ?>
-								</label>
-								<div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
-							</div>
-						<?php else: ?>
-							<div style="text-decoration: line-through;cursor:text" title="<?php echo esc_attr($value['short_desc']) ?>" data-duration="<?php echo esc_attr($value['duration']); ?>" data-price="<?php echo esc_attr($type_price); ?>" data-d_type="<?php echo esc_attr($value['d_type']); ?>" data-start_time="<?php echo esc_attr($value['start_time']); ?>" data-end_time="<?php echo esc_attr($value['end_time']); ?>" data-available_quantity="<?php echo esc_attr($rbfw_timely_available_quantity); ?>" class="radio-button">
-								<label>
-									<input type="radio" name="option" class="radio-input">
-									<span class="rent-type"><?php echo esc_attr($value['rent_type'])?></span>
-                                	<?php if($enable_specific_duration=='on'): ?>
-                                    	<div class="time"><?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?></div>
-                                    <?php else: ?>
-                                    	<div class="time"><?php echo esc_html($value['duration']." ".$value['d_type']); ?></div>
-                                    <?php endif; ?>
-								</label>
-								<div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
-							</div>
-						<?php endif;?>
-					
-					<?php
+                    $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'stock'=>$rbfw_timely_available_quantity);
 				}
-				wp_die();
+
+                $sd_extra_service_info = [];
+
+                $rbfw_extra_service_data = get_post_meta($post_id, 'rbfw_extra_service_data', true) ? get_post_meta($post_id, 'rbfw_extra_service_data', true) : [];
+
+                foreach ($rbfw_extra_service_data as $value) {
+                    $max_es_available_qty = rbfw_get_bike_car_sd_es_available_qty($post_id, $start_date, $value['service_name']);
+                    if($value['service_qty'] > 0){
+                        $sd_extra_service_info[$value['service_name']] = array($max_es_available_qty);
+                    }
+                }
+                echo wp_json_encode(array('service_info'=>$sd_service_info,'extra_service_info'=>$sd_extra_service_info));
+                wp_die();
 			}
 
 			public function rbfw_bike_car_sd_frontend_scripts( $rbfw_post_id ) {

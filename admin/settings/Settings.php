@@ -178,8 +178,10 @@
                     $product_id = get_post_meta($post_id, 'link_wc_product', true) ? get_post_meta($post_id, 'link_wc_product', true) : $post_id;
                     update_post_meta($product_id, '_virtual', ($shipping_enable=='yes')?'no':'yes');
 					update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
+
+             
 					
-					$rbfw_enable_extra_service_qty = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_extra_service_qty'] ) ) : 'yes';
+					$rbfw_enable_extra_service_qty = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_extra_service_qty'] ) ) : 'no';
 					update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
