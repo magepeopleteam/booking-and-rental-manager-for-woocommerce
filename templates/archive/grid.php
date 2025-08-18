@@ -7,10 +7,10 @@ $post_id            = get_the_id();
 $post_title         = get_the_title();
 $post_featured_img  = !empty(get_the_post_thumbnail_url( $post_id, 'full' )) ? get_the_post_thumbnail_url( $post_id, 'full' ) : RBFW_PLUGIN_URL. '/assets/images/no_image.png';
 $post_link          = get_the_permalink();
-$book_now_label     = $rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce'));
+$book_now_label     = __('Book Now','booking-and-rental-manager-for-woocommerce');
 
-$hourly_rate_label = $rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly rate','booking-and-rental-manager-for-woocommerce'));
-$daily_rate_label = $rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily rate','booking-and-rental-manager-for-woocommerce'));
+$hourly_rate_label = __('Hourly rate','booking-and-rental-manager-for-woocommerce');
+$daily_rate_label = __('Daily rate','booking-and-rental-manager-for-woocommerce');
 $rbfw_enable_hourly_rate = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
 $rbfw_enable_daily_rate  = get_post_meta( get_the_id(), 'rbfw_enable_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_enable_daily_rate', true ) : 'no';
 
@@ -20,7 +20,7 @@ if($rbfw_enable_hourly_rate == 'no'){
     $the_price_label = $hourly_rate_label;
 }
 
-$prices_start_at = $rbfw->get_option_trans('rbfw_text_prices_start_at', 'rbfw_basic_translation_settings', __('Prices start at','booking-and-rental-manager-for-woocommerce'));
+$prices_start_at = __('Prices start at','booking-and-rental-manager-for-woocommerce');
 $rbfw_rent_type = get_post_meta( $post_id, 'rbfw_item_type', true );
 
 if($rbfw_enable_hourly_rate == 'yes'){

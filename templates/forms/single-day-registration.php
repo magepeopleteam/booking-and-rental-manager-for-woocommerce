@@ -35,10 +35,10 @@
 			<form action="" method='post' class="mp_rbfw_ticket_form">
                 <?php if ($location_switch == 'yes' && !empty($pickup_location)) : ?>
                     <div class="item">
-                        <div class="rbfw-single-right-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_location', 'rbfw_basic_translation_settings', __('Pickup Location','booking-and-rental-manager-for-woocommerce'))); ?></div>
+                        <div class="rbfw-single-right-heading"><?php esc_html_e('Pickup Location','booking-and-rental-manager-for-woocommerce'); ?></div>
                         <div class="item-content rbfw-location">
                             <select class="rbfw-select" name="rbfw_pickup_point" required>
-                                <option value=""><?php echo esc_html($rbfw->get_option_trans('rbfw_text_choose_pickup_location', 'rbfw_basic_translation_settings', __('Choose pickup location','booking-and-rental-manager-for-woocommerce'))); ?></option>
+                                <option value=""><?php esc_html_e('Choose pickup location','booking-and-rental-manager-for-woocommerce'); ?></option>
                                 <?php foreach ($pickup_location as $pickup) : ?>
                                     <option value="<?php echo esc_attr($pickup['loc_pickup_name']); ?>"><?php echo esc_html($pickup['loc_pickup_name']); ?></option>
                                 <?php endforeach; ?>
@@ -50,11 +50,11 @@
                 <?php if ($location_switch == 'yes' && !empty($dropoff_location)) : ?>
                     <div class="item">
                         <div class="rbfw-single-right-heading">
-                            <?php echo esc_html($rbfw->get_option_trans('rbfw_text_dropoff_location', 'rbfw_basic_translation_settings', __('Drop-off Location','booking-and-rental-manager-for-woocommerce'))); ?>
+                            <?php esc_html_e('Drop-off Location','booking-and-rental-manager-for-woocommerce'); ?>
                         </div>
                         <div class="item-content rbfw-location">
                             <select class="rbfw-select" name="rbfw_dropoff_point" required>
-                                <option value=""><?php echo esc_attr($rbfw->get_option_trans('rbfw_text_choose_dropoff_location', 'rbfw_basic_translation_settings', __('Choose drop-off location','booking-and-rental-manager-for-woocommerce'))); ?></option>
+                                <option value=""><?php esc_html_e('Choose drop-off location','booking-and-rental-manager-for-woocommerce'); ?></option>
                                 <?php foreach ($dropoff_location as $dropoff) : ?>
                                     <option value="<?php echo esc_attr($dropoff['loc_dropoff_name']); ?>"><?php echo esc_html($dropoff['loc_dropoff_name']); ?></option>
                                 <?php endforeach; ?>
@@ -99,7 +99,7 @@
                                 </label>
                                 <div class="rbfw-p-relative">
                                     <span class="calendar"><i class="fas fa-calendar-days"></i></span>
-                                    <input class="rbfw-input rbfw-time-price pickup_date_timely" type="text"   placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_pickup_date', 'rbfw_basic_translation_settings', __('Select Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly="" style="background-position: 95% center">
+                                    <input class="rbfw-input rbfw-time-price pickup_date_timely" type="text"   placeholder="<?php esc_attr_e('Select Date','booking-and-rental-manager-for-woocommerce'); ?>" required readonly="" style="background-position: 95% center">
                                     <span class="input-picker-icon"><i class="fas fa-chevron-down"></i></span>
                                 </div>
                             </div>
@@ -107,14 +107,14 @@
                             <?php if($rbfw_enable_time_picker == 'yes' && $enable_specific_duration =='off'){ ?>
                                 <div class="right time">
                                     <div class="rbfw-single-right-heading">
-                                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_date_time', 'rbfw_basic_translation_settings')); ?>
+                                        <?php esc_html_e('Pickup Time','booking-and-rental-manager-for-woocommerce'); ?>
                                     </div>
                                     <div class="rbfw-p-relative">
                                         <span class="clock">
                                             <i class="fa-regular fa-clock"></i>
                                         </span>
                                         <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time" required>
-                                            <option value="" disabled selected><?php echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_time', 'rbfw_basic_translation_settings', __('Pickup Time','booking-and-rental-manager-for-woocommerce'))); ?></option>
+                                            <option value="" disabled selected><?php esc_html_e('Pickup Time','booking-and-rental-manager-for-woocommerce'); ?></option>
                                         </select>
                                         <span class="input-picker-icon"></span>
                                     </div>
@@ -200,7 +200,7 @@
                                                             <small class="rbfw_bikecarsd_type_desc"><?php echo esc_html($value['service_desc']); ?></small>
                                                         <?php } ?>
                                                         <?php if($available_qty_info_switch == 'yes'){ ?>
-                                                            <small class="rbfw_available_qty_notice">(<?php echo esc_html(rbfw_string_return('rbfw_text_available',__('Available:','booking-and-rental-manager-for-woocommerce'))).esc_html($max_es_available_qty); ?>)</small>
+                                                            <small class="rbfw_available_qty_notice"><?php echo esc_html__('Available:','booking-and-rental-manager-for-woocommerce') . esc_html($max_es_available_qty); ?></small>
                                                         <?php } ?>
                                                         <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_name]" value="<?php echo esc_attr($value['service_name']); ?>"/>
                                                     </div>
@@ -232,7 +232,7 @@
                                 <div class="item-content rbfw-costing">
                                     <ul class="rbfw-ul">
                                         <li class="duration-costing rbfw-cond">
-                                            <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce'))); ?>
+                                            <?php esc_html_e('Duration Cost','booking-and-rental-manager-for-woocommerce'); ?>
                                             <span>
                                                 <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
                                             </span>
@@ -240,20 +240,20 @@
                                         </li>
                                         <?php if(!empty($rbfw_extra_service_data)){ ?>
                                             <li class="resource-costing extra_service_cost rbfw-cond">
-                                                <?php echo esc_html($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce'))); ?>
+                                                <?php esc_html_e('Resource Cost','booking-and-rental-manager-for-woocommerce'); ?>
                                                 <span>
                                                     <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
                                                 </span>
                                             </li>
                                         <?php } ?>
                                         <li class="subtotal">
-                                            <?php echo esc_html($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce'))); ?>
+                                            <?php esc_html_e('Subtotal','booking-and-rental-manager-for-woocommerce'); ?>
                                             <span>
                                                 <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
                                             </span>
                                         </li>
                                         <li class="total">
-                                            <strong><?php echo esc_html($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce'))); ?></strong>
+                                            <strong><?php esc_html_e('Total','booking-and-rental-manager-for-woocommerce'); ?></strong>
                                             <span>
                                                 <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
                                             </span>
@@ -271,7 +271,7 @@
 				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
 					<button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn rbfw_disabled_button" disabled>
 					<?php
-						echo esc_html($rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings', __('Book Now','booking-and-rental-manager-for-woocommerce')));
+						esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce');
 					?>
 					</button>
 				</div>
