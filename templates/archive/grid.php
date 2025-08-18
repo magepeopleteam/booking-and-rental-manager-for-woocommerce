@@ -174,6 +174,7 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
 
         <div class="rbfw_rent_list_content">
 
+            <?php if( !isset($rbfw_hide_price) || $rbfw_hide_price !== 'yes' ): ?>
             <div class="rbfw_rent_list_price_wrap">
                 <?php if($rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment'): ?>
                     <div class="rbfw_rent_list_price_badge">
@@ -196,6 +197,7 @@ $rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? 
                     </div>
                 <?php endif; ?>
             </div>
+            <?php endif; ?>
 
             <div class="rbfw_rent_list_title_wrap">
                 <a href="<?php echo esc_url($post_link); ?>"><?php echo esc_html($post_title); ?></a>
