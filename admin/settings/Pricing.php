@@ -84,14 +84,14 @@
                     </div>
 					<?php $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd'; ?>
 					<?php $item_type = [
-						'bike_car_sd' => 'Rent item for single day',
-						'bike_car_md' => 'Rent item for multiple day',
-						'resort'      => 'Resort',
-						'equipment'   => 'Equipment',
-						'dress'       => 'Dress',
-						'appointment' => 'Appointment',
-						'others'      => 'Others',
-                        'multiple_items' => 'Multiple day for multiple items',
+                        'bike_car_sd'     => __('Rent item for single day', 'booking-and-rental-manager-for-woocommerce'),
+                        'bike_car_md'     => __('Rent item for multiple day', 'booking-and-rental-manager-for-woocommerce'),
+                        'resort'          => __('Resort', 'booking-and-rental-manager-for-woocommerce'),
+                        'equipment'       => __('Equipment', 'booking-and-rental-manager-for-woocommerce'),
+                        'dress'           => __('Dress', 'booking-and-rental-manager-for-woocommerce'),
+                        'appointment'     => __('Appointment', 'booking-and-rental-manager-for-woocommerce'),
+                        'others'          => __('Others', 'booking-and-rental-manager-for-woocommerce'),
+                        'multiple_items'  => __('Multiple day for multiple items', 'booking-and-rental-manager-for-woocommerce'),
 					]; ?>
                     <select name="rbfw_item_type" id="rbfw_item_type">
 						<?php foreach ( $item_type as $kay => $value ): ?>
