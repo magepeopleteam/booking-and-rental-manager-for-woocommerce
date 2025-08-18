@@ -39,7 +39,7 @@
             let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
             let is_muffin_template = jQuery('.rbfw_muffin_template').length;
 
-            alert(manage_inventory_as_timely);
+
 /*
             if(manage_inventory_as_timely=='on'){
                 if(time_slot_switch=='no'){

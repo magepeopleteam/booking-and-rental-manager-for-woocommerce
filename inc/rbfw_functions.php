@@ -60,6 +60,7 @@
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
+				'for' => true, // Allows inline JavaScript
 			),
 			'i'       => array(
 				'style'   => true, // Allows inline styles
@@ -106,13 +107,14 @@
 				'data-key'    => true,
 				'placeholder' => true,
 				'checked' => true,
-				'checked' => true,
+				'required' => true,
 			),
             'select'   => array(
                 'style'       => true, // Allows inline styles
                 'class'       => true,
                 'name'        => true,
                 'id'          => true,
+                'required' => true,
             ),
             'option'   => array(
                 'style'       => true, // Allows inline styles
