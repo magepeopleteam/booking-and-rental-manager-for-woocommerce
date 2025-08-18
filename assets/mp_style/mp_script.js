@@ -85,7 +85,7 @@ function mp_load_date_picker(parent = jQuery('.mpStyle')) {
 		jQuery(this).removeClass('hasDatepicker').attr('id', '').removeData('datepicker').unbind();
 	}).promise().done(function () {
 		parent.find(".date_type").datepicker({
-			dateFormat: mp_date_format,
+			dateFormat: js_date_format,
 			//showButtonPanel: true,
 			autoSize: true,
 			changeMonth: true,
