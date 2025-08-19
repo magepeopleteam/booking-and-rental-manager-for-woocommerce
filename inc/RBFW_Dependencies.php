@@ -121,14 +121,16 @@
 
                 wp_enqueue_script( 'rbfw_script', RBFW_PLUGIN_URL . '/assets/mp_script/rbfw_script.js', array(), time(), true );
 
+                if ( rbfw_woo_install_check() == 'Yes' ) {
+                    wp_localize_script('rbfw_script', 'rbfw_translation', array(
+                        'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
+                        'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
+                        'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
+                        'currency' => get_woocommerce_currency_symbol()
+                    ));
+                }
 
 
-                wp_localize_script('rbfw_script', 'rbfw_translation', array(
-                    'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
-                    'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
-                    'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
-                    'currency' => get_woocommerce_currency_symbol()
-                ));
 
 
                 
