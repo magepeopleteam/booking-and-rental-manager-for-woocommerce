@@ -418,7 +418,7 @@
 
                             <input type="hidden" name="rbfw_enable_time_picker" value="yes">
 
-                            <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','md' ); ?>
+                            <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','md','mi' ); ?>
 
                         </div>
 
@@ -1628,7 +1628,7 @@
 
 
 
-            public function multiple_time_slot_with_particular($post_id, $rbfw_enable_time_picker,$type='sd')
+            public function multiple_time_slot_with_particular($post_id, $rbfw_enable_time_picker,$type='sd' , $mi='')
             {
                 ?>
                 <div class="time-slots-section" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'block' : 'none' ); ?>;">
@@ -1699,7 +1699,11 @@
                             </div>
                             <?php $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off'; ?>
                             <label class="switch">
-                                <input type="checkbox" name="rbfw_particular_switch_<?php echo esc_attr($type) ?>" class="rbfw_particular_switch" value="<?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? $rbfw_particular_switch : 'off' ); ?>" <?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'checked' : '' ); ?>>
+                                <?php if($mi=='mi'){ ?>
+                                    <input type="checkbox" name="rbfw_particular_switch_mi" class="rbfw_particular_switch" value="<?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? $rbfw_particular_switch : 'off' ); ?>" <?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'checked' : '' ); ?>>
+                                <?php }else{ ?>
+                                    <input type="checkbox" name="rbfw_particular_switch_<?php echo esc_attr($type) ?>" class="rbfw_particular_switch" value="<?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? $rbfw_particular_switch : 'off' ); ?>" <?php echo esc_attr( ( $rbfw_particular_switch == 'on' ) ? 'checked' : '' ); ?>>
+                                <?php } ?>
                                 <span class="slider round"></span>
                             </label>
                         </section>
@@ -1904,6 +1908,8 @@
 
                     $rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
 
+
+
                     if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others' || $rbfw_item_type=='multiple_items'){
                         $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time'] ) ? $input_data_sabitized['rdfw_available_time'] : [];
                         $particulars_data           = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars'] ) : [];
@@ -1956,10 +1962,12 @@
 					$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : 'off';
 
 
-                    if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others' || $rbfw_item_type=='multiple_items') {
-                        $rbfw_particular_switch = isset($_POST['rbfw_particular_switch_md']) ? sanitize_text_field(wp_unslash($_POST['rbfw_particular_switch_mi'])) : 'off';
-                   }elseif ($rbfw_item_type=='bike_car_sd' || $rbfw_item_type=='appointment'){
-                        $rbfw_particular_switch = isset($_POST['rbfw_particular_switch_sd']) ? sanitize_text_field(wp_unslash($_POST['rbfw_particular_switch_mi'])) : 'off';
+                    if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others') {
+                        $rbfw_particular_switch = isset($_POST['rbfw_particular_switch_md']) ? sanitize_text_field(wp_unslash($_POST['rbfw_particular_switch_md'])) : 'off';
+                   }elseif ($rbfw_item_type=='multiple_items'){
+                        $rbfw_particular_switch = isset($_POST['rbfw_particular_switch_mi']) ? sanitize_text_field(wp_unslash($_POST['rbfw_particular_switch_mi'])) : 'off';
+                    }elseif ($rbfw_item_type=='bike_car_sd' || $rbfw_item_type=='appointment'){
+                        $rbfw_particular_switch = isset($_POST['rbfw_particular_switch_sd']) ? sanitize_text_field(wp_unslash($_POST['rbfw_particular_switch_sd'])) : 'off';
                     }
 
 
@@ -1971,6 +1979,9 @@
                     update_post_meta( $post_id, 'rbfw_weekly_rate', $rbfw_weekly_rate );
                     update_post_meta( $post_id, 'rbfw_enable_day_threshold_for_weekly', $rbfw_enable_day_threshold_for_weekly );
                     update_post_meta( $post_id, 'rbfw_day_threshold_for_weekly', $rbfw_day_threshold_for_weekly );
+
+
+                    update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
 
                     update_post_meta( $post_id, 'rbfw_enable_daily_rate', $rbfw_enable_daily_rate );
 					update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );
