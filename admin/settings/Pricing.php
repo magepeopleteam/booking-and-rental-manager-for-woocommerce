@@ -108,7 +108,7 @@
                                                     'icon' => 'fa fa-calendar-check'
                                                 ],  
                             'multiple_items'  =>[
-                                                    'name' => __( 'Multiple day for multiple items jj', 'booking-and-rental-manager-for-woocommerce' ),
+                                                    'name' => __( 'Multiple day for multiple items', 'booking-and-rental-manager-for-woocommerce' ),
                                                     'desc' => 'This option is perfect for renting out multiple items over multiple days. You can set pricing by the <b>hour</b>, <b>per day</b>, <b>per week</b>, or <b>per month</b>, giving customers flexible rental choices.',
                                                     'icon' => 'fa fa-layer-group'
                                                 ],
@@ -1958,6 +1958,7 @@
                     $rbfw_particular_switch     = isset( $_POST['rbfw_particular_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_particular_switch'] ) ) : 'off';
 
 
+                    echo $rbfw_particular_switch;exit;
 
 					update_post_meta( $post_id, 'rbfw_item_type', $rbfw_item_type );
 
