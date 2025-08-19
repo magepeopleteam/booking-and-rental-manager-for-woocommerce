@@ -170,39 +170,85 @@
             rbfw_price_calculation_sd();
         });
 
-        function updateTotal() {
+        function updateTotalSdTypeCheckbox() {
             let total = 0;
-
-            jQuery(".rbfw_bikecarsd_qty_plus").each(function() {
+            let hasQty = false;
+            jQuery(".rbfw_bikecarsd_checkbox").each(function() {
                 let checkbox = jQuery(this);
                 let qtyInput = checkbox.closest("label").find(".rbfw_bikecarsd_qty");
                 let price = parseFloat(qtyInput.data("price")) || 0;
                 let qty = parseInt(qtyInput.val()) || 0;
-
                 if (checkbox.is(":checked")) {
                     total += price * qty;
+                    if (qty > 0) {
+                        hasQty = true; // mark that we found one
+                    }
                 }
             });
 
-            alert(total);
+            if (hasQty) {
+                jQuery('.rbfw_bikecarsd_es_price_table').show();
+                jQuery('button.rbfw_bikecarsd_book_now_btn').removeAttr('disabled');
+                jQuery(' button.rbfw_bikecarsd_book_now_btn').removeClass('rbfw_disabled_button');
+            }else{
+                jQuery('.rbfw_bikecarsd_es_price_table').hide();
+                jQuery('button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
+                jQuery('button.rbfw_bikecarsd_book_now_btn').addClass('rbfw_disabled_button');
+            }
+
+            jQuery("#rbfw_service_price").val(total.toFixed(2));
+            rbfw_price_calculation_sd();
         }
 
-        // Checkbox toggle -> show qty input
-        /*$(".rbfw_bikecarsd_qty_plus").on("change", function() {*/
-        jQuery(document).on("change", ".rbfw_bikecarsd_qty_plus", function(e) {
+
+        jQuery(document).on("change", ".rbfw_bikecarsd_checkbox", function(e) {
             let qtyInput = jQuery(this).closest("label").find(".rbfw_bikecarsd_qty");
             if (jQuery(this).is(":checked")) {
                 qtyInput.show().val(1); // default to 1 when checked
             } else {
                 qtyInput.hide().val(0);
             }
-            updateTotal();
+            updateTotalSdTypeCheckbox();
         });
 
-        // Quantity change
-       /* $(".rbfw_bikecarsd_qty").on("input", function() {*/
+
         jQuery(document).on("input", ".rbfw_bikecarsd_qty", function(e) {
-            updateTotal();
+            updateTotalSdTypeCheckbox();
+        });
+
+
+
+        function updateTotalSdExtraServiceCheckbox() {
+            let total = 0;
+            jQuery(".rbfw_extra_service_sd_checkbox").each(function() {
+                let checkbox = jQuery(this);
+                let qtyInput = checkbox.closest("label").find(".rbfw_servicesd_qty");
+                let price = parseFloat(qtyInput.data("price")) || 0;
+                let qty = parseInt(qtyInput.val()) || 0;
+                if (checkbox.is(":checked")) {
+                    total += price * qty;
+                }
+            });
+
+
+            jQuery("#rbfw_es_service_price").val(total.toFixed(2));
+            rbfw_price_calculation_sd();
+        }
+
+
+        jQuery(document).on("change", ".rbfw_extra_service_sd_checkbox", function(e) {
+            let qtyInput = jQuery(this).closest("label").find(".rbfw_servicesd_qty");
+            if (jQuery(this).is(":checked")) {
+                qtyInput.show().val(1); // default to 1 when checked
+            } else {
+                qtyInput.hide().val(0);
+            }
+            updateTotalSdExtraServiceCheckbox();
+        });
+
+
+        jQuery(document).on("input", ".rbfw_servicesd_qty", function(e) {
+            updateTotalSdExtraServiceCheckbox();
         });
 
 
@@ -232,7 +278,7 @@
         });
 
         // When minus button clicked
-        jQuery(document).on("click", ".rbfw_bikecarsd_qty_plus", function(e) {
+        jQuery(document).on("click", ".rbfw_bikecarsd_qty_minus", function(e) {
             e.preventDefault();
             let $input = $(this).siblings(".rbfw_bikecarsd_qty");
             let min = parseInt($input.attr("min")) || 0;
@@ -348,7 +394,7 @@
 
 
 
-function calculateTotal() {
+function calculateTotal() {  
     let total = 0;
     let hasQty = false;
     // Loop through each qty input
