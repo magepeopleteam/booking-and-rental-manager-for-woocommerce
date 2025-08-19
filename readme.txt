@@ -214,6 +214,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.4.6
+Extra ajax request removed and calculation fast.
+Updated UI and UX design.
+
 2.4.4
 Monthly and weekly price implemented for multi day.
 Search result update.

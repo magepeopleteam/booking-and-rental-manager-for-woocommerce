@@ -25,16 +25,7 @@ if( ! class_exists('RBFW_Custom_Post')){
             switch($columns){
                 case 'rbfw_item_type':
                     $rbfw_item_type = get_post_meta($post_id,'rbfw_item_type',true);
-                    $item_type = [
-						'bike_car_sd' => 'Bike/Car for single day',
-						'bike_car_md' => 'Bike/Car for multiple day',
-						'resort' => 'Resort',
-						'equipment' => 'Equipment',
-						'dress' => 'Dress',
-						'appointment' => 'Appointment',
-						'others' => 'Others',
-						'multiple_items' => ' Multiple day for multiple items',
-					];
+                    $item_type = RBFW_Function::rbfw_rent_types();
                     foreach($item_type as $kay => $value):
                         echo $kay==$rbfw_item_type ? esc_html($value) : '';
                     endforeach;

@@ -74,7 +74,6 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 
 
 
-
             },
             complete:function(response) {
                 jQuery('html, body').animate({
@@ -89,6 +88,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 // update input value onclick and onchange
 
 
+/*
 jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_servicesd_qty_plus, .rbfw_service_qty_plus',function (e) {
 
     let quantity_fixed = jQuery(this).data('quantity_fixed');
@@ -150,7 +150,7 @@ jQuery(document).on('change','.rbfw_bikecarsd_qty',function (e) {
 
 
 
-/********For single day services************/
+/!********For single day services************!/
 
 jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus,.rbfw_servicesd_qty_minus,.rbfw_servicesd_qty_plus',function (e) {
 
@@ -213,7 +213,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_qty_plus,.rbfw_bikecarsd_qty_minus,
     });
 
 
-       /***********for single day extra services**********/
+       /!***********for single day extra services**********!/
 jQuery(document).on('change','.rbfw_bikecarsd_qty, .rbfw_servicesd_qty',function (e) {
         let data_cat         = jQuery(this).attr('data-cat');
         let post_id = jQuery('#rbfw_post_id').val();
@@ -322,16 +322,7 @@ jQuery(document).on('change','.rbfw_bikecarsd_qty',function (e) {
         }
     });
 
-
-function rbfw_mps_checkout_header_link(){
-    jQuery('.rbfw_mps_header_action_link').click(function (e) {
-        e.preventDefault();
-        jQuery('.rbfw_mps_user_form_result').empty();
-        jQuery('.rbfw_mps_form_wrap').hide();
-        let this_data_id = jQuery(this).attr('data-id');
-        jQuery('.rbfw_mps_form_wrap[data-id="'+this_data_id+'"]').show();
-    });
-}
+*/
 
 
 /*start resort pricing booking*/
@@ -423,16 +414,34 @@ function particular_time_date_dependent_ajax(post_id,date_ymd,type='',rbfw_enabl
             jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
             jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
 
-            if (response[1] == ".rbfw-select.rbfw-time-price.dropoff_time") {
-                var quantity_options = "<option value=''>" + rbfw_translation.return_time + "</option>";
+            if(type=='sd'){
+
+                let quantity_options = '';
+
+                jQuery.each(response[0], function(i, item) {
+                        quantity_options += `
+                            <a data-time="${item[1]}" class="rbfw_bikecarsd_time">
+                                <span class="rbfw_bikecarsd_time_span">${item[1]}</span>
+                            </a>
+                        `;
+                });
+                jQuery(response[1]).html(quantity_options);
+
             } else {
-                var quantity_options = "<option value=''>" + rbfw_translation.pickup_time + "</option>";
+                if (response[1] == ".rbfw-select.rbfw-time-price.dropoff_time") {
+                    var quantity_options = "<option value=''>" + rbfw_translation.return_time + "</option>";
+                } else {
+                    var quantity_options = "<option value=''>" + rbfw_translation.pickup_time + "</option>";
+                }
+
+                jQuery.each(response[0], function(i, item) {
+                    quantity_options += "<option "+ item[0] +" value="+i+">"+item[1]+"</option>";
+                });
+                jQuery(response[1]).html(quantity_options);
             }
 
-            jQuery.each(response[0], function(i, item) {
-                quantity_options += "<option "+ item[0] +" value="+i+">"+item[1]+"</option>";
-            });
-            jQuery(response[1]).html(quantity_options);
+
+
 
 
 
@@ -478,12 +487,6 @@ function particular_time_date_dependent_ajax(post_id,date_ymd,type='',rbfw_enabl
 }
 
 
-
-function rbfw_today_date() {
-    var default_d = new Date();
-    var new_d = changeTimezone(default_d, rbfw_calendar_object.default_timezone);
-    return new_d;
-}
 
 
 jQuery(document).on('click', '#add-date-range-row',function(e){

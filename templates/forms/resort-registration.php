@@ -46,7 +46,7 @@
                         <div class="item-content pricing-content">
                             <div class="section-header">
                                 <div class="rbfw-single-right-heading rbfw_pricing_info_heading">
-                                    <?php echo esc_html($rbfw->get_option_trans('rbfw_text_pricing_info', 'rbfw_basic_translation_settings', __('Pricing Info','booking-and-rental-manager-for-woocommerce'))); ?>
+                                    <?php esc_html_e('Pricing Info','booking-and-rental-manager-for-woocommerce'); ?>
                                 </div>
                             </div>
                         </div>
@@ -180,24 +180,26 @@
                 <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo esc_attr($rbfw_maximum_booking_day); ?>">
                 <?php do_action('rbfw_ticket_feature_info'); ?>
                 <div class="item">
-                        <div class="rbfw-single-right-heading mb-08"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_checkin_checkout_date', 'rbfw_basic_translation_settings')); ?></div>
-                        <div class="item-content rbfw-datetime">
-                            <div class="left date">
-                                <span class="calendar"><i class="fas fa-calendar-alt"></i></span>
-                                <input type="hidden" name="rbfw_start_datetime" id="hidden_checkin_date">
-                                <input class="rbfw-input rbfw-time-price" type="text" name="rbfw_start" id="checkin_date" placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_checkin_date', 'rbfw_basic_translation_settings', __('Check-In Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly>
-                            </div>
-                            <div class="right date">
-                                <span class="calendar"><i class="fas fa-calendar-alt"></i></span>
-                                <input type="hidden" name="rbfw_end_datetime" id="hidden_checkout_date">
-                                <input class="rbfw-input rbfw-time-price" type="text" name="rbfw_end" id="checkout_date" placeholder="<?php echo esc_attr($rbfw->get_option_trans('rbfw_text_checkout_date', 'rbfw_basic_translation_settings', __('Check-Out Date','booking-and-rental-manager-for-woocommerce'))); ?>" required readonly>
-                            </div>
+                    <div class="rbfw-single-right-heading mb-08">
+                        <?php esc_html_e('Check-In & Check-Out Date','booking-and-rental-manager-for-woocommerce'); ?>
+                    </div>
+                    <div class="item-content rbfw-datetime">
+                        <div class="left date">
+                            <span class="calendar"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="hidden" name="rbfw_start_datetime" id="hidden_checkin_date">
+                            <input class="rbfw-input rbfw-time-price" type="text" name="rbfw_start" id="checkin_date" placeholder="<?php esc_attr_e('Check-In Date','booking-and-rental-manager-for-woocommerce'); ?>" required readonly>
+                        </div>
+                        <div class="right date">
+                            <span class="calendar"><i class="fas fa-calendar-alt"></i></span>
+                            <input type="hidden" name="rbfw_end_datetime" id="hidden_checkout_date">
+                            <input class="rbfw-input rbfw-time-price" type="text" name="rbfw_end" id="checkout_date" placeholder="<?php esc_attr_e('Check-Out Date','booking-and-rental-manager-for-woocommerce'); ?>" required readonly>
                         </div>
                     </div>
+                </div>
 
                 <div class="item">
                     <a class="rbfw_chk_availability_btn">
-                        <?php echo esc_html($rbfw->get_option_trans('rbfw_text_check_availability', 'rbfw_basic_translation_settings', __('Check Availability','booking-and-rental-manager-for-woocommerce'))); ?>
+                        <?php esc_html_e('Check Availability','booking-and-rental-manager-for-woocommerce'); ?>
                     </a>
                 </div>
 

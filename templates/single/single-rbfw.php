@@ -24,11 +24,22 @@ if ( wp_is_block_theme() ) {  ?>
         <header class="wp-block-template-part site-header">
             <?php block_header_area(); ?>
         </header>
+
     </div>
     <?php
 } else {
     get_header();
     the_post();
+
+    if ( function_exists( 'blocksy_output_hero_section' ) ) {
+        if (apply_filters('blocksy:single:has-default-hero', true)) {
+            echo blocksy_output_hero_section([
+                'type' => 'type-2'
+            ]);
+        }
+    }
+
+
 }
 
 

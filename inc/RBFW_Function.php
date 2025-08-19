@@ -34,17 +34,6 @@
 			}
 
 
-			public static function get_submit_info( $key, $default = '' ) {
-
-                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
-                    return;
-                }
-
-                $data = isset($_POST[ $key ])?sanitize_text_field(wp_unslash($_POST[ $key ])): $default;
-
-				return self::data_sanitize( $data );
-			}
-
 			//***********Template********************//
 
 			public static function get_all_template() {
@@ -163,6 +152,20 @@
 			public static function get_cpt_name(): string {
 				return 'rbfw_item';
 			}
+
+            public static function rbfw_rent_types( ) {
+                $item_type = [
+                    'bike_car_sd'     => __('Rent item for single day', 'booking-and-rental-manager-for-woocommerce'),
+                    'bike_car_md'     => __('Rent item for multiple day', 'booking-and-rental-manager-for-woocommerce'),
+                    'resort'          => __('Resort', 'booking-and-rental-manager-for-woocommerce'),
+                    'equipment'       => __('Equipment', 'booking-and-rental-manager-for-woocommerce'),
+                    'dress'           => __('Dress', 'booking-and-rental-manager-for-woocommerce'),
+                    'appointment'     => __('Appointment', 'booking-and-rental-manager-for-woocommerce'),
+                    'others'          => __('Others', 'booking-and-rental-manager-for-woocommerce'),
+                    'multiple_items'  => __('Multiple day for multiple items', 'booking-and-rental-manager-for-woocommerce'),
+                ];
+                return $item_type;
+            }
 
 			//****************feture lists***********//
 		}
