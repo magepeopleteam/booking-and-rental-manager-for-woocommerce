@@ -1449,7 +1449,7 @@
     });
 
 
-    $(document).on('click', 'input[name=rbfw_particular_switch]', function (e) {
+    $(document).on('click', '.rbfw_particular_switch', function (e) {
         var status = $(this).val();
         if (status === 'on') {
             $(this).val('off');
