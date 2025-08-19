@@ -85,7 +85,7 @@ function mp_load_date_picker(parent = jQuery('.mpStyle')) {
 		jQuery(this).removeClass('hasDatepicker').attr('id', '').removeData('datepicker').unbind();
 	}).promise().done(function () {
 		parent.find(".date_type").datepicker({
-			dateFormat: mp_date_format,
+			dateFormat: js_date_format,
 			//showButtonPanel: true,
 			autoSize: true,
 			changeMonth: true,
@@ -107,7 +107,7 @@ function mp_alert($this, attr = 'alert') {
 	"use strict";
 	$(document).ready(function () {
 		mp_load_date_picker();
-		$('.mp_select2').select2({});
+		//$('.mp_select2').select2({});
 	});
 }(jQuery));
 //====================================================================Load Bg Image=================//

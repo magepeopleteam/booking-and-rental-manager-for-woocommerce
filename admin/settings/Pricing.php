@@ -88,27 +88,27 @@
                         $rbfw_item_type = ($rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others')?"bike_car_md":$rbfw_item_type;
                         $item_type = [
                             'bike_car_sd'     =>[
-                                                    'name' => 'Single day',
+                                                    'name' =>__( 'Single day', 'booking-and-rental-manager-for-woocommerce' ) ,
                                                     'desc' => 'This option is ideal for rentals such as <b>bikes</b>, <b>boats</b>, <b>yachts</b>, <b>kayaks</b>, or similar items that can be hired for a full day, by the hour, or for a specific time slot within a single day. It provides flexibility for both hourly and fixed-duration',
                                                     'icon' => 'fa fa-calendar-day'
                                                 ],
                             'bike_car_md'     =>[
-                                                    'name' => 'Multiple day',  
+                                                    'name' => __( 'Multiple day', 'booking-and-rental-manager-for-woocommerce' ),
                                                     'desc' => 'This option is perfect for rentals like <b>cars</b>, <b>equipment</b>, <b>dresses</b>, <b>sports kits</b>, or similar items that customers can hire for one day or several days. Customers can select a date range for their booking, and you can set pricing by the hour, per day, or for weekends.',   
                                                     'icon' => 'fa fa-calendar-alt'
                                                 ],
                             'resort'          =>[
-                                                    'name' => 'Resort',  
+                                                    'name' => __( 'Resort', 'booking-and-rental-manager-for-woocommerce' ),
                                                     'desc' => 'This option is designed for resorts or similar accommodations where you can set <b>day-night</b> price or <b>day-long</b> price. The total price is automatically calculated based on the number of days the customer selects for their stay.',                       
                                                     'icon' => 'fa fa-hotel'
                                                 ],
                             'appointment'     =>[
-                                                    'name' => 'Appointment', 
+                                                    'name' => __( 'Appointment', 'booking-and-rental-manager-for-woocommerce' ),
                                                     'desc' => 'This option is ideal for appointment-based services such as <b>barbers</b>, <b>spas</b>, <b>yoga classes</b>, <b>consultations</b>, <b>hair care</b>, and similar activities. Pricing can be set according to the specific service offered.',                   
                                                     'icon' => 'fa fa-calendar-check'
                                                 ],  
                             'multiple_items'  =>[
-                                                    'name' => 'Multiple day for multiple items',
+                                                    'name' => __( 'Multiple day for multiple items jj', 'booking-and-rental-manager-for-woocommerce' ),
                                                     'desc' => 'This option is perfect for renting out multiple items over multiple days. You can set pricing by the <b>hour</b>, <b>per day</b>, <b>per week</b>, or <b>per month</b>, giving customers flexible rental choices.',
                                                     'icon' => 'fa fa-layer-group'
                                                 ],

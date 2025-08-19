@@ -255,7 +255,7 @@ function fetch_order_details_callback() {
                                                     ?>
                                                     <tr>
                                                         <td><strong><?php echo esc_html( $key ); ?></strong></td>
-                                                        <td><?php echo esc_html( $value ); ?></td>
+                                                        <td><?php echo wp_kses( $value, rbfw_allowed_html() ); ?></td>
                                                     </tr>
                                                     <?php
                                                 }
@@ -785,7 +785,7 @@ function rbfw_order_meta_box_callback() {
                     <?php if ( ! empty( $service_info ) ) { ?>
                         <tr>
                             <td>
-                                <strong><?php rbfw_string( 'rbfw_text_extra_service_information', esc_html__( 'Extra Service Information', 'booking-and-rental-manager-for-woocommerce' ) );
+                                <strong><?php rbfw_string( 'rbfw_text_extra_service_information', esc_html__( 'Extra Service Information jj', 'booking-and-rental-manager-for-woocommerce' ) );
                                     echo ':'; ?></strong>
                             </td>
                             <td>
@@ -796,7 +796,7 @@ function rbfw_order_meta_box_callback() {
                                             foreach ( $service_info as $key => $value ) {
                                                 ?>
                                                 <tr>
-                                                    <td><strong><?php echo esc_html( $key ); ?></strong></td>
+                                                    <td><strong><?php //echo esc_html( $key ); ?></strong></td>
                                                     <td><?php echo wp_kses( $value, rbfw_allowed_html() ); ?></td>
                                                 </tr>
                                                 <?php

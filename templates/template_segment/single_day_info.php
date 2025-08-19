@@ -142,7 +142,7 @@ if(isset($_POST['post_id'])){
                                                             <a class="rbfw_qty_plus rbfw_bikecarsd_qty_plus"><i class="fas fa-plus"></i></a>
                                                         <?php }else{ ?>
                                                             <label class="switch">
-                                                                <input type="checkbox" class="rbfw_bikecarsd_qty_plus" data-quantity_fixed="checkbox">
+                                                                <input type="checkbox" class="rbfw_bikecarsd_checkbox" data-quantity_fixed="checkbox">
                                                                 <span class="slider round"></span>
                                                                 <input style="display:none" type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($type_price); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
                                                             </label>
@@ -229,7 +229,7 @@ if(isset($_POST['post_id'])){
                                                             <a class="rbfw_qty_plus rbfw_servicesd_qty_plus"><i class="fas fa-plus"></i></a>
                                                         <?php }else{ ?>
                                                             <label class="switch">
-                                                                <input type="checkbox" class="rbfw_servicesd_qty_plus"  data-quantity_fixed="checkbox">
+                                                                <input type="checkbox" class="rbfw_extra_service_sd_checkbox"  data-quantity_fixed="checkbox">
                                                                 <span class="slider round"></span>
                                                                 <input style="display: none" type="number" min="0" max="<?php echo esc_attr($max_es_available_qty) ?>" value="0" name="rbfw_service_info[<?php echo esc_attr($c)?>][service_qty]" class="rbfw_servicesd_qty" data-price="<?php echo esc_attr($value['service_price']); ?>" data-type="<?php echo esc_attr($value['service_name']); ?>" data-cat="service"/>
                                                             </label>

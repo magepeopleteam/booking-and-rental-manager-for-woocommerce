@@ -35,13 +35,9 @@ function render_mep_events_by_status( $posts ) {
             $rental_shortcode = "[rent-add-to-cart id=$rental_id]";
             $featured_image_url = get_the_post_thumbnail_url( $rental_id, 'medium' );
 
-            if( $rbfw_rent_type === 'bike_car_sd' ){
-                $price_type = 'Bike/Car for single day';
-            }else if( $rbfw_rent_type === 'bike_car_md' ){
-                $price_type = 'Bike/Car for multiple day';
-            }else{
-                $price_type = $rbfw_rent_type;
-            }
+            $item_type = RBFW_Function::rbfw_rent_types();
+
+            $price_type = $item_type[$rbfw_rent_type];
 
 
             $rbfw_categories = get_post_meta( $rental_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $rental_id, 'rbfw_categories', true ) ) : [];
