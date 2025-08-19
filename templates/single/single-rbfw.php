@@ -31,11 +31,15 @@ if ( wp_is_block_theme() ) {  ?>
     get_header();
     the_post();
 
-    if (apply_filters('blocksy:single:has-default-hero', true)) {
-        echo blocksy_output_hero_section([
-            'type' => 'type-2'
-        ]);
+    if ( function_exists( 'blocksy_output_hero_section' ) ) {
+        if (apply_filters('blocksy:single:has-default-hero', true)) {
+            echo blocksy_output_hero_section([
+                'type' => 'type-2'
+            ]);
+        }
     }
+
+
 }
 
 
