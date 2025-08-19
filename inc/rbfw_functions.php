@@ -2310,10 +2310,13 @@
 	}
 	function rbfw_get_available_times_particulars( $rbfw_id, $start_date, $type = '', $selector = '' ) {
 
-		$particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
+        $rbfw_particular_switch = get_post_meta($rbfw_id, 'rbfw_particular_switch', true) ? get_post_meta($rbfw_id, 'rbfw_particular_switch', true) : 'off';
+
+
+        $particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
 		$the_array   = [];
 
-		if(!empty($particulars_data)){
+		if($rbfw_particular_switch =='on' && !empty($particulars_data)){
 
 			foreach ( $particulars_data as $single ) {
 				$pd_dates_array = getAllDates( $single['start_date'], $single['end_date'] );
