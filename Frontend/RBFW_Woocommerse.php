@@ -2,8 +2,8 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
 	}
-if (!class_exists('MPTBM_Woocommerce')) {
-    class MPTBM_Woocommerce
+if (!class_exists('RBFW_Woocommerce')) {
+    class RBFW_Woocommerce
     {
 
         public function __construct()
@@ -1288,7 +1288,7 @@ if (!class_exists('MPTBM_Woocommerce')) {
         }
 
     }
-    new MPTBM_Woocommerce();
+    new RBFW_Woocommerce();
 }
 
 
