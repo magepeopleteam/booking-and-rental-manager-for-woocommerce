@@ -390,7 +390,7 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                                 </li>
 
                                 <li class="total">
-                                    <?php esc_html_e('Price','booking-and-rental-manager-for-woocommerce'); ?>
+                                    <?php esc_html_e('Total Price','booking-and-rental-manager-for-woocommerce'); ?>
                                     <span class="price-figure" data-price="">
                                     </span>
                                 </li>

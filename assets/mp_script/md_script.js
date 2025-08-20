@@ -783,11 +783,6 @@ function calculateTotalSingleItem() {
         let price = parseFloat(jQuery(this).data('price')) || 0;
         let qtyInput = jQuery('input[name="' + jQuery(this).attr('name').replace('[main_cat_name]', '[quantity]') + '"]');
         let service_price_type = jQuery(this).data('service_price_type');
-
-        alert(service_price_type);
-
-
-
         let qty = parseInt(qtyInput.val()) || 1;
         service_price += price * qty;
     });
