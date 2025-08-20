@@ -105,6 +105,9 @@
 				//mp style
 				wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
 				wp_enqueue_script( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_script.js', array(), time(), true );
+				wp_localize_script( 'mp_plugin_global', 'mp_script_vars', array(
+					'mp_empty_image_url' => RBFW_PLUGIN_URL . '/assets/images/no_image.png'
+				) );
 				//loading owl carousel css
 				wp_enqueue_style( 'owl.carousel.min', RBFW_PLUGIN_URL . '/css/owl.carousel.min.css' );
 				wp_enqueue_style( 'owl.theme.default', RBFW_PLUGIN_URL . '/css/owl.theme.default.min.css' );

@@ -97,12 +97,15 @@
 							$count = 1;
 							foreach ( $image_ids as $id ) {
 								$image_url = RBFW_Function::get_image_url( '', $id );
-								$size = getimagesize($image_url);
 								$width=0;
 								$height=0;
-								if ($size) {
-									$width = $size[0];
-									$height = $size[1];
+								// FIXED: Check if image_url is not empty before calling getimagesize() - 2025-01-27 by Shahnur Alam
+								if ( !empty($image_url) && filter_var($image_url, FILTER_VALIDATE_URL) ) {
+									$size = getimagesize($image_url);
+									if ($size) {
+										$width = $size[0];
+										$height = $size[1];
+									}
 								}
 								?>
                                 <div class="sliderItem" data-slide-index="<?php echo esc_html( $count ); ?>" data-target-popup="superSlider" data-placeholder>

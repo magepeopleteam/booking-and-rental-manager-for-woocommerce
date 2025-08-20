@@ -120,7 +120,7 @@ function loadBgImage() {
 			if (target.css('background-image') === 'none' || width === 0 || height === 0) {
 				let bg_url = target.data('bg-image');
 				if (!bg_url || bg_url.width === 0 || bg_url.width === 'undefined') {
-					bg_url = mp_empty_image_url;
+					bg_url = mp_script_vars.mp_empty_image_url;
 				}
 				mp_resize_bg_image_area(target, bg_url);
 				target.css('background-image', 'url("' + bg_url + '")').promise().done(function () {
@@ -148,7 +148,7 @@ function mpwem_slider_resize(target) {
 		// if (jQuery(this).css('background-image') === 'none' || width === 0 || height === 0) {
 		let bg_url = jQuery(this).data('bg-image');
 		if (!bg_url || bg_url.width === 0 || bg_url.width === 'undefined') {
-			bg_url = mp_empty_image_url;
+			bg_url = mp_script_vars.mp_empty_image_url;
 		}
 		let imgWidth = jQuery(this).data('width');
 		let imgHeight = jQuery(this).data('height');
@@ -217,8 +217,8 @@ function mp_resize_bg_image_area(target, bg_url) {
 			if (target.closest('.sliderAllItem').length === 0) {
 				let bg_url = target.data('bg-image');
 				if (!bg_url || bg_url.width === 0 || bg_url.width === 'undefined') {
-					bg_url = mp_empty_image_url;
-				}
+				bg_url = mp_script_vars.mp_empty_image_url;
+			}
 				mp_resize_bg_image_area(target, bg_url);
 			}
 		});

@@ -372,7 +372,9 @@ jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #
 
     if(changedElement == 'durationType'){
         jQuery('.item-price').children('span').hide();
-        jQuery('.item-price .rbfw_'+durationType+'_price').show();
+        // FIXED: Sanitize durationType to prevent jQuery selector syntax errors - 2025-01-27 by Shahnur Alam
+        var sanitizedDurationType = durationType.replace(/[^a-zA-Z0-9_-]/g, '_');
+        jQuery('.item-price .rbfw_'+sanitizedDurationType+'_price').show();
     }
 
     if (!pickup_date) {
@@ -911,7 +913,9 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
 
             jQuery('.rbfw_pricing_applied').hide();
             if(response.pricing_applied != 'No'){
-                jQuery('.rbfw_pricing_applied.'+response.pricing_applied).show();
+                // FIXED: Sanitize class name to prevent jQuery selector syntax errors - 2025-01-27 by Shahnur Alam
+                var sanitizedClass = response.pricing_applied.replace(/[^a-zA-Z0-9_-]/g, '_');
+                jQuery('.rbfw_pricing_applied.' + sanitizedClass).show();
             }
 
 
@@ -1079,8 +1083,10 @@ function rbfw_service_price_calculation(total_days){
         var service_quantity = jQuery(this).data('quantity');
         var rbfw_enable_md_type_item_qty = jQuery(this).data('rbfw_enable_md_type_item_qty');
         if(rbfw_enable_md_type_item_qty=='yes'){
-            jQuery('.item_'+item_no).removeAttr('style');
-            jQuery('.available-stock'+'.item_'+item_no).css('display','block');
+            // FIXED: Sanitize item_no to prevent jQuery selector syntax errors - 2025-01-27 by Shahnur Alam
+            var sanitizedItemNo = item_no.toString().replace(/[^a-zA-Z0-9_-]/g, '_');
+            jQuery('.item_'+sanitizedItemNo).removeAttr('style');
+            jQuery('.available-stock'+'.item_'+sanitizedItemNo).css('display','block');
         }
         if(service_price_type=='day_wise'){
             total +=  jQuery(this).data('price')*service_quantity*total_days;
