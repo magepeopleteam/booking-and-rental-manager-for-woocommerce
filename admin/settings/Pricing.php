@@ -318,6 +318,7 @@
 
             public function multiple_items( $post_id ) {
                 $rbfw_item_type                  = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+                $rbfw_enable_time_picker    = get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) : 'no';
 
                 $pricing_types           = get_post_meta( $post_id, 'pricing_types', true ) ? get_post_meta( $post_id, 'pricing_types', true ) : [];
                 $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info', true ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
@@ -326,6 +327,7 @@
                 $checked_item = (get_the_title($post_id)=='Auto Draft')?true:false;
 
                 ?>
+
                 <section class="rbfw_multiple_items <?php echo esc_attr( $rbfw_item_type == 'multiple_items') ? 'show' : 'hide'; ?>">
                     <div class="">
                             <div class="">
@@ -416,7 +418,24 @@
                                 </button>
                             </div>
 
-                            <input type="hidden" name="rbfw_enable_time_picker" value="yes">
+                        <div class="rbfw_multi_day_price_conf">
+                            <div class="item">
+                                <div class="item-left">
+                                    <div class="label">Enable Time Picker</div>
+                                    <div class="description">
+                                        Toggle to enable time selection for more precise rental periods.
+                                    </div>
+                                </div>
+                                <div class="item-right">
+                                    <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">
+                                        <div class="toggle-knob"></div>
+                                    </div>
+                                    <input type="hidden" name="rbfw_enable_time_picker" class="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
+                                </div>
+                            </div>
+                        </div>
+
+
 
                             <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','md','mi' ); ?>
 
@@ -1034,6 +1053,9 @@
                     </script>
 
                 </section>
+
+
+
                 <?php
             }
 

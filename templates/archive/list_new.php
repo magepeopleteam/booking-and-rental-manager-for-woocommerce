@@ -162,6 +162,38 @@
 		} else {
 			$price_level = $prices_start_at;
 		}
+
+        if($rbfw_rent_type == 'multiple_items'){
+
+            $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info', true ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
+            function findMinimumPrice($items) {
+                $minPrice = PHP_INT_MAX;
+                $minItem  = null;
+                $minType  = null;
+
+                foreach ($items as $item) {
+                    foreach (['hourly_price', 'daily_price', 'weekly_price', 'monthly_price'] as $priceType) {
+                        if (!empty($item[$priceType]) && $item[$priceType] < $minPrice) {
+                            $minPrice = $item[$priceType];
+                            $minItem  = $item['item_name'];
+                            $minType  = $priceType;
+                        }
+                    }
+                }
+
+                return [
+                    'item_name' => $minItem,
+                    'price_type' => $minType,
+                    'price' => $minPrice
+                ];
+            }
+
+            $result = findMinimumPrice($multiple_items_info);
+
+            $price = $result['price'];
+            $price_level = ($result['price_type']=='hourly_price')?'Hourly':(($result['price_type']=='daily_price')?'Daily':(($result['price_type']=='weekly_price')?'Weekly':'Monthly'));
+
+        }
 		?>
         <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo esc_attr( $d ); ?>">
             <div class="rbfw_rent_list_inner_wrapper">
