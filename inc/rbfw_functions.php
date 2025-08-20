@@ -3487,6 +3487,28 @@ function rbfw_end_time(){
     }
 }
 
+function findMinimumPrice($items) {
+    $minPrice = PHP_INT_MAX;
+    $minItem  = null;
+    $minType  = null;
+
+    foreach ($items as $item) {
+        foreach (['hourly_price', 'daily_price', 'weekly_price', 'monthly_price'] as $priceType) {
+            if (!empty($item[$priceType]) && $item[$priceType] < $minPrice) {
+                $minPrice = $item[$priceType];
+                $minItem  = $item['item_name'];
+                $minType  = $priceType;
+            }
+        }
+    }
+
+    return [
+        'item_name' => $minItem,
+        'price_type' => $minType,
+        'price' => $minPrice
+    ];
+}
+
 
 add_action( 'rbfw_ticket_feature_info', 'rbfw_ticket_feature_info' );
 function rbfw_ticket_feature_info(){
