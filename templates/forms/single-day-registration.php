@@ -163,10 +163,8 @@
                             </div>
                         </div>
                     </div>
-
-                    <input type="hidden" name="end_date" value="2025-08-07">
-                    <input type="hidden" name="end_time" value="08:00:00">
-                    <input type="hidden" name="service_type" value="type 1">
+                    
+                    <input type="hidden" name="service_type" id="rbfw_service_type_for_st" value="">
 
                     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step rbfw_extra_service_sd" style="display: none">
                         <div class="">
