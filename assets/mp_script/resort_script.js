@@ -213,7 +213,16 @@ function calculateTotalDurationPrice() {
     // You can update this in a DOM element, console, or wherever you want
     jQuery('#rbfw_room_duration_price').val(room_duration_price.toFixed(2));
 
+    resort_total_price = room_duration_price + parseFloat(jQuery('#rbfw_extra_service_price').val());
+
+
+
     jQuery('.duration-costing .price-figure').text(rbfw_translation.currency + room_duration_price.toFixed(2));
+
+
+    jQuery('.subtotal .price-figure').text(rbfw_translation.currency + resort_total_price.toFixed(2));
+    jQuery('.total .price-figure').text(rbfw_translation.currency + resort_total_price.toFixed(2));
+
 }
 
 
