@@ -367,6 +367,7 @@ jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #
     let pickup_time = jQuery('#pickup_time').find(':selected').val();
     let durationType = jQuery('#durationType').val();
     let durationQty = jQuery('#durationQty').val();
+    let rbfw_enable_time_slot = jQuery('#rbfw_enable_time_slot').val();
 
     const changedElement = e.target.id || e.target.className;
 
@@ -379,8 +380,15 @@ jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #
         jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
     }
 
-    if(pickup_date && pickup_time && durationType && durationQty){
-        calculateTotalMultipleItems();
+    if(pickup_date  && durationType && durationQty){
+        if(rbfw_enable_time_slot=='no'){
+            calculateTotalMultipleItems();
+        }else{
+            if(pickup_time){
+                calculateTotalMultipleItems();
+            }
+        }
+
     }
 
 });

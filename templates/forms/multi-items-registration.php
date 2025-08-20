@@ -78,7 +78,8 @@ $rbfw_event_end_time  = gmdate('h:i a', strtotime($rbfw_event_end_time));
 $rbfw_event_last_date = strtotime(date_i18n('Y-m-d h:i a', strtotime($rbfw_event_end_date.' '.$rbfw_event_end_time)));
 $rbfw_todays_date = strtotime(date_i18n('Y-m-d h:i a'));
 $referal_page = '';
-$rbfw_enable_time_picker = 'yes';
+
+$rbfw_enable_time_picker = get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) ? get_post_meta($rbfw_id, 'rbfw_enable_time_picker', true) : 'no';
 if(isset($_GET['rbfw_start_date']) && $_GET['rbfw_start_date'] && isset($_GET['rbfw_end_date']) && $_GET['rbfw_end_date']){
     $rbfw_enable_time_picker = 'no';
     $referal_page = 'search';
@@ -207,7 +208,8 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                     <div class="rbfw_select_rental_period">
                         <div class="item">
                             <div class="item-content rbfw-datetime">
-                                <div class="left date">
+
+                                <div class="<?php echo ($rbfw_enable_time_picker=='yes')?'left':'' ?> date">
                                     <div class="rbfw-single-right-heading">
                                         <?php esc_html_e('Pickup Date','booking-and-rental-manager-for-woocommerce'); ?>
                                     </div>
@@ -224,20 +226,24 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
                                     </div>
                                 </div>
 
-                                <div class="right time">
-                                    <div class="rbfw-single-right-heading">
-                                        <?php esc_html_e('Pickup Time','booking-and-rental-manager-for-woocommerce'); ?>
+                                <?php if($rbfw_enable_time_picker=='yes'){ ?>
+
+                                    <div class="right time">
+                                        <div class="rbfw-single-right-heading">
+                                            <?php esc_html_e('Pickup Time','booking-and-rental-manager-for-woocommerce'); ?>
+                                        </div>
+                                        <div class="rbfw-p-relative">
+                                        <span class="clock">
+                                            <i class="fa-regular fa-clock"></i>
+                                        </span>
+                                            <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_pickup_start_time" id="pickup_time" required>
+                                                <option value="" disabled selected><?php esc_html_e('Pickup Time','booking-and-rental-manager-for-woocommerce'); ?></option>
+                                            </select>
+                                            <span class="input-picker-icon"></span>
+                                        </div>
                                     </div>
-                                    <div class="rbfw-p-relative">
-                                    <span class="clock">
-                                        <i class="fa-regular fa-clock"></i>
-                                    </span>
-                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_pickup_start_time" id="pickup_time" required>
-                                            <option value="" disabled selected><?php esc_html_e('Pickup Time','booking-and-rental-manager-for-woocommerce'); ?></option>
-                                        </select>
-                                        <span class="input-picker-icon"></span>
-                                    </div>
-                                </div>
+
+                                <?php } ?>
 
                             </div>
                         </div>
