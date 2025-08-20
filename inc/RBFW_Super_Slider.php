@@ -97,6 +97,7 @@
 							$count = 1;
 							foreach ( $image_ids as $id ) {
 								$image_url = RBFW_Function::get_image_url( '', $id );
+								$image_url = $image_url ?: RBFW_PLUGIN_URL . '/assets/images/no_image.png';
 								$size = getimagesize($image_url);
 								$width=0;
 								$height=0;
