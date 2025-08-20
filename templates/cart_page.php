@@ -252,6 +252,8 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
         <?php
 
+
+
         foreach ( $rbfw_bikecarsd_data as $key => $value ){
             $rent_type = $value['rent_type'];
             if ( array_key_exists( $rent_type, $rbfw_type_info ) ) {
