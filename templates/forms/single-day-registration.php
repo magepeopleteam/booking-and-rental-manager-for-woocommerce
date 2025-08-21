@@ -163,7 +163,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <input type="hidden" name="service_type" id="rbfw_service_type_for_st" value="">
 
                     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step rbfw_extra_service_sd" style="display: none">
