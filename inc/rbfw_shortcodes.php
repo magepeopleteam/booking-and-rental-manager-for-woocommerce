@@ -498,6 +498,13 @@ function rbfw_add_to_cart_shortcode_func($atts){
         $BikeCarMdclass = new RBFW_BikeCarMd_Function();
         $BikeCarMdclass->rbfw_bike_car_md_frontend_scripts($post_id);
 
+    } elseif($rbfw_item_type == 'multiple_items'){
+
+
+        include(  RBFW_TEMPLATE_PATH . 'forms/multi-items-registration.php' );
+
+
+
     }
     elseif($rbfw_item_type == 'resort'){
         include(  RBFW_TEMPLATE_PATH . 'forms/resort-registration.php' );
