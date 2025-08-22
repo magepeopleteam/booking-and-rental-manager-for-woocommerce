@@ -225,6 +225,15 @@
                                 </div>
                             <?php } ?>
 
+                            <?php
+                            /* Include Custom Registration Form */
+                            if(class_exists('Rbfw_Reg_Form')){
+                                $reg_form = new Rbfw_Reg_Form();
+                                echo wp_kses($reg_form->rbfw_generate_regf_fields($rbfw_id),  rbfw_allowed_html());
+                            }
+                            /* End: Include Custom Registration Form */
+                            ?>
+
                             <div class="item rbfw_bikecarsd_price_summary">
                                 <label class="rbfw-single-right-heading"><?php _e('Booking Summary','booking-and-rental-manager-for-woocommerce'); ?></label>
                                 <div class="item-content rbfw-costing">
@@ -275,11 +284,7 @@
 				</div>
 
                 <?php
-                $rbfw_regf_info = [];
-                if(class_exists('Rbfw_Reg_Form')){
-                    $ClassRegForm = new Rbfw_Reg_Form();
-                    $rbfw_regf_info = $ClassRegForm->rbfw_get_regf_all_fields_name($post_id);
-                }
+
                 $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
                 $available_times = get_post_meta($post_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];
 
