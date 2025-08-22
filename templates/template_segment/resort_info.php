@@ -48,6 +48,7 @@ if(isset($post_id) && isset($active_tab)){
     </div>
 
     <input type="hidden" name="rbfw_room_price_category" value="<?php echo esc_attr($active_tab); ?>"/>
+    <input type="hidden" name="resort_total_days" id="resort_total_days" value="<?php echo esc_attr($total_days); ?>"/>
 
     <div class="rbfw_resort_rt_price_table_container">
         <table class="rbfw_room_price_table rbfw_resort_rt_price_table">

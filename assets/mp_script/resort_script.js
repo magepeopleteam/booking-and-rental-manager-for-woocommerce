@@ -195,7 +195,8 @@ function calculateTotalDurationPrice() {
     jQuery('.rbfw_room_qty').each(function() {
         let qty = parseInt(jQuery(this).val()) || 0;
         let price = parseFloat(jQuery(this).data('price')) || 0;
-        room_duration_price += qty * price;
+        let resort_total_days = jQuery('#resort_total_days').val();
+        room_duration_price += qty * resort_total_days * price;
         if (qty > 0) {
             hasQty = true; // mark that we found one
         }
