@@ -1171,6 +1171,10 @@
 			$end_time = $duration;
 		} else {
 			$total_hours = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? (int)$duration * 24 : (int)$duration * 24 * 7 ) );
+			// Fixed by Shahnur Alam: Validate $total_hours to prevent DateMalformedStringException
+			if ( empty( $total_hours ) || ! is_numeric( $total_hours ) ) {
+				$total_hours = 0;
+			}
 			$for_end_date_time->modify( "+$total_hours hours" );
 			$end_date = $for_end_date_time->format( 'Y-m-d' );
 			$end_time = $for_end_date_time->format( 'H:i:s' );
