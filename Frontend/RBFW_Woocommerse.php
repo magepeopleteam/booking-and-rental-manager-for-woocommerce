@@ -57,10 +57,22 @@ if (!class_exists('RBFW_Woocommerce')) {
             }
             $discount_type   = '';
             $discount_amount = 0;
-            $rbfw_regf_info  = [];
+            // FIXED: Get registration form data from cart item data instead of re-processing POST
+            // This ensures we use the enhanced data collection that handles long labels properly
+            $rbfw_regf_info = [];
             if ( class_exists( 'Rbfw_Reg_Form' ) ) {
-                $ClassRegForm   = new Rbfw_Reg_Form();
-                $rbfw_regf_info = $ClassRegForm->rbfw_regf_value_array_function( $rbfw_id );
+                $ClassRegForm = new Rbfw_Reg_Form();
+                
+                // CRITICAL FIX: Always use the enhanced cart function to get registration form data
+                // This ensures we capture ALL custom fields including those with long labels
+                $enhanced_regf_info = $ClassRegForm->rbfw_regf_add_cart_function( array(), $rbfw_id );
+                
+                if ( isset( $enhanced_regf_info['rbfw_regf_info'] ) && !empty( $enhanced_regf_info['rbfw_regf_info'] ) ) {
+                    $rbfw_regf_info = $enhanced_regf_info['rbfw_regf_info'];
+                } else {
+                    // Fallback to the old method if enhanced method fails
+                    $rbfw_regf_info = $ClassRegForm->rbfw_regf_value_array_function( $rbfw_id );
+                }
             }
             $cart_item_data['rbfw_id'] = $rbfw_id;
             if ( $rbfw_rent_type == 'resort' ) {
