@@ -214,15 +214,33 @@ function calculateTotalDurationPrice() {
     // You can update this in a DOM element, console, or wherever you want
     jQuery('#rbfw_room_duration_price').val(room_duration_price.toFixed(2));
 
-    resort_total_price = room_duration_price + parseFloat(jQuery('#rbfw_extra_service_price').val());
+    var sub_total_price = room_duration_price + parseFloat(jQuery('#rbfw_extra_service_price').val());
 
 
 
     jQuery('.duration-costing .price-figure').text(rbfw_translation.currency + room_duration_price.toFixed(2));
 
 
-    jQuery('.subtotal .price-figure').text(rbfw_translation.currency + resort_total_price.toFixed(2));
-    jQuery('.total .price-figure').text(rbfw_translation.currency + resort_total_price.toFixed(2));
+
+    let rbfw_security_deposit_actual_amount = 0;
+    if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
+        let rbfw_security_deposit_amount  = jQuery('#rbfw_security_deposit_amount').val();
+        if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
+            rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
+        }else{
+            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+        }
+    }
+
+    var total_price = sub_total_price + parseFloat(rbfw_security_deposit_actual_amount);
+    if(rbfw_security_deposit_actual_amount){
+        jQuery('.security_deposit').show();
+        jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
+    }
+
+
+    jQuery('.subtotal .price-figure').text(rbfw_translation.currency + sub_total_price.toFixed(2));
+    jQuery('.total .price-figure').text(rbfw_translation.currency + total_price.toFixed(2));
 
 }
 
@@ -243,10 +261,28 @@ function calculateTotalResortExtraService() {
     jQuery('#rbfw_extra_service_price').val(resort_extra_service.toFixed(2));
     jQuery('.resource-costing .price-figure').text(rbfw_translation.currency + resort_extra_service.toFixed(2));
 
-    resort_total_price = parseFloat(jQuery('#rbfw_room_duration_price').val()) + resort_extra_service;
+    let sub_total_price = parseFloat(jQuery('#rbfw_room_duration_price').val()) + resort_extra_service;
 
-    jQuery('.subtotal .price-figure').text(rbfw_translation.currency + resort_total_price.toFixed(2));
-    jQuery('.total .price-figure').text(rbfw_translation.currency + resort_total_price.toFixed(2));
+
+    let rbfw_security_deposit_actual_amount = 0;
+    if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
+        let rbfw_security_deposit_amount  = jQuery('#rbfw_security_deposit_amount').val();
+        if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
+            rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
+        }else{
+            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+        }
+    }
+
+    var total_price = sub_total_price + parseFloat(rbfw_security_deposit_actual_amount);
+    if(rbfw_security_deposit_actual_amount){
+        jQuery('.security_deposit').show();
+        jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
+    }
+
+
+    jQuery('.subtotal .price-figure').text(rbfw_translation.currency + sub_total_price.toFixed(2));
+    jQuery('.total .price-figure').text(rbfw_translation.currency + total_price.toFixed(2));
 }
 
 /*

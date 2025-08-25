@@ -25,6 +25,10 @@
 
     $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($rbfw_id, 'rbfw_available_qty_info_switch', true) : 'no';
 
+    $rbfw_enable_security_deposit = get_post_meta($rbfw_id, 'rbfw_enable_security_deposit', true) ? get_post_meta($rbfw_id, 'rbfw_enable_security_deposit', true) : 'no';
+    $rbfw_security_deposit_type = get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) : 'percentage';
+    $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) : 0;
+
 
 ?>
 
@@ -243,7 +247,6 @@
                                             <span>
                                                 <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
                                             </span>
-
                                         </li>
                                         <?php if(!empty($rbfw_extra_service_data)){ ?>
                                             <li class="resource-costing extra_service_cost rbfw-cond">
@@ -258,6 +261,10 @@
                                             <span>
                                                 <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
                                             </span>
+                                        </li>
+                                        <li class="security_deposit" style="display:none;">
+                                            <?php echo esc_html((!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : __('Security Deposit','booking-and-rental-manager-for-woocommerce'))); ?>
+                                            <span></span>
                                         </li>
                                         <li class="total">
                                             <strong><?php esc_html_e('Total','booking-and-rental-manager-for-woocommerce'); ?></strong>
@@ -306,9 +313,13 @@
                 <input type="hidden" name="rbfw_start_time" id="rbfw_start_time" value="00:00">
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price" value="0">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price" value="0">
+
+                <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
+                <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">
+                <input type="hidden" name="rbfw_security_deposit_amount" id="rbfw_security_deposit_amount"  value="<?php echo esc_attr($rbfw_security_deposit_amount); ?>">
+
                 <input type="hidden" name="manage_inventory_as_timely" id="manage_inventory_as_timely" value="<?php echo esc_attr($manage_inventory_as_timely); ?>">
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
-                <input type="hidden" name="rbfw_regf_info" id="rbfw_regf_info"  value='<?php echo wp_json_encode($rbfw_regf_info); ?>'>
                 <input type="hidden" name="appointment_days" id="appointment_days"  value='<?php echo esc_attr($appointment_days); ?>'>
                 <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
                 <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range" class="llll"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>

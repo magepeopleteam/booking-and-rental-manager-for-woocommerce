@@ -269,6 +269,12 @@ if(isset($_POST['post_id'])){
                             <?php echo esc_html__( 'Subtotal','booking-and-rental-manager-for-woocommerce' ); ?>
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                         </li>
+
+                        <li class="security_deposit" style="display:none;">
+                            <?php echo esc_html((!empty(get_post_meta($id, 'rbfw_security_deposit_label', true)) ? get_post_meta($id, 'rbfw_security_deposit_label', true) : __('Security Deposit','booking-and-rental-manager-for-woocommerce'))); ?>
+                            <span></span>
+                        </li>
+
                         <li class="total">
                             <strong><?php echo esc_html__( 'Total','booking-and-rental-manager-for-woocommerce' ); ?></strong>
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>

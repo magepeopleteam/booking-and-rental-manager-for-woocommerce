@@ -418,8 +418,7 @@ jQuery(document).on('click', '.rbfw_multi_items_qty_plus', function () {
     if (value < max) {
         input.val(value + 1).trigger('input');
     }
-    row.find('.rbfw-resource-qty').val(value);
-    calculateTotalMultipleItems(true);
+
 });
 
     // Handle minus button
@@ -430,7 +429,6 @@ jQuery(document).on('click', '.rbfw_multi_items_qty_minus', function () {
     if (value > 0) {
         input.val(value - 1).trigger('input');
     }
-    calculateTotalMultipleItems(true);
 });
 
     // Initial calculation on page load
@@ -728,29 +726,48 @@ function rbfw_multi_items_ajax_price_calculation(){
 }
 
 function calculateAdditional() {
-    let total = 0;
+    let additional_price = 0;
     jQuery('.rbfw_muiti_items_additional_service_qty').each(function () {
         const price = parseFloat(jQuery(this).data('price')) || 0;
         const service_price_type = jQuery(this).data('service_price_type');
         const quantity = jQuery(this).val() || 0;
         if(service_price_type=='day_wise'){
             const rbfw_total_days = jQuery('#rbfw_total_days').val();
-            total += price * quantity * rbfw_total_days;
+            additional_price += price * quantity * rbfw_total_days;
         }else{
-            total += price * quantity;
+            additional_price += price * quantity;
         }
     });
 
-    if(total){
-        jQuery('#AddonsPrice span').text(rbfw_translation.currency + total.toFixed(2));
+    if(additional_price){
+        jQuery('#AddonsPrice span').text(rbfw_translation.currency + additional_price.toFixed(2));
         jQuery('#AddonsPrice').show();
     }else{
         jQuery('#AddonsPrice').hide();
     }
 
-    jQuery('#rbfw_service_category_price').val(total.toFixed(2));
-    total = total + parseInt(jQuery('#rbfw_multi_item_price').val());
-    jQuery('.price-figure').text(rbfw_translation.currency+total.toFixed(2));
+    jQuery('#rbfw_service_category_price').val(additional_price.toFixed(2));
+
+    var sub_total_price = additional_price + parseInt(jQuery('#rbfw_multi_item_price').val());
+
+    let rbfw_security_deposit_actual_amount = 0;
+    if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
+        let rbfw_security_deposit_amount  = jQuery('#rbfw_security_deposit_amount').val();
+        if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
+            rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
+        }else{
+            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+        }
+    }
+    var total_price = sub_total_price + rbfw_security_deposit_actual_amount;
+    if(rbfw_security_deposit_actual_amount){
+        jQuery('.security_deposit').show();
+        jQuery('.security_deposit span').html(rbfw_translation.currency + rbfw_security_deposit_actual_amount.toFixed(2));
+    }
+
+
+    jQuery('.subtotal .price-figure').text(rbfw_translation.currency+sub_total_price.toFixed(2));
+    jQuery('.total .price-figure').text(rbfw_translation.currency+total_price.toFixed(2));
 
 }
 
@@ -776,9 +793,23 @@ function calculateTotalExtraService() {
 
     jQuery('.resource-costing span').text(rbfw_translation.currency + resourse_cost.toFixed(2));
 
-    var total_price = resourse_cost + parseFloat(jQuery('#rbfw_duration_price').val());
+    var sub_total_price = resourse_cost + parseFloat(jQuery('#rbfw_duration_price').val());
 
-    jQuery('.subtotal .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
+
+    let rbfw_security_deposit_actual_amount = 0;
+    if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
+        let rbfw_security_deposit_amount  = jQuery('#rbfw_security_deposit_amount').val();
+        if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
+            rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
+        }else{
+            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+        }
+    }
+    var total_price = sub_total_price + rbfw_security_deposit_actual_amount;
+    jQuery('.security_deposit span').html(rbfw_translation.currency + rbfw_security_deposit_actual_amount.toFixed(2));
+
+
+    jQuery('.subtotal .price-figure').html(rbfw_translation.currency + sub_total_price.toFixed(2));
     jQuery('.total .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
 
 }
@@ -801,8 +832,21 @@ function calculateTotalSingleItem() {
     var resourse_cost = service_price + parseInt(jQuery('#rbfw_es_service_price').val());
 
     jQuery('.resource-costing span').text(rbfw_translation.currency + resourse_cost.toFixed(2));
-    
-    var total_price = resourse_cost + parseFloat(jQuery('#rbfw_duration_price').val());
+
+    var sub_total_price = resourse_cost + parseFloat(jQuery('#rbfw_duration_price').val());
+
+
+    let rbfw_security_deposit_actual_amount = 0;
+    if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
+        let rbfw_security_deposit_amount  = jQuery('#rbfw_security_deposit_amount').val();
+        if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
+             rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
+        }else{
+            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+        }
+    }
+    var total_price = sub_total_price + rbfw_security_deposit_actual_amount;
+    jQuery('.security_deposit span').html(rbfw_translation.currency + rbfw_security_deposit_actual_amount.toFixed(2));
 
     jQuery('.subtotal .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
     jQuery('.total .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
@@ -814,7 +858,7 @@ function calculateTotalMultipleItems(only_calculation=false) {
 
     var durationType = jQuery('#durationType').val();
     var durationQty = parseInt(jQuery('#durationQty').val()) || 1;
-    var total = 0;
+    var item_total_price = 0;
     jQuery('.rbfw_muiti_items_qty').each(function () {
         var $qtyInput = jQuery(this);
         var pricePerUnit = parseFloat($qtyInput.data('price-' + durationType)) || 0;
@@ -826,11 +870,11 @@ function calculateTotalMultipleItems(only_calculation=false) {
             .find('.rbfw_item_peice')
             .val(pricePerUnit.toFixed(2));
 
-        total += itemTotal;
+        item_total_price += itemTotal;
     });
 
 
-    if(total){
+    if(item_total_price){
         jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',false);
         jQuery('.multi-service-category-section').show();
     }else{
@@ -839,12 +883,33 @@ function calculateTotalMultipleItems(only_calculation=false) {
     }
 
 
-    jQuery('#rbfw_multi_item_price').val(total.toFixed(2));
+    jQuery('#rbfw_multi_item_price').val(item_total_price.toFixed(2));
 
-    total = total + parseInt(jQuery('#rbfw_service_category_price').val());
+    var sub_total_price = item_total_price + parseInt(jQuery('#rbfw_service_category_price').val());
 
     if(only_calculation){
-        jQuery('.price-figure').text(rbfw_translation.currency+total.toFixed(2))
+
+        let rbfw_security_deposit_actual_amount = 0;
+        if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
+            let rbfw_security_deposit_amount  = jQuery('#rbfw_security_deposit_amount').val();
+            if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
+                rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
+            }else{
+                rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+            }
+        }
+        var total_price = sub_total_price + rbfw_security_deposit_actual_amount;
+        if(rbfw_security_deposit_actual_amount){
+            jQuery('.security_deposit').show();
+            jQuery('.security_deposit span').html(rbfw_translation.currency + rbfw_security_deposit_actual_amount.toFixed(2));
+        }
+
+
+
+        jQuery('.subtotal .price-figure').text(rbfw_translation.currency+sub_total_price.toFixed(2));
+        jQuery('.total .price-figure').text(rbfw_translation.currency+total_price.toFixed(2));
+
+
     }else{
         rbfw_multi_items_ajax_price_calculation();
     }
