@@ -785,6 +785,8 @@ function calculateTotalExtraService() {
         extra_service_price += price * qty;
     });
 
+
+
     // Show total in a container with id="total_price"
     var rbfw_service_price = jQuery('#rbfw_service_price').val();
     jQuery('#rbfw_es_service_price').val(extra_service_price.toFixed(2));
@@ -796,6 +798,8 @@ function calculateTotalExtraService() {
     var sub_total_price = resourse_cost + parseFloat(jQuery('#rbfw_duration_price').val());
 
 
+
+
     let rbfw_security_deposit_actual_amount = 0;
     if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
         let rbfw_security_deposit_amount  = jQuery('#rbfw_security_deposit_amount').val();
@@ -805,8 +809,10 @@ function calculateTotalExtraService() {
             rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
         }
     }
-    var total_price = sub_total_price + rbfw_security_deposit_actual_amount;
-    jQuery('.security_deposit span').html(rbfw_translation.currency + rbfw_security_deposit_actual_amount.toFixed(2));
+
+
+    var total_price = sub_total_price + parseFloat(rbfw_security_deposit_actual_amount);
+    jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
 
 
     jQuery('.subtotal .price-figure').html(rbfw_translation.currency + sub_total_price.toFixed(2));
@@ -823,8 +829,20 @@ function calculateTotalSingleItem() {
         let qtyInput = jQuery('input[name="' + jQuery(this).attr('name').replace('[main_cat_name]', '[quantity]') + '"]');
         let service_price_type = jQuery(this).data('service_price_type');
         let qty = parseInt(qtyInput.val()) || 1;
-        service_price += price * qty;
+
+
+        if(service_price_type=='day_wise'){
+            const rbfw_total_days = jQuery('#rbfw_total_days').val();
+            service_price += price * qty * rbfw_total_days;
+        }else{
+            service_price += price * qty;
+        }
+
     });
+
+
+
+
 
     // Show total in an element with id="total_price"
     jQuery('#rbfw_service_price').val(service_price.toFixed(2));
@@ -845,10 +863,10 @@ function calculateTotalSingleItem() {
             rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
         }
     }
-    var total_price = sub_total_price + rbfw_security_deposit_actual_amount;
-    jQuery('.security_deposit span').html(rbfw_translation.currency + rbfw_security_deposit_actual_amount.toFixed(2));
+    var total_price = sub_total_price + parseFloat(rbfw_security_deposit_actual_amount);
+    jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
 
-    jQuery('.subtotal .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
+    jQuery('.subtotal .price-figure').html(rbfw_translation.currency + sub_total_price.toFixed(2));
     jQuery('.total .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
 
 }
