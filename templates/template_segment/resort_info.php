@@ -65,8 +65,6 @@ if(isset($post_id) && isset($active_tab)){
             <?php
             $i = 0;
 
-            setcookie("pricing_applied", "No");
-
             foreach ($rbfw_resort_room_data as $key => $value) {
                 $img_url    = wp_get_attachment_url($value['rbfw_room_image']);
                 $uniq_id    = wp_rand();
@@ -272,9 +270,9 @@ if(isset($post_id) && isset($active_tab)){
                 <span>
                     <?php echo esc_html__( 'Duration Cost','booking-and-rental-manager-for-woocommerce' ); ?>
                     <span class="rbfw_pricing_applied">
-                        <?php if($_COOKIE['pricing_applied']=='sessional'){ ?>
+                        <?php if(get_transient("pricing_applied")=='sessional'){ ?>
                             (<?php esc_html_e( 'Sessional pricing applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
-                        <?php }elseif ($_COOKIE['pricing_applied']=='mds'){ ?>
+                        <?php }elseif (get_transient("pricing_applied")=='mds'){ ?>
                             (<?php esc_html_e( 'Multi day pricing saver applied', 'booking-and-rental-manager-for-woocommerce' ); ?>)
                         <?php } ?>
                     </span>

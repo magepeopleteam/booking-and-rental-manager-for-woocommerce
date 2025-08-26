@@ -47,7 +47,7 @@ $post_id = get_the_id();
 $frontend = 'yes';
 $submit_name = 'add-to-cart';
 
-
+set_transient("pricing_applied", "No", 3600);
 
 
 /*$rbfw_inventory = get_post_meta($post_id,'rbfw_inventory',true);
