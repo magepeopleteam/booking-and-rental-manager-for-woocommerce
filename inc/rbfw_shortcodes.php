@@ -717,7 +717,7 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
             <?php if( $left_filter_control['title_filter_shown'] === 'on' ){?>
                 <div class="rbfw_left_filter_text_Search_holder">
                     <div class="rbfw_left_filter_search_text_input">
-                        <input name="rbfw_search_by_title" class="rbfw_search_by_title" placeholder="<?php esc_html_e('Title search','booking-and-rental-manager-for-woocommerce'); ?>">
+                        <input name="rbfw_search_by_title" class="rbfw_search_by_title" placeholder="<?php esc_attr_e('Title search','booking-and-rental-manager-for-woocommerce'); ?>">
                     </div>
                     <div class="rbfw_left_filter_search_btn"><?php esc_html_e('Filter','booking-and-rental-manager-for-woocommerce'); ?></div>
                 </div>
