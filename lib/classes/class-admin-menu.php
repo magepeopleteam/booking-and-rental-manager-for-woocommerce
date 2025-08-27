@@ -18,6 +18,7 @@
 				add_action( 'add_meta_boxes', array( $this, 'add_meta_box_func' ) );
 				add_action( 'admin_init', array( $this, 'admin_init' ) );
 				add_action( 'admin_menu', array( $this, 'admin_menu' ) );
+				add_action( 'admin_enqueue_scripts', array( $this, 'rbfw_admin_enqueue_scripts' ) );
 				/* WooCommerce Action and Filter */
 				add_filter( 'woocommerce_order_status_changed', array( $this, 'rbfw_wc_status_update' ), 10, 4 );
 				/* End WooCommerce Action and Filter */
@@ -44,15 +45,24 @@
 				// End PRO plugin is activated
 			}
 
+			public function rbfw_admin_enqueue_scripts( $hook ) {
+				// Only load on our order list page
+				if ( $hook === 'rbfw_item_page_rbfw_order' ) {
+					wp_enqueue_style( 
+						'rbfw-order-list-modern', 
+						plugin_dir_url( __FILE__ ) . '../../assets/admin/css/rbfw-order-list-modern.css', 
+						array(), 
+						'1.0.0' 
+					);
+				}
+			}
+
 			public function rbfw_time_slots() {
 				$time_slots_page = new RBFW_Timeslots_Page();
 				$time_slots_page->rbfw_time_slots_page();
 			}
 
 			public function rbfw_order_list() {
-
-				// Enqueue the modern CSS
-				wp_enqueue_style( 'rbfw-order-list-modern', plugin_dir_url( __FILE__ ) . '../../assets/admin/css/rbfw-order-list-modern.css', array(), '1.0.0' );
 
 				$args                 = array(
 					'post_type'      => 'rbfw_order',
@@ -251,7 +261,7 @@
                     </div>
                     
                     <div class="rental-order-list-load-more-container">
-                        <button id="load-more-btn" class="rental-order-list-load-more-btn"><?php esc_html_e( 'Load More Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                        <button id="load-more-btn" class="rental-order-list-load-more-btn" style="display: <?php echo ($total_orders > 10) ? 'block' : 'none'; ?>;"><?php esc_html_e( 'Load More Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                     </div>
                 </div>
                 <script>
