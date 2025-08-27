@@ -2828,7 +2828,9 @@ function rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $d
     }
     $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
     $custom_rate = get_post_meta($post_id, "rbfw_{$day}_hourly_rate", true);
-    return $enabled === 'yes' ? ($custom_rate * $hours) : ($hourly_rate * $hours);
+    return $enabled === 'yes'
+        ? ((float) $custom_rate * (float) $hours)
+        : ((float) $hourly_rate * (float) $hours);
 }
 
 function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
