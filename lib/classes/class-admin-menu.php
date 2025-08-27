@@ -51,6 +51,8 @@
 
 			public function rbfw_order_list() {
 
+				// Enqueue the modern CSS
+				wp_enqueue_style( 'rbfw-order-list-modern', plugin_dir_url( __FILE__ ) . '../../assets/admin/css/rbfw-order-list-modern.css', array(), '1.0.0' );
 
 				$args                 = array(
 					'post_type'      => 'rbfw_order',
@@ -58,11 +60,91 @@
 					'posts_per_page' => - 1
 				);
 				$query                = new WP_Query( $args );
+				
+				// Calculate stats
+				$total_orders = $query->found_posts;
+				$completed_orders = 0;
+				$cancelled_orders = 0;
+				$pending_orders = 0;
+				$total_amount = 0;
+				
+				if ( $query->have_posts() ) {
+					while ( $query->have_posts() ) {
+						$query->the_post();
+						global $post;
+						$post_id = $post->ID;
+						$wc_order_id = get_post_meta( $post_id, 'rbfw_order_id', true );
+						$order = wc_get_order($wc_order_id);
+						
+						if ($order) {
+							$status = $order->get_status();
+							$total_amount += $order->get_total();
+							
+							switch($status) {
+								case 'completed':
+									$completed_orders++;
+									break;
+								case 'cancelled':
+									$cancelled_orders++;
+									break;
+								case 'pending':
+								case 'on-hold':
+									$pending_orders++;
+									break;
+							}
+						}
+					}
+					wp_reset_postdata();
+				}
 				?>
-                <div class="rbfw_order_page_wrap wrap">
-                    <h1 class="awesome-heading"><?php esc_html_e( 'Order List', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
-                    <input type="text" id="search" class="search-input awesome-search" placeholder="<?php esc_attr_e( 'Search by order id or customer name..', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
-                    <table class="rbfw_order_page_table">
+                <div class="rental-order-list-dashboard">
+                    <div class="rental-order-list-header">
+                        <h1><?php esc_html_e( 'ORDER LIST', 'booking-and-rental-manager-for-woocommerce' ); ?></h1>
+                    </div>
+                    
+                    <!-- Stats Cards -->
+                    <div class="rental-order-list-stats-grid">
+                        <div class="rental-order-list-stat-card rental-order-list-total">
+                            <div class="rental-order-list-stat-icon">📊</div>
+                            <div class="rental-order-list-stat-info">
+                                <div class="rental-order-list-stat-number"><?php echo esc_html( $total_orders ); ?></div>
+                                <div class="rental-order-list-stat-label"><?php esc_html_e( 'Total Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $total_amount ) ); ?></div>
+                            </div>
+                        </div>
+                        <div class="rental-order-list-stat-card rental-order-list-cancelled">
+                            <div class="rental-order-list-stat-icon">❌</div>
+                            <div class="rental-order-list-stat-info">
+                                <div class="rental-order-list-stat-number"><?php echo esc_html( $cancelled_orders ); ?></div>
+                                <div class="rental-order-list-stat-label"><?php esc_html_e( 'Cancelled Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( 0 ) ); ?></div>
+                            </div>
+                        </div>
+                        <div class="rental-order-list-stat-card rental-order-list-completed">
+                            <div class="rental-order-list-stat-icon">✅</div>
+                            <div class="rental-order-list-stat-info">
+                                <div class="rental-order-list-stat-number"><?php echo esc_html( $completed_orders ); ?></div>
+                                <div class="rental-order-list-stat-label"><?php esc_html_e( 'Completed Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( 0 ) ); ?></div>
+                            </div>
+                        </div>
+                        <div class="rental-order-list-stat-card rental-order-list-pending">
+                            <div class="rental-order-list-stat-icon">⏳</div>
+                            <div class="rental-order-list-stat-info">
+                                <div class="rental-order-list-stat-number"><?php echo esc_html( $pending_orders ); ?></div>
+                                <div class="rental-order-list-stat-label"><?php esc_html_e( 'Pending Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( 0 ) ); ?></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="rental-order-list-search-container">
+                        <div class="rental-order-list-search-icon">🔍</div>
+                        <input type="text" id="search" class="rental-order-list-search-input" placeholder="<?php esc_attr_e( 'Search by order id or customer name..', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                    </div>
+                    
+                    <div class="rental-order-list-table-container">
+                        <table class="rental-order-list-table">
                         <thead>
                         <tr>
                             <th><?php esc_html_e( 'Order', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
@@ -107,31 +189,31 @@
                                 <td><?php echo esc_html( get_the_date( 'F j, Y' ) . ' ' . get_the_time() ); ?></td>
                                 <td><?php echo esc_html( ! empty( $rbfw_start_datetime ) ? date_i18n( 'F j, Y g:i a', strtotime( $rbfw_start_datetime ) ) : '' ); ?></td>
                                 <td><?php echo esc_html( ! empty( $rbfw_end_datetime ) ? date_i18n( 'F j, Y g:i a', strtotime( $rbfw_end_datetime ) ) : '' ); ?></td>
-                                <td><span class="rbfw_order_status <?php echo esc_attr( $status ); ?>"><?php echo esc_html( $status ) ;  ?></span></td>
-                                <td><?php echo wp_kses_post( wc_price( $total_price ) ); ?></td>
+                                <td><span class="rental-order-list-status-badge rental-order-list-status-<?php echo esc_attr( $status ); ?>"><?php echo esc_html( ucfirst($status) ); ?></span></td>
+                                <td><span class="rental-order-list-price"><?php echo wp_kses_post( wc_price( $total_price ) ); ?></span></td>
 								<?php if ( function_exists( 'rbfw_pro_tab_menu_list' ) ) { ?>
                                     <td>
-                                        <a href="javascript:void(0);" class="rbfw_order_view_btn" data-post-id="<?php echo esc_attr( $post_id ); ?>">
-                                            <i class="fas fa-pen-to-square"></i>
-											<?php esc_html_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                        </a>
-                                        <a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post_id . '&action=edit' ) ); ?>" class="rbfw_order_edit_btn">
-                                            <i class="fas fa-pen-to-square"></i>
-											<?php esc_html_e( 'Order status changes', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                        </a>
+                                        <div class="rental-order-list-action-buttons">
+                                            <a href="javascript:void(0);" class="rental-order-list-btn rental-order-list-btn-view rbfw_order_view_btn" data-post-id="<?php echo esc_attr( $post_id ); ?>">
+                                                👁️
+                                            </a>
+                                            <a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post_id . '&action=edit' ) ); ?>" class="rental-order-list-btn rental-order-list-btn-edit">
+                                                ✏️
+                                            </a>
+                                        </div>
                                     </td>
 								<?php
 									} else {
 								?>
                                     <td>
-                                        <a href="javascript:void(0);" class="rbfw_order_view_btn pro-overlay">
-                                            <i class="fas fa-pen-to-square"></i>
-											<?php esc_html_e( 'View Details', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                        </a>
-                                        <a href="javascript:void(0);" class="rbfw_order_edit_btn pro-overlay">
-                                            <i class="fas fa-pen-to-square"></i>
-											<?php esc_html_e( 'Order status changes', 'booking-and-rental-manager-for-woocommerce' ); ?>
-                                        </a>
+                                        <div class="rental-order-list-action-buttons">
+                                            <a href="javascript:void(0);" class="rental-order-list-btn rental-order-list-btn-view pro-overlay">
+                                                👁️
+                                            </a>
+                                            <a href="javascript:void(0);" class="rental-order-list-btn rental-order-list-btn-edit pro-overlay">
+                                                ✏️
+                                            </a>
+                                        </div>
                                     </td>
                                     <script>
 										document.querySelectorAll('.pro-overlay').forEach(function (button) {
@@ -162,79 +244,61 @@
 							wp_reset_postdata(); ?>
                         </tbody>
                     </table>
+                    </div>
+                    
                     <div id="loader" style="display: none;">
                         <div class="loader"></div> <!-- Loader element -->
                     </div>
-                    <label for="posts-per-page"><?php esc_html_e( 'Posts per Page:', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
-                    <select id="posts-per-page">
-                        <option value="2" <?php selected( $this->posts_per_page, 2 ); ?>>2</option>
-                        <option value="5" <?php selected( $this->posts_per_page, 5 ); ?>>5</option>
-                        <option value="10" <?php selected( $this->posts_per_page, 10 ); ?>>10</option>
-                        <option value="20" <?php selected( $this->posts_per_page, 20 ); ?>>20</option>
-                        <option value="25" <?php selected( $this->posts_per_page, 25 ); ?>>25</option>
-                        <option value="30" <?php selected( $this->posts_per_page, 30 ); ?>>30</option>
-                    </select>
-                    <div id="pagination" class="pagination"></div>
+                    
+                    <div class="rental-order-list-load-more-container">
+                        <button id="load-more-btn" class="rental-order-list-load-more-btn"><?php esc_html_e( 'Load More Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                    </div>
                 </div>
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         const rows = document.querySelectorAll('.order-row');
-                        const rowsPerPageSelect = document.getElementById('posts-per-page');
-                        let rowsPerPage = parseInt(rowsPerPageSelect.value);
-                        let currentPage = 1;
-                        const paginationElement = document.getElementById('pagination');
-                        function displayRows(page, rowsToShow = rows) {
-                            const start = (page - 1) * rowsPerPage;
-                            const end = start + rowsPerPage;
-                            rows.forEach(row => row.style.display = 'none'); // Hide all rows initially
-                            rowsToShow.forEach((row, index) => {
-                                if (index >= start && index < end) {
-                                    row.style.display = ''; // Show rows within the range
-                                }
+                        let rowsPerPage = 10;
+                        let currentlyShown = rowsPerPage;
+                        let filteredRows = Array.from(rows);
+                        
+                        function displayRows(rowsToShow = filteredRows) {
+                            // Hide all rows first
+                            rows.forEach(row => row.style.display = 'none');
+                            
+                            // Show only the rows we want to display
+                            rowsToShow.slice(0, currentlyShown).forEach(row => {
+                                row.style.display = '';
                             });
-                        }
-                        function setupPagination(rowsToShow = rows) {
-                            paginationElement.innerHTML = '';
-                            const totalPages = Math.ceil(rowsToShow.length / rowsPerPage);
-                            for (let i = 1; i <= totalPages; i++) {
-                                const button = document.createElement('button');
-                                button.className = 'page-button';
-                                button.textContent = i;
-                                button.dataset.page = i;
-                                button.addEventListener('click', function () {
-                                    currentPage = parseInt(this.dataset.page);
-                                    displayRows(currentPage, rowsToShow);
-                                    document.querySelectorAll('.page-button').forEach(btn => btn.classList.remove('active'));
-                                    this.classList.add('active');
-                                });
-                                paginationElement.appendChild(button);
-                            }
-                            // Set the first button as active by default
-                            if (paginationElement.firstChild) {
-                                paginationElement.firstChild.classList.add('active');
+                            
+                            // Update load more button
+                            const loadMoreBtn = document.getElementById('load-more-btn');
+                            if (currentlyShown >= rowsToShow.length) {
+                                loadMoreBtn.style.display = 'none';
+                            } else {
+                                loadMoreBtn.style.display = 'block';
                             }
                         }
+                        
+                        // Load more functionality
+                        document.getElementById('load-more-btn').addEventListener('click', function() {
+                            currentlyShown += rowsPerPage;
+                            displayRows(filteredRows);
+                        });
+                        
+                        // Search functionality
                         document.getElementById('search').addEventListener('keyup', function () {
                             const filter = this.value.toLowerCase();
-                            const filteredRows = Array.from(rows).filter(row => {
-                                const orderId = row.cells[0].textContent.toLowerCase(); // Order ID
-                                const billingName = row.cells[1].textContent.toLowerCase(); // Billing Name
-                                return orderId.includes(filter) || billingName.includes(filter); // Match either Order ID or Billing Name
+                            filteredRows = Array.from(rows).filter(row => {
+                                const orderId = row.cells[0].textContent.toLowerCase();
+                                const billingName = row.cells[1].textContent.toLowerCase();
+                                return orderId.includes(filter) || billingName.includes(filter);
                             });
-                            // Reset pagination and display filtered rows
-                            currentPage = 1;
-                            setupPagination(filteredRows);
-                            displayRows(currentPage, filteredRows);
+                            currentlyShown = rowsPerPage; // Reset to initial load
+                            displayRows(filteredRows);
                         });
-                        // Dropdown change event
-                        rowsPerPageSelect.addEventListener('change', function () {
-                            rowsPerPage = parseInt(this.value);
-                            setupPagination();
-                            displayRows(1); // Reset to the first page
-                        });
+                        
                         // Initial setup
-                        setupPagination();
-                        displayRows(currentPage);
+                        displayRows(filteredRows);
                     });
                 </script>
                 <script>
