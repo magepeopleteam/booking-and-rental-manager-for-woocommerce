@@ -18,7 +18,7 @@ body {
 }
 
 .rental-order-list-dashboard {
-    max-width: 1200px;
+    max-width: 1460px;
     margin: 0 auto;
     background: rgba(255, 255, 255, 0.95);
     border-radius: 20px;
@@ -180,12 +180,19 @@ body {
     box-shadow: 0 0 20px rgba(33, 150, 243, 0.2);
 }
 
+.rental-order-list-search-input::placeholder {
+    color: #999;
+    padding-left: 0;
+}
+
 .rental-order-list-search-icon {
     position: absolute;
-    left: 20px;
+    left: 95%;
     top: 50%;
     transform: translateY(-50%);
     color: #999;
+    pointer-events: none;
+    z-index: 2;
 }
 
 .rental-order-list-table-container {

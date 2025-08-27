@@ -63,6 +63,9 @@
 			}
 
 			public function rbfw_order_list() {
+				// Hide admin notices on order list page
+				add_action('admin_notices', array($this, 'rbfw_hide_admin_notices_on_order_page'), 1);
+				add_action('all_admin_notices', array($this, 'rbfw_hide_admin_notices_on_order_page'), 1);
 
 				$args                 = array(
 					'post_type'      => 'rbfw_order',
@@ -756,6 +759,27 @@
 				}
 
 				return $tax_list;
+			}
+
+			/**
+			 * Hide admin notices on RBFW order list page
+			 */
+			public function rbfw_hide_admin_notices_on_order_page() {
+				// Check if we're on the order list page
+				if (isset($_GET['page']) && $_GET['page'] === 'rbfw_order') {
+					// Remove all admin notices
+					remove_all_actions('admin_notices');
+					remove_all_actions('all_admin_notices');
+					
+					// Add custom CSS to hide any remaining notices
+					echo '<style>
+						.notice, .error, .updated, .update-nag, 
+						.notice-error, .notice-warning, .notice-success, .notice-info,
+						div.error, div.updated, div.notice {
+							display: none !important;
+						}
+					</style>';
+				}
 			}
 		}
 	}
