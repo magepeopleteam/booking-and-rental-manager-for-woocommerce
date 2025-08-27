@@ -81,26 +81,58 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
+    color: transparent !important;
     font-size: 1.2rem;
     flex-shrink: 0;
+    position: relative;
 }
 
 .rental-order-list-total .rental-order-list-stat-icon {
     background: #9c27b0;
 }
 
+.rental-order-list-total .rental-order-list-stat-icon::after {
+    content: "📈";
+    position: absolute;
+    color: white !important;
+    font-size: 1.2rem;
+}
+
 .rental-order-list-cancelled .rental-order-list-stat-icon {
     background: #f44336;
+}
+
+.rental-order-list-cancelled .rental-order-list-stat-icon::after {
+    content: "✖";
+    position: absolute;
+    color: white !important;
+    font-weight: bold;
+    font-size: 1.2rem;
 }
 
 .rental-order-list-completed .rental-order-list-stat-icon {
     background: #4caf50;
 }
 
+.rental-order-list-completed .rental-order-list-stat-icon::after {
+    content: "✓";
+    position: absolute;
+    color: white !important;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
 .rental-order-list-pending .rental-order-list-stat-icon {
     background: #ff9800;
 }
+
+.rental-order-list-pending .rental-order-list-stat-icon::after {
+    content: "⏳";
+    position: absolute;
+    color: white !important;
+    font-size: 1.2rem;
+}
+
 
 .rental-order-list-stat-info {
     flex: 1;
@@ -375,6 +407,285 @@ body {
 .rental-order-list-load-more-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+/* Order Details Content Styling - Exact Match to Reference Image */
+.rbfw_order_meta_box_wrap {
+    background: #f8f9fa !important;
+    padding: 20px !important;
+    border-radius: 8px !important;
+    margin: 20px 0 !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_meta_box_head h1 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #ffffff !important;
+    margin: -20px -20px 20px -20px !important;
+    padding: 20px !important;
+    border-radius: 8px 8px 0 0 !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_meta_box_body {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    margin-top: 20px !important;
+}
+
+/* Item Information Section - Left Side */
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type {
+    background: #ffffff !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    border-right: 10px solid #f8f9fa !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type thead th {
+    background: #e3f2fd !important;
+    color: #1976d2 !important;
+    border-bottom: 1px solid #bbdefb !important;
+    font-weight: 700 !important;
+    padding: 15px 20px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-size: 12px !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td {
+    background: #ffffff !important;
+    padding: 12px 20px !important;
+    border: none !important;
+    border-bottom: 1px solid #f5f5f5 !important;
+    font-size: 14px !important;
+    color: #333333 !important;
+    font-weight: 500 !important;
+    /* width: 50% !important; */
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:first-child {
+    color: #666666 !important;
+    font-weight: 500 !important;
+    width: 40% !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child {
+    color: #333333 !important;
+    font-weight: 600 !important;
+    text-align: right !important;
+}
+
+/* Rental Details Section - Right Side */
+.rbfw_order_meta_box_wrap .rental-details-table {
+    background: #ffffff !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.rbfw_order_meta_box_wrap .rental-details-table thead th {
+    background: #e3f2fd !important;
+    color: #1976d2 !important;
+    border-bottom: 1px solid #bbdefb !important;
+    font-weight: 700 !important;
+    padding: 15px 20px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-size: 12px !important;
+}
+
+.rbfw_order_meta_box_wrap .rental-details-table tbody td {
+    background: #ffffff !important;
+    padding: 8px 15px !important;
+    border: none !important;
+    border-bottom: 1px solid #f5f5f5 !important;
+    font-size: 14px !important;
+    color: #333333 !important;
+    font-weight: 500 !important;
+    width: 50% !important;
+}
+
+.rbfw_order_meta_box_wrap .rental-details-table tbody td:first-child {
+    color: #666666 !important;
+    font-weight: 500 !important;
+    width: 40% !important;
+}
+
+.rbfw_order_meta_box_wrap .rental-details-table tbody td:last-child {
+    color: #333333 !important;
+    font-weight: 600 !important;
+    text-align: right !important;
+}
+
+/* Container for pricing tables to make them inline */
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child {
+    white-space: nowrap !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child table {
+    display: inline-table !important;
+    width: auto !important;
+    min-width: 120px !important;
+    max-width: 180px !important;
+    margin: 5px 10px 5px 0 !important;
+    vertical-align: top !important;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+    border: 1px solid #ffb300 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child table th,
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child table td {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+    color: #000000 !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    border-bottom: 1px solid #ffe082 !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child table th {
+    font-weight: 600 !important;
+    border-bottom: 1px solid #ffcc02 !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child table tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* Pricing Options Styling - Gradient Background with Black Text */
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type .rbfw_bikecarsd_price_info_table,
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type .rbfw_bikecarmd_price_info_table,
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type .rbfw_resort_price_info_table,
+.rbfw_order_meta_box_wrap .rbfw_bikecarsd_price_info_table,
+.rbfw_order_meta_box_wrap .rbfw_bikecarmd_price_info_table,
+.rbfw_order_meta_box_wrap .rbfw_resort_price_info_table {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+    border: 1px solid #ffb300 !important;
+    margin: 5px 10px 5px 0 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    box-shadow: none !important;
+    display: inline-table !important;
+    width: auto !important;
+    min-width: 120px !important;
+    max-width: 180px !important;
+    vertical-align: top !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_bikecarsd_price_info_table thead th,
+.rbfw_order_meta_box_wrap .rbfw_bikecarmd_price_info_table thead th,
+.rbfw_order_meta_box_wrap .rbfw_resort_price_info_table thead th {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+    color: #000000 !important;
+    border-bottom: 1px solid #ffcc02 !important;
+    font-weight: 600 !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_bikecarsd_price_info_table tbody td,
+.rbfw_order_meta_box_wrap .rbfw_bikecarmd_price_info_table tbody td,
+.rbfw_order_meta_box_wrap .rbfw_resort_price_info_table tbody td {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+    color: #000000 !important;
+    font-weight: 500 !important;
+    padding: 8px 12px !important;
+    border-bottom: 1px solid #ffe082 !important;
+    font-size: 13px !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_bikecarsd_price_info_table tbody tr:last-child td,
+.rbfw_order_meta_box_wrap .rbfw_bikecarmd_price_info_table tbody tr:last-child td,
+.rbfw_order_meta_box_wrap .rbfw_resort_price_info_table tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* Summary Section - Green Design Full Width */
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type {
+    width: 100% !important;
+    background: #d1f2eb !important;
+    border: 1px solid #a3e4d7 !important;
+    margin: 20px 0 0 0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.1) !important;
+    grid-column: 1 / -1 !important;
+    position: relative !important;
+    clear: both !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table thead th,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type thead th {
+    background: #d1f2eb !important;
+    color: #0e6b47 !important;
+    border-bottom: 1px solid #a3e4d7 !important;
+    font-weight: 700 !important;
+    padding: 15px 20px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    font-size: 12px !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table tbody,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type tbody {
+    background: #d1f2eb !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table tbody td,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type tbody td {
+    background: #d1f2eb !important;
+    color: #0e6b47 !important;
+    padding: 12px 20px !important;
+    font-weight: 500 !important;
+    border-bottom: 1px solid #a3e4d7 !important;
+    font-size: 14px !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table tbody td:first-child,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type tbody td:first-child {
+    color: #0e6b47 !important;
+    font-weight: 500 !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table tbody td:last-child,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type tbody td:last-child {
+    color: #0e6b47 !important;
+    font-weight: 600 !important;
+    text-align: right !important;
+}
+
+/* Total Cost Row - Emphasized Green */
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table tbody tr:last-child td,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type tbody tr:last-child td {
+    border-top: 2px solid #17a2b8 !important; 
+        border-bottom: none !important;
+        padding: 15px 5px !important;
+        /* font-weight: 700 !important; */
+        font-size: 16px !important;
+        /* color: #28a745 !important; */
+        /* background: #d1f2eb !important;*/
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .rbfw_order_meta_box_wrap .rbfw_order_meta_box_body {
+        grid-template-columns: 1fr;
+    }
+    
+    .rbfw_order_meta_box_wrap .wp-list-table:first-child {
+        border-right: none;
+        border-bottom: 1px solid #dee2e6;
+    }
 }
 
 .rental-order-list-load-more-btn:disabled {
