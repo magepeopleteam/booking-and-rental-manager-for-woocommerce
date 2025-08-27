@@ -1,0 +1,127 @@
+/**
+ * RBFW Reset Orders Styles
+ * Professional CSS for the reset orders functionality
+ * Aligned with existing toggle switch layout
+ */
+
+/* Match the existing section layout structure */
+.rbfw-reset-orders section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.rbfw-reset-orders section:last-child {
+    border-bottom: none;
+}
+
+.rbfw-reset-orders section div {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.rbfw-reset-orders section label {
+    font-weight: 600;
+    color: #23282d;
+    font-size: 14px;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.rbfw-reset-orders section p {
+    color: #666;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Reset button styling to match the design */
+#rbfw-reset-orders-btn {
+    background-color: #d63638;
+    color: white;
+    border: 1px solid #d63638;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 80px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+#rbfw-reset-orders-btn:hover {
+    background-color: #b32d2e;
+    border-color: #b32d2e;
+    color: white;
+}
+
+#rbfw-reset-orders-btn:disabled {
+    background-color: #ccc;
+    border-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+#rbfw-reset-orders-btn:focus {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 3px #d63638;
+    outline: none;
+}
+
+/* Result message styling */
+#rbfw-reset-orders-result {
+    position: absolute;
+    top: 90%;
+    left: 27%;
+    right: 0;
+    /* margin-top: 10px; */
+    z-index: 10;
+    width: 40%;
+}
+
+#rbfw-reset-orders-result div {
+    padding: 8px 12px;
+    border-radius: 3px;
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.rbfw-success {
+    color: #00a32a;
+    font-weight: bold;
+    background-color: #f0f8f0;
+    border: 1px solid #00a32a;
+}
+
+.rbfw-error {
+    color: #d63638;
+    font-weight: bold;
+    background-color: #fdf0f0;
+    border: 1px solid #d63638;
+}
+
+/* Position the reset section relative for absolute positioning of result */
+.rbfw-reset-orders section:has(#rbfw-reset-orders-btn) {
+    position: relative;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .rbfw-reset-orders section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .rbfw-reset-orders section div {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    
+    .rbfw-reset-orders #rbfw-reset-orders-btn {
+        width: 100%;
+    }
+}
