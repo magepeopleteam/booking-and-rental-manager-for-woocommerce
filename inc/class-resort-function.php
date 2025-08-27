@@ -341,7 +341,8 @@
 
 					$rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
                 
-					if ($rbfw_count_extra_day_enable == 'on') {
+
+                    if ($rbfw_count_extra_day_enable == 'on') {
 						$total_days = $total_days + 1;
                 	}
 

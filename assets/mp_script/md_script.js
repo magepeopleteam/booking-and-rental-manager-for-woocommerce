@@ -1,3 +1,4 @@
+let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
 jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',function() {
     const $this = jQuery(this);
     const target = jQuery('.price-item-container');
@@ -44,7 +45,9 @@ jQuery(window).on('load', function() {
 
 
 
-jQuery('body').on('focusin', '.pickup_date', function(e) { 
+jQuery('body').on('focusin', '.pickup_date', function(e) {
+
+
 
     jQuery(this).datepicker({
         dateFormat: js_date_format,
@@ -303,6 +306,8 @@ jQuery(document).on('change', '#rbfw_item_quantity', function(e) {
 
 
 jQuery(document).ready(function () {
+
+
     const durationTypeSelect = jQuery('#durationType');
     const pickupDateInput = jQuery('#pickupDate');
     const pickupTimeInput = jQuery('#pickupTime');

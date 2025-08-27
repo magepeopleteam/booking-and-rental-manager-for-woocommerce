@@ -17,7 +17,9 @@ if(isset($post_id) && isset($active_tab)){
     $target             = date_create($checkout_date);
     $interval           = date_diff($origin, $target);
     $total_days         = $interval->format('%a');
-    $rbfw_count_extra_day_enable = 'on'; // static fallback, translation not needed for logic
+
+    $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+
 
     if ($rbfw_count_extra_day_enable == 'on' || $total_days==0) {
         $total_days = $total_days + 1;
