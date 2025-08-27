@@ -3145,10 +3145,8 @@ function check_multi_day_price_saver_in_md( $total_days, $rbfw_md_data_mds) {
 
             set_transient("pricing_applied", "mds", 3600);
 
-            return array($single['rbfw_daily_price'] , $single['rbfw_hourly_price']);
-        } else {
-            break;
-        }
+            $price =  array($single['rbfw_daily_price'] , $single['rbfw_hourly_price']);
+        } 
     }
     return $price;
 }
