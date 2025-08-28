@@ -196,7 +196,7 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                                             </tr>
                                             <?php if ($enable_daily_rate == 'yes') { ?>
                                                 <tr>
-                                                    <td><?php echo esc_html(__('Daily','booking-and-rental-manager-for-woocommerce')); ?>(<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
+                                                    <td><?php echo esc_html__('Daily','booking-and-rental-manager-for-woocommerce'); ?>(<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
                                                     <td><?php echo esc_html(($sunday['enable'] =='yes' && $sunday['daily_rate'])? $sunday['daily_rate'] :$daily_rate); ?></td>
                                                     <td><?php echo esc_html(($monday['enable'] =='yes' && $monday['daily_rate'])? $monday['daily_rate'] :$daily_rate); ?></td>
                                                     <td><?php echo esc_html(($tueday['enable'] =='yes' && $tueday['daily_rate'])? $tueday['daily_rate'] :$daily_rate); ?></td>
@@ -208,7 +208,7 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                                             <?php } ?>
                                             <?php if ($enable_hourly_rate == 'yes') { ?>
                                                 <tr>
-                                                    <td><?php echo esc_html(__('Hourly','booking-and-rental-manager-for-woocommerce')); ?>(<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
+                                                    <td><?php echo esc_html__('Hourly','booking-and-rental-manager-for-woocommerce'); ?>(<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
                                                     <td><?php echo esc_html(($sunday['enable'] =='yes' && $sunday['hourly_rate'])? $sunday['hourly_rate'] :$hourly_rate); ?></td>
                                                     <td><?php echo esc_html(($monday['enable'] =='yes' && $monday['hourly_rate'])? $monday['hourly_rate'] :$hourly_rate); ?></td>
                                                     <td><?php echo esc_html(($tueday['enable'] =='yes' && $tueday['hourly_rate'])? $tueday['hourly_rate'] :$hourly_rate); ?></td>
@@ -465,7 +465,7 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                                         <?php if(!empty($data_arr_one['value'])){  ?>
                                             <select class="rbfw-select rbfw_variation_field" required name="<?php echo esc_attr($data_arr_one['field_id']); ?>" id="<?php echo esc_attr($data_arr_one['field_id']); ?>" data-field="<?php echo esc_attr($data_arr_one['field_label']); ?>">
                                                 <?php if(empty($selected_value)){ ?>
-                                                    <option value=""><?php echo esc_html(__('Choose','booking-and-rental-manager-for-woocommerce').' '.$data_arr_one['field_label']); ?></option>
+                                                    <option value=""><?php echo esc_html__('Choose','booking-and-rental-manager-for-woocommerce').' '.$data_arr_one['field_label']; ?></option>
                                                 <?php } ?>
                                                 <?php foreach ($data_arr_one['value'] as $data_arr_two) { ?>
                                                     <option class="rbfw_variant" value="<?php echo esc_attr($data_arr_two['name']); ?>" <?php if($data_arr_two['name'] == $selected_value){ echo 'selected'; } ?> ><?php echo esc_html($data_arr_two['name']); ?></option>

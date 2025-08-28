@@ -250,13 +250,13 @@
                         global $rbfw;
 
                         $show_result = $total_posts;
-                        $show_result .= esc_html(__('results','booking-and-rental-manager-for-woocommerce'));
-                        $show_result .= esc_html(__('Showing','booking-and-rental-manager-for-woocommerce'));
-                        $show_result .= $post_count;
-                        $show_result .= esc_html(__('of','booking-and-rental-manager-for-woocommerce'));
-                        $show_result .=  $total_posts ;
-                        $show_result .= esc_html(__('of','booking-and-rental-manager-for-woocommerce'));
-                        $show_result .= esc_html(__('total','booking-and-rental-manager-for-woocommerce'));
+                        $show_result .= esc_html__('results','booking-and-rental-manager-for-woocommerce');
+                        $show_result .= esc_html__('Showing','booking-and-rental-manager-for-woocommerce');
+                        $start_result = $post_count - ($posts_per_page * ($number_of_page - 1));
+                        $end_result = $post_count - ($posts_per_page * ($number_of_page - 1)) + $posts_per_page - 1;
+                        $show_result .= ' '.$start_result.' - '.$end_result.' ';
+                        $show_result .= esc_html__('of','booking-and-rental-manager-for-woocommerce');
+                        $show_result .= esc_html__('total','booking-and-rental-manager-for-woocommerce');
 					}
 				}
 				$result = array(
