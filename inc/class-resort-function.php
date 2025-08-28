@@ -391,9 +391,9 @@
 					$content          .= '<div class="item rbfw_room_price_summary">
                             <div class="item-content rbfw-costing">
                                 <ul class="rbfw-ul">
-                                    <li class="duration-costing rbfw-cond">' . $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings', esc_html__( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' ) ) . ' <span class="price-figure" data-price="' . $total_room_price_org . '">' . wc_price( $total_room_price_org ) . '</span></li>
-                                    <li class="resource-costing rbfw-cond">' . $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings', esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) ) . ' <span class="price-figure" data-price="' . $total_service_price . '">' . wc_price( $total_service_price ) . '</span></li>
-                                    <li class="subtotal">' . $rbfw->get_option_trans( 'rbfw_text_subtotal', 'rbfw_basic_translation_settings', esc_html__( 'Subtotal', 'booking-and-rental-manager-for-woocommerce' ) ) . '<span class="price-figure" data-price="' . $subtotal_price . '">' . wc_price( $subtotal_price ) . '</span></li>';
+                                    <li class="duration-costing rbfw-cond">' . esc_html__( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' ) . ' <span class="price-figure" data-price="' . $total_room_price_org . '">' . wc_price( $total_room_price_org ) . '</span></li>
+                                    <li class="resource-costing rbfw-cond">' . esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) . ' <span class="price-figure" data-price="' . $total_service_price . '">' . wc_price( $total_service_price ) . '</span></li>
+                                    <li class="subtotal">' . esc_html__( 'Subtotal', 'booking-and-rental-manager-for-woocommerce' ) . '<span class="price-figure" data-price="' . $subtotal_price . '">' . wc_price( $subtotal_price ) . '</span></li>';
 					$security_deposit = rbfw_security_deposit( $post_id, $subtotal_price );
 					if ( $security_deposit['security_deposit_amount'] ) {
 						$content .= '<li class="subtotal">' . ( ! empty( get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) ) ? get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) : 'Security Deposit' ) . '<span class="price-figure" data-price="' . $subtotal_price . '">' . $security_deposit['security_deposit_desc'] . '</span></li>';
@@ -409,13 +409,13 @@
 							$discount_amount = $discount_arr['discount_amount'];
 							$discount_desc   = $discount_arr['discount_desc'];
 							$content         .= '<li class="discount">';
-							$content         .= $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings', esc_html__( 'Discount', 'booking-and-rental-manager-for-woocommerce' ) );
+							$content         .= esc_html__( 'Discount', 'booking-and-rental-manager-for-woocommerce' );
 							$content         .= '<span>' . wc_price( $discount_arr['discount_amount'] ) . '</span>';
 							$content         .= '</li>';
 						}
 					}
 					/* End Discount Calculations */
-					$content .= '<li class="total"><strong>' . $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings', esc_html__( 'Total', 'booking-and-rental-manager-for-woocommerce' ) ) . '</strong> <span class="price-figure" data-price="' . ( $total_price - $discount_amount + $security_deposit['security_deposit_amount'] ) . '">' . wc_price( $total_price - $discount_amount + $security_deposit['security_deposit_amount'] ) . ' ' . $tax_status . '</span></li>
+					$content .= '<li class="total"><strong>' . esc_html__( 'Total', 'booking-and-rental-manager-for-woocommerce' ) . '</strong> <span class="price-figure" data-price="' . ( $total_price - $discount_amount + $security_deposit['security_deposit_amount'] ) . '">' . wc_price( $total_price - $discount_amount + $security_deposit['security_deposit_amount'] ) . ' ' . $tax_status . '</span></li>
                                 </ul>
                                 <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
                             </div>

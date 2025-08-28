@@ -138,14 +138,13 @@
 			}
 
 			public static function get_translation_settings( $key, $default = '' ) {
-				$options = get_option( 'rbfw_basic_translation_settings' );
-
-				return self::settings( $options, $key, $default );
+				// Translation settings removed - use direct translation strings
+				return $default;
 			}
 
 			public static function translation_settings( $key, $default = '' ) {
-				$options = get_option( 'rbfw_basic_translation_settings' );
-				echo esc_html( self::settings( $options, $key, $default ) );
+				// Translation settings removed - use direct translation strings
+				echo esc_html( $default );
 			}
 
 			//***************************//

@@ -76,8 +76,8 @@ jQuery('body').on('change', '#hidden_checkin_date', function(e) {
 // resort check availability ajax
 jQuery(document).on('click','.rbfw_chk_availability_btn',function(e) {
     e.preventDefault();
-    let checkin_date_notice 	= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_choose_checkin_date', 'rbfw_basic_translation_settings', __('Please Choose Check-In Date','booking-and-rental-manager-for-woocommerce'))); ?>";
-    let checkout_date_notice 	= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_choose_checkout_date', 'rbfw_basic_translation_settings', __('Please Choose Check-Out Date','booking-and-rental-manager-for-woocommerce'))); ?>";
+    let checkin_date_notice 	= "<?php echo esc_html(__('Please Choose Check-In Date','booking-and-rental-manager-for-woocommerce')); ?>";
+    let checkout_date_notice 	= "<?php echo esc_html(__('Please Choose Check-Out Date','booking-and-rental-manager-for-woocommerce')); ?>";
     let checkin_date 			= jQuery('#hidden_checkin_date').val();
     let checkout_date 			= jQuery('#hidden_checkout_date').val();
     let post_id 				= jQuery('#rbfw_post_id').val();

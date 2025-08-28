@@ -49,13 +49,13 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 								<?php do_action( 'rbfw_product_feature_lists', $post_id ); ?>
 
 								<div class="description" data-id="description">
-									<h3 class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_description', 'rbfw_basic_translation_settings', __('Description','booking-and-rental-manager-for-woocommerce'))); ?></h3>
+									<h3 class="rbfw-sub-heading"><?php echo esc_html(__('Description','booking-and-rental-manager-for-woocommerce')); ?></h3>
 									<?php the_content(); ?>
 								</div><!--end of tab two-->
 
 								<?php if(!empty($rbfw_enable_faq_content) && $rbfw_enable_faq_content == 'yes'): ?>
 								<div class="faq" data-id="faq">
-									<h3 class="rbfw-sub-heading"><?php echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings', __('Frequently Asked Questions','booking-and-rental-manager-for-woocommerce'))); ?></h3>
+									<h3 class="rbfw-sub-heading"><?php echo esc_html(__('Frequently Asked Questions','booking-and-rental-manager-for-woocommerce')); ?></h3>
 									<?php do_action( 'rbfw_the_faq_only', $post_id ); ?>
 								</div><!--end of tab three-->
 								<?php endif; ?>
