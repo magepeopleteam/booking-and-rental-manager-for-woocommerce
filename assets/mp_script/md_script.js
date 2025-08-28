@@ -1,4 +1,3 @@
-let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
 jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',function() {
     const $this = jQuery(this);
     const target = jQuery('.price-item-container');
@@ -54,7 +53,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
         minDate: '',
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
         },
         onSelect: function (dateString, data) {
             let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -110,6 +109,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
 jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) {
 
+
     //const endDate = getURLParameter('rbfw_end_date');
 
     if(jQuery('#hidden_pickup_date').val() > jQuery('#hidden_dropoff_date').val()){
@@ -131,7 +131,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
         },
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
         }
     });
 });
@@ -223,7 +223,7 @@ jQuery('body').on('focusin', '.pickup_date_search', function(e) {
         minDate: '',
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
         },
         onSelect: function (dateString, data) {
             let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -257,7 +257,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_date_search"]', function(e)
         },
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
         }
 
     });

@@ -1,4 +1,4 @@
-let rbfw_today_booking_enable = jQuery('.rbfw_today_booking_enable').val();
+
 let room_prices_arr = {};
 let service_prices_arr = {};
 
@@ -8,7 +8,7 @@ jQuery('body').on('focusin', '#checkin_date', function(e) {
         minDate: 0,
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
         },
         onSelect: function (dateString, data) {
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -61,7 +61,7 @@ jQuery('body').on('change', '#hidden_checkin_date', function(e) {
         minDate: new Date(gYear, gMonth - 1 , parseInt(gDay) + extra_day),
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_today_booking_enable);
+            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
         },
         onSelect: function (dateString, data) {
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
