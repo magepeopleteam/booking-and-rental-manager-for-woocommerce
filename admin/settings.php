@@ -117,6 +117,18 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
             ),
 
             array(
+                'name' => 'want_loco_translate',
+                'label' => esc_html__( 'Want to use loco translate', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( "If you want to change translation by using loco translate then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'no',
+                'options' => array(
+                    'yes' => 'Yes',
+                    'no'  => 'No'
+                )
+            ),
+
+            array(
                 'name' => 'today_booking_enable',
                 'label' => esc_html__( 'Same day booking enable', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc' => esc_html__( "If you want to enable same day booking, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
@@ -139,6 +151,9 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                     'no'  => 'No'
                 )
             ),
+
+
+
 		),
 		'rbfw_basic_style_settings' => array(
 			array(
