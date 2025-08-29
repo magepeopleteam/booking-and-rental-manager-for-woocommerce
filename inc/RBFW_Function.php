@@ -138,13 +138,27 @@
 			}
 
 			public static function get_translation_settings( $key, $default = '' ) {
-				// Translation settings removed - use direct translation strings
+				// Priority 1: WordPress translation system (Loco Translate)
+				$translated = __( $default, 'booking-and-rental-manager-for-woocommerce' );
+				
+				// If translation is different from default, use it
+				if ( $translated !== $default ) {
+					return $translated;
+				}
+				
+				// Priority 2: Check database as fallback
+				$options = get_option( 'rbfw_basic_translation_settings' );
+				if ( isset( $options[$key] ) && !empty( $options[$key] ) ) {
+					return $options[$key];
+				}
+				
+				// Final fallback to default
 				return $default;
 			}
 
 			public static function translation_settings( $key, $default = '' ) {
-				// Translation settings removed - use direct translation strings
-				echo esc_html( $default );
+				// Hybrid translation: Check database first, then fallback to WordPress translation
+				echo esc_html( self::get_translation_settings( $key, $default ) );
 			}
 
 			//***************************//
