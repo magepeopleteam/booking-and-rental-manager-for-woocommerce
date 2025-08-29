@@ -534,7 +534,7 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                                                         </td>
                                                         <td class="w_20">
                                                             <div class="title"><?php echo wp_kses(wc_price($service['price']),rbfw_allowed_html()); ?></div>
-                                                            <span class="day-time-wise"><?php echo (isset($service['service_price_type'] ) && $service['service_price_type'] === 'day_wise') ? esc_html__('Day Wise', 'booking-and-rental-manager-for-woocommerce') : esc_html__('One Time', 'booking-and-rental-manager-for-woocommerce'); ?></span>
+                                                            <span class="day-time-wise"><?php echo (isset($service['service_price_type'] ) && $service['service_price_type'] === 'day_wise') ? ($rbfw->get_option_trans('rbfw_text_day_wise', 'rbfw_basic_translation_settings') && want_loco_translate()=='no' ? esc_html($rbfw->get_option_trans('rbfw_text_day_wise', 'rbfw_basic_translation_settings')) : esc_html__('Day Wise', 'booking-and-rental-manager-for-woocommerce')) : ($rbfw->get_option_trans('rbfw_text_one_time', 'rbfw_basic_translation_settings') && want_loco_translate()=='no' ? esc_html($rbfw->get_option_trans('rbfw_text_one_time', 'rbfw_basic_translation_settings')) : esc_html__('One Time', 'booking-and-rental-manager-for-woocommerce')); ?></span>
                                                         </td>
                                                         <td class="rbfw_service_quantity item_<?php echo esc_attr($cat . $serkey); ?>" style="display: none;">
                                                             <div class="rbfw_qty_input">
@@ -781,7 +781,7 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                 <?php } ?>
 
                 <?php if($rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date) {
-                    echo '<div class="mps_alert_warning">'.esc_html__('Booking Time Expired!','booking-and-rental-manager-for-woocommerce').'</div>';
+                    echo '<div class="mps_alert_warning">'.(($rbfw->get_option_trans('rbfw_text_booking_time_expired', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_booking_time_expired', 'rbfw_basic_translation_settings')) : esc_html__('Booking Time Expired!','booking-and-rental-manager-for-woocommerce')).'</div>';
                 } ?>
             </div>
                 

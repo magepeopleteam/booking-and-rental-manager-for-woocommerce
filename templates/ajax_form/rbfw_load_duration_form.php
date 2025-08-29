@@ -33,9 +33,27 @@ $total_row = $total_row??'';
 
     <td class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo esc_attr(($manage_inventory_as_timely == 'off') ? 'rbfw_hide' : (($manage_inventory_as_timely == 'on' && $enable_specific_duration == 'on') ? 'rbfw_hide' : '')); ?>">
         <select class="medium" name="rbfw_bike_car_sd_data[<?php echo esc_attr($total_row); ?>][d_type]">
-            <option><?php echo esc_html__('Hours', 'booking-and-rental-manager-for-woocommerce'); ?></option>
-            <option><?php echo esc_html__('Days', 'booking-and-rental-manager-for-woocommerce'); ?></option>
-            <option><?php echo esc_html__('Weeks', 'booking-and-rental-manager-for-woocommerce'); ?></option>
+            <option><?php
+            if($rbfw->get_option_trans('rbfw_text_hours', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                echo esc_html($rbfw->get_option_trans('rbfw_text_hours', 'rbfw_basic_translation_settings'));
+            }else{
+               echo esc_html__('Hours', 'booking-and-rental-manager-for-woocommerce');
+            }
+            ?></option>
+            <option><?php
+            if($rbfw->get_option_trans('rbfw_text_days', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                echo esc_html($rbfw->get_option_trans('rbfw_text_days', 'rbfw_basic_translation_settings'));
+            }else{
+               echo esc_html__('Days', 'booking-and-rental-manager-for-woocommerce');
+            }
+            ?></option>
+            <option><?php
+            if($rbfw->get_option_trans('rbfw_text_weeks', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                echo esc_html($rbfw->get_option_trans('rbfw_text_weeks', 'rbfw_basic_translation_settings'));
+            }else{
+               echo esc_html__('Weeks', 'booking-and-rental-manager-for-woocommerce');
+            }
+            ?></option>
         </select>
     </td>
     <td>

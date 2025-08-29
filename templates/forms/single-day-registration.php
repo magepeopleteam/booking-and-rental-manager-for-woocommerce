@@ -202,7 +202,13 @@
                                                             <small class="rbfw_bikecarsd_type_desc"><?php echo esc_html($value['service_desc']); ?></small>
                                                         <?php } ?>
                                                         <?php if($available_qty_info_switch == 'yes'){ ?>
-                                                            <small class="rbfw_available_qty_notice"><?php echo esc_html__('Available:','booking-and-rental-manager-for-woocommerce') . esc_html($max_es_available_qty); ?></small>
+                                                            <small class="rbfw_available_qty_notice"><?php
+                                                            if($rbfw->get_option_trans('rbfw_text_available', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                                                echo esc_html($rbfw->get_option_trans('rbfw_text_available', 'rbfw_basic_translation_settings'));
+                                                            }else{
+                                                               echo esc_html__('Available:','booking-and-rental-manager-for-woocommerce');
+                                                            }
+                                                            ?> <?php echo esc_html($max_es_available_qty); ?></small>
                                                         <?php } ?>
                                                         <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_name]" value="<?php echo esc_attr($value['service_name']); ?>"/>
                                                     </div>

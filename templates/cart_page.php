@@ -444,7 +444,14 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
         <tr>
             <th>
-                <?php echo esc_html($rbfw->get_option_trans('rbfw_text_duration', 'rbfw_basic_translation_settings', __('Duration','booking-and-rental-manager-for-woocommerce'))); ?>
+
+            <?php
+                if($rbfw->get_option_trans('rbfw_text_duration', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                    echo esc_html($rbfw->get_option_trans('rbfw_text_duration', 'rbfw_basic_translation_settings'));
+                }else{
+                   echo esc_html__('Duration:','booking-and-rental-manager-for-woocommerce');
+                }
+                ?>   
             </th>
             <td>
                 <?php echo esc_html($rbfw_duration_md); ?>

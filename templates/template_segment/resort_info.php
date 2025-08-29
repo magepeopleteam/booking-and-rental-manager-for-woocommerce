@@ -307,12 +307,24 @@ if(class_exists('Rbfw_Reg_Form')){
 
     <div class="item rbfw_text_book_now">
         <button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_resort_book_now_btn rbfw_disabled_button" disabled>
-            <?php echo esc_html__( 'Book Now','booking-and-rental-manager-for-woocommerce' ); ?>
+            <?php
+            if($rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                echo esc_html($rbfw->get_option_trans('rbfw_text_book_now', 'rbfw_basic_translation_settings'));
+            }else{
+               echo esc_html__('Book Now','booking-and-rental-manager-for-woocommerce');
+            }
+            ?>
         </button>
     </div>
 <?php }else{ ?>
     <div class="rbfw_alert_warning">
         <i class="fas fa-circle-info"></i>
-        <?php echo esc_html__("Sorry, the day-night package is not available on the same check-in and check-out date.","booking-and-rental-manager-for-woocommerce") ?>
+        <?php
+        if($rbfw->get_option_trans('rbfw_text_day_night_package_error', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+            echo esc_html($rbfw->get_option_trans('rbfw_text_day_night_package_error', 'rbfw_basic_translation_settings'));
+        }else{
+           echo esc_html__("Sorry, the day-night package is not available on the same check-in and check-out date.","booking-and-rental-manager-for-woocommerce");
+        }
+        ?>
     </div>
 <?php } ?>

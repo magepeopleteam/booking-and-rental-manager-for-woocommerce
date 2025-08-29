@@ -50,13 +50,25 @@ if(isset($_POST['post_id'])){
 
     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step" data-step="3">
         <a class="rbfw_back_step_btn" back-step="2" data-step="3"><i class="fas fa-circle-left"></i>
-           <?php echo esc_html__( 'Back to Previous Step','booking-and-rental-manager-for-woocommerce' );  ?>
+           <?php
+           if($rbfw->get_option_trans('rbfw_text_back_to_previous_step', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+               echo esc_html($rbfw->get_option_trans('rbfw_text_back_to_previous_step', 'rbfw_basic_translation_settings'));
+           }else{
+              echo esc_html__('Back to Previous Step','booking-and-rental-manager-for-woocommerce');
+           }
+           ?>
         </a>
 
 
             <div class="rbfw_step_selected_date" data-time="<?php echo esc_attr($selected_time); ?>">
                 <i class="fas fa-calendar-check"></i>
-                <?php echo esc_html__( 'You selected','booking-and-rental-manager-for-woocommerce' ) ?>: <?php echo esc_html($result.' '.$selected_time); ?>
+                <?php
+                if($rbfw->get_option_trans('rbfw_text_you_selected', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                    echo esc_html($rbfw->get_option_trans('rbfw_text_you_selected', 'rbfw_basic_translation_settings'));
+                }else{
+                   echo esc_html__('You selected','booking-and-rental-manager-for-woocommerce');
+                }
+                ?>: <?php echo esc_html($result.' '.$selected_time); ?>
             </div>
 
 
@@ -67,15 +79,33 @@ if(isset($_POST['post_id'])){
                             <thead>
                             <tr>
                                 <th class="w_50_pc">
-                                    <?php echo esc_html__( 'Type','booking-and-rental-manager-for-woocommerce' ); ?>
+                                    <?php
+                                    if($rbfw->get_option_trans('rbfw_text_type', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                        echo esc_html($rbfw->get_option_trans('rbfw_text_type', 'rbfw_basic_translation_settings'));
+                                    }else{
+                                       echo esc_html__('Type','booking-and-rental-manager-for-woocommerce');
+                                    }
+                                    ?>
                                 </th>
                                 <th class="w_30_pc">
-                                    <?php echo esc_html__( 'Price','booking-and-rental-manager-for-woocommerce' ); ?>
+                                    <?php
+                                    if($rbfw->get_option_trans('rbfw_text_price', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                        echo esc_html($rbfw->get_option_trans('rbfw_text_price', 'rbfw_basic_translation_settings'));
+                                    }else{
+                                       echo esc_html__('Price','booking-and-rental-manager-for-woocommerce');
+                                    }
+                                    ?>
                                 </th>
 
                                 <?php if($rbfw_enable_extra_service_qty=='yes'){ ?>
                                     <th data-booked_message="<?php echo esc_attr__( 'Available Quantity is ', 'booking-and-rental-manager-for-woocommerce' ) ?>" class="w_20_pc">
-                                        <?php echo esc_html__( 'Quantity','booking-and-rental-manager-for-woocommerce' ); ?>
+                                        <?php
+                                        if($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                            echo esc_html($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings'));
+                                        }else{
+                                           echo esc_html__('Quantity','booking-and-rental-manager-for-woocommerce');
+                                        }
+                                        ?>
                                     </th>
                                 <?php }else{ ?>
                                     <th data-booked_message="<?php echo esc_attr__( 'Available Quantity is ', 'booking-and-rental-manager-for-woocommerce' ) ?>" class="w_20_pc">
@@ -108,7 +138,13 @@ if(isset($_POST['post_id'])){
                                             <span class="rbfw_bikecarsd_type_title"><?php echo esc_html($value['rent_type']); ?></span>
                                             <small class="rbfw_bikecarsd_type_desc"><?php echo esc_html($value['short_desc']); ?></small>
                                             <?php  if($available_qty_info_switch == 'yes'){ ?>
-                                                <small class="rbfw_available_qty_notice"><?php echo esc_html__( 'Available:','booking-and-rental-manager-for-woocommerce' ) . esc_html($max_available_qty); ?></small>
+                                                <small class="rbfw_available_qty_notice"><?php
+                                                if($rbfw->get_option_trans('rbfw_text_available', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                                    echo esc_html($rbfw->get_option_trans('rbfw_text_available', 'rbfw_basic_translation_settings'));
+                                                }else{
+                                                   echo esc_html__('Available:','booking-and-rental-manager-for-woocommerce');
+                                                }
+                                                ?> <?php echo esc_html($max_available_qty); ?></small>
                                             <?php } ?>
                                             <input type="hidden" name="rbfw_bikecarsd_info[<?php echo esc_attr($i); ?>][rent_type]" value="<?php echo esc_attr($value['rent_type']); ?>"/>
                                             <input type="hidden" name="rbfw_bikecarsd_info[<?php echo esc_attr($i); ?>][short_desc]" value="<?php echo esc_attr($value['short_desc']); ?>"/>
@@ -161,10 +197,28 @@ if(isset($_POST['post_id'])){
                         <table class="rbfw_bikecarsd_price_table">
                             <thead>
                             <tr>
-                                <th class="w_50_pc"><?php echo esc_html__( 'Service Name','booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                <th class="w_30_pc"><?php echo esc_html__( 'Price','booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th class="w_50_pc"><?php
+                                if($rbfw->get_option_trans('rbfw_text_service_name', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                    echo esc_html($rbfw->get_option_trans('rbfw_text_service_name', 'rbfw_basic_translation_settings'));
+                                }else{
+                                   echo esc_html__('Service Name','booking-and-rental-manager-for-woocommerce');
+                                }
+                                ?></th>
+                                <th class="w_30_pc"><?php
+                                if($rbfw->get_option_trans('rbfw_text_price', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                    echo esc_html($rbfw->get_option_trans('rbfw_text_price', 'rbfw_basic_translation_settings'));
+                                }else{
+                                   echo esc_html__('Price','booking-and-rental-manager-for-woocommerce');
+                                }
+                                ?></th>
                                 <?php if($rbfw_enable_extra_service_qty=='yes'){ ?>
-                                    <th class="w_20_pc"><?php echo esc_html__( 'Quantity','booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                    <th class="w_20_pc"><?php
+                                    if($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                        echo esc_html($rbfw->get_option_trans('rbfw_text_quantity', 'rbfw_basic_translation_settings'));
+                                    }else{
+                                       echo esc_html__('Quantity','booking-and-rental-manager-for-woocommerce');
+                                    }
+                                    ?></th>
                                 <?php }else{ ?>
                                     <th class="w_20_pc"><?php esc_html_e('Enable/Disable','booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <?php } ?>
@@ -198,7 +252,13 @@ if(isset($_POST['post_id'])){
                                                     <small class="rbfw_bikecarsd_type_desc"><?php echo esc_html($value['service_desc']); ?></small>
                                                 <?php } ?>
                                                 <?php if($available_qty_info_switch == 'yes'){ ?>
-                                                    <small class="rbfw_available_qty_notice"><?php echo esc_html__( 'Available:','booking-and-rental-manager-for-woocommerce' ) . esc_html($max_es_available_qty); ?></small>
+                                                    <small class="rbfw_available_qty_notice"><?php
+                                                    if($rbfw->get_option_trans('rbfw_text_available', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                                        echo esc_html($rbfw->get_option_trans('rbfw_text_available', 'rbfw_basic_translation_settings'));
+                                                    }else{
+                                                       echo esc_html__('Available:','booking-and-rental-manager-for-woocommerce');
+                                                    }
+                                                    ?> <?php echo esc_html($max_es_available_qty); ?></small>
                                                 <?php } ?>
                                                 <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c) ?>][service_name]" value="<?php echo esc_attr($value['service_name']); ?>"/>
                                             </div>
@@ -244,17 +304,35 @@ if(isset($_POST['post_id'])){
                 <div class="item-content rbfw-costing">
                     <ul class="rbfw-ul">
                         <li class="duration-costing rbfw-cond">
-                            <?php echo esc_html__( 'Duration Cost','booking-and-rental-manager-for-woocommerce' ); ?>
+                            <?php
+                            if($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings'));
+                            }else{
+                               echo esc_html__('Duration Cost','booking-and-rental-manager-for-woocommerce');
+                            }
+                            ?>
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                         </li>
                         <?php if(!empty($rbfw_extra_service_data)){ ?>
                             <li class="extra_service_cost rbfw-cond">
-                                <?php echo esc_html__( 'Resource Cost','booking-and-rental-manager-for-woocommerce' ); ?>
+                                <?php
+                                if($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                    echo esc_html($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings'));
+                                }else{
+                                   echo esc_html__('Resource Cost','booking-and-rental-manager-for-woocommerce');
+                                }
+                                ?>
                                 <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                             </li>
                         <?php } ?>
                         <li class="subtotal">
-                            <?php echo esc_html__( 'Subtotal','booking-and-rental-manager-for-woocommerce' ); ?>
+                            <?php
+                            if($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                echo esc_html($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings'));
+                            }else{
+                               echo esc_html__('Subtotal','booking-and-rental-manager-for-woocommerce');
+                            }
+                            ?>
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                         </li>
 
@@ -264,7 +342,13 @@ if(isset($_POST['post_id'])){
                         </li>
 
                         <li class="total">
-                            <strong><?php echo esc_html__( 'Total','booking-and-rental-manager-for-woocommerce' ); ?></strong>
+                            <strong><?php
+                            if($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                echo esc_html($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings'));
+                            }else{
+                               echo esc_html__('Total','booking-and-rental-manager-for-woocommerce');
+                            }
+                            ?></strong>
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                         </li>
                     </ul>

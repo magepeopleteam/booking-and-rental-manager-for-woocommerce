@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 add_action( 'add_meta_boxes_rbfw_order', 'rbfw_order_meta_box' );
 function rbfw_order_meta_box() {
-    add_meta_box( 'rbfw-order-meta-box', esc_html__( 'Order Details', 'booking-and-rental-manager-for-woocommerce' ), 'rbfw_order_meta_box_callback' );
-    add_meta_box( 'rbfw-order-meta-box-sidebar', esc_html__( 'Order Status Update', 'booking-and-rental-manager-for-woocommerce' ), 'rbfw_order_meta_box_sidebar_callback', '', 'side', 'core' );
+    add_meta_box( 'rbfw-order-meta-box', ($rbfw->get_option_trans('rbfw_text_order_details', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_order_details', 'rbfw_basic_translation_settings')) : esc_html__( 'Order Details', 'booking-and-rental-manager-for-woocommerce' ), 'rbfw_order_meta_box_callback' );
+    add_meta_box( 'rbfw-order-meta-box-sidebar', ($rbfw->get_option_trans('rbfw_text_order_status_update', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_order_status_update', 'rbfw_basic_translation_settings')) : esc_html__( 'Order Status Update', 'booking-and-rental-manager-for-woocommerce' ), 'rbfw_order_meta_box_sidebar_callback', '', 'side', 'core' );
 }
 add_action( 'wp_ajax_fetch_order_details', 'fetch_order_details_callback' );
 function fetch_order_details_callback() {
@@ -356,7 +356,7 @@ function fetch_order_details_callback() {
                                             $label = $info['label'];
                                             $value = $info['value'];
                                             if ( filter_var( $value, FILTER_VALIDATE_URL ) ) {
-                                                $value = '<a href="' . esc_url( $value ) . '" target="_blank" style="text-decoration:underline">' . esc_html__( 'View File', 'booking-and-rental-manager-for-woocommerce' ) . '</a>';
+                                                $value = '<a href="' . esc_url( $value ) . '" target="_blank" style="text-decoration:underline">' . (($rbfw->get_option_trans('rbfw_text_view_file', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_view_file', 'rbfw_basic_translation_settings')) : esc_html__( 'View File', 'booking-and-rental-manager-for-woocommerce' )) . '</a>';
                                             }
                                             ?>
                                             <tr>
@@ -529,12 +529,12 @@ function rbfw_order_meta_box_callback() {
             <table class="wp-list-table widefat fixed striped table-view-list">
                 <thead>
                 <tr>
-                    <th colspan="2"><?php rbfw_string( 'rbfw_text_general_information', esc_html__( 'General Information', 'booking-and-rental-manager-for-woocommerce' ) ); ?></th>
+                    <th colspan="2"><?php rbfw_string( 'rbfw_text_general_information', ($rbfw->get_option_trans('rbfw_text_general_information', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_general_information', 'rbfw_basic_translation_settings')) : esc_html__( 'General Information', 'booking-and-rental-manager-for-woocommerce' ) ); ?></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td><strong><?php rbfw_string( 'rbfw_text_status', esc_html__( 'Status', 'booking-and-rental-manager-for-woocommerce' ) ); ?></strong></td>
+                    <td><strong><?php rbfw_string( 'rbfw_text_status', ($rbfw->get_option_trans('rbfw_text_status', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_status', 'rbfw_basic_translation_settings')) : esc_html__( 'Status', 'booking-and-rental-manager-for-woocommerce' ) ); ?></strong></td>
                     <td>
                         <select name="rbfw_order_status">
                             <option value="pending" <?php echo selected( $status, 'pending', false ); ?>><?php esc_html_e( 'Pending payment', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
@@ -589,12 +589,12 @@ function rbfw_order_meta_box_callback() {
                     </tr>
                 <?php } ?>
                 <tr>
-                    <td><strong><?php rbfw_string( 'rbfw_text_order_created_date', esc_html__( 'Order created date', 'booking-and-rental-manager-for-woocommerce' ) );
+                    <td><strong><?php rbfw_string( 'rbfw_text_order_created_date', ($rbfw->get_option_trans('rbfw_text_order_created_date', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_order_created_date', 'rbfw_basic_translation_settings')) : esc_html__( 'Order created date', 'booking-and-rental-manager-for-woocommerce' ) );
                             echo ':'; ?></strong></td>
                     <td><?php echo esc_html( get_the_date( 'F j, Y' ) ) . ' ' . esc_html( get_the_time() ); ?></td>
                 </tr>
                 <tr>
-                    <td><strong><?php rbfw_string( 'rbfw_text_payment_method', esc_html__( 'Payment method', 'booking-and-rental-manager-for-woocommerce' ) );
+                    <td><strong><?php rbfw_string( 'rbfw_text_payment_method', ($rbfw->get_option_trans('rbfw_text_payment_method', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_payment_method', 'rbfw_basic_translation_settings')) : esc_html__( 'Payment method', 'booking-and-rental-manager-for-woocommerce' ) );
                             echo ':'; ?></strong></td>
                     <td><?php echo esc_html( $payment_method ); ?></td>
                 </tr>

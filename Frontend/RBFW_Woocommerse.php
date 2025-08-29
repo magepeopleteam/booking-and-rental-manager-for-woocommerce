@@ -613,7 +613,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $rent_content .= '</tr>';
                         $rent_content .= '</table>';
                         if ( $rbfw_type_info[ $rent_type ] > 0 ):
-                            $item->add_meta_data( rbfw_string_return( 'rbfw_text_rent_information', esc_html__( 'Rent Information', 'booking-and-rental-manager-for-woocommerce' ) ), $rent_content );
+                            $item->add_meta_data( rbfw_string_return( 'rbfw_text_rent_information', ($rbfw->get_option_trans('rbfw_text_rent_information', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_rent_information', 'rbfw_basic_translation_settings')) : esc_html__( 'Rent Information', 'booking-and-rental-manager-for-woocommerce' ) ), $rent_content );
                         endif;
                     }
                 }

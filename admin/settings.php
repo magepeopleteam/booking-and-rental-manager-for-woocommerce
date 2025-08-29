@@ -19,11 +19,11 @@ function rbfw_admin_settings_sec_reg_basic( $default_sec ) {
 		),
 		array(
 			'id'    => 'rbfw_basic_style_settings',
-			'title' => '<i class="fas fa-palette"></i>'.esc_html__( 'Style Settings', 'booking-and-rental-manager-for-woocommerce' )
+			'title' => '<i class="fas fa-palette"></i>'.(($rbfw->get_option_trans('rbfw_text_style_settings', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_style_settings', 'rbfw_basic_translation_settings')) : esc_html__( 'Style Settings', 'booking-and-rental-manager-for-woocommerce' ))
 		),
         array(
             'id'    => 'rbfw_custom_style_settings',
-            'title' => '<i class="fas fa-palette"></i>'.esc_html__( 'Custom CSS', 'booking-and-rental-manager-for-woocommerce' )
+            'title' => '<i class="fas fa-palette"></i>'.(($rbfw->get_option_trans('rbfw_text_custom_css', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_custom_css', 'rbfw_basic_translation_settings')) : esc_html__( 'Custom CSS', 'booking-and-rental-manager-for-woocommerce' ))
         ),
 
 
@@ -31,7 +31,7 @@ function rbfw_admin_settings_sec_reg_basic( $default_sec ) {
 
 		array(
 			'id'    => 'rbfw_basic_payment_settings',
-			'title' => '<i class="fas fa-money-check-dollar"></i>'.esc_html__( 'Checkout Page', 'booking-and-rental-manager-for-woocommerce' )
+			'title' => '<i class="fas fa-money-check-dollar"></i>'.(($rbfw->get_option_trans('rbfw_text_checkout_page', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_checkout_page', 'rbfw_basic_translation_settings')) : esc_html__( 'Checkout Page', 'booking-and-rental-manager-for-woocommerce' ))
 		),
 	);
 
@@ -46,8 +46,8 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 		'rbfw_basic_gen_settings' => array(
 			array(
 				'name' => 'rbfw_gutenburg_switch',
-				'label' => esc_html__( 'On/Off Gutenburg', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc' => esc_html__( 'Enable/Disable gutenburg editor.', 'booking-and-rental-manager-for-woocommerce' ),
+				'label' => ($rbfw->get_option_trans('rbfw_text_on_off_gutenburg', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_on_off_gutenburg', 'rbfw_basic_translation_settings')) : esc_html__( 'On/Off Gutenburg', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc' => ($rbfw->get_option_trans('rbfw_text_enable_disable_gutenburg', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_enable_disable_gutenburg', 'rbfw_basic_translation_settings')) : esc_html__( 'Enable/Disable gutenburg editor.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type' => 'select',
 				'default' => 'off',
 				'options' => array(
@@ -57,37 +57,37 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
 			),
 			array(
 				'name'    => 'rbfw_rent_label',
-				'label'   => esc_html__( 'CPT Label', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'If you want to change the for rent custom post type label in the dashboard menu you can change here.', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => ($rbfw->get_option_trans('rbfw_text_cpt_label', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_cpt_label', 'rbfw_basic_translation_settings')) : esc_html__( 'CPT Label', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => ($rbfw->get_option_trans('rbfw_text_cpt_label_desc', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_cpt_label_desc', 'rbfw_basic_translation_settings')) : esc_html__( 'If you want to change the for rent custom post type label in the dashboard menu you can change here.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'Rent'
 			),
 			array(
 				'name'    => 'rbfw_rent_slug',
-				'label'   => esc_html__( 'CPT Slug', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'Please enter the slug name for rent custom post type. Remember after change this slug you need to flush permalink, Just go to Settings->Permalink hit the Save Settings button', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => ($rbfw->get_option_trans('rbfw_text_cpt_slug', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_cpt_slug', 'rbfw_basic_translation_settings')) : esc_html__( 'CPT Slug', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => ($rbfw->get_option_trans('rbfw_text_cpt_slug_desc', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_cpt_slug_desc', 'rbfw_basic_translation_settings')) : esc_html__( 'Please enter the slug name for rent custom post type. Remember after change this slug you need to flush permalink, Just go to Settings->Permalink hit the Save Settings button', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'text',
 				'default' => 'rent'
 			),
 			array(
 				'name'    => 'rbfw_rent_icon',
-				'label'   => esc_html__( 'CPT Icon', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'Please enter the icon class name for rent custom post type. Example: dashicons-list-view.', 'booking-and-rental-manager-for-woocommerce' ).' Find Icons: <a href="https://developer.wordpress.org/resource/dashicons/">Dashicons</a>',
+				'label'   => ($rbfw->get_option_trans('rbfw_text_cpt_icon', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_cpt_icon', 'rbfw_basic_translation_settings')) : esc_html__( 'CPT Icon', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => (($rbfw->get_option_trans('rbfw_text_cpt_icon_desc', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_cpt_icon_desc', 'rbfw_basic_translation_settings')) : esc_html__( 'Please enter the icon class name for rent custom post type. Example: dashicons-list-view.', 'booking-and-rental-manager-for-woocommerce' )).' Find Icons: <a href="https://developer.wordpress.org/resource/dashicons/">Dashicons</a>',
 				'type'    => 'text',
 				'default' => 'dashicons-clipboard'
 			),
 
 			array(
 				'name'    => 'rbfw_thankyou_page',
-				'label'   => esc_html__( 'Thank You Page', 'booking-and-rental-manager-for-woocommerce' ),
-				'desc'    => esc_html__( 'It will work when the mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => ($rbfw->get_option_trans('rbfw_text_thank_you_page', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_thank_you_page', 'rbfw_basic_translation_settings')) : esc_html__( 'Thank You Page', 'booking-and-rental-manager-for-woocommerce' ),
+				'desc'    => ($rbfw->get_option_trans('rbfw_text_thank_you_page_desc', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_thank_you_page_desc', 'rbfw_basic_translation_settings')) : esc_html__( 'It will work when the mage payment system is enabled.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'generatepage',
 				'default' => '',
 				'options' => rbfw_get_pages_arr()
 			),
 			array(
 				'name'    => 'rbfw_search_page',
-				'label'   => esc_html__( 'Search Page', 'booking-and-rental-manager-for-woocommerce' ),
+				'label'   => ($rbfw->get_option_trans('rbfw_text_search_page', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_search_page', 'rbfw_basic_translation_settings')) : esc_html__( 'Search Page', 'booking-and-rental-manager-for-woocommerce' ),
 				'desc'    => esc_html__( 'The filter form result will display on search result page.', 'booking-and-rental-manager-for-woocommerce' ),
 				'type'    => 'generatepage',
 				'default' => '',

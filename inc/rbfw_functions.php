@@ -188,7 +188,7 @@
 			'hide_empty' => false,
 		) );
 		$arr   = array(
-			'' => esc_html__( 'Please Select a Location', 'booking-and-rental-manager-for-woocommerce' )
+			'' => ($rbfw->get_option_trans('rbfw_text_please_select_location', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_please_select_location', 'rbfw_basic_translation_settings')) : esc_html__( 'Please Select a Location', 'booking-and-rental-manager-for-woocommerce' )
 		);
 		foreach ( $terms as $_terms ) {
 			$arr[ $_terms->name ] = $_terms->name;
@@ -258,17 +258,17 @@
 				$minutes = $interval->i;
 				if ( $days > 0 ) {
 					global $rbfw;
-					$dd = $days . ' ' . esc_html__( 'Days', 'booking-and-rental-manager-for-woocommerce' );
+					$dd = $days . ' ' . (($rbfw->get_option_trans('rbfw_text_days', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_days', 'rbfw_basic_translation_settings')) : esc_html__( 'Days', 'booking-and-rental-manager-for-woocommerce' ));
 				} else {
 					$dd = "";
 				}
 				if ( $hours > 0 ) {
-					$hh = $hours . ' ' . esc_html__( 'hours', 'booking-and-rental-manager-for-woocommerce' );
+					$hh = $hours . ' ' . (($rbfw->get_option_trans('rbfw_text_hours', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_hours', 'rbfw_basic_translation_settings')) : esc_html__( 'hours', 'booking-and-rental-manager-for-woocommerce' ));
 				} else {
 					$hh = "";
 				}
 				if ( $minutes > 0 ) {
-					$mm = $minutes . ' ' . esc_html__( 'minutes', 'booking-and-rental-manager-for-woocommerce' );
+					$mm = $minutes . ' ' . (($rbfw->get_option_trans('rbfw_text_minutes', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_minutes', 'rbfw_basic_translation_settings')) : esc_html__( 'minutes', 'booking-and-rental-manager-for-woocommerce' ));
 				} else {
 					$mm = "";
 				}
@@ -283,7 +283,7 @@
 		if ( $stock_status == 'yes' ) {
 			?>
             <p class='rbfw_availabe_seat_label'><?php echo esc_html( $availabe_type_seat ) . ' ';
-					rbfw_string( 'rbfw_string_availabe', esc_html__( 'Availabe', 'booking-and-rental-manager-for-woocommerce' ) ); ?></p>
+					rbfw_string( 'rbfw_string_availabe', ($rbfw->get_option_trans('rbfw_text_available', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_available', 'rbfw_basic_translation_settings')) : esc_html__( 'Available', 'booking-and-rental-manager-for-woocommerce' ) ); ?></p>
 			<?php
 		}
 	}
@@ -298,17 +298,17 @@
 	}
 	function rbfw_create_tag_taxonomy() {
 		$labels = array(
-			'name'              => esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
-			'singular_name'     => esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
-			'search_items'      => esc_html__( 'Search Tags', 'booking-and-rental-manager-for-woocommerce' ),
-			'all_items'         => esc_html__( 'All Tags', 'booking-and-rental-manager-for-woocommerce' ),
-			'parent_item'       => esc_html__( 'Parent Tag', 'booking-and-rental-manager-for-woocommerce' ),
-			'parent_item_colon' => esc_html__( 'Parent Tag:', 'booking-and-rental-manager-for-woocommerce' ),
-			'edit_item'         => esc_html__( 'Edit Tag', 'booking-and-rental-manager-for-woocommerce' ),
-			'update_item'       => esc_html__( 'Update Tag', 'booking-and-rental-manager-for-woocommerce' ),
-			'add_new_item'      => esc_html__( 'Add New Tag', 'booking-and-rental-manager-for-woocommerce' ),
-			'new_item_name'     => esc_html__( 'New Tag Name', 'booking-and-rental-manager-for-woocommerce' ),
-			'menu_name'         => esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
+			'name'              => ($rbfw->get_option_trans('rbfw_text_tags', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_tags', 'rbfw_basic_translation_settings')) : esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
+			'singular_name'     => ($rbfw->get_option_trans('rbfw_text_tags', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_tags', 'rbfw_basic_translation_settings')) : esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
+			'search_items'      => ($rbfw->get_option_trans('rbfw_text_search_tags', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_search_tags', 'rbfw_basic_translation_settings')) : esc_html__( 'Search Tags', 'booking-and-rental-manager-for-woocommerce' ),
+			'all_items'         => ($rbfw->get_option_trans('rbfw_text_all_tags', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_all_tags', 'rbfw_basic_translation_settings')) : esc_html__( 'All Tags', 'booking-and-rental-manager-for-woocommerce' ),
+			'parent_item'       => ($rbfw->get_option_trans('rbfw_text_parent_tag', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_parent_tag', 'rbfw_basic_translation_settings')) : esc_html__( 'Parent Tag', 'booking-and-rental-manager-for-woocommerce' ),
+			'parent_item_colon' => ($rbfw->get_option_trans('rbfw_text_parent_tag_colon', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_parent_tag_colon', 'rbfw_basic_translation_settings')) : esc_html__( 'Parent Tag:', 'booking-and-rental-manager-for-woocommerce' ),
+			'edit_item'         => ($rbfw->get_option_trans('rbfw_text_edit_tag', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_edit_tag', 'rbfw_basic_translation_settings')) : esc_html__( 'Edit Tag', 'booking-and-rental-manager-for-woocommerce' ),
+			'update_item'       => ($rbfw->get_option_trans('rbfw_text_update_tag', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_update_tag', 'rbfw_basic_translation_settings')) : esc_html__( 'Update Tag', 'booking-and-rental-manager-for-woocommerce' ),
+			'add_new_item'      => ($rbfw->get_option_trans('rbfw_text_add_new_tag', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_add_new_tag', 'rbfw_basic_translation_settings')) : esc_html__( 'Add New Tag', 'booking-and-rental-manager-for-woocommerce' ),
+			'new_item_name'     => ($rbfw->get_option_trans('rbfw_text_new_tag_name', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_new_tag_name', 'rbfw_basic_translation_settings')) : esc_html__( 'New Tag Name', 'booking-and-rental-manager-for-woocommerce' ),
+			'menu_name'         => ($rbfw->get_option_trans('rbfw_text_tags', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_tags', 'rbfw_basic_translation_settings')) : esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
 		);
 // 		register_taxonomy( 'rbfw_item_tag', array( 'rbfw_item' ), array(
 // 			'hierarchical'      => false,
@@ -942,7 +942,7 @@
 	function rbfw_get_pages_arr() {
 		$pages = get_pages();
 		$arr   = array(
-			'' => esc_html__( 'Please Select a Page', 'booking-and-rental-manager-for-woocommerce' )
+			'' => ($rbfw->get_option_trans('rbfw_text_please_select_page', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_please_select_page', 'rbfw_basic_translation_settings')) : esc_html__( 'Please Select a Page', 'booking-and-rental-manager-for-woocommerce' )
 		);
 		foreach ( $pages as $page ) {
 			$arr[ $page->ID ] = $page->post_title;

@@ -262,7 +262,7 @@
 				$sections = array(
 					array(
 						'id'    => 'super_slider_settings',
-						'title' => '<i class="fas fa-sliders"></i>' . esc_html__( 'Super Slider Settings', 'booking-and-rental-manager-for-woocommerce' )
+						'title' => '<i class="fas fa-sliders"></i>' . (($rbfw->get_option_trans('rbfw_text_super_slider_settings', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_super_slider_settings', 'rbfw_basic_translation_settings')) : esc_html__( 'Super Slider Settings', 'booking-and-rental-manager-for-woocommerce' ))
 					)
 				);
 
@@ -274,18 +274,18 @@
 					'super_slider_settings' => array(
 						array(
 							'name'    => 'super_slider_type',
-							'label'   => esc_html__( 'Slider Type', 'booking-and-rental-manager-for-woocommerce' ),
-							'desc'    => esc_html__( 'Please Select Slider Type Default Slider', 'booking-and-rental-manager-for-woocommerce' ),
+							'label'   => ($rbfw->get_option_trans('rbfw_text_slider_type', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_slider_type', 'rbfw_basic_translation_settings')) : esc_html__( 'Slider Type', 'booking-and-rental-manager-for-woocommerce' ),
+							'desc'    => ($rbfw->get_option_trans('rbfw_text_slider_type_desc', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_slider_type_desc', 'rbfw_basic_translation_settings')) : esc_html__( 'Please Select Slider Type Default Slider', 'booking-and-rental-manager-for-woocommerce' ),
 							'type'    => 'select',
 							'default' => 'slider',
 							'options' => array(
-								'slider'       => esc_html__( 'Slider', 'booking-and-rental-manager-for-woocommerce' ),
-								'single_image' => esc_html__( 'Post Thumbnail', 'booking-and-rental-manager-for-woocommerce' )
+								'slider'       => ($rbfw->get_option_trans('rbfw_text_slider', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_slider', 'rbfw_basic_translation_settings')) : esc_html__( 'Slider', 'booking-and-rental-manager-for-woocommerce' ),
+								'single_image' => ($rbfw->get_option_trans('rbfw_text_post_thumbnail', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_post_thumbnail', 'rbfw_basic_translation_settings')) : esc_html__( 'Post Thumbnail', 'booking-and-rental-manager-for-woocommerce' )
 							)
 						),
 						array(
 							'name'    => 'super_slider_style',
-							'label'   => esc_html__( 'Slider Style', 'booking-and-rental-manager-for-woocommerce' ),
+							'label'   => ($rbfw->get_option_trans('rbfw_text_slider_style', 'rbfw_basic_translation_settings') && want_loco_translate()=='no') ? esc_html($rbfw->get_option_trans('rbfw_text_slider_style', 'rbfw_basic_translation_settings')) : esc_html__( 'Slider Style', 'booking-and-rental-manager-for-woocommerce' ),
 							'desc'    => esc_html__( 'Please Select Slider Style Default Style One', 'booking-and-rental-manager-for-woocommerce' ),
 							'type'    => 'select',
 							'default' => 'style_1',
