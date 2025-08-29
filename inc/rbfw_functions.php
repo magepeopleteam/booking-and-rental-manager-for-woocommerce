@@ -2614,7 +2614,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
 
 
-        return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>$_COOKIE['pricing_applied']];
+        return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>get_transient("pricing_applied")];
 
     }
 
@@ -2650,7 +2650,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         if ($daysWeeks > 0)        $output[] = "$daysWeeks day" . ($daysWeeks > 1 ? 's' : '');
         if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
 
-        return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>$_COOKIE['pricing_applied']];
+        return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>get_transient("pricing_applied")];
     }
 
 
@@ -2664,7 +2664,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
     $actual_days = $total_days;
     $hours = $diff->h + ($diff->i / 60);
 
-    setcookie("pricing_applied", "No");
+
 
     if ($rbfw_enable_time_slot === 'off') {
         if ($rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on') === 'on' || $total_days === 0) {
@@ -2695,7 +2695,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         );
     }
 
-    return ['duration_price' => $duration_price, 'total_days' => $total_days, 'actual_days' => $actual_days, 'hours' => $hours,'pricing_applied'=>isset($_COOKIE['pricing_applied'])?$_COOKIE['pricing_applied']:''];
+    return ['duration_price' => $duration_price, 'total_days' => $total_days, 'actual_days' => $actual_days, 'hours' => $hours,'pricing_applied'=>get_transient("pricing_applied")];
 }
 
 
@@ -2828,7 +2828,9 @@ function rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $d
     }
     $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
     $custom_rate = get_post_meta($post_id, "rbfw_{$day}_hourly_rate", true);
-    return $enabled === 'yes' ? ($custom_rate * $hours) : ($hourly_rate * $hours);
+    return $enabled === 'yes'
+        ? ((float) $custom_rate * (float) $hours)
+        : ((float) $hourly_rate * (float) $hours);
 }
 
 function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
@@ -3066,7 +3068,9 @@ function rbfw_md_duration_price_calculation_old( $post_id = 0, $pickup_datetime 
                 $daily_rate = $rbfw_sp_price['rbfw_sp_price_h'] ?: $daily_rate;
                 $hourly_rate = $rbfw_sp_price['rbfw_sp_price_d'] ?: $hourly_rate;
 
-                setcookie("pricing_applied", "sessional");
+               // setcookie("pricing_applied", "sessional");
+
+                set_transient("pricing_applied", "sessional", 3600);
 
 				if ( $hours ) {
 					return $daily_rate * $hours;
@@ -3092,7 +3096,9 @@ function check_seasonal_price_resort( $Book_date, $rbfw_sp_prices, $room_type = 
                 if ( in_array( $Book_date, $sp_dates_array ) ) {
                     foreach ($rbfw_sp_price['room_price'] as $room_price){
                         if($room_type == $room_price['room_type']){
-                            setcookie("pricing_applied", "sessional");
+
+                            set_transient("pricing_applied", "sessional", 3600);
+
                             if($active_tab=='daylong'){
                                 return $room_price['day_long_price'];
                             }else{
@@ -3114,7 +3120,12 @@ function check_seasonal_price_resort_mds( $day_number, $rbfw_sp_prices, $room_ty
             if ($day_number >= $rbfw_sp_price['start_day']) {
                 foreach ($rbfw_sp_price['room_price'] as $key=>$room_price){
                     if($room_type == $room_price['room_type']){
-                        setcookie("pricing_applied", "mds");
+
+
+
+                        set_transient("pricing_applied", "mds", 3600);
+
+
                         if($active_tab=='daylong'){
                             $price = $room_price['day_long_price'];
                         }else{
@@ -3133,10 +3144,10 @@ function check_multi_day_price_saver_in_md( $total_days, $rbfw_md_data_mds) {
     $price = [];
     foreach ($rbfw_md_data_mds as $single) {
         if ($total_days >= $single['rbfw_start_day']) {
-            setcookie("pricing_applied", "mds");
-            return array($single['rbfw_daily_price'] , $single['rbfw_hourly_price']);
-        } else {
-            break;
+
+            set_transient("pricing_applied", "mds", 3600);
+
+            $price =  array($single['rbfw_daily_price'] , $single['rbfw_hourly_price']);
         }
     }
     return $price;

@@ -14,6 +14,9 @@ if($cart_backend){
     $submit_name = 'add-to-cart';
 }
 
+
+
+
 $rbfw_monthly_rate = get_post_meta($rbfw_id, 'rbfw_monthly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_monthly_rate', true) : 0;
 $rbfw_weekly_rate = get_post_meta($rbfw_id, 'rbfw_weekly_rate', true) ? get_post_meta($rbfw_id, 'rbfw_weekly_rate', true) : 0;
 $daily_rate = get_post_meta($rbfw_id, 'rbfw_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_daily_rate', true) : 0;

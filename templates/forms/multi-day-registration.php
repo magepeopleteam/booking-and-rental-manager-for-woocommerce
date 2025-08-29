@@ -737,7 +737,6 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                 <input type="hidden" name="rbfw_duration_price" id="rbfw_duration_price"  value="0">
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price"  value="0">
-                <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price"  value="0">
 
                 <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">
@@ -748,7 +747,7 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo esc_attr($rbfw_enable_variations); ?>">
                 <input type="hidden" name="rbfw_input_stock_quantity" id="rbfw_input_stock_quantity"  value="<?php echo esc_attr($input_stock_quantity); ?>">
                 <input type="hidden" name="rbfw_enable_time_slot" id="rbfw_enable_time_slot"  value="<?php echo esc_attr($rbfw_enable_time_picker); ?>">
-                <input type="hidden" name="total_days" value="0">
+                <input type="hidden" name="total_days" id="rbfw_total_days" value="0">
                 <input type="hidden" id="rbfw_minimum_booking_day" value="<?php echo esc_attr($rbfw_minimum_booking_day); ?>">
                 <input type="hidden" id="rbfw_maximum_booking_day" value="<?php echo esc_attr($rbfw_maximum_booking_day); ?>">
                 <input type="hidden" id="rbfw_month_wise_inventory" value="<?php echo esc_attr($day_wise_imventory); ?>">

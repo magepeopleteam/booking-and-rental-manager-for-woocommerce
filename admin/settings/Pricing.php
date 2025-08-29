@@ -1739,8 +1739,10 @@
                                         <div><?php esc_html_e( 'Actions', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                     </div>
                                     <div class="rbfw_pdwt_insert">
-                                        <?php $i=0;  foreach ( $particulars_data as $index => $particular ){ if( $particular['start_date'] && $particular['end_date'] && isset($particular['available_time'])){ ?>
-                                            <div class="rbfw_pdwt_row d-flex justify-content-between">
+                                        <?php if ( ! empty( $particulars_data ) ){ ?>
+                                            <?php $i=0;  foreach ( $particulars_data as $index => $particular ){
+                                                if( $particular['start_date'] && $particular['end_date'] && isset($particular['available_time'])){ ?>
+                                                    <div class="rbfw_pdwt_row d-flex justify-content-between">
                                                 <?php if($type=='md'){ ?>
                                                     <div class="rbfw-particular-date">
                                                         <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
@@ -1813,7 +1815,9 @@
                                                     <button type="button" class="remove-row button"><?php echo esc_html__( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                                                 </div>
                                             </div>
-                                            <?php $i++; } } ?>
+                                                <?php $i++; }  ?>
+                                            <?php } ?>
+                                        <?php } ?>
                                     </div>
                                     <div>
                                         <button type="button" id="add-particular-row" data-rent_type="<?php echo $type ?>" class="ppof-button">
