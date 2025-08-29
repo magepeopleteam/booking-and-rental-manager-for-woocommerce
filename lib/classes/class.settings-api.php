@@ -582,10 +582,12 @@ class RBFW_Setting_API {
 
         $options = get_option( $section );
 
-        if ( isset( $options[$option] ) ) {
+        // Check if the key exists in database settings and is not empty
+        if ( isset( $options[$option] ) && !empty( $options[$option] ) ) {
             return $options[$option];
         }
 
+        // Fall back to default translation string (for Loco Translate)
         return $default;
     }
 

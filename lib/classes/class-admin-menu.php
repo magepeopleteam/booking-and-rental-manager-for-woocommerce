@@ -350,30 +350,6 @@
 			}
 
 			function get_option_trans( $option = 'text', $section = 'rbfw_basic_gen_settings', $default = '' ) {
-				// For translation settings, prioritize WordPress translations (Loco Translate)
-				if ( $section === 'rbfw_basic_translation_settings' ) {
-					// Priority 1: WordPress translation system (Loco Translate)
-					$translated = __( $default, 'booking-and-rental-manager-for-woocommerce' );
-					
-					// If translation is different from default, use it
-					if ( $translated !== $default ) {
-						return $translated;
-					}
-					
-					// Priority 2: Check database as fallback
-					$options = get_option( $section );
-					if ( ! empty( $options[ $option ] ) ) {
-						if ( is_array( $options[ $option ] ) ) {
-							return $options[ $option ];
-						} else {
-							return esc_html( $options[ $option ] );
-						}
-					}
-					
-					return $default;
-				}
-				
-				// For other sections, use normal database check
 				$options = get_option( $section );
 				if ( ! empty( $options[ $option ] ) ) {
 					if ( is_array( $options[ $option ] ) ) {

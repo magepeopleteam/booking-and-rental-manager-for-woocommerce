@@ -2,39 +2,6 @@
 	if ( ! defined( 'ABSPATH' ) ) {
 		exit;
 	}
-
-// Hybrid Translation Function
-if ( ! function_exists( 'rbfw_string' ) ) {
-	function rbfw_string( $key, $default = '' ) {
-		// Check database first
-		$options = get_option( 'rbfw_basic_translation_settings' );
-		
-		// If translation exists in database, use it
-		if ( isset( $options[$key] ) && !empty( $options[$key] ) ) {
-			echo esc_html( $options[$key] );
-			return;
-		}
-		
-		// Fallback to WordPress translation system (Loco Translate)
-		echo esc_html( __( $default, 'booking-and-rental-manager-for-woocommerce' ) );
-	}
-}
-
-if ( ! function_exists( 'rbfw_get_string' ) ) {
-	function rbfw_get_string( $key, $default = '' ) {
-		// Check database first
-		$options = get_option( 'rbfw_basic_translation_settings' );
-		
-		// If translation exists in database, use it
-		if ( isset( $options[$key] ) && !empty( $options[$key] ) ) {
-			return $options[$key];
-		}
-		
-		// Fallback to WordPress translation system (Loco Translate)
-		return __( $default, 'booking-and-rental-manager-for-woocommerce' );
-	}
-}
-
 // Language Load
 	function rbfw_allowed_html() {
 		$allowed_html = array(
@@ -233,44 +200,12 @@ if ( ! function_exists( 'rbfw_get_string' ) ) {
 		global $rbfw;
 		return $rbfw->get_option_trans( $option, $section, $default );
 	}
-	// Updated function with Loco Translate priority
+	// Deprecated function - use esc_html_e() instead
 	function rbfw_string( $option_name, $default_string ) {
-		// Priority 1: WordPress translation system (Loco Translate)
-		$translated = __( $default_string, 'booking-and-rental-manager-for-woocommerce' );
-		
-		// If translation is different from default, use it
-		if ( $translated !== $default_string ) {
-			echo esc_html( $translated );
-			return;
-		}
-		
-		// Priority 2: Check database as fallback
-		$options = get_option( 'rbfw_basic_translation_settings' );
-		if ( isset( $options[$option_name] ) && !empty( $options[$option_name] ) ) {
-			echo esc_html( $options[$option_name] );
-			return;
-		}
-		
-		// Final fallback to default
 		echo esc_html( $default_string );
 	}
-	// Updated function with Loco Translate priority
+	// Deprecated function - use __() instead
 	function rbfw_string_return( $option_name, $default_string ) {
-		// Priority 1: WordPress translation system (Loco Translate)
-		$translated = __( $default_string, 'booking-and-rental-manager-for-woocommerce' );
-		
-		// If translation is different from default, use it
-		if ( $translated !== $default_string ) {
-			return $translated;
-		}
-		
-		// Priority 2: Check database as fallback
-		$options = get_option( 'rbfw_basic_translation_settings' );
-		if ( isset( $options[$option_name] ) && !empty( $options[$option_name] ) ) {
-			return $options[$option_name];
-		}
-		
-		// Final fallback to default
 		return $default_string;
 	}
 	function rbfw_get_datetime( $date, $type = 'date-time-text' ) {
