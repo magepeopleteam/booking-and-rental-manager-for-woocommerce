@@ -1,395 +1,348 @@
 # Copyright (C) 2025 MagePeople Team
 # This file is distributed under the same license as the Booking and Rental Manager for WooCommerce package.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Booking and Rental Manager for WooCommerce 2.2.8\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/booking-and-rental-manager-for-woocommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/booking-and-"
+"rental-manager-for-woocommerce\n"
 "POT-Creation-Date: 2025-08-28 12:19+0600\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: MagePeople Team <support@mage-people.com>\n"
-"Language-Team: MagePeople <mage-people.com>\n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Manual\n"
+"PO-Revision-Date: 2025-08-28 06:40+0000\n"
+"Last-Translator: \n"
+"Language-Team: Swedish\n"
+"Language: sv_SE\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Loco https://localise.biz/\n"
 "X-Domain: booking-and-rental-manager-for-woocommerce\n"
+"X-Loco-Version: 2.8.0; wp-6.8.2; php-8.0.30"
 
 # Main Plugin Strings
 #: rent-manager.php:79 rent-manager.php:84
 msgid "Docs"
-msgstr ""
+msgstr "Dokument"
 
 #: rent-manager.php:80 rent-manager.php:85
 msgid "Support"
-msgstr ""
+msgstr "Stöd"
 
 #: rent-manager.php:97 rent-manager.php:100
 msgid "Settings"
-msgstr ""
+msgstr "Inställningar"
 
 #: rent-manager.php:98
 msgid "Get Booking and Rental Manager Pro"
-msgstr ""
+msgstr "Skaffa boknings- och uthyrningshanteraren Pro"
 
 # Admin Interface
 #: admin/custom_post.php:17
 msgid "Price Type"
-msgstr ""
+msgstr "Pristyp"
 
 #: admin/custom_post.php:18
 msgid "Rent Type"
-msgstr ""
+msgstr "Hyrestyp"
 
 #: admin/custom_post.php:19
 msgid "Author"
-msgstr ""
+msgstr "Författare"
 
 #: admin/custom_post.php:20
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: admin/custom_post.php:70 admin/custom_post.php:71
 msgid " List"
-msgstr ""
+msgstr "Lista"
 
 #: admin/custom_post.php:72
 msgid " Item:"
-msgstr ""
+msgstr "Artikel:"
 
 #: admin/custom_post.php:73
 msgid "All Items"
-msgstr ""
+msgstr "Alla artiklar"
 
 #: admin/custom_post.php:74 admin/custom_post.php:75
 msgid "Add New Item"
-msgstr ""
+msgstr "Lägg till nytt objekt"
 
 #: admin/custom_post.php:76
 msgid "New Item "
-msgstr ""
+msgstr "Nytt objekt"
 
 #: admin/custom_post.php:77
 msgid "Edit "
-msgstr ""
+msgstr "Redigera"
 
 #: admin/custom_post.php:78 admin/custom_post.php:79
 msgid "Update "
-msgstr ""
+msgstr "Uppdatering"
 
 #: admin/custom_post.php:80 admin/custom_post.php:81
 msgid "View "
-msgstr ""
+msgstr "Visa"
 
 #: admin/custom_post.php:82
 msgid "Search "
-msgstr ""
+msgstr "Sök"
 
 #: admin/custom_post.php:83
 msgid " Not found"
-msgstr ""
+msgstr "Inte hittad"
 
 #: admin/custom_post.php:84
 msgid " Not found in Trash"
-msgstr ""
+msgstr "Hittades inte i papperskorgen"
 
 #: admin/custom_post.php:85
 msgid " Featured Image"
-msgstr ""
+msgstr "Utvald bild"
 
 #: admin/custom_post.php:86 admin/custom_post.php:87 admin/custom_post.php:88
 msgid " featured image"
-msgstr ""
+msgstr "utvald bild"
 
 #: admin/custom_post.php:89
 msgid "Set "
-msgstr ""
+msgstr "Ställ in"
 
 #: admin/custom_post.php:90
 msgid "Remove "
-msgstr ""
+msgstr "Ta bort"
 
 #: admin/custom_post.php:91
 msgid "Use as "
-msgstr ""
+msgstr "Använd som"
 
 #: admin/custom_post.php:92
 msgid "Insert into "
-msgstr ""
+msgstr "Sätt in i"
 
 #: admin/custom_post.php:93
 msgid "Uploaded to this "
-msgstr ""
+msgstr "Uppladdad till detta"
 
 #: admin/custom_post.php:94 admin/custom_post.php:96
 msgid " list"
-msgstr ""
+msgstr "lista"
 
 #: admin/custom_post.php:95
 msgid " list navigation"
-msgstr ""
+msgstr "listnavigering"
 
 #: admin/custom_post.php:97
 msgid "Filter "
-msgstr ""
+msgstr "Filtrera"
 
 # Order Management
-#: admin/custom_post.php:109 admin/custom_post.php:110 admin/custom_post.php:111 admin/custom_post.php:112
+#: admin/custom_post.php:109 admin/custom_post.php:110
+#: admin/custom_post.php:111 admin/custom_post.php:112
 msgid "Order"
-msgstr ""
+msgstr "Beställa"
 
 #: admin/custom_post.php:113 admin/custom_post.php:114
 msgid "Order List"
-msgstr ""
+msgstr "Orderlista"
 
 #: admin/custom_post.php:115
 msgid "Order Item:"
-msgstr ""
+msgstr "Beställningsartikel:"
 
 #: admin/custom_post.php:116
 msgid "All Order"
-msgstr ""
+msgstr "Alla beställningar"
 
 #: admin/custom_post.php:117 admin/custom_post.php:118
 msgid "Add New Order"
-msgstr ""
+msgstr "Lägg till ny beställning"
 
 #: admin/custom_post.php:119
 msgid "New Order"
-msgstr ""
+msgstr "Ny beställning"
 
 #: admin/custom_post.php:120
 msgid "Edit Order"
-msgstr ""
+msgstr "Redigera beställning"
 
 #: admin/custom_post.php:121
 msgid "Update Order"
-msgstr ""
+msgstr "Uppdatera order"
 
 #: admin/custom_post.php:122
 msgid "View Order"
-msgstr ""
+msgstr "Visa beställning"
 
 # Booking and Rental Types
 #: inc/RBFW_Function.php:157
 msgid "Rent item for single day"
-msgstr ""
+msgstr "Hyr objekt för en dag"
 
 #: inc/RBFW_Function.php:158
 msgid "Rent item for multiple day"
-msgstr ""
+msgstr "Hyr objekt i flera dagar"
 
 #: inc/RBFW_Function.php:159
 msgid "Resort"
-msgstr ""
+msgstr "Tillflykt"
 
 #: inc/RBFW_Function.php:160
 msgid "Equipment"
-msgstr ""
+msgstr "Utrustning"
 
 #: inc/RBFW_Function.php:161
 msgid "Dress"
-msgstr ""
+msgstr "Klä"
 
 #: inc/RBFW_Function.php:162
 msgid "Appointment"
-msgstr ""
+msgstr "Utnämning"
 
 #: inc/RBFW_Function.php:163
 msgid "Others"
-msgstr ""
+msgstr "Andra"
 
 #: inc/RBFW_Function.php:164
 msgid "Multiple day for multiple items"
-msgstr ""
+msgstr "Flera dagar för flera artiklar"
 
 # Frontend Display Strings
 #: Frontend/RBFW_Woocommerse.php:571
 msgid "Start Date"
-msgstr ""
+msgstr "Startdatum"
 
 #: Frontend/RBFW_Woocommerse.php:576
 msgid "Duration Cost"
-msgstr ""
+msgstr "Varaktighet Kostnad"
 
 #: Frontend/RBFW_Woocommerse.php:581
 msgid "Resource Cost"
-msgstr ""
+msgstr "Resurskostnad"
 
 #: Frontend/RBFW_Woocommerse.php:586
 msgid "Discount"
-msgstr ""
+msgstr "Rabatt"
 
 #: Frontend/RBFW_Woocommerse.php:591
 msgid "Pickup Location"
-msgstr ""
+msgstr "Upphämtningsplats"
 
 #: Frontend/RBFW_Woocommerse.php:676
 msgid "Drop-off Location"
-msgstr ""
+msgstr "Avlämningsplats"
 
 #: Frontend/RBFW_Woocommerse.php:681
 msgid "Extra Service Information"
-msgstr ""
+msgstr "Extra serviceinformation"
 
 #: Frontend/RBFW_Woocommerse.php:686
 msgid "Check-In Date"
-msgstr ""
+msgstr "Incheckningsdatum"
 
 #: Frontend/RBFW_Woocommerse.php:691
 msgid "Check-Out Date"
-msgstr ""
+msgstr "Utcheckningsdatum"
 
 #: Frontend/RBFW_Woocommerse.php:696
 msgid "Package"
-msgstr ""
+msgstr "Paket"
 
 #: Frontend/RBFW_Woocommerse.php:904
 msgid "Start Date and Time"
-msgstr ""
+msgstr "Startdatum och tid"
 
 #: Frontend/RBFW_Woocommerse.php:909
 msgid "Quantity"
-msgstr ""
+msgstr "Kvantitet"
 
 #: Frontend/RBFW_Woocommerse.php:914
 msgid "Duration"
-msgstr ""
-
-# Cart Page Strings
-#: templates/cart_page.php:68
-msgid "Check-In Date"
-msgstr ""
-
-#: templates/cart_page.php:73
-msgid "Check-Out Date"
-msgstr ""
-
-#: templates/cart_page.php:78
-msgid "Package"
-msgstr ""
-
-#: templates/cart_page.php:83
-msgid "Duration Cost"
-msgstr ""
-
-#: templates/cart_page.php:88
-msgid "Resource Cost"
-msgstr ""
-
-#: templates/cart_page.php:93
-msgid "Discount"
-msgstr ""
+msgstr "Varaktighet"
 
 #: templates/cart_page.php:98
 msgid "Pickup Point"
-msgstr ""
+msgstr "Upphämtningsplats"
 
 #: templates/cart_page.php:102
 msgid "Drop-off Point"
-msgstr ""
-
-#: templates/cart_page.php:134
-msgid "Start Date and Time"
-msgstr ""
-
-#: templates/cart_page.php:139
-msgid "Quantity"
-msgstr ""
-
-#: templates/cart_page.php:144
-msgid "Duration"
-msgstr ""
+msgstr "Avlämningsplats"
 
 # Pricing and Cost Labels
 #: inc/rbfw_functions.php:429
 msgid "Hourly rate"
-msgstr ""
+msgstr "Timpris"
 
 #: inc/rbfw_functions.php:434
 msgid "Prices start at"
-msgstr ""
+msgstr "Priserna börjar på"
 
 #: inc/rbfw_functions.php:439
 msgid "Daily rate"
-msgstr ""
+msgstr "Dagspris"
 
 #: inc/rbfw_functions.php:444
 msgid "Reviews"
-msgstr ""
+msgstr "Recensioner"
 
 # Search Results
 #: lib/classes/class-search-page.php:253
 msgid "results"
-msgstr ""
+msgstr "resultat"
 
 #: lib/classes/class-search-page.php:254
 msgid "Showing"
-msgstr ""
+msgstr "Visande"
 
 #: lib/classes/class-search-page.php:256 lib/classes/class-search-page.php:258
 msgid "of"
-msgstr ""
+msgstr "av"
 
 #: lib/classes/class-search-page.php:259
 msgid "total"
-msgstr ""
+msgstr "total"
 
 #: lib/classes/class-search-page.php:274
 msgid "Book Now"
-msgstr ""
-
-#: lib/classes/class-search-page.php:290
-msgid "Hourly rate"
-msgstr ""
-
-#: lib/classes/class-search-page.php:291
-msgid "Daily rate"
-msgstr ""
-
-#: lib/classes/class-search-page.php:302
-msgid "Prices start at"
-msgstr ""
+msgstr "Boka nu"
 
 # Template Strings
 #: templates/single/donut/multi-day.php:45
 msgid "PER DAY"
-msgstr ""
+msgstr "PER DAG"
 
 #: templates/single/donut/multi-day.php:49
 msgid "PER HOUR"
-msgstr ""
+msgstr "VARJE TIMME"
 
 #: templates/single/donut/multi-day.php:92
 msgid "Load More"
-msgstr ""
+msgstr "Ladda mer"
 
 #: templates/single/donut/multi-day.php:113
 msgid "Booking Detail"
-msgstr ""
+msgstr "Bokningsdetaljer"
 
 #: templates/single/donut/multi-day.php:121
 msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Vanliga frågor"
 
 #: templates/single/donut/multi-day.php:140
 msgid "You May Also Like"
-msgstr ""
+msgstr "Du kanske också gillar"
 
 #: templates/single/donut/resort.php:73
 msgid "DAYNIGHT"
-msgstr ""
+msgstr "DAGNATT"
 
 # Form Registration
 #: templates/forms/multi-day-registration.php:199
 msgid "Daily"
-msgstr ""
+msgstr "Dagligen"
 
 #: templates/forms/multi-day-registration.php:211
 msgid "Hourly"
-msgstr ""
+msgstr "Varje timme"
 
 # Default Templates
 #: templates/single/default/single-day.php:55
@@ -397,761 +350,721 @@ msgstr ""
 #: templates/single/default/resort.php:40
 #: templates/single/default/multi-day.php:52
 msgid "Description"
-msgstr ""
-
-#: templates/single/default/single-day.php:61
-#: templates/single/default/multiple-items.php:58
-#: templates/single/default/resort.php:45
-#: templates/single/default/multi-day.php:58
-msgid "Frequently Asked Questions"
-msgstr ""
+msgstr "Beskrivning"
 
 # Muffin Templates
 #: templates/single/muffin/single-day.php:284
 #: templates/single/muffin/resort.php:286
 msgid "Write Review"
-msgstr ""
+msgstr "Skriv recension"
 
 # Duration Labels
 #: inc/class-bike-car-md-function.php:174
 msgid "Days"
-msgstr ""
+msgstr "Dagar"
 
 #: inc/class-bike-car-md-function.php:174
 msgid "Day"
-msgstr ""
+msgstr "Dag"
 
-# Pricing Summary
-#: inc/class-resort-function.php:394
-#: inc/class-bike-car-sd-function.php:431
-msgid "Duration Cost"
-msgstr ""
-
-#: inc/class-resort-function.php:395
-#: inc/class-bike-car-sd-function.php:433
-msgid "Resource Cost"
-msgstr ""
-
-#: inc/class-resort-function.php:396
-#: inc/class-bike-car-sd-function.php:435
+#: inc/class-resort-function.php:396 inc/class-bike-car-sd-function.php:435
 msgid "Subtotal"
-msgstr ""
+msgstr "Delsumma"
 
-#: inc/class-resort-function.php:412
-#: inc/class-bike-car-sd-function.php:442
-msgid "Discount"
-msgstr ""
-
-#: inc/class-resort-function.php:418
-#: inc/class-bike-car-sd-function.php:442
+#: inc/class-resort-function.php:418 inc/class-bike-car-sd-function.php:442
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 # Order Meta
-#: inc/rbfw_order_meta.php:163
-#: inc/rbfw_order_meta.php:731
+#: inc/rbfw_order_meta.php:163 inc/rbfw_order_meta.php:731
 msgid "Discount Type"
-msgstr ""
-
-#: inc/rbfw_order_meta.php:438
-#: inc/rbfw_order_meta.php:938
-msgid "Discount"
-msgstr ""
-
-# Thank You Page
-#: lib/classes/class-thankyou-page.php:377
-#: lib/classes/class-thankyou-page.php:661
-msgid "Quantity"
-msgstr ""
-
-#: lib/classes/class-thankyou-page.php:394
-#: lib/classes/class-thankyou-page.php:679
-msgid "Discount"
-msgstr ""
+msgstr "Rabatttyp"
 
 # Dependencies
 #: inc/RBFW_Dependencies.php:172
 msgid "Hide More"
-msgstr ""
-
-#: inc/RBFW_Dependencies.php:173
-msgid "Load More"
-msgstr ""
+msgstr "Dölj mer"
 
 #: inc/RBFW_Dependencies.php:174
 msgid "View More Offers"
-msgstr ""
+msgstr "Visa fler erbjudanden"
 
 #: inc/RBFW_Dependencies.php:175
 msgid "Hide More Offers"
-msgstr ""
+msgstr "Dölj fler erbjudanden"
 
 # JavaScript Strings
 #: assets/mp_script/resort_script.js:79
 msgid "Please Choose Check-In Date"
-msgstr ""
+msgstr "Vänligen välj incheckningsdatum"
 
 #: assets/mp_script/resort_script.js:80
 msgid "Please Choose Check-Out Date"
-msgstr ""
+msgstr "Vänligen välj utcheckningsdatum"
 
 # Common Error Messages
 msgid "Something is wrong! Please try again."
-msgstr ""
+msgstr "Något är fel! Försök igen."
 
 msgid "Sorry, no data found!"
-msgstr ""
+msgstr "Tyvärr, ingen data hittades!"
 
 msgid "No results found."
-msgstr ""
+msgstr "Inga resultat hittades."
 
 # Time and Date
 msgid "Hour"
-msgstr ""
+msgstr "Timme"
 
 msgid "Hours"
-msgstr ""
+msgstr "Timmar"
 
 msgid "Minute"
-msgstr ""
+msgstr "Minut"
 
 msgid "Minutes"
-msgstr ""
+msgstr "Minuter"
 
 # Status Messages
 msgid "Available"
-msgstr ""
+msgstr "Tillgänglig"
 
 msgid "Not Available"
-msgstr ""
+msgstr "Inte tillgänglig"
 
 msgid "Booked"
-msgstr ""
+msgstr "Bokad"
 
 msgid "Pending"
-msgstr ""
+msgstr "I avvaktan på"
 
 msgid "Confirmed"
-msgstr ""
+msgstr "Bekräftad"
 
 msgid "Cancelled"
-msgstr ""
+msgstr "Avbruten"
 
 msgid "Completed"
-msgstr ""
+msgstr "Avslutad"
 
 # Security
 msgid "Security Deposit"
-msgstr ""
+msgstr "Säkerhetsdeposition"
 
 # Tax
 msgid "Tax"
-msgstr ""
+msgstr "Beskatta"
 
 msgid "Including Tax"
-msgstr ""
+msgstr "Inklusive moms"
 
 msgid "Excluding Tax"
-msgstr ""
+msgstr "Exklusive moms"
 
 # Additional Missing Strings
 msgid "Number of Items"
-msgstr ""
+msgstr "Antal artiklar"
 
 msgid "x"
-msgstr ""
+msgstr "x"
 
 msgid "Optional Add-ons"
-msgstr ""
+msgstr "Valfria tillägg"
 
 msgid "Available:"
-msgstr ""
+msgstr "Tillgänglig:"
 
 msgid "Sold Out"
-msgstr ""
+msgstr "Slutsåld"
 
 msgid "Booking Summary"
-msgstr ""
+msgstr "Bokningssammanfattning"
 
 msgid "Back to Previous Step"
-msgstr ""
+msgstr "Tillbaka till föregående steg"
 
 msgid "You selected"
-msgstr ""
-
-msgid "Date"
-msgstr ""
+msgstr "Du valde"
 
 msgid "Time"
-msgstr ""
+msgstr "Tid"
 
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 msgid "Price"
-msgstr ""
+msgstr "Pris"
 
 msgid "Available Quantity is "
-msgstr ""
+msgstr "Tillgänglig kvantitet är"
 
 msgid "Enable/Disable"
-msgstr ""
+msgstr "Aktivera/Inaktivera"
 
 msgid "Activate"
-msgstr ""
+msgstr "Aktivera"
 
 msgid "Activated"
-msgstr ""
+msgstr "Aktiverad"
 
 msgid "Additional Informations"
-msgstr ""
+msgstr "Ytterligare information"
 
 msgid "All Order Meta"
-msgstr ""
+msgstr "Alla ordermetadata"
 
 msgid "Add New Order Meta"
-msgstr ""
+msgstr "Lägg till ny ordermeta"
 
 msgid "New Order Meta"
-msgstr ""
+msgstr "Ny ordermeta"
 
 msgid "Edit Order Meta"
-msgstr ""
+msgstr "Redigera ordermetadata"
 
 msgid "Update Order Meta"
-msgstr ""
+msgstr "Uppdatera ordermetadata"
 
 msgid "View Order Meta"
-msgstr ""
+msgstr "Visa ordermetadata"
 
 msgid "Search Order Meta"
-msgstr ""
+msgstr "Sökordermeta"
 
 msgid "Order Meta Not found"
-msgstr ""
+msgstr "Ordermeta hittades inte"
 
 msgid "Order Meta Not found in Trash"
-msgstr ""
+msgstr "Ordermeta hittades inte i papperskorgen"
 
 msgid "Order Meta Featured Image"
-msgstr ""
+msgstr "Beställ meta Utvald bild"
 
 msgid "Set Order Meta featured image"
-msgstr ""
+msgstr "Ange order Meta utvald bild"
 
 msgid "Remove Order Meta featured image"
-msgstr ""
+msgstr "Ta bort utvald bild för ordermeta"
 
 msgid "Use as Order Meta featured image"
-msgstr ""
+msgstr "Använd som utvald bild för ordermeta"
 
 msgid "Insert into Order Meta"
-msgstr ""
+msgstr "Infoga i ordermeta"
 
 msgid "Uploaded to this Order Meta"
-msgstr ""
+msgstr "Uppladdad till denna ordermeta"
 
 msgid "Order Meta navigation"
-msgstr ""
+msgstr "Beställ Meta-navigering"
 
 msgid "Filter Order Meta"
-msgstr ""
+msgstr "Filtrera ordermeta"
 
 msgid "Order Meta"
-msgstr ""
+msgstr "Beställningsmeta"
 
 msgid "Order Meta Item:"
-msgstr ""
+msgstr "Beställningsmetaartikel:"
 
 msgid "Order Feature Image"
-msgstr ""
+msgstr "Beställningsfunktionsbild"
 
 msgid "Set Order featured image"
-msgstr ""
+msgstr "Ange order utvald bild"
 
 msgid "Remove Order eatured image"
-msgstr ""
+msgstr "Ta bort orderns utvalda bild"
 
 msgid "Use as Order featured image"
-msgstr ""
+msgstr "Använd som utvald bild för beställning"
 
 msgid "Insert into Order"
-msgstr ""
+msgstr "Lägg in i ordningen"
 
 msgid "Uploaded to this Order"
-msgstr ""
+msgstr "Uppladdad till denna beställning"
 
 msgid "Order list navigation"
-msgstr ""
+msgstr "Navigering i orderlistan"
 
 msgid "Filter Order list"
-msgstr ""
-
-msgid "Order List"
-msgstr ""
+msgstr "Filtrera orderlista"
 
 msgid "Order Not found"
-msgstr ""
+msgstr "Beställningen hittades inte"
 
 msgid "Order Not found in Trash"
-msgstr ""
+msgstr "Beställningen hittades inte i papperskorgen"
 
 msgid "Average"
-msgstr ""
+msgstr "Genomsnitt"
 
 msgid "Booking Time Expired!"
-msgstr ""
+msgstr "Bokningstiden har gått ut!"
 
 msgid "Day Wise"
-msgstr ""
+msgstr "Dagvis"
 
 msgid "Extra Service Price Settings"
-msgstr ""
+msgstr "Prisinställningar för extra tjänster"
 
 msgid "I already did"
-msgstr ""
+msgstr "Jag gjorde redan"
 
 msgid "I need support"
-msgstr ""
+msgstr "Jag behöver stöd"
 
 msgid "Install"
-msgstr ""
+msgstr "Installera"
 
 msgid "Maximum"
-msgstr ""
+msgstr "Maximal"
 
 msgid "Minimum"
-msgstr ""
+msgstr "Minimum"
 
 msgid "No, not good enough"
-msgstr ""
+msgstr "Nej, inte tillräckligt bra"
 
 msgid "Ok, you deserved it"
-msgstr ""
+msgstr "Okej, du förtjänade det"
 
 msgid "Please Select Slider Height"
-msgstr ""
+msgstr "Välj skjutreglagehöjd"
 
 msgid "Quick Setup"
-msgstr ""
+msgstr "Snabbinstallation"
 
 msgid "Remove"
-msgstr ""
+msgstr "Ta bort"
 
 msgid "Rent Item"
-msgstr ""
+msgstr "Hyr objekt"
 
 msgid "Service Name"
-msgstr ""
+msgstr "Tjänstens namn"
 
 msgid "Slider height"
-msgstr ""
-
-msgid "Sorry, no data found!"
-msgstr ""
+msgstr "Skjutreglagens höjd"
 
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 msgid "Upload"
-msgstr ""
+msgstr "Ladda upp"
 
 msgid "Weeks"
-msgstr ""
+msgstr "Veckor"
 
 msgid "Active Now"
-msgstr ""
+msgstr "Aktiv nu"
 
 msgid "Add More Item"
-msgstr ""
+msgstr "Lägg till fler objekt"
 
 msgid "Additional Services You may like."
-msgstr ""
+msgstr "Ytterligare tjänster som du kanske gillar."
 
 msgid "Addon: Seasonal Pricing extends the date-wise pricing features."
 msgstr ""
+"Tillägg: Säsongsprissättning utökar de datumvisa prissättningsfunktionerna."
 
 msgid "Add-ons Price"
-msgstr ""
+msgstr "Tilläggspris"
 
 msgid "Audio/Video format not supported."
-msgstr ""
+msgstr "Ljud-/videoformat stöds inte."
 
 msgid "Automatic Email Confirmation Message and Pdf Receipts Mailing Features."
 msgstr ""
+"Automatiskt e-postbekräftelsemeddelande och funktioner för utskick av PDF-"
+"kvitton."
 
 msgid "Available Qty"
-msgstr ""
+msgstr "Tillgänglig kvantitet"
 
 msgid "Available Qty "
-msgstr ""
+msgstr "Tillgänglig kvantitet"
 
 msgid "Available Quantity"
-msgstr ""
+msgstr "Tillgänglig kvantitet"
 
 msgid "Available Quantity:"
-msgstr ""
+msgstr "Tillgänglig kvantitet:"
 
 msgid "Avg price"
-msgstr ""
+msgstr "Genomsnittspris"
 
-msgid "Booking and Rental Manager for WooCommerce <span>Addon: Seasonal Pricing</span>"
+msgid ""
+"Booking and Rental Manager for WooCommerce <span>Addon: Seasonal "
+"Pricing</span>"
 msgstr ""
+"Boknings- och uthyrningsansvarig för WooCommerce <span>Tillägg: "
+"Säsongsprissättning</span>"
 
 msgid "Booking and Rental Manager For Woocommerce Plugin"
-msgstr ""
+msgstr "Boknings- och uthyrningshanterare för Woocommerce-plugin"
 
 msgid "Booking and Rental Manager for WooCommerce Pro"
-msgstr ""
+msgstr "Boknings- och uthyrningsansvarig för WooCommerce Pro"
 
 msgid "Booking and Rental Manager for WooCommerce Pro Features"
-msgstr ""
+msgstr "Boknings- och uthyrningsansvarig för WooCommerce Pro-funktioner"
 
 msgid "Booking Calender."
-msgstr ""
+msgstr "Bokningskalender."
 
 msgid "Buy Pro"
-msgstr ""
+msgstr "Köp Pro"
 
 msgid "Buy Seasonal Pricing Addon"
-msgstr ""
+msgstr "Köp säsongsprissättningstillägg"
 
 msgid "Cars Available"
-msgstr ""
+msgstr "Bilar tillgängliga"
 
 msgid "Category Service"
-msgstr ""
+msgstr "Kategori Tjänst"
 
 msgid "Category Service Sold Qty"
-msgstr ""
+msgstr "Kategori Tjänst Såld Antal"
 
 msgid "Category wise service:"
-msgstr ""
+msgstr "Kategorivis tjänst:"
 
 msgid "Check Availability"
-msgstr ""
+msgstr "Kontrollera tillgänglighet"
 
 msgid "Check-In & Check-Out Date"
-msgstr ""
+msgstr "Inchecknings- och utcheckningsdatum"
 
 msgid "Choose drop-off location"
-msgstr ""
+msgstr "Välj avlämningsplats"
 
 msgid "Choose number of quantity"
-msgstr ""
+msgstr "Välj antal"
 
 msgid "Choose pickup location"
-msgstr ""
+msgstr "Välj upphämtningsplats"
 
 msgid "Choose some general option."
-msgstr ""
+msgstr "Välj något generellt alternativ."
 
 msgid "Daily Price"
-msgstr ""
+msgstr "Dagligt pris"
 
 msgid "Daily Rate"
-msgstr ""
-
-msgid "Day"
-msgstr ""
+msgstr "Dagspris"
 
 msgid "Day night stay"
-msgstr ""
+msgstr "Dag övernattning"
 
 msgid "Daylong only day stay"
-msgstr ""
+msgstr "Endast en dags vistelse"
 
 msgid "Delete"
-msgstr ""
+msgstr "Radera"
 
 msgid "Documentation"
-msgstr ""
+msgstr "Dokumentation"
 
 msgid "Done"
-msgstr ""
+msgstr "Gjort"
 
 msgid "Download PDF receipt for customers."
-msgstr ""
+msgstr "Ladda ner PDF-kvitto för kunder."
 
 msgid "Download PRO Version Now"
-msgstr ""
-
-msgid "Drop-off Location"
-msgstr ""
+msgstr "Ladda ner PRO-versionen nu"
 
 msgid "Duration Type"
-msgstr ""
+msgstr "Varaktighetstyp"
 
 msgid "Enable Daily"
-msgstr ""
+msgstr "Aktivera dagligen"
 
 msgid "Enable Hourly"
-msgstr ""
+msgstr "Aktivera timvis"
 
 msgid "Enable Monthly"
-msgstr ""
+msgstr "Aktivera månadsvis"
 
 msgid "Enable Price Types (applies to all items)"
-msgstr ""
+msgstr "Aktivera pristyper (gäller alla artiklar)"
 
 msgid "Enable Weekly"
-msgstr ""
+msgstr "Aktivera veckovis"
 
 msgid "Enter Amount"
-msgstr ""
+msgstr "Ange belopp"
 
 msgid "Expired"
-msgstr ""
+msgstr "Utgången"
 
 msgid "Export Reports as CSV Format."
-msgstr ""
+msgstr "Exportera rapporter som CSV-format."
 
 msgid "Extra Service Sold Qty"
-msgstr ""
+msgstr "Extra sålda tjänster Antal"
 
 msgid "Extra Service Stock"
-msgstr ""
+msgstr "Extra servicelager"
 
 msgid "Extra Services:"
-msgstr ""
+msgstr "Extra tjänster:"
 
 msgid "Feature Highlights"
-msgstr ""
+msgstr "Funktionshöjdpunkter"
 
 msgid "Filter"
-msgstr ""
+msgstr "Filtrera"
 
 msgid "Finalize Setup"
-msgstr ""
+msgstr "Slutför installationen"
 
 msgid "Finish & Save"
-msgstr ""
+msgstr "Slutför och spara"
 
 msgid "General"
-msgstr ""
+msgstr "Allmän"
 
 msgid "General settings"
-msgstr ""
-
-msgid "Hour"
-msgstr ""
+msgstr "Allmänna inställningar"
 
 msgid "Hourly Price"
-msgstr ""
+msgstr "Timpris"
 
 msgid "Install & Active Now"
-msgstr ""
+msgstr "Installera och aktiv nu"
 
 msgid "Inventory"
-msgstr ""
+msgstr "Lager"
 
 msgid "It will change the Rent post type label on the entire plugin."
-msgstr ""
+msgstr "Det kommer att ändra etiketten för hyrinläggstyp i hela pluginet."
 
-msgid "It will change the Rent slug on the entire plugin. Remember after changing this slug you need to flush permalinks. Just go to Settings->Permalinks hit the Save Settings button"
+msgid ""
+"It will change the Rent slug on the entire plugin. Remember after changing "
+"this slug you need to flush permalinks. Just go to Settings->Permalinks hit "
+"the Save Settings button"
 msgstr ""
+"Det kommer att ändra Rent-sluggen för hela pluginet. Kom ihåg att efter att "
+"du har ändrat denna slug måste du tömma permalänkarna. Gå bara till "
+"Inställningar->Permalänkar och tryck på knappen Spara inställningar."
 
 msgid "Item Name"
-msgstr ""
+msgstr "Artikelnamn"
 
 msgid "Item Sold Qty"
-msgstr ""
+msgstr "Såld vara Antal"
 
 msgid "Item Stock"
-msgstr ""
+msgstr "Artikellager"
 
 msgid "Items"
-msgstr ""
+msgstr "Föremål"
 
 msgid "Member, WordPress.Org"
-msgstr ""
+msgstr "Medlem, WordPress.Org"
 
 msgid "Month"
-msgstr ""
+msgstr "Månad"
 
 msgid "Monthly"
-msgstr ""
+msgstr "Månatlig"
 
 msgid "Monthly Price"
-msgstr ""
+msgstr "Månadspris"
 
 msgid "Name"
-msgstr ""
+msgstr "Namn"
 
 msgid "Next"
-msgstr ""
+msgstr "Nästa"
 
 msgid "Number of Duration"
-msgstr ""
+msgstr "Antal varaktighet"
 
 msgid "Pickup Date"
-msgstr ""
+msgstr "Upphämtningsdatum"
 
 msgid "Pickup Time"
-msgstr ""
+msgstr "Upphämtningstid"
 
 msgid "Please install or activate the WooCommerce plugin. "
-msgstr ""
+msgstr "Installera eller aktivera WooCommerce-pluginet."
 
 msgid "Previous"
-msgstr ""
+msgstr "Tidigare"
 
 msgid "Pricing Info"
-msgstr ""
+msgstr "Prisinformation"
 
 msgid "Pro Version Plugin Features:"
-msgstr ""
+msgstr "Funktioner i Pro-versionens plugin:"
 
 msgid "Refresh Page"
-msgstr ""
+msgstr "Uppdatera sidan"
 
 msgid "Rent Info:"
-msgstr ""
+msgstr "Hyresinformation:"
 
 msgid "Rent Label:"
-msgstr ""
+msgstr "Hyresetikett:"
 
 msgid "Rent Slug:"
-msgstr ""
+msgstr "Hyr Slug:"
 
 msgid "Rental Duration"
-msgstr ""
+msgstr "Hyreslängd"
 
 msgid "Rental Start Date"
-msgstr ""
+msgstr "Uthyrningsstartdatum"
 
 msgid "Reports Display."
-msgstr ""
+msgstr "Rapportvisning."
 
 msgid "Reset Filter"
-msgstr ""
+msgstr "Återställ filter"
 
 msgid "Return date"
-msgstr ""
+msgstr "Returdatum"
 
 msgid "Return Time"
-msgstr ""
+msgstr "Returtid"
 
 msgid "Room Info:"
-msgstr ""
+msgstr "Rumsinformation:"
 
 msgid "Room Type"
-msgstr ""
+msgstr "Rumstyp"
 
 msgid "Security Deposit Label"
-msgstr ""
+msgstr "Etikett för säkerhetsdeposition"
 
 msgid "See Details"
-msgstr ""
+msgstr "Se detaljer"
 
 msgid "Select Date"
-msgstr ""
+msgstr "Välj datum"
 
 msgid "Select duration type"
-msgstr ""
+msgstr "Välj varaktighet"
 
 msgid "Select Item to Rent"
-msgstr ""
+msgstr "Välj objekt att hyra"
 
 msgid "Selected Items"
-msgstr ""
+msgstr "Valda objekt"
 
 msgid "Share"
-msgstr ""
+msgstr "Dela"
 
 msgid "Skip, Go to Dashboard"
-msgstr ""
+msgstr "Hoppa över, gå till instrumentpanelen"
 
 msgid "Summary"
-msgstr ""
+msgstr "Sammanfattning"
 
-msgid "Thanks for choosing Booking and Rental Manager Manager Plugin for WooCommerce for your site, Please go step by step and choose some options to get started."
+msgid ""
+"Thanks for choosing Booking and Rental Manager Manager Plugin for "
+"WooCommerce for your site, Please go step by step and choose some options to "
+"get started."
 msgstr ""
+"Tack för att du valde Booking and Rental Manager Manager Plugin för "
+"WooCommerce för din webbplats. Gå steg för steg och välj några alternativ "
+"för att komma igång."
 
-msgid "This is the best booking and rental plugin. Found all things in one place. This plugin meet my business requirements."
+msgid ""
+"This is the best booking and rental plugin. Found all things in one place. "
+"This plugin meet my business requirements."
 msgstr ""
+"Detta är det bästa pluginet för bokning och uthyrning. Hittade allt på ett "
+"ställe. Det här pluginet uppfyller mina affärskrav."
 
 msgid "Total Price"
-msgstr ""
+msgstr "Totalpris"
 
 msgid "Variation Stock:"
-msgstr ""
+msgstr "Variantlager:"
 
 msgid "View Demo"
-msgstr ""
+msgstr "Visa demo"
 
 msgid "Week"
-msgstr ""
+msgstr "Vecka"
 
 msgid "Weekly"
-msgstr ""
+msgstr "Varje vecka"
 
 msgid "Weekly Price"
-msgstr ""
+msgstr "Veckopris"
 
 msgid "Welcome"
-msgstr ""
+msgstr "Välkomna"
 
 msgid "What User Says About Our Plugin"
-msgstr ""
+msgstr "Vad användaren säger om vårt plugin"
 
 msgid "Woocommerce already install , please activate it"
-msgstr ""
+msgstr "Woocommerce är redan installerat, vänligen aktivera det"
 
 msgid "Woocommerce already installed and activated"
-msgstr ""
+msgstr "Woocommerce är redan installerat och aktiverat"
 
 msgid "Woocommerce need to install and active"
-msgstr ""
+msgstr "Woocommerce behöver installeras och aktiveras"
 
-msgid "You are about to Finish & Save Booking and Reantal Manager For Woocommerce Plugin setup process"
+msgid ""
+"You are about to Finish & Save Booking and Reantal Manager For Woocommerce "
+"Plugin setup process"
 msgstr ""
+"Du är på väg att slutföra och spara installationsprocessen för bokning och "
+"uthyrningshanterare för Woocommerce-pluginet."
 
 msgid "Duplicate Item "
-msgstr ""
+msgstr "Duplicera objekt"
 
 msgid "Short Description"
-msgstr ""
+msgstr "Kort beskrivning"
 
 msgid "Stock Quantity"
-msgstr ""
+msgstr "Lagerkvantitet"
 
 msgid "Type name"
-msgstr ""
+msgstr "Skriv namn"
 
 # Additional Common Strings
 msgid "Choose"
-msgstr ""
+msgstr "Välja"
 
 msgid "Click a date to browse availability"
-msgstr ""
+msgstr "Klicka på ett datum för att se tillgänglighet"
 
 msgid "Day-long price"
-msgstr ""
+msgstr "Pris för hela dagen"
 
 msgid "Day-night price"
-msgstr ""
+msgstr "Pris för dag och natt"
 
 msgid "Drop-off Date"
-msgstr ""
+msgstr "Avlämningsdatum"
 
 msgid "Drop-off Date & Time"
-msgstr ""
+msgstr "Avlämningsdatum och tid"
 
 msgid "Duration Cost:"
-msgstr ""
+msgstr "Kostnad för varaktighet:"
 
 msgid "Instant confirmation"
-msgstr ""
+msgstr "Omedelbar bekräftelse"
 
 msgid "Pickup Date & Time"
-msgstr ""
+msgstr "Upphämtningsdatum och tid"
 
 msgid "Real-time availability"
-msgstr ""
+msgstr "Tillgänglighet i realtid"
 
 msgid "Rental Lists"
-msgstr ""
-
-msgid "Something is wrong! Please try again."
-msgstr ""
+msgstr "Hyreslistor"

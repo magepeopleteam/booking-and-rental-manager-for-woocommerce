@@ -1,21 +1,23 @@
 # Copyright (C) 2025 MagePeople Team
 # This file is distributed under the same license as the Booking and Rental Manager for WooCommerce package.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Booking and Rental Manager for WooCommerce 2.2.8\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/booking-and-rental-manager-for-woocommerce\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/booking-and-"
+"rental-manager-for-woocommerce\n"
 "POT-Creation-Date: 2025-08-28 12:19+0600\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: MagePeople Team <support@mage-people.com>\n"
-"Language-Team: MagePeople <mage-people.com>\n"
-"Language: \n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Manual\n"
+"PO-Revision-Date: 2025-08-28 06:29+0000\n"
+"Last-Translator: \n"
+"Language-Team: English (United States)\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Loco https://localise.biz/\n"
 "X-Domain: booking-and-rental-manager-for-woocommerce\n"
+"\n"
+"X-Loco-Version: 2.8.0; wp-6.8.2; php-8.0.30"
 
 # Main Plugin Strings
 #: rent-manager.php:79 rent-manager.php:84
@@ -136,7 +138,8 @@ msgid "Filter "
 msgstr ""
 
 # Order Management
-#: admin/custom_post.php:109 admin/custom_post.php:110 admin/custom_post.php:111 admin/custom_post.php:112
+#: admin/custom_post.php:109 admin/custom_post.php:110
+#: admin/custom_post.php:111 admin/custom_post.php:112
 msgid "Order"
 msgstr ""
 
@@ -422,39 +425,32 @@ msgid "Day"
 msgstr ""
 
 # Pricing Summary
-#: inc/class-resort-function.php:394
-#: inc/class-bike-car-sd-function.php:431
+#: inc/class-resort-function.php:394 inc/class-bike-car-sd-function.php:431
 msgid "Duration Cost"
 msgstr ""
 
-#: inc/class-resort-function.php:395
-#: inc/class-bike-car-sd-function.php:433
+#: inc/class-resort-function.php:395 inc/class-bike-car-sd-function.php:433
 msgid "Resource Cost"
 msgstr ""
 
-#: inc/class-resort-function.php:396
-#: inc/class-bike-car-sd-function.php:435
+#: inc/class-resort-function.php:396 inc/class-bike-car-sd-function.php:435
 msgid "Subtotal"
 msgstr ""
 
-#: inc/class-resort-function.php:412
-#: inc/class-bike-car-sd-function.php:442
+#: inc/class-resort-function.php:412 inc/class-bike-car-sd-function.php:442
 msgid "Discount"
 msgstr ""
 
-#: inc/class-resort-function.php:418
-#: inc/class-bike-car-sd-function.php:442
+#: inc/class-resort-function.php:418 inc/class-bike-car-sd-function.php:442
 msgid "Total"
 msgstr ""
 
 # Order Meta
-#: inc/rbfw_order_meta.php:163
-#: inc/rbfw_order_meta.php:731
+#: inc/rbfw_order_meta.php:163 inc/rbfw_order_meta.php:731
 msgid "Discount Type"
 msgstr ""
 
-#: inc/rbfw_order_meta.php:438
-#: inc/rbfw_order_meta.php:938
+#: inc/rbfw_order_meta.php:438 inc/rbfw_order_meta.php:938
 msgid "Discount"
 msgstr ""
 
@@ -795,7 +791,9 @@ msgstr ""
 msgid "Avg price"
 msgstr ""
 
-msgid "Booking and Rental Manager for WooCommerce <span>Addon: Seasonal Pricing</span>"
+msgid ""
+"Booking and Rental Manager for WooCommerce <span>Addon: Seasonal "
+"Pricing</span>"
 msgstr ""
 
 msgid "Booking and Rental Manager For Woocommerce Plugin"
@@ -948,7 +946,10 @@ msgstr ""
 msgid "It will change the Rent post type label on the entire plugin."
 msgstr ""
 
-msgid "It will change the Rent slug on the entire plugin. Remember after changing this slug you need to flush permalinks. Just go to Settings->Permalinks hit the Save Settings button"
+msgid ""
+"It will change the Rent slug on the entire plugin. Remember after changing "
+"this slug you need to flush permalinks. Just go to Settings->Permalinks hit "
+"the Save Settings button"
 msgstr ""
 
 msgid "Item Name"
@@ -1065,10 +1066,15 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-msgid "Thanks for choosing Booking and Rental Manager Manager Plugin for WooCommerce for your site, Please go step by step and choose some options to get started."
+msgid ""
+"Thanks for choosing Booking and Rental Manager Manager Plugin for "
+"WooCommerce for your site, Please go step by step and choose some options to "
+"get started."
 msgstr ""
 
-msgid "This is the best booking and rental plugin. Found all things in one place. This plugin meet my business requirements."
+msgid ""
+"This is the best booking and rental plugin. Found all things in one place. "
+"This plugin meet my business requirements."
 msgstr ""
 
 msgid "Total Price"
@@ -1104,7 +1110,9 @@ msgstr ""
 msgid "Woocommerce need to install and active"
 msgstr ""
 
-msgid "You are about to Finish & Save Booking and Reantal Manager For Woocommerce Plugin setup process"
+msgid ""
+"You are about to Finish & Save Booking and Reantal Manager For Woocommerce "
+"Plugin setup process"
 msgstr ""
 
 msgid "Duplicate Item "

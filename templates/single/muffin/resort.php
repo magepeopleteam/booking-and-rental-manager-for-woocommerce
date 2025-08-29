@@ -283,7 +283,7 @@
 					<?php do_action( 'rbfw_muff_review_tab', $post_id ); ?>
                 </div>
                 <div class="rbfw_muff_review_write_btn_wrapper">
-                    <button class="rbfw_muff_review_write_btn"><?php echo esc_html( $rbfw->get_option( 'rbfw_text_write_review', 'rbfw_basic_translation_settings', __( 'Write Review', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></button>
+                    <button class="rbfw_muff_review_write_btn"><?php echo esc_html( __( 'Write Review', 'booking-and-rental-manager-for-woocommerce' ) ); ?></button>
                 </div>
             </div>
             <div class="rbfw_muff_faq_tab_contents">

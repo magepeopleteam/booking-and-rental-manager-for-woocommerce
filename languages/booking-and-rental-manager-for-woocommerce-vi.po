@@ -9,11 +9,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2025-08-28 06:35+0000\n"
+"PO-Revision-Date: 2025-08-28 06:41+0000\n"
 "Last-Translator: \n"
-"Language-Team: French (France)\n"
-"Language: fr_FR\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"Language-Team: Vietnamese\n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Loco https://localise.biz/\n"
 "X-Domain: booking-and-rental-manager-for-woocommerce\n"
 "X-Loco-Version: 2.8.0; wp-6.8.2; php-8.0.30"
@@ -21,328 +21,328 @@ msgstr ""
 # Main Plugin Strings
 #: rent-manager.php:79 rent-manager.php:84
 msgid "Docs"
-msgstr "Documents"
+msgstr "Tài liệu"
 
 #: rent-manager.php:80 rent-manager.php:85
 msgid "Support"
-msgstr "Soutien"
+msgstr "Ủng hộ"
 
 #: rent-manager.php:97 rent-manager.php:100
 msgid "Settings"
-msgstr "Paramètres"
+msgstr "Cài đặt"
 
 #: rent-manager.php:98
 msgid "Get Booking and Rental Manager Pro"
-msgstr "Obtenez Booking and Rental Manager Pro"
+msgstr "Tải Booking and Rental Manager Pro"
 
 # Admin Interface
 #: admin/custom_post.php:17
 msgid "Price Type"
-msgstr "Type de prix"
+msgstr "Loại giá"
 
 #: admin/custom_post.php:18
 msgid "Rent Type"
-msgstr "Type de location"
+msgstr "Loại thuê"
 
 #: admin/custom_post.php:19
 msgid "Author"
-msgstr "Auteur"
+msgstr "Tác giả"
 
 #: admin/custom_post.php:20
 msgid "Date"
-msgstr "Date"
+msgstr "Ngày"
 
 #: admin/custom_post.php:70 admin/custom_post.php:71
 msgid " List"
-msgstr " Liste"
+msgstr " Danh sách"
 
 #: admin/custom_post.php:72
 msgid " Item:"
-msgstr " Article:"
+msgstr " Mục:"
 
 #: admin/custom_post.php:73
 msgid "All Items"
-msgstr "Tous les articles"
+msgstr "Tất cả các mặt hàng"
 
 #: admin/custom_post.php:74 admin/custom_post.php:75
 msgid "Add New Item"
-msgstr "Ajouter un nouvel élément"
+msgstr "Thêm mục mới"
 
 #: admin/custom_post.php:76
 msgid "New Item "
-msgstr "Nouvel article"
+msgstr "Sản phẩm mới"
 
 #: admin/custom_post.php:77
 msgid "Edit "
-msgstr "Modifier "
+msgstr "Biên tập "
 
 #: admin/custom_post.php:78 admin/custom_post.php:79
 msgid "Update "
-msgstr "Mise à jour "
+msgstr "Cập nhật "
 
 #: admin/custom_post.php:80 admin/custom_post.php:81
 msgid "View "
-msgstr "Voir "
+msgstr "Xem "
 
 #: admin/custom_post.php:82
 msgid "Search "
-msgstr "Recherche "
+msgstr "Tìm kiếm "
 
 #: admin/custom_post.php:83
 msgid " Not found"
-msgstr "Non trouvé"
+msgstr "Không tìm thấy"
 
 #: admin/custom_post.php:84
 msgid " Not found in Trash"
-msgstr "Non trouvé dans la corbeille"
+msgstr "Không tìm thấy trong Thùng rác"
 
 #: admin/custom_post.php:85
 msgid " Featured Image"
-msgstr "Image en vedette"
+msgstr "Hình ảnh nổi bật"
 
 #: admin/custom_post.php:86 admin/custom_post.php:87 admin/custom_post.php:88
 msgid " featured image"
-msgstr "image en vedette"
+msgstr "hình ảnh nổi bật"
 
 #: admin/custom_post.php:89
 msgid "Set "
-msgstr "Ensemble "
+msgstr "Bộ "
 
 #: admin/custom_post.php:90
 msgid "Remove "
-msgstr "Retirer "
+msgstr "Di dời "
 
 #: admin/custom_post.php:91
 msgid "Use as "
-msgstr "Utiliser comme"
+msgstr "Sử dụng như"
 
 #: admin/custom_post.php:92
 msgid "Insert into "
-msgstr "Insérer dans"
+msgstr "Chèn vào"
 
 #: admin/custom_post.php:93
 msgid "Uploaded to this "
-msgstr "Téléchargé sur ceci"
+msgstr "Đã tải lên đây"
 
 #: admin/custom_post.php:94 admin/custom_post.php:96
 msgid " list"
-msgstr " liste"
+msgstr " danh sách"
 
 #: admin/custom_post.php:95
 msgid " list navigation"
-msgstr "navigation dans la liste"
+msgstr "danh sách điều hướng"
 
 #: admin/custom_post.php:97
 msgid "Filter "
-msgstr "Filtrer"
+msgstr "Lọc "
 
 # Order Management
 #: admin/custom_post.php:109 admin/custom_post.php:110
 #: admin/custom_post.php:111 admin/custom_post.php:112
 msgid "Order"
-msgstr "Commande"
+msgstr "Đặt hàng"
 
 #: admin/custom_post.php:113 admin/custom_post.php:114
 msgid "Order List"
-msgstr "Liste de commandes"
+msgstr "Danh sách đơn hàng"
 
 #: admin/custom_post.php:115
 msgid "Order Item:"
-msgstr "Article de la commande :"
+msgstr "Đặt hàng sản phẩm:"
 
 #: admin/custom_post.php:116
 msgid "All Order"
-msgstr "Toutes les commandes"
+msgstr "Tất cả đơn hàng"
 
 #: admin/custom_post.php:117 admin/custom_post.php:118
 msgid "Add New Order"
-msgstr "Ajouter une nouvelle commande"
+msgstr "Thêm đơn hàng mới"
 
 #: admin/custom_post.php:119
 msgid "New Order"
-msgstr "Nouvel ordre"
+msgstr "Trật tự mới"
 
 #: admin/custom_post.php:120
 msgid "Edit Order"
-msgstr "Modifier la commande"
+msgstr "Chỉnh sửa đơn hàng"
 
 #: admin/custom_post.php:121
 msgid "Update Order"
-msgstr "Mettre à jour la commande"
+msgstr "Cập nhật đơn hàng"
 
 #: admin/custom_post.php:122
 msgid "View Order"
-msgstr "Voir la commande"
+msgstr "Xem đơn hàng"
 
 # Booking and Rental Types
 #: inc/RBFW_Function.php:157
 msgid "Rent item for single day"
-msgstr "Louer un article pour une seule journée"
+msgstr "Cho thuê mặt hàng trong một ngày"
 
 #: inc/RBFW_Function.php:158
 msgid "Rent item for multiple day"
-msgstr "Louer un article pour plusieurs jours"
+msgstr "Thuê mặt hàng trong nhiều ngày"
 
 #: inc/RBFW_Function.php:159
 msgid "Resort"
-msgstr "Station balnéaire"
+msgstr "Khu nghỉ mát"
 
 #: inc/RBFW_Function.php:160
 msgid "Equipment"
-msgstr "Équipement"
+msgstr "Thiết bị"
 
 #: inc/RBFW_Function.php:161
 msgid "Dress"
-msgstr "Robe"
+msgstr "Đầm"
 
 #: inc/RBFW_Function.php:162
 msgid "Appointment"
-msgstr "Rendez-vous"
+msgstr "Cuộc hẹn"
 
 #: inc/RBFW_Function.php:163
 msgid "Others"
-msgstr "Autres"
+msgstr "Người khác"
 
 #: inc/RBFW_Function.php:164
 msgid "Multiple day for multiple items"
-msgstr "Plusieurs jours pour plusieurs articles"
+msgstr "Nhiều ngày cho nhiều mặt hàng"
 
 # Frontend Display Strings
 #: Frontend/RBFW_Woocommerse.php:571
 msgid "Start Date"
-msgstr "Date de début"
+msgstr "Ngày bắt đầu"
 
 #: Frontend/RBFW_Woocommerse.php:576
 msgid "Duration Cost"
-msgstr "Durée Coût"
+msgstr "Thời lượng Chi phí"
 
 #: Frontend/RBFW_Woocommerse.php:581
 msgid "Resource Cost"
-msgstr "Coût des ressources"
+msgstr "Chi phí tài nguyên"
 
 #: Frontend/RBFW_Woocommerse.php:586
 msgid "Discount"
-msgstr "Rabais"
+msgstr "Giảm giá"
 
 #: Frontend/RBFW_Woocommerse.php:591
 msgid "Pickup Location"
-msgstr "Lieu de prise en charge"
+msgstr "Địa điểm đón"
 
 #: Frontend/RBFW_Woocommerse.php:676
 msgid "Drop-off Location"
-msgstr "Lieu de dépôt"
+msgstr "Địa điểm trả hàng"
 
 #: Frontend/RBFW_Woocommerse.php:681
 msgid "Extra Service Information"
-msgstr "Informations supplémentaires sur les services"
+msgstr "Thông tin dịch vụ bổ sung"
 
 #: Frontend/RBFW_Woocommerse.php:686
 msgid "Check-In Date"
-msgstr "Date d'arrivée"
+msgstr "Ngày nhận phòng"
 
 #: Frontend/RBFW_Woocommerse.php:691
 msgid "Check-Out Date"
-msgstr "Date de départ"
+msgstr "Ngày trả phòng"
 
 #: Frontend/RBFW_Woocommerse.php:696
 msgid "Package"
-msgstr "Emballer"
+msgstr "Bưu kiện"
 
 #: Frontend/RBFW_Woocommerse.php:904
 msgid "Start Date and Time"
-msgstr "Date et heure de début"
+msgstr "Ngày và giờ bắt đầu"
 
 #: Frontend/RBFW_Woocommerse.php:909
 msgid "Quantity"
-msgstr "Quantité"
+msgstr "Số lượng"
 
 #: Frontend/RBFW_Woocommerse.php:914
 msgid "Duration"
-msgstr "Durée"
+msgstr "Khoảng thời gian"
 
 #: templates/cart_page.php:98
 msgid "Pickup Point"
-msgstr "Point de retrait"
+msgstr "Điểm đón"
 
 #: templates/cart_page.php:102
 msgid "Drop-off Point"
-msgstr "Point de dépôt"
+msgstr "Điểm trả khách"
 
 # Pricing and Cost Labels
 #: inc/rbfw_functions.php:429
 msgid "Hourly rate"
-msgstr "Taux horaire"
+msgstr "Tỷ lệ theo giờ"
 
 #: inc/rbfw_functions.php:434
 msgid "Prices start at"
-msgstr "Les prix commencent à"
+msgstr "Giá bắt đầu từ"
 
 #: inc/rbfw_functions.php:439
 msgid "Daily rate"
-msgstr "Tarif journalier"
+msgstr "Tỷ giá hàng ngày"
 
 #: inc/rbfw_functions.php:444
 msgid "Reviews"
-msgstr "Avis"
+msgstr "Đánh giá"
 
 # Search Results
 #: lib/classes/class-search-page.php:253
 msgid "results"
-msgstr "résultats"
+msgstr "kết quả"
 
 #: lib/classes/class-search-page.php:254
 msgid "Showing"
-msgstr "Affichage"
+msgstr "Hiển thị"
 
 #: lib/classes/class-search-page.php:256 lib/classes/class-search-page.php:258
 msgid "of"
-msgstr "de"
+msgstr "của"
 
 #: lib/classes/class-search-page.php:259
 msgid "total"
-msgstr "total"
+msgstr "tổng cộng"
 
 #: lib/classes/class-search-page.php:274
 msgid "Book Now"
-msgstr "Réservez maintenant"
+msgstr "Đặt ngay"
 
 # Template Strings
 #: templates/single/donut/multi-day.php:45
 msgid "PER DAY"
-msgstr "PAR JOUR"
+msgstr "MỖI NGÀY"
 
 #: templates/single/donut/multi-day.php:49
 msgid "PER HOUR"
-msgstr "PAR HEURE"
+msgstr "MỖI GIỜ"
 
 #: templates/single/donut/multi-day.php:92
 msgid "Load More"
-msgstr "Charger plus"
+msgstr "Tải thêm"
 
 #: templates/single/donut/multi-day.php:113
 msgid "Booking Detail"
-msgstr "Détails de la réservation"
+msgstr "Chi tiết đặt phòng"
 
 #: templates/single/donut/multi-day.php:121
 msgid "Frequently Asked Questions"
-msgstr "Questions fréquemment posées"
+msgstr "Những câu hỏi thường gặp"
 
 #: templates/single/donut/multi-day.php:140
 msgid "You May Also Like"
-msgstr "Vous aimerez peut-être aussi"
+msgstr "Bạn cũng có thể thích"
 
 #: templates/single/donut/resort.php:73
 msgid "DAYNIGHT"
-msgstr "JOURNUIT"
+msgstr "BAN NGÀY ĐÊM"
 
 # Form Registration
 #: templates/forms/multi-day-registration.php:199
 msgid "Daily"
-msgstr "Tous les jours"
+msgstr "Hằng ngày"
 
 #: templates/forms/multi-day-registration.php:211
 msgid "Hourly"
-msgstr "Toutes les heures"
+msgstr "Hàng giờ"
 
 # Default Templates
 #: templates/single/default/single-day.php:55
@@ -350,727 +350,719 @@ msgstr "Toutes les heures"
 #: templates/single/default/resort.php:40
 #: templates/single/default/multi-day.php:52
 msgid "Description"
-msgstr "Description"
+msgstr "Sự miêu tả"
 
 # Muffin Templates
 #: templates/single/muffin/single-day.php:284
 #: templates/single/muffin/resort.php:286
 msgid "Write Review"
-msgstr "Écrire un avis"
+msgstr "Viết đánh giá"
 
 # Duration Labels
 #: inc/class-bike-car-md-function.php:174
 msgid "Days"
-msgstr "Jours"
+msgstr "Ngày"
 
 #: inc/class-bike-car-md-function.php:174
 msgid "Day"
-msgstr "Jour"
+msgstr "Ngày"
 
 #: inc/class-resort-function.php:396 inc/class-bike-car-sd-function.php:435
 msgid "Subtotal"
-msgstr "Total"
+msgstr "Tổng phụ"
 
 #: inc/class-resort-function.php:418 inc/class-bike-car-sd-function.php:442
 msgid "Total"
-msgstr "Total"
+msgstr "Tổng cộng"
 
 # Order Meta
 #: inc/rbfw_order_meta.php:163 inc/rbfw_order_meta.php:731
 msgid "Discount Type"
-msgstr "Type de remise"
+msgstr "Loại giảm giá"
 
 # Dependencies
 #: inc/RBFW_Dependencies.php:172
 msgid "Hide More"
-msgstr "Masquer plus"
+msgstr "Ẩn thêm"
 
 #: inc/RBFW_Dependencies.php:174
 msgid "View More Offers"
-msgstr "Voir plus d'offres"
+msgstr "Xem thêm ưu đãi"
 
 #: inc/RBFW_Dependencies.php:175
 msgid "Hide More Offers"
-msgstr "Masquer plus d'offres"
+msgstr "Ẩn thêm ưu đãi"
 
 # JavaScript Strings
 #: assets/mp_script/resort_script.js:79
 msgid "Please Choose Check-In Date"
-msgstr "Veuillez choisir la date d'arrivée"
+msgstr "Vui lòng chọn ngày nhận phòng"
 
 #: assets/mp_script/resort_script.js:80
 msgid "Please Choose Check-Out Date"
-msgstr "Veuillez choisir la date de départ"
+msgstr "Vui lòng chọn ngày trả phòng"
 
 # Common Error Messages
 msgid "Something is wrong! Please try again."
-msgstr "Un problème est survenu ! Veuillez réessayer."
+msgstr "Có gì đó không ổn! Vui lòng thử lại."
 
 msgid "Sorry, no data found!"
-msgstr "Désolé, aucune donnée trouvée !"
+msgstr "Xin lỗi, không tìm thấy dữ liệu!"
 
 msgid "No results found."
-msgstr "Aucun résultat trouvé."
+msgstr "Không tìm thấy kết quả nào."
 
 # Time and Date
 msgid "Hour"
-msgstr "Heure"
+msgstr "Giờ"
 
 msgid "Hours"
-msgstr "Heures"
+msgstr "Giờ"
 
 msgid "Minute"
-msgstr "Minute"
+msgstr "Phút"
 
 msgid "Minutes"
-msgstr "Minutes"
+msgstr "Phút"
 
 # Status Messages
 msgid "Available"
-msgstr "Disponible"
+msgstr "Có sẵn"
 
 msgid "Not Available"
-msgstr "Pas disponible"
+msgstr "Không có sẵn"
 
 msgid "Booked"
-msgstr "Réservé"
+msgstr "Đã đặt chỗ"
 
 msgid "Pending"
-msgstr "En attente"
+msgstr "Chưa giải quyết"
 
 msgid "Confirmed"
-msgstr "Confirmé"
+msgstr "Đã xác nhận"
 
 msgid "Cancelled"
-msgstr "Annulé"
+msgstr "Đã hủy"
 
 msgid "Completed"
-msgstr "Complété"
+msgstr "Hoàn thành"
 
 # Security
 msgid "Security Deposit"
-msgstr "Dépôt de garantie"
+msgstr "Tiền đặt cọc an ninh"
 
 # Tax
 msgid "Tax"
-msgstr "Impôt"
+msgstr "Thuế"
 
 msgid "Including Tax"
-msgstr "Taxes comprises"
+msgstr "Bao gồm thuế"
 
 msgid "Excluding Tax"
-msgstr "Hors taxes"
+msgstr "Không bao gồm thuế"
 
 # Additional Missing Strings
 msgid "Number of Items"
-msgstr "Nombre d'articles"
+msgstr "Số lượng mặt hàng"
 
 msgid "x"
 msgstr "x"
 
 msgid "Optional Add-ons"
-msgstr "Modules complémentaires optionnels"
+msgstr "Tiện ích bổ sung tùy chọn"
 
 msgid "Available:"
-msgstr "Disponible:"
+msgstr "Có sẵn:"
 
 msgid "Sold Out"
-msgstr "Épuisé"
+msgstr "Bán hết"
 
 msgid "Booking Summary"
-msgstr "Résumé de la réservation"
+msgstr "Tóm tắt đặt phòng"
 
 msgid "Back to Previous Step"
-msgstr "Retour à l'étape précédente"
+msgstr "Quay lại bước trước"
 
 msgid "You selected"
-msgstr "Vous avez sélectionné"
+msgstr "Bạn đã chọn"
 
 msgid "Time"
-msgstr "Temps"
+msgstr "Thời gian"
 
 msgid "Type"
-msgstr "Taper"
+msgstr "Kiểu"
 
 msgid "Price"
-msgstr "Prix"
+msgstr "Giá"
 
 msgid "Available Quantity is "
-msgstr "La quantité disponible est"
+msgstr "Số lượng có sẵn là"
 
 msgid "Enable/Disable"
-msgstr "Activer/Désactiver"
+msgstr "Bật/Tắt"
 
 msgid "Activate"
-msgstr "Activer"
+msgstr "Kích hoạt"
 
 msgid "Activated"
-msgstr "Activé"
+msgstr "Đã kích hoạt"
 
 msgid "Additional Informations"
-msgstr "Informations complémentaires"
+msgstr "Thông tin bổ sung"
 
 msgid "All Order Meta"
-msgstr "Méta de tous les ordres"
+msgstr "Tất cả các đơn hàng Meta"
 
 msgid "Add New Order Meta"
-msgstr "Ajouter une nouvelle méta de commande"
+msgstr "Thêm Meta đơn hàng mới"
 
 msgid "New Order Meta"
-msgstr "Méta Nouvel Ordre"
+msgstr "Meta Trật tự Mới"
 
 msgid "Edit Order Meta"
-msgstr "Modifier la commande Meta"
+msgstr "Chỉnh sửa đơn hàng Meta"
 
 msgid "Update Order Meta"
-msgstr "Mettre à jour la méta de commande"
+msgstr "Cập nhật Meta đơn hàng"
 
 msgid "View Order Meta"
-msgstr "Afficher les métadonnées de la commande"
+msgstr "Xem Meta đơn hàng"
 
 msgid "Search Order Meta"
-msgstr "Méta-ordre de recherche"
+msgstr "Tìm kiếm thứ tự Meta"
 
 msgid "Order Meta Not found"
-msgstr "Commande Meta non trouvée"
+msgstr "Không tìm thấy Meta đơn hàng"
 
 msgid "Order Meta Not found in Trash"
-msgstr "Commande Meta non trouvée dans la corbeille"
+msgstr "Đơn hàng Meta Không tìm thấy trong Thùng rác"
 
 msgid "Order Meta Featured Image"
-msgstr "Commander une méta-image en vedette"
+msgstr "Đặt hàng hình ảnh nổi bật Meta"
 
 msgid "Set Order Meta featured image"
-msgstr "Définir l'ordre Méta image vedette"
+msgstr "Đặt thứ tự Meta hình ảnh nổi bật"
 
 msgid "Remove Order Meta featured image"
-msgstr "Supprimer l'image méta de commande"
+msgstr "Xóa hình ảnh nổi bật của Order Meta"
 
 msgid "Use as Order Meta featured image"
-msgstr "Utiliser comme image méta vedette de la commande"
+msgstr "Sử dụng làm hình ảnh nổi bật của Order Meta"
 
 msgid "Insert into Order Meta"
-msgstr "Insérer dans la méta-commande"
+msgstr "Chèn vào Order Meta"
 
 msgid "Uploaded to this Order Meta"
-msgstr "Téléchargé sur cette commande Meta"
+msgstr "Đã tải lên Đơn hàng này Meta"
 
 msgid "Order Meta navigation"
-msgstr "Commande Méta navigation"
+msgstr "Đặt hàng Meta navigation"
 
 msgid "Filter Order Meta"
-msgstr "Filtrer l'ordre Méta"
+msgstr "Bộ lọc thứ tự Meta"
 
 msgid "Order Meta"
-msgstr "Méta-commande"
+msgstr "Đặt hàng Meta"
 
 msgid "Order Meta Item:"
-msgstr "Méta-élément de commande :"
+msgstr "Đặt hàng Meta Item:"
 
 msgid "Order Feature Image"
-msgstr "Commander une image vedette"
+msgstr "Đặt hàng hình ảnh nổi bật"
 
 msgid "Set Order featured image"
-msgstr "Définir l'ordre de l'image en vedette"
+msgstr "Đặt thứ tự hình ảnh nổi bật"
 
 msgid "Remove Order eatured image"
-msgstr "Supprimer l'ordre image animée"
+msgstr "Xóa thứ tự hình ảnh đã chụp"
 
 msgid "Use as Order featured image"
-msgstr "Utiliser comme image vedette de la commande"
+msgstr "Sử dụng làm hình ảnh nổi bật của đơn hàng"
 
 msgid "Insert into Order"
-msgstr "Insérer dans la commande"
+msgstr "Chèn vào đơn hàng"
 
 msgid "Uploaded to this Order"
-msgstr "Téléchargé sur cette commande"
+msgstr "Đã tải lên Đơn hàng này"
 
 msgid "Order list navigation"
-msgstr "Navigation dans la liste des commandes"
+msgstr "Điều hướng danh sách đơn hàng"
 
 msgid "Filter Order list"
-msgstr "Liste de commande de filtre"
+msgstr "Danh sách thứ tự bộ lọc"
 
 msgid "Order Not found"
-msgstr "Commande non trouvée"
+msgstr "Không tìm thấy đơn hàng"
 
 msgid "Order Not found in Trash"
-msgstr "Commande non trouvée dans la corbeille"
+msgstr "Không tìm thấy đơn hàng trong Thùng rác"
 
 msgid "Average"
-msgstr "Moyenne"
+msgstr "Trung bình"
 
 msgid "Booking Time Expired!"
-msgstr "Le délai de réservation est expiré !"
+msgstr "Thời gian đặt chỗ đã hết!"
 
 msgid "Day Wise"
-msgstr "Jour par jour"
+msgstr "Ngày khôn ngoan"
 
 msgid "Extra Service Price Settings"
-msgstr "Paramètres de prix des services supplémentaires"
+msgstr "Cài đặt giá dịch vụ bổ sung"
 
 msgid "I already did"
-msgstr "Je l'ai déjà fait"
+msgstr "Tôi đã làm rồi"
 
 msgid "I need support"
-msgstr "J'ai besoin de soutien"
+msgstr "Tôi cần sự hỗ trợ"
 
 msgid "Install"
-msgstr "Installer"
+msgstr "Cài đặt"
 
 msgid "Maximum"
-msgstr "Maximum"
+msgstr "Tối đa"
 
 msgid "Minimum"
-msgstr "Minimum"
+msgstr "Tối thiểu"
 
 msgid "No, not good enough"
-msgstr "Non, pas assez bien"
+msgstr "Không, không đủ tốt"
 
 msgid "Ok, you deserved it"
-msgstr "Ok, tu l'as mérité"
+msgstr "Được thôi, bạn xứng đáng với điều đó"
 
 msgid "Please Select Slider Height"
-msgstr "Veuillez sélectionner la hauteur du curseur"
+msgstr "Vui lòng chọn chiều cao thanh trượt"
 
 msgid "Quick Setup"
-msgstr "Configuration rapide"
+msgstr "Thiết lập nhanh"
 
 msgid "Remove"
-msgstr "Retirer"
+msgstr "Di dời"
 
 msgid "Rent Item"
-msgstr "Louer un article"
+msgstr "Cho thuê mặt hàng"
 
 msgid "Service Name"
-msgstr "Nom du service"
+msgstr "Tên dịch vụ"
 
 msgid "Slider height"
-msgstr "Hauteur du curseur"
+msgstr "Chiều cao thanh trượt"
 
 msgid "Status"
-msgstr "Statut"
+msgstr "Trạng thái"
 
 msgid "Upload"
-msgstr "Télécharger"
+msgstr "Tải lên"
 
 msgid "Weeks"
-msgstr "Semaines"
+msgstr "Tuần"
 
 msgid "Active Now"
-msgstr "Actif maintenant"
+msgstr "Đang hoạt động"
 
 msgid "Add More Item"
-msgstr "Ajouter plus d'articles"
+msgstr "Thêm mục khác"
 
 msgid "Additional Services You may like."
-msgstr "Services supplémentaires que vous pourriez aimer."
+msgstr "Dịch vụ bổ sung bạn có thể thích."
 
 msgid "Addon: Seasonal Pricing extends the date-wise pricing features."
-msgstr ""
-"Module complémentaire : la tarification saisonnière étend les "
-"fonctionnalités de tarification par date."
+msgstr "Tiện ích bổ sung: Giá theo mùa mở rộng tính năng định giá theo ngày."
 
 msgid "Add-ons Price"
-msgstr "Prix des modules complémentaires"
+msgstr "Giá bổ sung"
 
 msgid "Audio/Video format not supported."
-msgstr "Format audio/vidéo non pris en charge."
+msgstr "Định dạng âm thanh/video không được hỗ trợ."
 
 msgid "Automatic Email Confirmation Message and Pdf Receipts Mailing Features."
-msgstr ""
-"Fonctionnalités d'envoi automatique de messages de confirmation par courrier "
-"électronique et de reçus PDF."
+msgstr "Tính năng gửi tin nhắn xác nhận email tự động và biên lai PDF."
 
 msgid "Available Qty"
-msgstr "Quantité disponible"
+msgstr "Số lượng có sẵn"
 
 msgid "Available Qty "
-msgstr "Quantité disponible"
+msgstr "Số lượng có sẵn"
 
 msgid "Available Quantity"
-msgstr "Quantité disponible"
+msgstr "Số lượng có sẵn"
 
 msgid "Available Quantity:"
-msgstr "Quantité disponible :"
+msgstr "Số lượng có sẵn:"
 
 msgid "Avg price"
-msgstr "Prix moyen"
+msgstr "Giá trung bình"
 
 msgid ""
 "Booking and Rental Manager for WooCommerce <span>Addon: Seasonal "
 "Pricing</span>"
 msgstr ""
-"Gestionnaire de réservation et de location pour WooCommerce <span>Module "
-"complémentaire : Tarification saisonnière</span>"
+"Trình quản lý đặt phòng và cho thuê cho WooCommerce <span>Tiện ích bổ sung: "
+"Giá theo mùa</span>"
 
 msgid "Booking and Rental Manager For Woocommerce Plugin"
-msgstr "Plugin de gestion de réservation et de location pour Woocommerce"
+msgstr "Trình quản lý đặt phòng và cho thuê cho plugin Woocommerce"
 
 msgid "Booking and Rental Manager for WooCommerce Pro"
-msgstr "Gestionnaire de réservation et de location pour WooCommerce Pro"
+msgstr "Trình quản lý đặt chỗ và cho thuê cho WooCommerce Pro"
 
 msgid "Booking and Rental Manager for WooCommerce Pro Features"
 msgstr ""
-"Fonctionnalités du gestionnaire de réservation et de location pour "
-"WooCommerce Pro"
+"Tính năng của Trình quản lý đặt phòng và cho thuê dành cho WooCommerce Pro"
 
 msgid "Booking Calender."
-msgstr "Calendrier de réservation."
+msgstr "Lịch đặt chỗ."
 
 msgid "Buy Pro"
-msgstr "Acheter Pro"
+msgstr "Mua Pro"
 
 msgid "Buy Seasonal Pricing Addon"
-msgstr "Acheter le module complémentaire de tarification saisonnière"
+msgstr "Mua tiện ích bổ sung giá theo mùa"
 
 msgid "Cars Available"
-msgstr "Voitures disponibles"
+msgstr "Xe có sẵn"
 
 msgid "Category Service"
-msgstr "Catégorie Service"
+msgstr "Dịch vụ danh mục"
 
 msgid "Category Service Sold Qty"
-msgstr "Catégorie Service Vendu Qté"
+msgstr "Danh mục Dịch vụ Đã bán Số lượng"
 
 msgid "Category wise service:"
-msgstr "Service par catégorie :"
+msgstr "Dịch vụ theo từng danh mục:"
 
 msgid "Check Availability"
-msgstr "Vérifier la disponibilité"
+msgstr "Kiểm tra tình trạng sẵn có"
 
 msgid "Check-In & Check-Out Date"
-msgstr "Date d'arrivée et de départ"
+msgstr "Ngày nhận phòng và trả phòng"
 
 msgid "Choose drop-off location"
-msgstr "Choisissez le lieu de dépôt"
+msgstr "Chọn địa điểm trả hàng"
 
 msgid "Choose number of quantity"
-msgstr "Choisissez le nombre de quantité"
+msgstr "Chọn số lượng"
 
 msgid "Choose pickup location"
-msgstr "Choisissez le lieu de prise en charge"
+msgstr "Chọn địa điểm đón"
 
 msgid "Choose some general option."
-msgstr "Choisissez une option générale."
+msgstr "Chọn một số tùy chọn chung."
 
 msgid "Daily Price"
-msgstr "Prix journalier"
+msgstr "Giá hàng ngày"
 
 msgid "Daily Rate"
-msgstr "Tarif journalier"
+msgstr "Tỷ giá hàng ngày"
 
 msgid "Day night stay"
-msgstr "Séjour de jour et de nuit"
+msgstr "Nghỉ ngày đêm"
 
 msgid "Daylong only day stay"
-msgstr "Séjour d'une journée uniquement"
+msgstr "Chỉ ở lại trong ngày"
 
 msgid "Delete"
-msgstr "Supprimer"
+msgstr "Xóa bỏ"
 
 msgid "Documentation"
-msgstr "Documentation"
+msgstr "Tài liệu"
 
 msgid "Done"
-msgstr "Fait"
+msgstr "Xong"
 
 msgid "Download PDF receipt for customers."
-msgstr "Téléchargez le reçu PDF pour les clients."
+msgstr "Tải xuống biên lai PDF cho khách hàng."
 
 msgid "Download PRO Version Now"
-msgstr "Téléchargez la version PRO maintenant"
+msgstr "Tải xuống phiên bản PRO ngay"
 
 msgid "Duration Type"
-msgstr "Type de durée"
+msgstr "Loại thời lượng"
 
 msgid "Enable Daily"
-msgstr "Activer quotidiennement"
+msgstr "Kích hoạt hàng ngày"
 
 msgid "Enable Hourly"
-msgstr "Activer toutes les heures"
+msgstr "Bật theo giờ"
 
 msgid "Enable Monthly"
-msgstr "Activer mensuellement"
+msgstr "Kích hoạt hàng tháng"
 
 msgid "Enable Price Types (applies to all items)"
-msgstr "Activer les types de prix (s'applique à tous les articles)"
+msgstr "Bật Loại giá (áp dụng cho tất cả các mặt hàng)"
 
 msgid "Enable Weekly"
-msgstr "Activer chaque semaine"
+msgstr "Kích hoạt hàng tuần"
 
 msgid "Enter Amount"
-msgstr "Entrez le montant"
+msgstr "Nhập số tiền"
 
 msgid "Expired"
-msgstr "Expiré"
+msgstr "Hết hạn"
 
 msgid "Export Reports as CSV Format."
-msgstr "Exporter les rapports au format CSV."
+msgstr "Xuất báo cáo theo định dạng CSV."
 
 msgid "Extra Service Sold Qty"
-msgstr "Service supplémentaire Qté vendue"
+msgstr "Dịch vụ bổ sung Số lượng đã bán"
 
 msgid "Extra Service Stock"
-msgstr "Stock de services supplémentaires"
+msgstr "Hàng tồn kho dịch vụ bổ sung"
 
 msgid "Extra Services:"
-msgstr "Services supplémentaires :"
+msgstr "Dịch vụ bổ sung:"
 
 msgid "Feature Highlights"
-msgstr "Points forts des fonctionnalités"
+msgstr "Điểm nổi bật của tính năng"
 
 msgid "Filter"
-msgstr "Filtre"
+msgstr "Lọc"
 
 msgid "Finalize Setup"
-msgstr "Finaliser la configuration"
+msgstr "Hoàn tất thiết lập"
 
 msgid "Finish & Save"
-msgstr "Terminer et enregistrer"
+msgstr "Hoàn tất & Lưu"
 
 msgid "General"
-msgstr "Général"
+msgstr "Tổng quan"
 
 msgid "General settings"
-msgstr "Paramètres généraux"
+msgstr "Cài đặt chung"
 
 msgid "Hourly Price"
-msgstr "Tarif horaire"
+msgstr "Giá theo giờ"
 
 msgid "Install & Active Now"
-msgstr "Installer et activer maintenant"
+msgstr "Cài đặt & Kích hoạt ngay"
 
 msgid "Inventory"
-msgstr "Inventaire"
+msgstr "Hàng tồn kho"
 
 msgid "It will change the Rent post type label on the entire plugin."
-msgstr ""
-"Cela modifiera l'étiquette du type de publication de location sur l'ensemble "
-"du plugin."
+msgstr "Nó sẽ thay đổi nhãn loại bài đăng Thuê trên toàn bộ plugin."
 
 msgid ""
 "It will change the Rent slug on the entire plugin. Remember after changing "
 "this slug you need to flush permalinks. Just go to Settings->Permalinks hit "
 "the Save Settings button"
 msgstr ""
-"Cela modifiera le slug « Rent » pour l'ensemble du plugin. Après avoir "
-"modifié ce slug, vous devez supprimer les permaliens. Accédez simplement à "
-"Paramètres > Permaliens et cliquez sur le bouton « Enregistrer les "
-"paramètres »."
+"Thao tác này sẽ thay đổi slug Rent trên toàn bộ plugin. Lưu ý: sau khi thay "
+"đổi slug này, bạn cần xóa permalink. Chỉ cần vào Cài đặt->Liên kết cố định "
+"và nhấn nút Lưu Cài đặt."
 
 msgid "Item Name"
-msgstr "Nom de l'article"
+msgstr "Tên mặt hàng"
 
 msgid "Item Sold Qty"
-msgstr "Article vendu Qté"
+msgstr "Số lượng mặt hàng đã bán"
 
 msgid "Item Stock"
-msgstr "Stock d'articles"
+msgstr "Hàng tồn kho"
 
 msgid "Items"
-msgstr "Articles"
+msgstr "Mặt hàng"
 
 msgid "Member, WordPress.Org"
-msgstr "Membre, WordPress.Org"
+msgstr "Thành viên, WordPress.Org"
 
 msgid "Month"
-msgstr "Mois"
+msgstr "Tháng"
 
 msgid "Monthly"
-msgstr "Mensuel"
+msgstr "Hàng tháng"
 
 msgid "Monthly Price"
-msgstr "Prix mensuel"
+msgstr "Giá hàng tháng"
 
 msgid "Name"
-msgstr "Nom"
+msgstr "Tên"
 
 msgid "Next"
-msgstr "Suivant"
+msgstr "Kế tiếp"
 
 msgid "Number of Duration"
-msgstr "Nombre de durée"
+msgstr "Số lượng thời lượng"
 
 msgid "Pickup Date"
-msgstr "Date de ramassage"
+msgstr "Ngày nhận hàng"
 
 msgid "Pickup Time"
-msgstr "Heure de ramassage"
+msgstr "Thời gian đón"
 
 msgid "Please install or activate the WooCommerce plugin. "
-msgstr "Veuillez installer ou activer le plugin WooCommerce."
+msgstr "Vui lòng cài đặt hoặc kích hoạt plugin WooCommerce."
 
 msgid "Previous"
-msgstr "Précédent"
+msgstr "Trước"
 
 msgid "Pricing Info"
-msgstr "Informations sur les prix"
+msgstr "Thông tin giá cả"
 
 msgid "Pro Version Plugin Features:"
-msgstr "Fonctionnalités du plugin de la version Pro :"
+msgstr "Tính năng của plugin phiên bản Pro:"
 
 msgid "Refresh Page"
-msgstr "Actualiser la page"
+msgstr "Làm mới trang"
 
 msgid "Rent Info:"
-msgstr "Informations sur la location :"
+msgstr "Thông tin thuê nhà:"
 
 msgid "Rent Label:"
-msgstr "Étiquette de location :"
+msgstr "Cho thuê nhãn:"
 
 msgid "Rent Slug:"
-msgstr "Slug de location :"
+msgstr "Thuê Slug:"
 
 msgid "Rental Duration"
-msgstr "Durée de location"
+msgstr "Thời hạn thuê"
 
 msgid "Rental Start Date"
-msgstr "Date de début de location"
+msgstr "Ngày bắt đầu thuê"
 
 msgid "Reports Display."
-msgstr "Affichage des rapports."
+msgstr "Hiển thị báo cáo."
 
 msgid "Reset Filter"
-msgstr "Réinitialiser le filtre"
+msgstr "Đặt lại bộ lọc"
 
 msgid "Return date"
-msgstr "Date de retour"
+msgstr "Ngày trở về"
 
 msgid "Return Time"
-msgstr "Heure de retour"
+msgstr "Thời gian trở về"
 
 msgid "Room Info:"
-msgstr "Informations sur la chambre :"
+msgstr "Thông tin phòng:"
 
 msgid "Room Type"
-msgstr "Type de chambre"
+msgstr "Loại phòng"
 
 msgid "Security Deposit Label"
-msgstr "Étiquette de dépôt de garantie"
+msgstr "Nhãn tiền đặt cọc an ninh"
 
 msgid "See Details"
-msgstr "Voir les détails"
+msgstr "Xem chi tiết"
 
 msgid "Select Date"
-msgstr "Sélectionnez la date"
+msgstr "Chọn ngày"
 
 msgid "Select duration type"
-msgstr "Sélectionnez le type de durée"
+msgstr "Chọn loại thời lượng"
 
 msgid "Select Item to Rent"
-msgstr "Sélectionnez l'article à louer"
+msgstr "Chọn mục để thuê"
 
 msgid "Selected Items"
-msgstr "Articles sélectionnés"
+msgstr "Các mục đã chọn"
 
 msgid "Share"
-msgstr "Partager"
+msgstr "Chia sẻ"
 
 msgid "Skip, Go to Dashboard"
-msgstr "Ignorer, aller au tableau de bord"
+msgstr "Bỏ qua, Đi tới Bảng điều khiển"
 
 msgid "Summary"
-msgstr "Résumé"
+msgstr "Bản tóm tắt"
 
 msgid ""
 "Thanks for choosing Booking and Rental Manager Manager Plugin for "
 "WooCommerce for your site, Please go step by step and choose some options to "
 "get started."
 msgstr ""
-"Merci d'avoir choisi Booking and Rental Manager Manager Plugin pour "
-"WooCommerce pour votre site, veuillez procéder étape par étape et choisir "
-"certaines options pour commencer."
+"Cảm ơn bạn đã chọn Plugin quản lý Booking and Rental Manager cho WooCommerce "
+"cho trang web của mình. Vui lòng thực hiện từng bước và chọn một số tùy chọn "
+"để bắt đầu."
 
 msgid ""
 "This is the best booking and rental plugin. Found all things in one place. "
 "This plugin meet my business requirements."
 msgstr ""
-"C'est le meilleur plugin de réservation et de location. Tout est réuni au "
-"même endroit. Ce plugin répond à mes besoins professionnels."
+"Đây là plugin đặt phòng và cho thuê tốt nhất. Mọi thứ đều tập trung tại một "
+"nơi. Plugin này đáp ứng mọi yêu cầu kinh doanh của tôi."
 
 msgid "Total Price"
-msgstr "Prix total"
+msgstr "Tổng giá"
 
 msgid "Variation Stock:"
-msgstr "Variation des stocks :"
+msgstr "Cổ phiếu biến thể:"
 
 msgid "View Demo"
-msgstr "Voir la démo"
+msgstr "Xem bản demo"
 
 msgid "Week"
-msgstr "Semaine"
+msgstr "Tuần"
 
 msgid "Weekly"
-msgstr "Hebdomadaire"
+msgstr "Hàng tuần"
 
 msgid "Weekly Price"
-msgstr "Prix hebdomadaire"
+msgstr "Giá hàng tuần"
 
 msgid "Welcome"
-msgstr "Accueillir"
+msgstr "Chào mừng"
 
 msgid "What User Says About Our Plugin"
-msgstr "Ce que les utilisateurs disent de notre plugin"
+msgstr "Người dùng nói gì về Plugin của chúng tôi"
 
 msgid "Woocommerce already install , please activate it"
-msgstr "Woocommerce est déjà installé, veuillez l'activer"
+msgstr "Woocommerce đã được cài đặt, vui lòng kích hoạt nó"
 
 msgid "Woocommerce already installed and activated"
-msgstr "Woocommerce déjà installé et activé"
+msgstr "Woocommerce đã được cài đặt và kích hoạt"
 
 msgid "Woocommerce need to install and active"
-msgstr "Woocommerce doit être installé et activé"
+msgstr "Woocommerce cần cài đặt và kích hoạt"
 
 msgid ""
 "You are about to Finish & Save Booking and Reantal Manager For Woocommerce "
 "Plugin setup process"
 msgstr ""
-"Vous êtes sur le point de terminer et d'enregistrer le processus de "
-"configuration du plugin Booking and Reantal Manager pour Woocommerce"
+"Bạn sắp hoàn tất và lưu quy trình thiết lập Booking and Reantal Manager For "
+"Woocommerce Plugin"
 
 msgid "Duplicate Item "
-msgstr "Article en double"
+msgstr "Mục trùng lặp"
 
 msgid "Short Description"
-msgstr "Brève description"
+msgstr "Mô tả ngắn"
 
 msgid "Stock Quantity"
-msgstr "Quantité en stock"
+msgstr "Số lượng cổ phiếu"
 
 msgid "Type name"
-msgstr "Nom du type"
+msgstr "Tên loại"
 
 # Additional Common Strings
 msgid "Choose"
-msgstr "Choisir"
+msgstr "Chọn"
 
 msgid "Click a date to browse availability"
-msgstr "Cliquez sur une date pour parcourir les disponibilités"
+msgstr "Nhấp vào ngày để duyệt tình trạng còn phòng"
 
 msgid "Day-long price"
-msgstr "Tarif journée"
+msgstr "Giá cả ngày"
 
 msgid "Day-night price"
-msgstr "Tarif jour-nuit"
+msgstr "Giá ngày-đêm"
 
 msgid "Drop-off Date"
-msgstr "Date de dépôt"
+msgstr "Ngày trả hàng"
 
 msgid "Drop-off Date & Time"
-msgstr "Date et heure de dépôt"
+msgstr "Ngày & giờ trả hàng"
 
 msgid "Duration Cost:"
-msgstr "Durée Coût :"
+msgstr "Thời lượng Chi phí:"
 
 msgid "Instant confirmation"
-msgstr "Confirmation instantanée"
+msgstr "Xác nhận ngay lập tức"
 
 msgid "Pickup Date & Time"
-msgstr "Date et heure de ramassage"
+msgstr "Ngày & giờ nhận hàng"
 
 msgid "Real-time availability"
-msgstr "Disponibilité en temps réel"
+msgstr "Khả dụng theo thời gian thực"
 
 msgid "Rental Lists"
-msgstr "Listes de location"
+msgstr "Danh sách cho thuê"
