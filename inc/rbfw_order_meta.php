@@ -160,7 +160,16 @@ function fetch_order_details_callback() {
 
                         <?php if ( ! empty( $discount_type ) ) { ?>
                             <tr>
-                                <td><strong><?php echo esc_html( $rbfw->get_option( 'rbfw_text_discount_type', 'rbfw_basic_translation_settings', __( 'Discount Type', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>:</strong></td>
+                                <td><strong>
+                                        <?php
+                                        if($rbfw->get_option_trans('rbfw_text_discount_type', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                        echo esc_html($rbfw->get_option_trans('rbfw_text_discount_type', 'rbfw_basic_translation_settings'));
+                                        }else{
+                                        echo esc_html__('Discount Type','booking-and-rental-manager-for-woocommerce');
+                                        }
+                                        ?>
+                                    </strong>
+                                </td>
                                 <td><?php echo esc_html( $discount_type ); ?></td>
                             </tr>
                         <?php } ?>

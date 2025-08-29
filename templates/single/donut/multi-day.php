@@ -42,11 +42,33 @@
                     <div class="rbfw_dt_pricing_card_col1"><?php echo esc_html( $currency_symbol ); ?></div>
                     <div class="rbfw_dt_pricing_card_col2">
 						<?php if ( ( $enable_daily_rate == 'yes' || $rbfw_enable_daywise_price == 'yes' ) && ! empty( $get_daily_price ) ) : ?>
-                            <div class="rbfw_dt_pricing_card_price"><?php echo esc_html( $get_daily_price ); ?><span> / <?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_day', 'rbfw_basic_translation_settings', __( 'PER DAY', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></span></div>
+                            <div class="rbfw_dt_pricing_card_price"><?php echo esc_html( $get_daily_price ); ?><span> /
+
+                                    <?php
+                                    if($rbfw->get_option_trans('rbfw_text_day', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                        echo esc_html($rbfw->get_option_trans('rbfw_text_day', 'rbfw_basic_translation_settings'));
+                                    }else{
+                                        echo esc_html__('PER DAY:','booking-and-rental-manager-for-woocommerce');
+                                    }
+                                    ?>
+
+
+                                </span></div>
 						<?php endif; ?>
 
 						<?php if ( ( $enable_hourly_rate == 'yes' || $rbfw_enable_daywise_price == 'yes' ) && ! empty( $get_hourly_price ) ) : ?>
-                            <div class="rbfw_dt_pricing_card_price"><?php echo esc_html( $get_hourly_price ); ?><span> / <?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_hour', 'rbfw_basic_translation_settings', __( 'PER HOUR', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></span></div>
+                            <div class="rbfw_dt_pricing_card_price"><?php echo esc_html( $get_hourly_price ); ?><span> /
+
+                                    <?php
+                                    if($rbfw->get_option_trans('rbfw_text_hour', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                        echo esc_html($rbfw->get_option_trans('rbfw_text_hour', 'rbfw_basic_translation_settings'));
+                                    }else{
+                                        echo esc_html__('PER HOUR','booking-and-rental-manager-for-woocommerce');
+                                    }
+                                    ?>
+
+
+                                </span></div>
 						<?php endif; ?>
                     </div>
                 </div>
@@ -89,7 +111,16 @@
 							?>
                             <li style="width:100%">
                                 <a class="rbfw_muff_lmf_btn">
-									<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_view_more_features', 'rbfw_basic_translation_settings', __( 'Load More', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>
+
+                                    <?php
+                                    if($rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                        echo esc_html($rbfw->get_option_trans('rbfw_text_view_more_features', 'rbfw_basic_translation_settings'));
+                                    }else{
+                                        echo esc_html__('Load More','booking-and-rental-manager-for-woocommerce');
+                                    }
+                                    ?>
+
+
                                 </a>
                             </li>
                         </ul>
@@ -110,7 +141,17 @@
             </div>
 		<?php endif; ?>
         <div class="rbfw_dt_registration_col2">
-            <div class="rbfw_dt_heading"><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_booking_detail', 'rbfw_basic_translation_settings', __( 'Booking Detail', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></div>
+            <div class="rbfw_dt_heading">
+
+                <?php
+                if($rbfw->get_option_trans('rbfw_text_booking_detail', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                    echo esc_html($rbfw->get_option_trans('rbfw_text_booking_detail', 'rbfw_basic_translation_settings'));
+                }else{
+                    echo esc_html__('Booking Detail','booking-and-rental-manager-for-woocommerce');
+                }
+                ?>
+
+            </div>
 			<?php include( RBFW_Function::get_template_path( 'forms/multi-day-registration.php' ) ); ?>
         </div>
     </div>
@@ -118,7 +159,15 @@
         <div class="rbfw_dt_row_faq">
             <div class="rbfw_dt_heading">
                 <div class="rbfw_dt_heading_tab active" data-tab="tab1">
-					<?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_faq', 'rbfw_basic_translation_settings', __( 'Freequently Asked Questions', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>
+
+                    <?php
+                    if($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                        echo esc_html($rbfw->get_option_trans('rbfw_text_faq', 'rbfw_basic_translation_settings'));
+                    }else{
+                        echo esc_html__('Freequently Asked Questions','booking-and-rental-manager-for-woocommerce');
+                    }
+                    ?>
+
                 </div>
                 <div class="rbfw_dt_heading_tab" data-tab="tab2">
 					<?php do_action( 'rbfw_dt_review_tab', $post_id ); ?>
@@ -137,7 +186,15 @@
 
 	<?php if ( ! empty( $rbfw_related_post_arr ) ): ?>
         <div class="rbfw_dt_row_related_item">
-            <h3 class="rbfw_dt_heading"><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings', __( 'You May Also Like', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></h3>
+            <h3 class="rbfw_dt_heading">
+                <?php
+                if($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                    echo esc_html($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings'));
+                }else{
+                    echo esc_html__('You May Also Like','booking-and-rental-manager-for-woocommerce');
+                }
+                ?>
+            </h3>
 			<?php do_action( 'rbfw_related_products_style_two', $post_id ); ?>
         </div>
 	<?php endif; ?>
