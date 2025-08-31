@@ -480,9 +480,45 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_room_duration_price = $values['rbfw_room_duration_price'] ? $values['rbfw_room_duration_price'] : '';
                 $rbfw_room_service_price  = $values['rbfw_room_service_price'] ? $values['rbfw_room_service_price'] : '';
                 $discount_amount          = $values['discount_amount'] ? $values['discount_amount'] : '';
-                $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_checkin_date', 'rbfw_basic_translation_settings', esc_html__( 'Check-In Date', 'booking-and-rental-manager-for-woocommerce' ) ), rbfw_date_format( $rbfw_start_datetime ) );
-                $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_checkout_date', 'rbfw_basic_translation_settings', esc_html__( 'Check-Out Date', 'booking-and-rental-manager-for-woocommerce' ) ), rbfw_date_format( $rbfw_end_datetime ) );
-                $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_package', 'rbfw_basic_translation_settings', esc_html__( 'Package', 'booking-and-rental-manager-for-woocommerce' ) ), $rbfw_room_price_category );
+
+                $checkin_label = (
+                    $rbfw->get_option_trans( 'rbfw_text_checkin_date', 'rbfw_basic_translation_settings' )
+                    && want_loco_translate() == 'no'
+                )
+                    ? $rbfw->get_option_trans( 'rbfw_text_checkin_date', 'rbfw_basic_translation_settings' )
+                    : esc_html__( 'Check-In Date:', 'booking-and-rental-manager-for-woocommerce' );
+
+                $item->add_meta_data(
+                    esc_html( $checkin_label ),
+                    rbfw_date_format( $rbfw_start_datetime )
+                );
+
+                $checkout_label = (
+                    $rbfw->get_option_trans( 'rbfw_text_checkout_date', 'rbfw_basic_translation_settings' )
+                    && want_loco_translate() == 'no'
+                )
+                    ? $rbfw->get_option_trans( 'rbfw_text_checkout_date', 'rbfw_basic_translation_settings' )
+                    : esc_html__( 'Check-Out Date:', 'booking-and-rental-manager-for-woocommerce' );
+
+                $item->add_meta_data(
+                    esc_html( $checkout_label ),
+                    rbfw_date_format( $rbfw_end_datetime )
+                );
+
+
+                $package_label = (
+                    $rbfw->get_option_trans( 'rbfw_text_package', 'rbfw_basic_translation_settings' )
+                    && want_loco_translate() == 'no'
+                )
+                    ? $rbfw->get_option_trans( 'rbfw_text_package', 'rbfw_basic_translation_settings' )
+                    : esc_html__( 'Package:', 'booking-and-rental-manager-for-woocommerce' );
+
+                $item->add_meta_data(
+                    esc_html( $package_label ),
+                    $rbfw_room_price_category
+                );
+
+
                 if ( ! empty( $rbfw_room_info ) ):
                     foreach ( $rbfw_room_info as $key => $value ):
                         $room_type = $key; //Type
@@ -509,8 +545,18 @@ if (!class_exists('RBFW_Woocommerce')) {
                             $room_content .= '</tr>';
                             $room_content .= '</table>';
                             if ( $room_qty > 0 ):
-                                $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_room_information', 'rbfw_basic_translation_settings', esc_html__( 'Room Information', 'booking-and-rental-manager-for-woocommerce' ) ), $room_content );
-                            endif;
+                                $room_info_label = (
+                                    $rbfw->get_option_trans( 'rbfw_text_room_information', 'rbfw_basic_translation_settings' )
+                                    && want_loco_translate() == 'no'
+                                )
+                                    ? $rbfw->get_option_trans( 'rbfw_text_room_information', 'rbfw_basic_translation_settings' )
+                                    : esc_html__( 'Room Information:', 'booking-and-rental-manager-for-woocommerce' );
+
+                                $item->add_meta_data(
+                                    esc_html( $room_info_label ),
+                                    $room_content
+                                );
+                                endif;
                         }
                     endforeach;
                 endif;
@@ -536,19 +582,69 @@ if (!class_exists('RBFW_Woocommerce')) {
                             $room_service_content .= '</tr>';
                             $room_service_content .= '</table>';
                             if ( $service_qty > 0 ):
-                                $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_room_service_information', 'rbfw_basic_translation_settings', esc_html__( 'Service Information', 'booking-and-rental-manager-for-woocommerce' ) ), $room_service_content );
+                                $service_info_label = (
+                                    $rbfw->get_option_trans( 'rbfw_text_room_service_information', 'rbfw_basic_translation_settings' )
+                                    && want_loco_translate() == 'no'
+                                )
+                                    ? $rbfw->get_option_trans( 'rbfw_text_room_service_information', 'rbfw_basic_translation_settings' )
+                                    : esc_html__( 'Service Information:', 'booking-and-rental-manager-for-woocommerce' );
+
+                                $item->add_meta_data(
+                                    esc_html( $service_info_label ),
+                                    $room_service_content
+                                );
                             endif;
                         }
                     endforeach;
                 endif;
-                $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings', esc_html__( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' ) ), wc_price( $rbfw_room_duration_price ) );
+                $duration_cost_label = (
+                    $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings' )
+                    && want_loco_translate() == 'no'
+                )
+                    ? $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings' )
+                    : esc_html__( 'Duration Cost:', 'booking-and-rental-manager-for-woocommerce' );
+
+                $item->add_meta_data(
+                    esc_html( $duration_cost_label ),
+                    wc_price( $rbfw_room_duration_price )
+                );
                 if ( $rbfw_room_service_price ) {
-                    $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings', esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) ), wc_price( $rbfw_room_service_price ) );
+                    $resource_cost_label = (
+                        $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings' )
+                        && want_loco_translate() == 'no'
+                    )
+                        ? $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings' )
+                        : esc_html__( 'Resource Cost:', 'booking-and-rental-manager-for-woocommerce' );
+
+                    $item->add_meta_data(
+                        esc_html( $resource_cost_label ),
+                        wc_price( $rbfw_room_service_price )
+                    );
                 }
-                $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings', esc_html__( 'Discount', 'booking-and-rental-manager-for-woocommerce' ) ), wc_price( $discount_amount ) );
+                $discount_label = (
+                    $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings' )
+                    && want_loco_translate() == 'no'
+                )
+                    ? $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings' )
+                    : esc_html__( 'Discount:', 'booking-and-rental-manager-for-woocommerce' );
+
+                $item->add_meta_data(
+                    esc_html( $discount_label ),
+                    wc_price( $discount_amount )
+                );
                 $security_deposit = rbfw_security_deposit( $rbfw_id, ( (int) $rbfw_room_duration_price + (int) $rbfw_room_service_price ) );
                 if ( $security_deposit['security_deposit_amount'] ) {
-                    $item->add_meta_data( $rbfw_security_deposit_label, wc_price( $security_deposit['security_deposit_amount'] ) );
+                    $security_deposit_label = (
+                        $rbfw->get_option_trans( 'rbfw_text_security_deposit', 'rbfw_basic_translation_settings' )
+                        && want_loco_translate() == 'no'
+                    )
+                        ? $rbfw->get_option_trans( 'rbfw_text_security_deposit', 'rbfw_basic_translation_settings' )
+                        : esc_html__( 'Security Deposit:', 'booking-and-rental-manager-for-woocommerce' );
+
+                    $item->add_meta_data(
+                        esc_html( $security_deposit_label ),
+                        wc_price( $security_deposit['security_deposit_amount'] )
+                    );
                 }
                 $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
 
