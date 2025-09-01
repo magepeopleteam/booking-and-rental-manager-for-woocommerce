@@ -28,7 +28,7 @@
 				?>
 					<div class="rbfw-booking-header">
 						<h1><?php the_title(); ?></h1>
-						<div><?php echo esc_html($sub_title); ?></div>
+						<p class="sub-title"><?php echo esc_html($sub_title); ?></p>
 					</div>
 				<?php
 			}

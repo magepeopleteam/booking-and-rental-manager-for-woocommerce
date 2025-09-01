@@ -542,12 +542,18 @@ div.mp_right_section {
     padding: 10px;
     color:#fff;
     border-radius: 12px  12px 0 0;
+    text-align: center;
 }
 .rbfw-booking-header h1{
     color:#fff;
-    font-size: 1.5rem;
+    font-size: 22px;
     font-weight: 700;
     letter-spacing: -0.025em;
+    margin: 0;
+}
+.rbfw-booking-header .sub-title{
+    
+    font-size: 14px;
     margin: 0;
 }
 .mp_right_section .rbfw-booking-form{
@@ -4453,7 +4459,7 @@ span {
 /* =======================Single day booking calendar=========================== */
 .single-rbfw_item .ui-datepicker .ui-datepicker-header{
     background: none;
-    background-color:#8cfff7;
+    background-color:#fff;
     color: #333;
     border: 0;
     padding: .7em 0;
@@ -4520,7 +4526,7 @@ span {
     margin: 0;
 }
 .single-rbfw_item .ui-datepicker table tbody{
-    background-color:#e1fffd;
+    background-color:#fff;
 }
 .single-rbfw_item .ui-datepicker table th{
     padding: 5px;
@@ -4538,7 +4544,7 @@ span {
 }
 
 .single-rbfw_item .ui-datepicker table thead{
-    background-color:#e1fffd;
+    background-color:#fff;
 }
 
 .single-rbfw_item .ui-datepicker table td{
@@ -4554,14 +4560,15 @@ span {
 
 .single-rbfw_item .ui-state-default,
 .single-rbfw_item .ui-widget-content .ui-state-default{
-    background: transparent;
+    background: #e8fbf9;
+    border:1px solid #87faef;
+    border-radius: 5px;
     color: #333;
     text-align: center;
-    border: 0;
     font-size: 16px;
     width: 33px;
     height: 33px;
-    line-height: 33px;
+    line-height: 28px;
 }
 
 .single-rbfw_item .ui-state-disabled .ui-state-default, .single-rbfw_item .ui-widget-content .ui-state-disabled .ui-state-default{
@@ -4575,9 +4582,10 @@ color: #666;
 .single-rbfw_item .ui-state-default.ui-state-active,
 .single-rbfw_item .ui-state-highlight{
     background:var(--rbfw_color_primary);
+    border:1px solid var(--rbfw_color_primary);
     color: #fff;
     text-align: center;
-    border-radius: 100px;
+    border-radius: 5px;
 }
 
 .single-rbfw_item .rbfw_bikecarsd_book_now_btn_wrap button.mp_rbfw_book_now_submit.rbfw_disabled_button{
