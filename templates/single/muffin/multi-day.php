@@ -143,7 +143,7 @@
 						?>
                     </ul>
 					<?php if ( $total_features >= 10 ) : ?>
-                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr( $post_id ); ?>">See more</div>
+                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr( $post_id ); ?>"><?php echo esc_html__( 'See more','booking-and-rental-manager-for-woocommerce' ) ?></div>
 					<?php endif; ?>
 				<?php endif; ?>
             </div>
