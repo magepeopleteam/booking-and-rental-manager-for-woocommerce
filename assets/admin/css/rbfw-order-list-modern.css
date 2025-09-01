@@ -1,0 +1,726 @@
+/* 
+ * Rental Order List Design for RBFW Plugin - Exact Match
+ * Author: MagePeople Team Enhancement
+ * Version: 2.0.0
+ * Description: Exact replica of the provided design
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.rental-order-list-dashboard {
+    max-width: 1460px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.rental-order-list-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.rental-order-list-header h1 {
+    font-size: 2.8rem;
+    background: linear-gradient(45deg, #00bcd4, #2196f3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: #2196f3; /* Fallback for browsers that don't support background-clip */
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 10px 0;
+}
+
+.rental-order-list-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.rental-order-list-stat-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.rental-order-list-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.rental-order-list-stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent !important;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.rental-order-list-total .rental-order-list-stat-icon {
+    background: #9c27b0;
+}
+
+.rental-order-list-total .rental-order-list-stat-icon::after {
+    content: "📈";
+    position: absolute;
+    color: white !important;
+    font-size: 1.2rem;
+}
+
+.rental-order-list-cancelled .rental-order-list-stat-icon {
+    background: #f44336;
+}
+
+.rental-order-list-cancelled .rental-order-list-stat-icon::after {
+    content: "✖";
+    position: absolute;
+    color: white !important;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.rental-order-list-completed .rental-order-list-stat-icon {
+    background: #4caf50;
+}
+
+.rental-order-list-completed .rental-order-list-stat-icon::after {
+    content: "✓";
+    position: absolute;
+    color: white !important;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.rental-order-list-pending .rental-order-list-stat-icon {
+    background: #ff9800;
+}
+
+.rental-order-list-pending .rental-order-list-stat-icon::after {
+    content: "⏳";
+    position: absolute;
+    color: white !important;
+    font-size: 1.2rem;
+}
+
+
+.rental-order-list-stat-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.rental-order-list-stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.rental-order-list-stat-label {
+    color: #666;
+    font-size: 0.85rem;
+    margin-bottom: 3px;
+}
+
+.rental-order-list-stat-amount {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.rental-order-list-search-container {
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.rental-order-list-search-input {
+    width: 100%;
+    padding: 15px 20px 15px 50px;
+    border: 2px solid #e0e0e0;
+    border-radius: 50px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.rental-order-list-search-input:focus {
+    outline: none;
+    border-color: #2196f3;
+    box-shadow: 0 0 20px rgba(33, 150, 243, 0.2);
+}
+
+.rental-order-list-search-input::placeholder {
+    color: #999;
+    padding-left: 0;
+}
+
+.rental-order-list-search-icon {
+    position: absolute;
+    left: 95%;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.rental-order-list-table-container {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.rental-order-list-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.rental-order-list-table thead {
+    background: #ededed;
+    color: #666;
+}
+
+.rental-order-list-table th,
+.rental-order-list-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.rental-order-list-table th {
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.rental-order-list-table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.rental-order-list-table tbody tr:hover {
+    background: linear-gradient(90deg, rgba(33, 150, 243, 0.05) 0%, transparent 100%);
+    transform: scale(1.01);
+}
+
+.rental-order-list-status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: white;
+    display: inline-block;
+}
+
+.rental-order-list-status-cancelled {
+    background: linear-gradient(45deg, #f44336, #e91e63);
+}
+
+.rental-order-list-status-completed {
+    background: linear-gradient(45deg, #4caf50, #8bc34a);
+}
+
+.rental-order-list-status-pending {
+    background: linear-gradient(45deg, #ff9800, #ffc107);
+}
+
+/* WooCommerce status variations */
+.rental-order-list-status-processing {
+    background: linear-gradient(45deg, #2196f3, #03a9f4);
+}
+
+.rental-order-list-status-on-hold {
+    background: linear-gradient(45deg, #ff9800, #ffc107);
+}
+
+.rental-order-list-status-refunded {
+    background: linear-gradient(45deg, #9c27b0, #e91e63);
+}
+
+.rental-order-list-status-failed {
+    background: linear-gradient(45deg, #f44336, #ff5722);
+}
+
+.rental-order-list-price {
+    font-weight: 600;
+    color: #4caf50;
+    font-size: 1.1rem;
+}
+
+.rental-order-list-action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.rental-order-list-btn {
+    width: 35px;
+    height: 35px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    color: white;
+}
+
+.rental-order-list-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.rental-order-list-btn-view {
+    background: linear-gradient(45deg, #2196f3, #21cbf3);
+}
+
+.rental-order-list-btn-edit {
+    background: linear-gradient(45deg, #4caf50, #8bc34a);
+}
+
+.rental-order-list-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.rental-order-list-modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 20px;
+    width: 80%;
+    max-width: 600px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: rental-order-list-modalSlideIn 0.3s ease;
+}
+
+@keyframes rental-order-list-modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.rental-order-list-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.rental-order-list-close:hover {
+    color: #f44336;
+}
+
+.rental-order-list-modal-header {
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.rental-order-list-modal-header h2 {
+    color: #333;
+    margin: 0;
+}
+
+.rental-order-list-detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.rental-order-list-detail-label {
+    font-weight: 600;
+    color: #666;
+}
+
+.rental-order-list-detail-value {
+    color: #333;
+}
+
+.rental-order-list-no-results {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-style: italic;
+}
+
+.rental-order-list-load-more-container {
+    text-align: center;
+    padding: 30px;
+    background: white;
+}
+
+.rental-order-list-load-more-btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+.rental-order-list-load-more-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+/* Order Details Content Styling - Exact Match to Reference Image */
+.rbfw_order_meta_box_wrap {
+    background: #f8f9fa !important;
+    padding: 20px !important;
+    border-radius: 8px !important;
+    margin: 20px 0 !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_meta_box_head h1 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #ffffff !important;
+    margin: -20px -20px 20px -20px !important;
+    padding: 20px !important;
+    border-radius: 8px 8px 0 0 !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_meta_box_body {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    margin-top: 20px !important;
+}
+
+/* Item Information Section - Left Side */
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type {
+    background: #ffffff !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    border-right: 10px solid #f8f9fa !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type thead th {
+    background: #e3f2fd !important;
+    color: #1976d2 !important;
+    border-bottom: 1px solid #bbdefb !important;
+    font-weight: 700 !important;
+    padding: 15px 20px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-size: 12px !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td {
+    background: #ffffff !important;
+    padding: 12px 20px !important;
+    border: none !important;
+    border-bottom: 1px solid #f5f5f5 !important;
+    font-size: 14px !important;
+    color: #333333 !important;
+    font-weight: 500 !important;
+    /* width: 50% !important; */
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:first-child {
+    color: #666666 !important;
+    font-weight: 500 !important;
+    width: 40% !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child {
+    color: #333333 !important;
+    font-weight: 600 !important;
+    text-align: right !important;
+}
+
+/* Rental Details Section - Right Side */
+.rbfw_order_meta_box_wrap .rental-details-table {
+    background: #ffffff !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.rbfw_order_meta_box_wrap .rental-details-table thead th {
+    background: #e3f2fd !important;
+    color: #1976d2 !important;
+    border-bottom: 1px solid #bbdefb !important;
+    font-weight: 700 !important;
+    padding: 15px 20px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    font-size: 12px !important;
+}
+
+.rbfw_order_meta_box_wrap .rental-details-table tbody td {
+    background: #ffffff !important;
+    padding: 8px 15px !important;
+    border: none !important;
+    border-bottom: 1px solid #f5f5f5 !important;
+    font-size: 14px !important;
+    color: #333333 !important;
+    font-weight: 500 !important;
+    width: 50% !important;
+}
+
+.rbfw_order_meta_box_wrap .rental-details-table tbody td:first-child {
+    color: #666666 !important;
+    font-weight: 500 !important;
+    width: 40% !important;
+}
+
+.rbfw_order_meta_box_wrap .rental-details-table tbody td:last-child {
+    color: #333333 !important;
+    font-weight: 600 !important;
+    text-align: right !important;
+}
+
+/* Container for pricing tables to make them inline */
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child {
+    white-space: nowrap !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child table {
+    display: inline-table !important;
+    width: auto !important;
+    min-width: 120px !important;
+    max-width: 180px !important;
+    margin: 5px 10px 5px 0 !important;
+    vertical-align: top !important;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+    border: 1px solid #ffb300 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    left: -18%;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child table th,
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child table td {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+    color: #000000 !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+    border-bottom: 1px solid #ffe082 !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child table th {
+    font-weight: 600 !important;
+    border-bottom: 1px solid #ffcc02 !important;
+}
+
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type tbody td:last-child table tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* Pricing Options Styling - Gradient Background with Black Text */
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type .rbfw_bikecarsd_price_info_table,
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type .rbfw_bikecarmd_price_info_table,
+.rbfw_order_meta_box_wrap .wp-list-table:first-of-type .rbfw_resort_price_info_table,
+.rbfw_order_meta_box_wrap .rbfw_bikecarsd_price_info_table,
+.rbfw_order_meta_box_wrap .rbfw_bikecarmd_price_info_table,
+.rbfw_order_meta_box_wrap .rbfw_resort_price_info_table {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+    border: 1px solid #ffb300 !important;
+    margin: 5px 10px 5px 0 !important;
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    box-shadow: none !important;
+    display: inline-table !important;
+    width: auto !important;
+    min-width: 120px !important;
+    max-width: 180px !important;
+    vertical-align: top !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_bikecarsd_price_info_table thead th,
+.rbfw_order_meta_box_wrap .rbfw_bikecarmd_price_info_table thead th,
+.rbfw_order_meta_box_wrap .rbfw_resort_price_info_table thead th {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+    color: #000000 !important;
+    border-bottom: 1px solid #ffcc02 !important;
+    font-weight: 600 !important;
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_bikecarsd_price_info_table tbody td,
+.rbfw_order_meta_box_wrap .rbfw_bikecarmd_price_info_table tbody td,
+.rbfw_order_meta_box_wrap .rbfw_resort_price_info_table tbody td {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%) !important;
+    color: #000000 !important;
+    font-weight: 500 !important;
+    padding: 8px 12px !important;
+    border-bottom: 1px solid #ffe082 !important;
+    font-size: 13px !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_bikecarsd_price_info_table tbody tr:last-child td,
+.rbfw_order_meta_box_wrap .rbfw_bikecarmd_price_info_table tbody tr:last-child td,
+.rbfw_order_meta_box_wrap .rbfw_resort_price_info_table tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* Summary Section - Green Design Full Width */
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type {
+    width: 100% !important;
+    background: #d1f2eb !important;
+    border: 1px solid #a3e4d7 !important;
+    margin: 20px 0 0 0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.1) !important;
+    grid-column: 1 / -1 !important;
+    position: relative !important;
+    clear: both !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table thead th,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type thead th {
+    background: #d1f2eb !important;
+    color: #0e6b47 !important;
+    border-bottom: 1px solid #a3e4d7 !important;
+    font-weight: 700 !important;
+    padding: 15px 20px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    font-size: 12px !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table tbody,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type tbody {
+    background: #d1f2eb !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table tbody td,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type tbody td {
+    background: #d1f2eb !important;
+    color: #0e6b47 !important;
+    padding: 12px 20px !important;
+    font-weight: 500 !important;
+    border-bottom: 1px solid #a3e4d7 !important;
+    font-size: 14px !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table tbody td:first-child,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type tbody td:first-child {
+    color: #0e6b47 !important;
+    font-weight: 500 !important;
+}
+
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table tbody td:last-child,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type tbody td:last-child {
+    color: #0e6b47 !important;
+    font-weight: 600 !important;
+    text-align: right !important;
+}
+
+/* Total Cost Row - Emphasized Green */
+.rbfw_order_meta_box_wrap .rbfw_order_summary_table tbody tr:last-child td,
+.rbfw_order_meta_box_wrap .wp-list-table:last-of-type tbody tr:last-child td {
+    border-top: 2px solid #17a2b8 !important; 
+        border-bottom: none !important;
+        padding: 15px 5px !important;
+        /* font-weight: 700 !important; */
+        font-size: 16px !important;
+        /* color: #28a745 !important; */
+        /* background: #d1f2eb !important;*/
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .rbfw_order_meta_box_wrap .rbfw_order_meta_box_body {
+        grid-template-columns: 1fr;
+    }
+    
+    .rbfw_order_meta_box_wrap .wp-list-table:first-child {
+        border-right: none;
+        border-bottom: 1px solid #dee2e6;
+    }
+}
+
+.rental-order-list-load-more-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+@media (max-width: 768px) {
+    .rental-order-list-dashboard {
+        padding: 15px;
+    }
+    .rental-order-list-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    .rental-order-list-table {
+        font-size: 0.9rem;
+    }
+    .rental-order-list-table th,
+    .rental-order-list-table td {
+        padding: 10px 8px;
+    }
+    .rental-order-list-modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 20px;
+    }
+}

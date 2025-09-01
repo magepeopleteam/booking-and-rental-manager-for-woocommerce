@@ -146,6 +146,21 @@
 				<?php
 			}
 
+			public function reset_orders_section( $post_id ) {
+				?>
+				<section>
+					<div>
+						<label><?php esc_html_e( 'Reset All Rental Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+						<p><?php esc_html_e( 'This will cancel all rental-related orders for this item. This action cannot be undone.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<button type="button" id="rbfw-reset-orders-btn" class="button button-secondary" data-item-id="<?php echo esc_attr( $post_id ); ?>">
+						<?php esc_html_e( 'Reset', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</button>
+					<div id="rbfw-reset-orders-result"></div>
+				</section>
+				<?php
+			}
+
 			public function add_tabs_content( $post_id ) {
 				?>
                 <div class="mpStyle mp_tab_item" data-tab-item="#rbfw_frontend_display">
@@ -157,6 +172,7 @@
 					<?php $this->shipping_method( $post_id ); ?>
 
 					<?php $this->service_quantity_box( $post_id ); ?>
+					<?php $this->reset_orders_section( $post_id ); ?>
                 </div>
 				<?php
 			}
@@ -232,12 +248,8 @@
                     }
 
 					update_post_meta($product_id, '_virtual', ($product_type=='yes')?'no':'yes');
-
-
-
-
-
 			}
+
 		}
 		new RBFW_Settings();
 	}

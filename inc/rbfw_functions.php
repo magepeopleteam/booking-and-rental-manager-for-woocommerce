@@ -3527,3 +3527,167 @@ function rbfw_ticket_feature_info(){
 </div>
 <?php
 }
+
+/**
+ * RBFW Reset Orders - AJAX Handler
+ * Handles the cancellation of all rental orders for a specific item
+ */
+add_action( 'wp_ajax_rbfw_cancel_all_orders', 'rbfw_cancel_all_orders_callback' );
+function rbfw_cancel_all_orders_callback() {
+	// Verify nonce for security
+	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_cancel_orders_nonce' ) ) {
+		wp_send_json_error( array( 'message' => __( 'Security check failed.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+	}
+
+	// Check user capabilities
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_send_json_error( array( 'message' => __( 'You do not have permission to perform this action.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+	}
+
+	$item_id = isset( $_POST['item_id'] ) ? intval( $_POST['item_id'] ) : 0;
+
+	if ( ! $item_id ) {
+		wp_send_json_error( array( 'message' => __( 'Invalid item ID.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+	}
+
+	// Get all orders for this rental item
+	$args = array(
+		'post_type' => 'rbfw_order',
+		'posts_per_page' => -1,
+		'meta_query' => array(
+			array(
+				'key' => 'rbfw_id',
+				'value' => $item_id,
+				'compare' => '='
+			)
+		)
+	);
+
+	$orders = get_posts( $args );
+	$cancelled_count = 0;
+	$error_count = 0;
+
+	foreach ( $orders as $order ) {
+		$rbfw_order_id = $order->ID;
+		$wc_order_id = get_post_meta( $rbfw_order_id, 'rbfw_order_id', true );
+
+		if ( $wc_order_id ) {
+			$wc_order = wc_get_order( $wc_order_id );
+
+			if ( $wc_order && ! in_array( $wc_order->get_status(), array( 'cancelled', 'refunded', 'failed' ) ) ) {
+				try {
+					// Cancel the WooCommerce order
+					$wc_order->update_status( 'cancelled', __( 'Order cancelled via rental reset function.', 'booking-and-rental-manager-for-woocommerce' ) );
+
+					// Update the rental order status
+					update_post_meta( $rbfw_order_id, 'rbfw_order_status', 'cancelled' );
+
+					// Restore inventory if needed
+					rbfw_restore_inventory_on_cancel( $rbfw_order_id );
+
+					$cancelled_count++;
+				} catch ( Exception $e ) {
+					$error_count++;
+					error_log( 'RBFW Order Cancellation Error: ' . $e->getMessage() );
+				}
+			}
+		}
+	}
+
+	if ( $cancelled_count > 0 ) {
+		$message = sprintf(
+			_n(
+				'Successfully cancelled %d order.',
+				'Successfully cancelled %d orders.',
+				$cancelled_count,
+				'booking-and-rental-manager-for-woocommerce'
+			),
+			$cancelled_count
+		);
+
+		if ( $error_count > 0 ) {
+			$message .= ' ' . sprintf(
+				_n(
+					'%d order could not be cancelled.',
+					'%d orders could not be cancelled.',
+					$error_count,
+					'booking-and-rental-manager-for-woocommerce'
+				),
+				$error_count
+			);
+		}
+
+		wp_send_json_success( array( 'message' => $message ) );
+	} else {
+		wp_send_json_error( array( 'message' => __( 'No orders found to cancel or all orders are already cancelled.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+	}
+}
+
+/**
+ * Restore inventory when an order is cancelled
+ * 
+ * @param int $rbfw_order_id The RBFW order ID
+ */
+function rbfw_restore_inventory_on_cancel( $rbfw_order_id ) {
+	// Get order ticket information
+	$ticket_infos = get_post_meta( $rbfw_order_id, 'rbfw_ticket_info', true );
+	$ticket_info_array = maybe_unserialize( $ticket_infos );
+
+	if ( ! empty( $ticket_info_array ) && is_array( $ticket_info_array ) ) {
+		foreach ( $ticket_info_array as $ticket_info ) {
+			$rbfw_id = isset( $ticket_info['rbfw_id'] ) ? $ticket_info['rbfw_id'] : 0;
+			$start_date = isset( $ticket_info['rbfw_start_date'] ) ? $ticket_info['rbfw_start_date'] : '';
+			$end_date = isset( $ticket_info['rbfw_end_date'] ) ? $ticket_info['rbfw_end_date'] : '';
+			$item_quantity = isset( $ticket_info['rbfw_item_quantity'] ) ? intval( $ticket_info['rbfw_item_quantity'] ) : 1;
+
+			if ( $rbfw_id && $start_date && $end_date ) {
+				// Restore inventory for the cancelled booking
+				// This hook allows other plugins/themes to handle inventory restoration
+				do_action( 'rbfw_restore_inventory_on_cancel', $rbfw_id, $start_date, $end_date, $item_quantity );
+			}
+		}
+	}
+}
+
+/**
+ * Enqueue admin assets for RBFW reset orders functionality
+ */
+add_action( 'admin_enqueue_scripts', 'rbfw_enqueue_reset_orders_assets' );
+function rbfw_enqueue_reset_orders_assets( $hook ) {
+	// Only load on rbfw_item edit pages
+	global $post_type;
+	if ( $post_type !== 'rbfw_item' || ( $hook !== 'post.php' && $hook !== 'post-new.php' ) ) {
+		return;
+	}
+
+	// Enqueue CSS
+	wp_enqueue_style(
+		'rbfw-reset-orders-css',
+		plugin_dir_url( dirname( __FILE__ ) ) . 'assets/admin/css/rbfw-reset-orders.css',
+		array(),
+		'1.0.0'
+	);
+
+	// Enqueue JavaScript
+	wp_enqueue_script(
+		'rbfw-reset-orders-js',
+		plugin_dir_url( dirname( __FILE__ ) ) . 'assets/admin/js/rbfw-reset-orders.js',
+		array( 'jquery' ),
+		'1.0.0',
+		true
+	);
+
+	// Localize script with data
+	wp_localize_script( 'rbfw-reset-orders-js', 'rbfw_reset_orders', array(
+		'ajax_url' => admin_url( 'admin-ajax.php' ),
+		'nonce' => wp_create_nonce( 'rbfw_cancel_orders_nonce' ),
+		'messages' => array(
+			'confirm' => __( 'Are you sure you want to cancel all rental orders for this item? This action cannot be undone.', 'booking-and-rental-manager-for-woocommerce' ),
+			'processing' => __( 'Processing...', 'booking-and-rental-manager-for-woocommerce' ),
+			'button_text' => __( 'Reset', 'booking-and-rental-manager-for-woocommerce' ),
+			'ajax_error' => __( 'An error occurred. Please try again.', 'booking-and-rental-manager-for-woocommerce' ),
+			'invalid_item' => __( 'Invalid item ID.', 'booking-and-rental-manager-for-woocommerce' ),
+			'unknown_error' => __( 'An unknown error occurred.', 'booking-and-rental-manager-for-woocommerce' )
+		)
+	) );
+}
