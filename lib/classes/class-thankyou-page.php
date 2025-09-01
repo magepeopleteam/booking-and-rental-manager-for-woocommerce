@@ -374,7 +374,7 @@
 									} ?>
 									<?php if ( ! empty( $item_quantity ) ) { ?>
                                         <tr>
-                                            <td><strong><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_quantity', 'rbfw_basic_translation_settings', __( 'Quantity', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></strong></td>
+                                            <td><strong><?php echo rbfw_get_label( $rbfw, 'rbfw_text_quantity', 'Quantity' ); ?></strong></td>
                                             <td><?php echo esc_html( $item_quantity ); ?></td>
                                         </tr>
 									<?php } ?>
@@ -391,7 +391,7 @@
 
 									<?php if ( ! empty( $discount_amount ) ) { ?>
                                         <tr>
-                                            <td><strong><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings', __( 'Discount', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?>:</strong></td>
+                                            <td><strong><?php echo rbfw_get_label( $rbfw, 'rbfw_text_discount', 'Discount' ); ?>:</strong></td>
                                             <td><?php echo esc_html( $discount_amount ); ?></td>
                                         </tr>
 									<?php } ?>
@@ -658,7 +658,7 @@
 							} ?>
 							<?php if ( ! empty( $item_quantity ) ) { ?>
                                 <tr>
-                                    <td><strong><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_quantity', 'rbfw_basic_translation_settings', __( 'Quantity', 'booking-and-rental-manager-for-woocommerce' ) ) ); ?></strong></td>
+                                    <td><strong><?php echo rbfw_get_label( $rbfw, 'rbfw_text_quantity', 'Quantity' ) ?></strong></td>
                                     <td><?php echo esc_html( $item_quantity ); ?></td>
                                 </tr>
 							<?php } ?>
