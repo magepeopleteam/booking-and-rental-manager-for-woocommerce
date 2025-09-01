@@ -15,17 +15,37 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
 <div class="item-content rbfw-costing">
     <ul class="rbfw-ul">
         <li class="duration-costing rbfw-cond">
-            <?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings', __('Duration Cost','booking-and-rental-manager-for-woocommerce') ) ); ?>
+            <?php
+            if($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                echo esc_html($rbfw->get_option_trans('rbfw_text_duration_cost', 'rbfw_basic_translation_settings'));
+            }else{
+                echo esc_html__('Duration Cost','booking-and-rental-manager-for-woocommerce');
+            }
+            ?>
             <?php echo wp_kses( wc_price( $duration_cost ) , rbfw_allowed_html()); ?>
         </li>
 
         <li class="resource-costing rbfw-cond">
-            <?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings', __('Resource Cost','booking-and-rental-manager-for-woocommerce') ) ); ?>
+
+            <?php
+            if($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                echo esc_html($rbfw->get_option_trans('rbfw_text_resource_cost', 'rbfw_basic_translation_settings'));
+            }else{
+                echo esc_html__('Resource Cost','booking-and-rental-manager-for-woocommerce');
+            }
+            ?>
             <?php echo wp_kses( wc_price( $es_service_price ) , rbfw_allowed_html()); ?>
         </li>
 
         <li class="subtotal">
-            <?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_subtotal', 'rbfw_basic_translation_settings', __('Subtotal','booking-and-rental-manager-for-woocommerce') ) ); ?>
+
+            <?php
+            if($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                echo esc_html($rbfw->get_option_trans('rbfw_text_subtotal', 'rbfw_basic_translation_settings'));
+            }else{
+                echo esc_html__('Subtotal','booking-and-rental-manager-for-woocommerce');
+            }
+            ?>
             <?php echo wp_kses( wc_price( $duration_cost + $es_service_price )  , rbfw_allowed_html()); ?>
         </li>
 
@@ -44,7 +64,17 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
         ?>
         
         <li class="total">
-            <strong><?php echo esc_html( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings', __('Total','booking-and-rental-manager-for-woocommerce') ) ); ?></strong>
+            <strong>
+
+                <?php
+                if($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                    echo esc_html($rbfw->get_option_trans('rbfw_text_total', 'rbfw_basic_translation_settings'));
+                }else{
+                    echo esc_html__('Total','booking-and-rental-manager-for-woocommerce');
+                }
+                ?>
+
+            </strong>
             <?php echo wp_kses( wc_price( $total_price )  , rbfw_allowed_html()); ?>
         </li>
     </ul>

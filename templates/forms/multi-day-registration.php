@@ -196,7 +196,16 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                                             </tr>
                                             <?php if ($enable_daily_rate == 'yes') { ?>
                                                 <tr>
-                                                    <td><?php echo esc_html($rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings', __('Daily','booking-and-rental-manager-for-woocommerce'))); ?>(<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
+                                                    <td>
+                                                        <?php
+                                                        if($rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                                            echo esc_html($rbfw->get_option_trans('rbfw_text_daily_rate', 'rbfw_basic_translation_settings'));
+                                                        }else{
+                                                            echo esc_html__('Daily','booking-and-rental-manager-for-woocommerce');
+                                                        }
+                                                        ?>
+
+                                                        (<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
                                                     <td><?php echo esc_html(($sunday['enable'] =='yes' && $sunday['daily_rate'])? $sunday['daily_rate'] :$daily_rate); ?></td>
                                                     <td><?php echo esc_html(($monday['enable'] =='yes' && $monday['daily_rate'])? $monday['daily_rate'] :$daily_rate); ?></td>
                                                     <td><?php echo esc_html(($tueday['enable'] =='yes' && $tueday['daily_rate'])? $tueday['daily_rate'] :$daily_rate); ?></td>
@@ -208,7 +217,15 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                                             <?php } ?>
                                             <?php if ($enable_hourly_rate == 'yes') { ?>
                                                 <tr>
-                                                    <td><?php echo esc_html($rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings', __('Hourly','booking-and-rental-manager-for-woocommerce'))); ?>(<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
+                                                    <td>
+                                                        <?php
+                                                        if($rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                                                            echo esc_html($rbfw->get_option_trans('rbfw_text_hourly_rate', 'rbfw_basic_translation_settings'));
+                                                        }else{
+                                                            echo esc_html__('Hourly','booking-and-rental-manager-for-woocommerce');
+                                                        }
+                                                        ?>
+                                                        (<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
                                                     <td><?php echo esc_html(($sunday['enable'] =='yes' && $sunday['hourly_rate'])? $sunday['hourly_rate'] :$hourly_rate); ?></td>
                                                     <td><?php echo esc_html(($monday['enable'] =='yes' && $monday['hourly_rate'])? $monday['hourly_rate'] :$hourly_rate); ?></td>
                                                     <td><?php echo esc_html(($tueday['enable'] =='yes' && $tueday['hourly_rate'])? $tueday['hourly_rate'] :$hourly_rate); ?></td>
@@ -226,7 +243,8 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                                             <tbody>
                                             <?php if ($enable_daily_rate == 'yes') { ?>
                                                 <tr>
-                                                    <td><strong><?php esc_html_e('Daily Rate', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
+                                                    <td><strong>
+                                                            <?php esc_html_e('Daily Rate', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
                                                     <td><?php echo wp_kses_post(wc_price($daily_rate)); ?> / <?php esc_html_e('day', 'booking-and-rental-manager-for-woocommerce'); ?></td>
                                                 </tr>
                                             <?php } ?>

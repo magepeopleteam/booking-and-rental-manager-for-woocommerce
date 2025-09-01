@@ -11,6 +11,20 @@ function rbfw_woo_install_check() {
     }
 }
 
+
+function want_loco_translate()
+{
+   return rbfw_get_option('want_loco_translate', 'rbfw_basic_gen_settings');
+}
+
+function rbfw_get_label( $rbfw, $key, $default ) {
+    if ( $rbfw->get_option_trans( $key, 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' ) {
+        return esc_html( $rbfw->get_option_trans( $key, 'rbfw_basic_translation_settings' ) );
+    } else {
+        return esc_html__( $default, 'booking-and-rental-manager-for-woocommerce' );
+    }
+}
+
 function rbfw_update_settings(){
     $payment_settings = maybe_unserialize('a:6:{s:19:"rbfw_payment_system";s:3:"wps";s:17:"rbfw_mps_currency";s:3:"USD";s:26:"rbfw_mps_currency_position";s:4:"left";s:32:"rbfw_mps_currency_decimal_number";s:1:"2";s:25:"rbfw_mps_checkout_account";s:2:"on";s:24:"rbfw_mps_payment_gateway";a:1:{s:7:"offline";s:7:"offline";}}');
 

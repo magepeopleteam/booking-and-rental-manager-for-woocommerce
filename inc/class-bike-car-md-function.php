@@ -171,7 +171,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $duration = '';
 
                 if ( $actual_days > 0 ) {
-                    $duration .= $actual_days > 1 ? $actual_days.' '.esc_html__($rbfw->get_option_trans('rbfw_text_days','rbfw_basic_translation_settings',__('Days','booking-and-rental-manager-for-woocommerce'))).' ' : $actual_days.' '.esc_html__($rbfw->get_option_trans('rbfw_text_day','rbfw_basic_translation_settings',__('Day','booking-and-rental-manager-for-woocommerce'))).' ';
+                    $duration .= $actual_days > 1 ? $actual_days.' '.rbfw_get_label( $rbfw, 'rbfw_text_days', 'Days' ).' ' : $actual_days.' '. rbfw_get_label( $rbfw, 'rbfw_text_days', 'Day' ).' ';
                 }
                 if ( $hours > 0 ) {
                     $duration .= $hours > 1 ? $hours.' '.rbfw_string_return('rbfw_text_hours',esc_html__('Hours','booking-and-rental-manager-for-woocommerce')) : $hours.' '.rbfw_string_return('rbfw_text_hour',esc_html__('Hour','booking-and-rental-manager-for-woocommerce'));
