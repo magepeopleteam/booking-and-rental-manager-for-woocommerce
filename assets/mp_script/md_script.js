@@ -764,10 +764,10 @@ function calculateAdditional() {
             rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
         }
     }
-    var total_price = sub_total_price + rbfw_security_deposit_actual_amount;
+    var total_price = sub_total_price + parseFloat(rbfw_security_deposit_actual_amount);
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
-        jQuery('.security_deposit span').html(rbfw_translation.currency + rbfw_security_deposit_actual_amount.toFixed(2));
+        jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
     }
 
 
