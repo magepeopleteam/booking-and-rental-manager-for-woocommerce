@@ -92,6 +92,14 @@
 					'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ),
 					'nonce'        => wp_create_nonce( 'rbfw_ajax_action' )
 				) );
+                wp_localize_script(
+                    'jquery',
+                    'rbfw_js_variables',
+                    array(
+                        'rbfw_today_booking_enable' => rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings'),
+
+                    )
+                );
 				wp_enqueue_script( 'smartWizard', plugins_url( 'admin/js/jquery.smartWizard.min.js', __DIR__ ), array( 'jquery' ), '6.0.6', false );
 				wp_enqueue_script( 'rbfw-admin-input', plugins_url( 'admin/js/rbfw-admin-input.js', __DIR__ ), array( 'jquery' ), time(), false );
 				do_action( 'rbfw_admin_enqueue_scripts' );
