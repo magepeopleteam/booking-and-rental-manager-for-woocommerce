@@ -92,12 +92,18 @@
 					'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ),
 					'nonce'        => wp_create_nonce( 'rbfw_ajax_action' )
 				) );
+
+                if ( function_exists('rbfw_get_option') ) {
+                    $today_booking_enable = rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings');
+                } else {
+                    $today_booking_enable = 'no';
+                }
+
                 wp_localize_script(
                     'jquery',
                     'rbfw_js_variables',
                     array(
-                        /*'rbfw_today_booking_enable' => rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings'),*/
-                        'rbfw_today_booking_enable' => 'yes',
+                        'rbfw_today_booking_enable' => $today_booking_enable,
 
                     )
                 );
@@ -199,12 +205,19 @@
 
 
 
+                    if ( function_exists('rbfw_get_option') ) {
+                        $today_booking_enable = rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings');
+                    } else {
+                        $today_booking_enable = 'no';
+                    }
+
+
+
                     wp_localize_script(
                             'jquery',
                             'rbfw_js_variables',
                             array(
-                                    /*'rbfw_today_booking_enable' => rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings'),*/
-                                    'rbfw_today_booking_enable' => 'yes',
+                                    'rbfw_today_booking_enable' => $today_booking_enable,
 
                             )
                     );
