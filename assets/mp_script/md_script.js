@@ -290,7 +290,7 @@ jQuery(window).on('load', function() {
 
 
 
-jQuery(document).on('change', '#rbfw_item_quantity', function(e) {
+jQuery(document).on('change', '#rbfw_item_quantity_md', function(e) {
     let that = jQuery(this);
     var total_days = jQuery('[name="total_days"]').val();
 
@@ -950,13 +950,13 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
     let pickup_time = jQuery('.pickup_time').find(':selected').val();
     let dropoff_time = jQuery('.dropoff_time').find(':selected').val();
 
-    let item_quantity = jQuery('#rbfw_item_quantity').find(':selected').val();
+    let item_quantity = jQuery('#rbfw_item_quantity_md').find(':selected').val();
     let rbfw_enable_variations = jQuery('#rbfw_enable_variations').val();
 
     var rbfw_input_stock_quantity = jQuery('#rbfw_input_stock_quantity').val();
 
     if(typeof item_quantity === "undefined"){
-        item_quantity = jQuery("[name='rbfw_item_quantity']").val();
+        item_quantity = jQuery("[name='rbfw_item_quantity_md']").val();
     }
 
     let rbfw_service_price = jQuery('#rbfw_service_price').val();
@@ -1054,7 +1054,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
                 }
             }
 
-            jQuery('#rbfw_item_quantity').html(quantity_options);
+            jQuery('#rbfw_item_quantity_md').html(quantity_options);
 
 
             jQuery('.rbfw_quantity_md').show();

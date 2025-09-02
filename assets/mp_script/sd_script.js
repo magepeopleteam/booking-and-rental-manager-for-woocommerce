@@ -131,8 +131,14 @@
                 return;
             }
             let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
-            var start_time = jQuery(this).data('start_time');
+
             let enable_specific_duration = jQuery('#enable_specific_duration').val();
+
+            if(enable_specific_duration=='on'){
+                var start_time = jQuery(this).data('start_time');
+                jQuery('#rbfw_start_time').val(start_time);
+            }
+
             var end_time = jQuery(this).data('end_time');
             let available_quantity = jQuery(this).data('available_quantity');
             let service_type = jQuery(this).data('text');
@@ -149,7 +155,7 @@
             jQuery(".rbfw_extra_service_sd").show();
             var rbfw_service_price = jQuery('#rbfw_item_quantity').val() * service_price;
             jQuery('#rbfw_service_price').val(rbfw_service_price);
-            jQuery('#rbfw_start_time').val(start_time);
+
             jQuery('#rbfw_service_type_for_st').val(service_type);
 
             jQuery('.single-type-timely').each(function(index, element) {
