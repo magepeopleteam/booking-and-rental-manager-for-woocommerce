@@ -96,7 +96,8 @@
                     'jquery',
                     'rbfw_js_variables',
                     array(
-                        'rbfw_today_booking_enable' => rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings'),
+                        /*'rbfw_today_booking_enable' => rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings'),*/
+                        'rbfw_today_booking_enable' => 'yes',
 
                     )
                 );
@@ -202,7 +203,8 @@
                             'jquery',
                             'rbfw_js_variables',
                             array(
-                                    'rbfw_today_booking_enable' => rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings'),
+                                    /*'rbfw_today_booking_enable' => rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings'),*/
+                                    'rbfw_today_booking_enable' => 'yes',
 
                             )
                     );
