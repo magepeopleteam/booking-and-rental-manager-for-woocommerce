@@ -371,9 +371,13 @@
 			}
 
 			public function rbfw_bikecarsd_time_table() {
-				if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
+				/*if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
 					return;
-				}
+				}*/
+                $ajax_action = 'rbfw_bikecarsd_time_table_action';
+
+                check_ajax_referer( $ajax_action, 'nonce' );
+
 				if ( isset( $_POST['post_id'] ) ) {
 					$id                 = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
 					$selected_date      = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
@@ -385,6 +389,7 @@
 			}
 
 			public function rbfw_bikecarsd_type_list() {
+                $ajax_action = 'rbfw_bikecarsd_type_list_action';
 				include( RBFW_Function::get_template_path( 'template_segment/single_day_info.php' ) );
 				wp_die();
 			}

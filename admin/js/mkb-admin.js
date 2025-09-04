@@ -644,7 +644,7 @@
                     'selected_date' : selected_date,
                     'start_date' : start_date,
                     'end_date' : end_date,
-                    'nonce' : rbfw_ajax.nonce
+                    'nonce' : rbfw_ajax_admin.nonce_get_stock_by_filter
                 },
                 beforeSend: function() {
                     jQuery('.rbfw_inventory_page_table_wrap').empty();
@@ -672,7 +672,7 @@
                 data: {
                     'action' : 'rbfw_get_stock_by_filter',
                     'selected_date' : selected_date,
-                    'nonce' : rbfw_ajax.nonce
+                    'nonce' : rbfw_ajax_admin.nonce_get_stock_by_filter
                 },
                 beforeSend: function() {
                     jQuery('.rbfw_inventory_page_table_wrap').empty();
@@ -710,7 +710,7 @@
                     'data_request' : data_request,
                     'data_date' : data_date,
                     'data_id' : data_id,
-                    'nonce' : rbfw_ajax.nonce
+                    'nonce' : rbfw_ajax_admin.nonce_get_stock_details
                 },
                 beforeSend: function() {
                     jQuery('#rbfw_stock_view_result_inner_wrap').empty();
@@ -1011,7 +1011,7 @@
 				rbfw_faq_content:content,
 				rbfw_faq_postID:postID.val(),
 				rbfw_faq_itemID:itemId.val(),
-                'nonce' : rbfw_ajax.nonce
+                'nonce' : rbfw_ajax_admin.nonce_faq_data_update
 			},
 			success: function(response) {
 				$('#rbfw-faq-msg').html(response.data.message);
@@ -1046,7 +1046,7 @@
 				rbfw_faq_title:title.val(),
 				rbfw_faq_content:content,
 				rbfw_faq_postID:postID.val(),
-                'nonce' : rbfw_ajax.nonce
+                'nonce' : rbfw_ajax_admin.nonce_faq_data_save
 			},
 			success: function(response) {
 				$('#rbfw-faq-msg').html(response.data.message);
@@ -1069,7 +1069,7 @@
 				action: 'rbfw_faq_delete_item',
 				rbfw_faq_postID:postID.val(),
 				itemId:itemId,
-                'nonce' : rbfw_ajax.nonce
+                'nonce' : rbfw_ajax_admin.nonce_faq_delete_item
 			},
 			success: function(response) {
 				$('.rbfw-faq-items').html('');

@@ -97,6 +97,14 @@
 					'nonce_room_types_with_sessional_price'        => wp_create_nonce( 'rbfw_room_types_with_sessional_price_action' ),
 					'nonce_room_types_with_resort_price_mds'        => wp_create_nonce( 'rbfw_room_types_with_resort_price_mds_action' ),
                     'nonce_fetch_order_details'        => wp_create_nonce( 'rbfw_fetch_order_details_action' ),
+                    'nonce_load_more_icons'        => wp_create_nonce( 'rbfw_load_more_icons_action' ),
+                    'nonce_update_time_slot'        => wp_create_nonce( 'rbfw_update_time_slot_action' ),
+                    'nonce_delete_time_slot'        => wp_create_nonce( 'rbfw_delete_time_slot_action' ),
+                    'nonce_get_stock_by_filter'        => wp_create_nonce( 'rbfw_get_stock_by_filter_action' ),
+                    'nonce_get_stock_details'        => wp_create_nonce( 'rbfw_get_stock_details_action' ),
+                    'nonce_faq_data_save'        => wp_create_nonce( 'rbfw_faq_data_save_action' ),
+                    'nonce_faq_delete_item'        => wp_create_nonce( 'rbfw_faq_delete_item_action' ),
+                    'nonce_faq_data_update'        => wp_create_nonce( 'rbfw_faq_data_update_action' ),
 				));
 
                 if ( function_exists('rbfw_get_option') ) {
@@ -239,7 +247,9 @@
 						'nonce_get_left_side_filter_data'        => wp_create_nonce( 'rbfw_get_left_side_filter_data_action' ),
 						'nonce_get_resort_sessional_day_wise_price'        => wp_create_nonce( 'rbfw_get_resort_sessional_day_wise_price_action' ),
 						'nonce_get_rent_item_left_filter_more_data_popup'        => wp_create_nonce( 'rbfw_get_rent_item_left_filter_more_data_popup_action' ),
-						'nonce_delete_time_slot'        => wp_create_nonce( 'rbfw_delete_time_slot_action' ),
+						'nonce_bikecarsd_type_list'        => wp_create_nonce( 'rbfw_bikecarsd_type_list_action' ),
+						'nonce_bikecarsd_time_table'        => wp_create_nonce( 'rbfw_bikecarsd_time_table_action' ),
+						'nonce_bikecarmd_ajax_min_max_and_offdays_info'        => wp_create_nonce( 'rbfw_bikecarmd_ajax_min_max_and_offdays_info_action' ),
 
                     ));
 					//font awesome

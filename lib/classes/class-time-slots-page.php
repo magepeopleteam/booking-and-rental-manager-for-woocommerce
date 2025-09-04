@@ -193,9 +193,13 @@
                     wp_die();
                 }
 
-                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                /*if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                     return;
-                }
+                }*/
+
+                check_ajax_referer( 'rbfw_update_time_slot_action', 'nonce' );
+
+
 
 				if ( isset( $_POST['new_ts_label'] ) && isset( $_POST['current_ts_label'] ) ) {
 					$rbfw_time_slots  = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
@@ -267,12 +271,12 @@
                             if (confirm('Are you sure? You won\'t be able to revert this!')) {
                                 jQuery.ajax({
                                     type: 'POST',
-                                    url: rbfw_ajax_front.rbfw_ajaxurl,
+                                    url: rbfw_ajax_admin.rbfw_ajaxurl,
                                     data: {
                                         'action': 'rbfw_delete_time_slot',
                                         'ts_time': ts_time,
                                         'ts_label': ts_label,
-                                        'nonce': rbfw_ajax_front.nonce_delete_time_slot
+                                        'nonce': rbfw_ajax_admin.nonce_delete_time_slot
                                     },
                                     beforeSend: function () {
                                         this_btn.append('<i class="fas fa-spinner fa-spin"></i>');
@@ -315,7 +319,7 @@
                                     'action': 'rbfw_update_time_slot',
                                     'new_ts_label': new_ts_label,
                                     'current_ts_label': current_ts_label,
-                                    'nonce': rbfw_ajax.nonce
+                                    'nonce': rbfw_ajax_admin.nonce_update_time_slot
                                 },
                                 beforeSend: function () {
                                     jQuery('.rbfw_time_slot_edit_form_save').append('<i class="fas fa-spinner fa-spin"></i>');

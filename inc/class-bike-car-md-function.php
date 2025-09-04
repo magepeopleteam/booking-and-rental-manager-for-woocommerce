@@ -292,9 +292,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
         function rbfw_bikecarmd_ajax_min_max_and_offdays_info(){
 
-            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+           /* if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                 return;
-            }
+            }*/
+            check_ajax_referer( 'rbfw_bikecarmd_ajax_min_max_and_offdays_info_action', 'nonce' );
+
 
             $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
 

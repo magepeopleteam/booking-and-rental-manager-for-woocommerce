@@ -172,10 +172,12 @@
 				}
 			
 				// Verify nonce
-				if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
+			/*	if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
 					wp_send_json_error( [ 'message' => __( 'Invalid nonce.', 'booking-and-rental-manager-for-woocommerce' ) ] );
 					wp_die();
-				}
+				}*/
+                check_ajax_referer( 'rbfw_faq_data_update_action', 'nonce' );
+
 			
 				// Sanitize and validate inputs
 				$post_id      = intval( $_POST['rbfw_faq_postID'] );
@@ -235,18 +237,12 @@
 
 			public function save_faq_data_settings() {
 				// Check required POST fields exist
-				if (
-					! isset( $_POST['nonce'], $_POST['rbfw_faq_postID'], $_POST['rbfw_faq_title'], $_POST['rbfw_faq_content'] )
-				) {
+				if (! isset( $_POST['nonce'], $_POST['rbfw_faq_postID'], $_POST['rbfw_faq_title'], $_POST['rbfw_faq_content'] )) {
 					wp_send_json_error( [ 'message' => __( 'Missing required fields.', 'booking-and-rental-manager-for-woocommerce' ) ] );
 					wp_die();
 				}
-			
-				// Verify nonce
-				if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
-					wp_send_json_error( [ 'message' => __( 'Nonce verification failed.', 'booking-and-rental-manager-for-woocommerce' ) ] );
-					wp_die();
-				}
+
+                check_ajax_referer( 'rbfw_faq_data_save_action', 'nonce' );
 			
 				// Sanitize and validate post ID
 				$post_id = intval( $_POST['rbfw_faq_postID'] );
@@ -304,10 +300,9 @@
 					wp_die();
 				}			
 				// Verify nonce
-				if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
-					wp_send_json_error( [ 'message' => __( 'Invalid nonce.', 'booking-and-rental-manager-for-woocommerce' ) ] );
-					wp_die();
-				}
+
+                check_ajax_referer( 'rbfw_faq_delete_item_action', 'nonce' );
+
 
 				// Sanitize and validate inputs
 				$post_id  = intval( $_POST['rbfw_faq_postID'] );

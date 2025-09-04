@@ -710,7 +710,7 @@
 				var data = {
 					'action': 'rbfw_load_more_icons',
 					'data_loaded': data_loaded,
-                    'nonce': rbfw_ajax.nonce
+                    'nonce': rbfw_ajax_admin.nonce_load_more_icons
 				};
 				jQuery.ajax({
 					type: 'POST',
@@ -718,7 +718,7 @@
 					data: {
 						'action': 'rbfw_load_more_icons',
 						'data_loaded': data_loaded,
-                        'nonce': rbfw_ajax.nonce
+                        'nonce': rbfw_ajax_admin.nonce_load_more_icons
 					},
 					beforeSend: function () {
 						jQuery('.rbfw_load_more_icons').append('<span class="rbfw_load_more_icons_loader"><i class="fas fa-spinner fa-spin"></i></span>');
@@ -798,9 +798,12 @@
 	add_action( 'wp_ajax_rbfw_load_more_icons', 'rbfw_load_more_icons_func' );
 	function rbfw_load_more_icons_func() {
 
-		if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
+		/*if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
 			return;
-		}
+		}*/
+
+        check_ajax_referer( 'rbfw_load_more_icons_action', 'nonce' );
+
         $data_loaded       = isset( $_POST['data_loaded'] ) ? sanitize_text_field( sanitize_text_field( wp_unslash( $_POST['data_loaded'] ) ) ) : '';
 		$icon_library      = new rbfw_icon_library();
 		$icon_library_list = $icon_library->rbfw_fontawesome_icons();

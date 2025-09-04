@@ -11,38 +11,6 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 });
 
 
-jQuery(window).on('load', function() {
-
-    let rent_type = jQuery('#rbfw_rent_type').val();
-
-    var now = new Date();
-    var currentMonth = now.getMonth()+1;
-    var currentYear = now.getFullYear();
-
-    if(rent_type == 'bike_car_mdjjjj'){
-        let post_id = jQuery('#rbfw_post_id').val();
-        jQuery.ajax({
-            type: 'POST',
-            dataType:'JSON',
-            url: rbfw_ajax.rbfw_ajaxurl,
-            data: {
-                'action'  : 'rbfw_day_wise_sold_out_check',
-                'post_id': post_id,
-                'month': currentMonth,
-                'year': currentYear,
-                'nonce' : rbfw_ajax.nonce
-            },
-         
-            success: function (response) {  
-                jQuery('#rbfw_month_wise_inventory').val(JSON.stringify(response)); 
-                jQuery('.item .rbfw-datetime').show();
-            }
-        });
-    }
-})
-
-
-
 
 jQuery('body').on('focusin', '.pickup_date', function(e) {
 
@@ -186,11 +154,11 @@ jQuery('body').on('change', '#rbfw_search_type', function (e) {
     jQuery.ajax({
         type: 'POST',
         dataType: 'json',
-        url: rbfw_ajax.rbfw_ajaxurl,
+        url: rbfw_ajax_front.rbfw_ajaxurl,
         data: {
             'action' : 'rbfw_bikecarmd_ajax_min_max_and_offdays_info',
             'post_id': post_id,
-            'nonce' : rbfw_ajax.nonce
+            'nonce' : rbfw_ajax_front.nonce_bikecarmd_ajax_min_max_and_offdays_info
 
         },
         beforeSend: function() {
