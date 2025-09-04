@@ -54,7 +54,7 @@
                 'manage_inventory_as_timely': manage_inventory_as_timely,
                 'enable_specific_duration': enable_specific_duration,
                 'total_row': total_row,
-                'nonce': rbfw_ajax.nonce
+                'nonce': rbfw_ajax_admin.nonce_duration_form
             },
             success: function(response) {
                 jQuery('.rbfw_bike_car_sd_price_table tbody').append(response);

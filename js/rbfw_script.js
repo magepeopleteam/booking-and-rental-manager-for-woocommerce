@@ -215,11 +215,11 @@
 
             jQuery.ajax({
                 type: 'POST',
-                url: rbfw_ajax.rbfw_ajaxurl,
+                url: rbfw_ajax_front.rbfw_ajaxurl,
                 data: {
                     'action' : 'rbfw_get_rent_item_category_info',
                     'post_id': item_number,
-                    'nonce' : rbfw_ajax.nonce
+                    'nonce' : rbfw_ajax_front.nonce_get_rent_item_category_info
                 },
                 success: function (response) {
                     $('#rbfw_popup_content').html( response.data );
@@ -243,7 +243,7 @@
 
             jQuery.ajax({
                 type: 'POST',
-                url: rbfw_ajax.rbfw_ajaxurl,
+                url: rbfw_ajax_front.rbfw_ajaxurl,
                 data: {
                     'action' : 'rbfw_get_resort_sessional_day_wise_price',
                     'post_id': post_id,
@@ -253,7 +253,7 @@
                     'checkin_date': checkin_date,
                     'room_type': room_type,
                     'active_tab': active_tab,
-                    'nonce' : rbfw_ajax.nonce
+                    'nonce' : rbfw_ajax_front.nonce_get_resort_sessional_day_wise_price
                 },
                 success: function (response) {
                     $('#rbfw_popup_content').html( response.data );
@@ -290,13 +290,12 @@
 
             jQuery.ajax({
                 type: 'POST',
-                url: rbfw_ajax.rbfw_ajaxurl,
+                url: rbfw_ajax_front.rbfw_ajaxurl,
                 data: {
                     'action' : 'rbfw_get_left_side_filter_data',
                     'filter_date': filter_date,
-                    'rbfw_nonce': rbfw_vars.rbfw_nonce,
                     'rbfw_item_style': rbfw_item_style,
-                    'nonce' : rbfw_ajax.nonce
+                    'nonce' : rbfw_ajax_front.nonce_get_left_side_filter_data
                 },
                 success: function (response) {
                     if( response.success ){
@@ -473,12 +472,12 @@
                 $("#"+appendId).append('<div class="rbfw_loader" id="rbfw_left_filter_loader">Loading....</div>');
                 jQuery.ajax({
                     type: 'POST',
-                    url: rbfw_ajax.rbfw_ajaxurl,
+                    url: rbfw_ajax_front.rbfw_ajaxurl,
                     data: {
                         'action': 'rbfw_get_rent_item_left_filter_more_data_popup',
                         'filter_type': filter_type,
                         'rbfw_nonce': rbfw_vars.rbfw_nonce,
-                        'nonce' : rbfw_ajax.nonce
+                        'nonce' : rbfw_ajax_front.nonce_get_rent_item_left_filter_more_data_popup
                     },
                     success: function (response) {
                         $('#' + appendId).append(response.data);

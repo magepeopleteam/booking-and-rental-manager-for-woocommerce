@@ -113,9 +113,12 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
         function rbfw_md_duration_price_calculation_ajax(){
 
-            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+            /*if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                 return;
-            }
+            }*/
+
+            check_ajax_referer( 'rbfw_bikecarmd_ajax_price_calculation_action', 'nonce' );
+
             global $rbfw;
             $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
 
@@ -214,9 +217,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
         function rbfw_multi_items_ajax_price_calculation(){
 
-            if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+            /*if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                 return;
-            }
+            }*/
+            check_ajax_referer( 'rbfw_multi_items_ajax_price_calculation_action', 'nonce' );
+
 
             $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
 

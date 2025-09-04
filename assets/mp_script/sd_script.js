@@ -479,14 +479,14 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
     jQuery.ajax({
         type: 'POST',
         dataType: 'json',
-        url: rbfw_ajax.rbfw_ajaxurl,
+        url: rbfw_ajax_front.rbfw_ajaxurl,
         data: {
             'action'  : 'rbfw_service_type_timely_stock',
             'post_id': post_id,
             'rbfw_bikecarsd_selected_date': start_date,
             'pickup_time': start_time,
             'enable_specific_duration': enable_specific_duration,
-            'nonce' : rbfw_ajax.nonce
+            'nonce' : rbfw_ajax_front.nonce_service_type_timely_stock
         },
         beforeSend: function() {
             jQuery('.rbfw_bikecarsd_price_summary').addClass('old');

@@ -13,10 +13,14 @@ function rbfw_order_meta_box() {
 }
 add_action( 'wp_ajax_fetch_order_details', 'fetch_order_details_callback' );
 function fetch_order_details_callback() {
-    if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
+
+ /*   if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
         wp_send_json_error( 'Invalid request.' );
         wp_die();
-    }
+    }*/
+    check_ajax_referer( 'rbfw_fetch_order_details_action', 'nonce' );
+
+
     global $rbfw;
     if ( isset( $_POST['post_id'] ) ) {
         $rbfw_order_id = intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) );

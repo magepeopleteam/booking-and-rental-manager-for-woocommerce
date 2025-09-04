@@ -101,9 +101,12 @@
 			}
 
 			public function rbfw_get_rent_item_category_info() {
-                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                /*if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                     return;
-                }
+                }*/
+
+                check_ajax_referer( 'rbfw_get_rent_item_category_info_action', 'nonce' );
+
 				$all_cat_features = '';
 				if ( isset( $_POST['post_id'] ) ) {
 					$post_id               = sanitize_text_field( wp_unslash($_POST['post_id']));
@@ -135,10 +138,13 @@
 			}
 
 			public function rbfw_get_left_side_filter_data() {
-				$nonce       = isset( $_POST['rbfw_nonce'] ) ? sanitize_text_field( wp_unslash($_POST['rbfw_nonce'])) : '';
-				$response    = '';
+
+                check_ajax_referer( 'rbfw_get_left_side_filter_data_action', 'nonce' );
+
+
+                $response    = '';
 				$show_result = '0 result of total 0';
-				if ( wp_verify_nonce( $nonce, 'rbfw_nonce' ) ) {
+
 					if ( isset( $_POST['filter_date'] ) ) {
 						$filter_date_str     = sanitize_text_field( stripslashes( $_POST['filter_date' ] ) );
                         $filter_date = json_decode( $filter_date_str, true);
@@ -258,7 +264,7 @@
                         $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_of', 'of' );
                         $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_total', 'total' );
 					}
-				}
+
 				$result = array(
 					'display_date' => $response,
 					'show_text'    => $show_result,
@@ -543,9 +549,11 @@
 			}
 
 			public function rbfw_get_rent_item_left_filter_more_data_popup() {
-				$nonce   = isset( $_POST['rbfw_nonce'] ) ? sanitize_text_field( wp_unslash($_POST['rbfw_nonce'] )) : '';
+
+                check_ajax_referer( 'rbfw_get_rent_item_left_filter_more_data_popup_action', 'nonce' );
+
 				$content = '';
-				if ( wp_verify_nonce( $nonce, 'rbfw_nonce' ) ) {
+
 					if ( isset( $_POST['filter_type'] ) ) {
 						$filter_type = trim( sanitize_text_field( wp_unslash($_POST['filter_type'] )) );
 						if ( $filter_type === 'rbfw_left_filter_location' ) {
@@ -602,7 +610,7 @@
 						<?php
 						$content = ob_get_clean();
 					}
-				}
+
 				wp_send_json_success( $content );
 			}
 		}

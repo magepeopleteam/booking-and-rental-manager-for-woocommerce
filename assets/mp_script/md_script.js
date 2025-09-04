@@ -636,7 +636,7 @@ function rbfw_multi_items_ajax_price_calculation(){
     jQuery.ajax({
         type: 'POST',
         dataType: 'json',
-        url: rbfw_ajax.rbfw_ajaxurl,
+        url: rbfw_ajax_front.rbfw_ajaxurl,
         data: {
             'action' : 'rbfw_multi_items_ajax_price_calculation',
             'post_id': post_id,
@@ -648,7 +648,7 @@ function rbfw_multi_items_ajax_price_calculation(){
             'rbfw_multi_item_price': rbfw_multi_item_price,
             'rbfw_service_category_price': rbfw_service_category_price,
             'rbfw_available_time': rbfw_available_time,
-            'nonce' : rbfw_ajax.nonce
+            'nonce' : rbfw_ajax_front.nonce_multi_items_ajax_price_calculation
         },
         beforeSend: function() {
             jQuery('.rbfw_multi_items_wrapper_inner').addClass('rbfw_loader_in');
@@ -970,7 +970,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
     jQuery.ajax({
         type: 'POST',
         dataType: 'json',
-        url: rbfw_ajax.rbfw_ajaxurl,
+        url: rbfw_ajax_front.rbfw_ajaxurl,
         data: {
             'action' : 'rbfw_bikecarmd_ajax_price_calculation',
             'post_id': post_id,
@@ -985,7 +985,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             'rbfw_es_service_price': rbfw_es_service_price,
             'rbfw_available_time': rbfw_available_time,
             'rbfw_enable_time_slot': rbfw_enable_time_slot,
-            'nonce' : rbfw_ajax.nonce
+            'nonce' : rbfw_ajax_front.nonce_bikecarmd_ajax_price_calculation
         },
         beforeSend: function() {
             jQuery('.rbfw_bike_car_md_item_wrapper').addClass('rbfw_loader_in');

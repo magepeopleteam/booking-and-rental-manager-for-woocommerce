@@ -464,9 +464,12 @@
 			}
 
 			public function particular_time_date_dependent() {
-				if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
+				/*if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
 					return;
-				}
+				}*/
+
+                check_ajax_referer( 'particular_time_date_dependent_action', 'nonce' );
+
 				$post_id           = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
 				$selected_date     = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
 				$type              = isset( $_POST['type'] ) ? sanitize_text_field( wp_unslash( $_POST['type'] ) ) : '';
@@ -477,9 +480,11 @@
 			}
 
 			public function rbfw_service_type_timely_stock() {
-				if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
+				/*if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
 					return;
-				}
+				}*/
+                check_ajax_referer( 'rbfw_service_type_timely_stock_action', 'nonce' );
+
 				$post_id                  = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
 				$start_date               = isset( $_POST['rbfw_bikecarsd_selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_bikecarsd_selected_date'] ) ) : '';
 				$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : '';

@@ -294,9 +294,9 @@
 
 
 			public function rbfw_check_resort_availibility() {
-				if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
-					return;
-				}
+
+                check_ajax_referer( 'rbfw_check_resort_availibility_action', 'nonce' );
+
 				$start_date = isset( $_POST['checkin_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkin_date'] ) ) : '';
 				$end_date   = isset( $_POST['checkout_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkout_date'] ) ) : '';
 				$post_id    = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
@@ -306,18 +306,18 @@
 				$total_days = $interval->format( '%a' );
 
 				if ( $total_days ) {
-					$price_type = 'daynight';
+                    $active_tab = 'daynight';
 				} else {
-					$price_type = 'daylong';
+                    $active_tab = 'daylong';
 				}
-
-				$this->rbfw_get_active_price_table( $post_id, $price_type, $start_date, $end_date );
+                include( RBFW_Function::get_template_path( 'template_segment/resort_info.php' ) );
+                wp_die();
 			}
 
+
+
 			public function rbfw_get_active_price_table( $post_id = 0, $active_tab = '', $checkin_date = '', $checkout_date = '' ) {
-				if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
-					return;
-				}
+
 				include( RBFW_Function::get_template_path( 'template_segment/resort_info.php' ) );
 				wp_die();
 			}
@@ -441,9 +441,11 @@
 
             public function rbfw_get_resort_sessional_day_wise_price() {
 
-                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+               /* if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                     return;
-                }
+                }*/
+
+                check_ajax_referer( 'rbfw_get_resort_sessional_day_wise_price_action', 'nonce' );
 
                 if ( isset( $_POST['post_id'] ) ) {
 

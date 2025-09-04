@@ -88,10 +88,16 @@
 				wp_enqueue_script( 'select2.min', plugins_url( 'admin/js/select2.min.js', __DIR__ ), array( 'jquery' ) );
 				wp_enqueue_script( 'form-field-dependency', plugins_url( 'admin/js/form-field-dependency.js', __DIR__ ), array( 'jquery' ), null, false );
 				wp_enqueue_script( 'rbfw-script', plugins_url( 'admin/js/mkb-admin.js', __DIR__ ), array( 'jquery', 'jquery-ui-datepicker', 'wp-tinymce' ), time(), false );
-				wp_localize_script( 'jquery', 'rbfw_ajax', array(
+
+                wp_localize_script( 'jquery', 'rbfw_ajax_admin', array(
 					'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ),
-					'nonce'        => wp_create_nonce( 'rbfw_ajax_action' )
-				) );
+					'nonce_time_slot'        => wp_create_nonce( 'rbfw_time_slot_action' ),
+					'nonce_duration_form'        => wp_create_nonce( 'rbfw_duration_form_action' ),
+					'nonce_room_types_with_sd_price'        => wp_create_nonce( 'rbfw_room_types_with_sd_price_action' ),
+					'nonce_room_types_with_sessional_price'        => wp_create_nonce( 'rbfw_room_types_with_sessional_price_action' ),
+					'nonce_room_types_with_resort_price_mds'        => wp_create_nonce( 'rbfw_room_types_with_resort_price_mds_action' ),
+                    'nonce_fetch_order_details'        => wp_create_nonce( 'rbfw_fetch_order_details_action' ),
+				));
 
                 if ( function_exists('rbfw_get_option') ) {
                     $today_booking_enable = rbfw_get_option('today_booking_enable','rbfw_basic_gen_settings');
@@ -222,9 +228,19 @@
                             )
                     );
 
-                    wp_localize_script( 'jquery', 'rbfw_ajax', array(
+                    wp_localize_script( 'jquery', 'rbfw_ajax_front', array(
 						'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ),
-						'nonce'        => wp_create_nonce( 'rbfw_ajax_action' )
+						'nonce_check_resort_availibility'        => wp_create_nonce( 'rbfw_check_resort_availibility_action' ),
+						'nonce_bikecarmd_ajax_price_calculation'        => wp_create_nonce( 'rbfw_bikecarmd_ajax_price_calculation_action' ),
+						'nonce_multi_items_ajax_price_calculation'        => wp_create_nonce( 'rbfw_multi_items_ajax_price_calculation_action' ),
+						'nonce_particular_time_date_dependent'        => wp_create_nonce( 'particular_time_date_dependent_action' ),
+						'nonce_get_rent_item_category_info'        => wp_create_nonce( 'rbfw_get_rent_item_category_info_action' ),
+						'nonce_service_type_timely_stock'        => wp_create_nonce( 'rbfw_service_type_timely_stock_action' ),
+						'nonce_get_left_side_filter_data'        => wp_create_nonce( 'rbfw_get_left_side_filter_data_action' ),
+						'nonce_get_resort_sessional_day_wise_price'        => wp_create_nonce( 'rbfw_get_resort_sessional_day_wise_price_action' ),
+						'nonce_get_rent_item_left_filter_more_data_popup'        => wp_create_nonce( 'rbfw_get_rent_item_left_filter_more_data_popup_action' ),
+						'nonce_delete_time_slot'        => wp_create_nonce( 'rbfw_delete_time_slot_action' ),
+
                     ));
 					//font awesome
 					// wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
