@@ -1,9 +1,7 @@
 <?php
 global $rbfw;
-if ( !isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action') ) {
-    wp_die('Nonce verification failed.');
-}
 
+check_ajax_referer( 'rbfw_check_resort_availibility_action', 'nonce' );
 
 if ( !($post_id && $active_tab) ) {
     $post_id = isset($_POST['post_id']) ? sanitize_text_field(wp_unslash($_POST['post_id'])) : '';

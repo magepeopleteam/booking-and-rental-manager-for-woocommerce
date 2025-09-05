@@ -125,33 +125,30 @@
 
 			public function rbfw_insert_time_slot() {
 
+                check_ajax_referer( 'rbfw_time_slot_action', 'nonce' );
                 if (!current_user_can('manage_options')) {
                     wp_send_json_error(['message' => 'Unauthorized access'], 403);
                     wp_die();
                 }
-
-
-				$status = '';
-				if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
-					if ( isset( $_POST['ts_label'] ) && isset( $_POST['ts_time'] ) ) {
-						$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
-						$ts_label        = sanitize_text_field( wp_unslash( $_POST['ts_label'] ) );
-						$ts_time         = sanitize_text_field( wp_unslash( $_POST['ts_time'] ) );
-						$ts_time         = gmdate( 'H:i', strtotime( $ts_time ) );
-						if ( ! array_key_exists( $ts_label, $rbfw_time_slots ) ) {
-							$rbfw_time_slots[ $ts_label ] = $ts_time;
-							update_option( 'rbfw_time_slots', $rbfw_time_slots );
-							$status = 'inserted';
-						} else {
-							$status = 'exist';
-						}
-					}
-				}
-				echo wp_json_encode( array(
+                $status = '';
+                if ( isset( $_POST['ts_label'] ) && isset( $_POST['ts_time'] ) ) {
+                    $rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
+                    $ts_label        = sanitize_text_field( wp_unslash( $_POST['ts_label'] ) );
+                    $ts_time         = sanitize_text_field( wp_unslash( $_POST['ts_time'] ) );
+                    $ts_time         = gmdate( 'H:i', strtotime( $ts_time ) );
+                    if ( ! array_key_exists( $ts_label, $rbfw_time_slots ) ) {
+                        $rbfw_time_slots[ $ts_label ] = $ts_time;
+                        update_option( 'rbfw_time_slots', $rbfw_time_slots );
+                        $status = 'inserted';
+                    } else {
+                        $status = 'exist';
+                    }
+                }
+                echo wp_json_encode( array(
 					'status' => $status,
 				) );
 				wp_die();
-			}
+            }
 
 			public function rbfw_delete_time_slot() {
                 if (!current_user_can('manage_options')) {
@@ -159,7 +156,9 @@
                     wp_die();
                 }
 				$status = '';
-				if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) {
+
+                check_ajax_referer( 'rbfw_delete_time_slot_action', 'nonce' );
+
 					if ( isset( $_POST['ts_time'] ) && isset( $_POST['ts_label'] ) ) {
 						$rbfw_time_slots = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
 						$ts_label        = sanitize_text_field( wp_unslash( $_POST['ts_label'] ) );
@@ -169,7 +168,7 @@
 							$status = 'deleted';
 						}
 					}
-				}
+
 				echo wp_json_encode( array(
 					'status' => $status,
 				) );
@@ -194,9 +193,13 @@
                     wp_die();
                 }
 
-                if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+                /*if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                     return;
-                }
+                }*/
+
+                check_ajax_referer( 'rbfw_update_time_slot_action', 'nonce' );
+
+
 
 				if ( isset( $_POST['new_ts_label'] ) && isset( $_POST['current_ts_label'] ) ) {
 					$rbfw_time_slots  = ! empty( get_option( 'rbfw_time_slots' ) ) ? get_option( 'rbfw_time_slots' ) : [];
@@ -228,12 +231,12 @@
                             }
                             jQuery.ajax({
                                 type: 'POST',
-                                url: rbfw_ajax.rbfw_ajaxurl,
+                                url: rbfw_ajax_admin.rbfw_ajaxurl,
                                 data: {
                                     'action': 'rbfw_insert_time_slot',
                                     'ts_label': ts_label,
                                     'ts_time': ts_time,
-                                    'nonce': rbfw_ajax.nonce
+                                    'nonce': rbfw_ajax_admin.nonce_time_slot
                                 },
                                 beforeSend: function () {
                                     jQuery('.rbfw_time_slot_add_btn').append('<i class="fas fa-spinner fa-spin"></i>');
@@ -268,12 +271,12 @@
                             if (confirm('Are you sure? You won\'t be able to revert this!')) {
                                 jQuery.ajax({
                                     type: 'POST',
-                                    url: rbfw_ajax.rbfw_ajaxurl,
+                                    url: rbfw_ajax_admin.rbfw_ajaxurl,
                                     data: {
                                         'action': 'rbfw_delete_time_slot',
                                         'ts_time': ts_time,
                                         'ts_label': ts_label,
-                                        'nonce': rbfw_ajax.nonce
+                                        'nonce': rbfw_ajax_admin.nonce_delete_time_slot
                                     },
                                     beforeSend: function () {
                                         this_btn.append('<i class="fas fa-spinner fa-spin"></i>');
@@ -316,7 +319,7 @@
                                     'action': 'rbfw_update_time_slot',
                                     'new_ts_label': new_ts_label,
                                     'current_ts_label': current_ts_label,
-                                    'nonce': rbfw_ajax.nonce
+                                    'nonce': rbfw_ajax_admin.nonce_update_time_slot
                                 },
                                 beforeSend: function () {
                                     jQuery('.rbfw_time_slot_edit_form_save').append('<i class="fas fa-spinner fa-spin"></i>');

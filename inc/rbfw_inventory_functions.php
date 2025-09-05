@@ -1088,7 +1088,8 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
 function rbfw_get_stock_by_filter(){
 
-    if (isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action')) {
+    check_ajax_referer( 'rbfw_get_stock_by_filter_action', 'nonce' );
+
         $selected_date = isset($_POST['selected_date'])?sanitize_text_field(wp_unslash($_POST['selected_date'])):'';
         $start_date = isset($_POST['start_date'])?sanitize_text_field(wp_unslash($_POST['start_date'])):'';
         $end_date = isset($_POST['end_date'])?sanitize_text_field(wp_unslash($_POST['end_date'])):'';
@@ -1102,14 +1103,16 @@ function rbfw_get_stock_by_filter(){
         $content = rbfw_inventory_page_table($query, $selected_date,$start_date,$end_date);
         echo wp_kses($content,rbfw_allowed_html());
         wp_die();
-    }
+
 }
 
 function rbfw_get_stock_details(){
 
-    if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+    /*if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
         return;
-    }
+    }*/
+
+    check_ajax_referer( 'rbfw_get_stock_details_action', 'nonce' );
 
             $data_request = isset($_POST['data_request'])?sanitize_text_field(wp_unslash($_POST['data_request'])):'';
             $data_date = isset($_POST['data_date'])?sanitize_text_field(wp_unslash($_POST['data_date'])):'';

@@ -205,7 +205,8 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                                                         }
                                                         ?>
 
-                                                        (<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)</td>
+                                                        (<?php echo esc_html(get_woocommerce_currency_symbol()); ?>)
+                                                    </td>
                                                     <td><?php echo esc_html(($sunday['enable'] =='yes' && $sunday['daily_rate'])? $sunday['daily_rate'] :$daily_rate); ?></td>
                                                     <td><?php echo esc_html(($monday['enable'] =='yes' && $monday['daily_rate'])? $monday['daily_rate'] :$daily_rate); ?></td>
                                                     <td><?php echo esc_html(($tueday['enable'] =='yes' && $tueday['daily_rate'])? $tueday['daily_rate'] :$daily_rate); ?></td>
@@ -456,7 +457,7 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                                 <?php esc_html_e('Quantity','booking-and-rental-manager-for-woocommerce'); ?>
                             </div>
                             <div class="item-content rbfw-quantity">
-                                <select class="rbfw-select" name="rbfw_item_quantity" id="rbfw_item_quantity">
+                                <select class="rbfw-select" name="rbfw_item_quantity_md" id="rbfw_item_quantity_md">
                                     <option value="0"><?php esc_html_e('Choose number of quantity','booking-and-rental-manager-for-woocommerce'); ?></option>
                                     <?php for ($qty = 1; $qty <= $item_stock_quantity; $qty++) { ?>
                                         <option value="<?php echo esc_attr($qty); ?>" <?php if($qty == 1){ echo 'selected'; } ?>><?php echo esc_html($qty); ?></option>
@@ -465,11 +466,11 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                             </div>
                         </div>
                     <?php }elseif ($item_stock_quantity > 0){ ?>
-                        <input type="hidden" name="rbfw_item_quantity" value="1">
+                        <input type="hidden" name="rbfw_item_quantity_md" value="1">
                     <?php } elseif($input_stock_quantity == 'no_has_value'){ ?>
-                        <input type="hidden" name="rbfw_item_quantity" value="1">
+                        <input type="hidden" name="rbfw_item_quantity_md" value="1">
                     <?php }else{ ?>
-                        <input type="hidden" name="rbfw_item_quantity" value="0">
+                        <input type="hidden" name="rbfw_item_quantity_md" value="0">
                     <?php } ?>
 
                     <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data)){ ?>

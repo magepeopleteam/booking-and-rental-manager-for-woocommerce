@@ -214,6 +214,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.4.9
+bug fixing.
+Security issue updated.
+
 2.4.7
 bug fixing.
 

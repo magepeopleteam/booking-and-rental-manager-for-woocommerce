@@ -1,9 +1,11 @@
 <?php
 global $rbfw;
 
-if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
+/*if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
     return;
-}
+}*/
+
+check_ajax_referer( $ajax_action, 'nonce' );
 
 if(isset($_POST['post_id'])){
     $id = isset($_POST['post_id']) ? sanitize_text_field(wp_unslash($_POST['post_id'])) : '';
