@@ -56,6 +56,7 @@
                         'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
                         'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
                         'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
+                        'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
                         'currency' => get_woocommerce_currency_symbol()
                     ));
                 }
@@ -88,6 +89,25 @@
 				wp_enqueue_script( 'select2.min', plugins_url( 'admin/js/select2.min.js', __DIR__ ), array( 'jquery' ) );
 				wp_enqueue_script( 'form-field-dependency', plugins_url( 'admin/js/form-field-dependency.js', __DIR__ ), array( 'jquery' ), null, false );
 				wp_enqueue_script( 'rbfw-script', plugins_url( 'admin/js/mkb-admin.js', __DIR__ ), array( 'jquery', 'jquery-ui-datepicker', 'wp-tinymce' ), time(), false );
+
+                wp_localize_script( 'jquery', 'rbfw_ajax_front', array(
+                    'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ),
+                    'nonce_check_resort_availibility'        => wp_create_nonce( 'rbfw_check_resort_availibility_action' ),
+                    'nonce_bikecarmd_ajax_price_calculation'        => wp_create_nonce( 'rbfw_bikecarmd_ajax_price_calculation_action' ),
+                    'nonce_multi_items_ajax_price_calculation'        => wp_create_nonce( 'rbfw_multi_items_ajax_price_calculation_action' ),
+                    'nonce_particular_time_date_dependent'        => wp_create_nonce( 'particular_time_date_dependent_action' ),
+                    'nonce_get_rent_item_category_info'        => wp_create_nonce( 'rbfw_get_rent_item_category_info_action' ),
+                    'nonce_service_type_timely_stock'        => wp_create_nonce( 'rbfw_service_type_timely_stock_action' ),
+                    'nonce_get_left_side_filter_data'        => wp_create_nonce( 'rbfw_get_left_side_filter_data_action' ),
+                    'nonce_get_resort_sessional_day_wise_price'        => wp_create_nonce( 'rbfw_get_resort_sessional_day_wise_price_action' ),
+                    'nonce_get_rent_item_left_filter_more_data_popup'        => wp_create_nonce( 'rbfw_get_rent_item_left_filter_more_data_popup_action' ),
+                    'nonce_bikecarsd_type_list'        => wp_create_nonce( 'rbfw_bikecarsd_type_list_action' ),
+                    'nonce_bikecarsd_time_table'        => wp_create_nonce( 'rbfw_bikecarsd_time_table_action' ),
+                    'nonce_bikecarmd_ajax_min_max_and_offdays_info'        => wp_create_nonce( 'rbfw_bikecarmd_ajax_min_max_and_offdays_info_action' ),
+
+                ));
+
+
 
                 wp_localize_script( 'jquery', 'rbfw_ajax_admin', array(
 					'rbfw_ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -157,6 +177,7 @@
                         'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
                         'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
                         'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
+                        'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
                         'currency' => get_woocommerce_currency_symbol()
                 ));
 
