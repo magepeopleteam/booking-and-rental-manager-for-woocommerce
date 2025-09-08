@@ -229,7 +229,9 @@
                 jQuery('.regular_fixed_date').hide();
                 jQuery('.rbfw_off_days').show();
                 jQuery('.wervice_quantity_input_box').show();
-                jQuery('#add-bike-car-sd-type-row').show();
+
+                jQuery('.sd-add-type-and-sessional').show();
+
 
                 jQuery('.additional-service-item-price').hide();
 
@@ -272,7 +274,9 @@
                 jQuery('.rbfw_off_days input').prop('checked', false);
                 jQuery('.rbfw_off_days').show();
                 jQuery('.regular_fixed_date').hide();
-                jQuery('#add-bike-car-sd-type-row').hide();
+
+                jQuery('.sd-add-type-and-sessional').hide();
+
 
                 jQuery('.manage_inventory_as_timely').hide();
                 jQuery('.rbfw_time_inventory').hide();

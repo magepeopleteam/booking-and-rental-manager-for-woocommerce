@@ -296,7 +296,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <p class="mt-2 <?php echo esc_attr( $rbfw_item_type == 'appointment' ? 'hide' : 'show' ); ?>">
+                            <div class="mt-2 sd-add-type-and-sessional  <?php echo esc_attr( $rbfw_item_type == 'appointment' ? 'hide' : 'show' ); ?>">
                                 <span id="add-bike-car-sd-type-row" data-post_id="<?php echo esc_attr( $post_id ) ?>" class="ppof-button" >
                                     <i class="fas fa-circle-plus"></i>
                                     <?php esc_html_e( 'Add New Type', 'booking-and-rental-manager-for-woocommerce' ); ?>
@@ -307,7 +307,7 @@
                                         <?php esc_html_e( 'Sync with sessional price', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                     </span>
                                 <?php } ?>
-                            </p>
+                            </div>
                         </div>
                     </section>
                 </div>
