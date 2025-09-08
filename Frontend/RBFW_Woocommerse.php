@@ -286,7 +286,9 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $start_date                = isset( $sd_input_data_sabitized['rbfw_pickup_start_date'] ) ? $sd_input_data_sabitized['rbfw_pickup_start_date'] : '';
                 $end_date                  = isset( $sd_input_data_sabitized['rbfw_pickup_end_date'] ) ? $sd_input_data_sabitized['rbfw_pickup_end_date'] : '';
                 $start_time                = isset( $sd_input_data_sabitized['rbfw_pickup_start_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_start_time'] : '';
-                $end_time                  = isset( $sd_input_data_sabitized['rbfw_pickup_end_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_end_time'] : '';
+                $end_time                  = isset( $sd_input_data_sabitized['rbfw_pickup_end_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_end_time'] : rbfw_end_time();
+
+
                 $pickup_datetime           = gmdate( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
                 $dropoff_datetime          = gmdate( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
                 $rbfw_pickup_point         = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
@@ -626,7 +628,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     && want_loco_translate() == 'no'
                 )
                     ? $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings' )
-                    : esc_html__( 'Discount:', 'booking-and-rental-manager-for-woocommerce' );
+                    : esc_html__( 'Discount', 'booking-and-rental-manager-for-woocommerce' ) . ' :';
 
                 $item->add_meta_data(
                     esc_html( $discount_label ),

@@ -433,18 +433,34 @@
 				$content .= '<div class="item rbfw_bikecarsd_price_summary">
                                 <div class="item-content rbfw-costing">
                                     <ul class="rbfw-ul">
-                                        <li class="duration-costing rbfw-cond">' . rbfw_get_label( $rbfw, 'rbfw_text_duration_cost', 'Duration Cost' ) . ' <span class="price-figure" data-price="' . $total_bikecarsd_price . '">' . wc_price( $total_bikecarsd_price ) . '</span></li>';
+                                        <li class="duration-costing rbfw-cond">' . (
+                    ( $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                        ? esc_html( $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings' ) )
+                        : esc_html__( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' )
+                    ) . ' <span class="price-figure" data-price="' . $total_bikecarsd_price . '">' . wc_price( $total_bikecarsd_price ) . '</span></li>';
 				if ( ! empty( $service_price_arr ) ) {
-					$content .= '<li class="resource-costing rbfw-cond">' . rbfw_get_label( $rbfw, 'rbfw_text_resource_cost', 'Resource Cost' ) . ' <span class="price-figure" data-price="' . $total_service_price . '">' . wc_price( $total_service_price ) . '</span></li>';
+					$content .= '<li class="resource-costing rbfw-cond">' . (
+                        ( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' )
+                        ) . ' <span class="price-figure" data-price="' . $total_service_price . '">' . wc_price( $total_service_price ) . '</span></li>';
 				}
-				$content .= '<li class="subtotal">' . rbfw_get_label( $rbfw, 'rbfw_text_subtotal', 'Subtotal' ) . '<span class="price-figure" data-price="' . $subtotal_price . '">' . wc_price( $subtotal_price ) . '</span></li>';
+				$content .= '<li class="subtotal">' . (
+                    ( $rbfw->get_option_trans( 'rbfw_text_subtotal', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                        ? esc_html( $rbfw->get_option_trans( 'rbfw_text_subtotal', 'rbfw_basic_translation_settings' ) )
+                        : esc_html__( 'Subtotal', 'booking-and-rental-manager-for-woocommerce' )
+                    )  . '<span class="price-figure" data-price="' . $subtotal_price . '">' . wc_price( $subtotal_price ) . '</span></li>';
 
 				$security_deposit = rbfw_security_deposit( $post_id, $subtotal_price );
 				if ( $security_deposit['security_deposit_desc'] ) {
 					$content .= '<li class="subtotal">' . ( ! empty( get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) ) ? get_post_meta( $post_id, 'rbfw_security_deposit_label', true ) : 'Security Deposit' ) . '<span class="price-figure" data-price="' . $security_deposit['security_deposit_amount'] . '">' . $security_deposit['security_deposit_desc'] . '</span></li>';
 				}
 				$total_price = $total_price + $security_deposit['security_deposit_amount'];
-				$content     .= '<li class="total"><strong>' . rbfw_get_label( $rbfw, 'rbfw_text_total', 'Total' ) . '</strong> <span class="price-figure" data-price="' . $total_price . '">' . wc_price( $total_price ) . ' ' . $tax_status . '</span></li>
+				$content     .= '<li class="total"><strong>' . (
+                    ( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                        ? esc_html( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings' ) )
+                        : esc_html__( 'Total', 'booking-and-rental-manager-for-woocommerce' )
+                    ) . '</strong> <span class="price-figure" data-price="' . $total_price . '">' . wc_price( $total_price ) . ' ' . $tax_status . '</span></li>
 
 
                                     </ul>

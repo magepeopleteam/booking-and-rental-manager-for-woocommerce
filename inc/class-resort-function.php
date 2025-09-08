@@ -394,13 +394,24 @@
                                 <ul class="rbfw-ul">
                                 
                                 
-                                <li class="duration-costing rbfw-cond">' . rbfw_get_label( $rbfw, 'rbfw_text_duration_cost', 'Duration Cost:' ) .
+                                <li class="duration-costing rbfw-cond">' . (
+                        ( $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' ) .' :'
+                        )  .
                         ' <span class="price-figure" data-price="' . $total_room_price_org . '">' . wc_price( $total_room_price_org ) . '</span></li>
-
-<li class="resource-costing rbfw-cond">' . rbfw_get_label( $rbfw, 'rbfw_text_resource_cost', 'Resource Cost:' ) .
+<li class="resource-costing rbfw-cond">' . (
+                        ( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) .' :'
+                        )  .
                         ' <span class="price-figure" data-price="' . $total_service_price . '">' . wc_price( $total_service_price ) . '</span></li>
 
-<li class="subtotal">' . rbfw_get_label( $rbfw, 'rbfw_text_subtotal', 'Subtotal:' ) .
+<li class="subtotal">' . (
+                        ( $rbfw->get_option_trans( 'rbfw_text_subtotal', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_subtotal', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'Subtotal', 'booking-and-rental-manager-for-woocommerce' ) .' :'
+                        ) .
                         '<span class="price-figure" data-price="' . $subtotal_price . '">' . wc_price( $subtotal_price ) . '</span></li>';
 
 
@@ -419,13 +430,20 @@
 						if ( ( $discount_arr['discount_amount'] ) ) {
 							$discount_amount = $discount_arr['discount_amount'];
 							$discount_desc   = $discount_arr['discount_desc'];
-							$content         .= '<li class="discount">' . rbfw_get_label( $rbfw, 'rbfw_text_discount', 'Discount:' ) .
-                                '<span>' . wc_price( $discount_amount ) . '</span></li>';
+                            $content .= '<li class="discount">' . (
+                                ( $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                                    ? esc_html( $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings' ) )
+                                    : esc_html__( 'Discount', 'booking-and-rental-manager-for-woocommerce' ) . ' :'
+                                ) . '<span>' . wc_price( $discount_amount ) . '</span></li>';
 
 						}
 					}
 					/* End Discount Calculations */
-					$content .= '<li class="total"><strong>' . rbfw_get_label( $rbfw, 'rbfw_text_total', 'Total:' ) . '</strong> 
+					$content .= '<li class="total"><strong>' . (
+                        ( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'Total', 'booking-and-rental-manager-for-woocommerce' )
+                        ) . '</strong> 
 <span class="price-figure" data-price="' . ( $total_price - $discount_amount + $security_deposit['security_deposit_amount'] ) . '">' . wc_price( $total_price - $discount_amount + $security_deposit['security_deposit_amount'] ) . ' ' . $tax_status . '</span></li>
                                 </ul>
                                 <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>

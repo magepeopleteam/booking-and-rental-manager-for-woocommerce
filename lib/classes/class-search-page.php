@@ -256,13 +256,33 @@
                         global $rbfw;
 
                         $show_result = $total_posts;
-                        $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_results', 'results' );
-                        $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_showings', 'Showing' );
+                        $show_result .= (
+                        ( $rbfw->get_option_trans( 'rbfw_text_results', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_results', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'results', 'booking-and-rental-manager-for-woocommerce' )
+                        );
+                        $show_result .= (
+                        ( $rbfw->get_option_trans( 'rbfw_text_showings', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_showings', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'Showing', 'booking-and-rental-manager-for-woocommerce' )
+                        );
                         $show_result .= $post_count;
-                        $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_of', 'of' );
+                        $show_result .= (
+                        ( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'of', 'booking-and-rental-manager-for-woocommerce' )
+                        );
                         $show_result .=  $total_posts ;
-                        $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_of', 'of' );
-                        $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_total', 'total' );
+                        $show_result .= (
+                        ( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'of', 'booking-and-rental-manager-for-woocommerce' )
+                        );
+                        $show_result .= (
+                        ( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings' ) )
+                            : esc_html__( 'total', 'booking-and-rental-manager-for-woocommerce' )
+                        );
 					}
 
 				$result = array(
@@ -277,7 +297,11 @@
 				$post_featured_img = ! empty( get_the_post_thumbnail_url( $post_id, 'full' ) ) ? get_the_post_thumbnail_url( $post_id,
 					'full' ) : RBFW_PLUGIN_URL . '/assets/images/no_image.png';
 				$post_link         = get_the_permalink();
-				$book_now_label    = rbfw_get_label( $rbfw, 'rbfw_text_book_now', 'Book Now' );
+				$book_now_label    = (
+                ( $rbfw->get_option_trans( 'rbfw_text_book_now', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                    ? esc_html( $rbfw->get_option_trans( 'rbfw_text_book_now', 'rbfw_basic_translation_settings' ) )
+                    : esc_html__( 'Book Now', 'booking-and-rental-manager-for-woocommerce' )
+                );
 				$rbfw_offday_range = get_post_meta( $post_id, 'rbfw_offday_range', true ) ? get_post_meta( $post_id, 'rbfw_offday_range', true ) : 'no';
 				$continue          = false;
 				if ( $rbfw_offday_range !== 'no' && ! empty( $pickup_date ) ) {
@@ -293,8 +317,12 @@
 						}
 					}
 				}
-				$hourly_rate_label       = rbfw_get_label( $rbfw, 'rbfw_text_hourly_rate', 'Hourly rate' );
-				$daily_rate_label        = rbfw_get_label( $rbfw, 'rbfw_text_daily_rate', 'Daily rate' );
+				$hourly_rate_label       = ($rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                    ? esc_html( $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings' ) )
+                    : esc_html__( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' );
+				$daily_rate_label        = ($rbfw->get_option_trans( 'rbfw_text_daily_rate', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                    ? esc_html( $rbfw->get_option_trans( 'rbfw_text_daily_rate', 'rbfw_basic_translation_settings' ) )
+                    : esc_html__( 'Daily rate', 'booking-and-rental-manager-for-woocommerce' );
 				$rbfw_enable_hourly_rate = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_rate',
 					true ) : 'no';
 				$rbfw_enable_daily_rate  = get_post_meta( $post_id, 'rbfw_enable_daily_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_daily_rate',
@@ -305,7 +333,9 @@
 				} else {
 					$the_price_label = $hourly_rate_label;
 				}
-				$prices_start_at = rbfw_get_label( $rbfw, 'rbfw_text_prices_start_at', 'Prices start at' );
+				$prices_start_at = ($rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+                    ? esc_html( $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings' ) )
+                    : esc_html__( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' );
 				$rbfw_rent_type  = get_post_meta( $post_id, 'rbfw_item_type', true );
 				if ( $rbfw_enable_hourly_rate == 'yes' ) {
 					$price     = get_post_meta( $post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_hourly_rate', true ) : 0;

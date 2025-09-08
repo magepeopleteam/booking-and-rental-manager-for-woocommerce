@@ -254,13 +254,33 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     global $rbfw;
 
     $show_result = '<span id="rbfw_total_post">'.$post_count.'</span> ';
-    $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_results', 'results' ).'. ';
-    $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_showings', 'Showing' ) .' ';
+    $show_result .= (
+        ( $rbfw->get_option_trans( 'rbfw_text_results', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_results', 'rbfw_basic_translation_settings' ) )
+            : esc_html__( 'results', 'booking-and-rental-manager-for-woocommerce' )
+        )  .'. ';
+    $show_result .= (
+        ( $rbfw->get_option_trans( 'rbfw_text_showings', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_showings', 'rbfw_basic_translation_settings' ) )
+            : esc_html__( 'Showing', 'booking-and-rental-manager-for-woocommerce' )
+        ).' ';
     $show_result .= '<span id="rbfw_total_post2">'.$post_count.'</span> ';
-    $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_of', 'of' ) .' ';
+    $show_result .= (
+        ( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) )
+            : esc_html__( 'of', 'booking-and-rental-manager-for-woocommerce' )
+        ) .' ';
     $show_result .=  $total_posts.' ' ;
-    $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_of', 'of' ).' ';
-    $show_result .= rbfw_get_label( $rbfw, 'rbfw_text_total', 'total' ).'.';
+    $show_result .= (
+        ( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) )
+            : esc_html__( 'of', 'booking-and-rental-manager-for-woocommerce' )
+        ) .' ';
+    $show_result .= (
+        ( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
+            ? esc_html( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings' ) )
+            : esc_html__( 'total', 'booking-and-rental-manager-for-woocommerce' )
+        ).'.';
 
 
     ?>

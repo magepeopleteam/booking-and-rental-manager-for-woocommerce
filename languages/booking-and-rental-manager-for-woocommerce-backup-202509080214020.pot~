@@ -7,7 +7,7 @@ msgstr ""
 "Appointment | Dress | Equipment - WpRently\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/theme/booking-and-rental-"
 "manager-for-woocommerce\n"
-"POT-Creation-Date: 2025-09-08 02:13+0000\n"
+"POT-Creation-Date: 2025-09-08 02:10+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2485,10 +2485,6 @@ msgstr ""
 #: templates/forms/multi-day-registration.php:674
 #: templates/forms/multi-items-registration.php:396
 msgid "Discount"
-msgstr ""
-
-#: functions.php:24
-msgid "Discount ff"
 msgstr ""
 
 #: inc/rbfw_order_meta.php:172
