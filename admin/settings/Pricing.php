@@ -435,9 +435,7 @@
                             </div>
                         </div>
 
-
-
-                            <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','md','mi' ); ?>
+                            <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','mi','mi' ); ?>
 
                         </div>
 
@@ -1682,6 +1680,10 @@
                                         <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][id]" value="<?php echo $i ?>">
                                         <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
                                         <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
+                                    <?php }elseif($type=='mi'){ ?>
+                                        <input type="hidden" name="rdfw_available_time_mi[<?php echo $i ?>][id]" value="<?php echo $i ?>">
+                                        <input type="hidden" name="rdfw_available_time_mi[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
+                                        <input type="hidden" name="rdfw_available_time_mi[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
                                     <?php }else{ ?>
                                         <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][id]" value="<?php echo $i ?>">
                                         <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
@@ -1936,10 +1938,14 @@
 
 
 
-                    if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others' || $rbfw_item_type=='multiple_items'){
+                    if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others'){
                         $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time'] ) ? $input_data_sabitized['rdfw_available_time'] : [];
                         $particulars_data           = isset( $_POST['rbfw_particulars'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars'] ) : [];
-                    }else{
+                    }elseif ($rbfw_item_type=='multiple_items'){
+                        $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time_mi'] ) ? $input_data_sabitized['rdfw_available_time_mi'] : [];
+                        $particulars_data           = isset( $_POST['rbfw_particulars_mi'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars_mi'] ) : [];
+                    }
+                    else{
                         $rdfw_available_time              = isset( $input_data_sabitized['rdfw_available_time_sd'] ) ? $input_data_sabitized['rdfw_available_time_sd'] : [];
                         $particulars_data           = isset( $_POST['rbfw_particulars_sd'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_particulars_sd'] ) : [];
                     }

@@ -249,7 +249,7 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                                                     <td><?php echo wp_kses_post(wc_price($daily_rate)); ?> / <?php esc_html_e('day', 'booking-and-rental-manager-for-woocommerce'); ?></td>
                                                 </tr>
                                             <?php } ?>
-                                            <?php if ($rbfw_enable_time_picker == 'yes') { ?>
+                                            <?php if ($rbfw_enable_time_picker == 'yes' && $enable_hourly_rate=='yes') { ?>
                                                 <tr>
                                                     <td><strong><?php esc_html_e('Hourly Rate', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
                                                     <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / <?php esc_html_e('hour', 'booking-and-rental-manager-for-woocommerce'); ?></td>
@@ -268,13 +268,13 @@ $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_a
                                             <table>
                                                 <tbody>
                                                 <tr>
-                                                    <td <?php echo ($rbfw_enable_time_picker == 'yes')?'colspan="2"':'' ?>>Over <strong><?php echo esc_html($item['rbfw_start_day']) ?></strong> Days </td>
+                                                    <td <?php echo ($rbfw_enable_time_picker == 'yes' &&  $enable_hourly_rate=='yes')?'colspan="2"':'' ?>>Over <strong><?php echo esc_html($item['rbfw_start_day']) ?></strong> Days </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
                                                         <strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><?php echo wc_price($item['rbfw_daily_price']) ?>
                                                     </td>
-                                                    <?php if($rbfw_enable_time_picker == 'yes'){ ?>
+                                                    <?php if($rbfw_enable_time_picker == 'yes'  && $enable_hourly_rate=='yes'){ ?>
                                                     <td>
                                                         <strong><?php esc_html_e( 'Hourly Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><?php echo wc_price($item['rbfw_hourly_price']) ?>
                                                     </td>
