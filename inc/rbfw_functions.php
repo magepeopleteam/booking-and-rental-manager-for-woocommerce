@@ -2765,7 +2765,11 @@ function rbfw_calculate_day_price($i, $post_id, $Book_dates_array, $day, $start_
             if ( $total_days == 1) {
                 $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
             } elseif ($i == $total_days - 1) {
-                if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
+                if($rbfw_hourly_threshold && $enable_hourly === 'yes'){
+                    if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
+                        $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
+                    }
+                }else{
                     $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
                 }
             } else {
@@ -2774,9 +2778,6 @@ function rbfw_calculate_day_price($i, $post_id, $Book_dates_array, $day, $start_
         } else {
             $price = rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours, $enable_daily, $total_days, $start_date, $end_date);
         }
-
-
-
 
     }
     // Case: Both enabled (hybrid)
