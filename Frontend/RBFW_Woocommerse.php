@@ -769,11 +769,15 @@ if (!class_exists('RBFW_Woocommerce')) {
                 if ( $rbfw_bikecarsd_service_price ) {
                     $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings', esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) ), wc_price( $rbfw_bikecarsd_service_price ) );
                 }
+                // Persist Processing Fee to show in admin order meta
+                if ( isset( $values['rbfw_processing_fee'] ) && $values['rbfw_processing_fee'] > 0 ) {
+                    $item->add_meta_data( esc_html__( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ), wc_price( $values['rbfw_processing_fee'] ) );
+                }
                 $security_deposit = rbfw_security_deposit( $rbfw_id, ( (int) $rbfw_bikecarsd_duration_price + (int) $rbfw_bikecarsd_service_price ) );
                 if ( $security_deposit['security_deposit_amount'] ) {
                     $item->add_meta_data( $rbfw_security_deposit_label, wc_price( $security_deposit['security_deposit_amount'] ) );
                 }
-                $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
+                $item->add_meta_data( '_rbfw_ticket_info', $rbfw_bikecarsd_ticket_info );
 
 
 
