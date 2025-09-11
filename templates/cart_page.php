@@ -268,6 +268,14 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
     $rbfw_bikecarsd_duration_price 	= $cart_item['rbfw_bikecarsd_duration_price'] ? $cart_item['rbfw_bikecarsd_duration_price'] : '';
     $rbfw_bikecarsd_service_price 	= $cart_item['rbfw_bikecarsd_service_price'] ? $cart_item['rbfw_bikecarsd_service_price'] : '';
+    // Fallback: compute processing fee if not present in cart item
+    $rbfw_processing_fee_total = isset($cart_item['rbfw_processing_fee']) ? $cart_item['rbfw_processing_fee'] : 0;
+    if ( empty( $rbfw_processing_fee_total ) ) {
+        if ( class_exists( 'RBFW_BikeCarSd_Function' ) ) {
+            $rbfw_bikecarsd_obj = new RBFW_BikeCarSd_Function();
+            $rbfw_processing_fee_total = $rbfw_bikecarsd_obj->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_processing_fee', $start_datetime );
+        }
+    }
 
     ?>
     <table class="rbfw_bikecarsd_cart_table rbfw_room_cart_table">
@@ -424,6 +432,18 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
                     :</th>
                 <td><?php echo wp_kses(wc_price($rbfw_bikecarsd_service_price),rbfw_allowed_html()); ?></td>
+            </tr>
+        <?php endif; ?>
+        <?php if ( ! empty( $cart_item['rbfw_processing_fee'] ) ): ?>
+            <tr>
+                <th><?php echo esc_html__( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ); ?>:</th>
+                <td><?php echo wp_kses( wc_price( $cart_item['rbfw_processing_fee'] ), rbfw_allowed_html() ); ?></td>
+            </tr>
+        <?php endif; ?>
+        <?php if ( empty( $cart_item['rbfw_processing_fee'] ) && ! empty( $rbfw_processing_fee_total ) ): ?>
+            <tr>
+                <th><?php echo esc_html__( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ); ?>:</th>
+                <td><?php echo wp_kses( wc_price( $rbfw_processing_fee_total ), rbfw_allowed_html() ); ?></td>
             </tr>
         <?php endif; ?>
         <?php if ( ! empty( $security_deposit_amount ) ): ?>

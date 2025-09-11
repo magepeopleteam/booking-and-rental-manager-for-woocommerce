@@ -398,6 +398,24 @@
 													echo ':'; ?></strong></td>
                                         <td><?php echo esc_html( $service_cost ); ?></td>
                                     </tr>
+                            <?php
+                            $processing_fee_display = '';
+                            if ( isset( $item_id ) ) {
+                                $processing_fee_display = wc_get_order_item_meta( $item_id, 'Processing Fee', true );
+                            }
+                            if ( empty( $processing_fee_display ) && class_exists( 'RBFW_BikeCarSd_Function' ) && ! empty( $rbfw_type_info ) ) {
+                                $bike_sd_fn = new RBFW_BikeCarSd_Function();
+                                $processing_fee_number = $bike_sd_fn->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_processing_fee', $rbfw_start_datetime );
+                                if ( $processing_fee_number ) {
+                                    $processing_fee_display = wc_price( $processing_fee_number );
+                                }
+                            }
+                            if ( ! empty( $processing_fee_display ) ) { ?>
+                                <tr>
+                                    <td><strong><?php echo esc_html__( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ); ?>:</strong></td>
+                                    <td><?php echo wp_kses_post( $processing_fee_display ); ?></td>
+                                </tr>
+                            <?php } ?>
 
 									<?php if ( ! empty( $discount_amount ) ) { ?>
                                         <tr>
@@ -703,6 +721,24 @@
 											echo ':'; ?></strong></td>
                                 <td><?php echo esc_html( $service_cost ); ?></td>
                             </tr>
+                            <?php
+                            $processing_fee_display = '';
+                            if ( isset( $item_id ) ) {
+                                $processing_fee_display = wc_get_order_item_meta( $item_id, 'Processing Fee', true );
+                            }
+                            if ( empty( $processing_fee_display ) && class_exists( 'RBFW_BikeCarSd_Function' ) && ! empty( $rbfw_type_info ) ) {
+                                $bike_sd_fn = new RBFW_BikeCarSd_Function();
+                                $processing_fee_number = $bike_sd_fn->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_processing_fee', $rbfw_start_datetime );
+                                if ( $processing_fee_number ) {
+                                    $processing_fee_display = wc_price( $processing_fee_number );
+                                }
+                            }
+                            if ( ! empty( $processing_fee_display ) ) { ?>
+                                <tr>
+                                    <td><strong><?php echo esc_html__( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ); ?>:</strong></td>
+                                    <td><?php echo wp_kses_post( $processing_fee_display ); ?></td>
+                                </tr>
+                            <?php } ?>
 
 							<?php if ( ! empty( $discount_amount ) ) { ?>
                                 <tr>
