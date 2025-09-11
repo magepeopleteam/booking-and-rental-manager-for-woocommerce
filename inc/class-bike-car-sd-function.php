@@ -528,14 +528,25 @@
                     }
                     $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
                     $processing_fee = isset($value['processing_fee']) ? (float) $value['processing_fee'] : 0;
+                    // Compute end date/time window for stock check
                     if ( $enable_specific_duration == 'on' ) {
-                        $d_type   = $value['start_time'];
-                        $duration = $value['end_time'];
+                        // When specific duration is enabled, start_time/end_time are explicit
+                        $computed_start_time = $value['start_time'];
+                        $computed_end_time   = $value['end_time'];
+                        $computed_end_date   = $start_date;
                     } else {
-                        $d_type   = $value['d_type'];
-                        $duration = $value['duration'];
+                        // Otherwise, derive end time based on d_type and duration from start
+                        $computed_start_time = $start_time ? $start_time : '00:00';
+                        $start_date_time     = new DateTime( $start_date . ' ' . $computed_start_time );
+                        $d_type              = $value['d_type'];
+                        $duration            = $value['duration'];
+                        $total_hours         = ( $d_type == 'Hours' ? (int)$duration : ( $d_type == 'Days' ? (int)$duration * 24 : (int)$duration * 24 * 7 ) );
+                        $end_dt              = clone $start_date_time;
+                        $end_dt->modify( "+$total_hours hours" );
+                        $computed_end_date   = $end_dt->format( 'Y-m-d' );
+                        $computed_end_time   = $end_dt->format( 'H:i:s' );
                     }
-                    $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration );
+                    $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $computed_start_time, $computed_end_date, $computed_end_time );
                     $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'processing_fee'=>$processing_fee,'stock'=>$rbfw_timely_available_quantity);
                 }
 
