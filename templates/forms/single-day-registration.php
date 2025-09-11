@@ -313,6 +313,7 @@
                 <input type="hidden" name="rbfw_start_time" id="rbfw_start_time">
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price" value="0">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price" value="0">
+                <input type="hidden" name="rbfw_processing_fee" id="rbfw_processing_fee" value="0">
 
                 <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">

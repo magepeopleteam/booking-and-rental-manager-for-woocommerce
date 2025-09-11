@@ -249,6 +249,7 @@
 						$extra_services = array();
 					endif;
 
+                    $processing_fee_total = 0;
                     foreach ( $rbfw_rent_data as $key => $value ){
                         $rent_type = $value['rent_type'];
                         if ( array_key_exists( $rent_type, $rbfw_bikecarsd_info ) ) {
@@ -261,6 +262,10 @@
                             }
                             $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
                             $rent_price += (float) $rbfw_bikecarsd_info[ $rent_type ] * (float) $type_price; // addup price
+                            
+                            // Add processing fee calculation
+                            $processing_fee = isset($value['processing_fee']) ? (float) $value['processing_fee'] : 0;
+                            $processing_fee_total += (float) $rbfw_bikecarsd_info[ $rent_type ] * $processing_fee;
                         }
                     }
 
@@ -291,7 +296,7 @@
 						$subtotal_price = (float) $total_rent_price + (float) $total_service_price;
 					endif;
 					if ( $subtotal_price > 0 ):
-						$total_price = (float) $subtotal_price;
+						$total_price = (float) $subtotal_price + (float) $processing_fee_total;
 					endif;
 
 					if ( $rbfw_request == 'rbfw_bikecarsd_total_price' ):
@@ -300,6 +305,8 @@
 						return $total_rent_price;
 					elseif ( $rbfw_request == 'rbfw_bikecarsd_service_price' ):
 						return $total_service_price;
+					elseif ( $rbfw_request == 'rbfw_bikecarsd_processing_fee' ):
+						return $processing_fee_total;
 					else:
 						return $total_price;
 					endif;
@@ -520,6 +527,7 @@
                         }
                     }
                     $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
+                    $processing_fee = isset($value['processing_fee']) ? (float) $value['processing_fee'] : 0;
                     if ( $enable_specific_duration == 'on' ) {
 						$d_type   = $value['start_time'];
 						$duration = $value['end_time'];
@@ -528,7 +536,7 @@
 						$duration = $value['duration'];
 					}
 					$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration );
-                    $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'stock'=>$rbfw_timely_available_quantity);
+                    $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'processing_fee'=>$processing_fee,'stock'=>$rbfw_timely_available_quantity);
 				}
 
                 $sd_extra_service_info = [];

@@ -128,13 +128,13 @@ if(isset($_POST['post_id'])){
                                                     <?php if($max_available_qty){ ?>
                                                         <?php if($rbfw_enable_extra_service_qty=='yes'){ ?>
                                                             <a class="rbfw_qty_minus rbfw_bikecarsd_qty_minus"><i class="fas fa-minus"></i></a>
-                                                            <input type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($type_price); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
+                                                            <input type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($type_price); ?>" data-processing-fee="<?php echo esc_attr(isset($value['processing_fee']) ? $value['processing_fee'] : '0'); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
                                                             <a class="rbfw_qty_plus rbfw_bikecarsd_qty_plus"><i class="fas fa-plus"></i></a>
                                                         <?php }else{ ?>
                                                             <label class="switch">
                                                                 <input type="checkbox" class="rbfw_bikecarsd_checkbox" data-quantity_fixed="checkbox">
                                                                 <span class="slider round"></span>
-                                                                <input style="display:none" type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($type_price); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
+                                                                <input style="display:none" type="number" min="0" max="<?php echo esc_attr($max_available_qty); ?>" value="0" name="rbfw_bikecarsd_info[<?php echo esc_attr($i) ?>][qty]" class="rbfw_bikecarsd_qty" data-price="<?php echo esc_attr($type_price); ?>" data-processing-fee="<?php echo esc_attr(isset($value['processing_fee']) ? $value['processing_fee'] : '0'); ?>" data-type="<?php echo esc_attr($value['rent_type']); ?>" data-cat="bikecarsd" />
                                                             </label>
                                                         <?php } ?>
                                                     <?php }else{ ?>
@@ -255,6 +255,11 @@ if(isset($_POST['post_id'])){
                                 <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                             </li>
                         <?php } ?>
+                        <li class="processing_fee" style="display:none;">
+                            <?php echo esc_html__( 'Processing Fee','booking-and-rental-manager-for-woocommerce' ); ?>
+                            <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                        </li>
+
                         <li class="subtotal">
                             <?php echo esc_html__( 'Subtotal','booking-and-rental-manager-for-woocommerce' ); ?>
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>

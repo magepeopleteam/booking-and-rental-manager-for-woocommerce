@@ -177,14 +177,17 @@
 
         function updateTotalSdTypeCheckbox() {
             let total = 0;
+            let processingFeeTotal = 0;
             let hasQty = false;
             jQuery(".rbfw_bikecarsd_checkbox").each(function() {
                 let checkbox = jQuery(this);
                 let qtyInput = checkbox.closest("label").find(".rbfw_bikecarsd_qty");
                 let price = parseFloat(qtyInput.data("price")) || 0;
+                let processingFee = parseFloat(qtyInput.data("processing-fee")) || 0;
                 let qty = parseInt(qtyInput.val()) || 0;
                 if (checkbox.is(":checked")) {
                     total += price * qty;
+                    processingFeeTotal += processingFee * qty;
                     if (qty > 0) {
                         hasQty = true; // mark that we found one
                     }
@@ -202,6 +205,7 @@
             }
 
             jQuery("#rbfw_service_price").val(total.toFixed(2));
+            jQuery("#rbfw_processing_fee").val(processingFeeTotal.toFixed(2));
             rbfw_price_calculation_sd();
         }
 
@@ -401,12 +405,15 @@
 
 function calculateTotal() {  
     let total = 0;
+    let processingFeeTotal = 0;
     let hasQty = false;
     // Loop through each qty input
     jQuery(".rbfw_bikecarsd_qty").each(function() {
         let qty = parseInt(jQuery(this).val()) || 0;
         let price = parseFloat(jQuery(this).data("price")) || 0;
+        let processingFee = parseFloat(jQuery(this).data("processing-fee")) || 0;
         total += qty * price;
+        processingFeeTotal += qty * processingFee;
         if (qty > 0) {
             hasQty = true; // mark that we found one
         }
@@ -422,6 +429,7 @@ function calculateTotal() {
     }
     // Display total somewhere (create #total_price element if needed)
     jQuery("#rbfw_service_price").val(total.toFixed(2));
+    jQuery("#rbfw_processing_fee").val(processingFeeTotal.toFixed(2));
     rbfw_price_calculation_sd();
 }
 
@@ -429,10 +437,19 @@ function calculateTotal() {
 function rbfw_price_calculation_sd(){
     let rbfw_service_price = parseInt(jQuery('#rbfw_service_price').val());
     var rbfw_es_service_price = parseInt(jQuery('#rbfw_es_service_price').val());
+    var rbfw_processing_fee = parseInt(jQuery('#rbfw_processing_fee').val()) || 0;
     var sub_total_price = rbfw_service_price + rbfw_es_service_price;
 
     jQuery('.duration-costing span').text(rbfw_translation.currency + rbfw_service_price.toFixed(2));
     jQuery('.extra_service_cost span').text(rbfw_translation.currency + rbfw_es_service_price.toFixed(2));
+    
+    // Show/hide processing fee
+    if(rbfw_processing_fee > 0){
+        jQuery('.processing_fee').show();
+        jQuery('.processing_fee span').text(rbfw_translation.currency + rbfw_processing_fee.toFixed(2));
+    } else {
+        jQuery('.processing_fee').hide();
+    }
 
 
     let rbfw_security_deposit_actual_amount = 0;
@@ -445,14 +462,13 @@ function rbfw_price_calculation_sd(){
         }
     }
 
-    var total_price = sub_total_price + parseFloat(rbfw_security_deposit_actual_amount);
+    var total_price = sub_total_price + parseFloat(rbfw_security_deposit_actual_amount) + rbfw_processing_fee;
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
         jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
     }
 
-
-    jQuery('.subtotal span').text(rbfw_translation.currency + total_price.toFixed(2));
+    jQuery('.subtotal span').text(rbfw_translation.currency + (sub_total_price + rbfw_processing_fee).toFixed(2));
     jQuery('.total span').text(rbfw_translation.currency + total_price.toFixed(2));
 }
 
@@ -509,6 +525,7 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
                 if (service_info[type]) {
                     // Update attributes
                     $el.attr('data-price', service_info[type].price);
+                    $el.attr('data-processing-fee', service_info[type].processing_fee || 0);
                     $el.attr('data-available_quantity', service_info[type].stock);
                     // (Optional) Update displayed price text
                     $el.find('.price').text(rbfw_translation.currency + service_info[type].price);
