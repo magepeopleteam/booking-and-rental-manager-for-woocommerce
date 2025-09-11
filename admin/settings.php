@@ -152,6 +152,18 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                 )
             ),
 
+            array(
+                'name' => 'rbfw_share_section_enable',
+                'label' => esc_html__( 'Enable Share Section', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( "If you want to display the social media share section on rental item pages, then enable it.", 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'yes',
+                'options' => array(
+                    'yes' => 'Yes',
+                    'no'  => 'No'
+                )
+            ),
+
 
 
 		),
