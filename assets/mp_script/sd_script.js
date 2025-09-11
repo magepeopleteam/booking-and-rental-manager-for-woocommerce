@@ -157,7 +157,9 @@
             jQuery('#rbfw_service_price').val(rbfw_service_price);
             
             var processing_fee = jQuery(this).data('processing-fee') || 0;
-            jQuery('#rbfw_processing_fee').val(processing_fee);
+            var quantity = jQuery('#rbfw_item_quantity').val() || 1;
+            var total_processing_fee = processing_fee * quantity;
+            jQuery('#rbfw_processing_fee').val(total_processing_fee);
 
             jQuery('#rbfw_service_type_for_st').val(service_type);
 
@@ -180,7 +182,9 @@
             var selected_duration = jQuery('.single-type-timely.selected');
             if(selected_duration.length > 0) {
                 var processing_fee = selected_duration.data('processing-fee') || 0;
-                jQuery('#rbfw_processing_fee').val(processing_fee);
+                var quantity = jQuery('#rbfw_item_quantity').val() || 1;
+                var total_processing_fee = processing_fee * quantity;
+                jQuery('#rbfw_processing_fee').val(total_processing_fee);
             }
             
             rbfw_price_calculation_sd();

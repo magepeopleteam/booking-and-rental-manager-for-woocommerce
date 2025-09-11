@@ -262,6 +262,12 @@
                                                 <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
                                             </span>
                                         </li>
+                                        <li class="processing_fee" style="display:none;">
+                                            <?php esc_html_e('Processing Fee','booking-and-rental-manager-for-woocommerce'); ?>
+                                            <span>
+                                                <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
+                                            </span>
+                                        </li>
                                         <li class="security_deposit" style="display:none;">
                                             <?php echo esc_html((!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : __('Security Deposit','booking-and-rental-manager-for-woocommerce'))); ?>
                                             <span></span>
