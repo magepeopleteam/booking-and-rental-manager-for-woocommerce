@@ -393,6 +393,14 @@
 // Post Share meta function
 	add_action( 'rbfw_product_meta', 'rbfw_post_share_meta' );
 	function rbfw_post_share_meta( $post_id ) {
+		// Check if share section is enabled in settings
+		$share_section_enabled = rbfw_get_option('rbfw_share_section_enable', 'rbfw_basic_gen_settings', 'yes');
+		
+		// If share section is disabled, don't display it
+		if ( $share_section_enabled !== 'yes' ) {
+			return;
+		}
+		
 		// Get current post URL
 		$rbfwURL = urlencode( get_permalink() );
 		// Get current post title
