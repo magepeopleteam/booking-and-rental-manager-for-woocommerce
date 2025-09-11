@@ -779,8 +779,11 @@ if (!class_exists('RBFW_Woocommerce')) {
                 if ( $security_deposit['security_deposit_amount'] ) {
                     $item->add_meta_data( $rbfw_security_deposit_label, wc_price( $security_deposit['security_deposit_amount'] ) );
                 }
-                $item->add_meta_data( '_rbfw_ticket_info', $rbfw_bikecarsd_ticket_info );
-                $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
+                if ( isset( $rbfw_bikecarsd_ticket_info ) ) {
+                    $item->add_meta_data( '_rbfw_ticket_info', $rbfw_bikecarsd_ticket_info );
+                } elseif ( isset( $rbfw_ticket_info ) ) {
+                    $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
+                }
 
 
 
