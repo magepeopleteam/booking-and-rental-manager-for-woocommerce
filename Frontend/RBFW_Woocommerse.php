@@ -38,6 +38,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                 return;
             }
             $sd_input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
+            // Capture processing fee from submission (set by JS)
+            $rbfw_processing_fee = isset( $sd_input_data_sabitized['rbfw_processing_fee'] ) ? (float) $sd_input_data_sabitized['rbfw_processing_fee'] : 0;
             $rbfw_rent_type     = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 
             $rbfw_item_quantity = isset( $sd_input_data_sabitized['rbfw_item_quantity'] ) ? intval( $sd_input_data_sabitized['rbfw_item_quantity'] ) : 1;
@@ -65,6 +67,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_regf_info = $ClassRegForm->rbfw_regf_value_array_function( $rbfw_id );
             }
             $cart_item_data['rbfw_id'] = $rbfw_id;
+            // persist processing fee for later order item meta
+            $cart_item_data['rbfw_processing_fee'] = $rbfw_processing_fee;
             if ( $rbfw_rent_type == 'resort' ) {
                 global $rbfw;
                 $rbfw_resort              = new RBFW_Resort_Function();
@@ -778,7 +782,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $item->add_meta_data( $rbfw_security_deposit_label, wc_price( $security_deposit['security_deposit_amount'] ) );
                 }
                 $item->add_meta_data( '_rbfw_ticket_info', $rbfw_bikecarsd_ticket_info );
-
+                $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
 
 
 
