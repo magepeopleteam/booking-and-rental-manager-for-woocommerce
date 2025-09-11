@@ -17,8 +17,6 @@ if (!class_exists('RBFW_Woocommerce')) {
             add_action( 'woocommerce_before_thankyou', array($this ,  'rbfw_booking_management') );
             //add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management' );
             add_action( 'rbfw_wc_order_status_change', array($this ,  'rbfw_change_user_order_status_on_order_status_change'), 10, 3 );
-            // Show Processing Fee under each line item on thank-you/emails
-            add_action( 'woocommerce_order_item_meta_end', array( $this, 'rbfw_output_processing_fee_meta' ), 10, 4 );
         }
         public function rbfw_add_info_to_cart_item( $cart_item_data, $product_id, $variation_id ) {
             global $rbfw;
@@ -775,7 +773,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
                 // Persist Processing Fee to show in admin order meta
                 if ( isset( $values['rbfw_processing_fee'] ) && $values['rbfw_processing_fee'] > 0 ) {
-                    $item->add_meta_data( esc_html__( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ), wc_price( $values['rbfw_processing_fee'] ) );
+                    $item->add_meta_data( esc_html__( 'Processing Feesssss', 'booking-and-rental-manager-for-woocommerce' ), wc_price( $values['rbfw_processing_fee'] ) );
                 }
                 $security_deposit = rbfw_security_deposit( $rbfw_id, ( (int) $rbfw_bikecarsd_duration_price + (int) $rbfw_bikecarsd_service_price ) );
                 if ( $security_deposit['security_deposit_amount'] ) {
