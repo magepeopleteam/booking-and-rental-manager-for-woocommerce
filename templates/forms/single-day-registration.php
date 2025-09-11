@@ -308,9 +308,14 @@
                 <?php wp_nonce_field('rbfw_ajax_action', 'nonce'); ?>
 
                 <input type="hidden" name="rbfw_time_slot_switch" id="rbfw_time_slot_switch" value="<?php echo esc_attr($rbfw_enable_time_picker); ?>">
-                <input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
+
                 <input type="hidden" name="enable_specific_duration" id="enable_specific_duration" value="<?php echo esc_attr($enable_specific_duration); ?>">
+
+                <input type="hidden" name="rbfw_bikecarsd_selected_date" id="rbfw_bikecarsd_selected_date">
                 <input type="hidden" name="rbfw_start_time" id="rbfw_start_time">
+                <input type="hidden" name="rbfw_end_date" id="rbfw_end_date">
+                <input type="hidden" name="rbfw_end_time" id="rbfw_end_time">
+
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price" value="0">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price" value="0">
 

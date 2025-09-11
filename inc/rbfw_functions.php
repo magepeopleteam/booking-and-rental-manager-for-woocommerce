@@ -1166,24 +1166,11 @@
 
 		return $remaining_stock;
 	}
-	function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration = '' ) {
+	function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $end_date, $end_time ) {
 		if ( empty( $post_id ) ) {
 			return;
 		}
-		if ( $enable_specific_duration == 'on' ) {
-			$start_time = $d_type;
-		}
-		$start_date_time   = new DateTime( $start_date . ' ' . $start_time );
-		$for_end_date_time = $start_date_time;
-		if ( $enable_specific_duration == 'on' ) {
-			$end_date = $start_date;
-			$end_time = $duration;
-		} else {
-			$total_hours = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? (int)$duration * 24 : (int)$duration * 24 * 7 ) );
-			$for_end_date_time->modify( "+$total_hours hours" );
-			$end_date = $for_end_date_time->format( 'Y-m-d' );
-			$end_time = $for_end_date_time->format( 'H:i:s' );
-		}
+
 		$end_date_time   = new DateTime( $end_date . ' ' . $end_time );
 		$start_date_time = new DateTime( $start_date . ' ' . $start_time ); // Original date and time
 		$rbfw_inventory  = get_post_meta( $post_id, 'rbfw_inventory', true );
@@ -2410,9 +2397,19 @@
             $rbfw_bike_car_sd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : [];
             foreach ( $rbfw_bike_car_sd_data as $value ) {
                 if(isset($value['rent_type']) && $value['rent_type']){
-                    $d_type                         = $value['d_type'];
-                    $duration                       = $value['duration'];
-                    $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $rbfw_id, $start_date, $start_time, $d_type, $duration );
+
+
+                    $start_date_time   = new DateTime( $start_date . ' ' . $start_time );
+                    $for_end_date_time = $start_date_time;
+                    $d_type   = $value['d_type'];
+                    $duration = $value['duration'];
+                    $total_hours = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? (int)$duration * 24 : (int)$duration * 24 * 7 ) );
+                    $for_end_date_time->modify( "+$total_hours hours" );
+                    $end_date = $for_end_date_time->format( 'Y-m-d' );
+                    $end_time = $for_end_date_time->format( 'H:i:s' );
+
+
+                    $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $rbfw_id, $start_date, $start_time, $end_date, $end_time );
                     if ( $rbfw_timely_available_quantity > 0 ) {
                         return;
                     }
