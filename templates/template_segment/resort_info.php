@@ -3,18 +3,8 @@ global $rbfw;
 
 check_ajax_referer( 'rbfw_check_resort_availibility_action', 'nonce' );
 
-if ( !($post_id && $active_tab) ) {
-    $post_id = isset($_POST['post_id']) ? sanitize_text_field(wp_unslash($_POST['post_id'])) : '';
-    $checkin_date = isset($_POST['checkin_date']) ? sanitize_text_field(wp_unslash($_POST['checkin_date'])) : '';
-    $checkout_date = isset($_POST['checkout_date']) ? sanitize_text_field(wp_unslash($_POST['checkout_date'])) : '';
-}
 if(isset($post_id) && isset($active_tab)){
 
-
-    $origin             = date_create($checkin_date);
-    $target             = date_create($checkout_date);
-    $interval           = date_diff($origin, $target);
-    $total_days         = $interval->format('%a');
 
     $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
 
@@ -83,7 +73,7 @@ if(isset($post_id) && isset($active_tab)){
 
 
                 if($value['rbfw_room_available_qty'] > 0) {
-                    $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $checkin_date, $checkout_date, $value['room_type'], '', '');
+                    $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $value['room_type'], '', '');
                     $max_available_qty = $max_available_qty['remaining_stock'];
                 }
 
@@ -133,7 +123,7 @@ if(isset($post_id) && isset($active_tab)){
 
                             <td>
                                 <?php
-                                $book_dates = getAllDates( $checkin_date, $checkout_date );
+                                $book_dates = getAllDates( $start_date, $end_date );
                                 $total_room_price =0;
                                 for($d = 0; $d < $total_days; $d++) {
                                     if (($sp_price = check_seasonal_price_resort($book_dates[$d], $rbfw_resort_data_sp, $value['room_type'], $active_tab)) != 'not_found') {
@@ -145,7 +135,7 @@ if(isset($post_id) && isset($active_tab)){
                                 $room_price = $total_room_price/$total_days;
                                 ?>
                                 <p><?php esc_html_e('Avg price','booking-and-rental-manager-for-woocommerce'); ?>: <?php echo wp_kses(wc_price($total_room_price/$total_days) , rbfw_allowed_html()); ?></p>
-                                <a class="rbfw_see_resort_datewise_price" data-checkin_date="<?php echo esc_attr($checkin_date) ?>" data-checkout_date="<?php echo esc_attr($checkout_date) ?>" data-total_days="<?php echo esc_attr($total_days) ?>" data-price="<?php echo esc_attr($price) ?>" data-post_id="<?php echo esc_attr( $post_id ); ?>" data-room_type="<?php echo esc_attr($value['room_type']) ?>" data-active_tab="<?php echo esc_attr($active_tab) ?>" href="#">
+                                <a class="rbfw_see_resort_datewise_price" data-checkin_date="<?php echo esc_attr($start_date) ?>" data-checkout_date="<?php echo esc_attr($end_date) ?>" data-total_days="<?php echo esc_attr($total_days) ?>" data-price="<?php echo esc_attr($price) ?>" data-post_id="<?php echo esc_attr( $post_id ); ?>" data-room_type="<?php echo esc_attr($value['room_type']) ?>" data-active_tab="<?php echo esc_attr($active_tab) ?>" href="#">
                                     <?php esc_html_e('See Details','booking-and-rental-manager-for-woocommerce'); ?>
                                 </a>
                             </td>
@@ -202,7 +192,7 @@ if(isset($post_id) && isset($active_tab)){
 
                     $c = 0;
                     foreach ($rbfw_extra_service_data as $key => $value) {
-                        $max_es_available_qty = rbfw_get_multiple_date_es_available_qty($post_id, $checkin_date, $checkout_date, $value['service_name']);
+                        $max_es_available_qty = rbfw_get_multiple_date_es_available_qty($post_id, $start_date, $end_date, $value['service_name']);
                         $img_url = isset($value['service_img'])?wp_get_attachment_url($value['service_img']):'';
                         $uniq_id = wp_rand();
                         if ($img_url) {

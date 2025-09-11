@@ -91,6 +91,8 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $rbfw_room_service_price  = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_service_price' );
                 $rbfw_room_total_price    = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_total_price' );
+
+
                 $origin                   = date_create( $rbfw_checkin_datetime );
                 $target                   = date_create( $rbfw_checkout_datetime );
                 $interval                 = date_diff( $origin, $target );
@@ -114,6 +116,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $discount_amount       = $discount_arr['discount_amount'];
                 }
                 $rbfw_resort_ticket_info                    = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price );
+
+
+                echo $rbfw_room_total_price;exit;
+
 
                 $base_price                                 = $rbfw_room_total_price;
                 $total_price                                = apply_filters( 'rbfw_cart_base_price', $base_price );
@@ -146,8 +152,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_bikecarsd_selected_date = isset( $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] ) ? $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] : '';
                 $bikecarsd_selected_date      = isset( $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] ) ? $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] : '';
                 $rbfw_bikecarsd_selected_time = isset( $sd_input_data_sabitized['rbfw_start_time'] ) ? $sd_input_data_sabitized['rbfw_start_time'] : '';
-                $end_date = isset( $_POST['end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['end_date'] ) ) : '';
-                $end_time = isset( $_POST['end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['end_time'] ) ) : '';
+                $end_date = isset( $_POST['rbfw_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_end_date'] ) ) : '';
+                $end_time = isset( $_POST['rbfw_end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_end_time'] ) ) : '';
                 if ( ! ( $end_date && $end_time ) ) {
                     $end_date = $bikecarsd_selected_date;
                 }

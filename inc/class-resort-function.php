@@ -12,8 +12,8 @@
 			public function __construct() {
 				add_action( 'wp_ajax_rbfw_check_resort_availibility', array( $this, 'rbfw_check_resort_availibility' ) );
 				add_action( 'wp_ajax_nopriv_rbfw_check_resort_availibility', array( $this, 'rbfw_check_resort_availibility' ) );
-				add_action( 'wp_ajax_rbfw_get_active_price_table', array( $this, 'rbfw_get_active_price_table' ) );
-				add_action( 'wp_ajax_nopriv_rbfw_get_active_price_table', array( $this, 'rbfw_get_active_price_table' ) );
+				/*add_action( 'wp_ajax_rbfw_get_active_price_table', array( $this, 'rbfw_get_active_price_table' ) );
+				add_action( 'wp_ajax_nopriv_rbfw_get_active_price_table', array( $this, 'rbfw_get_active_price_table' ) );*/
 				add_action( 'wp_ajax_rbfw_room_price_calculation', array( $this, 'rbfw_room_price_calculation' ) );
 				add_action( 'wp_ajax_nopriv_rbfw_room_price_calculation', array( $this, 'rbfw_room_price_calculation' ) );
 
@@ -305,7 +305,8 @@
 				$interval   = date_diff( $origin, $target );
 				$total_days = $interval->format( '%a' );
 
-				if ( $total_days ) {
+
+				if ($total_days ) {
                     $active_tab = 'daynight';
 				} else {
                     $active_tab = 'daylong';
