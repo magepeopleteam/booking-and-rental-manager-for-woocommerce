@@ -773,7 +773,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
                 // Persist Processing Fee to show in admin order meta
                 if ( isset( $values['rbfw_processing_fee'] ) && $values['rbfw_processing_fee'] > 0 ) {
-                    $item->add_meta_data( esc_html__( 'Processing Feesssss', 'booking-and-rental-manager-for-woocommerce' ), wc_price( $values['rbfw_processing_fee'] ) );
+                    $item->add_meta_data( esc_html__( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ), wc_price( $values['rbfw_processing_fee'] ) );
                 }
                 $security_deposit = rbfw_security_deposit( $rbfw_id, ( (int) $rbfw_bikecarsd_duration_price + (int) $rbfw_bikecarsd_service_price ) );
                 if ( $security_deposit['security_deposit_amount'] ) {
