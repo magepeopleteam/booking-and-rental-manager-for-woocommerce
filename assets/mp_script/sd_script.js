@@ -155,6 +155,9 @@
             jQuery(".rbfw_extra_service_sd").show();
             var rbfw_service_price = jQuery('#rbfw_item_quantity').val() * service_price;
             jQuery('#rbfw_service_price').val(rbfw_service_price);
+            
+            var processing_fee = jQuery(this).data('processing-fee') || 0;
+            jQuery('#rbfw_processing_fee').val(processing_fee);
 
             jQuery('#rbfw_service_type_for_st').val(service_type);
 
@@ -172,6 +175,14 @@
         jQuery('body').on('change','#rbfw_item_quantity',function (e) {
             var rbfw_service_price = jQuery('#rbfw_item_quantity').val() * jQuery(".rbfw_sd_price_input").val();
             jQuery('#rbfw_service_price').val(rbfw_service_price);
+            
+            // Update processing fee based on selected duration and quantity
+            var selected_duration = jQuery('.single-type-timely.selected');
+            if(selected_duration.length > 0) {
+                var processing_fee = selected_duration.data('processing-fee') || 0;
+                jQuery('#rbfw_processing_fee').val(processing_fee);
+            }
+            
             rbfw_price_calculation_sd();
         });
 
