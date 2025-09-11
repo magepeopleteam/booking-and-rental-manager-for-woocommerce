@@ -529,15 +529,15 @@
                     $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
                     $processing_fee = isset($value['processing_fee']) ? (float) $value['processing_fee'] : 0;
                     if ( $enable_specific_duration == 'on' ) {
-						$d_type   = $value['start_time'];
-						$duration = $value['end_time'];
-					} else {
-						$d_type   = $value['d_type'];
-						$duration = $value['duration'];
-					}
-					$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration );
+                        $d_type   = $value['start_time'];
+                        $duration = $value['end_time'];
+                    } else {
+                        $d_type   = $value['d_type'];
+                        $duration = $value['duration'];
+                    }
+                    $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration );
                     $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'processing_fee'=>$processing_fee,'stock'=>$rbfw_timely_available_quantity);
-				}
+                }
 
                 $sd_extra_service_info = [];
 
@@ -549,6 +549,9 @@
                         $sd_extra_service_info[$value['service_name']] = array($max_es_available_qty);
                     }
                 }
+
+
+
                 echo wp_json_encode(array('service_info'=>$sd_service_info,'extra_service_info'=>$sd_extra_service_info));
                 wp_die();
 			}
