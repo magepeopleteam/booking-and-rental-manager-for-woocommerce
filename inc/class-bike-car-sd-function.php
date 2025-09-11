@@ -520,14 +520,38 @@
                         }
                     }
                     $type_price = (isset($sp_price) and $sp_price)?$sp_price:$value['price'];
-                    if ( $enable_specific_duration == 'on' ) {
+
+
+                    /*if ( $enable_specific_duration == 'on' ) {
 						$d_type   = $value['start_time'];
 						$duration = $value['end_time'];
 					} else {
 						$d_type   = $value['d_type'];
 						$duration = $value['duration'];
-					}
-					$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $d_type, $duration, $enable_specific_duration );
+					}*/
+
+
+
+
+                    if ( $enable_specific_duration == 'on' ) {
+                        $start_time = $value['start_time'];
+                        $end_time = $value['end_time'];
+                    } else {
+                        $start_date_time   = new DateTime( $start_date . ' ' . $start_time );
+                        $for_end_date_time = $start_date_time;
+                        $d_type   = $value['d_type'];
+                        $duration = $value['duration'];
+                        $total_hours = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? (int)$duration * 24 : (int)$duration * 24 * 7 ) );
+                        $for_end_date_time->modify( "+$total_hours hours" );
+                        $end_date = $for_end_date_time->format( 'Y-m-d' );
+                        $end_time = $for_end_date_time->format( 'H:i:s' );
+                    }
+
+
+
+
+
+					$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $end_date, $end_time );
                     $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'stock'=>$rbfw_timely_available_quantity);
 				}
 
@@ -541,6 +565,9 @@
                         $sd_extra_service_info[$value['service_name']] = array($max_es_available_qty);
                     }
                 }
+
+
+
                 echo wp_json_encode(array('service_info'=>$sd_service_info,'extra_service_info'=>$sd_extra_service_info));
                 wp_die();
 			}

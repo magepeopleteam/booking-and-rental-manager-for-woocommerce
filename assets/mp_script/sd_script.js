@@ -136,10 +136,39 @@
 
             if(enable_specific_duration=='on'){
                 var start_time = jQuery(this).data('start_time');
+                var end_time = jQuery(this).data('end_time');
                 jQuery('#rbfw_start_time').val(start_time);
+                jQuery('#rbfw_end_date').val(start_date);
+                jQuery('#rbfw_end_time').val(end_time);
+            }else{
+                var duration = jQuery(this).data('duration');
+                var duration_type = jQuery(this).data('d_type');
+
+                let start_time = jQuery(this).data('start_time');
+                jQuery('#rbfw_start_time').val(start_time);
+
+                // Combine start_date + start_time into a Date object
+                let startDateTime = new Date(start_date + ' ' + start_time);
+
+                // Add duration
+                if(duration_type === 'Hours'){
+                    startDateTime.setHours(startDateTime.getHours() + duration);
+                } else if(duration_type === 'Days'){
+                    startDateTime.setDate(startDateTime.getDate() + duration);
+                } else if(duration_type === 'Weeks'){
+                    startDateTime.setDate(startDateTime.getDate() + (duration * 7));
+                }
+
+                // Extract back into date & time
+                let endDate = startDateTime.toISOString().split('T')[0]; // YYYY-MM-DD
+                let endTime = startDateTime.toTimeString().split(' ')[0].slice(0,5); // HH:MM
+
+                jQuery('#rbfw_end_date').val(endDate);
+                jQuery('#rbfw_end_time').val(endTime);
+
             }
 
-            var end_time = jQuery(this).data('end_time');
+
             let available_quantity = jQuery(this).data('available_quantity');
             let service_type = jQuery(this).data('text');
             let service_price = jQuery(this).data('price');
