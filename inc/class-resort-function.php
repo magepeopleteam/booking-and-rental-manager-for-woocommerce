@@ -295,22 +295,7 @@
 
 			public function rbfw_check_resort_availibility() {
 
-                check_ajax_referer( 'rbfw_check_resort_availibility_action', 'nonce' );
 
-				$start_date = isset( $_POST['checkin_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkin_date'] ) ) : '';
-				$end_date   = isset( $_POST['checkout_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkout_date'] ) ) : '';
-				$post_id    = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
-				$origin     = date_create( $start_date );
-				$target     = date_create( $end_date );
-				$interval   = date_diff( $origin, $target );
-				$total_days = $interval->format( '%a' );
-
-
-				if ($total_days ) {
-                    $active_tab = 'daynight';
-				} else {
-                    $active_tab = 'daylong';
-				}
                 include( RBFW_Function::get_template_path( 'template_segment/resort_info.php' ) );
                 wp_die();
 			}

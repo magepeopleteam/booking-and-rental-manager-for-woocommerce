@@ -3,21 +3,28 @@ global $rbfw;
 
 check_ajax_referer( 'rbfw_check_resort_availibility_action', 'nonce' );
 
+$start_date = isset( $_POST['checkin_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkin_date'] ) ) : '';
+$end_date   = isset( $_POST['checkout_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkout_date'] ) ) : '';
+$post_id    = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
+$origin     = date_create( $start_date );
+$target     = date_create( $end_date );
+$interval   = date_diff( $origin, $target );
+$total_days = $interval->format( '%a' );
+
+
+if ($total_days ) {
+    $active_tab = 'daynight';
+} else {
+    $active_tab = 'daylong';
+}
+
 if(isset($post_id) && isset($active_tab)){
 
-
     $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
-
-
     if ($rbfw_count_extra_day_enable == 'on' || $total_days==0) {
         $total_days = $total_days + 1;
     }
-
     $rbfw_resort_room_data = get_post_meta( $post_id, 'rbfw_resort_room_data', true ) ? get_post_meta( $post_id, 'rbfw_resort_room_data', true ) : [];
-
-
-
-
     $rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
     $rbfw_product_id = get_post_meta( $post_id, "link_wc_product", true ) ? get_post_meta( $post_id, "link_wc_product", true ) : $post_id;
 
@@ -75,6 +82,7 @@ if(isset($post_id) && isset($active_tab)){
                 if($value['rbfw_room_available_qty'] > 0) {
                     $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $value['room_type'], '', '');
                     $max_available_qty = $max_available_qty['remaining_stock'];
+                    $max_available_qty = ($max_available_qty < 0) ? 0 : $max_available_qty;
                 }
 
                 ?>
