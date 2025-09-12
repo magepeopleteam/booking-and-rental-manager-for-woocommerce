@@ -82,6 +82,7 @@ if(isset($post_id) && isset($active_tab)){
                 if($value['rbfw_room_available_qty'] > 0) {
                     $max_available_qty = rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, $value['room_type'], '', '');
                     $max_available_qty = $max_available_qty['remaining_stock'];
+                    $max_available_qty = ($max_available_qty < 0) ? 0 : $max_available_qty;
                 }
 
                 ?>
