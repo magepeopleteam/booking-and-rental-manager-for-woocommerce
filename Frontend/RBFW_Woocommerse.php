@@ -36,6 +36,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                 return;
             }
             $sd_input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
+            // Capture processing fee from submission (set by JS)
+            $rbfw_processing_fee = isset( $sd_input_data_sabitized['rbfw_processing_fee'] ) ? (float) $sd_input_data_sabitized['rbfw_processing_fee'] : 0;
             $rbfw_rent_type     = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 
             $rbfw_item_quantity = isset( $sd_input_data_sabitized['rbfw_item_quantity'] ) ? intval( $sd_input_data_sabitized['rbfw_item_quantity'] ) : 1;
@@ -63,6 +65,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_regf_info = $ClassRegForm->rbfw_regf_value_array_function( $rbfw_id );
             }
             $cart_item_data['rbfw_id'] = $rbfw_id;
+            // persist processing fee for later order item meta
+            $cart_item_data['rbfw_processing_fee'] = $rbfw_processing_fee;
             if ( $rbfw_rent_type == 'resort' ) {
                 global $rbfw;
                 $rbfw_resort              = new RBFW_Resort_Function();
@@ -767,12 +771,19 @@ if (!class_exists('RBFW_Woocommerce')) {
                 if ( $rbfw_bikecarsd_service_price ) {
                     $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings', esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) ), wc_price( $rbfw_bikecarsd_service_price ) );
                 }
+                // Persist Processing Fee to show in admin order meta
+                if ( isset( $values['rbfw_processing_fee'] ) && $values['rbfw_processing_fee'] > 0 ) {
+                    $item->add_meta_data( esc_html__( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ), wc_price( $values['rbfw_processing_fee'] ) );
+                }
                 $security_deposit = rbfw_security_deposit( $rbfw_id, ( (int) $rbfw_bikecarsd_duration_price + (int) $rbfw_bikecarsd_service_price ) );
                 if ( $security_deposit['security_deposit_amount'] ) {
                     $item->add_meta_data( $rbfw_security_deposit_label, wc_price( $security_deposit['security_deposit_amount'] ) );
                 }
-                $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
-
+                if ( isset( $rbfw_bikecarsd_ticket_info ) ) {
+                    $item->add_meta_data( '_rbfw_ticket_info', $rbfw_bikecarsd_ticket_info );
+                } elseif ( isset( $rbfw_ticket_info ) ) {
+                    $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
+                }
 
 
 
@@ -1418,6 +1429,37 @@ if (!class_exists('RBFW_Woocommerce')) {
                     return $percent;
                 default:
                     return $total_price;
+            }
+        }
+
+        public function rbfw_output_processing_fee_meta( $item_id, $item, $order, $plain_text ) {
+            // Try to read stored meta first
+            $display = wc_get_order_item_meta( $item_id, 'Processing Fee', true );
+            if ( empty( $display ) ) {
+                $rbfw_id        = wc_get_order_item_meta( $item_id, '_rbfw_id', true );
+                $rbfw_type_info = wc_get_order_item_meta( $item_id, 'rbfw_type_info', true );
+                $rbfw_service_info = wc_get_order_item_meta( $item_id, 'rbfw_service_info', true );
+                $rbfw_start_date = wc_get_order_item_meta( $item_id, 'start_date', true );
+                if ( empty( $rbfw_type_info ) && isset( $item->get_meta( '_rbfw_ticket_info', true )[0]['rbfw_type_info'] ) ) {
+                    $ticket = $item->get_meta( '_rbfw_ticket_info', true );
+                    if ( is_array( $ticket ) && isset( $ticket[0]['rbfw_type_info'] ) ) {
+                        $rbfw_type_info = $ticket[0]['rbfw_type_info'];
+                    }
+                }
+                if ( class_exists( 'RBFW_BikeCarSd_Function' ) && ! empty( $rbfw_id ) && ! empty( $rbfw_type_info ) ) {
+                    $fn = new RBFW_BikeCarSd_Function();
+                    $amount = $fn->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, is_array($rbfw_service_info)?$rbfw_service_info:[], 'rbfw_bikecarsd_processing_fee', $rbfw_start_date );
+                    if ( $amount ) {
+                        $display = wc_price( $amount );
+                    }
+                }
+            }
+            if ( $display ) {
+                if ( $plain_text ) {
+                    echo "\n" . esc_html__( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ) . ': ' . wp_strip_all_tags( $display );
+                } else {
+                    echo '<div class="rbfw-processing-fee"><strong>' . esc_html__( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ) . ':</strong> ' . wp_kses_post( $display ) . '</div>';
+                }
             }
         }
 

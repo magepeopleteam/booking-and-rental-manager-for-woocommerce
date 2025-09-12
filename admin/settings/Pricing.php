@@ -71,7 +71,6 @@
                 </section>
 				<?php
 			}
-
 			public function rent_type( $post_id ) {
 				?>
 				<?php $this->panel_header( 'Price Settings', 'Price Settings' ); ?>
@@ -206,6 +205,9 @@
                                         <th class="rbfw_time_inventory rbfw_time_inventory_enable duration_disable <?php echo esc_attr( $manage_inventory_as_timely == 'off' ) ? 'rbfw_hide' : ( ( $manage_inventory_as_timely == 'on' && $enable_specific_duration == 'on' ) ? 'rbfw_hide' : '' ) ?>">
 											<?php esc_html_e( 'Duration Type', 'booking-and-rental-manager-for-woocommerce' ); ?> <b class="required">*</b>
                                         </th>
+                                        <th>
+											<?php esc_html_e( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                        </th>
                                         <th class="rbfw_bike_car_sd_price_table_action_column">
 											<?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                         </th>
@@ -239,6 +241,9 @@
                                                             <option <?php echo esc_attr( isset( $value['d_type'] ) && $value['d_type'] == 'Days' ) ? 'selected' : ''; ?> value="Days">Days</option>
                                                             <option <?php echo esc_attr( isset( $value['d_type'] ) && $value['d_type'] == 'Weeks' ) ? 'selected' : ''; ?> value="Weeks">Weeks</option>
                                                         </select>
+                                                    </td>
+                                                    <td>
+                                                        <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr( $i ); ?>][processing_fee]" step=".01" value="<?php echo esc_attr( isset( $value['processing_fee'] ) ? $value['processing_fee'] : '0' ); ?>" placeholder="<?php echo esc_attr( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                     </td>
                                                     <td class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
 														echo 'style="display:none"';
@@ -282,6 +287,9 @@
                                                         <option value="Days">Days</option>
                                                         <option value="Weeks">Weeks</option>
                                                     </select>
+                                                </td>
+                                                <td>
+                                                    <input class="medium" type="number" name="rbfw_bike_car_sd_data[0][processing_fee]" step=".01" placeholder="<?php echo esc_attr( 'Processing Fee', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                                 <td class="rbfw_bike_car_sd_price_table_action_column"<?php if ( $rbfw_item_type == 'appointment' ) {
 													echo 'style="display:none"';

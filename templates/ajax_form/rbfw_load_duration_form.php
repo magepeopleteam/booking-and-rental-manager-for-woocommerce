@@ -39,6 +39,9 @@ $total_row = $total_row??'';
         </select>
     </td>
     <td>
+        <input class="medium" type="number" name="rbfw_bike_car_sd_data[<?php echo esc_attr($total_row); ?>][processing_fee]" step=".01" value="0" placeholder="<?php echo esc_attr__('Processing Fee', 'booking-and-rental-manager-for-woocommerce'); ?>">
+    </td>
+    <td>
         <div class="mp_event_remove_move">
             <button class="button remove-row"><i class="fas fa-trash-can"></i></button>
             <div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
