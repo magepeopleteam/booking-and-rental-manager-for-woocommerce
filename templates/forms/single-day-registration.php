@@ -29,6 +29,13 @@
     $rbfw_security_deposit_type = get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) : 'percentage';
     $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) : 0;
 
+    $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off';
+    $particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
+    $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
+
+    //echo '<pre>';print_r($rdfw_available_time);echo '<pre>';
+    //echo '<pre>';print_r($particulars_data);echo '<pre>';
+
 
 ?>
 
@@ -117,9 +124,18 @@
                                         <span class="clock">
                                             <i class="fa-regular fa-clock"></i>
                                         </span>
+
+                                        <?php echo $rbfw_particular_switch; ?>
+
+                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time" required="">
+                                            <option value="">Pickup Time</option>
+                                            <option value="01:00">01:00</option>
+                                            <option value="02:00">02:00</option>
+                                        </select>
                                         <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time" required>
                                             <option value="" disabled selected><?php esc_html_e('Pickup Time','booking-and-rental-manager-for-woocommerce'); ?></option>
                                         </select>
+
                                         <span class="input-picker-icon"></span>
                                     </div>
                                 </div>
@@ -186,9 +202,6 @@
                                         }else{
                                             $img = '';
                                         }
-
-
-
                                         if($value['service_qty'] > 0){
                                             ?>
                                             <div class="rbfw-optional-add-ons">
@@ -327,10 +340,18 @@
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="<?php echo esc_attr($rbfw_rent_type); ?>">
                 <input type="hidden" name="appointment_days" id="appointment_days"  value='<?php echo esc_attr($appointment_days); ?>'>
                 <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
-                <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range" class="llll"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
+                <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
+
+                <input type="hidden" name="rbfw_particular_switch" id="rbfw_particular_switch"  value='<?php echo esc_attr($rbfw_particular_switch); ?>'>
+                <input type="hidden" name="rbfw_particulars_data" id="rbfw_particulars_data"  value='<?php echo esc_attr(wp_json_encode($particulars_data)); ?>'>
+                <input type="hidden" name="rdfw_available_time" id="rdfw_available_time"  value='<?php echo esc_attr(wp_json_encode($rdfw_available_time)); ?>'>
+
+
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id" class="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
 
-			</form>
+
+
+            </form>
 		</div>
 		<!--    Right Side END-->
 	</div>

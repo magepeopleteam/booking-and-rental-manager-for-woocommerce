@@ -146,7 +146,32 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
     }
 }
 
+
+function getAvailableTimes(schedule, givenDate) {
+    const date = new Date(givenDate);
+    let options = [];
+
+    var scheduleJson = JSON.parse(schedule);
+
+    jQuery.each(scheduleJson, function(key, value) {
+        console.log("Key:", key);
+        console.log("Start Date:", value.start_date);
+        console.log("End Date:", value.end_date);
+
+        jQuery.each(value.available_time, function(i, timeSlot) {
+            console.log("   Time:", timeSlot.time, "Status:", timeSlot.status);
+        });
+    });
+
+
+
+}
+
 function particular_time_date_dependent_ajax(post_id,date_ymd,type='',rbfw_enable_time_slot='',selector){
+
+
+
+
 
     jQuery.ajax({
         type: 'POST',
