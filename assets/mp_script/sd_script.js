@@ -144,7 +144,8 @@
                 var duration = jQuery(this).data('duration');
                 var duration_type = jQuery(this).data('d_type');
 
-                let start_time = jQuery(this).data('start_time');
+                var start_time = jQuery('.rbfw-select.rbfw-time-price.pickup_time').val();
+
                 jQuery('#rbfw_start_time').val(start_time);
 
                 // Combine start_date + start_time into a Date object
