@@ -269,7 +269,7 @@
                             'rbfw_js_variables',
                             array(
                                     'rbfw_today_booking_enable' => $today_booking_enable,
-
+                                    'timeFormat' => get_option('time_format'),
                             )
                     );
 

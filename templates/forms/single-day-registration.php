@@ -125,16 +125,20 @@
                                             <i class="fa-regular fa-clock"></i>
                                         </span>
 
-                                        <?php echo $rbfw_particular_switch; ?>
-
-                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time" required="">
+                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time_normal" required="" style="display:<?php echo ($rbfw_particular_switch == 'off')?'block':'none' ?>">
                                             <option value="">Pickup Time</option>
-                                            <option value="01:00">01:00</option>
-                                            <option value="02:00">02:00</option>
+                                            <?php if(!empty($rdfw_available_time)){ ?>
+                                                <?php foreach ($rdfw_available_time as $single){  ?>
+                                                    <option value="<?php echo $single['time'] ?>"><?php echo gmdate( get_option( 'time_format' ), strtotime( $single['time'] ) ) ?></option>
+                                                <?php } ?>
+                                            <?php } ?>
                                         </select>
-                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time" required>
+
+
+                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time_particular" required style="display:<?php echo ($rbfw_particular_switch == 'off')?'none':'block' ?>">
                                             <option value="" disabled selected><?php esc_html_e('Pickup Time','booking-and-rental-manager-for-woocommerce'); ?></option>
                                         </select>
+
 
                                         <span class="input-picker-icon"></span>
                                     </div>

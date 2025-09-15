@@ -148,23 +148,73 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
 
 
 function getAvailableTimes(schedule, givenDate) {
-    const date = new Date(givenDate);
-    let options = [];
 
     var scheduleJson = JSON.parse(schedule);
 
-    jQuery.each(scheduleJson, function(key, value) {
-        console.log("Key:", key);
-        console.log("Start Date:", value.start_date);
-        console.log("End Date:", value.end_date);
+    let  sapecific_date_time = false;
 
-        jQuery.each(value.available_time, function(i, timeSlot) {
-            console.log("   Time:", timeSlot.time, "Status:", timeSlot.status);
+    const timeSelect = document.getElementById("pickup_time_particular");
+
+    const selectedDate = new Date(givenDate);
+
+    timeSelect.innerHTML = '<option value="">'+ rbfw_translation.pickup_time +'</option>'; // reset options
+
+        // loop through data
+        Object.values(scheduleJson).forEach(item => {
+            const start = new Date(item.start_date);
+            const end = new Date(item.end_date);
+
+            // check if selected date is within range
+            if (selectedDate >= start && selectedDate <= end) {
+                item.available_time.forEach(timeObj => {
+                    if (timeObj.status === "enabled") {
+                        let myTime = timeObj.time;  // 2:30 PM
+
+                        // Split into hours and minutes
+                        let [hours, minutes] = myTime.split(":").map(Number);
+
+                        // Create a JS Date object for formatting
+                        let date = new Date();
+                        date.setHours(hours);
+                        date.setMinutes(minutes);
+
+                        sapecific_date_time = true;
+                        const option = document.createElement("option");
+                        option.value = timeObj.time;
+                        option.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;
+                        timeSelect.appendChild(option);
+                    }
+                });
+            }
         });
-    });
+
+        if(sapecific_date_time==false){
+            document.getElementById("pickup_time_particular").style.display = "none";
+            document.getElementById("pickup_time_normal").style.display = "block";
+        }else{
+            document.getElementById("pickup_time_particular").style.display = "block";
+            document.getElementById("pickup_time_normal").style.display = "none";
+        }
 
 
 
+
+
+}
+
+
+function formatTime(date, format) {
+    // Map WP PHP formats to JS Intl options
+    let options = {};
+    if (format.includes('a') || format.includes('A')) {
+        options.hour12 = true;
+    } else {
+        options.hour12 = false;
+    }
+    options.hour = 'numeric';
+    options.minute = '2-digit';
+
+    return new Intl.DateTimeFormat([], options).format(date);
 }
 
 function particular_time_date_dependent_ajax(post_id,date_ymd,type='',rbfw_enable_time_slot='',selector){

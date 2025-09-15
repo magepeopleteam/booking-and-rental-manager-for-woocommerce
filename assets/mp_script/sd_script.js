@@ -44,8 +44,6 @@
                         /*disable specific time and time slot enable*/
                       let rbfw_getAvailableTimes =  getAvailableTimes(rbfw_particulars_data , start_date_ymd);
 
-                      console.log('getAvailableTimes',rbfw_getAvailableTimes);
-
                         jQuery('body').on('change',  '.rbfw_bikecarsd_pricing_table_wrap #pickup_time',function (e) {
 
                             let post_id = jQuery('.rbfw_post_id').val();
