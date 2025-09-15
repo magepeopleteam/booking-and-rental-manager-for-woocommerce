@@ -147,13 +147,22 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
 }
 
 
-function getAvailableTimes(schedule, givenDate) {
+function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_particular) {
+
+
+
+   // let rbfw_particular_switch = jQuery('.rbfw_particular_switch').val();
+
 
     var scheduleJson = JSON.parse(schedule);
+    var rdfw_available_timeJson = JSON.parse(rdfw_available_time);
 
     let  sapecific_date_time = false;
+    let  time_enable = false;
 
-    const timeSelect = document.getElementById("pickup_time_particular");
+    let past_time = ''
+
+    const timeSelect = document.getElementById(pickup_time_particular);
 
     const selectedDate = new Date(givenDate);
 
@@ -168,6 +177,28 @@ function getAvailableTimes(schedule, givenDate) {
             if (selectedDate >= start && selectedDate <= end) {
                 item.available_time.forEach(timeObj => {
                     if (timeObj.status === "enabled") {
+
+
+                        let now = new Date();
+                        let currentDateStr = now.toISOString().split("T")[0]; // YYYY-MM-DD
+                        let selectedDateStr = selectedDate.toISOString().split("T")[0];
+
+                        if (selectedDateStr === currentDateStr) {
+                            // Parse available_time into a Date object for comparison
+                            let [hours, minutes] = timeObj.time.split(":").map(Number);
+                            let timeDate = new Date();
+                            timeDate.setHours(hours, minutes, 0, 0);
+
+                            if (timeDate <= now) {
+                                time_enable = true;
+                                past_time = 'Past time';
+                            }else{
+                                time_enable = false;
+                                past_time = '';
+                            }
+                        }
+
+
                         let myTime = timeObj.time;  // 2:30 PM
 
                         // Split into hours and minutes
@@ -182,6 +213,8 @@ function getAvailableTimes(schedule, givenDate) {
                         const option = document.createElement("option");
                         option.value = timeObj.time;
                         option.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;
+                        option.disabled = time_enable;
+                        option.title = past_time;
                         timeSelect.appendChild(option);
                     }
                 });
@@ -189,11 +222,49 @@ function getAvailableTimes(schedule, givenDate) {
         });
 
         if(sapecific_date_time==false){
-            document.getElementById("pickup_time_particular").style.display = "none";
-            document.getElementById("pickup_time_normal").style.display = "block";
-        }else{
-            document.getElementById("pickup_time_particular").style.display = "block";
-            document.getElementById("pickup_time_normal").style.display = "none";
+            rdfw_available_timeJson.forEach(timeObj => {
+                if (timeObj.status === "enabled") {
+
+
+                    let now = new Date();
+                    let currentDateStr = now.toISOString().split("T")[0]; // YYYY-MM-DD
+                    let selectedDateStr = selectedDate.toISOString().split("T")[0];
+
+                    if (selectedDateStr === currentDateStr) {
+                        // Parse available_time into a Date object for comparison
+                        let [hours, minutes] = timeObj.time.split(":").map(Number);
+                        let timeDate = new Date();
+                        timeDate.setHours(hours, minutes, 0, 0);
+
+                        if (timeDate <= now) {
+                            time_enable = true;
+                            past_time = 'Past time';
+                        }else{
+                            time_enable = false;
+                            past_time = '';
+                        }
+                    }
+
+
+                    let myTime = timeObj.time;  // 2:30 PM
+
+                    // Split into hours and minutes
+                    let [hours, minutes] = myTime.split(":").map(Number);
+
+                    // Create a JS Date object for formatting
+                    let date = new Date();
+                    date.setHours(hours);
+                    date.setMinutes(minutes);
+
+                    sapecific_date_time = true;
+                    const option = document.createElement("option");
+                    option.value = timeObj.time;
+                    option.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;
+                    option.disabled = time_enable;
+                    option.title = past_time;
+                    timeSelect.appendChild(option);
+                }
+            })
         }
 
 

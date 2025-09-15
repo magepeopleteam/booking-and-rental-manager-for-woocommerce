@@ -125,17 +125,7 @@
                                             <i class="fa-regular fa-clock"></i>
                                         </span>
 
-                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time_normal" required="" style="display:<?php echo ($rbfw_particular_switch == 'off')?'block':'none' ?>">
-                                            <option value="">Pickup Time</option>
-                                            <?php if(!empty($rdfw_available_time)){ ?>
-                                                <?php foreach ($rdfw_available_time as $single){  ?>
-                                                    <option value="<?php echo $single['time'] ?>"><?php echo gmdate( get_option( 'time_format' ), strtotime( $single['time'] ) ) ?></option>
-                                                <?php } ?>
-                                            <?php } ?>
-                                        </select>
-
-
-                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time_particular" required style="display:<?php echo ($rbfw_particular_switch == 'off')?'none':'block' ?>">
+                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time_particular" required>
                                             <option value="" disabled selected><?php esc_html_e('Pickup Time','booking-and-rental-manager-for-woocommerce'); ?></option>
                                         </select>
 
