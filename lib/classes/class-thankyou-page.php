@@ -273,7 +273,7 @@
                                     <tr>
                                         <td>
                                             <strong>
-                                                llll<?php rbfw_string( 'rbfw_text_extra_service_information', __( 'Extra Service Information', 'booking-and-rental-manager-for-woocommerce' ) );echo ':'; ?>
+                                                <?php rbfw_string( 'rbfw_text_extra_service_information', __( 'Extra Service Information', 'booking-and-rental-manager-for-woocommerce' ) );echo ':'; ?>
                                             </strong>
                                         </td>
                                         <td>

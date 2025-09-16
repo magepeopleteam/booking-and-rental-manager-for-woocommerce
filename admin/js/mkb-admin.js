@@ -1441,7 +1441,7 @@
             return timeA.localeCompare(timeB);
         });
 
-        console.log('lllll',$slots);
+
 
 
         $timeSlotsContainer.html($slots);

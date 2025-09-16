@@ -52,7 +52,13 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             }
 
             if(rbfw_enable_time_slot=='yes'){
-                particular_time_date_dependent_ajax(post_id,date_ymd,'time_enable',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.pickup_time');
+               // particular_time_date_dependent_ajax(post_id,date_ymd,'time_enable',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.pickup_time');
+                let rbfw_particulars_data = jQuery('#rbfw_particulars_data').val();
+                let rdfw_available_time = jQuery('#rdfw_available_time').val();
+                getAvailableTimes(rbfw_particulars_data , date_ymd,rdfw_available_time,'pickup_time');
+
+
+
             }
         },
     });
@@ -87,14 +93,17 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
     jQuery('.dropoff_date').datepicker({
         dateFormat: js_date_format,
         onSelect: function (dateString, data) {
-            let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-            jQuery('input[name="rbfw_pickup_end_date"]').val(date_ymd_drop).trigger('change');
+            let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
+            jQuery('input[name="rbfw_pickup_end_date"]').val(date_ymd).trigger('change');
 
             let post_id = jQuery('#rbfw_post_id').val();
             let rbfw_enable_time_slot = jQuery('#rbfw_enable_time_slot').val();
 
             if(rbfw_enable_time_slot=='yes'){
-                particular_time_date_dependent_ajax(post_id,date_ymd_drop,'',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.dropoff_time');
+                let rbfw_particulars_data = jQuery('#rbfw_particulars_data').val();
+                let rdfw_available_time = jQuery('#rdfw_available_time').val();
+                getAvailableTimes(rbfw_particulars_data , date_ymd,rdfw_available_time,'dropoff_time');
+               // particular_time_date_dependent_ajax(post_id,date_ymd_drop,'',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.dropoff_time');
             }
         },
         beforeShowDay: function(date)

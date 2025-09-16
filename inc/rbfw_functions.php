@@ -2389,11 +2389,7 @@
                     $time_status = rbfw_time_enable_disable( $rbfw_id, $start_date, $start_time );
                 }
                 $the_array[ $start_time ] = array( $time_status, gmdate( get_option( 'time_format' ), strtotime( $start_time ) ) );
-
             }
-
-
-
         }
 
 		return array( $the_array, $selector );
