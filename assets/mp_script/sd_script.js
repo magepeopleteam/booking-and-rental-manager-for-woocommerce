@@ -133,10 +133,13 @@
 
         jQuery(document).on('click', '.rbfw_service_type .single-type-timely', function(e) {
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
+            let time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
             if(rbfw_bikecarsd_selected_date==''){
                 alert("please enter pickup date");
                 return;
             }
+
+
             let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
 
             let enable_specific_duration = jQuery('#enable_specific_duration').val();
@@ -151,7 +154,16 @@
                 var duration = jQuery(this).data('duration');
                 var duration_type = jQuery(this).data('d_type');
 
-                let start_time = jQuery(this).data('start_time');
+                var start_time = jQuery('.rbfw-select.rbfw-time-price.pickup_time').val();
+
+
+                if(time_slot_switch == 'yes'){
+                    if(start_time==''){
+                        alert("please enter pickup time");
+                        return;
+                    }
+                }
+
                 jQuery('#rbfw_start_time').val(start_time);
 
                 // Combine start_date + start_time into a Date object

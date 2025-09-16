@@ -214,6 +214,10 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.5.1
+Multi day Optional Add-ons pricing problem solved.
+
+
 2.5.0
 Bug fixing.
 Translation updated.

@@ -466,6 +466,15 @@ jQuery(document).on('change', '.rbfw-resource-price', function() {
         inputBox.hide();
     }
 
+    var $checkbox = jQuery(this);
+    var $qtyInput = jQuery('.rbfw_bikecarmd_es_qty[data-name="' + $checkbox.data('name') + '"]');
+
+    if ($checkbox.is(':checked')) {
+        $qtyInput.val(1); // Set value to 1 when checked
+    } else {
+        $qtyInput.val(0); // Optional: reset to 0 when unchecked
+    }
+
     calculateTotalExtraService();
 });
 
@@ -478,6 +487,7 @@ jQuery(document).on('input change', '.rbfw_bikecarmd_es_qty', function() {
 jQuery(document).on('click', '.rbfw_bikecarmd_es_qty_plus', function(e) {
     e.preventDefault();
     let input = jQuery(this).siblings('input');
+    console.log('input',input);
     let val = parseInt(input.val()) || 0;
     let max = parseInt(input.attr('max')) || 9999;
     if (val < max) {
@@ -495,7 +505,6 @@ jQuery(document).on('click', '.rbfw_bikecarmd_es_qty_minus', function(e) {
         input.val(val - 1).trigger('change');
     }
 });
-
 
 
 
