@@ -118,8 +118,6 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_resort_ticket_info                    = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price );
 
 
-                echo $rbfw_room_total_price;exit;
-
 
                 $base_price                                 = $rbfw_room_total_price;
                 $total_price                                = apply_filters( 'rbfw_cart_base_price', $base_price );

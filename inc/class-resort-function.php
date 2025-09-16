@@ -78,11 +78,14 @@
 					$rent_type = $key; //Type1
 					if ( $value > 0 ) {
 						if ( array_key_exists( $rent_type, $rent_types ) ) {
+
                             $room_price = !empty($rbfw_room_price)?$rbfw_room_price[ $rent_type ] :$rent_types[$rent_type];
 							$main_array[ $rent_type ] = '(' . wc_price( $room_price ) . ' x ' . $value . ') = ' . wc_price( (float) $room_price * (float) $value ); // type = quantity
 						}
 					}
 				}
+
+
 
 				return $main_array;
 			}
