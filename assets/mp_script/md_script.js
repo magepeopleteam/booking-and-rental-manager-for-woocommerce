@@ -119,7 +119,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
 jQuery('.dropoff_date').click(function(e) {
     let pickup_date = jQuery('[name="rbfw_pickup_start_date"]').val();
     if (pickup_date == '') {
-        alert('Please select the pickup date!');
+        alert(rbfw_translation.select_pickup_date);
     }
 });
 
