@@ -125,7 +125,7 @@
                                             <i class="fa-regular fa-clock"></i>
                                         </span>
 
-                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time_particular" required>
+                                        <select class="rbfw-select rbfw-time-price pickup_time" name="rbfw_start_time" id="pickup_time" required>
                                             <option value="" disabled selected><?php esc_html_e('Pickup Time','booking-and-rental-manager-for-woocommerce'); ?></option>
                                         </select>
 

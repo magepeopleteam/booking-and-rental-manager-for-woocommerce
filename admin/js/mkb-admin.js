@@ -1301,6 +1301,10 @@
             tempDiv.find(".rbfw_start_date").attr({"name": "rbfw_particulars["+total_element+"][start_date]"});
             tempDiv.find(".rbfw_end_date").attr({"name": "rbfw_particulars["+total_element+"][end_date]"});
             tempDiv.find(".add-slot-btn").attr({"data-particular_id": total_element});
+        }else if(rent_type=='mi'){
+            tempDiv.find(".rbfw_start_date").attr({"name": "rbfw_particulars_mi["+total_element+"][start_date]"});
+            tempDiv.find(".rbfw_end_date").attr({"name": "rbfw_particulars_mi["+total_element+"][end_date]"});
+            tempDiv.find(".add-slot-btn").attr({"data-particular_id": total_element});
         }else{
             tempDiv.find(".rbfw_start_date").attr({"name": "rbfw_particulars_sd["+total_element+"][start_date]"});
             tempDiv.find(".rbfw_end_date").attr({"name": "rbfw_particulars_sd["+total_element+"][end_date]"});
@@ -1386,6 +1390,17 @@
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
       `;
+            }else if(rent_type=='mi'){
+                newSlot = `
+        <div class="time-slot enabled" data-id="${index}">
+          <span class="time-slot-time">${time}</span>
+          <input type="hidden" name="rdfw_available_time_mi[${index}][id]" value="${dataId}">
+          <input type="hidden" name="rdfw_available_time_mi[${index}][time]" value="${time}">
+          <input type="hidden" name="rdfw_available_time_mi[${index}][status]" value="enabled">
+          <div class="time-slot-indicator active" title="Click to disable"></div>
+          <div class="time-slot-remove" title="Remove time slot">×</div>
+        </div>
+      `;
             }else{
                 newSlot = `
         <div class="time-slot enabled" data-id="${index}">
@@ -1411,6 +1426,17 @@
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][id]" value="${dataId}">
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][time]" value="${time}">
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][status]" value="enabled">
+          <div class="time-slot-indicator active" title="Click to disable"></div>
+          <div class="time-slot-remove" title="Remove time slot">×</div>
+        </div>
+           `;
+            }else if(rent_type=='mi'){
+                newSlot = `
+        <div class="time-slot enabled" data-id="${dataId}">
+          <span class="time-slot-time">${time}</span>
+          <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][id]" value="${dataId}">
+          <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][time]" value="${time}">
+          <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][status]" value="enabled">
           <div class="time-slot-indicator active" title="Click to disable"></div>
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>

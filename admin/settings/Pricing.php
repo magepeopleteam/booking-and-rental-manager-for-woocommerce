@@ -1752,7 +1752,14 @@
                                                     <div class="rbfw-particular-date">
                                                         <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars[<?php echo esc_attr( $i ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
                                                     </div>
-                                                    <?php } else{ ?>
+                                                <?php } elseif($type=='mi'){ ?>
+                                                        <div class="rbfw-particular-date">
+                                                            <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars_mi[<?php echo esc_attr( $i ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
+                                                        </div>
+                                                        <div class="rbfw-particular-date">
+                                                            <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars_mi[<?php echo esc_attr( $i ); ?>][end_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['end_date'] ?? '' ); ?>">
+                                                        </div>
+                                                <?php }else{ ?>
                                                     <div class="rbfw-particular-date">
                                                         <input type="text" class="date_type rbfw_particulars_date" name="rbfw_particulars_sd[<?php echo esc_attr( $i ); ?>][start_date]" class="rbfw_days_range" value="<?php echo esc_attr( $particular['start_date'] ?? '' ); ?>">
                                                     </div>
@@ -1788,6 +1795,10 @@
                                                                             <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][id]" value="<?php echo $i ?>">
                                                                             <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][time]" value="<?php echo $item['time'] ?>">
                                                                             <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][status]" value="<?php echo $item['status'] ?>">
+                                                                        <?php }elseif($type=='mi'){ ?>
+                                                                            <input type="hidden" name="rbfw_particulars_mi[<?php echo $i ?>][available_time][<?php echo $j ?>][id]" value="<?php echo $i ?>">
+                                                                            <input type="hidden" name="rbfw_particulars_mi[<?php echo $i ?>][available_time][<?php echo $j ?>][time]" value="<?php echo $item['time'] ?>">
+                                                                            <input type="hidden" name="rbfw_particulars_mi[<?php echo $i ?>][available_time][<?php echo $j ?>][status]" value="<?php echo $item['status'] ?>">
                                                                         <?php }else{ ?>
                                                                             <input type="hidden" name="rbfw_particulars_sd[<?php echo $i ?>][available_time][<?php echo $j ?>][id]" value="<?php echo $i ?>">
                                                                             <input type="hidden" name="rbfw_particulars_sd[<?php echo $i ?>][available_time][<?php echo $j ?>][time]" value="<?php echo $item['time'] ?>">
