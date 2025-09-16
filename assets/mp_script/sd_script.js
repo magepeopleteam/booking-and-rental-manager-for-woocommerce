@@ -73,7 +73,12 @@
 
             }else{
                 if(time_slot_switch=='yes'){
-                    particular_time_date_dependent_ajax(post_id,start_date_ymd,'sd','yes','.rbfw_bikecarsd_time_table_wrap');
+
+                    getAvailableTimes(rbfw_particulars_data , start_date_ymd,rdfw_available_time,'rbfw_bikecarsd_time_table_wrap','calendar');
+
+
+                    // particular_time_date_dependent_ajax(post_id,start_date_ymd,'sd','yes','.rbfw_bikecarsd_time_table_wrap');
+
                 }else{
 
                     let is_muffin_template = jQuery('.rbfw_muffin_template').length;

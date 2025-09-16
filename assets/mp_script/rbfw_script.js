@@ -147,84 +147,35 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
 }
 
 
-function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_particular) {
-
-
-
-   // let rbfw_particular_switch = jQuery('.rbfw_particular_switch').val();
-
+function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_particular,is_calendar=null) {
 
     var scheduleJson = JSON.parse(schedule);
     var rdfw_available_timeJson = JSON.parse(rdfw_available_time);
-
     let  sapecific_date_time = false;
     let  time_enable = false;
-
     let past_time = ''
-
-    const timeSelect = document.getElementById(pickup_time_particular);
 
     const selectedDate = new Date(givenDate);
 
-    timeSelect.innerHTML = '<option value="">'+ rbfw_translation.pickup_time +'</option>'; // reset options
+    const timeSelect = document.getElementById(pickup_time_particular);
 
-        // loop through data
-        Object.values(scheduleJson).forEach(item => {
-            const start = new Date(item.start_date);
-            const end = new Date(item.end_date);
+
+    if(is_calendar=='calendar'){
+        timeSelect.innerHTML = '';
+    }else{
+        timeSelect.innerHTML = '<option value="">'+ rbfw_translation.pickup_time +'</option>'; // reset options
+    }
+
+
+    // loop through data
+    Object.values(scheduleJson).forEach(item => {
+        const start = new Date(item.start_date);
+        const end = new Date(item.end_date);
 
             // check if selected date is within range
-            if (selectedDate >= start && selectedDate <= end) {
-                item.available_time.forEach(timeObj => {
-                    if (timeObj.status === "enabled") {
-
-
-                        let now = new Date();
-                        let currentDateStr = now.toISOString().split("T")[0]; // YYYY-MM-DD
-                        let selectedDateStr = selectedDate.toISOString().split("T")[0];
-
-                        if (selectedDateStr === currentDateStr) {
-                            // Parse available_time into a Date object for comparison
-                            let [hours, minutes] = timeObj.time.split(":").map(Number);
-                            let timeDate = new Date();
-                            timeDate.setHours(hours, minutes, 0, 0);
-
-                            if (timeDate <= now) {
-                                time_enable = true;
-                                past_time = 'Past time';
-                            }else{
-                                time_enable = false;
-                                past_time = '';
-                            }
-                        }
-
-
-                        let myTime = timeObj.time;  // 2:30 PM
-
-                        // Split into hours and minutes
-                        let [hours, minutes] = myTime.split(":").map(Number);
-
-                        // Create a JS Date object for formatting
-                        let date = new Date();
-                        date.setHours(hours);
-                        date.setMinutes(minutes);
-
-                        sapecific_date_time = true;
-                        const option = document.createElement("option");
-                        option.value = timeObj.time;
-                        option.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;
-                        option.disabled = time_enable;
-                        option.title = past_time;
-                        timeSelect.appendChild(option);
-                    }
-                });
-            }
-        });
-
-        if(sapecific_date_time==false){
-            rdfw_available_timeJson.forEach(timeObj => {
+        if (selectedDate >= start && selectedDate <= end) {
+            item.available_time.forEach(timeObj => {
                 if (timeObj.status === "enabled") {
-
 
                     let now = new Date();
                     let currentDateStr = now.toISOString().split("T")[0]; // YYYY-MM-DD
@@ -246,7 +197,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                     }
 
 
-                    let myTime = timeObj.time;  // 2:30 PM
+                    let myTime = timeObj.time;
 
                     // Split into hours and minutes
                     let [hours, minutes] = myTime.split(":").map(Number);
@@ -257,6 +208,86 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                     date.setMinutes(minutes);
 
                     sapecific_date_time = true;
+
+                    if(is_calendar=='calendar'){
+
+                        const a = document.createElement("a");
+                        a.className = "rbfw_bikecarsd_time";
+                        a.setAttribute("data-time", timeObj.time);
+
+                        const span = document.createElement("span");
+                        span.className = "rbfw_bikecarsd_time_span";
+                        span.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;;
+
+                        a.appendChild(span);
+                        timeSelect.appendChild(a);
+
+                    }else{
+                        const option = document.createElement("option");
+                        option.value = timeObj.time;
+                        option.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;
+                        option.disabled = time_enable;
+                        option.title = past_time;
+                        timeSelect.appendChild(option);
+                    }
+
+
+
+                }
+            });
+        }
+    });
+
+    if(sapecific_date_time==false){
+        rdfw_available_timeJson.forEach(timeObj => {
+            if (timeObj.status === "enabled") {
+
+                let now = new Date();
+                let currentDateStr = now.toISOString().split("T")[0]; // YYYY-MM-DD
+                let selectedDateStr = selectedDate.toISOString().split("T")[0];
+
+                if (selectedDateStr === currentDateStr) {
+                    // Parse available_time into a Date object for comparison
+                    let [hours, minutes] = timeObj.time.split(":").map(Number);
+                    let timeDate = new Date();
+                    timeDate.setHours(hours, minutes, 0, 0);
+
+                    if (timeDate <= now) {
+                        time_enable = true;
+                        past_time = 'Past time';
+                    }else{
+                        time_enable = false;
+                        past_time = '';
+                    }
+                }
+
+
+                let myTime = timeObj.time;  // 2:30 PM
+
+                // Split into hours and minutes
+                let [hours, minutes] = myTime.split(":").map(Number);
+
+                // Create a JS Date object for formatting
+                let date = new Date();
+                date.setHours(hours);
+                date.setMinutes(minutes);
+                sapecific_date_time = true;
+
+                if(is_calendar=='calendar'){
+
+                    const a = document.createElement("a");
+                    a.className = "rbfw_bikecarsd_time";
+                    a.setAttribute("data-time", timeObj.time);
+
+                    const span = document.createElement("span");
+                    span.className = "rbfw_bikecarsd_time_span";
+                    span.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;;
+
+                    a.appendChild(span);
+                    timeSelect.appendChild(a);
+
+
+                }else{
                     const option = document.createElement("option");
                     option.value = timeObj.time;
                     option.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;
@@ -264,13 +295,11 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                     option.title = past_time;
                     timeSelect.appendChild(option);
                 }
-            })
-        }
 
 
-
-
-
+            }
+        })
+    }
 }
 
 
