@@ -296,10 +296,8 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     }
 
     $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
-
+    $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true );
     $total_booked = 0;
-
-   
 
     if(is_array($rbfw_inventory)){
         foreach ($rbfw_inventory as $key => $inventory) {
@@ -358,7 +356,6 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                 }
             }
         }
-
     }
 
 

@@ -939,7 +939,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
     var rbfw_input_stock_quantity = jQuery('#rbfw_input_stock_quantity').val();
 
     if(typeof item_quantity === "undefined"){
-        item_quantity = jQuery("[name='rbfw_item_quantity_md']").val();
+        item_quantity = jQuery("[name='rbfw_item_quantity']").val();
     }
 
     let rbfw_service_price = jQuery('#rbfw_service_price').val();
