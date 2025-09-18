@@ -324,7 +324,11 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                     $inventory_end_time = $inventory['rbfw_end_time'];
                 }
 
-                
+                if($stock_manage_on_return_date=='No'){
+                    $date = new DateTime($inventory_end_date);
+                    $date->modify('-1 day');
+                    $inventory_end_date = $date->format('Y-m-d');
+                }
 
                 $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
                 $date_inventory_end = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
@@ -536,16 +540,23 @@ function total_multi_items_quantity($service,$date,$inventory,$inventory_based_o
 function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_days){
 
 
+
     if (empty($post_id) || empty($year)  || empty($month) ) {
         return;
     }
+
+    $startDate = date("Y-m-d", strtotime("$year-$month-01"));
+    $endDate = date("Y-m-d", strtotime("last day of $year-$month-01"));
 
     $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
     $rbfw_variations_stock = rbfw_get_variations_stock($post_id);
 
     $rent_type = get_post_meta($post_id, 'rbfw_item_type', true);
     $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
-    
+
+    $rbfw_enable_time_picker    = get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) : 'no';
+
+
 
 
     $date_range = [];
@@ -564,7 +575,7 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
             $rbfw_resort_room_data = get_post_meta($post_id, 'rbfw_resort_room_data', true);
             if (!empty($rbfw_resort_room_data)) {
                 foreach ($rbfw_resort_room_data as $key => $resort_room_data) {
-                    if($resort_room_data['room_type'] == $type){
+                    if($resort_room_data['room_type'] == $rent_type){
                         $total_stock += !empty($resort_room_data['rbfw_room_available_qty']) ? $resort_room_data['rbfw_room_available_qty'] : 0;
                     }
                 }
@@ -581,6 +592,8 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
         $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
 
+        $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true );
+
         $total_booked = 0;
 
        
@@ -596,6 +609,7 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
 
                 if ( ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
+
 
                     if(isset($inventory['rbfw_start_date_ymd']) && isset($inventory['rbfw_end_date_ymd'])){
                         $inventory_start_date = $inventory['rbfw_start_date_ymd'];
@@ -620,7 +634,14 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
                             }
                         }
                     }else{
-                        if (in_array($date,$inventory['booked_dates'])) {
+
+                        $booked_dates = $inventory['booked_dates'];
+
+                        if($stock_manage_on_return_date=='No'){
+                            array_pop($booked_dates);
+                        }
+
+                        if (in_array($date,$booked_dates)) {
                             $total_booked += $rbfw_item_quantity;
                         }
                     }
