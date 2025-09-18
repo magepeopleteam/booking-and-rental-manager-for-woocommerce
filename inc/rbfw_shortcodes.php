@@ -25,7 +25,7 @@ add_shortcode('rent-add-to-cart', 'rbfw_add_to_cart_shortcode_func');
  ******************************/
 /*no needed this short code*/
 //add_shortcode('rbfw-search1', 'rbfw_rent_search_shortcode_func');
-
+ 
 
 
 
