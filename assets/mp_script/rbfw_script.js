@@ -85,7 +85,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 
 
 
-function rbfw_off_day_dates(date,type='',today_enable='no'){
+function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 
 
     var curr_date = ("0" + (date.getDate())).slice(-2);
@@ -134,6 +134,39 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
                     if(day_wise_inventory[date_in]==0){
                         return [false, "notav", 'Sold Out'];
                     }
+
+                    if(dropoff){
+                        // Additional check for return date selection
+                        // If pickup date is already selected and we're selecting return date
+                        let pickup_date = jQuery('input[name="rbfw_pickup_start_date"]').val();
+                        if(pickup_date && pickup_date !== '') {
+                            // Check if this is for return date calendar by checking if current date is after pickup date
+                            let pickup_date_obj = new Date(pickup_date);
+                            if(date > pickup_date_obj) {
+                                // Check for first sold-out date in the sequence from pickup to current date
+                                let current_check_date = new Date(pickup_date_obj);
+                                current_check_date.setDate(current_check_date.getDate() + 1); // Start from day after pickup
+
+                                while(current_check_date <= date) {
+                                    let check_curr_date = ("0" + current_check_date.getDate()).slice(-2);
+                                    let check_curr_month = ("0" + (current_check_date.getMonth() + 1)).slice(-2);
+                                    let check_curr_year = current_check_date.getFullYear();
+                                    let check_date_in = check_curr_date+"-"+check_curr_month+"-"+check_curr_year;
+
+                                    // If we find a sold-out date in the sequence, disable all subsequent dates
+                                    if(day_wise_inventory[check_date_in] == 0) {
+                                        return [false, "notav", ''];
+                                    }
+
+                                    current_check_date.setDate(current_check_date.getDate() + 1);
+                                }
+                            }
+                        }
+                    }
+
+
+
+
                 }
 
             }

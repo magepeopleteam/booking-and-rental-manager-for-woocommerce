@@ -214,6 +214,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.5.2
+Ajax request removed for time load depend on date.
+Code updated.
+Bug fixing
+
 2.5.1
 Multi day Optional Add-ons pricing problem solved.
 
