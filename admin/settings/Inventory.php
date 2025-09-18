@@ -195,6 +195,9 @@
 			}
 
             public function stock_manage_return_date( $post_id ) {
+
+                $total_booked = 0;
+
                 $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
 
                 ?>
