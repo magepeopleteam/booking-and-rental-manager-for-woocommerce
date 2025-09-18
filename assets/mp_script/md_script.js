@@ -83,9 +83,8 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
 
     //const endDate = getURLParameter('rbfw_end_date');
 
-    if(jQuery('#hidden_pickup_date').val() > jQuery('#hidden_dropoff_date').val()){
-        jQuery(".dropoff_date").val('');
-    }
+    jQuery(".dropoff_date").val('');
+
 
     jQuery('.dropoff_date').datepicker({
         dateFormat: js_date_format,
