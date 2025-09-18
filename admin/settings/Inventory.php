@@ -195,7 +195,7 @@
 			}
 
             public function stock_manage_return_date( $post_id ) {
-                $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : '';
+                $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
 
                 ?>
                     <section>
@@ -203,10 +203,14 @@
                             <label for="">Inventory Management by Return Date</label>
                             <p>(Items become available for booking again on the scheduled return date.)</p>
                         </div>
-                        <select class="formControl max_300" name="stock_manage_on_return_date">
-                            <option <?php echo ($stock_manage_on_return_date=='Yes')?'selected':'' ?> value="Yes">Yes</option>
-                            <option <?php echo ($stock_manage_on_return_date=='No')?'selected':'' ?> value="No">No</option>
-                        </select>
+                        <label class="switch">
+                            <input type="checkbox" name="stock_manage_on_return_date" value="<?php echo esc_attr( $stock_manage_on_return_date ); ?>" <?php echo esc_attr( ( $stock_manage_on_return_date == 'yes' ) ? 'checked' : '' ); ?>>
+                            <span class="slider round"></span>
+                        </label>
+                       <!-- <select class="formControl max_300" name="stock_manage_on_return_date">
+                            <option <?php /*echo ($stock_manage_on_return_date=='Yes')?'selected':'' */?> value="Yes">Yes</option>
+                            <option <?php /*echo ($stock_manage_on_return_date=='No')?'selected':'' */?> value="No">No</option>
+                        </select>-->
                     </section>
                 <?php
 
@@ -273,6 +277,16 @@
                         }
                     });
                     jQuery('input[name=rbfw_enable_md_type_item_qty]').click(function () {
+                        var status = jQuery(this).val();
+                        if (status == 'yes') {
+                            jQuery(this).val('no');
+                        }
+                        if (status == 'no') {
+                            jQuery(this).val('yes');
+                        }
+                    });
+
+                    jQuery('input[name=stock_manage_on_return_date]').click(function () {
                         var status = jQuery(this).val();
                         if (status == 'yes') {
                             jQuery(this).val('no');
