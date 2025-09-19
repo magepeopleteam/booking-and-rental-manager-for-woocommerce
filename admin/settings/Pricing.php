@@ -418,6 +418,7 @@
                                 </button>
                             </div>
 
+
                         <div class="rbfw_multi_day_price_conf">
                             <div class="item">
                                 <div class="item-left">
@@ -433,25 +434,12 @@
                                     <input type="hidden" name="rbfw_enable_time_picker" class="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
                                 </div>
                             </div>
-                        </div>
-
                             <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','mi','mi' ); ?>
-
                         </div>
+                    </div>
 
                     <style>
-                        * {
-                            margin: 0;
-                            padding: 0;
-                            box-sizing: border-box;
-                        }
 
-                        body {
-                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                            background: #f8fafc;
-                            color: #334155;
-                            padding: 20px;
-                        }
 
                         .container {
                             margin: 0 auto;
