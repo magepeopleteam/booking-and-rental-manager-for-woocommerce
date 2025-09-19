@@ -743,6 +743,7 @@
         const monthlyPriceItem = jQuery('.day-threshold-item-for-month');
         const weeklyPriceItem = jQuery('.day-threshold-item-for-week');
         const hourlyPriceItem = jQuery('.hourly-price-item');
+        const halfDayPriceItem = jQuery('.half-day-price-item');
 
         const monthlyPriceInput = jQuery('#monthly-price-input');
         const weeklyPriceInput = jQuery('#weekly-price-input');
@@ -780,12 +781,15 @@
 
         const timePickerToggle = jQuery('.time-picker-toggle');
         const hourlyPriceToggle = jQuery('.hourly-price-toggle');
+        const halfDayPriceToggle = jQuery('.half-day-price-toggle');
 
 
         const hourlyPriceInput = jQuery('#hourly-price-input');
+        const halfDayPriceInput = jQuery('#half-day-price-input');
         const hourThresholdInput = jQuery('#hour-threshold-input');
 
         hourlyPriceToggle.on('click', toggleHourlyPrice);
+        halfDayPriceToggle.on('click', toggleHalfDayPrice);
 
 
 
@@ -796,6 +800,7 @@
 
 
         const rbfw_enable_hourly_rate = jQuery('#rbfw_enable_hourly_rate');
+        const rbfw_enable_half_day_rate = jQuery('#rbfw_enable_half_day_rate');
         const rbfw_enable_hourly_threshold = jQuery('#rbfw_enable_hourly_threshold');
 
         // State
@@ -803,6 +808,7 @@
 
         let timePickerEnabled = rbfw_enable_time_picker.val() === 'yes';
         let hourlyPriceEnabled = rbfw_enable_time_picker.val() === 'yes';
+        let halfDayPriceEnabled = rbfw_enable_time_picker.val() === 'yes';
 
 
 
@@ -860,6 +866,7 @@
             hourlyPriceItem.css('display', timePickerEnabled ? 'flex' : 'none');
             hourThresholdItem.css('display', timePickerEnabled ? 'flex' : 'none');
             timeSlotsSection.css('display', timePickerEnabled ? 'block' : 'none');
+            halfDayPriceItem.css('display', halfDayPriceEnabled ? 'flex' : 'none');
 
             const $toggle = jQuery(this);
             const $input = jQuery('.rbfw_enable_time_picker');
@@ -879,6 +886,14 @@
             hourlyPriceToggle.toggleClass('active', hourlyPriceEnabled);
             hourlyPriceInput.prop('disabled', !hourlyPriceEnabled);
             rbfw_enable_hourly_rate.val(hourlyPriceEnabled ? 'yes' : 'no');
+        }
+
+        function toggleHalfDayPrice() {
+            halfDayPriceEnabled = !halfDayPriceEnabled;
+            halfDayPriceToggle.toggleClass('active', halfDayPriceEnabled);
+            halfDayPriceInput.prop('disabled', !halfDayPriceEnabled);
+            rbfw_enable_half_day_rate.val(halfDayPriceEnabled ? 'yes' : 'no');
+            halfDayPriceItem.css('display', halfDayPriceEnabled ? 'flex' : 'none');
         }
 
         // Input change handlers

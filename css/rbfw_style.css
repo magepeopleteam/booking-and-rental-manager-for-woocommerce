@@ -7355,7 +7355,7 @@ i.fas.fa-minus {
 .rbfw-particular-time-action{
     width: 10%;
 }
-.item.day-threshold-item-for-month, .item.day-threshold-item-for-week {
+.item.day-threshold-item-for-month, .item.day-threshold-item-for-week, .item.half-day-price-item{
     background: #ebffeb !important;
 }
 
