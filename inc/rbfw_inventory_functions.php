@@ -326,14 +326,14 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                     $inventory_end_time = $inventory['rbfw_end_time'];
                 }
 
-                echo $inventory_end_date;
+             
 
                 if($stock_manage_on_return_date=='no'){
                     $date = new DateTime($inventory_end_date);
                     $date->modify('-1 day');
                     $inventory_end_date = $date->format('Y-m-d');
                 }
-                echo $inventory_end_date;
+               
 
                 $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
                 $date_inventory_end = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
