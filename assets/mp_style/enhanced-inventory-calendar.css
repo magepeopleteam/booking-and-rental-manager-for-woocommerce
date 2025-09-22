@@ -1,0 +1,267 @@
+/**
+ * Enhanced CSS for inventory-based calendar date disabling
+ * Provides better visual feedback for sold out and unavailable dates
+ */
+
+/* Base styles for datepicker enhancement */
+.ui-datepicker .ui-state-disabled {
+    opacity: 0.6;
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed !important;
+}
+
+/* Sold out dates styling */
+.ui-datepicker .ui-state-disabled.notav {
+    background-color: #ffe6e6;
+    border-color: #ff9999;
+    color: #cc0000;
+    position: relative;
+}
+
+/* Enhanced sold out indicator */
+.ui-datepicker .ui-state-disabled.notav:after {
+    content: "✕";
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 10px;
+    color: #cc0000;
+    font-weight: bold;
+}
+
+/* Specific styling for inventory unavailable dates */
+.ui-datepicker .ui-state-disabled[title*="Unavailable"] {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.ui-datepicker .ui-state-disabled[title*="Unavailable"]:after {
+    content: "⚠";
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 10px;
+    color: #856404;
+    font-weight: bold;
+}
+
+/* Off day styling */
+.ui-datepicker .ui-state-disabled[title*="Off"] {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    color: #6c757d;
+}
+
+.ui-datepicker .ui-state-disabled[title*="Off"]:after {
+    content: "⚫";
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 8px;
+    color: #6c757d;
+}
+
+/* Hover effects for available dates */
+.ui-datepicker .ui-state-default.av:hover {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+    color: #1976d2;
+}
+
+/* Date label tooltips enhancement */
+.ui-datepicker .date-label {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 2px 6px;
+    font-size: 11px;
+    border-radius: 3px;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+.ui-datepicker td:hover .date-label {
+    opacity: 1;
+}
+
+/* Enhanced calendar container */
+.ui-datepicker {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Calendar header enhancement */
+.ui-datepicker .ui-datepicker-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px;
+}
+
+.ui-datepicker .ui-datepicker-title {
+    color: white;
+    font-weight: 600;
+}
+
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: white;
+}
+
+.ui-datepicker .ui-datepicker-prev:hover,
+.ui-datepicker .ui-datepicker-next:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Calendar body enhancement */
+.ui-datepicker table {
+    margin: 0;
+    width: 100%;
+}
+
+.ui-datepicker th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    padding: 8px;
+    text-align: center;
+}
+
+.ui-datepicker td {
+    position: relative;
+    border: none;
+    padding: 2px;
+}
+
+.ui-datepicker .ui-state-default {
+    width: 32px;
+    height: 32px;
+    line-height: 30px;
+    text-align: center;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: white;
+    color: #495057;
+    text-decoration: none;
+    display: block;
+    transition: all 0.2s ease;
+}
+
+/* Active/selected date styling */
+.ui-datepicker .ui-state-active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: #667eea;
+    font-weight: 600;
+}
+
+/* Today's date highlighting */
+.ui-datepicker .ui-state-highlight {
+    background-color: #fff3e0;
+    border-color: #ff9800;
+    color: #e65100;
+    font-weight: 600;
+}
+
+/* Weekend styling */
+.ui-datepicker .ui-datepicker-week-end .ui-state-default {
+    color: #dc3545;
+}
+
+/* Loading state for calendar */
+.rbfw_loader_in {
+    position: relative;
+    pointer-events: none;
+}
+
+.rbfw_loader_in:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 100;
+}
+
+.rbfw_loader_in .fa-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 101;
+    font-size: 24px;
+    color: #667eea;
+}
+
+/* Responsive calendar */
+@media (max-width: 768px) {
+    .ui-datepicker {
+        font-size: 14px;
+    }
+    
+    .ui-datepicker .ui-state-default {
+        width: 28px;
+        height: 28px;
+        line-height: 26px;
+        font-size: 12px;
+    }
+    
+    .ui-datepicker .date-label {
+        font-size: 10px;
+        bottom: -22px;
+    }
+}
+
+/* Animation for date state changes */
+.ui-datepicker .ui-state-default {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Enhanced calendar legend (if needed) */
+.rbfw-calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.rbfw-calendar-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.rbfw-calendar-legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    border: 1px solid #ddd;
+}
+
+.rbfw-calendar-legend-available { background-color: #e3f2fd; }
+.rbfw-calendar-legend-soldout { background-color: #ffe6e6; }
+.rbfw-calendar-legend-unavailable { background-color: #fff3cd; }
+.rbfw-calendar-legend-off { background-color: #f8f9fa; }

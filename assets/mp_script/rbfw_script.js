@@ -88,6 +88,7 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 
 
+
     var curr_date = ("0" + (date.getDate())).slice(-2);
     var curr_month = ("0" + (date.getMonth() + 1)).slice(-2);
     var curr_year = date.getFullYear();
@@ -131,9 +132,11 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
             if(rbfw_rent_type == 'bike_car_md'){
                 if(jQuery('#rbfw_month_wise_inventory').val()){
                     const  day_wise_inventory = JSON.parse(jQuery('#rbfw_month_wise_inventory').val());
+
                     if(day_wise_inventory[date_in]==0){
                         return [false, "notav", 'Sold Out'];
                     }
+
 
                     if(dropoff){
                         // Additional check for return date selection
@@ -167,11 +170,12 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 
 
 
+
                 }
 
             }
-            
-            
+
+
             return [true, "av", ""];
         }else{
             return false;
