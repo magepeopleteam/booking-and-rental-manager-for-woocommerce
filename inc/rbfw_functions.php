@@ -2707,7 +2707,8 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
     list($rbfw_daily_rate, $rbfw_hourly_rate, $rbfw_sp_prices) = rbfw_get_initial_rates($post_id);
 
     if (is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && !empty($rbfw_md_data_mds)) {
-        list($rbfw_daily_rate, $rbfw_hourly_rate, $rbfw_sp_prices) = rbfw_apply_multi_day_saver($total_days, $rbfw_md_data_mds, $rbfw_daily_rate, $rbfw_hourly_rate);
+        $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
+        list($rbfw_daily_rate, $rbfw_hourly_rate, $rbfw_sp_prices) = rbfw_apply_multi_day_saver($total_days, $rbfw_md_data_mds, $rbfw_daily_rate, $rbfw_hourly_rate,$hours,$rbfw_hourly_threshold);
     }
 
 
@@ -2735,7 +2736,13 @@ function rbfw_get_initial_rates($post_id) {
     return [$daily_rate, $hourly_rate, $seasonal_prices];
 }
 
-function rbfw_apply_multi_day_saver($total_days, $md_data, $default_daily, $default_hourly) {
+function rbfw_apply_multi_day_saver($total_days, $md_data, $default_daily, $default_hourly, $hours,$rbfw_hourly_threshold) {
+
+
+
+    if($hours && $hours <= $rbfw_hourly_threshold){
+            $total_days--;
+        }
     $md_saver = check_multi_day_price_saver_in_md($total_days, $md_data);
     if (!empty($md_saver)) {
         $daily = empty($md_saver[0]) ? $default_daily : $md_saver[0];
@@ -2833,7 +2840,17 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
             if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
                 $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
             }else{
+                //half day thresold appiied here
+                $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_half_day_rate', true );
+                $half_day_hour_threshold_start = get_post_meta( $post_id, 'half_day_hour_threshold_start', true );
+                $half_day_hour_threshold_end = get_post_meta( $post_id, 'half_day_hour_threshold_end', true );
+
+                if($rbfw_hourly_threshold){
+                    
+                }
+
                 $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
+
             }
         } else {
             $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
