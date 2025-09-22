@@ -463,7 +463,7 @@ $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? 
                                 <?php esc_html_e('Quantity','booking-and-rental-manager-for-woocommerce'); ?>
                             </div>
                             <div class="item-content rbfw-quantity">
-                                <select class="rbfw-select" name="rbfw_item_quantity_md" id="rbfw_item_quantity_md">
+                                <select class="rbfw-select" name="rbfw_item_quantity" id="rbfw_item_quantity_md">
                                     <option value="0"><?php esc_html_e('Choose number of quantity','booking-and-rental-manager-for-woocommerce'); ?></option>
                                     <?php for ($qty = 1; $qty <= $item_stock_quantity; $qty++) { ?>
                                         <option value="<?php echo esc_attr($qty); ?>" <?php if($qty == 1){ echo 'selected'; } ?>><?php echo esc_html($qty); ?></option>
@@ -472,11 +472,11 @@ $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? 
                             </div>
                         </div>
                     <?php }elseif ($item_stock_quantity > 0){ ?>
-                        <input type="hidden" name="rbfw_item_quantity_md" value="1">
+                        <input type="hidden" name="rbfw_item_quantity" value="1">
                     <?php } elseif($input_stock_quantity == 'no_has_value'){ ?>
-                        <input type="hidden" name="rbfw_item_quantity_md" value="1">
+                        <input type="hidden" name="rbfw_item_quantity" value="1">
                     <?php }else{ ?>
-                        <input type="hidden" name="rbfw_item_quantity_md" value="0">
+                        <input type="hidden" name="rbfw_item_quantity" value="0">
                     <?php } ?>
 
                     <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data)){ ?>
@@ -733,21 +733,7 @@ $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? 
                             if (function_exists('cal_days_in_month')) {
                                 $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
                             }
-
                             $day_wise_imventory_2 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
-                        }
-                        if ($i == 2) {
-                            $date = new DateTime("$year-$month-01");
-                            $date->modify('+2 month');
-                            $year = $date->format('Y');
-                            $month = $month + 1;
-                            $total_days_month = 30;
-                            if (function_exists('cal_days_in_month')) {
-                                $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                            }
-
-
-                            $day_wise_imventory_3 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
                         }
                     }
                     $day_wise_imventory = wp_json_encode(array_merge($day_wise_imventory_1, $day_wise_imventory_2));

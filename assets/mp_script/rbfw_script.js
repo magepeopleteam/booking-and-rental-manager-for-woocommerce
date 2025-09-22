@@ -85,7 +85,62 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
 
 
 
-function rbfw_off_day_dates(date,type='',today_enable='no'){
+/**
+ * Enhanced inventory checking for return date selection
+ * Sequential check: finds first sold out date from pickup, then disables all dates after it
+ */
+function rbfw_check_return_date_inventory(pickup_date, return_date, current_date, day_wise_inventory) {
+    try {
+        var pickup_dt = new Date(pickup_date);
+        var return_dt = new Date(return_date);
+        var current_dt = new Date(current_date.getFullYear(), current_date.getMonth(), current_date.getDate());
+        
+        // Find the first sold out date starting from pickup date
+        var check_date = new Date(pickup_dt);
+        var first_sold_out_date = null;
+        
+        // Check each date sequentially from pickup date onwards
+        while (check_date.getTime() <= current_dt.getTime() + (365 * 24 * 60 * 60 * 1000)) { // Check up to 1 year ahead
+            var curr_date_str = ("0" + check_date.getDate()).slice(-2) + "-" + 
+                               ("0" + (check_date.getMonth() + 1)).slice(-2) + "-" + 
+                               check_date.getFullYear();
+            
+            // If we find a sold out date, mark it and break
+            if (day_wise_inventory[curr_date_str] === 0) {
+                first_sold_out_date = new Date(check_date);
+                break;
+            }
+            
+            check_date.setDate(check_date.getDate() + 1);
+        }
+        
+        // If no sold out date found, check current date's own inventory
+        if (first_sold_out_date === null) {
+            var current_date_str = ("0" + current_dt.getDate()).slice(-2) + "-" + 
+                                  ("0" + (current_dt.getMonth() + 1)).slice(-2) + "-" + 
+                                  current_dt.getFullYear();
+            
+            if (day_wise_inventory[current_date_str] === 0) {
+                return { available: false, message: 'Sold Out' };
+            }
+            
+            return { available: true, message: '' };
+        }
+        
+        // If we found a sold out date, disable all dates after it (including available ones)
+        if (current_dt >= first_sold_out_date) {
+            return { available: false, message: 'Unavailable - Blocked due to sold out date in sequence' };
+        }
+        
+        return { available: true, message: '' };
+        
+    } catch (error) {
+        console.log('Error in rbfw_check_return_date_inventory:', error);
+        return { available: true, message: '' }; // Default to available on error
+    }
+}
+
+function rbfw_off_day_dates(date,type='',today_enable='no',md_drop_off=null){
 
 
     var curr_date = ("0" + (date.getDate())).slice(-2);
@@ -131,14 +186,28 @@ function rbfw_off_day_dates(date,type='',today_enable='no'){
             if(rbfw_rent_type == 'bike_car_md'){
                 if(jQuery('#rbfw_month_wise_inventory').val()){
                     const  day_wise_inventory = JSON.parse(jQuery('#rbfw_month_wise_inventory').val());
+
                     if(day_wise_inventory[date_in]==0){
                         return [false, "notav", 'Sold Out'];
+                    }
+                    
+                    // Enhanced inventory checking for return date selection
+                    // This triggers when selecting return date (dropoff)
+                    if(md_drop_off === true && typeof rbfw_check_return_date_inventory === 'function'){
+                        var pickup_date = jQuery('[name="rbfw_pickup_start_date"]').val();
+                        
+                        if(pickup_date){
+                            var inventory_check_result = rbfw_check_return_date_inventory(pickup_date, null, date, day_wise_inventory);
+                            if(!inventory_check_result.available){
+                                return [false, "notav", inventory_check_result.message];
+                            }
+                        }
                     }
                 }
 
             }
-            
-            
+
+
             return [true, "av", ""];
         }else{
             return false;

@@ -13,15 +13,13 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 
 
 jQuery('body').on('focusin', '.pickup_date', function(e) {
-
-
-
     jQuery(this).datepicker({
         dateFormat: js_date_format,
         minDate: '',
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            // Use enhanced inventory checking that considers return date
+            return rbfw_enhanced_pickup_beforeShowDay(date);
         },
         onSelect: function (dateString, data) {
             let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -60,6 +58,11 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
 
             }
+            
+            // Trigger calendar refresh to apply enhanced inventory checking
+            setTimeout(function() {
+                rbfw_refresh_calendar_with_inventory_check();
+            }, 200);
         },
     });
 
@@ -105,10 +108,14 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
                 getAvailableTimes(rbfw_particulars_data , date_ymd,rdfw_available_time,'dropoff_time');
                // particular_time_date_dependent_ajax(post_id,date_ymd_drop,'',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.dropoff_time');
             }
+            
+            // Trigger calendar refresh to apply enhanced inventory checking
+            rbfw_refresh_calendar_with_inventory_check();
         },
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            // Use enhanced inventory checking for return date selection
+            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable,true);
         }
     });
 });
@@ -200,7 +207,8 @@ jQuery('body').on('focusin', '.pickup_date_search', function(e) {
         minDate: '',
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            // Use enhanced inventory checking for search calendar as well
+            return rbfw_enhanced_pickup_beforeShowDay(date);
         },
         onSelect: function (dateString, data) {
             let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
@@ -234,7 +242,8 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_date_search"]', function(e)
         },
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable);
+            // Use enhanced inventory checking for search dropoff calendar as well
+            return rbfw_enhanced_pickup_beforeShowDay(date);
         }
 
     });
@@ -924,6 +933,38 @@ function calculateTotalMultipleItems(only_calculation=false) {
     }
 }
 
+/**
+ * Refresh calendar to apply enhanced inventory checking after return date selection
+ */
+function rbfw_refresh_calendar_with_inventory_check() {
+    // Small delay to ensure the return date is properly set
+    setTimeout(function() {
+        var pickup_date = jQuery('[name="rbfw_pickup_start_date"]').val();
+        var return_date = jQuery('[name="rbfw_pickup_end_date"]').val();
+        
+        if(pickup_date && return_date) {
+            // Refresh the datepicker to trigger beforeShowDay callback
+            jQuery('.pickup_date').datepicker('refresh');
+            jQuery('.dropoff_date').datepicker('refresh');
+            
+            // Also update any other calendar instances that might exist
+            jQuery('.pickup_date_search').datepicker('refresh');
+            jQuery('.dropoff_date_search').datepicker('refresh');
+            
+            console.log('Calendar refreshed with enhanced inventory checking for range:', pickup_date, 'to', return_date);
+        }
+    }, 100);
+}
+
+/**
+ * Enhanced beforeShowDay callback for pickup date - just use normal logic
+ */
+function rbfw_enhanced_pickup_beforeShowDay(date) {
+    // For pickup dates, use normal inventory checking
+    return rbfw_off_day_dates(date, 'md', rbfw_js_variables.rbfw_today_booking_enable, false);
+}
+
+
 
 function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
 
@@ -942,7 +983,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
     var rbfw_input_stock_quantity = jQuery('#rbfw_input_stock_quantity').val();
 
     if(typeof item_quantity === "undefined"){
-        item_quantity = jQuery("[name='rbfw_item_quantity_md']").val();
+        item_quantity = jQuery("[name='rbfw_item_quantity']").val();
     }
 
     let rbfw_service_price = jQuery('#rbfw_service_price').val();
