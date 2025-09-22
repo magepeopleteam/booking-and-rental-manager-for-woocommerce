@@ -297,7 +297,9 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
     $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
     $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true );
-    $total_booked = 0;
+
+
+
 
     if(is_array($rbfw_inventory)){
         foreach ($rbfw_inventory as $key => $inventory) {
@@ -324,11 +326,18 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                     $inventory_end_time = $inventory['rbfw_end_time'];
                 }
 
-                if($stock_manage_on_return_date=='No'){
+
+             
+
+                if($stock_manage_on_return_date=='no'){
+
                     $date = new DateTime($inventory_end_date);
                     $date->modify('-1 day');
                     $inventory_end_date = $date->format('Y-m-d');
                 }
+
+               
+
 
                 $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
                 $date_inventory_end = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
@@ -353,7 +362,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                             $total_booked += $rbfw_item_quantity;
                         }
                     }else{
-                        if ($date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end) {
+                        if ($date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end) {
                             $total_booked += $rbfw_item_quantity;
                         }
                     }
@@ -537,6 +546,7 @@ function total_multi_items_quantity($service,$date,$inventory,$inventory_based_o
 
 
 
+
 function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_days){
 
 
@@ -545,8 +555,9 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
         return;
     }
 
-    $startDate = date("Y-m-d", strtotime("$year-$month-01"));
-    $endDate = date("Y-m-d", strtotime("last day of $year-$month-01"));
+
+
+
 
     $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
     $rbfw_variations_stock = rbfw_get_variations_stock($post_id);
@@ -554,7 +565,6 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
     $rent_type = get_post_meta($post_id, 'rbfw_item_type', true);
     $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
 
-    $rbfw_enable_time_picker    = get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) : 'no';
 
 
 
@@ -564,13 +574,13 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
     $day_wise_inventory = [];
 
     for($i=1;$i<=$total_days;$i++){
-        
+
         $total_stock = 0;
         $date = str_pad($i, 2, '0', STR_PAD_LEFT).'-'.str_pad($month, 2, '0', STR_PAD_LEFT).'-'.$year;
         $date_range[] = $date;
 
- 
-   
+
+
         if ($rent_type == 'resort') {
             $rbfw_resort_room_data = get_post_meta($post_id, 'rbfw_resort_room_data', true);
             if (!empty($rbfw_resort_room_data)) {
@@ -592,11 +602,16 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
         $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
 
-        $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true );
+
+
+
+        $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
+
+
 
         $total_booked = 0;
 
-       
+
 
         if(is_array($rbfw_inventory)){
             foreach ($rbfw_inventory as $key => $inventory) {
@@ -637,7 +652,9 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
                         $booked_dates = $inventory['booked_dates'];
 
-                        if($stock_manage_on_return_date=='No'){
+
+                        if($stock_manage_on_return_date=='no'){
+
                             array_pop($booked_dates);
                         }
 
@@ -680,7 +697,7 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
             }
             $remaining_stock = max($variant_instock);
 
-        
+
         }
 
         $day_wise_inventory[$date] = $remaining_stock;
@@ -689,8 +706,6 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
     return $day_wise_inventory;
 
 }
-
-
 function total_service_quantity($paraent,$service,$date,$inventory,$inventory_based_on_return,$start_time = null, $end_time = null){
     $total_single_service = 0;
 

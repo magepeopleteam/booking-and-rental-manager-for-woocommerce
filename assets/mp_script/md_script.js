@@ -89,9 +89,8 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
 
     //const endDate = getURLParameter('rbfw_end_date');
 
-    if(jQuery('#hidden_pickup_date').val() > jQuery('#hidden_dropoff_date').val()){
-        jQuery(".dropoff_date").val('');
-    }
+    jQuery(".dropoff_date").val('');
+
 
     jQuery('.dropoff_date').datepicker({
         dateFormat: js_date_format,
@@ -114,8 +113,8 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
         },
         beforeShowDay: function(date)
         {
-            // Use enhanced inventory checking for return date selection
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable,true);
+            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable,'yes');
+
         }
     });
 });
