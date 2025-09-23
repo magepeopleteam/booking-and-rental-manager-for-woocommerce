@@ -2844,12 +2844,15 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
                 $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_half_day_rate', true );
                 $half_day_hour_threshold_start = get_post_meta( $post_id, 'half_day_hour_threshold_start', true );
                 $half_day_hour_threshold_end = get_post_meta( $post_id, 'half_day_hour_threshold_end', true );
+                $rbfw_half_day_rate = get_post_meta( $post_id, 'rbfw_half_day_rate', true );
 
-                if($rbfw_hourly_threshold){
-                    
+                if($rbfw_hourly_threshold && $hours >= $half_day_hour_threshold_start && $hours <= $half_day_hour_threshold_end){
+                    $price += (float) $rbfw_half_day_rate;
+                }else{
+                    $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
+
                 }
 
-                $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
 
             }
         } else {
