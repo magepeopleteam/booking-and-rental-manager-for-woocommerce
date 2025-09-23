@@ -80,10 +80,12 @@
 				$completed_orders = 0;
 				$cancelled_orders = 0;
 				$pending_orders = 0;
+				$refunded_orders = 0;
 				$total_amount = 0;
 				$completed_amount = 0;
 				$cancelled_amount = 0;
 				$pending_amount = 0;
+				$refunded_amount = 0;
 				
 				if ( $query->have_posts() ) {
 					while ( $query->have_posts() ) {
@@ -120,9 +122,10 @@
 									$cancelled_orders++;
 									$cancelled_amount += $order_total;
 									break;
-								// Note: Refunded orders are not counted in any category for now
-								// This matches the original behavior where refunded orders
-								// were not included in the statistics
+								case 'refunded':
+									$refunded_orders++;
+									$refunded_amount += $order_total;
+									break;
 								case 'pending':
 								case 'on-hold':
 								case 'processing':
@@ -172,6 +175,14 @@
                                 <div class="rental-order-list-stat-number"><?php echo esc_html( $pending_orders ); ?></div>
                                 <div class="rental-order-list-stat-label"><?php esc_html_e( 'Pending Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $pending_amount ) ); ?></div>
+                            </div>
+                        </div>
+                        <div class="rental-order-list-stat-card rental-order-list-refunded">
+                            <div class="rental-order-list-stat-icon">🔄</div>
+                            <div class="rental-order-list-stat-info">
+                                <div class="rental-order-list-stat-number"><?php echo esc_html( $refunded_orders ); ?></div>
+                                <div class="rental-order-list-stat-label"><?php esc_html_e( 'Refunded Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $refunded_amount ) ); ?></div>
                             </div>
                         </div>
                     </div>
