@@ -116,9 +116,13 @@
 									break;
 								case 'cancelled':
 								case 'canceled':
+								case 'failed':
 									$cancelled_orders++;
 									$cancelled_amount += $order_total;
 									break;
+								// Note: Refunded orders are not counted in any category for now
+								// This matches the original behavior where refunded orders
+								// were not included in the statistics
 								case 'pending':
 								case 'on-hold':
 								case 'processing':
