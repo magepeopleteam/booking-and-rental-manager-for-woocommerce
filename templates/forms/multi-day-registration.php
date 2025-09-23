@@ -272,7 +272,7 @@ $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? 
                                             <table>
                                                 <tbody>
                                                 <tr>
-                                                    <td <?php echo ($rbfw_enable_time_picker == 'yes' &&  $enable_hourly_rate=='yes')?'colspan="2"':'' ?>>Over <strong><?php echo esc_html($item['rbfw_start_day']) ?></strong> Days </td>
+                                                    <td <?php echo ($rbfw_enable_time_picker == 'yes' &&  $enable_hourly_rate=='yes')?'colspan="2"':'' ?>> <?php esc_html_e( 'Over', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html($item['rbfw_start_day']) ?></strong> <?php esc_html_e( 'Days', 'booking-and-rental-manager-for-woocommerce' ); ?>  </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
