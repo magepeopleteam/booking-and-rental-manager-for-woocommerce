@@ -182,6 +182,8 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 
 function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_particular,is_calendar=null) {
 
+
+
     var scheduleJson = JSON.parse(schedule);
     var rdfw_available_timeJson = JSON.parse(rdfw_available_time);
     let  sapecific_date_time = false;
@@ -337,6 +339,46 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
             }
         })
     }
+
+    let pickup_date = jQuery('#hidden_pickup_date').val();
+    let dropoff_date = jQuery('#hidden_dropoff_date').val();
+    let selected_time = jQuery('.pickup_time').val();
+
+
+    // Only validate if both dates are selected and they are the same day
+    if (pickup_date && dropoff_date && pickup_date == dropoff_date && selected_time) {
+        // Convert pickup time to comparable format (HH:MM)
+        let pickup_time_parts = selected_time.split(':');
+        let pickup_hours = parseInt(pickup_time_parts[0]);
+        let pickup_minutes = parseInt(pickup_time_parts[1]);
+        let pickup_time_minutes = pickup_hours * 60 + pickup_minutes;
+
+        // Clear current return time selection
+        jQuery(".dropoff_time").val("").trigger("change");
+
+        // Update return time options
+        jQuery("#dropoff_time option").each(function() {
+            var thisOptionValue = jQuery(this).val();
+            if (thisOptionValue && thisOptionValue !== '') {
+                // Convert return time to comparable format (HH:MM)
+                let return_time_parts = thisOptionValue.split(':');
+                let return_hours = parseInt(return_time_parts[0]);
+                let return_minutes = parseInt(return_time_parts[1]);
+                let return_time_minutes = return_hours * 60 + return_minutes;
+
+                // Disable return times that are earlier than or equal to pickup time
+                if (return_time_minutes <= pickup_time_minutes) {
+                    jQuery(this).attr('disabled', true);
+                } else {
+                    jQuery(this).attr('disabled', false);
+                }
+            } else {
+                jQuery(this).attr('disabled', true);
+            }
+        });
+    }
+
+
 }
 
 
@@ -406,7 +448,8 @@ jQuery(document).on('click', '.groupCheckBox .customCheckboxLabel', function () 
 jQuery(document).on('change', '.pickup_time', function() {
     let pickup_date = jQuery('#hidden_pickup_date').val();
     let dropoff_date = jQuery('#hidden_dropoff_date').val();
-    let selected_time = jQuery(this).val();
+    let selected_time = jQuery('.pickup_time').val();
+
     
     // Only validate if both dates are selected and they are the same day
     if (pickup_date && dropoff_date && pickup_date == dropoff_date && selected_time) {
