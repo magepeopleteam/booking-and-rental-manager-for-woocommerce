@@ -185,7 +185,20 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
 
 
     var scheduleJson = JSON.parse(schedule);
-    var rdfw_available_timeJson = JSON.parse(rdfw_available_time);
+    // Safely parse and normalize rdfw_available_time into an array
+    var rdfw_available_timeJson = [];
+    try {
+        var parsedAvailable = (typeof rdfw_available_time === 'string') ? JSON.parse(rdfw_available_time) : rdfw_available_time;
+        if (Array.isArray(parsedAvailable)) {
+            rdfw_available_timeJson = parsedAvailable;
+        } else if (parsedAvailable && typeof parsedAvailable === 'object') {
+            rdfw_available_timeJson = Object.values(parsedAvailable);
+        } else {
+            rdfw_available_timeJson = [];
+        }
+    } catch (e) {
+        rdfw_available_timeJson = [];
+    }
     let  sapecific_date_time = false;
     let  time_enable = false;
     let past_time = ''
@@ -273,7 +286,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
         }
     });
 
-    if(sapecific_date_time==false){
+    if(sapecific_date_time==false && Array.isArray(rdfw_available_timeJson)){
         rdfw_available_timeJson.forEach(timeObj => {
             if (timeObj.status === "enabled") {
 
