@@ -211,7 +211,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                 if (timeObj.status === "enabled") {
 
                     let now = new Date();
-                    let currentDateStr = now.toISOString().split("T")[0]; // YYYY-MM-DD
+                    let currentDateStr = new Date(rbfw_js_variables.currentDateTime.replace(' ', 'T'));
                     let selectedDateStr = selectedDate.toISOString().split("T")[0];
 
                     if (selectedDateStr === currentDateStr) {
@@ -275,14 +275,18 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
         rdfw_available_timeJson.forEach(timeObj => {
             if (timeObj.status === "enabled") {
 
-                let now = new Date();
-                let currentDateStr = now.toISOString().split("T")[0]; // YYYY-MM-DD
+                let now = new Date(rbfw_js_variables.currentDateTime.replace(" ", "T"));// new Date();
+                let currentDateStr = rbfw_js_variables.currentDate;
                 let selectedDateStr = selectedDate.toISOString().split("T")[0];
+
+                console.log('currentDateStr',currentDateStr);
+                console.log('selectedDateStr',selectedDateStr);
+                console.log(rbfw_js_variables.currentDateTime);
 
                 if (selectedDateStr === currentDateStr) {
                     // Parse available_time into a Date object for comparison
                     let [hours, minutes] = timeObj.time.split(":").map(Number);
-                    let timeDate = new Date();
+                    let timeDate = new Date(rbfw_js_variables.currentDateTime.replace(" ", "T"));
                     timeDate.setHours(hours, minutes, 0, 0);
 
                     if (timeDate <= now) {
@@ -417,21 +421,45 @@ function particular_time_date_dependent_ajax(post_id,date_ymd,type='',rbfw_enabl
 
             if (pickup_date == dropoff_date) {
                 let selected_time = jQuery('.pickup_time').val();
-                selected_time = new Date (pickup_date +' '+ selected_time);
-                jQuery(".dropoff_time").val("").trigger("change");
+                if (selected_time && selected_time !== '') {
+                    // Convert pickup time to comparable format (HH:MM)
+                    let pickup_time_parts = selected_time.split(':');
+                    let pickup_hours = parseInt(pickup_time_parts[0]);
+                    let pickup_minutes = parseInt(pickup_time_parts[1]);
+                    let pickup_time_minutes = pickup_hours * 60 + pickup_minutes;
+                    
+                    jQuery(".dropoff_time").val("").trigger("change");
 
-                jQuery("#dropoff_time option").each(function() {
-                    var thisOptionValue = jQuery(this).val();
-                    thisOptionValue = new Date(pickup_date +' '+ thisOptionValue);
-
-
-                    if (thisOptionValue <= selected_time) {
-                        jQuery(this).attr('disabled', true);
-                    } else {
-                        jQuery(this).attr('disabled', false);
-                    }
-                });
-
+                    jQuery("#dropoff_time option").each(function() {
+                        var thisOptionValue = jQuery(this).val();
+                        if (thisOptionValue && thisOptionValue !== '') {
+                            // Convert return time to comparable format (HH:MM)
+                            let return_time_parts = thisOptionValue.split(':');
+                            let return_hours = parseInt(return_time_parts[0]);
+                            let return_minutes = parseInt(return_time_parts[1]);
+                            let return_time_minutes = return_hours * 60 + return_minutes;
+                            
+                            // Disable return times that are earlier than or equal to pickup time
+                            if (return_time_minutes <= pickup_time_minutes) {
+                                jQuery(this).attr('disabled', true);
+                            } else {
+                                jQuery(this).attr('disabled', false);
+                            }
+                        } else {
+                            jQuery(this).attr('disabled', true);
+                        }
+                    });
+                } else {
+                    // If no pickup time selected, enable all return time options
+                    jQuery("#dropoff_time option").each(function() {
+                        var thisOptionValue = jQuery(this).val();
+                        if (thisOptionValue != '') {
+                            jQuery(this).attr('disabled', false);
+                        } else {
+                            jQuery(this).attr('disabled', true);
+                        }
+                    });
+                }
             } else {
                 jQuery("#dropoff_time option").each(function() {
                     var thisOptionValue = jQuery(this).val();
@@ -496,6 +524,46 @@ jQuery(document).on('click', '.groupCheckBox .customCheckboxLabel', function () 
     }).promise().done(function () {
         parent.find('input[type="hidden"]').val(value);
     });
+});
+
+// Real-time validation for pickup time change
+jQuery(document).on('change', '.pickup_time', function() {
+    let pickup_date = jQuery('#hidden_pickup_date').val();
+    let dropoff_date = jQuery('#hidden_dropoff_date').val();
+    let selected_time = jQuery(this).val();
+    
+    // Only validate if both dates are selected and they are the same day
+    if (pickup_date && dropoff_date && pickup_date == dropoff_date && selected_time) {
+        // Convert pickup time to comparable format (HH:MM)
+        let pickup_time_parts = selected_time.split(':');
+        let pickup_hours = parseInt(pickup_time_parts[0]);
+        let pickup_minutes = parseInt(pickup_time_parts[1]);
+        let pickup_time_minutes = pickup_hours * 60 + pickup_minutes;
+        
+        // Clear current return time selection
+        jQuery(".dropoff_time").val("").trigger("change");
+        
+        // Update return time options
+        jQuery("#dropoff_time option").each(function() {
+            var thisOptionValue = jQuery(this).val();
+            if (thisOptionValue && thisOptionValue !== '') {
+                // Convert return time to comparable format (HH:MM)
+                let return_time_parts = thisOptionValue.split(':');
+                let return_hours = parseInt(return_time_parts[0]);
+                let return_minutes = parseInt(return_time_parts[1]);
+                let return_time_minutes = return_hours * 60 + return_minutes;
+                
+                // Disable return times that are earlier than or equal to pickup time
+                if (return_time_minutes <= pickup_time_minutes) {
+                    jQuery(this).attr('disabled', true);
+                } else {
+                    jQuery(this).attr('disabled', false);
+                }
+            } else {
+                jQuery(this).attr('disabled', true);
+            }
+        });
+    }
 });
 
 

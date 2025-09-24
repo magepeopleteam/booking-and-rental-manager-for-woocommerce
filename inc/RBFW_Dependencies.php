@@ -263,14 +263,17 @@
                         $today_booking_enable = 'no';
                     }
 
-
+                    $timezone = wp_timezone(); // WP 5.3+
+                    $datetime = new DateTime('now', $timezone);
 
                     wp_localize_script(
                             'jquery',
                             'rbfw_js_variables',
                             array(
                                     'rbfw_today_booking_enable' => $today_booking_enable,
-                                    'timeFormat' => get_option('time_format'),
+                                'timeFormat' => get_option('time_format'),
+                                'currentDateTime' => $datetime->format('Y-m-d H:i:s'),
+                                'currentDate' => $datetime->format('Y-m-d'),
                             )
                     );
 
