@@ -86,10 +86,10 @@ if(isset($_POST['post_id'])){
 
                                             <tr class="rbfw_bike_car_sd_price_table_row">
                                                 <td>
-                                                    <input class="medium"  type="text" name="rbfw_bike_car_sd_data_sp[<?php echo $key ?>][type_price][<?php echo $key_1 ?>][type]"  value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input class="medium"  type="text" name="rbfw_bike_car_sd_data_sp[<?php echo $key ?>][type_price][<?php echo $key_1 ?>][type]"  value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                                 <td>
-                                                    <input class="medium" type="number" name="rbfw_bike_car_sd_data_sp[<?php echo $key ?>][type_price][<?php echo $key_1 ?>][price]" step=".01" value="<?php echo esc_attr( $single_item['type_price'][$key_1]['price'] ); ?>" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input class="medium" type="number" name="rbfw_bike_car_sd_data_sp[<?php echo $key ?>][type_price][<?php echo $key_1 ?>][price]" step=".01" value="<?php echo esc_attr( $single_item['type_price'][$key_1]['price'] ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                             </tr>
 
@@ -152,10 +152,10 @@ if(isset($_POST['post_id'])){
 
                                     <tr class="rbfw_bike_car_sd_price_table_row">
                                         <td>
-                                            <input  class="medium rent_type_<?php echo $key_1 ?>" type="text" name="rbfw_bike_car_sd_data_sp[][<?php echo $key_1 ?>][type]"  value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                            <input  class="medium rent_type_<?php echo $key_1 ?>" type="text" name="rbfw_bike_car_sd_data_sp[][<?php echo $key_1 ?>][type]"  value="<?php echo esc_attr( $value['rent_type'] ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                         </td>
                                         <td>
-                                            <input  class="medium price_<?php echo $key_1 ?>" type="number" name="rbfw_bike_car_sd_data_sp[][<?php echo $key_1 ?>][price]" step=".01"  placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                            <input  class="medium price_<?php echo $key_1 ?>" type="number" name="rbfw_bike_car_sd_data_sp[][<?php echo $key_1 ?>][price]" step=".01"  placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                         </td>
                                     </tr>
 
