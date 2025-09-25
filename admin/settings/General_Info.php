@@ -331,9 +331,9 @@
                 <section class="bg-light mt-5">
                     <div>
                         <label>
-							<?php echo esc_html( "Sub Title",'booking-and-rental-manager-for-woocommerce'); ?>
+							<?php esc_html_e( "Sub Title",'booking-and-rental-manager-for-woocommerce'); ?>
                         </label>
-                        <p><?php echo esc_html( "Add sub title",'booking-and-rental-manager-for-woocommerce'); ?></p>
+                        <p><?php esc_html_e( "Add sub title",'booking-and-rental-manager-for-woocommerce'); ?></p>
                     </div>
                 </section>
                 <section class="rbfw-sub-title">
