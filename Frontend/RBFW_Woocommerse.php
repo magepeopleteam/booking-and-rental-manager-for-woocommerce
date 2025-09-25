@@ -290,9 +290,8 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
                 $rbfw_enable_time_picker  = get_post_meta( $rbfw_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_time_picker', true ) : '';
-
+                $end_date = isset($sd_input_data_sabitized['rbfw_pickup_end_date']) ? $sd_input_data_sabitized['rbfw_pickup_end_date'] : '';
                 if($rbfw_count_extra_day_enable=='on' && $rbfw_enable_time_picker=='no') {
-                    $end_date = isset($sd_input_data_sabitized['rbfw_pickup_end_date']) ? $sd_input_data_sabitized['rbfw_pickup_end_date'] : '';
                     $date = new DateTime($end_date);
                     $date->modify("+1 day");
                     $end_date = $date->format("Y-m-d");
