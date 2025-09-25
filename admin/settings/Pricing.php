@@ -1286,6 +1286,7 @@
 
 			public function rbfw_day_row( $day_name, $day_slug ) {
 				$hourly_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) : '';
+				$half_day_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_half_day_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_half_day_rate', true ) : '';
 				$daily_rate  = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) : '';
 				$enable      = ! empty( get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) ) ? get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) : '';
 				?>
@@ -1297,6 +1298,13 @@
                             name="rbfw_<?php echo esc_attr( $day_slug ); ?>_hourly_rate"
                             value="<?php echo esc_attr( $hourly_rate ); ?>"
                             placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                    </td>
+                    <td>
+                        <input
+                                type="number"
+                                name="rbfw_<?php echo esc_attr( $day_slug ); ?>_half_day_rate"
+                                value="<?php echo esc_attr( $half_day_rate ); ?>"
+                                placeholder="<?php esc_attr_e( 'Half Day Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                     </td>
                     <td>
                         <input
@@ -1402,12 +1410,18 @@
 
                 $rbfw_enable_time_picker    = get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) : 'no';
                 $rbfw_enable_hourly_rate   = get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
+                $rbfw_hourly_rate          = get_post_meta( $post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_hourly_rate', true ) : 0;
+
+                $rbfw_enable_half_day_rate   = get_post_meta( $post_id, 'rbfw_enable_half_day_rate', true ) ? get_post_meta( $post_id, 'rbfw_enable_half_day_rate', true ) : 'no';
+                $rbfw_half_day_rate          = get_post_meta( $post_id, 'rbfw_half_day_rate', true ) ? get_post_meta( $post_id, 'rbfw_half_day_rate', true ) : 0;
+
+                $half_day_hour_threshold_start   = get_post_meta( $post_id, 'half_day_hour_threshold_start', true ) ? get_post_meta( $post_id, 'half_day_hour_threshold_start', true ) : 'no';
+                $half_day_hour_threshold_end   = get_post_meta( $post_id, 'half_day_hour_threshold_end', true ) ? get_post_meta( $post_id, 'half_day_hour_threshold_end', true ) : 'no';
 
                 $rbfw_hourly_threshold   = get_post_meta( $post_id, 'rbfw_hourly_threshold', true ) ? get_post_meta( $post_id, 'rbfw_hourly_threshold', true ) : '0';
                 $rbfw_enable_hourly_threshold    = get_post_meta( $post_id, 'rbfw_enable_hourly_threshold', true ) ? get_post_meta( $post_id, 'rbfw_enable_hourly_threshold', true ) : 'no';
 
 
-                $rbfw_hourly_rate          = get_post_meta( $post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $post_id, 'rbfw_hourly_rate', true ) : 0;
 				$rbfw_item_type            = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$mdedo                     = ( $rbfw_item_type == 'bike_car_md' || $rbfw_item_type == 'equipment' || $rbfw_item_type == 'dress' || $rbfw_item_type == 'others') ? 'block' : 'none';
 				$rbfw_enable_daywise_price = get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) : 'no';
@@ -1511,6 +1525,42 @@
                             </div>
                         </div>
 
+
+                        <div class="item hourly-price-item" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'flex' : 'none' ); ?>;">
+                            <div class="item-left">
+                                <div class="label">Half-Day Price</div>
+                                <div class="description">
+                                    Pricing will be calculated as half-day when rental hours fall within the specified range.
+                                </div>
+                            </div>
+                            <div class="item-right">
+                                <div class="toggle half-day-price-toggle <?php echo esc_attr( $rbfw_enable_half_day_rate == 'yes' ? 'active' : '' ); ?>">
+                                    <div class="toggle-knob"></div>
+                                </div>
+                                <input type="number" name="rbfw_half_day_rate" step="0.01" value="<?php echo esc_attr( $rbfw_half_day_rate ); ?>" placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( $rbfw_enable_half_day_rate == 'no' ? 'disabled' : '' ); ?> id="half-day-price-input" class="price-input">
+                                <input type="hidden" name="rbfw_enable_half_day_rate" id="rbfw_enable_half_day_rate" value="<?php echo esc_attr( $rbfw_enable_half_day_rate ); ?>">
+                            </div>
+                        </div>
+
+                        <!-- Hour Threshold (conditional) -->
+                        <div class="item half-day-price-item" style="display: <?php echo esc_attr( $rbfw_enable_half_day_rate == 'yes' ? 'flex' : 'none' ); ?>;">
+                            <div class="item-left">
+                                <div class="label">Half-Day Hour Threshold</div>
+                                <div class="description">
+                                    Define the hour range for half-day pricing. Rentals within this range will be charged as half-day.
+                                </div>
+                            </div>
+                            <div class="item-right">
+                                <div class="threshold-inputs">
+                                    <span>From</span>
+                                    <input  type="number" name="half_day_hour_threshold_start" class="input-field" value="<?php echo esc_attr( $half_day_hour_threshold_start ); ?>" min="1" max="24">
+                                    <span>to</span>
+                                    <input type="number" name="half_day_hour_threshold_end" class="input-field" value="<?php echo esc_attr( $half_day_hour_threshold_end ); ?>" min="1" max="24">
+                                    <span>hours</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Hourly Price (conditional) -->
                         <div class="item hourly-price-item" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'flex' : 'none' ); ?>;">
                             <div class="item-left">
@@ -1575,6 +1625,7 @@
                             <tr>
                                 <th scope="row"><?php esc_html_e( 'Day Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                 <th scope="row"><?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th scope="row"><?php esc_html_e( 'Half Day Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                 <th scope="row"><?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                 <th scope="row"><?php esc_html_e( 'Enable/Disable', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                             </tr>
@@ -1931,6 +1982,14 @@
                     $rbfw_enable_hourly_rate            = isset( $_POST['rbfw_enable_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_hourly_rate'] ) ) : 'no';
                     $hourly_rate                        = isset( $_POST['rbfw_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_hourly_rate'] ) ) : 0;
 
+
+
+                    $rbfw_enable_half_day_rate           = isset( $_POST['rbfw_enable_half_day_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_half_day_rate'] ) ) : 0;
+                    $rbfw_half_day_rate                  = isset( $_POST['rbfw_half_day_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_half_day_rate'] ) ) : 'no';
+                    $half_day_hour_threshold_start       = isset( $_POST['half_day_hour_threshold_start'] ) ? sanitize_text_field( wp_unslash( $_POST['half_day_hour_threshold_start'] ) ) : 'no';
+                    $half_day_hour_threshold_end         = isset( $_POST['half_day_hour_threshold_end'] ) ? sanitize_text_field( wp_unslash( $_POST['half_day_hour_threshold_end'] ) ) : 0;
+
+
                     $rbfw_enable_daywise_price          = isset( $_POST['rbfw_enable_daywise_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_daywise_price'] ) ) : 'no';
 
                     $rbfw_item_type          = isset( $_POST['rbfw_item_type'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_item_type'] ) ) : '';
@@ -1962,34 +2021,8 @@
 					$rbfw_item_stock_quantity_timely = isset( $_POST['rbfw_item_stock_quantity_timely'] ) ? intval( wp_unslash( $_POST['rbfw_item_stock_quantity_timely'] ) ) : 1;
 					// daywise configureation============================
 					//sun
-					$hourly_rate_sun = isset( $_POST['rbfw_sun_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sun_hourly_rate'] ) ) : '';
-					$daily_rate_sun  = isset( $_POST['rbfw_sun_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sun_daily_rate'] ) ) : '';
-					$enabled_sun     = isset( $_POST['rbfw_enable_sun_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_sun_day'] ) ) : 'no';
-					//mon
-					$hourly_rate_mon = isset( $_POST['rbfw_mon_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mon_hourly_rate'] ) ) : '';
-					$daily_rate_mon  = isset( $_POST['rbfw_mon_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mon_daily_rate'] ) ) : '';
-					$enabled_mon     = isset( $_POST['rbfw_enable_mon_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_mon_day'] ) ) : 'no';
-					//tue
-					$hourly_rate_tue = isset( $_POST['rbfw_tue_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_tue_hourly_rate'] ) ) : '';
-					$daily_rate_tue  = isset( $_POST['rbfw_tue_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_tue_daily_rate'] ) ) : '';
-					$enabled_tue     = isset( $_POST['rbfw_enable_tue_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_tue_day'] ) ) : 'no';
-					//wed
-					$hourly_rate_wed = isset( $_POST['rbfw_wed_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_wed_hourly_rate'] ) ) : '';
-					$daily_rate_wed  = isset( $_POST['rbfw_wed_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_wed_daily_rate'] ) ) : '';
-					$enabled_wed     = isset( $_POST['rbfw_enable_wed_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_wed_day'] ) ) : 'no';
-					//thu
-					$hourly_rate_thu = isset( $_POST['rbfw_thu_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_thu_hourly_rate'] ) ) : '';
-					$daily_rate_thu  = isset( $_POST['rbfw_thu_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_thu_daily_rate'] ) ) : '';
-					$enabled_thu     = isset( $_POST['rbfw_enable_thu_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_thu_day'] ) ) : 'no';
-					//fri
-					$hourly_rate_fri = isset( $_POST['rbfw_fri_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_fri_hourly_rate'] ) ) : '';
-					$daily_rate_fri  = isset( $_POST['rbfw_fri_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_fri_daily_rate'] ) ) : '';
-					$enabled_fri     = isset( $_POST['rbfw_enable_fri_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_fri_day'] ) ) : 'no';
-					//sat
-					$hourly_rate_sat            = isset( $_POST['rbfw_sat_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sat_hourly_rate'] ) ) : '';
-					$daily_rate_sat             = isset( $_POST['rbfw_sat_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sat_daily_rate'] ) ) : '';
-					$enabled_sat                = isset( $_POST['rbfw_enable_sat_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_sat_day'] ) ) : 'no';
-					$manage_inventory_as_timely = isset( $_POST['manage_inventory_as_timely'] ) ? sanitize_text_field( wp_unslash( $_POST['manage_inventory_as_timely'] ) ) : 'off';
+
+                    $manage_inventory_as_timely = isset( $_POST['manage_inventory_as_timely'] ) ? sanitize_text_field( wp_unslash( $_POST['manage_inventory_as_timely'] ) ) : 'off';
 					$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : 'off';
 
 
@@ -2027,6 +2060,12 @@
                     update_post_meta( $post_id, 'rbfw_hourly_rate', $hourly_rate );
 
 
+                    update_post_meta( $post_id, 'rbfw_enable_half_day_rate', $rbfw_enable_half_day_rate );
+                    update_post_meta( $post_id, 'rbfw_half_day_rate', $rbfw_half_day_rate );
+                    update_post_meta( $post_id, 'half_day_hour_threshold_start', $half_day_hour_threshold_start );
+                    update_post_meta( $post_id, 'half_day_hour_threshold_end', $half_day_hour_threshold_end );
+
+
 
 					update_post_meta( $post_id, 'rbfw_enable_daywise_price', $rbfw_enable_daywise_price );
 
@@ -2047,7 +2086,56 @@
 					update_post_meta( $post_id, 'rbfw_enable_resort_daylong_price', $rbfw_enable_resort_daylong_price );
 					update_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', $rbfw_sd_appointment_max_qty_per_session );
 					update_post_meta( $post_id, 'rbfw_sd_appointment_ondays', $rbfw_sd_appointment_ondays );
-					// sun
+
+                    $days = [ 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat' ];
+
+                    foreach ( $days as $day ) {
+                        // sanitize and get posted values
+                        $hourly_rate = isset( $_POST["rbfw_{$day}_hourly_rate"] ) ? sanitize_text_field( wp_unslash( $_POST["rbfw_{$day}_hourly_rate"] ) ) : '';
+                        $half_day_rate = isset( $_POST["rbfw_{$day}_half_day_rate"] ) ? sanitize_text_field( wp_unslash( $_POST["rbfw_{$day}_half_day_rate"] ) ) : '';
+                        $daily_rate  = isset( $_POST["rbfw_{$day}_daily_rate"] ) ? sanitize_text_field( wp_unslash( $_POST["rbfw_{$day}_daily_rate"] ) ) : '';
+                        $enabled     = isset( $_POST["rbfw_enable_{$day}_day"] ) ? sanitize_text_field( wp_unslash( $_POST["rbfw_enable_{$day}_day"] ) ) : 'no';
+
+                        // update post meta
+                        update_post_meta( $post_id, "rbfw_{$day}_hourly_rate", $hourly_rate );
+                        update_post_meta( $post_id, "rbfw_{$day}_half_day_rate", $half_day_rate );
+                        update_post_meta( $post_id, "rbfw_{$day}_daily_rate", $daily_rate );
+                        update_post_meta( $post_id, "rbfw_enable_{$day}_day", $enabled );
+                    }
+
+
+                    /*$hourly_rate_sun = isset( $_POST['rbfw_sun_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sun_hourly_rate'] ) ) : '';
+                    $daily_rate_sun  = isset( $_POST['rbfw_sun_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sun_daily_rate'] ) ) : '';
+                    $enabled_sun     = isset( $_POST['rbfw_enable_sun_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_sun_day'] ) ) : 'no';
+                    //mon
+                    $hourly_rate_mon = isset( $_POST['rbfw_mon_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mon_hourly_rate'] ) ) : '';
+                    $daily_rate_mon  = isset( $_POST['rbfw_mon_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mon_daily_rate'] ) ) : '';
+                    $enabled_mon     = isset( $_POST['rbfw_enable_mon_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_mon_day'] ) ) : 'no';
+                    //tue
+                    $hourly_rate_tue = isset( $_POST['rbfw_tue_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_tue_hourly_rate'] ) ) : '';
+                    $daily_rate_tue  = isset( $_POST['rbfw_tue_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_tue_daily_rate'] ) ) : '';
+                    $enabled_tue     = isset( $_POST['rbfw_enable_tue_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_tue_day'] ) ) : 'no';
+                    //wed
+                    $hourly_rate_wed = isset( $_POST['rbfw_wed_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_wed_hourly_rate'] ) ) : '';
+                    $daily_rate_wed  = isset( $_POST['rbfw_wed_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_wed_daily_rate'] ) ) : '';
+                    $enabled_wed     = isset( $_POST['rbfw_enable_wed_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_wed_day'] ) ) : 'no';
+                    //thu
+                    $hourly_rate_thu = isset( $_POST['rbfw_thu_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_thu_hourly_rate'] ) ) : '';
+                    $daily_rate_thu  = isset( $_POST['rbfw_thu_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_thu_daily_rate'] ) ) : '';
+                    $enabled_thu     = isset( $_POST['rbfw_enable_thu_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_thu_day'] ) ) : 'no';
+                    //fri
+                    $hourly_rate_fri = isset( $_POST['rbfw_fri_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_fri_hourly_rate'] ) ) : '';
+                    $daily_rate_fri  = isset( $_POST['rbfw_fri_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_fri_daily_rate'] ) ) : '';
+                    $enabled_fri     = isset( $_POST['rbfw_enable_fri_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_fri_day'] ) ) : 'no';
+                    //sat
+                    $hourly_rate_sat            = isset( $_POST['rbfw_sat_hourly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sat_hourly_rate'] ) ) : '';
+                    $daily_rate_sat             = isset( $_POST['rbfw_sat_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_sat_daily_rate'] ) ) : '';
+                    $enabled_sat                = isset( $_POST['rbfw_enable_sat_day'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_sat_day'] ) ) : 'no';
+
+
+
+
+                    // sun
 					update_post_meta( $post_id, 'rbfw_sun_hourly_rate', $hourly_rate_sun );
 					update_post_meta( $post_id, 'rbfw_sun_daily_rate', $daily_rate_sun );
 					update_post_meta( $post_id, 'rbfw_enable_sun_day', $enabled_sun );
@@ -2074,7 +2162,8 @@
 					// sat
 					update_post_meta( $post_id, 'rbfw_sat_hourly_rate', $hourly_rate_sat );
 					update_post_meta( $post_id, 'rbfw_sat_daily_rate', $daily_rate_sat );
-					update_post_meta( $post_id, 'rbfw_enable_sat_day', $enabled_sat );
+					update_post_meta( $post_id, 'rbfw_enable_sat_day', $enabled_sat );*/
+
 					update_post_meta( $post_id, 'manage_inventory_as_timely', $manage_inventory_as_timely );
 					update_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', $rbfw_item_stock_quantity_timely );
 					update_post_meta( $post_id, 'enable_specific_duration', $enable_specific_duration );

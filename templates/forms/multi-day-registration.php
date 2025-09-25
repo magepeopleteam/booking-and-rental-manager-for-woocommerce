@@ -272,7 +272,7 @@ $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? 
                                             <table>
                                                 <tbody>
                                                 <tr>
-                                                    <td <?php echo ($rbfw_enable_time_picker == 'yes' &&  $enable_hourly_rate=='yes')?'colspan="2"':'' ?>>Over <strong><?php echo esc_html($item['rbfw_start_day']) ?></strong> Days </td>
+                                                    <td <?php echo ($rbfw_enable_time_picker == 'yes' &&  $enable_hourly_rate=='yes')?'colspan="2"':'' ?>> <?php esc_html_e( 'Over', 'booking-and-rental-manager-for-woocommerce' ); ?> <strong><?php echo esc_html($item['rbfw_start_day']) ?></strong> <?php esc_html_e( 'Days', 'booking-and-rental-manager-for-woocommerce' ); ?>  </td>
                                                 </tr>
                                                 <tr>
                                                     <td>
@@ -622,9 +622,9 @@ $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? 
                                                 </td>
                                                 <td class="resource-title-qty">
                                                     <?php echo esc_html($extra['service_name']); ?>
-                                            <?php if($available_qty_info_switch == 'yes'){ ?>
-                                                    <i class="resource-qty"><?php esc_html_e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo '('.esc_html($extra['service_qty']).')'; ?></span></i>
-                                                <?php } ?>
+                                                    <?php if($available_qty_info_switch == 'yes'){ ?>
+                                                        <i class="resource-qty"><?php esc_html_e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo '('.esc_html($extra['service_qty']).')'; ?></span></i>
+                                                    <?php } ?>
                                                 </td>
                                                 <td class="w_20"><?php echo wp_kses(wc_price($extra['service_price']),rbfw_allowed_html()); ?></td>
                                                 <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>

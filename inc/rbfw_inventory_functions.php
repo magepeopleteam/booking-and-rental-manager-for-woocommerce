@@ -327,7 +327,6 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                 }
 
 
-             
 
                 if($stock_manage_on_return_date=='no'){
 
@@ -336,7 +335,6 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                     $inventory_end_date = $date->format('Y-m-d');
                 }
 
-               
 
 
                 $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);

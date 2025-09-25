@@ -101,7 +101,7 @@
                                         <table>
                                             <tbody>
                                             <tr>
-                                                <td colspan="2">Over <strong><?php echo esc_html($mds_single['start_day']) ?></strong> Days</td>
+                                                <td colspan="2"><?php esc_html_e('Over','booking-and-rental-manager-for-woocommerce'); ?> <strong><?php echo esc_html($mds_single['start_day']) ?></strong> <?php esc_html_e('Days','booking-and-rental-manager-for-woocommerce'); ?> </td>
                                             </tr>
                                             <tr>
                                                 <td>
