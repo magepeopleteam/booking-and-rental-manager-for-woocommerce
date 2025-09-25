@@ -415,7 +415,7 @@ function fetch_order_details_callback() {
                         <?php $total_security_deposit_amount = $total_security_deposit_amount + $security_deposit_amount;
                         if ( ! empty( $security_deposit_amount ) ) { ?>
                             <tr>
-                                <td><strong><?php echo esc_html( 'Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?>:</strong></td>
+                                <td><strong><?php echo esc_html__( 'Security Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?>:</strong></td>
                                 <td><?php echo wp_kses( wc_price( $security_deposit_amount ), rbfw_allowed_html() ); ?></td>
                             </tr>
                         <?php } ?>
@@ -497,7 +497,7 @@ function fetch_order_details_callback() {
                     <?php if ( $total_security_deposit_amount ) { ?>
                         <tr>
                             <td>
-                                <strong><?php echo esc_html( 'Sceurity Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?>:
+                                <strong><?php echo esc_html__( 'Sceurity Deposit', 'booking-and-rental-manager-for-woocommerce' ); ?>:
                                 </strong>
                             </td>
                             <td><?php echo wp_kses( wc_price( $total_security_deposit_amount ), rbfw_allowed_html() ); ?></td>
