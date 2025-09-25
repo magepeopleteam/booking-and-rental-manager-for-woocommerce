@@ -24,9 +24,10 @@
 				//wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style.css', array(), time(), 'all' );
 				wp_enqueue_style( 'mp_admin_settings', RBFW_PLUGIN_URL . '/assets/mp_admin_settings.css', array(), time(), 'all' );
 				// wp_enqueue_script( 'mp_plugin_global_rbfw', RBFW_PLUGIN_URL . '/assets/mp_script.js', array(), time(), true );
-				//mp style
-				wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
-				wp_enqueue_style( 'rental_lists', RBFW_PLUGIN_URL . '/assets/admin/css/rental_lists.css', array(), time(), 'all' );
+			//mp style
+			wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
+			wp_enqueue_style( 'enhanced_inventory_calendar', RBFW_PLUGIN_URL . '/assets/mp_style/enhanced-inventory-calendar.css', array(), time(), 'all' );
+			wp_enqueue_script( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_script.js', array(), time(), true );
 				wp_enqueue_script( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_script.js', array(), time(), true );
 				wp_enqueue_script( 'rental_lists', RBFW_PLUGIN_URL . '/assets/admin/js/rental_lists.js', array(), time(), true );
 				//loading owl carousel css
@@ -151,9 +152,10 @@
 				wp_enqueue_script( 'jquery-ui-core' );
 				wp_enqueue_script( 'jquery-ui-datepicker' );
 				wp_enqueue_script( 'jquery-ui-accordion' );
-				//mp style
-				wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
-				wp_enqueue_script( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_script.js', array(), time(), true );
+			//mp style
+			wp_enqueue_style( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_style.css', array(), time(), 'all' );
+			wp_enqueue_style( 'enhanced_inventory_calendar', RBFW_PLUGIN_URL . '/assets/mp_style/enhanced-inventory-calendar.css', array(), time(), 'all' );
+			wp_enqueue_script( 'mp_plugin_global', RBFW_PLUGIN_URL . '/assets/mp_style/mp_script.js', array(), time(), true );
 				//loading owl carousel css
 				wp_enqueue_style( 'owl.carousel.min', RBFW_PLUGIN_URL . '/css/owl.carousel.min.css' );
 				wp_enqueue_style( 'owl.theme.default', RBFW_PLUGIN_URL . '/css/owl.theme.default.min.css' );
@@ -192,7 +194,11 @@
 				wp_enqueue_script( 'resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true );
 				wp_enqueue_script( 'sd_script', RBFW_PLUGIN_URL . '/assets/mp_script/sd_script.js', array(), time(), true );
 				wp_enqueue_script( 'rbfw_custom_script', plugin_dir_url( __DIR__ ) . 'js/rbfw_script.js', array( 'jquery' ), time(), true );
-				do_action( 'rbfw_frontend_enqueue_scripts' );
+
+                wp_enqueue_script( 'coockie-js', 'https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js', array( 'jquery' ), null, true );
+
+
+                do_action( 'rbfw_frontend_enqueue_scripts' );
 				global $post;
 				$post_id = ! empty( $post->ID ) ? $post->ID : '';
 				if ( ! empty( $post_id ) ) {
