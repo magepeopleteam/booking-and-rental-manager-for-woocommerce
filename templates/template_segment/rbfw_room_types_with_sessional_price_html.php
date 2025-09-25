@@ -87,13 +87,13 @@ if(isset($_POST['post_id'])){
 
                                             <tr class="rbfw_resort_price_table_row">
                                                 <td>
-                                                    <input class="medium" type="text" name="rbfw_resort_data_sp[<?php echo $key ?>][room_price][<?php echo $key_1 ?>][room_type]" readonly  value="<?php echo esc_attr( $value['room_type'] ); ?>" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input class="medium" type="text" name="rbfw_resort_data_sp[<?php echo $key ?>][room_price][<?php echo $key_1 ?>][room_type]" readonly  value="<?php echo esc_attr( $value['room_type'] ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                                 <td class="resort_day_long_price" style="display:<?php echo esc_attr( ( $rbfw_enable_resort_daylong_price == 'yes' ) ? 'table-cell' : 'none' ); ?>">
-                                                    <input class="medium" type="number" name="rbfw_resort_data_sp[<?php echo $key ?>][room_price][<?php echo $key_1 ?>][day_long_price]" step=".01" value="<?php echo esc_attr( $single_item['room_price'][$key_1]['day_long_price'] ); ?>" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input class="medium" type="number" name="rbfw_resort_data_sp[<?php echo $key ?>][room_price][<?php echo $key_1 ?>][day_long_price]" step=".01" value="<?php echo esc_attr( $single_item['room_price'][$key_1]['day_long_price'] ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                                 <td>
-                                                    <input class="medium" type="number" name="rbfw_resort_data_sp[<?php echo $key ?>][room_price][<?php echo $key_1 ?>][price]" step=".01" value="<?php echo esc_attr( $single_item['room_price'][$key_1]['price'] ); ?>" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                                    <input class="medium" type="number" name="rbfw_resort_data_sp[<?php echo $key ?>][room_price][<?php echo $key_1 ?>][price]" step=".01" value="<?php echo esc_attr( $single_item['room_price'][$key_1]['price'] ); ?>" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                                 </td>
                                             </tr>
 
@@ -159,13 +159,13 @@ if(isset($_POST['post_id'])){
 
                                     <tr class="rbfw_resort_price_table_row">
                                         <td>
-                                            <input class="medium room_type_<?php echo $key_1 ?>" type="text" name="rbfw_resort_data_sp[][<?php echo $key_1 ?>][room_type]"  value="<?php echo esc_attr( $value['room_type'] ); ?>" readonly placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                            <input class="medium room_type_<?php echo $key_1 ?>" type="text" name="rbfw_resort_data_sp[][<?php echo $key_1 ?>][room_type]"  value="<?php echo esc_attr( $value['room_type'] ); ?>" readonly placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                         </td>
                                         <td class="resort_day_long_price" style="display:<?php echo esc_attr( ( $rbfw_enable_resort_daylong_price == 'yes' ) ? 'table-cell' : 'none' ); ?>">
-                                            <input class="medium day_long_price_<?php echo $key_1 ?>" type="number" name="rbfw_resort_data_sp[][<?php echo $key_1 ?>][day_long_price]" step=".01" value="" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                            <input class="medium day_long_price_<?php echo $key_1 ?>" type="number" name="rbfw_resort_data_sp[][<?php echo $key_1 ?>][day_long_price]" step=".01" value="" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                         </td>
                                         <td>
-                                            <input class="medium price_<?php echo $key_1 ?>" type="number" name="rbfw_resort_data_sp[][<?php echo $key_1 ?>][price]" step=".01" value="" placeholder="<?php echo esc_attr( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
+                                            <input class="medium price_<?php echo $key_1 ?>" type="number" name="rbfw_resort_data_sp[][<?php echo $key_1 ?>][price]" step=".01" value="" placeholder="<?php esc_attr_e( 'Price', 'booking-and-rental-manager-for-woocommerce' ); ?>"/>
                                         </td>
                                     </tr>
 
