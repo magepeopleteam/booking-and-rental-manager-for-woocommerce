@@ -1481,7 +1481,7 @@
                             <div class="item-left">
                                 <div class="label">Day threshold for weekly price</div>
                                 <div class="description">
-                                    If total hours are more than <span id="hour-threshold-display">6</span>, count as full day. If less, day will not count.
+                                    If total hours are more than <span id="hour-threshold-display">x</span>, count as full day. If less, day will not count.
                                 </div>
                             </div>
                             <div class="item-right">
@@ -1581,7 +1581,7 @@
                             <div class="item-left">
                                 <div class="label">Hour Threshold</div>
                                 <div class="description">
-                                    If total hours are more than <span id="hour-threshold-display">6</span>, count as full day. If less, day will not count.
+                                    If total hours are more than <span id="hour-threshold-display">X</span>, count as full day. If less, day will not count.
                                 </div>
                             </div>
                             <div class="item-right">
