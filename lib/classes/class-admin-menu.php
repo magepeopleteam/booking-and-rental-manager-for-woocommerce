@@ -70,16 +70,22 @@
 				$args                 = array(
 					'post_type'      => 'rbfw_order',
 					'order'          => 'DESC',
-					'posts_per_page' => - 1
+					'posts_per_page' => - 1,
+					'post_status'    => array('publish', 'private', 'draft', 'pending', 'future', 'inherit')
 				);
 				$query                = new WP_Query( $args );
 				
 				// Calculate stats
-				$total_orders = $query->found_posts;
+				$total_orders = 0;
 				$completed_orders = 0;
 				$cancelled_orders = 0;
 				$pending_orders = 0;
+				$refunded_orders = 0;
 				$total_amount = 0;
+				$completed_amount = 0;
+				$cancelled_amount = 0;
+				$pending_amount = 0;
+				$refunded_amount = 0;
 				
 				if ( $query->have_posts() ) {
 					while ( $query->have_posts() ) {
@@ -91,18 +97,40 @@
 						
 						if ($order) {
 							$status = $order->get_status();
-							$total_amount += $order->get_total();
 							
-							switch($status) {
+							// Skip orders with trash status
+							if ($status === 'trash' || $status === 'wc-trash') {
+								continue;
+							}
+							
+							$total_orders++;
+							$order_total = $order->get_total();
+							$total_amount += $order_total;
+							
+							// Normalize status by removing 'wc-' prefix if present
+							$normalized_status = str_replace('wc-', '', $status);
+							
+							// Count orders and amounts by normalized status
+							switch($normalized_status) {
 								case 'completed':
 									$completed_orders++;
+									$completed_amount += $order_total;
 									break;
 								case 'cancelled':
+								case 'canceled':
+								case 'failed':
 									$cancelled_orders++;
+									$cancelled_amount += $order_total;
+									break;
+								case 'refunded':
+									$refunded_orders++;
+									$refunded_amount += $order_total;
 									break;
 								case 'pending':
 								case 'on-hold':
+								case 'processing':
 									$pending_orders++;
+									$pending_amount += $order_total;
 									break;
 							}
 						}
@@ -130,7 +158,7 @@
                             <div class="rental-order-list-stat-info">
                                 <div class="rental-order-list-stat-number"><?php echo esc_html( $cancelled_orders ); ?></div>
                                 <div class="rental-order-list-stat-label"><?php esc_html_e( 'Cancelled Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( 0 ) ); ?></div>
+                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $cancelled_amount ) ); ?></div>
                             </div>
                         </div>
                         <div class="rental-order-list-stat-card rental-order-list-completed">
@@ -138,7 +166,7 @@
                             <div class="rental-order-list-stat-info">
                                 <div class="rental-order-list-stat-number"><?php echo esc_html( $completed_orders ); ?></div>
                                 <div class="rental-order-list-stat-label"><?php esc_html_e( 'Completed Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( 0 ) ); ?></div>
+                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $completed_amount ) ); ?></div>
                             </div>
                         </div>
                         <div class="rental-order-list-stat-card rental-order-list-pending">
@@ -146,7 +174,15 @@
                             <div class="rental-order-list-stat-info">
                                 <div class="rental-order-list-stat-number"><?php echo esc_html( $pending_orders ); ?></div>
                                 <div class="rental-order-list-stat-label"><?php esc_html_e( 'Pending Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( 0 ) ); ?></div>
+                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $pending_amount ) ); ?></div>
+                            </div>
+                        </div>
+                        <div class="rental-order-list-stat-card rental-order-list-refunded">
+                            <div class="rental-order-list-stat-icon">🔄</div>
+                            <div class="rental-order-list-stat-info">
+                                <div class="rental-order-list-stat-number"><?php echo esc_html( $refunded_orders ); ?></div>
+                                <div class="rental-order-list-stat-label"><?php esc_html_e( 'Refunded Orders', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rental-order-list-stat-amount"><?php echo wp_kses_post( wc_price( $refunded_amount ) ); ?></div>
                             </div>
                         </div>
                     </div>
@@ -182,8 +218,13 @@
                             if (!$order) {
                                 continue;
                             }
+                            
+                            // Skip orders with trash status
+                            if ($order->get_status() === 'trash') {
+                                continue;
+                            }
 
-							$status              = ( $order && $order->get_status() === 'trash')? $order->get_status() : get_post_meta( $post_id, 'rbfw_order_status', true );
+							$status              = $order->get_status();
 							$total_price         = $order->get_total();
 							$ticket_infos        = get_post_meta( $post_id, 'rbfw_ticket_info', true );
 							$ticket_info_array   = maybe_unserialize( $ticket_infos );
