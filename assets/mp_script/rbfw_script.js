@@ -33,54 +33,54 @@ jQuery(document).on('click','.rbfw_bikecarsd_time:not(.rbfw_bikecarsd_time.disab
     }
 
     jQuery.ajax({
-            type: 'POST',
-            url: rbfw_ajax_front.rbfw_ajaxurl,
-            data: {
-                'action' : 'rbfw_bikecarsd_type_list',
-                'post_id': post_id,
-                'selected_time': gTime,
-                'selected_date': selected_date,
-                'is_muffin_template': is_muffin_template,
-                'nonce' : rbfw_ajax_front.nonce_bikecarsd_type_list
-            },
-            beforeSend: function() {
+        type: 'POST',
+        url: rbfw_ajax_front.rbfw_ajaxurl,
+        data: {
+            'action' : 'rbfw_bikecarsd_type_list',
+            'post_id': post_id,
+            'selected_time': gTime,
+            'selected_date': selected_date,
+            'is_muffin_template': is_muffin_template,
+            'nonce' : rbfw_ajax_front.nonce_bikecarsd_type_list
+        },
+        beforeSend: function() {
 
-                jQuery('.rbfw_bikecarsd_pricing_table_wrap').addClass('rbfw_loader_in');
-                jQuery('.rbfw_bikecarsd_pricing_table_wrap').append('<i class="fas fa-spinner fa-spin"></i>');
+            jQuery('.rbfw_bikecarsd_pricing_table_wrap').addClass('rbfw_loader_in');
+            jQuery('.rbfw_bikecarsd_pricing_table_wrap').append('<i class="fas fa-spinner fa-spin"></i>');
 
-                if( rent_type == 'appointment' ){
-                    jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
-                }
-            },
-            success: function (response) {
-
-                jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
-                jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
-
-                if( rent_type == 'bike_car_sd' ){
-                    jQuery('.rbfw-bikecarsd-step[data-step="2"]').hide();
-                }
-                jQuery('.rbfw_bikecarsd_pricing_table_container').remove();
-                jQuery('.rbfw-bikecarsd-result').append(response);
-
-                if( rent_type == 'appointment' ){
-                    jQuery('.rbfw-bikecarsd-step[data-step="3"] .rbfw_back_step_btn').hide();
-                    jQuery('.rbfw-bikecarsd-step[data-step="3"] .rbfw_step_selected_date').hide();
-                    jQuery('#rbfw_bikecarsd_selected_time').val();
-                    jQuery('.rbfw-bikecarsd-step[data-step="2"] .rbfw_step_selected_date span.rbfw_selected_time').remove();
-                }
-
-                jQuery('.rbfw_muff_registration_wrapper .rbfw_regf_wrap').show();
-
-
-
-            },
-            complete:function(response) {
-                jQuery('html, body').animate({
-                    scrollTop: jQuery(".rbfw-bikecarsd-calendar-header").offset().top
-                }, 100);
+            if( rent_type == 'appointment' ){
+                jQuery('.rbfw_bikecarsd_price_summary').addClass('old');
             }
-        });
+        },
+        success: function (response) {
+
+            jQuery('.rbfw_bikecarsd_pricing_table_wrap').removeClass('rbfw_loader_in');
+            jQuery('.rbfw_bikecarsd_pricing_table_wrap i.fa-spinner').remove();
+
+            if( rent_type == 'bike_car_sd' ){
+                jQuery('.rbfw-bikecarsd-step[data-step="2"]').hide();
+            }
+            jQuery('.rbfw_bikecarsd_pricing_table_container').remove();
+            jQuery('.rbfw-bikecarsd-result').append(response);
+
+            if( rent_type == 'appointment' ){
+                jQuery('.rbfw-bikecarsd-step[data-step="3"] .rbfw_back_step_btn').hide();
+                jQuery('.rbfw-bikecarsd-step[data-step="3"] .rbfw_step_selected_date').hide();
+                jQuery('#rbfw_bikecarsd_selected_time').val();
+                jQuery('.rbfw-bikecarsd-step[data-step="2"] .rbfw_step_selected_date span.rbfw_selected_time').remove();
+            }
+
+            jQuery('.rbfw_muff_registration_wrapper .rbfw_regf_wrap').show();
+
+
+
+        },
+        complete:function(response) {
+            jQuery('html, body').animate({
+                scrollTop: jQuery(".rbfw-bikecarsd-calendar-header").offset().top
+            }, 100);
+        }
+    });
 });
 
 
@@ -95,7 +95,7 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
     var date_in = curr_date+"-"+curr_month+"-"+curr_year;
 
     let ajax = 'no';
-    
+
 
     var date_today = new Date();
     if(today_enable=='yes'){
@@ -108,7 +108,7 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 
     var rbfw_offday_range = JSON.parse(jQuery("#rbfw_offday_range").val());
 
-  
+
 
 
     if(jQuery.inArray( day_in, rbfw_off_days )>= 0 || jQuery.inArray( date_in, rbfw_offday_range )>= 0 || (date <  date_today) ){
@@ -188,7 +188,19 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
 
 
 
-    var scheduleJson = JSON.parse(schedule);
+    var scheduleJson = [];
+    try {
+        var parsedAvailable = (typeof schedule === 'string') ? JSON.parse(schedule) : schedule;
+        if (Array.isArray(parsedAvailable)) {
+            scheduleJson = parsedAvailable;
+        } else if (parsedAvailable && typeof parsedAvailable === 'object') {
+            scheduleJson = Object.values(parsedAvailable);
+        } else {
+            scheduleJson = [];
+        }
+    } catch (e) {
+        scheduleJson = [];
+    }
     // Safely parse and normalize rdfw_available_time into an array
     var rdfw_available_timeJson = [];
     try {
@@ -224,9 +236,26 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
         const start = new Date(item.start_date);
         const end = new Date(item.end_date);
 
-            // check if selected date is within range
+        // check if selected date is within range
         if (selectedDate >= start && selectedDate <= end) {
-            item.available_time.forEach(timeObj => {
+
+
+            var specific_available_time = [];
+            try {
+                var parsedAvailable = (typeof item.available_time === 'string') ? JSON.parse(item.available_time) : item.available_time;
+                if (Array.isArray(parsedAvailable)) {
+                    specific_available_time = parsedAvailable;
+                } else if (parsedAvailable && typeof parsedAvailable === 'object') {
+                    specific_available_time = Object.values(parsedAvailable);
+                } else {
+                    specific_available_time = [];
+                }
+            } catch (e) {
+                specific_available_time = [];
+            }
+
+
+            specific_available_time.forEach(timeObj => {
                 if (timeObj.status === "enabled") {
 
                     let now = new Date();
@@ -467,7 +496,7 @@ jQuery(document).on('change', '.pickup_time', function() {
     let dropoff_date = jQuery('#hidden_dropoff_date').val();
     let selected_time = jQuery('.pickup_time').val();
 
-    
+
     // Only validate if both dates are selected and they are the same day
     if (pickup_date && dropoff_date && pickup_date == dropoff_date && selected_time) {
         // Convert pickup time to comparable format (HH:MM)
@@ -475,10 +504,10 @@ jQuery(document).on('change', '.pickup_time', function() {
         let pickup_hours = parseInt(pickup_time_parts[0]);
         let pickup_minutes = parseInt(pickup_time_parts[1]);
         let pickup_time_minutes = pickup_hours * 60 + pickup_minutes;
-        
+
         // Clear current return time selection
         jQuery(".dropoff_time").val("").trigger("change");
-        
+
         // Update return time options
         jQuery("#dropoff_time option").each(function() {
             var thisOptionValue = jQuery(this).val();
@@ -488,7 +517,7 @@ jQuery(document).on('change', '.pickup_time', function() {
                 let return_hours = parseInt(return_time_parts[0]);
                 let return_minutes = parseInt(return_time_parts[1]);
                 let return_time_minutes = return_hours * 60 + return_minutes;
-                
+
                 // Disable return times that are earlier than or equal to pickup time
                 if (return_time_minutes <= pickup_time_minutes) {
                     jQuery(this).attr('disabled', true);

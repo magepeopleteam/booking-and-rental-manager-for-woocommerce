@@ -214,6 +214,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.5.3
+Time slot for particular date problem solved.
+
+
+
 2.5.2
 Ajax request removed for time load depend on date.
 Considered inventory management by return date
