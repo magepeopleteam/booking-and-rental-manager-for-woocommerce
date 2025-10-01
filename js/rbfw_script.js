@@ -171,26 +171,27 @@
 
         function rbfw_pick_date_from_flatpicker(){
 
+
             let today = new Date();
             let tomorrow = new Date();
             tomorrow.setDate(today.getDate() + 1); // Add 1 day to get tomorrow
             let todayFormatted = flatpickr.formatDate(today, "d-m-Y");
             let calendar = flatpickr(".rbfw_flatpicker", {
                 disableMobile: "true",
-                dateFormat: "d-m-Y",
+                dateFormat: rbfw_js_variables.timeFormat,
                 defaultDate: todayFormatted,
                 minDate: "today",
                 showMonths: 1,
                 onChange: function(selectedDates, dateStr, instance) {
                     if (selectedDates.length === 1) {
-                        let selectedDate = flatpickr.formatDate(selectedDates[0], "F j, Y");
+                        let selectedDate = flatpickr.formatDate(selectedDates[0], wp_date_format);
                         $("#rbfw_rent_item_search_pickup_date").val(selectedDate);
                     }
                 }
             });
 
             $("#rbfw_rent_item_search_pickup_date").on('focus', function (){
-                calendar.open();
+                //calendar.open();
             });
         }
 

@@ -93,14 +93,25 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
     var curr_month = ("0" + (date.getMonth() + 1)).slice(-2);
     var curr_year = date.getFullYear();
     var date_in = curr_date+"-"+curr_month+"-"+curr_year;
-
-    let ajax = 'no';
-
-
     var date_today = new Date();
-    if(today_enable=='yes'){
+    var rbfw_buffer_time = parseInt(jQuery("#rbfw_buffer_time").val());
+
+
+    if(rbfw_buffer_time){
+        date_today = new Date(date_today);
+        date_today.setHours(date_today.getHours() + 24);
         date_today.setDate(date_today.getDate() - 1);
+    }else{
+        if(today_enable=='yes'){
+            date_today.setDate(date_today.getDate() - 1);
+        }
     }
+
+    //alert(date_today);
+
+   /* if(today_enable=='yes'){
+        date_today.setDate(date_today.getDate() - 1);
+    }*/
 
     var weekday = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     var day_in = weekday[date.getDay()];
@@ -186,6 +197,7 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 
 function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_particular,is_calendar=null) {
 
+    var rbfw_buffer_time = parseInt(jQuery("#rbfw_buffer_time").val());
 
 
     var scheduleJson = [];
@@ -258,11 +270,24 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
             specific_available_time.forEach(timeObj => {
                 if (timeObj.status === "enabled") {
 
-                    let now = new Date();
+                   // let now = new Date();
+
+                    var now = new Date();
+                    now = new Date(now);
+                    now.setHours(now.getHours() + rbfw_buffer_time);
+                    now.setDate(now.getDate() - 1);
+
                     let currentDateStr = new Date(rbfw_js_variables.currentDateTime.replace(' ', 'T'));
+
+
+                    currentDateStr = new Date(currentDateStr);
+                    currentDateStr.setHours(currentDateStr.getHours() + rbfw_buffer_time);
+                    currentDateStr.setDate(currentDateStr.getDate() - 1);
+
+
                     let selectedDateStr = selectedDate.toISOString().split("T")[0];
 
-                    if (selectedDateStr === currentDateStr) {
+                    if (selectedDateStr === currentDateStr) { alert(444);
                         // Parse available_time into a Date object for comparison
                         let [hours, minutes] = timeObj.time.split(":").map(Number);
                         let timeDate = new Date();
@@ -311,9 +336,6 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                         option.title = past_time;
                         timeSelect.appendChild(option);
                     }
-
-
-
                 }
             });
         }
@@ -323,19 +345,39 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
         rdfw_available_timeJson.forEach(timeObj => {
             if (timeObj.status === "enabled") {
 
+
                 let now = new Date(rbfw_js_variables.currentDateTime.replace(" ", "T"));// new Date();
+                now = new Date(now);
+                now.setHours(now.getHours() + rbfw_buffer_time);
+
+
                 let currentDateStr = rbfw_js_variables.currentDate;
+                currentDateStr = new Date(currentDateStr);
+
+
+                 currentDateStr = new Date(currentDateStr.getTime() + rbfw_buffer_time * 60 * 60 * 1000);
+
+                // Format as YYYY-MM-DD HH:mm
+                let formatted = currentDateStr.getFullYear() + "-" +
+                    String(currentDateStr.getMonth() + 1).padStart(2, '0') + "-" +
+                    String(currentDateStr.getDate()).padStart(2, '0');
+
+
+                console.log('currentDateStr',formatted);
+
+
+
                 let selectedDateStr = selectedDate.toISOString().split("T")[0];
 
-                console.log('currentDateStr',currentDateStr);
-                console.log('selectedDateStr',selectedDateStr);
-                console.log(rbfw_js_variables.currentDateTime);
 
-                if (selectedDateStr === currentDateStr) {
+                if (selectedDateStr === currentDateStr) { alert(12);
                     // Parse available_time into a Date object for comparison
                     let [hours, minutes] = timeObj.time.split(":").map(Number);
                     let timeDate = new Date(rbfw_js_variables.currentDateTime.replace(" ", "T"));
                     timeDate.setHours(hours, minutes, 0, 0);
+
+                    console.log('now',now);
+                    console.log('timeDate',timeDate);
 
                     if (timeDate <= now) {
                         time_enable = true;
