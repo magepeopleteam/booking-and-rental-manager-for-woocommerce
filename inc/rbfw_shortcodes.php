@@ -686,7 +686,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
                             <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location' );?>
                         </div>
                         <div class="rbfw_search_item rbfw_flatpicker">
-                            <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="dd-mm-yyyy">
+                            <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="<?php echo date_i18n( get_option('date_format')) ?>">
                             <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
                         </div>
                         <div class="rbfw_search_item">

@@ -5,6 +5,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 $rbfw_id = $post_id ??0;
 global $frontend;
 global $submit_name;
+global $rbfw;
+
 $frontend = $frontend??0;
 $cart_backend = $cart_backend??'';
 
@@ -42,19 +44,13 @@ $current_day = date_i18n('D');
 
 $current_date = date_i18n('Y-m-d');
 
-global $rbfw;
-
-
 $rbfw_enable_md_type_item_qty = get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) ? get_post_meta($rbfw_id, 'rbfw_enable_md_type_item_qty', true) : 'no';
 
-//echo $rbfw_enable_md_type_item_qty;exit;
 
 $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
 
 $rbfw_enable_variations = get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_variations', true ) : 'no';
 $rbfw_variations_data = get_post_meta( $rbfw_id, 'rbfw_variations_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_variations_data', true ) : [];
-
-//echo '<pre>';print_r($rbfw_variations_data);echo '<pre>';exit;
 
 $input_stock_quantity = '';
 if($rbfw_enable_variations == 'yes'){
@@ -95,8 +91,17 @@ $rbfw_security_deposit_type = get_post_meta($rbfw_id, 'rbfw_security_deposit_typ
 $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) : 0;
 
 $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off';
-$particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
+
+
+if($rbfw_particular_switch=='off'){
+    $particulars_data = [];
+}else{
+    $particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
+}
+
 $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
+
+$rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ) : [];
 
 
 ?>
@@ -767,7 +772,7 @@ $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? 
                 <input type="hidden" name="rbfw_particulars_data" id="rbfw_particulars_data"  value='<?php echo esc_attr(wp_json_encode($particulars_data)); ?>'>
                 <input type="hidden" name="rdfw_available_time" id="rdfw_available_time"  value='<?php echo esc_attr(wp_json_encode($rdfw_available_time)); ?>'>
 
-
+                <input type="hidden" name="rbfw_buffer_time" id="rbfw_buffer_time"  value='<?php echo esc_attr($rbfw_buffer_time); ?>'>
 
 
 

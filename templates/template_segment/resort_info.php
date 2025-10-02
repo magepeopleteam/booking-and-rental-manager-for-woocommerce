@@ -164,14 +164,18 @@ if(isset($post_id) && isset($active_tab)){
                     <?php } ?>
                     <?php $price = isset($room_price)?$room_price:$price ?>
                     <td>
-                        <div class="rbfw_service_price_wrap">
-                            <input type="hidden" value="<?php echo esc_attr($price); ?>" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]"/>
-                            <div class="rbfw_qty_input">
-                                <a class="rbfw_qty_minus rbfw_room_qty_minus"><i class="fas fa-minus"></i></a>
-                                <input type="number" min="0" max="<?php echo esc_attr($max_available_qty) ?>" value="0" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_qty]" class="rbfw_room_qty" data-price="<?php echo esc_attr($price); ?>" data-type="<?php echo esc_attr($value['room_type']); ?>" data-active_tab="<?php echo esc_attr($active_tab); ?>" data-cat="room"/>
-                                <a class="rbfw_qty_plus rbfw_room_qty_plus"><i class="fas fa-plus"></i></a>
+                        <?php if($max_available_qty){ ?>
+                            <div class="rbfw_service_price_wrap">
+                                <input type="hidden" value="<?php echo esc_attr($price); ?>" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_price]"/>
+                                <div class="rbfw_qty_input">
+                                    <a class="rbfw_qty_minus rbfw_room_qty_minus"><i class="fas fa-minus"></i></a>
+                                    <input type="number" min="0" max="<?php echo esc_attr($max_available_qty) ?>" value="0" name="rbfw_room_info[<?php echo esc_attr($i); ?>][room_qty]" class="rbfw_room_qty" data-price="<?php echo esc_attr($price); ?>" data-type="<?php echo esc_attr($value['room_type']); ?>" data-active_tab="<?php echo esc_attr($active_tab); ?>" data-cat="room"/>
+                                    <a class="rbfw_qty_plus rbfw_room_qty_plus"><i class="fas fa-plus"></i></a>
+                                </div>
                             </div>
-                        </div>
+                        <?php }else{ ?>
+                            <?php esc_html_e('Sold Out','booking-and-rental-manager-for-woocommerce'); ?>
+                        <?php } ?>
                     </td>
                 </tr>
                 <?php

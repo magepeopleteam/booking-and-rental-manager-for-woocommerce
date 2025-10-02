@@ -114,7 +114,6 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
         beforeShowDay: function(date)
         {
             return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable,'yes');
-
         }
     });
 });
