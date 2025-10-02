@@ -216,6 +216,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 2.5.3
 Time slot for particular date problem solved.
+Buffer time option added.
 
 
 
