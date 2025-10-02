@@ -99,7 +99,7 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
 
     if(rbfw_buffer_time){
         date_today = new Date(date_today);
-        date_today.setHours(date_today.getHours() + 24);
+        date_today.setHours(date_today.getHours() + rbfw_buffer_time);
         date_today.setDate(date_today.getDate() - 1);
     }else{
         if(today_enable=='yes'){
@@ -270,30 +270,25 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
             specific_available_time.forEach(timeObj => {
                 if (timeObj.status === "enabled") {
 
-                   // let now = new Date();
+                    let current_date_time = new Date(rbfw_js_variables.currentDateTime.replace(" ", "T"));// new Date();
+                    let actual_booking_date_time_format = new Date(current_date_time);
+                    actual_booking_date_time_format.setHours(current_date_time.getHours() + rbfw_buffer_time);
 
-                    var now = new Date();
-                    now = new Date(now);
-                    now.setHours(now.getHours() + rbfw_buffer_time);
-                    now.setDate(now.getDate() - 1);
-
-                    let currentDateStr = new Date(rbfw_js_variables.currentDateTime.replace(' ', 'T'));
-
-
-                    currentDateStr = new Date(currentDateStr);
-                    currentDateStr.setHours(currentDateStr.getHours() + rbfw_buffer_time);
-                    currentDateStr.setDate(currentDateStr.getDate() - 1);
-
+                    let actual_booking_date_time = new Date(actual_booking_date_time_format);
+                    let actual_booking_date = actual_booking_date_time.toLocaleDateString('en-CA');
 
                     let selectedDateStr = selectedDate.toISOString().split("T")[0];
 
-                    if (selectedDateStr === currentDateStr) { alert(444);
+                    if (selectedDateStr === actual_booking_date) {
                         // Parse available_time into a Date object for comparison
                         let [hours, minutes] = timeObj.time.split(":").map(Number);
-                        let timeDate = new Date();
-                        timeDate.setHours(hours, minutes, 0, 0);
+                        //et timeDate = new Date(rbfw_js_variables.currentDateTime.replace(" ", "T"));
+                        actual_booking_date_time_format.setHours(hours, minutes, 0, 0);
 
-                        if (timeDate <= now) {
+                        console.log('actual_booking_date_time_format',actual_booking_date_time_format);
+                        // console.log('timeDate',timeDate);
+
+                        if (actual_booking_date_time >= actual_booking_date_time_format) {
                             time_enable = true;
                             past_time = 'Past time';
                         }else{
@@ -318,7 +313,13 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                     if(is_calendar=='calendar'){
 
                         const a = document.createElement("a");
-                        a.className = "rbfw_bikecarsd_time";
+                        if(time_enable){
+                            a.className = "rbfw_bikecarsd_time_disable";
+                            a.title = "Past Time";
+                        }else{
+                            a.className = "rbfw_bikecarsd_time";
+                        }
+
                         a.setAttribute("data-time", timeObj.time);
 
                         const span = document.createElement("span");
@@ -346,40 +347,25 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
             if (timeObj.status === "enabled") {
 
 
-                let now = new Date(rbfw_js_variables.currentDateTime.replace(" ", "T"));// new Date();
-                now = new Date(now);
-                now.setHours(now.getHours() + rbfw_buffer_time);
+                let current_date_time = new Date(rbfw_js_variables.currentDateTime.replace(" ", "T"));// new Date();
+                let actual_booking_date_time_format = new Date(current_date_time);
+                actual_booking_date_time_format.setHours(current_date_time.getHours() + rbfw_buffer_time);
 
-
-                let currentDateStr = rbfw_js_variables.currentDate;
-                currentDateStr = new Date(currentDateStr);
-
-
-                 currentDateStr = new Date(currentDateStr.getTime() + rbfw_buffer_time * 60 * 60 * 1000);
-
-                // Format as YYYY-MM-DD HH:mm
-                let formatted = currentDateStr.getFullYear() + "-" +
-                    String(currentDateStr.getMonth() + 1).padStart(2, '0') + "-" +
-                    String(currentDateStr.getDate()).padStart(2, '0');
-
-
-                console.log('currentDateStr',formatted);
-
-
+                let actual_booking_date_time = new Date(actual_booking_date_time_format);
+                let actual_booking_date = actual_booking_date_time.toLocaleDateString('en-CA');
 
                 let selectedDateStr = selectedDate.toISOString().split("T")[0];
 
-
-                if (selectedDateStr === currentDateStr) { alert(12);
+                if (selectedDateStr === actual_booking_date) {
                     // Parse available_time into a Date object for comparison
                     let [hours, minutes] = timeObj.time.split(":").map(Number);
-                    let timeDate = new Date(rbfw_js_variables.currentDateTime.replace(" ", "T"));
-                    timeDate.setHours(hours, minutes, 0, 0);
+                    //et timeDate = new Date(rbfw_js_variables.currentDateTime.replace(" ", "T"));
+                    actual_booking_date_time_format.setHours(hours, minutes, 0, 0);
 
-                    console.log('now',now);
-                    console.log('timeDate',timeDate);
+                    console.log('actual_booking_date_time_format',actual_booking_date_time_format);
+                   // console.log('timeDate',timeDate);
 
-                    if (timeDate <= now) {
+                    if (actual_booking_date_time >= actual_booking_date_time_format) {
                         time_enable = true;
                         past_time = 'Past time';
                     }else{
@@ -403,7 +389,12 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                 if(is_calendar=='calendar'){
 
                     const a = document.createElement("a");
-                    a.className = "rbfw_bikecarsd_time";
+                    if(time_enable){
+                        a.className = "rbfw_bikecarsd_time_disable";
+                        a.title = "Past Time";
+                    }else{
+                        a.className = "rbfw_bikecarsd_time";
+                    }
                     a.setAttribute("data-time", timeObj.time);
 
                     const span = document.createElement("span");
