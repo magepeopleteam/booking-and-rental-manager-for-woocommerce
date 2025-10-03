@@ -280,6 +280,13 @@ if(isset($post_id) && isset($active_tab)){
             <li class="resource-costing rbfw-cond"><?php echo esc_html__( 'Resource Cost','booking-and-rental-manager-for-woocommerce' ); ?>  <span><span class="price-figure" data-price="0"><?php echo wp_kses_post(wc_price(0)); ?></span></span></li>
             <li class="subtotal"> <?php echo esc_html__( 'Subtotal','booking-and-rental-manager-for-woocommerce' ); ?><span><span class="price-figure"><?php echo wp_kses_post(wc_price(0)); ?></span></span></li>
 
+            <?php
+            // Include fee display
+            if ( class_exists( 'RBFW_Fee_Functions' ) ) {
+                include RBFW_PLUGIN_DIR . '/templates/template_segment/fee_display.php';
+            }
+            ?>
+
             <li class="security_deposit" style="display:none;">
                 <?php echo esc_html((!empty(get_post_meta($post_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($post_id, 'rbfw_security_deposit_label', true) : __('Security Deposit','booking-and-rental-manager-for-woocommerce'))); ?>
                 <span></span>

@@ -426,6 +426,29 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 <td><?php echo wp_kses(wc_price($rbfw_bikecarsd_service_price),rbfw_allowed_html()); ?></td>
             </tr>
         <?php endif; ?>
+        
+        <?php
+        // Display fees in cart for bike/car single day
+        if ( class_exists( 'RBFW_Fee_Functions' ) && ! empty( $cart_item['rbfw_fees'] ) ) {
+            foreach ( $cart_item['rbfw_fees'] as $fee ) {
+                ?>
+                <tr class="rbfw-cart-fee-row">
+                    <th>
+                        <div class="rbfw-fee-cart-info">
+                            <span class="rbfw-fee-cart-icon"><?php echo esc_html( $fee['icon'] ); ?></span>
+                            <span class="rbfw-fee-cart-label"><?php echo esc_html( $fee['label'] ); ?></span>
+                            <?php if ( $fee['refundable'] ) : ?>
+                                <span class="rbfw-fee-cart-badge refundable"><?php esc_html_e( 'Refundable', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <?php endif; ?>
+                        </div>
+                    </th>
+                    <td><?php echo wp_kses( wc_price( $fee['amount'] ), rbfw_allowed_html() ); ?></td>
+                </tr>
+                <?php
+            }
+        }
+        ?>
+        
         <?php if ( ! empty( $security_deposit_amount ) ): ?>
             <tr>
                 <th><?php echo esc_html((!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit')); ?>:</th>

@@ -260,6 +260,13 @@ if(isset($_POST['post_id'])){
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                         </li>
 
+                        <?php
+                        // Include fee display
+                        if ( class_exists( 'RBFW_Fee_Functions' ) ) {
+                            include RBFW_PLUGIN_DIR . '/templates/template_segment/fee_display.php';
+                        }
+                        ?>
+
                         <li class="security_deposit" style="display:none;">
                             <?php echo esc_html((!empty(get_post_meta($id, 'rbfw_security_deposit_label', true)) ? get_post_meta($id, 'rbfw_security_deposit_label', true) : __('Security Deposit','booking-and-rental-manager-for-woocommerce'))); ?>
                             <span></span>
