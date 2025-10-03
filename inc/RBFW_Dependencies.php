@@ -177,6 +177,7 @@
                         'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
                         'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
                         'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
+                        'sold_out' => __('Sold Out', 'booking-and-rental-manager-for-woocommerce'),
                         'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
                         'select_pickup_date' => __('Please select the pickup date!', 'booking-and-rental-manager-for-woocommerce'),
                         'currency' => get_woocommerce_currency_symbol()

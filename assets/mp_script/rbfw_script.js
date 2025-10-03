@@ -145,7 +145,7 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
                     const  day_wise_inventory = JSON.parse(jQuery('#rbfw_month_wise_inventory').val());
 
                     if(day_wise_inventory[date_in]==0){
-                        return [false, "notav", 'Sold Out'];
+                        return [false, "notav", rbfw_translation.sold_out];
                     }
 
 
