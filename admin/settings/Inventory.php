@@ -200,6 +200,7 @@
 
                 $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
 
+
                 ?>
                     <section>
                         <div>

@@ -90,6 +90,8 @@
 
                 $rbfw_buffer_time  = get_post_meta( $post_id, 'rbfw_buffer_time', true ) ? get_post_meta( $post_id, 'rbfw_buffer_time', true ) : '';
 
+                $rbfw_buffer_time_after  = get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) ? get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) : '';
+
                 ?>
                 <div class="mpStyle mp_tab_item" data-tab-item="#travel_off_days">
 					<?php $this->section_header(); ?>
@@ -122,6 +124,20 @@
                         </div>
                     </section>
 
+                    <section>
+                        <div>
+                            <label>
+                                <?php esc_html_e( 'Buffer Time After', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </label>
+                            <p>
+                                <?php esc_html_e( 'Buffer Time After (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                            </p>
+                        </div>
+                        <div class="item_stock_quantity">
+                            <input type="number" name="rbfw_buffer_time_after" id="rbfw_buffer_time_after" value="<?php echo esc_attr( $rbfw_buffer_time_after ); ?>">
+                        </div>
+                    </section>
+
 					<?php $this->panel_header( 'Off Date Settings', 'Off Date Settings' ); ?>
 					<?php $this->rbfw_off_days_config( $post_id ); ?>
                 </div>
@@ -141,11 +157,14 @@
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$rbfw_off_days  = isset( $_POST['rbfw_off_days'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_off_days'] ) : '';
 					$rbfw_buffer_time  = isset( $_POST['rbfw_buffer_time'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_buffer_time'] ) : '';
-					$off_days_start = isset( $_POST['off_days_start'] ) ? RBFW_Function::data_sanitize( $_POST['off_days_start'] ) : '';
+					$rbfw_buffer_time_after  = isset( $_POST['rbfw_buffer_time_after'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_buffer_time_after'] ) : '';
+
+                    $off_days_start = isset( $_POST['off_days_start'] ) ? RBFW_Function::data_sanitize( $_POST['off_days_start'] ) : '';
 					$off_days_end   = isset( $_POST['off_days_end'] ) ? RBFW_Function::data_sanitize( $_POST['off_days_end'] ) : '';
 
                     update_post_meta( $post_id, 'rbfw_off_days', $rbfw_off_days );
                     update_post_meta( $post_id, 'rbfw_buffer_time', $rbfw_buffer_time );
+                    update_post_meta( $post_id, 'rbfw_buffer_time_after', $rbfw_buffer_time_after );
 
                     $off_schedules = [];
 					$from_dates    = $off_days_start;

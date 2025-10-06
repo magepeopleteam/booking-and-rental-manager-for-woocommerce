@@ -296,7 +296,9 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     }
 
     $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
-    $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true );
+    $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
+    $rbfw_buffer_time_after = get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) ? get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) : 'no';
+
 
 
 
@@ -326,14 +328,24 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                     $inventory_end_time = $inventory['rbfw_end_time'];
                 }
 
-
-
-                if($stock_manage_on_return_date=='no'){
-
-                    $date = new DateTime($inventory_end_date);
-                    $date->modify('-1 day');
-                    $inventory_end_date = $date->format('Y-m-d');
+                if ($rbfw_buffer_time_after) {
+                    $datetime = new DateTime("$inventory_end_date $inventory_end_time");
+                    $datetime->modify('+' . $rbfw_buffer_time_after . ' hours');
+                    $inventory_end_date = $datetime->format('Y-m-d');
+                    $inventory_end_time = $datetime->format('H:i');
+                } else {
+                    if ($stock_manage_on_return_date == 'no') {
+                        $date = new DateTime($inventory_end_date);
+                        $date->modify('-1 day');
+                        $inventory_end_date = $date->format('Y-m-d');
+                    }
                 }
+
+
+
+
+
+
 
 
 
