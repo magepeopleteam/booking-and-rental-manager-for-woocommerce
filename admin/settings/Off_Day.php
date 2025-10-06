@@ -113,10 +113,10 @@
                     <section>
                         <div>
                             <label>
-                                <?php esc_html_e( 'Buffer Time', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                <?php esc_html_e( 'Buffer Time Before', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </label>
                             <p>
-                                <?php esc_html_e( 'Buffer Time (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                <?php esc_html_e( 'Buffer Time Before (Hours)', 'booking-and-rental-manager-for-woocommerce' ); ?>
                             </p>
                         </div>
                         <div class="item_stock_quantity">
