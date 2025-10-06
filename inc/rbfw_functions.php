@@ -2818,6 +2818,9 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
     if ($hours) {
 
         $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
+        $half_day_hour_threshold_start = get_post_meta( $post_id, 'half_day_hour_threshold_start', true );
+        $half_day_hour_threshold_end = get_post_meta( $post_id, 'half_day_hour_threshold_end', true );
+        $rbfw_half_day_rate = get_post_meta( $post_id, 'rbfw_half_day_rate', true );
 
         if ($start_date != $end_date && $total_days == 1) {
             if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold){
@@ -2830,29 +2833,28 @@ function rbfw_handle_hybrid_rate($i, $post_id, $day, $date, $start_date, $end_da
 
         } elseif ($start_date === $end_date && $total_days == 1) {
 
-            if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
-                $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
+            
+            if($rbfw_hourly_threshold && $hours >= $half_day_hour_threshold_start && $hours <= $half_day_hour_threshold_end){
+                $price += rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, 0, $enable_daily);
             }else{
-                $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
+                if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
+                    $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
+                }else{
+                    $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
+                }
             }
+
+
 
         } elseif ($i == $total_days - 1) {
             if($rbfw_hourly_threshold && $hours >= $rbfw_hourly_threshold) {
                 $price += rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, 0, $enable_daily);
             }else{
                 //half day thresold appiied here
-                $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_half_day_rate', true );
-                $half_day_hour_threshold_start = get_post_meta( $post_id, 'half_day_hour_threshold_start', true );
-                $half_day_hour_threshold_end = get_post_meta( $post_id, 'half_day_hour_threshold_end', true );
-                $rbfw_half_day_rate = get_post_meta( $post_id, 'rbfw_half_day_rate', true );
+
 
                 if($rbfw_hourly_threshold && $hours >= $half_day_hour_threshold_start && $hours <= $half_day_hour_threshold_end){
-
-                   // $price += (float) $rbfw_half_day_rate;
-
-                     $price += rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, 0, $enable_daily);
-
-
+                    $price += rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, 0, $enable_daily);
                 }else{
                     $price += rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $date, $hours);
 
