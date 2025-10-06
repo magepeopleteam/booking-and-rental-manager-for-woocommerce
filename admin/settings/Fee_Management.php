@@ -207,7 +207,8 @@ if ( ! class_exists( 'RBFW_Fee_Management' ) ) {
 			// Fee Management JavaScript - Direct JS
 			jQuery(document).ready(function($) {
 				// Add new fee row
-				$('#add-fee-row').on('click', function() {
+				$('#add-fee-row').on('click', function(e) {
+                    e.preventDefault();
 					// Hide the "no fees" message if it exists
 					$('#no-fees-message').remove();
 					
@@ -430,7 +431,8 @@ if ( ! class_exists( 'RBFW_Fee_Management' ) ) {
 				});
 
 				// Update hidden field when adding new row
-				$(document).on('click', '#add-fee-row', function() {
+				$(document).on('click', '#add-fee-row', function(e) {
+                    e.preventDefault();
 					setTimeout(updateHiddenField, 100);
 				});
 
