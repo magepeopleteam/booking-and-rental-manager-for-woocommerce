@@ -128,7 +128,7 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
             if((date <  date_today)){
                 return [false, "notav", ''];
             }else{
-                return [false, "notav", 'Off'];
+                return [false, "notav", rbfw_translation.off_label];
             }
 
         }else{
