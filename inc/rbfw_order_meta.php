@@ -680,6 +680,7 @@ function rbfw_order_meta_box_callback() {
                     $ResortClass  = new RBFW_Resort_Function();
                     $package      = $ticket_info['rbfw_resort_package'];
                     $rent_info    = ! empty( $ticket_info['rbfw_type_info'] ) ? $ticket_info['rbfw_type_info'] : [];
+
                     $rent_info    = $ResortClass->rbfw_get_resort_room_info( $item_id, $rent_info, $package );
                     $service_info = ! empty( $ticket_info['rbfw_service_info'] ) ? $ticket_info['rbfw_service_info'] : [];
                     $service_info = $ResortClass->rbfw_get_resort_service_info( $item_id, $service_info );
