@@ -265,6 +265,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     $rent_type = get_post_meta($post_id, 'rbfw_item_type', true);
     $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
     $total_stock = 0;
+    $total_booked = 0;
 
 
     $date_range = [];
