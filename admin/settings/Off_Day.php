@@ -90,7 +90,7 @@
 
                 $rbfw_buffer_time  = get_post_meta( $post_id, 'rbfw_buffer_time', true ) ? get_post_meta( $post_id, 'rbfw_buffer_time', true ) : '';
 
-                $rbfw_buffer_time_after  = get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) ? get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) : '';
+                $rbfw_buffer_time_after  = get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) ? get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) : 0;
 
                 ?>
                 <div class="mpStyle mp_tab_item" data-tab-item="#travel_off_days">
@@ -156,8 +156,8 @@
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$rbfw_off_days  = isset( $_POST['rbfw_off_days'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_off_days'] ) : '';
-					$rbfw_buffer_time  = isset( $_POST['rbfw_buffer_time'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_buffer_time'] ) : '';
-					$rbfw_buffer_time_after  = isset( $_POST['rbfw_buffer_time_after'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_buffer_time_after'] ) : '';
+					$rbfw_buffer_time  = isset( $_POST['rbfw_buffer_time'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_buffer_time'] ) : 0;
+					$rbfw_buffer_time_after  = isset( $_POST['rbfw_buffer_time_after'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_buffer_time_after'] ) : 0;
 
                     $off_days_start = isset( $_POST['off_days_start'] ) ? RBFW_Function::data_sanitize( $_POST['off_days_start'] ) : '';
 					$off_days_end   = isset( $_POST['off_days_end'] ) ? RBFW_Function::data_sanitize( $_POST['off_days_end'] ) : '';
