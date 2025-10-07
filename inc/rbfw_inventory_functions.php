@@ -298,7 +298,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
     $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
     $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
-    $rbfw_buffer_time_after = get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) ? get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) : '0';
+    $rbfw_buffer_time_after = get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) ? get_post_meta( $post_id, 'rbfw_buffer_time_after', true ) : 0;
 
 
 
