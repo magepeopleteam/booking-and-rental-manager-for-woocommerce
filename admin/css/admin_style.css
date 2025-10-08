@@ -5707,7 +5707,6 @@ border: 1px solid #d4dadf !important;
 .rbfw_multi_day_price_conf .time-slots-container {
     margin-top: 0px;
     background-color: white;
-    padding: 15px;
     border-radius: 4px;
 }
 
@@ -5720,15 +5719,14 @@ border: 1px solid #d4dadf !important;
 .rbfw_multi_day_price_conf .time-slot {
     display: inline-flex;
     align-items: center;
-    background-color: #f5f5f5;
-    padding: 5px 10px;
-    border-radius: 20px;
-    border: 1px solid #ddd;
+    padding: 5px;
+    border: 1px solid #999;
     font-size: 14px;
 }
 
 .rbfw_multi_day_price_conf .time-slot.enabled {
-    background-color: #e8f5e9;
+    background-color: var(--mage-primary);
+    color: white;
 }
 
 .rbfw_multi_day_price_conf .time-slot-time {
@@ -5736,16 +5734,15 @@ border: 1px solid #d4dadf !important;
 }
 
 .rbfw_multi_day_price_conf .time-slot-indicator {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
+    border-radius:5px;
     background-color: #ccc;
+    color: #333;
     cursor: pointer;
-    margin-right: 5px;
+    margin-right: 1px;
 }
 
 .rbfw_multi_day_price_conf .time-slot.enabled .time-slot-indicator {
-    background-color: #4caf50;
+    background-color: green;
 }
 
 .rbfw_multi_day_price_conf .time-slot-remove {
@@ -5755,7 +5752,7 @@ border: 1px solid #d4dadf !important;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #f44336;
+    background-color: #333;
     color: white;
     font-size: 12px;
     font-weight: bold;
@@ -5824,7 +5821,7 @@ border: 1px solid #d4dadf !important;
     color: #00796b;
     padding: 6px 12px;
     margin: 5px 5px 0 0;
-    border-radius: 20px;
+    border-radius:5px;
     position: relative;
     font-size: 14px;
 }

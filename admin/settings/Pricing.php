@@ -1675,7 +1675,7 @@
                 ?>
                 <div class="time-slots-section" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'block' : 'none' ); ?>;">
                     <div class="section">
-                        <h2><?php echo esc_html__( 'Time Slots Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+                        <div class="label"><?php echo esc_html__( 'Time Slots Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                         <p><?php echo esc_html__( 'Configure available 30-minute time slots for booking', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
 
@@ -1696,7 +1696,8 @@
                             $i = 0;
                             foreach ($rdfw_available_time as $key => $item) { if(is_array($item)){
                                 ?>
-                                <div class="time-slot <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
+                                <div class="time-slot time-slot-indicator <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
+                                    
                                     <span class="time-slot-time"><?php echo $item['time'] ?></span>
                                     <?php if($type=='md'){ ?>
                                         <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][id]" value="<?php echo $i ?>">
@@ -1711,7 +1712,7 @@
                                         <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
                                         <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
                                     <?php } ?>
-                                    <div class="time-slot-indicator" title="Click to disable"></div>
+                                    
                                     <div class="time-slot-remove" title="Remove time slot">×</div>
                                 </div>
                                 <?php $i++; } } ?>
@@ -1811,7 +1812,7 @@
                                                             foreach ($particular_available_time as $key => $item) {
                                                                 if(is_array($item)){
                                                                     ?>
-                                                                    <div class="time-slot <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
+                                                                    <div class="time-slot time-slot-indicator <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
                                                                         <span class="time-slot-time"><?php echo $item['time'] ?></span>
                                                                         <?php if($type=='md'){ ?>
                                                                             <input type="hidden" name="rbfw_particulars[<?php echo $i ?>][available_time][<?php echo $j ?>][id]" value="<?php echo $i ?>">
@@ -1826,7 +1827,6 @@
                                                                             <input type="hidden" name="rbfw_particulars_sd[<?php echo $i ?>][available_time][<?php echo $j ?>][time]" value="<?php echo $item['time'] ?>">
                                                                             <input type="hidden" name="rbfw_particulars_sd[<?php echo $i ?>][available_time][<?php echo $j ?>][status]" value="<?php echo $item['status'] ?>">
                                                                         <?php } ?>
-                                                                        <div class="time-slot-indicator" title="Click to disable"></div>
                                                                         <div class="time-slot-remove" title="Remove time slot">×</div>
                                                                     </div>
                                                                     <?php $j++;  ?>
