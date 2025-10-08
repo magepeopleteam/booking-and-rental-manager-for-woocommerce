@@ -333,7 +333,7 @@
                             <div class="">
                                 <!-- Global Pricing Options -->
                                 <div class="pricing-options">
-                                    <h3>🔧 <?php esc_html_e('Enable Price Types (applies to all items)','booking-and-rental-manager-for-woocommerce'); ?></h3>
+                                    <h3><i class="fas fa-coins"></i> <?php esc_html_e('Enable Price Types (applies to all items)','booking-and-rental-manager-for-woocommerce'); ?></h3>
                                     <div class="pricing-toggles">
 
                                         <div class="price-toggle">
@@ -413,8 +413,8 @@
                                     <?php $i++; } ?>
                                 </div>
 
-                                <button type="button" class="add-more-btn" onclick="addItemRow()">
-                                    ➕ <?php esc_html_e('Add More Item','booking-and-rental-manager-for-woocommerce'); ?>
+                                <button type="button" class="ppof-button add-more-btn" onclick="addItemRow()">
+                                    <i class="fas fa-plus"></i> <?php esc_html_e('Add More Item','booking-and-rental-manager-for-woocommerce'); ?>
                                 </button>
                             </div>
 
@@ -612,23 +612,6 @@
                             background: #dc2626;
                         }
 
-                        .add-more-btn {
-                            width: 100%;
-                            padding: 12px;
-                            background: #10b981;
-                            color: white;
-                            border: none;
-                            border-radius: 6px;
-                            font-size: 14px;
-                            font-weight: 600;
-                            cursor: pointer;
-                            transition: background-color 0.2s;
-                            margin-top: 12px;
-                        }
-
-                        .add-more-btn:hover {
-                            background: #059669;
-                        }
 
                         .items-table {
                             width: 100%;
