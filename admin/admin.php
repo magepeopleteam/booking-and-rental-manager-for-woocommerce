@@ -6,6 +6,7 @@ require_once RBFW_PLUGIN_DIR . '/admin/custom_post.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/General_Info.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Pricing.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Extra_Service.php';
+require_once RBFW_PLUGIN_DIR . '/admin/settings/Fee_Management.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Inventory.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Off_Day.php';
 require_once RBFW_PLUGIN_DIR . '/admin/settings/Tax.php';
