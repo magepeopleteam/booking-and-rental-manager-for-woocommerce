@@ -450,7 +450,7 @@
                         }
 
                         .header {
-                            background: #3b82f6;
+                            background: #f1f5f9;
                             color: white;
                             padding: 20px;
                             text-align: center;
@@ -1868,10 +1868,10 @@
                                 <div class="mp_hidden_item" >
                                     <div class="rbfw_pdwt_row d-flex justify-content-between">
                                         <div>
-                                            <input type="text" class="rbfw_start_date rbfw_particulars_date">
+                                            <input type="text" class="rbfw_start_date rbfw_particulars_date" placeholder="<?php echo date('Y-m-d'); ?>">
                                         </div>
                                         <div>
-                                            <input type="text" class="rbfw_end_date  rbfw_particulars_date">
+                                            <input type="text" class="rbfw_end_date  rbfw_particulars_date" placeholder="<?php echo date('Y-m-d'); ?>">
                                         </div>
                                         <div>
                                             <div class="time-slots-container">

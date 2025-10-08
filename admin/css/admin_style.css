@@ -5708,6 +5708,7 @@ border: 1px solid #d4dadf !important;
     margin-top: 0px;
     background-color: white;
     border-radius: 4px;
+    padding:0 10px;
 }
 
 .rbfw_multi_day_price_conf .time-slots {
