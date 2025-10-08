@@ -139,9 +139,7 @@
                 return;
             }
 
-
             let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
-
             let enable_specific_duration = jQuery('#enable_specific_duration').val();
 
             if(enable_specific_duration=='on'){
@@ -558,6 +556,12 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
                     // Update attributes
                     $el.attr('data-price', service_info[type].price);
                     $el.attr('data-available_quantity', service_info[type].stock);
+                    if(!service_info[type].stock){
+                        $el.removeClass('single-type-timely');
+                        $el.find('.rent-type').html(type+' (Sold Out)');
+                    }else{
+                        $el.find('.rent-type').text(type);
+                    }
                     // (Optional) Update displayed price text
                     $el.find('.price').text(rbfw_translation.currency + service_info[type].price);
                 }
