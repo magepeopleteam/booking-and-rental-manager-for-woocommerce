@@ -536,6 +536,7 @@
                     if ( $enable_specific_duration == 'on' ) {
                         $start_time = $value['start_time'];
                         $end_time = $value['end_time'];
+                        $end_date = $start_date;
                     } else {
                         $start_date_time   = new DateTime( $start_date . ' ' . $start_time );
                         $for_end_date_time = $start_date_time;
@@ -547,11 +548,7 @@
                         $end_time = $for_end_date_time->format( 'H:i:s' );
                     }
 
-
-
-
-
-					$rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $end_date, $end_time );
+                    $rbfw_timely_available_quantity = rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $end_date, $end_time );
                     $sd_service_info[$value['rent_type']] = array('price'=>$type_price,'stock'=>$rbfw_timely_available_quantity);
 				}
 
@@ -572,7 +569,9 @@
                 wp_die();
 			}
 
-			public function rbfw_bike_car_sd_frontend_scripts( $rbfw_post_id ) {
+
+
+            public function rbfw_bike_car_sd_frontend_scripts( $rbfw_post_id ) {
 				global $post;
 				$post_id = ! empty( $post->ID ) ? $post->ID : '';
 				if ( ! empty( $rbfw_post_id ) ) {
