@@ -573,10 +573,9 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
     if(isset($_GET['rbfw_search_item'])){
 
-        $search_item = $_GET['rbfw_search_item'] ?? '';
-
-        $start_date = $_GET['rbfw_pickup_date_search'] ?? '';
-        $end_date = $_GET['rbfw_dropoff_date_search'] ?? '';
+        $search_item = sanitize_text_field( wp_unslash($_GET['rbfw_search_item'])) ?? '';
+        $start_date = sanitize_text_field( wp_unslash($_GET['rbfw_pickup_date_search'])) ?? '';
+        $end_date = sanitize_text_field( wp_unslash($_GET['rbfw_dropoff_date_search'])) ?? '';
 
         $redirect_url = add_query_arg(
             array(
