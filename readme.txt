@@ -214,7 +214,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
-2.5.3
+2.5.4
 Single day inventory problem solved.
 Vernulable issue solved.
 
