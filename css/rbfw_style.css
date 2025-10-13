@@ -7189,9 +7189,9 @@ select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
     text-decoration: line-through;
 }
 
-.rbfw_single_default_template .product-quantity{
+/*.rbfw_single_default_template .product-quantity{
     display: none;
-}
+}*/
 
 .woocommerce-order-received .order-actions-button{
     display:none !important;
