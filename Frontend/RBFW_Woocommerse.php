@@ -8,7 +8,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
         public function __construct()
         {
-            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'prevent_duplicate_cart_item'), 10, 2 );
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
             add_filter( 'woocommerce_add_cart_item_data',array($this ,  'rbfw_add_info_to_cart_item'), 90, 3 );
             add_action( 'woocommerce_before_calculate_totals', array($this ,  'rbfw_set_new_cart_price'), 90 );
             add_filter( 'woocommerce_get_item_data', array($this ,  'rbfw_show_cart_items') , 90, 2 );
@@ -20,7 +20,7 @@ if (!class_exists('RBFW_Woocommerce')) {
             add_action( 'rbfw_wc_order_status_change', array($this ,  'rbfw_change_user_order_status_on_order_status_change'), 10, 3 );
         }
 
-        public function prevent_duplicate_cart_item( $passed, $product_id  ) {
+        public function rbfw_prevent_duplicate_cart_item( $passed, $product_id  ) {
             foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) {
                 $_product = $values['data'];
 
