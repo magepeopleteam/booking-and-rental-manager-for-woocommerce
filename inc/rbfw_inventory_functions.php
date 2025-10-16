@@ -309,7 +309,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
             $order = wc_get_order($wc_order_id);
 
-            if($order){
+            if($order && $order->get_status() != 'trash'){
 
                 $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
 
@@ -631,55 +631,63 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
 
         if(is_array($rbfw_inventory)){
-            foreach ($rbfw_inventory as $key => $inventory) {
-                $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
+            foreach ($rbfw_inventory as $wc_order_id => $inventory) {
 
-                $partial_stock = true;
-                if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
-                    $partial_stock = false;
-                }
+                $order = wc_get_order($wc_order_id);
 
+                if($order){
+                    $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
 
-                if ( ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
-
-
-                    if(isset($inventory['rbfw_start_date_ymd']) && isset($inventory['rbfw_end_date_ymd'])){
-                        $inventory_start_date = $inventory['rbfw_start_date_ymd'];
-                        $inventory_end_date = $inventory['rbfw_end_date_ymd'];
-                    }else{
-                        $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
-                        $inventory_start_date = $booked_dates[0];
-                        $inventory_end_date = end($booked_dates);
+                    $partial_stock = true;
+                    if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
+                        $partial_stock = false;
                     }
 
 
-                    if ($rent_type == 'resort') {
-                        $start_date_time = new DateTime( $start_date );
-                        $end_date_time = new DateTime( $end_date );
+                    if ( ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
 
-                        if ($date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end) {
-                            $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
-                            foreach ($rbfw_type_info as $type_name => $type_qty) {
-                                if ($type_name == $type) {
-                                    $total_booked += $type_qty;
+
+                        if(isset($inventory['rbfw_start_date_ymd']) && isset($inventory['rbfw_end_date_ymd'])){
+                            $inventory_start_date = $inventory['rbfw_start_date_ymd'];
+                            $inventory_end_date = $inventory['rbfw_end_date_ymd'];
+                        }else{
+                            $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
+                            $inventory_start_date = $booked_dates[0];
+                            $inventory_end_date = end($booked_dates);
+                        }
+
+
+                        if ($rent_type == 'resort') {
+                            $start_date_time = new DateTime( $start_date );
+                            $end_date_time = new DateTime( $end_date );
+
+                            if ($date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end) {
+                                $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
+                                foreach ($rbfw_type_info as $type_name => $type_qty) {
+                                    if ($type_name == $type) {
+                                        $total_booked += $type_qty;
+                                    }
                                 }
                             }
-                        }
-                    }else{
+                        }else{
 
-                        $booked_dates = $inventory['booked_dates'];
+                            $booked_dates = $inventory['booked_dates'];
 
 
-                        if($stock_manage_on_return_date=='no'){
+                            if($stock_manage_on_return_date=='no'){
 
-                            array_pop($booked_dates);
-                        }
+                                array_pop($booked_dates);
+                            }
 
-                        if (in_array($date,$booked_dates)) {
-                            $total_booked += $rbfw_item_quantity;
+                            if (in_array($date,$booked_dates)) {
+                                $total_booked += $rbfw_item_quantity;
+                            }
                         }
                     }
                 }
+
+
+
             }
 
         }
