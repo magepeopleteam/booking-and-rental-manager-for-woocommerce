@@ -8,6 +8,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
         public function __construct()
         {
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
             add_filter( 'woocommerce_add_cart_item_data',array($this ,  'rbfw_add_info_to_cart_item'), 90, 3 );
             add_action( 'woocommerce_before_calculate_totals', array($this ,  'rbfw_set_new_cart_price'), 90 );
             add_filter( 'woocommerce_get_item_data', array($this ,  'rbfw_show_cart_items') , 90, 2 );
@@ -18,6 +19,36 @@ if (!class_exists('RBFW_Woocommerce')) {
             //add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management' );
             add_action( 'rbfw_wc_order_status_change', array($this ,  'rbfw_change_user_order_status_on_order_status_change'), 10, 3 );
         }
+
+        public function rbfw_prevent_duplicate_cart_item( $passed, $product_id  ) {
+            foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) {
+                $_product = $values['data'];
+
+                if ( $_product->get_id() == $product_id ) {
+
+                    $cart_url = wc_get_cart_url();
+
+                    // Add notice with link to cart
+                    wc_add_notice(
+                        sprintf(
+                            __( 'This product is already in your cart. <a href="%s" class="wc-forward">View Cart</a>', 'woocommerce' ),
+                            esc_url( $cart_url )
+                        ),
+                        'error'
+                    );
+
+                    // For AJAX requests, send the notice immediately
+                    if ( wp_doing_ajax() ) {
+                        wc_print_notices();
+                        wp_die(); // Stop further execution
+                    }
+
+                    return false;
+                }
+            }
+            return $passed;
+        }
+
         public function rbfw_add_info_to_cart_item( $cart_item_data, $product_id, $variation_id ) {
             global $rbfw;
             $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;

@@ -52,7 +52,7 @@ if (!class_exists('RBFW_Rental_List')) {
 
         public function rental_list_menu()
         {
-            add_submenu_page('edit.php?post_type=rbfw_item', __('Rental Lists', 'booking-and-rental-manager-for-woocommerce'), __('Rental Lists', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_rental_lists', array($this, 'display_rental_lists'));
+            //add_submenu_page('edit.php?post_type=rbfw_item', __('Rental Lists', 'booking-and-rental-manager-for-woocommerce'), __('Rental Lists', 'booking-and-rental-manager-for-woocommerce'), 'manage_options', 'rbfw_rental_lists', array($this, 'display_rental_lists'));
         }
 
         public function display_rental_lists()

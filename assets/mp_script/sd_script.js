@@ -139,9 +139,7 @@
                 return;
             }
 
-
             let start_date = jQuery('#rbfw_bikecarsd_selected_date').val();
-
             let enable_specific_duration = jQuery('#enable_specific_duration').val();
 
             if(enable_specific_duration=='on'){
@@ -153,23 +151,20 @@
             }else{
                 var duration = jQuery(this).data('duration');
                 var duration_type = jQuery(this).data('d_type');
-
                 var start_time = jQuery('.rbfw-select.rbfw-time-price.pickup_time').val();
 
-
                 if(time_slot_switch == 'yes'){
-                    if(start_time==''){
-                        alert("please enter pickup time");
+                    if(start_time == ''){
+                        alert("Please enter pickup time");
                         return;
                     }
                 }
 
                 jQuery('#rbfw_start_time').val(start_time);
 
-                // Combine start_date + start_time into a Date object
                 let startDateTime = new Date(start_date + ' ' + start_time);
 
-                // Add duration
+// Add duration
                 if(duration_type === 'Hours'){
                     startDateTime.setHours(startDateTime.getHours() + duration);
                 } else if(duration_type === 'Days'){
@@ -178,9 +173,15 @@
                     startDateTime.setDate(startDateTime.getDate() + (duration * 7));
                 }
 
-                // Extract back into date & time
-                let endDate = startDateTime.toISOString().split('T')[0]; // YYYY-MM-DD
-                let endTime = startDateTime.toTimeString().split(' ')[0].slice(0,5); // HH:MM
+// Format local end date/time (no UTC conversion)
+                let year = startDateTime.getFullYear();
+                let month = String(startDateTime.getMonth() + 1).padStart(2, '0');
+                let day = String(startDateTime.getDate()).padStart(2, '0');
+                let endDate = `${year}-${month}-${day}`;
+
+                let hours = String(startDateTime.getHours()).padStart(2, '0');
+                let minutes = String(startDateTime.getMinutes()).padStart(2, '0');
+                let endTime = `${hours}:${minutes}`;
 
                 jQuery('#rbfw_end_date').val(endDate);
                 jQuery('#rbfw_end_time').val(endTime);
@@ -548,18 +549,35 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
             var service_info = response.service_info;
             var extra_service_info = response.extra_service_info;
 
-            jQuery('.single-type-timely').each(function() {
+            jQuery('.single-type-timely, .sold-out').each(function () {
                 var $el = jQuery(this);
 
-                // Get the type from the data-text attribute
-                var type = $el.data('text'); // e.g., "type 1"
+                // Get the type safely (from data-text or fallback to .text())
+                var type = ($el.data('text') || $el.text() || '').trim();
 
-                if (service_info[type]) {
+                // Ensure the type exists in service_info
+                if (service_info.hasOwnProperty(type)) {
+                    var info = service_info[type];
+                    var price = info.price || 0;
+                    var stock = parseInt(info.stock, 10) || 0;
+
                     // Update attributes
-                    $el.attr('data-price', service_info[type].price);
-                    $el.attr('data-available_quantity', service_info[type].stock);
-                    // (Optional) Update displayed price text
-                    $el.find('.price').text(rbfw_translation.currency + service_info[type].price);
+                    $el.attr({
+                        'data-price': price,
+                        'data-available_quantity': stock
+                    });
+
+                    // Update display based on stock
+                    if (stock <= 0) {
+                        $el.removeClass('single-type-timely').addClass('sold-out');
+                        $el.find('.rent-type').text(type + ' (Sold Out)');
+                    } else {
+                        $el.addClass('single-type-timely').removeClass('sold-out');
+                        $el.find('.rent-type').text(type);
+                    }
+
+                    // Update displayed price
+                    $el.find('.price').text(rbfw_translation.currency + price);
                 }
             });
 
