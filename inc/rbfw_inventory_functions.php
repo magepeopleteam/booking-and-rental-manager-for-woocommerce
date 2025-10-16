@@ -305,42 +305,47 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
 
     if(is_array($rbfw_inventory)){
-        foreach ($rbfw_inventory as $key => $inventory) {
-            $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
+        foreach ($rbfw_inventory as $wc_order_id => $inventory) {
 
-            $partial_stock = true;
-            if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
-                $partial_stock = false;
-            }
+            $order = wc_get_order($wc_order_id);
 
+            if($order){
 
-            if ( ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
+                $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
 
-                if(isset($inventory['rbfw_start_date_ymd']) && isset($inventory['rbfw_end_date_ymd'])){
-                    $inventory_start_date = $inventory['rbfw_start_date_ymd'];
-                    $inventory_end_date = $inventory['rbfw_end_date_ymd'];
-                    $inventory_start_time = $inventory['rbfw_start_time_24'];
-                    $inventory_end_time = $inventory['rbfw_end_time_24'];
-                }else{
-                    $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
-                    $inventory_start_date = $booked_dates[0];
-                    $inventory_end_date = end($booked_dates);
-                    $inventory_start_time = $inventory['rbfw_start_time'];
-                    $inventory_end_time = $inventory['rbfw_end_time'];
+                $partial_stock = true;
+                if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
+                    $partial_stock = false;
                 }
 
-                if ($rbfw_buffer_time_after) {
-                    $datetime = new DateTime("$inventory_end_date $inventory_end_time");
-                    $datetime->modify('+' . $rbfw_buffer_time_after . ' hours');
-                    $inventory_end_date = $datetime->format('Y-m-d');
-                    $inventory_end_time = $datetime->format('H:i');
-                } else {
-                    if ($stock_manage_on_return_date == 'no') {
-                        $date = new DateTime($inventory_end_date);
-                        $date->modify('-1 day');
-                        $inventory_end_date = $date->format('Y-m-d');
+
+                if ( ($inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
+
+                    if(isset($inventory['rbfw_start_date_ymd']) && isset($inventory['rbfw_end_date_ymd'])){
+                        $inventory_start_date = $inventory['rbfw_start_date_ymd'];
+                        $inventory_end_date = $inventory['rbfw_end_date_ymd'];
+                        $inventory_start_time = $inventory['rbfw_start_time_24'];
+                        $inventory_end_time = $inventory['rbfw_end_time_24'];
+                    }else{
+                        $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
+                        $inventory_start_date = $booked_dates[0];
+                        $inventory_end_date = end($booked_dates);
+                        $inventory_start_time = $inventory['rbfw_start_time'];
+                        $inventory_end_time = $inventory['rbfw_end_time'];
                     }
-                }
+
+                    if ($rbfw_buffer_time_after) {
+                        $datetime = new DateTime("$inventory_end_date $inventory_end_time");
+                        $datetime->modify('+' . $rbfw_buffer_time_after . ' hours');
+                        $inventory_end_date = $datetime->format('Y-m-d');
+                        $inventory_end_time = $datetime->format('H:i');
+                    } else {
+                        if ($stock_manage_on_return_date == 'no') {
+                            $date = new DateTime($inventory_end_date);
+                            $date->modify('-1 day');
+                            $inventory_end_date = $date->format('Y-m-d');
+                        }
+                    }
 
 
 
@@ -350,31 +355,32 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
 
 
-                $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
-                $date_inventory_end = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
+                    $date_inventory_start = new DateTime($inventory_start_date . ' ' . $inventory_start_time);
+                    $date_inventory_end = new DateTime($inventory_end_date . ' ' . $inventory_end_time);
 
-                if ($rent_type == 'resort') {
-                    $start_date_time = new DateTime( $start_date );
-                    $end_date_time = new DateTime( $end_date );
+                    if ($rent_type == 'resort') {
+                        $start_date_time = new DateTime( $start_date );
+                        $end_date_time = new DateTime( $end_date );
 
-                    if ($date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end) {
-                        $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
-                        foreach ($rbfw_type_info as $type_name => $type_qty) {
-                            if ($type_name == $type) {
-                                $total_booked += $type_qty;
+                        if ($date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end) {
+                            $rbfw_type_info = !empty($inventory['rbfw_type_info']) ? $inventory['rbfw_type_info'] : [];
+                            foreach ($rbfw_type_info as $type_name => $type_qty) {
+                                if ($type_name == $type) {
+                                    $total_booked += $type_qty;
+                                }
                             }
                         }
-                    }
-                }else{
-                    $start_date_time = new DateTime( $pickup_datetime );
-                    $end_date_time = new DateTime( $dropoff_datetime );
-                    if($rbfw_enable_time_slot=='on'){
-                        if ($date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end) {
-                            $total_booked += $rbfw_item_quantity;
-                        }
                     }else{
-                        if ($date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end) {
-                            $total_booked += $rbfw_item_quantity;
+                        $start_date_time = new DateTime( $pickup_datetime );
+                        $end_date_time = new DateTime( $dropoff_datetime );
+                        if($rbfw_enable_time_slot=='on'){
+                            if ($date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end) {
+                                $total_booked += $rbfw_item_quantity;
+                            }
+                        }else{
+                            if ($date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end) {
+                                $total_booked += $rbfw_item_quantity;
+                            }
                         }
                     }
                 }

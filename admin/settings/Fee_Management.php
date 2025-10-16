@@ -12,8 +12,8 @@
 				add_action( 'rbfw_meta_box_tab_name', [ $this, 'add_tab_menu' ] );
 				add_action( 'rbfw_meta_box_tab_content', [ $this, 'add_tabs_content' ] );
 				add_action( 'save_post', array( $this, 'settings_save' ), 99, 1 );
-				add_action( 'wp_ajax_rbfw_add_fee_row', array( $this, 'ajax_add_fee_row' ) );
-				add_action( 'wp_ajax_rbfw_delete_fee_row', array( $this, 'ajax_delete_fee_row' ) );
+				//add_action( 'wp_ajax_rbfw_add_fee_row', array( $this, 'ajax_add_fee_row' ) );
+				//add_action( 'wp_ajax_rbfw_delete_fee_row', array( $this, 'ajax_delete_fee_row' ) );
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ) );
 			}
