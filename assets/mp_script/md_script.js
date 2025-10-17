@@ -1,3 +1,59 @@
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const qtyInputs = document.querySelectorAll('.rbfw_muiti_items_qty');
+    const summaryDiv = document.getElementById('rbfw-items-summary');
+
+    function updateSummary() {
+        let summaryHtml = '';
+        let hasItems = false;
+        var durationType = jQuery('#durationType').val();
+        var durationQty = parseInt(jQuery('#durationQty').val()) || 1;
+
+        qtyInputs.forEach(input => {
+            const qty = parseInt(input.value);
+            if (qty > 0) {
+                const itemName = input.dataset.name;
+                const pricePerUnit = parseFloat(input.dataset[`price${durationType.charAt(0).toUpperCase() + durationType.slice(1)}`]) || 0;
+
+                const total = (qty * durationQty *  pricePerUnit).toFixed(2);
+
+                summaryHtml += `<li class="item-type"><span>${itemName}</span> <span>${qty} x ${durationQty} x <span>${rbfw_translation.currency}${pricePerUnit}</span> = <span>${rbfw_translation.currency}${total}</span></li>`;
+
+                hasItems = true;
+            }
+        });
+
+
+        // summaryDiv.innerHTML = hasItems ? summaryHtml : '';
+    }
+
+    // Attach event listeners to quantity inputs
+    qtyInputs.forEach(input => {
+        input.addEventListener('input', updateSummary);
+    });
+
+    // Also trigger update when clicking plus or minus buttons
+    const plusButtons = document.querySelectorAll('.rbfw_qty_plus');
+    const minusButtons = document.querySelectorAll('.rbfw_qty_minus');
+    const durationType = document.querySelectorAll('#durationType');
+
+    [...plusButtons, ...minusButtons].forEach(btn => {
+        btn.addEventListener('click', function () {
+            // Slight delay to ensure value updates first
+            setTimeout(updateSummary, 50);
+        });
+    });
+
+    [...durationType].forEach(btn => {
+        btn.addEventListener('change', function () {
+            // Slight delay to ensure value updates first
+            setTimeout(updateSummary, 50);
+        });
+    });
+});
+
+
 jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',function() {
     const $this = jQuery(this);
     const target = jQuery('.price-item-container');
@@ -485,6 +541,9 @@ jQuery(document).on('change', '.rbfw-resource-price', function() {
     calculateTotalExtraService();
 });
 
+
+
+
 // Quantity changes
 jQuery(document).on('input change', '.rbfw_bikecarmd_es_qty', function() {
     calculateTotalExtraService();
@@ -555,57 +614,19 @@ jQuery(document).on('click', '.rbfw_additional_service_qty_minus', function () {
 
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    const qtyInputs = document.querySelectorAll('.rbfw_muiti_items_qty');
-    const summaryDiv = document.getElementById('rbfw-items-summary');
+jQuery(document).on('change', '.rbfw-management-price', function() {
 
-    function updateSummary() {
-        let summaryHtml = '';
-        let hasItems = false;
-        var durationType = jQuery('#durationType').val();
-        var durationQty = parseInt(jQuery('#durationQty').val()) || 1;
+    var $checkbox = jQuery(this);
+    var $parent = $checkbox.closest('.rbfw-checkbox'); // find the parent container
+    var $managementQty = $parent.find('.rbfw-management-qty'); // hidden input to set yes/no
 
-        qtyInputs.forEach(input => {
-            const qty = parseInt(input.value);
-            if (qty > 0) {
-                const itemName = input.dataset.name;
-                const pricePerUnit = parseFloat(input.dataset[`price${durationType.charAt(0).toUpperCase() + durationType.slice(1)}`]) || 0;
-
-                const total = (qty * durationQty *  pricePerUnit).toFixed(2);
-               
-                summaryHtml += `<li class="item-type"><span>${itemName}</span> <span>${qty} x ${durationQty} x <span>${rbfw_translation.currency}${pricePerUnit}</span> = <span>${rbfw_translation.currency}${total}</span></li>`;
-                 
-                hasItems = true;
-            }
-        });
-
-       
-       // summaryDiv.innerHTML = hasItems ? summaryHtml : '';
+    if ($checkbox.is(':checked')) {
+        $managementQty.val('yes'); // Mark as selected
+    } else {
+        $managementQty.val('no'); // Mark as not selected
     }
 
-    // Attach event listeners to quantity inputs
-    qtyInputs.forEach(input => {
-        input.addEventListener('input', updateSummary);
-    });
-
-    // Also trigger update when clicking plus or minus buttons
-    const plusButtons = document.querySelectorAll('.rbfw_qty_plus');
-    const minusButtons = document.querySelectorAll('.rbfw_qty_minus');
-    const durationType = document.querySelectorAll('#durationType');
-
-    [...plusButtons, ...minusButtons].forEach(btn => {
-        btn.addEventListener('click', function () {
-            // Slight delay to ensure value updates first
-            setTimeout(updateSummary, 50);
-        });
-    });
-
-    [...durationType].forEach(btn => {
-        btn.addEventListener('change', function () {
-            // Slight delay to ensure value updates first
-            setTimeout(updateSummary, 50);
-        });
-    });
+    calculateTotalManagementPrice();
 });
 
 
@@ -653,8 +674,12 @@ function rbfw_multi_items_ajax_price_calculation(){
 
             jQuery('[name="total_days"]').val(response.total_days);
 
+            alert(response.rbfw_management_price_html);
+
 
             jQuery('.resource-costing .price-figure').html(response.service_cost_html);
+
+
             jQuery('.subtotal .price-figure').html(response.sub_total_price_html);
 
             jQuery('.rbfw_pricing_applied').hide();
@@ -794,6 +819,50 @@ function calculateTotalExtraService() {
     jQuery('.resource-costing span').text(rbfw_translation.currency + resourse_cost.toFixed(2));
 
     var sub_total_price = resourse_cost + parseFloat(jQuery('#rbfw_duration_price').val());
+
+
+
+
+    let rbfw_security_deposit_actual_amount = 0;
+    if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
+        let rbfw_security_deposit_amount  = jQuery('#rbfw_security_deposit_amount').val();
+        if (jQuery('#rbfw_security_deposit_type').val() == 'percentage'){
+            rbfw_security_deposit_actual_amount = (rbfw_security_deposit_amount / 100) * sub_total_price;
+        }else{
+            rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
+        }
+    }
+
+
+    var total_price = sub_total_price + parseFloat(rbfw_security_deposit_actual_amount);
+    jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
+
+
+    jQuery('.subtotal .price-figure').html(rbfw_translation.currency + sub_total_price.toFixed(2));
+    jQuery('.total .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
+
+}
+
+function calculateTotalManagementPrice() {
+    let rbfw_management_price = 0;
+
+    // Loop through all checked services
+    jQuery('.rbfw-management-price:checked').each(function() {
+        let price = parseFloat(jQuery(this).data('price')) || 0;
+        rbfw_management_price += price;
+    });
+
+
+    var rbfw_service_price = jQuery('#rbfw_service_price').val();
+    var extra_service_price = jQuery('#rbfw_es_service_price').val();
+
+    jQuery('#rbfw_management_price').val(rbfw_management_price.toFixed(2));
+
+    var resourse_cost = parseFloat(rbfw_service_price) + parseFloat(extra_service_price);
+
+    jQuery('.management-costing span').text(rbfw_translation.currency + rbfw_management_price.toFixed(2));
+
+    var sub_total_price = resourse_cost + rbfw_management_price + parseFloat(jQuery('#rbfw_duration_price').val());
 
 
 
@@ -986,6 +1055,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
 
     let rbfw_service_price = jQuery('#rbfw_service_price').val();
     let rbfw_es_service_price = jQuery('#rbfw_es_service_price').val();
+    let rbfw_management_price = jQuery('#rbfw_management_price').val();
     let rbfw_enable_time_slot = jQuery('#rbfw_enable_time_slot').val();
 
     if(pickup_date == '' || dropoff_date == ''){
@@ -1008,6 +1078,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             'rbfw_service_price': rbfw_service_price,
             'rbfw_enable_variations': rbfw_enable_variations,
             'rbfw_es_service_price': rbfw_es_service_price,
+            'rbfw_management_price': rbfw_management_price,
             'rbfw_available_time': rbfw_available_time,
             'rbfw_enable_time_slot': rbfw_enable_time_slot,
             'nonce' : rbfw_ajax_front.nonce_bikecarmd_ajax_price_calculation
@@ -1023,9 +1094,13 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             jQuery('[name="total_days"]').val(response.total_days);
 
             jQuery('.resource-costing .price-figure').html(response.service_cost_html);
+
+            jQuery('.management-costing .price-figure').html(response.rbfw_management_price_html);
+
             jQuery('.subtotal .price-figure').html(response.sub_total_price_html);
 
             jQuery('.rbfw_pricing_applied').hide();
+
             if(response.pricing_applied != 'No'){
                 jQuery('.rbfw_pricing_applied.'+response.pricing_applied).show();
             }

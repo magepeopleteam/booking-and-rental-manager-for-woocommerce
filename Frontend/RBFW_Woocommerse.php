@@ -72,9 +72,6 @@ if (!class_exists('RBFW_Woocommerce')) {
             $rbfw_item_quantity = isset( $sd_input_data_sabitized['rbfw_item_quantity'] ) ? intval( $sd_input_data_sabitized['rbfw_item_quantity'] ) : 1;
             $rbfw_service_info_all = (isset( $sd_input_data_sabitized['rbfw_service_info'] ) && is_array( $sd_input_data_sabitized['rbfw_service_info'] ) ) ? $sd_input_data_sabitized['rbfw_service_info'] : [];
 
-
-
-
             $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
             $rbfw_service_info             = array();
             if ( ! empty( $rbfw_service_info_all ) ) {
@@ -86,6 +83,23 @@ if (!class_exists('RBFW_Woocommerce')) {
                     }
                 }
             }
+
+            $rbfw_management_info_all = (isset( $sd_input_data_sabitized['rbfw_management_info'] ) && is_array( $sd_input_data_sabitized['rbfw_management_info'] ) ) ? $sd_input_data_sabitized['rbfw_management_info'] : [];
+
+
+            $rbfw_management_info             = array();
+            if ( ! empty( $rbfw_service_info_all ) ) {
+                foreach ( $rbfw_service_info_all as $key => $value ) {
+                    $service_name = ! empty( $value['service_name'] ) ? $value['service_name'] : '';
+                    $service_qty  = ! empty( $value['service_qty'] ) ? $value['service_qty'] : 0;
+                    if ( $service_qty > 0 ) {
+                        $rbfw_service_info[ $service_name ] = $service_qty;
+                    }
+                }
+            }
+
+
+
             $discount_type   = '';
             $discount_amount = 0;
             $rbfw_regf_info  = [];
@@ -146,7 +160,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $discount_type         = $discount_arr['discount_type'];
                     $discount_amount       = $discount_arr['discount_amount'];
                 }
-                $rbfw_resort_ticket_info                    = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price );
+                $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price );
 
 
                 $base_price                                 = $rbfw_room_total_price;
@@ -206,11 +220,6 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $rbfw_bikecarsd_duration_price                   = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_duration_price' , $bikecarsd_selected_date);
                 $rbfw_bikecarsd_service_price                    = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_service_price' );
-
-
-
-
-
                 $rbfw_bikecarsd_total_price                      = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_total_price' , $bikecarsd_selected_date);
                 $rbfw_pickup_point                               = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
                 $rbfw_dropoff_point                              = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
@@ -361,6 +370,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         }
                     }
                 }
+
 
                 $rbfw_service_infos_new = [];
                 foreach ( $rbfw_service_infos as $item_s ) {

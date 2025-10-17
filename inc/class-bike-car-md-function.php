@@ -112,6 +112,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $item_quantity = isset($_POST['item_quantity'])?absint($_POST['item_quantity']):'';
             $rbfw_service_price = isset($_POST['rbfw_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_price']))):'' * $item_quantity;
+            $rbfw_management_price = isset($_POST['rbfw_management_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_management_price']))):'';
 
             $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_time_slot'])):'off';
 
@@ -187,6 +188,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'duration_price_number' => $duration_price,
                 'rbfw_service_price' => $rbfw_service_price,
                 'rbfw_service_price_html' => wc_price($rbfw_service_price),
+                'rbfw_management_price' => $rbfw_management_price,
+                'rbfw_management_price_html' => wc_price($rbfw_management_price),
                 'service_cost' => $service_cost+$rbfw_service_price,
                 'service_cost_html' => wc_price($service_cost+$rbfw_service_price),
                 'sub_total_price_html' => wc_price($sub_total_price),

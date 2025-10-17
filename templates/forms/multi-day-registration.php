@@ -683,10 +683,11 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                             <tr>
                                                 <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
                                                     <div class="label rbfw-checkbox">
-                                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][label]" value="<?php echo esc_attr($fee['label']); ?>">
-                                                        <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][amount]"  value="<?php echo esc_attr($fee['amount']); ?>">
+                                                        <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][label]" value="<?php echo esc_attr($fee['label']); ?>">
+                                                        <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][is_checked]" class="rbfw-management-qty" value="">
+                                                        <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][amount]"  value="<?php echo esc_attr($fee['amount']); ?>">
                                                         <label class="switch">
-                                                            <input type="checkbox"  class="rbfw-resource-price rbfw-resource-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>"   data-price="<?php echo esc_attr($fee['amount']); ?>" data-name="<?php echo esc_attr($fee['label']); ?>">
+                                                            <input type="checkbox"  class="rbfw-management-price rbfw-resource-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>"   data-price="<?php echo esc_attr($fee['amount']); ?>" data-name="<?php echo esc_attr($fee['label']); ?>">
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
@@ -732,10 +733,15 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 <span class="price-figure" data-price="">
                                     </span>
                             </li>
+                            <li class="management-costing rbfw-cond">
+                                <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>
+                                <span class="price-figure" data-price="">
+                                </span>
+                            </li>
                             <li class="subtotal">
                                 <?php esc_html_e('Subtotal','booking-and-rental-manager-for-woocommerce'); ?>
                                 <span class="price-figure" data-price="">
-                                    </span>
+                                </span>
                             </li>
 
 
@@ -811,6 +817,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                 <input type="hidden" name="rbfw_duration_price" id="rbfw_duration_price"  value="0">
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price"  value="0">
+                <input type="hidden" name="rbfw_management_price" id="rbfw_management_price"  value="0">
 
                 <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">
