@@ -309,7 +309,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
             $order = wc_get_order($wc_order_id);
 
-            if($order && $order->get_status() != 'trash'){
+            if($order && !($order->get_status() == 'trash' || $order->get_status() == 'cancelled')){
 
                 $rbfw_item_quantity = !empty($inventory['rbfw_item_quantity']) ? $inventory['rbfw_item_quantity'] : 0;
 
