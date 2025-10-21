@@ -295,6 +295,7 @@ if (! class_exists('RBFW_Dependencies')) {
 						'timeFormat' => get_option('time_format'),
 						'currentDateTime' => $datetime->format('Y-m-d H:i:s'),
 						'currentDate' => $datetime->format('Y-m-d'),
+                        'currency' => get_woocommerce_currency_symbol(),
 					)
 				);
 

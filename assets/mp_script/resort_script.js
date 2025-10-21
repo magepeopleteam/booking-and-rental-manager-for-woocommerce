@@ -128,6 +128,7 @@ jQuery(document).on('click','.rbfw_chk_availability_btn',function(e) {
                 } else{
                     jQuery('.rbfw_room_price_category_tabs').html(response);
                 }
+
             }
         });
 });
@@ -215,6 +216,30 @@ function calculateTotalDurationPrice() {
     jQuery('#rbfw_room_duration_price').val(room_duration_price.toFixed(2));
 
     var sub_total_price = room_duration_price + parseFloat(jQuery('#rbfw_extra_service_price').val());
+
+
+    let rbfw_management_price = 0;
+    jQuery('.rbfw-management-price-resort:checked').each(function() {  
+        let price_type = jQuery(this).data('price_type');
+        let price = parseFloat(jQuery(this).data('price')) || 0;
+
+        let resort_total_days = parseFloat(jQuery('#resort_total_days').val()) || 0;
+
+        if(price_type == 'percentage'){
+            rbfw_management_price += ( price/100 ) * sub_total_price;
+        }else{
+            let frequency = jQuery(this).data('frequency');
+            if(frequency == 'one-time' ){
+                rbfw_management_price += price;
+            }else{
+                rbfw_management_price += price * resort_total_days
+            }
+        }
+    });
+
+
+    jQuery('#rbfw_management_price_resort').val(rbfw_management_price.toFixed(2));
+    jQuery('.management-costing span').text(rbfw_translation.currency + rbfw_management_price.toFixed(2));
 
 
 

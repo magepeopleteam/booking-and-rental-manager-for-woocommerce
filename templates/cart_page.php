@@ -442,7 +442,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
     $start_datetime     = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
     $end_datetime       = $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
-
     $start_date         = $cart_item['rbfw_start_date'] ? $cart_item['rbfw_start_date'] : '';
     $start_time         = $cart_item['rbfw_start_time'] ? $cart_item['rbfw_start_time'] : '';
     $end_date           = $cart_item['rbfw_end_date'] ? $cart_item['rbfw_end_date'] : '';
@@ -460,6 +459,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $rbfw_service_price = $cart_item['rbfw_service_price'] ? $cart_item['rbfw_service_price'] : '';
     $rbfw_service_info 	= $cart_item['rbfw_service_info'] ? $cart_item['rbfw_service_info'] : [];
     $rbfw_service_infos 	= $cart_item['rbfw_service_infos'] ? $cart_item['rbfw_service_infos'] : [];
+    $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_management_info'] : [];
     $rbfw_ticket_info = $cart_item['rbfw_ticket_info'] ? $cart_item['rbfw_ticket_info'] : [];
     $variation_info = $cart_item['rbfw_variation_info'] ? $cart_item['rbfw_variation_info'] : [];
     $total_days = $cart_item['total_days'];
@@ -685,6 +685,27 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                     }
                 } ?>
             <?php } ?>
+
+        <?php if ( ! empty( $rbfw_management_info ) ){ ?>
+            <?php
+            foreach ($rbfw_management_info as $key => $value){
+                $service_label = $key; //service name
+                $service_price = (float)$value;
+                ?>
+                <tr>
+                    <th>
+                        <?php echo esc_html($service_label); ?>:
+                    </th>
+                    <td>
+                        (<?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>) = <?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
+                    </td>
+                </tr>
+                <?php
+            } ?>
+        <?php } ?>
+
+
+
 
             <?php if (  $discount_amount ): ?>
                 <tr>
