@@ -94,6 +94,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_regf_info = $ClassRegForm->rbfw_regf_value_array_function( $rbfw_id );
             }
             $cart_item_data['rbfw_id'] = $rbfw_id;
+
             if ( $rbfw_rent_type == 'resort' ) {
                 global $rbfw;
                 $rbfw_resort              = new RBFW_Resort_Function();
@@ -117,11 +118,11 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
                 $rbfw_room_duration_price = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_duration_price' );
-
-
-
                 $rbfw_room_service_price  = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_service_price' );
-                $rbfw_room_total_price    = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_total_price' );
+
+                $sub_total_price = $rbfw_room_duration_price + $rbfw_room_service_price;
+
+
 
 
                 $origin                   = date_create( $rbfw_checkin_datetime );
@@ -135,24 +136,50 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $total_days++;
                 }
 
+                $rbfw_management_info_all = (isset( $sd_input_data_sabitized['rbfw_management_info'] ) && is_array( $sd_input_data_sabitized['rbfw_management_info'] ) ) ? $sd_input_data_sabitized['rbfw_management_info'] : [];
+
+
+
+                $rbfw_management_price = 0;
+                $rbfw_management_info             = array();
+                if ( ! empty( $rbfw_management_info_all ) ) {
+                    foreach ( $rbfw_management_info_all as $key => $value ) {
+                        $service_label = ! empty( $value['label'] ) ? $value['label'] : '';
+                        $is_checked  = ! empty( $value['is_checked'] ) ? $value['is_checked'] : 0;
+                        $price  = ! empty( $value['amount'] ) ? $value['amount'] : 0;
+                        $price_type  = ! empty( $value['calculation_type'] ) ? $value['calculation_type'] : '';
+                        $frequency  = ! empty( $value['frequency'] ) ? $value['frequency'] : '';
+                        if ( $is_checked == 'yes' ) {
+                            if ($price_type === 'percentage') {
+                                $rbfw_management_price += (($price / 100) * $sub_total_price);
+                                $rbfw_management_info[ $service_label ] = (($price / 100) * $sub_total_price);
+                            } else {
+                                if ($frequency === 'one-time') {
+                                    $rbfw_management_price += $price * $rbfw_item_quantity;
+                                    $rbfw_management_info[ $service_label ] = $price * $rbfw_item_quantity;
+                                } else {
+                                    $rbfw_management_price += $price * $rbfw_item_quantity * $total_days;
+                                    $rbfw_management_info[ $service_label ] = $price * $rbfw_item_quantity * $total_days;
+                                }
+                            }
+                        }
+                    }
+                }
 
                 if ( function_exists( 'rbfw_get_discount_array' ) ) {
-                    $discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $rbfw_room_total_price, $rbfw_item_quantity );
+                    $discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $sub_total_price, $rbfw_item_quantity );
                 } else {
                     $discount_arr = [];
                 }
                 if ( ! empty( $discount_arr ) ) {
-                    $rbfw_room_total_price = $discount_arr['total_amount'];
+                    $sub_total_price_discount       = $discount_arr['total_amount'];
                     $discount_type         = $discount_arr['discount_type'];
                     $discount_amount       = $discount_arr['discount_amount'];
                 }
                 $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price );
 
-
-                $base_price                                 = $rbfw_room_total_price;
-                $total_price                                = apply_filters( 'rbfw_cart_base_price', $base_price );
-                $security_deposit                           = rbfw_security_deposit( $rbfw_id, $total_price );
-                $total_price                                = $total_price;
+                $security_deposit                           = rbfw_security_deposit( $rbfw_id, $sub_total_price_discount );
+                $total_price                                = $sub_total_price + $rbfw_management_price;
                 $start_date                                 = $rbfw_checkin_datetime;
                 $end_date                                   = $rbfw_checkout_datetime;
                 $cart_item_data['rbfw_start_datetime']      = $rbfw_checkin_datetime;
@@ -169,6 +196,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_room_duration_price'] = $rbfw_room_duration_price;
                 $cart_item_data['rbfw_room_service_price']  = $rbfw_room_service_price;
                 $cart_item_data['rbfw_ticket_info']         = $rbfw_resort_ticket_info;
+                $cart_item_data['rbfw_management_info']     = $rbfw_management_info;
                 $cart_item_data['discount_type']            = $discount_type;
                 $cart_item_data['discount_amount']          = $discount_amount;
                 $cart_item_data['security_deposit_amount']  = $security_deposit['security_deposit_amount'];
@@ -438,9 +466,6 @@ if (!class_exists('RBFW_Woocommerce')) {
                         }
                     }
                 }
-
-
-
 
 
                 $discount_amount = 0;

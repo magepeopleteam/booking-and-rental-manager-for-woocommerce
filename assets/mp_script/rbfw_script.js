@@ -564,4 +564,24 @@ jQuery(document).on('change', '.pickup_time', function() {
     }
 });
 
+function fee_management(sub_total_price,total_days=1,quantity=1){
+    let rbfw_management_price = 0;
+    jQuery('.rbfw-management-price:checked').each(function() {
+        let price_type = jQuery(this).data('price_type');
+        let price = parseFloat(jQuery(this).data('price')) || 0;
+        let frequency = jQuery(this).data('frequency');
+
+        if (price_type === 'percentage') {
+            rbfw_management_price += ((price / 100) * sub_total_price);
+        } else {
+            if (frequency === 'one-time') {
+                rbfw_management_price += price * quantity;
+            } else {
+                rbfw_management_price += price * quantity * total_days;
+            }
+        }
+    });
+    return rbfw_management_price;
+}
+
 

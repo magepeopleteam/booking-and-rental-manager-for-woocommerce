@@ -867,7 +867,7 @@ function calculateTotalExtraService() {
 
 function calculateTotalManagementPrice() {
 
-    let rbfw_management_price = 0;
+
     let rbfw_duration_price = parseFloat(jQuery('#rbfw_duration_price').val()) || 0;
     let rbfw_service_price = parseFloat(jQuery('#rbfw_service_price').val()) || 0;
     let extra_service_price = parseFloat(jQuery('#rbfw_es_service_price').val()) || 0;
@@ -876,25 +876,11 @@ function calculateTotalManagementPrice() {
 
     let sub_total_price = rbfw_duration_price + rbfw_service_price + extra_service_price;
 
-    jQuery('.rbfw-management-price:checked').each(function() {
-        let price_type = jQuery(this).data('price_type');
-        let price = parseFloat(jQuery(this).data('price')) || 0;
-        let frequency = jQuery(this).data('frequency');
+    let rbfw_management_price = fee_management(sub_total_price,total_days,quantity);
 
-        if (price_type === 'percentage') {
-            rbfw_management_price += ((price / 100) * sub_total_price);
-        } else {
-            if (frequency === 'one-time') {
-                rbfw_management_price += price * quantity;
-            } else {
-                rbfw_management_price += price * quantity * total_days;
-            }
-        }
-    });
 
     jQuery('#rbfw_management_price').val(rbfw_management_price.toFixed(2));
     jQuery('.management-costing span').text(rbfw_translation.currency + rbfw_management_price.toFixed(2));
-
 
     let rbfw_security_deposit_actual_amount = 0;
 
@@ -908,6 +894,9 @@ function calculateTotalManagementPrice() {
     }
 
     let total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+
+    alert(12);
+
     jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
     jQuery('.subtotal .price-figure').html(rbfw_translation.currency + sub_total_price.toFixed(2));
     jQuery('.total .price-figure').html(rbfw_translation.currency + total_price.toFixed(2));
