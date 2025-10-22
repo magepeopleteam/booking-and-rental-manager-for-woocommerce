@@ -895,7 +895,7 @@ function calculateTotalManagementPrice() {
 
     let total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
 
-    alert(12);
+
 
     jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
     jQuery('.subtotal .price-figure').html(rbfw_translation.currency + sub_total_price.toFixed(2));
