@@ -661,13 +661,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                         </div>
                     <?php } ?>
 
-                    <?php
-                    $rbfw_fee_data = get_post_meta( $post_id, 'rbfw_fee_data', true );
-
-                    //echo '<pre>';print_r($rbfw_fee_data);
-
-                    ?>
-
+                    <?php $rbfw_fee_data = get_post_meta( $post_id, 'rbfw_fee_data', true ); ?>
                     <?php if(!empty($rbfw_fee_data)){ ?>
                         <div class="item rbfw_resourse_md" style="display: none">
                             <div class="rbfw-single-right-heading">

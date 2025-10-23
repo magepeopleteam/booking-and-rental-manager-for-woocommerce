@@ -447,6 +447,25 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                 <td><?php echo wp_kses(wc_price($rbfw_bikecarsd_service_price),rbfw_allowed_html()); ?></td>
             </tr>
         <?php endif; ?>
+
+        <?php if ( ! empty( $rbfw_management_info ) ){ ?>
+            <?php
+            foreach ($rbfw_management_info as $key => $value){
+                $service_label = $key; //service name
+                $service_price = (float)$value;
+                ?>
+                <tr>
+                    <th>
+                        <?php echo esc_html($service_label); ?>:
+                    </th>
+                    <td>
+                        (<?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>) = <?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
+                    </td>
+                </tr>
+                <?php
+            } ?>
+        <?php } ?>
+
         <?php if ( ! empty( $security_deposit_amount ) ): ?>
             <tr>
                 <th><?php echo esc_html((!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit')); ?>:</th>

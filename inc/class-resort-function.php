@@ -113,7 +113,7 @@
 				return $main_array;
 			}
 
-			public function rbfw_resort_ticket_info( $product_id, $checkin_date, $checkout_date, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info = null, $rbfw_regf_info = array() , $rbfw_room_price = array() ) {
+			public function rbfw_resort_ticket_info( $product_id, $checkin_date, $checkout_date, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info = null, $rbfw_regf_info = array() , $rbfw_room_price = array() , $rbfw_management_info = [], $rbfw_management_price=0 ) {
 				global $rbfw;
 				if ( ! empty( $product_id ) && ! empty( $checkin_date ) && ! empty( $checkout_date ) && ! empty( $rbfw_room_info ) ):
 					$post_id               = $product_id;
@@ -258,6 +258,7 @@
 					$main_array[0]['rbfw_resort_package']     = $rbfw_room_price_category;
 					$main_array[0]['rbfw_type_info']          = [];
 					$main_array[0]['rbfw_service_info']       = [];
+					$main_array[0]['rbfw_management_info']    = $rbfw_management_info;
 					$main_array[0]['rbfw_room_price']         = $rbfw_room_price;
 					$main_array[0]['rbfw_rent_type']          = $rbfw_rent_type;
 					$main_array[0]['rbfw_id']                 = $product_id;
@@ -284,6 +285,7 @@
 					$main_array[0]['rbfw_mps_tax']    = $percent;
 					$main_array[0]['duration_cost']   = $total_room_price;
 					$main_array[0]['service_cost']    = $total_service_price;
+					$main_array[0]['rbfw_management_price']    = $rbfw_management_price;
 					$main_array[0]['discount_type']   = $discount_type;
 					$main_array[0]['discount_amount'] = $discount_amount;
 					$main_array[0]['rbfw_regf_info']  = $rbfw_regf_info;

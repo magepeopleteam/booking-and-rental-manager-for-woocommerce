@@ -674,7 +674,7 @@ function rbfw_multi_items_ajax_price_calculation(){
 
             jQuery('[name="total_days"]').val(response.total_days);
 
-            alert(response.rbfw_management_price_html);
+            //alert(response.rbfw_management_price_html);
 
 
             jQuery('.resource-costing .price-figure').html(response.service_cost_html);
