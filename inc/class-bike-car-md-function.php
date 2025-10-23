@@ -247,7 +247,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $total_days = 1;
             }
 
-            $rbfw_multi_item_price = isset($_POST['rbfw_multi_item_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_multi_item_price']))):'';
+            $rbfw_multi_item_price = isset($_POST['rbfw_duration_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_duration_price']))):'';
             $rbfw_service_category_price = isset($_POST['rbfw_service_category_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_category_price']))):'';
 
             $rbfw_enable_time_slot = isset($_POST['rbfw_enable_time_slot'])?sanitize_text_field(wp_unslash($_POST['rbfw_enable_time_slot'])):'off';

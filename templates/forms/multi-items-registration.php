@@ -472,6 +472,12 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                     </span>
                                 </li>
 
+                                <li class="management-costing rbfw-cond">
+                                    <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>
+                                    <span class="price-figure" data-price="">
+                                    </span>
+                                </li>
+
                                 <li class="discount" style="display:none;">
                                     <?php esc_html_e('Discount','booking-and-rental-manager-for-woocommerce'); ?>
                                     <span></span>
@@ -616,8 +622,10 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
                 <?php wp_nonce_field('rbfw_ajax_action', 'nonce'); ?>
 
-                <input type="hidden" name="rbfw_multi_item_price" id="rbfw_multi_item_price" value="0">
+                <input type="hidden" name="rbfw_duration_price" id="rbfw_duration_price" value="0">
                 <input type="hidden" name="rbfw_service_category_price" id="rbfw_service_category_price"  value="0">
+
+                <input type="hidden" name="rbfw_management_price" id="rbfw_management_price"  value="0">
 
                 <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">

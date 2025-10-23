@@ -312,7 +312,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $total_days = isset($_POST['total_days'])?sanitize_text_field(wp_unslash($_POST['total_days'])):'';
 
-                $rbfw_multi_item_price = isset($_POST['rbfw_multi_item_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_multi_item_price']))):0;
+                $rbfw_multi_item_price = isset($_POST['rbfw_duration_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_duration_price']))):0;
                 $rbfw_category_wise_price = isset($_POST['rbfw_service_category_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_category_price']))):0;
 
 
@@ -357,7 +357,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
                 $cart_item_data['multiple_items_info']          = $multiple_items_info;
-                $cart_item_data['rbfw_multi_item_price']          = $rbfw_multi_item_price;
+                $cart_item_data['rbfw_duration_price']          = $rbfw_multi_item_price;
 
                 $cart_item_data['rbfw_category_wise_info']    = $rbfw_category_wise_info;
 
@@ -991,7 +991,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_management_info = $values['rbfw_management_info'] ? $values['rbfw_management_info'] : [];
                 $rbfw_management_price = $values['rbfw_management_price'] ? $values['rbfw_management_price'] : [];
 
-                $rbfw_multi_item_price    = $values['rbfw_multi_item_price'] ? $values['rbfw_multi_item_price'] : 0;
+                $rbfw_multi_item_price    = $values['rbfw_duration_price'] ? $values['rbfw_duration_price'] : 0;
                 $rbfw_service_category_price    = '0';
 
 

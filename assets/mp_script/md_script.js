@@ -636,7 +636,7 @@ function rbfw_multi_items_ajax_price_calculation(){
     let post_id = jQuery('[data-service-id]').data('service-id');
     let date_format = jQuery('#wp_date_format').val();
     let rbfw_available_time = jQuery('#rbfw_available_time').val();
-    let rbfw_multi_item_price = jQuery('#rbfw_multi_item_price').val();
+    let rbfw_duration_price = jQuery('#rbfw_duration_price').val();
     let rbfw_service_category_price = jQuery('#rbfw_service_category_price').val();
     let pickup_date = jQuery('#pickup_date').val();
     let pickup_time = jQuery('#pickup_time').find(':selected').val();
@@ -659,7 +659,7 @@ function rbfw_multi_items_ajax_price_calculation(){
             'pickup_time': pickup_time,
             'durationType': durationType,
             'durationQty': durationQty,
-            'rbfw_multi_item_price': rbfw_multi_item_price,
+            'rbfw_duration_price': rbfw_duration_price,
             'rbfw_service_category_price': rbfw_service_category_price,
             'rbfw_available_time': rbfw_available_time,
             'nonce' : rbfw_ajax_front.nonce_multi_items_ajax_price_calculation
@@ -675,6 +675,24 @@ function rbfw_multi_items_ajax_price_calculation(){
             jQuery('[name="total_days"]').val(response.total_days);
 
             //alert(response.rbfw_management_price_html);
+
+            let rbfw_management_price = 0;
+            jQuery('.rbfw-management-price:checked').each(function() {
+                let price_type = jQuery(this).data('price_type');
+                let price = parseFloat(jQuery(this).data('price')) || 0;
+                if(price_type == 'percentage'){
+                    let sub_total_price = response.duration_price_number + response.service_cost;
+                    rbfw_management_price += ( price/100 ) * sub_total_price;
+                }else{
+                    rbfw_management_price += price;
+                }
+            });
+
+
+
+
+
+            jQuery('.management-costing .price-figure').text( rbfw_js_variables.currency + rbfw_management_price.toFixed(2));
 
 
             jQuery('.resource-costing .price-figure').html(response.service_cost_html);
@@ -699,7 +717,8 @@ function rbfw_multi_items_ajax_price_calculation(){
                 jQuery('.security_deposit').hide();
             }
 
-            jQuery('.total .price-figure').html(response.total_price_html);
+            jQuery('.total .price-figure').text( rbfw_js_variables.currency + (rbfw_management_price + response.total_price).toFixed(2));
+
             jQuery('.rbfw-duration').show();
             jQuery('.rbfw-duration .item-content').html(response.total_duration);
             jQuery('.rbfw-duration .rbfw_duration_md').val(response.total_duration);
@@ -771,7 +790,7 @@ function calculateAdditional() {
 
     jQuery('#rbfw_service_category_price').val(additional_price.toFixed(2));
 
-    var sub_total_price = additional_price + parseInt(jQuery('#rbfw_multi_item_price').val());
+    var sub_total_price = additional_price + parseInt(jQuery('#rbfw_duration_price').val());
 
     let rbfw_security_deposit_actual_amount = 0;
     if(jQuery('#rbfw_security_deposit_enable').val() == 'yes'){
@@ -1007,9 +1026,13 @@ function calculateTotalMultipleItems(only_calculation=false) {
     }
 
 
-    jQuery('#rbfw_multi_item_price').val(item_total_price.toFixed(2));
+    jQuery('#rbfw_duration_price').val(item_total_price.toFixed(2));
 
     var sub_total_price = item_total_price + parseInt(jQuery('#rbfw_service_category_price').val());
+
+    let rbfw_management_price = fee_management(sub_total_price,1,1);
+
+
 
     if(only_calculation){
 
@@ -1022,7 +1045,8 @@ function calculateTotalMultipleItems(only_calculation=false) {
                 rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
             }
         }
-        var total_price = sub_total_price + parseFloat(rbfw_security_deposit_actual_amount);
+        var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+
         if(rbfw_security_deposit_actual_amount){
             jQuery('.security_deposit').show();
             jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
