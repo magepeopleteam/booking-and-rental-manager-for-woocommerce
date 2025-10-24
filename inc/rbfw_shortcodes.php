@@ -448,11 +448,13 @@ function rbfw_rent_search_ac_shortcode($atts = null)
     $location = !empty($_GET['rbfw_search_location']) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_location'])) : '';
     $type = !empty($_GET['rbfw_search_type']) ? sanitize_text_field(wp_unslash($_GET['rbfw_search_type'])) : '';
     $pickup_date = !empty($_GET['rbfw-pickup-date']) ? sanitize_text_field(wp_unslash($_GET['rbfw-pickup-date'])) : 'Pickup date';
+    $hide_pickup_date = !empty($_GET['hide_pickup_date']) ? sanitize_text_field(wp_unslash($_GET['hide_pickup_date'])) : 'no';
 
 
     $atts['rbfw_search_location'] = $location;
     $atts['rbfw_search_type'] = $type;
     $atts['rbfw_pickup_date'] = $pickup_date;
+    $atts['hide_pickup_date'] = $hide_pickup_date;
 
     return rbfw_rent_search_shortcode($atts);
 }
@@ -590,9 +592,11 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
     $attributes = shortcode_atts( array(
         'search-type'  => '',
+        'hide_pickup_date' => 'no',
     ), $atts );
 
     $search_type  = $attributes['search-type'];
+    $hide_pickup_date = $attributes['hide_pickup_date'];
 
 
 
@@ -677,6 +681,9 @@ function rbfw_rent_search_shortcode( $atts = null ){
             <div class="rbfw_rent_item_search_elementor_container">
                 <form class="rbfw_search_form_new" action="<?php echo esc_url( get_home_url() . '/search-item-list/' ); ?>" method="GET">
                     <?php wp_nonce_field('rbfw_nonce_action', 'nonce'); ?>
+                    <?php if( $hide_pickup_date === 'yes' ): ?>
+                    <input type="hidden" name="hide_pickup_date" value="yes">
+                    <?php endif; ?>
                     <div class="rbfw_search_container">
                         <div class="rbfw_search_item">
                             <?php rbfw_get_dropdown_new( 'rbfw_search_type', $type,  'rbfw_rent_item_search_type_location', 'category' );?>
@@ -684,10 +691,12 @@ function rbfw_rent_search_shortcode( $atts = null ){
                         <div class="rbfw_search_item">
                             <?php rbfw_get_dropdown_new( 'rbfw_search_location', $location, 'rbfw_rent_item_search_type_location', 'location' );?>
                         </div>
+                        <?php if( $hide_pickup_date !== 'yes' ): ?>
                         <div class="rbfw_search_item rbfw_flatpicker">
                             <input type="text" name="rbfw-pickup-date" id="rbfw_rent_item_search_pickup_date" value="<?php echo esc_attr( $pickup_date )?>" placeholder="<?php echo date_i18n( get_option('date_format')) ?>">
                             <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
                         </div>
+                        <?php endif; ?>
                         <div class="rbfw_search_item">
                             <input type="submit" class="rbfw_rent_item_search_submit" value="<?php echo esc_html__( 'Search', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                         </div>
