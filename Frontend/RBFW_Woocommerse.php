@@ -341,9 +341,43 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $sub_total_price = $rbfw_multi_item_price + $rbfw_category_wise_price;
 
+
+                $rbfw_management_info_all = (isset( $sd_input_data_sabitized['rbfw_management_info'] ) && is_array( $sd_input_data_sabitized['rbfw_management_info'] ) ) ? $sd_input_data_sabitized['rbfw_management_info'] : [];
+
+                $rbfw_management_price = 0;
+                $rbfw_management_info             = array();
+                if ( ! empty( $rbfw_management_info_all ) ) {
+                    foreach ( $rbfw_management_info_all as $key => $value ) {
+                        $service_label = ! empty( $value['label'] ) ? $value['label'] : '';
+                        $is_checked  = ! empty( $value['is_checked'] ) ? $value['is_checked'] : 0;
+                        $price  = ! empty( $value['amount'] ) ? $value['amount'] : 0;
+                        $price_type  = ! empty( $value['calculation_type'] ) ? $value['calculation_type'] : '';
+                        $frequency  = ! empty( $value['frequency'] ) ? $value['frequency'] : '';
+                        if ( $is_checked == 'yes' ) {
+                            if ($price_type === 'percentage') {
+                                $rbfw_management_price += (($price / 100) * $sub_total_price);
+
+                                $rbfw_management_info[ $service_label ] = (($price / 100) * $sub_total_price);
+                            } else {
+                                if ($frequency === 'one-time') {
+                                    $rbfw_management_price += $price * $rbfw_item_quantity;
+                                    $rbfw_management_info[ $service_label ] = $price * $rbfw_item_quantity;
+                                } else {
+                                    $rbfw_management_price += $price * $rbfw_item_quantity * $total_days;
+                                    $rbfw_management_info[ $service_label ] = $price * $rbfw_item_quantity * $total_days;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+
+
+
                 $security_deposit                                 = rbfw_security_deposit( $rbfw_id, $sub_total_price );
-                $total_price                                      = $sub_total_price - $discount_amount;
-                $rbfw_ticket_info                                 = $this->rbfw_cart_multi_items_ticket_info( $rbfw_id, $start_date, $end_date, $start_time, $end_time, $rbfw_pickup_point, $rbfw_dropoff_point,$total_price, $multiple_items_info , $rbfw_category_wise_info,$total_days,$durationQty, $rbfw_regf_info, $security_deposit);
+                $total_price                                      = $sub_total_price + $rbfw_management_price - $discount_amount;
+                $rbfw_ticket_info                                 = $this->rbfw_cart_multi_items_ticket_info( $rbfw_id, $start_date, $end_date, $start_time, $end_time, $rbfw_pickup_point, $rbfw_dropoff_point,$total_price, $multiple_items_info , $rbfw_category_wise_info,$total_days,$durationQty, $rbfw_regf_info, $security_deposit,$rbfw_management_info,$rbfw_management_price,$rbfw_multi_item_price);
                 $cart_item_data['rbfw_pickup_point']              = $rbfw_pickup_point;
                 $cart_item_data['rbfw_dropoff_point']             = $rbfw_dropoff_point;
                 $cart_item_data['rbfw_duration_md']               = $rbfw_duration_md;
@@ -356,14 +390,16 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_end_datetime']              = $dropoff_datetime;
 
 
-                $cart_item_data['multiple_items_info']          = $multiple_items_info;
-                $cart_item_data['rbfw_duration_price']          = $rbfw_multi_item_price;
+                $cart_item_data['multiple_items_info']            = $multiple_items_info;
+                $cart_item_data['rbfw_duration_price']            = $rbfw_multi_item_price;
 
-                $cart_item_data['rbfw_category_wise_info']    = $rbfw_category_wise_info;
+                $cart_item_data['rbfw_category_wise_info']        = $rbfw_category_wise_info;
 
-                $cart_item_data['duration_type']              = $durationType;
-                $cart_item_data['duration_qty']              = $durationQty;
+                $cart_item_data['duration_type']                  = $durationType;
+                $cart_item_data['duration_qty']                   = $durationQty;
                 $cart_item_data['rbfw_ticket_info']               = $rbfw_ticket_info;
+                $cart_item_data['rbfw_management_info']           = $rbfw_management_info;
+                $cart_item_data['rbfw_management_price']          = $rbfw_management_price;
                 $cart_item_data['total_days']                     = $total_days;
                 $cart_item_data['discount_type']                  = $discount_type;
                 $cart_item_data['discount_amount']                = $discount_amount;
@@ -482,14 +518,14 @@ if (!class_exists('RBFW_Woocommerce')) {
                             if ($price_type === 'percentage') {
                                 $rbfw_management_price += (($price / 100) * $sub_total_price);
 
-                                $rbfw_management_info[ $service_label ] = (($price / 100) * $sub_total_price);
+                                $rbfw_management_info[ $service_label ] = array('price_desc'=>$price.'% of '.$sub_total_price ,'price'=>(($price / 100) * $sub_total_price)); ;
                             } else {
                                 if ($frequency === 'one-time') {
                                     $rbfw_management_price += $price * $rbfw_item_quantity;
-                                    $rbfw_management_info[ $service_label ] = $price * $rbfw_item_quantity;
+                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>$price .'*'. $rbfw_item_quantity ,'price'=>$price * $rbfw_item_quantity);
                                 } else {
                                     $rbfw_management_price += $price * $rbfw_item_quantity * $total_days;
-                                    $rbfw_management_info[ $service_label ] = $price * $rbfw_item_quantity * $total_days;
+                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>$price .'*'. $rbfw_item_quantity .'*'. $total_days,'price'=>$price * $rbfw_item_quantity * $total_days);
                                 }
                             }
 
@@ -1154,6 +1190,28 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 }
 
+                if (!empty($rbfw_management_info)){
+                    foreach ($rbfw_management_info as $key => $value) {
+                        $service_label = $key; //service name
+                        $service_price = (float)$value;
+                        $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
+                        $fee_management_content .= '<tr>';
+                        $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
+                        $fee_management_content .= '<strong>' . $service_label . '</strong>';
+                        $fee_management_content .= '</td>';
+                        $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
+                        $fee_management_content .= wc_price($service_price);
+                        $fee_management_content .= '</td>';
+                        $fee_management_content .= '</tr>';
+                        $fee_management_content .= '</table>';
+                        $fee_management_info_label = esc_html__('Fee Management Info:', 'booking-and-rental-manager-for-woocommerce');
+                        $item->add_meta_data(
+                            esc_html($fee_management_info_label),
+                            $fee_management_content
+                        );
+                    }
+                }
+
                 $fee_management_label = esc_html__( 'Fee Management Cost', 'booking-and-rental-manager-for-woocommerce' );
 
                 $item->add_meta_data(
@@ -1391,7 +1449,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
 
-        public   function rbfw_cart_multi_items_ticket_info( $product_id, $rbfw_pickup_start_date, $rbfw_pickup_end_date, $rbfw_pickup_start_time, $rbfw_pickup_end_time, $rbfw_pickup_point, $rbfw_dropoff_point, $total_price, $multiple_items_info, $rbfw_category_wise_info, $total_days, $durationQty,  $rbfw_regf_info = array(),  $security_deposit = []) {
+        public   function rbfw_cart_multi_items_ticket_info( $product_id, $rbfw_pickup_start_date, $rbfw_pickup_end_date, $rbfw_pickup_start_time, $rbfw_pickup_end_time, $rbfw_pickup_point, $rbfw_dropoff_point, $total_price, $multiple_items_info, $rbfw_category_wise_info, $total_days, $durationQty,  $rbfw_regf_info = array(),  $security_deposit = [],$rbfw_management_info=[],$rbfw_management_price=0,$rbfw_multi_item_price=0) {
             global $rbfw;
             $rbfw_rent_type  = get_post_meta( $product_id, 'rbfw_item_type', true );
             $names           = [ get_the_title( $product_id ) ];
@@ -1405,6 +1463,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     if ( $qty[ $i ] > 0 ) {
                         $ticket_type_arr[ $i ]['ticket_name']             = ! empty( $names[ $i ] ) ? wp_strip_all_tags( $names[ $i ] ) : '';
                         $ticket_type_arr[ $i ]['ticket_price']            = $total_price;
+                        $ticket_type_arr[ $i ]['duration_cost']           = $rbfw_multi_item_price;
                         $ticket_type_arr[ $i ]['ticket_qty']              = ! empty( $qty[ $i ] ) ? stripslashes( wp_strip_all_tags( $qty[ $i ] ) ) : '';
                         $ticket_type_arr[ $i ]['rbfw_start_date']         = $rbfw_pickup_start_date;
                         $ticket_type_arr[ $i ]['rbfw_start_time']         = $rbfw_pickup_start_time;
@@ -1415,6 +1474,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $ticket_type_arr[ $i ]['rbfw_pickup_point']       = $rbfw_pickup_point;
                         $ticket_type_arr[ $i ]['rbfw_dropoff_point']      = $rbfw_dropoff_point;
                         $ticket_type_arr[ $i ]['rbfw_rent_type']          = $rbfw_rent_type;
+                        $ticket_type_arr[ $i ]['rbfw_management_info']    = $rbfw_management_info;
+                        $ticket_type_arr[ $i ]['rbfw_management_price']          = $rbfw_management_price;
                         $ticket_type_arr[ $i ]['rbfw_id']                 = stripslashes( wp_strip_all_tags( $product_id ) );
                         $ticket_type_arr[ $i ]['multiple_items_info']     = $multiple_items_info;
                         $ticket_type_arr[ $i ]['rbfw_category_wise_info'] = $rbfw_category_wise_info;

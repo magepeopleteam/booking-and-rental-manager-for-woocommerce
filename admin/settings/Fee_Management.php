@@ -419,9 +419,8 @@
 					</td>
 					<td>
 						<select class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][frequency]">
-							<option value="one-time" <?php selected( $frequency, 'one-time' ); ?>><?php echo esc_html__( 'One-time', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-							<option value="per-day" <?php selected( $frequency, 'per-day' ); ?>><?php echo esc_html__( 'Per day', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-							<option value="per-night" <?php selected( $frequency, 'per-night' ); ?>><?php echo esc_html__( 'Per night', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+							<option value="one-time" <?php selected( $frequency, 'one-time' ); ?>><?php echo esc_html__( 'One Time', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+							<option value="per-day" <?php selected( $frequency, 'per-day' ); ?>><?php echo esc_html__( 'Day Wise', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
 						</select>
 					</td>
 					<td>
