@@ -12,8 +12,6 @@
 				add_action( 'rbfw_meta_box_tab_name', [ $this, 'add_tab_menu' ] );
 				add_action( 'rbfw_meta_box_tab_content', [ $this, 'add_tabs_content' ] );
 				add_action( 'save_post', array( $this, 'settings_save' ), 99, 1 );
-				//add_action( 'wp_ajax_rbfw_add_fee_row', array( $this, 'ajax_add_fee_row' ) );
-				//add_action( 'wp_ajax_rbfw_delete_fee_row', array( $this, 'ajax_delete_fee_row' ) );
 				add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_scripts' ) );
 				add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_scripts' ) );
 			}
@@ -86,11 +84,12 @@
 			public function fee_management_table( $post_id ) {
 				$rbfw_fee_data = get_post_meta( $post_id, 'rbfw_fee_data', true );
 				$rbfw_fee_data = is_array( $rbfw_fee_data ) ? $rbfw_fee_data : array();
+                $rbfw_item_type = get_post_meta( $post_id, 'rbfw_item_type', true );
 				?>
 				<div class="rbfw_fee_management_wrapper">
 					<?php $this->panel_header( 'Fee Configuration Settings', 'Configure additional fees for your rental items' ); ?>
 					<?php $this->render_fee_management_styles(); ?>
-					<?php $this->render_fee_table( $rbfw_fee_data ); ?>
+					<?php $this->render_fee_table( $rbfw_fee_data, $rbfw_item_type ); ?>
 					<?php $this->render_fee_management_scripts(); ?>
 				</div>
 				<?php
@@ -335,10 +334,11 @@
 				<?php
 			}
 
-			private function render_fee_table( $rbfw_fee_data ) {
-				?>
+			private function render_fee_table( $rbfw_fee_data , $rbfw_item_type) {
+                ?>
 				<div class="wprently_fee-container">
 					<div class="rbfw-scroll-hint" style="text-align: center; margin-bottom: 10px; color: #666; font-size: 12px;">
+                        <?php echo $rbfw_item_type ?>
 						<em><?php echo esc_html__( '← Scroll horizontally to view all columns →', 'booking-and-rental-manager-for-woocommerce' ); ?></em>
 					</div>
 					<div class="wprently_fee-table-wrap">
@@ -347,7 +347,9 @@
 								<tr>
 									<th><?php echo esc_html__( 'Fee Type & Label', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									<th><?php echo esc_html__( 'Calculation', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-									<th><?php echo esc_html__( 'Frequency', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+
+                                    <th style="display:<?php echo ($rbfw_item_type == 'resort' ||  $rbfw_item_type == 'bike_car_md')?'block':'none' ?>"><?php echo esc_html__( 'Frequency', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+
 									<th><?php echo esc_html__( 'Priority', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									<th><?php echo esc_html__( 'Options', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									<th><?php echo esc_html__( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
@@ -358,11 +360,11 @@
 								<?php
 								if ( ! empty( $rbfw_fee_data ) ) {
 									foreach ( $rbfw_fee_data as $index => $fee ) {
-										$this->render_fee_row( $index, $fee );
+										$this->render_fee_row( $index, $fee , $rbfw_item_type);
 									}
 								} else {
 									// Default empty row
-									$this->render_fee_row( 0, array() );
+									$this->render_fee_row( 0, array() ,$rbfw_item_type);
 								}
 								?>
 							</tbody>
@@ -384,7 +386,7 @@
 			 * @param array $fee
 			 * @since 1.0.0
 			 */
-			private function render_fee_row( $index, $fee = array() ) {
+			private function render_fee_row( $index, $fee = array() ,$rbfw_item_type = '') {
 				$label = isset( $fee['label'] ) ? $fee['label'] : '';
 				$description = isset( $fee['description'] ) ? $fee['description'] : '';
 				$calculation_type = isset( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
@@ -417,12 +419,14 @@
 							<span><?php echo ( $calculation_type === 'percentage' ) ? '%' : '$'; ?></span>
 						</div>
 					</td>
-					<td>
-						<select class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][frequency]">
-							<option value="one-time" <?php selected( $frequency, 'one-time' ); ?>><?php echo esc_html__( 'One Time', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-							<option value="per-day" <?php selected( $frequency, 'per-day' ); ?>><?php echo esc_html__( 'Day Wise', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-						</select>
-					</td>
+
+                    <td style="display:<?php echo ($rbfw_item_type == 'resort' ||  $rbfw_item_type == 'bike_car_md')?'block':'none' ?>">
+                        <select class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][frequency]">
+                            <option value="one-time" <?php selected( $frequency, 'one-time' ); ?>><?php echo esc_html__( 'One Time', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                            <option value="per-day" <?php selected( $frequency, 'per-day' ); ?>><?php echo esc_html__( 'Day Wise', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+                        </select>
+                    </td>
+
 					<td>
 						<div class="wprently_fee-priority">
 							<select class="wprently_fee-input wprently_fee-priority-select" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][priority]" onchange="rbfwUpdatePriorityBadge(this)">
@@ -499,6 +503,7 @@
 						const rowCount = tbody.rows.length;
 						const icon = rbfwFeeIcons[Math.floor(Math.random() * rbfwFeeIcons.length)];
 						const color = rbfwFeeColors[Math.floor(Math.random() * rbfwFeeColors.length)];
+                        let current_item_type = jQuery('#rbfw_item_type').val();
 						
 						const row = tbody.insertRow();
 						row.innerHTML = `
@@ -521,7 +526,7 @@
 									<span>$</span>
 								</div>
 							</td>
-							<td>
+							<td class="fee-frequency-td">
 								<select class="wprently_fee-input" name="rbfw_fee_data[${rowCount}][frequency]">
 									<option value="one-time" selected><?php echo esc_html__( 'One-time', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
 									<option value="per-day"><?php echo esc_html__( 'Per day', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
@@ -572,6 +577,12 @@
 								</div>
 							</td>
 						`;
+                        if (current_item_type === 'bike_car_md' || current_item_type === 'resort') {
+                            jQuery(row).find('.fee-frequency-td').css('display', 'table-cell');
+                        } else {
+                            jQuery(row).find('.fee-frequency-td').css('display', 'none');
+                        }
+
 					}
 
 					/**
@@ -781,24 +792,6 @@
 				}
 			}
 
-			/**
-			 * AJAX handler for adding fee row
-			 * @since 1.0.0
-			 */
-			public function ajax_add_fee_row() {
-				// Verify nonce for security
-				if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_fee_nonce' ) ) {
-					wp_die( 'Security check failed' );
-				}
-
-				$index = isset( $_POST['index'] ) ? intval( $_POST['index'] ) : 0;
-				
-				ob_start();
-				$this->render_fee_row( $index, array() );
-				$output = ob_get_clean();
-
-				wp_send_json_success( $output );
-			}
 
 			/**
 			 * AJAX handler for deleting fee row

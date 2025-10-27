@@ -251,6 +251,9 @@
                 }
                 jQuery('.rbfw_multiple_items').hide();
 
+                jQuery('table.wprently_fee-table th:nth-child(3)').hide();
+                jQuery('table.wprently_fee-table td:nth-child(3)').hide();
+
             } else if (item_type == 'appointment') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
                 jQuery('.rbfw_general_price_config_wrapper').addClass('rbfw-d-none');
@@ -294,6 +297,9 @@
 
                 jQuery('.additional-service-item-price').hide();
 
+                jQuery('table.wprently_fee-table th:nth-child(3)').hide();
+                jQuery('table.wprently_fee-table td:nth-child(3)').hide();
+
             } else if (item_type == 'resort') {
                 jQuery('.mp_tab_menu li[data-target-tabs="#rbfw_location_config"]').hide();
                 jQuery('.mp_tab_item[data-target-tabs="#rbfw_location_config"]').hide();
@@ -323,6 +329,9 @@
                 jQuery('.rbfw_multiple_items').hide();
 
                 jQuery('.additional-service-item-price').hide();
+
+                jQuery('table.wprently_fee-table th:nth-child(3)').show();
+                jQuery('table.wprently_fee-table td:nth-child(3)').show();
 
             }else if (item_type == 'resort') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
@@ -368,6 +377,10 @@
 
                 jQuery('.rbfw_multiple_items').show();
 
+                jQuery('table.wprently_fee-table th:nth-child(3)').hide();
+                jQuery('table.wprently_fee-table td:nth-child(3)').hide();
+
+
             } else {
                 jQuery('.rbfw_bike_car_sd_wrapper').hide();
                 jQuery('.rbfw_resort_price_config_wrapper').hide();
@@ -410,6 +423,9 @@
                 jQuery('.sessional_price_resort').hide();
                 jQuery('.mds_price_resort').hide();
                 jQuery('.rbfw_multiple_items').hide();
+
+                jQuery('table.wprently_fee-table th:nth-child(3)').show();
+                jQuery('table.wprently_fee-table td:nth-child(3)').show();
 
             }
 

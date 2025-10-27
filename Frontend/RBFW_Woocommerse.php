@@ -152,19 +152,20 @@ if (!class_exists('RBFW_Woocommerce')) {
                         if ( $is_checked == 'yes' ) {
                             if ($price_type === 'percentage') {
                                 $rbfw_management_price += (($price / 100) * $sub_total_price);
-                                $rbfw_management_info[ $service_label ] = (($price / 100) * $sub_total_price);
+                                $rbfw_management_info[ $service_label ] = array('price_desc'=>$price.'% of '.wc_price($sub_total_price) ,'price'=>(($price / 100) * $sub_total_price));
                             } else {
                                 if ($frequency === 'one-time') {
                                     $rbfw_management_price += $price * $rbfw_item_quantity;
-                                    $rbfw_management_info[ $service_label ] = $price * $rbfw_item_quantity;
+                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) ,'price'=>$price * $rbfw_item_quantity);
                                 } else {
                                     $rbfw_management_price += $price * $rbfw_item_quantity * $total_days;
-                                    $rbfw_management_info[ $service_label ] = $price * $rbfw_item_quantity * $total_days;
+                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $total_days,'price'=>$price * $rbfw_item_quantity * $total_days);
                                 }
                             }
                         }
                     }
                 }
+
 
                 if ( function_exists( 'rbfw_get_discount_array' ) ) {
                     $discount_arr = rbfw_get_discount_array( $rbfw_id, $total_days, $sub_total_price, $rbfw_item_quantity );
@@ -517,15 +518,14 @@ if (!class_exists('RBFW_Woocommerce')) {
                         if ( $is_checked == 'yes' ) {
                             if ($price_type === 'percentage') {
                                 $rbfw_management_price += (($price / 100) * $sub_total_price);
-
-                                $rbfw_management_info[ $service_label ] = array('price_desc'=>$price.'% of '.$sub_total_price ,'price'=>(($price / 100) * $sub_total_price)); ;
+                                $rbfw_management_info[ $service_label ] = array('price_desc'=>$price.'% of '.wc_price($sub_total_price) ,'price'=>(($price / 100) * $sub_total_price)); ;
                             } else {
                                 if ($frequency === 'one-time') {
                                     $rbfw_management_price += $price * $rbfw_item_quantity;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>$price .'*'. $rbfw_item_quantity ,'price'=>$price * $rbfw_item_quantity);
+                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $rbfw_item_quantity ,'price'=>$price * $rbfw_item_quantity);
                                 } else {
                                     $rbfw_management_price += $price * $rbfw_item_quantity * $total_days;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>$price .'*'. $rbfw_item_quantity .'*'. $total_days,'price'=>$price * $rbfw_item_quantity * $total_days);
+                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $rbfw_item_quantity .'*'. $total_days,'price'=>$price * $rbfw_item_quantity * $total_days);
                                 }
                             }
 
@@ -777,7 +777,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 if (!empty($rbfw_management_info)){
                     foreach ($rbfw_management_info as $key => $value) {
                         $service_label = $key; //service name
-                        $service_price = (float)$value;
+                        $service_price = (float)$value['price'];
 
                         $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
                         $fee_management_content .= '<tr>';
@@ -785,7 +785,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $fee_management_content .= '<strong>' . $service_label . '</strong>';
                         $fee_management_content .= '</td>';
                         $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
-                        $fee_management_content .= wc_price($service_price);
+                        $fee_management_content .=     wp_kses($value['price_desc'],rbfw_allowed_html()). ' = '.wc_price($service_price);
                         $fee_management_content .= '</td>';
                         $fee_management_content .= '</tr>';
                         $fee_management_content .= '</table>';

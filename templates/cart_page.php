@@ -220,14 +220,14 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
             <?php
             foreach ($rbfw_management_info as $key => $value){
                 $service_label = $key; //service name
-                $service_price = (float)$value;
+                $service_price = (float)$value['price'];
                 ?>
                 <tr>
                     <th>
                         <?php echo esc_html($service_label); ?>:
                     </th>
                     <td>
-                        (<?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>) = <?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
+                        (<?php echo wp_kses($value['price_desc'],rbfw_allowed_html()); ?>) = <?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
                     </td>
                 </tr>
                 <?php
@@ -728,17 +728,18 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
 
         <?php if ( ! empty( $rbfw_management_info ) ){ ?>
             <?php
-            echo '<pre>';print_r($rbfw_management_info);echo '<pre>';
+            //echo '<pre>';print_r($rbfw_management_info);echo '<pre>';
             foreach ($rbfw_management_info as $key => $value){
+                //echo '<pre>';print_r($value);echo '<pre>';
                 $service_label = $key; //service name
-                $service_price = (float)$value;
+                $service_price = (float)$value['price'];
                 ?>
                 <tr>
                     <th>
                         <?php echo esc_html($service_label); ?>:
                     </th>
                     <td>
-                        (<?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>) = <?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
+                        (<?php echo wp_kses($value['price_desc'],rbfw_allowed_html()); ?>) = <?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
                     </td>
                 </tr>
                 <?php
