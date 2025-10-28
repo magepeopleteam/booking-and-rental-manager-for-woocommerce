@@ -11,7 +11,7 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
 do_action( 'rbfw_before_cart_item_display', $cart_item, $rbfw_id );
 
 $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['security_deposit_amount'] : '';
-
+$rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_management_info'] : [];
 
 ?>
 
@@ -215,23 +215,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 <td><?php echo wp_kses(wc_price($discount_amount),rbfw_allowed_html()); ?></td>
             </tr>
         <?php endif; ?>
-        
-        <?php 
-        // Add WooCommerce Products to Resort cart display
-        $rbfw_wc_products_info = $cart_item['rbfw_wc_products_info'] ? $cart_item['rbfw_wc_products_info'] : [];
-        if ( ! empty( $rbfw_wc_products_info ) ) {
-            foreach ( $rbfw_wc_products_info as $product_id => $product_data ) {
-                $product = wc_get_product( $product_id );
-                if ( $product ) { ?>
-                    <tr>
-                        <th><?php echo esc_html( $product->get_name() ); ?>:</th>
-                        <td>(<?php echo wp_kses( wc_price( $product_data['price'] ), rbfw_allowed_html() ); ?> x <?php echo esc_html( $product_data['quantity'] ); ?>) = <?php echo wp_kses( wc_price( $product_data['total'] ), rbfw_allowed_html() ); ?></td>
-                    </tr>
-                <?php }
-            }
-        }
-        ?>
-        
         <?php if ( ! empty( $security_deposit_amount ) ): ?>
             <tr>
                 <th><?php echo esc_html((!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit')); ?>:</th>
@@ -443,23 +426,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 <td><?php echo wp_kses(wc_price($rbfw_bikecarsd_service_price),rbfw_allowed_html()); ?></td>
             </tr>
         <?php endif; ?>
-        
-        <?php 
-        // Add WooCommerce Products to Single Day cart display
-        $rbfw_wc_products_info = $cart_item['rbfw_wc_products_info'] ? $cart_item['rbfw_wc_products_info'] : [];
-        if ( ! empty( $rbfw_wc_products_info ) ) {
-            foreach ( $rbfw_wc_products_info as $product_id => $product_data ) {
-                $product = wc_get_product( $product_id );
-                if ( $product ) { ?>
-                    <tr>
-                        <th><?php echo esc_html( $product->get_name() ); ?>:</th>
-                        <td>(<?php echo wp_kses( wc_price( $product_data['price'] ), rbfw_allowed_html() ); ?> x <?php echo esc_html( $product_data['quantity'] ); ?>) = <?php echo wp_kses( wc_price( $product_data['total'] ), rbfw_allowed_html() ); ?></td>
-                    </tr>
-                <?php }
-            }
-        }
-        ?>
-        
         <?php if ( ! empty( $security_deposit_amount ) ): ?>
             <tr>
                 <th><?php echo esc_html((!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit')); ?>:</th>
@@ -476,7 +442,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
 
     $start_datetime     = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
     $end_datetime       = $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
-
     $start_date         = $cart_item['rbfw_start_date'] ? $cart_item['rbfw_start_date'] : '';
     $start_time         = $cart_item['rbfw_start_time'] ? $cart_item['rbfw_start_time'] : '';
     $end_date           = $cart_item['rbfw_end_date'] ? $cart_item['rbfw_end_date'] : '';
@@ -494,6 +459,7 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
     $rbfw_service_price = $cart_item['rbfw_service_price'] ? $cart_item['rbfw_service_price'] : '';
     $rbfw_service_info 	= $cart_item['rbfw_service_info'] ? $cart_item['rbfw_service_info'] : [];
     $rbfw_service_infos 	= $cart_item['rbfw_service_infos'] ? $cart_item['rbfw_service_infos'] : [];
+
     $rbfw_ticket_info = $cart_item['rbfw_ticket_info'] ? $cart_item['rbfw_ticket_info'] : [];
     $variation_info = $cart_item['rbfw_variation_info'] ? $cart_item['rbfw_variation_info'] : [];
     $total_days = $cart_item['total_days'];
@@ -720,20 +686,42 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 } ?>
             <?php } ?>
 
-            <?php if (  $discount_amount ): ?>
+        <?php if ( ! empty( $rbfw_management_info ) ){ ?>
+            <?php
+            //echo '<pre>';print_r($rbfw_management_info);echo '<pre>';
+            foreach ($rbfw_management_info as $key => $value){
+                //echo '<pre>';print_r($value);echo '<pre>';
+                $service_label = $key; //service name
+                $service_price = (float)$value['price'];
+                ?>
                 <tr>
                     <th>
-                        <?php
-                        if($rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
-                            echo esc_html($rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings'));
-                        }else{
-                            echo esc_html__('Discount','booking-and-rental-manager-for-woocommerce') . ' :';
-                        }
-                        ?>
+                        <?php echo esc_html($service_label); ?>:
                     </th>
-                    <td><?php echo wp_kses(wc_price($discount_amount),rbfw_allowed_html()); ?></td>
+                    <td>
+                        (<?php echo wp_kses($value['price_desc'],rbfw_allowed_html()); ?>) = <?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
+                    </td>
                 </tr>
-            <?php endif; ?>
+                <?php
+            } ?>
+        <?php } ?>
+
+
+
+        <?php if (  $discount_amount ): ?>
+            <tr>
+                <th>
+                    <?php
+                    if($rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                        echo esc_html($rbfw->get_option_trans('rbfw_text_discount', 'rbfw_basic_translation_settings'));
+                    }else{
+                        echo esc_html__('Discount','booking-and-rental-manager-for-woocommerce') . ' :';
+                    }
+                    ?>
+                </th>
+                <td><?php echo wp_kses(wc_price($discount_amount),rbfw_allowed_html()); ?></td>
+            </tr>
+        <?php endif; ?>
 
             <?php 
             // Add WooCommerce Products to Multi Day cart display
@@ -907,22 +895,6 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 </tr>
             <?php } ?>
         <?php } ?>
-
-        <?php 
-        // Add WooCommerce Products to Multiple Items cart display
-        $rbfw_wc_products_info = $cart_item['rbfw_wc_products_info'] ? $cart_item['rbfw_wc_products_info'] : [];
-        if ( ! empty( $rbfw_wc_products_info ) ) {
-            foreach ( $rbfw_wc_products_info as $product_id => $product_data ) {
-                $product = wc_get_product( $product_id );
-                if ( $product ) { ?>
-                    <tr>
-                        <th><?php echo esc_html( $product->get_name() ); ?>:</th>
-                        <td>(<?php echo wp_kses( wc_price( $product_data['price'] ), rbfw_allowed_html() ); ?> x <?php echo esc_html( $product_data['quantity'] ); ?>) = <?php echo wp_kses( wc_price( $product_data['total'] ), rbfw_allowed_html() ); ?></td>
-                    </tr>
-                <?php }
-            }
-        }
-        ?>
 
         <?php if ( ! empty( $security_deposit_amount ) ): ?>
             <tr>

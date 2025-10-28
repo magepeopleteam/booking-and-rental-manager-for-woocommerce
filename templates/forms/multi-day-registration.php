@@ -460,7 +460,6 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 <span class="item-content"></span>
                                 <span class="item-price"></span>
                             </div>
-                            
                             <input type="hidden" class="rbfw_duration_md" name="rbfw_duration_md">
                         </div>
 
@@ -606,13 +605,14 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                         </div>
                     <?php } ?>
 
+
+
                     <?php if(!empty($extra_service_list)){ ?>
                         <div class="item rbfw_resourse_md" style="display: none">
                             <div class="rbfw-single-right-heading">
                                 <?php esc_html_e('Optional Add-ons','booking-and-rental-manager-for-woocommerce'); ?>
                             </div>
                             <div class="item-content rbfw-resource">
-
                                 <table class="rbfw_bikecarmd_es_table">
                                     <tbody>
                                     <?php
@@ -621,14 +621,13 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                         <?php if(isset($extra['service_qty']) && $extra['service_qty'] > 0){ ?>
                                             <tr>
                                                 <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
-                                        <div style="display: none" class="rbfw-sold-out">
-                                            <?php esc_html_e('Sold Out', 'booking-and-rental-manager-for-woocommerce'); ?>
-                                        </div>
+                                                    <div style="display: none" class="rbfw-sold-out">
+                                                        <?php esc_html_e('Sold Out', 'booking-and-rental-manager-for-woocommerce'); ?>
+                                                    </div>
                                                     <div class="label rbfw-checkbox">
                                                         <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_name]" value="<?php echo esc_attr($extra['service_name']); ?>">
                                                         <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_qty]" class="rbfw-resource-qty key_value_cart_<?php echo esc_attr($key+1); ?>" value="">
                                                         <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_price]"  value="<?php echo esc_attr($extra['service_price']); ?>">
-
                                                         <label class="switch">
                                                             <input type="checkbox"  class="rbfw-resource-price rbfw-resource-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>"   data-price="<?php echo esc_attr($extra['service_price']); ?>" data-name="<?php echo esc_attr($extra['service_name']); ?>">
                                                             <span class="slider round"></span>
@@ -641,7 +640,9 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                                         <i class="resource-qty"><?php esc_html_e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo '('.esc_html($extra['service_qty']).')'; ?></span></i>
                                                     <?php } ?>
                                                 </td>
-                                                <td class="w_20"><?php echo wp_kses(wc_price($extra['service_price']),rbfw_allowed_html()); ?></td>
+                                                <td class="w_20">
+                                                    <?php echo wp_kses(wc_price($extra['service_price']),rbfw_allowed_html()); ?>
+                                                </td>
                                                 <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>
                                                     <td class="rbfw_bikecarmd_es_input_box" style="display:none">
                                                         <div class="rbfw_qty_input">
@@ -659,70 +660,6 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                             </div>
                         </div>
                     <?php } ?>
-
-                    <?php
-                    /* Include WooCommerce Products */
-                    $rbfw_enable_woocommerce_products = get_post_meta($rbfw_id, 'rbfw_enable_woocommerce_products', true) ? get_post_meta($rbfw_id, 'rbfw_enable_woocommerce_products', true) : 'no';
-                    $rbfw_woocommerce_products = get_post_meta($rbfw_id, 'rbfw_woocommerce_products', true) ? get_post_meta($rbfw_id, 'rbfw_woocommerce_products', true) : [];
-                    
-                    if($rbfw_enable_woocommerce_products == 'yes' && !empty($rbfw_woocommerce_products)) {
-                        ?>
-                        <div class="item rbfw_woocommerce_products_md" style="display: none">
-                            <div class="rbfw-single-right-heading">
-                                <?php esc_html_e('Additional Products','booking-and-rental-manager-for-woocommerce'); ?>
-                            </div>
-                            <div class="item-content rbfw-woocommerce-products">
-                                <div class="rbfw_woocommerce_products_list">
-                                    <?php
-                                    foreach ($rbfw_woocommerce_products as $index => $wc_product_data) {
-                                        if(empty($wc_product_data['product_id'])) continue;
-                                        
-                                        $product = wc_get_product($wc_product_data['product_id']);
-                                        if(!$product) continue;
-                                        
-                                        $product_price = $product->get_price();
-                                        if($wc_product_data['override_price'] == 'yes' && !empty($wc_product_data['custom_price'])) {
-                                            $product_price = $wc_product_data['custom_price'];
-                                        }
-                                        
-                                        $max_quantity = !empty($wc_product_data['max_quantity']) ? $wc_product_data['max_quantity'] : 10;
-                                        ?>
-                                        <div class="rbfw-wc-product-item">
-                                            <div class="rbfw-wc-product-info">
-                                                <div class="rbfw-wc-product-name"><?php echo esc_html($product->get_name()); ?></div>
-                                                <div class="rbfw-wc-product-price"><?php echo wp_kses(wc_price($product_price), rbfw_allowed_html()); ?></div>
-                                            </div>
-                                            <div class="rbfw-wc-product-quantity">
-                                                <div class="rbfw_qty_input">
-                                                    <a class="rbfw_qty_minus rbfw_wc_qty_minus" data-product-id="<?php echo esc_attr($wc_product_data['product_id']); ?>">
-                                                        <i class="fas fa-minus"></i>
-                                                    </a>
-                                                    <input type="number" 
-                                                           min="0" 
-                                                           max="<?php echo esc_attr($max_quantity); ?>" 
-                                                           value="0" 
-                                                           name="rbfw_wc_products[<?php echo esc_attr($index); ?>][quantity]" 
-                                                           class="rbfw_wc_qty" 
-                                                           data-product-id="<?php echo esc_attr($wc_product_data['product_id']); ?>"
-                                                           data-price="<?php echo esc_attr($product_price); ?>"
-                                                           data-max="<?php echo esc_attr($max_quantity); ?>"/>
-                                                    <a class="rbfw_qty_plus rbfw_wc_qty_plus" data-product-id="<?php echo esc_attr($wc_product_data['product_id']); ?>">
-                                                        <i class="fas fa-plus"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <input type="hidden" name="rbfw_wc_products[<?php echo esc_attr($index); ?>][product_id]" value="<?php echo esc_attr($wc_product_data['product_id']); ?>">
-                                            <input type="hidden" name="rbfw_wc_products[<?php echo esc_attr($index); ?>][price]" value="<?php echo esc_attr($product_price); ?>">
-                                        </div>
-                                        <?php
-                                    }
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-                    }
-                    ?>
                 </div>
 
 
@@ -748,18 +685,16 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 <span class="price-figure" data-price="">
                                     </span>
                             </li>
-                            <?php if($rbfw_enable_woocommerce_products == 'yes' && !empty($rbfw_woocommerce_products)){ ?>
-                            <li class="woocommerce-products-costing wc_products_cost rbfw-cond">
-                                <?php esc_html_e('Additional Products','booking-and-rental-manager-for-woocommerce'); ?>
-                                <span class="price-figure" data-price="">
-                                    <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
-                                </span>
-                            </li>
-                            <?php } ?>
                             <li class="subtotal">
                                 <?php esc_html_e('Subtotal','booking-and-rental-manager-for-woocommerce'); ?>
                                 <span class="price-figure" data-price="">
-                                    </span>
+                                </span>
+                            </li>
+
+                            <li class="management-costing rbfw-cond">
+                                <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>
+                                <span class="price-figure" data-price="">
+                                </span>
                             </li>
 
 
@@ -835,6 +770,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                 <input type="hidden" name="rbfw_duration_price" id="rbfw_duration_price"  value="0">
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price"  value="0">
+                <input type="hidden" name="rbfw_management_price" id="rbfw_management_price"  value="0">
 
                 <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">
@@ -880,7 +816,6 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                             <?php esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce'); ?>
                         </button>
                     </div>
-
                 <?php } ?>
 
                 <?php if($rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date) {
