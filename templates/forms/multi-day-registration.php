@@ -460,7 +460,6 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 <span class="item-content"></span>
                                 <span class="item-price"></span>
                             </div>
-                            
                             <input type="hidden" class="rbfw_duration_md" name="rbfw_duration_md">
                         </div>
 
@@ -606,13 +605,14 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                         </div>
                     <?php } ?>
 
+
+
                     <?php if(!empty($extra_service_list)){ ?>
                         <div class="item rbfw_resourse_md" style="display: none">
                             <div class="rbfw-single-right-heading">
                                 <?php esc_html_e('Optional Add-ons','booking-and-rental-manager-for-woocommerce'); ?>
                             </div>
                             <div class="item-content rbfw-resource">
-
                                 <table class="rbfw_bikecarmd_es_table">
                                     <tbody>
                                     <?php
@@ -621,14 +621,13 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                         <?php if(isset($extra['service_qty']) && $extra['service_qty'] > 0){ ?>
                                             <tr>
                                                 <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
-                                        <div style="display: none" class="rbfw-sold-out">
-                                            <?php esc_html_e('Sold Out', 'booking-and-rental-manager-for-woocommerce'); ?>
-                                        </div>
+                                                    <div style="display: none" class="rbfw-sold-out">
+                                                        <?php esc_html_e('Sold Out', 'booking-and-rental-manager-for-woocommerce'); ?>
+                                                    </div>
                                                     <div class="label rbfw-checkbox">
                                                         <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_name]" value="<?php echo esc_attr($extra['service_name']); ?>">
                                                         <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_qty]" class="rbfw-resource-qty key_value_cart_<?php echo esc_attr($key+1); ?>" value="">
                                                         <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_price]"  value="<?php echo esc_attr($extra['service_price']); ?>">
-
                                                         <label class="switch">
                                                             <input type="checkbox"  class="rbfw-resource-price rbfw-resource-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>"   data-price="<?php echo esc_attr($extra['service_price']); ?>" data-name="<?php echo esc_attr($extra['service_name']); ?>">
                                                             <span class="slider round"></span>
@@ -641,7 +640,9 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                                         <i class="resource-qty"><?php esc_html_e('Available Qty ','booking-and-rental-manager-for-woocommerce') ?><span class="es_stock"><?php echo '('.esc_html($extra['service_qty']).')'; ?></span></i>
                                                     <?php } ?>
                                                 </td>
-                                                <td class="w_20"><?php echo wp_kses(wc_price($extra['service_price']),rbfw_allowed_html()); ?></td>
+                                                <td class="w_20">
+                                                    <?php echo wp_kses(wc_price($extra['service_price']),rbfw_allowed_html()); ?>
+                                                </td>
                                                 <?php if($rbfw_enable_extra_service_qty == 'yes'){ ?>
                                                     <td class="rbfw_bikecarmd_es_input_box" style="display:none">
                                                         <div class="rbfw_qty_input">
@@ -659,6 +660,69 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                             </div>
                         </div>
                     <?php } ?>
+
+                    <?php $rbfw_fee_data = get_post_meta( $post_id, 'rbfw_fee_data', true ); ?>
+                    <?php if(!empty($rbfw_fee_data)){ ?>
+                        <div class="item rbfw_resourse_md" style="display: none">
+                            <div class="rbfw-single-right-heading">
+                                <?php esc_html_e('Fee Management','booking-and-rental-manager-for-woocommerce'); ?>
+                            </div>
+                            <div class="item-content rbfw-resource">
+                                <table class="rbfw_bikecarmd_es_table">
+                                    <tbody>
+                                    <?php
+                                    $c = 0;
+                                    //echo '<pre>';print_r($rbfw_fee_data);echo '<pre>';
+                                    $rbfw_management_price = 0;
+                                    foreach ($rbfw_fee_data as $key=>$fee) { ?>
+                                        <?php if(isset($fee['label'])){ ?>
+                                            <tr>
+                                                <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
+                                                    <div class="label rbfw-checkbox">
+                                                        <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][label]" value="<?php echo esc_attr($fee['label']); ?>">
+                                                        <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][is_checked]" class="rbfw-management-qty" value="<?php echo (esc_attr($fee['priority'])=='required')?'yes':'' ?>">
+                                                        <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][amount]"  value="<?php echo esc_attr($fee['amount']); ?>">
+                                                        <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][calculation_type]"  value="<?php echo esc_attr($fee['calculation_type']); ?>">
+                                                        <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][frequency]"  value="<?php echo esc_attr($fee['frequency']); ?>">
+                                                        <label class="switch">
+                                                            <input type="checkbox" <?php echo (esc_attr($fee['priority'])=='required')?'checked':'' ?>   class="rbfw-management-price rbfw-resource-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>"   data-price="<?php echo esc_attr($fee['amount']); ?>" data-name="<?php echo esc_attr($fee['label']); ?>" data-price_type="<?php echo esc_attr($fee['calculation_type']); ?>" data-frequency="<?php echo esc_attr($fee['frequency']); ?>">
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td class="resource-title-qty">
+                                                    <?php echo esc_html($fee['label']); ?>
+                                                    <?php
+                                                    if($fee['frequency']=='one-time'){
+                                                        echo 'One Time';
+                                                    }else{
+                                                        echo 'Day Wise';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td class="w_20">
+                                                    <?php if($fee['calculation_type']=='fixed'){
+                                                        echo wp_kses(wc_price($fee['amount']),rbfw_allowed_html());
+                                                   }else{
+                                                       echo $fee['amount'].'%';
+                                                   }
+                                                   ?>
+                                                </td>
+                                                <?php
+                                                if(esc_attr($fee['priority'])=='required'){
+                                                    $rbfw_management_price +=  $fee['amount'];
+                                                }
+                                                ?>
+                                            </tr>
+                                        <?php } ?>
+                                        <?php $c++; } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    <?php } ?>
+
+
                 </div>
 
 
@@ -684,10 +748,17 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 <span class="price-figure" data-price="">
                                     </span>
                             </li>
+
                             <li class="subtotal">
                                 <?php esc_html_e('Subtotal','booking-and-rental-manager-for-woocommerce'); ?>
                                 <span class="price-figure" data-price="">
-                                    </span>
+                                </span>
+                            </li>
+
+                            <li class="management-costing rbfw-cond">
+                                <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>
+                                <span class="price-figure" data-price="">
+                                </span>
                             </li>
 
 
@@ -763,6 +834,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                 <input type="hidden" name="rbfw_duration_price" id="rbfw_duration_price"  value="0">
                 <input type="hidden" name="rbfw_service_price" id="rbfw_service_price"  value="0">
                 <input type="hidden" name="rbfw_es_service_price" id="rbfw_es_service_price"  value="0">
+                <input type="hidden" name="rbfw_management_price" id="rbfw_management_price"  value="0">
 
                 <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">
@@ -808,7 +880,6 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                             <?php esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce'); ?>
                         </button>
                     </div>
-
                 <?php } ?>
 
                 <?php if($rbfw_enable_start_end_date == 'no' && $rbfw_event_last_date < $rbfw_todays_date) {

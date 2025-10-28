@@ -1,0 +1,129 @@
+/**
+ * Fee Management Frontend Styles
+ * @Author: Shahnur Alam
+ * @since 1.0.0
+ */
+
+/* Fee Summary Display */
+.rbfw-fee-summary {
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.rbfw-fee-summary h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.rbfw-fee-items {
+    margin-bottom: 10px;
+}
+
+.rbfw-fee-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.rbfw-fee-item:last-child {
+    border-bottom: none;
+}
+
+.rbfw-fee-label {
+    font-weight: 500;
+    color: #333;
+}
+
+.rbfw-fee-description {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+    margin-left: 10px;
+}
+
+.rbfw-fee-amount {
+    font-weight: 600;
+    color: #e91e63;
+}
+
+.rbfw-fee-refundable {
+    font-size: 10px;
+    color: #4caf50;
+    background: #e8f5e8;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 5px;
+}
+
+.rbfw-fee-total {
+    border-top: 2px solid #e91e63;
+    padding-top: 10px;
+    margin-top: 10px;
+    text-align: right;
+}
+
+.rbfw-fee-total strong {
+    color: #e91e63;
+    font-size: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .rbfw-fee-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    
+    .rbfw-fee-description {
+        margin-left: 0;
+        margin-top: 2px;
+    }
+    
+    .rbfw-fee-amount,
+    .rbfw-fee-refundable {
+        margin-left: 0;
+    }
+}
+
+/* Integration with WooCommerce styles */
+.woocommerce .rbfw-fee-summary {
+    margin: 1em 0;
+}
+
+.woocommerce-checkout .rbfw-fee-summary {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+/* Cart page styling */
+.woocommerce-cart .rbfw-fee-summary {
+    background: #f7f7f7;
+    border-left: 4px solid #e91e63;
+    padding-left: 15px;
+}
+
+/* Single product page styling */
+.single-rbfw_item .rbfw-fee-summary {
+    margin-top: 20px;
+}
+
+/* Booking form integration */
+.rbfw_single_day_booking .rbfw-fee-summary,
+.rbfw_daily_booking_section .rbfw-fee-summary {
+    margin-top: 15px;
+    border-color: var(--rbfw-primary-color, #e91e63);
+}
+
+.rbfw_single_day_booking .rbfw-fee-summary h4,
+.rbfw_daily_booking_section .rbfw-fee-summary h4 {
+    color: var(--rbfw-primary-color, #e91e63);
+}

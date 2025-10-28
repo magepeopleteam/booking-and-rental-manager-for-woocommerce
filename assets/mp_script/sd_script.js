@@ -480,6 +480,12 @@ function rbfw_price_calculation_sd(){
     var rbfw_es_service_price = parseInt(jQuery('#rbfw_es_service_price').val());
     var sub_total_price = rbfw_service_price + rbfw_es_service_price;
 
+    let rbfw_management_price = fee_management(sub_total_price,1,1);
+
+
+    jQuery('#rbfw_management_price').val(rbfw_management_price.toFixed(2));
+    jQuery('.management-costing span').text(rbfw_translation.currency + rbfw_management_price.toFixed(2));
+
     jQuery('.duration-costing span').text(rbfw_translation.currency + rbfw_service_price.toFixed(2));
     jQuery('.extra_service_cost span').text(rbfw_translation.currency + rbfw_es_service_price.toFixed(2));
 
@@ -494,14 +500,17 @@ function rbfw_price_calculation_sd(){
         }
     }
 
-    var total_price = sub_total_price + parseFloat(rbfw_security_deposit_actual_amount);
+    var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
+
+
+
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
         jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
     }
 
 
-    jQuery('.subtotal span').text(rbfw_translation.currency + total_price.toFixed(2));
+    jQuery('.subtotal span').text(rbfw_translation.currency + sub_total_price.toFixed(2));
     jQuery('.total span').text(rbfw_translation.currency + total_price.toFixed(2));
 }
 
