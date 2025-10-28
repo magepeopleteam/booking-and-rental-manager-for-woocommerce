@@ -295,14 +295,21 @@ function fetch_order_details_callback() {
                                     <table class="wp-list-table widefat fixed striped table-view-list">
                                         <?php foreach ($rbfw_management_info as $key => $value){
                                             $service_label = $key; //service name
-                                            $service_price = (float)$value;
+                                            if(is_array($value)){
+                                                $service_price = $value['price'];
+                                                $service_price_desc = $value['price_desc'];
+                                            }else{
+                                                $service_price = $value;
+                                                $service_price_desc = wc_price($value);
+                                            }
+
                                             ?>
                                             <tr>
                                                 <th>
                                                     <?php echo esc_html($service_label); ?>:
                                                 </th>
                                                 <td>
-                                                    (<?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>) = <?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
+                                                    (<?php echo wp_kses($service_price_desc,rbfw_allowed_html()); ?>)  = <?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>
