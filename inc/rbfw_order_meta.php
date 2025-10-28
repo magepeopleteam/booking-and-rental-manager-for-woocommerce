@@ -355,6 +355,30 @@ function fetch_order_details_callback() {
                             </tr>
                         <?php } ?>
 
+                        <?php 
+                        // Add WooCommerce Products to order details
+                        $rbfw_wc_products_info = ! empty( $ticket_info['rbfw_wc_products_info'] ) ? $ticket_info['rbfw_wc_products_info'] : [];
+                        if ( ! empty( $rbfw_wc_products_info ) ) { ?>
+                            <tr>
+                                <td>
+                                    <strong><?php esc_html_e( 'Additional Products', 'booking-and-rental-manager-for-woocommerce' ); ?>:</strong>
+                                </td>
+                                <td>
+                                    <table class="wp-list-table widefat fixed striped table-view-list">
+                                        <?php foreach ( $rbfw_wc_products_info as $product_id => $product_data ) { 
+                                            $product = wc_get_product( $product_id );
+                                            if ( $product ) { ?>
+                                                <tr>
+                                                    <td><strong><?php echo esc_html( $product->get_name() ); ?></strong></td>
+                                                    <td>(<?php echo wp_kses( wc_price( $product_data['price'] ), rbfw_allowed_html() ); ?> x <?php echo esc_html( $product_data['quantity'] ); ?>) = <?php echo wp_kses( wc_price( $product_data['total'] ), rbfw_allowed_html() ); ?></td>
+                                                </tr>
+                                            <?php }
+                                        } ?>
+                                    </table>
+                                </td>
+                            </tr>
+                        <?php } ?>
+
                         <?php if ( ! empty( $rbfw_regf_info ) ) { ?>
                             <tr>
                                 <td>

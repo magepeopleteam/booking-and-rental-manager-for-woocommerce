@@ -245,6 +245,66 @@
                             /* End: Include Custom Registration Form */
                             ?>
 
+                            <?php
+                            /* Include WooCommerce Products */
+                            $rbfw_enable_woocommerce_products = get_post_meta($rbfw_id, 'rbfw_enable_woocommerce_products', true) ? get_post_meta($rbfw_id, 'rbfw_enable_woocommerce_products', true) : 'no';
+                            $rbfw_woocommerce_products = get_post_meta($rbfw_id, 'rbfw_woocommerce_products', true) ? get_post_meta($rbfw_id, 'rbfw_woocommerce_products', true) : [];
+                            
+                            if($rbfw_enable_woocommerce_products == 'yes' && !empty($rbfw_woocommerce_products)) {
+                                ?>
+                                <div class="rbfw_woocommerce_products_section">
+                                    <label class="rbfw-single-right-heading"><?php esc_html_e('Additional Products','booking-and-rental-manager-for-woocommerce'); ?></label>
+                                    <div class="rbfw_woocommerce_products_list">
+                                        <?php
+                                        foreach ($rbfw_woocommerce_products as $index => $wc_product_data) {
+                                            if(empty($wc_product_data['product_id'])) continue;
+                                            
+                                            $product = wc_get_product($wc_product_data['product_id']);
+                                            if(!$product) continue;
+                                            
+                                            $product_price = $product->get_price();
+                                            if($wc_product_data['override_price'] == 'yes' && !empty($wc_product_data['custom_price'])) {
+                                                $product_price = $wc_product_data['custom_price'];
+                                            }
+                                            
+                                            $max_quantity = !empty($wc_product_data['max_quantity']) ? $wc_product_data['max_quantity'] : 10;
+                                            ?>
+                                            <div class="rbfw-wc-product-item">
+                                                <div class="rbfw-wc-product-info">
+                                                    <div class="rbfw-wc-product-name"><?php echo esc_html($product->get_name()); ?></div>
+                                                    <div class="rbfw-wc-product-price"><?php echo wp_kses(wc_price($product_price), rbfw_allowed_html()); ?></div>
+                                                </div>
+                                                <div class="rbfw-wc-product-quantity">
+                                                    <div class="rbfw_qty_input">
+                                                        <a class="rbfw_qty_minus rbfw_wc_qty_minus" data-product-id="<?php echo esc_attr($wc_product_data['product_id']); ?>">
+                                                            <i class="fas fa-minus"></i>
+                                                        </a>
+                                                        <input type="number" 
+                                                               min="0" 
+                                                               max="<?php echo esc_attr($max_quantity); ?>" 
+                                                               value="0" 
+                                                               name="rbfw_wc_products[<?php echo esc_attr($index); ?>][quantity]" 
+                                                               class="rbfw_wc_qty" 
+                                                               data-product-id="<?php echo esc_attr($wc_product_data['product_id']); ?>"
+                                                               data-price="<?php echo esc_attr($product_price); ?>"
+                                                               data-max="<?php echo esc_attr($max_quantity); ?>"/>
+                                                        <a class="rbfw_qty_plus rbfw_wc_qty_plus" data-product-id="<?php echo esc_attr($wc_product_data['product_id']); ?>">
+                                                            <i class="fas fa-plus"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="rbfw_wc_products[<?php echo esc_attr($index); ?>][product_id]" value="<?php echo esc_attr($wc_product_data['product_id']); ?>">
+                                                <input type="hidden" name="rbfw_wc_products[<?php echo esc_attr($index); ?>][price]" value="<?php echo esc_attr($product_price); ?>">
+                                            </div>
+                                            <?php
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+                            ?>
+
                             <div class="item rbfw_bikecarsd_price_summary">
                                 <label class="rbfw-single-right-heading"><?php _e('Booking Summary','booking-and-rental-manager-for-woocommerce'); ?></label>
                                 <div class="item-content rbfw-costing">
@@ -258,6 +318,14 @@
                                         <?php if(!empty($rbfw_extra_service_data)){ ?>
                                             <li class="resource-costing extra_service_cost rbfw-cond">
                                                 <?php esc_html_e('Resource Cost','booking-and-rental-manager-for-woocommerce'); ?>
+                                                <span>
+                                                    <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
+                                                </span>
+                                            </li>
+                                        <?php } ?>
+                                        <?php if($rbfw_enable_woocommerce_products == 'yes' && !empty($rbfw_woocommerce_products)){ ?>
+                                            <li class="woocommerce-products-costing wc_products_cost rbfw-cond">
+                                                <?php esc_html_e('Additional Products','booking-and-rental-manager-for-woocommerce'); ?>
                                                 <span>
                                                     <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
                                                 </span>
@@ -351,3 +419,195 @@
 		<!--    Right Side END-->
 	</div>
 	<!--    Main Layout END-->
+
+	<style>
+	.rbfw-wc-product-item {
+		display: flex !important;
+		justify-content: space-between !important;
+		align-items: center !important;
+		padding: 10px 0 !important;
+		margin-bottom: 5px !important;
+		border-bottom: 1px solid #eee !important;
+	}
+	.rbfw-wc-product-item:last-child {
+		border-bottom: none !important;
+	}
+	.rbfw-wc-product-info {
+		flex: 1 !important;
+		display: flex !important;
+		justify-content: space-between !important;
+		align-items: center !important;
+	}
+	.rbfw-wc-product-name {
+		font-weight: 500 !important;
+		color: #333 !important;
+		margin: 0 !important;
+	}
+	.rbfw-wc-product-price {
+		color: #333 !important;
+		font-weight: 500 !important;
+		margin: 0 !important;
+	}
+	.rbfw-wc-product-quantity {
+		margin-left: 15px !important;
+	}
+	.rbfw_qty_input {
+		display: flex !important;
+		align-items: center !important;
+		border: 1px solid #ddd !important;
+		border-radius: 4px !important;
+		overflow: hidden !important;
+	}
+	.rbfw_qty_minus,
+	.rbfw_qty_plus {
+		display: flex !important;
+		align-items: center !important;
+		justify-content: center !important;
+		width: 30px !important;
+		height: 30px !important;
+		background-color: #f8f9fa !important;
+		border: none !important;
+		cursor: pointer !important;
+		transition: background-color 0.3s ease !important;
+		font-size: 12px !important;
+	}
+	.rbfw_qty_minus:hover,
+	.rbfw_qty_plus:hover {
+		background-color: #e9ecef !important;
+	}
+	.rbfw_wc_qty {
+		width: 50px !important;
+		height: 30px !important;
+		border: none !important;
+		text-align: center !important;
+		font-weight: 500 !important;
+		outline: none !important;
+		font-size: 14px !important;
+	}
+	.rbfw_wc_qty:focus {
+		background-color: #f8f9fa !important;
+	}
+	</style>
+
+	<script>
+	jQuery(document).ready(function($) {
+		console.log('RBFW WooCommerce Products JS loaded inline');
+		
+		// WooCommerce Products Quantity Controls
+		$(document).on('click', '.rbfw_wc_qty_plus', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			console.log('Plus button clicked');
+			
+			var $input = $(this).siblings('input.rbfw_wc_qty');
+			console.log('Input found:', $input.length);
+			
+			if ($input.length === 0) {
+				console.log('No input found, trying alternative selector');
+				$input = $(this).closest('.rbfw_qty_input').find('input.rbfw_wc_qty');
+				console.log('Alternative input found:', $input.length);
+			}
+			
+			if ($input.length > 0) {
+				var currentVal = parseInt($input.val()) || 0;
+				var maxVal = parseInt($input.data('max')) || 10;
+				
+				console.log('Current val:', currentVal, 'Max val:', maxVal);
+				
+				if (currentVal < maxVal) {
+					$input.val(currentVal + 1).trigger('change');
+					console.log('Updated to:', currentVal + 1);
+				}
+			}
+		});
+
+		$(document).on('click', '.rbfw_wc_qty_minus', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			console.log('Minus button clicked');
+			
+			var $input = $(this).siblings('input.rbfw_wc_qty');
+			console.log('Input found:', $input.length);
+			
+			if ($input.length === 0) {
+				console.log('No input found, trying alternative selector');
+				$input = $(this).closest('.rbfw_qty_input').find('input.rbfw_wc_qty');
+				console.log('Alternative input found:', $input.length);
+			}
+			
+			if ($input.length > 0) {
+				var currentVal = parseInt($input.val()) || 0;
+				
+				console.log('Current val:', currentVal);
+				
+				if (currentVal > 0) {
+					$input.val(currentVal - 1).trigger('change');
+					console.log('Updated to:', currentVal - 1);
+				}
+			}
+		});
+
+		// Update WooCommerce Products Total in Booking Summary
+		$(document).on('change', '.rbfw_wc_qty', function() {
+			console.log('Quantity changed for:', $(this).val());
+			updateWooCommerceProductsTotal();
+		});
+
+		function updateWooCommerceProductsTotal() {
+			console.log('Updating WooCommerce products total');
+			var total = 0;
+			var hasProducts = false;
+			
+			$('.rbfw_wc_qty').each(function() {
+				var quantity = parseInt($(this).val()) || 0;
+				var price = parseFloat($(this).data('price')) || 0;
+				
+				console.log('Product qty:', quantity, 'price:', price);
+				
+				if (quantity > 0) {
+					total += quantity * price;
+					hasProducts = true;
+				}
+			});
+
+			console.log('Total WC products cost:', total, 'Has products:', hasProducts);
+
+			// Update the display
+			var $wcProductsCost = $('.wc_products_cost');
+			var $wcProductsSpan = $wcProductsCost.find('span');
+			
+			console.log('WC products cost element found:', $wcProductsCost.length);
+			console.log('WC products span found:', $wcProductsSpan.length);
+			
+			if (hasProducts) {
+				$wcProductsCost.removeClass('rbfw-cond').addClass('show');
+				$wcProductsSpan.html('€' + total.toFixed(2));
+			} else {
+				$wcProductsCost.removeClass('show').addClass('rbfw-cond');
+				$wcProductsSpan.html('€0.00');
+			}
+
+			// Update subtotal
+			updateBookingSubtotal();
+		}
+
+		function updateBookingSubtotal() {
+			var durationCost = parseFloat($('.duration-costing span').text().replace(/[^0-9.-]+/g, '')) || 0;
+			var resourceCost = parseFloat($('.extra_service_cost span').text().replace(/[^0-9.-]+/g, '')) || 0;
+			var wcProductsCost = parseFloat($('.wc_products_cost span').text().replace(/[^0-9.-]+/g, '')) || 0;
+			
+			var subtotal = durationCost + resourceCost + wcProductsCost;
+			
+			$('.subtotal span').html('€' + subtotal.toFixed(2));
+			
+			// Update total
+			var securityDeposit = parseFloat($('.security_deposit span').text().replace(/[^0-9.-]+/g, '')) || 0;
+			var total = subtotal + securityDeposit;
+			
+			$('.total span').html('€' + total.toFixed(2));
+		}
+
+		// Initialize on page load
+		updateWooCommerceProductsTotal();
+	});
+	</script>

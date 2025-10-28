@@ -399,6 +399,30 @@
                                         <td><?php echo esc_html( $service_cost ); ?></td>
                                     </tr>
 
+									<?php 
+									// Add WooCommerce Products to thankyou page
+									$rbfw_wc_products_info = ! empty( $ticket_info['rbfw_wc_products_info'] ) ? $ticket_info['rbfw_wc_products_info'] : [];
+									$rbfw_wc_products_total = ! empty( $ticket_info['rbfw_wc_products_total'] ) ? $ticket_info['rbfw_wc_products_total'] : 0;
+									
+									if ( ! empty( $rbfw_wc_products_info ) ) { ?>
+                                        <tr>
+                                            <td><strong><?php esc_html_e( 'Additional Products', 'booking-and-rental-manager-for-woocommerce' ); ?>:</strong></td>
+                                            <td>
+                                                <table style="border:1px solid #f5f5f5;margin:0;width: 100%;">
+													<?php foreach ( $rbfw_wc_products_info as $product_id => $product_data ) { 
+														$product = wc_get_product( $product_id );
+														if ( $product ) { ?>
+                                                            <tr>
+                                                                <td style="border:1px solid #f5f5f5;"><strong><?php echo esc_html( $product->get_name() ); ?></strong></td>
+                                                                <td style="border:1px solid #f5f5f5;">(<?php echo wc_price( $product_data['price'] ); ?> x <?php echo esc_html( $product_data['quantity'] ); ?>) = <?php echo wc_price( $product_data['total'] ); ?></td>
+                                                            </tr>
+														<?php }
+													} ?>
+                                                </table>
+                                            </td>
+                                        </tr>
+									<?php } ?>
+
 									<?php if ( ! empty( $discount_amount ) ) { ?>
                                         <tr>
                                             <td>
@@ -703,6 +727,30 @@
 											echo ':'; ?></strong></td>
                                 <td><?php echo esc_html( $service_cost ); ?></td>
                             </tr>
+
+							<?php 
+							// Add WooCommerce Products to thankyou page (offline payment)
+							$rbfw_wc_products_info = ! empty( $ticket_info['rbfw_wc_products_info'] ) ? $ticket_info['rbfw_wc_products_info'] : [];
+							$rbfw_wc_products_total = ! empty( $ticket_info['rbfw_wc_products_total'] ) ? $ticket_info['rbfw_wc_products_total'] : 0;
+							
+							if ( ! empty( $rbfw_wc_products_info ) ) { ?>
+                                <tr>
+                                    <td><strong><?php esc_html_e( 'Additional Products', 'booking-and-rental-manager-for-woocommerce' ); ?>:</strong></td>
+                                    <td>
+                                        <table style="border:1px solid #f5f5f5;margin:0;width: 100%;">
+											<?php foreach ( $rbfw_wc_products_info as $product_id => $product_data ) { 
+												$product = wc_get_product( $product_id );
+												if ( $product ) { ?>
+                                                    <tr>
+                                                        <td style="border:1px solid #f5f5f5;"><strong><?php echo esc_html( $product->get_name() ); ?></strong></td>
+                                                        <td style="border:1px solid #f5f5f5;">(<?php echo wc_price( $product_data['price'] ); ?> x <?php echo esc_html( $product_data['quantity'] ); ?>) = <?php echo wc_price( $product_data['total'] ); ?></td>
+                                                    </tr>
+												<?php }
+											} ?>
+                                        </table>
+                                    </td>
+                                </tr>
+							<?php } ?>
 
 							<?php if ( ! empty( $discount_amount ) ) { ?>
                                 <tr>

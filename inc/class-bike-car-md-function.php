@@ -333,7 +333,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
         }
 
-        public function rbfw_bikecarmd_ticket_info($product_id, $rbfw_start_datetime = null, $rbfw_end_datetime = null, $pickup_point = null, $dropoff_point = null, $rbfw_service_info = array(), $duration_cost = null, $service_cost = null, $ticket_total_price = null, $item_quantity = null, $start_date = null,$end_date = null,$start_time = null,$end_time = null, $variation_info = array(), $discount_type = null, $discount_amount = null, $rbfw_regf_info = array()){
+        public function rbfw_bikecarmd_ticket_info($product_id, $rbfw_start_datetime = null, $rbfw_end_datetime = null, $pickup_point = null, $dropoff_point = null, $rbfw_service_info = array(), $duration_cost = null, $service_cost = null, $ticket_total_price = null, $item_quantity = null, $start_date = null,$end_date = null,$start_time = null,$end_time = null, $variation_info = array(), $discount_type = null, $discount_amount = null, $rbfw_regf_info = array(), $rbfw_wc_products_info = array(), $rbfw_wc_products_total = 0){
             global $rbfw;
 
             if(!empty($product_id)):
@@ -403,6 +403,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 $main_array[0]['discount_type'] = $discount_type;
                 $main_array[0]['discount_amount'] = $discount_amount;
                 $main_array[0]['rbfw_regf_info'] = $rbfw_regf_info;
+                $main_array[0]['rbfw_wc_products_info'] = $rbfw_wc_products_info;
+                $main_array[0]['rbfw_wc_products_total'] = $rbfw_wc_products_total;
 
                 return $main_array;
 

@@ -215,6 +215,23 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 <td><?php echo wp_kses(wc_price($discount_amount),rbfw_allowed_html()); ?></td>
             </tr>
         <?php endif; ?>
+        
+        <?php 
+        // Add WooCommerce Products to Resort cart display
+        $rbfw_wc_products_info = $cart_item['rbfw_wc_products_info'] ? $cart_item['rbfw_wc_products_info'] : [];
+        if ( ! empty( $rbfw_wc_products_info ) ) {
+            foreach ( $rbfw_wc_products_info as $product_id => $product_data ) {
+                $product = wc_get_product( $product_id );
+                if ( $product ) { ?>
+                    <tr>
+                        <th><?php echo esc_html( $product->get_name() ); ?>:</th>
+                        <td>(<?php echo wp_kses( wc_price( $product_data['price'] ), rbfw_allowed_html() ); ?> x <?php echo esc_html( $product_data['quantity'] ); ?>) = <?php echo wp_kses( wc_price( $product_data['total'] ), rbfw_allowed_html() ); ?></td>
+                    </tr>
+                <?php }
+            }
+        }
+        ?>
+        
         <?php if ( ! empty( $security_deposit_amount ) ): ?>
             <tr>
                 <th><?php echo esc_html((!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit')); ?>:</th>
@@ -426,6 +443,23 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 <td><?php echo wp_kses(wc_price($rbfw_bikecarsd_service_price),rbfw_allowed_html()); ?></td>
             </tr>
         <?php endif; ?>
+        
+        <?php 
+        // Add WooCommerce Products to Single Day cart display
+        $rbfw_wc_products_info = $cart_item['rbfw_wc_products_info'] ? $cart_item['rbfw_wc_products_info'] : [];
+        if ( ! empty( $rbfw_wc_products_info ) ) {
+            foreach ( $rbfw_wc_products_info as $product_id => $product_data ) {
+                $product = wc_get_product( $product_id );
+                if ( $product ) { ?>
+                    <tr>
+                        <th><?php echo esc_html( $product->get_name() ); ?>:</th>
+                        <td>(<?php echo wp_kses( wc_price( $product_data['price'] ), rbfw_allowed_html() ); ?> x <?php echo esc_html( $product_data['quantity'] ); ?>) = <?php echo wp_kses( wc_price( $product_data['total'] ), rbfw_allowed_html() ); ?></td>
+                    </tr>
+                <?php }
+            }
+        }
+        ?>
+        
         <?php if ( ! empty( $security_deposit_amount ) ): ?>
             <tr>
                 <th><?php echo esc_html((!empty(get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true)) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_label', true) : 'Security Deposit')); ?>:</th>
@@ -701,6 +735,21 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 </tr>
             <?php endif; ?>
 
+            <?php 
+            // Add WooCommerce Products to Multi Day cart display
+            $rbfw_wc_products_info = $cart_item['rbfw_wc_products_info'] ? $cart_item['rbfw_wc_products_info'] : [];
+            if ( ! empty( $rbfw_wc_products_info ) ) {
+                foreach ( $rbfw_wc_products_info as $product_id => $product_data ) {
+                    $product = wc_get_product( $product_id );
+                    if ( $product ) { ?>
+                        <tr>
+                            <th><?php echo esc_html( $product->get_name() ); ?>:</th>
+                            <td>(<?php echo wp_kses( wc_price( $product_data['price'] ), rbfw_allowed_html() ); ?> x <?php echo esc_html( $product_data['quantity'] ); ?>) = <?php echo wp_kses( wc_price( $product_data['total'] ), rbfw_allowed_html() ); ?></td>
+                        </tr>
+                    <?php }
+                }
+            }
+            ?>
 
             <?php if ( ! empty( $security_deposit_amount ) ): ?>
                 <tr>
@@ -858,6 +907,22 @@ $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['
                 </tr>
             <?php } ?>
         <?php } ?>
+
+        <?php 
+        // Add WooCommerce Products to Multiple Items cart display
+        $rbfw_wc_products_info = $cart_item['rbfw_wc_products_info'] ? $cart_item['rbfw_wc_products_info'] : [];
+        if ( ! empty( $rbfw_wc_products_info ) ) {
+            foreach ( $rbfw_wc_products_info as $product_id => $product_data ) {
+                $product = wc_get_product( $product_id );
+                if ( $product ) { ?>
+                    <tr>
+                        <th><?php echo esc_html( $product->get_name() ); ?>:</th>
+                        <td>(<?php echo wp_kses( wc_price( $product_data['price'] ), rbfw_allowed_html() ); ?> x <?php echo esc_html( $product_data['quantity'] ); ?>) = <?php echo wp_kses( wc_price( $product_data['total'] ), rbfw_allowed_html() ); ?></td>
+                    </tr>
+                <?php }
+            }
+        }
+        ?>
 
         <?php if ( ! empty( $security_deposit_amount ) ): ?>
             <tr>

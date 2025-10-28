@@ -1196,7 +1196,9 @@
 
 
                 if ( ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ( ( $inventory_based_on_return == 'yes' ) ? $inventory['rbfw_order_status'] == 'returned' : '' ) ) && $partial_stock ) {
-					if ( isset($inventory['rbfw_start_date_ymd']) && $inventory['rbfw_end_date_ymd'] ) {
+					if ( isset($inventory['rbfw_start_date_ymd']) && $inventory['rbfw_end_date_ymd'] && 
+						 !empty($inventory['rbfw_start_date_ymd']) && !empty($inventory['rbfw_end_date_ymd']) &&
+						 !empty($inventory['rbfw_start_time_24']) && !empty($inventory['rbfw_end_time_24']) ) {
 						$inventory_start_date = $inventory['rbfw_start_date_ymd'];
 						$inventory_end_date   = $inventory['rbfw_end_date_ymd'];
 						$inventory_start_time = $inventory['rbfw_start_time_24'];
@@ -1208,11 +1210,33 @@
 						$inventory_start_time = $inventory['rbfw_start_time'];
 						$inventory_end_time   = $inventory['rbfw_end_time'];
 					}
-					$date_inventory_start = new DateTime( $inventory_start_date . ' ' . $inventory_start_time );
-					$date_inventory_end   = new DateTime( $inventory_end_date . ' ' . $inventory_end_time );
+					
+					// Validate dates before creating DateTime objects
+					if ( empty( $inventory_start_date ) || empty( $inventory_end_date ) || 
+						 empty( $inventory_start_time ) || empty( $inventory_end_time ) ) {
+						continue; // Skip this inventory item if dates are invalid
+					}
+					
+					// Validate date format before creating DateTime
+					$start_date_string = $inventory_start_date . ' ' . $inventory_start_time;
+					$end_date_string = $inventory_end_date . ' ' . $inventory_end_time;
+					
+					// Check if the date strings are valid
+					if ( !strtotime( $start_date_string ) || !strtotime( $end_date_string ) ) {
+						continue; // Skip this inventory item if date strings are invalid
+					}
+					
+					try {
+						$date_inventory_start = new DateTime( $start_date_string );
+						$date_inventory_end   = new DateTime( $end_date_string );
 
                     if ( $date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end ) {
 						$total_booked += $rbfw_item_quantity;
+						}
+					} catch ( Exception $e ) {
+						// Log the error and skip this inventory item
+						error_log( 'RBFW DateTime Error: ' . $e->getMessage() . ' - Start: ' . $start_date_string . ' - End: ' . $end_date_string );
+						continue;
 					}
 				}
 			}

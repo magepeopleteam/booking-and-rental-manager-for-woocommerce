@@ -33,6 +33,7 @@
                     <?php $this->resort_price_config( $post_id ); ?>
                     <?php $this->multiple_items( $post_id ); ?>
                     <?php $this->md_price_config( $post_id ); ?>
+                    <?php $this->woocommerce_products( $post_id ); ?>
                 </div>
 
                 <?php
@@ -2150,10 +2151,221 @@
 					update_post_meta( $post_id, 'manage_inventory_as_timely', $manage_inventory_as_timely );
 					update_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', $rbfw_item_stock_quantity_timely );
 					update_post_meta( $post_id, 'enable_specific_duration', $enable_specific_duration );
+
+					// WooCommerce Products Integration
+					$rbfw_enable_woocommerce_products = isset( $_POST['rbfw_enable_woocommerce_products'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_woocommerce_products'] ) ) : 'no';
+					$rbfw_woocommerce_products = isset( $input_data_sabitized['rbfw_woocommerce_products'] ) ? $input_data_sabitized['rbfw_woocommerce_products'] : [];
+					
+					update_post_meta( $post_id, 'rbfw_enable_woocommerce_products', $rbfw_enable_woocommerce_products );
+					update_post_meta( $post_id, 'rbfw_woocommerce_products', $rbfw_woocommerce_products );
 				}
 			}
+
+			public function woocommerce_products( $post_id ) {
+				$rbfw_woocommerce_products = get_post_meta( $post_id, 'rbfw_woocommerce_products', true ) ? get_post_meta( $post_id, 'rbfw_woocommerce_products', true ) : [];
+				$rbfw_enable_woocommerce_products = get_post_meta( $post_id, 'rbfw_enable_woocommerce_products', true ) ? get_post_meta( $post_id, 'rbfw_enable_woocommerce_products', true ) : 'no';
+				?>
+				<div class="rbfw_woocommerce_products_wrapper">
+					<?php $this->panel_header( 'WooCommerce Products Integration', 'Add WooCommerce products to your rental booking. Customers can add these products with quantity controls during booking.' ); ?>
+					
+					<section class="rbfw_enable_woocommerce_products">
+						<div>
+							<label>
+								<?php esc_html_e( 'Enable WooCommerce Products', 'booking-and-rental-manager-for-woocommerce' ); ?>
+							</label>
+							<p><?php esc_html_e( 'Allow customers to add WooCommerce products during rental booking.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+						</div>
+						<label class="switch">
+							<input type="hidden" name="rbfw_enable_woocommerce_products" value="no">
+							<input type="checkbox" name="rbfw_enable_woocommerce_products" value="yes" <?php echo esc_attr( $rbfw_enable_woocommerce_products == 'yes' ? 'checked' : '' ); ?>>
+							<span class="slider round"></span>
+						</label>
+					</section>
+
+					<div class="rbfw_woocommerce_products_content <?php echo esc_attr( $rbfw_enable_woocommerce_products == 'yes' ? 'show' : 'hide' ); ?>">
+						<section>
+							<div class="w-100">
+								<div style="overflow-x: auto;">
+									<table class='form-table rbfw_woocommerce_products_table'>
+										<thead>
+										<tr>
+											<th>
+												<?php esc_html_e( 'WooCommerce Product', 'booking-and-rental-manager-for-woocommerce' ); ?>
+											</th>
+											<th>
+												<?php esc_html_e( 'Override Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
+											</th>
+											<th>
+												<?php esc_html_e( 'Custom Price', 'booking-and-rental-manager-for-woocommerce' ); ?>
+											</th>
+											<th>
+												<?php esc_html_e( 'Max Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>
+											</th>
+											<th>
+												<?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?>
+											</th>
+										</tr>
+										</thead>
+										<tbody class="rbfw_woocommerce_products_table_body">
+										<?php
+										if ( ! empty( $rbfw_woocommerce_products ) ) :
+											$i = 0;
+											foreach ( $rbfw_woocommerce_products as $key => $value ):
+												$product = wc_get_product( $value['product_id'] );
+												?>
+												<tr class="rbfw_woocommerce_products_table_row" data-key="<?php echo esc_attr( $i ); ?>">
+													<td>
+														<select class="rbfw-wc-product-select" name="rbfw_woocommerce_products[<?php echo esc_attr( $i ); ?>][product_id]" required>
+															<option value=""><?php esc_html_e( 'Select Product', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+															<?php
+															$products = wc_get_products( array( 'limit' => -1, 'status' => 'publish' ) );
+															foreach ( $products as $product_option ) {
+																$selected = ( $value['product_id'] == $product_option->get_id() ) ? 'selected' : '';
+																echo '<option value="' . esc_attr( $product_option->get_id() ) . '" ' . $selected . '>' . esc_html( $product_option->get_name() ) . '</option>';
+															}
+															?>
+														</select>
+													</td>
+													<td>
+														<label class="switch">
+															<input type="hidden" name="rbfw_woocommerce_products[<?php echo esc_attr( $i ); ?>][override_price]" value="no">
+															<input type="checkbox" name="rbfw_woocommerce_products[<?php echo esc_attr( $i ); ?>][override_price]" value="yes" <?php echo esc_attr( (isset($value['override_price']) && $value['override_price'] == 'yes') ? 'checked' : '' ); ?>>
+															<span class="slider round"></span>
+														</label>
+													</td>
+													<td>
+														<input class="medium rbfw-custom-price" type="number" name="rbfw_woocommerce_products[<?php echo esc_attr( $i ); ?>][custom_price]" step=".01" value="<?php echo esc_attr( isset($value['custom_price']) ? $value['custom_price'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Custom Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" <?php echo esc_attr( (isset($value['override_price']) && $value['override_price'] == 'yes') ? '' : 'disabled' ); ?>/>
+													</td>
+													<td>
+														<input class="medium" type="number" name="rbfw_woocommerce_products[<?php echo esc_attr( $i ); ?>][max_quantity]" value="<?php echo esc_attr( isset($value['max_quantity']) ? $value['max_quantity'] : '' ); ?>" placeholder="<?php esc_attr_e( 'Max Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" min="1"/>
+													</td>
+													<td class="rbfw_woocommerce_products_table_action_column">
+														<div class="mp_event_remove_move">
+															<button class="button remove-row"><i class="fas fa-trash-can"></i></button>
+															<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
+														</div>
+													</td>
+												</tr>
+												<?php
+												$i ++;
+											endforeach;
+										else:
+											?>
+											<tr class="rbfw_woocommerce_products_table_row" data-key="0">
+												<td>
+													<select class="rbfw-wc-product-select" name="rbfw_woocommerce_products[0][product_id]" required>
+														<option value=""><?php esc_html_e( 'Select Product', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
+														<?php
+														$products = wc_get_products( array( 'limit' => -1, 'status' => 'publish' ) );
+														foreach ( $products as $product ) {
+															echo '<option value="' . esc_attr( $product->get_id() ) . '">' . esc_html( $product->get_name() ) . '</option>';
+														}
+														?>
+													</select>
+												</td>
+												<td>
+													<label class="switch">
+														<input type="checkbox" name="rbfw_woocommerce_products[0][override_price]" value="no">
+														<span class="slider round"></span>
+													</label>
+												</td>
+												<td>
+													<input class="medium rbfw-custom-price" type="number" name="rbfw_woocommerce_products[0][custom_price]" step=".01" placeholder="<?php esc_attr_e( 'Custom Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" disabled/>
+												</td>
+												<td>
+													<input class="medium" type="number" name="rbfw_woocommerce_products[0][max_quantity]" placeholder="<?php esc_attr_e( 'Max Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" min="1"/>
+												</td>
+												<td class="rbfw_woocommerce_products_table_action_column">
+													<div class="mp_event_remove_move">
+														<button class="button remove-row"><i class="fas fa-trash-can"></i></button>
+														<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>
+													</div>
+												</td>
+											</tr>
+										<?php endif; ?>
+										</tbody>
+									</table>
+								</div>
+								<div class="mt-2">
+									<button type="button" class="button button-primary rbfw_add_woocommerce_product_row">
+										<i class="fas fa-plus"></i> <?php esc_html_e( 'Add WooCommerce Product', 'booking-and-rental-manager-for-woocommerce' ); ?>
+									</button>
+								</div>
+							</div>
+						</section>
+					</div>
+				</div>
+
+				<script>
+				jQuery(document).ready(function($) {
+					// Toggle WooCommerce products content
+					$('input[name="rbfw_enable_woocommerce_products"][type="checkbox"]').change(function() {
+						console.log('Toggle changed:', $(this).is(':checked'));
+						if ($(this).is(':checked')) {
+							$('.rbfw_woocommerce_products_content').removeClass('hide').addClass('show');
+							console.log('Showing content');
+						} else {
+							$('.rbfw_woocommerce_products_content').removeClass('show').addClass('hide');
+							console.log('Hiding content');
+						}
+					});
+
+					// Toggle custom price field
+					$(document).on('change', 'input[name*="[override_price]"][type="checkbox"]', function() {
+						var customPriceField = $(this).closest('tr').find('.rbfw-custom-price');
+						if ($(this).is(':checked')) {
+							customPriceField.prop('disabled', false);
+						} else {
+							customPriceField.prop('disabled', true).val('');
+						}
+					});
+
+					// Add new WooCommerce product row
+					$('.rbfw_add_woocommerce_product_row').click(function() {
+						var rowCount = $('.rbfw_woocommerce_products_table_row').length;
+						var newRow = '<tr class="rbfw_woocommerce_products_table_row" data-key="' + rowCount + '">' +
+							'<td>' +
+								'<select class="rbfw-wc-product-select" name="rbfw_woocommerce_products[' + rowCount + '][product_id]" required>' +
+									'<option value=""><?php esc_html_e( 'Select Product', 'booking-and-rental-manager-for-woocommerce' ); ?></option>' +
+									'<?php
+									$products = wc_get_products( array( 'limit' => -1, 'status' => 'publish' ) );
+									foreach ( $products as $product ) {
+										echo '<option value="' . esc_attr( $product->get_id() ) . '">' . esc_html( $product->get_name() ) . '</option>';
+									}
+									?>' +
+								'</select>' +
+							'</td>' +
+							'<td>' +
+								'<label class="switch">' +
+									'<input type="hidden" name="rbfw_woocommerce_products[' + rowCount + '][override_price]" value="no">' +
+									'<input type="checkbox" name="rbfw_woocommerce_products[' + rowCount + '][override_price]" value="yes">' +
+									'<span class="slider round"></span>' +
+								'</label>' +
+							'</td>' +
+							'<td>' +
+								'<input class="medium rbfw-custom-price" type="number" name="rbfw_woocommerce_products[' + rowCount + '][custom_price]" step=".01" placeholder="<?php esc_attr_e( 'Custom Price', 'booking-and-rental-manager-for-woocommerce' ); ?>" disabled/>' +
+							'</td>' +
+							'<td>' +
+								'<input class="medium" type="number" name="rbfw_woocommerce_products[' + rowCount + '][max_quantity]" placeholder="<?php esc_attr_e( 'Max Quantity', 'booking-and-rental-manager-for-woocommerce' ); ?>" min="1"/>' +
+							'</td>' +
+							'<td class="rbfw_woocommerce_products_table_action_column">' +
+								'<div class="mp_event_remove_move">' +
+									'<button class="button remove-row"><i class="fas fa-trash-can"></i></button>' +
+									'<div class="button mp_event_type_sortable_button"><i class="fas fa-arrows-alt"></i></div>' +
+								'</div>' +
+							'</td>' +
+						'</tr>';
+						$('.rbfw_woocommerce_products_table_body').append(newRow);
+					});
+
+					// Remove WooCommerce product row
+					$(document).on('click', '.rbfw_woocommerce_products_table .remove-row', function() {
+						$(this).closest('tr').remove();
+					});
+				});
+				</script>
+				<?php
+			}
 		}
-		new RBFW_Pricing();
 	}
-	
-	
+	new RBFW_Pricing();
