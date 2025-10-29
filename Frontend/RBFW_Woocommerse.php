@@ -149,17 +149,18 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $price  = ! empty( $value['amount'] ) ? $value['amount'] : 0;
                         $price_type  = ! empty( $value['calculation_type'] ) ? $value['calculation_type'] : '';
                         $frequency  = ! empty( $value['frequency'] ) ? $value['frequency'] : '';
+                        $refundable  = ! empty( $value['refundable'] ) ? $value['refundable'] : '';
                         if ( $is_checked == 'yes' ) {
                             if ($price_type === 'percentage') {
                                 $rbfw_management_price += (($price / 100) * $sub_total_price);
-                                $rbfw_management_info[ $service_label ] = array('price_desc'=>$price.'% of '.wc_price($sub_total_price) ,'price'=>(($price / 100) * $sub_total_price));
+                                $rbfw_management_info[ $service_label ] = array('price_desc'=>$price.'% of '.wc_price($sub_total_price) ,'price'=>(($price / 100) * $sub_total_price),'refundable'=>$refundable);
                             } else {
                                 if ($frequency === 'one-time') {
                                     $rbfw_management_price += $price * $rbfw_item_quantity;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) ,'price'=>$price * $rbfw_item_quantity);
+                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) ,'price'=>$price * $rbfw_item_quantity,'refundable'=>$refundable);
                                 } else {
                                     $rbfw_management_price += $price * $rbfw_item_quantity * $total_days;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $total_days,'price'=>$price * $rbfw_item_quantity * $total_days);
+                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $total_days,'price'=>$price * $rbfw_item_quantity * $total_days,'refundable'=>$refundable);
                                 }
                             }
                         }
@@ -250,13 +251,14 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $is_checked  = ! empty( $value['is_checked'] ) ? $value['is_checked'] : 0;
                         $price  = ! empty( $value['amount'] ) ? $value['amount'] : 0;
                         $price_type  = ! empty( $value['calculation_type'] ) ? $value['calculation_type'] : '';
+                        $refundable  = ! empty( $value['refundable'] ) ? $value['refundable'] : '';
                         if ( $is_checked == 'yes' ) {
                             if ($price_type === 'percentage') {
                                 $rbfw_management_price += (($price / 100) * $sub_total_price);
-                                $rbfw_management_info[ $service_label ] = (($price / 100) * $sub_total_price);
+                                $rbfw_management_info[ $service_label ] = array('price'=> ($price / 100) * $sub_total_price, 'price_desc'=>wc_price(($price / 100) * $sub_total_price), 'refundable'=>$refundable);
                             } else {
                                 $rbfw_management_price += $price;
-                                $rbfw_management_info[ $service_label ] = $price;
+                                $rbfw_management_info[ $service_label ] = array('price'=> $price, 'price_desc'=>wc_price($price), 'refundable'=>$refundable);
                             }
                         }
                     }
@@ -354,21 +356,15 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $price  = ! empty( $value['amount'] ) ? $value['amount'] : 0;
                         $price_type  = ! empty( $value['calculation_type'] ) ? $value['calculation_type'] : '';
                         $frequency  = ! empty( $value['frequency'] ) ? $value['frequency'] : '';
+                        $refundable  = ! empty( $value['refundable'] ) ? $value['refundable'] : 'no';
                         if ( $is_checked == 'yes' ) {
                             if ($price_type === 'percentage') {
                                 $rbfw_management_price += (($price / 100) * $sub_total_price);
-
-                                $rbfw_management_info[ $service_label ] = (($price / 100) * $sub_total_price);
+                                $rbfw_management_info[ $service_label ] = array('price'=> ($price / 100) * $sub_total_price, 'price_desc'=>wc_price(($price / 100) * $sub_total_price), 'refundable'=>$refundable);
                             } else {
-                                if ($frequency === 'one-time') {
-                                    $rbfw_management_price += $price * $rbfw_item_quantity;
-                                    $rbfw_management_info[ $service_label ] = $price * $rbfw_item_quantity;
-                                } else {
-                                    $rbfw_management_price += $price * $rbfw_item_quantity * $total_days;
-                                    $rbfw_management_info[ $service_label ] = $price * $rbfw_item_quantity * $total_days;
-                                }
+                                $rbfw_management_price += $price * $rbfw_item_quantity;
+                                $rbfw_management_info[ $service_label ] =array('price'=> $price, 'price_desc'=>wc_price($price), 'refundable'=>$refundable);
                             }
-
                         }
                     }
                 }
@@ -515,20 +511,20 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $price  = ! empty( $value['amount'] ) ? $value['amount'] : 0;
                         $price_type  = ! empty( $value['calculation_type'] ) ? $value['calculation_type'] : '';
                         $frequency  = ! empty( $value['frequency'] ) ? $value['frequency'] : '';
+                        $refundable  = ( $value['refundable'] ) ? $value['refundable'] : 'no';
                         if ( $is_checked == 'yes' ) {
                             if ($price_type === 'percentage') {
                                 $rbfw_management_price += (($price / 100) * $sub_total_price);
-                                $rbfw_management_info[ $service_label ] = array('price_desc'=>$price.'% of '.wc_price($sub_total_price) ,'price'=>(($price / 100) * $sub_total_price)); ;
+                                $rbfw_management_info[ $service_label ] = array('price'=>(($price / 100) * $sub_total_price),'price_desc'=>$price.'% of '.wc_price($sub_total_price) ,'refundable'=>$refundable);
                             } else {
                                 if ($frequency === 'one-time') {
                                     $rbfw_management_price += $price * $rbfw_item_quantity;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $rbfw_item_quantity ,'price'=>$price * $rbfw_item_quantity);
+                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $rbfw_item_quantity ,'price'=>$price * $rbfw_item_quantity,'refundable'=>$refundable);
                                 } else {
                                     $rbfw_management_price += $price * $rbfw_item_quantity * $total_days;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $rbfw_item_quantity .'*'. $total_days,'price'=>$price * $rbfw_item_quantity * $total_days);
+                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $rbfw_item_quantity .'*'. $total_days,'price'=>$price * $rbfw_item_quantity * $total_days,'refundable'=>$refundable);
                                 }
                             }
-
                         }
                     }
                 }
@@ -775,26 +771,27 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
                 if (!empty($rbfw_management_info)){
+                    $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
                     foreach ($rbfw_management_info as $key => $value) {
                         $service_label = $key; //service name
                         $service_price = (float)$value['price'];
-
-                        $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
+                        $refundable = ($value['refundable']=='yes')?'( Refundable )':'( Non refundable )';
                         $fee_management_content .= '<tr>';
                         $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
-                        $fee_management_content .= '<strong>' . $service_label . '</strong>';
+                        $fee_management_content .= '<strong>' . $service_label.' '. $refundable . '</strong>';
                         $fee_management_content .= '</td>';
                         $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
-                        $fee_management_content .=     wp_kses($value['price_desc'],rbfw_allowed_html()). ' = '.wc_price($service_price);
+                        $fee_management_content .=  wc_price($service_price);
                         $fee_management_content .= '</td>';
                         $fee_management_content .= '</tr>';
-                        $fee_management_content .= '</table>';
-                        $fee_management_info_label = esc_html__('Fee Management Info:', 'booking-and-rental-manager-for-woocommerce');
-                        $item->add_meta_data(
-                            esc_html($fee_management_info_label),
-                            $fee_management_content
-                        );
                     }
+                    $fee_management_content .= '</table>';
+
+                    $fee_management_info_label = esc_html__('Fee Management Info:', 'booking-and-rental-manager-for-woocommerce');
+                    $item->add_meta_data(
+                        esc_html($fee_management_info_label),
+                        $fee_management_content
+                    );
                 }
 
                 $duration_cost_label = (
@@ -974,26 +971,27 @@ if (!class_exists('RBFW_Woocommerce')) {
                 endif;
 
                 if (!empty($rbfw_management_info)){
+                    $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
                     foreach ($rbfw_management_info as $key => $value) {
                         $service_label = $key; //service name
-                        $service_price = (float)$value;
-
-                        $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
+                        $service_price = (float)$value['price'];
+                        $refundable = ($value['refundable']=='yes')?'( Refundable )':'( Non refundable )';
                         $fee_management_content .= '<tr>';
                         $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
-                        $fee_management_content .= '<strong>' . $service_label . '</strong>';
+                        $fee_management_content .= '<strong>' . $service_label.' '. $refundable . '</strong>';
                         $fee_management_content .= '</td>';
                         $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
-                        $fee_management_content .= wc_price($service_price);
+                        $fee_management_content .=  wc_price($service_price);
                         $fee_management_content .= '</td>';
                         $fee_management_content .= '</tr>';
-                        $fee_management_content .= '</table>';
-                        $fee_management_info_label = esc_html__('Fee Management Info:', 'booking-and-rental-manager-for-woocommerce');
-                        $item->add_meta_data(
-                            esc_html($fee_management_info_label),
-                            $fee_management_content
-                        );
                     }
+                    $fee_management_content .= '</table>';
+
+                    $fee_management_info_label = esc_html__('Fee Management Info:', 'booking-and-rental-manager-for-woocommerce');
+                    $item->add_meta_data(
+                        esc_html($fee_management_info_label),
+                        $fee_management_content
+                    );
                 }
 
 
@@ -1191,25 +1189,27 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
 
                 if (!empty($rbfw_management_info)){
+                    $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
                     foreach ($rbfw_management_info as $key => $value) {
                         $service_label = $key; //service name
-                        $service_price = (float)$value;
-                        $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
+                        $service_price = (float)$value['price'];
+                        $refundable = ($value['refundable']=='yes')?'( Refundable )':'( Non refundable )';
                         $fee_management_content .= '<tr>';
                         $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
-                        $fee_management_content .= '<strong>' . $service_label . '</strong>';
+                        $fee_management_content .= '<strong>' . $service_label.' '. $refundable . '</strong>';
                         $fee_management_content .= '</td>';
                         $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
-                        $fee_management_content .= wc_price($service_price);
+                        $fee_management_content .=  wc_price($service_price);
                         $fee_management_content .= '</td>';
                         $fee_management_content .= '</tr>';
-                        $fee_management_content .= '</table>';
-                        $fee_management_info_label = esc_html__('Fee Management Info:', 'booking-and-rental-manager-for-woocommerce');
-                        $item->add_meta_data(
-                            esc_html($fee_management_info_label),
-                            $fee_management_content
-                        );
                     }
+                    $fee_management_content .= '</table>';
+
+                    $fee_management_info_label = esc_html__('Fee Management Info:', 'booking-and-rental-manager-for-woocommerce');
+                    $item->add_meta_data(
+                        esc_html($fee_management_info_label),
+                        $fee_management_content
+                    );
                 }
 
                 $fee_management_label = esc_html__( 'Fee Management Cost', 'booking-and-rental-manager-for-woocommerce' );
@@ -1322,25 +1322,27 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
 
                 if (!empty($rbfw_management_info)){
+                    $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
                     foreach ($rbfw_management_info as $key => $value) {
                         $service_label = $key; //service name
-                        $service_price = (float)$value;
-                        $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
+                        $service_price = (float)$value['price'];
+                        $refundable = ($value['refundable']=='yes')?'( Refundable )':'( Non refundable )';
                         $fee_management_content .= '<tr>';
                         $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
-                        $fee_management_content .= '<strong>' . $service_label . '</strong>';
+                        $fee_management_content .= '<strong>' . $service_label.' '. $refundable . '</strong>';
                         $fee_management_content .= '</td>';
                         $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
-                        $fee_management_content .= wc_price($service_price);
+                        $fee_management_content .=  wc_price($service_price);
                         $fee_management_content .= '</td>';
                         $fee_management_content .= '</tr>';
-                        $fee_management_content .= '</table>';
-                        $fee_management_info_label = esc_html__('Fee Management Info:', 'booking-and-rental-manager-for-woocommerce');
-                        $item->add_meta_data(
-                            esc_html($fee_management_info_label),
-                            $fee_management_content
-                        );
                     }
+                    $fee_management_content .= '</table>';
+
+                    $fee_management_info_label = esc_html__('Fee Management Info:', 'booking-and-rental-manager-for-woocommerce');
+                    $item->add_meta_data(
+                        esc_html($fee_management_info_label),
+                        $fee_management_content
+                    );
                 }
 
                 $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings', esc_html__( 'Duration Cost', 'booking-and-rental-manager-for-woocommerce' ) ), wc_price( $rbfw_duration_price ) );

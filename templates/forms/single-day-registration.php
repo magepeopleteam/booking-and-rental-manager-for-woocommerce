@@ -266,6 +266,7 @@
                                                                 <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][amount]"  value="<?php echo esc_attr($fee['amount']); ?>">
                                                                 <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][calculation_type]"  value="<?php echo esc_attr($fee['calculation_type']); ?>">
                                                                 <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][frequency]"  value="<?php echo esc_attr($fee['frequency']); ?>">
+                                                                <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][refundable]"  value="<?php echo esc_attr($fee['refundable']); ?>">
                                                                 <label class="switch">
                                                                     <input type="checkbox" <?php echo (esc_attr($fee['priority'])=='required')?'checked':'' ?>   class="rbfw-management-price rbfw-resource-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>"   data-price="<?php echo esc_attr($fee['amount']); ?>" data-name="<?php echo esc_attr($fee['label']); ?>" data-price_type="<?php echo esc_attr($fee['calculation_type']); ?>" data-frequency="<?php echo esc_attr($fee['frequency']); ?>">
                                                                     <span class="slider round"></span>
@@ -274,6 +275,15 @@
                                                         </td>
                                                         <td class="resource-title-qty">
                                                             <?php echo esc_html($fee['label']); ?>
+                                                            <span class="rbfw-refundable">
+                                                        <?php
+                                                        if($fee['refundable']=='yes'){
+                                                            echo '(Refundable)';
+                                                        }else{
+                                                            echo '(Non refundable)';
+                                                        }
+                                                        ?>
+                                                    </span>
                                                             <?php
                                                             if($fee['frequency']=='one-time'){
                                                                 echo 'One Time';

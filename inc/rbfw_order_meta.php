@@ -295,18 +295,13 @@ function fetch_order_details_callback() {
                                     <table class="wp-list-table widefat fixed striped table-view-list">
                                         <?php foreach ($rbfw_management_info as $key => $value){
                                             $service_label = $key; //service name
-                                            if(is_array($value)){
-                                                $service_price = $value['price'];
-                                                $service_price_desc = $value['price_desc'];
-                                            }else{
-                                                $service_price = $value;
-                                                $service_price_desc = wc_price($value);
-                                            }
-
+                                            $service_price = $value['price'];
+                                            $service_price_desc = $value['price_desc'];
+                                            $refundable = ($value['refundable']=='yes')?'( Refundable )':'( Non refundable )';
                                             ?>
                                             <tr>
                                                 <th>
-                                                    <?php echo esc_html($service_label); ?>:
+                                                    <?php echo esc_html($service_label); ?> <?php echo esc_html($refundable); ?>:
                                                 </th>
                                                 <td>
                                                     (<?php echo wp_kses($service_price_desc,rbfw_allowed_html()); ?>)  = <?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>

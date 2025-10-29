@@ -338,7 +338,6 @@
                 ?>
 				<div class="wprently_fee-container">
 					<div class="rbfw-scroll-hint" style="text-align: center; margin-bottom: 10px; color: #666; font-size: 12px;">
-                        <?php echo $rbfw_item_type ?>
 						<em><?php echo esc_html__( '← Scroll horizontally to view all columns →', 'booking-and-rental-manager-for-woocommerce' ); ?></em>
 					</div>
 					<div class="wprently_fee-table-wrap">
@@ -348,7 +347,7 @@
 									<th><?php echo esc_html__( 'Fee Type & Label', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									<th><?php echo esc_html__( 'Calculation', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 
-                                    <th style="display:<?php echo ($rbfw_item_type == 'resort' ||  $rbfw_item_type == 'bike_car_md')?'block':'none' ?>"><?php echo esc_html__( 'Frequency', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                    <th style="display:<?php echo ($rbfw_item_type == 'resort' ||  $rbfw_item_type == 'bike_car_md')?'table-cell':'none' ?>"><?php echo esc_html__( 'Frequency', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 
 									<th><?php echo esc_html__( 'Priority', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									<th><?php echo esc_html__( 'Options', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
@@ -420,7 +419,7 @@
 						</div>
 					</td>
 
-                    <td style="display:<?php echo ($rbfw_item_type == 'resort' ||  $rbfw_item_type == 'bike_car_md')?'block':'none' ?>">
+                    <td style="display:<?php echo ($rbfw_item_type == 'resort' ||  $rbfw_item_type == 'bike_car_md')?'table-cell':'none' ?>">
                         <select class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][frequency]">
                             <option value="one-time" <?php selected( $frequency, 'one-time' ); ?>><?php echo esc_html__( 'One Time', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
                             <option value="per-day" <?php selected( $frequency, 'per-day' ); ?>><?php echo esc_html__( 'Day Wise', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
@@ -478,9 +477,11 @@
 						</div>
 					</td>
 					<td>
-						<div class="wprently_fee-actions">
-							<button type="button" class="wprently_fee-btn-icon" onclick="rbfwDuplicateFeeRow(this)" title="<?php echo esc_attr__( 'Duplicate', 'booking-and-rental-manager-for-woocommerce' ); ?>">⎘</button>
-							<button type="button" class="wprently_fee-btn-icon" onclick="rbfwDeleteFeeRow(this)" title="<?php echo esc_attr__( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>">✕</button>
+						<div class="mp_event_remove_move">
+							<button type="button" class="button" onclick="rbfwDuplicateFeeRow(this)" title="<?php echo esc_attr__( 'Duplicate', 'booking-and-rental-manager-for-woocommerce' ); ?>">⎘</button>
+							<button type="button" class="button remove-row" onclick="rbfwDeleteFeeRow(this)" title="<?php echo esc_attr__( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                <i class="fas fa-trash-can"></i>
+                            </button>
 						</div>
 					</td>
 				</tr>
@@ -530,7 +531,6 @@
 								<select class="wprently_fee-input" name="rbfw_fee_data[${rowCount}][frequency]">
 									<option value="one-time" selected><?php echo esc_html__( 'One-time', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
 									<option value="per-day"><?php echo esc_html__( 'Per day', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
-									<option value="per-night"><?php echo esc_html__( 'Per night', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
 								</select>
 							</td>
 							<td>
@@ -571,9 +571,9 @@
 								</div>
 							</td>
 							<td>
-								<div class="wprently_fee-actions">
-									<button type="button" class="wprently_fee-btn-icon" onclick="rbfwDuplicateFeeRow(this)" title="<?php echo esc_attr__( 'Duplicate', 'booking-and-rental-manager-for-woocommerce' ); ?>">⎘</button>
-									<button type="button" class="wprently_fee-btn-icon" onclick="rbfwDeleteFeeRow(this)" title="<?php echo esc_attr__( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>">✕</button>
+								<div class="mp_event_remove_move">
+									<button type="button" class="button" onclick="rbfwDuplicateFeeRow(this)" title="<?php echo esc_attr__( 'Duplicate', 'booking-and-rental-manager-for-woocommerce' ); ?>">⎘</button>
+									<button type="button" class="button" onclick="rbfwDeleteFeeRow(this)" title="<?php echo esc_attr__( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>"><i class="fas fa-trash-can"></i></button>
 								</div>
 							</td>
 						`;
