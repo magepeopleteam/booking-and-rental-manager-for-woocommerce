@@ -587,7 +587,9 @@ if (!class_exists('RBFW_Woocommerce')) {
             global $rbfw;
             $rbfw_id = array_key_exists( 'rbfw_id', $cart_item ) ? $cart_item['rbfw_id'] : 0;
             ob_start();
+
             if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
+                
                 include( RBFW_Function::get_template_path( 'cart_page.php' ) );
             }
             $content     = ob_get_clean();
