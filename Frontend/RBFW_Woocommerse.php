@@ -28,14 +28,56 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                     $cart_url = wc_get_cart_url();
 
-                    // Add notice with link to cart
-                    wc_add_notice(
-                        sprintf(
-                            __( 'This product is already in your cart. <a href="%s" class="wc-forward">View Cart</a>', 'woocommerce' ),
-                            esc_url( $cart_url )
-                        ),
-                        'error'
-                    );
+                    if ( wp_get_theme()->get( 'Name' ) === 'Blocksy' ) {
+
+                        ?>
+
+
+                        <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                // Create the message HTML as a safe string
+                                const messageText = `<?php
+                                echo esc_html__( 'This product is already in your cart.', 'booking-and-rental-manager-for-woocommerce' );
+                                ?>`;
+
+                                const messageLink = `<?php
+                                echo sprintf(
+                                    '<a href="%s" class="wc-forward">%s</a>',
+                                    esc_url( $cart_url ),
+                                    esc_html__( 'View Cart', 'booking-and-rental-manager-for-woocommerce' )
+                                );
+                                ?>`;
+
+// Combine if needed
+                                const messageHTML = `${messageText} ${messageLink}`;
+                                // Find the WooCommerce notices wrapper
+                                const wrapper = document.querySelector('.woocommerce-notices-wrapper');
+
+                                if (messageHTML && wrapper) {
+                                    // Create a new div element
+                                    const messageDiv = document.createElement('div');
+                                    messageDiv.classList.add('woocommerce-message');
+                                    messageDiv.innerHTML = messageHTML;
+
+                                    // Append it to the wrapper
+                                    wrapper.appendChild(messageDiv);
+                                }
+                            });
+                        </script>
+
+                        <?php
+
+
+                    }else{
+                        wc_add_notice(
+                            sprintf(
+                                __('This product is already in your cart. <a href="%s" class="wc-forward">View Cart</a>', 'woocommerce'),
+                                esc_url($cart_url)
+                            ),
+                            'error'
+                        );
+
+                    }
 
                     // For AJAX requests, send the notice immediately
                     if ( wp_doing_ajax() ) {
