@@ -694,21 +694,22 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                                 <td class="resource-title-qty">
                                                     <?php echo esc_html($fee['label']); ?>
                                                     <span class="rbfw-refundable">
-                                                        <?php
-                                                        if($fee['refundable']=='yes'){
-                                                            echo '(Refundable)';
-                                                        }else{
-                                                            echo '(Non refundable)';
-                                                        }
-                                                        ?>
+                                                        (<?php
+                                                            if($fee['refundable']=='yes'){
+                                                                esc_html_e('Refundable','booking-and-rental-manager-for-woocommerce');
+                                                            }else{
+                                                                esc_html_e('Non refundable','booking-and-rental-manager-for-woocommerce');
+                                                            }
+                                                            ?>
+                                                            <?php
+                                                            if($fee['frequency']=='one-time'){
+                                                                esc_html_e('One Time','booking-and-rental-manager-for-woocommerce');
+                                                            }else{
+                                                                esc_html_e('Day Wise','booking-and-rental-manager-for-woocommerce');
+                                                            }
+                                                        ?>)
                                                     </span>
-                                                    <?php
-                                                    if($fee['frequency']=='one-time'){
-                                                        echo 'One Time';
-                                                    }else{
-                                                        echo 'Day Wise';
-                                                    }
-                                                    ?>
+
                                                 </td>
                                                 <td class="w_20">
                                                     <?php if($fee['calculation_type']=='fixed'){
