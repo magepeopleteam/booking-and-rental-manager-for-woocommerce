@@ -239,9 +239,89 @@ if(isset($_POST['post_id'])){
                             </tbody>
                         </table>
                     </div>
-                <?php
-            }
+            <?php } ?>
+
+
+            <?php
+            $rbfw_fee_data = get_post_meta( $id, 'rbfw_fee_data', true );
             ?>
+
+            <?php if(!empty($rbfw_fee_data)){ ?>
+                <div class="item rbfw_resourse_md">
+                    <div class="rbfw-single-right-heading">
+                        <?php esc_html_e('Fee Management','booking-and-rental-manager-for-woocommerce'); ?>
+                    </div>
+                    <div class="item-content rbfw-resource">
+                        <table class="rbfw_bikecarmd_es_table">
+                            <tbody>
+                            <?php
+                            $c = 0;
+                            //echo '<pre>';print_r($rbfw_fee_data);echo '<pre>';
+                            $rbfw_management_price = 0;
+                            foreach ($rbfw_fee_data as $key=>$fee) { ?>
+                                <?php if(isset($fee['label'])){ ?>
+                                    <tr>
+                                        <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
+                                            <div class="label rbfw-checkbox">
+                                                <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][label]" value="<?php echo esc_attr($fee['label']); ?>">
+                                                <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][is_checked]" class="rbfw-management-qty" value="<?php echo (esc_attr($fee['priority'])=='required')?'yes':'' ?>">
+                                                <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][amount]"  value="<?php echo esc_attr($fee['amount']); ?>">
+                                                <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][calculation_type]"  value="<?php echo esc_attr($fee['calculation_type']); ?>">
+                                                <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][frequency]"  value="<?php echo esc_attr($fee['frequency']); ?>">
+                                                <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][refundable]"  value="<?php echo esc_attr($fee['refundable']); ?>">
+                                                <label class="switch">
+                                                    <input type="checkbox" <?php echo (esc_attr($fee['priority'])=='required')?'checked':'' ?>   class="rbfw-management-price <?php echo (esc_attr($fee['priority'])=='required')?'rbfw-fee-required':'' ?> rbfw-resource-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>"   data-price="<?php echo esc_attr($fee['amount']); ?>" data-name="<?php echo esc_attr($fee['label']); ?>" data-price_type="<?php echo esc_attr($fee['calculation_type']); ?>" data-frequency="<?php echo esc_attr($fee['frequency']); ?>">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                        <td class="resource-title-qty">
+                                            <?php echo esc_html($fee['label']); ?>
+                                            <span class="rbfw-refundable">
+                                                        <?php
+                                                        if($fee['refundable']=='yes'){
+                                                            echo '(Refundable)';
+                                                        }else{
+                                                            echo '(Non refundable)';
+                                                        }
+                                                        ?>
+                                                    </span>
+
+                                        </td>
+                                        <td class="w_20">
+                                            <?php if($fee['calculation_type']=='fixed'){
+                                                echo wp_kses(wc_price($fee['amount']),rbfw_allowed_html());
+                                            }else{
+                                                echo $fee['amount'].'%';
+                                            }
+                                            ?>
+                                        </td>
+                                        <?php
+                                        if(esc_attr($fee['priority'])=='required'){
+                                            $rbfw_management_price +=  $fee['amount'];
+                                        }
+                                        ?>
+                                    </tr>
+                                <?php } ?>
+                                <?php $c++; } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <?php } ?>
+
+
+            <?php
+            /* Include Custom Registration Form */
+            if(class_exists('Rbfw_Reg_Form')){
+                $reg_form = new Rbfw_Reg_Form();
+                echo wp_kses($reg_form->rbfw_generate_regf_fields($id),rbfw_allowed_html());
+            }
+            /* End: Include Custom Registration Form */
+            ?>
+
+
+
             <div class="item rbfw_bikecarsd_price_summary">
                 <div class="item-content rbfw-costing">
                     <ul class="rbfw-ul">
@@ -249,15 +329,24 @@ if(isset($_POST['post_id'])){
                             <?php echo esc_html__( 'Duration Cost','booking-and-rental-manager-for-woocommerce' ); ?>
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                         </li>
+
                         <?php if(!empty($rbfw_extra_service_data)){ ?>
                             <li class="extra_service_cost rbfw-cond">
                                 <?php echo esc_html__( 'Resource Cost','booking-and-rental-manager-for-woocommerce' ); ?>
                                 <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                             </li>
                         <?php } ?>
+
                         <li class="subtotal">
                             <?php echo esc_html__( 'Subtotal','booking-and-rental-manager-for-woocommerce' ); ?>
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                        </li>
+
+                        <li class="management-costing rbfw-cond">
+                            <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>
+                            <span class="price-figure" data-price="">
+                                <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                            </span>
                         </li>
 
                         <li class="security_deposit" style="display:none;">
@@ -267,7 +356,9 @@ if(isset($_POST['post_id'])){
 
                         <li class="total">
                             <strong><?php echo esc_html__( 'Total','booking-and-rental-manager-for-woocommerce' ); ?></strong>
-                            <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                            <span class="price-figure" data-price="">
+                                <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
+                            </span>
                         </li>
                     </ul>
                     <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>
@@ -275,13 +366,6 @@ if(isset($_POST['post_id'])){
             </div>
         </div>
 
-        <?php
-        /* Include Custom Registration Form */
-        if(class_exists('Rbfw_Reg_Form')){
-            $reg_form = new Rbfw_Reg_Form();
-            echo wp_kses($reg_form->rbfw_generate_regf_fields($id),rbfw_allowed_html());
-        }
-        /* End: Include Custom Registration Form */
-        ?>
+
     </div>
 <?php } ?>
