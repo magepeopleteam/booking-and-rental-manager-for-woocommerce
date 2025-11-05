@@ -105,14 +105,26 @@
                     return;
                 }*/
 
+
+
+
                 check_ajax_referer( 'rbfw_get_rent_item_category_info_action', 'nonce' );
 
 				$all_cat_features = '';
 				if ( isset( $_POST['post_id'] ) ) {
 					$post_id               = sanitize_text_field( wp_unslash($_POST['post_id']));
-					$rbfw_feature_category = get_post_meta( $post_id, 'rbfw_feature_category', true ) ? maybe_unserialize( get_post_meta( $post_id,
-						'rbfw_feature_category', true ) ) : [];
-					$all_cat_features      = '';
+
+
+                    $rbfw_feature_category = get_post_meta( $post_id, 'rbfw_feature_category', true ) ? get_post_meta( $post_id,
+                        'rbfw_feature_category', true )  : [];
+
+                    if ( is_serialized( $rbfw_feature_category ) ) {
+                        $rbfw_feature_category = unserialize( $rbfw_feature_category, [ 'allowed_classes' => false ] );
+                    }
+
+
+
+                    $all_cat_features      = '';
 					$all_cat_features      .= '<div class="rbfw_show_all_cat_features rbfw_show_all_cat_title" id="rbfw_show_all_cat_features-' . $post_id . '"> ';
 					foreach ( $rbfw_feature_category as $value ) {
 						$cat_features     = $value['cat_features'] ? $value['cat_features'] : [];

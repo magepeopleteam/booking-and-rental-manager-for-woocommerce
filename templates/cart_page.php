@@ -960,3 +960,5 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
 
 
 <?php do_action( 'rbfw_after_cart_item_display', $cart_item ); ?>
+
+

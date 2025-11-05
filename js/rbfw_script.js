@@ -554,8 +554,9 @@ jQuery(document).ready(function($) {
         var $postContent = $this.closest('.rbfw_muff_post_content');
         $postContent.find('.trimmed-content').toggle();
         $postContent.find('.full-content').toggle();
-        
+
     });
 });
+
 
 
