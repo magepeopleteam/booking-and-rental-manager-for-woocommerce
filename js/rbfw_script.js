@@ -554,8 +554,26 @@ jQuery(document).ready(function($) {
         var $postContent = $this.closest('.rbfw_muff_post_content');
         $postContent.find('.trimmed-content').toggle();
         $postContent.find('.full-content').toggle();
-        
+
     });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.querySelector('.rbfw_toggle-content');
+    if (!container) return;
+
+    // Get all the items
+    const items = Array.from(container.querySelectorAll('.rbfw_rent_item_left_feature_title'));
+
+    // Sort them alphabetically by the <span> text (case-insensitive)
+    items.sort((a, b) => {
+        const textA = a.querySelector('span').textContent.trim().toLowerCase();
+        const textB = b.querySelector('span').textContent.trim().toLowerCase();
+        return textA.localeCompare(textB);
+    });
+
+    // Re-append sorted items to the container
+    items.forEach(item => container.appendChild(item));
 });
 
 

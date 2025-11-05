@@ -105,6 +105,9 @@
                     return;
                 }*/
 
+
+
+
                 check_ajax_referer( 'rbfw_get_rent_item_category_info_action', 'nonce' );
 
 				$all_cat_features = '';

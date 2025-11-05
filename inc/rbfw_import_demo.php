@@ -21,7 +21,7 @@
 
 			}
 
-			public function rbfw_import_demo_function() {
+			public function rbfw_import_demo_function() {   exit;
 				// If you must ensure longer execution time, consider handling this at the server level.
 				
 				$xml_url     = RBFW_PLUGIN_URL . '/assets/sample-rent-items.xml';

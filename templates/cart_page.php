@@ -960,3 +960,9 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
 
 
 <?php do_action( 'rbfw_after_cart_item_display', $cart_item ); ?>
+
+
+
+<script id="rbfw_custom_script-js-extra">
+    var rbfw_ajaxurl = {"rbfw_ajaxurl":"https:\/\/www.wprently.com\/wp-admin\/admin-ajax.php","view_more_feature_btn_text":"Hide More","hide_more_feature_btn_text":"Load More","view_more_offers_btn_text":"View More Offers","hide_more_offers_btn_text":"Hide More Offers"};
+</script>

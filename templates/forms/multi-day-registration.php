@@ -701,6 +701,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                                                 esc_html_e('Non refundable','booking-and-rental-manager-for-woocommerce');
                                                             }
                                                             ?>
+                                                        -
                                                             <?php
                                                             if($fee['frequency']=='one-time'){
                                                                 esc_html_e('One Time','booking-and-rental-manager-for-woocommerce');
