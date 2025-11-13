@@ -177,6 +177,61 @@
 
 		return $allowed_html;
 	}
+
+
+
+
+
+
+add_action( 'wp',  'rbfw_hide_hidden_wc_product_from_frontend' );
+function rbfw_hide_hidden_wc_product_from_frontend() {
+				global $post, $wp_query;
+				if ( is_product() ) {
+					$post_id    = $post->ID;
+					$visibility = get_the_terms( $post_id, 'product_visibility' ) ? get_the_terms( $post_id, 'product_visibility' ) : [ 0 ];
+					if ( is_object( $visibility[0] ) ) {
+						if ( $visibility[0]->name == 'exclude-from-catalog' ) {
+							$check_event_hidden = get_post_meta( $post_id, 'link_rbfw_id', true ) ? get_post_meta( $post_id, 'link_rbfw_id', true ) : 0;
+							if ( $check_event_hidden > 0 ) {
+								$wp_query->set_404();
+								status_header( 404 );
+								get_template_part( 404 );
+								exit();
+							}
+						}
+					}
+				}
+			}
+
+
+
+
+add_action( 'wp_head',  'rbfw_url_exclude_search_engine' );
+function rbfw_url_exclude_search_engine() {
+				global $post;
+				if ( is_single() && is_product() ) {
+					$post_id    = $post->ID;
+					$visibility = get_the_terms( $post_id, 'product_visibility' ) ? get_the_terms( $post_id, 'product_visibility' ) : [ 0 ];
+					if ( is_object( $visibility[0] ) ) {
+						if ( $visibility[0]->name == 'exclude-from-catalog' ) {
+							$check_event_hidden = get_post_meta( $post_id, 'link_rbfw_id', true ) ? get_post_meta( $post_id, 'link_rbfw_id', true ) : 0;
+							if ( $check_event_hidden > 0 ) {
+								echo '<meta name="robots" content="noindex, nofollow">';
+							}
+						}
+					}
+				}
+			}
+
+
+
+
+
+
+
+
+
+
 	add_action( 'init', 'rbfw_language_load' );
 	function rbfw_language_load() {
 		$plugin_dir = basename( dirname( __DIR__ ) ) . "/languages/";
