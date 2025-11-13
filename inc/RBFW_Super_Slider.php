@@ -44,7 +44,7 @@
 					$slider_style      = RBFW_Function::get_settings( 'super_slider_style', 'super_slider_settings', 'style_1' );
 					?>
                     <div class="superSlider placeholder_area fdColumn">
-                        <input type="hidden" name="slider_height_type" value="<?php echo esc_attr(RBFW_Function::get_settings( 'slider_height', 'super_slider_settings','avg' )); ?>" />
+                        <input type="hidden" name="slider_height_type" value="<?php echo esc_attr( RBFW_Function::get_settings( 'slider_height', 'super_slider_settings', 'avg' ) ); ?>"/>
                         <div class="dFlex  <?php echo esc_attr( $column_class ); ?>">
 							<?php
 								if ( $showcase_position == 'top' || $showcase_position == 'left' ) {
@@ -96,21 +96,23 @@
 						<?php
 							$count = 1;
 							foreach ( $image_ids as $id ) {
-								$image_url = RBFW_Function::get_image_url( '', $id );
-								$image_url = $image_url ?: RBFW_PLUGIN_URL . '/assets/images/no_image.png';
-								$size = getimagesize($image_url);
-								$width=0;
-								$height=0;
-								if ($size) {
-									$width = $size[0];
-									$height = $size[1];
+								$image_url = RBFW_Function::get_image_url( '', $id, 'large' );
+								if ( $image_url ) {
+									$image_url = $image_url ?: RBFW_PLUGIN_URL . '/assets/images/no_image.png';
+									$size      = getimagesize( $image_url );
+									$width     = 0;
+									$height    = 0;
+									if ( $size ) {
+										$width  = $size[0];
+										$height = $size[1];
+									}
+									?>
+                                    <div class="sliderItem" data-slide-index="<?php echo esc_html( $count ); ?>" data-target-popup="superSlider" data-placeholder>
+                                        <div data-bg-image="<?php echo esc_html( $image_url ); ?>" data-width="<?php echo esc_html( $width ); ?>" data-height="<?php echo esc_html( $height ); ?>"></div>
+                                    </div>
+									<?php
+									$count ++;
 								}
-								?>
-                                <div class="sliderItem" data-slide-index="<?php echo esc_html( $count ); ?>" data-target-popup="superSlider" data-placeholder>
-                                    <div data-bg-image="<?php echo esc_html( $image_url ); ?>" data-width="<?php echo esc_html( $width ); ?>" data-height="<?php echo esc_html( $height ); ?>"></div>
-                                </div>
-								<?php
-								$count ++;
 							}
 						?>
 						<?php
@@ -363,15 +365,15 @@
 							)
 						),
 						array(
-							'name' => 'slider_height',
-							'label' => esc_html__('Slider height', 'booking-and-rental-manager-for-woocommerce'),
-							'desc' => esc_html__('Please Select Slider Height', 'booking-and-rental-manager-for-woocommerce'),
-							'type' => 'select',
+							'name'    => 'slider_height',
+							'label'   => esc_html__( 'Slider height', 'booking-and-rental-manager-for-woocommerce' ),
+							'desc'    => esc_html__( 'Please Select Slider Height', 'booking-and-rental-manager-for-woocommerce' ),
+							'type'    => 'select',
 							'default' => 'avg',
 							'options' => array(
-								'min' => esc_html__('Minimum', 'booking-and-rental-manager-for-woocommerce'),
-								'avg' => esc_html__('Average', 'booking-and-rental-manager-for-woocommerce'),
-								'max' => esc_html__('Maximum', 'booking-and-rental-manager-for-woocommerce')
+								'min' => esc_html__( 'Minimum', 'booking-and-rental-manager-for-woocommerce' ),
+								'avg' => esc_html__( 'Average', 'booking-and-rental-manager-for-woocommerce' ),
+								'max' => esc_html__( 'Maximum', 'booking-and-rental-manager-for-woocommerce' )
 							)
 						)
 					)

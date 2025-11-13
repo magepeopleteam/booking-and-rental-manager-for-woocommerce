@@ -821,6 +821,8 @@
     }
     div.superSlider .sliderPopup .sliderAllItem {
         height: 70vh;
+        min-height: 70vh;
+        max-height: initial !important;
         background-color: transparent;
         margin: 0 auto;
         overflow: hidden;
@@ -830,6 +832,7 @@
         width: auto;
         height: 100%;
     }
+    div.superSlider .sliderPopup .sliderAllItem .sliderItem{min-height: initial !important;       max-height: initial !important;}
     div.superSlider .sliderPopup .popupHeader {
         border-bottom: 1px solid #FFF;
     }

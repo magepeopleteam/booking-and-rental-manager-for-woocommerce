@@ -341,6 +341,7 @@ if (! class_exists('RBFW_Dependencies')) {
 				let wp_date_format = <?php echo json_encode(esc_js(get_option('date_format'))); ?>;
 				let wp_time_format = <?php echo json_encode(esc_js(get_option('time_format'))); ?>;
 				let js_date_format = 'yy-mm-dd'; // Default date format
+                let mp_empty_image_url= "<?php echo esc_attr( RBFW_PLUGIN_URL . '/assets/images/no_image.png' ); ?>";
 				// Modify JavaScript date format based on WordPress date format
 				if (wp_date_format === 'F j, Y') {
 					js_date_format = 'dd M yy';
