@@ -191,6 +191,7 @@ if (! class_exists('RBFW_Dependencies')) {
 				'off_label' => __('Off', 'booking-and-rental-manager-for-woocommerce'),
 				'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
 				'select_pickup_date' => __('Please select the pickup date!', 'booking-and-rental-manager-for-woocommerce'),
+				'filter' => __('Filter', 'booking-and-rental-manager-for-woocommerce'),
 				'currency' => get_woocommerce_currency_symbol()
 			));
 

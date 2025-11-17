@@ -311,7 +311,7 @@
                         });
 
                         $('#rbfw_shoe_result_text').html('<span >'+text_display+'</span>');
-                        $(".rbfw_left_filter_button").text('Filter');
+                        $(".rbfw_left_filter_button").text(rbfw_translation.filter);
                     }else{
                         alert('ok');
                         $('#rbfw_shoe_result_text').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');

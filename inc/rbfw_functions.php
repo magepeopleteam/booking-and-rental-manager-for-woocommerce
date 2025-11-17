@@ -141,6 +141,7 @@
                 'id'          => true,
                 'name'          => true,
                 'autocomplete'          => true,
+                'required'          => true,
             ),
             'button'   => array(
                 'type'       => true, // Allows inline styles
