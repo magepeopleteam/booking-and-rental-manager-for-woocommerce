@@ -600,15 +600,15 @@
 						$filter_type = trim( sanitize_text_field( wp_unslash($_POST['filter_type'] )) );
 						if ( $filter_type === 'rbfw_left_filter_location' ) {
 							$rbfw_features   = get_rbfw_pickup_data_wp_query();
-							$type_text       = 'Pickup Location';
+                            $type_text       = __( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' );
 							$check_box_class = 'rbfw_location';
 						} else if ( $filter_type === 'rbfw_left_filter_category' ) {
 							$rbfw_features   = get_rbfw_post_categories_from_meta();
-							$type_text       = 'Item Category';
+                            $type_text       = __( 'Item Category', 'booking-and-rental-manager-for-woocommerce' );
 							$check_box_class = 'rbfw_category';
 						} else if ( $filter_type === 'rbfw_left_filter_feature' ) {
 							$rbfw_features   = get_rbfw_post_features_from_meta();
-							$type_text       = 'Item Features';
+                            $type_text       = __( 'Item Features', 'booking-and-rental-manager-for-woocommerce' );
 							$check_box_class = 'rbfw_rent_feature';
 						} else {
 							$rbfw_features   = [];

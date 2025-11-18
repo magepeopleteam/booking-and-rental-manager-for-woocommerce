@@ -237,6 +237,9 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
 
     const timeSelect = document.getElementById(pickup_time_particular);
 
+    console.log('pickup_time_particular',pickup_time_particular);
+    console.log('timeSelect',timeSelect);
+
 
     if(is_calendar=='calendar'){
         timeSelect.innerHTML = '';
@@ -384,39 +387,46 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
 
                 // Create a JS Date object for formatting
                 let date = new Date();
-                date.setHours(hours);
-                date.setMinutes(minutes);
-                sapecific_date_time = true;
-
-                if(is_calendar=='calendar'){
-
-                    const a = document.createElement("a");
-                    if(time_enable){
-                        a.className = "rbfw_bikecarsd_time_disable";
-                        a.title = "Past Time";
-                    }else{
-                        a.className = "rbfw_bikecarsd_time";
-                    }
-                    a.setAttribute("data-time", timeObj.time);
-
-                    const span = document.createElement("span");
-                    span.className = "rbfw_bikecarsd_time_span";
-                    span.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;;
-
-                    a.appendChild(span);
-                    timeSelect.appendChild(a);
 
 
-                }else{
-                    const option = document.createElement("option");
-                    option.value = timeObj.time;
-                    option.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;
-                    option.disabled = time_enable;
-                    option.title = past_time;
-                    timeSelect.appendChild(option);
+                const h = parseInt(hours, 10);
+                const m = parseInt(minutes, 10);
+
+                if (!isNaN(h) && !isNaN(m)) {
+                    date.setHours(h);
+                    date.setMinutes(m);
+                    date.setSeconds(0);
+                } else {
+                    console.error("Invalid hours or minutes:", hours, minutes);
                 }
 
 
+                if (isNaN(date.getTime())) {
+                    console.error("Invalid Date generated:", date);
+                } else {
+                    sapecific_date_time = true;
+
+                    if (is_calendar === 'calendar') {
+                        const a = document.createElement("a");
+                        if (time_enable) {
+                            a.className = "rbfw_bikecarsd_time_disable";
+                            a.title = "Past Time";
+                        } else {
+                            a.className = "rbfw_bikecarsd_time";
+                        }
+                        a.setAttribute("data-time", timeObj.time);
+
+                        const span = document.createElement("span");
+                        span.className = "rbfw_bikecarsd_time_span";
+
+                        console.log('date', date);
+
+                        span.textContent = formatTime(date, rbfw_js_variables.timeFormat);
+
+                        a.appendChild(span);
+                        timeSelect.appendChild(a);
+                    }
+                }
             }
         })
     }
