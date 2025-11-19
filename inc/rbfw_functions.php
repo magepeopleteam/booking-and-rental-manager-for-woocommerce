@@ -14,6 +14,7 @@
 			'div'     => array(
 				'style'   => true, // Allows inline styles
 				'class'   => true,
+				'id'   => true,
 				'onclick' => true, // Allows inline JavaScript
 				'data-step' => true, // Allows inline JavaScript
 				'data-key' => true, // Allows inline JavaScript
@@ -1208,8 +1209,25 @@
 						$inventory_start_time = $inventory['rbfw_start_time'];
 						$inventory_end_time   = $inventory['rbfw_end_time'];
 					}
-					$date_inventory_start = new DateTime( $inventory_start_date . ' ' . $inventory_start_time );
-					$date_inventory_end   = new DateTime( $inventory_end_date . ' ' . $inventory_end_time );
+
+					// Validate date and time values before creating DateTime objects
+					if ( empty( $inventory_start_date ) || empty( $inventory_end_date ) || empty( $inventory_start_time ) || empty( $inventory_end_time ) ) {
+						continue; // Skip this inventory entry if dates/times are invalid
+					}
+
+					// Additional validation: check if dates are valid format (not NaN or invalid)
+					if ( strpos( $inventory_start_date, 'NaN' ) !== false || strpos( $inventory_end_date, 'NaN' ) !== false || 
+						 strpos( $inventory_start_time, 'NaN' ) !== false || strpos( $inventory_end_time, 'NaN' ) !== false ) {
+						continue; // Skip this inventory entry if contains NaN
+					}
+
+					try {
+						$date_inventory_start = new DateTime( $inventory_start_date . ' ' . $inventory_start_time );
+						$date_inventory_end   = new DateTime( $inventory_end_date . ' ' . $inventory_end_time );
+					} catch ( Exception $e ) {
+						// Skip this inventory entry if DateTime creation fails
+						continue;
+					}
 
                     if ( $date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end ) {
 						$total_booked += $rbfw_item_quantity;
