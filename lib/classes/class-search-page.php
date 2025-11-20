@@ -105,14 +105,26 @@
                     return;
                 }*/
 
+
+
+
                 check_ajax_referer( 'rbfw_get_rent_item_category_info_action', 'nonce' );
 
 				$all_cat_features = '';
 				if ( isset( $_POST['post_id'] ) ) {
 					$post_id               = sanitize_text_field( wp_unslash($_POST['post_id']));
-					$rbfw_feature_category = get_post_meta( $post_id, 'rbfw_feature_category', true ) ? maybe_unserialize( get_post_meta( $post_id,
-						'rbfw_feature_category', true ) ) : [];
-					$all_cat_features      = '';
+
+
+                    $rbfw_feature_category = get_post_meta( $post_id, 'rbfw_feature_category', true ) ? get_post_meta( $post_id,
+                        'rbfw_feature_category', true )  : [];
+
+                    if ( is_serialized( $rbfw_feature_category ) ) {
+                        $rbfw_feature_category = unserialize( $rbfw_feature_category, [ 'allowed_classes' => false ] );
+                    }
+
+
+
+                    $all_cat_features      = '';
 					$all_cat_features      .= '<div class="rbfw_show_all_cat_features rbfw_show_all_cat_title" id="rbfw_show_all_cat_features-' . $post_id . '"> ';
 					foreach ( $rbfw_feature_category as $value ) {
 						$cat_features     = $value['cat_features'] ? $value['cat_features'] : [];
@@ -588,15 +600,15 @@
 						$filter_type = trim( sanitize_text_field( wp_unslash($_POST['filter_type'] )) );
 						if ( $filter_type === 'rbfw_left_filter_location' ) {
 							$rbfw_features   = get_rbfw_pickup_data_wp_query();
-							$type_text       = 'Pickup Location';
+                            $type_text       = __( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' );
 							$check_box_class = 'rbfw_location';
 						} else if ( $filter_type === 'rbfw_left_filter_category' ) {
 							$rbfw_features   = get_rbfw_post_categories_from_meta();
-							$type_text       = 'Item Category';
+                            $type_text       = __( 'Item Category', 'booking-and-rental-manager-for-woocommerce' );
 							$check_box_class = 'rbfw_category';
 						} else if ( $filter_type === 'rbfw_left_filter_feature' ) {
 							$rbfw_features   = get_rbfw_post_features_from_meta();
-							$type_text       = 'Item Features';
+                            $type_text       = __( 'Item Features', 'booking-and-rental-manager-for-woocommerce' );
 							$check_box_class = 'rbfw_rent_feature';
 						} else {
 							$rbfw_features   = [];

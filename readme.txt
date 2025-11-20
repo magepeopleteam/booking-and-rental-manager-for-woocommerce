@@ -45,9 +45,10 @@ WpRently provides you with the necessary features for free to start your rental 
 **🌡️ Medical Equipment:** Ideal for healthcare providers & medical equipment.
 **🔌 Electronics Goods:** Manage rentals for electronics goods.
 
+## LET'S SEE HOW IT WORKS
+https://www.youtube.com/watch?v=JK33WAWKo7E
 
-
-Let's dive deeper into the features list to ensure your system is optimized for maximum effectiveness.
+Let's dive deeper into the features list to ensure your system is optimised for maximum effectiveness.
 
 ## Free Version Of The Plugin Offers:
 

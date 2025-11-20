@@ -965,38 +965,63 @@
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu {
   min-width: 250px;
   max-width: 283px;
-  background-color: var(--mage-light);
-  padding: 25px 0 25px 25px;
+  background-color:#fff;
+  padding: 10px;
 }
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li {
   position: relative;
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 15px;
+  padding: 10px;
   color: var(--mage-black);
-  border-left: 2px solid transparent;
+  margin: 10px 0;
+  background-color: #f8f8f8;
   font-size: 16px;
-  margin: 0;
+  transition: all 0.3s ease;
 }
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li i {
   margin: 0 10px 0 0;
   color: var(--mage-primary);
 }
-#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li.active, #rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li:hover {
-  background-color: var(--mage-white);
-  color: var(--d_color);
-  border-left: 2px solid var(--mage-primary);
+
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li.active{
+  background-color: var(--color_theme);
+  color: #fff;
+} 
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li.active:hover {
+  background-color: var(--color_theme);
+  color: #fff;
 }
-#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li.active::after, #rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li:hover::after {
-  width: 100%;
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li.active::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 8px solid var(--color_theme);
 }
+
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li.active  i {
+color: #fff;
+}
+
+#rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li:hover {
+  background-color: #EAF6FF;
+  color: var(--color_theme);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 119, 204, 0.15);
+}
+
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_menu ul li::after {
   content: "";
   position: absolute;
   left: 0;
   bottom: 0;
-  border-bottom: 1px solid var(--mage-gray);
   width: 90%;
 }
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_details {
