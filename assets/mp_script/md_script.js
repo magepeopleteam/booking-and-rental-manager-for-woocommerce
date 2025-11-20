@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Attach event listeners to quantity inputs
-    qtyInputs.forEach(input => {  alert(12);
+    qtyInputs.forEach(input => { 
         input.addEventListener('input', updateSummary);
     });
 

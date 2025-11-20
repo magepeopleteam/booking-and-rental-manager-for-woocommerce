@@ -172,8 +172,5 @@
 		require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
 	}
 
-add_action( 'wp_enqueue_scripts', function() {
-    wp_enqueue_script( 'accounting' );
-});
 
 // this include file can't added inside class method due to fatal error. need to fix.
