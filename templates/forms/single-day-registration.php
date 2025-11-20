@@ -158,7 +158,7 @@
                                         </div>
                                     <?php endif; ?>
                                 </label>
-                                <div class="price"><?php echo esc_html(get_woocommerce_currency_symbol().$value['price']); ?></div>
+                                <div class="price"><?php echo wp_kses(wc_price($value['price']) , rbfw_allowed_html()); ?></div>
                             </div>
                         <?php } ?>
                     </div>
@@ -381,6 +381,8 @@
                 $time_slot_switch = !empty(get_post_meta($post_id, 'rbfw_time_slot_switch', true)) ? get_post_meta($post_id, 'rbfw_time_slot_switch', true) : 'on';
                 $available_times = get_post_meta($post_id, 'rdfw_available_time', true) ? maybe_unserialize(get_post_meta($post_id, 'rdfw_available_time', true)) : [];
 
+
+              //  echo '<pre>';print_r($available_times);echo '<pre>';
 
                 if($time_slot_switch == 'on' && !empty($available_times)){
                     $time_slot_switch = 'on';

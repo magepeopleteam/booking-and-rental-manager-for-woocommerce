@@ -3,7 +3,7 @@
 	 * Plugin Name: Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Equipment
 	 * Plugin URI: https://mage-people.com
 	 * Description: A complete booking & rental solution for WordPress.
-	 * Version: 2.5.5
+	 * Version: 2.5.6
 	 * Author: MagePeople Team
 	 * Author URI: https://www.mage-people.com/
 	 * Text Domain: booking-and-rental-manager-for-woocommerce
@@ -172,5 +172,8 @@
 		require_once RBFW_PLUGIN_DIR . '/inc/rbfw_file_include.php';
 	}
 
+add_action( 'wp_enqueue_scripts', function() {
+    wp_enqueue_script( 'accounting' );
+});
 
-	// this include file can't added inside class method due to fatal error. need to fix.
+// this include file can't added inside class method due to fatal error. need to fix.

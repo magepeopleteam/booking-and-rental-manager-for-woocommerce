@@ -14,6 +14,7 @@
 			'div'     => array(
 				'style'   => true, // Allows inline styles
 				'class'   => true,
+				'id'   => true,
 				'onclick' => true, // Allows inline JavaScript
 				'data-step' => true, // Allows inline JavaScript
 				'data-key' => true, // Allows inline JavaScript
@@ -1264,8 +1265,25 @@ function rbfw_url_exclude_search_engine() {
 						$inventory_start_time = $inventory['rbfw_start_time'];
 						$inventory_end_time   = $inventory['rbfw_end_time'];
 					}
-					$date_inventory_start = new DateTime( $inventory_start_date . ' ' . $inventory_start_time );
-					$date_inventory_end   = new DateTime( $inventory_end_date . ' ' . $inventory_end_time );
+
+					// Validate date and time values before creating DateTime objects
+					if ( empty( $inventory_start_date ) || empty( $inventory_end_date ) || empty( $inventory_start_time ) || empty( $inventory_end_time ) ) {
+						continue; // Skip this inventory entry if dates/times are invalid
+					}
+
+					// Additional validation: check if dates are valid format (not NaN or invalid)
+					if ( strpos( $inventory_start_date, 'NaN' ) !== false || strpos( $inventory_end_date, 'NaN' ) !== false || 
+						 strpos( $inventory_start_time, 'NaN' ) !== false || strpos( $inventory_end_time, 'NaN' ) !== false ) {
+						continue; // Skip this inventory entry if contains NaN
+					}
+
+					try {
+						$date_inventory_start = new DateTime( $inventory_start_date . ' ' . $inventory_start_time );
+						$date_inventory_end   = new DateTime( $inventory_end_date . ' ' . $inventory_end_time );
+					} catch ( Exception $e ) {
+						// Skip this inventory entry if DateTime creation fails
+						continue;
+					}
 
                     if ( $date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end ) {
 						$total_booked += $rbfw_item_quantity;
@@ -3138,35 +3156,57 @@ function rbfw_security_deposit( $post_id, $sub_total_price ) {
 	 * @return array|false Array of unique categories or false on failure.
 	 */
 
-    function get_rbfw_post_categories_from_meta() {
-		$args  = array(
-			'post_type'      => 'any',
-			'meta_key'       => 'rbfw_categories',
-			'meta_compare'   => 'EXISTS',
-			'posts_per_page' => - 1,
-			'orderby'        => 'meta_id',
-			'order'          => 'DESC',
-		);
-		$query = new WP_Query( $args );
-		if ( ! $query->have_posts() ) {
-			return false;
-		}
-		$all_categories = [];
-		while ( $query->have_posts() ) {
-			$query->the_post();
-			$meta_value = get_post_meta( get_the_ID(), 'rbfw_categories', true );
-			$meta_value = maybe_unserialize( $meta_value );
-			if ( is_array( $meta_value ) && count( $meta_value ) > 0 ) {
-				$all_categories = array_merge( $all_categories, $meta_value );
-			}
-		}
-		wp_reset_postdata();
-		$all_categories = array_filter( $all_categories, function ( $value ) {
-			return ! empty( $value );
-		} );
 
-		return array_unique( $all_categories );
-	}
+
+function get_rbfw_post_categories_from_meta() {
+
+    $args = [
+        'post_type'      => 'rbfw_item',
+        'post_status'    => 'publish',
+        'posts_per_page' => -1,
+        'fields'         => 'ids',
+        'meta_query'     => [
+            [
+                'key'     => 'rbfw_categories',
+                'compare' => 'EXISTS',
+            ]
+        ]
+    ];
+
+    $query = new WP_Query($args);
+
+    if (!$query->have_posts()) {
+        return [];
+    }
+
+    $output = [];
+
+    foreach ($query->posts as $post_id) {
+
+        // Get the meta value (string like "Car,Bike,Resort")
+        $value = get_post_meta($post_id, 'rbfw_categories', true);
+
+        $value = $value[0];
+
+        if (!empty($value)) {
+
+            // Convert comma separated string to array
+            $items = array_map('trim', explode(',', $value));
+
+            // Merge into main list
+            $output = array_merge($output, $items);
+        }
+    }
+
+    // Remove duplicates, empty values and reindex
+    $output = array_values(array_unique(array_filter($output)));
+
+    return $output;
+}
+
+
+
+
 	function get_rbfw_post_features_from_meta() {
 		$args  = array(
 			'post_type'      => 'any',

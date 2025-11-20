@@ -214,6 +214,12 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.5.6
+Date language problem solved.
+Currency position problem solved.
+Category wise search updated.
+My accounct order pdf download problem solved and updated
+
 2.5.5
 Fee management option added.
 

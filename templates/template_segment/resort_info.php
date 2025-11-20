@@ -28,8 +28,6 @@ if(isset($post_id) && isset($active_tab)){
     $rbfw_extra_service_data = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
     $rbfw_product_id = get_post_meta( $post_id, "link_wc_product", true ) ? get_post_meta( $post_id, "link_wc_product", true ) : $post_id;
 
-    $currency_symbol = get_woocommerce_currency_symbol();
-
     $rbfw_payment_system = 'wps_enabled';
 
     $available_qty_info_switch = get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($post_id, 'rbfw_available_qty_info_switch', true) : 'no';
@@ -360,7 +358,11 @@ if(isset($post_id) && isset($active_tab)){
                         <?php } ?>
                     </span>
                 </span>
-                <span><span class="price-figure" data-price="0"><?php echo esc_html($currency_symbol); ?>0</span></span>
+                <span>
+                    <span class="price-figure" data-price="0">
+                        <?php echo wp_kses_post(wc_price(0)); ?>
+                    </span>
+                </span>
             </li>
 
             <li class="resource-costing rbfw-cond">

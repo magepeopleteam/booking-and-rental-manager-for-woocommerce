@@ -55,10 +55,23 @@ if(isset($_POST['post_id'])){
            <?php echo esc_html__( 'Back to Previous Step','booking-and-rental-manager-for-woocommerce' );  ?>
         </a>
 
+        <?php
+
+
+        $datetime_string = $result . ' ' . $selected_time;
+        $timestamp = strtotime($datetime_string);
+
+        $wp_datetime = date_i18n( get_option('date_format') . ' ' . get_option('time_format'), $timestamp );
+
+
+
+
+        ?>
+
 
             <div class="rbfw_step_selected_date" data-time="<?php echo esc_attr($selected_time); ?>">
                 <i class="fas fa-calendar-check"></i>
-                <?php echo esc_html__( 'You selected','booking-and-rental-manager-for-woocommerce' ) ?>: <?php echo esc_html($result.' '.$selected_time); ?>
+                <?php echo esc_html__( 'You selected','booking-and-rental-manager-for-woocommerce' ) ?>: <?php echo esc_html($wp_datetime); ?>
             </div>
 
 
@@ -66,7 +79,7 @@ if(isset($_POST['post_id'])){
 
         <div class="">
             <table class="rbfw_bikecarsd_price_table rbfw_bikecarsd_rt_price_table">
-                            <thead>
+                <thead>
                             <tr>
                                 <th class="w_50_pc">
                                     <?php echo esc_html__( 'Type','booking-and-rental-manager-for-woocommerce' ); ?>

@@ -357,7 +357,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                     <?php } ?>
                 </th>
                 <td>
-                    <?php echo esc_html(rbfw_date_format($start_datetime)) ; ?>
+                    <?php echo esc_html(rbfw_get_datetime($start_datetime,'date-text')) ; ?>
                     <?php if(($start_time)){
                         echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($start_time)));
                     } ?>
@@ -586,7 +586,6 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
         <?php } ?>
 
 
-        <?php echo $start_time.' '.$end_time ?>
 
         <?php if (!empty($end_datetime) && !empty($end_time)){ ?>
             <tr>
