@@ -521,6 +521,16 @@ function rbfw_aig_currentSlide(n) {
     rbfw_aig_showSlides(slideIndex = n);
 }
 
+
+function wc_price_rbfw(price) {
+    if(rbfw_translation.currency_format=='left'){ 
+        return rbfw_js_variables.currency + price.toFixed(2)
+    }else{
+        return price.toFixed(2) + rbfw_js_variables.currency;
+    }
+}
+
+
 function rbfw_aig_showSlides(n) {
     var i;
     var slides = document.getElementsByClassName("rbfw_aig_slides");
@@ -557,5 +567,8 @@ jQuery(document).ready(function($) {
         
     });
 });
+
+
+
 
 

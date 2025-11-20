@@ -236,11 +236,11 @@ function calculateTotalDurationPrice() {
     });
 
     jQuery('#rbfw_management_price_resort').val(rbfw_management_price.toFixed(2));
-    jQuery('.management-costing span').text(rbfw_translation.currency + rbfw_management_price.toFixed(2));
+    jQuery('.management-costing span').text(wc_price_rbfw(rbfw_management_price));
 
 
 
-    jQuery('.duration-costing .price-figure').text(rbfw_translation.currency + room_duration_price.toFixed(2));
+    jQuery('.duration-costing .price-figure').text(wc_price_rbfw(room_duration_price));
 
 
 
@@ -257,12 +257,12 @@ function calculateTotalDurationPrice() {
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
-        jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
+        jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
     }
 
 
-    jQuery('.subtotal .price-figure').text(rbfw_translation.currency + sub_total_price.toFixed(2));
-    jQuery('.total .price-figure').text(rbfw_translation.currency + total_price.toFixed(2));
+    jQuery('.subtotal .price-figure').text(wc_price_rbfw(sub_total_price));
+    jQuery('.total .price-figure').text(wc_price_rbfw(total_price));
 
 }
 
@@ -281,7 +281,7 @@ function calculateTotalResortExtraService() {
 
     // Output total
     jQuery('#rbfw_extra_service_price').val(resort_extra_service.toFixed(2));
-    jQuery('.resource-costing .price-figure').text(rbfw_translation.currency + resort_extra_service.toFixed(2));
+    jQuery('.resource-costing .price-figure').text(wc_price_rbfw(resort_extra_service));
 
     let sub_total_price = parseFloat(jQuery('#rbfw_room_duration_price').val()) + resort_extra_service;
 
@@ -303,7 +303,7 @@ function calculateTotalResortExtraService() {
     });
 
     jQuery('#rbfw_management_price_resort').val(rbfw_management_price.toFixed(2));
-    jQuery('.management-costing span').text(rbfw_translation.currency + rbfw_management_price.toFixed(2));
+    jQuery('.management-costing span').text(wc_price_rbfw(rbfw_management_price));
 
 
     let rbfw_security_deposit_actual_amount = 0;
@@ -319,12 +319,12 @@ function calculateTotalResortExtraService() {
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
-        jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
+        jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
     }
 
 
-    jQuery('.subtotal .price-figure').text(rbfw_translation.currency + sub_total_price.toFixed(2));
-    jQuery('.total .price-figure').text(rbfw_translation.currency + total_price.toFixed(2));
+    jQuery('.subtotal .price-figure').text(wc_price_rbfw(sub_total_price));
+    jQuery('.total .price-figure').text(wc_price_rbfw(total_price));
 }
 
 
@@ -371,7 +371,7 @@ function calculateTotalManagementPriceResort() {
 
 
     jQuery('#rbfw_management_price_resort').val(rbfw_management_price.toFixed(2));
-    jQuery('.management-costing span').text(rbfw_translation.currency + rbfw_management_price.toFixed(2));
+    jQuery('.management-costing span').text(wc_price_rbfw(rbfw_management_price));
 
 
 
@@ -389,10 +389,10 @@ function calculateTotalManagementPriceResort() {
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
-        jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
+        jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
     }
 
 
-    jQuery('.subtotal .price-figure').text(rbfw_translation.currency + sub_total_price.toFixed(2));
-    jQuery('.total .price-figure').text(rbfw_translation.currency + total_price.toFixed(2));
+    jQuery('.subtotal .price-figure').text(wc_price_rbfw(sub_total_price));
+    jQuery('.total .price-figure').text(wc_price_rbfw(total_price));
 }

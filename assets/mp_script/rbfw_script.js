@@ -377,11 +377,71 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
 
                 let myTime = timeObj.time;  // 2:30 PM
 
-                // Split into hours and minutes
-                let [hours, minutes] = myTime.split(":").map(Number);
+                let [time, modifier] = myTime.split(" ");   // "2:30" and "PM"
+                let [hours, minutes] = time.split(":").map(Number);
 
-                // Create a JS Date object for formatting
+                if (modifier === "PM" && hours !== 12) {
+                    hours += 12;
+                }
+                if (modifier === "AM" && hours === 12) {
+                    hours = 0;
+                }
+
+
                 let date = new Date();
+
+                const h = parseInt(hours, 10);
+                const m = parseInt(minutes, 10);
+
+                if (!isNaN(h) && !isNaN(m)) {
+                    date.setHours(h);
+                    date.setMinutes(m);
+                    date.setSeconds(0);
+                } else {
+                    console.error("Invalid hours or minutes:", hours, minutes);
+                }
+
+                if (isNaN(date.getTime())) {
+                    console.error("Invalid Date generated:", date);
+                } else {
+                    sapecific_date_time = true;
+
+                    if (is_calendar === 'calendar') {
+                        const a = document.createElement("a");
+                        if (time_enable) {
+                            a.className = "rbfw_bikecarsd_time_disable";
+                            a.title = "Past Time";
+                        } else {
+                            a.className = "rbfw_bikecarsd_time";
+                        }
+                        a.setAttribute("data-time", timeObj.time);
+
+                        const span = document.createElement("span");
+                        span.className = "rbfw_bikecarsd_time_span";
+
+                        console.log('date', formatTime(date, rbfw_js_variables.timeFormat));
+
+                        span.textContent = formatTime(date, rbfw_js_variables.timeFormat);
+
+                        a.appendChild(span);
+                        timeSelect.appendChild(a);
+                    }else{
+                        const option = document.createElement("option");
+                        option.value = timeObj.time;
+                        option.textContent = formatTime(date, rbfw_js_variables.timeFormat); timeObj.time;
+                        option.disabled = time_enable;
+                        option.title = past_time;
+                        timeSelect.appendChild(option);
+                    }
+                }
+
+
+
+
+
+
+
+                /*let date = new Date();
                 date.setHours(hours);
                 date.setMinutes(minutes);
                 sapecific_date_time = true;
@@ -412,7 +472,7 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
                     option.disabled = time_enable;
                     option.title = past_time;
                     timeSelect.appendChild(option);
-                }
+                }*/
 
 
             }

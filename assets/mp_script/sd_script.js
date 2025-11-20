@@ -199,7 +199,7 @@
             }
             jQuery('#rbfw_item_quantity').html(quantity_options);
             jQuery('.rbfw_quantiry_area_sd .rbfw_sd_price_input').val(service_price);
-            jQuery('.rbfw_quantiry_area_sd .rbfw_sd_price').text(rbfw_translation.currency + service_price.toFixed(2));
+            jQuery('.rbfw_quantiry_area_sd .rbfw_sd_price').text(wc_price_rbfw(service_price));
             jQuery(".rbfw_quantiry_area_sd").show();
             jQuery(".rbfw_extra_service_sd").show();
             var rbfw_service_price = jQuery('#rbfw_item_quantity').val() * service_price;
@@ -484,10 +484,10 @@ function rbfw_price_calculation_sd(){
 
 
     jQuery('#rbfw_management_price').val(rbfw_management_price.toFixed(2));
-    jQuery('.management-costing span').text(rbfw_translation.currency + rbfw_management_price.toFixed(2));
+    jQuery('.management-costing span').text( wc_price_rbfw(rbfw_management_price));
 
-    jQuery('.duration-costing span').text(rbfw_translation.currency + rbfw_service_price.toFixed(2));
-    jQuery('.extra_service_cost span').text(rbfw_translation.currency + rbfw_es_service_price.toFixed(2));
+    jQuery('.duration-costing span').text(wc_price_rbfw(rbfw_service_price));
+    jQuery('.extra_service_cost span').text(wc_price_rbfw(rbfw_es_service_price));
 
 
     let rbfw_security_deposit_actual_amount = 0;
@@ -506,12 +506,12 @@ function rbfw_price_calculation_sd(){
 
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
-        jQuery('.security_deposit span').html(rbfw_translation.currency + parseFloat(rbfw_security_deposit_actual_amount).toFixed(2));
+        jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
     }
 
 
-    jQuery('.subtotal span').text(rbfw_translation.currency + sub_total_price.toFixed(2));
-    jQuery('.total span').text(rbfw_translation.currency + total_price.toFixed(2));
+    jQuery('.subtotal span').text(wc_price_rbfw(sub_total_price));
+    jQuery('.total span').text(wc_price_rbfw(total_price));
 }
 
 function datepicker_inline(){
@@ -586,7 +586,7 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
                     }
 
                     // Update displayed price
-                    $el.find('.price').text(rbfw_translation.currency + price);
+                    $el.find('.price').text(wc_price_rbfw(price));
                 }
             });
 

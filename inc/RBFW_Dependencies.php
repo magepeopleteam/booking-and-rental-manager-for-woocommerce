@@ -296,6 +296,7 @@ if (! class_exists('RBFW_Dependencies')) {
 						'currentDateTime' => $datetime->format('Y-m-d H:i:s'),
 						'currentDate' => $datetime->format('Y-m-d'),
                         'currency' => get_woocommerce_currency_symbol(),
+                        'currency_format'                 => get_option( 'woocommerce_currency_pos' ),
 					)
 				);
 
