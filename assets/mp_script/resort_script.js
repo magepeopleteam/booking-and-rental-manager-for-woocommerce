@@ -330,6 +330,11 @@ function calculateTotalResortExtraService() {
 
 jQuery(document).on('change', '.rbfw-management-price-resort', function() {
 
+    if (jQuery(this).hasClass('rbfw-fee-required')) {
+        jQuery(this).prop('checked', true);
+        e.preventDefault(); // prevent change
+    }
+
     var $checkbox = jQuery(this);
     var $parent = $checkbox.closest('.rbfw-checkbox'); // find the parent container
     var $managementQty = $parent.find('.rbfw-management-qty'); // hidden input to set yes/no

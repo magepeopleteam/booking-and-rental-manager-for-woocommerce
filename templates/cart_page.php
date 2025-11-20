@@ -10,6 +10,7 @@ $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_d
 
 do_action( 'rbfw_before_cart_item_display', $cart_item, $rbfw_id );
 
+
 $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['security_deposit_amount'] : '';
 $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_management_info'] : [];
 
@@ -958,3 +959,5 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
 
 
 <?php do_action( 'rbfw_after_cart_item_display', $cart_item ); ?>
+
+

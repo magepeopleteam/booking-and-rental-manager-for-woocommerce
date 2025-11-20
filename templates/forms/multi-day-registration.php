@@ -379,6 +379,8 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     <?php endif; ?>
 
 
+
+
                     <input type="hidden" name="rbfw_off_days" id="rbfw_off_days"  value='<?php echo esc_attr(rbfw_off_days($post_id)); ?>'>
                     <input type="hidden" name="rbfw_offday_range" id="rbfw_offday_range"  value='<?php echo esc_attr(rbfw_off_dates($post_id)); ?>'>
 
@@ -677,7 +679,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                     foreach ($rbfw_fee_data as $key=>$fee) { ?>
                                         <?php if(isset($fee['label'])){ ?>
                                             <tr>
-                                                <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
+                                                <td class="w_20">
                                                     <div class="label rbfw-checkbox">
                                                         <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][label]" value="<?php echo esc_attr($fee['label']); ?>">
                                                         <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][is_checked]" class="rbfw-management-qty" value="<?php echo (esc_attr($fee['priority'])=='required')?'yes':'' ?>">
@@ -686,7 +688,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                                         <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][frequency]"  value="<?php echo esc_attr($fee['frequency']); ?>">
                                                         <input type="hidden" name="rbfw_management_info[<?php echo esc_attr($c); ?>][refundable]"  value="<?php echo esc_attr($fee['refundable']); ?>">
                                                         <label class="switch">
-                                                            <input type="checkbox" <?php echo (esc_attr($fee['priority'])=='required')?'checked':'' ?>   class="rbfw-management-price rbfw-resource-price-multiple-qty key_value_<?php echo esc_attr($key+1); ?>"   data-price="<?php echo esc_attr($fee['amount']); ?>" data-name="<?php echo esc_attr($fee['label']); ?>" data-price_type="<?php echo esc_attr($fee['calculation_type']); ?>" data-frequency="<?php echo esc_attr($fee['frequency']); ?>">
+                                                            <input type="checkbox" <?php echo (esc_attr($fee['priority'])=='required')?'checked':'' ?>   class="rbfw-management-price <?php echo (esc_attr($fee['priority'])=='required')?'rbfw-fee-required':'' ?> key_value_<?php echo esc_attr($key+1); ?>"   data-price="<?php echo esc_attr($fee['amount']); ?>" data-name="<?php echo esc_attr($fee['label']); ?>" data-price_type="<?php echo esc_attr($fee['calculation_type']); ?>" data-frequency="<?php echo esc_attr($fee['frequency']); ?>">
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
@@ -694,21 +696,23 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                                 <td class="resource-title-qty">
                                                     <?php echo esc_html($fee['label']); ?>
                                                     <span class="rbfw-refundable">
-                                                        <?php
-                                                        if($fee['refundable']=='yes'){
-                                                            echo '(Refundable)';
-                                                        }else{
-                                                            echo '(Non refundable)';
-                                                        }
-                                                        ?>
+                                                        (<?php
+                                                            if($fee['refundable']=='yes'){
+                                                                esc_html_e('Refundable','booking-and-rental-manager-for-woocommerce');
+                                                            }else{
+                                                                esc_html_e('Non refundable','booking-and-rental-manager-for-woocommerce');
+                                                            }
+                                                            ?>
+                                                        -
+                                                            <?php
+                                                            if($fee['frequency']=='one-time'){
+                                                                esc_html_e('One Time','booking-and-rental-manager-for-woocommerce');
+                                                            }else{
+                                                                esc_html_e('Day Wise','booking-and-rental-manager-for-woocommerce');
+                                                            }
+                                                        ?>)
                                                     </span>
-                                                    <?php
-                                                    if($fee['frequency']=='one-time'){
-                                                        echo 'One Time';
-                                                    }else{
-                                                        echo 'Day Wise';
-                                                    }
-                                                    ?>
+
                                                 </td>
                                                 <td class="w_20">
                                                     <?php if($fee['calculation_type']=='fixed'){
@@ -753,6 +757,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 <span class="price-figure" data-price="">
                                 </span>
                             </li>
+
                             <li class="resource-costing rbfw-cond">
                                 <?php esc_html_e('Resource Cost','booking-and-rental-manager-for-woocommerce'); ?>
                                 <span class="price-figure" data-price="">
