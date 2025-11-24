@@ -132,6 +132,11 @@
         /*start single day hourly inventory managed*/
 
         jQuery(document).on('click', '.rbfw_service_type .single-type-timely', function(e) {
+
+            if (jQuery(this).hasClass('rbfw-sold-out')) {
+                return;
+            }
+
             let rbfw_bikecarsd_selected_date = jQuery('#rbfw_bikecarsd_selected_date').val();
             let time_slot_switch = jQuery('#rbfw_time_slot_switch').val();
             if(rbfw_bikecarsd_selected_date==''){
@@ -558,37 +563,39 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
             var service_info = response.service_info;
             var extra_service_info = response.extra_service_info;
 
-            jQuery('.single-type-timely, .sold-out').each(function () {
+
+            jQuery('.single-type-timely').each(function() {
                 var $el = jQuery(this);
 
-                // Get the type safely (from data-text or fallback to .text())
-                var type = ($el.data('text') || $el.text() || '').trim();
+                // Get the type from the data-text attribute
+                var type = $el.data('text'); // e.g., "type 1"
 
-                // Ensure the type exists in service_info
-                if (service_info.hasOwnProperty(type)) {
-                    var info = service_info[type];
-                    var price = info.price || 0;
-                    var stock = parseInt(info.stock, 10) || 0;
-
+                if (service_info[type]) {
                     // Update attributes
-                    $el.attr({
-                        'data-price': price,
-                        'data-available_quantity': stock
-                    });
+                    $el.attr('data-price', service_info[type].price);
+                    $el.attr('data-available_quantity', service_info[type].stock);
 
-                    // Update display based on stock
-                    if (stock <= 0) {
-                        $el.removeClass('single-type-timely').addClass('sold-out');
+                    if(service_info[type].stock==0){
                         $el.find('.rent-type').text(type + ' (Sold Out)');
-                    } else {
-                        $el.addClass('single-type-timely').removeClass('sold-out');
+
+                        $el.addClass('rbfw-sold-out');
+
+
+
+
+                    }else{
                         $el.find('.rent-type').text(type);
+
+                        $el.removeClass('rbfw-sold-out');
                     }
 
-                    // Update displayed price
-                    $el.find('.price').text(wc_price_rbfw(price));
+
+                    // (Optional) Update displayed price text
+                    $el.find('.price').text(rbfw_translation.currency + service_info[type].price);
                 }
             });
+
+
 
             //jQuery('.rbfw_service_type_timely').html(response);
             jQuery('button.rbfw_bikecarsd_book_now_btn').attr('disabled',true);
