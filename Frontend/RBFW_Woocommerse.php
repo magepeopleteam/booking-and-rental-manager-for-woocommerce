@@ -281,7 +281,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_bikecarsd_service_price                    = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_service_price' );
 
 
+
                 $sub_total_price = $rbfw_bikecarsd_duration_price + $rbfw_bikecarsd_service_price;
+
+
 
                 $rbfw_management_info_all = (isset( $sd_input_data_sabitized['rbfw_management_info'] ) && is_array( $sd_input_data_sabitized['rbfw_management_info'] ) ) ? $sd_input_data_sabitized['rbfw_management_info'] : [];
 
@@ -514,9 +517,9 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $service_name = $key; //Service1
                     if ( array_key_exists( $service_name, $extra_services ) ) { // if Service1 exist in array
                         if ( $rbfw_item_quantity > 1 && (int) $extra_services[ $service_name ] == 1 && $rbfw_enable_extra_service_qty != 'yes' ) {
-                            $rbfw_extra_service_price += (int) $rbfw_item_quantity * (float) $value; // quantity * price
+                            $rbfw_extra_service_price +=  $rbfw_item_quantity * (float) $value; // quantity * price
                         } else {
-                            $rbfw_extra_service_price += (int) $extra_services[ $service_name ] * (float) $value; // quantity * price
+                            $rbfw_extra_service_price +=  $extra_services[ $service_name ] * (float) $value; // quantity * price
                         }
                     }
                 }
@@ -539,6 +542,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                         $i ++;
                     }
                 }
+
+
 
                 $sub_total_price = $rbfw_duration_price + $rbfw_service_price + $rbfw_extra_service_price;
 

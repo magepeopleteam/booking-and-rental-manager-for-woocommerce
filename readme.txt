@@ -215,6 +215,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.5.7
+Currency position problem solved.
+Decimal pricing calculation problem solved.
+Soldout problem solbed in single day.
+
 2.5.6
 Date language problem solved.
 Currency position problem solved.
