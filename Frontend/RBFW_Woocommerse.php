@@ -16,7 +16,7 @@ if (!class_exists('RBFW_Woocommerce')) {
             add_action( 'woocommerce_after_checkout_validation', array($this ,  'rbfw_validation_before_checkout') );
             add_action( 'woocommerce_checkout_create_order_line_item', array($this ,  'rbfw_add_order_item_data'), 90, 4 );
             add_action( 'woocommerce_before_thankyou', array($this ,  'rbfw_booking_management') );
-            //add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management' );
+            add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management' );
             add_action( 'rbfw_wc_order_status_change', array($this ,  'rbfw_change_user_order_status_on_order_status_change'), 10, 3 );
         }
 
@@ -1273,6 +1273,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
             } else {
+
                 $rbfw_extra_service_data = get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_extra_service_data', true ) : array();
                 if ( ! empty( $rbfw_extra_service_data ) ) {
                     $extra_services = array_column( $rbfw_extra_service_data, 'service_price', 'service_name' );
@@ -1450,6 +1451,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_regf_info_content .= '</table>';
                 $item->add_meta_data( rbfw_string_return( 'rbfw_text_customer_information', esc_html__( 'Customer Information', 'booking-and-rental-manager-for-woocommerce' ) ), $rbfw_regf_info_content );
             }
+
         }
         public   function rbfw_cart_ticket_info( $product_id, $rbfw_pickup_start_date, $rbfw_pickup_end_date, $rbfw_pickup_start_time, $rbfw_pickup_end_time, $rbfw_pickup_point, $rbfw_dropoff_point, $rbfw_item_quantity, $rbfw_duration_price, $rbfw_service_price, $total_price, $rbfw_service_info, $variation_info, $discount_type = null, $discount_amount = null, $rbfw_regf_info = array(), $rbfw_service_infos = null, $total_days = 0, $security_deposit = [], $rbfw_management_info =[], $rbfw_management_price=0 ) {
             global $rbfw;
@@ -1593,7 +1595,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 rbfw_update_inventory( $rbfw_post_id, $order_status );
             }
         }
-        public  function rbfw_booking_management( $wc_order_id ) {
+        public  function rbfw_booking_management( $wc_order_id ) { echo 'ddddd';exit;
             global $rbfw;
             $post = get_post( $wc_order_id );
             if ( $post ) {

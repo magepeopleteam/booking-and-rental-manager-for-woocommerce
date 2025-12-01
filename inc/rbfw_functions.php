@@ -61,6 +61,7 @@
 				'style'   => true, // Allows inline styles
 				'class'   => true,
 				'onclick' => true, // Allows inline JavaScript
+				'for' => true, // Allows inline JavaScript
 			),
 			'i'       => array(
 				'style'   => true, // Allows inline styles
@@ -108,6 +109,8 @@
 				'placeholder' => true,
 				'checked' => true,
 				'required' => true,
+				'data-rbfw-guard' => true,
+				'data-rbfw-guard-target' => true,
 			),
             'select'   => array(
                 'style'       => true, // Allows inline styles
@@ -2557,7 +2560,7 @@ function rbfw_url_exclude_search_engine() {
 			return false;
 		}
 	}
-	add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );
+add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );
 	function rbfw_update_order_status( $order_id ) {
 		$order          = wc_get_order( $order_id );
 		$current_status = $order->get_status();
@@ -2962,8 +2965,9 @@ function rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $d
 }
 
 function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
+
     if (!empty($seasonal_prices) && ($sp_price = check_seasonal_price($date, $seasonal_prices, $hours, $enable_daily)) !== 'not_found') {
-        return $sp_price;
+        return 5;
     }
     $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
     $custom_rate = get_post_meta($post_id, "rbfw_{$day}_daily_rate", true);
@@ -3011,7 +3015,9 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
 			$rbfw_sp_end_date   = $rbfw_sp_price['rbfw_sp_end_date'];
 			$sp_dates_array     = getAllDates( $rbfw_sp_start_date, $rbfw_sp_end_date );
 
+
 			if ( in_array( $Book_date, $sp_dates_array ) ) {
+
 
                 $daily_rate = $rbfw_sp_price['rbfw_sp_price_d'] ?: 0;
                 $hourly_rate = $rbfw_sp_price['rbfw_sp_price_h'] ?: 0;
@@ -3031,7 +3037,7 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
 					if ( $rbfw_enable_daily_rate == 'no' ) {
 						return $hourly_rate * 24;
 					} else {
-						return $hourly_rate;
+						return $daily_rate;
 					}
 				}
 			}

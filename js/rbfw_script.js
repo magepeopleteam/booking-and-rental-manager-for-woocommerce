@@ -524,9 +524,9 @@ function rbfw_aig_currentSlide(n) {
 
 function wc_price_rbfw(price) {
     if(rbfw_js_variables.currency_format=='left'){
-        return rbfw_js_variables.currency + price.toFixed(2)
+        return rbfw_js_variables.currency + price.toFixed(rbfw_js_variables.price_decimals)
     }else{
-        return price.toFixed(2) + rbfw_js_variables.currency;
+        return price.toFixed(rbfw_js_variables.price_decimals) + rbfw_js_variables.currency;
     }
 }
 

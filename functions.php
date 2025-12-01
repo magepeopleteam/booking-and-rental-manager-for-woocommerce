@@ -11,6 +11,11 @@ function rbfw_woo_install_check() {
     }
 }
 
+add_filter( 'woocommerce_get_checkout_order_received_url', 'rbfw_force_default_order_received_url', 10, 2 );
+function rbfw_force_default_order_received_url( $url, $order ) {
+    return $order->get_checkout_order_received_url();
+}
+
 
 function want_loco_translate()
 {
