@@ -115,12 +115,7 @@
 					$post_id               = sanitize_text_field( wp_unslash($_POST['post_id']));
 
 
-                    $rbfw_feature_category = get_post_meta( $post_id, 'rbfw_feature_category', true ) ? get_post_meta( $post_id,
-                        'rbfw_feature_category', true )  : [];
-
-                    if ( is_serialized( $rbfw_feature_category ) ) {
-                        $rbfw_feature_category = unserialize( $rbfw_feature_category, [ 'allowed_classes' => false ] );
-                    }
+                    $rbfw_feature_category = rbfw_get_feature_category_meta( $post_id );
 
 
 
@@ -458,8 +453,7 @@
 					}
 					$price = $smallest_price;
 				endif;
-				$rbfw_feature_category = get_post_meta( $post_id, 'rbfw_feature_category', true ) ? maybe_unserialize( get_post_meta( $post_id,
-					'rbfw_feature_category', true ) ) : [];
+				$rbfw_feature_category = rbfw_get_feature_category_meta( $post_id );
 				if ( $rbfw_rent_type != 'resort' && $rbfw_rent_type != 'bike_car_sd' && $rbfw_rent_type != 'appointment' ) {
 					$price_level = $the_price_label;
 				} elseif ( $rbfw_rent_type == 'resort' && ! empty( $rbfw_room_data ) ) {

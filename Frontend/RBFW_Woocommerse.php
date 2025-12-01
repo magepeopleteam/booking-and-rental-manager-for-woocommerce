@@ -1595,7 +1595,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 rbfw_update_inventory( $rbfw_post_id, $order_status );
             }
         }
-        public  function rbfw_booking_management( $wc_order_id ) { echo 'ddddd';exit;
+        public  function rbfw_booking_management( $wc_order_id ) {
             global $rbfw;
             $post = get_post( $wc_order_id );
             if ( $post ) {

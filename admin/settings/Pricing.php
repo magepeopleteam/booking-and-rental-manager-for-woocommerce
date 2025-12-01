@@ -1939,6 +1939,8 @@
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
+                    echo '<pre>';print_r($_POST);echo '<pre>';exit;
+
 					$input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
 
                     $rbfw_enable_monthly_rate                  = isset( $_POST['rbfw_enable_monthly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_monthly_rate'] ) ) : 'no';

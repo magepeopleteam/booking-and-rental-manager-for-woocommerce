@@ -82,7 +82,7 @@
 			}
 
 			public function feature_lists($post_id){
-				$rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
+				$rbfw_feature_category = rbfw_get_feature_category_meta( $post_id );
 				?>
 				<div class="rbfw-features" >
 					<div class="rbfw-single-left-information-item">

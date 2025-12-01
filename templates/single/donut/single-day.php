@@ -10,7 +10,7 @@
 	$rbfw_id                 = $post_id;
 	$post_title              = get_the_title();
 	$post_content            = get_the_content();
-	$rbfw_feature_category   = get_post_meta( $post_id, 'rbfw_feature_category', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_feature_category', true ) ) : [];
+	$rbfw_feature_category   = rbfw_get_feature_category_meta( $post_id );
 	$rbfw_enable_faq_content = get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) ? get_post_meta( $post_id, 'rbfw_enable_faq_content', true ) : 'no';
 	$slide_style             = $rbfw->get_option_trans( 'super_slider_style', 'super_slider_settings' );
 	$post_review_rating      = function_exists( 'rbfw_review_display_average_rating' ) ? rbfw_review_display_average_rating() : '';
