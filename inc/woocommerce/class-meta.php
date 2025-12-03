@@ -57,37 +57,6 @@ if ( ! class_exists( 'RBFW_WC_Meta' ) ) {
                     ),
                 );
             }
-
-
-            $rbfw_tax_meta_boxs = array(
-                'page_nav' => esc_html__( 'Tax', 'booking-and-rental-manager-for-woocommerce' ),
-                'priority' => 10,
-                'sections' => array(
-                    'section_2' => array(
-                        'title'       => esc_html__( 'Tax Configuration', 'booking-and-rental-manager-for-woocommerce' ),
-                        'description' => esc_html__( 'desc', 'booking-and-rental-manager-for-woocommerce' ),
-                        'options'     => $the_array
-                    ),
-                
-                ),
-            );
-            
-            /*$rbfw_tax_meta_boxs_args = array(
-                'meta_box_id'    => 'rbfw_tax_meta_boxes',
-                'meta_box_title' => '<i class="fas fa-file-lines"></i>'. esc_html__( 'Tax', 'booking-and-rental-manager-for-woocommerce' ),
-                'screen'         => array( 'rbfw_item' ),
-                'context'        => 'normal',
-                'priority'       => 'low',
-                'callback_args'  => array(),
-                'nav_position'   => 'none', // right, top, left, none
-                'item_name'      => "MagePeople",
-                'item_version'   => "2.0",
-                'panels'         => array(
-                    'rbfw_tax_meta_boxs' => $rbfw_tax_meta_boxs
-                ),
-            );
-            
-            new RMFWAddMetaBox( $rbfw_tax_meta_boxs_args );*/
         }
     }
     new RBFW_WC_Meta();

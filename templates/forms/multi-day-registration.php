@@ -828,8 +828,12 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                             $date = new DateTime("$year-$month-01");
                             $date->modify('+1 month');
                             $year = $date->format('Y');
-                            $month = $month + 1;
-
+                            if($month == 12){
+                                $year = $year +1;
+                                $month = 1;
+                            }else{
+                                $month = $month + 1;
+                            }
                             $total_days_month = 30;
                             if (function_exists('cal_days_in_month')) {
                                 $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);

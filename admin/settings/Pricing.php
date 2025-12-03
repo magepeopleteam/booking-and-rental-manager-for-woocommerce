@@ -1939,8 +1939,6 @@
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 
-                    echo '<pre>';print_r($_POST);echo '<pre>';exit;
-
 					$input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
 
                     $rbfw_enable_monthly_rate                  = isset( $_POST['rbfw_enable_monthly_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_monthly_rate'] ) ) : 'no';
@@ -2013,7 +2011,7 @@
 
                     if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others') {
                         $rbfw_particular_switch = isset($_POST['rbfw_particular_switch_md']) ? sanitize_text_field(wp_unslash($_POST['rbfw_particular_switch_md'])) : 'off';
-                   }elseif ($rbfw_item_type=='multiple_items'){
+                    }elseif ($rbfw_item_type=='multiple_items'){
                         $rbfw_particular_switch = isset($_POST['rbfw_particular_switch_mi']) ? sanitize_text_field(wp_unslash($_POST['rbfw_particular_switch_mi'])) : 'off';
                     }elseif ($rbfw_item_type=='bike_car_sd' || $rbfw_item_type=='appointment'){
                         $rbfw_particular_switch = isset($_POST['rbfw_particular_switch_sd']) ? sanitize_text_field(wp_unslash($_POST['rbfw_particular_switch_sd'])) : 'off';

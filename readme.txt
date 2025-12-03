@@ -215,6 +215,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.5.8
+Vernulable issue solved.
+Calandar soldout problem solved.
+
+
 2.5.7
 Currency position problem solved.
 Decimal pricing calculation problem solved.
