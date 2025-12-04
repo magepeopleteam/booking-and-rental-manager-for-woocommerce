@@ -19,8 +19,8 @@ if (! class_exists('RBFW_Dependencies')) {
 		{
 			//font awesome
 			wp_enqueue_style('fontawesome.v6', RBFW_PLUGIN_URL . '/assets/font-awesome/all.min.css');
-			// wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
-			// wp_enqueue_script( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.js', array(), time(), true );
+
+
 			wp_enqueue_script('jquery-ui-core');
 			wp_enqueue_script('jquery-ui-datepicker');
 			wp_enqueue_script('jquery-ui-accordion');
@@ -192,7 +192,8 @@ if (! class_exists('RBFW_Dependencies')) {
 				'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
 				'select_pickup_date' => __('Please select the pickup date!', 'booking-and-rental-manager-for-woocommerce'),
 				'filter' => __('Filter', 'booking-and-rental-manager-for-woocommerce'),
-				'currency' => get_woocommerce_currency_symbol()
+				'currency' => get_woocommerce_currency_symbol(),
+
 			));
 
 
@@ -298,6 +299,7 @@ if (! class_exists('RBFW_Dependencies')) {
 						'currentDate' => $datetime->format('Y-m-d'),
                         'currency' => get_woocommerce_currency_symbol(),
                         'currency_format'                 => get_option( 'woocommerce_currency_pos' ),
+                        'price_decimals' => wc_get_price_decimals()
 					)
 				);
 
@@ -318,11 +320,9 @@ if (! class_exists('RBFW_Dependencies')) {
 
 				));
 				//font awesome
-				// wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/css/all.min.css' );
-				// wp_enqueue_style('fontawesome.v6',  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css');
-				wp_enqueue_style('fontawesome.v6', RBFW_PLUGIN_URL . '/assets/font-awesome/all.min.css');
+
+                wp_enqueue_style('fontawesome.v6', RBFW_PLUGIN_URL . '/assets/font-awesome/all.min.css');
 				wp_enqueue_style('flatpickr-css', RBFW_PLUGIN_URL . '/css/flatpickr.min.css', array(), null);
-				//wp_enqueue_style( 'fontawesome.v6', RBFW_PLUGIN_URL . '/assets/all.min.css', array(), null );
 				wp_enqueue_script('flatpickr-js', RBFW_PLUGIN_URL . '/assets/flatpickr.js', array('jquery'), null, true);
 				wp_enqueue_script(
 					'jquery-ui-dialog', // WordPress default jQuery UI component (can change based on need, e.g., 'jquery-ui-dialog', 'jquery-ui-datepicker', etc.)

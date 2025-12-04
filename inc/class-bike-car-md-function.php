@@ -123,6 +123,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $duration_price_info = rbfw_md_duration_price_calculation($post_id,$pickup_datetime,$dropoff_datetime,$start_date,$end_date,$star_time,$end_time,$rbfw_enable_time_slot);
 
 
+            //echo '<pre>';print_r($duration_price_info);echo '<pre>';exit;
 
             $duration_price = $duration_price_info['duration_price'] * $item_quantity;
 

@@ -351,7 +351,6 @@
 
 									<th><?php echo esc_html__( 'Priority', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									<th><?php echo esc_html__( 'Options', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-									<th><?php echo esc_html__( 'Status', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 									<th><?php echo esc_html__( 'Actions', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
 								</tr>
 							</thead>
@@ -446,7 +445,6 @@
 					<td>
 						<div class="wprently_fee-options">
 							<div class="wprently_fee-option-item">
-								<label class="wprently_fee-option-label"><?php echo esc_html__( 'Refundable', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 								<label class="wprently_fee-toggle">
 									<input type="checkbox" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][refundable]" value="<?php echo esc_attr( $refundable ); ?>" <?php checked( $refundable, 'yes' ); ?> onchange="rbfwUpdateRefundableStatus(this)">
 									<span class="wprently_fee-slider"></span>
@@ -465,17 +463,7 @@
 						<input type="hidden" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][icon]" value="<?php echo esc_attr( $icon ); ?>">
 						<input type="hidden" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][color]" value="<?php echo esc_attr( $color ); ?>">
 					</td>
-					<td>
-						<div class="wprently_fee-status">
-							<label class="wprently_fee-toggle">
-								<input type="checkbox" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][status]" value="<?php echo esc_attr( $status ); ?>" <?php checked( $status, 'active' ); ?> onchange="rbfwUpdateStatus(this)">
-								<span class="wprently_fee-slider"></span>
-							</label>
-							<div class="wprently_fee-status-badge <?php echo esc_attr( $status ); ?>">
-								<span class="wprently_fee-status-dot"></span><?php echo esc_html( ucfirst( $status ) ); ?>
-							</div>
-						</div>
-					</td>
+
 					<td>
 						<div class="mp_event_remove_move">
 							<button type="button" class="button" onclick="rbfwDuplicateFeeRow(this)" title="<?php echo esc_attr__( 'Duplicate', 'booking-and-rental-manager-for-woocommerce' ); ?>">⎘</button>

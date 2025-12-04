@@ -2,7 +2,6 @@
 	/*
 	* @Author 	:	MagePeople Team
 	* Copyright	: 	mage-people.com
-	* Developer :   Mahin and Ariful
 	* Version	:	1.0.0
 	*/
 	if ( ! defined( 'ABSPATH' ) ) {

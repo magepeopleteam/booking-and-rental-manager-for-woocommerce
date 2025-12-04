@@ -158,7 +158,7 @@ if(!empty($rbfw_bike_car_sd_data) && ($rbfw_rent_type == 'bike_car_sd' || $rbfw_
     $price = $smallest_price;
 endif;
 
-$rbfw_feature_category = get_post_meta($post_id,'rbfw_feature_category',true) ? maybe_unserialize(get_post_meta($post_id, 'rbfw_feature_category', true)) : [];
+$rbfw_feature_category = rbfw_get_feature_category_meta( $post_id );
 ?>
 
 <div class="rbfw_rent_list_col rbfw_grid_list_col_<?php echo esc_attr($d); ?>">

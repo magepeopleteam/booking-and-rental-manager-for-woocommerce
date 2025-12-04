@@ -356,10 +356,11 @@
 					return;
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-					$rbfw_categories = isset( $_POST['rbfw_categories'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_categories'] ) : [];
+					$rbfw_categories = isset( $_POST['rbfw_categories'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_categories'] ) ) : [];
 					wp_set_object_terms( $post_id, $rbfw_categories, 'rbfw_item_caregory' );
-					$feature_category = isset( $_POST['rbfw_feature_category'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_feature_category'] ) : [];
-					$sub_title = isset( $_POST['rbfw_item_sub_title'] ) ? RBFW_Function::data_sanitize( $_POST['rbfw_item_sub_title'] ) : '';
+					$feature_category_input = isset( $_POST['rbfw_feature_category'] ) ? wp_unslash( $_POST['rbfw_feature_category'] ) : array();
+					$feature_category = rbfw_prepare_feature_category_meta_value( $feature_category_input );
+					$sub_title = isset( $_POST['rbfw_item_sub_title'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_item_sub_title'] ) ) : '';
 					update_post_meta( $post_id, 'rbfw_item_sub_title', $sub_title );
 					update_post_meta( $post_id, 'rbfw_categories', $rbfw_categories );
 					update_post_meta( $post_id, 'rbfw_feature_category', $feature_category );
