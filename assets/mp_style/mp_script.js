@@ -313,7 +313,7 @@ function mp_all_content_change($this) {
 				pageScrollTo(tabsContent);
 				parent.height('auto').promise().done(function () {
 					loadBgImage();
-					mp_sticky_management();
+					//mp_sticky_management();
 					dLoaderRemove(parent);
 				});
 			});
