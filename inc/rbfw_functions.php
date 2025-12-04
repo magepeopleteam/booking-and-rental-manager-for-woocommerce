@@ -3186,16 +3186,21 @@ function get_rbfw_post_categories_from_meta() {
         // Get the meta value (string like "Car,Bike,Resort")
         $value = get_post_meta($post_id, 'rbfw_categories', true);
 
-        $value = $value[0];
-
-        if (!empty($value)) {
-
-            // Convert comma separated string to array
-            $items = array_map('trim', explode(',', $value));
-
-            // Merge into main list
-            $output = array_merge($output, $items);
+        // Handle case where meta value might be an array or string
+        if (is_array($value) && isset($value[0])) {
+            $value = $value[0];
         }
+        
+        // Skip if value is empty or not a string
+        if (empty($value) || !is_string($value)) {
+            continue;
+        }
+
+        // Convert comma separated string to array
+        $items = array_map('trim', explode(',', $value));
+
+        // Merge into main list
+        $output = array_merge($output, $items);
     }
 
     // Remove duplicates, empty values and reindex
@@ -3672,4 +3677,93 @@ function rbfw_enqueue_reset_orders_assets( $hook ) {
 			'unknown_error' => __( 'An unknown error occurred.', 'booking-and-rental-manager-for-woocommerce' )
 		)
 	) );
+}
+
+if ( ! function_exists( 'rbfw_get_partial_payment_overview' ) ) {
+	/**
+	 * Build a normalized summary of MEPP partial payments for a WooCommerce order.
+	 *
+	 * @param int|WC_Order $order WooCommerce order instance or ID.
+	 *
+	 * @return array
+	 */
+	function rbfw_get_partial_payment_overview( $order ) {
+		if ( empty( $order ) ) {
+			return array();
+		}
+
+		if ( is_numeric( $order ) ) {
+			$order = wc_get_order( $order );
+		}
+
+		if ( ! $order instanceof WC_Order ) {
+			return array();
+		}
+
+		if ( 'yes' !== $order->get_meta( '_mepp_order_has_deposit', true ) ) {
+			return array();
+		}
+
+		$payment_schedule = $order->get_meta( '_mepp_payment_schedule', true );
+		if ( empty( $payment_schedule ) || ! is_array( $payment_schedule ) ) {
+			return array();
+		}
+
+		$summary = array(
+			'currency'    => $order->get_currency(),
+			'order_total' => (float) $order->get_total(),
+			'paid_total'  => 0,
+			'due_total'   => 0,
+			'payments'    => array(),
+			'has_deposit' => true,
+		);
+
+		foreach ( $payment_schedule as $timestamp => $payment ) {
+			if ( empty( $payment['id'] ) ) {
+				continue;
+			}
+
+			$payment_order = wc_get_order( $payment['id'] );
+			if ( ! $payment_order ) {
+				continue;
+			}
+
+			$payment_total  = (float) $payment_order->get_total();
+			$refunded_total = (float) $payment_order->get_total_refunded();
+			$net_total      = max( $payment_total - $refunded_total, 0 );
+			$payment_status = $payment_order->get_status();
+			$status_label   = function_exists( 'wc_get_order_status_name' ) ? wc_get_order_status_name( $payment_status ) : ucfirst( $payment_status );
+			$payment_method = $payment_order->get_payment_method_title();
+
+			if ( ! empty( $payment['timestamp'] ) && is_numeric( $payment['timestamp'] ) ) {
+				$label = date_i18n( wc_date_format(), (int) $payment['timestamp'] );
+			} elseif ( ! empty( $payment['title'] ) ) {
+				$label = $payment['title'];
+			} else {
+				$label = __( 'Scheduled payment', 'booking-and-rental-manager-for-woocommerce' );
+			}
+
+			$summary['payments'][] = array(
+				'title'        => $label,
+				'order_id'     => $payment_order->get_id(),
+				'order_number' => $payment_order->get_order_number(),
+				'amount'       => $net_total,
+				'status'       => $payment_status,
+				'status_label' => $status_label,
+				'method'       => $payment_method,
+			);
+
+			if ( ! in_array( $payment_status, array( 'pending', 'failed', 'cancelled', 'refunded' ), true ) ) {
+				$summary['paid_total'] += $net_total;
+			}
+		}
+
+		if ( empty( $summary['payments'] ) ) {
+			return array();
+		}
+
+		$summary['due_total'] = max( $summary['order_total'] - $summary['paid_total'], 0 );
+
+		return $summary;
+	}
 }

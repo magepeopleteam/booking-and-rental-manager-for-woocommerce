@@ -393,7 +393,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
 
         <script>
-            const total_actual_post = "<?php echo $total_actual_post ?>";
+            const total_actual_post = <?php echo absint( $total_actual_post ); ?>;
             document.getElementById("rbfw_total_post").innerHTML = `${total_actual_post}`;
             document.getElementById("rbfw_total_post2").innerHTML = `${total_actual_post}`;
         </script>
@@ -482,7 +482,7 @@ function rbfw_add_to_cart_shortcode_func($atts){
 
 
 
-    if (defined('add_to_cart_id')) {
+    if (!defined('add_to_cart_id')) {
         define("add_to_cart_id", $post_id);
     }
 
@@ -579,14 +579,19 @@ function rbfw_rent_search_shortcode( $atts = null ){
         $start_date = sanitize_text_field( wp_unslash($_GET['rbfw_pickup_date_search'])) ?? '';
         $end_date = sanitize_text_field( wp_unslash($_GET['rbfw_dropoff_date_search'])) ?? '';
 
-        $redirect_url = add_query_arg(
-            array(
-                'rbfw_start_date' => $start_date,
-                'rbfw_end_date' => $end_date
-            ),
-            $search_item
-        );
-        wp_redirect($redirect_url);
+        // Validate and sanitize the URL to prevent open redirect vulnerabilities
+        if ( ! empty( $search_item ) ) {
+            $redirect_url = add_query_arg(
+                array(
+                    'rbfw_start_date' => $start_date,
+                    'rbfw_end_date' => $end_date
+                ),
+                esc_url_raw( $search_item )
+            );
+            // wp_safe_redirect automatically validates that the URL is internal to prevent open redirects
+            wp_safe_redirect( $redirect_url );
+            exit;
+        }
     }
 
 

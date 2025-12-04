@@ -901,14 +901,26 @@ function rbfw_check_available_by_specific_date_md($post_id, $specific_date = nul
     }
 
 
-    $rbfw_inventory = !empty(get_post_meta($post_id, 'rbfw_inventory', true)) ? get_post_meta($post_id, 'rbfw_inventory', true) : [];
+    $rbfw_inventory = get_post_meta($post_id, 'rbfw_inventory', true);
+    
+    // Ensure $rbfw_inventory is an array
+    if (!is_array($rbfw_inventory)) {
+        // Try to unserialize if it's a serialized string
+        if (is_string($rbfw_inventory) && !empty($rbfw_inventory)) {
+            $rbfw_inventory = maybe_unserialize($rbfw_inventory);
+        }
+        // If still not an array, set to empty array
+        if (!is_array($rbfw_inventory)) {
+            $rbfw_inventory = [];
+        }
+    }
 
     $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
 
     $remaining_item_stock = $rbfw_item_stock_quantity;
     $sold_item_qty = 0;
 
-    if(!empty($rbfw_inventory)){
+    if(!empty($rbfw_inventory) && is_array($rbfw_inventory)){
         foreach ($rbfw_inventory as $key => $inventory) {
             $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
 
