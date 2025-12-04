@@ -591,7 +591,7 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
 
 
                     // (Optional) Update displayed price text
-                    $el.find('.price').text(rbfw_translation.currency + service_info[type].price);
+                    $el.find('.price').text(rbfw_js_variables.currency + service_info[type].price);
                 }
             });
 

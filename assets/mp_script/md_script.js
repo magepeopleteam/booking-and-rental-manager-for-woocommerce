@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const total = (qty * durationQty *  pricePerUnit).toFixed(2);
 
-                summaryHtml += `<li class="item-type"><span>${itemName}</span> <span>${qty} x ${durationQty} x <span>${rbfw_translation.currency}${pricePerUnit}</span> = <span>${rbfw_translation.currency}${total}</span></li>`;
+                summaryHtml += `<li class="item-type"><span>${itemName}</span> <span>${qty} x ${durationQty} x <span>${rbfw_js_variables.currency}${pricePerUnit}</span> = <span>${rbfw_js_variables.currency}${total}</span></li>`;
 
                 hasItems = true;
             }
