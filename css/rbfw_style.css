@@ -6808,6 +6808,7 @@ h2.rbfw_rent_list_grid_title a{
 .rbfw_rent_list_grid_row {
     display: inline-flex;
     align-items: flex-end;
+    flex-wrap: wrap;
     gap: 4px;
 }
 
