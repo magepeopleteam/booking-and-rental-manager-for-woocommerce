@@ -553,13 +553,13 @@ jQuery(document).on('click', '#add-date-range-row',function(e){
 });
 
 
-jQuery(document).on('click', '.remove-row',function(e){
+/*jQuery(document).on('click', '.remove-row',function(e){
     if (confirm('Are You Sure , Remove this row ? \n\n 1. Ok : To Remove . \n 2. Cancel : To Cancel .')) {
         jQuery(this).parents('.off_date_range_child').remove();
     } else {
         return false;
     }
-});
+});*/
 
 jQuery(document).on("click", ".rbfw_off_days_range", function (e) {
     jQuery(this).datepicker({

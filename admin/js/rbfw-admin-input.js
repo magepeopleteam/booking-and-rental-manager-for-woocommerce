@@ -16,11 +16,11 @@
         }
 
         if($('.enable_specific_duration').val()==='on'){
-            $('.rbfw_time_inventory_enable.durstion_disable').hide();
+            $('.rbfw_time_inventory_enable.duration_disable').hide();
             $('.rbfw_time_inventory_enable.duration_enable').show()
         }
         if($('.enable_specific_duration').val()==='off'){
-            $('.rbfw_time_inventory_enable.durstion_disable').show();
+            $('.rbfw_time_inventory_enable.duration_disable').show();
             $('.rbfw_time_inventory_enable.duration_enable').hide()
         }
     });

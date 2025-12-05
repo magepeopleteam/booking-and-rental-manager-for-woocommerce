@@ -169,13 +169,11 @@
                 'class'          => true,
             ),
 
-            'figure'   => array(
-                'id'          => true,
+            'form'   => array(
+                'method'          => true,
+                'action'          => true,
                 'class'          => true,
             ),
-
-
-
 
 
 		);
