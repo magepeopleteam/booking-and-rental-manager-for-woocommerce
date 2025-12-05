@@ -192,8 +192,6 @@ if (! class_exists('RBFW_Dependencies')) {
 				'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
 				'select_pickup_date' => __('Please select the pickup date!', 'booking-and-rental-manager-for-woocommerce'),
 				'filter' => __('Filter', 'booking-and-rental-manager-for-woocommerce'),
-				'currency' => get_woocommerce_currency_symbol(),
-
 			));
 
 
@@ -302,6 +300,7 @@ if (! class_exists('RBFW_Dependencies')) {
                         'price_decimals' => wc_get_price_decimals()
 					)
 				);
+
 
 				wp_localize_script('jquery', 'rbfw_ajax_front', array(
 					'rbfw_ajaxurl' => admin_url('admin-ajax.php'),
