@@ -1399,19 +1399,25 @@ if (!class_exists('RBFW_Woocommerce')) {
                 if ( $rbfw_service_price ) {
                     $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_resource_cost', 'rbfw_basic_translation_settings', esc_html__( 'Resource Cost', 'booking-and-rental-manager-for-woocommerce' ) ), wc_price( $rbfw_service_price ) );
                 }
-                $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings', esc_html__( 'Discount', 'booking-and-rental-manager-for-woocommerce' ) ), wc_price( $discount_amount ) );
+                if($discount_amount){
+                    $item->add_meta_data( $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings', esc_html__( 'Discount', 'booking-and-rental-manager-for-woocommerce' ) ), wc_price( $discount_amount ) );
+                }
 
-                $fee_management_label = esc_html__( 'Fee Management Cost', 'booking-and-rental-manager-for-woocommerce' );
+                if($rbfw_management_price){
+                    $fee_management_label = esc_html__( 'Fee Management Cost', 'booking-and-rental-manager-for-woocommerce' );
+                    $item->add_meta_data(
+                        esc_html( $fee_management_label ),
+                        wc_price($rbfw_management_price)
+                    );
+                }
 
-                $item->add_meta_data(
-                    esc_html( $fee_management_label ),
-                    wc_price($rbfw_management_price)
-                );
+
 
                 $security_deposit = rbfw_security_deposit( $rbfw_id, ( (int) $rbfw_duration_price + (int) $rbfw_service_price ) );
                 if ( $security_deposit['security_deposit_amount'] ) {
                     $item->add_meta_data( $rbfw_security_deposit_label, wc_price( $security_deposit['security_deposit_amount'] ) );
                 }
+                
                 $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
             }
 

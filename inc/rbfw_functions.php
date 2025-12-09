@@ -169,13 +169,11 @@
                 'class'          => true,
             ),
 
-            'figure'   => array(
-                'id'          => true,
+            'form'   => array(
+                'method'          => true,
+                'action'          => true,
                 'class'          => true,
             ),
-
-
-
 
 
 		);
@@ -2663,6 +2661,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
     $days = $remainingDays % 7;
     $hours = $interval->h;
+
     $output = [];
 
     $duration_price = 0;
@@ -2709,10 +2708,13 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
             }
         }
 
+
         if ($totalMonths > 0)       $output[] = "$totalMonths month" . ($totalMonths > 1 ? 's' : '');
         if ($weeks > 0)       $output[] = "$weeks week" . ($weeks > 1 ? 's' : '');
         if ($days > 0)        $output[] = "$days day" . ($days > 1 ? 's' : '');
         if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
+
+
 
 
         return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>get_transient("pricing_applied")];
@@ -2751,6 +2753,8 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         if ($daysWeeks > 0)        $output[] = "$daysWeeks day" . ($daysWeeks > 1 ? 's' : '');
         if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
 
+        echo $hours;exit;
+
         return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>get_transient("pricing_applied")];
     }
 
@@ -2763,7 +2767,10 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
     $total_days = $diff->days;
     $actual_days = $total_days;
-    $hours = $diff->h + ($diff->i / 60);
+    $hours = round($diff->h + ($diff->i / 60),2);
+
+
+
 
 
 
@@ -2800,6 +2807,8 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
             $rbfw_enable_hourly_rate, $rbfw_sp_prices, $endday
         );
     }
+
+
 
     return ['duration_price' => $duration_price, 'total_days' => $total_days, 'actual_days' => $actual_days, 'hours' => $hours,'pricing_applied'=>get_transient("pricing_applied")];
 }
