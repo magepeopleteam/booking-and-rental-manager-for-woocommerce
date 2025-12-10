@@ -46,7 +46,9 @@
 			public function variation_settings( $post_id ) {
 				$rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
 				$rbfw_variations_data   = get_post_meta( $post_id, 'rbfw_variations_data', true ) ? get_post_meta( $post_id, 'rbfw_variations_data', true ) : [];
-				?>
+
+
+                ?>
                 <section class="rbfw_variations_table_wrap <?php echo esc_attr( ( $rbfw_enable_variations == 'yes' ) ? 'show' : 'hide' ); ?>">
                     <div class="form-table rbfw_variations_table">
                         <tbody class="rbfw_variations_table_body ui-sortable">
