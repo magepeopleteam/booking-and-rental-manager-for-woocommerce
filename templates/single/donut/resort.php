@@ -5,8 +5,6 @@
 	}
 	global $rbfw;
 	$rbfw_id = $post_id ?? 0;
-	global $frontend;
-	$frontend                = $frontend ?? 0;
 	$post_title              = get_the_title();
 	$post_content            = get_the_content();
 	$rbfw_feature_category   = rbfw_get_feature_category_meta( $post_id );
@@ -100,7 +98,7 @@
             </div>
         </div>
     </div>
-	<?php if ( $frontend ) { ?>
+    <?php  if(!is_admin()){ ?>
         <div class="rbfw_dt_row_content">
             <div class="rbfw_dt_content_col1">
                 <div class="rbfw_dt_slider mpStyle <?php echo esc_html( $slide_style ); ?>">
@@ -182,7 +180,7 @@
 			<?php include( RBFW_Function::get_template_path( 'forms/resort-registration.php' ) ); ?>
         </div>
     </div>
-	<?php if ( $frontend ) { ?>
+    <?php  if(!is_admin()){ ?>
 		<?php if ( $rbfw_enable_faq_content == 'yes' ): ?>
             <div class="rbfw_dt_row_faq">
                 <div class="rbfw_dt_heading">

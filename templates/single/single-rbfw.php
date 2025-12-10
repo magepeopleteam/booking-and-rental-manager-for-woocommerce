@@ -44,7 +44,6 @@ if ( wp_is_block_theme() ) {  ?>
 
 
 $post_id = get_the_id();
-$frontend = 'yes';
 $submit_name = 'add-to-cart';
 
 set_transient("pricing_applied", "No", 3600);

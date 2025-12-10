@@ -3,11 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     die;
 }
 $rbfw_id = $post_id ??0;
-global $frontend;
+
 global $submit_name;
 global $rbfw;
-
-$frontend = $frontend??0;
 $cart_backend = $cart_backend??'';
 
 if($cart_backend){

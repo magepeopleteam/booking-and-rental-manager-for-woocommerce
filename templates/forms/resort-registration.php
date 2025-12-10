@@ -4,8 +4,6 @@
 	}
 
     $rbfw_id = $post_id ??0;
-    global $frontend;
-    $frontend = $frontend??0;
 	global $rbfw;
 
 	$daily_rate = get_post_meta($rbfw_id, 'rbfw_daily_rate', true) ? get_post_meta($rbfw_id, 'rbfw_daily_rate', true) : 0;
