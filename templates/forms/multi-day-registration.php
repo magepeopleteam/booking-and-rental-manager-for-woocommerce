@@ -179,7 +179,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                         <?php if ($enable_hourly_rate == 'yes') { ?>
                                             <tr>
                                                 <td><strong><?php esc_html_e( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                                                <td>rbfw_js_variables.currency +rbfw_js_variables.currency + / <?php esc_html_e('Hour', 'booking-and-rental-manager-for-woocommerce'); ?></td>
+                                                <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / <?php esc_html_e('Hour', 'booking-and-rental-manager-for-woocommerce'); ?></td>
                                             </tr>
                                         <?php } ?>
                                         </tbody>

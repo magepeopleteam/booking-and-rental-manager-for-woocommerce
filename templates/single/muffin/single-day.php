@@ -164,7 +164,7 @@
 						<?php echo wp_kses( $trimmed_content, rbfw_allowed_html()); ?>
                     </div>
                     <div class="full-content" style="display: none;">
-						<?php echo wp_kses( $full_content , rbfw_allowed_html()); ?>
+						<?php echo wp_kses( $post_content , rbfw_allowed_html()); ?>
                     </div>
                 </div>
 				<?php if ( $additional_gallary_status == 'on' ): ?>

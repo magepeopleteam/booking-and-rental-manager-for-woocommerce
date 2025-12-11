@@ -153,6 +153,7 @@
                 'id'          => true,
                 'class'          => true,
                 'aria-expanded'          => true,
+                'data-key'          => true,
             ),
             'h2'   => array(
                 'id'          => true,
@@ -2752,8 +2753,6 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         if ($actualWeeks > 0)        $output[] = "$actualWeeks week" . ($actualWeeks > 1 ? 's' : '');
         if ($daysWeeks > 0)        $output[] = "$daysWeeks day" . ($daysWeeks > 1 ? 's' : '');
         if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
-
-        echo $hours;exit;
 
         return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>get_transient("pricing_applied")];
     }

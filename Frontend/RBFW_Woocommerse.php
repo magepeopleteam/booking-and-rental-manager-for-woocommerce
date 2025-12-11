@@ -16,7 +16,7 @@ if (!class_exists('RBFW_Woocommerce')) {
             add_action( 'woocommerce_after_checkout_validation', array($this ,  'rbfw_validation_before_checkout') );
             add_action( 'woocommerce_checkout_create_order_line_item', array($this ,  'rbfw_add_order_item_data'), 90, 4 );
             add_action( 'woocommerce_before_thankyou', array($this ,  'rbfw_booking_management') );
-            add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management' );
+           // add_action( 'woocommerce_checkout_order_processed', 'rbfw_booking_management' );
             add_action( 'rbfw_wc_order_status_change', array($this ,  'rbfw_change_user_order_status_on_order_status_change'), 10, 3 );
         }
 
@@ -1601,7 +1601,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 rbfw_update_inventory( $rbfw_post_id, $order_status );
             }
         }
-        public  function rbfw_booking_management( $wc_order_id ) {
+        public  function rbfw_booking_management( $wc_order_id = 0 ) {
             global $rbfw;
             $post = get_post( $wc_order_id );
             if ( $post ) {
