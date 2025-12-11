@@ -414,7 +414,7 @@
 								<option value="fixed" <?php selected( $calculation_type, 'fixed' ); ?>><?php echo esc_html__( 'Fixed', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
 							</select>
 							<input type="number" class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][amount]" value="<?php echo esc_attr( $amount ); ?>" step="0.01" min="0">
-							<span><?php echo ( $calculation_type === 'percentage' ) ? '%' : '$'; ?></span>
+							<span><?php echo ( $calculation_type === 'percentage' ) ? '%' : get_woocommerce_currency_symbol(); ?></span>
 						</div>
 					</td>
 
@@ -512,7 +512,7 @@
 										<option value="fixed" selected><?php echo esc_html__( 'Fixed', 'booking-and-rental-manager-for-woocommerce' ); ?></option>
 									</select>
 									<input type="number" class="wprently_fee-input" name="rbfw_fee_data[${rowCount}][amount]" value="0" step="0.01" min="0">
-									<span>$</span>
+									<span><?php echo get_woocommerce_currency_symbol() ?></span>
 								</div>
 							</td>
 							<td class="fee-frequency-td">
@@ -547,17 +547,7 @@
 								<input type="hidden" name="rbfw_fee_data[${rowCount}][icon]" value="${icon}">
 								<input type="hidden" name="rbfw_fee_data[${rowCount}][color]" value="${color}">
 							</td>
-							<td>
-								<div class="wprently_fee-status">
-									<label class="wprently_fee-toggle">
-										<input type="checkbox" name="rbfw_fee_data[${rowCount}][status]" value="active" checked onchange="rbfwUpdateStatus(this)">
-										<span class="wprently_fee-slider"></span>
-									</label>
-									<div class="wprently_fee-status-badge active">
-										<span class="wprently_fee-status-dot"></span><?php echo esc_html__( 'Active', 'booking-and-rental-manager-for-woocommerce' ); ?>
-									</div>
-								</div>
-							</td>
+
 							<td>
 								<div class="mp_event_remove_move">
 									<button type="button" class="button" onclick="rbfwDuplicateFeeRow(this)" title="<?php echo esc_attr__( 'Duplicate', 'booking-and-rental-manager-for-woocommerce' ); ?>">⎘</button>

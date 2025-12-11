@@ -60,7 +60,12 @@ if (! class_exists('RBFW_Dependencies')) {
 					'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
 					'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
 					'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
-					'currency' => get_woocommerce_currency_symbol()
+					'variation_name' => __('Value Name', 'booking-and-rental-manager-for-woocommerce'),
+					'stock_quantity' => __('Stock Quantity', 'booking-and-rental-manager-for-woocommerce'),
+					'is_default' => __('Is Default', 'booking-and-rental-manager-for-woocommerce'),
+					'filed_label' => __('Field Label', 'booking-and-rental-manager-for-woocommerce'),
+					'actions' => __('Action', 'booking-and-rental-manager-for-woocommerce'),
+					'add_new_value' => __('Add New Value', 'booking-and-rental-manager-for-woocommerce'),
 				));
 			}
 
