@@ -1586,39 +1586,43 @@ function getPostIdFromUrl() {
     return urlParams.get('post'); // returns the post ID as a string
 }
 
-jQuery('input[name=rbfw_enable_variations]').click(function () {
-    var status = jQuery(this).val();
-    if (status == 'yes') {
-        jQuery(this).val('no');
-        jQuery('.rbfw_variations_table_wrap').slideUp().removeClass('show').addClass('hide');
-        jQuery('.item_stock_quantity input').removeAttr("disabled");
-    }
-    if (status == 'no') {
-        jQuery(this).val('yes');
-        jQuery('.rbfw_variations_table_wrap').slideDown().removeClass('hide').addClass('show');
-        jQuery('.item_stock_quantity input').attr("disabled", true);
-    }
-});
-jQuery('input[name=rbfw_enable_md_type_item_qty]').click(function () {
-    var status = jQuery(this).val();
-    if (status == 'yes') {
-        jQuery(this).val('no');
-    }
-    if (status == 'no') {
-        jQuery(this).val('yes');
-    }
-});
-
-jQuery('input[name=stock_manage_on_return_date]').click(function () {
-    var status = jQuery(this).val();
-    if (status == 'yes') {
-        jQuery(this).val('no');
-    }
-    if (status == 'no') {
-        jQuery(this).val('yes');
-    }
-});
 jQuery(document).ready(function () {
+
+    jQuery('input[name=rbfw_enable_variations]').click(function () {
+        var status = jQuery(this).val();
+        if (status == 'yes') {
+            jQuery(this).val('no');
+            jQuery('.rbfw_variations_table_wrap').slideUp().removeClass('show').addClass('hide');
+            jQuery('.item_stock_quantity input').removeAttr("disabled");
+        }
+        if (status == 'no') {
+            jQuery(this).val('yes');
+            jQuery('.rbfw_variations_table_wrap').slideDown().removeClass('hide').addClass('show');
+            jQuery('.item_stock_quantity input').attr("disabled", true);
+        }
+    });
+    jQuery('input[name=rbfw_enable_md_type_item_qty]').click(function () {
+        var status = jQuery(this).val();
+        if (status == 'yes') {
+            jQuery(this).val('no');
+        }
+        if (status == 'no') {
+            jQuery(this).val('yes');
+        }
+    });
+
+    jQuery('input[name=stock_manage_on_return_date]').click(function () {
+        var status = jQuery(this).val();
+        if (status == 'yes') {
+            jQuery(this).val('no');
+        }
+        if (status == 'no') {
+            jQuery(this).val('yes');
+        }
+    });
+
+
+
     jQuery('#add-new-variation').click(function (e) {
         e.preventDefault();
         if (jQuery('.rbfw_variations_table .rbfw_variations_table_row').length > 0) {
