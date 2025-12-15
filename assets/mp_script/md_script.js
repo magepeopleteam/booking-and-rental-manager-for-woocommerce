@@ -1373,6 +1373,14 @@ function rbfw_service_price_calculation(total_days){
     rbfw_bikecarmd_ajax_price_calculation();
 }
 
+function wc_price_rbfw(price) {
+    if(rbfw_js_variables.currency_format=='left'){
+        return rbfw_js_variables.currency + price.toFixed(rbfw_js_variables.price_decimals)
+    }else{
+        return price.toFixed(rbfw_js_variables.price_decimals) + rbfw_js_variables.currency;
+    }
+}
+
 
 
 
