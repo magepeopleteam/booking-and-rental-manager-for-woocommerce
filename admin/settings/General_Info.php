@@ -55,7 +55,10 @@
                         <label>
 							<?php echo esc_html__( "Category Settings",'booking-and-rental-manager-for-woocommerce'); ?>
                         </label>
-                        <p><?php echo esc_html__( "Here you can check categories",'booking-and-rental-manager-for-woocommerce'); ?></p>
+                        <p>
+                            <?php echo esc_html__( "Here you can manage rent type.",'booking-and-rental-manager-for-woocommerce'); ?>
+                            <a href="edit-tags.php?taxonomy=rbfw_item_caregory&post_type=rbfw_item"><?php echo esc_html__( "Add new ",'booking-and-rental-manager-for-woocommerce'); ?></a><?php echo esc_html__( "rent type",'booking-and-rental-manager-for-woocommerce'); ?>
+                        </p>
                     </div>
                 </section>
                 <section class="rbfw_off_days justify-content-center">
