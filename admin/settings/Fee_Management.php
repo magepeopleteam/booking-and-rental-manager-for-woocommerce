@@ -136,20 +136,7 @@
 					.wprently_fee-table tr:last-child td { border-bottom: none; }
 					.wprently_fee-table tbody tr:hover { background: #f7fafc; }
 					.wprently_fee-type { display: flex; align-items: center; gap: 8px; }
-					.wprently_fee-icon { 
-						width: 32px; 
-						height: 32px; 
-						border-radius: 6px; 
-						display: flex; 
-						align-items: center; 
-						justify-content: center; 
-						font-size: 16px; 
-						flex-shrink: 0; 
-					}
-					.wprently_fee-icon.security { background: #fee; }
-					.wprently_fee-icon.insurance { background: #e3f2fd; }
-					.wprently_fee-icon.cleaning { background: #f3e5f5; }
-					.wprently_fee-icon.pet { background: #fff3e0; }
+
 					.wprently_fee-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
 					.wprently_fee-input { 
 						padding: 6px 8px; 
@@ -236,21 +223,7 @@
 					.wprently_fee-status-badge.inactive { background: #fee2e2; color: #991b1b; }
 					.wprently_fee-status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
 					.wprently_fee-actions { display: flex; gap: 4px; align-items: center; justify-content: flex-end; }
-					.wprently_fee-btn-icon { 
-						background: none; 
-						border: none; 
-						cursor: pointer; 
-						padding: 4px; 
-						color: #718096; 
-						font-size: 16px; 
-						width: 28px; 
-						height: 28px; 
-						display: flex; 
-						align-items: center; 
-						justify-content: center; 
-						border-radius: 4px; 
-					}
-					.wprently_fee-btn-icon:hover { background: #f7fafc; color: #e91e63; }
+
 					.wprently_fee-add-wrap { display: flex; justify-content: center; margin-top: 16px; }
 					.wprently_fee-add-btn { 
 						width: 200px; 
@@ -393,14 +366,11 @@
 				$priority = isset( $fee['priority'] ) ? $fee['priority'] : 'optional'; // Added by Shahnur Alam - Priority field
 				$refundable = isset( $fee['refundable'] ) ? $fee['refundable'] : 'no';
 				$taxable = isset( $fee['taxable'] ) ? $fee['taxable'] : 'no';
-				$status = isset( $fee['status'] ) ? $fee['status'] : 'active';
-				$icon = isset( $fee['icon'] ) ? $fee['icon'] : '💰';
 				$color = isset( $fee['color'] ) ? $fee['color'] : 'security';
 				?>
 				<tr>
 					<td>
 						<div class="wprently_fee-type">
-							<div class="wprently_fee-icon <?php echo esc_attr( $color ); ?>"><?php echo esc_html( $icon ); ?></div>
 							<div class="wprently_fee-info">
 								<input type="text" class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][label]" value="<?php echo esc_attr( $label ); ?>" placeholder="<?php echo esc_attr__( 'Fee label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 								<input type="text" class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][description]" value="<?php echo esc_attr( $description ); ?>" placeholder="<?php echo esc_attr__( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?>">
@@ -460,7 +430,6 @@
 							</div>
 						</div>
 						<input type="hidden" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][taxable]" value="<?php echo esc_attr( $taxable ); ?>">
-						<input type="hidden" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][icon]" value="<?php echo esc_attr( $icon ); ?>">
 						<input type="hidden" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][color]" value="<?php echo esc_attr( $color ); ?>">
 					</td>
 
@@ -490,7 +459,6 @@
 					function rbfwAddFeeRow() {
 						const tbody = document.getElementById('wprently_fee_body');
 						const rowCount = tbody.rows.length;
-						const icon = rbfwFeeIcons[Math.floor(Math.random() * rbfwFeeIcons.length)];
 						const color = rbfwFeeColors[Math.floor(Math.random() * rbfwFeeColors.length)];
                         let current_item_type = jQuery('#rbfw_item_type').val();
 						
@@ -498,7 +466,6 @@
 						row.innerHTML = `
 							<td>
 								<div class="wprently_fee-type">
-									<div class="wprently_fee-icon ${color}">${icon}</div>
 									<div class="wprently_fee-info">
 										<input type="text" class="wprently_fee-input" name="rbfw_fee_data[${rowCount}][label]" placeholder="<?php echo esc_attr__( 'Fee label', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 										<input type="text" class="wprently_fee-input" name="rbfw_fee_data[${rowCount}][description]" placeholder="<?php echo esc_attr__( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?>">
@@ -533,7 +500,6 @@
 							<td>
 								<div class="wprently_fee-options">
 									<div class="wprently_fee-option-item">
-										<label class="wprently_fee-option-label"><?php echo esc_html__( 'Refundable', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
 										<label class="wprently_fee-toggle">
 											<input type="checkbox" name="rbfw_fee_data[${rowCount}][refundable]" value="no" onchange="rbfwUpdateRefundableStatus(this)">
 											<span class="wprently_fee-slider"></span>
@@ -544,7 +510,6 @@
 									</div>
 								</div>
 								<input type="hidden" name="rbfw_fee_data[${rowCount}][taxable]" value="no">
-								<input type="hidden" name="rbfw_fee_data[${rowCount}][icon]" value="${icon}">
 								<input type="hidden" name="rbfw_fee_data[${rowCount}][color]" value="${color}">
 							</td>
 
@@ -749,9 +714,6 @@
 								'frequency'        => isset( $fee['frequency'] ) ? sanitize_text_field( wp_unslash( $fee['frequency'] ) ) : 'one-time',
 								'priority'         => isset( $fee['priority'] ) ? sanitize_text_field( wp_unslash( $fee['priority'] ) ) : 'optional', // Added by Shahnur Alam - Priority field saving
 								'refundable'       => isset( $fee['refundable'] ) ? sanitize_text_field( wp_unslash( $fee['refundable'] ) ) : 'no',
-								'taxable'          => isset( $fee['taxable'] ) ? sanitize_text_field( wp_unslash( $fee['taxable'] ) ) : 'no',
-								'status'           => isset( $fee['status'] ) ? sanitize_text_field( wp_unslash( $fee['status'] ) ) : 'active',
-								'icon'             => isset( $fee['icon'] ) ? sanitize_text_field( wp_unslash( $fee['icon'] ) ) : '💰',
 								'color'            => isset( $fee['color'] ) ? sanitize_text_field( wp_unslash( $fee['color'] ) ) : 'security'
 							);
 							
