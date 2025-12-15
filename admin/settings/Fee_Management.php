@@ -724,7 +724,7 @@
 						}
 						
 						// Update post meta with sanitized fee data
-						update_post_meta( $post_id, 'rbfw_fee_data', $_POST['rbfw_fee_data'] );
+						update_post_meta( $post_id, 'rbfw_fee_data', $fee_data );
 					} else {
 						// If no fee data, delete the meta
 						delete_post_meta( $post_id, 'rbfw_fee_data' );
