@@ -369,15 +369,7 @@ function rbfw_url_exclude_search_engine() {
 			'new_item_name'     => esc_html__( 'New Tag Name', 'booking-and-rental-manager-for-woocommerce' ),
 			'menu_name'         => esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
 		);
-// 		register_taxonomy( 'rbfw_item_tag', array( 'rbfw_item' ), array(
-// 			'hierarchical'      => false,
-// 			'labels'            => $labels,
-// 			'show_ui'           => true,
-// 			'show_in_rest'      => true,
-// 			'show_admin_column' => true,
-// 			'query_var'         => true,
-// 			'rewrite'           => array( 'slug' => 'rbfw_item_tag' ),
-// 		) );
+
 	}
 	add_action( 'init', 'rbfw_create_tag_taxonomy', 0 );
 	if ( ! function_exists( 'mage_array_strip' ) ) {
@@ -407,10 +399,7 @@ function rbfw_url_exclude_search_engine() {
 		}
 		$rbfw_faq_arr = get_post_meta( $post_id, 'mep_event_faq', true );
 		if ( ! empty( $rbfw_faq_arr ) ) {
-			$rbfw_faq_title   = array_column( $rbfw_faq_arr, 'rbfw_faq_title' );
-			$rbfw_faq_img     = array_column( $rbfw_faq_arr, 'rbfw_faq_img' );
-			$rbfw_faq_content = array_column( $rbfw_faq_arr, 'rbfw_faq_content' );
-			$count_faq_arr    = count( $rbfw_faq_arr );
+
 			?>
             <div id="rbfw_faq_accordion">
 				<?php foreach ( $rbfw_faq_arr as $faq ) { ?>
