@@ -3227,7 +3227,7 @@ function get_rbfw_post_categories_from_meta() {
 		while ( $query->have_posts() ) {
 			$query->the_post();
 			$meta_value = get_post_meta( get_the_ID(), 'rbfw_feature_category', true );
-			$meta_value = maybe_unserialize( $meta_value );
+			$meta_value = maybe_unserialize( $meta_value , array( 'allowed_classes' => false ));
 			if ( is_array( $meta_value ) && count( $meta_value ) > 0 ) {
 				$all_categories = array_merge( $all_categories, $meta_value );
 			}
