@@ -2746,22 +2746,9 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>get_transient("pricing_applied")];
     }
 
-
-
-
-
-
-
-
     $total_days = $diff->days;
     $actual_days = $total_days;
     $hours = round($diff->h + ($diff->i / 60),2);
-
-
-
-
-
-
 
     if ($rbfw_enable_time_slot === 'off') {
         if ($rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on') === 'on' || $total_days === 0) {
@@ -3007,7 +2994,8 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
 
     function check_seasonal_price( $Book_date, $rbfw_sp_prices, $hours = '0', $rbfw_enable_daily_rate = '0' ,$rbfw_half_day_rate=0) {
 
-		foreach ( $rbfw_sp_prices as $rbfw_sp_price ) {
+
+        foreach ( $rbfw_sp_prices as $rbfw_sp_price ) {
 			$rbfw_sp_start_date = $rbfw_sp_price['rbfw_sp_start_date'];
 			$rbfw_sp_end_date   = $rbfw_sp_price['rbfw_sp_end_date'];
 			$sp_dates_array     = getAllDates( $rbfw_sp_start_date, $rbfw_sp_end_date );
@@ -3027,8 +3015,10 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
 				if ( $hours ) {
                     if($rbfw_half_day_rate){
                         return $rbfw_half_day_rate;
-                    }else{
+                    }elseif($hourly_rate){
                         return $hourly_rate * $hours;
+                    }else{
+                        return $daily_rate;
                     }
 				} else {
 					if ( $rbfw_enable_daily_rate == 'no' ) {
