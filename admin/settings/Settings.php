@@ -146,6 +146,27 @@
 				<?php
 			}
 
+            public function  before_and_after_day_booking($post_id){
+                $before_and_after_day_booking = get_post_meta( $post_id, 'before_and_after_day_booking', true ) ? get_post_meta( $post_id, 'before_and_after_day_booking', true ) : 'yes';
+                ?>
+                <div class="wervice_quantity_input_box">
+                    <section>
+                        <div>
+                            <label><?php esc_html_e( 'Before and after day booking', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
+                            <p><?php esc_html_e( 'Before and after day booking.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="before_and_after_day_booking" value="<?php echo esc_attr( $before_and_after_day_booking ); ?>" <?php echo esc_attr( ( $before_and_after_day_booking == 'yes' ) ? 'checked' : '' ); ?>>
+                            <span class="slider round"></span>
+                        </label>
+                    </section>
+                </div>
+                <?php
+            }
+
+
+
+
 			public function reset_orders_section( $post_id ) {
 				?>
 				<section>
@@ -172,7 +193,9 @@
 					<?php $this->shipping_method( $post_id ); ?>
 
 					<?php $this->service_quantity_box( $post_id ); ?>
-					<?php $this->reset_orders_section( $post_id ); ?>
+					<?php $this->before_and_after_day_booking( $post_id ); ?>
+
+                    <?php $this->reset_orders_section( $post_id ); ?>
                 </div>
 				<?php
 			}
@@ -195,10 +218,13 @@
                     update_post_meta($product_id, '_virtual', ($shipping_enable=='yes')?'no':'yes');
 					update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
 
-             
+
 					
 					$rbfw_enable_extra_service_qty = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_extra_service_qty'] ) ) : 'no';
 					update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
+
+                    $before_and_after_day_booking = isset( $_POST['before_and_after_day_booking'] ) ? sanitize_text_field( wp_unslash( $_POST['before_and_after_day_booking'] ) ) : 'no';
+					update_post_meta( $post_id, 'before_and_after_day_booking', $before_and_after_day_booking );
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$faq_description    = isset( $_POST['rbfw_faq_description'] ) ? sanitize_text_field($_POST['rbfw_faq_description']) : '';
