@@ -561,8 +561,6 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
 
 
-
-
     $date_range = [];
 
     $day_wise_inventory = [];
@@ -584,31 +582,33 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
                     }
                 }
             }
-        } else {
-            // For Bike/car Multiple Day Type
+        } elseif($rent_type == 'bike_car_sd'){
+            $rbfw_bike_car_sd_data = get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
+            foreach ($rbfw_bike_car_sd_data as $value) {
+
+                $total_stock += (int) ($value['qty'] ?? 0);
+
+            }
+        }else {
+
             if($rbfw_enable_variations == 'yes'){
                 $total_stock += $rbfw_variations_stock;
             } else {
                 $total_stock += (int)get_post_meta($post_id, 'rbfw_item_stock_quantity', true);
             }
-            // End Bike/car Multiple Day Type
+
         }
 
+
+
         $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
-
-
-
-
         $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
-
-
-
         $total_booked = 0;
-
-
 
         if(is_array($rbfw_inventory)){
             foreach ($rbfw_inventory as $wc_order_id => $inventory) {
+
+
 
                 $order = wc_get_order($wc_order_id);
 
@@ -626,37 +626,25 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
                     $checkValues = $inventory['rbfw_order_status'];
 
                     if ( (in_array($checkValues, $inventory_managed_order_status) || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
-
-                        if(isset($inventory['rbfw_start_date_ymd']) && isset($inventory['rbfw_end_date_ymd'])){
-                            $inventory_start_date = $inventory['rbfw_start_date_ymd'];
-                            $inventory_end_date = $inventory['rbfw_end_date_ymd'];
-                        }else{
-                            $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
-                            $inventory_start_date = $booked_dates[0];
-                            $inventory_end_date = end($booked_dates);
-                        }
-
-                        $booked_dates = $inventory['booked_dates'];
+                        $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
                         if($stock_manage_on_return_date=='no'){
                             array_pop($booked_dates);
                         }
                         if (in_array($date,$booked_dates)) {
-                            $total_booked += $rbfw_item_quantity;
+                            if($rent_type == 'bike_car_sd'){
+                                $total_booked += array_sum($inventory['rbfw_type_info']);
+                            }else{
+                                $total_booked += $rbfw_item_quantity;
+                            }
                         }
                     }
                 }
-
-
-
             }
-
         }
 
 
 
         $remaining_stock = $total_stock - $total_booked;
-
-
 
 
         /*start variation inventory*/
@@ -681,8 +669,6 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
                 }
             }
             $remaining_stock = max($variant_instock);
-
-
         }
 
         $day_wise_inventory[$date] = $remaining_stock;

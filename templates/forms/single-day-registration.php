@@ -393,6 +393,51 @@
                 $appointment_days = wp_json_encode(get_post_meta($post_id, 'rbfw_sd_appointment_ondays', true));
                 ?>
 
+                <?php
+
+                $day_wise_imventory = '';
+
+
+
+                    $year = Date('Y');
+                    $month = Date('n');
+
+                    for ($i = 0; $i <= 1; $i++) {
+
+                        if ($i == 0) {
+                            $total_days_month = 30;
+                            if (function_exists('cal_days_in_month')) {
+                                $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                            }
+                            $day_wise_imventory_1 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
+                        }
+
+                        if ($i == 1) {
+                            $date = new DateTime("$year-$month-01");
+                            $date->modify('+1 month');
+                            $year = $date->format('Y');
+                            if($month == 12){
+                                $year = $year +1;
+                                $month = 1;
+                            }else{
+                                $month = $month + 1;
+                            }
+                            $total_days_month = 30;
+                            if (function_exists('cal_days_in_month')) {
+                                $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                            }
+                            $day_wise_imventory_2 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
+                        }
+                    }
+                    $day_wise_imventory = wp_json_encode(array_merge($day_wise_imventory_1, $day_wise_imventory_2));
+
+
+
+
+                ?>
+
+
+
                 <?php wp_nonce_field('rbfw_ajax_action', 'nonce'); ?>
 
                 <input type="hidden" name="rbfw_time_slot_switch" id="rbfw_time_slot_switch" value="<?php echo esc_attr($rbfw_enable_time_picker); ?>">
@@ -424,6 +469,8 @@
                 <input type="hidden" name="rbfw_buffer_time" id="rbfw_buffer_time"  value='<?php echo esc_attr($rbfw_buffer_time); ?>'>
 
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id" class="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
+
+                <input type="hidden" id="rbfw_month_wise_inventory" value="<?php echo esc_attr($day_wise_imventory); ?>">
 
 
 
