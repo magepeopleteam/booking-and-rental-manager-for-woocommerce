@@ -141,6 +141,24 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
             ),
 
             array(
+                'name'    => 'inventory_managed_order_status',
+                'label'   => __( 'Inventory Managed Order Status', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc'    => __( 'Please Select which order status Will be Managed Inventory', 'booking-and-rental-manager-for-woocommerce' ),
+                'type'    => 'multicheck',
+                'default' => array( 'processing' => 'processing', 'completed' => 'completed' ),
+                'options' => array(
+                    'on-hold'    => 'On Hold',
+                    'pending'    => 'Pending',
+                    'processing' => 'Processing',
+                    'completed'  => 'Completed'
+                    // 'cancelled'     => 'Cancelled'
+                )
+            ),
+
+
+
+
+            array(
                 'name' => 'inventory_based_on_return',
                 'label' => esc_html__( 'Inventory manage based on return', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc' => esc_html__( "If you want to inventory manage based on return, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
@@ -164,9 +182,10 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                 )
             ),
 
+        ),
 
 
-		),
+
 		'rbfw_basic_style_settings' => array(
 			array(
 				'name'    => 'rbfw_rent_list_base_color',

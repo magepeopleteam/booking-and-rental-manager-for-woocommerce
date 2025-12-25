@@ -1154,16 +1154,10 @@
         if (status === 'no') {
             $(this).val('yes');
         }
+
     });
-    $(document).on('click', 'input[name=rbfw_available_qty_info_switch]', function (e) {
-        var status = $(this).val();
-        if (status === 'yes') {
-            $(this).val('no');
-        }
-        if (status === 'no') {
-            $(this).val('yes');
-        }
-    });
+
+
     $(document).on('click', 'input[name=shipping_enable]', function (e) {
         var status = $(this).val();
         if (status === 'yes') {

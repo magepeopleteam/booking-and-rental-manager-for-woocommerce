@@ -143,19 +143,21 @@ if (! class_exists('RBFW_Dependencies')) {
             $timezone = wp_timezone(); // WP 5.3+
             $datetime = new DateTime('now', $timezone);
 
-			wp_localize_script(
-				'jquery',
-				'rbfw_js_variables',
-				array(
-					'rbfw_today_booking_enable' => $today_booking_enable,
-                    'timeFormat' => get_option('time_format'),
-                    'currentDateTime' => $datetime->format('Y-m-d H:i:s'),
-                    'currentDate' => $datetime->format('Y-m-d'),
-                    'currency' => get_woocommerce_currency_symbol(),
-                    'currency_format'                 => get_option( 'woocommerce_currency_pos' ),
-                    'price_decimals' => (rbfw_woo_install_check() == 'Yes')? wc_get_price_decimals() : 2
-				)
-			);
+            if (rbfw_woo_install_check() == 'Yes') {
+                wp_localize_script(
+                    'jquery',
+                    'rbfw_js_variables',
+                    array(
+                        'rbfw_today_booking_enable' => $today_booking_enable,
+                        'timeFormat' => get_option('time_format'),
+                        'currentDateTime' => $datetime->format('Y-m-d H:i:s'),
+                        'currentDate' => $datetime->format('Y-m-d'),
+                        'currency' => get_woocommerce_currency_symbol(),
+                        'currency_format'                 => get_option( 'woocommerce_currency_pos' ),
+                        'price_decimals' => wc_get_price_decimals()
+                    )
+                );
+            }
 
 			wp_enqueue_script('smartWizard', plugins_url('admin/js/jquery.smartWizard.min.js', __DIR__), array('jquery'), '6.0.6', false);
 			wp_enqueue_script('rbfw-admin-input', plugins_url('admin/js/rbfw-admin-input.js', __DIR__), array('jquery'), time(), false);

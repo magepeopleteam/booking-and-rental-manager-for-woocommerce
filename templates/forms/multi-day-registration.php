@@ -768,12 +768,11 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 </span>
                             </li>
 
-                            <li class="management-costing rbfw-cond">
+                            <li class="management-costing rbfw-cond" style="display:none;">
                                 <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>
                                 <span class="price-figure" data-price="">
                                 </span>
                             </li>
-
 
                             <li class="discount" style="display:none;">
                                 <?php esc_html_e('Discount','booking-and-rental-manager-for-woocommerce'); ?>

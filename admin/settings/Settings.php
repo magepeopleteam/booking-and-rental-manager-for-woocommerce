@@ -146,6 +146,10 @@
 				<?php
 			}
 
+
+
+
+
 			public function reset_orders_section( $post_id ) {
 				?>
 				<section>
@@ -172,7 +176,9 @@
 					<?php $this->shipping_method( $post_id ); ?>
 
 					<?php $this->service_quantity_box( $post_id ); ?>
-					<?php $this->reset_orders_section( $post_id ); ?>
+
+
+                    <?php $this->reset_orders_section( $post_id ); ?>
                 </div>
 				<?php
 			}
@@ -195,10 +201,12 @@
                     update_post_meta($product_id, '_virtual', ($shipping_enable=='yes')?'no':'yes');
 					update_post_meta( $post_id, 'rbfw_available_qty_info_switch', $rbfw_available_qty_info_switch );
 
-             
+
 					
 					$rbfw_enable_extra_service_qty = isset( $_POST['rbfw_enable_extra_service_qty'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_extra_service_qty'] ) ) : 'no';
 					update_post_meta( $post_id, 'rbfw_enable_extra_service_qty', $rbfw_enable_extra_service_qty );
+
+
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$faq_description    = isset( $_POST['rbfw_faq_description'] ) ? sanitize_text_field($_POST['rbfw_faq_description']) : '';
