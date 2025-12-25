@@ -1146,7 +1146,7 @@
         }
     });
 
-    $(document).on('click', 'input[name=before_and_after_day_booking]', function (e) {
+    $(document).on('click', 'input[name=rbfw_enable_extra_service_qty]', function (e) {
         var status = $(this).val();
         if (status === 'yes') {
             $(this).val('no');
@@ -1157,18 +1157,6 @@
 
     });
 
-
-
-    $(document).on('click', 'input[name=before_and_after_day_booking]', function (e) {
-        var status = $(this).val();
-        alert(status);
-        if (status === 'yes') {
-            $(this).val('no');
-        }
-        if (status === 'no') {
-            $(this).val('yes');
-        }
-    });
 
     $(document).on('click', 'input[name=shipping_enable]', function (e) {
         var status = $(this).val();
