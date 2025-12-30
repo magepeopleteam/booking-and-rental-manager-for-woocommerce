@@ -250,25 +250,16 @@ if (!class_exists('RBFW_Woocommerce')) {
             } elseif ( $rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment' ) {
 
                 $rbfw_bikecarsd               = new RBFW_BikeCarSd_Function();
-                $start_date      = isset( $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] ) ? $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] : '';
+                $selected_date      = isset( $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] ) ? $sd_input_data_sabitized['rbfw_bikecarsd_selected_date'] : '';
                 $start_time = isset( $sd_input_data_sabitized['rbfw_start_time'] ) ? $sd_input_data_sabitized['rbfw_start_time'] : '';
                 $end_date = isset( $_POST['rbfw_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_end_date'] ) ) : '';
                 $end_time = isset( $_POST['rbfw_end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_end_time'] ) ) : '';
                 if ( ! ( $end_date && $end_time ) ) {
-
-                    $before_and_after_day_booking = get_post_meta( $rbfw_id, 'before_and_after_day_booking', true );
-
-
-
-                    if($before_and_after_day_booking=='yes'){
-                        $start_date_format = new DateTime($start_date);
-                        $start_date = (clone $start_date_format)->modify('-1 day');
-                        $start_date = $start_date->format('Y-m-d');
-                        $end_date = (clone $start_date_format)->modify('+1 day');
-                        $end_date = $end_date->format('Y-m-d');
-                    }else{
-                        $end_date = $end_date;
-                    }
+                    $start_date_format = new DateTime($selected_date);
+                    $start_date = (clone $start_date_format)->modify('-1 day');
+                    $start_date = $start_date->format('Y-m-d');
+                    $end_date = (clone $start_date_format)->modify('+1 day');
+                    $end_date = $end_date->format('Y-m-d');
                 }
                 $rbfw_start_datetime = $start_date;
                 $rbfw_type_info_all = isset( $sd_input_data_sabitized['rbfw_bikecarsd_info'] ) ? $sd_input_data_sabitized['rbfw_bikecarsd_info'] : [];
@@ -326,7 +317,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $rbfw_pickup_point                               = isset( $sd_input_data_sabitized['rbfw_pickup_point'] ) ? $sd_input_data_sabitized['rbfw_pickup_point'] : '';
                 $rbfw_dropoff_point                              = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
-                $rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $end_date, $rbfw_type_info, $rbfw_service_info, $start_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity , $start_date , $rbfw_management_info , $rbfw_management_price);
+                $rbfw_bikecarsd_ticket_info                      = $rbfw_bikecarsd->rbfw_bikecarsd_ticket_info( $rbfw_id, $rbfw_start_datetime, $end_date, $rbfw_type_info, $rbfw_service_info, $start_time, $rbfw_regf_info, $rbfw_pickup_point, $rbfw_dropoff_point, $end_time, $rbfw_item_quantity , $start_date , $rbfw_management_info , $rbfw_management_price,$selected_date);
 
                 $sub_total_price                                 = apply_filters( 'rbfw_cart_base_price', $sub_total_price );
                 $security_deposit                                = rbfw_security_deposit( $rbfw_id, $sub_total_price );
@@ -335,12 +326,15 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_item_quantity']            = $rbfw_item_quantity;
                 $cart_item_data['rbfw_pickup_point']             = $rbfw_pickup_point;
                 $cart_item_data['rbfw_dropoff_point']            = $rbfw_dropoff_point;
+
                 $cart_item_data['rbfw_start_datetime']           = $rbfw_start_datetime;
                 $cart_item_data['rbfw_end_datetime']             = $end_date . ' ' . $end_time;
                 $cart_item_data['rbfw_start_date']               = $start_date;
                 $cart_item_data['rbfw_start_time']               = $start_time;
                 $cart_item_data['rbfw_end_date']                 = $end_date;
                 $cart_item_data['rbfw_end_time']                 = $end_time;
+                $cart_item_data['selected_date']                 = $selected_date;
+
                 $cart_item_data['rbfw_type_info']                = $rbfw_type_info;
                 $cart_item_data['rbfw_service_info']             = $rbfw_service_info;
                 $cart_item_data['rbfw_bikecarsd_duration_price'] = $rbfw_bikecarsd_duration_price;
@@ -915,6 +909,9 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $dropoff_location    = $values['rbfw_dropoff_point'] ? $values['rbfw_dropoff_point'] : '';
                 $rbfw_start_datetime = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
                 $rbfw_start_time     = $values['rbfw_start_time'] ? $values['rbfw_start_time'] : '';
+                $selected_date        = $values['selected_date'] ? $values['selected_date'] : '';
+
+
                 $rbfw_ticket_info    = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
                 $rbfw_type_info      = $values['rbfw_type_info'] ? $values['rbfw_type_info'] : [];
 
@@ -946,7 +943,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                     $item->add_meta_data(
                         esc_html( $start_date_time_label ),
-                        rbfw_date_format( $rbfw_start_datetime ) . ' ' . gmdate( get_option( 'time_format' ), strtotime( $rbfw_start_time ) )
+                        rbfw_date_format( $selected_date ) . ' ' . gmdate( get_option( 'time_format' ), strtotime( $rbfw_start_time ) )
                     );
                 } else {
                     $start_date_label = (
@@ -958,7 +955,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                     $item->add_meta_data(
                         esc_html( $start_date_label ),
-                        rbfw_date_format( $rbfw_start_datetime )
+                        rbfw_date_format( $selected_date )
                     );
                 }
                 if ( ! empty( $pickup_location ) ) {

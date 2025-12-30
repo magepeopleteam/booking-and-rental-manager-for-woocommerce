@@ -627,9 +627,9 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
                     if ( (in_array($checkValues, $inventory_managed_order_status) || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
                         $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
-                        if($stock_manage_on_return_date=='no'){
+                        /*if($stock_manage_on_return_date=='no'){
                             array_pop($booked_dates);
-                        }
+                        }*/
                         if (in_array($date,$booked_dates)) {
                             if($rent_type == 'bike_car_sd'){
                                 $total_booked += array_sum($inventory['rbfw_type_info']);

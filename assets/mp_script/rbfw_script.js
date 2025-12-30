@@ -139,6 +139,9 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
         if(type=='md'){
 
             let rbfw_rent_type = jQuery("#rbfw_rent_type").val();
+            let manage_inventory_as_timely = jQuery("#manage_inventory_as_timely").val();
+
+
 
             if(rbfw_rent_type == 'bike_car_md'){
                 if(jQuery('#rbfw_month_wise_inventory').val()){
@@ -177,16 +180,18 @@ function rbfw_off_day_dates(date,type='',today_enable='no',dropoff=null){
                             }
                         }
                     }
+                }
+            }else if(rbfw_rent_type == 'bike_car_sd' && manage_inventory_as_timely =='off'){
 
-
-
-
-
+                if(jQuery('#rbfw_month_wise_inventory').val()) {
+                    const day_wise_inventory = JSON.parse(jQuery('#rbfw_month_wise_inventory').val());
+                    if (day_wise_inventory[date_in] <= 0) {
+                        return [false, "notav", rbfw_translation.sold_out];
+                    }
                 }
 
+                return [true, "av", ""];
             }
-
-
             return [true, "av", ""];
         }else{
             return false;

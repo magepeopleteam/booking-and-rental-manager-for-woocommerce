@@ -95,7 +95,6 @@
 
                         </div>
                     </div>
-
                 <?php } else{ ?>
 
                     <?php
@@ -370,9 +369,7 @@
 
 				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
 					<button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn rbfw_disabled_button" disabled>
-					<?php
-						esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce');
-					?>
+					<?php esc_html_e('Book Now','booking-and-rental-manager-for-woocommerce'); ?>
 					</button>
 				</div>
 
@@ -396,28 +393,24 @@
                 <?php
 
                 $day_wise_imventory = '';
+                $year = Date('Y');
+                $month = Date('n');
 
-
-
-                    $year = Date('Y');
-                    $month = Date('n');
-
-                    for ($i = 0; $i <= 1; $i++) {
-
-                        if ($i == 0) {
-                            $total_days_month = 30;
-                            if (function_exists('cal_days_in_month')) {
-                                $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                            }
-                            $day_wise_imventory_1 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
+                for ($i = 0; $i <= 1; $i++) {
+                    if ($i == 0) {
+                        $total_days_month = 30;
+                        if (function_exists('cal_days_in_month')) {
+                            $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
                         }
+                        $day_wise_imventory_1 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
+                    }
 
-                        if ($i == 1) {
+                    if ($i == 1) {
                             $date = new DateTime("$year-$month-01");
                             $date->modify('+1 month');
                             $year = $date->format('Y');
+
                             if($month == 12){
-                                $year = $year +1;
                                 $month = 1;
                             }else{
                                 $month = $month + 1;
@@ -426,17 +419,13 @@
                             if (function_exists('cal_days_in_month')) {
                                 $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
                             }
+
                             $day_wise_imventory_2 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
                         }
                     }
                     $day_wise_imventory = wp_json_encode(array_merge($day_wise_imventory_1, $day_wise_imventory_2));
 
-
-
-
-                ?>
-
-
+                    ?>
 
                 <?php wp_nonce_field('rbfw_ajax_action', 'nonce'); ?>
 

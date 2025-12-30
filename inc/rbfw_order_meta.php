@@ -62,10 +62,11 @@ function fetch_order_details_callback() {
                         $BikeCarSdClass = new RBFW_BikeCarSd_Function();
                         $rent_info      = ! empty( $ticket_info['rbfw_type_info'] ) ? $ticket_info['rbfw_type_info'] : [];
                         if($ticket_info['rbfw_end_time']){
-                            $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-time-text');
+                            $rbfw_end_datetime = rbfw_get_datetime($ticket_info['selected_date'], 'date-time-text');
                         }else{
-                            $rbfw_end_datetime = rbfw_get_datetime($ticket_info['rbfw_end_datetime'], 'date-text');
+                            $rbfw_end_datetime = rbfw_get_datetime($ticket_info['selected_date'], 'date-text');
                         }
+                        $rbfw_start_datetime = rbfw_get_datetime( $ticket_info['selected_date'], 'date-text' );
                         $service_info   = ! empty( $ticket_info['rbfw_service_info'] ) ? $ticket_info['rbfw_service_info'] : [];
                         $rent_info      = $BikeCarSdClass->rbfw_get_bikecarsd_rent_info( $item_id, $rent_info , $ticket_info['rbfw_start_date']);
                         $service_info   = $BikeCarSdClass->rbfw_get_bikecarsd_service_info( $item_id, $service_info );
@@ -141,8 +142,11 @@ function fetch_order_details_callback() {
                         <?php if ( $rent_type == 'bike_car_md' || $rent_type == 'dress' || $rent_type == 'equipment' || $rent_type == 'others' ) { ?>
                             <?php if ( $pickup_point ) { ?>
                                 <tr>
-                                    <td><strong><?php rbfw_string( 'rbfw_text_pickup_location', __( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' ) );
-                                            echo ':'; ?></strong></td>
+                                    <td>
+                                        <strong>
+                                            <?php rbfw_string( 'rbfw_text_pickup_location', __( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' ) ); echo ':'; ?>
+                                        </strong>
+                                    </td>
                                     <td><?php echo esc_html( $pickup_point ); ?></td>
                                 </tr>
                             <?php } ?>

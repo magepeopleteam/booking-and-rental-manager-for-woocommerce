@@ -250,6 +250,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
 
 <?php if($rbfw_rent_type == 'bike_car_sd' || $rbfw_rent_type == 'appointment'){
 
+
     $start_datetime = $cart_item['rbfw_start_date'] ? $cart_item['rbfw_start_date'] : '';
     $start_time = $cart_item['rbfw_start_time'] ? $cart_item['rbfw_start_time'] : '';
 
@@ -258,6 +259,10 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
     $end_time = $cart_item['rbfw_end_time'] ? $cart_item['rbfw_end_time'] : '';
     $rbfw_start_datetime = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
     $rbfw_end_datetime = $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
+
+    $selected_date = $cart_item['selected_date'] ? $cart_item['selected_date'] : '';
+
+
     $rbfw_type_info = $cart_item['rbfw_type_info'] ? $cart_item['rbfw_type_info'] : [];
 
 
@@ -298,7 +303,6 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
         <?php if ( ! empty( $rbfw_pickup_point ) ){ ?>
             <tr>
                 <th>
-
                     <?php
                     if($rbfw->get_option_trans('rbfw_text_pickup_point', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
                         echo esc_html($rbfw->get_option_trans('rbfw_text_pickup_point', 'rbfw_basic_translation_settings'));
@@ -306,7 +310,6 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                         echo esc_html__('Pickup Point','booking-and-rental-manager-for-woocommerce');
                     }
                     ?>
-
                 </th>
                 <td><?php echo esc_html($rbfw_pickup_point); ?></td>
             </tr>
@@ -335,7 +338,6 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
             <tr>
                 <th>
                     <?php if(($start_time)){ ?>
-
                         <?php
                         if($rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
                             echo esc_html($rbfw->get_option_trans('rbfw_text_start_date_and_time', 'rbfw_basic_translation_settings'));
@@ -343,9 +345,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                             echo esc_html__('Start Date and Time','booking-and-rental-manager-for-woocommerce');
                         }
                         ?>
-
                     <?php } else{ ?>
-
                         <?php
                         if($rbfw->get_option_trans('rbfw_text_start_date', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
                             echo esc_html($rbfw->get_option_trans('rbfw_text_start_date', 'rbfw_basic_translation_settings'));
@@ -353,13 +353,12 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                             echo esc_html__('Start Date','booking-and-rental-manager-for-woocommerce');
                         }
                         ?>
-
                     <?php } ?>
                 </th>
                 <td>
-                    <?php echo esc_html(rbfw_get_datetime($start_datetime,'date-text')) ; ?>
-                    <?php if(($start_time)){
-                        echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($start_time)));
+                    <?php echo esc_html(rbfw_get_datetime($selected_date,'date-text')) ; ?>
+                    <?php if(($selected_date)){
+                        echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($selected_date)));
                     } ?>
                 </td>
             </tr>
