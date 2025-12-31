@@ -3,11 +3,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     die;
 }
 $rbfw_id = $post_id ??0;
-global $frontend;
+
 global $submit_name;
 global $rbfw;
-
-$frontend = $frontend??0;
 $cart_backend = $cart_backend??'';
 
 if($cart_backend){
@@ -181,7 +179,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                         <?php if ($enable_hourly_rate == 'yes') { ?>
                                             <tr>
                                                 <td><strong><?php esc_html_e( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
-                                                <td>rbfw_js_variables.currency +rbfw_js_variables.currency + / <?php esc_html_e('Hour', 'booking-and-rental-manager-for-woocommerce'); ?></td>
+                                                <td><?php echo wp_kses_post(wc_price($hourly_rate)); ?> / <?php esc_html_e('Hour', 'booking-and-rental-manager-for-woocommerce'); ?></td>
                                             </tr>
                                         <?php } ?>
                                         </tbody>
@@ -770,12 +768,11 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 </span>
                             </li>
 
-                            <li class="management-costing rbfw-cond">
+                            <li class="management-costing rbfw-cond" style="display:none;">
                                 <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>
                                 <span class="price-figure" data-price="">
                                 </span>
                             </li>
-
 
                             <li class="discount" style="display:none;">
                                 <?php esc_html_e('Discount','booking-and-rental-manager-for-woocommerce'); ?>

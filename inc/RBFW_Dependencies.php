@@ -54,15 +54,20 @@ if (! class_exists('RBFW_Dependencies')) {
 			wp_enqueue_style('select2css', RBFW_PLUGIN_URL . '/admin/css/select2.min.css', false, '1.0', 'all');
 			wp_enqueue_script('select2', RBFW_PLUGIN_URL . '/admin/js/select2.min.js', array('jquery'), null, true);
 
-			if (rbfw_woo_install_check() == 'Yes') {
-				wp_localize_script('rbfw_script', 'rbfw_translation', array(
-					'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
-					'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
-					'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
-					'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
-					'currency' => get_woocommerce_currency_symbol()
-				));
-			}
+
+            wp_localize_script('rbfw_script', 'rbfw_translation', array(
+                'return_time' => __('Return Time', 'booking-and-rental-manager-for-woocommerce'),
+                'pickup_time' => __('Pickup Time', 'booking-and-rental-manager-for-woocommerce'),
+                'available_quantity_is' => __('Available Quantity is', 'booking-and-rental-manager-for-woocommerce'),
+                'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
+                'variation_name' => __('Value Name', 'booking-and-rental-manager-for-woocommerce'),
+                'stock_quantity' => __('Stock Quantity', 'booking-and-rental-manager-for-woocommerce'),
+                'is_default' => __('Is Default', 'booking-and-rental-manager-for-woocommerce'),
+                'filed_label' => __('Field Label', 'booking-and-rental-manager-for-woocommerce'),
+                'actions' => __('Action', 'booking-and-rental-manager-for-woocommerce'),
+                'add_new_value' => __('Add New Value', 'booking-and-rental-manager-for-woocommerce'),
+            ));
+
 
 			wp_enqueue_script('resort_script', RBFW_PLUGIN_URL . '/assets/mp_script/resort_script.js', array(), time(), true);
 			do_action('rbfw_frontend_enqueue_scripts');
@@ -138,17 +143,21 @@ if (! class_exists('RBFW_Dependencies')) {
             $timezone = wp_timezone(); // WP 5.3+
             $datetime = new DateTime('now', $timezone);
 
-			wp_localize_script(
-				'jquery',
-				'rbfw_js_variables',
-				array(
-					'rbfw_today_booking_enable' => $today_booking_enable,
-                    'timeFormat' => get_option('time_format'),
-                    'currentDateTime' => $datetime->format('Y-m-d H:i:s'),
-                    'currentDate' => $datetime->format('Y-m-d'),
-
-				)
-			);
+            if (rbfw_woo_install_check() == 'Yes') {
+                wp_localize_script(
+                    'jquery',
+                    'rbfw_js_variables',
+                    array(
+                        'rbfw_today_booking_enable' => $today_booking_enable,
+                        'timeFormat' => get_option('time_format'),
+                        'currentDateTime' => $datetime->format('Y-m-d H:i:s'),
+                        'currentDate' => $datetime->format('Y-m-d'),
+                        'currency' => get_woocommerce_currency_symbol(),
+                        'currency_format'                 => get_option( 'woocommerce_currency_pos' ),
+                        'price_decimals' => wc_get_price_decimals()
+                    )
+                );
+            }
 
 			wp_enqueue_script('smartWizard', plugins_url('admin/js/jquery.smartWizard.min.js', __DIR__), array('jquery'), '6.0.6', false);
 			wp_enqueue_script('rbfw-admin-input', plugins_url('admin/js/rbfw-admin-input.js', __DIR__), array('jquery'), time(), false);

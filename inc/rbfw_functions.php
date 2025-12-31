@@ -153,6 +153,7 @@
                 'id'          => true,
                 'class'          => true,
                 'aria-expanded'          => true,
+                'data-key'          => true,
             ),
             'h2'   => array(
                 'id'          => true,
@@ -368,15 +369,7 @@ function rbfw_url_exclude_search_engine() {
 			'new_item_name'     => esc_html__( 'New Tag Name', 'booking-and-rental-manager-for-woocommerce' ),
 			'menu_name'         => esc_html__( 'Tags', 'booking-and-rental-manager-for-woocommerce' ),
 		);
-// 		register_taxonomy( 'rbfw_item_tag', array( 'rbfw_item' ), array(
-// 			'hierarchical'      => false,
-// 			'labels'            => $labels,
-// 			'show_ui'           => true,
-// 			'show_in_rest'      => true,
-// 			'show_admin_column' => true,
-// 			'query_var'         => true,
-// 			'rewrite'           => array( 'slug' => 'rbfw_item_tag' ),
-// 		) );
+
 	}
 	add_action( 'init', 'rbfw_create_tag_taxonomy', 0 );
 	if ( ! function_exists( 'mage_array_strip' ) ) {
@@ -406,10 +399,7 @@ function rbfw_url_exclude_search_engine() {
 		}
 		$rbfw_faq_arr = get_post_meta( $post_id, 'mep_event_faq', true );
 		if ( ! empty( $rbfw_faq_arr ) ) {
-			$rbfw_faq_title   = array_column( $rbfw_faq_arr, 'rbfw_faq_title' );
-			$rbfw_faq_img     = array_column( $rbfw_faq_arr, 'rbfw_faq_img' );
-			$rbfw_faq_content = array_column( $rbfw_faq_arr, 'rbfw_faq_content' );
-			$count_faq_arr    = count( $rbfw_faq_arr );
+
 			?>
             <div id="rbfw_faq_accordion">
 				<?php foreach ( $rbfw_faq_arr as $faq ) { ?>
@@ -2753,27 +2743,12 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         if ($daysWeeks > 0)        $output[] = "$daysWeeks day" . ($daysWeeks > 1 ? 's' : '');
         if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
 
-        echo $hours;exit;
-
         return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>get_transient("pricing_applied")];
     }
-
-
-
-
-
-
-
 
     $total_days = $diff->days;
     $actual_days = $total_days;
     $hours = round($diff->h + ($diff->i / 60),2);
-
-
-
-
-
-
 
     if ($rbfw_enable_time_slot === 'off') {
         if ($rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on') === 'on' || $total_days === 0) {
@@ -2976,7 +2951,7 @@ function rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $d
 function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
 
     if (!empty($seasonal_prices) && ($sp_price = check_seasonal_price($date, $seasonal_prices, $hours, $enable_daily)) !== 'not_found') {
-        return 5;
+        return $sp_price;
     }
     $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
     $custom_rate = get_post_meta($post_id, "rbfw_{$day}_daily_rate", true);
@@ -3019,7 +2994,8 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
 
     function check_seasonal_price( $Book_date, $rbfw_sp_prices, $hours = '0', $rbfw_enable_daily_rate = '0' ,$rbfw_half_day_rate=0) {
 
-		foreach ( $rbfw_sp_prices as $rbfw_sp_price ) {
+
+        foreach ( $rbfw_sp_prices as $rbfw_sp_price ) {
 			$rbfw_sp_start_date = $rbfw_sp_price['rbfw_sp_start_date'];
 			$rbfw_sp_end_date   = $rbfw_sp_price['rbfw_sp_end_date'];
 			$sp_dates_array     = getAllDates( $rbfw_sp_start_date, $rbfw_sp_end_date );
@@ -3039,8 +3015,10 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
 				if ( $hours ) {
                     if($rbfw_half_day_rate){
                         return $rbfw_half_day_rate;
-                    }else{
+                    }elseif($hourly_rate){
                         return $hourly_rate * $hours;
+                    }else{
+                        return $daily_rate;
                     }
 				} else {
 					if ( $rbfw_enable_daily_rate == 'no' ) {
@@ -3239,7 +3217,7 @@ function get_rbfw_post_categories_from_meta() {
 		while ( $query->have_posts() ) {
 			$query->the_post();
 			$meta_value = get_post_meta( get_the_ID(), 'rbfw_feature_category', true );
-			$meta_value = maybe_unserialize( $meta_value );
+			$meta_value = maybe_unserialize( $meta_value , array( 'allowed_classes' => false ));
 			if ( is_array( $meta_value ) && count( $meta_value ) > 0 ) {
 				$all_categories = array_merge( $all_categories, $meta_value );
 			}

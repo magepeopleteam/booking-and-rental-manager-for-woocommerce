@@ -6,9 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <?php
 global $rbfw;
-global $frontend;
 $post_id = $post_id??0;
-$frontend = $frontend??0;
 
 $rbfw_feature_category = rbfw_get_feature_category_meta( $post_id );
 $tab_style = $rbfw->get_option_trans('rbfw_single_rent_tab_style', 'rbfw_basic_single_rent_page_settings','horizontal');
@@ -18,7 +16,7 @@ $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_setti
 	<div class="mp_default_theme">
 		<div class="mpContainer">
 			<div class="mp_details_page">
-                <?php  if($frontend){ ?>
+                <?php  if(!is_admin()){ ?>
 				<div class="mp_left_section">
 					<div class="mpStyle <?php echo esc_attr($slide_style); ?>">
 						<?php do_action( 'rbfw_slider', $post_id ,'rbfw_gallery_images'); ?>
