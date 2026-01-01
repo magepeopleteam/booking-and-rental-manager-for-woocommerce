@@ -233,3 +233,26 @@ function custom_taxable_fee() {
 }
 
 
+add_action( 'rbfw_ticket_feature_info', 'rbfw_ticket_feature_info' );
+function rbfw_ticket_feature_info(){
+
+    $rbfw_real_time_availability_display = rbfw_get_option('rbfw_real_time_availability_display', 'rbfw_basic_gen_settings');
+
+    if($rbfw_real_time_availability_display=='yes'){
+
+    ?>
+    <div class="rbfw-bikecarsd-calendar-header">
+        <div class="rbfw-bikecarsd-calendar-header-feature">
+            <i class="fas fa-clock"></i>
+            <?php esc_html_e('Real-time availability','booking-and-rental-manager-for-woocommerce'); ?>
+        </div>
+        <div class="rbfw-bikecarsd-calendar-header-feature">
+            <i class="fas fa-bolt"></i>
+            <?php esc_html_e('Instant confirmation','booking-and-rental-manager-for-woocommerce'); ?>
+        </div>
+    </div>
+    <?php
+    }
+}
+
+
