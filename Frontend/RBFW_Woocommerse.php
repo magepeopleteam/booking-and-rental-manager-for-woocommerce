@@ -908,7 +908,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $pickup_location     = $values['rbfw_pickup_point'] ? $values['rbfw_pickup_point'] : '';
                 $dropoff_location    = $values['rbfw_dropoff_point'] ? $values['rbfw_dropoff_point'] : '';
                 $rbfw_start_datetime = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
-                $rbfw_start_time     = $values['rbfw_start_time'] ? $values['rbfw_start_time'] : '';
+                $rbfw_start_time     = $values['rbfw_start_time'] ? $values['rbfw_start_time'] : '00:00';
                 $selected_date        = $values['selected_date'] ? $values['selected_date'] : '';
 
 

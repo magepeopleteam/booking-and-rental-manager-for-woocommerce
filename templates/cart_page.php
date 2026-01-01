@@ -357,8 +357,8 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                 </th>
                 <td>
                     <?php echo esc_html(rbfw_get_datetime($selected_date,'date-text')) ; ?>
-                    <?php if(($selected_date)){
-                        echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($selected_date)));
+                    <?php if(($start_time)){
+                        echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($start_time)));
                     } ?>
                 </td>
             </tr>
