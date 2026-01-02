@@ -2635,7 +2635,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
     $endday = strtolower(gmdate('D', strtotime($end_date)));
     $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
 
-   // echo $pickup_datetime.' '.$dropoff_datetime$diff->days;exit;
+
 
     if (!$diff) return ['duration_price' => 0, 'total_days' => 0, 'actual_days' => 0, 'hours' => 0];
 
@@ -2646,6 +2646,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
     $remainingDays = $interval->d;
     $weeks = floor($remainingDays / 7);
     $total_days = $interval->days;
+
     $actualWeeks = floor($total_days / 7);
     $daysWeeks = $total_days % 7;
 
@@ -2705,8 +2706,6 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
 
 
-
-
         return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>get_transient("pricing_applied")];
 
     }
@@ -2752,10 +2751,13 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
     $actual_days = $total_days;
     $hours = round($diff->h + ($diff->i / 60),2);
 
-    if ($rbfw_enable_time_slot === 'off') {
+
+
+    if ($rbfw_enable_time_slot === 'no') {
         if ($rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on') === 'on' || $total_days === 0) {
             $total_days++;
             $hours = 0;
+
         }
     } else {
         if ($hours || ($total_days && $rbfw_enable_hourly_rate === 'yes' && $rbfw_enable_daily_rate === 'no')) {
@@ -3462,15 +3464,7 @@ if (!function_exists('rbfw_day_row_md')) {
     }
 }
 
-function rbfw_end_time(){
-    global $rbfw;
-    $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
-    if($rbfw_count_extra_day_enable=='on'){
-        return '24:00:00';
-    }else{
-        return '00:00:00';
-    }
-}
+
 
 function findMinimumPrice($items) {
     $minPrice = PHP_INT_MAX;
