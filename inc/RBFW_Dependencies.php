@@ -344,6 +344,26 @@ if (! class_exists('RBFW_Dependencies')) {
 
 		public function included_header_script()
 		{
+			// Add import map for WordPress Interactivity API to fix module resolution error in block themes
+			// This ensures @wordpress/interactivity module specifier is resolved correctly
+			// Only add if WordPress hasn't already added it (WordPress 6.5+ handles this automatically)
+			$interactivity_runtime_path = ABSPATH . WPINC . '/js/interactivity/runtime.min.js';
+			
+			// Check if WordPress Interactivity API files exist and import map hasn't been added
+			if (file_exists($interactivity_runtime_path)) {
+				$interactivity_runtime = includes_url('js/interactivity/runtime.min.js');
+				$interactivity_router = includes_url('js/interactivity/router.min.js');
+				
+				// Add import map before any module scripts
+				echo '<script type="importmap">';
+				echo json_encode(array(
+					'imports' => array(
+						'@wordpress/interactivity' => esc_url($interactivity_runtime),
+						'@wordpress/interactivity-router' => esc_url($interactivity_router)
+					)
+				), JSON_UNESCAPED_SLASHES);
+				echo '</script>' . "\n";
+			}
 ?>
 			<script>
 				// Safely pass WordPress options to JavaScript
