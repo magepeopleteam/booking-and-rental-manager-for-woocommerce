@@ -518,11 +518,12 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     <?php } ?>
 
                     <?php
+                    $resourse_cost = 0;
                     $option_value  = get_post_meta($post_id, 'rbfw_service_category_price', true);
                     $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
                     ?>
 
-                    <?php if (!empty($option_value) && $enable_service_price === 'on') { ?>
+                    <?php if (!empty($option_value) && $enable_service_price === 'on') { $resourse_cost =1; ?>
                         <div class="multi-service-category-section" style="display: none">
                             <?php foreach ($option_value as $cat => $item) { ?>
                                 <div class="servise-item">
@@ -607,7 +608,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
 
 
-                    <?php if(!empty($extra_service_list)){ ?>
+                    <?php if(!empty($extra_service_list)){ $resourse_cost =1; ?>
                         <div class="item rbfw_resourse_md" style="display: none">
                             <div class="rbfw-single-right-heading">
                                 <?php esc_html_e('Optional Add-ons','booking-and-rental-manager-for-woocommerce'); ?>
@@ -756,11 +757,13 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                 </span>
                             </li>
 
-                            <li class="resource-costing rbfw-cond">
-                                <?php esc_html_e('Resource Cost','booking-and-rental-manager-for-woocommerce'); ?>
-                                <span class="price-figure" data-price="">
+                            <?php if($resourse_cost){ ?>
+                                <li class="resource-costing rbfw-cond">
+                                    <?php esc_html_e('Resource Cost','booking-and-rental-manager-for-woocommerce'); ?>
+                                    <span class="price-figure" data-price="">
                                     </span>
-                            </li>
+                                </li>
+                            <?php } ?>
 
                             <li class="subtotal">
                                 <?php esc_html_e('Subtotal','booking-and-rental-manager-for-woocommerce'); ?>
