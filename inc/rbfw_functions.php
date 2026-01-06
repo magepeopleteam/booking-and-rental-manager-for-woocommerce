@@ -3486,18 +3486,13 @@ function findMinimumPrice($items,$pricing_display_for_listing='') {
     }
 
    if($minPrice==PHP_INT_MAX){
-
        foreach ($items as $item) {
            foreach (['hourly_price', 'daily_price', 'weekly_price', 'monthly_price'] as $priceType) {
-
                if (!empty($item[$priceType]) && $item[$priceType] < $minPrice) {
-
                    $minPrice = $item[$priceType];
                    $minItem  = $item['item_name'];
                    $minType  = $priceType;
-
                }
-
            }
        }
    }
