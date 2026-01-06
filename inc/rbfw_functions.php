@@ -3466,20 +3466,41 @@ if (!function_exists('rbfw_day_row_md')) {
 
 
 
-function findMinimumPrice($items) {
+function findMinimumPrice($items,$pricing_display_for_listing='') {
     $minPrice = PHP_INT_MAX;
     $minItem  = null;
     $minType  = null;
 
     foreach ($items as $item) {
         foreach (['hourly_price', 'daily_price', 'weekly_price', 'monthly_price'] as $priceType) {
-            if (!empty($item[$priceType]) && $item[$priceType] < $minPrice) {
+
+            if ($priceType==$pricing_display_for_listing.'_price' && !empty($item[$priceType]) && $item[$priceType] < $minPrice) {
+
                 $minPrice = $item[$priceType];
                 $minItem  = $item['item_name'];
                 $minType  = $priceType;
+
             }
+
         }
     }
+
+   if($minPrice==PHP_INT_MAX){
+
+       foreach ($items as $item) {
+           foreach (['hourly_price', 'daily_price', 'weekly_price', 'monthly_price'] as $priceType) {
+
+               if (!empty($item[$priceType]) && $item[$priceType] < $minPrice) {
+
+                   $minPrice = $item[$priceType];
+                   $minItem  = $item['item_name'];
+                   $minType  = $priceType;
+
+               }
+
+           }
+       }
+   }
 
     return [
         'item_name' => $minItem,

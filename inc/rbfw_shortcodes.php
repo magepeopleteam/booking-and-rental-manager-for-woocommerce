@@ -769,6 +769,9 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
                     <div class="rbfw_filter_sidebar_locations">
                     <h5 class="rbfw_toggle-header"><?php esc_html_e('Pickup Location','booking-and-rental-manager-for-woocommerce'); ?><span class="rbfw_toggle-icon">-</span></h5>
                     <div class="rbfw_toggle-content" style="display: block">
+                        <div id="rbfw_toggle_content_location">
+
+
                         <?php
 
                             $total_location = count( $rbfw_locations );
@@ -784,6 +787,9 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
                                 }
                                 $count_location_display++;
                             }
+                        ?>
+                            </div>
+                        <?php
                             if( $total_location > $type_display ){ ?>
                                 <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_location"><?php esc_html_e('More','booking-and-rental-manager-for-woocommerce'); ?> +</div>
                             <?php }
@@ -807,7 +813,8 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
             <?php if( $left_filter_control['category_filter_shown'] === 'on' &&  is_array( $rbfw_categorys ) && count( $rbfw_categorys ) > 0 ){?>
                 <div class="rbfw_filter_sidebar_category">
                     <h5 class="rbfw_toggle-header"><?php esc_html_e('Item Category','booking-and-rental-manager-for-woocommerce'); ?> <span class="rbfw_toggle-icon">-</span></h5>
-                    <div class="rbfw_toggle-content" style="display: block">
+                    <div class="rbfw_toggle-content"  style="display: block">
+                        <div id="rbfw_toggle-content-category">
                         <?php
 
                         $total_category = count( $rbfw_categorys );
@@ -823,6 +830,10 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
                             }
                             $category_display_count++;
                         }
+                        ?>
+                        </div>
+                            <?php
+
                         if( $total_category > $type_display ){ ?>
                             <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_category"><?php esc_html_e('More','booking-and-rental-manager-for-woocommerce'); ?> +</div>
                         <?php }
@@ -834,8 +845,8 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
 
             <?php if( $left_filter_control['type_filter_shown'] === 'on' && is_array( $rbfw_rent_types ) && count( $rbfw_rent_types ) > 0 ){?>
                 <div class="rbfw_filter_sidebar_product-type">
-                    <h5 class="rbfw_toggle-header"><?php esc_html_e('More','booking-and-rental-manager-for-woocommerce'); ?>Item Type <span class="rbfw_toggle-icon">-</span></h5>
-                    <div class="rbfw_toggle-content" style="display: block">
+                    <h5 class="rbfw_toggle-header"><?php esc_html_e('More','booking-and-rental-manager-for-woocommerce'); ?> Item Type <span class="rbfw_toggle-icon">-</span></h5>
+                    <div class="rbfw_toggle-content" id="rbfw_toggle_content_types"  style="display: block">
                         <?php foreach ( $rbfw_rent_types as $key => $item ) { ?>
                             <div class="rbfw_rent_item_left_feature_title">
                                 <input type="checkbox" class="rbfw_rent_type" value="<?php echo esc_attr( $key )?>">
@@ -850,6 +861,7 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
                 <div class="rbfw_rent_item_fearture_holder">
                     <h5 class="rbfw_toggle-header"><?php esc_html_e('Item Features','booking-and-rental-manager-for-woocommerce'); ?><span class="rbfw_toggle-icon">-</span></h5>
                     <div class="rbfw_toggle-content" style="display: block">
+                        <div id="rbfw_toggle_content_feature">
                         <?php
                         $total_feature = count( $rbfw_features_category );
                         $feature_start = 1;
@@ -866,9 +878,12 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
                                 }
                             }
                         }
+                        ?>
+                        </div>
+                        <?php
                         if( $total_feature > $type_display ){ ?>
                             <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_feature"><?php esc_html_e('More','booking-and-rental-manager-for-woocommerce'); ?> +</div>
-                        <?php }?>
+                        <?php } ?>
                     </div>
                 </div>
             <?php }?>

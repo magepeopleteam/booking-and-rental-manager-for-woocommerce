@@ -194,6 +194,20 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                 )
             ),
 
+            array(
+                'name' => 'pricing_display_for_listing',
+                'label' => esc_html__( 'Pricing display for listing', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( "Pricing display for listing.", 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'hourly',
+                'options' => array(
+                    'hourly' => 'Hourly',
+                    'daily'  => 'Daily',
+                    'weekly'  => 'Weekly',
+                    'monthly'  => 'Monthly'
+                )
+            ),
+
         ),
 
 
