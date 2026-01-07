@@ -54,19 +54,13 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',function() {
-    const $this = jQuery(this);
-    const target = jQuery('.price-item-container');
-    if (target.hasClass('open')) {
-        target.removeClass('open').slideUp();
-        $this.find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
-    } else {
-        target.addClass('open').slideDown();
-        $this.find('i').removeClass('fa-angle-down').addClass('fa-angle-up');
-    }
+jQuery(document).on('mouseenter','.rbfw-pricing-info-heading i',function() {
+    jQuery('.price-item-container').stop(true, true).slideDown();
 });
 
-
+jQuery(document).on('mouseleave', '.rbfw-pricing-info-heading i', function () {
+    jQuery('.price-item-container').stop(true, true).slideUp();
+});
 
 jQuery('body').on('focusin', '.pickup_date', function(e) {
     jQuery(this).datepicker({
