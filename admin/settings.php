@@ -117,6 +117,18 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
             ),
 
             array(
+                'name' => 'rbfw_real_time_availability_display',
+                'label' => esc_html__( 'Real-time availability and Instant confirmation Display', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( "If you want to display Real-time availability and Instant confirmation, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'yes',
+                'options' => array(
+                    'yes' => 'Yes',
+                    'no'  => 'No'
+                )
+            ),
+
+            array(
                 'name' => 'want_loco_translate',
                 'label' => esc_html__( 'Want to use loco translate', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc' => esc_html__( "If you want to change translation by using loco translate then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
@@ -179,6 +191,20 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                 'options' => array(
                     'yes' => 'Yes',
                     'no'  => 'No'
+                )
+            ),
+
+            array(
+                'name' => 'pricing_display_for_listing',
+                'label' => esc_html__( 'Pricing display for listing', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( "Pricing display for listing.", 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'hourly',
+                'options' => array(
+                    'hourly' => 'Hourly',
+                    'daily'  => 'Daily',
+                    'weekly'  => 'Weekly',
+                    'monthly'  => 'Monthly'
                 )
             ),
 

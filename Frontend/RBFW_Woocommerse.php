@@ -455,11 +455,11 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
                 $rbfw_enable_time_picker  = get_post_meta( $rbfw_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_time_picker', true ) : '';
                 $end_date = isset($sd_input_data_sabitized['rbfw_pickup_end_date']) ? $sd_input_data_sabitized['rbfw_pickup_end_date'] : '';
-                if($rbfw_count_extra_day_enable=='on' && $rbfw_enable_time_picker=='no') {
+             /*   if($rbfw_count_extra_day_enable=='on' && $rbfw_enable_time_picker=='no') {
                     $date = new DateTime($end_date);
                     $date->modify("+1 day");
                     $end_date = $date->format("Y-m-d");
-                }
+                }*/
                 $start_time                = isset( $sd_input_data_sabitized['rbfw_pickup_start_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_start_time'] : '';
                 $end_time                  = isset( $sd_input_data_sabitized['rbfw_pickup_end_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_end_time'] : '';
 
@@ -471,6 +471,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_duration_md       = isset( $sd_input_data_sabitized['rbfw_duration_md'] ) ? $sd_input_data_sabitized['rbfw_duration_md'] : '';
                 $rbfw_enable_time_slot     = isset( $sd_input_data_sabitized['rbfw_enable_time_slot'] ) ? $sd_input_data_sabitized['rbfw_enable_time_slot'] : 'off';
                 $duration_price_info       = rbfw_md_duration_price_calculation( $rbfw_id, $pickup_datetime, $dropoff_datetime, $start_date, $end_date, $start_time, $end_time, $rbfw_enable_time_slot );
+
                 $duration_price_individual = $duration_price_info['duration_price'];
                 $duration_price            = $duration_price_info['duration_price'] * $rbfw_item_quantity;
                 $total_days                = $duration_price_info['total_days'];
