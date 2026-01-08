@@ -497,74 +497,11 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     </div>
                 </div>
 
-
-                <?php
-
-                $rbfw_minimum_booking_day = 0;
-                $rbfw_maximum_booking_day = 0;
-                if(rbfw_check_min_max_booking_day_active()){
-                    $rbfw_minimum_booking_day = (int)get_post_meta($post_id, 'rbfw_minimum_booking_day', true);
-                    if(get_post_meta($post_id, 'rbfw_maximum_booking_day', true)){
-                        $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';
-                    }
-                }
-
-                $day_wise_imventory = '';
-
-                if($rbfw_enable_time_picker != 'yes') {
-
-                    $year = Date('Y');
-                    $month = Date('n');
-
-                    for ($i = 0; $i <= 1; $i++) {
-
-                        if ($i == 0) {
-                            $total_days_month = 30;
-                            if (function_exists('cal_days_in_month')) {
-                                $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                            }
-                            $day_wise_imventory_1 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
-                        }
-
-                        if ($i == 1) {
-                            $date = new DateTime("$year-$month-01");
-                            $date->modify('+1 month');
-                            $year = $date->format('Y');
-                            $month = $month + 1;
-
-                            $total_days_month = 30;
-                            if (function_exists('cal_days_in_month')) {
-                                $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                            }
-
-                            $day_wise_imventory_2 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
-                        }
-                        if ($i == 2) {
-                            $date = new DateTime("$year-$month-01");
-                            $date->modify('+2 month');
-                            $year = $date->format('Y');
-                            $month = $month + 1;
-                            $total_days_month = 30;
-                            if (function_exists('cal_days_in_month')) {
-                                $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                            }
-
-
-                            $day_wise_imventory_3 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
-                        }
-                    }
-                    $day_wise_imventory = wp_json_encode(array_merge($day_wise_imventory_1, $day_wise_imventory_2));
-                }
-
-            
-
-                ?>
-
-
                 <?php
                 $option_value  = get_post_meta($post_id, 'rbfw_service_category_price', true);
                 $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
-                if (!empty($option_value) && $enable_service_price === 'on') { ?>
+                if (!empty($option_value) && $enable_service_price === 'on') {
+                    ?>
                     <div class="multi-service-category-section" style="display: none">
                         <?php foreach ($option_value as $cat => $item) { ?>
                             <div class="servise-item">

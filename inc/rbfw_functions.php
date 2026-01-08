@@ -2635,7 +2635,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
     $endday = strtolower(gmdate('D', strtotime($end_date)));
     $diff = date_diff(new DateTime($pickup_datetime), new DateTime($dropoff_datetime));
 
-   // echo $pickup_datetime.' '.$dropoff_datetime$diff->days;exit;
+
 
     if (!$diff) return ['duration_price' => 0, 'total_days' => 0, 'actual_days' => 0, 'hours' => 0];
 
@@ -2646,6 +2646,7 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
     $remainingDays = $interval->d;
     $weeks = floor($remainingDays / 7);
     $total_days = $interval->days;
+
     $actualWeeks = floor($total_days / 7);
     $daysWeeks = $total_days % 7;
 
@@ -2705,18 +2706,18 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         if ($hours > 0)       $output[] = "$hours hour" . ($hours > 1 ? 's' : '');
 
 
-
-
         return ['duration_price' => $duration_price, 'duration' => implode(" ", $output), 'total_days'=>$total_days?$total_days:1, 'pricing_applied'=>get_transient("pricing_applied")];
 
     }
 
-    if($rbfw_enable_weekly_rate=='yes'){
+    $rbfw_day_threshold_for_weekly   = get_post_meta( $post_id, 'rbfw_day_threshold_for_weekly', true ) ? get_post_meta( $post_id, 'rbfw_day_threshold_for_weekly', true ) : '0';
+    $rbfw_enable_day_threshold_for_weekly   = get_post_meta( $post_id, 'rbfw_enable_day_threshold_for_weekly', true ) ? get_post_meta( $post_id, 'rbfw_enable_day_threshold_for_weekly', true ) : 'no';
 
-        $rbfw_day_threshold_for_weekly   = get_post_meta( $post_id, 'rbfw_day_threshold_for_weekly', true ) ? get_post_meta( $post_id, 'rbfw_day_threshold_for_weekly', true ) : '0';
+
+    if($rbfw_enable_weekly_rate=='yes' && ($actualWeeks || ($rbfw_enable_day_threshold_for_weekly=='yes' && $daysWeeks >= $rbfw_day_threshold_for_weekly))){
+
         $rbfw_weekly_rate   = get_post_meta( $post_id, 'rbfw_weekly_rate', true );
 
-        $rbfw_enable_day_threshold_for_weekly   = get_post_meta( $post_id, 'rbfw_enable_day_threshold_for_weekly', true ) ? get_post_meta( $post_id, 'rbfw_enable_day_threshold_for_weekly', true ) : 'no';
         if($rbfw_enable_day_threshold_for_weekly=='yes' && $daysWeeks >= $rbfw_day_threshold_for_weekly){
             $thresold_Weeks = $actualWeeks + 1;
             $duration_price += $rbfw_weekly_rate * $thresold_Weeks;
@@ -2750,10 +2751,13 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
     $actual_days = $total_days;
     $hours = round($diff->h + ($diff->i / 60),2);
 
-    if ($rbfw_enable_time_slot === 'off') {
+
+
+    if ($rbfw_enable_time_slot === 'no') {
         if ($rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on') === 'on' || $total_days === 0) {
             $total_days++;
             $hours = 0;
+
         }
     } else {
         if ($hours || ($total_days && $rbfw_enable_hourly_rate === 'yes' && $rbfw_enable_daily_rate === 'no')) {
@@ -3460,30 +3464,38 @@ if (!function_exists('rbfw_day_row_md')) {
     }
 }
 
-function rbfw_end_time(){
-    global $rbfw;
-    $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
-    if($rbfw_count_extra_day_enable=='on'){
-        return '24:00:00';
-    }else{
-        return '00:00:00';
-    }
-}
 
-function findMinimumPrice($items) {
+
+function findMinimumPrice($items,$pricing_display_for_listing='') {
     $minPrice = PHP_INT_MAX;
     $minItem  = null;
     $minType  = null;
 
     foreach ($items as $item) {
         foreach (['hourly_price', 'daily_price', 'weekly_price', 'monthly_price'] as $priceType) {
-            if (!empty($item[$priceType]) && $item[$priceType] < $minPrice) {
+
+            if ($priceType==$pricing_display_for_listing.'_price' && !empty($item[$priceType]) && $item[$priceType] < $minPrice) {
+
                 $minPrice = $item[$priceType];
                 $minItem  = $item['item_name'];
                 $minType  = $priceType;
+
             }
+
         }
     }
+
+   if($minPrice==PHP_INT_MAX){
+       foreach ($items as $item) {
+           foreach (['hourly_price', 'daily_price', 'weekly_price', 'monthly_price'] as $priceType) {
+               if (!empty($item[$priceType]) && $item[$priceType] < $minPrice) {
+                   $minPrice = $item[$priceType];
+                   $minItem  = $item['item_name'];
+                   $minType  = $priceType;
+               }
+           }
+       }
+   }
 
     return [
         'item_name' => $minItem,
@@ -3493,15 +3505,6 @@ function findMinimumPrice($items) {
 }
 
 
-add_action( 'rbfw_ticket_feature_info', 'rbfw_ticket_feature_info' );
-function rbfw_ticket_feature_info(){
-?>
-<div class="rbfw-bikecarsd-calendar-header">
-	<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-clock"></i> <?php rbfw_string('rbfw_text_real_time_availability',__('Real-time availability','booking-and-rental-manager-for-woocommerce')); ?></div>
-	<div class="rbfw-bikecarsd-calendar-header-feature"><i class="fas fa-bolt"></i> <?php rbfw_string('rbfw_text_instant_confirmation',__('Instant confirmation','booking-and-rental-manager-for-woocommerce')); ?></div>
-</div>
-<?php
-}
 
 /**
  * RBFW Reset Orders - AJAX Handler

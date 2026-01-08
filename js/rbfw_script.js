@@ -471,7 +471,6 @@
                 type: [],
                 price: {},
                 title_text: '',
-
             };
             get_left_filter_data( get_filters );
             $("#rbfw_price_start").val('');
@@ -494,6 +493,12 @@
         $(this).next('.rbfw_faq_content_wrapper').toggleClass(' active');
         $(this).find('i').toggleClass('fa-plus fa-minus');
     });
+
+    rbfw_alphabetic_order($('#rbfw_toggle-content-categor'));
+    rbfw_alphabetic_order($('#rbfw_toggle_content_location'));
+    rbfw_alphabetic_order($('#rbfw_toggle_content_types'));
+    rbfw_alphabetic_order($('#rbfw_toggle_content_feature'));
+
 
 })(jQuery)
 
@@ -522,13 +527,26 @@ function rbfw_aig_currentSlide(n) {
 }
 
 
-/*function wc_price_rbfw(price) {
-    if(rbfw_js_variables.currency_format=='left'){
-        return rbfw_js_variables.currency + price.toFixed(rbfw_js_variables.price_decimals)
-    }else{
-        return price.toFixed(rbfw_js_variables.price_decimals) + rbfw_js_variables.currency;
-    }
-}*/
+function rbfw_alphabetic_order(container){
+
+   // var container = jQuery('#rbfw_toggle-content-category');
+
+    var items = container.find('.rbfw_rent_item_left_feature_title').get();
+
+    items.sort(function (a, b) {
+        var textA = jQuery(a).find('span').text().toUpperCase();
+        var textB = jQuery(b).find('span').text().toUpperCase();
+
+        if (textA < textB) return -1;
+        if (textA > textB) return 1;
+        return 0;
+    });
+
+    jQuery.each(items, function (index, item) {
+        container.append(item);
+    });
+
+}
 
 
 function rbfw_aig_showSlides(n) {
