@@ -754,11 +754,10 @@ div.mp_left_section {
 #rbfw_faq_accordion .rbfw_faq_header.active {
     background: #f5f3f1;
     color: #333;
-    border-radius: 5px 5px 0 0;
 }
 
 #rbfw_faq_accordion .rbfw_faq_header.active i {
-    color: #fff;
+    color: var(--rbfw_color_primary);
 }
 
 #rbfw_faq_accordion .rbfw_faq_header i {
