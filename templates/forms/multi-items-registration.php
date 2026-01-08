@@ -129,63 +129,57 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
             <div class="rbfw_bike_car_md_item_wrapper">
                 <div class="rbfw_multi_items_wrapper_inner">
                     <?php do_action('rbfw_discount_ad', $rbfw_id); ?>
-                    <div class="item pricing-content-collapse">
-                        <div class="item-content pricing-content">
-                            <div class="section-header">
-                                <div class="rbfw-single-right-heading rbfw_pricing_info_heading">
-                                    <?php esc_html_e('Pricing Info', 'booking-and-rental-manager-for-woocommerce'); ?>
+                    <div class="item pricing-content-container">
+                        <?php do_action('rbfw_pricing_info_header'); ?>
+                        <div class="price-item-container">
+                            <div class="mpStyle">
+                                <div class="rbfw_day_wise_price">
+                                    <table>
+                                        <tbody>
+
+                                        <tr>
+                                            <td><strong><?php esc_html_e('Items', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
+                                            <?php if(isset($pricing_types['hourly']) && $pricing_types['hourly']=='on'){ ?>
+                                                <td><?php esc_html_e('Hourly Price','booking-and-rental-manager-for-woocommerce'); ?> </td>
+                                            <?php } ?>
+                                            <?php if(isset($pricing_types['daily']) && $pricing_types['daily']=='on'){ ?>
+                                                <td><?php esc_html_e('Daily Price','booking-and-rental-manager-for-woocommerce'); ?> </td>
+                                            <?php } ?>
+                                            <?php if(isset($pricing_types['weekly']) && $pricing_types['weekly']=='on'){ ?>
+                                                <td><?php esc_html_e('Weekly Price','booking-and-rental-manager-for-woocommerce'); ?></td>
+                                            <?php } ?>
+                                            <?php if(isset($pricing_types['monthly']) && $pricing_types['monthly']=='on'){ ?>
+                                                <td><?php esc_html_e('Monthly Price','booking-and-rental-manager-for-woocommerce'); ?></td>
+                                            <?php } ?>
+                                        </tr>
+
+                                        <?php foreach ($multiple_items_info as $key=>$item_price){   ?>
+
+                                        <tr>
+                                            <td><strong><?php echo esc_html($item_price['item_name']); ?></strong></td>
+                                            <?php if(isset($pricing_types['hourly']) && $pricing_types['hourly']=='on'){ ?>
+                                                <td><?php echo wc_price($item_price['hourly_price']) ?> / <?php esc_html_e('Hour','booking-and-rental-manager-for-woocommerce'); ?></td>
+                                            <?php } ?>
+                                            <?php if(isset($pricing_types['daily']) && $pricing_types['daily']=='on'){ ?>
+                                                <td><?php echo wc_price($item_price['daily_price']) ?> / <?php esc_html_e('Day','booking-and-rental-manager-for-woocommerce'); ?></td>
+                                            <?php } ?>
+                                            <?php if(isset($pricing_types['weekly']) && $pricing_types['weekly']=='on'){ ?>
+                                                <td><?php echo wc_price($item_price['weekly_price']) ?> / <?php esc_html_e('Week','booking-and-rental-manager-for-woocommerce'); ?></td>
+                                            <?php } ?>
+                                            <?php if(isset($pricing_types['monthly']) && $pricing_types['monthly']=='on'){ ?>
+                                                <td><?php echo wc_price($item_price['monthly_price']) ?> / <?php esc_html_e('Month','booking-and-rental-manager-for-woocommerce'); ?></td>
+                                            <?php } ?>
+
+
+                                        </tr>
+
+                                        <?php } ?>
+
+
+
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </div>
-                            <?php $rbfw_pricing_info_display = rbfw_get_option('rbfw_pricing_info_display', 'rbfw_basic_gen_settings'); ?>
-                        </div>
-
-                        <div class="price-item-container pricing-content_dh  mpStyle  <?php echo ($rbfw_pricing_info_display=='yes')?'open':'' ?>" style="display: <?php echo ($rbfw_pricing_info_display=='yes')?'block':'none' ?>">
-                            <div class="rbfw_day_wise_price">
-                                <table>
-                                    <tbody>
-
-                                    <tr>
-                                        <td><strong><?php esc_html_e('Items', 'booking-and-rental-manager-for-woocommerce'); ?></strong></td>
-                                        <?php if(isset($pricing_types['hourly']) && $pricing_types['hourly']=='on'){ ?>
-                                            <td><?php esc_html_e('Hourly Price','booking-and-rental-manager-for-woocommerce'); ?> </td>
-                                        <?php } ?>
-                                        <?php if(isset($pricing_types['daily']) && $pricing_types['daily']=='on'){ ?>
-                                            <td><?php esc_html_e('Daily Price','booking-and-rental-manager-for-woocommerce'); ?> </td>
-                                        <?php } ?>
-                                        <?php if(isset($pricing_types['weekly']) && $pricing_types['weekly']=='on'){ ?>
-                                            <td><?php esc_html_e('Weekly Price','booking-and-rental-manager-for-woocommerce'); ?></td>
-                                        <?php } ?>
-                                        <?php if(isset($pricing_types['monthly']) && $pricing_types['monthly']=='on'){ ?>
-                                            <td><?php esc_html_e('Monthly Price','booking-and-rental-manager-for-woocommerce'); ?></td>
-                                        <?php } ?>
-                                    </tr>
-
-                                    <?php foreach ($multiple_items_info as $key=>$item_price){   ?>
-
-                                    <tr>
-                                        <td><strong><?php echo esc_html($item_price['item_name']); ?></strong></td>
-                                        <?php if(isset($pricing_types['hourly']) && $pricing_types['hourly']=='on'){ ?>
-                                            <td><?php echo wc_price($item_price['hourly_price']) ?> / <?php esc_html_e('Hour','booking-and-rental-manager-for-woocommerce'); ?></td>
-                                        <?php } ?>
-                                        <?php if(isset($pricing_types['daily']) && $pricing_types['daily']=='on'){ ?>
-                                            <td><?php echo wc_price($item_price['daily_price']) ?> / <?php esc_html_e('Day','booking-and-rental-manager-for-woocommerce'); ?></td>
-                                        <?php } ?>
-                                        <?php if(isset($pricing_types['weekly']) && $pricing_types['weekly']=='on'){ ?>
-                                            <td><?php echo wc_price($item_price['weekly_price']) ?> / <?php esc_html_e('Week','booking-and-rental-manager-for-woocommerce'); ?></td>
-                                        <?php } ?>
-                                        <?php if(isset($pricing_types['monthly']) && $pricing_types['monthly']=='on'){ ?>
-                                            <td><?php echo wc_price($item_price['monthly_price']) ?> / <?php esc_html_e('Month','booking-and-rental-manager-for-woocommerce'); ?></td>
-                                        <?php } ?>
-
-
-                                    </tr>
-
-                                    <?php } ?>
-
-
-
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>
