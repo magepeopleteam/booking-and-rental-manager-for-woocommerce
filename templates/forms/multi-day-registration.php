@@ -337,7 +337,9 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
                     <?php if ($location_switch == 'yes' && !empty($pickup_location)) : ?>
                         <div class="item">
-                            <div class="rbfw-single-right-heading"><?php esc_html_e('Pickup Location','booking-and-rental-manager-for-woocommerce'); ?></div>
+                            <div class="rbfw-single-right-heading">
+                                <?php esc_html_e('Pickup Location','booking-and-rental-manager-for-woocommerce'); ?>
+                            </div>
                             <div class="item-content rbfw-location">
                                 <select class="rbfw-select" name="rbfw_pickup_point" required>
                                     <option value=""><?php esc_html_e('Choose pickup location','booking-and-rental-manager-for-woocommerce'); ?></option>
