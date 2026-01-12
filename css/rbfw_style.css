@@ -7135,7 +7135,8 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     border-radius: 5px;
 }
 .rbfw_service_type .radio-button.rbfw-sold-out,
-.rbfw_service_type .radio-button.rbfw-sold-out:hover{
+.rbfw_service_type .radio-button.rbfw-sold-out:hover,
+.rbfw_service_type .radio-button.selected.rbfw-sold-out{
     border:1px solid #f9fafb;
     background-color:#f9fafb;
     
@@ -7157,8 +7158,10 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 .rbfw_service_type .radio-button.rbfw-sold-out .price{
     text-decoration: line-through;
 }
+.rbfw_service_type .radio-button.selected.rbfw-sold-out::before,
 .rbfw_service_type .radio-button.rbfw-sold-out::before{
     background-color: #ddd;
+    border: 1px solid #ccc;
 }
 
 /* Selected state for the radio button */
