@@ -7128,11 +7128,37 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     font-weight: normal;
     color:#666;
 }
-/* Hover effect */
+
 .rbfw_service_type .radio-button:hover {
     border:1px solid var(--rbfw_color_primary);
     background-color:var(--rbfw_primary_opacity);
     border-radius: 5px;
+}
+.rbfw_service_type .radio-button.rbfw-sold-out,
+.rbfw_service_type .radio-button.rbfw-sold-out:hover{
+    border:1px solid #f9fafb;
+    background-color:#f9fafb;
+    
+}
+.rbfw_service_type .radio-button.rbfw-sold-out{
+    cursor: not-allowed;
+}
+.rbfw_service_type .radio-button.rbfw-sold-out label,
+.rbfw_service_type .radio-button.rbfw-sold-out .price{
+    color: #9ca3af;
+}
+.rbfw_service_type .radio-button.rbfw-sold-out .solded{
+    padding:2px 3px;
+    margin: 2px;
+    border-radius: 3px;
+    background-color: #ffbebe;
+    color: #ef4444;
+}
+.rbfw_service_type .radio-button.rbfw-sold-out .price{
+    text-decoration: line-through;
+}
+.rbfw_service_type .radio-button.rbfw-sold-out::before{
+    background-color: #ddd;
 }
 
 /* Selected state for the radio button */

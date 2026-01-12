@@ -576,7 +576,7 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
                     $el.attr('data-available_quantity', service_info[type].stock);
 
                     if(service_info[type].stock==0){
-                        $el.find('.rent-type').text(type + ' (Sold Out)');
+                        $el.find('.rent-type').html(type + '<span class="solded">Sold Out</span>');
 
                         $el.addClass('rbfw-sold-out');
 
