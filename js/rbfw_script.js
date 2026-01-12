@@ -592,7 +592,7 @@ jQuery(document).ready(function($){
 
         if(select.val() === ''){
             select.css('border', '1px solid red');
-            e.preventDefault(); // submit বন্ধ করবে
+            //e.preventDefault(); // submit বন্ধ করবে
         } else {
             select.css('border', '');
         }
