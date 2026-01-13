@@ -2775,6 +2775,27 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         list($rbfw_daily_rate, $rbfw_hourly_rate, $rbfw_sp_prices) = rbfw_apply_multi_day_saver($total_days, $rbfw_md_data_mds, $rbfw_daily_rate, $rbfw_hourly_rate,$hours,$rbfw_hourly_threshold);
     }
 
+    if (is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && (!(empty($rbfw_additional_day_prices)))) {
+
+      /*  $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
+        if ($rbfw_count_extra_day_enable == 'on') {
+            $total_days = $total_days + 1;
+        }*/
+        $hours = 0;
+
+        for ($i = 1; $i < $total_days + 1; $i++) {
+
+            if ($multi_day_price_saver = check_multi_day_price_saver($i,$rbfw_additional_day_prices)) {
+                $duration_price =  $multi_day_price_saver + $duration_price;
+            } else {
+                $duration_price = $duration_price + get_post_meta($post_id, 'rbfw_daily_rate', true);
+            }
+
+        }
+
+
+    }
+
 
 
 
@@ -2804,11 +2825,24 @@ function rbfw_get_initial_rates($post_id) {
 
 function rbfw_apply_multi_day_saver($total_days, $md_data, $default_daily, $default_hourly, $hours,$rbfw_hourly_threshold) {
 
-
-
-    if($hours && $hours <= $rbfw_hourly_threshold){
+        if($hours && $hours <= $rbfw_hourly_threshold){
            // $total_days--;
         }
+        $md_saver = check_multi_day_price_saver_in_md($total_days, $md_data);
+        if (!empty($md_saver)) {
+            $daily = empty($md_saver[0]) ? $default_daily : $md_saver[0];
+            $hourly = empty($md_saver[1]) ? $default_hourly : $md_saver[1];
+            return [$daily, $hourly, ''];
+        }
+        return [$default_daily, $default_hourly, ''];
+    }
+
+
+function rbfw_apply_tiered_pricing_addon($total_days, $md_data, $default_daily, $default_hourly, $hours,$rbfw_hourly_threshold) {
+
+    if($hours && $hours <= $rbfw_hourly_threshold){
+        // $total_days--;
+    }
     $md_saver = check_multi_day_price_saver_in_md($total_days, $md_data);
     if (!empty($md_saver)) {
         $daily = empty($md_saver[0]) ? $default_daily : $md_saver[0];
@@ -2817,6 +2851,8 @@ function rbfw_apply_multi_day_saver($total_days, $md_data, $default_daily, $defa
     }
     return [$default_daily, $default_hourly, ''];
 }
+
+
 
 function rbfw_calculate_day_price($i, $post_id, $Book_dates_array, $day, $start_date, $end_date, $pickup_datetime, $dropoff_datetime,
                                   $total_days, $hours, $daily_rate, $hourly_rate, $enable_daily, $enable_hourly, $seasonal_prices, $endday) {
