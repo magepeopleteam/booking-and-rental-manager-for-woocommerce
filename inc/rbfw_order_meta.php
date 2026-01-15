@@ -18,7 +18,12 @@ function fetch_order_details_callback() {
         wp_send_json_error( 'Invalid request.' );
         wp_die();
     }*/
+
     check_ajax_referer( 'rbfw_fetch_order_details_action', 'nonce' );
+
+    if ( ! current_user_can( 'manage_options' ) ) {
+        wp_send_json_error( 'Unauthorized access', 403 );
+    }
 
 
     global $rbfw;

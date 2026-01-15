@@ -2783,16 +2783,11 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
         if ($rbfw_count_extra_day_enable == 'on') {
             $total_days = $total_days + 1;
         }*/
-        $hours = 0;
-
         for ($i = 1; $i < $total_days + 1; $i++) {
-
             if ($multi_day_price_saver = check_multi_day_price_saver($i,$rbfw_additional_day_prices)) {
                 $rbfw_daily_rate =  $multi_day_price_saver;
             }
         }
-
-
     }
 
 
