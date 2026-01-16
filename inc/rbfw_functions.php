@@ -3656,7 +3656,23 @@ function rbfw_restore_inventory_on_cancel( $rbfw_order_id ) {
 		}
 	}
 }
-
+/**
+ * Display pricing information header
+ */
+add_action( 'rbfw_pricing_info_header', 'rbfw_pricing_info_header' );
+function rbfw_pricing_info_header(){
+	$info_display = rbfw_get_option('rbfw_pricing_info_display', 'rbfw_basic_gen_settings');
+	?>
+	<?php if ( $info_display == 'yes' ) : ?>
+	<div class="rbfw-pricing-info-heading">
+		<?php esc_html_e('Pricing Info', 'booking-and-rental-manager-for-woocommerce'); ?>
+		<span class="pricing-info-icon">
+			<i class="fas fa-info-circle"></i>
+		</span>
+	</div>
+	<?php endif; ?>
+	<?php
+}
 /**
  * Enqueue admin assets for RBFW reset orders functionality
  */

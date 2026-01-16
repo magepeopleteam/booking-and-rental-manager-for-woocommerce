@@ -301,10 +301,10 @@ CSS for Single Page Template
     color:#000;
 }
 .rbfw-single-right-heading {
-    margin:20px 0 10px 0;
+    margin:0 0 5px 0;
     display: block;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: normal;
 }
 .rbfw_room_price_category_tabs .rbfw-single-right-heading{
     text-align: center;
@@ -323,22 +323,7 @@ CSS for Single Page Template
 
 .rbfw_room_price_category_tabs .rbfw-single-right-heading p{margin-bottom:0px;}
 
-item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid #ddd;}
 
-.pricing-content {
-    background-color: #f5f5f5;
-    position: relative;
-}
-
-.pricing-content::after{
-    content: '\f078';
-    font-family: FontAwesome;
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    font-size: 14px;
-}
 
 .input-picker-icon{
     position: absolute;
@@ -347,33 +332,6 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
 }
 .input-picker-icon i{
     font-size: 14px;
-}
-.pricing-content .price-type {
-    margin-bottom: 10px;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    border-bottom: 1px solid #ddd;
-}
-
-.pricing-content .price-type p {
-    padding: 5px;
-    font-size: 14px;
-}
-
-.pricing-content .price-type p:first-child {
-    font-weight: 600;
-    width: 40%;
-}
-
-.pricing-content .price-type p:last-child {
-    text-align: right;
-    width: 60%;
-}
-
-.pricing-content .price-type:last-child {
-    margin-bottom: 0;
 }
 
 .rbfw-datetime {
@@ -454,21 +412,68 @@ item-content pricing-content .rbfw-single-right-heading{ border-bottom:1px solid
     right: 15px;
 }
 
-.pricing-content .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.pricing-info-icon{
+    color:  var(--rbfw_color_primary);
     cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease-in-out;
 }
 
+.open .pricing-info-icon::before {
+    content: "";
+    position: absolute;
+    top:100%;
+    left:50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid var(--rbfw_color_primary);
+    z-index: 2;
+}
+.open .pricing-info-icon::after {
+    content: "";
+    position: absolute;
+    top: calc(100% + 2px); /* shadow একটু নিচে */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
 
-.pricing-content .price-item-container {
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 10px solid rgb(255, 255, 255);
+    z-index: 2;
+}
+
+.price-item-container {
     display: none;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border-top: 1px solid rgb(211, 211, 211);
-    margin-top: 10px;
+    position: absolute;
+    width:100%;
+    max-width: 400px;
+    border-radius:5px;
+    background-color: #fff;
+    padding: 10px;
+    top:89px;
+    left:50%;
+    transform: translate(-50%,-50%);
+    z-index: 1;
+    box-shadow: 0 0px 5px #5b5b5b;
+    border: 1px solid var(--rbfw_color_primary);
 }
+.rbfw-related-products-wrapper .owl-carousel{
+    z-index: 0;
+}
+.rbfw-pricing-info-heading{
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    border-radius: 5px;
+    margin-bottom: 10px;  
+}
+
+
 
 .rbfw-location {
     position: relative;
@@ -749,11 +754,10 @@ div.mp_left_section {
 #rbfw_faq_accordion .rbfw_faq_header.active {
     background: #f5f3f1;
     color: #333;
-    border-radius: 5px 5px 0 0;
 }
 
 #rbfw_faq_accordion .rbfw_faq_header.active i {
-    color: #fff;
+    color: var(--rbfw_color_primary);
 }
 
 #rbfw_faq_accordion .rbfw_faq_header i {
@@ -1442,12 +1446,6 @@ a.rbfw_qty_plus.rbfw_timely_es_qty_plus i{
 .rbfw-single-right-container .item.rbfw_bikecarsd_price_summary {
     font-size: 16px;
 }
-.pricing-content .rbfw_pricing_info_heading {
-    border-bottom: 1px solid #e7dede !important;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    width: 100%;
-}
 
 .rbfw_alert_warning {
     font-size: 16px;
@@ -2046,8 +2044,7 @@ li.rbfw-visibility-hidden {
     font-weight: 600;
 }
 
-
-.rbfw-single-right-heading.rbfw_pricing_info_heading .rbfw_pricing_info_heading{padding-left:20px}
+.rbfw_pricing_info_heading{padding-left:20px}
 
 .rbfw_rent_list_button_wrap a.rbfw_rent_list_btn:hover {
     background: var(--rbfw_single_page_base_color4);
@@ -3800,7 +3797,6 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_registration_wrapper .rbfw-bikecarsd-calendar-header,
-.rbfw_muff_registration_wrapper .pricing-content,
 .rbfw_muff_registration_wrapper .rbfw-datetime input,
 .rbfw_muff_registration_wrapper .rbfw-datetime select,
 .rbfw_muff_registration_wrapper .rbfw-quantity select,
@@ -5593,7 +5589,6 @@ img {
     font-weight: normal;
 }
 
-.rbfw_dt_row_registration .pricing-content,
 .rbfw_dt_row_registration .rbfw-p-relative,
 .rbfw_dt_row_registration .rbfw-quantity,
 .rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header,
@@ -5622,7 +5617,6 @@ img {
 .rbfw_dt_row_registration .rbfw-datetime select,
 .rbfw_dt_row_registration .rbfw-quantity select,
 .rbfw_dt_row_registration .rbfw_variation_field,
-.rbfw_dt_row_registration .pricing-content,
 .rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header,
 .rbfw_dt_row_registration .rbfw-duration .item-content,
 .rbfw_dt_row_registration .rbfw-costing,
@@ -5644,7 +5638,6 @@ img {
 .rbfw_dt_row_registration .rbfw_variation_field,
 .rbfw_dt_row_registration #pickup_date::placeholder,
 .rbfw_dt_row_registration #dropoff_date::placeholder,
-.rbfw_dt_row_registration .pricing-content,
 .rbfw_dt_row_registration .rbfw-bikecarsd-calendar-header,
 .rbfw_dt_row_registration .rbfw-duration .item-content,
 .rbfw_dt_row_registration .rbfw-costing,
@@ -6306,18 +6299,6 @@ span:not(.week .day[disabled="disabled"] span):hover {
     height: 50px;
 }
 
-.mp_default_theme .rbfw-location,
-.mp_default_theme #pickup_date,
-.mp_default_theme #dropoff_date,
-.mp_default_theme .rbfw-quantity,
-.mp_default_theme .clock,
-.mp_default_theme .rbfw-duration .item-content,
-.mp_default_theme #checkin_date,
-.mp_default_theme #checkout_date,
-.mp_default_theme .pricing-content {
-    /* border-left: 5px solid var(--rbfw_color_primary); */
-}
-
 .mp_default_theme .rbfw-datetime .date .calendar,
 .mp_default_theme .rbfw-datetime .time .clock {
     color: var(--rbfw_color_primary) !important;
@@ -6808,6 +6789,7 @@ h2.rbfw_rent_list_grid_title a{
 .rbfw_rent_list_grid_row {
     display: inline-flex;
     align-items: flex-end;
+    flex-wrap: wrap;
     gap: 4px;
 }
 
@@ -7066,8 +7048,9 @@ div.rbfw_day_wise_price table{
     margin:0;
 }
 
-.pricing-content-collapse{
+.pricing-content-container{
     margin-bottom: 10px;
+    position: relative;
 }
 
 div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
@@ -7145,11 +7128,40 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     font-weight: normal;
     color:#666;
 }
-/* Hover effect */
+
 .rbfw_service_type .radio-button:hover {
     border:1px solid var(--rbfw_color_primary);
     background-color:var(--rbfw_primary_opacity);
     border-radius: 5px;
+}
+.rbfw_service_type .radio-button.rbfw-sold-out,
+.rbfw_service_type .radio-button.rbfw-sold-out:hover,
+.rbfw_service_type .radio-button.selected.rbfw-sold-out{
+    border:1px solid #f9fafb;
+    background-color:#f9fafb;
+    
+}
+.rbfw_service_type .radio-button.rbfw-sold-out{
+    cursor: not-allowed;
+}
+.rbfw_service_type .radio-button.rbfw-sold-out label,
+.rbfw_service_type .radio-button.rbfw-sold-out .price{
+    color: #9ca3af;
+}
+.rbfw_service_type .radio-button.rbfw-sold-out .solded{
+    padding:2px 3px;
+    margin: 2px;
+    border-radius: 3px;
+    background-color: #ffbebe;
+    color: #ef4444;
+}
+.rbfw_service_type .radio-button.rbfw-sold-out .price{
+    text-decoration: line-through;
+}
+.rbfw_service_type .radio-button.selected.rbfw-sold-out::before,
+.rbfw_service_type .radio-button.rbfw-sold-out::before{
+    background-color: #ddd;
+    border: 1px solid #ccc;
 }
 
 /* Selected state for the radio button */
@@ -7182,9 +7194,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     text-align: center;
     padding: 5px;
 }
-.price-item-container.pricing-content_dh.mpStyle.open {
-    background: #fff;
-}
+
 select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
     text-decoration: line-through;
 }
