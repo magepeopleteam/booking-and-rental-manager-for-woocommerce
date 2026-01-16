@@ -412,39 +412,11 @@ CSS for Single Page Template
     right: 15px;
 }
 
-.pricing-info-icon{
+.pricing-info-view{
     color:  var(--rbfw_color_primary);
     cursor: pointer;
     position: relative;
     transition: all 0.3s ease-in-out;
-}
-
-.open .pricing-info-icon::before {
-    content: "";
-    position: absolute;
-    top:100%;
-    left:50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid var(--rbfw_color_primary);
-    z-index: 2;
-}
-.open .pricing-info-icon::after {
-    content: "";
-    position: absolute;
-    top: calc(100% + 2px); /* shadow একটু নিচে */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid rgb(255, 255, 255);
-    z-index: 2;
 }
 
 .price-item-container {
@@ -455,13 +427,26 @@ CSS for Single Page Template
     border-radius:5px;
     background-color: #fff;
     padding: 10px;
-    top: 72px;
+    top: 170px;
     left:50%;
     transform: translate(-50%,-50%);
     z-index: 1;
     box-shadow: 0 0px 5px #5b5b5b;
     border: 1px solid var(--rbfw_color_primary);
 }
+.price-item-container::before {
+    content: "";
+    position: absolute;
+    top: -10px;          /* container এর উপর বসবে */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 10px solid var(--rbfw_color_primary) /* triangle color */
+}
+
 .rbfw-related-products-wrapper .owl-carousel{
     z-index: 0;
 }
