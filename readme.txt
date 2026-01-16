@@ -215,6 +215,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.6.1
+Vernulable issue solved.
+Translation updated.
+Location validation highlighted
+
 2.5.9
 Bug fixing.
 Validation checked.

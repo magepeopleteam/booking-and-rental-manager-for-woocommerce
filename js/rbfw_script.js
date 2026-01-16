@@ -586,5 +586,20 @@ jQuery(document).ready(function($) {
     });
 });
 
+jQuery(document).ready(function($){
+    $('.rbfw-book-now-btn').on('click', function(e){
+        var select = $('.rbfw-location .rbfw-select');
+
+        if(select.val() === ''){
+            select.css('border', '1px solid red');
+            //e.preventDefault(); // submit বন্ধ করবে
+        } else {
+            select.css('border', '');
+        }
+    });
+});
+
+
+
 
 

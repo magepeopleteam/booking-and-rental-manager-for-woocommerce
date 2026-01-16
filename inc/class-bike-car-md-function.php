@@ -170,17 +170,15 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                         ) .' ';
                 }
                 if ( $hours > 0 ) {
-                    $duration .= $hours > 1 ? $hours.' '.rbfw_string_return('rbfw_text_hours',esc_html__('Hours','booking-and-rental-manager-for-woocommerce')) : $hours.' '.rbfw_string_return('rbfw_text_hour',esc_html__('Hour','booking-and-rental-manager-for-woocommerce'));
+                    $duration .= $hours > 1 ? $hours.' '.esc_html__('Hours','booking-and-rental-manager-for-woocommerce') : $hours.' '.esc_html__('Hour','booking-and-rental-manager-for-woocommerce');
                 }
 
                 if($actual_days == 0 && $hours == 0){
                     $actual_days = 1;
-                    $duration .= $actual_days > 1 ? $actual_days.' '.rbfw_string_return('rbfw_text_days',esc_html__('Days','booking-and-rental-manager-for-woocommerce')).' ' : $actual_days.' '.rbfw_string_return('rbfw_text_day',esc_html__('Day','booking-and-rental-manager-for-woocommerce')).' ';
+                    $duration .= $actual_days > 1 ? $actual_days.' '.esc_html__('Days','booking-and-rental-manager-for-woocommerce').' ' : $actual_days.' '.esc_html__('Day','booking-and-rental-manager-for-woocommerce').' ';
                 }
 
             }
-
-
 
 
             echo wp_json_encode( array(
@@ -226,7 +224,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $pickup_datetime = gmdate('Y-m-d H:i', strtotime($start_date . ' ' . $start_time));
             $durationQty = isset($_POST['durationQty'])?sanitize_text_field(wp_unslash($_POST['durationQty'])):'';
             $durationType = isset($_POST['durationType'])?sanitize_text_field(wp_unslash($_POST['durationType'])):'';
-            $durationType_display = ($durationType == 'hourly' ? 'Hour' : ($durationType == 'daily' ? 'Day' :($durationType == 'weekly'?'Week': 'Month')));
+            $durationType_display = ($durationType == 'hourly' ? esc_html__('Hour','booking-and-rental-manager-for-woocommerce') : ($durationType == 'daily' ? esc_html__('Day','booking-and-rental-manager-for-woocommerce') :($durationType == 'weekly'? esc_html__('Week','booking-and-rental-manager-for-woocommerce') : esc_html__('Month','booking-and-rental-manager-for-woocommerce'))));
 
             $durationType_display = ($durationQty==1)?$durationType_display:$durationType_display.'s';
 
