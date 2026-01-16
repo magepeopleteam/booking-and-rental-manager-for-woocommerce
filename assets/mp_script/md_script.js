@@ -376,14 +376,14 @@ jQuery(document).ready(function () {
         const durationType = durationTypeSelect.val();
         if (durationType) {
             const typeMap = {
-                hourly: 'Hours',
-                daily: 'Days',
-                weekly: 'Weeks',
-                monthly: 'Months'
+                hourly: rbfw_translation.hours,
+                daily: rbfw_translation.days,
+                weekly: rbfw_translation.weeks,
+                monthly: rbfw_translation.months
             };
-            qtyLabel.text(`Number of ${typeMap[durationType]}`);
+            qtyLabel.text(rbfw_translation.number_of+ ` ${typeMap[durationType]}`);
         } else {
-            qtyLabel.text('Number of Duration');
+            qtyLabel.text(rbfw_translation.number_of+' '+rbfw_translation.duration);
         }
     }
 

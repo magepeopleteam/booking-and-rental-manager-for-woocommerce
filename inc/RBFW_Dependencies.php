@@ -200,7 +200,12 @@ if (! class_exists('RBFW_Dependencies')) {
 				'off_label' => __('Off', 'booking-and-rental-manager-for-woocommerce'),
 				'no_items_available' => __('No Items Available!', 'booking-and-rental-manager-for-woocommerce'),
 				'select_pickup_date' => __('Please select the pickup date!', 'booking-and-rental-manager-for-woocommerce'),
-				'filter' => __('Filter', 'booking-and-rental-manager-for-woocommerce'),
+				'hours' => __('Hours', 'booking-and-rental-manager-for-woocommerce'),
+				'days' => __('Days', 'booking-and-rental-manager-for-woocommerce'),
+				'weeks' => __('Weeks', 'booking-and-rental-manager-for-woocommerce'),
+				'months' => __('Months', 'booking-and-rental-manager-for-woocommerce'),
+				'number_of' => __('Number of', 'booking-and-rental-manager-for-woocommerce'),
+				'duration' => __('Duration', 'booking-and-rental-manager-for-woocommerce'),
 			));
 
 
