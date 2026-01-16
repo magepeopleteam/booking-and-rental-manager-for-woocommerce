@@ -3665,9 +3665,9 @@ function rbfw_pricing_info_header(){
 	?>
 	<?php if ( $info_display == 'yes' ) : ?>
 	<div class="rbfw-pricing-info-heading">
-		<?php esc_html_e('Pricing Info', 'booking-and-rental-manager-for-woocommerce'); ?>
-		<span class="pricing-info-icon">
-			<i class="fas fa-info-circle"></i>
+		<i class="fas fa-info-circle"></i> <?php esc_html_e('Pricing Info', 'booking-and-rental-manager-for-woocommerce'); ?>
+		<span class="pricing-info-view" title="click to see">
+			<?php _e('Click to view','booking-and-rental-manager-for-woocommerce') ?>
 		</span>
 	</div>
 	<?php endif; ?>

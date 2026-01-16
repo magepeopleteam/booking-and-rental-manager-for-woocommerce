@@ -53,21 +53,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-
-jQuery(document).on('mouseenter','.rbfw-pricing-info-heading i',function() {
-    jQuery('.price-item-container').stop(true, true).addClass('open').fadeIn();
-    jQuery(this).closest('.mp_right_section').addClass('overlay');
-    jQuery(this).closest('.rbfw-pricing-info-heading').addClass('open');
-});
-
-jQuery(document).on('mouseleave', '.rbfw-pricing-info-heading i', function () {
-    jQuery('.price-item-container').stop(true, true).removeClass('open').fadeOut();
-    jQuery(this).closest('.mp_right_section').removeClass('overlay');
-    jQuery(this).closest('.rbfw-pricing-info-heading').removeClass('open');
-});
-
- // Click → toggle
-jQuery(document).on('click', '.rbfw-pricing-info-heading i', function (e) {
+ // pricing table show/hide
+jQuery(document).on('click', '.pricing-info-view', function (e) {
     e.preventDefault();
     jQuery(this).closest('.rbfw-pricing-info-heading').toggleClass('open');
     jQuery(this).closest('.mp_right_section').toggleClass('overlay');
