@@ -459,6 +459,7 @@ CSS for Single Page Template
     height: 20px;
     border-radius: 4px;
     cursor: pointer;
+    line-height: 1.54;
 }
 .rbfw-related-products-wrapper .owl-carousel{
     z-index: 0;
