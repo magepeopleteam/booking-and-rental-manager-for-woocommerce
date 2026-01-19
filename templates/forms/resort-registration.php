@@ -45,6 +45,7 @@
                     <div class="item pricing-content-container">
                         <?php do_action('rbfw_pricing_info_header'); ?>
                         <div class="price-item-container">
+                            <span class="close-price-container"><i class="mi mi-x"></i></span>
                             <div class="mpStyle">
                                 <div class="rbfw_day_wise_price">
                                     <table>

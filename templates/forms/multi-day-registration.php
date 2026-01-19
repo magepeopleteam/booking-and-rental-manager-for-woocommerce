@@ -123,6 +123,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     <div class="item pricing-content-container">
                         <?php do_action('rbfw_pricing_info_header'); ?>
                         <div class="price-item-container">
+                            <span class="close-price-container"><i class="mi mi-x"></i></span>
                             <div class="mpStyle"  >
                                 <?php if($rbfw_enable_monthly_rate=='yes'){ ?>
                                     <div class="rbfw_day_wise_price">
