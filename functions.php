@@ -255,15 +255,20 @@ function rbfw_ticket_feature_info(){
     }
 }
 
-function check_multi_day_price_saver( $day_number, $rbfw_additional_day_prices) {
-    foreach ( $rbfw_additional_day_prices as $item ) {
-        $rbfw_start_day = $item['rbfw_start_day'];
-        $rbfw_end_day   = $item['rbfw_end_day'];
+function check_rbfw_tiered_pricing( $day_number, $rbfw_tiered_pricing) {
+
+
+    foreach ( $rbfw_tiered_pricing as $item ) {
+        $rbfw_start_day = $item['rbfw_start_day_tiered'];
+        $rbfw_end_day   = $item['rbfw_end_day_tiered'];
+
+
         if ( $day_number >= $rbfw_start_day  &&  $day_number <= $rbfw_end_day) {
-            return $item['rbfw_daily_price'];
+
+            return $item['rbfw_daily_price_tiered'];
         }
     }
-    return '';
+    //return '';
 }
 
 

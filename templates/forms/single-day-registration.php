@@ -150,7 +150,7 @@
                                     <span class="rent-type"><?php echo esc_html($value['rent_type']); ?></span>
                                     <?php if($enable_specific_duration=='on'): ?>
                                         <div class="rbfw_time">
-                                            <?php echo esc_html($value['start_time']).' - '.esc_html($value['end_time']); ?>
+                                            <?php echo esc_html(  gmdate(get_option('time_format'), strtotime($value['start_time']))).' - '.esc_html(  gmdate(get_option('time_format'), strtotime($value['end_time']))); ?>
                                         </div>
                                     <?php else: ?>
                                         <div class="rbfw_time">
