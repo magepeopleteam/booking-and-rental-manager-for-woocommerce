@@ -57,8 +57,15 @@ document.addEventListener('DOMContentLoaded', function () {
 jQuery(document).on('click', '.pricing-info-view', function (e) {
     e.preventDefault();
     jQuery(this).closest('.rbfw-pricing-info-heading').toggleClass('open');
-    jQuery(this).closest('.mp_right_section').toggleClass('overlay');
+    jQuery(this).closest('.mp_rbfw_ticket_form').toggleClass('overlay');
     jQuery('.price-item-container').stop(true, true).toggleClass('open').fadeToggle();
+});
+jQuery(document).on('click', '.pricing-content-container .close-price-container', function (e) {
+    e.preventDefault();
+    parent = jQuery(this).closest('.pricing-content-container');
+    parent.find('.price-item-container').removeClass('open').hide();
+    parent.find('.rbfw-pricing-info-heading').removeClass('open');
+    parent.closest('.mp_rbfw_ticket_form').removeClass('overlay');
 });
 
 jQuery('body').on('focusin', '.pickup_date', function(e) {
