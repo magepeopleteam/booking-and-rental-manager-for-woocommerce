@@ -1632,6 +1632,7 @@
 					<?php do_action( 'rbfw_after_general_price_table_row' ); ?>
 
 					<?php do_action( 'rbfw_after_general_price_table', $post_id ); ?>
+					<?php do_action( 'rbfw_after_general_price_table_tier_pricing', $post_id ); ?>
                 </div>
                 <?php do_action( 'rbfw_after_rent_item_type_table_row' ); ?>
 

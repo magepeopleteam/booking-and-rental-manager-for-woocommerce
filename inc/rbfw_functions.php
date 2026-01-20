@@ -2770,22 +2770,15 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
     list($rbfw_daily_rate, $rbfw_hourly_rate, $rbfw_sp_prices) = rbfw_get_initial_rates($post_id);
 
+    $rbfw_tiered_pricing = get_post_meta($post_id, 'rbfw_tiered_pricing', true);
+
     if (is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && !empty($rbfw_md_data_mds)) {
         $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
         list($rbfw_daily_rate, $rbfw_hourly_rate, $rbfw_sp_prices) = rbfw_apply_multi_day_saver($total_days, $rbfw_md_data_mds, $rbfw_daily_rate, $rbfw_hourly_rate,$hours,$rbfw_hourly_threshold);
-    }
-
-    $rbfw_additional_day_prices = get_post_meta($post_id, 'rbfw_additional_day_prices', true);
-
-    if (is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && (!(empty($rbfw_additional_day_prices)))) {
-
-      /*  $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
-        if ($rbfw_count_extra_day_enable == 'on') {
-            $total_days = $total_days + 1;
-        }*/
-        for ($i = 1; $i < $total_days + 1; $i++) {
-            if ($multi_day_price_saver = check_multi_day_price_saver($i,$rbfw_additional_day_prices)) {
-                $rbfw_daily_rate =  $multi_day_price_saver;
+    }elseif (is_plugin_active('tiered-pricing-addon-wprently/tiered-pricing-addon.php') && (!(empty($rbfw_tiered_pricing)))) {
+        for ($i = 0; $i < $total_days; $i++) {
+            if ($rbfw_tiered_pricing_daily = check_rbfw_tiered_pricing($i, $rbfw_tiered_pricing)) {
+                $rbfw_daily_rate = $rbfw_tiered_pricing_daily;
             }
         }
     }
@@ -2793,7 +2786,17 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
 
 
+
     for ($i = 0; $i < $total_days; $i++) {
+
+        if (is_plugin_active('tiered-pricing-addon-wprently/tiered-pricing-addon.php') && (!(empty($rbfw_tiered_pricing)))) {
+
+            if ($rbfw_tiered_pricing_daily = check_rbfw_tiered_pricing($i, $rbfw_tiered_pricing)) {
+                $rbfw_daily_rate = $rbfw_tiered_pricing_daily;
+            }
+        }
+
+
         $day = strtolower(gmdate('D', strtotime("+$i day", strtotime($start_date))));
         $duration_price += rbfw_calculate_day_price(
             $i, $post_id, $Book_dates_array, $day, $start_date, $end_date, $pickup_datetime, $dropoff_datetime,
@@ -2832,19 +2835,16 @@ function rbfw_apply_multi_day_saver($total_days, $md_data, $default_daily, $defa
     }
 
 
-function rbfw_apply_tiered_pricing_addon($total_days, $md_data, $default_daily, $default_hourly, $hours,$rbfw_hourly_threshold) {
+function rbfw_apply_tiered_pricing($total_days, $rbfw_tiered_pricing, $default_daily, $default_hourly, $hours,$rbfw_hourly_threshold) {
 
-    if($hours && $hours <= $rbfw_hourly_threshold){
-        // $total_days--;
+        for ($i = 1; $i < $total_days + 1; $i++) {
+
+            if ($rbfw_tiered_pricing_daily = check_rbfw_tiered_pricing($i, $rbfw_tiered_pricing)) {
+                return $rbfw_tiered_pricing_daily;
+            }
+        }
+        return $default_daily;
     }
-    $md_saver = check_multi_day_price_saver_in_md($total_days, $md_data);
-    if (!empty($md_saver)) {
-        $daily = empty($md_saver[0]) ? $default_daily : $md_saver[0];
-        $hourly = empty($md_saver[1]) ? $default_hourly : $md_saver[1];
-        return [$daily, $hourly, ''];
-    }
-    return [$default_daily, $default_hourly, ''];
-}
 
 
 
@@ -3128,6 +3128,21 @@ function check_multi_day_price_saver_in_md( $total_days, $rbfw_md_data_mds) {
     $price = [];
     foreach ($rbfw_md_data_mds as $single) {
         if ($total_days >= $single['rbfw_start_day']) {
+
+            set_transient("pricing_applied", "mds", 3600);
+
+            $price =  array($single['rbfw_daily_price'] , $single['rbfw_hourly_price']);
+        }
+    }
+    return $price;
+}
+
+function check_multi_day_tiered_pricing_in_md( $total_days, $rbfw_md_data_mds) {
+    $price = [];
+    foreach ($rbfw_md_data_mds as $single) {
+        $rbfw_start_day = $single['rbfw_start_day_tiered'];
+        $rbfw_end_day   = $single['rbfw_end_day_tiered'];
+        if ($day_number >= $rbfw_start_day  &&  $day_number <= $rbfw_end_day) {
 
             set_transient("pricing_applied", "mds", 3600);
 

@@ -441,11 +441,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                     </div>
                                 </div>
                             <?php } ?>
-
-
-
-
-                            </div>
+                        </div>
                     <?php } ?>
                 </div>
 
