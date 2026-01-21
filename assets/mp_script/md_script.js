@@ -1,8 +1,4 @@
 
-// Holds dynamically disabled dates for jQuery UI datepicker (format: YYYY-MM-DD)
-// updateDisabledDates() populates this, and beforeShowDay must check it.
-var disabledDates = window.disabledDates || [];
-
 
 document.addEventListener('DOMContentLoaded', function () {
     const qtyInputs = document.querySelectorAll('.rbfw_muiti_items_qty');
@@ -33,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Attach event listeners to quantity inputs
-    qtyInputs.forEach(input => { 
+    qtyInputs.forEach(input => {
         input.addEventListener('input', updateSummary);
     });
 
@@ -74,8 +70,7 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 
 jQuery('body').on('focusin', '.pickup_date', function(e) {
     jQuery(this).datepicker({
-       // dateFormat: js_date_format,
-        dateFormat: "yy-mm-dd",
+        dateFormat: js_date_format,
         minDate: '',
         beforeShowDay: function(date)
         {
@@ -119,7 +114,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
 
             }
-            
+
             // Trigger calendar refresh to apply enhanced inventory checking
             setTimeout(function() {
                 rbfw_refresh_calendar_with_inventory_check();
@@ -127,23 +122,8 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
         },
 
         onChangeMonthYear: function (year, month) {
-
-           /* disabledDates = [];
-
-            if(year == 2026 && month == 5) { alert(month); // May 2026 alert(month);
-                disabledDates = ["2026-05-05", "2026-05-10"];
-            }
-            else if(year == 2026 && month == 6) { // June 2026
-                disabledDates = ["2026-06-15", "2026-06-20"];
-            }*/
-
-            updateDisabledDates(year, month);
-            // Refresh datepicker to apply new disabled dates
-            jQuery(".pickup_date").datepicker("refresh");
-
-
-           // let post_id = jQuery('#rbfw_post_id').val();
-           // loadDisabledDates(post_id, year, month);
+            let post_id = jQuery('#rbfw_post_id').val();
+            loadDisabledDates(post_id, year, month);
         },
 
 
@@ -154,7 +134,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
         console.log($this.attr('title'));
         if ($this.find(".date-label").length === 0) {
             let dateText = $this.attr('title');
-          
+
             if (dateText) {
                 $this.append(`<span class='date-label'>`+dateText+`</span>`);
             }
@@ -190,7 +170,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
                 getAvailableTimes(rbfw_particulars_data , date_ymd,rdfw_available_time,'dropoff_time');
                // particular_time_date_dependent_ajax(post_id,date_ymd_drop,'',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.dropoff_time');
             }
-            
+
             // Trigger calendar refresh to apply enhanced inventory checking
             rbfw_refresh_calendar_with_inventory_check();
         },
@@ -1106,16 +1086,16 @@ function rbfw_refresh_calendar_with_inventory_check() {
     setTimeout(function() {
         var pickup_date = jQuery('[name="rbfw_pickup_start_date"]').val();
         var return_date = jQuery('[name="rbfw_pickup_end_date"]').val();
-        
+
         if(pickup_date && return_date) {
             // Refresh the datepicker to trigger beforeShowDay callback
             jQuery('.pickup_date').datepicker('refresh');
             jQuery('.dropoff_date').datepicker('refresh');
-            
+
             // Also update any other calendar instances that might exist
             jQuery('.pickup_date_search').datepicker('refresh');
             jQuery('.dropoff_date_search').datepicker('refresh');
-            
+
             console.log('Calendar refreshed with enhanced inventory checking for range:', pickup_date, 'to', return_date);
         }
     }, 100);
@@ -1125,21 +1105,8 @@ function rbfw_refresh_calendar_with_inventory_check() {
  * Enhanced beforeShowDay callback for pickup date - just use normal logic
  */
 function rbfw_enhanced_pickup_beforeShowDay(date) {
-    // First apply normal inventory/off-day logic
-    var baseResult = rbfw_off_day_dates(date, 'md', rbfw_js_variables.rbfw_today_booking_enable, false);
-
-    // Then apply dynamic disabled dates (set by updateDisabledDates/loadDisabledDates)
-    // jQuery UI datepicker expects [isSelectable, cssClass, tooltip]
-    var y = date.getFullYear();
-    var m = ('0' + (date.getMonth() + 1)).slice(-2);
-    var d = ('0' + date.getDate()).slice(-2);
-    var ymd = y + '-' + m + '-' + d;
-
-    if (Array.isArray(disabledDates) && disabledDates.indexOf(ymd) !== -1) {
-        return [false, 'ui-state-disabled', 'Unavailable'];
-    }
-
-    return baseResult;
+    // For pickup dates, use normal inventory checking
+    return rbfw_off_day_dates(date, 'md', rbfw_js_variables.rbfw_today_booking_enable, false);
 }
 
 
@@ -1424,7 +1391,7 @@ function wc_price_rbfw(price) {
 function loadDisabledDates(post_id, year, month) {
     jQuery.ajax({
         url: rbfw_ajax_front.rbfw_ajaxurl,
-        type: "POST",
+        type: 'POST',
         dataType: 'json',
         data: {
             'action' : 'rbfw_day_wise_sold_out_check',
@@ -1435,37 +1402,16 @@ function loadDisabledDates(post_id, year, month) {
         },
 
         success: function (response) {
-            //response: ["2026-01-05","2026-01-10"]
-            //disabledDates = response;
-
-            disabledDates = ["2026-05-05", "2026-05-10"];
-
-            //jQuery(".pickup_date").datepicker("setDate", null);
+            // Example response: ["2026-01-05","2026-01-10"]
+            disabledDates = response;
 
             // Refresh datepicker
             jQuery(".pickup_date").datepicker("refresh");
-           // alert("Dates disabled. Open datepicker again.");
         },
         error: function () {
             console.error("Failed to load disabled dates");
         }
     });
-}
-
-function updateDisabledDates(year, month) {
-    disabledDates = [];
-
-    // Example: May 2026
-    if(year === 2026 && month === 5) {
-        disabledDates = ["2026-05-05", "2026-05-10"];
-    }
-
-    // Example: June 2026
-    else if(year === 2026 && month === 6) {
-        disabledDates = ["2026-06-15", "2026-06-20"];
-    }
-
-
 }
 
 

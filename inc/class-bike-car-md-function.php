@@ -71,6 +71,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             }
 
+            $day_wise_imventory = array("2026-03-03","2026-03-04");
+
             echo wp_json_encode($day_wise_imventory);
             wp_die();
         }
