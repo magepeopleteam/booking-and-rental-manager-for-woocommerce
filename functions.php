@@ -257,7 +257,7 @@ function rbfw_ticket_feature_info(){
 
 function check_rbfw_tiered_pricing( $day_number, $rbfw_tiered_pricing) {
 
-
+    $day_number = $day_number+1;
     foreach ( $rbfw_tiered_pricing as $item ) {
         $rbfw_start_day = $item['rbfw_start_day_tiered'];
         $rbfw_end_day   = $item['rbfw_end_day_tiered'];
@@ -268,7 +268,7 @@ function check_rbfw_tiered_pricing( $day_number, $rbfw_tiered_pricing) {
             return $item['rbfw_daily_price_tiered'];
         }
     }
-    //return '';
+    return '';
 }
 
 

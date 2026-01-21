@@ -2775,27 +2775,20 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
     if (is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && !empty($rbfw_md_data_mds)) {
         $rbfw_hourly_threshold = get_post_meta( $post_id, 'rbfw_hourly_threshold', true );
         list($rbfw_daily_rate, $rbfw_hourly_rate, $rbfw_sp_prices) = rbfw_apply_multi_day_saver($total_days, $rbfw_md_data_mds, $rbfw_daily_rate, $rbfw_hourly_rate,$hours,$rbfw_hourly_threshold);
-    }elseif (is_plugin_active('tiered-pricing-addon-wprently/tiered-pricing-addon.php') && (!(empty($rbfw_tiered_pricing)))) {
-        for ($i = 0; $i < $total_days; $i++) {
-            if ($rbfw_tiered_pricing_daily = check_rbfw_tiered_pricing($i, $rbfw_tiered_pricing)) {
-                $rbfw_daily_rate = $rbfw_tiered_pricing_daily;
-            }
-        }
     }
-
 
 
 
 
     for ($i = 0; $i < $total_days; $i++) {
 
-        if (is_plugin_active('tiered-pricing-addon-wprently/tiered-pricing-addon.php') && (!(empty($rbfw_tiered_pricing)))) {
-
+        if (!(is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && !empty($rbfw_md_data_mds)) && is_plugin_active('tiered-pricing-addon-wprently/tiered-pricing-addon.php') && (!(empty($rbfw_tiered_pricing)))) {
             if ($rbfw_tiered_pricing_daily = check_rbfw_tiered_pricing($i, $rbfw_tiered_pricing)) {
                 $rbfw_daily_rate = $rbfw_tiered_pricing_daily;
             }
         }
 
+       // echo $rbfw_daily_rate;
 
         $day = strtolower(gmdate('D', strtotime("+$i day", strtotime($start_date))));
         $duration_price += rbfw_calculate_day_price(
