@@ -21,8 +21,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             add_action('wp_ajax_nopriv_rbfw_multi_items_ajax_price_calculation', array($this,'rbfw_multi_items_ajax_price_calculation'));
 
 
-
-
             add_action('wp_ajax_rbfw_bikecarmd_ajax_min_max_and_offdays_info', array($this, 'rbfw_bikecarmd_ajax_min_max_and_offdays_info'));
             add_action('wp_ajax_nopriv_rbfw_bikecarmd_ajax_min_max_and_offdays_info', array($this,'rbfw_bikecarmd_ajax_min_max_and_offdays_info'));
 
@@ -58,9 +56,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             
             $post_id = $_POST['post_id']; 
             $month = $_POST['month'];
-            $year = $_POST['year']; 
+            $year = $_POST['year'];
 
-          
 
             for($i=0;$i<=1;$i++){
 
@@ -69,22 +66,11 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     if (function_exists('cal_days_in_month')) {
                         $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
                     }
-                    $day_wise_imventory_1 = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days_month);
+                    $day_wise_imventory = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days_month);
                 }
 
-                if($i==1){
-                    $date = new DateTime("$year-$month-01");
-                    $date->modify('+1 month');
-                    $year = $date->format('Y');
-                    $month = $month + 1;
-                    $total_days_month = 30;
-                    if (function_exists('cal_days_in_month')) {
-                        $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                    }
-                    $day_wise_imventory_2 = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days_month);
-                }
             }
-            $day_wise_imventory = array_merge($day_wise_imventory_1, $day_wise_imventory_2);
+
             echo wp_json_encode($day_wise_imventory);
             wp_die();
         }
