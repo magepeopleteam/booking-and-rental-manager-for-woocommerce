@@ -1,5 +1,8 @@
 
 
+// Holds sold-out dates returned from loadDisabledDates
+var disabledDates = [];
+
 document.addEventListener('DOMContentLoaded', function () {
     const qtyInputs = document.querySelectorAll('.rbfw_muiti_items_qty');
     const summaryDiv = document.getElementById('rbfw-items-summary');
@@ -69,7 +72,16 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 
 
 jQuery('body').on('focusin', '.pickup_date', function(e) {
-    jQuery(this).datepicker({
+    const $picker = jQuery(this);
+    const post_id = jQuery('#rbfw_post_id').val();
+
+    // Prime the disabled dates for the initially visible month
+    (function primeDisabledDates(){
+        const today = new Date();
+        loadDisabledDates(post_id, today.getFullYear(), today.getMonth() + 1);
+    })();
+
+    $picker.datepicker({
         dateFormat: js_date_format,
         minDate: '',
         beforeShowDay: function(date)
@@ -122,7 +134,6 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
         },
 
         onChangeMonthYear: function (year, month) {
-            let post_id = jQuery('#rbfw_post_id').val();
             loadDisabledDates(post_id, year, month);
         },
 
@@ -1105,7 +1116,18 @@ function rbfw_refresh_calendar_with_inventory_check() {
  * Enhanced beforeShowDay callback for pickup date - just use normal logic
  */
 function rbfw_enhanced_pickup_beforeShowDay(date) {
-    // For pickup dates, use normal inventory checking
+    // Disable sold-out dates fetched via loadDisabledDates
+    const y = date.getFullYear();
+    const m = ('0' + (date.getMonth() + 1)).slice(-2);
+    const d = ('0' + date.getDate()).slice(-2);
+    const isoDate = `${y}-${m}-${d}`;
+
+    if (disabledDates.indexOf(isoDate) !== -1) {
+        var soldOutLabel = (typeof rbfw_translation !== 'undefined' && rbfw_translation.sold_out) ? rbfw_translation.sold_out : 'Sold Out';
+        return [false, 'rbfw-disabled-date', soldOutLabel];
+    }
+
+    // Otherwise, use normal inventory checking
     return rbfw_off_day_dates(date, 'md', rbfw_js_variables.rbfw_today_booking_enable, false);
 }
 
@@ -1403,7 +1425,7 @@ function loadDisabledDates(post_id, year, month) {
 
         success: function (response) {
             // Example response: ["2026-01-05","2026-01-10"]
-            disabledDates = response;
+            disabledDates = Array.isArray(response) ? response : [];
 
             // Refresh datepicker
             jQuery(".pickup_date").datepicker("refresh");
