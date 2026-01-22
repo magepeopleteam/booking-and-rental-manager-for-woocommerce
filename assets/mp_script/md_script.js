@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Attach event listeners to quantity inputs
-    qtyInputs.forEach(input => { 
+    qtyInputs.forEach(input => {
         input.addEventListener('input', updateSummary);
     });
 
@@ -54,25 +54,19 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-jQuery(document).on('mouseenter','.rbfw-pricing-info-heading i',function() {
-    jQuery('.price-item-container').stop(true, true).addClass('open').fadeIn();
-    jQuery(this).closest('.mp_right_section').addClass('overlay');
-    jQuery(this).closest('.rbfw-pricing-info-heading').addClass('open');
+jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',function() {
+    const $this = jQuery(this);
+    const target = jQuery('.price-item-container');
+    if (target.hasClass('open')) {
+        target.removeClass('open').slideUp();
+        $this.find('i').removeClass('fa-angle-up').addClass('fa-angle-down');
+    } else {
+        target.addClass('open').slideDown();
+        $this.find('i').removeClass('fa-angle-down').addClass('fa-angle-up');
+    }
 });
 
-jQuery(document).on('mouseleave', '.rbfw-pricing-info-heading i', function () {
-    jQuery('.price-item-container').stop(true, true).removeClass('open').fadeOut();
-    jQuery(this).closest('.mp_right_section').removeClass('overlay');
-    jQuery(this).closest('.rbfw-pricing-info-heading').removeClass('open');
-});
 
- // Click → toggle
-jQuery(document).on('click', '.rbfw-pricing-info-heading i', function (e) {
-    e.preventDefault();
-    jQuery(this).closest('.rbfw-pricing-info-heading').toggleClass('open');
-    jQuery(this).closest('.mp_right_section').toggleClass('overlay');
-    jQuery('.price-item-container').stop(true, true).toggleClass('open').fadeToggle();
-});
 
 jQuery('body').on('focusin', '.pickup_date', function(e) {
     jQuery(this).datepicker({
@@ -120,12 +114,19 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
 
 
             }
-            
+
             // Trigger calendar refresh to apply enhanced inventory checking
             setTimeout(function() {
                 rbfw_refresh_calendar_with_inventory_check();
             }, 200);
         },
+
+        onChangeMonthYear: function (year, month) {
+            let post_id = jQuery('#rbfw_post_id').val();
+            loadDisabledDates(post_id, year, month);
+        },
+
+
     });
 
    jQuery(document).on("mousemove", ".ui-datepicker-calendar td", function() {
@@ -133,7 +134,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
         console.log($this.attr('title'));
         if ($this.find(".date-label").length === 0) {
             let dateText = $this.attr('title');
-          
+
             if (dateText) {
                 $this.append(`<span class='date-label'>`+dateText+`</span>`);
             }
@@ -169,7 +170,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
                 getAvailableTimes(rbfw_particulars_data , date_ymd,rdfw_available_time,'dropoff_time');
                // particular_time_date_dependent_ajax(post_id,date_ymd_drop,'',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.dropoff_time');
             }
-            
+
             // Trigger calendar refresh to apply enhanced inventory checking
             rbfw_refresh_calendar_with_inventory_check();
         },
@@ -389,14 +390,14 @@ jQuery(document).ready(function () {
         const durationType = durationTypeSelect.val();
         if (durationType) {
             const typeMap = {
-                hourly: rbfw_translation.hours,
-                daily: rbfw_translation.days,
-                weekly: rbfw_translation.weeks,
-                monthly: rbfw_translation.months
+                hourly: 'Hours',
+                daily: 'Days',
+                weekly: 'Weeks',
+                monthly: 'Months'
             };
-            qtyLabel.text(rbfw_translation.number_of+ ` ${typeMap[durationType]}`);
+            qtyLabel.text(`Number of ${typeMap[durationType]}`);
         } else {
-            qtyLabel.text(rbfw_translation.number_of+' '+rbfw_translation.duration);
+            qtyLabel.text('Number of Duration');
         }
     }
 
@@ -1085,16 +1086,16 @@ function rbfw_refresh_calendar_with_inventory_check() {
     setTimeout(function() {
         var pickup_date = jQuery('[name="rbfw_pickup_start_date"]').val();
         var return_date = jQuery('[name="rbfw_pickup_end_date"]').val();
-        
+
         if(pickup_date && return_date) {
             // Refresh the datepicker to trigger beforeShowDay callback
             jQuery('.pickup_date').datepicker('refresh');
             jQuery('.dropoff_date').datepicker('refresh');
-            
+
             // Also update any other calendar instances that might exist
             jQuery('.pickup_date_search').datepicker('refresh');
             jQuery('.dropoff_date_search').datepicker('refresh');
-            
+
             console.log('Calendar refreshed with enhanced inventory checking for range:', pickup_date, 'to', return_date);
         }
     }, 100);
@@ -1385,6 +1386,32 @@ function wc_price_rbfw(price) {
     }else{
         return price.toFixed(rbfw_js_variables.price_decimals) + rbfw_js_variables.currency;
     }
+}
+
+function loadDisabledDates(post_id, year, month) {
+    jQuery.ajax({
+        url: rbfw_ajax_front.rbfw_ajaxurl,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            'action' : 'rbfw_day_wise_sold_out_check',
+            'post_id': post_id,
+            'year': year,
+            'month': month,
+            'nonce' : rbfw_ajax_front.nonce_bikecarmd_ajax_price_calculation
+        },
+
+        success: function (response) {
+            // Example response: ["2026-01-05","2026-01-10"]
+            disabledDates = response;
+
+            // Refresh datepicker
+            jQuery(".pickup_date").datepicker("refresh");
+        },
+        error: function () {
+            console.error("Failed to load disabled dates");
+        }
+    });
 }
 
 

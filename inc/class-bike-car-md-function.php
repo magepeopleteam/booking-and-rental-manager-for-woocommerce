@@ -71,21 +71,16 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     }
                     $day_wise_imventory_1 = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days_month);
                 }
+            }
+            $result = [];
 
-                if($i==1){
-                    $date = new DateTime("$year-$month-01");
-                    $date->modify('+1 month');
-                    $year = $date->format('Y');
-                    $month = $month + 1;
-                    $total_days_month = 30;
-                    if (function_exists('cal_days_in_month')) {
-                        $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                    }
-                    $day_wise_imventory_2 = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days_month);
+            foreach ($day_wise_imventory_1 as $date => $value) {
+                if ($value == 0) {
+                    $result[] = date('Y-m-d', strtotime($date));
                 }
             }
-            $day_wise_imventory = array_merge($day_wise_imventory_1, $day_wise_imventory_2);
-            echo wp_json_encode($day_wise_imventory);
+
+            echo wp_json_encode($result);
             wp_die();
         }
 
