@@ -76,10 +76,10 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
     const post_id = jQuery('#rbfw_post_id').val();
 
     // Prime the disabled dates for the initially visible month
-    (function primeDisabledDates(){
+/*    (function primeDisabledDates(){
         const today = new Date();
         loadDisabledDates(post_id, today.getFullYear(), today.getMonth() + 1);
-    })();
+    })();*/
 
     $picker.datepicker({
         dateFormat: js_date_format,
@@ -164,7 +164,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
     //const endDate = getURLParameter('rbfw_end_date');
 
     jQuery(".dropoff_date").val('');
-
+    let post_id = jQuery('#rbfw_post_id').val();
 
     jQuery('.dropoff_date').datepicker({
         dateFormat: js_date_format,
@@ -187,8 +187,12 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
         },
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable,'yes');
-        }
+            return rbfw_enhanced_pickup_beforeShowDay(date);
+            //return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable,'yes');
+        },
+        onChangeMonthYear: function (year, month) {
+            loadDisabledDates(post_id, year, month);
+        },
     });
 });
 
@@ -1429,6 +1433,7 @@ function loadDisabledDates(post_id, year, month) {
 
             // Refresh datepicker
             jQuery(".pickup_date").datepicker("refresh");
+            jQuery(".dropoff_date").datepicker("refresh");
         },
         error: function () {
             console.error("Failed to load disabled dates");
