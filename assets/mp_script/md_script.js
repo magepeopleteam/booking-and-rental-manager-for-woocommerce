@@ -74,12 +74,7 @@ jQuery(document).on('click','.rbfw-toggle-btn,.rbfw_pricing_info_heading',functi
 jQuery('body').on('focusin', '.pickup_date', function(e) {
     const $picker = jQuery(this);
     const post_id = jQuery('#rbfw_post_id').val();
-
-    // Prime the disabled dates for the initially visible month
-/*    (function primeDisabledDates(){
-        const today = new Date();
-        loadDisabledDates(post_id, today.getFullYear(), today.getMonth() + 1);
-    })();*/
+    let rbfw_enable_time_slot = jQuery('#rbfw_enable_time_slot').val();
 
     $picker.datepicker({
         dateFormat: js_date_format,
@@ -93,8 +88,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
             jQuery('input[name="rbfw_pickup_start_date"]').val(date_ymd).trigger('change');
 
-            let post_id = jQuery('#rbfw_post_id').val();
-            let rbfw_enable_time_slot = jQuery('#rbfw_enable_time_slot').val();
+
 
             let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
             let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
@@ -122,9 +116,6 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
                 let rbfw_particulars_data = jQuery('#rbfw_particulars_data').val();
                 let rdfw_available_time = jQuery('#rdfw_available_time').val();
                 getAvailableTimes(rbfw_particulars_data , date_ymd,rdfw_available_time,'pickup_time');
-
-
-
             }
 
             // Trigger calendar refresh to apply enhanced inventory checking
@@ -134,10 +125,10 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
         },
 
         onChangeMonthYear: function (year, month) {
-            loadDisabledDates(post_id, year, month);
-        },
-
-
+            if(rbfw_enable_time_slot=='no'){
+                loadDisabledDates(post_id, year, month);
+            }
+        }
     });
 
    jQuery(document).on("mousemove", ".ui-datepicker-calendar td", function() {
@@ -1427,8 +1418,18 @@ function loadDisabledDates(post_id, year, month) {
             'nonce' : rbfw_ajax_front.nonce_bikecarmd_ajax_price_calculation
         },
 
+        beforeSend: function() {
+            jQuery('.ui-datepicker').addClass('rbfw_loader_in');
+            jQuery('.ui-datepicker').append('<i class="fas fa-spinner fa-spin"></i>');
+        },
+
         success: function (response) {
             // Example response: ["2026-01-05","2026-01-10"]
+
+            jQuery('.ui-datepicker').removeClass('rbfw_loader_in');
+            jQuery('.ui-datepicker i.fa-spinner').remove();
+
+
             disabledDates = Array.isArray(response) ? response : [];
 
             // Refresh datepicker
