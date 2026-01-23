@@ -817,25 +817,8 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                             }
                             $day_wise_imventory_1 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
                         }
-
-                        if ($i == 1) {
-                            $date = new DateTime("$year-$month-01");
-                            $date->modify('+1 month');
-                            $year = $date->format('Y');
-                            if($month == 12){
-                                $year = $year +1;
-                                $month = 1;
-                            }else{
-                                $month = $month + 1;
-                            }
-                            $total_days_month = 30;
-                            if (function_exists('cal_days_in_month')) {
-                                $total_days_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-                            }
-                            $day_wise_imventory_2 = rbfw_day_wise_sold_out_check_by_month($post_id, $year, $month, $total_days_month);
-                        }
                     }
-                    $day_wise_imventory = wp_json_encode(array_merge($day_wise_imventory_1, $day_wise_imventory_2));
+                    $day_wise_imventory = wp_json_encode($day_wise_imventory_1);
                 }
 
             

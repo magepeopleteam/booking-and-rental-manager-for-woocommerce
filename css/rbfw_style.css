@@ -3532,7 +3532,8 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 .rbfw_bikecarsd_price_summary.rbfw_loader_in::after,
 .rbfw_bikecarsd_pricing_table_wrap.rbfw_loader_in::after,
 .rbfw_room_price_category_details.rbfw_loader_in::after,
-.rbfw_bike_car_md_item_wrapper.rbfw_loader_in::after {
+.rbfw_bike_car_md_item_wrapper.rbfw_loader_in::after,
+.ui-datepicker.rbfw_loader_in::after{
     content: "";
     position: absolute;
     top: 0;

@@ -1,5 +1,8 @@
 
 
+// Holds sold-out dates returned from loadDisabledDates
+var disabledDates = [];
+
 document.addEventListener('DOMContentLoaded', function () {
     const qtyInputs = document.querySelectorAll('.rbfw_muiti_items_qty');
     const summaryDiv = document.getElementById('rbfw-items-summary');
@@ -29,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Attach event listeners to quantity inputs
-    qtyInputs.forEach(input => { 
+    qtyInputs.forEach(input => {
         input.addEventListener('input', updateSummary);
     });
 
@@ -69,7 +72,11 @@ jQuery(document).on('click', '.pricing-content-container .close-price-container'
 });
 
 jQuery('body').on('focusin', '.pickup_date', function(e) {
-    jQuery(this).datepicker({
+    const $picker = jQuery(this);
+    const post_id = jQuery('#rbfw_post_id').val();
+    let rbfw_enable_time_slot = jQuery('#rbfw_enable_time_slot').val();
+
+    $picker.datepicker({
         dateFormat: js_date_format,
         minDate: '',
         beforeShowDay: function(date)
@@ -81,8 +88,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
             let date_ymd = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
             jQuery('input[name="rbfw_pickup_start_date"]').val(date_ymd).trigger('change');
 
-            let post_id = jQuery('#rbfw_post_id').val();
-            let rbfw_enable_time_slot = jQuery('#rbfw_enable_time_slot').val();
+
 
             let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
             let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
@@ -110,16 +116,19 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
                 let rbfw_particulars_data = jQuery('#rbfw_particulars_data').val();
                 let rdfw_available_time = jQuery('#rdfw_available_time').val();
                 getAvailableTimes(rbfw_particulars_data , date_ymd,rdfw_available_time,'pickup_time');
-
-
-
             }
-            
+
             // Trigger calendar refresh to apply enhanced inventory checking
             setTimeout(function() {
                 rbfw_refresh_calendar_with_inventory_check();
             }, 200);
         },
+
+        onChangeMonthYear: function (year, month) {
+            if(rbfw_enable_time_slot=='no'){
+                loadDisabledDates(post_id, year, month);
+            }
+        }
     });
 
    jQuery(document).on("mousemove", ".ui-datepicker-calendar td", function() {
@@ -127,7 +136,7 @@ jQuery('body').on('focusin', '.pickup_date', function(e) {
         console.log($this.attr('title'));
         if ($this.find(".date-label").length === 0) {
             let dateText = $this.attr('title');
-          
+
             if (dateText) {
                 $this.append(`<span class='date-label'>`+dateText+`</span>`);
             }
@@ -146,7 +155,7 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
     //const endDate = getURLParameter('rbfw_end_date');
 
     jQuery(".dropoff_date").val('');
-
+    let post_id = jQuery('#rbfw_post_id').val();
 
     jQuery('.dropoff_date').datepicker({
         dateFormat: js_date_format,
@@ -163,14 +172,18 @@ jQuery('body').on('change', 'input[name="rbfw_pickup_start_date"]', function(e) 
                 getAvailableTimes(rbfw_particulars_data , date_ymd,rdfw_available_time,'dropoff_time');
                // particular_time_date_dependent_ajax(post_id,date_ymd_drop,'',rbfw_enable_time_slot,'.rbfw-select.rbfw-time-price.dropoff_time');
             }
-            
+
             // Trigger calendar refresh to apply enhanced inventory checking
             rbfw_refresh_calendar_with_inventory_check();
         },
         beforeShowDay: function(date)
         {
-            return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable,'yes');
-        }
+            return rbfw_enhanced_pickup_beforeShowDay(date);
+            //return rbfw_off_day_dates(date,'md',rbfw_js_variables.rbfw_today_booking_enable,'yes');
+        },
+        onChangeMonthYear: function (year, month) {
+            loadDisabledDates(post_id, year, month);
+        },
     });
 });
 
@@ -1079,16 +1092,16 @@ function rbfw_refresh_calendar_with_inventory_check() {
     setTimeout(function() {
         var pickup_date = jQuery('[name="rbfw_pickup_start_date"]').val();
         var return_date = jQuery('[name="rbfw_pickup_end_date"]').val();
-        
+
         if(pickup_date && return_date) {
             // Refresh the datepicker to trigger beforeShowDay callback
             jQuery('.pickup_date').datepicker('refresh');
             jQuery('.dropoff_date').datepicker('refresh');
-            
+
             // Also update any other calendar instances that might exist
             jQuery('.pickup_date_search').datepicker('refresh');
             jQuery('.dropoff_date_search').datepicker('refresh');
-            
+
             console.log('Calendar refreshed with enhanced inventory checking for range:', pickup_date, 'to', return_date);
         }
     }, 100);
@@ -1098,7 +1111,18 @@ function rbfw_refresh_calendar_with_inventory_check() {
  * Enhanced beforeShowDay callback for pickup date - just use normal logic
  */
 function rbfw_enhanced_pickup_beforeShowDay(date) {
-    // For pickup dates, use normal inventory checking
+    // Disable sold-out dates fetched via loadDisabledDates
+    const y = date.getFullYear();
+    const m = ('0' + (date.getMonth() + 1)).slice(-2);
+    const d = ('0' + date.getDate()).slice(-2);
+    const isoDate = `${y}-${m}-${d}`;
+
+    if (disabledDates.indexOf(isoDate) !== -1) {
+        var soldOutLabel = (typeof rbfw_translation !== 'undefined' && rbfw_translation.sold_out) ? rbfw_translation.sold_out : 'Sold Out';
+        return [false, 'rbfw-disabled-date', soldOutLabel];
+    }
+
+    // Otherwise, use normal inventory checking
     return rbfw_off_day_dates(date, 'md', rbfw_js_variables.rbfw_today_booking_enable, false);
 }
 
@@ -1379,6 +1403,43 @@ function wc_price_rbfw(price) {
     }else{
         return price.toFixed(rbfw_js_variables.price_decimals) + rbfw_js_variables.currency;
     }
+}
+
+function loadDisabledDates(post_id, year, month) {
+    jQuery.ajax({
+        url: rbfw_ajax_front.rbfw_ajaxurl,
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            'action' : 'rbfw_day_wise_sold_out_check',
+            'post_id': post_id,
+            'year': year,
+            'month': month,
+            'nonce' : rbfw_ajax_front.nonce_bikecarmd_ajax_price_calculation
+        },
+
+        beforeSend: function() {
+            jQuery('.ui-datepicker').addClass('rbfw_loader_in');
+            jQuery('.ui-datepicker').append('<i class="fas fa-spinner fa-spin"></i>');
+        },
+
+        success: function (response) {
+            // Example response: ["2026-01-05","2026-01-10"]
+
+            jQuery('.ui-datepicker').removeClass('rbfw_loader_in');
+            jQuery('.ui-datepicker i.fa-spinner').remove();
+
+
+            disabledDates = Array.isArray(response) ? response : [];
+
+            // Refresh datepicker
+            jQuery(".pickup_date").datepicker("refresh");
+            jQuery(".dropoff_date").datepicker("refresh");
+        },
+        error: function () {
+            console.error("Failed to load disabled dates");
+        }
+    });
 }
 
 
