@@ -304,19 +304,6 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
                     $inventory_start_time = $inventory['rbfw_start_time_24'];
                     $inventory_end_time = $inventory['rbfw_end_time_24'];
 
-                    /*if(isset($inventory['rbfw_start_date_ymd']) && isset($inventory['rbfw_end_date_ymd'])){
-                        $inventory_start_date = $inventory['rbfw_start_date_ymd'];
-                        $inventory_end_date = $inventory['rbfw_end_date_ymd'];
-                        $inventory_start_time = $inventory['rbfw_start_time_24'];
-                        $inventory_end_time = $inventory['rbfw_end_time_24'];
-                    }else{
-                        $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
-                        $inventory_start_date = $booked_dates[0];
-                        $inventory_end_date = end($booked_dates);
-                        $inventory_start_time = $inventory['rbfw_start_time'];
-                        $inventory_end_time = $inventory['rbfw_end_time'];
-                    }*/
-
                     if ($rbfw_buffer_time_after) {
                         $datetime = new DateTime("$inventory_end_date $inventory_end_time");
                         $datetime->modify('+' . $rbfw_buffer_time_after . ' hours');
@@ -371,25 +358,34 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
 
     /*start service inventory*/
-    $rbfw_service_category_price_raw = get_post_meta($post_id, 'rbfw_service_category_price', true);
-    $rbfw_service_category_price = json_decode($rbfw_service_category_price_raw, true);
 
-    $service_stock = [];
-    if (!empty($rbfw_service_category_price)) {
-        foreach($rbfw_service_category_price as $key=>$item1){
-            $cat_title = $item1['cat_title'];
 
-            foreach ($item1['cat_services'] as $key1=>$single){
-                if($single['title']){
-                    $service_q = [];
-                    foreach($date_range as $date){
-                        $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return));
+    if ($rent_type != 'resort'){
+
+        $rbfw_service_category_price_raw = get_post_meta($post_id, 'rbfw_service_category_price', true);
+        $rbfw_service_category_price = json_decode($rbfw_service_category_price_raw, true);
+
+        $service_stock = [];
+        if (!empty($rbfw_service_category_price)) {
+            foreach($rbfw_service_category_price as $key=>$item1){
+                $cat_title = $item1['cat_title'];
+
+                foreach ($item1['cat_services'] as $key1=>$single){
+                    if($single['title']){
+                        $service_q = [];
+                        foreach($date_range as $date){
+                            $service_q[] = array('date'=>$date,$single['title']=>total_service_quantity($cat_title,$single['title'],$date,$rbfw_inventory,$inventory_based_on_return));
+                        }
+                        $service_stock[] = (int)$single['stock_quantity'] - max(array_column($service_q, $single['title']));
                     }
-                    $service_stock[] = (int)$single['stock_quantity'] - max(array_column($service_q, $single['title']));
                 }
             }
         }
+
     }
+
+
+
 
 
     /*end service inventory*/
