@@ -2781,7 +2781,6 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
 
     for ($i = 0; $i < $total_days; $i++) {
-
         if (!(is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && !empty($rbfw_md_data_mds)) && is_plugin_active('tiered-pricing-addon-wprently/tiered-pricing-addon.php') && (!(empty($rbfw_tiered_pricing)))) {
             if ($rbfw_tiered_pricing_daily = check_rbfw_tiered_pricing($i, $rbfw_tiered_pricing)) {
                 $rbfw_daily_rate = $rbfw_tiered_pricing_daily;
@@ -3059,63 +3058,12 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
         return 'not_found';
 	}
 
-function check_seasonal_price_resort( $Book_date, $rbfw_sp_prices, $room_type = '' , $active_tab ='') {
 
 
 
-        foreach ( $rbfw_sp_prices as $rbfw_sp_price ) {
-            if(isset($rbfw_sp_price['start_date']) && isset($rbfw_sp_price['end_date'])){
-                $rbfw_sp_start_date = $rbfw_sp_price['start_date'];
-                $rbfw_sp_end_date   = $rbfw_sp_price['end_date'];
-                $sp_dates_array     = getAllDates( $rbfw_sp_start_date, $rbfw_sp_end_date );
-
-
-                if ( in_array( $Book_date, $sp_dates_array ) ) {
-                    foreach ($rbfw_sp_price['room_price'] as $room_price){
-                        if($room_type == $room_price['room_type']){
-
-                            set_transient("pricing_applied", "sessional", 3600);
-
-                            if($active_tab=='daylong'){
-                                return $room_price['day_long_price'];
-                            }else{
-                                return $room_price['price'];
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    return 'not_found';
-}
 
 
 
-function check_seasonal_price_resort_mds( $day_number, $rbfw_sp_prices, $room_type = '' , $active_tab ='', $minStartDay = '') {
-        $price = 0;
-        foreach ($rbfw_sp_prices as $rbfw_sp_price) {
-            if ($day_number >= $rbfw_sp_price['start_day']) {
-                foreach ($rbfw_sp_price['room_price'] as $key=>$room_price){
-                    if($room_type == $room_price['room_type']){
-
-
-
-                        set_transient("pricing_applied", "mds", 3600);
-
-
-                        if($active_tab=='daylong'){
-                            $price = $room_price['day_long_price'];
-                        }else{
-                            $price = $room_price['price'];
-                        }
-                    }
-                }
-            } else {
-                break;
-            }
-        }
-        return $price;
-    }
 
 function check_multi_day_price_saver_in_md( $total_days, $rbfw_md_data_mds) {
     $price = [];

@@ -371,7 +371,9 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
 
     /*start service inventory*/
-    $rbfw_service_category_price = get_post_meta($post_id, 'rbfw_service_category_price', true);
+    $rbfw_service_category_price_raw = get_post_meta($post_id, 'rbfw_service_category_price', true);
+    $rbfw_service_category_price = json_decode($rbfw_service_category_price_raw, true);
+
     $service_stock = [];
     if (!empty($rbfw_service_category_price)) {
         foreach($rbfw_service_category_price as $key=>$item1){
@@ -489,7 +491,9 @@ function rbfw_get_multi_items_available_qty($post_id, $start_date, $end_date, $t
     /*end extra service inventory*/
 
     /*start service inventory*/
-    $rbfw_service_category_price = get_post_meta($post_id, 'rbfw_service_category_price', true);
+    $rbfw_service_category_price_raw = get_post_meta($post_id, 'rbfw_service_category_price', true);
+    $rbfw_service_category_price = json_decode($rbfw_service_category_price_raw, true);
+
     $service_stock = [];
     if (!empty($rbfw_service_category_price)) {
         foreach($rbfw_service_category_price as $key=>$item1){
@@ -1050,7 +1054,9 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                 }
 
 
-                $rbfw_service_category_price = get_post_meta($post_id, 'rbfw_service_category_price', true);
+                $rbfw_service_category_price_raw = get_post_meta($post_id, 'rbfw_service_category_price', true);
+                $rbfw_service_category_price = json_decode($rbfw_service_category_price_raw, true);
+
                 $service_quantity = [];
                 $service_stock = [];
                 if (!empty($rbfw_service_category_price)) {
@@ -1455,7 +1461,9 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
 
             <?php
 
-            $rbfw_service_category_price = get_post_meta($data_id, 'rbfw_service_category_price', true);
+            $rbfw_service_category_price_raw = get_post_meta($data_id, 'rbfw_service_category_price', true);
+            $rbfw_service_category_price = json_decode($rbfw_service_category_price_raw, true);
+
             $service_stock = [];
             if (!empty($rbfw_service_category_price)) { ?>
                 <div class="rbfw_inventory_vf_label"><?php esc_html_e('Category wise service:','booking-and-rental-manager-for-woocommerce'); ?></div>

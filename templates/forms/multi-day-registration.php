@@ -268,6 +268,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                     <?php } ?>
                                     <?php
                                     $rbfw_md_data_mds = get_post_meta( $post_id, 'rbfw_md_data_mds', true ) ? get_post_meta( $post_id, 'rbfw_md_data_mds', true ) : [];
+                                    $rbfw_tiered_pricing = get_post_meta($post_id, 'rbfw_tiered_pricing', true);
                                     if (is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') && (!(empty($rbfw_md_data_mds)))) {
                                         foreach ($rbfw_md_data_mds as $item){
                                             ?>
@@ -295,8 +296,33 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                                 </table>
                                             </div>
                                         <?php } ?>
-                                    <?php }else{
-                                        $seasonal_prices = [];
+                                    <?php }elseif(is_plugin_active('tiered-pricing-addon-wprently/tiered-pricing-addon.php') && (!(empty($rbfw_tiered_pricing)))){
+                                    foreach ($rbfw_tiered_pricing as $item){
+                                    ?>
+                                        <div class="mp_item_insert ">
+                                            <table>
+                                                <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <?php esc_html_e( 'From', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                                        <strong><?php echo esc_html($item['rbfw_start_day_tiered']) ?></strong>
+                                                        <?php esc_html_e( 'Days', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                                        <?php esc_html_e( 'To', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                                        <strong><?php echo esc_html($item['rbfw_end_day_tiered']) ?></strong>
+                                                        <?php esc_html_e( 'Days', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <strong><?php esc_html_e( 'Daily Rate:', 'booking-and-rental-manager-for-woocommerce' ); ?></strong><?php echo wc_price($item['rbfw_daily_price_tiered']) ?>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    <?php } ?>
+                                    <?php } else{ ?>
+                                       <?php $seasonal_prices = [];
                                         if (is_plugin_active('booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php')){
                                             $seasonal_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) ? get_post_meta( $post_id, 'rbfw_seasonal_prices', true ) : [];
                                         }
@@ -515,8 +541,11 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     <?php } ?>
 
                     <?php
-                    $option_value  = get_post_meta($post_id, 'rbfw_service_category_price', true);
-                    $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
+                    $rbfw_service_category_price_raw  = get_post_meta($post_id, 'rbfw_service_category_price', true);
+                    $rbfw_service_category_price  = json_decode($rbfw_service_category_price_raw, true);
+
+
+                    $option_value  = is_serialized($rbfw_service_category_price) ? unserialize($rbfw_service_category_price) : $rbfw_service_category_price;
                     ?>
 
                     <?php if (!empty($option_value) && $enable_service_price === 'on') { ?>

@@ -495,8 +495,11 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                 </div>
 
                 <?php
-                $option_value  = get_post_meta($post_id, 'rbfw_service_category_price', true);
-                $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
+                $rbfw_service_category_price_raw  = get_post_meta($post_id, 'rbfw_service_category_price', true);
+                $rbfw_service_category_price  = json_decode($rbfw_service_category_price_raw, true);
+
+
+                $option_value  = is_serialized($rbfw_service_category_price) ? unserialize($rbfw_service_category_price) : $rbfw_service_category_price;
                 if (!empty($option_value) && $enable_service_price === 'on') {
                     ?>
                     <div class="multi-service-category-section" style="display: none">
