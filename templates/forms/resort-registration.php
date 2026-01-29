@@ -82,10 +82,13 @@
                                 </div>
                                 <?php
 
-                                if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php') || is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') ) {
+                                if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php') || is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') || is_plugin_active('tiered-pricing-addon-wprently/tiered-pricing-addon.php') ) {
 
                                     $rbfw_resort_data_mds = get_post_meta($post_id, 'rbfw_resort_data_mds', true) ? get_post_meta($post_id, 'rbfw_resort_data_mds', true) : [];
                                     $rbfw_resort_data_sp = get_post_meta($post_id, 'rbfw_resort_data_sp', true) ? get_post_meta($post_id, 'rbfw_resort_data_sp', true) : [];
+                                    $rbfw_resort_data_tp = get_post_meta($post_id, 'rbfw_resort_data_tp', true) ? get_post_meta($post_id, 'rbfw_resort_data_tp', true) : [];
+
+
 
                                     if(is_plugin_active( 'multi-day-price-saver-addon-for-wprently/additional-day-price.php' ) && !empty($rbfw_resort_data_mds)){
                                         ?>
@@ -125,6 +128,41 @@
 
                                         <?php
 
+                                    }elseif(is_plugin_active( 'tiered-pricing-addon-wprently/tiered-pricing-addon.php') && !empty($rbfw_resort_data_tp)){
+                                        ?>
+                                        <?php foreach ($rbfw_resort_data_tp as $tp_single){ ?>
+                                            <table>
+                                                <tbody>
+                                                <tr>
+                                                    <td>From <strong><?php echo esc_html($tp_single['start_day']) ?></strong> To  <strong><?php echo esc_html($tp_single['end_day']) ?></strong> </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <div class="rbfw_day_wise_price">
+                                                            <table>
+                                                                <tbody>
+                                                                <?php foreach ($tp_single['room_price'] as $tp_single){  ?>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <?php echo esc_html($tp_single['room_type']) ?>
+                                                                        </td>
+                                                                        <td style="display: <?php echo ($rbfw_enable_resort_daylong_price == 'yes')?'block':'none'  ?>">
+                                                                            <?php echo wc_price($tp_single['day_long_price']) ?>
+                                                                        </td>
+                                                                        <td>
+                                                                            <?php echo wc_price($tp_single['price']) ?>
+                                                                        </td>
+                                                                    </tr>
+                                                                <?php } ?>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        <?php } ?>
+                                        <?php
                                     }elseif(is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php') && !empty($rbfw_resort_data_sp)){
                                         ?>
                                         <?php foreach ($rbfw_resort_data_sp as $sp_single){ ?>

@@ -369,7 +369,6 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
         if (!empty($rbfw_service_category_price)) {
             foreach($rbfw_service_category_price as $key=>$item1){
                 $cat_title = $item1['cat_title'];
-
                 foreach ($item1['cat_services'] as $key1=>$single){
                     if($single['title']){
                         $service_q = [];
