@@ -74,9 +74,13 @@
 								'type'        => 'md_service_category_price',
 								'placeholder' => 'Service Name',
 							);
-							$option_value     = get_post_meta( $post_id, $options['id'], true );
-							$options['value'] = is_serialized( $option_value ) ? unserialize( $option_value ) : $option_value;
-							$id = isset( $options['id'] ) ? $options['id'] : "";
+
+                        $rbfw_service_category_price_raw  = get_post_meta($post_id, 'rbfw_service_category_price', true);
+                        $rbfw_service_category_price  = json_decode($rbfw_service_category_price_raw, true);
+
+                        $options['value'] = is_serialized( $rbfw_service_category_price ) ? unserialize( $rbfw_service_category_price ) : $rbfw_service_category_price;
+
+                        $id = isset( $options['id'] ) ? $options['id'] : "";
 							if ( empty( $id ) ) {
 								return;
 							}
@@ -496,7 +500,7 @@
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$input_data_sabitized          = RBFW_Function::data_sanitize( $_POST );
 					$rbfw_enable_category_service_price = isset( $_POST['rbfw_enable_category_service_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_category_service_price'] ) ) : 'off';
-					$rbfw_service_category_price        = isset( $input_data_sabitized['rbfw_service_category_price'] ) ? $input_data_sabitized['rbfw_service_category_price'] : [];
+					//$rbfw_service_category_price        = isset( $input_data_sabitized['rbfw_service_category_price'] ) ? $input_data_sabitized['rbfw_service_category_price'] : [];
 					// save extra service data==========================================
 					$old_extra_service = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 					$new_extra_service = array();
@@ -536,7 +540,32 @@
 						delete_post_meta( $post_id, 'rbfw_extra_service_data', $old_extra_service );
 					}
 					// =====extra service cateogry=============
-					update_post_meta( $post_id, 'rbfw_service_category_price', $rbfw_service_category_price );
+
+
+                    if (isset($_POST['rbfw_service_category_price']) && is_array($_POST['rbfw_service_category_price'])) {
+
+                        $rbfw_service_category_price_raw = wp_unslash($_POST['rbfw_service_category_price']);
+
+                        // Force array of scalars only
+                        array_walk_recursive($rbfw_service_category_price_raw, function (&$value) {
+                            if (is_string($value)) {
+                                $value = sanitize_text_field($value);
+                            } else {
+                                $value = '';
+                            }
+                        });
+
+                        update_post_meta($post_id, 'rbfw_service_category_price', wp_json_encode($rbfw_service_category_price_raw));
+                    }
+
+
+
+
+
+
+
+
+
 					update_post_meta( $post_id, 'rbfw_enable_category_service_price', $rbfw_enable_category_service_price );
 				}
 			}

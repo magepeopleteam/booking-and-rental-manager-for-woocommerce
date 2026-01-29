@@ -163,6 +163,8 @@
                             if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php') || is_plugin_active('multi-day-price-saver-addon-for-wprently/additional-day-price.php') ) {
 
                                 $rbfw_resort_data_mds = get_post_meta($product_id, 'rbfw_resort_data_mds', true) ? get_post_meta($product_id, 'rbfw_resort_data_mds', true) : [];
+                                $rbfw_resort_data_mds = get_post_meta($product_id, 'rbfw_resort_data_mds', true) ? get_post_meta($product_id, 'rbfw_resort_data_mds', true) : [];
+
                                 $rbfw_resort_data_sp = get_post_meta($product_id, 'rbfw_resort_data_sp', true) ? get_post_meta($product_id, 'rbfw_resort_data_sp', true) : [];
 
 
@@ -299,8 +301,6 @@
 
 
 			public function rbfw_check_resort_availibility() {
-
-
                 include( RBFW_Function::get_template_path( 'template_segment/resort_info.php' ) );
                 wp_die();
 			}
