@@ -7197,6 +7197,8 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     width: 60px;
     text-align: center;
     padding: 5px;
+    border:1px solid #c5c0c0;
+    border-radius:3px;
 }
 
 select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
