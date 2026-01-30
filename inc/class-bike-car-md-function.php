@@ -60,7 +60,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
 
             for($i=0;$i<=1;$i++){
-
                 if($i==0){
                     $total_days_month = 30;
                     if (function_exists('cal_days_in_month')) {
@@ -68,7 +67,6 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                     }
                     $day_wise_imventory = rbfw_day_wise_sold_out_check_by_month($post_id ,$year, $month , $total_days_month);
                 }
-
             }
 
             $result = [];
