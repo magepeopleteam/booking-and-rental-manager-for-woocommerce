@@ -1396,7 +1396,7 @@ table.rbfw_room_price_table tbody td img {
     text-align: center;
     width:40px;
     padding: 4px;
-    height:34px;
+    height:26px;
 }
 
 .rbfw_qty_input input[type="number"]::-webkit-inner-spin-button,
@@ -2538,7 +2538,7 @@ a.rbfw_back_step_btn {
     text-align: left;
     margin-bottom: 10px;
     font-size: .9rem;
-    font-weight: bold;
+    font-weight: normal;
     border: 1px solid #e1e1e1;
 }
 
