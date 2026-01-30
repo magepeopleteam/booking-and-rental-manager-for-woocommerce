@@ -7120,10 +7120,10 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     text-align: left;
 }
 .rbfw_service_type .radio-button{
-    font-weight: bold;
+    font-weight: normal;
 }
 .rbfw_service_type .radio-button .price,.rbfw_service_type .radio-button .rent-type{
-    font-weight: bold;
+    font-weight: normal;
 }
 .rbfw_service_type .radio-button .time{
     font-weight: normal;
