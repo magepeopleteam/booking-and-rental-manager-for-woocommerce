@@ -7084,6 +7084,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     flex-wrap: wrap;
     gap:8px 0px;
 }
+.rbfw_service_type .rbfw_time{font-size:12px;}
 
 /* Base style for the text radio button */
 .rbfw_service_type .radio-button{
