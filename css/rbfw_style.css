@@ -6764,8 +6764,8 @@ h2.rbfw_rent_list_grid_title a{
 }
 
 .rbfw_rent_list_grid_title {
-    font-weight: 600;
-    font-size: 22px;
+    font-weight: normal;
+    font-size: 18px;
     line-height: 1.2;
     text-transform: capitalize;
     color: #202020;
@@ -6777,7 +6777,7 @@ h2.rbfw_rent_list_grid_title a{
 .rbfw_rent_list_grid_title a {
     color: #202020;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_grid_title {
@@ -6918,6 +6918,7 @@ a.rbfw_rent_list_btn{
     color: #fff;
     border-radius: 5px;
     text-decoration: none !important;
+    font-size:16px;
 }
 
 a.rbfw_rent_list_btn:hover{
