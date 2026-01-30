@@ -6928,7 +6928,8 @@ a.rbfw_rent_list_btn:hover{
 
 .rbfw_rent_list_style_list .rbfw_rent_list_btn {
     display: inline-flex;
-    padding: 12px 26px;
+    padding: 8px 26px;
+    margin:10px 0px;
 }
 
 .rbfw_rent_list_btn .button-icon svg {
