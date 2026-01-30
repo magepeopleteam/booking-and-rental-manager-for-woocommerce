@@ -75,7 +75,7 @@
 								'placeholder' => 'Service Name',
 							);
 							$option_value     = get_post_meta( $post_id, $options['id'], true );
-							$options['value'] = is_serialized( $option_value ) ? unserialize( $option_value ) : $option_value;
+							$options['value'] = maybe_unserialize( $option_value );
 							$id = isset( $options['id'] ) ? $options['id'] : "";
 							if ( empty( $id ) ) {
 								return;

@@ -496,7 +496,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
                 <?php
                 $option_value  = get_post_meta($post_id, 'rbfw_service_category_price', true);
-                $option_value  = is_serialized($option_value) ? unserialize($option_value) : $option_value;
+                $option_value  = maybe_unserialize($option_value);
                 if (!empty($option_value) && $enable_service_price === 'on') {
                     ?>
                     <div class="multi-service-category-section" style="display: none">
