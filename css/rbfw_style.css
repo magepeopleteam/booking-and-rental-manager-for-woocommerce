@@ -1085,12 +1085,12 @@ ul.rbfw-feature-lists li {
     margin-bottom: 0;
 }
 h2.rbfw-post-title{padding-left:10px;}
-.rbfw-single-left-information .description p{padding-left:10px;}
+.rbfw-single-left-information .description p{padding-left:10px; font-size:16px; }
 .rbfw-single-left-information ul.rbfw-feature-lists li {
     color: #0a0a0a;
     font-size:16px;
 }
-
+p.rbfw_faq_desc{font-size:16px;}
 ul.rbfw-feature-lists li i, .service-price-item .title i.sc-icon {
     color: var(--rbfw_color_primary);
     margin-right: 8px;
