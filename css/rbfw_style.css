@@ -301,9 +301,10 @@ CSS for Single Page Template
     color:#000;
 }
 .rbfw-single-right-heading {
-    margin:0 0 5px 0;
+    margin:0 0 5px 0px;
     display: block;
     font-size: 16px;
+    padding: 10px 0px;
     font-weight: normal;
 }
 .rbfw_room_price_category_tabs .rbfw-single-right-heading{
@@ -328,7 +329,7 @@ CSS for Single Page Template
 .input-picker-icon{
     position: absolute;
     right: 12px;
-    top: 10px;
+    top: 3px;
 }
 .input-picker-icon i{
     font-size: 14px;
@@ -1084,11 +1085,12 @@ ul.rbfw-feature-lists li {
     margin-bottom: 0;
 }
 h2.rbfw-post-title{padding-left:10px;}
-.rbfw-single-left-information .description p{padding-left:10px;}
+.rbfw-single-left-information .description p{padding-left:10px; font-size:16px; }
 .rbfw-single-left-information ul.rbfw-feature-lists li {
     color: #0a0a0a;
+    font-size:16px;
 }
-
+p.rbfw_faq_desc{font-size:16px;}
 ul.rbfw-feature-lists li i, .service-price-item .title i.sc-icon {
     color: var(--rbfw_color_primary);
     margin-right: 8px;
@@ -1394,7 +1396,7 @@ table.rbfw_room_price_table tbody td img {
     text-align: center;
     width:40px;
     padding: 4px;
-    height:34px;
+    height:27px;
 }
 
 .rbfw_qty_input input[type="number"]::-webkit-inner-spin-button,
@@ -2536,7 +2538,7 @@ a.rbfw_back_step_btn {
     text-align: left;
     margin-bottom: 10px;
     font-size: .9rem;
-    font-weight: bold;
+    font-weight: normal;
     border: 1px solid #e1e1e1;
 }
 
@@ -2561,7 +2563,7 @@ a.rbfw_back_step_btn i {
     text-align: left;
     margin-bottom: 10px;
     font-size: 0.9rem;
-    font-weight: bold;
+    font-weight: normal;
     border: 1px solid #e1e1e1;
 }
 
@@ -2573,6 +2575,8 @@ div.rbfw_bikecarsd_price_table {
 
     margin-bottom: 20px;
     border-radius:5px;
+    margin-top:10px;
+    font-size:16px;
 }
 
 .rbfw-optional-add-ons{
@@ -2603,7 +2607,7 @@ table.rbfw_bikecarsd_price_table thead th {
     text-align: left;
     padding: 5px 10px;
     text-transform: capitalize;
-    background:#f7f7f7;
+    background:#e9e4e4;
 }
 
 .rbfw_single_muffin_template table.rbfw_bikecarsd_price_table thead th {
@@ -6760,8 +6764,8 @@ h2.rbfw_rent_list_grid_title a{
 }
 
 .rbfw_rent_list_grid_title {
-    font-weight: 600;
-    font-size: 22px;
+    font-weight: normal;
+    font-size: 18px;
     line-height: 1.2;
     text-transform: capitalize;
     color: #202020;
@@ -6773,7 +6777,7 @@ h2.rbfw_rent_list_grid_title a{
 .rbfw_rent_list_grid_title a {
     color: #202020;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_grid_title {
@@ -6914,6 +6918,7 @@ a.rbfw_rent_list_btn{
     color: #fff;
     border-radius: 5px;
     text-decoration: none !important;
+    font-size:16px;
 }
 
 a.rbfw_rent_list_btn:hover{
@@ -6923,7 +6928,8 @@ a.rbfw_rent_list_btn:hover{
 
 .rbfw_rent_list_style_list .rbfw_rent_list_btn {
     display: inline-flex;
-    padding: 12px 26px;
+    padding: 8px 26px;
+    margin:10px 0px;
 }
 
 .rbfw_rent_list_btn .button-icon svg {
@@ -7080,6 +7086,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     flex-wrap: wrap;
     gap:8px 0px;
 }
+.rbfw_service_type .rbfw_time{font-size:12px;}
 
 /* Base style for the text radio button */
 .rbfw_service_type .radio-button{
@@ -7118,10 +7125,10 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     text-align: left;
 }
 .rbfw_service_type .radio-button{
-    font-weight: bold;
+    font-weight: normal;
 }
 .rbfw_service_type .radio-button .price,.rbfw_service_type .radio-button .rent-type{
-    font-weight: bold;
+    font-weight: normal;
 }
 .rbfw_service_type .radio-button .time{
     font-weight: normal;
@@ -7192,6 +7199,8 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     width: 60px;
     text-align: center;
     padding: 5px;
+    border:1px solid #c5c0c0;
+    border-radius:3px;
 }
 
 select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
@@ -7357,7 +7366,7 @@ i.fas.fa-minus {
 }
 .rbfw-single-left-information ul.rbfw-feature-lists li {
     background: #f5f5f5;
-    padding: 2px 10px;
+    padding: 5px 10px;
     border-radius: 10px;
 }
 
