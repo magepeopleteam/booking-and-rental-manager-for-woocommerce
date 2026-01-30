@@ -458,13 +458,28 @@
 
                 if ( isset( $_POST['post_id'] ) ) {
 
-                    $post_id = $_POST['post_id'];
-                    $price = $_POST['price'];
-                    $total_days = $_POST['total_days'];
-                    $checkout_date = $_POST['checkout_date'];
-                    $checkin_date = $_POST['checkin_date'];
-                    $room_type = $_POST['room_type'];
-                    $active_tab = $_POST['active_tab'];
+                    $post_id = isset($_POST['post_id']) ? intval(sanitize_text_field(wp_unslash($_POST['post_id']))) : 0;
+                    
+                    // Security check: Only allow access to published posts for unauthenticated users
+                    if (!is_user_logged_in()) {
+                        $post_status = get_post_status($post_id);
+                        if ($post_status !== 'publish') {
+                            wp_send_json_error(array('message' => 'Access denied'), 403);
+                        }
+                    }
+                    
+                    // Verify the post exists and is of correct type
+                    $post = get_post($post_id);
+                    if (!$post || $post->post_type !== 'rbfw_item') {
+                        wp_send_json_error(array('message' => 'Invalid product'), 404);
+                    }
+                    
+                    $price = isset($_POST['price']) ? floatval(sanitize_text_field(wp_unslash($_POST['price']))) : 0;
+                    $total_days = isset($_POST['total_days']) ? intval(sanitize_text_field(wp_unslash($_POST['total_days']))) : 0;
+                    $checkout_date = isset($_POST['checkout_date']) ? sanitize_text_field(wp_unslash($_POST['checkout_date'])) : '';
+                    $checkin_date = isset($_POST['checkin_date']) ? sanitize_text_field(wp_unslash($_POST['checkin_date'])) : '';
+                    $room_type = isset($_POST['room_type']) ? sanitize_text_field(wp_unslash($_POST['room_type'])) : '';
+                    $active_tab = isset($_POST['active_tab']) ? sanitize_text_field(wp_unslash($_POST['active_tab'])) : '';
 
                     $all_infos      = '<div class="rbfw_container">';
                     $all_infos .= '<div class="rbfw_header">Price Details</div>';

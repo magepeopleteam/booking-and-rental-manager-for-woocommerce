@@ -359,6 +359,23 @@
 
 				if ( isset( $_POST['post_id'] ) ) {
 					$id                 = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
+					
+					// Security check: Only allow access to published posts for unauthenticated users
+					if (!is_user_logged_in()) {
+						$post_status = get_post_status($id);
+						if ($post_status !== 'publish') {
+							wp_send_json_error(array('message' => 'Access denied'), 403);
+							wp_die();
+						}
+					}
+					
+					// Verify the post exists and is of correct type
+					$post = get_post($id);
+					if (!$post || $post->post_type !== 'rbfw_item') {
+						wp_send_json_error(array('message' => 'Invalid product'), 404);
+						wp_die();
+					}
+					
 					$selected_date      = isset( $_POST['selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['selected_date'] ) ) : '';
 					$is_muffin_template = isset( $_POST['is_muffin_template'] ) ? sanitize_text_field( wp_unslash( $_POST['is_muffin_template'] ) ) : '';
 					$time_slot_switch   = isset( $_POST['time_slot_switch'] ) ? sanitize_text_field( wp_unslash( $_POST['time_slot_switch'] ) ) : '';
@@ -368,7 +385,28 @@
 			}
 
 			public function rbfw_bikecarsd_type_list() {
-                $ajax_action = 'rbfw_bikecarsd_type_list_action';
+                // Verify nonce for security
+                check_ajax_referer( 'rbfw_bikecarsd_type_list_action', 'nonce' );
+                
+                // Get post_id from POST data if available
+                $post_id = isset($_POST['post_id']) ? intval(sanitize_text_field(wp_unslash($_POST['post_id']))) : 0;
+                
+                // Security check: Only allow access to published posts for unauthenticated users
+                if ($post_id && !is_user_logged_in()) {
+                    $post_status = get_post_status($post_id);
+                    if ($post_status !== 'publish') {
+                        wp_send_json_error(array('message' => 'Access denied'), 403);
+                        wp_die();
+                    }
+                    
+                    // Verify the post exists and is of correct type
+                    $post = get_post($post_id);
+                    if (!$post || $post->post_type !== 'rbfw_item') {
+                        wp_send_json_error(array('message' => 'Invalid product'), 404);
+                        wp_die();
+                    }
+                }
+                
 				include( RBFW_Function::get_template_path( 'template_segment/single_day_info.php' ) );
 				wp_die();
 			}
@@ -486,6 +524,23 @@
                 check_ajax_referer( 'rbfw_service_type_timely_stock_action', 'nonce' );
 
 				$post_id                  = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
+				
+				// Security check: Only allow access to published posts for unauthenticated users
+				if (!is_user_logged_in()) {
+					$post_status = get_post_status($post_id);
+					if ($post_status !== 'publish') {
+						wp_send_json_error(array('message' => 'Access denied'), 403);
+						wp_die();
+					}
+				}
+				
+				// Verify the post exists and is of correct type
+				$post = get_post($post_id);
+				if (!$post || $post->post_type !== 'rbfw_item') {
+					wp_send_json_error(array('message' => 'Invalid product'), 404);
+					wp_die();
+				}
+				
 				$start_date               = isset( $_POST['rbfw_bikecarsd_selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_bikecarsd_selected_date'] ) ) : '';
 				$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : '';
 				$start_time               = isset( $_POST['pickup_time'] ) ? sanitize_text_field( wp_unslash( $_POST['pickup_time'] ) ) : '00:00';

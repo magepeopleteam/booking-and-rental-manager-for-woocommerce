@@ -6,8 +6,27 @@ check_ajax_referer( 'rbfw_check_resort_availibility_action', 'nonce' );
 $start_date = isset( $_POST['checkin_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkin_date'] ) ) : '';
 $end_date   = isset( $_POST['checkout_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkout_date'] ) ) : '';
 $post_id    = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
+
+// Security check: Only allow access to published posts for unauthenticated users
+if (!is_user_logged_in()) {
+    $post_status = get_post_status($post_id);
+    if ($post_status !== 'publish') {
+        wp_send_json_error(array('message' => 'Access denied'), 403);
+        wp_die();
+    }
+}
+
+// Verify the post exists and is of correct type
+$post = get_post($post_id);
+if (!$post || $post->post_type !== 'rbfw_item') {
+    wp_send_json_error(array('message' => 'Invalid product'), 404);
+    wp_die();
+}
+
 $origin     = date_create( $start_date );
 $target     = date_create( $end_date );
+$interval   = date_diff( $origin, $target );
+$total_days = $interval->format( '%a' );
 $interval   = date_diff( $origin, $target );
 $total_days = $interval->format( '%a' );
 

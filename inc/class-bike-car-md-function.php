@@ -54,10 +54,28 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
         function rbfw_day_wise_sold_out_check(){
             
-            $post_id = $_POST['post_id']; 
-            $month = $_POST['month'];
-            $year = $_POST['year'];
-
+            // Verify nonce for security
+            check_ajax_referer( 'rbfw_day_wise_sold_out_check_action', 'nonce' );
+            
+            $post_id = isset($_POST['post_id']) ? absint(sanitize_text_field(wp_unslash($_POST['post_id']))) : 0;
+            $month = isset($_POST['month']) ? absint(sanitize_text_field(wp_unslash($_POST['month']))) : 0;
+            $year = isset($_POST['year']) ? absint(sanitize_text_field(wp_unslash($_POST['year']))) : 0;
+            
+            // Security check: Only allow access to published posts for unauthenticated users
+            if (!is_user_logged_in()) {
+                $post_status = get_post_status($post_id);
+                if ($post_status !== 'publish') {
+                    wp_send_json_error(array('message' => 'Access denied'), 403);
+                    wp_die();
+                }
+            }
+            
+            // Verify the post exists and is of correct type
+            $post = get_post($post_id);
+            if (!$post || $post->post_type !== 'rbfw_item') {
+                wp_send_json_error(array('message' => 'Invalid product'), 404);
+                wp_die();
+            }
 
             for($i=0;$i<=1;$i++){
 
@@ -286,6 +304,22 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
 
             $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
+            
+            // Security check: Only allow access to published posts for unauthenticated users
+            if (!is_user_logged_in()) {
+                $post_status = get_post_status($post_id);
+                if ($post_status !== 'publish') {
+                    wp_send_json_error(array('message' => 'Access denied'), 403);
+                    wp_die();
+                }
+            }
+            
+            // Verify the post exists and is of correct type
+            $post = get_post($post_id);
+            if (!$post || $post->post_type !== 'rbfw_item') {
+                wp_send_json_error(array('message' => 'Invalid product'), 404);
+                wp_die();
+            }
 
             $rbfw_minimum_booking_day = 0;
             $rbfw_maximum_booking_day = 0;
