@@ -125,9 +125,7 @@
                                                 </tbody>
                                             </table>
                                         <?php } ?>
-
                                         <?php
-
                                     }elseif(is_plugin_active( 'tiered-pricing-addon-wprently/tiered-pricing-addon.php') && !empty($rbfw_resort_data_tp)){
                                         ?>
                                         <?php foreach ($rbfw_resort_data_tp as $tp_single){ ?>
