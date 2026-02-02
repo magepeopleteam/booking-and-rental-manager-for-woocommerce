@@ -1324,7 +1324,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             });
 
 
-            if(rbfw_enable_variations == 'yes'){ 
+            if(rbfw_enable_variations == 'yes'){
                 var total_variation_stock = 0;
                 jQuery(".rbfw_variant").each(function(index, value) {
                     var variant_text = jQuery(this).val();
