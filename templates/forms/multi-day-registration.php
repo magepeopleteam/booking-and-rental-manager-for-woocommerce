@@ -495,7 +495,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
 
                     <?php if ($rbfw_enable_md_type_item_qty == 'yes' && $item_stock_quantity > 0) { ?>
-                        <div class="item rbfw_quantity_md" style="display: none">
+                        <div class="item rbfw_quantity_md">
                             <div class="rbfw-single-right-heading">
                                 <?php esc_html_e('Quantity','booking-and-rental-manager-for-woocommerce'); ?>
                             </div>
@@ -517,7 +517,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     <?php } ?>
 
                     <?php if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data)){ ?>
-                        <div class="rbfw-variations-content-wrapper" style="display: none">
+                        <div class="rbfw-variations-content-wrapper">
                             <?php foreach ($rbfw_variations_data as $data_arr_one) {
                                 $selected_value = !empty($data_arr_one['selected_value']) ? $data_arr_one['selected_value'] : '';
                                 ?>
@@ -547,13 +547,11 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                     if(!is_array($rbfw_service_category_price)){
                         $rbfw_service_category_price  = json_decode($rbfw_service_category_price, true);
                     }
-
-
                     $option_value  = is_serialized($rbfw_service_category_price) ? unserialize($rbfw_service_category_price) : $rbfw_service_category_price;
                     ?>
 
                     <?php if (!empty($option_value) && $enable_service_price === 'on') { ?>
-                        <div class="multi-service-category-section" style="display: none">
+                        <div class="multi-service-category-section">
                             <?php foreach ($option_value as $cat => $item) { ?>
                                 <div class="servise-item">
                                     <div class="rbfw-single-right-heading"><?php echo esc_html($item['cat_title']); ?></div>
@@ -638,7 +636,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
 
                     <?php if(!empty($extra_service_list)){ ?>
-                        <div class="item rbfw_resourse_md" style="display: none">
+                        <div class="item rbfw_resourse_md">
                             <div class="rbfw-single-right-heading">
                                 <?php esc_html_e('Optional Add-ons','booking-and-rental-manager-for-woocommerce'); ?>
                             </div>
@@ -693,7 +691,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
                     <?php $rbfw_fee_data = get_post_meta( $post_id, 'rbfw_fee_data', true ); ?>
                     <?php if(!empty($rbfw_fee_data)){ ?>
-                        <div class="item rbfw_resourse_md" style="display: none">
+                        <div class="item rbfw_resourse_md">
                             <div class="rbfw-single-right-heading">
                                 <?php esc_html_e('Fee Management','booking-and-rental-manager-for-woocommerce'); ?>
                             </div>
@@ -768,11 +766,11 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                 </div>
 
 
-                <div class="rbfw_bikecarmd_price_result" style="display: none">
+                <div class="rbfw_bikecarmd_price_result">
                     <div class="item-content rbfw-costing">
                         <ul class="rbfw-ul">
 
-                            <li class="duration-costing rbfw-cond">
+                            <li class="duration-costing rbfw-cond" style="display: none">
                                 <span>
                                     <?php esc_html_e('Duration Cost','booking-and-rental-manager-for-woocommerce'); ?>
                                     <span class="rbfw_pricing_applied sessional">
@@ -889,7 +887,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
                 <?php if(rbfw_chk_regf_fields_exist($rbfw_id) === true){ ?>
                     <div class="item">
-                        <div class="rbfw_reg_form_rb" style="display: none">
+                        <div class="rbfw_reg_form_rb">
                             <?php
                             $reg_form = new Rbfw_Reg_Form();
                             echo wp_kses($reg_form->rbfw_generate_regf_fields($post_id),rbfw_allowed_html());
