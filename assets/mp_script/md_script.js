@@ -1142,6 +1142,8 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
     let item_quantity = jQuery('#rbfw_item_quantity_md').find(':selected').val();
     let rbfw_enable_variations = jQuery('#rbfw_enable_variations').val();
 
+
+
     var rbfw_input_stock_quantity = jQuery('#rbfw_input_stock_quantity').val();
 
     if(typeof item_quantity === "undefined"){
@@ -1322,7 +1324,7 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             });
 
 
-            if(response.rbfw_enable_variations == 'yes'){
+            if(rbfw_enable_variations == 'yes'){ 
                 var total_variation_stock = 0;
                 jQuery(".rbfw_variant").each(function(index, value) {
                     var variant_text = jQuery(this).val();
