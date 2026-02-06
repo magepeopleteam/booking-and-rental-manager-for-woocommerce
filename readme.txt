@@ -219,6 +219,7 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 2.6.2
 Vernulable issue solved.
 Sold out problem solved.
+Bug fixing.
 
 2.6.1
 Vernulable issue solved.

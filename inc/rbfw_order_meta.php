@@ -724,6 +724,7 @@ function rbfw_order_meta_box_callback() {
             <?php
             /* Loop Ticket Info */
             $ticket_infos = ! empty( get_post_meta( $order_id, 'rbfw_ticket_info', true ) ) ? get_post_meta( $order_id, 'rbfw_ticket_info', true ) : [];
+
             $subtotal = 0;
             foreach ( $ticket_infos as $ticket_info ) {
                 $item_name = ! empty( $ticket_info['ticket_name'] ) ? $ticket_info['ticket_name'] : '';
@@ -760,7 +761,7 @@ function rbfw_order_meta_box_callback() {
                     $package      = $ticket_info['rbfw_resort_package'];
                     $rent_info    = ! empty( $ticket_info['rbfw_type_info'] ) ? $ticket_info['rbfw_type_info'] : [];
 
-                    $rent_info    = $ResortClass->rbfw_get_resort_room_info( $item_id, $rent_info, $package );
+                    $rent_info    = $ResortClass->rbfw_get_resort_room_info( $item_id, $rent_info, $package, $ticket_info['ticket_price'] );
                     $service_info = ! empty( $ticket_info['rbfw_service_info'] ) ? $ticket_info['rbfw_service_info'] : [];
                     $service_info = $ResortClass->rbfw_get_resort_service_info( $item_id, $service_info );
                 } else {

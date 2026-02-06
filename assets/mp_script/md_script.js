@@ -334,7 +334,7 @@ jQuery(window).on('load', function() {
         const month = ('0' + (date.getMonth() + 1)).slice(-2); // Months are 0-based
         const day = ('0' + date.getDate()).slice(-2);
         const date_ymd = `${year}-${month}-${day}`;
-        jQuery('input[name="rbfw_pickup_start_date"]').val(date_ymd).trigger('change');
+        //jQuery('input[name="rbfw_pickup_start_date"]').val(date_ymd).trigger('change');
 
 
         rbfw_bikecarmd_ajax_price_calculation();
