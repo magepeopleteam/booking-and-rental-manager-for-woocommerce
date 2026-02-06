@@ -644,7 +644,7 @@ function rbfw_rent_search_shortcode( $atts = null ){
                     <div class="rbfw_search_container">
                         <div class="rbfw_search_item">
                             <select name="rbfw_search_item" id="rbfw_search_type" required class="rbfw_rent_item_search_type_location">
-                                <option value="">Select Rent Item</option>
+                                <option value=""><?php esc_html_e('Select Rent Item','booking-and-rental-manager-for-woocommerce'); ?></option>
                                 <?php if($query->have_posts()): while ( $query->have_posts() ) : $query->the_post(); ?>
                                     <option data-post_id="<?php echo get_the_ID(); ?>" value="<?php the_permalink(); ?>"><?php the_title(); ?></option>
                                 <?php

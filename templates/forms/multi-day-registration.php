@@ -451,7 +451,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                         <div class="rbfw-single-right-heading"><?php esc_html_e('Return Date','booking-and-rental-manager-for-woocommerce'); ?></div>
                                         <div class="rbfw-p-relative">
                                             <span class="calendar"><i class="fas fa-calendar-days"></i></span>
-                                            <?php if($referal_page == 'search'){ ?>
+                                            <?php if($referal_page == 'search'){  ?>
                                                 <input type="hidden" id="hidden_dropoff_date" value="<?php echo $rbfw_end_date ?>" name="rbfw_pickup_end_date">
                                                 <input class="rbfw-input rbfw-time-price dropoff_date" type="text" value="<?php echo rbfw_date_format($rbfw_end_date)  ?>" id="dropoff_date" placeholder="<?php esc_attr_e('Return date','booking-and-rental-manager-for-woocommerce'); ?>" required readonly="" <?php if($enable_hourly_rate == 'no'){ echo 'style="background-position: 95% center"'; }?>>
                                             <?php }else{ ?>

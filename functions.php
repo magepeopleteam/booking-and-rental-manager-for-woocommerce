@@ -268,6 +268,21 @@ function check_rbfw_tiered_pricing( $day_number, $rbfw_tiered_pricing) {
     return '';
 }
 
+add_action( 'rbfw_pricing_info_header', 'rbfw_pricing_info_header' );
+function rbfw_pricing_info_header(){
+    $info_display = rbfw_get_option('rbfw_pricing_info_display', 'rbfw_basic_gen_settings');
+    ?>
+    <?php if ( $info_display == 'yes' ) : ?>
+        <div class="rbfw-pricing-info-heading">
+            <i class="fas fa-info-circle"></i> <?php esc_html_e('Pricing Info', 'booking-and-rental-manager-for-woocommerce'); ?>
+            <span class="pricing-info-view" title="click to see">
+			<?php esc_html_e('Click to view','booking-and-rental-manager-for-woocommerce') ?>
+		</span>
+        </div>
+    <?php endif; ?>
+    <?php
+}
+
 
 
 

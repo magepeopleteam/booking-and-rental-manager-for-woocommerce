@@ -108,6 +108,7 @@ if (!class_exists('RBFW_Woocommerce')) {
             if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
                 return;
             }
+
             $sd_input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
             $rbfw_rent_type     = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 
