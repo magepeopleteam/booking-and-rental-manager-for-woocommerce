@@ -132,6 +132,9 @@ if (! class_exists('RBFW_Dependencies')) {
 				'nonce_faq_data_save'        => wp_create_nonce('rbfw_faq_data_save_action'),
 				'nonce_faq_delete_item'        => wp_create_nonce('rbfw_faq_delete_item_action'),
 				'nonce_faq_data_update'        => wp_create_nonce('rbfw_faq_data_update_action'),
+                'nonce_term_data_save'        => wp_create_nonce('rbfw_term_data_save_action'),
+                'nonce_term_delete_item'        => wp_create_nonce('rbfw_term_delete_item_action'),
+                'nonce_term_data_update'        => wp_create_nonce('rbfw_term_data_update_action'),
 			));
 
 			if (function_exists('rbfw_get_option')) {
