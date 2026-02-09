@@ -283,6 +283,32 @@ function rbfw_pricing_info_header(){
     <?php
 }
 
+add_action( 'rbfw_add_term_condition', 'rbfw_add_term_condition_item', 10, 1 );
+function rbfw_add_term_condition_item( $post_id ) {
+
+    $check_condition = get_post_meta( $post_id, 'rbfw_enable_term_content', true );
+    $check_condition = $check_condition ? $check_condition : 'yes';
+
+
+
+    if ( $check_condition && $check_condition == 'yes' ) {
+        $conditions = get_post_meta( $post_id, 'mep_event_term', true ) ? maybe_unserialize( get_post_meta( $post_id, 'mep_event_term', true ) ) : [];
+
+        if ( sizeof( $conditions ) > 0 ) {
+            foreach ( $conditions as $condition ) {
+
+                $required = $condition['rbfw_term_required'] == 'on' ? 'required' : '';
+                ?>
+                <label class="">
+                    <input type="checkbox" name="accept_term[]" <?php echo $required; ?> />
+                    <a href="<?php echo $condition['rbfw_term_url']; ?>" target="_blank"><?php echo $condition['rbfw_term_title']; ?></a>
+                </label>
+                <?php
+            }
+        }
+    }
+}
+
 
 
 

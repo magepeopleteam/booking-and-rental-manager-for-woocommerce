@@ -1115,6 +1115,193 @@
 			}
 		});
 	}
+
+
+    // ================ Term. ===================================
+    $(document).on('click', '.rbfw-term-item-new', function (e) {
+        $('#rbfw-term-msg').html('');
+        $('.rbfw_term_save_buttons').show();
+        $('.rbfw_term_update_buttons').hide();
+        empty_term_form();
+    });
+
+    function close_sidebar_modal(e){
+        e.preventDefault();
+        e.stopPropagation();
+        $('.rbfw-modal-container').removeClass('open');
+    }
+
+    $(document).on('click', 'input[name=rbfw_enable_term_content]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no')
+            $('.rbfw-term-section').slideUp();
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+            $('.rbfw-term-section').slideDown();
+        }
+    });
+
+    $(document).on('click', '.rbfw-term-item-edit', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        $('#rbfw-term-msg').html('');
+        $('.rbfw_term_save_buttons').hide();
+        $('.rbfw_term_update_buttons').show();
+        var itemId = $(this).closest('.rbfw-term-item').data('id');
+        var parent = $(this).closest('.rbfw-term-item');
+        var headerTextRequired = parent.find('.term-header .mep-term-required').text().trim();
+        var headerText = parent.find('.term-header p.term_title').text().trim();
+        var headerTexturl = parent.find('.term-header p.term_url').text().trim();
+        $('input[name="rbfw_term_condition_required"]').val(headerTextRequired);
+
+        if(headerTextRequired=='yes'){
+            $('input[name="rbfw_term_condition_required"]').prop('checked', true);
+        }
+
+
+        $('input[name="rbfw_term_title"]').val(headerText);
+        $('input[name="rbfw_term_url"]').val(headerTexturl);
+        $('input[name="rbfw_term_item_id"]').val(itemId);
+
+    });
+
+    $(document).on('click', '.rbfw-term-item-delete', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var itemId = $(this).closest('.rbfw-term-item').data('id');
+
+        var isConfirmed = confirm('Are you sure you want to delete this row?');
+        if (isConfirmed) {
+            delete_term_item(itemId);
+        } else {
+            console.log('Deletion canceled.'+itemId);
+        }
+    });
+
+
+    function empty_term_form(){
+        $('input[name="rbfw_term_title"]').val('');
+        $('input[name="rbfw_term_url"]').val('');
+        $('input[name="rbfw_term_item_id"]').val('');
+    }
+
+
+    $(document).on('click', '#rbfw_term_update', function (e) {
+        e.preventDefault();
+        update_term();
+    });
+
+    $(document).on('click', '#rbfw_term_save', function (e) {
+        e.preventDefault();
+        save_term();
+    });
+
+    $(document).on('click', '#rbfw_term_save_close', function (e) {
+        e.preventDefault();
+        save_term();
+        close_sidebar_modal(e);
+    });
+
+    function update_term(){
+        var is_required   = $('input[name="rbfw_term_condition_required"]');
+        var title   = $('input[name="rbfw_term_title"]');
+        var url   = $('input[name="rbfw_term_url"]');
+        var url   = $('input[name="rbfw_term_url"]');
+
+        var postID  = $('input[name="rbfw_post_id"]');
+        var itemId = $('input[name="rbfw_term_item_id"]');
+        $.ajax({
+            url: rbfw_ajax_url,
+            type: 'POST',
+            data: {
+                action: 'rbfw_term_data_update',
+                rbfw_term_required:is_required.val(),
+                rbfw_term_title:title.val(),
+                rbfw_term_url:url.val(),
+                rbfw_term_postID:postID.val(),
+                rbfw_term_itemID:itemId.val(),
+                'nonce' : rbfw_ajax_admin.nonce_term_data_update
+            },
+            success: function(response) {
+                $('#rbfw-term-msg').html(response.data.message);
+                $('.rbfw-term-items').html('');
+                $('.rbfw-term-items').append(response.data.html);
+                setTimeout(function(){
+                    $('.rbfw-modal-container').removeClass('open');
+                    empty_term_form();
+                },1000);
+
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+    function save_term(){
+        var is_required   = $('input[name="rbfw_term_condition_required"]');
+        var title   = $('input[name="rbfw_term_title"]');
+        var url   = $('input[name="rbfw_term_url"]');
+        var postID  = $('input[name="rbfw_post_id"]');
+        $.ajax({
+            url: rbfw_ajax_url,
+            type: 'POST',
+            data: {
+                action: 'rbfw_term_data_save',
+                rbfw_term_title:title.val(),
+                rbfw_term_required:is_required.val(),
+                rbfw_term_url:url.val(),
+                rbfw_term_postID:postID.val(),
+                'nonce' : rbfw_ajax_admin.nonce_term_data_save
+            },
+            success: function(response) {
+                $('#rbfw-term-msg').html(response.data.message);
+                $('.rbfw-term-items').html('');
+                $('.rbfw-term-items').append(response.data.html);
+                empty_term_form();
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+    function delete_term_item(itemId){
+        var postID  = $('input[name="rbfw_post_id"]');
+        $.ajax({
+            url: rbfw_ajax_url,
+            type: 'POST',
+            data: {
+                action: 'rbfw_term_delete_item',
+                rbfw_term_postID:postID.val(),
+                itemId:itemId,
+                'nonce' : rbfw_ajax_admin.nonce_term_delete_item
+            },
+            success: function(response) {
+                $('.rbfw-term-items').html('');
+                $('.rbfw-term-items').append(response.data.html);
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
+        });
+    }
+
+
+    $(document).on('click', 'input[name=rbfw_term_condition_required]', function (e) {
+        var status = $(this).val();
+        if (status === 'yes') {
+            $(this).val('no')
+        }
+        if (status === 'no') {
+            $(this).val('yes');
+        }
+    });
+
+
+
    
     // ================toggle switch, ===================
     /**
