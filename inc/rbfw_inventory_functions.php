@@ -598,8 +598,6 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
         $inventory_based_on_return = rbfw_get_option('inventory_based_on_return','rbfw_basic_gen_settings');
 
 
-
-
         $stock_manage_on_return_date = get_post_meta( $post_id, 'stock_manage_on_return_date', true ) ? get_post_meta( $post_id, 'stock_manage_on_return_date', true ) : 'no';
 
 
@@ -623,7 +621,11 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
 
                     $inventory_managed_order_status = rbfw_get_option('inventory_managed_order_status', 'rbfw_basic_gen_settings');
-                    $inventory_managed_order_status = is_array($inventory_managed_order_status )?$inventory_managed_order_status : [];
+                    $inventory_managed_order_status = is_array($inventory_managed_order_status )?$inventory_managed_order_status : [
+                        'processing' => 'processing',
+                        'completed'  => 'completed',
+                    ];
+
                     $checkValues = $inventory['rbfw_order_status'];
 
                     if ( (in_array($checkValues, $inventory_managed_order_status) || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
