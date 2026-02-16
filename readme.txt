@@ -216,6 +216,12 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.6.3
+Vernulable issue solved.
+Terms and condition feature added.
+Null value check and hide for price calculation.
+
+
 2.6.2
 Vernulable issue solved.
 Sold out problem solved.
