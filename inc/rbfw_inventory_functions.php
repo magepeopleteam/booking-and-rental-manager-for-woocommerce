@@ -358,7 +358,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
 
 
     /*start service inventory*/
-
+    $service_stock = [];
 
     if ($rent_type != 'resort'){
 
@@ -368,7 +368,7 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
         }
 
 
-        $service_stock = [];
+
         if (!empty($rbfw_service_category_price)) {
             foreach($rbfw_service_category_price as $key=>$item1){
                 $cat_title = $item1['cat_title'];
@@ -488,8 +488,12 @@ function rbfw_get_multi_items_available_qty($post_id, $start_date, $end_date, $t
     /*end extra service inventory*/
 
     /*start service inventory*/
-    $rbfw_service_category_price_raw = get_post_meta($post_id, 'rbfw_service_category_price', true);
-    $rbfw_service_category_price = json_decode($rbfw_service_category_price_raw, true);
+
+
+    $rbfw_service_category_price = get_post_meta($post_id, 'rbfw_service_category_price', true);
+    if(!is_array($rbfw_service_category_price)){
+        $rbfw_service_category_price = json_decode($rbfw_service_category_price, true);
+    }
 
     $service_stock = [];
     if (!empty($rbfw_service_category_price)) {
@@ -1053,8 +1057,10 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                 }
 
 
-                $rbfw_service_category_price_raw = get_post_meta($post_id, 'rbfw_service_category_price', true);
-                $rbfw_service_category_price = json_decode($rbfw_service_category_price_raw, true);
+                $rbfw_service_category_price = get_post_meta($post_id, 'rbfw_service_category_price', true);
+                if(!is_array($rbfw_service_category_price)){
+                    $rbfw_service_category_price = json_decode($rbfw_service_category_price, true);
+                }
 
                 $service_quantity = [];
                 $service_stock = [];
@@ -1460,8 +1466,12 @@ if($rbfw_enable_variations == 'yes' && !empty($rbfw_variations_data) && $rent_ty
 
             <?php
 
-            $rbfw_service_category_price_raw = get_post_meta($data_id, 'rbfw_service_category_price', true);
-            $rbfw_service_category_price = json_decode($rbfw_service_category_price_raw, true);
+            $rbfw_service_category_price = get_post_meta($data_id, 'rbfw_service_category_price', true);
+
+            if(!is_array($rbfw_service_category_price)){
+                $rbfw_service_category_price = json_decode($rbfw_service_category_price, true);
+            }
+
 
             $service_stock = [];
             if (!empty($rbfw_service_category_price)) { ?>

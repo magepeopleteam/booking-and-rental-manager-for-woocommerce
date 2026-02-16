@@ -2009,7 +2009,7 @@
                     $manage_inventory_as_timely = isset( $_POST['manage_inventory_as_timely'] ) ? sanitize_text_field( wp_unslash( $_POST['manage_inventory_as_timely'] ) ) : 'off';
 					$enable_specific_duration = isset( $_POST['enable_specific_duration'] ) ? sanitize_text_field( wp_unslash( $_POST['enable_specific_duration'] ) ) : 'off';
 
-
+                    $rbfw_particular_switch = 'off';
                     if($rbfw_item_type=='bike_car_md' || $rbfw_item_type=='equipment' || $rbfw_item_type=='dress' || $rbfw_item_type=='others') {
                         $rbfw_particular_switch = isset($_POST['rbfw_particular_switch_md']) ? sanitize_text_field(wp_unslash($_POST['rbfw_particular_switch_md'])) : 'off';
                     }elseif ($rbfw_item_type=='multiple_items'){
