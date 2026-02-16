@@ -426,7 +426,7 @@ if(class_exists('Rbfw_Reg_Form')){
     <input type="hidden" name="rbfw_room_duration_price" id="rbfw_room_duration_price" value="0"/>
     <input type="hidden" name="rbfw_extra_service_price" id="rbfw_extra_service_price" value="0"/>
     <input type="hidden" name="rbfw_management_price_resort" id="rbfw_management_price_resort" value="0"/>
-
+    <?php do_action('rbfw_add_term_condition',$post_id) ?>
     <div class="item rbfw_text_book_now">
         <button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_resort_book_now_btn rbfw_disabled_button" disabled>
             <?php echo esc_html__( 'Book Now','booking-and-rental-manager-for-woocommerce' ); ?>

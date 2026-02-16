@@ -341,12 +341,21 @@ jQuery(window).on('load', function() {
     }
 })
 
-
+let previousQuantity;
+jQuery(document).on('focus', '#rbfw_item_quantity_md', function() {
+    previousQuantity = jQuery(this).val(); // store old value
+});
 
 jQuery(document).on('change', '#rbfw_item_quantity_md', function(e) {
-    let that = jQuery(this);
-    var total_days = jQuery('[name="total_days"]').val();
+    let pickup_date = jQuery('#hidden_pickup_date').val();
+    let dropoff_date = jQuery('#hidden_dropoff_date').val();
 
+    if(pickup_date == '' || dropoff_date == ''){
+        alert(rbfw_translation.pickup_dropoff_date);
+        jQuery(this).val(previousQuantity);
+        return;
+    }
+    var total_days = jQuery('[name="total_days"]').val();
     if(total_days){
         rbfw_service_price_calculation(total_days);
     }
@@ -493,6 +502,16 @@ jQuery(document).on('click', '.rbfw_multi_items_qty_minus', function () {
 
 // Checkbox change
 jQuery(document).on('change', '.rbfw_service_price_data', function() {
+
+    let pickup_date = jQuery('#hidden_pickup_date').val();
+    let dropoff_date = jQuery('#hidden_dropoff_date').val();
+
+    if(pickup_date == '' || dropoff_date == ''){
+        alert(rbfw_translation.pickup_dropoff_date);
+        jQuery(this).prop("checked", false);
+        return false;
+    }
+
     let itemClass = '.rbfw_service_quantity.item_' + jQuery(this).data('item');
     if (jQuery(this).is(':checked')) {
         jQuery(itemClass).show();
@@ -534,6 +553,16 @@ jQuery(document).on('click', '.rbfw_service_quantity_minus', function(e) {
 
 // Checkbox toggle
 jQuery(document).on('change', '.rbfw-resource-price', function() {
+
+    let pickup_date = jQuery('#hidden_pickup_date').val();
+    let dropoff_date = jQuery('#hidden_dropoff_date').val();
+
+    if(pickup_date == '' || dropoff_date == ''){
+        alert(rbfw_translation.pickup_dropoff_date);
+        jQuery(this).prop("checked", false);
+        return false;
+    }
+    
     let inputBox = jQuery(this).closest('tr').find('.rbfw_bikecarmd_es_input_box');
 
     if (jQuery(this).is(':checked')) {
