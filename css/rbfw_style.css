@@ -7204,6 +7204,7 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 
 select.rbfw-select.rbfw-time-price.pickup_time option:disabled {
     text-decoration: line-through;
+    color: #c3bebe;
 }
 
 /*.rbfw_single_default_template .product-quantity{
