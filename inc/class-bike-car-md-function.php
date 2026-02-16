@@ -53,6 +53,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
         }
 
         function rbfw_day_wise_sold_out_check(){
+
+            check_ajax_referer( 'rbfw_bikecarmd_ajax_price_calculation_action', 'nonce' );
             
             $post_id = $_POST['post_id']; 
             $month = $_POST['month'];

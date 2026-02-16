@@ -209,6 +209,7 @@ if (! class_exists('RBFW_Dependencies')) {
 				'months' => __('Months', 'booking-and-rental-manager-for-woocommerce'),
 				'number_of' => __('Number of', 'booking-and-rental-manager-for-woocommerce'),
 				'duration' => __('Duration', 'booking-and-rental-manager-for-woocommerce'),
+				'pickup_dropoff_date' => __('Please enter pickup date and dropoff date', 'booking-and-rental-manager-for-woocommerce'),
 			));
 
 

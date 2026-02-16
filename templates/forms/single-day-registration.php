@@ -368,6 +368,8 @@
 
                 <?php do_action('rbfw_ticket_feature_info'); ?>
 
+                <?php do_action('rbfw_add_term_condition',$rbfw_id) ?>
+
 				<div class="item rbfw_bikecarsd_book_now_btn_wrap">
 					<button type="submit" name="add-to-cart" value="<?php echo esc_attr($rbfw_product_id); ?>" class="mp_rbfw_book_now_submit single_add_to_cart_button button alt btn-mep-event-cart rbfw-book-now-btn rbfw_bikecarsd_book_now_btn rbfw_disabled_button" disabled>
 					<?php

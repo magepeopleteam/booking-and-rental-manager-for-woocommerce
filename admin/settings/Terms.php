@@ -148,8 +148,12 @@
                             <section class="term-header" data-collapse-target="#term-content-<?php echo esc_attr( $key ); ?>">
                                 <div>
                                     <p class="term_title">hhh<?php echo esc_html( $value['rbfw_term_title'] ); ?></p>
-                                    <p class="term_url"><?php echo esc_html( $value['rbfw_term_url'] ); ?></p>
-                                    <p style="display: none">Required: <span class="mep-term-required"><?php echo esc_html( $value['rbfw_term_required'] ); ?></span></p>
+                                    <p class="term_url">
+                                        <a target="_blank" href="<?php echo esc_html( $value['rbfw_term_url'] ); ?>">
+                                            <?php esc_html_e('View Terms & Conditions','booking-and-rental-manager-for-woocommerce'); ?>
+                                        </a>
+                                    </p>
+                                    <p style="display: none">Required: <span class="mep-term-required"><?php echo esc_html( isset($value['rbfw_term_required'])?$value['rbfw_term_required']:'no' ); ?></span></p>
                                     <div class="term-action">
                                         <span class=""><i class="fas fa-eye"></i></span>
                                         <span class="rbfw-term-item-edit" data-modal="rbfw-term-item-new"><i class="fas fa-edit"></i></span>
