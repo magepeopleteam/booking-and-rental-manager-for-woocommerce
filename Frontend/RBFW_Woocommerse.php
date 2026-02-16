@@ -148,15 +148,18 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_room_info = array();
                 $rbfw_room_price = array();
                 $i              = 0;
+
                 foreach ( $rbfw_room_info_all as $key => $value ) {
-                    $room_type = $sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_type'];
-                    $room_qty  = $sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_qty'];
-                    $room_price  = $sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_price'];
-                    if ( ! empty( $room_qty ) ) {
-                        $rbfw_room_info[ $room_type ] = $room_qty;
-                        $rbfw_room_price[ $room_type ] = $room_price;
+                    if(isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_qty']) &&  isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_price'] )) {
+                        $room_type = $sd_input_data_sabitized['rbfw_room_info'][$i]['room_type'];
+                        $room_qty = $sd_input_data_sabitized['rbfw_room_info'][$i]['room_qty'];
+                        $room_price = $sd_input_data_sabitized['rbfw_room_info'][$i]['room_price'];
+                        if (!empty($room_qty)) {
+                            $rbfw_room_info[$room_type] = $room_qty;
+                            $rbfw_room_price[$room_type] = $room_price;
+                        }
+                        $i++;
                     }
-                    $i ++;
                 }
 
 
@@ -216,6 +219,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 } else {
                     $discount_arr = [];
                 }
+                $sub_total_price_discount = 0;
                 if ( ! empty( $discount_arr ) ) {
                     $sub_total_price_discount       = $discount_arr['total_amount'];
                     $discount_type         = $discount_arr['discount_type'];
@@ -876,10 +880,13 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $fee_management_label = esc_html__( 'Fee Management Cost', 'booking-and-rental-manager-for-woocommerce' );
 
-                $item->add_meta_data(
-                    esc_html( $fee_management_label ),
-                    wc_price($rbfw_management_price)
-                );
+                if($rbfw_management_price){
+                    $item->add_meta_data(
+                        esc_html( $fee_management_label ),
+                        wc_price($rbfw_management_price)
+                    );
+                }
+
 
 
                 $discount_label = (
@@ -889,10 +896,14 @@ if (!class_exists('RBFW_Woocommerce')) {
                     ? $rbfw->get_option_trans( 'rbfw_text_discount', 'rbfw_basic_translation_settings' )
                     : esc_html__( 'Discount', 'booking-and-rental-manager-for-woocommerce' ) . ' :';
 
-                $item->add_meta_data(
-                    esc_html( $discount_label ),
-                    wc_price( $discount_amount )
-                );
+                if($discount_amount){
+                    $item->add_meta_data(
+                        esc_html( $discount_label ),
+                        wc_price( $discount_amount )
+                    );
+                }
+
+
                 $security_deposit = rbfw_security_deposit( $rbfw_id, ( (int) $rbfw_room_duration_price + (int) $rbfw_room_service_price ) );
                 if ( $security_deposit['security_deposit_amount'] ) {
                     $item->add_meta_data( $rbfw_security_deposit_label, wc_price( $security_deposit['security_deposit_amount'] ) );
@@ -1053,10 +1064,13 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $fee_management_label = esc_html__( 'Fee Management Cost', 'booking-and-rental-manager-for-woocommerce' );
 
-                $item->add_meta_data(
-                    esc_html( $fee_management_label ),
-                    wc_price($rbfw_management_price)
-                );
+                if($rbfw_management_price){
+                    $item->add_meta_data(
+                        esc_html( $fee_management_label ),
+                        wc_price($rbfw_management_price)
+                    );
+                }
+
 
                 $security_deposit = rbfw_security_deposit( $rbfw_id, ( (int) $rbfw_bikecarsd_duration_price + (int) $rbfw_bikecarsd_service_price ) );
                 if ( $security_deposit['security_deposit_amount'] ) {
@@ -1265,14 +1279,14 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $fee_management_label = esc_html__( 'Fee Management Cost', 'booking-and-rental-manager-for-woocommerce' );
 
-                $item->add_meta_data(
-                    esc_html( $fee_management_label ),
-                    wc_price($rbfw_management_price)
-                );
+                if($rbfw_management_price){
+                    $item->add_meta_data(
+                        esc_html( $fee_management_label ),
+                        wc_price($rbfw_management_price)
+                    );
+                }
 
                 $item->add_meta_data( '_rbfw_ticket_info', $rbfw_ticket_info );
-
-
 
             } else {
 

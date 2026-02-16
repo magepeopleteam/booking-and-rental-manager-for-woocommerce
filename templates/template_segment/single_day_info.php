@@ -167,7 +167,7 @@ if(isset($_POST['post_id'])){
 
 
 
-            <?php if(!empty($rbfw_extra_service_data)){ ?>
+            <?php if(!empty($rbfw_extra_service_data)){  ?>
 
                     <div class="rbfw_bikecarsd_es_price_table">
                         <div class="rbfw-single-right-heading">
@@ -257,6 +257,7 @@ if(isset($_POST['post_id'])){
 
             <?php
             $rbfw_fee_data = get_post_meta( $id, 'rbfw_fee_data', true );
+            $fee_management_cost_enable = false;
             ?>
 
             <?php if(!empty($rbfw_fee_data)){ ?>
@@ -269,10 +270,10 @@ if(isset($_POST['post_id'])){
                             <tbody>
                             <?php
                             $c = 0;
-                            //echo '<pre>';print_r($rbfw_fee_data);echo '<pre>';
                             $rbfw_management_price = 0;
-                            foreach ($rbfw_fee_data as $key=>$fee) { ?>
-                                <?php if(isset($fee['label'])){ ?>
+                            $rbfw_management_price = 0;
+                            foreach ($rbfw_fee_data as $key=>$fee) { $fee_management_cost_enable = true; ?>
+                                <?php if(isset($fee['label'])){  ?>
                                     <tr>
                                         <td class="w_20 rbfw_bikecarmd_es_hidden_input_box">
                                             <div class="label rbfw-checkbox">
@@ -354,12 +355,16 @@ if(isset($_POST['post_id'])){
                             <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                         </li>
 
-                        <li class="management-costing rbfw-cond">
-                            <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>
-                            <span class="price-figure" data-price="">
+                        <?php if($fee_management_cost_enable){ ?>
+                            <li class="management-costing rbfw-cond">
+                                <?php esc_html_e('Management Cost','booking-and-rental-manager-for-woocommerce'); ?>
+                                <span class="price-figure" data-price="">
                                 <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
-                            </span>
-                        </li>
+                                </span>
+                            </li>
+                        <?php } ?>
+
+
 
                         <li class="security_deposit" style="display:none;">
                             <?php echo esc_html((!empty(get_post_meta($id, 'rbfw_security_deposit_label', true)) ? get_post_meta($id, 'rbfw_security_deposit_label', true) : __('Security Deposit','booking-and-rental-manager-for-woocommerce'))); ?>
