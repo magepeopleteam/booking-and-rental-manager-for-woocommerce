@@ -92,14 +92,14 @@
                                 <label>
 									<?php _e( 'Add Title', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                     <input type="hidden" name="rbfw_post_id" value="<?php echo $post_id; ?>">
-                                    <input type="text" name="rbfw_term_title">
+                                    <input type="text" class="rbfw_term_input" name="rbfw_term_title">
                                     <input type="hidden" name="rbfw_term_item_id">
                                 </label>
 
                                 <label>
                                     <?php _e( 'Add Description Url', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                     <input type="hidden" name="rbfw_post_id" value="<?php echo $post_id; ?>">
-                                    <input type="text" name="rbfw_term_url">
+                                    <input type="text" class="rbfw_term_input" name="rbfw_term_url">
                                     <input type="hidden" name="rbfw_term_item_id">
                                 </label>
 
@@ -147,7 +147,7 @@
                         <div class="rbfw-term-item" data-id="<?php echo esc_attr( $key ); ?>">
                             <section class="term-header" data-collapse-target="#term-content-<?php echo esc_attr( $key ); ?>">
                                 <div>
-                                    <p class="term_title">hhh<?php echo esc_html( $value['rbfw_term_title'] ); ?></p>
+                                    <p class="term_title"><?php echo esc_html( $value['rbfw_term_title'] ); ?></p>
                                     <p class="term_url">
                                         <a target="_blank" href="<?php echo esc_html( $value['rbfw_term_url'] ); ?>">
                                             <?php esc_html_e('View Terms & Conditions','booking-and-rental-manager-for-woocommerce'); ?>
