@@ -147,7 +147,7 @@
                         <div class="rbfw-term-item" data-id="<?php echo esc_attr( $key ); ?>">
                             <section class="term-header" data-collapse-target="#term-content-<?php echo esc_attr( $key ); ?>">
                                 <div>
-                                    <p class="term_title">hhh<?php echo esc_html( $value['rbfw_term_title'] ); ?></p>
+                                    <p class="term_title"><?php echo esc_html( $value['rbfw_term_title'] ); ?></p>
                                     <p class="term_url">
                                         <a target="_blank" href="<?php echo esc_html( $value['rbfw_term_url'] ); ?>">
                                             <?php esc_html_e('View Terms & Conditions','booking-and-rental-manager-for-woocommerce'); ?>
