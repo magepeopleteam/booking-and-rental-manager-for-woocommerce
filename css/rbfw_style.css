@@ -7473,5 +7473,8 @@ i.fas.fa-minus {
 .rbfw-refundable{
     font-size: 12px;
 }
+#rbfw_add_meta_box .rbfw_term_input{
+    width: 100% !important;
+}
 
 

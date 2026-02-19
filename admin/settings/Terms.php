@@ -92,14 +92,14 @@
                                 <label>
 									<?php _e( 'Add Title', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                     <input type="hidden" name="rbfw_post_id" value="<?php echo $post_id; ?>">
-                                    <input type="text" name="rbfw_term_title">
+                                    <input type="text" class="rbfw_term_input" name="rbfw_term_title">
                                     <input type="hidden" name="rbfw_term_item_id">
                                 </label>
 
                                 <label>
                                     <?php _e( 'Add Description Url', 'booking-and-rental-manager-for-woocommerce' ); ?>
                                     <input type="hidden" name="rbfw_post_id" value="<?php echo $post_id; ?>">
-                                    <input type="text" name="rbfw_term_url">
+                                    <input type="text" class="rbfw_term_input" name="rbfw_term_url">
                                     <input type="hidden" name="rbfw_term_item_id">
                                 </label>
 
