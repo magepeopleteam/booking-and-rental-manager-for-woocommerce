@@ -634,14 +634,6 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
 
                     if ( (in_array($checkValues, $inventory_managed_order_status) || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
 
-                        if(isset($inventory['rbfw_start_date_ymd']) && isset($inventory['rbfw_end_date_ymd'])){
-                            $inventory_start_date = $inventory['rbfw_start_date_ymd'];
-                            $inventory_end_date = $inventory['rbfw_end_date_ymd'];
-                        }else{
-                            $booked_dates = !empty($inventory['booked_dates']) ? $inventory['booked_dates'] : [];
-                            $inventory_start_date = $booked_dates[0];
-                            $inventory_end_date = end($booked_dates);
-                        }
 
                         $booked_dates = $inventory['booked_dates'];
                         if($stock_manage_on_return_date=='no'){
