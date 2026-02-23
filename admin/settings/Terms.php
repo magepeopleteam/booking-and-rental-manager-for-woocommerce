@@ -36,7 +36,7 @@
 			public function term_tab() {
 				?>
                 <li data-target-tabs="#rbfw_term_meta">
-                    <i class="far fa-question-circle"></i><?php esc_html_e( 'Term', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    <i class="fa-solid fa-handcuffs"></i><?php esc_html_e( 'Terms', 'booking-and-rental-manager-for-woocommerce' ); ?>
                 </li>
 				<?php
 			}

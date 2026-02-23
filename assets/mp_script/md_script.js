@@ -737,11 +737,6 @@ function rbfw_multi_items_ajax_price_calculation(){
             });
 
 
-
-
-
-
-
             jQuery('.management-costing .price-figure').text( wc_price_rbfw(rbfw_management_price));
 
 
@@ -931,6 +926,9 @@ function calculateTotalExtraService() {
     jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
 
 
+    jQuery('.resource-costing.rbfw-cond').show();
+
+
     jQuery('.subtotal .price-figure').html(wc_price_rbfw(sub_total_price));
     jQuery('.total .price-figure').html(wc_price_rbfw(total_price));
 
@@ -1043,6 +1041,7 @@ function calculateTotalSingleItem() {
     var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
     jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
 
+    jQuery('.resource-costing.rbfw-cond').show();
     jQuery('.subtotal .price-figure').html(wc_price_rbfw(sub_total_price));
     jQuery('.total .price-figure').html(wc_price_rbfw(total_price));
 
