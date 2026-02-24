@@ -8,6 +8,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
         public function __construct()
         {
+            add_filter( 'woocommerce_add_to_cart_product_id', array( $this, 'rbfw_normalize_wpml_add_to_cart_product_id' ), 10, 1 );
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
             add_filter( 'woocommerce_is_sold_individually', array($this , 'rbfw_allow_multiple_rental_cart_items'), 90, 2 );
             add_filter( 'woocommerce_add_cart_item_data',array($this ,  'rbfw_add_info_to_cart_item'), 90, 3 );
@@ -23,10 +24,113 @@ if (!class_exists('RBFW_Woocommerce')) {
 
         private function rbfw_is_rental_product( $product_id ) {
             global $rbfw;
-            $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
-            $cpt_name       = ( is_object( $rbfw ) && method_exists( $rbfw, 'get_cpt_name' ) ) ? $rbfw->get_cpt_name() : 'rbfw_item';
+            $cpt_name = ( is_object( $rbfw ) && method_exists( $rbfw, 'get_cpt_name' ) ) ? $rbfw->get_cpt_name() : 'rbfw_item';
+            $rbfw_id  = $this->rbfw_get_canonical_rental_id( $product_id );
 
-            return get_post_type( $linked_rbfw_id ) === $cpt_name;
+            return $rbfw_id > 0 && get_post_type( $rbfw_id ) === $cpt_name;
+        }
+
+        private function rbfw_wpml_shared_cart_inventory() {
+            global $rbfw;
+            $is_enabled = ( is_object( $rbfw ) && method_exists( $rbfw, 'get_option_trans' ) ) ? $rbfw->get_option_trans( 'rbfw_wpml_shared_cart_inventory', 'rbfw_basic_gen_settings', 'yes' ) : 'yes';
+
+            return $is_enabled === 'yes';
+        }
+
+        private function rbfw_get_wpml_default_language() {
+            if ( ! $this->rbfw_wpml_shared_cart_inventory() ) {
+                return '';
+            }
+
+            $default_language = apply_filters( 'wpml_default_language', null );
+
+            return is_string( $default_language ) ? $default_language : '';
+        }
+
+        private function rbfw_get_wpml_object_id( $post_id, $post_type ) {
+            $post_id = absint( $post_id );
+
+            if ( ! $post_id ) {
+                return 0;
+            }
+
+            $default_language = $this->rbfw_get_wpml_default_language();
+
+            if ( ! $default_language ) {
+                return $post_id;
+            }
+
+            $translated_id = apply_filters( 'wpml_object_id', $post_id, $post_type, true, $default_language );
+
+            return $translated_id ? absint( $translated_id ) : $post_id;
+        }
+
+        private function rbfw_get_canonical_rental_id( $product_id ) {
+            global $rbfw;
+
+            $product_id = absint( $product_id );
+            $cpt_name   = ( is_object( $rbfw ) && method_exists( $rbfw, 'get_cpt_name' ) ) ? $rbfw->get_cpt_name() : 'rbfw_item';
+
+            if ( ! $product_id ) {
+                return 0;
+            }
+
+            $linked_rbfw_id = absint( get_post_meta( $product_id, 'link_rbfw_id', true ) );
+
+            if ( $linked_rbfw_id && get_post_type( $linked_rbfw_id ) === $cpt_name ) {
+                $rbfw_id = $linked_rbfw_id;
+            } elseif ( get_post_type( $product_id ) === $cpt_name ) {
+                $rbfw_id = $product_id;
+            } else {
+                return 0;
+            }
+
+            $translated_rbfw_id = $this->rbfw_get_wpml_object_id( $rbfw_id, $cpt_name );
+
+            if ( $translated_rbfw_id && get_post_type( $translated_rbfw_id ) === $cpt_name ) {
+                return $translated_rbfw_id;
+            }
+
+            return $rbfw_id;
+        }
+
+        private function rbfw_get_cart_item_rental_id( $cart_item ) {
+            $rbfw_id = array_key_exists( 'rbfw_id', $cart_item ) ? absint( $cart_item['rbfw_id'] ) : 0;
+
+            if ( $rbfw_id ) {
+                $resolved_rbfw_id = $this->rbfw_get_canonical_rental_id( $rbfw_id );
+                if ( $resolved_rbfw_id ) {
+                    return $resolved_rbfw_id;
+                }
+            }
+
+            $product_id = array_key_exists( 'product_id', $cart_item ) ? absint( $cart_item['product_id'] ) : 0;
+
+            if ( ! $product_id && array_key_exists( 'data', $cart_item ) && is_object( $cart_item['data'] ) && method_exists( $cart_item['data'], 'get_id' ) ) {
+                $product_id = absint( $cart_item['data']->get_id() );
+            }
+
+            return $this->rbfw_get_canonical_rental_id( $product_id );
+        }
+
+        public function rbfw_normalize_wpml_add_to_cart_product_id( $product_id ) {
+            if ( ! $this->rbfw_wpml_shared_cart_inventory() ) {
+                return $product_id;
+            }
+
+            $rbfw_id = $this->rbfw_get_canonical_rental_id( $product_id );
+
+            if ( ! $rbfw_id ) {
+                return $product_id;
+            }
+
+            $canonical_wc_product_id = absint( get_post_meta( $rbfw_id, 'link_wc_product', true ) );
+
+            if ( $canonical_wc_product_id && get_post_type( $canonical_wc_product_id ) === 'product' ) {
+                return $canonical_wc_product_id;
+            }
+
+            return $product_id;
         }
 
         private function rbfw_allow_duplicate_rental_cart_item() {
@@ -41,10 +145,16 @@ if (!class_exists('RBFW_Woocommerce')) {
                 // fixed by shahnur: allow adding same rent item with different variations/configurations.
                 return $passed;
             }
+
+            $normalized_product_id = absint( $this->rbfw_normalize_wpml_add_to_cart_product_id( $product_id ) );
+
             foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) {
                 $_product = $values['data'];
 
-                if ( $_product->get_id() == $product_id ) {
+                $cart_product_id = ( is_object( $_product ) && method_exists( $_product, 'get_id' ) ) ? $_product->get_id() : 0;
+                $cart_product_id = absint( $this->rbfw_normalize_wpml_add_to_cart_product_id( $cart_product_id ) );
+
+                if ( $cart_product_id === $normalized_product_id ) {
 
                     $cart_url = wc_get_cart_url();
 
@@ -126,12 +236,12 @@ if (!class_exists('RBFW_Woocommerce')) {
 
         public function rbfw_add_info_to_cart_item( $cart_item_data, $product_id, $variation_id ) {
             global $rbfw;
-            $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
-            $product_id     = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
-            if ( get_post_type( $product_id ) == $rbfw->get_cpt_name() ) {
-                $cart_item_data = $this->rbfw_add_cart_item_func( $cart_item_data, $product_id );
+            $rbfw_id = $this->rbfw_get_canonical_rental_id( $product_id );
+
+            if ( $rbfw_id && get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
+                $cart_item_data = $this->rbfw_add_cart_item_func( $cart_item_data, $rbfw_id );
             }
-            $cart_item_data['rbfw_id'] = $product_id;
+            $cart_item_data['rbfw_id'] = $rbfw_id ? $rbfw_id : $product_id;
 
             return $cart_item_data;
         }
@@ -663,7 +773,7 @@ if (!class_exists('RBFW_Woocommerce')) {
         public function rbfw_set_new_cart_price( $cart_object ) {
             global $rbfw;
             foreach ( $cart_object->cart_contents as $key => $value ) {
-                $rbfw_id = array_key_exists( 'rbfw_id', $value ) ? $value['rbfw_id'] : 0;
+                $rbfw_id = $this->rbfw_get_cart_item_rental_id( $value );
                 if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
                     do_action( 'rbfw_set_cart_item_price', $value, $rbfw_id );
                 }
@@ -671,11 +781,11 @@ if (!class_exists('RBFW_Woocommerce')) {
         }
         public  function rbfw_show_cart_items( $item_data, $cart_item ) {
             global $rbfw;
-            $rbfw_id = array_key_exists( 'rbfw_id', $cart_item ) ? $cart_item['rbfw_id'] : 0;
+            $rbfw_id = $this->rbfw_get_cart_item_rental_id( $cart_item );
             ob_start();
 
             if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
-                
+                $cart_item['rbfw_id'] = $rbfw_id;
                 include( RBFW_Function::get_template_path( 'cart_page.php' ) );
             }
             $content     = ob_get_clean();
@@ -692,7 +802,7 @@ if (!class_exists('RBFW_Woocommerce')) {
             global $woocommerce, $rbfw;
             $items = $woocommerce->cart->get_cart();
             foreach ( $items as $item => $values ) {
-                $rbfw_id = array_key_exists( 'rbfw_id', $values ) ? $values['rbfw_id'] : 0;
+                $rbfw_id = $this->rbfw_get_cart_item_rental_id( $values );
                 if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
                     do_action( 'rbfw_validate_cart_item', $values, $rbfw_id );
                 }
@@ -700,7 +810,7 @@ if (!class_exists('RBFW_Woocommerce')) {
         }
         public   function rbfw_add_order_item_data( $item, $cart_item_key, $values, $order ) {
             global $rbfw;
-            $rbfw_id = array_key_exists( 'rbfw_id', $values ) ? $values['rbfw_id'] : 0;
+            $rbfw_id = $this->rbfw_get_cart_item_rental_id( $values );
             if ( get_post_type( $rbfw_id ) == $rbfw->get_cpt_name() ) {
                 $this->rbfw_validate_add_order_item_func( $values, $item, $rbfw_id );
             }

@@ -116,6 +116,17 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                 )
             ),
             array(
+                'name' => 'rbfw_wpml_shared_cart_inventory',
+                'label' => esc_html__( 'WPML Shared Cart & Inventory', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( 'If Yes, cart and inventory are shared across WPML languages using one primary rental/product ID. If No, each language can keep separate cart/inventory behavior.', 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'yes',
+                'options' => array(
+                    'yes' => 'Yes',
+                    'no'  => 'No'
+                )
+            ),
+            array(
                 'name' => 'rbfw_pricing_info_display',
                 'label' => esc_html__( 'Pricing Info Display', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc' => esc_html__( "If you want to display pricing info, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),
