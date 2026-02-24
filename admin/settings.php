@@ -109,7 +109,7 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                 'label' => esc_html__( 'Allow duplicate rental item in cart', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc' => esc_html__( 'If Yes, the same rental product can be added multiple times (for different variations/configurations). If No, it will work as sold individually.', 'booking-and-rental-manager-for-woocommerce' ),
                 'type' => 'select',
-                'default' => 'yes',
+                'default' => 'no',
                 'options' => array(
                     'yes' => 'Yes',
                     'no'  => 'No'

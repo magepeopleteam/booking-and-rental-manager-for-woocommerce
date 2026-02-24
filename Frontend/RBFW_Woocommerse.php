@@ -31,7 +31,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
         private function rbfw_allow_duplicate_rental_cart_item() {
             global $rbfw;
-            $allow_duplicate = ( is_object( $rbfw ) && method_exists( $rbfw, 'get_option_trans' ) ) ? $rbfw->get_option_trans( 'rbfw_allow_duplicate_rental_cart_item', 'rbfw_basic_gen_settings', 'yes' ) : 'yes';
+            $allow_duplicate = ( is_object( $rbfw ) && method_exists( $rbfw, 'get_option_trans' ) ) ? $rbfw->get_option_trans( 'rbfw_allow_duplicate_rental_cart_item', 'rbfw_basic_gen_settings', 'no' ) : 'no';
 
             return $allow_duplicate === 'yes';
         }
