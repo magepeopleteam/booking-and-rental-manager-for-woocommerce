@@ -105,6 +105,17 @@ function rbfw_settings_sec_fields_basic( $default_fields ) {
                 )
             ),
             array(
+                'name' => 'rbfw_allow_duplicate_rental_cart_item',
+                'label' => esc_html__( 'Allow duplicate rental item in cart', 'booking-and-rental-manager-for-woocommerce' ),
+                'desc' => esc_html__( 'If Yes, the same rental product can be added multiple times (for different variations/configurations). If No, it will work as sold individually.', 'booking-and-rental-manager-for-woocommerce' ),
+                'type' => 'select',
+                'default' => 'yes',
+                'options' => array(
+                    'yes' => 'Yes',
+                    'no'  => 'No'
+                )
+            ),
+            array(
                 'name' => 'rbfw_pricing_info_display',
                 'label' => esc_html__( 'Pricing Info Display', 'booking-and-rental-manager-for-woocommerce' ),
                 'desc' => esc_html__( "If you want to display pricing info, then yes it.", 'booking-and-rental-manager-for-woocommerce' ),

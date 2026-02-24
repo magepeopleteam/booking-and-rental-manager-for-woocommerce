@@ -9,6 +9,7 @@ if (!class_exists('RBFW_Woocommerce')) {
         public function __construct()
         {
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
+            add_filter( 'woocommerce_is_sold_individually', array($this , 'rbfw_allow_multiple_rental_cart_items'), 90, 2 );
             add_filter( 'woocommerce_add_cart_item_data',array($this ,  'rbfw_add_info_to_cart_item'), 90, 3 );
             add_action( 'woocommerce_before_calculate_totals', array($this ,  'rbfw_set_new_cart_price'), 90 );
             add_filter( 'woocommerce_get_item_data', array($this ,  'rbfw_show_cart_items') , 90, 2 );
@@ -20,7 +21,26 @@ if (!class_exists('RBFW_Woocommerce')) {
             add_action( 'rbfw_wc_order_status_change', array($this ,  'rbfw_change_user_order_status_on_order_status_change'), 10, 3 );
         }
 
+        private function rbfw_is_rental_product( $product_id ) {
+            global $rbfw;
+            $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
+            $cpt_name       = ( is_object( $rbfw ) && method_exists( $rbfw, 'get_cpt_name' ) ) ? $rbfw->get_cpt_name() : 'rbfw_item';
+
+            return get_post_type( $linked_rbfw_id ) === $cpt_name;
+        }
+
+        private function rbfw_allow_duplicate_rental_cart_item() {
+            global $rbfw;
+            $allow_duplicate = ( is_object( $rbfw ) && method_exists( $rbfw, 'get_option_trans' ) ) ? $rbfw->get_option_trans( 'rbfw_allow_duplicate_rental_cart_item', 'rbfw_basic_gen_settings', 'yes' ) : 'yes';
+
+            return $allow_duplicate === 'yes';
+        }
+
         public function rbfw_prevent_duplicate_cart_item( $passed, $product_id  ) {
+            if ( $this->rbfw_is_rental_product( $product_id ) && $this->rbfw_allow_duplicate_rental_cart_item() ) {
+                // fixed by shahnur: allow adding same rent item with different variations/configurations.
+                return $passed;
+            }
             foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) {
                 $_product = $values['data'];
 
@@ -89,6 +109,19 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
             }
             return $passed;
+        }
+
+        public function rbfw_allow_multiple_rental_cart_items( $sold_individually, $product ) {
+            if ( ! is_object( $product ) || ! method_exists( $product, 'get_id' ) ) {
+                return $sold_individually;
+            }
+
+            if ( $this->rbfw_is_rental_product( $product->get_id() ) && $this->rbfw_allow_duplicate_rental_cart_item() ) {
+                // fixed by shahnur: rental product should not be sold individually.
+                return false;
+            }
+
+            return $sold_individually;
         }
 
         public function rbfw_add_info_to_cart_item( $cart_item_data, $product_id, $variation_id ) {
