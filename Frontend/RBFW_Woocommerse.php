@@ -21,72 +21,74 @@ if (!class_exists('RBFW_Woocommerce')) {
         }
 
         public function rbfw_prevent_duplicate_cart_item( $passed, $product_id  ) {
-            foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) {
-                $_product = $values['data'];
-
-                if ( $_product->get_id() == $product_id ) {
-
-                    $cart_url = wc_get_cart_url();
-
-                    if ( wp_get_theme()->get( 'Name' ) === 'Blocksy' ) {
-
-                        ?>
 
 
-                        <script>
-                            document.addEventListener('DOMContentLoaded', function() {
-                                // Create the message HTML as a safe string
-                                const messageText = `<?php
-                                echo esc_html__( 'This product is already in your cart.', 'booking-and-rental-manager-for-woocommerce' );
-                                ?>`;
+            $rbfw_allow_duplicate_rental_cart_item = rbfw_get_option( 'rbfw_allow_duplicate_rental_cart_item', 'rbfw_basic_gen_settings' );
 
-                                const messageLink = `<?php
-                                echo sprintf(
-                                    '<a href="%s" class="wc-forward">%s</a>',
-                                    esc_url( $cart_url ),
-                                    esc_html__( 'View Cart', 'booking-and-rental-manager-for-woocommerce' )
-                                );
-                                ?>`;
+            // If share section is disabled, don't display it
+            if ( $rbfw_allow_duplicate_rental_cart_item !== 'yes' ) {
+                foreach ( WC()->cart->get_cart() as $cart_item_key => $values ) {
+                    $_product = $values['data'];
 
-// Combine if needed
-                                const messageHTML = `${messageText} ${messageLink}`;
-                                // Find the WooCommerce notices wrapper
-                                const wrapper = document.querySelector('.woocommerce-notices-wrapper');
+                    if ( $_product->get_id() == $product_id ) {
 
-                                if (messageHTML && wrapper) {
-                                    // Create a new div element
-                                    const messageDiv = document.createElement('div');
-                                    messageDiv.classList.add('woocommerce-message');
-                                    messageDiv.innerHTML = messageHTML;
+                        $cart_url = wc_get_cart_url();
 
-                                    // Append it to the wrapper
-                                    wrapper.appendChild(messageDiv);
-                                }
-                            });
-                        </script>
+                        if ( wp_get_theme()->get( 'Name' ) === 'Blocksy' ) {
 
-                        <?php
+                            ?>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    // Create the message HTML as a safe string
+                                    const messageText = `<?php
+                                    echo esc_html__( 'This product is already in your cart.', 'booking-and-rental-manager-for-woocommerce' );
+                                    ?>`;
 
+                                    const messageLink = `<?php
+                                    echo sprintf(
+                                        '<a href="%s" class="wc-forward">%s</a>',
+                                        esc_url( $cart_url ),
+                                        esc_html__( 'View Cart', 'booking-and-rental-manager-for-woocommerce' )
+                                    );
+                                    ?>`;
+                                    // Combine if needed
+                                    const messageHTML = `${messageText} ${messageLink}`;
+                                    // Find the WooCommerce notices wrapper
+                                    const wrapper = document.querySelector('.woocommerce-notices-wrapper');
 
-                    }else{
-                        wc_add_notice(
-                            sprintf(
-                                __('This product is already in your cart. <a href="%s" class="wc-forward">View Cart</a>', 'woocommerce'),
-                                esc_url($cart_url)
-                            ),
-                            'error'
-                        );
+                                    if (messageHTML && wrapper) {
+                                        // Create a new div element
+                                        const messageDiv = document.createElement('div');
+                                        messageDiv.classList.add('woocommerce-message');
+                                        messageDiv.innerHTML = messageHTML;
 
+                                        // Append it to the wrapper
+                                        wrapper.appendChild(messageDiv);
+                                    }
+                                });
+                            </script>
+                            <?php
+                        }else{
+                            wc_add_notice(
+                                sprintf(
+                                    __('This product is already in your cart. <a href="%s" class="wc-forward">View Cart</a>', 'woocommerce'),
+                                    esc_url($cart_url)
+                                ),
+                                'error'
+                            );
+
+                        }
+
+                        // For AJAX requests, send the notice immediately
+                        if ( wp_doing_ajax() ) {
+                            wc_print_notices();
+                            wp_die(); // Stop further execution
+                        }
+
+                        return false;
                     }
-
-                    // For AJAX requests, send the notice immediately
-                    if ( wp_doing_ajax() ) {
-                        wc_print_notices();
-                        wp_die(); // Stop further execution
-                    }
-
-                    return false;
                 }
+
             }
             return $passed;
         }
