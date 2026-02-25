@@ -397,24 +397,25 @@ function rbfw_get_multiple_date_available_qty($post_id, $start_date, $end_date, 
     $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
 
     if(($rbfw_enable_variations=='yes') && !empty($rbfw_variations_data)){
-        $variant_q = [];
         foreach($rbfw_variations_data as $key=>$item1){
             $field_label = $item1['field_label'];
             if($field_label){
                 foreach ($item1['value'] as $key1=>$single){
                     if($single['name']){
+                        $variant_q = [];
                         foreach($date_range as $date){
                             $variant_q[] = array('date'=>$date,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
                         }
                         $booked_quantity = array_column($variant_q, $single['name']);
                         if(isset($single['quantity'])){
-                            $variant_instock[] = $single['quantity'] - max($booked_quantity);
+                            $max_booked_qty = !empty($booked_quantity) ? max($booked_quantity) : 0;
+                            $variant_instock[] = (int) $single['quantity'] - (int) $max_booked_qty;
                         }
                     }
                 }
             }
         }
-        $remaining_stock = max($variant_instock);
+        $remaining_stock = !empty($variant_instock) ? max($variant_instock) : 0;
     }
 
     /*end variation inventory*/
@@ -664,22 +665,23 @@ function rbfw_day_wise_sold_out_check_by_month($post_id, $year,  $month, $total_
         $rbfw_enable_variations = get_post_meta( $post_id, 'rbfw_enable_variations', true ) ? get_post_meta( $post_id, 'rbfw_enable_variations', true ) : 'no';
 
         if(($rbfw_enable_variations=='yes') && !empty($rbfw_variations_data)){
-            $variant_q = [];
             foreach($rbfw_variations_data as $key=>$item1){
                 $field_label = $item1['field_label'];
                 if($field_label){
                     foreach ($item1['value'] as $key1=>$single){
                         if($single['name']){
+                            $variant_q = [];
                             foreach($date_range as $date1){
-                                $variant_q[] = array('date'=>$date1,$single['name']=>total_variant_quantity($field_label,$single['name'],$date,$rbfw_inventory,$inventory_based_on_return));
+                                $variant_q[] = array('date'=>$date1,$single['name']=>total_variant_quantity($field_label,$single['name'],$date1,$rbfw_inventory,$inventory_based_on_return));
                             }
                             $booked_quantity = array_column($variant_q, $single['name']);
-                            $variant_instock[] = $single['quantity'] - max($booked_quantity);
+                            $max_booked_qty = !empty($booked_quantity) ? max($booked_quantity) : 0;
+                            $variant_instock[] = (int) $single['quantity'] - (int) $max_booked_qty;
                         }
                     }
                 }
             }
-            $remaining_stock = max($variant_instock);
+            $remaining_stock = !empty($variant_instock) ? max($variant_instock) : 0;
 
 
         }

@@ -10,7 +10,7 @@ function rbfw_set_cart_item_price_func( $value, $rbfw_id ) {
     $value['data']->set_price( $total_price );
     $value['data']->set_regular_price( $total_price );
     $value['data']->set_sale_price( $total_price );
-    // fixed by shahnur: control sold individually by global setting.
+    // fixed by shahnur: setting YES allows multiple add-to-cart; setting NO keeps sold individually behavior.
     $value['data']->set_sold_individually( $allow_duplicate === 'yes' ? 'no' : 'yes' );
     $value['data']->get_price();
 }
