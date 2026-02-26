@@ -299,7 +299,7 @@ function rbfw_add_term_condition_item( $post_id ) {
 
                 $required = $condition['rbfw_term_required'] == 'on' ? 'required' : '';
                 ?>
-                <label class="">
+                <label class="rbfw-term-condition">
                     <input type="checkbox" name="accept_term[]" <?php echo $required; ?> />
                     <a href="<?php echo $condition['rbfw_term_url']; ?>" target="_blank"><?php echo $condition['rbfw_term_title']; ?></a>
                 </label>
