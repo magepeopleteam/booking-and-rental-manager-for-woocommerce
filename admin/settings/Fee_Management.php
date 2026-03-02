@@ -384,6 +384,7 @@
 							</div>
 						</div>
 					</td>
+
 					<td>
 						<div class="wprently_fee-amount">
 							<select class="wprently_fee-input" name="rbfw_fee_data[<?php echo esc_attr( $index ); ?>][calculation_type]" onchange="rbfwUpdateCurrencySymbol(this)">
