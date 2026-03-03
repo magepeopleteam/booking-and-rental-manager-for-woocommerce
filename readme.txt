@@ -216,6 +216,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.6.4
+Fee Management feature update.
+Location problem solved.
+Inventory manage based on order status by settings.
+
 2.6.3
 Vernulable issue solved.
 Terms and condition feature added.
