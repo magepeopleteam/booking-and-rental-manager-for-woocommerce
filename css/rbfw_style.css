@@ -7477,5 +7477,9 @@ i.fas.fa-minus {
 #rbfw_add_meta_box .rbfw_term_input{
     width: 100% !important;
 }
+.rbfw-term-condition{
+    display: inline-block;
+    margin-bottom: 20px;
+}
 
 

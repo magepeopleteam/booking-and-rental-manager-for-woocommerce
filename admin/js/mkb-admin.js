@@ -1320,6 +1320,10 @@
             $('#field-wrapper-rbfw_service_category_price').slideDown().removeClass('hide').addClass('show');
         }
     });
+
+
+
+
     // Daywise price
     $(document).on('click', 'input[name=rbfw_enable_daywise_price]', function (e) {
         var status = $(this).val();

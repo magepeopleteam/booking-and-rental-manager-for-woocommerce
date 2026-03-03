@@ -1,9 +1,7 @@
-
-
-
-
 (function($) {
     $(document).ready(function() {
+
+
 
         // rbfw TAB
         $('.rbfw-tab-a').click(function(e) {
