@@ -52,8 +52,17 @@ if( ! class_exists('RBFW_Custom_Post')){
         }
 
         public function rbfw_cpt(){
+            // Skip during WP-CLI execution
+            if ( defined('WP_CLI') && WP_CLI ) {
+                return;
+            }
+
             global $rbfw;
-            $cpt_label        = $rbfw->get_name();
+            
+
+            $cpt_label = $rbfw->get_name();
+
+
             $cpt_slug         = $rbfw->get_slug();    
             $cpt_icon         = $rbfw->get_icon();
             $gutenburg_switch  = $rbfw->get_option_trans('rbfw_gutenburg_switch', 'rbfw_basic_gen_settings', 'on');

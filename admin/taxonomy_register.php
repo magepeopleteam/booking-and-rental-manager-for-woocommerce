@@ -2,8 +2,15 @@
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 function rbfw_taxonomy_register(){
+
+    // Skip during WP-CLI execution
+    if ( defined('WP_CLI') && WP_CLI ) {
+        return;
+    }
+
     global $rbfw;
     $label = $rbfw->get_name();
+
     $labelso = array(
         'name'                       => esc_html__( 'Category','booking-and-rental-manager-for-woocommerce' ),
         'singular_name'              => esc_html__( 'Category','booking-and-rental-manager-for-woocommerce' ),

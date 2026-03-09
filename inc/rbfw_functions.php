@@ -256,7 +256,13 @@ function rbfw_url_exclude_search_engine() {
 		return $arr;
 	}
 	function rbfw_get_option( $option, $section, $default = '' ) {
-		global $rbfw;
+
+        // Skip during WP-CLI execution
+        if ( defined('WP_CLI') && WP_CLI ) {
+            return;
+        }
+
+        global $rbfw;
 		return $rbfw->get_option_trans( $option, $section, $default );
 	}
 	// Deprecated function - use esc_html_e() instead
