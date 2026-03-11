@@ -1228,69 +1228,71 @@ function rbfw_url_exclude_search_engine() {
 
 		return $remaining_stock;
 	}
-	function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $end_date, $end_time ) {
-		if ( empty( $post_id ) ) {
-			return;
-		}
+function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_time, $end_date, $end_time ) {
+    if ( empty( $post_id ) ) {
+        return;
+    }
 
-		$end_date_time   = new DateTime( $end_date . ' ' . $end_time );
-		$start_date_time = new DateTime( $start_date . ' ' . $start_time ); // Original date and time
-		$rbfw_inventory  = get_post_meta( $post_id, 'rbfw_inventory', true );
-		$total_stock     = (int) get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true );
-		$total_booked    = 0;
-		if ( ! empty( $rbfw_inventory ) ) {
-			foreach ( $rbfw_inventory as $key => $inventory ) {
-				$rbfw_item_quantity        = ! empty( $inventory['rbfw_item_quantity'] ) ? $inventory['rbfw_item_quantity'] : 0;
-				$inventory_based_on_return = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
+    $end_date_time   = new DateTime( $end_date . ' ' . $end_time );
+    $start_date_time = new DateTime( $start_date . ' ' . $start_time ); // Original date and time
+    $rbfw_inventory  = get_post_meta( $post_id, 'rbfw_inventory', true );
+    $total_stock     = (int) get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true );
+    $total_booked    = 0;
+    if ( ! empty( $rbfw_inventory ) ) {
+        foreach ( $rbfw_inventory as $key => $inventory ) {
+            $rbfw_item_quantity        = ! empty( $inventory['rbfw_item_quantity'] ) ? $inventory['rbfw_item_quantity'] : 0;
+            $inventory_based_on_return = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
 
-                $partial_stock = true;
-                if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
-                    $partial_stock = false;
+            $partial_stock = true;
+            if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
+                $partial_stock = false;
+            }
+
+
+            if ( ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ( ( $inventory_based_on_return == 'yes' ) ? $inventory['rbfw_order_status'] == 'returned' : '' ) ) && $partial_stock ) {
+                if ( isset($inventory['rbfw_start_date_ymd']) && $inventory['rbfw_end_date_ymd'] ) {
+                    $inventory_start_date = $inventory['rbfw_start_date_ymd'];
+                    $inventory_end_date   = $inventory['rbfw_end_date_ymd'];
+                    $inventory_start_time = $inventory['rbfw_start_time_24'];
+                    $inventory_end_time   = $inventory['rbfw_end_time_24'];
+                } else {
+                    $booked_dates         = ! empty( $inventory['booked_dates'] ) ? $inventory['booked_dates'] : [];
+                    $inventory_start_date = isset($booked_dates[0])?$booked_dates[0]:'';
+                    $inventory_end_date   = end( $booked_dates );
+                    $inventory_start_time = $inventory['rbfw_start_time'];
+                    $inventory_end_time   = $inventory['rbfw_end_time'];
+                }
+
+                // Validate date and time values before creating DateTime objects
+                if ( empty( $inventory_start_date ) || empty( $inventory_end_date ) ) {
+                    continue; // Skip this inventory entry if dates/times are invalid
+                }
+
+                // Additional validation: check if dates are valid format (not NaN or invalid)
+                if ( strpos( $inventory_start_date, 'NaN' ) !== false || strpos( $inventory_end_date, 'NaN' ) !== false ||
+                    strpos( $inventory_start_time, 'NaN' ) !== false || strpos( $inventory_end_time, 'NaN' ) !== false ) {
+                    continue; // Skip this inventory entry if contains NaN
+                }
+
+                try {
+                    $date_inventory_start = new DateTime( $inventory_start_date . ' ' . $inventory_start_time );
+                    $date_inventory_end   = new DateTime( $inventory_end_date . ' ' . $inventory_end_time );
+                } catch ( Exception $e ) {
+                    // Skip this inventory entry if DateTime creation fails
+                    continue;
                 }
 
 
-                if ( ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ( ( $inventory_based_on_return == 'yes' ) ? $inventory['rbfw_order_status'] == 'returned' : '' ) ) && $partial_stock ) {
-					if ( isset($inventory['rbfw_start_date_ymd']) && $inventory['rbfw_end_date_ymd'] ) {
-						$inventory_start_date = $inventory['rbfw_start_date_ymd'];
-						$inventory_end_date   = $inventory['rbfw_end_date_ymd'];
-						$inventory_start_time = $inventory['rbfw_start_time_24'];
-						$inventory_end_time   = $inventory['rbfw_end_time_24'];
-					} else {
-						$booked_dates         = ! empty( $inventory['booked_dates'] ) ? $inventory['booked_dates'] : [];
-						$inventory_start_date = isset($booked_dates[0])?$booked_dates[0]:'';
-						$inventory_end_date   = end( $booked_dates );
-						$inventory_start_time = $inventory['rbfw_start_time'];
-						$inventory_end_time   = $inventory['rbfw_end_time'];
-					}
 
-					// Validate date and time values before creating DateTime objects
-					if ( empty( $inventory_start_date ) || empty( $inventory_end_date ) || empty( $inventory_start_time ) || empty( $inventory_end_time ) ) {
-						continue; // Skip this inventory entry if dates/times are invalid
-					}
+                if ( $date_inventory_start <= $end_date_time && $start_date_time <= $date_inventory_end ) {
+                    $total_booked += $rbfw_item_quantity;
+                }
+            }
+        }
+    }
 
-					// Additional validation: check if dates are valid format (not NaN or invalid)
-					if ( strpos( $inventory_start_date, 'NaN' ) !== false || strpos( $inventory_end_date, 'NaN' ) !== false || 
-						 strpos( $inventory_start_time, 'NaN' ) !== false || strpos( $inventory_end_time, 'NaN' ) !== false ) {
-						continue; // Skip this inventory entry if contains NaN
-					}
-
-					try {
-						$date_inventory_start = new DateTime( $inventory_start_date . ' ' . $inventory_start_time );
-						$date_inventory_end   = new DateTime( $inventory_end_date . ' ' . $inventory_end_time );
-					} catch ( Exception $e ) {
-						// Skip this inventory entry if DateTime creation fails
-						continue;
-					}
-
-                    if ( $date_inventory_start < $end_date_time && $start_date_time < $date_inventory_end ) {
-						$total_booked += $rbfw_item_quantity;
-					}
-				}
-			}
-		}
-
-		return $total_stock - $total_booked;
-	}
+    return $total_stock - $total_booked;
+}
 	/****************************************************
 	 * Resort/Multiple Rent:
 	 * Get Extra Service Available Quantity
