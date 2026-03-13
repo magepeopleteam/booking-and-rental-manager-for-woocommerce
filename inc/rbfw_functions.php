@@ -1248,8 +1248,15 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
                 $partial_stock = false;
             }
 
+            $inventory_managed_order_status = rbfw_get_option('inventory_managed_order_status', 'rbfw_basic_gen_settings');
+            $inventory_managed_order_status = is_array($inventory_managed_order_status )?$inventory_managed_order_status : [
+                'processing' => 'processing',
+                'completed'  => 'completed',
+            ];
+            $checkValues = $inventory['rbfw_order_status'];
 
-            if ( ( $inventory['rbfw_order_status'] == 'completed' || $inventory['rbfw_order_status'] == 'processing' || $inventory['rbfw_order_status'] == 'picked' || ( ( $inventory_based_on_return == 'yes' ) ? $inventory['rbfw_order_status'] == 'returned' : '' ) ) && $partial_stock ) {
+
+            if ( (in_array($checkValues, $inventory_managed_order_status) || $inventory['rbfw_order_status'] == 'picked' || ($inventory_based_on_return == 'yes' && $inventory['rbfw_order_status'] == 'returned')) && $partial_stock) {
                 if ( isset($inventory['rbfw_start_date_ymd']) && $inventory['rbfw_end_date_ymd'] ) {
                     $inventory_start_date = $inventory['rbfw_start_date_ymd'];
                     $inventory_end_date   = $inventory['rbfw_end_date_ymd'];

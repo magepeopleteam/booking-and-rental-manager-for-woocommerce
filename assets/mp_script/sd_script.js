@@ -207,7 +207,8 @@
             }
 
 
-            let available_quantity = jQuery(this).data('available_quantity');
+            let available_quantity = jQuery(this).attr('data-available_quantity');
+           
             let service_type = jQuery(this).data('text');
             let service_price = jQuery(this).data('price');
 
@@ -608,6 +609,22 @@ function rbfw_service_type_timely_stock_ajax(post_id,start_date,start_time='',en
                 }
             });
 
+            jQuery(".rbfw_bikecarsd_checkbox").each(function() {
+                let checkbox = jQuery(this);
+                let qtyInput = checkbox.closest("label").find(".rbfw_bikecarsd_qty");
+                let price = parseFloat(qtyInput.data("price")) || 0;
+                let qty = parseInt(qtyInput.val()) || 0;
+                if (checkbox.is(":checked")) {
+                    total += price * qty;
+                    if (qty > 0) {
+                        hasQty = true; // mark that we found one
+                    }
+                }
+            });
+
+            jQuery('.single-type-timely').each(function(index, element) {
+                jQuery('.single-type-timely').removeClass('selected');
+            });
 
 
             //jQuery('.rbfw_service_type_timely').html(response);
