@@ -216,6 +216,11 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 == Changelog ==
 
+2.6.5
+Signle day inventory problem solved.
+Extra service pricing problem solved.
+
+
 2.6.4
 Fee Management feature update.
 Location problem solved.

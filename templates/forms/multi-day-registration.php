@@ -679,6 +679,8 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                                             <a class="rbfw_qty_plus rbfw_bikecarmd_es_qty_plus" data-item="<?php echo esc_attr($key+1); ?>"><i class="fas fa-plus"></i></a>
                                                         </div>
                                                     </td>
+                                                <?php }else{ ?>
+                                                    <input type="hidden" name="rbfw_service_info[<?php echo esc_attr($c); ?>][service_qty]" value="0" class="rbfw_bikecarmd_es_qty"  data-cat="service" data-item="<?php echo esc_attr($key+1); ?>" data-price="<?php echo esc_attr($extra['service_price']); ?>" data-name="<?php echo esc_attr($extra['service_name']); ?>"/>
                                                 <?php } ?>
                                             </tr>
                                         <?php } ?>

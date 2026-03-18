@@ -58,7 +58,7 @@ if( ! class_exists('RBFW_Custom_Post')){
             }
 
             global $rbfw;
-            
+
 
             $cpt_label = $rbfw->get_name();
 
