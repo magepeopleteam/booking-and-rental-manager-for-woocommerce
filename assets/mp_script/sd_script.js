@@ -189,6 +189,7 @@
                     startDateTime.setDate(startDateTime.getDate() + (duration * 7));
                 }
 
+
 // Format local end date/time (no UTC conversion)
                 let year = startDateTime.getFullYear();
                 let month = String(startDateTime.getMonth() + 1).padStart(2, '0');
@@ -303,8 +304,15 @@
                 }
             });
 
-
             jQuery("#rbfw_es_service_price").val(total.toFixed(2));
+            if(total){
+                jQuery('.extra_service_cost.rbfw-cond').show();
+            }else{
+                jQuery('.extra_service_cost.rbfw-cond').hide();
+            }
+
+
+
             rbfw_price_calculation_sd();
         }
 
@@ -419,6 +427,12 @@
                     total +=  price * quantity;
                 });
                 jQuery('#rbfw_es_service_price').val(total);
+                if(total){
+                    jQuery('.resource-costing.extra_service_cost').show();
+                }else{
+                    jQuery('.resource-costing.extra_service_cost').hide();
+                }
+
                 rbfw_price_calculation_sd();
             }
         });
@@ -439,7 +453,13 @@
                     total +=  price * quantity;
                 });
                 jQuery('#rbfw_es_service_price').val(total);
+                if(total){
+                    jQuery('.resource-costing.extra_service_cost').show();
+                }else{
+                    jQuery('.resource-costing.extra_service_cost').hide();
+                }
                 rbfw_price_calculation_sd();
+
             }
         });
 

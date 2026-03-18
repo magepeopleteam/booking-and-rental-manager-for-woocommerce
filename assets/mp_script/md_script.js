@@ -882,6 +882,14 @@ function calculateTotalExtraService() {
 
     var resourse_cost = parseFloat(rbfw_service_price) + parseFloat(extra_service_price);
 
+
+
+    if(resourse_cost){
+        jQuery('.resource-costing.rbfw-cond').show();
+    }else{
+        jQuery('.resource-costing.rbfw-cond').hide();
+    }
+
     jQuery('.resource-costing span').text(wc_price_rbfw(resourse_cost));
 
     let sub_total_price = resourse_cost + parseFloat(jQuery('#rbfw_duration_price').val());
@@ -926,7 +934,7 @@ function calculateTotalExtraService() {
     jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
 
 
-    jQuery('.resource-costing.rbfw-cond').show();
+
 
 
     jQuery('.subtotal .price-figure').html(wc_price_rbfw(sub_total_price));

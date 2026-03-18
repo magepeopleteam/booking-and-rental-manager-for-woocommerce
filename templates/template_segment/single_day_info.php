@@ -344,7 +344,7 @@ if(isset($_POST['post_id'])){
                         </li>
 
                         <?php if(!empty($rbfw_extra_service_data)){ ?>
-                            <li class="extra_service_cost rbfw-cond">
+                            <li class="extra_service_cost rbfw-cond" style="display: none">
                                 <?php echo esc_html__( 'Resource Cost','booking-and-rental-manager-for-woocommerce' ); ?>
                                 <?php echo wp_kses(wc_price(0),rbfw_allowed_html()); ?>
                             </li>

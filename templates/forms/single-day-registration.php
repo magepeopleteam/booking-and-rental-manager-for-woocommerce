@@ -326,7 +326,7 @@
                                             </span>
                                         </li>
                                         <?php if(!empty($rbfw_extra_service_data)){ ?>
-                                            <li class="resource-costing extra_service_cost rbfw-cond">
+                                            <li class="resource-costing extra_service_cost rbfw-cond" style="display: none">
                                                 <?php esc_html_e('Resource Cost','booking-and-rental-manager-for-woocommerce'); ?>
                                                 <span>
                                                     <?php echo wp_kses(wc_price(0) , rbfw_allowed_html()); ?>
