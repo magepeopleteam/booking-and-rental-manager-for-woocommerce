@@ -656,13 +656,13 @@ function rbfw_rent_search_shortcode( $atts = null ){
 
                         <div class="rbfw_search_item">
                             <input type="hidden" name="rbfw_pickup_date_search">
-                            <input type="text" name="rbfw-pickup-search" required class="pickup_date_search" id="pickup_date_search" placeholder="dd-mm-yyyy">
+                            <input type="text" readonly name="rbfw-pickup-search" required class="pickup_date_search" id="pickup_date_search" placeholder="dd-mm-yyyy">
                             <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
                         </div>
 
                         <div class="rbfw_search_item ">
                             <input type="hidden" name="rbfw_dropoff_date_search">
-                            <input type="text" name="rbfw-dropoff-search" required id="dropoff_date_search" class="dropoff_date_search" id="dropoff_date_search" placeholder="dd-mm-yyyy">
+                            <input type="text" readonly name="rbfw-dropoff-search" required id="dropoff_date_search" class="dropoff_date_search" id="dropoff_date_search" placeholder="dd-mm-yyyy">
                             <i class="fas fa-chevron-down " id="rbfw_rent_item_search_calendar_icon"></i>
                         </div>
 
