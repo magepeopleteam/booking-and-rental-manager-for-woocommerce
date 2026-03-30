@@ -118,10 +118,10 @@ if(isset($post_id) && isset($active_tab)){
                                 if (($sp_price = check_seasonal_price_resort_mds($total_days, $rbfw_resort_data_mds, $value['room_type'], $active_tab)) != 0) {
                                     $room_price = (float)$sp_price;
                                 }else{
-                                    $room_price = (float)$price;
+                                    $room_price = (float)$price ;
                                 }
                                 ?>
-                                <?php echo wp_kses(wc_price($room_price) , rbfw_allowed_html()); ?>
+                                <?php echo wp_kses(wc_price($room_price * $total_days) , rbfw_allowed_html()); ?>
                             </td>
 
                         <?php }elseif(is_plugin_active( 'tiered-pricing-addon-wprently/tiered-pricing-addon.php' ) && !empty($rbfw_resort_data_tp)){ ?>
