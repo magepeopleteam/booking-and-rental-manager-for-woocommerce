@@ -316,6 +316,7 @@ CSS for Single Page Template
 }
 .rbfw-single-right-container .rbfw-location{
     margin-bottom:10px;
+    border: 1px solid #d1c9c9;
 }
 
 .rbfw-single-right-container .rbfw-datetime .rbfw-single-right-heading{
