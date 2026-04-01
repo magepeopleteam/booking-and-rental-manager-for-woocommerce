@@ -227,7 +227,8 @@ jQuery('body').on('change', '#hidden_pickup_date, #hidden_dropoff_date, .pickup_
     }
 });
 
-
+jQuery('#pickup_date_search').readOnly = true;
+jQuery('#dropoff_date_search').readOnly = true;
 
 
 jQuery('body').on('change', '#rbfw_search_type', function (e) {
