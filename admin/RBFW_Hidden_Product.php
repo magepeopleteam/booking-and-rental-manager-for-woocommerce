@@ -12,7 +12,7 @@ if (!class_exists('RBFW_Hidden_Product')) {
             add_action('wp', array($this, 'hide_hidden_wc_product_from_frontend'));
             //******************//
             add_action('wp_head', [$this, 'url_exclude_search_engine']);
-            add_action('init', [$this, 'get_all_hidden_product_id']);
+            // add_action('init', [$this, 'get_all_hidden_product_id']);
             add_filter('wpseo_exclude_from_sitemap_by_post_ids', [$this, 'get_all_hidden_product_id']);
         }
 
