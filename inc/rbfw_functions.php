@@ -1482,6 +1482,87 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 			return false;
 		}
 	}
+
+	/**
+	 * Effective min/max booking length (days) for a pickup/check-in date.
+	 * Uses the Min–Max Booking Day addon post meta as the base, then applies
+	 * seasonal-pricing-only overrides stored under prefixed keys inside seasonal
+	 * arrays (never the same keys as the addon: rbfw_minimum_booking_day / rbfw_maximum_booking_day).
+	 *
+	 * @param int    $post_id  rbfw_item ID.
+	 * @param string $date_ymd Pickup or check-in date Y-m-d.
+	 * @return array{min:int,max:int} Min days; max 0 = no upper cap in UI.
+	 */
+	function rbfw_spricing_get_effective_min_max_booking_days( $post_id, $date_ymd ) {
+		$min = 0;
+		$max = 0;
+		if ( function_exists( 'rbfw_check_min_max_booking_day_active' ) && rbfw_check_min_max_booking_day_active() ) {
+			$min = (int) get_post_meta( $post_id, 'rbfw_minimum_booking_day', true );
+			$max = (int) get_post_meta( $post_id, 'rbfw_maximum_booking_day', true );
+		}
+		if ( ! $date_ymd || ! preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date_ymd ) ) {
+			return array(
+				'min' => $min,
+				'max' => $max,
+			);
+		}
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+		if ( ! is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
+			return array(
+				'min' => $min,
+				'max' => $max,
+			);
+		}
+		$item_type = get_post_meta( $post_id, 'rbfw_item_type', true );
+		if ( 'resort' === $item_type ) {
+			$blocks = get_post_meta( $post_id, 'rbfw_resort_data_sp', true );
+			if ( ! empty( $blocks ) && is_array( $blocks ) ) {
+				foreach ( $blocks as $row ) {
+					if ( empty( $row['start_date'] ) || empty( $row['end_date'] ) ) {
+						continue;
+					}
+					$dates = getAllDates( $row['start_date'], $row['end_date'] );
+					if ( in_array( $date_ymd, $dates, true ) ) {
+						if ( isset( $row['rbfw_spricing_resort_min_booking_day'] ) && $row['rbfw_spricing_resort_min_booking_day'] !== '' && is_numeric( $row['rbfw_spricing_resort_min_booking_day'] ) ) {
+							$min = (int) $row['rbfw_spricing_resort_min_booking_day'];
+						}
+						if ( isset( $row['rbfw_spricing_resort_max_booking_day'] ) && $row['rbfw_spricing_resort_max_booking_day'] !== '' && is_numeric( $row['rbfw_spricing_resort_max_booking_day'] ) ) {
+							$max = (int) $row['rbfw_spricing_resort_max_booking_day'];
+						}
+						break;
+					}
+				}
+			}
+			return array(
+				'min' => $min,
+				'max' => $max,
+			);
+		}
+		$seasonal = get_post_meta( $post_id, 'rbfw_seasonal_prices', true );
+		if ( ! empty( $seasonal ) && is_array( $seasonal ) ) {
+			foreach ( $seasonal as $row ) {
+				if ( empty( $row['rbfw_sp_start_date'] ) || empty( $row['rbfw_sp_end_date'] ) ) {
+					continue;
+				}
+				$dates = getAllDates( $row['rbfw_sp_start_date'], $row['rbfw_sp_end_date'] );
+				if ( in_array( $date_ymd, $dates, true ) ) {
+					if ( isset( $row['rbfw_spricing_period_min_booking_day'] ) && $row['rbfw_spricing_period_min_booking_day'] !== '' && is_numeric( $row['rbfw_spricing_period_min_booking_day'] ) ) {
+						$min = (int) $row['rbfw_spricing_period_min_booking_day'];
+					}
+					if ( isset( $row['rbfw_spricing_period_max_booking_day'] ) && $row['rbfw_spricing_period_max_booking_day'] !== '' && is_numeric( $row['rbfw_spricing_period_max_booking_day'] ) ) {
+						$max = (int) $row['rbfw_spricing_period_max_booking_day'];
+					}
+					break;
+				}
+			}
+		}
+		return array(
+			'min' => $min,
+			'max' => $max,
+		);
+	}
 	/****************************************************
 	 * Check Discount Over Days Plugin Active
 	 ****************************************************/

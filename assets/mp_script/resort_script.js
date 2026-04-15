@@ -12,31 +12,54 @@ jQuery('body').on('focusin', '#checkin_date', function(e) {
         },
         onSelect: function (dateString, data) {
             let date_ymd_drop = data.selectedYear + '-' + ('0' + (parseInt(data.selectedMonth) + 1)).slice(-2) + '-' + ('0' + parseInt(data.selectedDay)).slice(-2);
-            jQuery('input[name="rbfw_start_datetime"]').val(date_ymd_drop).trigger('change');
+            let post_id = jQuery('#rbfw_post_id').val();
 
-            let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val());
-            let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val());
+            function applyResortCheckoutLimits() {
+                let rbfw_minimum_booking_day = parseInt(jQuery('#rbfw_minimum_booking_day').val(), 10) || 0;
+                let rbfw_maximum_booking_day = parseInt(jQuery('#rbfw_maximum_booking_day').val(), 10) || 0;
+                let selected_date_array = date_ymd_drop.split('-');
+                let gYear = selected_date_array[0];
+                let gMonth = selected_date_array[1];
+                let gDay = selected_date_array[2];
+                let minDate = new Date(gYear,  gMonth - 1, gDay );
+                minDate.setDate(minDate.getDate() + rbfw_minimum_booking_day);
+                jQuery("#checkout_date").datepicker("option", "minDate", minDate);
+                if(rbfw_minimum_booking_day && rbfw_maximum_booking_day > 0){
+                    let maxDate = new Date(gYear,  gMonth - 1, gDay - 1 );
+                    maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
+                    jQuery("#checkout_date").datepicker("option", "maxDate", maxDate );
+                } else {
+                    jQuery("#checkout_date").datepicker("option", "maxDate", null );
+                }
+            }
 
-
-
-
-            let selected_date_array = date_ymd_drop.split('-');
-            let gYear = selected_date_array[0];
-            let gMonth = selected_date_array[1];
-            let gDay = selected_date_array[2];
-
-            let minDate = new Date(gYear,  gMonth - 1, gDay );
-            minDate.setDate(minDate.getDate() + rbfw_minimum_booking_day);
-
-
-
-            jQuery("#checkout_date").datepicker("option", "minDate", minDate);
-
-
-            if(rbfw_minimum_booking_day){
-                let maxDate = new Date(gYear,  gMonth - 1, gDay - 1 );
-                maxDate.setDate(maxDate.getDate() + rbfw_maximum_booking_day);
-                jQuery("#checkout_date").datepicker("option", "maxDate", maxDate );
+            if ( typeof rbfw_ajax_front !== 'undefined' && post_id ) {
+                jQuery.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: rbfw_ajax_front.rbfw_ajaxurl,
+                    data: {
+                        action: 'rbfw_bikecarmd_ajax_min_max_and_offdays_info',
+                        post_id: post_id,
+                        pickup_date: date_ymd_drop,
+                        nonce: rbfw_ajax_front.nonce_bikecarmd_ajax_min_max_and_offdays_info
+                    },
+                    success: function (response) {
+                        if ( response && typeof response.rbfw_minimum_booking_day !== 'undefined' ) {
+                            jQuery('#rbfw_minimum_booking_day').val(response.rbfw_minimum_booking_day);
+                            jQuery('#rbfw_maximum_booking_day').val(response.rbfw_maximum_booking_day);
+                        }
+                        jQuery('input[name="rbfw_start_datetime"]').val(date_ymd_drop).trigger('change');
+                        applyResortCheckoutLimits();
+                    },
+                    error: function () {
+                        jQuery('input[name="rbfw_start_datetime"]').val(date_ymd_drop).trigger('change');
+                        applyResortCheckoutLimits();
+                    }
+                });
+            } else {
+                jQuery('input[name="rbfw_start_datetime"]').val(date_ymd_drop).trigger('change');
+                applyResortCheckoutLimits();
             }
         },
     });
@@ -76,8 +99,8 @@ jQuery('body').on('change', '#hidden_checkin_date', function(e) {
 // resort check availability ajax
 jQuery(document).on('click','.rbfw_chk_availability_btn',function(e) {
     e.preventDefault();
-    let checkin_date_notice 	= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_choose_checkin_date', 'rbfw_basic_translation_settings', __('Please Choose Check-In Date','booking-and-rental-manager-for-woocommerce'))); ?>";
-    let checkout_date_notice 	= "<?php echo esc_html($rbfw->get_option_trans('rbfw_text_choose_checkout_date', 'rbfw_basic_translation_settings', __('Please Choose Check-Out Date','booking-and-rental-manager-for-woocommerce'))); ?>";
+    let checkin_date_notice 	= (typeof rbfw_translation !== 'undefined' && rbfw_translation.select_pickup_date) ? rbfw_translation.select_pickup_date : 'Please choose check-in date.';
+    let checkout_date_notice 	= 'Please choose check-out date.';
     let checkin_date 			= jQuery('#hidden_checkin_date').val();
     let checkout_date 			= jQuery('#hidden_checkout_date').val();
     let post_id 				= jQuery('#rbfw_post_id').val();

@@ -287,12 +287,18 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $post_id = isset($_POST['post_id'])? absint(sanitize_text_field(wp_unslash($_POST['post_id']))):'';
 
+            $pickup_date = isset($_POST['pickup_date']) ? sanitize_text_field(wp_unslash($_POST['pickup_date'])) : '';
+
             $rbfw_minimum_booking_day = 0;
             $rbfw_maximum_booking_day = 0;
-            if(rbfw_check_min_max_booking_day_active()){
-                $rbfw_minimum_booking_day = (int)get_post_meta($post_id, 'rbfw_minimum_booking_day', true);
-                if(get_post_meta($post_id, 'rbfw_maximum_booking_day', true)){
-                    $rbfw_maximum_booking_day = '+'.get_post_meta($post_id, 'rbfw_maximum_booking_day', true).'d';
+            if ( rbfw_check_min_max_booking_day_active() ) {
+                if ( $pickup_date && function_exists( 'rbfw_spricing_get_effective_min_max_booking_days' ) ) {
+                    $mm = rbfw_spricing_get_effective_min_max_booking_days( $post_id, $pickup_date );
+                    $rbfw_minimum_booking_day = (int) $mm['min'];
+                    $rbfw_maximum_booking_day = (int) $mm['max'];
+                } else {
+                    $rbfw_minimum_booking_day = (int) get_post_meta( $post_id, 'rbfw_minimum_booking_day', true );
+                    $rbfw_maximum_booking_day = (int) get_post_meta( $post_id, 'rbfw_maximum_booking_day', true );
                 }
             }
 
