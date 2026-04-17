@@ -838,7 +838,8 @@ function calculateAdditional() {
 
     jQuery('#rbfw_service_category_price').val(additional_price.toFixed(2));
 
-    var sub_total_price = additional_price + parseInt(jQuery('#rbfw_management_price').val()) + parseInt(jQuery('#rbfw_duration_price').val());
+    // Fixed by Shahnur - 2026-04-17 07:44 AM (Asia/Dhaka)
+    var sub_total_price = additional_price + (parseFloat(jQuery('#rbfw_management_price').val()) || 0) + (parseFloat(jQuery('#rbfw_duration_price').val()) || 0);
 
 
 
@@ -1010,7 +1011,7 @@ function calculateTotalSingleItem() {
     // Show total in an element with id="total_price"
     jQuery('#rbfw_service_price').val(service_price.toFixed(2));
 
-    var resourse_cost = service_price + parseInt(jQuery('#rbfw_es_service_price').val());
+    var resourse_cost = service_price + (parseFloat(jQuery('#rbfw_es_service_price').val()) || 0);
 
     jQuery('.resource-costing span').text(wc_price_rbfw(resourse_cost));
 
@@ -1090,7 +1091,7 @@ function calculateTotalMultipleItems(only_calculation=false) {
 
     jQuery('#rbfw_duration_price').val(item_total_price.toFixed(2));
 
-    var sub_total_price = item_total_price + parseInt(jQuery('#rbfw_service_category_price').val());
+    var sub_total_price = item_total_price + (parseFloat(jQuery('#rbfw_service_category_price').val()) || 0);
 
     let rbfw_management_price = fee_management(sub_total_price,1,1);
 

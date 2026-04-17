@@ -515,8 +515,9 @@ function calculateTotal() {
 
 
 function rbfw_price_calculation_sd(){
-    let rbfw_service_price = parseInt(jQuery('#rbfw_service_price').val());
-    var rbfw_es_service_price = parseInt(jQuery('#rbfw_es_service_price').val());
+    // Fixed by Shahnur - 2026-04-17 07:44 AM (Asia/Dhaka)
+    let rbfw_service_price = parseFloat(jQuery('#rbfw_service_price').val()) || 0;
+    var rbfw_es_service_price = parseFloat(jQuery('#rbfw_es_service_price').val()) || 0;
     var sub_total_price = rbfw_service_price + rbfw_es_service_price;
 
     let rbfw_management_price = fee_management(sub_total_price,1,1);
