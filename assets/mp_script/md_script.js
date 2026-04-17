@@ -937,14 +937,21 @@ function calculateTotalExtraService() {
     var total_price = sub_total_price + rbfw_management_price +  parseFloat(rbfw_security_deposit_actual_amount);
     jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
 
+    var rbfw_discount_type = jQuery('#rbfw_discount_type').val();
+    var rbfw_discount_number = jQuery('#rbfw_discount_number').val();
+
+    if(rbfw_discount_type == 'percentage'){
+        var discount_price = total_price*rbfw_discount_number/100;
+    }else{
+        var discount_price =  rbfw_discount_number;
+    }
 
 
-    var rbfw_discount_percentage = jQuery('#rbfw_discount_percentage').val();
 
     jQuery('.subtotal .price-figure').html(wc_price_rbfw(sub_total_price));
-    jQuery('.total .price-figure').html(wc_price_rbfw(total_price));
+    jQuery('.total .price-figure').html(wc_price_rbfw(total_price - discount_price));
 
-    jQuery('.discount span').text(wc_price_rbfw(total_price*rbfw_discount_percentage/100));
+    jQuery('.discount span').text(wc_price_rbfw(discount_price));
 
 }
 
@@ -1294,7 +1301,9 @@ function rbfw_bikecarmd_ajax_price_calculation(stock_no_effect){
             jQuery('.rbfw-duration .item-price').html(response.duration_price_html);
             jQuery('.rbfw-duration .rbfw_duration_md').val(response.total_duration);
             jQuery('#rbfw_duration_price').val(response.duration_price);
-            jQuery('#rbfw_discount_percentage').val(response.discount_percentage);
+
+            jQuery('#rbfw_discount_number').val(response.discount_number);
+            jQuery('#rbfw_discount_type').val(response.discount_type);
 
 
             var remaining_stock =  response.max_available_qty.remaining_stock;
