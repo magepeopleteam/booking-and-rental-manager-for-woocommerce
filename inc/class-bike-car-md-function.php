@@ -143,10 +143,14 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
 
                 $discount_amount = 0;
+                $discount_number = 0;
+                $discount_type = '';
                 if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){
                     if(function_exists('rbfw_get_discount_array')){
                         $discount_arr = rbfw_get_discount_array($post_id, $total_days, $sub_total_price,$item_quantity);
                         $discount_amount = isset($discount_arr['discount_amount'])?$discount_arr['discount_amount']:0;
+                        $discount_number = isset($discount_arr['discount_number'])?$discount_arr['discount_number']:0;
+                        $discount_type = isset($discount_arr['discount_type'])?$discount_arr['discount_type']:0;
                     }
                 }
 
@@ -187,6 +191,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'service_cost_html' => wc_price($service_cost+$rbfw_service_price),
                 'sub_total_price_html' => wc_price($sub_total_price),
                 'discount' => $discount_amount,
+                'discount_type' => $discount_type,
+                'discount_number' => $discount_number,
                 'discount_html' => wc_price((float)$discount_amount),
                 'security_deposit_desc' => $security_deposit['security_deposit_desc'],
                 'security_deposit_amount' => $security_deposit['security_deposit_amount'],

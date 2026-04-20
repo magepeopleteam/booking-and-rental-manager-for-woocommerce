@@ -869,6 +869,12 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">
                 <input type="hidden" name="rbfw_security_deposit_amount" id="rbfw_security_deposit_amount"  value="<?php echo esc_attr($rbfw_security_deposit_amount); ?>">
 
+                <?php if (is_plugin_active('booking-and-rental-manager-discount-over-x-days/rent-discount-over-x-days.php')){ ?>
+                    <input type="hidden" name="rbfw_discount_number" id="rbfw_discount_number"  value="">
+                    <input type="hidden" name="rbfw_discount_type" id="rbfw_discount_type"  value="">
+                <?php } ?>
+
+
                 <input type="hidden" name="rbfw_rent_type" id="rbfw_rent_type"  value="bike_car_md">
                 <input type="hidden" name="rbfw_post_id" id="rbfw_post_id"  value="<?php echo esc_attr($rbfw_id); ?>">
                 <input type="hidden" name="rbfw_enable_variations" id="rbfw_enable_variations"  value="<?php echo esc_attr($rbfw_enable_variations); ?>">
