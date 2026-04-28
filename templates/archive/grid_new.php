@@ -295,16 +295,7 @@
                             <h2 class="rbfw_rent_list_grid_title">
                                 <a href="<?php echo esc_url( $post_link ); ?>"><?php echo esc_html( $post_title ); ?></a>
                             </h2>
-                            <?php if( !isset($rbfw_hide_price) || $rbfw_hide_price !== 'yes' ): ?>
-                            <div class="rbfw_rent_list_grid_row rbfw_pricing-box">
-                                <p class="rbfw_rent_list_row_price">
-                                    <span class="prc currency_left">
-                                        <?php echo wp_kses( wc_price( $price ) , rbfw_allowed_html() ); ?>
-                                    </span>
-                                </p>
-                                <span class="rbfw_rent_list_row_price_level">/ <?php echo esc_html( $price_label ); ?></span>
-                            </div>
-                            <?php endif; ?>
+                            
                         </div>
                         <div class="rbfw_rent_item_description" id="rbfw_rent_item_description">
                             <p class="rbfw_rent_item_description_text" style="display: <?php echo esc_attr( $is_display ) ?>">
@@ -324,7 +315,7 @@
 								$cat_features = $value['cat_features'] ? $value['cat_features'] : [];
 								if ( $n == 1 ) {
 									?>
-                                    <ul class="<?php echo esc_attr( $rent_item_list_info ) ?>">
+                                    <div class="<?php echo esc_attr( $rent_item_list_info ) ?>">
 										<?php
 											if ( ! empty( $cat_features ) ) {
 												$i = 1;
@@ -335,12 +326,10 @@
 														$rand_number = wp_rand();
 														if ( $title ) {
 															?>
-                                                            <li class="bfw_rent_list_items title <?php echo esc_attr( $rand_number ); ?>">
-																<span class="bfw_rent_list_items_icon">
-																	<i class="<?php echo esc_attr( $icon ); ?>"></i>
-																</span> 
+                                                            <span class="bfw_rent_list_items title <?php echo esc_attr( $rand_number ); ?>">
+																
 																<?php echo esc_html( $title ); ?>
-															</li>
+															</span>
 															<?php
 														}
 													}
@@ -351,7 +340,7 @@
 										<?php if ( count( $cat_features ) > $display_cat_features ) { ?>
                                             <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr( $post_id ); ?>"><?php echo esc_html__( 'See more','booking-and-rental-manager-for-woocommerce' ) ?></div>
 										<?php } ?>
-                                    </ul>
+                                    </div>
 									<?php
 								}
 								$n ++;
@@ -359,6 +348,16 @@
 						endif;
 						?>
                         <div class="rbfw_rent_list_btn_holder">
+                            <?php if( !isset($rbfw_hide_price) || $rbfw_hide_price !== 'yes' ): ?>
+                                <div class="rbfw_rent_list_grid_row rbfw_pricing-box">
+                                    <p class="rbfw_rent_list_row_price">
+                                        <span class="prc currency_left">
+                                            <?php echo wp_kses( wc_price( $price ) , rbfw_allowed_html() ); ?>
+                                        </span>
+                                    </p>
+                                    <span class="rbfw_rent_list_row_price_level"><?php echo esc_html( $price_label ); ?></span>
+                                </div>
+                            <?php endif; ?>
                             <a class="rbfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url( $post_link ); ?>">
 								<?php echo esc_html( $book_now_label ); ?>
                                 <span class="button-icon">

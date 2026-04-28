@@ -18,7 +18,7 @@ RBFW TAB
 h1, h2, h3, h4, h5, h6 {
     font-family: inherit;
     font-weight: 600;
-    margin-top: 0 !important;
+    margin-top: 0;
 }
 
 
@@ -6716,7 +6716,6 @@ ul, li {
 
 .rbfw_rent_list_style_list .rbfw_rent_list_grid_view_top_img {
     height: 265px;
-    margin: 20px 5px 5px 5px;
 }
 
 
@@ -6724,7 +6723,7 @@ ul, li {
     width: 100%;
     height: 100%;
     max-height:224px;
-    object-fit: contain;
+    object-fit: cover;
     display: block;
     transition: all 0.5s ease-in-out;
 }
@@ -6737,7 +6736,7 @@ ul, li {
 
 .rbfw_inner_details {
     border-top-width: 0;
-    padding: 15px 20px 20px;
+    padding: 15px;
     flex: 2;
     display: flex;
     flex-direction: column;
@@ -6751,34 +6750,30 @@ ul, li {
 }
 
 .rbfw_rent_list_content {
-    padding-bottom: 15px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #d0d7de;
     height: max-content;
 }
 
 h2.rbfw_rent_list_grid_title {
-    line-height: 20px;
+
 }
 h2.rbfw_rent_list_grid_title a{
     text-decoration: none !important;
 }
 
-.rbfw_rent_list_grid_title {
+h2.rbfw_rent_list_grid_title {
     font-weight: normal;
     font-size: 18px;
-    line-height: 1.2;
     text-transform: capitalize;
     color: #202020;
-    min-height: 52px;
-    margin-bottom: 15px;
-    margin-top: 0 !important;
+    min-height:25px;
+    margin: 25px 0;
 }
 
 .rbfw_rent_list_grid_title a {
     color: #202020;
     text-decoration: none;
     font-size: 18px;
+    font-weight: 600;
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_grid_title {
@@ -6792,9 +6787,9 @@ h2.rbfw_rent_list_grid_title a{
 }
 
 .rbfw_rent_list_grid_row {
-    display: inline-flex;
-    align-items: flex-end;
-    flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
     gap: 4px;
 }
 
@@ -6835,12 +6830,10 @@ h2.rbfw_rent_list_grid_title a{
 }
 
 .rbfw_rent_list_style_grid .rbfw_rent_list_row_price {
-    font-weight: 600;
-    font-size: 28px;
-    letter-spacing: -1px;
-    text-transform: capitalize;
+    font-weight: 700;
+    font-size: 24px;
     color: var(--rbfw_color_primary);
-    line-height: 1;
+    line-height: .80;
     margin: 0;
 }
 
@@ -6851,7 +6844,7 @@ h2.rbfw_rent_list_grid_title a{
     column-gap: 15px;
     row-gap: 5px;
     line-height: 1.6;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     margin-left: 0;
     padding-left: 0;
 }
@@ -6880,16 +6873,21 @@ h2.rbfw_rent_list_grid_title a{
     color: var(--rbfw_color_primary);
 }
 
-.rbfw_rent_list_info li {
+.rbfw_rent_list_info{
     color: #0a0a0a;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    gap: 8px;
 }
 
 .bfw_rent_list_items {
     position: relative;
-    display: flex;
-    align-items: baseline;
-    gap: 5px;
-    text-align: left;
+    border-radius: 50px;
+    background: #eceef2;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 500;
 }
 
 .bfw_rent_list_items .bfw_rent_list_items_icon {
@@ -6904,9 +6902,8 @@ h2.rbfw_rent_list_grid_title a{
     align-items: center;
     gap: 3px;
     position: relative;
-    padding: 5px 30px;
+    padding:10px 20px;
     transition: all 0.3s ease-in-out;
-    z-index: 2;
     background: var(--rbfw_color_primary);
     color: #fff;
     border-radius: 2px;

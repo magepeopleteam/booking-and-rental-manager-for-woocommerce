@@ -106,7 +106,9 @@
 }
 
 .rbfw_rent_list_btn_holder {
-
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .rbfw_rent_items_grid, .rbfw_rent_items_list {
@@ -132,10 +134,9 @@
     background-color: #e0e0e0;
 }
 
-.rbfw_rent_item_description {
-    display: grid;
-    width: 100%;
+.rbfw_rent_list_style_list .rbfw_rent_item_description {
     text-align: left;
+    margin: 0;
 }
 
 .rbfw_rent_item_description_text {
@@ -160,18 +161,54 @@
 .selected_list_grid svg path {
     fill: #fff;
 }
+.rbfw_rent_list_style_list .rbfw_rent_list_lists_info{
+    padding: 0;
+}
+.rbfw_rent_list_style_list .rbfw_rent_list_content{
+    padding: 10px;
+}
+.rbfw_rent_list_style_list h2.rbfw_rent_list_grid_title{
+    margin: 0;
+}
 
+.rbfw_rent_list_style_list .rbfw_rent_list_row_price{
+    margin: 0;
+}
+
+.rbfw_rent_list_style_list .rbfw_rent_list_btn_holder{
+    border-top: 1px solid #ddd;
+}
+
+.rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper{
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 20px;
+}
+.rbfw_rent_list_style_list .rbfw_rent_item_content_list_bottom{
+    display: flex;
+    gap: 5px;
+}
+.rbfw_rent_list_style_list .rbfw_rent_list_lists_images{
+    min-height: 100%;
+}
+.rbfw_rent_list_style_list .rbfw_rent_list_grid_view_top_img{
+    min-height: 100%;
+}
+.rbfw_rent_list_style_list .rbfw_rent_list_grid_view_top_img img{
+    min-height: 100%;
+}
 
 /*Animation*/
 .rbfw_rent_list_lists_images,
 .rbfw_rent_list_grid_view_top,
 .rbfw_rent_item_content_list_bottom {
     transition: all 0.3s ease;
+    list-style: none;
 }
 
 .rbfw_rent_list_grid_view_top {
     opacity: 1;
-    transform: scale(1);
 }
 
 .rbfw_rent_list_lists_images {
@@ -372,10 +409,8 @@
     float: right;
     position: relative;
     cursor: pointer;
-    font-size: 13px;
     color: #333333;
     z-index: 10;
-    padding: 10px ;
 
 }
 .rbfw_muff_slider{
@@ -396,6 +431,7 @@ ul.rbfw_popup_fearure_lists{
     margin: 0;
     padding: 0;
     margin-bottom: 20px;
+    list-style-type: none;
 }
 
 ul.rbfw_popup_fearure_lists li{
@@ -507,7 +543,7 @@ ul.rbfw_show_all_cat_features li:last-child {
 }
 
 .bfw_rent_list_items_icon {
-    margin-right: 10px;
+    margin-right:2px;
 }
 
 .rbfw_left_filter_cover{
