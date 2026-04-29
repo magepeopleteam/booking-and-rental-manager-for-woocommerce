@@ -6701,7 +6701,7 @@ ul, li {
     overflow: hidden;
     width: 100%;
     height: auto;
-    /*min-height: 255px;*/
+    min-height: 220px;
 }
 .rbfw_rent_list_grid_view_top_img1 {
     display: block;

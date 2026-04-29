@@ -588,6 +588,7 @@ ul.rbfw_show_all_cat_features li:last-child {
     }
 
 }
+
 @media (min-width:1024px) {
     .rbfw_rent_item_search_item{
         width: 50%;
@@ -595,22 +596,23 @@ ul.rbfw_show_all_cat_features li:last-child {
 }
 
 
+
 .rbfw_rent_item_with_left_filter{
     display: flex;
     align-items: start;
     gap: 20px;
-    /*background-color: #990000;*/
 }
 
 /*Filter Css */
 .rbfw_filter_sidebar {
-    width: 230px;
+    width: 300px;
     position: absolute;
     margin: 1px;
     z-index: 111;
     display: block;
     background-color: #FFFFFF;
     border: 1px solid #ddd;
+    border-radius: 10px;
 }
 .rbfw_filter_area{
     padding: 10px;
@@ -619,9 +621,8 @@ ul.rbfw_show_all_cat_features li:last-child {
 
 .rbfw_title_text.title{
     padding: 10px;
-    background-color: var(--rbfw_color_primary);
-    color: #fff;
-    border-radius: 5px 5px 0 0;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .rbfw_title_text.title h4{
@@ -632,8 +633,8 @@ ul.rbfw_show_all_cat_features li:last-child {
 }
 
 .rbfw_rent_list_wrapper_with_left_filter{
-    width: calc( 100% - 230px );
-    margin-left: 250px;
+    width: calc( 100% - 300px );
+    margin-left: 320px;
 }
 .rbfw_rent_list_wrapper{
     width: 100%;
@@ -660,6 +661,7 @@ ul.rbfw_show_all_cat_features li:last-child {
 .rbfw_filter_sidebar input[type="checkbox"] {
     height: 15px;
     margin-right: 5px;
+    
 }
 .rbfw_rent_item_feature_des_text{
     font-size: 14px;
@@ -744,6 +746,8 @@ ul.rbfw_show_all_cat_features li:last-child {
     display: flex;
     padding: 1px 1px;
     align-items: center;
+    font-weight: 600;
+    color: #333;
 }
 
 .rbfw_toggle-icon {
@@ -892,6 +896,25 @@ ul.rbfw_show_all_cat_features li:last-child {
     border: 1px solid var(--rbfw_single_page_secondary_color);
     
 }
+
+@media (max-width:768px) {
+    .rbfw_rent_item_with_left_filter{
+        flex-direction:column
+    }
+    .rbfw_filter_sidebar{
+        position: relative;
+        width: 100%;
+        margin-bottom: 20px;    
+    }
+    .rbfw_filter_area{
+        min-height: auto;
+    }
+    .rbfw_rent_list_wrapper_with_left_filter {
+        width:  100%;
+        margin-left: 0;
+        }
+}
+
 @media (max-width: 550px) {
     .rbfw_rent_list_wrapper_with_left_filter  {
         width: 100% ;
@@ -907,3 +930,4 @@ ul.rbfw_show_all_cat_features li:last-child {
         position: relative;
     }
 }
+
