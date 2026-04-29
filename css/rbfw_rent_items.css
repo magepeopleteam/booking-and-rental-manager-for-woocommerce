@@ -96,7 +96,7 @@
 }
 
 .rbfw_rent_item_content_list_bottom .bfw_rent_list_items {
-    font-size: 16px;
+    font-size: 13px;
     gap: 7px;
     color: #0a0a0a;
 }
@@ -149,7 +149,7 @@
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_item_description_text {
-    display: -webkit-box !important;
+    font-size: 16px;
 }
 
 .selected_list_grid, .selected_list_grid:hover {
@@ -164,6 +164,7 @@
 
 .rbfw_rent_list_style_list .rbfw_rent_list_lists_info{
     padding: 15px;
+    box-sizing: border-box;
 }
 
 .rbfw_rent_list_style_list h2.rbfw_rent_list_grid_title{
@@ -188,6 +189,8 @@
 .rbfw_rent_list_style_list .rbfw_rent_item_content_list_bottom{
     display: flex;
     gap: 5px;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper{
@@ -896,7 +899,7 @@ ul.rbfw_show_all_cat_features li:last-child {
     }
 
     .rbfw_rent_item_with_left_filter {
-        display: grid;
+        display: flex;
         gap: 5px;
     }
     .rbfw_filter_sidebar {
