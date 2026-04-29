@@ -361,8 +361,8 @@
                             <a class="rbfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url( $post_link ); ?>">
 								<?php echo esc_html( $book_now_label ); ?>
                                 <span class="button-icon">
-                            <i class="fas fa-angle-double-right"></i>
-                        </span>
+                                    <i class="fas fa-angle-double-right"></i>
+                                </span>
                             </a>
                         </div>
                         <!-- /.rbfw_content_wrapper -->

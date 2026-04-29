@@ -161,12 +161,11 @@
 .selected_list_grid svg path {
     fill: #fff;
 }
+
 .rbfw_rent_list_style_list .rbfw_rent_list_lists_info{
-    padding: 0;
+    padding: 15px;
 }
-.rbfw_rent_list_style_list .rbfw_rent_list_content{
-    padding: 10px;
-}
+
 .rbfw_rent_list_style_list h2.rbfw_rent_list_grid_title{
     margin: 0;
 }
@@ -177,7 +176,14 @@
 
 .rbfw_rent_list_style_list .rbfw_rent_list_btn_holder{
     border-top: 1px solid #ddd;
+    padding-top: 10px;
 }
+
+.rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper{
+    min-height: 200px;
+    max-height: 300px;
+}
+
 
 .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper{
     display: flex;
@@ -190,15 +196,14 @@
     gap: 5px;
 }
 .rbfw_rent_list_style_list .rbfw_rent_list_lists_images{
-    min-height: 100%;
+    height: 100%;
 }
 .rbfw_rent_list_style_list .rbfw_rent_list_grid_view_top_img{
-    min-height: 100%;
+    height: 100%;
 }
 .rbfw_rent_list_style_list .rbfw_rent_list_grid_view_top_img img{
-    min-height: 100%;
+    height: 100%;
 }
-
 /*Animation*/
 .rbfw_rent_list_lists_images,
 .rbfw_rent_list_grid_view_top,
