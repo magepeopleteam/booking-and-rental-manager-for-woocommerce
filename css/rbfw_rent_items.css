@@ -180,12 +180,6 @@
 }
 
 .rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper{
-    min-height: 200px;
-    max-height: 300px;
-}
-
-
-.rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper{
     display: flex;
     align-items: start;
     justify-content: space-between;
@@ -195,14 +189,22 @@
     display: flex;
     gap: 5px;
 }
+
+.rbfw_rent_list_style_list .rbfw_rent_list_inner_wrapper{
+    min-height: 200px;
+    max-height: 300px;
+}
+
 .rbfw_rent_list_style_list .rbfw_rent_list_lists_images{
     height: 100%;
 }
 .rbfw_rent_list_style_list .rbfw_rent_list_grid_view_top_img{
-    height: 100%;
+    min-height:300px;
+    max-height: 300px;
 }
 .rbfw_rent_list_style_list .rbfw_rent_list_grid_view_top_img img{
     height: 100%;
+    max-height: 425px;
 }
 /*Animation*/
 .rbfw_rent_list_lists_images,
