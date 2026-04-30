@@ -526,19 +526,38 @@ ul.rbfw_show_all_cat_features {
     padding: 0;
     margin: 0;
 }
+
+.rbfw_left_filter_button_holer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+}
 .rbfw_left_filter_clearButton{
-    position: absolute;
-    right: 5px;
-    margin-top: 4px;
+    width:100%;
     background-color: #fff;
     border: 1px solid #dbd6d6;
-    padding:5px 10px;
-    border-radius: 3px;
+    padding: 8px;
+    border-radius: 5px;
     color: var(--rbfw_color_primary);
-    font-size: 11px;
 }
-.rbfw_left_filter_clearButton:hover{
-    background-color: var(--rbfw_single_page_secondary_color);
+
+.rbfw_left_filter_more_feature_loaders{
+    width: 100%;
+    background-color: var(--rbfw_color_primary);
+    text-align: center;
+    padding: 8px;
+    cursor: pointer;
+    border: 1px solid var(--rbfw_color_primary);
+    color: #fff;
+    border-radius:5px;
+}
+
+.rbfw_left_filter_clearButton:hover,
+button:focus{
+    background-color: #f8f8f8;
+    border: 1px solid var(--rbfw_color_primary);
     color: var(--rbfw_color_primary);
     cursor: pointer;
 }
@@ -672,6 +691,16 @@ ul.rbfw_show_all_cat_features li:last-child {
     
 }
 
+.rbfw_filter_area div.rbfw_toggle-header {
+    align-items: center;
+    padding: 10px 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+
 .rbfw_filter_sidebar .rbfw_price-range p {
     margin-bottom: 10px;
 }
@@ -727,16 +756,7 @@ ul.rbfw_show_all_cat_features li:last-child {
 .rbfw_price_start_end:-moz-pl
 
 
-.rbfw_toggle-header {
-    cursor: pointer;
-    user-select: none;
-    margin-block-start: 2px;
-    margin-block-end: 7px;
-    font-size: 18px;
-    font-weight: normal;
-    border-bottom: 1px dotted #d0d7de;
-    padding: 10px 0;
-}
+
 
 .rbfw_white_color{
     color: #ffffff;
@@ -744,7 +764,7 @@ ul.rbfw_show_all_cat_features li:last-child {
 }
 .rbfw_rent_item_left_feature_title{
     display: flex;
-    padding: 1px 1px;
+    padding: 5px;
     align-items: center;
     font-weight: 600;
     color: #333;
@@ -865,31 +885,22 @@ ul.rbfw_show_all_cat_features li:last-child {
 }
 .rbfw_left_filter_search_btn{
     display: flex;
-    padding:4px 10px;
+    padding:10px;
     border: 1px solid var(--rbfw_color_primary);
     background-color: var(--rbfw_color_primary);
     color: #fff;
     cursor: pointer;
     font-size: 14px;
-    border-radius: 0px 5px 5px;
+    border-radius: 0 5px 5px 0;
+    lign-items: center;
 }
+
 .rbfw_left_filter_search_btn:hover{
     background-color: var(--rbfw_single_page_secondary_color);
     border: 1px solid var(--rbfw_single_page_secondary_color);
 }
 
-.rbfw_left_filter_more_feature_loaders{
-    background-color: var(--rbfw_color_primary);
-    text-align: center;
-    margin: auto;
-    font-size: 12px;
-    padding: 4px 10px;
-    cursor: pointer;
-    border: 1px solid var(--rbfw_color_primary);
-    color: #fff;
-    margin-top: 10px;
-    border-radius:5px;
-}
+
 .rbfw_left_filter_more_feature_loaders:hover{
     text-decoration: none;
     background-color: var(--rbfw_single_page_secondary_color);
