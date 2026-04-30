@@ -262,14 +262,14 @@
 
 //Left Filtering
         $('.rbfw_toggle-content').show();
-        $('.rbfw_toggle-icon').on('click', function() {
+        $('.rbfw_toggle-header').on('click', function() {
             var content = $(this).next('.rbfw_toggle-content');
             content.slideToggle();
-            var icon = $(this);
-            if (icon.text() === '+') {
-                icon.text('−');
+            var icon = $(this).children('.rbfw_toggle-icon');
+            if (icon.text() === ' ') {
+                icon.text(' ');
             } else {
-                icon.text('+');
+                icon.text(' ');
             }
         });
         function get_left_filter_data( filter_date ){
@@ -473,7 +473,6 @@
             get_left_filter_data( get_filters );
             $("#rbfw_price_start").val('');
             $("#rbfw_price_end").val('');
-            $("#rbfw_left_filter_clearButton").hide();
         });
 
     });
