@@ -67,10 +67,10 @@
 
 			public function rbfw_get_location_dropdown( $name, $saved_value = '', $class = '' ) {
 				$location_arr = $this->rbfw_get_location_arr();
-				echo "<select name=" . esc_attr( $name ) . " class=" . esc_attr( $class ) . ">";
+				echo '<select name="' . esc_attr( $name ) . '" class="' . esc_attr( $class ) . '">';
 				foreach ( $location_arr as $key => $value ) {
-					$selected_text = ! empty( $saved_value ) && $saved_value == $key ? 'Selected' : '';
-					echo "<option value=" . esc_attr( $key ) . esc_attr( $selected_text ) . ">" . esc_html( $value ) . "</option>";
+					$selected_text = ! empty( $saved_value ) && $saved_value == $key ? ' selected' : '';
+					echo '<option value="' . esc_attr( $key ) . '"' . $selected_text . '>' . esc_html( $value ) . '</option>';
 				}
 				echo "</select>";
 			}
@@ -78,6 +78,7 @@
 			public function pickup_location_config( $post_id ) {
 				$rbfw_enable_pick_point = get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) ? get_post_meta( $post_id, 'rbfw_enable_pick_point', true ) : 'no';
 				$rbfw_pickup_data       = get_post_meta( $post_id, 'rbfw_pickup_data', true ) ? get_post_meta( $post_id, 'rbfw_pickup_data', true ) : [];
+				$saved_pickup_slugs     = wp_list_pluck( $rbfw_pickup_data, 'loc_pickup_name' );
 				?>
                 <section>
                     <div>
@@ -95,14 +96,12 @@
                         <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
                             <select name="loc_pickup_name[]" id="rdfw_pickup_location" multiple tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
 								<?php
-                                $i = 0;
                                 foreach ( $location_arr as $key => $value ) {
                                     $slug     = sanitize_title( $value );
-                                    $selected = (is_array($rbfw_pickup_data[ $i ]) && isset( $rbfw_pickup_data[ $i ] ) && in_array( $slug, $rbfw_pickup_data[ $i ], true )) ? 'selected' : '';
+                                    $selected = in_array( $slug, $saved_pickup_slugs, true ) ? 'selected' : '';
                                     echo '<option ' . $selected . ' value="' . esc_attr( $slug ) . '">';
                                     echo esc_html( $key );
                                     echo '</option>';
-                                    $i++;
                                 }
 								?>
                             </select>
@@ -116,6 +115,7 @@
 				$rbfw_enable_dropoff_point = get_post_meta( $post_id, 'rbfw_enable_dropoff_point', true ) ? get_post_meta( $post_id, 'rbfw_enable_dropoff_point', true ) : 'no';
 				$rbfw_dropoff_data         = get_post_meta( $post_id, 'rbfw_dropoff_data', true ) ? get_post_meta( $post_id, 'rbfw_dropoff_data', true ) : [];
 				$location_arr              = $this->rbfw_get_location_arr();
+				$saved_dropoff_slugs       = wp_list_pluck( $rbfw_dropoff_data, 'loc_dropoff_name' );
 				?>
                 <section>
                     <div>
@@ -132,14 +132,12 @@
                         <div id="field-wrapper-rdfw_available_time" class=" field-wrapper field-select2-wrapper field-select2-wrapper-rdfw_available_time">
                             <select name="loc_dropoff_name[]" id="rdfw_dropoff_location" multiple tabindex="-1" class="select2-hidden-accessible" aria-hidden="true">
                                 <?php
-                                $i = 0;
                                 foreach ( $location_arr as $key => $value ) {
                                     $slug     = sanitize_title( $value );
-                                    $selected = (is_array($rbfw_dropoff_data[ $i ]) && isset( $rbfw_dropoff_data[ $i ] ) && in_array( $slug, $rbfw_dropoff_data[ $i ], true )) ? 'selected' : '';
+                                    $selected = in_array( $slug, $saved_dropoff_slugs, true ) ? 'selected' : '';
                                     echo '<option ' . $selected . ' value="' . esc_attr( $slug ) . '">';
                                     echo esc_html( $key );
                                     echo '</option>';
-                                    $i++;
                                 }
                                 ?>
                             </select>
