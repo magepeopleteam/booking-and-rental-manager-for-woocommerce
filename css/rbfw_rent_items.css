@@ -885,7 +885,7 @@ ul.rbfw_show_all_cat_features li:last-child {
 }
 .rbfw_left_filter_search_btn{
     display: flex;
-    padding:10px;
+    padding:8px 10px;
     border: 1px solid var(--rbfw_color_primary);
     background-color: var(--rbfw_color_primary);
     color: #fff;
@@ -931,7 +931,9 @@ ul.rbfw_show_all_cat_features li:last-child {
         width: 100% ;
         margin-left: 0px;
     }
-
+    .rbfw_left_filter_search_text_input{
+        width: 100%;
+    }
     .rbfw_rent_item_with_left_filter {
         display: flex;
         gap: 5px;
