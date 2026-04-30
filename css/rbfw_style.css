@@ -6762,11 +6762,11 @@ h2.rbfw_rent_list_grid_title a{
 
 h2.rbfw_rent_list_grid_title {
     font-weight: normal;
-    font-size: 18px;
+    font-size: 16px;
     text-transform: capitalize;
     color: #202020;
     min-height:25px;
-    margin: 25px 0;
+    margin: 0 0 25px 0;
 }
 
 .rbfw_rent_list_grid_title a {
