@@ -166,7 +166,7 @@
                     <div class="rbfw_bikecarsd_pricing_table_container rbfw_quantiry_area_sd" style="display: none">
                         <div class="rbfw_bikecarsd_price_table timely_quqntity_table">
                             <span class="rbfw_bikecarsd_type_title">
-                                Quantity
+                                <?php esc_html_e('Quantity','booking-and-rental-manager-for-woocommerce'); ?>
                             </span>
                             <div class="rbfw_regf_group">
                                 <select name="rbfw_item_quantity" id="rbfw_item_quantity">
@@ -204,7 +204,7 @@
                                                         <?php echo wp_kses($img , rbfw_allowed_html()); ?>
                                                     </div>
                                                     <div>
-                                                        <span class="rbfw_bikecarsd_type_title"><?php echo esc_html($value['service_name']); ?></span>
+                                                        <span class="rbfw_bikecarsd_type_title"><?php echo esc_html($value['service_name']); ?>gg</span>
                                                         <?php if(!empty($value['service_desc'])){ ?>
                                                             <small class="rbfw_bikecarsd_type_desc"><?php echo esc_html($value['service_desc']); ?></small>
                                                         <?php } ?>
