@@ -204,7 +204,7 @@
                                                         <?php echo wp_kses($img , rbfw_allowed_html()); ?>
                                                     </div>
                                                     <div>
-                                                        <span class="rbfw_bikecarsd_type_title"><?php echo esc_html($value['service_name']); ?>gg</span>
+                                                        <span class="rbfw_bikecarsd_type_title"><?php echo esc_html($value['service_name']); ?></span>
                                                         <?php if(!empty($value['service_desc'])){ ?>
                                                             <small class="rbfw_bikecarsd_type_desc"><?php echo esc_html($value['service_desc']); ?></small>
                                                         <?php } ?>

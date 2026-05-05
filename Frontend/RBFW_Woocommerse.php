@@ -114,10 +114,12 @@ if (!class_exists('RBFW_Woocommerce')) {
             $sd_input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
             $rbfw_rent_type     = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 
+            $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
+
+
             $rbfw_item_quantity = isset( $sd_input_data_sabitized['rbfw_item_quantity'] ) ? intval( $sd_input_data_sabitized['rbfw_item_quantity'] ) : 1;
             $rbfw_service_info_all = (isset( $sd_input_data_sabitized['rbfw_service_info'] ) && is_array( $sd_input_data_sabitized['rbfw_service_info'] ) ) ? $sd_input_data_sabitized['rbfw_service_info'] : [];
 
-            $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
             $rbfw_service_info             = array();
             if ( ! empty( $rbfw_service_info_all ) ) {
                 foreach ( $rbfw_service_info_all as $key => $value ) {
@@ -125,6 +127,21 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $service_qty  = ! empty( $value['service_qty'] ) ? $value['service_qty'] : 0;
                     if ( $service_qty > 0 ) {
                         $rbfw_service_info[ $service_name ] = $service_qty;
+                    }
+                }
+            }
+
+            $rbfw_management_info_all = (isset( $sd_input_data_sabitized['rbfw_management_info'] ) && is_array( $sd_input_data_sabitized['rbfw_management_info'] ) ) ? $sd_input_data_sabitized['rbfw_management_info'] : [];
+
+
+
+            $rbfw_management_info             = array();
+            if ( ! empty( $rbfw_service_info_all ) ) {
+                foreach ( $rbfw_management_info_all as $key => $value ) {
+                    $management_label = ! empty( $value['label'] ) ? $value['label'] : '';
+                    $is_checked  = ! empty( $value['is_checked'] ) ? $value['is_checked'] : 0;
+                    if ( $is_checked == 'yes' ) {
+                        $rbfw_management_info[ $management_label ] = $is_checked;
                     }
                 }
             }
@@ -188,7 +205,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
 
-                $rbfw_management_price = 0;
+               /* $rbfw_management_price = 0;
                 $rbfw_management_info             = array();
                 if ( ! empty( $rbfw_management_info_all ) ) {
                     foreach ( $rbfw_management_info_all as $key => $value ) {
@@ -213,7 +230,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                             }
                         }
                     }
-                }
+                }*/
 
 
                 if ( function_exists( 'rbfw_get_discount_array' ) ) {
@@ -227,10 +244,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $discount_type         = $discount_arr['discount_type'];
                     $discount_amount       = $discount_arr['discount_amount'];
                 }
-                $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price , $rbfw_management_info , $rbfw_management_price );
+                $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price , $rbfw_management_info  );
 
                 $security_deposit                           = rbfw_security_deposit( $rbfw_id, $sub_total_price_discount );
-                $total_price                                = $sub_total_price + $rbfw_management_price;
+                $total_price                                = $sub_total_price;
                 $start_date                                 = $rbfw_checkin_datetime;
                 $end_date                                   = $rbfw_checkout_datetime;
                 $cart_item_data['rbfw_start_datetime']      = $rbfw_checkin_datetime;
@@ -248,7 +265,6 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_room_service_price']  = $rbfw_room_service_price;
                 $cart_item_data['rbfw_ticket_info']         = $rbfw_resort_ticket_info;
                 $cart_item_data['rbfw_management_info']     = $rbfw_management_info;
-                $cart_item_data['rbfw_management_price']     = $rbfw_management_price;
                 $cart_item_data['discount_type']            = $discount_type;
                 $cart_item_data['discount_amount']          = $discount_amount;
                 $cart_item_data['security_deposit_amount']  = $security_deposit['security_deposit_amount'];
@@ -686,7 +702,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_ticket_info = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
                 $rbfw_room_info = $values['rbfw_room_info'] ? $values['rbfw_room_info'] : [];
                 $rbfw_management_info = $values['rbfw_management_info'] ? $values['rbfw_management_info'] : [];
-                $rbfw_management_price = $values['rbfw_management_price'] ? $values['rbfw_management_price'] : [];
+               // $rbfw_management_price = $values['management_price'] ? $values['rbfw_management_price'] : [];
                 $rbfw_room_price = $values['rbfw_room_price'] ? $values['rbfw_room_price'] : [];
                 $rbfw_resort_room_data = get_post_meta($rbfw_id, 'rbfw_resort_room_data', true) ? get_post_meta($rbfw_id, 'rbfw_resort_room_data', true) : array();
                 if ($rbfw_room_price_category == 'daynight') {
@@ -826,7 +842,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     endforeach;
                 endif;
 
-
+/*
                 if (!empty($rbfw_management_info)){
                     $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
                     foreach ($rbfw_management_info as $key => $value) {
@@ -849,7 +865,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                         esc_html($fee_management_info_label),
                         $fee_management_content
                     );
-                }
+                }*/
 
                 $duration_cost_label = (
                     $rbfw->get_option_trans( 'rbfw_text_duration_cost', 'rbfw_basic_translation_settings' )
@@ -880,14 +896,14 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
 
-                $fee_management_label = esc_html__( 'Fee Management Cost', 'booking-and-rental-manager-for-woocommerce' );
+               /* $fee_management_label = esc_html__( 'Fee Management Cost', 'booking-and-rental-manager-for-woocommerce' );
 
                 if($rbfw_management_price){
                     $item->add_meta_data(
                         esc_html( $fee_management_label ),
                         wc_price($rbfw_management_price)
                     );
-                }
+                }*/
 
 
 
