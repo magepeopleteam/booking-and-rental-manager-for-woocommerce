@@ -225,15 +225,15 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
             foreach ($rbfw_fee_data as $fee){
                 $service_label = $key; //service name
                 $service_price = (float)$fee['amount'];
-                $refundable = 'yes';
+                $refundable = ($fee['refundable']=='yes')?'( Refundable )':'( Non refundable )';
                 if (isset($rbfw_management_info[$fee['label']]) && $rbfw_management_info[$fee['label']] == "yes") {
                 ?>
                 <tr>
                     <th>
-                        <?php echo esc_html($rbfw_management_info[$fee['label']]); ?> <?php echo esc_html($refundable); ?>:
+                        <?php echo esc_html($fee['label']); ?> <?php echo esc_html($refundable); ?>:
                     </th>
                     <td>
-                        (<?php echo wp_kses($fee['label'],rbfw_allowed_html()); ?>) = <?php echo wp_kses(wc_price($fee['amount']),rbfw_allowed_html()); ?>
+                        (<?php echo wp_kses($fee['description'],rbfw_allowed_html()); ?>) = <?php echo wp_kses(wc_price($fee['amount']),rbfw_allowed_html()); ?>
                     </td>
                 </tr>
                 <?php
