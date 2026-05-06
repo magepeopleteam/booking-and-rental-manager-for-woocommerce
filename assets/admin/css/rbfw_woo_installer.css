@@ -1,0 +1,389 @@
+/* ============================================
+   RBFW WooCommerce Installer & Dummy Import Popup
+   Light WordPress-native design with
+   beautiful accents and smooth animations
+   ============================================ */
+
+/* ---------- Overlay ---------- */
+.rbfw-woo-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 999999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(0, 0, 0, 0.45);
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
+	animation: rbfwOverlayIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes rbfwOverlayIn {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+
+/* ---------- Popup Card ---------- */
+.rbfw-woo-popup {
+	position: relative;
+	width: 500px;
+	max-width: 92vw;
+	border-radius: 12px;
+	background: #fff;
+	box-shadow:
+		0 1px 3px rgba(0, 0, 0, 0.08),
+		0 20px 60px rgba(0, 0, 0, 0.15);
+	text-align: center;
+	overflow: hidden;
+	animation: rbfwPopupIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
+}
+
+@keyframes rbfwPopupIn {
+	from {
+		opacity: 0;
+		transform: translateY(24px) scale(0.97);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+/* ---------- Header Strip ---------- */
+.rbfw-woo-header {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding: 14px 24px;
+	background: linear-gradient(135deg, #2271b1 0%, #38a0d8 100%);
+	color: #fff;
+}
+
+.rbfw-woo-header-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	background: rgba(255, 255, 255, 0.18);
+	border-radius: 8px;
+}
+
+.rbfw-woo-header-icon svg {
+	width: 18px;
+	height: 18px;
+}
+
+.rbfw-woo-header-text {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+}
+
+/* ---------- Icon ---------- */
+.rbfw-woo-icon-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-top: 32px;
+	padding-bottom: 8px;
+}
+
+.rbfw-woo-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 72px;
+	height: 72px;
+	border-radius: 50%;
+	background: linear-gradient(135deg, #fef3f2 0%, #fee4e2 100%);
+	color: #d92d20;
+	border: 1px solid #fecdca;
+	animation: rbfwPulseIcon 3s ease-in-out infinite;
+}
+
+@keyframes rbfwPulseIcon {
+	0%, 100% { box-shadow: 0 0 0 0 rgba(217, 45, 32, 0.08); }
+	50%      { box-shadow: 0 0 0 12px rgba(217, 45, 32, 0.04); }
+}
+
+/* ---------- Content ---------- */
+.rbfw-woo-content {
+	padding: 16px 36px 0;
+}
+
+.rbfw-woo-title {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 21px;
+	font-weight: 600;
+	color: #1d2327;
+	margin: 0 0 10px;
+	line-height: 1.3;
+}
+
+.rbfw-woo-desc {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 14px;
+	line-height: 1.6;
+	color: #50575e;
+	margin: 0;
+}
+
+/* ---------- Feature Highlights ---------- */
+.rbfw-woo-features {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	flex-wrap: wrap;
+	padding: 20px 36px 0;
+}
+
+.rbfw-woo-feature {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 13px;
+	color: #3c434a;
+}
+
+.rbfw-woo-feature-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 22px;
+	height: 22px;
+	border-radius: 50%;
+	background: #ecfdf3;
+	color: #039855;
+	flex-shrink: 0;
+}
+
+.rbfw-woo-feature-icon svg {
+	width: 12px;
+	height: 12px;
+}
+
+/* ---------- Progress ---------- */
+.rbfw-woo-progress {
+	padding: 0 36px;
+	margin-bottom: 8px;
+	animation: rbfwFadeIn 0.35s ease both;
+}
+
+@keyframes rbfwFadeIn {
+	from { opacity: 0; transform: translateY(6px); }
+	to   { opacity: 1; transform: translateY(0); }
+}
+
+.rbfw-woo-progress-bar {
+	width: 100%;
+	height: 8px;
+	background: #f0f0f1;
+	border-radius: 100px;
+	overflow: hidden;
+}
+
+.rbfw-woo-progress-fill {
+	height: 100%;
+	width: 0%;
+	border-radius: 100px;
+	background: linear-gradient(90deg, #2271b1, #38a0d8);
+	transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+	position: relative;
+}
+
+.rbfw-woo-progress-fill::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+	animation: rbfwShimmer 1.5s linear infinite;
+}
+
+@keyframes rbfwShimmer {
+	from { transform: translateX(-100%); }
+	to   { transform: translateX(100%); }
+}
+
+.rbfw-woo-status-text {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 13px;
+	color: #50575e;
+	margin: 10px 0 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+}
+
+/* Spinner for status text */
+.rbfw-woo-status-text::before {
+	content: '';
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	border: 2px solid #dcdde1;
+	border-top-color: #2271b1;
+	border-radius: 50%;
+	animation: rbfwSpin 0.7s linear infinite;
+	flex-shrink: 0;
+}
+
+@keyframes rbfwSpin {
+	to { transform: rotate(360deg); }
+}
+
+.rbfw-woo-status-text.rbfw-success {
+	color: #039855;
+}
+
+.rbfw-woo-status-text.rbfw-success::before {
+	display: none;
+}
+
+.rbfw-woo-status-text.rbfw-error {
+	color: #d92d20;
+}
+
+.rbfw-woo-status-text.rbfw-error::before {
+	display: none;
+}
+
+/* ---------- Action Buttons ---------- */
+.rbfw-woo-actions {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	align-items: center;
+	padding: 24px 36px 0;
+}
+
+.rbfw-woo-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: all 0.2s ease;
+	line-height: 1;
+}
+
+.rbfw-woo-btn-primary {
+	width: 100%;
+	padding: 14px 24px;
+	background: linear-gradient(135deg, #2271b1 0%, #38a0d8 100%);
+	color: #fff;
+	box-shadow: 0 1px 2px rgba(34, 113, 177, 0.2), 0 4px 12px rgba(34, 113, 177, 0.15);
+}
+
+.rbfw-woo-btn-primary:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 2px 4px rgba(34, 113, 177, 0.25), 0 8px 24px rgba(34, 113, 177, 0.2);
+	color: #fff;
+}
+
+.rbfw-woo-btn-primary:active {
+	transform: translateY(0);
+}
+
+.rbfw-woo-btn-primary:disabled {
+	opacity: 0.55;
+	cursor: not-allowed;
+	transform: none !important;
+}
+
+.rbfw-woo-btn-secondary {
+	padding: 8px 16px;
+	background: transparent;
+	color: #50575e;
+	font-size: 13px;
+	font-weight: 500;
+}
+
+.rbfw-woo-btn-secondary:hover {
+	color: #2271b1;
+	text-decoration: underline;
+}
+
+/* ---------- Footer Note ---------- */
+.rbfw-woo-footer-note {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-size: 12px;
+	color: #8c8f94;
+	margin: 0;
+	padding: 16px 36px 24px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 5px;
+}
+
+/* ---------- Success State ---------- */
+.rbfw-woo-popup.rbfw-state-success .rbfw-woo-icon {
+	background: linear-gradient(135deg, #ecfdf3 0%, #d1fadf 100%);
+	color: #039855;
+	border-color: #a6f4c5;
+	animation: rbfwSuccessBounce 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes rbfwSuccessBounce {
+	0%   { transform: scale(0.85); }
+	50%  { transform: scale(1.08); }
+	100% { transform: scale(1); }
+}
+
+.rbfw-woo-popup.rbfw-state-success .rbfw-woo-progress-fill {
+	background: linear-gradient(90deg, #039855, #12b76a);
+}
+
+.rbfw-woo-popup.rbfw-state-success .rbfw-woo-header {
+	background: linear-gradient(135deg, #039855 0%, #12b76a 100%);
+}
+
+/* ---------- Error State ---------- */
+.rbfw-woo-popup.rbfw-state-error .rbfw-woo-progress-fill {
+	background: linear-gradient(90deg, #d92d20, #f04438);
+}
+
+.rbfw-woo-popup.rbfw-state-error .rbfw-woo-header {
+	background: linear-gradient(135deg, #d92d20 0%, #f04438 100%);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 520px) {
+	.rbfw-woo-popup {
+		border-radius: 10px;
+	}
+
+	.rbfw-woo-content,
+	.rbfw-woo-features,
+	.rbfw-woo-actions,
+	.rbfw-woo-progress,
+	.rbfw-woo-footer-note {
+		padding-left: 24px;
+		padding-right: 24px;
+	}
+
+	.rbfw-woo-title {
+		font-size: 18px;
+	}
+
+	.rbfw-woo-desc {
+		font-size: 13px;
+	}
+
+	.rbfw-woo-features {
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+	}
+}

@@ -41,6 +41,47 @@ if (!class_exists('RBFW_Status')) {
             return $button_wc;
         }
 
+        /**
+         * PDF Support status row — shows on status page.
+         * Only visible when the Pro plugin is active and PDF feature is enabled.
+         */
+        public function rbfw_pdf_btn() {
+            // Only show if Pro plugin is active and PDF feature is enabled
+            if ( ! function_exists( 'rbfw_check_pro_active' ) || ! rbfw_check_pro_active() ) {
+                return '<span class="rbfw_plugin_na">' . esc_html__( 'Pro plugin not active', 'booking-and-rental-manager-for-woocommerce' ) . '</span>';
+            }
+
+            // Check if PDF feature is enabled in Pro settings
+            global $rbfw;
+            $send_pdf = 'no';
+            if ( $rbfw && method_exists( $rbfw, 'get_option' ) ) {
+                $send_pdf = $rbfw->get_option( 'rbfw_send_pdf', 'rbfw_basic_pdf_settings', 'no' );
+            }
+
+            if ( $send_pdf !== 'yes' ) {
+                return '<span class="rbfw_plugin_na">' . esc_html__( 'PDF feature is disabled in settings', 'booking-and-rental-manager-for-woocommerce' ) . '</span>';
+            }
+
+            $pdf_active    = is_plugin_active( 'magepeople-pdf-support-master/mage-pdf.php' );
+            $pdf_installed = $this->rbfw_free_chk_plugin_folder_exist( 'magepeople-pdf-support-master' );
+
+            if ( $pdf_active ) {
+                return '<span class="rbfw_plugin_status">' . esc_html__( 'Activated', 'booking-and-rental-manager-for-woocommerce' ) . '</span>';
+            }
+
+            // Not active — show button that triggers the popup
+            $label = $pdf_installed
+                ? esc_html__( 'Activate', 'booking-and-rental-manager-for-woocommerce' )
+                : esc_html__( 'Install & Activate', 'booking-and-rental-manager-for-woocommerce' );
+
+            $show_popup_url = wp_nonce_url(
+                admin_url( 'edit.php?post_type=rbfw_item&page=rbfw-status&rbfw_show_pdf_popup=1' ),
+                'rbfw_show_pdf_popup'
+            );
+
+            return '<a href="' . esc_url( $show_popup_url ) . '" class="rbfw_plugin_btn">' . $label . '</a>';
+        }
+
         public function rbfw_status_page(){
             $button_wc = '';
 
@@ -54,6 +95,9 @@ if (!class_exists('RBFW_Status')) {
             else {
                 $button_wc = '<span class="rbfw_plugin_status">' . esc_html__('Activated', 'booking-and-rental-manager-for-woocommerce') . '</span>';
             }
+
+            // PDF Support
+            $button_pdf = $this->rbfw_pdf_btn();
             ?>
             <div class="rbfw-status-page-wrapper wrap">
                 <h3><?php esc_html_e( 'Booking and Rental Manager Required Plugin', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
@@ -61,13 +105,23 @@ if (!class_exists('RBFW_Status')) {
                     <thead>
                         <tr>
                             <th><?php esc_html_e( 'Plugin Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                            <th><?php esc_html_e( 'Description', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                             <th><?php esc_html_e( 'Action', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><?php esc_html_e( 'WooCommerce', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
-                            <td><?php echo wp_kses($button_wc,rbfw_allowed_html()); ?></td>
+                            <td><strong><?php esc_html_e( 'WooCommerce', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
+                            <td><?php esc_html_e( 'Required for booking, payments and order management.', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
+                            <td><?php echo wp_kses($button_wc, rbfw_allowed_html()); ?></td>
+                        </tr>
+                        <tr>
+                            <td><strong><?php esc_html_e( 'MagePeople PDF Support', 'booking-and-rental-manager-for-woocommerce' ); ?></strong></td>
+                            <td><?php esc_html_e( 'Required for PDF booking receipts and email attachments.', 'booking-and-rental-manager-for-woocommerce' ); ?></td>
+                            <td><?php echo wp_kses($button_pdf, array(
+                                'a' => array( 'href' => array(), 'class' => array(), 'onclick' => array() ),
+                                'span' => array( 'class' => array() ),
+                            )); ?></td>
                         </tr>
                     </tbody>
                 </table>
@@ -98,19 +152,25 @@ if (!class_exists('RBFW_Status')) {
                     border-color: #ff982d;
                     color: #fff;
                     text-decoration: none;
-                    padding: 8px;
+                    padding: 8px 16px;
                     transition: 0.2s;
                     border-radius: 5px;
                     display: inline-block;
+                    cursor: pointer;
+                    font-weight: 500;
                 }
                 .rbfw-status-page-wrapper .rbfw_plugin_btn:hover{
-                    background-color: #ff982d;
-                    border-color: #ff982d;
+                    background-color: #e68a25;
                     color: #fff;
                     transition: 0.2s;
                 }
                 .rbfw_plugin_status{
                     color: #13df13;
+                    font-weight: 600;
+                }
+                .rbfw_plugin_na{
+                    color: #999;
+                    font-style: italic;
                 }
             </style>
             <?php
@@ -143,7 +203,7 @@ if (!class_exists('RBFW_Status')) {
 	        if ( isset( $_GET['rbfw_plugin_activate'] ) && !is_plugin_active( sanitize_text_field( wp_unslash( $_GET['rbfw_plugin_activate'] ) ) ) ) {
 		        $slug = sanitize_text_field( wp_unslash( $_GET['rbfw_plugin_activate'] ) );
 		        $activate = activate_plugin( $slug );
-                $url = admin_url( 'edit.php?post_type=rbfw_item&page=rbfw_import' );
+                $url = admin_url( 'edit.php?post_type=rbfw_item&page=rbfw-status' );
                 echo wp_kses_post('<script>
                     var url = "' . esc_url( $url ) . '";
                     window.location.replace(url);

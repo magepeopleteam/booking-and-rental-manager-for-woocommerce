@@ -1045,11 +1045,18 @@ function rbfw_url_exclude_search_engine() {
 // Update Settings On Register the Plugin
 // Check pro plugin active
 	function rbfw_check_pro_active() {
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+
+		if ( is_plugin_active( 'booking-and-rental-manager-for-woocommerce-pro/rent-pro.php' ) ) {
+			return true;
+		}
+
+		// Backward compatibility for any legacy/custom installation path.
 		if ( is_plugin_active( 'booking-and-rental-manager-for-woocommerce/rent-pro.php' ) ) {
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 // Hide wc hidden products
 	add_action( 'admin_head', 'rbfw_hide_date_from_order_page' );
