@@ -42,6 +42,14 @@
         $pricing_display_for_listing = rbfw_get_option( 'pricing_display_for_listing', 'rbfw_basic_gen_settings' );
 
         $price = 0;
+        $price_label = $prices_start_at;
+        $price_sun = 0;
+        $price_mon = 0;
+        $price_tue = 0;
+        $price_wed = 0;
+        $price_thu = 0;
+        $price_fri = 0;
+        $price_sat = 0;
 
         if ($rbfw_rent_type == 'bike_car_md') {
 
