@@ -74,7 +74,12 @@ if (!class_exists('RBFW_Status')) {
                 ? esc_html__( 'Activate', 'booking-and-rental-manager-for-woocommerce' )
                 : esc_html__( 'Install & Activate', 'booking-and-rental-manager-for-woocommerce' );
 
-            return '<a href="#" class="rbfw_plugin_btn rbfw-trigger-pdf-popup" onclick="return false;">' . $label . '</a>';
+            $show_popup_url = wp_nonce_url(
+                admin_url( 'edit.php?post_type=rbfw_item&page=rbfw-status&rbfw_show_pdf_popup=1' ),
+                'rbfw_show_pdf_popup'
+            );
+
+            return '<a href="' . esc_url( $show_popup_url ) . '" class="rbfw_plugin_btn">' . $label . '</a>';
         }
 
         public function rbfw_status_page(){
@@ -168,28 +173,6 @@ if (!class_exists('RBFW_Status')) {
                     font-style: italic;
                 }
             </style>
-            <script>
-            jQuery(document).ready(function($) {
-                // When user clicks the Activate / Install & Activate button on the status page
-                $(document).on('click', '.rbfw-trigger-pdf-popup', function(e) {
-                    e.preventDefault();
-
-                    // Clear the dismissal so the popup shows again
-                    $.ajax({
-                        url: ajaxurl,
-                        type: 'POST',
-                        data: {
-                            action: 'rbfw_pro_clear_pdf_dismiss',
-                            nonce: '<?php echo esc_js( wp_create_nonce( "rbfw_pro_clear_pdf_dismiss" ) ); ?>'
-                        },
-                        complete: function() {
-                            // Reload the page — the popup will appear after reload
-                            window.location.reload();
-                        }
-                    });
-                });
-            });
-            </script>
             <?php
 
         }
