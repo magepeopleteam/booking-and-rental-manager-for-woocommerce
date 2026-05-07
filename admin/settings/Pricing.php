@@ -319,6 +319,10 @@
             public function multiple_items( $post_id ) {
                 $rbfw_item_type                  = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
                 $rbfw_enable_time_picker    = get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) : 'yes';
+                $rbfw_mi_hourly_to_half_day_pivot  = get_post_meta( $post_id, 'rbfw_mi_hourly_to_half_day_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_hourly_to_half_day_pivot', true ) : '';
+                $rbfw_mi_half_day_to_daily_pivot   = get_post_meta( $post_id, 'rbfw_mi_half_day_to_daily_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_half_day_to_daily_pivot', true ) : '';
+                $rbfw_mi_daily_to_weekly_pivot     = get_post_meta( $post_id, 'rbfw_mi_daily_to_weekly_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_daily_to_weekly_pivot', true ) : '';
+                $rbfw_mi_weekly_to_monthly_pivot   = get_post_meta( $post_id, 'rbfw_mi_weekly_to_monthly_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_weekly_to_monthly_pivot', true ) : '';
 
                 $pricing_types           = get_post_meta( $post_id, 'pricing_types', true ) ? get_post_meta( $post_id, 'pricing_types', true ) : [];
                 $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info', true ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
@@ -420,6 +424,50 @@
 
 
                         <div class="rbfw_multi_day_price_conf">
+                            <div class="item">
+                                <div class="item-left">
+                                    <div class="label"><?php esc_html_e( 'Hourly to Half day Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description">
+                                        <?php esc_html_e( 'Set the hour threshold where hourly pricing changes to half day pricing.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                    </div>
+                                </div>
+                                <div class="item-right">
+                                    <input type="number" name="rbfw_mi_hourly_to_half_day_pivot" class="price-input" step="0.01" min="0" value="<?php echo esc_attr( $rbfw_mi_hourly_to_half_day_pivot ); ?>" placeholder="<?php esc_attr_e( 'Hours', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-left">
+                                    <div class="label"><?php esc_html_e( 'Half day to Daily Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description">
+                                        <?php esc_html_e( 'Set the half day threshold where pricing changes to daily pricing.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                    </div>
+                                </div>
+                                <div class="item-right">
+                                    <input type="number" name="rbfw_mi_half_day_to_daily_pivot" class="price-input" step="0.01" min="0" value="<?php echo esc_attr( $rbfw_mi_half_day_to_daily_pivot ); ?>" placeholder="<?php esc_attr_e( 'Hours', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-left">
+                                    <div class="label"><?php esc_html_e( 'Daily to Weekly Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description">
+                                        <?php esc_html_e( 'Set the day threshold where daily pricing changes to weekly pricing.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                    </div>
+                                </div>
+                                <div class="item-right">
+                                    <input type="number" name="rbfw_mi_daily_to_weekly_pivot" class="price-input" step="0.01" min="0" value="<?php echo esc_attr( $rbfw_mi_daily_to_weekly_pivot ); ?>" placeholder="<?php esc_attr_e( 'Days', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="item-left">
+                                    <div class="label"><?php esc_html_e( 'Weekly to Monthly Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description">
+                                        <?php esc_html_e( 'Set the week threshold where weekly pricing changes to monthly pricing.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                                    </div>
+                                </div>
+                                <div class="item-right">
+                                    <input type="number" name="rbfw_mi_weekly_to_monthly_pivot" class="price-input" step="0.01" min="0" value="<?php echo esc_attr( $rbfw_mi_weekly_to_monthly_pivot ); ?>" placeholder="<?php esc_attr_e( 'Weeks', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                </div>
+                            </div>
                             <div class="item">
                                 <div class="item-left">
                                     <div class="label">Enable Time Picker</div>
@@ -1959,6 +2007,10 @@
 					$daily_rate                         = isset( $_POST['rbfw_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_daily_rate'] ) ) : 0;
 
                     $rbfw_enable_time_picker            = isset( $_POST['rbfw_enable_time_picker'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_time_picker'] ) ) : 'no';
+                    $rbfw_mi_hourly_to_half_day_pivot   = isset( $_POST['rbfw_mi_hourly_to_half_day_pivot'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mi_hourly_to_half_day_pivot'] ) ) : '';
+                    $rbfw_mi_half_day_to_daily_pivot    = isset( $_POST['rbfw_mi_half_day_to_daily_pivot'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mi_half_day_to_daily_pivot'] ) ) : '';
+                    $rbfw_mi_daily_to_weekly_pivot      = isset( $_POST['rbfw_mi_daily_to_weekly_pivot'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mi_daily_to_weekly_pivot'] ) ) : '';
+                    $rbfw_mi_weekly_to_monthly_pivot    = isset( $_POST['rbfw_mi_weekly_to_monthly_pivot'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mi_weekly_to_monthly_pivot'] ) ) : '';
 
                     $rbfw_hourly_threshold       = isset( $_POST['rbfw_hourly_threshold'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_hourly_threshold'] ) ) : '0';
                     $rbfw_enable_hourly_threshold       = isset( $_POST['rbfw_enable_hourly_threshold'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_hourly_threshold'] ) ) : 'no';
@@ -2035,6 +2087,10 @@
 					update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );
 
 					update_post_meta( $post_id, 'rbfw_enable_time_picker', $rbfw_enable_time_picker );
+                    update_post_meta( $post_id, 'rbfw_mi_hourly_to_half_day_pivot', $rbfw_mi_hourly_to_half_day_pivot );
+                    update_post_meta( $post_id, 'rbfw_mi_half_day_to_daily_pivot', $rbfw_mi_half_day_to_daily_pivot );
+                    update_post_meta( $post_id, 'rbfw_mi_daily_to_weekly_pivot', $rbfw_mi_daily_to_weekly_pivot );
+                    update_post_meta( $post_id, 'rbfw_mi_weekly_to_monthly_pivot', $rbfw_mi_weekly_to_monthly_pivot );
 
                     update_post_meta( $post_id, 'rbfw_hourly_threshold', $rbfw_hourly_threshold );
                     update_post_meta( $post_id, 'rbfw_enable_hourly_threshold', $rbfw_enable_hourly_threshold );

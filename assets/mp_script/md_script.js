@@ -1070,17 +1070,77 @@ function calculateTotalSingleItem() {
 }
 
 
+function rbfwGetMultipleItemsPivotBilling(durationType, durationQty) {
+    var hourlyToHalfDay = parseFloat(jQuery('#rbfw_mi_hourly_to_half_day_pivot').val()) || 0;
+    var halfDayToDaily = parseFloat(jQuery('#rbfw_mi_half_day_to_daily_pivot').val()) || 0;
+    var dailyToWeekly = parseFloat(jQuery('#rbfw_mi_daily_to_weekly_pivot').val()) || 0;
+    var weeklyToMonthly = parseFloat(jQuery('#rbfw_mi_weekly_to_monthly_pivot').val()) || 0;
+
+    var billing = {
+        priceType: durationType,
+        units: durationQty,
+        multiplier: durationQty
+    };
+
+    if (durationType === 'weekly' && weeklyToMonthly > 0 && durationQty >= weeklyToMonthly) {
+        billing.priceType = 'monthly';
+        billing.units = Math.max(1, Math.ceil(durationQty / 4));
+        billing.multiplier = billing.units;
+    } else if (durationType === 'daily' && dailyToWeekly > 0 && durationQty >= dailyToWeekly) {
+        var weeklyUnits = Math.max(1, Math.ceil(durationQty / 7));
+        if (weeklyToMonthly > 0 && weeklyUnits >= weeklyToMonthly) {
+            billing.priceType = 'monthly';
+            billing.units = Math.max(1, Math.ceil(weeklyUnits / 4));
+        } else {
+            billing.priceType = 'weekly';
+            billing.units = weeklyUnits;
+        }
+        billing.multiplier = billing.units;
+    } else if (durationType === 'hourly') {
+        if (hourlyToHalfDay > 0 && durationQty >= hourlyToHalfDay && halfDayToDaily > hourlyToHalfDay && durationQty >= halfDayToDaily) {
+            var dailyUnits = Math.max(1, Math.ceil(durationQty / 24));
+            if (dailyToWeekly > 0 && dailyUnits >= dailyToWeekly) {
+                var hourlyWeeklyUnits = Math.max(1, Math.ceil(dailyUnits / 7));
+                if (weeklyToMonthly > 0 && hourlyWeeklyUnits >= weeklyToMonthly) {
+                    billing.priceType = 'monthly';
+                    billing.units = Math.max(1, Math.ceil(hourlyWeeklyUnits / 4));
+                } else {
+                    billing.priceType = 'weekly';
+                    billing.units = hourlyWeeklyUnits;
+                }
+            } else {
+                billing.priceType = 'daily';
+                billing.units = dailyUnits;
+            }
+            billing.multiplier = billing.units;
+        } else if (hourlyToHalfDay > 0 && durationQty >= hourlyToHalfDay) {
+            billing.priceType = 'daily';
+            billing.units = 0.5;
+            billing.multiplier = 0.5;
+        }
+    }
+
+    return billing;
+}
+
 function calculateTotalMultipleItems(only_calculation=false) {
 
     var durationType = jQuery('#durationType').val();
     var durationQty = parseInt(jQuery('#durationQty').val()) || 1;
+    var pivotBilling = rbfwGetMultipleItemsPivotBilling(durationType, durationQty);
     var item_total_price = 0;
     jQuery('.rbfw_muiti_items_qty').each(function () {
         var $qtyInput = jQuery(this);
-        var pricePerUnit = parseFloat($qtyInput.data('price-' + durationType)) || 0;
+        var pricePerUnit = parseFloat($qtyInput.data('price-' + pivotBilling.priceType)) || 0;
+        var priceMultiplier = pivotBilling.multiplier;
         var quantity = parseInt($qtyInput.val()) || 0;
 
-        var itemTotal = pricePerUnit * quantity * durationQty;
+        if (!pricePerUnit && pivotBilling.priceType !== durationType) {
+            pricePerUnit = parseFloat($qtyInput.data('price-' + durationType)) || 0;
+            priceMultiplier = durationQty;
+        }
+
+        var itemTotal = pricePerUnit * quantity * priceMultiplier;
         $qtyInput
             .closest('.rbfw_qty_input')
             .find('.rbfw_item_peice')

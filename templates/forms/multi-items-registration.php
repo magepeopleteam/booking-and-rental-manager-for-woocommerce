@@ -110,6 +110,10 @@ $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info',
 $rbfw_enable_security_deposit = get_post_meta($rbfw_id, 'rbfw_enable_security_deposit', true) ? get_post_meta($rbfw_id, 'rbfw_enable_security_deposit', true) : 'no';
 $rbfw_security_deposit_type = get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) : 'percentage';
 $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) : 0;
+$rbfw_mi_hourly_to_half_day_pivot = get_post_meta($rbfw_id, 'rbfw_mi_hourly_to_half_day_pivot', true) ? get_post_meta($rbfw_id, 'rbfw_mi_hourly_to_half_day_pivot', true) : '';
+$rbfw_mi_half_day_to_daily_pivot = get_post_meta($rbfw_id, 'rbfw_mi_half_day_to_daily_pivot', true) ? get_post_meta($rbfw_id, 'rbfw_mi_half_day_to_daily_pivot', true) : '';
+$rbfw_mi_daily_to_weekly_pivot = get_post_meta($rbfw_id, 'rbfw_mi_daily_to_weekly_pivot', true) ? get_post_meta($rbfw_id, 'rbfw_mi_daily_to_weekly_pivot', true) : '';
+$rbfw_mi_weekly_to_monthly_pivot = get_post_meta($rbfw_id, 'rbfw_mi_weekly_to_monthly_pivot', true) ? get_post_meta($rbfw_id, 'rbfw_mi_weekly_to_monthly_pivot', true) : '';
 
 $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', true ) ? get_post_meta( $post_id, 'rbfw_particular_switch', true ) : 'off';
 $particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
@@ -578,6 +582,10 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                 <input type="hidden" name="rbfw_security_deposit_enable" id="rbfw_security_deposit_enable"  value="<?php echo esc_attr($rbfw_enable_security_deposit); ?>">
                 <input type="hidden" name="rbfw_security_deposit_type" id="rbfw_security_deposit_type"  value="<?php echo esc_attr($rbfw_security_deposit_type); ?>">
                 <input type="hidden" name="rbfw_security_deposit_amount" id="rbfw_security_deposit_amount"  value="<?php echo esc_attr($rbfw_security_deposit_amount); ?>">
+                <input type="hidden" id="rbfw_mi_hourly_to_half_day_pivot" value="<?php echo esc_attr($rbfw_mi_hourly_to_half_day_pivot); ?>">
+                <input type="hidden" id="rbfw_mi_half_day_to_daily_pivot" value="<?php echo esc_attr($rbfw_mi_half_day_to_daily_pivot); ?>">
+                <input type="hidden" id="rbfw_mi_daily_to_weekly_pivot" value="<?php echo esc_attr($rbfw_mi_daily_to_weekly_pivot); ?>">
+                <input type="hidden" id="rbfw_mi_weekly_to_monthly_pivot" value="<?php echo esc_attr($rbfw_mi_weekly_to_monthly_pivot); ?>">
 
 
 

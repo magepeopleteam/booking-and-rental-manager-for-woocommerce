@@ -7086,7 +7086,6 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     background-color: #f9fafb;
 }
 .rbfw_service_type .radio-button::before{
-    position: absolute;
     content: "";
     width: 15px;
     height: 15px;

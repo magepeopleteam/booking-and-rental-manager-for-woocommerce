@@ -49,11 +49,11 @@ $submit_name = 'add-to-cart';
 set_transient("pricing_applied", "No", 3600);
 
 
-/*$rbfw_inventory = get_post_meta($post_id,'rbfw_inventory',true);
-echo '<pre>';
-print_r($rbfw_inventory);
-echo '<pre>';
-exit;*/
+// $rbfw_inventory = get_post_meta($post_id,'rbfw_inventory',true);
+// echo '<pre>';
+// print_r($rbfw_inventory);
+// echo '<pre>';
+// exit;
 
 
 do_action('rbfw_single_page_before_wrapper');
