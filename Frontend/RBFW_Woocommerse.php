@@ -544,26 +544,41 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $rbfw_management_price = 0;
                 $rbfw_management_info             = array();
+                $selected_management_fees = array();
                 if ( ! empty( $rbfw_management_info_all ) ) {
                     foreach ( $rbfw_management_info_all as $key => $value ) {
                         $service_label = ! empty( $value['label'] ) ? $value['label'] : '';
                         $is_checked  = ! empty( $value['is_checked'] ) ? $value['is_checked'] : 0;
-                        $price  = ! empty( $value['amount'] ) ? $value['amount'] : 0;
-                        $price_type  = ! empty( $value['calculation_type'] ) ? $value['calculation_type'] : '';
-                        $frequency  = ! empty( $value['frequency'] ) ? $value['frequency'] : '';
-                        $refundable  = ( $value['refundable'] ) ? $value['refundable'] : 'no';
-                        if ( $is_checked == 'yes' ) {
-                            if ($price_type === 'percentage') {
-                                $rbfw_management_price += (($price / 100) * $sub_total_price);
-                                $rbfw_management_info[ $service_label ] = array('price'=>(($price / 100) * $sub_total_price),'price_desc'=>$price.'% of '.wc_price($sub_total_price) ,'refundable'=>$refundable);
+                        if ( $service_label && $is_checked == 'yes' ) {
+                            $selected_management_fees[ $service_label ] = true;
+                        }
+                    }
+                }
+
+                $rbfw_fee_data = get_post_meta( $rbfw_id, 'rbfw_fee_data', true );
+                $rbfw_fee_data = is_array( $rbfw_fee_data ) ? $rbfw_fee_data : array();
+                foreach ( $rbfw_fee_data as $fee ) {
+                    $service_label = ! empty( $fee['label'] ) ? $fee['label'] : '';
+                    $priority = ! empty( $fee['priority'] ) ? $fee['priority'] : 'optional';
+                    if ( $service_label && ( isset( $selected_management_fees[ $service_label ] ) || $priority == 'required' ) ) {
+                        $price = ! empty( $fee['amount'] ) ? (float) $fee['amount'] : 0;
+                        $price_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
+                        $frequency = ! empty( $fee['frequency'] ) ? $fee['frequency'] : 'one-time';
+                        $refundable = ! empty( $fee['refundable'] ) ? $fee['refundable'] : 'no';
+                        if ( $price_type === 'percentage' ) {
+                            $fee_total = ( $price / 100 ) * $sub_total_price;
+                            $rbfw_management_price += $fee_total;
+                            $rbfw_management_info[ $service_label ] = array( 'price' => $fee_total, 'price_desc' => $price . '% of ' . wc_price( $sub_total_price ), 'refundable' => $refundable );
+                        } else {
+                            $is_day_wise_fee = in_array( $frequency, array( 'per-day', 'day-wise', 'day_wise' ), true );
+                            if ( $is_day_wise_fee ) {
+                                $fee_total = $price * $rbfw_item_quantity * $total_days;
+                                $rbfw_management_price += $fee_total;
+                                $rbfw_management_info[ $service_label ] = array( 'price_desc' => wc_price( $price ) . '*' . $rbfw_item_quantity . '*' . $total_days, 'price' => $fee_total, 'refundable' => $refundable );
                             } else {
-                                if ($frequency === 'one-time') {
-                                    $rbfw_management_price += $price * $rbfw_item_quantity;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $rbfw_item_quantity ,'price'=>$price * $rbfw_item_quantity,'refundable'=>$refundable);
-                                } else {
-                                    $rbfw_management_price += $price * $rbfw_item_quantity * $total_days;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $rbfw_item_quantity .'*'. $total_days,'price'=>$price * $rbfw_item_quantity * $total_days,'refundable'=>$refundable);
-                                }
+                                $fee_total = $price * $rbfw_item_quantity;
+                                $rbfw_management_price += $fee_total;
+                                $rbfw_management_info[ $service_label ] = array( 'price_desc' => wc_price( $price ) . '*' . $rbfw_item_quantity, 'price' => $fee_total, 'refundable' => $refundable );
                             }
                         }
                     }
