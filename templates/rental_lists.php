@@ -40,7 +40,15 @@ function render_mep_events_by_status( $posts ) {
             $price_type = $item_type[$rbfw_rent_type];
 
 
-            $rbfw_categories = get_post_meta( $rental_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $rental_id, 'rbfw_categories', true ) ) : [];
+            $rbfw_categories = wp_get_object_terms( $rental_id, 'rbfw_item_caregory', array( 'fields' => 'names' ) );
+            $rbfw_categories = ! is_wp_error( $rbfw_categories ) ? $rbfw_categories : [];
+            // Fallback to post meta for backward compatibility
+            if ( empty( $rbfw_categories ) ) {
+                $meta_cats = get_post_meta( $rental_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $rental_id, 'rbfw_categories', true ) ) : [];
+                if ( ! empty( $meta_cats ) && is_array( $meta_cats ) ) {
+                    $rbfw_categories = $meta_cats;
+                }
+            }
             $rbfw_categories_items = implode(',', $rbfw_categories);
             $status = get_post_status( $rental_id );
             $edit_link   = get_edit_post_link( $rental_id );
@@ -99,28 +107,46 @@ function render_mep_events_by_status( $posts ) {
 
 function fount_post_number_by_category(){
 
-    global $wpdb;
-    $results = $wpdb->get_results("
-    SELECT post_id, meta_value 
-    FROM {$wpdb->prefix}postmeta 
-    WHERE meta_key = 'rbfw_categories'
-");
-
+    // Use proper taxonomy queries instead of direct SQL on post meta
     $category_counts = [];
-
-    foreach ( $results as $row ) {
-        $categories = maybe_unserialize( $row->meta_value );
-        if ( is_array($categories) && count($categories) === 1 ) {
-            $cat = strtolower(trim($categories[0]));
-
-            if ( !empty($cat) ) {
-                if ( !isset($category_counts[$cat]) ) {
-                    $category_counts[$cat] = 0;
+    $terms = get_terms( array(
+        'taxonomy'   => 'rbfw_item_caregory',
+        'hide_empty' => false,
+    ) );
+    if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+        foreach ( $terms as $term ) {
+            $cat = strtolower( trim( $term->name ) );
+            if ( ! empty( $cat ) ) {
+                $count = $term->count;
+                if ( $count > 0 ) {
+                    $category_counts[ $cat ] = $count;
                 }
-                $category_counts[$cat]++;
             }
         }
+    }
 
+    // Fallback: also count from post meta for backward compatibility
+    if ( empty( $category_counts ) ) {
+        global $wpdb;
+        $results = $wpdb->get_results("
+        SELECT post_id, meta_value 
+        FROM {$wpdb->prefix}postmeta 
+        WHERE meta_key = 'rbfw_categories'
+    ");
+        foreach ( $results as $row ) {
+            $categories = maybe_unserialize( $row->meta_value );
+            if ( is_array($categories) ) {
+                foreach ( $categories as $cat_val ) {
+                    $cat = strtolower(trim($cat_val));
+                    if ( !empty($cat) ) {
+                        if ( !isset($category_counts[$cat]) ) {
+                            $category_counts[$cat] = 0;
+                        }
+                        $category_counts[$cat]++;
+                    }
+                }
+            }
+        }
     }
 
     return $category_counts;

@@ -3165,6 +3165,21 @@ function rbfw_security_deposit( $post_id, $sub_total_price ) {
 
 function get_rbfw_post_categories_from_meta() {
 
+    // Get all terms from the rbfw_item_caregory taxonomy (proper way)
+    $terms = get_terms( array(
+        'taxonomy'   => 'rbfw_item_caregory',
+        'hide_empty' => false,
+    ) );
+
+    if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+        $output = array();
+        foreach ( $terms as $term ) {
+            $output[] = $term->name;
+        }
+        return $output;
+    }
+
+    // Fallback: read from post meta for backward compatibility
     $args = [
         'post_type'      => 'rbfw_item',
         'post_status'    => 'publish',

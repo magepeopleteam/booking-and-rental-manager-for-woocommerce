@@ -16,7 +16,14 @@ function rbfw_custom_tables(){
     // Handle the value for each of the new columns.
     add_action( "manage_{$post_type}_posts_custom_column", function ( $column_name, $post_id ) {
         if ( $column_name == 'Categories' ) {
-            $categories = implode(', ', get_post_meta($post_id,'rbfw_categories',true));
+            $cats = wp_get_object_terms( $post_id, 'rbfw_item_caregory', array( 'fields' => 'names' ) );
+            if ( ! is_wp_error( $cats ) && ! empty( $cats ) ) {
+                $categories = implode(', ', $cats);
+            } else {
+                // Fallback to post meta for backward compatibility
+                $meta_cats = get_post_meta($post_id,'rbfw_categories',true);
+                $categories = is_array($meta_cats) ? implode(', ', $meta_cats) : '';
+            }
             if($categories){
                 echo esc_html($categories);
             }else{

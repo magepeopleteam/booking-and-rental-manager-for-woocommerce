@@ -216,16 +216,34 @@
 						}
 						$rent_categories = isset( $filter_date['category'] ) ? $filter_date['category'] : [];
 						if ( is_array( $rent_categories ) && count( $rent_categories ) > 0 ) {
-							$category_query = array( 'relation' => 'OR' );
+							// Use tax_query instead of meta_query for proper taxonomy filtering with child term support
+							$cat_term_ids = array();
 							foreach ( $rent_categories as $category_name ) {
-								$category_query[] = ! empty( $category_name ) ? array(
-									'key'     => 'rbfw_categories',
-									'value'   => sanitize_text_field( $category_name ),
-									'compare' => 'LIKE'
-								) : '';
+								$category_name = sanitize_text_field( $category_name );
+								if ( ! empty( $category_name ) ) {
+									$term = get_term_by( 'name', $category_name, 'rbfw_item_caregory' );
+									if ( $term && ! is_wp_error( $term ) ) {
+										$cat_term_ids[] = $term->term_id;
+									} else {
+										$term = get_term_by( 'slug', sanitize_title( $category_name ), 'rbfw_item_caregory' );
+										if ( $term && ! is_wp_error( $term ) ) {
+											$cat_term_ids[] = $term->term_id;
+										}
+									}
+								}
 							}
+							$category_query = '';
+							$category_tax_query = ! empty( $cat_term_ids ) ? array(
+								array(
+									'taxonomy'         => 'rbfw_item_caregory',
+									'field'            => 'term_id',
+									'terms'            => $cat_term_ids,
+									'include_children' => true,
+								)
+							) : '';
 						} else {
 							$category_query = '';
+							$category_tax_query = '';
 						}
 						$posts_per_page = 100;
 						$number_of_page = 1;
@@ -238,13 +256,15 @@
 								$feature_meta_queries,
 								$rent_type,
 								$location_query,
-								$category_query,
 							),
 							'orderby'        => 'ID',
 							'order'          => 'DESC',
 							'paged'          => $number_of_page,
 							'posts_per_page' => $posts_per_page,
 						);
+						if ( ! empty( $category_tax_query ) ) {
+							$args['tax_query'] = $category_tax_query;
+						}
 						$query          = new WP_Query( $args );
 						$total_posts    = $query->found_posts;
 						$post_count     = $query->post_count;

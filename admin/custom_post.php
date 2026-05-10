@@ -31,12 +31,24 @@ if( ! class_exists('RBFW_Custom_Post')){
                     endforeach;
                 break;
                 case 'rbfw_categories':
-                    $cats = get_post_meta($post_id,'rbfw_categories',true);
-                    if ( ! empty($cats) ) {
+                    // Read from taxonomy (source of truth)
+                    $cats = wp_get_object_terms( $post_id, 'rbfw_item_caregory', array( 'fields' => 'names' ) );
+                    if ( ! is_wp_error( $cats ) && ! empty( $cats ) ) {
                         foreach ($cats as $key => $cat) {
                             echo "<a href='edit.php?post_type=rbfw_item&rbfw_categories=".esc_attr($cat)."'>".esc_html($cat)."</a>";
                             if ($key !== count($cats) - 1) {
                                 echo ', ';
+                            }
+                        }
+                    } else {
+                        // Fallback to post meta for backward compatibility
+                        $meta_cats = get_post_meta($post_id,'rbfw_categories',true);
+                        if ( ! empty($meta_cats) && is_array($meta_cats) ) {
+                            foreach ($meta_cats as $key => $cat) {
+                                echo "<a href='edit.php?post_type=rbfw_item&rbfw_categories=".esc_attr($cat)."'>".esc_html($cat)."</a>";
+                                if ($key !== count($meta_cats) - 1) {
+                                    echo ', ';
+                                }
                             }
                         }
                     }
