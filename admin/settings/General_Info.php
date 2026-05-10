@@ -40,15 +40,23 @@
 			}
 
 			public function select_category( $post_id ) {
-				$rbfw_categories = get_post_meta( $post_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_categories', true ) ) : [];
+				// Get categories assigned to this post via taxonomy (source of truth)
+				$post_terms = wp_get_object_terms( $post_id, 'rbfw_item_caregory', array( 'fields' => 'names' ) );
+				$rbfw_categories_array = ! is_wp_error( $post_terms ) ? $post_terms : [];
+				// Also check post meta for backward compatibility
+				if ( empty( $rbfw_categories_array ) ) {
+					$meta_categories = get_post_meta( $post_id, 'rbfw_categories', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_categories', true ) ) : [];
+					if ( ! empty( $meta_categories ) ) {
+						$rbfw_categories_array = is_array( $meta_categories ) ? $meta_categories : array_filter( array_map( 'trim', explode( ',', $meta_categories ) ) );
+					}
+				}
+				$rbfw_categories_items = implode( ',', $rbfw_categories_array );
 				$terms = get_terms( array(
                     'taxonomy'   => 'rbfw_item_caregory',
                     'hide_empty' => false,
                 ) );
                 global $rbfw;
 				$label = $rbfw->get_name();
-                $rbfw_categories_items = implode(',', $rbfw_categories);
-                $rbfw_categories_array = $rbfw_categories_items ? explode(',', $rbfw_categories_items) : [];
 				?>
                 <section class="bg-light mt-5">
                     <div>
@@ -359,7 +367,15 @@
 					return;
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
-					$rbfw_categories = isset( $_POST['rbfw_categories'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_categories'] ) ) : [];
+					$rbfw_categories_raw = isset( $_POST['rbfw_categories'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_categories'] ) ) : [];
+					// The hidden input sends a comma-separated string like "Bike,Car" as a single array element.
+					// Split it into individual category names so wp_set_object_terms() sets each one separately.
+					$rbfw_categories = [];
+					foreach ( $rbfw_categories_raw as $cat_string ) {
+						$parts = array_map( 'trim', explode( ',', $cat_string ) );
+						$rbfw_categories = array_merge( $rbfw_categories, $parts );
+					}
+					$rbfw_categories = array_filter( array_unique( $rbfw_categories ) );
 					wp_set_object_terms( $post_id, $rbfw_categories, 'rbfw_item_caregory' );
 					$feature_category_input = isset( $_POST['rbfw_feature_category'] ) ? wp_unslash( $_POST['rbfw_feature_category'] ) : array();
 					$feature_category = rbfw_prepare_feature_category_meta_value( $feature_category_input );

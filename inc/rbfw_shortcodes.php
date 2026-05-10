@@ -134,11 +134,31 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
         if( !empty( $rbfw_search_type ) ) {
             $search_category_name = $rbfw_search_type;
-            $args['meta_query'][] = array(
-                    'key' => 'rbfw_categories',
-                'value' => $search_category_name,
-                'compare' => 'LIKE'
-            );
+            // Use tax_query instead of meta_query for proper taxonomy filtering with child term support
+            $term = get_term_by( 'name', $search_category_name, 'rbfw_item_caregory' );
+            if ( $term && ! is_wp_error( $term ) ) {
+                $args['tax_query'] = array(
+                    array(
+                        'taxonomy'         => 'rbfw_item_caregory',
+                        'field'            => 'term_id',
+                        'terms'            => $term->term_id,
+                        'include_children' => true,
+                    )
+                );
+            } else {
+                // Fallback: try matching by slug if name lookup fails
+                $term = get_term_by( 'slug', sanitize_title( $search_category_name ), 'rbfw_item_caregory' );
+                if ( $term && ! is_wp_error( $term ) ) {
+                    $args['tax_query'] = array(
+                        array(
+                            'taxonomy'         => 'rbfw_item_caregory',
+                            'field'            => 'term_id',
+                            'terms'            => $term->term_id,
+                            'include_children' => true,
+                        )
+                    );
+                }
+            }
         }
 
 
@@ -178,12 +198,27 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
         if(!empty($category)) {
             $category = explode(',', $category);
+            // Use tax_query instead of meta_query for proper taxonomy filtering with child term support
+            $term_ids = array();
             foreach ($category as $cat) {
-                $category_name = isset(get_term($cat)->name) ? get_term($cat)->name : '';
-                $args['meta_query'][] = array(
-                    'key' => 'rbfw_categories',
-                    'value' => serialize($category_name),
-                    'compare' => 'LIKE'
+                $cat = trim($cat);
+                if ( is_numeric( $cat ) ) {
+                    $term_ids[] = absint( $cat );
+                } else {
+                    $term = get_term_by( 'name', $cat, 'rbfw_item_caregory' );
+                    if ( $term && ! is_wp_error( $term ) ) {
+                        $term_ids[] = $term->term_id;
+                    }
+                }
+            }
+            if ( ! empty( $term_ids ) ) {
+                $args['tax_query'] = array(
+                    array(
+                        'taxonomy'         => 'rbfw_item_caregory',
+                        'field'            => 'term_id',
+                        'terms'            => $term_ids,
+                        'include_children' => true,
+                    )
                 );
             }
         }
