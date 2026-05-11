@@ -1071,8 +1071,7 @@ function calculateTotalSingleItem() {
 
 
 function rbfwGetMultipleItemsPivotBilling(durationType, durationQty) {
-    var hourlyToHalfDay = parseFloat(jQuery('#rbfw_mi_hourly_to_half_day_pivot').val()) || 0;
-    var halfDayToDaily = parseFloat(jQuery('#rbfw_mi_half_day_to_daily_pivot').val()) || 0;
+    var hourlyToDay = parseFloat(jQuery('#rbfw_mi_hourly_to_half_day_pivot').val()) || 0;
     var dailyToWeekly = parseFloat(jQuery('#rbfw_mi_daily_to_weekly_pivot').val()) || 0;
     var weeklyToMonthly = parseFloat(jQuery('#rbfw_mi_weekly_to_monthly_pivot').val()) || 0;
 
@@ -1097,7 +1096,7 @@ function rbfwGetMultipleItemsPivotBilling(durationType, durationQty) {
         }
         billing.multiplier = billing.units;
     } else if (durationType === 'hourly') {
-        if (hourlyToHalfDay > 0 && durationQty >= hourlyToHalfDay && halfDayToDaily > hourlyToHalfDay && durationQty >= halfDayToDaily) {
+        if (hourlyToDay > 0 && durationQty >= hourlyToDay) {
             var dailyUnits = Math.max(1, Math.ceil(durationQty / 24));
             if (dailyToWeekly > 0 && dailyUnits >= dailyToWeekly) {
                 var hourlyWeeklyUnits = Math.max(1, Math.ceil(dailyUnits / 7));
@@ -1113,10 +1112,6 @@ function rbfwGetMultipleItemsPivotBilling(durationType, durationQty) {
                 billing.units = dailyUnits;
             }
             billing.multiplier = billing.units;
-        } else if (hourlyToHalfDay > 0 && durationQty >= hourlyToHalfDay) {
-            billing.priceType = 'daily';
-            billing.units = 0.5;
-            billing.multiplier = 0.5;
         }
     }
 
