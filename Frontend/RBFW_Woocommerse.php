@@ -107,8 +107,23 @@ if (!class_exists('RBFW_Woocommerce')) {
 
         private function rbfw_get_multi_items_billing( $rbfw_id, $duration_type, $duration_qty ) {
             $duration_qty = max( 1, absint( $duration_qty ) );
+            $pricing_types = get_post_meta( $rbfw_id, 'pricing_types', true );
+            $pricing_types = is_array( $pricing_types ) ? $pricing_types : array();
+            $allowed_types = array( 'hourly', 'daily', 'weekly', 'monthly' );
+
+            if ( ! in_array( $duration_type, $allowed_types, true ) || ( isset( $pricing_types[ $duration_type ] ) && 'on' !== $pricing_types[ $duration_type ] ) ) {
+                $duration_type = 'daily';
+
+                foreach ( $allowed_types as $allowed_type ) {
+                    if ( isset( $pricing_types[ $allowed_type ] ) && 'on' === $pricing_types[ $allowed_type ] ) {
+                        $duration_type = $allowed_type;
+                        break;
+                    }
+                }
+            }
+
             $billing      = array(
-                'price_type' => in_array( $duration_type, array( 'hourly', 'daily', 'weekly', 'monthly' ), true ) ? $duration_type : 'daily',
+                'price_type' => $duration_type,
                 'multiplier' => $duration_qty,
             );
 
@@ -508,7 +523,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $start_time                = isset( $sd_input_data_sabitized['rbfw_pickup_start_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_start_time'] : '';
                 $pickup_datetime           = gmdate( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
                 $durationType = isset($_POST['durationType'])?sanitize_text_field(wp_unslash($_POST['durationType'])):'';
-                $durationQty = isset($_POST['durationQty'])?sanitize_text_field(wp_unslash($_POST['durationQty'])):0;
+                $durationQty = isset($_POST['durationQty'])?max( 1, absint(sanitize_text_field(wp_unslash($_POST['durationQty'])))):1;
+                if ( ! in_array( $durationType, array( 'hourly', 'daily', 'weekly', 'monthly' ), true ) ) {
+                    $durationType = 'daily';
+                }
                 $start_date_time = new DateTime($start_date.' '.$start_time);
                 $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 :($durationType == 'weekly'?$durationQty * 24 * 7: $durationQty * 24 * 30)));
 
@@ -521,7 +539,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_dropoff_point        = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
                 $rbfw_duration_md       = isset( $sd_input_data_sabitized['rbfw_duration_md'] ) ? $sd_input_data_sabitized['rbfw_duration_md'] : '';
 
-                $total_days = isset($_POST['total_days'])?absint(sanitize_text_field(wp_unslash($_POST['total_days']))):0;
+                $pickup = new DateTime($pickup_datetime);
+                $dropoff = new DateTime($dropoff_datetime);
+                $interval = $pickup->diff($dropoff);
+                $total_days = $interval->days ? absint( $interval->days ) : 1;
 
                 $submitted_multiple_items = (isset( $sd_input_data_sabitized['multiple_items_info'] ) && is_array( $sd_input_data_sabitized['multiple_items_info'] ) ) ? $sd_input_data_sabitized['multiple_items_info'] : [];
                 $prepared_multiple_items  = $this->rbfw_prepare_multi_items_from_post( $rbfw_id, $submitted_multiple_items, $durationType, $durationQty );
