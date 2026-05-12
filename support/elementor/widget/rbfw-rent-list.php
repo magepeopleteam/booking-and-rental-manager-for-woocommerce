@@ -30,6 +30,24 @@ class RBFWRentListWidget extends Widget_Base {
 		return [ 'RBFW-elements' ];
 	}
 
+	protected function get_rent_category_options() {
+		$options = [];
+		$terms = get_terms(
+			[
+				'taxonomy' => 'rbfw_item_caregory',
+				'hide_empty' => false,
+			]
+		);
+
+		if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+			foreach ( $terms as $term ) {
+				$options[ (string) $term->term_id ] = $term->name;
+			}
+		}
+
+		return $options;
+	}
+
     protected function register_controls() {
 
 		$this->start_controls_section(
@@ -119,9 +137,11 @@ class RBFWRentListWidget extends Widget_Base {
 			'category',
 			[
 				'label' => __( 'Category', 'booking-and-rental-manager-for-woocommerce' ),
-				'type' => Controls_Manager::TEXT,
-				'default' => '',
-				'description' => __( 'Filter by category (comma separated IDs)', 'booking-and-rental-manager-for-woocommerce' ),
+				'type' => Controls_Manager::SELECT2,
+				'multiple' => true,
+				'default' => [],
+				'options' => $this->get_rent_category_options(),
+				'description' => __( 'Select one or more categories', 'booking-and-rental-manager-for-woocommerce' ),
 			]
 		);
 		
@@ -144,6 +164,11 @@ class RBFWRentListWidget extends Widget_Base {
     protected function render() {
 
         $settings = $this->get_settings_for_display();
+        $category = $settings['category'];
+
+        if ( is_array( $category ) ) {
+            $category = implode( ',', array_filter( array_map( 'sanitize_text_field', $category ) ) );
+        }
         
         $shortcode_attributes = [
             'style' => $settings['style'],
@@ -152,7 +177,7 @@ class RBFWRentListWidget extends Widget_Base {
             'columns' => $settings['columns'],
             'type' => $settings['type'],
             'location' => $settings['location'],
-            'category' => $settings['category'],
+            'category' => $category,
             'left-filter' => $settings['left_filter'],
         ];
         
@@ -160,7 +185,7 @@ class RBFWRentListWidget extends Widget_Base {
         
         foreach ($shortcode_attributes as $key => $value) {
             if (!empty($value)) {
-                $shortcode_string .= ' ' . $key . '="' . $value . '"';
+                $shortcode_string .= ' ' . $key . '="' . esc_attr( $value ) . '"';
             }
         }
         

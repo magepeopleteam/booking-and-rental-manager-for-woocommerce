@@ -177,9 +177,15 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         );
 
         if(!empty($category)) {
-            $category = explode(',', $category);
+            $category = array_filter( array_map( 'trim', explode( ',', $category ) ) );
             foreach ($category as $cat) {
-                $category_name = isset(get_term($cat)->name) ? get_term($cat)->name : '';
+                $term = get_term( absint( $cat ) );
+
+                if ( ! $term || is_wp_error( $term ) ) {
+                    continue;
+                }
+
+                $category_name = $term->name;
                 $args['meta_query'][] = array(
                     'key' => 'rbfw_categories',
                     'value' => serialize($category_name),
@@ -314,7 +320,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
     <div class="rbfw_rent_item_with_left_filter">
         <?php
-        if( $left_filter === 'yes' ){
+        if( in_array( $left_filter, array( 'yes', 'on' ), true ) ){
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper_with_left_filter';
             echo wp_kses(rbfw_rent_left_filter( $left_filter_control ) , rbfw_allowed_html());
         }else{
