@@ -769,6 +769,7 @@ function rbfw_multi_items_ajax_price_calculation(){
             });
 
 
+            jQuery('#rbfw_management_price').val(rbfw_management_price.toFixed(2));
             jQuery('.management-costing .price-figure').text( wc_price_rbfw(rbfw_management_price));
 
 
@@ -867,8 +868,10 @@ function calculateAdditional() {
 
     jQuery('#rbfw_service_category_price').val(additional_price.toFixed(2));
 
-    // Fixed by Shahnur - 2026-04-17 07:44 AM (Asia/Dhaka)
-    var sub_total_price = additional_price + (parseFloat(jQuery('#rbfw_management_price').val()) || 0) + (parseFloat(jQuery('#rbfw_duration_price').val()) || 0);
+    var sub_total_price = additional_price + (parseFloat(jQuery('#rbfw_duration_price').val()) || 0);
+    var rbfw_management_price = fee_management(sub_total_price,1,1);
+    jQuery('#rbfw_management_price').val(rbfw_management_price.toFixed(2));
+    jQuery('.management-costing .price-figure').text(wc_price_rbfw(rbfw_management_price));
 
 
 
@@ -881,7 +884,7 @@ function calculateAdditional() {
             rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
         }
     }
-    var total_price = sub_total_price  + parseFloat(rbfw_security_deposit_actual_amount);
+    var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
         jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
@@ -1189,6 +1192,8 @@ function calculateTotalMultipleItems(only_calculation=false) {
 
     let rbfw_management_price = fee_management(sub_total_price,1,1);
 
+    jQuery('#rbfw_management_price').val(rbfw_management_price.toFixed(2));
+    jQuery('.management-costing .price-figure').text(wc_price_rbfw(rbfw_management_price));
 
 
     if(only_calculation){
