@@ -405,27 +405,56 @@ jQuery(document).ready(function () {
     }
 
     function updateQtyLabel() {
-        const durationType = durationTypeSelect.val();
-        if (durationType) {
-            const typeMap = {
-                hourly: rbfw_translation.hours,
-                daily: rbfw_translation.days,
-                weekly: rbfw_translation.weeks,
-                monthly: rbfw_translation.months
-            };
-            qtyLabel.text(rbfw_translation.number_of+ ` ${typeMap[durationType]}`);
-        } else {
-            qtyLabel.text(rbfw_translation.number_of+' '+rbfw_translation.duration);
+        qtyLabel.text(qtyLabel.data('duration-label') || 'Rental Duration');
+    }
+
+    function updateDurationQtyOptions() {
+        const durationType = durationTypeSelect.val() || 'hourly';
+        const unitMap = {
+            hourly: ['Hour', 'Hours'],
+            daily: ['Day', 'Days'],
+            weekly: ['Week', 'Weeks'],
+            monthly: ['Month', 'Months']
+        };
+        const maxMap = {
+            hourly: 23,
+            daily: 30,
+            weekly: 4,
+            monthly: 30
+        };
+        const labels = unitMap[durationType] || unitMap.hourly;
+        const maxOptions = maxMap[durationType] || 30;
+        const durationSelect = jQuery('#rbfw_mi_duration_qty_select');
+        const currentValue = durationSelect.val() || '1';
+        let options = '';
+
+        for (let i = 1; i <= maxOptions; i++) {
+            options += `<option value="${i}">${i} ${i === 1 ? labels[0] : labels[1]}</option>`;
         }
+
+        durationSelect.html(options).val(Math.min(parseInt(currentValue, 10) || 1, maxOptions));
+        jQuery('#durationQty').val(durationSelect.val()).trigger('change');
     }
 
     // Add event listener
     durationTypeSelect.on('change', function () {
         updateQtyLabel();
+        jQuery('.rbfw-mi-duration-tab').removeClass('active');
+        jQuery('.rbfw-mi-duration-tab[data-duration-type="' + jQuery(this).val() + '"]').addClass('active');
+        updateDurationQtyOptions();
+    });
+
+    jQuery(document).on('click', '.rbfw-mi-duration-tab', function () {
+        durationTypeSelect.val(jQuery(this).data('duration-type')).trigger('change');
+    });
+
+    jQuery(document).on('change', '#rbfw_mi_duration_qty_select', function () {
+        jQuery('#durationQty').val(jQuery(this).val()).trigger('change');
     });
 
     // Initial label update
     updateQtyLabel();
+    durationTypeSelect.trigger('change');
 });
 
 

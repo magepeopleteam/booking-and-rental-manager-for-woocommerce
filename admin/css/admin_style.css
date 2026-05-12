@@ -6207,7 +6207,7 @@ border: 1px solid #d6d6d6;
     padding: 0 24px 20px;
 }
 
-#rbfw_add_meta_box .rbfw_multi_day_price_conf .item {
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw_multi_day_price_conf .item {
     align-items: center;
     background: #eef4ff;
     border: 1px solid #dde6f5;
@@ -6230,34 +6230,34 @@ border: 1px solid #d6d6d6;
     width: 36px;
 }
 
-#rbfw_add_meta_box .rbfw_multi_day_price_conf .label {
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw_multi_day_price_conf .label {
     color: #111827;
     font-size: 14px;
     font-weight: 700;
     line-height: 1.3;
 }
 
-#rbfw_add_meta_box .rbfw_multi_day_price_conf .description {
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw_multi_day_price_conf .description {
     color: #6b7790;
     font-size: 12px;
     line-height: 1.35;
     margin-top: 4px;
 }
 
-#rbfw_add_meta_box .rbfw_multi_day_price_conf .item-right {
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw_multi_day_price_conf .item-right {
     align-items: center;
     display: flex;
     gap: 8px;
     white-space: nowrap;
 }
 
-#rbfw_add_meta_box .rbfw_multi_day_price_conf .item-right input.price-input {
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw_multi_day_price_conf .item-right input.price-input {
     min-height: 40px;
     text-align: center;
     width: 64px;
 }
 
-#rbfw_add_meta_box .rbfw_multi_day_price_conf .item-right span {
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw_multi_day_price_conf .item-right span {
     color: #6b7280;
     font-size: 12px;
 }
@@ -6288,10 +6288,9 @@ border: 1px solid #d6d6d6;
     overflow: hidden;
 }
 
-#rbfw_add_meta_box .rbfw-mi-time-picker-row.item {
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-mi-time-picker-row.item {
     background: #fff;
-    border-left: 0;
-    border-right: 0;
+    border: 0;
     border-radius: 0;
     display: grid;
     gap: 14px;
@@ -6300,24 +6299,30 @@ border: 1px solid #d6d6d6;
     padding: 16px;
 }
 
-#rbfw_add_meta_box .rbfw-mi-time-picker-row .label {
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-mi-time-picker-row .item-left {
+    flex: initial;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-mi-time-picker-row .label {
     color: #111827;
     font-size: 14px;
     font-weight: 700;
     line-height: 1.3;
 }
 
-#rbfw_add_meta_box .rbfw-mi-time-picker-row .description {
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-mi-time-picker-row .description {
     color: #6b7790;
     font-size: 12px;
     line-height: 1.35;
     margin-top: 4px;
 }
 
-#rbfw_add_meta_box .rbfw-mi-time-picker-row .item-right {
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-mi-time-picker-row .item-right {
     align-items: center;
     display: flex;
+    gap: 0;
     justify-content: flex-end;
+    white-space: normal;
 }
 
 #rbfw_add_meta_box .rbfw_multiple_items .available-particular {
