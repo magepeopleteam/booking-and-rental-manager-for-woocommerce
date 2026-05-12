@@ -826,6 +826,7 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
 
     $duration_type  = isset($cart_item['duration_type']) ? $cart_item['duration_type'] : '';
     $duration_qty  = isset($cart_item['duration_qty']) ? $cart_item['duration_qty'] : '';
+    $rbfw_duration_price = isset($cart_item['rbfw_duration_price']) ? (float) $cart_item['rbfw_duration_price'] : 0;
 
     $pricing_type = ($duration_type == 'hourly' ? 'hourly_price' : ($duration_type == 'daily' ? 'daily_price' : ($duration_type == 'weekly' ? 'weekly_price':'monthly_price')));
     $total_days = $cart_item['total_days'];
@@ -907,13 +908,18 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
 
 
         <?php if ( ! empty( $multiple_items_info ) ){
+            $selected_items_count = count( $multiple_items_info );
             foreach ($multiple_items_info as $key => $value){
+                $item_price = (float) $value['item_price'];
+                $item_qty = (int) $value['item_qty'];
+                $duration_quantity = max( 1, (int) $duration_qty );
+                $item_total = ( 1 === $selected_items_count ) ? (float) $rbfw_duration_price : $item_price * $item_qty * $duration_quantity;
                 ?>
                 <tr>
                     <th>
                         <?php echo esc_html($value['item_name']); ?>:
                     </th>
-                    <td>(<?php echo wp_kses(wc_price($value['item_price']),rbfw_allowed_html()); ?> x <?php echo esc_html($value['item_qty']); ?> x <?php echo esc_html($duration_qty); ?>) = <?php echo wp_kses(wc_price($value['item_price'] * $value['item_qty']),rbfw_allowed_html()); ?></td>
+                    <td>(<?php echo wp_kses(wc_price($item_price),rbfw_allowed_html()); ?> x <?php echo esc_html($item_qty); ?><?php echo ( $item_total === $item_price * $item_qty ) ? '' : ' x ' . esc_html($duration_quantity); ?>) = <?php echo wp_kses(wc_price($item_total),rbfw_allowed_html()); ?></td>
                 </tr>
                 <?php
             }

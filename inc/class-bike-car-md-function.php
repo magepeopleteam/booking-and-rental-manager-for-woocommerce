@@ -229,7 +229,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $durationType_display = ($durationQty==1)?$durationType_display:$durationType_display.'s';
 
             $start_date_time = new DateTime($start_date.' '.$start_time);
-            $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 : $durationQty * 24 * 7));
+            $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 : ($durationType == 'weekly' ? $durationQty * 24 * 7 : $durationQty * 24 * 30)));
             $start_date_time->modify("+$total_hours hours");
             $end_date = $start_date_time->format('Y-m-d');
             $end_time = $start_date_time->format('H:i:s');

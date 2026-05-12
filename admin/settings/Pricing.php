@@ -319,113 +319,181 @@
             public function multiple_items( $post_id ) {
                 $rbfw_item_type                  = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
                 $rbfw_enable_time_picker    = get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) ? get_post_meta( $post_id, 'rbfw_enable_time_picker', true ) : 'yes';
+                $rbfw_mi_hourly_to_half_day_pivot  = get_post_meta( $post_id, 'rbfw_mi_hourly_to_half_day_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_hourly_to_half_day_pivot', true ) : '';
+                $rbfw_mi_half_day_to_daily_pivot   = get_post_meta( $post_id, 'rbfw_mi_half_day_to_daily_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_half_day_to_daily_pivot', true ) : '';
+                $rbfw_mi_daily_to_weekly_pivot     = get_post_meta( $post_id, 'rbfw_mi_daily_to_weekly_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_daily_to_weekly_pivot', true ) : '';
+                $rbfw_mi_weekly_to_monthly_pivot   = get_post_meta( $post_id, 'rbfw_mi_weekly_to_monthly_pivot', true ) ? get_post_meta( $post_id, 'rbfw_mi_weekly_to_monthly_pivot', true ) : '';
 
                 $pricing_types           = get_post_meta( $post_id, 'pricing_types', true ) ? get_post_meta( $post_id, 'pricing_types', true ) : [];
                 $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info', true ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
 
                 $checked = (get_the_title($post_id)=='Auto Draft')?'checked':'';
                 $checked_item = (get_the_title($post_id)=='Auto Draft')?true:false;
+                $enabled_price_types = [
+                    'hourly'  => ( isset( $pricing_types['hourly'] ) && $pricing_types['hourly'] == 'on' ) || $checked_item,
+                    'daily'   => ( isset( $pricing_types['daily'] ) && $pricing_types['daily'] == 'on' ) || $checked_item,
+                    'weekly'  => isset( $pricing_types['weekly'] ) && $pricing_types['weekly'] == 'on',
+                    'monthly' => isset( $pricing_types['monthly'] ) && $pricing_types['monthly'] == 'on',
+                ];
+                $multiple_items_rows = ! empty( $multiple_items_info ) ? $multiple_items_info : [
+                    [
+                        'item_name'     => '',
+                        'available_qty' => 1,
+                        'hourly_price'  => '',
+                        'daily_price'   => '',
+                        'weekly_price'  => '',
+                        'monthly_price' => '',
+                    ],
+                ];
 
                 ?>
 
                 <section class="rbfw_multiple_items <?php echo esc_attr( $rbfw_item_type == 'multiple_items') ? 'show' : 'hide'; ?>">
-                    <div class="">
-                            <div class="">
-                                <!-- Global Pricing Options -->
-                                <div class="pricing-options">
-                                    <h3><i class="fas fa-coins"></i> <?php esc_html_e('Enable Price Types (applies to all items)','booking-and-rental-manager-for-woocommerce'); ?></h3>
-                                    <div class="pricing-toggles">
+                    <div class="rbfw-mi-pricing-shell">
+                        <div class="rbfw-mi-card rbfw-mi-price-types-card">
+                            <div class="rbfw-mi-card-heading">
+                                <span><?php esc_html_e( 'Enable Price Types', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            </div>
+                            <div class="pricing-toggles">
+                                <label class="price-toggle" for="enableHourly">
+                                    <input type="checkbox" name="pricing_types[hourly]" id="enableHourly" <?php checked( $enabled_price_types['hourly'] ); ?> onchange="toggleGlobalPricing('hourly')">
+                                    <span><?php esc_html_e( 'Hourly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                </label>
 
-                                        <div class="price-toggle">
-                                            <input type="checkbox" name="pricing_types[hourly]" id="enableHourly" <?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?'checked':$checked ?>  onchange="toggleGlobalPricing('hourly')">
-                                            <label for="enableHourly"><?php esc_html_e('Enable Hourly','booking-and-rental-manager-for-woocommerce'); ?></label>
-                                        </div>
+                                <label class="price-toggle" for="enableDaily">
+                                    <input type="checkbox" name="pricing_types[daily]" id="enableDaily" <?php checked( $enabled_price_types['daily'] ); ?> onchange="toggleGlobalPricing('daily')">
+                                    <span><?php esc_html_e( 'Daily', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                </label>
 
-                                        <div class="price-toggle">
-                                            <input type="checkbox" name="pricing_types[daily]" id="enableDaily" <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'checked':$checked ?>  onchange="toggleGlobalPricing('daily')">
-                                            <label for="enableDaily"><?php esc_html_e('Enable Daily','booking-and-rental-manager-for-woocommerce'); ?></label>
-                                        </div>
+                                <label class="price-toggle" for="enableWeekly">
+                                    <input type="checkbox" name="pricing_types[weekly]" id="enableWeekly" <?php checked( $enabled_price_types['weekly'] ); ?> onchange="toggleGlobalPricing('weekly')">
+                                    <span><?php esc_html_e( 'Weekly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                </label>
 
-                                        <div class="price-toggle">
-                                            <input type="checkbox" name="pricing_types[weekly]" id="enableWeekly" <?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?'checked':'' ?> onchange="toggleGlobalPricing('weekly')">
-                                            <label for="enableWeekly"><?php esc_html_e('Enable Weekly','booking-and-rental-manager-for-woocommerce'); ?></label>
-                                        </div>
+                                <label class="price-toggle" for="enableMonthly">
+                                    <input type="checkbox" name="pricing_types[monthly]" id="enableMonthly" <?php checked( $enabled_price_types['monthly'] ); ?> onchange="toggleGlobalPricing('monthly')">
+                                    <span><?php esc_html_e( 'Monthly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                </label>
+                            </div>
+                        </div>
 
-                                        <div class="price-toggle">
-                                            <input type="checkbox" name="pricing_types[monthly]" id="enableMonthly" <?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?'checked':'' ?> onchange="toggleGlobalPricing('monthly')">
-                                            <label for="enableMonthly"><?php esc_html_e('Enable Monthly','booking-and-rental-manager-for-woocommerce'); ?></label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="itemRows">
-                                    <!-- First item row -->
-                                    <?php $i=0; foreach ($multiple_items_info as $key=>$item_price){   ?>
-                                        <div class="item-row">
-                                            <div class="form-group">
-                                                <label><?php esc_html_e('Item Name','booking-and-rental-manager-for-woocommerce'); ?></label>
-                                                <input type="text" value="<?php echo $item_price['item_name'] ?>" name="multiple_items_info[<?php echo $i ?>][item_name]" class="item-name-input" placeholder="Enter item name">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label><?php esc_html_e('Available Qty','booking-and-rental-manager-for-woocommerce'); ?></label>
-                                                <input type="number" name="multiple_items_info[<?php echo $i ?>][available_qty]" class="qty-input" min="0" value="<?php echo $item_price['available_qty'] ?>" placeholder="1">
-                                            </div>
-
-                                            <div class="form-group hourly-field <?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?'':'disabled-field' ?>">
-                                                <label><?php esc_html_e('Hourly Price','booking-and-rental-manager-for-woocommerce'); ?></label>
-                                                <div class="price-input">
-                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][hourly_price]" class="hourly-price-input" step="0.01" min="0" value="<?php echo $item_price['hourly_price'] ?>" placeholder="0.00">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group daily-field <?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?'':'disabled-field' ?>">
-
-                                                <label><?php esc_html_e('Daily Price','booking-and-rental-manager-for-woocommerce'); ?></label>
-
-                                                <div class="price-input">
-                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][daily_price]" class="daily-price-input" step="0.01" min="0" value="<?php echo $item_price['daily_price'] ?>" placeholder="0.00">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group weekly-field <?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?'':'disabled-field' ?>">
-                                                <label><?php esc_html_e('Weekly Price','booking-and-rental-manager-for-woocommerce'); ?></label>
-                                                <div class="price-input">
-                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][weekly_price]" class="weekly-price-input" step="0.01" min="0" value="<?php echo $item_price['weekly_price'] ?>"  placeholder="0.00">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group monthly-field <?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?'':'disabled-field' ?>">
-                                                <label><?php esc_html_e('Monthly Price','booking-and-rental-manager-for-woocommerce'); ?></label>
-                                                <div class="price-input">
-                                                    <input type="number" name="multiple_items_info[<?php echo $i ?>][monthly_price]" class="monthly-price-input" step="0.01" min="0" value="<?php echo $item_price['monthly_price'] ?>" placeholder="0.00">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label>&nbsp;</label>
-                                                <button type="button" class="btn btn-danger" onclick="removeItemRow(this)" style="visibility: hidden;">
-
-                                                    <?php esc_html_e('Delete','booking-and-rental-manager-for-woocommerce'); ?>
-
-                                                </button>
-                                            </div>
-                                        </div>
-                                    <?php $i++; } ?>
-                                </div>
-
-                                <button type="button" class="ppof-button add-more-btn" onclick="addItemRow()">
-                                    <i class="fas fa-plus"></i> <?php esc_html_e('Add More Item','booking-and-rental-manager-for-woocommerce'); ?>
-                                </button>
+                        <div class="rbfw-mi-card rbfw-mi-items-card">
+                            <div class="rbfw-mi-items-head item-row">
+                                <div><?php esc_html_e( 'Item Name', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div><?php esc_html_e( 'Qty', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="hourly-field <?php echo esc_attr( $enabled_price_types['hourly'] ? '' : 'disabled-field' ); ?>"><?php esc_html_e( 'Hourly ($)', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="daily-field <?php echo esc_attr( $enabled_price_types['daily'] ? '' : 'disabled-field' ); ?>"><?php esc_html_e( 'Daily ($)', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="weekly-field <?php echo esc_attr( $enabled_price_types['weekly'] ? '' : 'disabled-field' ); ?>"><?php esc_html_e( 'Weekly ($)', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="monthly-field <?php echo esc_attr( $enabled_price_types['monthly'] ? '' : 'disabled-field' ); ?>"><?php esc_html_e( 'Monthly ($)', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                <div class="rbfw-mi-action-head"></div>
                             </div>
 
+                            <div id="itemRows" class="rbfw-mi-item-rows">
+                                <?php $i=0; foreach ($multiple_items_rows as $key=>$item_price){ ?>
+                                    <div class="item-row">
+                                        <div class="form-group">
+                                            <label><?php esc_html_e('Item Name','booking-and-rental-manager-for-woocommerce'); ?></label>
+                                            <input type="text" value="<?php echo esc_attr( $item_price['item_name'] ?? '' ); ?>" name="multiple_items_info[<?php echo esc_attr( $i ); ?>][item_name]" class="item-name-input" placeholder="<?php esc_attr_e( 'Enter item name', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                        </div>
 
-                        <div class="rbfw_multi_day_price_conf">
-                            <div class="item">
-                                <div class="item-left">
-                                    <div class="label">Enable Time Picker</div>
-                                    <div class="description">
-                                        Toggle to enable time selection for more precise rental periods.
+                                        <div class="form-group">
+                                            <label><?php esc_html_e('Qty','booking-and-rental-manager-for-woocommerce'); ?></label>
+                                            <input type="number" name="multiple_items_info[<?php echo esc_attr( $i ); ?>][available_qty]" class="qty-input" min="0" value="<?php echo esc_attr( $item_price['available_qty'] ?? 1 ); ?>" placeholder="1">
+                                        </div>
+
+                                        <div class="form-group hourly-field <?php echo esc_attr( $enabled_price_types['hourly'] ? '' : 'disabled-field' ); ?>">
+                                            <label><?php esc_html_e('Hourly Price','booking-and-rental-manager-for-woocommerce'); ?></label>
+                                            <input type="number" name="multiple_items_info[<?php echo esc_attr( $i ); ?>][hourly_price]" class="hourly-price-input" step="0.01" min="0" value="<?php echo esc_attr( $item_price['hourly_price'] ?? '' ); ?>" placeholder="0.00">
+                                        </div>
+
+                                        <div class="form-group daily-field <?php echo esc_attr( $enabled_price_types['daily'] ? '' : 'disabled-field' ); ?>">
+                                            <label><?php esc_html_e('Daily Price','booking-and-rental-manager-for-woocommerce'); ?></label>
+                                            <input type="number" name="multiple_items_info[<?php echo esc_attr( $i ); ?>][daily_price]" class="daily-price-input" step="0.01" min="0" value="<?php echo esc_attr( $item_price['daily_price'] ?? '' ); ?>" placeholder="0.00">
+                                        </div>
+
+                                        <div class="form-group weekly-field <?php echo esc_attr( $enabled_price_types['weekly'] ? '' : 'disabled-field' ); ?>">
+                                            <label><?php esc_html_e('Weekly Price','booking-and-rental-manager-for-woocommerce'); ?></label>
+                                            <input type="number" name="multiple_items_info[<?php echo esc_attr( $i ); ?>][weekly_price]" class="weekly-price-input" step="0.01" min="0" value="<?php echo esc_attr( $item_price['weekly_price'] ?? '' ); ?>" placeholder="0.00">
+                                        </div>
+
+                                        <div class="form-group monthly-field <?php echo esc_attr( $enabled_price_types['monthly'] ? '' : 'disabled-field' ); ?>">
+                                            <label><?php esc_html_e('Monthly Price','booking-and-rental-manager-for-woocommerce'); ?></label>
+                                            <input type="number" name="multiple_items_info[<?php echo esc_attr( $i ); ?>][monthly_price]" class="monthly-price-input" step="0.01" min="0" value="<?php echo esc_attr( $item_price['monthly_price'] ?? '' ); ?>" placeholder="0.00">
+                                        </div>
+
+                                        <div class="form-group rbfw-mi-row-action">
+                                            <label>&nbsp;</label>
+                                            <button type="button" class="btn btn-danger" onclick="removeItemRow(this)" title="<?php esc_attr_e( 'Delete', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+                                                <i class="fas fa-trash-can"></i>
+                                            </button>
+                                        </div>
                                     </div>
+                                <?php $i++; } ?>
+                            </div>
+
+                            <div class="rbfw-mi-card-footer">
+                                <button type="button" class="ppof-button add-more-btn" onclick="addItemRow()">
+                                    <i class="fas fa-circle-plus"></i> <?php esc_html_e('Add More Item','booking-and-rental-manager-for-woocommerce'); ?>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="rbfw-mi-card rbfw_multi_day_price_conf">
+                            <div class="rbfw-mi-card-heading">
+                                <span><?php esc_html_e( 'Pricing Automation & Thresholds', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <p><?php esc_html_e( 'Define the triggers for when a rental duration automatically upgrades to the next price tier.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+                            </div>
+
+                            <div class="rbfw-mi-threshold-grid">
+                                <div class="item">
+                                    <div class="rbfw-mi-threshold-icon"><i class="far fa-clock"></i></div>
+                                    <div class="item-left">
+                                        <div class="label"><?php esc_html_e( 'Hourly to Day Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                        <div class="description"><?php esc_html_e( 'Apply daily rate after X hours', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    </div>
+                                    <div class="item-right">
+                                        <input type="number" name="rbfw_mi_hourly_to_half_day_pivot" class="price-input" step="0.01" min="0" value="<?php echo esc_attr( $rbfw_mi_hourly_to_half_day_pivot ); ?>" placeholder="0">
+                                        <span><?php esc_html_e( 'Hours', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <div class="rbfw-mi-threshold-icon"><i class="far fa-calendar-alt"></i></div>
+                                    <div class="item-left">
+                                        <div class="label"><?php esc_html_e( 'Daily to Weekly Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                        <div class="description"><?php esc_html_e( 'Apply weekly rate after X days', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    </div>
+                                    <div class="item-right">
+                                        <input type="number" name="rbfw_mi_daily_to_weekly_pivot" class="price-input" step="0.01" min="0" value="<?php echo esc_attr( $rbfw_mi_daily_to_weekly_pivot ); ?>" placeholder="0">
+                                        <span><?php esc_html_e( 'Days', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </div>
+                                </div>
+
+                                <div class="item">
+                                    <div class="rbfw-mi-threshold-icon"><i class="far fa-calendar-check"></i></div>
+                                    <div class="item-left">
+                                        <div class="label"><?php esc_html_e( 'Weekly to Monthly Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                        <div class="description"><?php esc_html_e( 'Apply monthly rate after X weeks', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    </div>
+                                    <div class="item-right">
+                                        <input type="number" name="rbfw_mi_weekly_to_monthly_pivot" class="price-input" step="0.01" min="0" value="<?php echo esc_attr( $rbfw_mi_weekly_to_monthly_pivot ); ?>" placeholder="0">
+                                        <span><?php esc_html_e( 'Weeks', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="rbfw-mi-info-note">
+                                <i class="fas fa-info-circle"></i>
+                                <span><?php esc_html_e( 'Auto-Pivot Logic: The system will calculate the cheapest combination of rates unless the duration exceeds these thresholds. Once a threshold is hit, the higher rate becomes the cap for that period.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            </div>
+
+                        </div>
+
+                        <div class="rbfw-mi-time-settings-wrap rbfw_multi_day_price_conf">
+                            <div class="rbfw-mi-time-picker-row item">
+                                <div class="item-left">
+                                    <div class="label"><?php esc_html_e( 'Enable Time Picker', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                                    <div class="description"><?php esc_html_e( 'Toggle to enable time selection for more precise rental periods.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                                 </div>
                                 <div class="item-right">
                                     <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">
@@ -434,589 +502,110 @@
                                     <input type="hidden" name="rbfw_enable_time_picker" class="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
                                 </div>
                             </div>
+
                             <?php $this->multiple_time_slot_with_particular( $post_id, 'yes','mi','mi' ); ?>
                         </div>
                     </div>
-
-                    <style>
-
-
-                        .container {
-                            margin: 0 auto;
-                            background: white;
-                            border-radius: 8px;
-                            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-                            overflow: hidden;
-                        }
-
-                        .header {
-                            background: #f1f5f9;
-                            color: white;
-                            padding: 20px;
-                            text-align: center;
-                        }
-
-                        .header h1 {
-                            font-size: 20px;
-                            font-weight: 600;
-                        }
-
-                        .content {
-                            padding: 24px;
-                        }
-
-                        .form-container {
-                            background: #f8fafc;
-                            border-radius: 8px;
-                            padding: 20px;
-                            margin-bottom: 24px;
-                            border: 1px solid #e2e8f0;
-                        }
-
-                        .pricing-options {
-                            background: #f1f5f9;
-                            color: #334155;
-                            padding: 16px;
-                            border-radius: 6px;
-                            margin-bottom: 20px;
-                            border: 1px solid #e2e8f0;
-                        }
-
-                        #rbfw_add_meta_box .mp_tab_item .pricing-options h3 {
-                            font-size: 14px;
-                            margin-bottom: 12px;
-                            text-align: center;
-                            color: #1e293b;
-                            background: inherit;
-                        }
-
-                        .pricing-toggles {
-                            display: grid;
-                            grid-template-columns: repeat(4, 1fr);
-                            gap: 16px;
-                        }
-
-                        .price-toggle {
-                            display: flex;
-                            align-items: center;
-                            gap: 6px;
-                            justify-content: center;
-                        }
-
-                        .price-toggle input[type="checkbox"] {
-                            width: 16px;
-                            height: 16px;
-                            accent-color: #3b82f6;
-                        }
-
-                        .price-toggle label {
-                            font-size: 13px;
-                            cursor: pointer;
-                            font-weight: 500;
-                            color: #475569;
-                        }
-
-                        .item-row {
-                            display: grid;
-                            gap: 12px;
-                            align-items: end;
-                            margin-bottom: 16px;
-                            padding: 12px;
-                            background: white;
-                            border-radius: 6px;
-                            border: 1px solid #e5e7eb;
-                            overflow-x: auto;
-                        }
-
-                        .form-group {
-                            display: flex;
-                            flex-direction: column;
-                        }
-
-                        label {
-                            font-weight: 500;
-                            color: #374151;
-                            margin-bottom: 4px;
-                            font-size: 12px;
-                        }
-
-                        input[type="text"], input[type="number"] {
-                            padding: 8px 10px;
-                            border: 1px solid #d1d5db;
-                            border-radius: 4px;
-                            font-size: 13px;
-                            transition: border-color 0.2s;
-                        }
-
-                        input[type="text"]:focus, input[type="number"]:focus {
-                            outline: none;
-                            border-color: #3b82f6;
-                            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-                        }
-
-                        .price-input {
-                            position: relative;
-                        }
-
-                        .price-input input {
-                            padding-left: 18px;
-                            width: 100%;
-                        }
-
-                        .price-input input:disabled {
-                            background: #f1f5f9;
-                            color: #94a3b8;
-                            cursor: not-allowed;
-                        }
-
-
-
-                        .disabled-field {
-                            display: none;
-                        }
-
-                        .btn {
-                            padding: 8px 12px;
-                            border: none;
-                            border-radius: 4px;
-                            font-size: 11px;
-                            font-weight: 500;
-                            cursor: pointer;
-                            transition: all 0.2s;
-                        }
-
-                        .btn-primary {
-                            background: #3b82f6;
-                            color: white;
-                        }
-
-                        .btn-primary:hover {
-                            background: #2563eb;
-                        }
-
-                        .btn-secondary {
-                            background: #10b981;
-                            color: white;
-                        }
-
-                        .btn-secondary:hover {
-                            background: #059669;
-                        }
-
-                        .btn-danger {
-                            background: #ef4444;
-                            color: white;
-                        }
-
-                        .btn-danger:hover {
-                            background: #dc2626;
-                        }
-
-
-                        .items-table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin-top: 8px;
-                        }
-
-                        .items-table th {
-                            background: #f1f5f9;
-                            padding: 12px 8px;
-                            text-align: left;
-                            font-weight: 600;
-                            font-size: 11px;
-                            color: #475569;
-                            border-bottom: 1px solid #e2e8f0;
-                        }
-
-                        .items-table th.hidden-column {
-                            display: none;
-                        }
-
-                        .items-table td {
-                            padding: 12px 8px;
-                            border-bottom: 1px solid #e2e8f0;
-                            font-size: 12px;
-                        }
-
-                        .items-table td.hidden-column {
-                            display: none;
-                        }
-
-                        .items-table tr:hover {
-                            background: #f8fafc;
-                        }
-
-                        .item-name {
-                            font-weight: 500;
-                            color: #1e293b;
-                        }
-
-                        .price-cell {
-                            color: #059669;
-                            font-weight: 500;
-                        }
-
-                        .price-cell.empty {
-                            color: #94a3b8;
-                        }
-
-                        .qty-cell {
-                            color: #7c3aed;
-                            font-weight: 500;
-                        }
-
-                        .no-items {
-                            text-align: center;
-                            color: #64748b;
-                            padding: 40px;
-                            font-style: italic;
-                        }
-
-                        .success-message {
-                            background: #dcfce7;
-                            color: #166534;
-                            padding: 8px 12px;
-                            border-radius: 4px;
-                            font-size: 13px;
-                            margin-bottom: 16px;
-                            display: none;
-                        }
-
-                        .item-counter {
-                            background: #1e293b;
-                            color: white;
-                            padding: 6px 12px;
-                            border-radius: 4px;
-                            font-size: 12px;
-                            font-weight: 500;
-                            margin-bottom: 16px;
-                            text-align: center;
-                        }
-
-                        @media (max-width: 768px) {
-                            .pricing-toggles {
-                                grid-template-columns: repeat(2, 1fr);
-                                gap: 12px;
-                            }
-
-                            .item-row {
-                                grid-template-columns: 1fr;
-                                gap: 8px;
-                            }
-
-                            .items-table {
-                                font-size: 10px;
-                            }
-
-                            .items-table th,
-                            .items-table td {
-                                padding: 6px 4px;
-                            }
-                        }
-                        #rbfw_add_meta_box .rbfw_multiple_items input[type=text], #rbfw_add_meta_box .rbfw_multiple_items input[type=number]{
-                            width: 100%;
-                            padding: 8px 10px;
-                        }
-                    </style>
-
-
                     <script>
-                        let items = [];
-                        let rowCounter = 1;
-                        let enabledPriceTypes = {
-                            hourly: '<?php echo (isset($pricing_types['hourly']) && $pricing_types['hourly']=='on')?true:$checked_item ?> ',
-                            daily: '<?php echo (isset($pricing_types['daily']) && $pricing_types['daily']=='on')?true:$checked_item ?> ',
-                            weekly: '<?php echo (isset($pricing_types['weekly']) && $pricing_types['weekly']=='on')?true:false ?> ',
-                            monthly: '<?php echo (isset($pricing_types['monthly']) && $pricing_types['monthly']=='on')?true:false ?> '
+                        let rowCounter = <?php echo esc_js( count( $multiple_items_rows ) ); ?>;
+                        let enabledPriceTypes = <?php echo wp_json_encode( $enabled_price_types ); ?>;
+                        const priceTypeLabels = {
+                            hourly: '<?php echo esc_js( __( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ) ); ?>',
+                            daily: '<?php echo esc_js( __( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ) ); ?>',
+                            weekly: '<?php echo esc_js( __( 'Weekly Price', 'booking-and-rental-manager-for-woocommerce' ) ); ?>',
+                            monthly: '<?php echo esc_js( __( 'Monthly Price', 'booking-and-rental-manager-for-woocommerce' ) ); ?>'
                         };
 
-                        // Toggle global pricing options
                         function toggleGlobalPricing(priceType) {
                             const checkbox = document.getElementById(`enable${priceType.charAt(0).toUpperCase() + priceType.slice(1)}`);
                             enabledPriceTypes[priceType] = checkbox.checked;
 
+                            document.querySelectorAll(`.rbfw_multiple_items .${priceType}-field`).forEach(field => {
+                                field.classList.toggle('disabled-field', !checkbox.checked);
 
-
-                            // Update all existing rows
-                            const fields = document.querySelectorAll(`.${priceType}-field`);
-                            const tableColumns = document.querySelectorAll(`.${priceType}-column`);
-
-                            if (checkbox.checked) {
-                                fields.forEach(field => {
-                                    field.classList.remove('disabled-field');
-                                    field.style.display = 'flex';
-                                });
-                                tableColumns.forEach(col => {
-                                    col.classList.remove('hidden-column');
-                                    col.style.display = '';
-                                });
-                            } else {
-                                fields.forEach(field => {
-                                    field.classList.add('disabled-field');
-                                    field.style.display = 'none';
-                                    // Clear values when disabling
+                                if (!checkbox.checked) {
                                     const input = field.querySelector('input');
-                                    if (input) input.value = '';
-                                });
-                                tableColumns.forEach(col => {
-                                    col.classList.add('hidden-column');
-                                    col.style.display = 'none';
-                                });
-                            }
+                                    if (input) {
+                                        input.value = '';
+                                    }
+                                }
+                            });
 
-                            // Update grid layout for item rows
                             updateRowGridLayout();
-                            updateTableColspan();
                         }
 
-                        // Update grid layout based on enabled price types
                         function updateRowGridLayout() {
-                            const enabledCount = Object.values(enabledPriceTypes).filter(Boolean).length;
-
-
-                            const totalColumns = 3 + enabledCount; // item name + qty + enabled prices + delete button
-
-                            const rows = document.querySelectorAll('.item-row');
-                            rows.forEach(row => {
-                                row.style.gridTemplateColumns = `180px 80px ${'100px '.repeat(enabledCount)}80px`;
+                            const rateCount = Math.max(Object.values(enabledPriceTypes).filter(Boolean).length, 1);
+                            document.querySelectorAll('.rbfw_multiple_items .item-row').forEach(row => {
+                                row.style.setProperty('--rbfw-mi-rate-count', rateCount);
                             });
                         }
 
-                        // Update table colspan for no-items message
-                        function updateTableColspan() {
-                            // No longer needed since we removed the no-items message
-                        }
-
-                        // Generate item row HTML based on enabled price types
-                        function generateItemRowHTML() {
-                            let priceFields = '';
-
-                            var itemRowsCount  = document.querySelectorAll('#itemRows .item-row').length;
-
-
-
-
-
-                            if (enabledPriceTypes.hourly==true) {
-                                priceFields += `
-                    <div class="form-group hourly-field">
-                        <label>Hourly Price</label>
-                        <div class="price-input">
-                            <input type="number" name="multiple_items_info[${itemRowsCount}][hourly_price]" class="hourly-price-input" step="0.01" min="0" placeholder="0.00">
-                        </div>
-                    </div>
-                `;
-                            }else{
-                                priceFields += `
-                    <div class="form-group hourly-field disabled-field">
-                        <label>Hourly Price</label>
-                        <div class="price-input">
-                            <input type="number" name="multiple_items_info[${itemRowsCount}][hourly_price]" class="hourly-price-input" step="0.01" min="0" placeholder="0.00">
-                        </div>
-                    </div>
-                `;
-                            }
-
-                            if (enabledPriceTypes.daily==true) {
-                                priceFields += `
-                    <div class="form-group daily-field">
-                        <label>Daily Price</label>
-                        <div class="price-input">
-                            <input type="number" name="multiple_items_info[${itemRowsCount}][daily_price]" class="daily-price-input" step="0.01" min="0" placeholder="0.00">
-                        </div>
-                    </div>
-                `;
-                            }else{
-
-                                priceFields += `
-                    <div class="form-group daily-field disabled-field">
-                        <label>Daily Price</label>
-                        <div class="price-input">
-                            <input type="number" name="multiple_items_info[${itemRowsCount}][daily_price]" class="daily-price-input" step="0.01" min="0" placeholder="0.00">
-                        </div>
-                    </div>
-                `;
-
-                            }
-
-                            if (enabledPriceTypes.weekly==true) {
-                                priceFields += `
-                    <div class="form-group weekly-field">
-                        <label>Weekly Price</label>
-                        <div class="price-input">
-                            <input type="number" name="multiple_items_info[${itemRowsCount}][weekly_price]" class="weekly-price-input" step="0.01" min="0" placeholder="0.00">
-                        </div>
-                    </div>
-                `;
-                            }else{
-                                priceFields += `
-                    <div class="form-group weekly-field disabled-field">
-                        <label>Weekly Price</label>
-                        <div class="price-input">
-                            <input type="number" name="multiple_items_info[${itemRowsCount}][weekly_price]" class="weekly-price-input" step="0.01" min="0" placeholder="0.00">
-                        </div>
-                    </div>
-                `;
-                            }
-
-                            if (enabledPriceTypes.monthly==true) {
-                                priceFields += `
-        <div class="form-group monthly-field">
-            <label>Monthly Price</label>
-            <div class="price-input">
-                <input type="number" name="multiple_items_info[${itemRowsCount}][monthly_price]" class="monthly-price-input" step="0.01" min="0" placeholder="0.00">
-            </div>
-        </div>`;
-
-                            } else {
-                                priceFields += `
-        <div class="form-group monthly-field disabled-field">
-            <label>Monthly Price</label>
-            <div class="price-input">
-                <input type="number" name="multiple_items_info[${itemRowsCount}][monthly_price]" class="monthly-price-input" step="0.01" min="0" placeholder="0.00">
-            </div>
-        </div>`;
-                            }
-
+                        function buildPriceField(priceType, itemIndex) {
+                            const disabledClass = enabledPriceTypes[priceType] ? '' : ' disabled-field';
                             return `
-                <div class="form-group">
-                    <label>Item Name</label>
-                    <input type="text" name="multiple_items_info[${itemRowsCount}][item_name]" class="item-name-input" placeholder="Enter item name" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Available Qty</label>
-                    <input type="number" name="multiple_items_info[${itemRowsCount}][available_qty]" class="qty-input" min="0" value="1" placeholder="1">
-                </div>
-
-                ${priceFields}
-
-                <div class="form-group">
-                    <label>&nbsp;</label>
-                    <button type="button" class="btn btn-danger" onclick="removeItemRow(this)">
-                        Delete
-                    </button>
-                </div>
-            `;
+                                <div class="form-group ${priceType}-field${disabledClass}">
+                                    <label>${priceTypeLabels[priceType]}</label>
+                                    <input type="number" name="multiple_items_info[${itemIndex}][${priceType}_price]" class="${priceType}-price-input" step="0.01" min="0" placeholder="0.00">
+                                </div>
+                            `;
                         }
 
-                        // Add new item row
-                        function addItemRow() {
-                            rowCounter++;
-                            const itemRows = document.getElementById('itemRows');
+                        function generateItemRowHTML(itemIndex) {
+                            return `
+                                <div class="form-group">
+                                    <label><?php echo esc_js( __( 'Item Name', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
+                                    <input type="text" name="multiple_items_info[${itemIndex}][item_name]" class="item-name-input" placeholder="<?php echo esc_js( __( 'Enter item name', 'booking-and-rental-manager-for-woocommerce' ) ); ?>">
+                                </div>
 
+                                <div class="form-group">
+                                    <label><?php echo esc_js( __( 'Qty', 'booking-and-rental-manager-for-woocommerce' ) ); ?></label>
+                                    <input type="number" name="multiple_items_info[${itemIndex}][available_qty]" class="qty-input" min="0" value="1" placeholder="1">
+                                </div>
+
+                                ${buildPriceField('hourly', itemIndex)}
+                                ${buildPriceField('daily', itemIndex)}
+                                ${buildPriceField('weekly', itemIndex)}
+                                ${buildPriceField('monthly', itemIndex)}
+
+                                <div class="form-group rbfw-mi-row-action">
+                                    <label>&nbsp;</label>
+                                    <button type="button" class="btn btn-danger" onclick="removeItemRow(this)" title="<?php echo esc_js( __( 'Delete', 'booking-and-rental-manager-for-woocommerce' ) ); ?>">
+                                        <i class="fas fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            `;
+                        }
+
+                        function addItemRow() {
+                            const itemRows = document.getElementById('itemRows');
                             const newRow = document.createElement('div');
                             newRow.className = 'item-row';
-                            newRow.innerHTML = generateItemRowHTML();
+                            newRow.innerHTML = generateItemRowHTML(rowCounter);
+                            rowCounter++;
 
                             itemRows.appendChild(newRow);
-
-                            // Update grid layout
                             updateRowGridLayout();
-
-                            // Focus on the new item name input
-                            newRow.querySelector('.item-name-input').focus();
-
-                            // Show remove buttons for all rows if more than one
                             updateRemoveButtons();
+                            newRow.querySelector('.item-name-input').focus();
                         }
 
-                        // Remove item row
                         function removeItemRow(button) {
                             const row = button.closest('.item-row');
                             row.remove();
                             updateRemoveButtons();
                         }
 
-                        // Update remove button visibility
                         function updateRemoveButtons() {
-                            const rows = document.querySelectorAll('.item-row');
-                            rows.forEach((row, index) => {
+                            const rows = document.querySelectorAll('#itemRows .item-row');
+                            rows.forEach(row => {
                                 const removeBtn = row.querySelector('.btn-danger');
-                                if (rows.length === 1) {
-                                    removeBtn.style.visibility = 'hidden';
-                                } else {
-                                    removeBtn.style.visibility = 'visible';
+                                if (removeBtn) {
+                                    removeBtn.style.visibility = rows.length === 1 ? 'hidden' : 'visible';
                                 }
                             });
                         }
 
-
-
-                        // Show success message
-                        function showSuccess(message) {
-                            const successMsg = document.getElementById('successMessage');
-                            successMsg.textContent = message;
-                            successMsg.style.display = 'block';
-                            setTimeout(() => {
-                                successMsg.style.display = 'none';
-                            }, 3000);
-                        }
-
-                        // Update item counter
-                        function updateItemCounter() {
-                            // Counter removed - no longer needed
-                        }
-
-                        // Render items table
-                        function renderItemsTable() {
-                            const tbody = document.getElementById('itemsTableBody');
-
-                            if (items.length === 0) {
-                                tbody.innerHTML = '';
-                                return;
-                            }
-
-                            tbody.innerHTML = items.map(item => {
-                                let cells = `
-                    <td class="item-name">${item.name}</td>
-                    <td class="qty-cell">${item.qty}</td>
-                `;
-
-                                // Add price cells only for enabled types
-                                if (enabledPriceTypes.hourly) {
-                                    const hourlyPrice = item.pricing.hourly ? `${item.pricing.hourly}` : '-';
-                                    cells += `<td class="price-cell ${item.pricing.hourly ? '' : 'empty'}">${hourlyPrice}</td>`;
-                                }
-
-                                if (enabledPriceTypes.daily) {
-                                    const dailyPrice = item.pricing.daily ? `${item.pricing.daily}` : '-';
-                                    cells += `<td class="price-cell ${item.pricing.daily ? '' : 'empty'}">${dailyPrice}</td>`;
-                                }
-
-                                if (enabledPriceTypes.weekly) {
-                                    const weeklyPrice = item.pricing.weekly ? `${item.pricing.weekly}` : '-';
-                                    cells += `<td class="price-cell ${item.pricing.weekly ? '' : 'empty'}">${weeklyPrice}</td>`;
-                                }
-
-                                if (enabledPriceTypes.monthly) {
-                                    const monthlyPrice = item.pricing.monthly ? `${item.pricing.monthly}` : '-';
-                                    cells += `<td class="price-cell ${item.pricing.monthly ? '' : 'empty'}">${monthlyPrice}</td>`;
-                                }
-
-                                cells += `
-                    <td>
-                        <button class="btn btn-danger" onclick="deleteItem(${item.id})" style="padding: 4px 8px; font-size: 11px;">
-                            Delete
-                        </button>
-                    </td>
-                `;
-
-                                return `<tr>${cells}</tr>`;
-                            }).join('');
-                        }
-
-                        // Delete item
-                        function deleteItem(id) {
-                            if (confirm('Are you sure you want to delete this item?')) {
-                                items = items.filter(i => i.id !== id);
-                                renderItemsTable();
-                                showSuccess('Item deleted successfully!');
-                            }
-                        }
-
-                        // Initialize
                         updateRowGridLayout();
                         updateRemoveButtons();
                     </script>
@@ -1959,6 +1548,10 @@
 					$daily_rate                         = isset( $_POST['rbfw_daily_rate'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_daily_rate'] ) ) : 0;
 
                     $rbfw_enable_time_picker            = isset( $_POST['rbfw_enable_time_picker'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_time_picker'] ) ) : 'no';
+                    $rbfw_mi_hourly_to_half_day_pivot   = isset( $_POST['rbfw_mi_hourly_to_half_day_pivot'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mi_hourly_to_half_day_pivot'] ) ) : '';
+                    $rbfw_mi_half_day_to_daily_pivot    = isset( $_POST['rbfw_mi_half_day_to_daily_pivot'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mi_half_day_to_daily_pivot'] ) ) : '';
+                    $rbfw_mi_daily_to_weekly_pivot      = isset( $_POST['rbfw_mi_daily_to_weekly_pivot'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mi_daily_to_weekly_pivot'] ) ) : '';
+                    $rbfw_mi_weekly_to_monthly_pivot    = isset( $_POST['rbfw_mi_weekly_to_monthly_pivot'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_mi_weekly_to_monthly_pivot'] ) ) : '';
 
                     $rbfw_hourly_threshold       = isset( $_POST['rbfw_hourly_threshold'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_hourly_threshold'] ) ) : '0';
                     $rbfw_enable_hourly_threshold       = isset( $_POST['rbfw_enable_hourly_threshold'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_hourly_threshold'] ) ) : 'no';
@@ -1996,6 +1589,17 @@
 
                     $pricing_types                    = isset( $input_data_sabitized['pricing_types'] ) ? $input_data_sabitized['pricing_types'] : [];
                     $multiple_items_info              = isset( $input_data_sabitized['multiple_items_info'] ) ? $input_data_sabitized['multiple_items_info'] : [];
+                    if ( is_array( $multiple_items_info ) ) {
+                        $multiple_items_info = array_values( array_filter( $multiple_items_info, function ( $item ) {
+                            $item_name     = isset( $item['item_name'] ) ? trim( (string) $item['item_name'] ) : '';
+                            $hourly_price  = isset( $item['hourly_price'] ) ? trim( (string) $item['hourly_price'] ) : '';
+                            $daily_price   = isset( $item['daily_price'] ) ? trim( (string) $item['daily_price'] ) : '';
+                            $weekly_price  = isset( $item['weekly_price'] ) ? trim( (string) $item['weekly_price'] ) : '';
+                            $monthly_price = isset( $item['monthly_price'] ) ? trim( (string) $item['monthly_price'] ) : '';
+
+                            return $item_name !== '' || $hourly_price !== '' || $daily_price !== '' || $weekly_price !== '' || $monthly_price !== '';
+                        } ) );
+                    }
 
 
                     $rbfw_enable_resort_daylong_price = isset( $_POST['rbfw_enable_resort_daylong_price'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_resort_daylong_price'] ) ) : 'no';
@@ -2035,6 +1639,10 @@
 					update_post_meta( $post_id, 'rbfw_daily_rate', $daily_rate );
 
 					update_post_meta( $post_id, 'rbfw_enable_time_picker', $rbfw_enable_time_picker );
+                    update_post_meta( $post_id, 'rbfw_mi_hourly_to_half_day_pivot', $rbfw_mi_hourly_to_half_day_pivot );
+                    update_post_meta( $post_id, 'rbfw_mi_half_day_to_daily_pivot', $rbfw_mi_half_day_to_daily_pivot );
+                    update_post_meta( $post_id, 'rbfw_mi_daily_to_weekly_pivot', $rbfw_mi_daily_to_weekly_pivot );
+                    update_post_meta( $post_id, 'rbfw_mi_weekly_to_monthly_pivot', $rbfw_mi_weekly_to_monthly_pivot );
 
                     update_post_meta( $post_id, 'rbfw_hourly_threshold', $rbfw_hourly_threshold );
                     update_post_meta( $post_id, 'rbfw_enable_hourly_threshold', $rbfw_enable_hourly_threshold );
@@ -2158,3 +1766,4 @@
 	}
 	
 	
+

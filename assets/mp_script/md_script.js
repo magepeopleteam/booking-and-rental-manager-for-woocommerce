@@ -405,27 +405,56 @@ jQuery(document).ready(function () {
     }
 
     function updateQtyLabel() {
-        const durationType = durationTypeSelect.val();
-        if (durationType) {
-            const typeMap = {
-                hourly: rbfw_translation.hours,
-                daily: rbfw_translation.days,
-                weekly: rbfw_translation.weeks,
-                monthly: rbfw_translation.months
-            };
-            qtyLabel.text(rbfw_translation.number_of+ ` ${typeMap[durationType]}`);
-        } else {
-            qtyLabel.text(rbfw_translation.number_of+' '+rbfw_translation.duration);
+        qtyLabel.text(qtyLabel.data('duration-label') || 'Rental Duration');
+    }
+
+    function updateDurationQtyOptions() {
+        const durationType = durationTypeSelect.val() || 'hourly';
+        const unitMap = {
+            hourly: ['Hour', 'Hours'],
+            daily: ['Day', 'Days'],
+            weekly: ['Week', 'Weeks'],
+            monthly: ['Month', 'Months']
+        };
+        const maxMap = {
+            hourly: 23,
+            daily: 30,
+            weekly: 4,
+            monthly: 30
+        };
+        const labels = unitMap[durationType] || unitMap.hourly;
+        const maxOptions = maxMap[durationType] || 30;
+        const durationSelect = jQuery('#rbfw_mi_duration_qty_select');
+        const currentValue = durationSelect.val() || '1';
+        let options = '';
+
+        for (let i = 1; i <= maxOptions; i++) {
+            options += `<option value="${i}">${i} ${i === 1 ? labels[0] : labels[1]}</option>`;
         }
+
+        durationSelect.html(options).val(Math.min(parseInt(currentValue, 10) || 1, maxOptions));
+        jQuery('#durationQty').val(durationSelect.val()).trigger('change');
     }
 
     // Add event listener
     durationTypeSelect.on('change', function () {
         updateQtyLabel();
+        jQuery('.rbfw-mi-duration-tab').removeClass('active');
+        jQuery('.rbfw-mi-duration-tab[data-duration-type="' + jQuery(this).val() + '"]').addClass('active');
+        updateDurationQtyOptions();
+    });
+
+    jQuery(document).on('click', '.rbfw-mi-duration-tab', function () {
+        durationTypeSelect.val(jQuery(this).data('duration-type')).trigger('change');
+    });
+
+    jQuery(document).on('change', '#rbfw_mi_duration_qty_select', function () {
+        jQuery('#durationQty').val(jQuery(this).val()).trigger('change');
     });
 
     // Initial label update
     updateQtyLabel();
+    durationTypeSelect.trigger('change');
 });
 
 
@@ -740,6 +769,7 @@ function rbfw_multi_items_ajax_price_calculation(){
             });
 
 
+            jQuery('#rbfw_management_price').val(rbfw_management_price.toFixed(2));
             jQuery('.management-costing .price-figure').text( wc_price_rbfw(rbfw_management_price));
 
 
@@ -838,8 +868,10 @@ function calculateAdditional() {
 
     jQuery('#rbfw_service_category_price').val(additional_price.toFixed(2));
 
-    // Fixed by Shahnur - 2026-04-17 07:44 AM (Asia/Dhaka)
-    var sub_total_price = additional_price + (parseFloat(jQuery('#rbfw_management_price').val()) || 0) + (parseFloat(jQuery('#rbfw_duration_price').val()) || 0);
+    var sub_total_price = additional_price + (parseFloat(jQuery('#rbfw_duration_price').val()) || 0);
+    var rbfw_management_price = fee_management(sub_total_price,1,1);
+    jQuery('#rbfw_management_price').val(rbfw_management_price.toFixed(2));
+    jQuery('.management-costing .price-figure').text(wc_price_rbfw(rbfw_management_price));
 
 
 
@@ -852,7 +884,7 @@ function calculateAdditional() {
             rbfw_security_deposit_actual_amount = rbfw_security_deposit_amount;
         }
     }
-    var total_price = sub_total_price  + parseFloat(rbfw_security_deposit_actual_amount);
+    var total_price = sub_total_price + rbfw_management_price + parseFloat(rbfw_security_deposit_actual_amount);
     if(rbfw_security_deposit_actual_amount){
         jQuery('.security_deposit').show();
         jQuery('.security_deposit span').html(wc_price_rbfw(parseFloat(rbfw_security_deposit_actual_amount)));
@@ -1073,17 +1105,72 @@ function calculateTotalSingleItem() {
 }
 
 
+function rbfwGetMultipleItemsPivotBilling(durationType, durationQty) {
+    var hourlyToDay = parseFloat(jQuery('#rbfw_mi_hourly_to_half_day_pivot').val()) || 0;
+    var dailyToWeekly = parseFloat(jQuery('#rbfw_mi_daily_to_weekly_pivot').val()) || 0;
+    var weeklyToMonthly = parseFloat(jQuery('#rbfw_mi_weekly_to_monthly_pivot').val()) || 0;
+
+    var billing = {
+        priceType: durationType,
+        units: durationQty,
+        multiplier: durationQty
+    };
+
+    if (durationType === 'weekly' && weeklyToMonthly > 0 && durationQty >= weeklyToMonthly) {
+        billing.priceType = 'monthly';
+        billing.units = Math.max(1, Math.ceil(durationQty / 4));
+        billing.multiplier = billing.units;
+    } else if (durationType === 'daily' && dailyToWeekly > 0 && durationQty >= dailyToWeekly) {
+        var weeklyUnits = Math.max(1, Math.ceil(durationQty / 7));
+        if (weeklyToMonthly > 0 && weeklyUnits >= weeklyToMonthly) {
+            billing.priceType = 'monthly';
+            billing.units = Math.max(1, Math.ceil(weeklyUnits / 4));
+        } else {
+            billing.priceType = 'weekly';
+            billing.units = weeklyUnits;
+        }
+        billing.multiplier = billing.units;
+    } else if (durationType === 'hourly') {
+        if (hourlyToDay > 0 && durationQty >= hourlyToDay) {
+            var dailyUnits = Math.max(1, Math.ceil(durationQty / 24));
+            if (dailyToWeekly > 0 && dailyUnits >= dailyToWeekly) {
+                var hourlyWeeklyUnits = Math.max(1, Math.ceil(dailyUnits / 7));
+                if (weeklyToMonthly > 0 && hourlyWeeklyUnits >= weeklyToMonthly) {
+                    billing.priceType = 'monthly';
+                    billing.units = Math.max(1, Math.ceil(hourlyWeeklyUnits / 4));
+                } else {
+                    billing.priceType = 'weekly';
+                    billing.units = hourlyWeeklyUnits;
+                }
+            } else {
+                billing.priceType = 'daily';
+                billing.units = dailyUnits;
+            }
+            billing.multiplier = billing.units;
+        }
+    }
+
+    return billing;
+}
+
 function calculateTotalMultipleItems(only_calculation=false) {
 
     var durationType = jQuery('#durationType').val();
     var durationQty = parseInt(jQuery('#durationQty').val()) || 1;
+    var pivotBilling = rbfwGetMultipleItemsPivotBilling(durationType, durationQty);
     var item_total_price = 0;
     jQuery('.rbfw_muiti_items_qty').each(function () {
         var $qtyInput = jQuery(this);
-        var pricePerUnit = parseFloat($qtyInput.data('price-' + durationType)) || 0;
+        var pricePerUnit = parseFloat($qtyInput.data('price-' + pivotBilling.priceType)) || 0;
+        var priceMultiplier = pivotBilling.multiplier;
         var quantity = parseInt($qtyInput.val()) || 0;
 
-        var itemTotal = pricePerUnit * quantity * durationQty;
+        if (!pricePerUnit && pivotBilling.priceType !== durationType) {
+            pricePerUnit = parseFloat($qtyInput.data('price-' + durationType)) || 0;
+            priceMultiplier = durationQty;
+        }
+
+        var itemTotal = pricePerUnit * quantity * priceMultiplier;
         $qtyInput
             .closest('.rbfw_qty_input')
             .find('.rbfw_item_peice')
@@ -1108,6 +1195,8 @@ function calculateTotalMultipleItems(only_calculation=false) {
 
     let rbfw_management_price = fee_management(sub_total_price,1,1);
 
+    jQuery('#rbfw_management_price').val(rbfw_management_price.toFixed(2));
+    jQuery('.management-costing .price-figure').text(wc_price_rbfw(rbfw_management_price));
 
 
     if(only_calculation){

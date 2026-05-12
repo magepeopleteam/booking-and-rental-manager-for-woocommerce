@@ -105,6 +105,179 @@ if (!class_exists('RBFW_Woocommerce')) {
             return $cart_item_data;
         }
 
+        private function rbfw_get_multi_items_billing( $rbfw_id, $duration_type, $duration_qty ) {
+            $duration_qty = max( 1, absint( $duration_qty ) );
+            $pricing_types = get_post_meta( $rbfw_id, 'pricing_types', true );
+            $pricing_types = is_array( $pricing_types ) ? $pricing_types : array();
+            $allowed_types = array( 'hourly', 'daily', 'weekly', 'monthly' );
+
+            if ( ! in_array( $duration_type, $allowed_types, true ) || ( isset( $pricing_types[ $duration_type ] ) && 'on' !== $pricing_types[ $duration_type ] ) ) {
+                $duration_type = 'daily';
+
+                foreach ( $allowed_types as $allowed_type ) {
+                    if ( isset( $pricing_types[ $allowed_type ] ) && 'on' === $pricing_types[ $allowed_type ] ) {
+                        $duration_type = $allowed_type;
+                        break;
+                    }
+                }
+            }
+
+            $billing      = array(
+                'price_type' => $duration_type,
+                'multiplier' => $duration_qty,
+            );
+
+            $daily_to_weekly   = (float) get_post_meta( $rbfw_id, 'rbfw_mi_daily_to_weekly_pivot', true );
+            $weekly_to_monthly = (float) get_post_meta( $rbfw_id, 'rbfw_mi_weekly_to_monthly_pivot', true );
+            $hourly_to_day     = (float) get_post_meta( $rbfw_id, 'rbfw_mi_hourly_to_half_day_pivot', true );
+
+            if ( 'weekly' === $duration_type && $weekly_to_monthly > 0 && $duration_qty >= $weekly_to_monthly ) {
+                $billing['price_type'] = 'monthly';
+                $billing['multiplier'] = max( 1, (int) ceil( $duration_qty / 4 ) );
+            } elseif ( 'daily' === $duration_type && $daily_to_weekly > 0 && $duration_qty >= $daily_to_weekly ) {
+                $billing['price_type'] = 'weekly';
+                $billing['multiplier'] = max( 1, (int) ceil( $duration_qty / 7 ) );
+            } elseif ( 'hourly' === $duration_type && $hourly_to_day > 0 && $duration_qty >= $hourly_to_day ) {
+                $billing['price_type'] = 'daily';
+                $billing['multiplier'] = max( 1, (int) ceil( $duration_qty / 24 ) );
+            }
+
+            return $billing;
+        }
+
+        private function rbfw_prepare_multi_items_from_post( $rbfw_id, $submitted_items, $duration_type, $duration_qty ) {
+            $stored_items = get_post_meta( $rbfw_id, 'multiple_items_info', true );
+            $stored_items = is_array( $stored_items ) ? $stored_items : array();
+            $billing      = $this->rbfw_get_multi_items_billing( $rbfw_id, $duration_type, $duration_qty );
+            $price_key    = $billing['price_type'] . '_price';
+            $items        = array();
+            $total        = 0;
+
+            foreach ( (array) $submitted_items as $key => $submitted_item ) {
+                $item_key = absint( $key );
+                if ( ! isset( $stored_items[ $item_key ] ) || ! is_array( $stored_items[ $item_key ] ) ) {
+                    continue;
+                }
+
+                $quantity = isset( $submitted_item['item_qty'] ) ? absint( $submitted_item['item_qty'] ) : 0;
+                if ( $quantity <= 0 ) {
+                    continue;
+                }
+
+                $stored_item = $stored_items[ $item_key ];
+                $available   = isset( $stored_item['available_qty'] ) ? absint( $stored_item['available_qty'] ) : 0;
+                if ( $available > 0 ) {
+                    $quantity = min( $quantity, $available );
+                }
+
+                $unit_price = isset( $stored_item[ $price_key ] ) ? (float) $stored_item[ $price_key ] : 0;
+                $total     += $unit_price * $quantity * $billing['multiplier'];
+                $items[]    = array(
+                    'item_name'  => isset( $stored_item['item_name'] ) ? sanitize_text_field( $stored_item['item_name'] ) : '',
+                    'item_qty'   => $quantity,
+                    'item_price' => $unit_price,
+                );
+            }
+
+            return array(
+                'items' => $items,
+                'total' => $total,
+            );
+        }
+
+        private function rbfw_prepare_multi_item_addons_from_post( $rbfw_id, $submitted_categories, $total_days ) {
+            $enable_service_price = get_post_meta( $rbfw_id, 'rbfw_enable_category_service_price', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_category_service_price', true ) : 'off';
+            if ( 'on' !== $enable_service_price ) {
+                return array( 'items' => array(), 'total' => 0 );
+            }
+
+            $stored_categories = get_post_meta( $rbfw_id, 'rbfw_service_category_price', true );
+            if ( ! is_array( $stored_categories ) ) {
+                $stored_categories = json_decode( $stored_categories, true );
+            }
+            $stored_categories = is_array( $stored_categories ) ? $stored_categories : array();
+            $total_days        = max( 1, absint( $total_days ) );
+            $prepared          = array();
+            $total             = 0;
+
+            foreach ( (array) $submitted_categories as $cat_key => $submitted_category ) {
+                if ( ! isset( $stored_categories[ $cat_key ]['cat_services'] ) || ! is_array( $submitted_category ) ) {
+                    continue;
+                }
+
+                $new_category = array( 'cat_title' => isset( $stored_categories[ $cat_key ]['cat_title'] ) ? sanitize_text_field( $stored_categories[ $cat_key ]['cat_title'] ) : '' );
+
+                foreach ( $submitted_category as $service_key => $submitted_service ) {
+                    if ( 'cat_title' === $service_key || ! is_array( $submitted_service ) || ! isset( $stored_categories[ $cat_key ]['cat_services'][ $service_key ] ) ) {
+                        continue;
+                    }
+
+                    $quantity = isset( $submitted_service['quantity'] ) ? absint( $submitted_service['quantity'] ) : 0;
+                    if ( $quantity <= 0 ) {
+                        continue;
+                    }
+
+                    $stored_service     = $stored_categories[ $cat_key ]['cat_services'][ $service_key ];
+                    $price              = isset( $stored_service['price'] ) ? (float) $stored_service['price'] : 0;
+                    $service_price_type = isset( $stored_service['service_price_type'] ) ? sanitize_text_field( $stored_service['service_price_type'] ) : '';
+                    $total             += ( 'day_wise' === $service_price_type ) ? $price * $quantity * $total_days : $price * $quantity;
+                    $new_category[]     = array(
+                        'name'               => isset( $stored_service['title'] ) ? sanitize_text_field( $stored_service['title'] ) : '',
+                        'service_price_type' => $service_price_type,
+                        'price'              => $price,
+                        'quantity'           => $quantity,
+                    );
+                }
+
+                if ( count( $new_category ) > 1 ) {
+                    $prepared[] = $new_category;
+                }
+            }
+
+            return array(
+                'items' => $prepared,
+                'total' => $total,
+            );
+        }
+
+        private function rbfw_prepare_multi_item_fees_from_post( $rbfw_id, $submitted_fees, $sub_total_price ) {
+            $stored_fees = get_post_meta( $rbfw_id, 'rbfw_fee_data', true );
+            $stored_fees = is_array( $stored_fees ) ? $stored_fees : array();
+            $fee_info    = array();
+            $fee_total   = 0;
+
+            foreach ( $stored_fees as $key => $fee ) {
+                if ( empty( $fee['label'] ) ) {
+                    continue;
+                }
+
+                $label       = sanitize_text_field( $fee['label'] );
+                $is_required = isset( $fee['priority'] ) && 'required' === $fee['priority'];
+                $is_checked  = $is_required
+                    || ( isset( $submitted_fees[ $key ]['is_checked'] ) && 'yes' === $submitted_fees[ $key ]['is_checked'] )
+                    || ( isset( $submitted_fees[ $key ]['label'], $submitted_fees[ $key ]['is_checked'] ) && $label === $submitted_fees[ $key ]['label'] && 'yes' === $submitted_fees[ $key ]['is_checked'] );
+                if ( ! $is_checked ) {
+                    continue;
+                }
+
+                $amount      = isset( $fee['amount'] ) ? (float) $fee['amount'] : 0;
+                $price_type  = isset( $fee['calculation_type'] ) ? sanitize_text_field( $fee['calculation_type'] ) : '';
+                $refundable  = ! empty( $fee['refundable'] ) ? sanitize_text_field( $fee['refundable'] ) : 'no';
+                $fee_price   = ( 'percentage' === $price_type ) ? ( $amount / 100 ) * $sub_total_price : $amount;
+                $fee_total  += $fee_price;
+                $fee_info[ $label ] = array(
+                    'price'      => $fee_price,
+                    'price_desc' => ( 'percentage' === $price_type ) ? $amount . '% of ' . wc_price( $sub_total_price ) : wc_price( $amount ),
+                    'refundable' => $refundable,
+                );
+            }
+
+            return array(
+                'items' => $fee_info,
+                'total' => $fee_total,
+            );
+        }
+
         public function rbfw_add_cart_item_func( $cart_item_data, $rbfw_id ) {
 
             if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'rbfw_ajax_action' ) ) ) {
@@ -349,7 +522,10 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $start_time                = isset( $sd_input_data_sabitized['rbfw_pickup_start_time'] ) ? $sd_input_data_sabitized['rbfw_pickup_start_time'] : '';
                 $pickup_datetime           = gmdate( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
                 $durationType = isset($_POST['durationType'])?sanitize_text_field(wp_unslash($_POST['durationType'])):'';
-                $durationQty = isset($_POST['durationQty'])?sanitize_text_field(wp_unslash($_POST['durationQty'])):0;
+                $durationQty = isset($_POST['durationQty'])?max( 1, absint(sanitize_text_field(wp_unslash($_POST['durationQty'])))):1;
+                if ( ! in_array( $durationType, array( 'hourly', 'daily', 'weekly', 'monthly' ), true ) ) {
+                    $durationType = 'daily';
+                }
                 $start_date_time = new DateTime($start_date.' '.$start_time);
                 $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 :($durationType == 'weekly'?$durationQty * 24 * 7: $durationQty * 24 * 30)));
 
@@ -362,72 +538,27 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_dropoff_point        = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
                 $rbfw_duration_md       = isset( $sd_input_data_sabitized['rbfw_duration_md'] ) ? $sd_input_data_sabitized['rbfw_duration_md'] : '';
 
-                $total_days = isset($_POST['total_days'])?sanitize_text_field(wp_unslash($_POST['total_days'])):'';
+                $pickup = new DateTime($pickup_datetime);
+                $dropoff = new DateTime($dropoff_datetime);
+                $interval = $pickup->diff($dropoff);
+                $total_days = $interval->days ? absint( $interval->days ) : 1;
 
-                $rbfw_multi_item_price = isset($_POST['rbfw_duration_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_duration_price']))):0;
-                $rbfw_category_wise_price = isset($_POST['rbfw_service_category_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_category_price']))):0;
+                $submitted_multiple_items = (isset( $sd_input_data_sabitized['multiple_items_info'] ) && is_array( $sd_input_data_sabitized['multiple_items_info'] ) ) ? $sd_input_data_sabitized['multiple_items_info'] : [];
+                $prepared_multiple_items  = $this->rbfw_prepare_multi_items_from_post( $rbfw_id, $submitted_multiple_items, $durationType, $durationQty );
+                $multiple_items_info      = $prepared_multiple_items['items'];
+                $rbfw_multi_item_price    = $prepared_multiple_items['total'];
 
-
-                $multiple_items_info = (isset( $sd_input_data_sabitized['multiple_items_info'] ) && is_array( $sd_input_data_sabitized['multiple_items_info'] ) ) ? $sd_input_data_sabitized['multiple_items_info'] : [];
-                $filteredItems = array_filter($multiple_items_info, function($multiple_items_info) {
-                    return $multiple_items_info['item_qty'] > 0;
-                });
-                $multiple_items_info = array_values($filteredItems);
-
-
-                $rbfw_category_wise_info = isset( $sd_input_data_sabitized['rbfw_category_wise_info'] ) ? $sd_input_data_sabitized['rbfw_category_wise_info'] : [];
-                foreach ($rbfw_category_wise_info as $category) {
-                    $newCategory = ['cat_title' => $category['cat_title']];
-                    foreach ($category as $key => $item) {
-                        if (is_array($item) && isset($item['quantity']) && $item['quantity'] > 0) {
-                            $newCategory[] = $item;
-                        }
-                    }
-                    if (count($newCategory) > 1) {
-                        $filtered[] = $newCategory;
-                    }
-                }
-                $rbfw_category_wise_info = $filtered;
-
-
+                $submitted_category_wise_info = isset( $sd_input_data_sabitized['rbfw_category_wise_info'] ) ? $sd_input_data_sabitized['rbfw_category_wise_info'] : [];
+                $prepared_category_wise_info  = $this->rbfw_prepare_multi_item_addons_from_post( $rbfw_id, $submitted_category_wise_info, $total_days );
+                $rbfw_category_wise_info      = $prepared_category_wise_info['items'];
+                $rbfw_category_wise_price     = $prepared_category_wise_info['total'];
 
                 $sub_total_price = $rbfw_multi_item_price + $rbfw_category_wise_price;
 
-
                 $rbfw_management_info_all = (isset( $sd_input_data_sabitized['rbfw_management_info'] ) && is_array( $sd_input_data_sabitized['rbfw_management_info'] ) ) ? $sd_input_data_sabitized['rbfw_management_info'] : [];
-
-                $rbfw_management_price = 0;
-                $rbfw_management_info             = array();
-                $selected_management_fees = array();
-                if ( ! empty( $rbfw_management_info_all ) ) {
-                    foreach ( $rbfw_management_info_all as $key => $value ) {
-                        $service_label = ! empty( $value['label'] ) ? $value['label'] : '';
-                        $is_checked  = ! empty( $value['is_checked'] ) ? $value['is_checked'] : 0;
-                        if ( $service_label && $is_checked == 'yes' ) {
-                            $selected_management_fees[ $service_label ] = true;
-                        }
-                    }
-                }
-
-                $rbfw_fee_data = get_post_meta( $rbfw_id, 'rbfw_fee_data', true );
-                $rbfw_fee_data = is_array( $rbfw_fee_data ) ? $rbfw_fee_data : array();
-                foreach ( $rbfw_fee_data as $fee ) {
-                    $service_label = ! empty( $fee['label'] ) ? $fee['label'] : '';
-                    $priority = ! empty( $fee['priority'] ) ? $fee['priority'] : 'optional';
-                    if ( $service_label && ( isset( $selected_management_fees[ $service_label ] ) || $priority == 'required' ) ) {
-                        $price = ! empty( $fee['amount'] ) ? (float) $fee['amount'] : 0;
-                        $price_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
-                        $refundable = ! empty( $fee['refundable'] ) ? $fee['refundable'] : 'no';
-                        if ( $price_type === 'percentage' ) {
-                            $fee_total = ( $price / 100 ) * $sub_total_price;
-                            $rbfw_management_price += $fee_total;
-                            $rbfw_management_info[ $service_label ] = array( 'price' => $fee_total, 'price_desc' => wc_price( $fee_total ), 'refundable' => $refundable );
-                        } else {
-                            $rbfw_management_price += $price;
-                            $rbfw_management_info[ $service_label ] = array( 'price' => $price, 'price_desc' => wc_price( $price ), 'refundable' => $refundable );
-                        }
-                    }
-                }
+                $prepared_management_info = $this->rbfw_prepare_multi_item_fees_from_post( $rbfw_id, $rbfw_management_info_all, $sub_total_price );
+                $rbfw_management_info     = $prepared_management_info['items'];
+                $rbfw_management_price    = $prepared_management_info['total'];
 
 
 
@@ -1232,18 +1363,19 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $multiple_items_info_meta = '';
 
                 if ( ! empty( $multiple_items_info ) ) {
+                    $selected_items_count = count( $multiple_items_info );
                     $multiple_items_info_meta .= '<table>';
                     foreach ( $multiple_items_info as $key => $value ) {
                         $item_name = esc_html( $value['item_name'] );
                         $item_price = floatval( $value['item_price'] );
                         $item_qty = intval( $value['item_qty'] );
-                        $total_days = intval( $duration_qty );
-                        $total_price = $item_price * $item_qty * $total_days;
+                        $duration_quantity = max( 1, intval( $duration_qty ) );
+                        $total_price = ( 1 === $selected_items_count ) ? floatval( $rbfw_multi_item_price ) : $item_price * $item_qty * $duration_quantity;
 
                         $price_string = '(' .
                             wp_kses( wc_price( $item_price ), rbfw_allowed_html() ) .
                             ' x ' . esc_html( $item_qty ) .
-                            ' x ' . esc_html( $total_days ) .
+                            ( ( $total_price === $item_price * $item_qty ) ? '' : ' x ' . esc_html( $duration_quantity ) ) .
                             ') = ' . wp_kses( wc_price( $total_price ), rbfw_allowed_html() );
 
                         $multiple_items_info_meta .= '<tr>';
