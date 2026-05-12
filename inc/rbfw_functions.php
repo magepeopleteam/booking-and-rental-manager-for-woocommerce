@@ -3188,13 +3188,14 @@ function get_rbfw_post_categories_from_meta() {
 
     foreach ($query->posts as $post_id) {
 
-        // Get the meta value (string like "Car,Bike,Resort")
+        // Get the meta value. Older data may be saved as an array or a comma separated string.
         $value = get_post_meta($post_id, 'rbfw_categories', true);
 
-        $value = $value[0];
+        if ( is_array( $value ) ) {
+            $value = implode( ',', array_filter( $value ) );
+        }
 
-        if (!empty($value)) {
-
+        if ( ! empty( $value ) && is_string( $value ) ) {
             // Convert comma separated string to array
             $items = array_map('trim', explode(',', $value));
 

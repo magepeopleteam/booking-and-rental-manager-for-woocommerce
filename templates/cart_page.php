@@ -4,6 +4,7 @@ global $rbfw;
 $rbfw_rent_type 	= get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 
 $rbfw_enable_start_end_date  = get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_start_end_date', true ) : 'yes';
+$rbfw_fee_data 	= get_post_meta( $rbfw_id, 'rbfw_fee_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_fee_data', true ) : array();
 
 ?>
 <?php
@@ -13,6 +14,8 @@ do_action( 'rbfw_before_cart_item_display', $cart_item, $rbfw_id );
 
 $security_deposit_amount 	= $cart_item['security_deposit_amount'] ? $cart_item['security_deposit_amount'] : '';
 $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_management_info'] : [];
+
+
 
 ?>
 
@@ -217,24 +220,43 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
             </tr>
         <?php endif; ?>
 
-        <?php if ( ! empty( $rbfw_management_info ) ){ ?>
+        <?php if ( ! empty( $rbfw_fee_data ) ){ ?>
             <?php
-            foreach ($rbfw_management_info as $key => $value){
+            foreach ($rbfw_fee_data as $fee){
                 $service_label = $key; //service name
-                $service_price = (float)$value['price'];
-                $refundable = ($value['refundable']=='yes')?'( Refundable )':'( Non refundable )';
+                $service_price = (float)$fee['amount'];
+                $refundable = ($fee['refundable']=='yes')?'( Refundable )':'( Non refundable )';
+                if (isset($rbfw_management_info[$fee['label']]) && $rbfw_management_info[$fee['label']] == "yes") {
+                    $fee_calculation_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
+                    $fee_frequency = ! empty( $fee['frequency'] ) ? $fee['frequency'] : 'one-time';
+                    $fee_base_price = (float) $rbfw_room_duration_price + (float) $rbfw_room_service_price;
+                    if ( $fee_calculation_type == 'percentage' ) {
+                        $fee_total = ( $service_price / 100 ) * $fee_base_price;
+                        $fee_price_display = $service_price . '% x ' . wc_price( $fee_base_price ) . ' = ' . wc_price( $fee_total );
+                    } elseif ( $fee_frequency != 'one-time' ) {
+                        $fee_total = $service_price * (int) $total_days;
+                        $fee_price_display = wc_price( $service_price ) . ' x ' . esc_html( $total_days ) . ' = ' . wc_price( $fee_total );
+                    } else {
+                        $fee_total = $service_price;
+                        $fee_price_display = wc_price( $fee_total );
+                    }
                 ?>
                 <tr>
                     <th>
-                        <?php echo esc_html($service_label); ?> <?php echo esc_html($refundable); ?>:
+                        <?php echo esc_html($fee['label']); ?> <?php echo esc_html($refundable); ?>:
                     </th>
                     <td>
-                        (<?php echo wp_kses($value['price_desc'],rbfw_allowed_html()); ?>) = <?php echo wp_kses(wc_price($service_price),rbfw_allowed_html()); ?>
+                        (<?php echo wp_kses( $fee_price_display, rbfw_allowed_html() ); ?>)
                     </td>
                 </tr>
                 <?php
             } ?>
-        <?php } ?>
+        <?php } }?>
+
+
+
+
+
 
 
 

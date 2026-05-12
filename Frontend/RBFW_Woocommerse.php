@@ -114,10 +114,12 @@ if (!class_exists('RBFW_Woocommerce')) {
             $sd_input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
             $rbfw_rent_type     = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 
+            $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
+
+
             $rbfw_item_quantity = isset( $sd_input_data_sabitized['rbfw_item_quantity'] ) ? intval( $sd_input_data_sabitized['rbfw_item_quantity'] ) : 1;
             $rbfw_service_info_all = (isset( $sd_input_data_sabitized['rbfw_service_info'] ) && is_array( $sd_input_data_sabitized['rbfw_service_info'] ) ) ? $sd_input_data_sabitized['rbfw_service_info'] : [];
 
-            $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
             $rbfw_service_info             = array();
             if ( ! empty( $rbfw_service_info_all ) ) {
                 foreach ( $rbfw_service_info_all as $key => $value ) {
@@ -125,6 +127,20 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $service_qty  = ! empty( $value['service_qty'] ) ? $value['service_qty'] : 0;
                     if ( $service_qty > 0 ) {
                         $rbfw_service_info[ $service_name ] = $service_qty;
+                    }
+                }
+            }
+
+
+            $rbfw_management_info_all = (isset( $sd_input_data_sabitized['rbfw_management_info'] ) && is_array( $sd_input_data_sabitized['rbfw_management_info'] ) ) ? $sd_input_data_sabitized['rbfw_management_info'] : [];
+
+            $rbfw_management_info             = array();
+            if ( ! empty( $rbfw_management_info_all ) ) {
+                foreach ( $rbfw_management_info_all as $key => $value ) {
+                    $management_label = ! empty( $value['label'] ) ? $value['label'] : '';
+                    $is_checked  = ! empty( $value['is_checked'] ) ? $value['is_checked'] : 0;
+                    if ( $is_checked == 'yes' ) {
+                        $rbfw_management_info[ $management_label ] = $is_checked;
                     }
                 }
             }
@@ -165,13 +181,12 @@ if (!class_exists('RBFW_Woocommerce')) {
                 }
 
 
-                $rbfw_room_duration_price = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_duration_price' );
-                $rbfw_room_service_price  = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, 'rbfw_room_service_price' );
-
-                $sub_total_price = $rbfw_room_duration_price + $rbfw_room_service_price;
-
+                $rbfw_room_duration_price = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info,$rbfw_management_info, 'rbfw_room_duration_price' );
+                $rbfw_room_service_price  = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info,$rbfw_management_info, 'rbfw_room_service_price' );
+                $rbfw_management_price  = $this->rbfw_resort_price_calculation( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info,$rbfw_management_info, 'rbfw_room_management_price' );
 
 
+                $sub_total_price = $rbfw_room_duration_price + $rbfw_room_service_price + $rbfw_management_price;
 
                 $origin                   = date_create( $rbfw_checkin_datetime );
                 $target                   = date_create( $rbfw_checkout_datetime );
@@ -184,36 +199,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $total_days++;
                 }
 
-                $rbfw_management_info_all = (isset( $sd_input_data_sabitized['rbfw_management_info'] ) && is_array( $sd_input_data_sabitized['rbfw_management_info'] ) ) ? $sd_input_data_sabitized['rbfw_management_info'] : [];
 
-
-
-                $rbfw_management_price = 0;
-                $rbfw_management_info             = array();
-                if ( ! empty( $rbfw_management_info_all ) ) {
-                    foreach ( $rbfw_management_info_all as $key => $value ) {
-                        $service_label = ! empty( $value['label'] ) ? $value['label'] : '';
-                        $is_checked  = ! empty( $value['is_checked'] ) ? $value['is_checked'] : 0;
-                        $price  = ! empty( $value['amount'] ) ? $value['amount'] : 0;
-                        $price_type  = ! empty( $value['calculation_type'] ) ? $value['calculation_type'] : '';
-                        $frequency  = ! empty( $value['frequency'] ) ? $value['frequency'] : '';
-                        $refundable  = ! empty( $value['refundable'] ) ? $value['refundable'] : '';
-                        if ( $is_checked == 'yes' ) {
-                            if ($price_type === 'percentage') {
-                                $rbfw_management_price += (($price / 100) * $sub_total_price);
-                                $rbfw_management_info[ $service_label ] = array('price_desc'=>$price.'% of '.wc_price($sub_total_price) ,'price'=>(($price / 100) * $sub_total_price),'refundable'=>$refundable);
-                            } else {
-                                if ($frequency === 'one-time') {
-                                    $rbfw_management_price += $price * $rbfw_item_quantity;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) ,'price'=>$price * $rbfw_item_quantity,'refundable'=>$refundable);
-                                } else {
-                                    $rbfw_management_price += $price * $rbfw_item_quantity * $total_days;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $total_days,'price'=>$price * $rbfw_item_quantity * $total_days,'refundable'=>$refundable);
-                                }
-                            }
-                        }
-                    }
-                }
 
 
                 if ( function_exists( 'rbfw_get_discount_array' ) ) {
@@ -221,16 +207,16 @@ if (!class_exists('RBFW_Woocommerce')) {
                 } else {
                     $discount_arr = [];
                 }
-                $sub_total_price_discount = 0;
+                $discounted_total = $sub_total_price;
                 if ( ! empty( $discount_arr ) ) {
-                    $sub_total_price_discount       = $discount_arr['total_amount'];
+                    $discounted_total      = $discount_arr['total_amount'];
                     $discount_type         = $discount_arr['discount_type'];
                     $discount_amount       = $discount_arr['discount_amount'];
                 }
-                $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price , $rbfw_management_info , $rbfw_management_price );
+                $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price , $rbfw_management_info  );
 
-                $security_deposit                           = rbfw_security_deposit( $rbfw_id, $sub_total_price_discount );
-                $total_price                                = $sub_total_price + $rbfw_management_price;
+                $security_deposit                           = rbfw_security_deposit( $rbfw_id, $sub_total_price );
+                $total_price                                = $discounted_total + $security_deposit['security_deposit_amount'];
                 $start_date                                 = $rbfw_checkin_datetime;
                 $end_date                                   = $rbfw_checkout_datetime;
                 $cart_item_data['rbfw_start_datetime']      = $rbfw_checkin_datetime;
@@ -248,7 +234,6 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['rbfw_room_service_price']  = $rbfw_room_service_price;
                 $cart_item_data['rbfw_ticket_info']         = $rbfw_resort_ticket_info;
                 $cart_item_data['rbfw_management_info']     = $rbfw_management_info;
-                $cart_item_data['rbfw_management_price']     = $rbfw_management_price;
                 $cart_item_data['discount_type']            = $discount_type;
                 $cart_item_data['discount_amount']          = $discount_amount;
                 $cart_item_data['security_deposit_amount']  = $security_deposit['security_deposit_amount'];
@@ -297,21 +282,33 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $rbfw_management_price = 0;
                 $rbfw_management_info             = array();
+                $selected_management_fees = array();
                 if ( ! empty( $rbfw_management_info_all ) ) {
                     foreach ( $rbfw_management_info_all as $key => $value ) {
                         $service_label = ! empty( $value['label'] ) ? $value['label'] : '';
                         $is_checked  = ! empty( $value['is_checked'] ) ? $value['is_checked'] : 0;
-                        $price  = ! empty( $value['amount'] ) ? $value['amount'] : 0;
-                        $price_type  = ! empty( $value['calculation_type'] ) ? $value['calculation_type'] : '';
-                        $refundable  = ! empty( $value['refundable'] ) ? $value['refundable'] : '';
-                        if ( $is_checked == 'yes' ) {
-                            if ($price_type === 'percentage') {
-                                $rbfw_management_price += (($price / 100) * $sub_total_price);
-                                $rbfw_management_info[ $service_label ] = array('price'=> ($price / 100) * $sub_total_price, 'price_desc'=>wc_price(($price / 100) * $sub_total_price), 'refundable'=>$refundable);
-                            } else {
-                                $rbfw_management_price += $price;
-                                $rbfw_management_info[ $service_label ] = array('price'=> $price, 'price_desc'=>wc_price($price), 'refundable'=>$refundable);
-                            }
+                        if ( $service_label && $is_checked == 'yes' ) {
+                            $selected_management_fees[ $service_label ] = true;
+                        }
+                    }
+                }
+
+                $rbfw_fee_data = get_post_meta( $rbfw_id, 'rbfw_fee_data', true );
+                $rbfw_fee_data = is_array( $rbfw_fee_data ) ? $rbfw_fee_data : array();
+                foreach ( $rbfw_fee_data as $fee ) {
+                    $service_label = ! empty( $fee['label'] ) ? $fee['label'] : '';
+                    $priority = ! empty( $fee['priority'] ) ? $fee['priority'] : 'optional';
+                    if ( $service_label && ( isset( $selected_management_fees[ $service_label ] ) || $priority == 'required' ) ) {
+                        $price = ! empty( $fee['amount'] ) ? (float) $fee['amount'] : 0;
+                        $price_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
+                        $refundable = ! empty( $fee['refundable'] ) ? $fee['refundable'] : 'no';
+                        if ( $price_type === 'percentage' ) {
+                            $fee_total = ( $price / 100 ) * $sub_total_price;
+                            $rbfw_management_price += $fee_total;
+                            $rbfw_management_info[ $service_label ] = array( 'price' => $fee_total, 'price_desc' => wc_price( $fee_total ), 'refundable' => $refundable );
+                        } else {
+                            $rbfw_management_price += $price;
+                            $rbfw_management_info[ $service_label ] = array( 'price' => $price, 'price_desc' => wc_price( $price ), 'refundable' => $refundable );
                         }
                     }
                 }
@@ -401,22 +398,33 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $rbfw_management_price = 0;
                 $rbfw_management_info             = array();
+                $selected_management_fees = array();
                 if ( ! empty( $rbfw_management_info_all ) ) {
                     foreach ( $rbfw_management_info_all as $key => $value ) {
                         $service_label = ! empty( $value['label'] ) ? $value['label'] : '';
                         $is_checked  = ! empty( $value['is_checked'] ) ? $value['is_checked'] : 0;
-                        $price  = ! empty( $value['amount'] ) ? $value['amount'] : 0;
-                        $price_type  = ! empty( $value['calculation_type'] ) ? $value['calculation_type'] : '';
-                        $frequency  = ! empty( $value['frequency'] ) ? $value['frequency'] : '';
-                        $refundable  = ! empty( $value['refundable'] ) ? $value['refundable'] : 'no';
-                        if ( $is_checked == 'yes' ) {
-                            if ($price_type === 'percentage') {
-                                $rbfw_management_price += (($price / 100) * $sub_total_price);
-                                $rbfw_management_info[ $service_label ] = array('price'=> ($price / 100) * $sub_total_price, 'price_desc'=>wc_price(($price / 100) * $sub_total_price), 'refundable'=>$refundable);
-                            } else {
-                                $rbfw_management_price += $price * $rbfw_item_quantity;
-                                $rbfw_management_info[ $service_label ] =array('price'=> $price, 'price_desc'=>wc_price($price), 'refundable'=>$refundable);
-                            }
+                        if ( $service_label && $is_checked == 'yes' ) {
+                            $selected_management_fees[ $service_label ] = true;
+                        }
+                    }
+                }
+
+                $rbfw_fee_data = get_post_meta( $rbfw_id, 'rbfw_fee_data', true );
+                $rbfw_fee_data = is_array( $rbfw_fee_data ) ? $rbfw_fee_data : array();
+                foreach ( $rbfw_fee_data as $fee ) {
+                    $service_label = ! empty( $fee['label'] ) ? $fee['label'] : '';
+                    $priority = ! empty( $fee['priority'] ) ? $fee['priority'] : 'optional';
+                    if ( $service_label && ( isset( $selected_management_fees[ $service_label ] ) || $priority == 'required' ) ) {
+                        $price = ! empty( $fee['amount'] ) ? (float) $fee['amount'] : 0;
+                        $price_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
+                        $refundable = ! empty( $fee['refundable'] ) ? $fee['refundable'] : 'no';
+                        if ( $price_type === 'percentage' ) {
+                            $fee_total = ( $price / 100 ) * $sub_total_price;
+                            $rbfw_management_price += $fee_total;
+                            $rbfw_management_info[ $service_label ] = array( 'price' => $fee_total, 'price_desc' => wc_price( $fee_total ), 'refundable' => $refundable );
+                        } else {
+                            $rbfw_management_price += $price;
+                            $rbfw_management_info[ $service_label ] = array( 'price' => $price, 'price_desc' => wc_price( $price ), 'refundable' => $refundable );
                         }
                     }
                 }
@@ -559,26 +567,41 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $rbfw_management_price = 0;
                 $rbfw_management_info             = array();
+                $selected_management_fees = array();
                 if ( ! empty( $rbfw_management_info_all ) ) {
                     foreach ( $rbfw_management_info_all as $key => $value ) {
                         $service_label = ! empty( $value['label'] ) ? $value['label'] : '';
                         $is_checked  = ! empty( $value['is_checked'] ) ? $value['is_checked'] : 0;
-                        $price  = ! empty( $value['amount'] ) ? $value['amount'] : 0;
-                        $price_type  = ! empty( $value['calculation_type'] ) ? $value['calculation_type'] : '';
-                        $frequency  = ! empty( $value['frequency'] ) ? $value['frequency'] : '';
-                        $refundable  = ( $value['refundable'] ) ? $value['refundable'] : 'no';
-                        if ( $is_checked == 'yes' ) {
-                            if ($price_type === 'percentage') {
-                                $rbfw_management_price += (($price / 100) * $sub_total_price);
-                                $rbfw_management_info[ $service_label ] = array('price'=>(($price / 100) * $sub_total_price),'price_desc'=>$price.'% of '.wc_price($sub_total_price) ,'refundable'=>$refundable);
+                        if ( $service_label && $is_checked == 'yes' ) {
+                            $selected_management_fees[ $service_label ] = true;
+                        }
+                    }
+                }
+
+                $rbfw_fee_data = get_post_meta( $rbfw_id, 'rbfw_fee_data', true );
+                $rbfw_fee_data = is_array( $rbfw_fee_data ) ? $rbfw_fee_data : array();
+                foreach ( $rbfw_fee_data as $fee ) {
+                    $service_label = ! empty( $fee['label'] ) ? $fee['label'] : '';
+                    $priority = ! empty( $fee['priority'] ) ? $fee['priority'] : 'optional';
+                    if ( $service_label && ( isset( $selected_management_fees[ $service_label ] ) || $priority == 'required' ) ) {
+                        $price = ! empty( $fee['amount'] ) ? (float) $fee['amount'] : 0;
+                        $price_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
+                        $frequency = ! empty( $fee['frequency'] ) ? $fee['frequency'] : 'one-time';
+                        $refundable = ! empty( $fee['refundable'] ) ? $fee['refundable'] : 'no';
+                        if ( $price_type === 'percentage' ) {
+                            $fee_total = ( $price / 100 ) * $sub_total_price;
+                            $rbfw_management_price += $fee_total;
+                            $rbfw_management_info[ $service_label ] = array( 'price' => $fee_total, 'price_desc' => $price . '% of ' . wc_price( $sub_total_price ), 'refundable' => $refundable );
+                        } else {
+                            $is_day_wise_fee = in_array( $frequency, array( 'per-day', 'day-wise', 'day_wise' ), true );
+                            if ( $is_day_wise_fee ) {
+                                $fee_total = $price * $rbfw_item_quantity * $total_days;
+                                $rbfw_management_price += $fee_total;
+                                $rbfw_management_info[ $service_label ] = array( 'price_desc' => wc_price( $price ) . '*' . $rbfw_item_quantity . '*' . $total_days, 'price' => $fee_total, 'refundable' => $refundable );
                             } else {
-                                if ($frequency === 'one-time') {
-                                    $rbfw_management_price += $price * $rbfw_item_quantity;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $rbfw_item_quantity ,'price'=>$price * $rbfw_item_quantity,'refundable'=>$refundable);
-                                } else {
-                                    $rbfw_management_price += $price * $rbfw_item_quantity * $total_days;
-                                    $rbfw_management_info[ $service_label ] = array('price_desc'=>wc_price($price) .'*'. $rbfw_item_quantity .'*'. $total_days,'price'=>$price * $rbfw_item_quantity * $total_days,'refundable'=>$refundable);
-                                }
+                                $fee_total = $price * $rbfw_item_quantity;
+                                $rbfw_management_price += $fee_total;
+                                $rbfw_management_info[ $service_label ] = array( 'price_desc' => wc_price( $price ) . '*' . $rbfw_item_quantity, 'price' => $fee_total, 'refundable' => $refundable );
                             }
                         }
                     }
@@ -621,6 +644,7 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $cart_item_data['security_deposit_desc']          = $security_deposit['security_deposit_desc'];
                 $cart_item_data['total_days']                     = $total_days;
             }
+
             $cart_item_data['start_date']    = isset( $start_date ) ? $start_date : '';
             $cart_item_data['end_date']      = $end_date;
             $cart_item_data['rbfw_tp']       = $total_price;
@@ -682,11 +706,23 @@ if (!class_exists('RBFW_Woocommerce')) {
             if ( $rbfw_rent_type == 'resort' ) {
                 $rbfw_start_datetime = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
                 $rbfw_end_datetime = $values['rbfw_end_datetime'] ? $values['rbfw_end_datetime'] : '';
+                $origin = date_create( $rbfw_start_datetime );
+                $target = date_create( $rbfw_end_datetime );
+                $interval = date_diff( $origin, $target );
+                $total_days = $interval->format( '%a' );
+                $rbfw_count_extra_day_enable = $rbfw->get_option_trans( 'rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on' );
+                if ( $rbfw_count_extra_day_enable == 'on' ) {
+                    $total_days++;
+                }
                 $rbfw_room_price_category = $values['rbfw_room_price_category'] ? $values['rbfw_room_price_category'] : '';
                 $rbfw_ticket_info = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
                 $rbfw_room_info = $values['rbfw_room_info'] ? $values['rbfw_room_info'] : [];
                 $rbfw_management_info = $values['rbfw_management_info'] ? $values['rbfw_management_info'] : [];
-                $rbfw_management_price = $values['rbfw_management_price'] ? $values['rbfw_management_price'] : [];
+                $rbfw_fee_data = get_post_meta($rbfw_id, 'rbfw_fee_data', true) ? get_post_meta($rbfw_id, 'rbfw_fee_data', true) : array();
+
+
+
+               // $rbfw_management_price = $values['management_price'] ? $values['rbfw_management_price'] : [];
                 $rbfw_room_price = $values['rbfw_room_price'] ? $values['rbfw_room_price'] : [];
                 $rbfw_resort_room_data = get_post_meta($rbfw_id, 'rbfw_resort_room_data', true) ? get_post_meta($rbfw_id, 'rbfw_resort_room_data', true) : array();
                 if ($rbfw_room_price_category == 'daynight') {
@@ -827,20 +863,34 @@ if (!class_exists('RBFW_Woocommerce')) {
                 endif;
 
 
-                if (!empty($rbfw_management_info)){
+                if (!empty($rbfw_fee_data)){
                     $fee_management_content = '<table style="border:1px solid #f5f5f5;margin:0;width: 100%;">';
-                    foreach ($rbfw_management_info as $key => $value) {
-                        $service_label = $key; //service name
-                        $service_price = (float)$value['price'];
-                        $refundable = ($value['refundable']=='yes')?'( Refundable )':'( Non refundable )';
-                        $fee_management_content .= '<tr>';
-                        $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
-                        $fee_management_content .= '<strong>' . $service_label.' '. $refundable . '</strong>';
-                        $fee_management_content .= '</td>';
-                        $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
-                        $fee_management_content .=  wc_price($service_price);
-                        $fee_management_content .= '</td>';
-                        $fee_management_content .= '</tr>';
+                    foreach ($rbfw_fee_data as  $fee) {
+                        $service_price = (float)$fee['amount'];
+                        $refundable = ($fee['refundable']=='yes')?'( Refundable )':'( Non refundable )';
+                        if (isset($rbfw_management_info[$fee['label']]) && $rbfw_management_info[$fee['label']] == "yes") {
+                            $fee_calculation_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
+                            $fee_frequency = ! empty( $fee['frequency'] ) ? $fee['frequency'] : 'one-time';
+                            $fee_base_price = (float) $rbfw_room_duration_price + (float) $rbfw_room_service_price;
+                            if ( $fee_calculation_type == 'percentage' ) {
+                                $fee_total = ( $service_price / 100 ) * $fee_base_price;
+                                $fee_price_display = $service_price . '% x ' . wc_price( $fee_base_price ) . ' = ' . wc_price( $fee_total );
+                            } elseif ( $fee_frequency != 'one-time' ) {
+                                $fee_total = $service_price * (int) $total_days;
+                                $fee_price_display = wc_price( $service_price ) . ' x ' . esc_html( $total_days ) . ' = ' . wc_price( $fee_total );
+                            } else {
+                                $fee_total = $service_price;
+                                $fee_price_display = wc_price( $fee_total );
+                            }
+                            $fee_management_content .= '<tr>';
+                            $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
+                            $fee_management_content .= '<strong>' . $fee['label'] . ' ' . $refundable . '</strong>';
+                            $fee_management_content .= '</td>';
+                            $fee_management_content .= '<td style="border:1px solid #f5f5f5;">';
+                            $fee_management_content .= '(' . $fee_price_display . ')';
+                            $fee_management_content .= '</td>';
+                            $fee_management_content .= '</tr>';
+                        }
                     }
                     $fee_management_content .= '</table>';
 
@@ -880,14 +930,14 @@ if (!class_exists('RBFW_Woocommerce')) {
 
 
 
-                $fee_management_label = esc_html__( 'Fee Management Cost', 'booking-and-rental-manager-for-woocommerce' );
+               /* $fee_management_label = esc_html__( 'Fee Management Cost', 'booking-and-rental-manager-for-woocommerce' );
 
                 if($rbfw_management_price){
                     $item->add_meta_data(
                         esc_html( $fee_management_label ),
                         wc_price($rbfw_management_price)
                     );
-                }
+                }*/
 
 
 
@@ -1707,7 +1757,7 @@ if (!class_exists('RBFW_Woocommerce')) {
         }
 
         /*  for checkout page resort pricing calculation   */
-        public function rbfw_resort_price_calculation($product_id, $checkin_date, $checkout_date, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info = array(), $rbfw_request = null) {
+        public function rbfw_resort_price_calculation($product_id, $checkin_date, $checkout_date, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info = array(),$rbfw_management_info = array(), $rbfw_request = null) {
             global $rbfw;
             // Basic validation
             if (empty($product_id) || empty($checkin_date) || empty($checkout_date) || empty($rbfw_room_info)) {
@@ -1729,6 +1779,7 @@ if (!class_exists('RBFW_Woocommerce')) {
             $room_price = 0;
             $total_room_price = 0;
             $service_price = 0;
+            $management_price = 0;
 
             // Get room pricing based on category
             $room_data = get_post_meta($product_id, 'rbfw_resort_room_data', true) ?: array();
@@ -1742,6 +1793,7 @@ if (!class_exists('RBFW_Woocommerce')) {
 
             // Get extra service pricing
             $service_data = get_post_meta($product_id, 'rbfw_extra_service_data', true) ?: array();
+            $rbfw_fee_data = get_post_meta($product_id, 'rbfw_fee_data', true) ?: array();
             $extra_services = !empty($service_data) ? array_column($service_data, 'service_price', 'service_name') : array();
 
             // Loop through selected rooms
@@ -1771,13 +1823,6 @@ if (!class_exists('RBFW_Woocommerce')) {
                     }
                     $total_room_price += $room_price * $quantity;
 
-                   /* $book_dates = getAllDates($checkin_date, $checkout_date);
-                    for ($d = 0; $d < $total_days; $d++) {
-                        $sp_price = check_seasonal_price_resort($book_dates[$d], $sp_data, $room_type, $rbfw_room_price_category);
-                        $unit_price = ($sp_price !== 'not_found') ? (float)$sp_price : (float)$room_types[$room_type];
-                        $room_price += $unit_price;
-                    }
-                    $total_room_price += $room_price * $quantity;*/
 
                 } elseif ($sp_enabled && !empty($sp_data)) {
                     $book_dates = getAllDates($checkin_date, $checkout_date);
@@ -1801,10 +1846,27 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $service_price += (float) $extra_services[$service_name] * $quantity;
                 }
             }
-            $total_service_price = $service_price;
 
-            // Calculate total
+            $total_service_price = $service_price;
             $subtotal_price = $total_room_price + $total_service_price;
+
+            foreach ($rbfw_fee_data as $fee){
+                if (isset($rbfw_management_info[$fee['label']]) && $rbfw_management_info[$fee['label']] == "yes") {
+
+                    $price_type = ! empty( $fee['calculation_type'] ) ? $fee['calculation_type'] : 'fixed';
+                    $price = ! empty( $fee['amount'] ) ? (float) $fee['amount'] : 0;
+                    $frequency = ! empty( $fee['frequency'] ) ? $fee['frequency'] : 'one-time';
+
+                    if ($price_type === 'percentage') {
+                        $management_price += ( $price / 100 ) * $subtotal_price;
+                    } else {
+                        $management_price += ( $frequency === 'one-time' ) ? $price : $price * $total_days;
+                    }
+
+                }
+            }
+
+            $subtotal_price += $management_price;
             $total_price = $subtotal_price;
 
             // Placeholder for future tax calculation
@@ -1818,6 +1880,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                     return $total_room_price;
                 case 'rbfw_room_service_price':
                     return $total_service_price;
+                case 'rbfw_room_management_price':
+                    return $management_price;
                 case 'rbfw_tax_price':
                     return $percent;
                 default:
