@@ -984,7 +984,10 @@ function calculateTotalExtraService() {
     jQuery('.subtotal .price-figure').html(wc_price_rbfw(sub_total_price));
     jQuery('.total .price-figure').html(wc_price_rbfw(total_price - discount_price));
 
-    jQuery('.discount span').text(wc_price_rbfw(discount_price));
+    if(parseFloat(discount_price) > 0){ 
+         jQuery('.discount span').text(wc_price_rbfw(discount_price));
+    }
+
 
 }
 
