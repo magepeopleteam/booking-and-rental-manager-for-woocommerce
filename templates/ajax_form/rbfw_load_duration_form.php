@@ -36,6 +36,7 @@ $total_row = $total_row??'';
             <option><?php echo esc_html__('Hours', 'booking-and-rental-manager-for-woocommerce'); ?></option>
             <option><?php echo esc_html__('Days', 'booking-and-rental-manager-for-woocommerce'); ?></option>
             <option><?php echo esc_html__('Weeks', 'booking-and-rental-manager-for-woocommerce'); ?></option>
+            <option><?php echo esc_html__('Months', 'booking-and-rental-manager-for-woocommerce'); ?></option>
         </select>
     </td>
     <td>
