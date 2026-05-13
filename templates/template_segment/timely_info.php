@@ -20,7 +20,7 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
         $end_date = $start_date;
         $end_time = isset($_POST['end_time']) ? sanitize_text_field(wp_unslash($_POST['end_time'])) : '';
     } else {
-        $total_hours = ($d_type == 'Hours' ? $duration : ($d_type == 'Days' ? $duration * 24 : $duration * 24 * 7));
+        $total_hours = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? $duration * 24 : ( $d_type == 'Weeks' ? $duration * 24 * 7 : $duration * 24 * 30 ) ) );
         $start_date_time->modify("+$total_hours hours");
         $end_date = $start_date_time->format('Y-m-d');
         $end_time = $start_date_time->format('H:i:s');

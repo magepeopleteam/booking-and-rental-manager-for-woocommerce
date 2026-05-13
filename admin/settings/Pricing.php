@@ -238,6 +238,7 @@
                                                             <option <?php echo esc_attr( isset( $value['d_type'] ) && $value['d_type'] == 'Hours' ) ? 'selected' : ''; ?> value="Hours">Hours</option>
                                                             <option <?php echo esc_attr( isset( $value['d_type'] ) && $value['d_type'] == 'Days' ) ? 'selected' : ''; ?> value="Days">Days</option>
                                                             <option <?php echo esc_attr( isset( $value['d_type'] ) && $value['d_type'] == 'Weeks' ) ? 'selected' : ''; ?> value="Weeks">Weeks</option>
+                                                            <option <?php echo esc_attr( isset( $value['d_type'] ) && $value['d_type'] == 'Months' ) ? 'selected' : ''; ?> value="Months">Months</option>
                                                         </select>
                                                     </td>
                                                     <td class="rbfw_bike_car_sd_price_table_action_column" <?php if ( $rbfw_item_type == 'appointment' ) {
@@ -281,6 +282,7 @@
                                                         <option value="Hours">Hours</option>
                                                         <option value="Days">Days</option>
                                                         <option value="Weeks">Weeks</option>
+                                                        <option value="Months">Months</option>
                                                     </select>
                                                 </td>
                                                 <td class="rbfw_bike_car_sd_price_table_action_column"<?php if ( $rbfw_item_type == 'appointment' ) {

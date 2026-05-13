@@ -2495,7 +2495,7 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
                     $for_end_date_time = $start_date_time;
                     $d_type   = $value['d_type'];
                     $duration = $value['duration'];
-                    $total_hours = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? (int)$duration * 24 : (int)$duration * 24 * 7 ) );
+                    $total_hours = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? (int) $duration * 24 : ( $d_type == 'Weeks' ? (int) $duration * 24 * 7 : (int) $duration * 24 * 30 ) ) );
                     $for_end_date_time->modify( "+$total_hours hours" );
                     $end_date = $for_end_date_time->format( 'Y-m-d' );
                     $end_time = $for_end_date_time->format( 'H:i:s' );
