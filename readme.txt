@@ -3,7 +3,7 @@ Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: booking calendar, Woocommerce Reservation Booking, Rental Booking, Woocommerce Rental Booking, Rental Plugin 
 Requires at least: 5.3
-Stable tag: 2.2.2
+Stable tag: 2.7.0
 Tested up to: 6.7.1
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -215,6 +215,16 @@ Learn more about how [Appsero collects and uses this data](https://appsero.com/p
 
 
 == Changelog ==
+
+2.7.0
+Multiple items price manipulation vulnerable issue solved.
+Multiple items server side price calculation updated.
+Multiple items fee management total price calculation problem solved.
+Elementor rent list category multiple select option added.
+Elementor rent list left filter problem solved.
+Cart and checkout multiple items price breakdown problem solved.
+Category meta warning problem solved.
+Code updated.
 
 2.6.5
 Signle day inventory problem solved.
