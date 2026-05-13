@@ -32,6 +32,39 @@ add_shortcode('rent-add-to-cart', 'rbfw_add_to_cart_shortcode_func');
 
 add_shortcode('rbfw_left_filter', 'rbfw_rent_left_filter' );
 
+function rbfw_rent_list_get_category_filter_names( $category ) {
+    if ( empty( $category ) ) {
+        return array();
+    }
+
+    $category_values = is_array( $category ) ? $category : explode( ',', $category );
+    $category_names  = array();
+
+    foreach ( $category_values as $category_value ) {
+        $category_value = sanitize_text_field( trim( (string) $category_value ) );
+
+        if ( '' === $category_value ) {
+            continue;
+        }
+
+        if ( is_numeric( $category_value ) ) {
+            $term = get_term( absint( $category_value ), 'rbfw_item_caregory' );
+
+            if ( ! $term || is_wp_error( $term ) ) {
+                $term = get_term( absint( $category_value ) );
+            }
+
+            if ( $term && ! is_wp_error( $term ) ) {
+                $category_names[] = $term->name;
+            }
+        } else {
+            $category_names[] = $category_value;
+        }
+    }
+
+    return array_values( array_unique( array_filter( $category_names ) ) );
+}
+
 function rbfw_rent_list_shortcode_func($atts = null) {
 
     $attributes = shortcode_atts( array(
@@ -75,6 +108,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'type_filter_shown'     => $attributes['left-type-filter'],
         'feature_filter_shown'  => $attributes['left-feature-filter'],
     );
+    $left_filter_category_names = rbfw_rent_list_get_category_filter_names( ! empty( $category ) ? $category : $cat_ids );
 
 
     if(isset($atts['rbfw_search_type'])){
@@ -322,7 +356,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         <?php
         if( in_array( $left_filter, array( 'yes', 'on' ), true ) ){
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper_with_left_filter';
-            echo wp_kses(rbfw_rent_left_filter( $left_filter_control ) , rbfw_allowed_html());
+            echo wp_kses(rbfw_rent_left_filter( $left_filter_control, $left_filter_category_names ) , rbfw_allowed_html());
         }else{
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper';
         }
@@ -720,7 +754,21 @@ function rbfw_rent_search_shortcode( $atts = null ){
 }
 
 
-function rbfw_rent_left_filter( $left_filter_control = null ){
+function rbfw_rent_left_filter( $left_filter_control = null, $allowed_categories = array() ){
+
+    $left_filter_control = shortcode_atts(
+        array(
+            'title_filter_shown'    => isset( $left_filter_control['title-filter'] ) ? $left_filter_control['title-filter'] : 'on',
+            'price_filter_shown'    => isset( $left_filter_control['price-filter'] ) ? $left_filter_control['price-filter'] : 'on',
+            'location_filter_shown' => isset( $left_filter_control['location-filter'] ) ? $left_filter_control['location-filter'] : 'on',
+            'category_filter_shown' => isset( $left_filter_control['category-filter'] ) ? $left_filter_control['category-filter'] : 'on',
+            'type_filter_shown'     => isset( $left_filter_control['type-filter'] ) ? $left_filter_control['type-filter'] : 'on',
+            'feature_filter_shown'  => isset( $left_filter_control['feature-filter'] ) ? $left_filter_control['feature-filter'] : 'on',
+        ),
+        is_array( $left_filter_control ) ? $left_filter_control : array()
+    );
+
+    $allowed_categories = rbfw_rent_list_get_category_filter_names( $allowed_categories );
 
 
     $rbfw_locations = get_rbfw_pickup_data_wp_query();
@@ -811,7 +859,17 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
 
             $rbfw_categorys = get_rbfw_post_categories_from_meta();
 
-
+            if ( ! empty( $allowed_categories ) && is_array( $rbfw_categorys ) ) {
+                $allowed_category_lookup = array_map( 'strtolower', $allowed_categories );
+                $rbfw_categorys = array_values(
+                    array_filter(
+                        $rbfw_categorys,
+                        function ( $category ) use ( $allowed_category_lookup ) {
+                            return in_array( strtolower( $category ), $allowed_category_lookup, true );
+                        }
+                    )
+                );
+            }
 
             ?>
 
@@ -823,9 +881,10 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
                         <?php
 
                         $total_category = count( $rbfw_categorys );
+                        $category_limit = ! empty( $allowed_categories ) ? $total_category : $type_display;
                         $category_display_count = 1;
                         foreach ( $rbfw_categorys as $category ) {
-                            if( $category_display_count <= $type_display ){
+                            if( $category_display_count <= $category_limit ){
                                 ?>
                                 <div class="rbfw_rent_item_left_feature_title">
                                     <input type="checkbox" class="rbfw_category" value="<?php echo esc_attr( $category )?>">
@@ -839,7 +898,7 @@ function rbfw_rent_left_filter( $left_filter_control = null ){
                         </div>
                             <?php
 
-                        if( $total_category > $type_display ){ ?>
+                        if( empty( $allowed_categories ) && $total_category > $type_display ){ ?>
                             <div class="rbfw_left_filter_more_feature_loaders" id="rbfw_left_filter_category"><?php esc_html_e('More','booking-and-rental-manager-for-woocommerce'); ?> +</div>
                         <?php }
     //                    }
