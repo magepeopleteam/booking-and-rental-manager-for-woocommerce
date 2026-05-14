@@ -161,6 +161,15 @@
 						if ( ! empty( $text_search ) ) {
 							$search_by_title = $text_search;
 						}
+						/**
+						 * FIX: Keep the original widget/category scope when the left filter resets.
+						 * AUTHOR: shahnur alam
+						 * ISSUE: #RBFW-FILTER-001
+						 * SOLVED: 2026-05-14
+						 * CONTEXT: The AJAX query must keep the baseline categorized items scoped
+						 * even when the sidebar sends an empty category filter after Clear All.
+						 */
+						$base_categories = isset( $filter_date['base_category'] ) && is_array( $filter_date['base_category'] ) ? array_filter( array_map( 'sanitize_text_field', $filter_date['base_category'] ) ) : [];
 						$filter_by_price = isset( $filter_date['price'] ) ? $filter_date['price'] : [];
 
 						if ( is_array( $filter_by_price ) && count( $filter_by_price ) > 0 ) {
@@ -220,31 +229,65 @@
 							foreach ( $rent_categories as $category_name ) {
 								$category_query[] = ! empty( $category_name ) ? array(
 									'key'     => 'rbfw_categories',
-									'value'   => sanitize_text_field( $category_name ),
+									'value'   => serialize( sanitize_text_field( $category_name ) ),
 									'compare' => 'LIKE'
 								) : '';
 							}
 						} else {
 							$category_query = '';
 						}
+						if ( is_array( $base_categories ) && count( $base_categories ) > 0 ) {
+							$base_category_query = array( 'relation' => 'OR' );
+							foreach ( $base_categories as $base_category_name ) {
+								$base_category_query[] = ! empty( $base_category_name ) ? array(
+									'key'     => 'rbfw_categories',
+									'value'   => serialize( sanitize_text_field( $base_category_name ) ),
+									'compare' => 'LIKE'
+								) : '';
+							}
+						} else {
+							$base_category_query = '';
+						}
 						$posts_per_page = 100;
 						$number_of_page = 1;
-						$args           = array(
-							'post_type'      => 'rbfw_item',
-							's'              => $search_by_title,
-							'meta_query'     => array(
-								'relation' => 'OR',
+						$meta_query     = array(
+							'relation' => 'AND',
+						);
+						if ( ! empty( $base_category_query ) ) {
+							$meta_query[] = $base_category_query;
+						}
+						$active_filter_queries = array_filter(
+							array(
 								$price_filter_query,
 								$feature_meta_queries,
 								$rent_type,
 								$location_query,
 								$category_query,
 							),
+							static function ( $query_part ) {
+								return is_array( $query_part ) && ! empty( $query_part );
+							}
+						);
+						if ( ! empty( $active_filter_queries ) ) {
+							$optional_filter_query = array(
+								'relation' => 'OR',
+							);
+							foreach ( $active_filter_queries as $query_part ) {
+								$optional_filter_query[] = $query_part;
+							}
+							$meta_query[] = $optional_filter_query;
+						}
+						$args           = array(
+							'post_type'      => 'rbfw_item',
+							's'              => $search_by_title,
 							'orderby'        => 'ID',
 							'order'          => 'DESC',
 							'paged'          => $number_of_page,
 							'posts_per_page' => $posts_per_page,
 						);
+						if ( count( $meta_query ) > 1 ) {
+							$args['meta_query'] = $meta_query;
+						}
 						$query          = new WP_Query( $args );
 						$total_posts    = $query->found_posts;
 						$post_count     = $query->post_count;

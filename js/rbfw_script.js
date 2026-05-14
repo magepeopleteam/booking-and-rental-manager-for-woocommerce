@@ -319,11 +319,24 @@
             });
         }
 
+        let baseCategories = [];
+        const baseCategoryData = $('#rbfw_rent_list_wrapper').attr('data-base-categories');
+        if (baseCategoryData) {
+            try {
+                const parsedBaseCategories = JSON.parse(baseCategoryData);
+                if (Array.isArray(parsedBaseCategories)) {
+                    baseCategories = parsedBaseCategories;
+                }
+            } catch (error) {
+                baseCategories = [];
+            }
+        }
         var selectedLocation = [];
         var selectedcategory = [];
         var selectedType = [];
         var selectedFeatures = [];
         var get_filters = {
+            base_category: baseCategories,
             location: [],
             category: [],
             type: [],
@@ -463,7 +476,12 @@
 
         $(document).on('click', '.rbfw_left_filter_clearButton',function() {
             $('.rbfw_location, .rbfw_category, .rbfw_rent_type, .rbfw_rent_feature').prop('checked', false);
+            selectedLocation = [];
+            selectedcategory = [];
+            selectedType = [];
+            selectedFeatures = [];
             get_filters = {
+                base_category: baseCategories,
                 location: [],
                 category: [],
                 type: [],
@@ -595,7 +613,6 @@ jQuery(document).ready(function($){
         }
     });
 });
-
 
 
 
