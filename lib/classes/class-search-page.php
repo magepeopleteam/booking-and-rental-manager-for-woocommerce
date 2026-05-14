@@ -299,40 +299,50 @@
 								$post_ids[] = get_the_ID();
 								$response   .= $this->display_filter_rent_items( get_the_ID(), get_the_title(), get_the_content(), $item_style, $d );
 								$d ++;
+								}
+								wp_reset_postdata();
+							} else {
+								$response = '<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">' . esc_html__( 'Sorry, no data found!', 'booking-and-rental-manager-for-woocommerce' ) . '</div>';
 							}
-							wp_reset_postdata();
-						}
 
                         global $rbfw;
 
-                        $show_result = $total_posts;
+                        /**
+                         * FIX: Keep the left filter usable when the AJAX result set is empty.
+                         * AUTHOR: shahnur alam
+                         * ISSUE: #RBFW-FILTER-002
+                         * SOLVED: 2026-05-14
+                         * CONTEXT: An empty wrapper collapses the layout because the sidebar is
+                         * absolutely positioned, so the AJAX response must still render a block.
+                         */
+                        $show_result = $total_posts . ' ';
                         $show_result .= (
                         ( $rbfw->get_option_trans( 'rbfw_text_results', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
                             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_results', 'rbfw_basic_translation_settings' ) )
                             : esc_html__( 'results', 'booking-and-rental-manager-for-woocommerce' )
-                        );
+                        ) . '. ';
                         $show_result .= (
                         ( $rbfw->get_option_trans( 'rbfw_text_showings', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
                             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_showings', 'rbfw_basic_translation_settings' ) )
                             : esc_html__( 'Showing', 'booking-and-rental-manager-for-woocommerce' )
-                        );
-                        $show_result .= $post_count;
+                        ) . ' ';
+                        $show_result .= $post_count . ' ';
                         $show_result .= (
                         ( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
                             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) )
                             : esc_html__( 'of', 'booking-and-rental-manager-for-woocommerce' )
-                        );
-                        $show_result .=  $total_posts ;
+                        ) . ' ';
+                        $show_result .=  $total_posts . ' ';
                         $show_result .= (
                         ( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
                             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_of', 'rbfw_basic_translation_settings' ) )
                             : esc_html__( 'of', 'booking-and-rental-manager-for-woocommerce' )
-                        );
+                        ) . ' ';
                         $show_result .= (
                         ( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
                             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_total', 'rbfw_basic_translation_settings' ) )
                             : esc_html__( 'total', 'booking-and-rental-manager-for-woocommerce' )
-                        );
+                        ) . '.';
 					}
 
 				$result = array(

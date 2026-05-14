@@ -300,22 +300,31 @@
                     if( response.success ){
 
                         let text_display = response.data.show_text;
+                        let display_markup = response.data.display_date;
 
-                        $("#rbfw_left_filter_cover").hide();
+                        if (!display_markup) {
+                            display_markup = '<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">Sorry, no data found!</div>';
+                        }
 
                         // $('#rbfw_rent_list_wrapper').html( response.data.display_date );
                         $('#rbfw_rent_list_wrapper').fadeOut(200, function () {
-                            $(this).html(response.data.display_date).fadeIn(300);
+                            $(this).html(display_markup).fadeIn(300);
                         });
 
                         $('#rbfw_shoe_result_text').html('<span >'+text_display+'</span>');
-                        $(".rbfw_left_filter_button").text(rbfw_translation.filter);
                     }else{
-                        alert('ok');
+                        $('#rbfw_rent_list_wrapper').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
                         $('#rbfw_shoe_result_text').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
                     }
-
                 },
+                error: function () {
+                    $('#rbfw_rent_list_wrapper').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
+                    $('#rbfw_shoe_result_text').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
+                },
+                complete: function () {
+                    $("#rbfw_left_filter_cover").hide();
+                    $(".rbfw_left_filter_button").text(rbfw_translation.filter);
+                }
             });
         }
 
@@ -613,7 +622,6 @@ jQuery(document).ready(function($){
         }
     });
 });
-
 
 
 
