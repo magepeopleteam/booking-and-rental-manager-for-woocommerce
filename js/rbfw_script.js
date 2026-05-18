@@ -303,7 +303,7 @@
                         let display_markup = response.data.display_date;
 
                         if (!display_markup) {
-                            display_markup = '<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">Sorry, no data found!</div>';
+                            display_markup = '<div class="rbfw_search_result_empty_state"><div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">Sorry, no data found!</div></div>';
                         }
 
                         // $('#rbfw_rent_list_wrapper').html( response.data.display_date );
@@ -313,12 +313,12 @@
 
                         $('#rbfw_shoe_result_text').html('<span >'+text_display+'</span>');
                     }else{
-                        $('#rbfw_rent_list_wrapper').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
+                        $('#rbfw_rent_list_wrapper').html('<div class="rbfw_search_result_empty_state"><div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div></div>');
                         $('#rbfw_shoe_result_text').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
                     }
                 },
                 error: function () {
-                    $('#rbfw_rent_list_wrapper').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
+                    $('#rbfw_rent_list_wrapper').html('<div class="rbfw_search_result_empty_state"><div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div></div>');
                     $('#rbfw_shoe_result_text').html('<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">No Match Result Found!</div>');
                 },
                 complete: function () {
@@ -622,6 +622,5 @@ jQuery(document).ready(function($){
         }
     });
 });
-
 
 

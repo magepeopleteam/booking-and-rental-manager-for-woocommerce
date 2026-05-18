@@ -302,7 +302,7 @@
 								}
 								wp_reset_postdata();
 							} else {
-								$response = '<div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">' . esc_html__( 'Sorry, no data found!', 'booking-and-rental-manager-for-woocommerce' ) . '</div>';
+								$response = '<div class="rbfw_search_result_empty_state"><div class="rbfw_search_result_empty" data-placeholder="" style="display: block;">' . esc_html__( 'Sorry, no data found!', 'booking-and-rental-manager-for-woocommerce' ) . '</div></div>';
 							}
 
                         global $rbfw;
