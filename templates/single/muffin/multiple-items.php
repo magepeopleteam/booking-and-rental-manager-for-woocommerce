@@ -106,8 +106,10 @@
             <div class="rbfw_muff_slider mpStyle <?php echo esc_attr( $slide_style ); ?>">
 				<?php do_action( 'rbfw_slider', $post_id, 'rbfw_gallery_images' ); ?>
             </div>
-            <div class="rbfw_muff_registration_wrapper">
-				<?php include( RBFW_Function::get_template_path( 'forms/multi-day-registration.php' ) ); ?>
+            <div class="rbfw_muff_registration_wrapper rbfw_multi_items_right">
+                <div class="rbfw-booking-form">
+					<?php include( RBFW_Function::get_template_path( 'forms/multi-items-registration.php' ) ); ?>
+                </div>
             </div>
         </div>
         <div class="rbfw_muff_content_col2">

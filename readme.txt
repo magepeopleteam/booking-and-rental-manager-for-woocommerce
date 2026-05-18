@@ -1,7 +1,7 @@
 === Booking and Rental Manager for Bike | Car | Resort | Appointment | Dress | Equipment ===
 Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
-Tags: booking calendar, Woocommerce Reservation Booking, Rental Booking, Woocommerce Rental Booking, Rental Plugin 
+Tags: woocommerce rental, rental booking, booking calendar, car rental, bike rental
 Requires at least: 5.3
 Stable tag: 2.7.0
 Tested up to: 6.7.1
@@ -9,210 +9,160 @@ Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Woocommerce Rental and Booking Manager for Bike, Car, Resort, Appointment and Equipment. Simplify your reservation system for a memorable journey!
+Create rental and booking products with WooCommerce for cars, bikes, equipment, dresses, resorts, appointments, and more.
 
 == Description ==
-[Booking & Rental Manager – WpRently](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/) is a complete solution for all booking, rental, and reservation services including Cars, Bikes, Party Dress, Parking, Equipment, and resort. The plugin will help to create your booking management system within your WordPress website with advanced capabilities that can be used to manage and offer bookings on the dates selected by customers.
 
-## The #1 Dynamic WordPress Rental And Booking Plugin
+Booking and Rental Manager for WooCommerce helps you build a rental booking system inside WordPress and WooCommerce. Create single-day, multi-day, appointment, resort, equipment, dress, and multi-item rentals, then accept bookings through the WooCommerce checkout flow.
 
-Upgrade your manual rental appointment and equipment booking system with the touch of automation and a customer-centric, customized solution trusted by hundreds of businesses.
+Use it for car rentals, bike rentals, equipment rentals, dress rentals, appointment booking, resort booking, vacation rentals, parking, boat rentals, sports kits, office spaces, and other rental businesses that need date-based booking, pricing, inventory, and order management.
 
-Locally and internationally, we don't just build businesses; we guarantee that we solve a significant number of business problems with our customized rental booking WordPress plugin solution. While we mostly focus on bikes, our solution is wider than them. Multiple businesses can benefit from WpRently, including cars, party dresses, parking, equipment, and resort booking. 
+= Demo and documentation =
 
-WpRently provides you with the necessary features for free to start your rental booking system. However, when you want to take your business to the next level, the pro version of WpRently will help you achieve that position. If you are running a small business, the free version would be okay, but for larger businesses or want to level up, the pro version would suit you best.
+* [Frontend live demo](https://wprently.com/)
+* [Documentation](https://www.wprently.com/docs/)
+* [Pro version](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
 
-###  Explore The Demo:
+= What you can build =
 
-🌐 [Frontend Live Demo](https://wprently.com/)
-🌐 [Backend Demo](https://app.instawp.io/launch?s=rentalplugin&d=v2)
-📘 [Online Documentation](https://www.wprently.com/docs/)
-🛍️ [Buy Booking and Rental Pro](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
+* Car and bike rental websites
+* Equipment and tool rental websites
+* Dress and costume rental websites
+* Appointment booking systems
+* Resort and room booking websites
+* Vacation rental and holiday rental websites
+* Boat, sports kit, parking, and office space rental websites
+* Multi-item rental catalogs with separate item quantities
 
+= Key free features =
 
+* WooCommerce-based rental checkout and payment flow
+* Single-day and multi-day rental booking
+* Multi-item rental support
+* Appointment and resort booking support
+* Hourly, daily, weekly, monthly, day-wise, day-long, and day-night pricing options
+* Pickup and drop-off location settings
+* Inventory and availability controls
+* Extra services and add-ons
+* Dress size configuration
+* Related rental items and highlighted features
+* Rental galleries, sliders, and multiple list layouts
+* Frontend customer booking dashboard
+* Order list with booking details
+* Tax settings and WooCommerce payment gateway support
+* Responsive layouts and multilingual translation support
+* Shortcodes for rental lists and single-item booking forms
 
-## Our plugin supports a variety of applications, including:
+= Pro features =
 
-**🚲 Bike Rentals:** Efficiently manage bookings for bike rentals.
-**🚗 Car Rentals:** Simplify the car rental process with our versatile plugin.
-**📅 Appointments:** Streamlines appointment scheduling for professionals.
-**🏨 Hotel Bookings:** Provide a user-friendly platform for guests to book their stay.
-**🛠️ Equipment Rentals:** From tools to machinery, our plugin handles All.
-**👗 Dress Rentals:** Facilitates dress rentals with a smooth booking experience.
-**⛵ Yacht/Boat Rentals:** Create a seamless process for water enthusiasts.
-**🏡 Vacation/Holiday Rentals:** Equipped for vacation and holiday rentals.
-**🏑 Sport Kit Rentals:** Make sports equipment bookings a breeze with customers.
-**🏢 Office/Event Space Rentals:** Streamline the booking process for office and event spaces.
-**🌡️ Medical Equipment:** Ideal for healthcare providers & medical equipment.
-**🔌 Electronics Goods:** Manage rentals for electronics goods.
+* Booking calendar with order details
+* Reports with order details
+* CSV export for reports
+* PDF booking receipts
+* Booking-related email features
 
-## LET'S SEE HOW IT WORKS
+[View Pro version](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
+
+= Video overview =
+
 https://www.youtube.com/watch?v=JK33WAWKo7E
 
-Let's dive deeper into the features list to ensure your system is optimised for maximum effectiveness.
+= Shortcodes =
 
-## Free Version Of The Plugin Offers:
+Show rental items:
 
-**🚲🚗 Bike/Car Rent (Single Day:** Enable customers to effortlessly book bikes or cars for a single day with ease.
-**🚲🚗 Bike/Car Rent (Multiple Days:** Provide flexibility with multi-day bike or car rentals for extended travel plans.
-**👗 Dress Rent (Single/Multiple Day:** Provide dress rentals, accommodating both single-day and extended-use bookings.
-**📅 Doctor/Lawyer Appointment:** Simplify scheduling appointments with healthcare professionals or legal advisors.
-**🏨 Resort Booking:** Streamline resort bookings, offering guests a seamless platform to secure their stay.
-**🛠️ Equipment Rent:** Efficiently manage equipment rentals, providing a straightforward booking process.
-**💲 Daywise Price Configuration:** Configure rental prices based on specific days, ensuring accurate pricing.
-**💲 Hourly Price Configuration:** Set hourly rental rates for precise billing and flexibility in booking.
-**💲 Daily Price Configuration:** Provide daily rental pricing options for various rental durations.
-**🖼️ Single Rent Gallery Configuration:** Customize the display of single rental items with a gallery configuration.
-**📍 Pickup/Dropoff Location Settings:** Configure pickup and dropoff locations for a convenient rental experience.
-**🔄 Related Rents:** Enhance user experience by showcasing related rental options for cross-selling.
-**🌟 Highlight Features:** Draw attention to key features, making your rentals stand out to customers.
-**💲 Day-long Price Configuration:** Configure specific prices for day-long rentals, catering to varying needs
-**💲 Day-night Price Configuration:** Set distinct prices for day and night rentals, offering flexible pricing options.
-**👗 Dress Size Configuration:** Provide a personalized experience with configurable dress size options.
-**➕ Extra Service Configuration:** Allow customers to enhance their experience with configurable extra services.
-**🔄 Available Shortcode for Showing the Rent List:** Utilize shortcodes to seamlessly display your rental list on any page.
-**⚙️ Detailed Rent Settings and Date Configuration:** Customize detailed rental settings and date configurations for precision.
-**🔄 Different Rent List Styles:** Enhance visual appeal by choosing from various styles for displaying rental lists.
-**🎨 Style Settings:** Customize the look and feel of your rental listings with style settings.
-**🔄 Slider Settings:** Utilize slider settings for a dynamic and interactive presentation of rental items.
-**🖥️ Front-end Booking Dashboard:** Provide customers with a user-friendly front-end booking dashboard.
-**🙏 Thank You Page Selection:** Allow customization by letting users select their preferred thank-you page.
-**📑 Order List with Details:** Easily view and manage orders with comprehensive details.
-**💰 Tax Settings:** Manage tax settings seamlessly for accurate financial transactions.
-**📦 Inventory Settings:** Efficiently manage inventory settings for smooth rental operations.
-**🌐 Cross-Browser Support:** Ensure compatibility across various browsers for a seamless user experience.
-**📱 Responsive and SEO-friendly:** Create a responsive and SEO-friendly rental platform for increased visibility.
-**🌐🗣️ Multilingual Translation Support:** Cater to a diverse audience with multilingual translation support.
-**🎨🔄 Works with Any Standards-Compliant WordPress Theme:** Seamlessly integrate with any WordPress theme following standard compliance.
-**🔗💼 WooCommerce Integration:** Integrate smoothly with WooCommerce, expanding your e-commerce capabilities.
-**💳🔄 Supports All WooCommerce Payment Methods:** Ensure flexibility by supporting all WooCommerce payment methods.
+`[rent-list type='' style='grid' show='' columns='' left-filter='yes/no' category='' order='DESC']`
 
-### Meet your higher business demand with the pro version of the plugin:
-### Pro Version Offer:
+Show only single-day bike/car rentals:
 
+`[rent-list type='bike_car_sd']`
 
-**💳🔄 Paypal Integration:** Expand payment options with seamless Paypal integration for secure transactions.
-**💳🔄 Stripe Integration:** Provide users with another secure payment option through integrated Stripe functionality.
-**🗓️📑 Booking Calendar with Order Details:** Enhance booking management with an interactive calendar displaying comprehensive order details.
-**📊📑 Reports with Order Details:** Generate detailed reports, providing insights into your rental business's performance.
-**📊🔄 Export Reports in CSV:** Export reports in CSV format for easy sharing and external analysis.
-**📄🔄 PDF Booking Receipt:** Provide customers with professional and printable PDF booking receipts.
-**📧🔄 Email Functionality:** Enhance communication with built-in email functionality for booking-related correspondence.
+Show grid-style rental list:
 
+`[rent-list style='grid' left-filter='yes/no']`
 
+Show list-style rental list:
 
-➡  [Buy Pro](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/)
+`[rent-list style='list' left-filter='yes/no']`
 
-➡  [View All PRO Version Demo](https://www.wprently.com/bike/)
-➡  [Bike/Car Rent Service for Single Day PRO Version Demo](https://www.wprently.com/bike/)
-➡  [Bike/Car Rent for Multiple Day PRO Version Demo](https://www.wprently.com/car/)
-➡  [Doctor Appointment PRO Version Demo](https://www.wprently.com/rent/doctor-appointment/)
-➡  [Dress Rent System PRO Version Demo](https://www.wprently.com/rent/dress/)
-➡  [Equipment Rent Service PRO Version Demo](https://www.wprently.com/equipment/)
-➡  [Resort Rent or Resort Booking PRO Version Demo](https://www.wprently.com/rent/resort/)
-➡  [Rental Items List PRO Version Demo](https://www.wprently.com/rents-list-style/)
-➡  [Rental Items Grid Style List PRO Version Demo](https://www.wprently.com/rents-grid-style/)
+Show six rental items:
 
+`[rent-list show='6']`
 
-### Shortcodes included with Booking and Rental Manager:
+Show rental items in ascending order:
 
-`
-[rent-list type='' style='grid' show='' columns='' left-filter='yes/no' category='' order='DESC']
-`
+`[rent-list order='ASC']`
 
-### Shortcode to show only bike/car for single-day type rent list:
+Show a four-column rental list:
 
-`
-[rent-list type='bike_car_sd']
-`
+`[rent-list columns='4']`
 
-### Shortcode to show grid-style rent list:
+Show rentals from selected category IDs:
 
-`
-[rent-list style='grid' left-filter='yes/no']
-`
-### Shortcode to show list style rent list:
+`[rent-list category='2,3']`
 
-`
-[rent-list style='list' left-filter='yes/no']
-`
+Show the booking form for one rental item:
 
-### Shortcode to show only six items in the rent list:
+`[rent-add-to-cart id='1']`
 
-`
-[rent-list show='6']
-`
+= Support =
 
-### Shortcode to show rent list order by ascending:
+Need help or want to suggest an improvement? Use the [support form](https://mage-people.com/submit-ticket/).
 
-`
-[rent-list order='ASC']
-`
+= Theme compatibility =
 
-### Shortcode to show rent list by column here 4 I have given as example column:
-
-`
-[rent-list columns='4']
-`
-### Shortcode to show rent list by categories ID here I have give 2,3 as category id:
-
-`
-[rent-list category='2,3']
-`
-
-### Shortcode to show single item add-to-cart:
-
-`
-[rent-add-to-cart id='1']
-`
-
-= PAYMENT GATEWAYS =
-Our Plugin Works with WooCommerce and without WooCommerce. So all payment methods of WooCommerce will work with this plugin, and this is a very good advantage of this plugin. And without wooCommerce, we have our own PayPal and Stripe payment method integration.
-
-
-= Support and Suggestions =
-If you need any further assistance or support, do contact us at this [support form](https://mage-people.com/submit-ticket/). We are very open to your suggestions. So do feel free to tell us if there is anything we can do to improve the plugin. 
-
-= Theme Compatibility =
-It will be compatible with any standards-compliant wordpress theme.
-
+The plugin is designed to work with standards-compliant WordPress themes.
 
 == Installation ==
 
-= Uploading in WordPress Dashboard =
+1. Go to `Plugins > Add New` in the WordPress dashboard.
+2. Search for `Booking and Rental Manager`.
+3. Click `Install Now`, then `Activate`.
+4. Create a rental item and configure pricing, availability, and booking settings.
 
-1. Navigate to the 'Add New' in the plugins dashboard
-2. Navigate to the 'Upload' area
-3. Select booking-and-rental-manager-for-woocommerce.zip from your computer
-4. Click 'Install Now'
-5. Activate the plugin in the Plugin dashboard
+You can also upload the plugin ZIP from `Plugins > Add New > Upload Plugin`.
 
-= Using FTP =
+== Frequently Asked Questions ==
 
-1. Download booking-and-rental-manager-for-woocommerce.zip
-2. Extract the booking-and-rental-manager-for-woocommerce directory to your computer
-3. Upload the booking-and-rental-manager-for-woocommerce directory to the /wp-content/plugins/ directory
-4. Activate the plugin in the Plugin dashboard
+= Does this plugin require WooCommerce? =
+
+Yes. The plugin uses WooCommerce for cart, checkout, orders, and payment gateways.
+
+= Can I create car or bike rentals with hourly and daily pricing? =
+
+Yes. You can configure hourly, daily, weekly, monthly, and other pricing types depending on the rental setup.
+
+= Can I manage more than one rental item in a single product? =
+
+Yes. Multi-item rentals are supported, including separate quantities for multiple rentable items.
+
+= Can I use shortcodes to show rental lists? =
+
+Yes. Use the included `[rent-list]` and `[rent-add-to-cart]` shortcodes to place rental content on pages.
 
 == Screenshots ==
 
+1. Rental booking form with duration, date, and pricing controls.
+2. Multi-item rental booking interface with item quantities.
+3. Rental item configuration screen in the WordPress admin.
+4. Availability, inventory, and booking settings.
+5. Rental list layout for browsing available items.
+6. Booking order details in the admin area.
 
-**CHECK-OUT OUR OTHER PLUGINS** 
-[Booking and Rental Manager for WooCommerce Addon: Seasonal Pricing](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-addon-seasonal-pricing/)
-[Bus Booking Manager](https://wordpress.org/plugins/bus-booking-manager/)
-[Bus Ticket Booking with Seat Reservation](https://wordpress.org/plugins/bus-ticket-booking-with-seat-reservation/)
-[Woocommerce Events Manager](https://wordpress.org/plugins/mage-eventpress/)
+== Other plugins ==
 
+* [Booking and Rental Manager for WooCommerce Addon: Seasonal Pricing](https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-addon-seasonal-pricing/)
+* [Bus Booking Manager](https://wordpress.org/plugins/bus-booking-manager/)
+* [Bus Ticket Booking with Seat Reservation](https://wordpress.org/plugins/bus-ticket-booking-with-seat-reservation/)
+* [WooCommerce Events Manager](https://wordpress.org/plugins/mage-eventpress/)
 
-## Privacy Policy
-Rent and Booking Manager For WooCommerce uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon the user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
+== Privacy Policy ==
 
-Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users.
+Booking and Rental Manager for WooCommerce uses the [Appsero](https://appsero.com) SDK to collect basic telemetry data only after the user gives permission through the admin notice. This helps with troubleshooting and product improvements.
 
-Integrating Appsero SDK **DOES NOT IMMEDIATELY** start gathering data, **without confirmation from users in any case.**
+Appsero does not collect data by default. Data collection starts only after user consent.
 
-Learn more about how [Appsero collects and uses this data](https://appsero.com/privacy-policy/).
-
+Learn more about how [Appsero collects and uses data](https://appsero.com/privacy-policy/).
 
 == Changelog ==
 

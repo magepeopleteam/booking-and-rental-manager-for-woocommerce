@@ -436,6 +436,14 @@ jQuery(document).ready(function () {
         jQuery('#durationQty').val(durationSelect.val()).trigger('change');
     }
 
+    function autoSelectSingleDurationType() {
+        const availableOptions = durationTypeSelect.find('option[value!=""]');
+
+        if (!durationTypeSelect.val() && availableOptions.length === 1) {
+            durationTypeSelect.val(availableOptions.first().val());
+        }
+    }
+
     // Add event listener
     durationTypeSelect.on('change', function () {
         updateQtyLabel();
@@ -453,6 +461,7 @@ jQuery(document).ready(function () {
     });
 
     // Initial label update
+    autoSelectSingleDurationType();
     updateQtyLabel();
     durationTypeSelect.trigger('change');
 });
