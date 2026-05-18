@@ -106,6 +106,13 @@ $available_qty_info_switch = get_post_meta($rbfw_id, 'rbfw_available_qty_info_sw
 
 $pricing_types           = get_post_meta( $post_id, 'pricing_types', true ) ? get_post_meta( $post_id, 'pricing_types', true ) : [];
 $multiple_items_info           = get_post_meta( $post_id, 'multiple_items_info', true ) ? get_post_meta( $post_id, 'multiple_items_info', true ) : [];
+$enabled_pricing_types = [];
+foreach ( [ 'hourly', 'daily', 'weekly', 'monthly' ] as $pricing_type ) {
+    if ( isset( $pricing_types[ $pricing_type ] ) && $pricing_types[ $pricing_type ] == 'on' ) {
+        $enabled_pricing_types[] = $pricing_type;
+    }
+}
+$auto_selected_pricing_type = count( $enabled_pricing_types ) === 1 ? current( $enabled_pricing_types ) : '';
 
 $rbfw_enable_security_deposit = get_post_meta($rbfw_id, 'rbfw_enable_security_deposit', true) ? get_post_meta($rbfw_id, 'rbfw_enable_security_deposit', true) : 'no';
 $rbfw_security_deposit_type = get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) : 'percentage';
@@ -119,6 +126,7 @@ $rbfw_particular_switch = get_post_meta( $post_id, 'rbfw_particular_switch', tru
 $particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
 $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
 $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ) : 0;
+$fee_management_cost_enable = false;
 
 
 ?>
@@ -236,19 +244,21 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                     </div>
                                     <div class="rbfw-p-relative">
                                         <select class="rbfw-select" name="durationType" id="durationType" required>
-                                            <option value=""><?php esc_html_e('Select duration type','booking-and-rental-manager-for-woocommerce'); ?></option>
+                                            <?php if ( empty( $auto_selected_pricing_type ) ) { ?>
+                                                <option value=""><?php esc_html_e('Select duration type','booking-and-rental-manager-for-woocommerce'); ?></option>
+                                            <?php } ?>
 
                                             <?php if(isset($pricing_types['hourly']) && $pricing_types['hourly']=='on'){ ?>
-                                                <option value="hourly"><?php esc_html_e('Hourly','booking-and-rental-manager-for-woocommerce'); ?></option>
+                                                <option value="hourly" <?php selected( $auto_selected_pricing_type, 'hourly' ); ?>><?php esc_html_e('Hourly','booking-and-rental-manager-for-woocommerce'); ?></option>
                                             <?php } ?>
                                             <?php if(isset($pricing_types['daily']) && $pricing_types['daily']=='on'){ ?>
-                                                <option value="daily"><?php esc_html_e('Daily','booking-and-rental-manager-for-woocommerce'); ?></option>
+                                                <option value="daily" <?php selected( $auto_selected_pricing_type, 'daily' ); ?>><?php esc_html_e('Daily','booking-and-rental-manager-for-woocommerce'); ?></option>
                                             <?php } ?>
                                             <?php if(isset($pricing_types['weekly']) && $pricing_types['weekly']=='on'){ ?>
-                                                <option value="weekly"><?php esc_html_e('Weekly','booking-and-rental-manager-for-woocommerce'); ?></option>
+                                                <option value="weekly" <?php selected( $auto_selected_pricing_type, 'weekly' ); ?>><?php esc_html_e('Weekly','booking-and-rental-manager-for-woocommerce'); ?></option>
                                             <?php } ?>
                                             <?php if(isset($pricing_types['monthly']) && $pricing_types['monthly']=='on'){ ?>
-                                                <option value="monthly"><?php esc_html_e('Monthly','booking-and-rental-manager-for-woocommerce'); ?></option>
+                                                <option value="monthly" <?php selected( $auto_selected_pricing_type, 'monthly' ); ?>><?php esc_html_e('Monthly','booking-and-rental-manager-for-woocommerce'); ?></option>
                                             <?php } ?>
                                         </select>
                                         <div class="rbfw-mi-duration-tabs" aria-label="<?php esc_attr_e('Rental Duration Type','booking-and-rental-manager-for-woocommerce'); ?>">
@@ -398,8 +408,6 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                             <?php
 
                             $rbfw_fee_data = get_post_meta( $post_id, 'rbfw_fee_data', true );
-                            $fee_management_cost_enable = false;
-
                             ?>
                             <?php if(!empty($rbfw_fee_data)){ ?>
                                 <div class="item rbfw_resourse_md">
