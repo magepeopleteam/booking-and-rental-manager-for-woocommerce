@@ -863,6 +863,12 @@ ul.rbfw_show_all_cat_features li:last-child {
     margin: var(--dmp) 0;
 }
 
+.rbfw_search_result_empty_state{
+    min-height: 1100px;
+    display: flex;
+    align-items: flex-start;
+}
+
 #rbfw_feature_loadMore:hover {
     background-color: #0056b3;
 }
@@ -943,4 +949,3 @@ ul.rbfw_show_all_cat_features li:last-child {
         position: relative;
     }
 }
-

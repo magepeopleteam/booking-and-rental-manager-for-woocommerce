@@ -1554,10 +1554,20 @@ function rbfw_service_price_calculation(total_days){
 }
 
 function wc_price_rbfw(price) {
+    /**
+     * FIX: Normalize shared frontend price values before calling toFixed.
+     * AUTHOR: shahnur alam
+     * ISSUE: #RBFW-JS-001
+     * SOLVED: 2026-05-14
+     * CONTEXT: Some pricing flows pass string values from data attributes, so the
+     * shared formatter must coerce them safely instead of crashing.
+     */
+    const safePrice = Number.isFinite(Number(price)) ? Number(price) : 0;
+    const safeDecimals = Number.isInteger(Number(rbfw_js_variables.price_decimals)) ? Number(rbfw_js_variables.price_decimals) : 2;
     if(rbfw_js_variables.currency_format=='left'){
-        return rbfw_js_variables.currency + price.toFixed(rbfw_js_variables.price_decimals)
+        return rbfw_js_variables.currency + safePrice.toFixed(safeDecimals)
     }else{
-        return price.toFixed(rbfw_js_variables.price_decimals) + rbfw_js_variables.currency;
+        return safePrice.toFixed(safeDecimals) + rbfw_js_variables.currency;
     }
 }
 
@@ -1597,7 +1607,6 @@ function loadDisabledDates(post_id, year, month) {
         }
     });
 }
-
 
 
 

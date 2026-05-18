@@ -108,7 +108,9 @@ function rbfw_rent_list_shortcode_func($atts = null) {
         'type_filter_shown'     => $attributes['left-type-filter'],
         'feature_filter_shown'  => $attributes['left-feature-filter'],
     );
+
     $left_filter_category_names = rbfw_rent_list_get_category_filter_names( ! empty( $category ) ? $category : $cat_ids );
+
 
 
     if(isset($atts['rbfw_search_type'])){
@@ -220,6 +222,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 }
 
                 $category_name = $term->name;
+                $base_filter_categories[] = $category_name;
                 $args['meta_query'][] = array(
                     'key' => 'rbfw_categories',
                     'value' => serialize($category_name),
@@ -228,6 +231,8 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             }
         }
     }
+
+    $base_filter_categories = array_values( array_unique( $base_filter_categories ) );
 
     $query = new WP_Query($args);
     $total_posts = $query->found_posts;
@@ -361,7 +366,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             $rent_list_wrapper_cls = 'rbfw_rent_list_wrapper';
         }
         ?>
-        <div class="<?php echo esc_attr( $rent_list_wrapper_cls ) . ' ' . esc_attr( $grid_class ); ?> rbfw_rent_list_style_<?php echo esc_attr( $style ); ?>" id="rbfw_rent_list_wrapper">
+        <div class="<?php echo esc_attr( $rent_list_wrapper_cls ) . ' ' . esc_attr( $grid_class ); ?> rbfw_rent_list_style_<?php echo esc_attr( $style ); ?>" id="rbfw_rent_list_wrapper" data-base-categories="<?php echo esc_attr( wp_json_encode( $base_filter_categories ) ); ?>">
 
             <?php
             $d = 1;
