@@ -111,7 +111,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
     $left_filter_category_names = rbfw_rent_list_get_category_filter_names( ! empty( $category ) ? $category : $cat_ids );
 
-
+    $base_filter_categories = array();
 
     if(isset($atts['rbfw_search_type'])){
 

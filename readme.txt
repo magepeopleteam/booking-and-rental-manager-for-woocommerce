@@ -3,7 +3,7 @@ Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: woocommerce rental, rental booking, booking calendar, car rental, bike rental
 Requires at least: 5.3
-Stable tag: 2.7.0
+Stable tag: 2.7.1
 Tested up to: 6.7.1
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -165,6 +165,10 @@ Appsero does not collect data by default. Data collection starts only after user
 Learn more about how [Appsero collects and uses data](https://appsero.com/privacy-policy/).
 
 == Changelog ==
+
+
+2.7.1
+Code updated and minor bug fixes.
 
 2.7.0
 Multiple items price manipulation vulnerable issue solved.
