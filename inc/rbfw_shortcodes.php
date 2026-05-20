@@ -152,7 +152,14 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             'compare' => 'LIKE'
         ) : '';
 
-        $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+        /**
+         * FIX: Pagination not working on live server
+         * AUTHOR: Shahnur alam
+         * ISSUE: #pagination-live-fix
+         * SOLVED: 2026-05-20
+         * CONTEXT: get_query_var('paged') returns 0 on singular/static pages; must also check 'page' query var
+         */
+        $paged = get_query_var('paged') ? get_query_var('paged') : (get_query_var('page') ? get_query_var('page') : 1);
         $args = array(
             'post_type' => 'rbfw_item',
             'posts_per_page' => $show,
@@ -197,7 +204,14 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             'compare' => 'LIKE'
         ) : '';
 
-        $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+        /**
+         * FIX: Pagination not working on live server
+         * AUTHOR: Shahnur alam
+         * ISSUE: #pagination-live-fix
+         * SOLVED: 2026-05-20
+         * CONTEXT: get_query_var('paged') returns 0 on singular/static pages; must also check 'page' query var
+         */
+        $paged = get_query_var('paged') ? get_query_var('paged') : (get_query_var('page') ? get_query_var('page') : 1);
         $args = array(
             'post_type' => 'rbfw_item',
             'posts_per_page' => $show,
@@ -447,11 +461,22 @@ function rbfw_rent_list_shortcode_func($atts = null) {
     <?php
     $content = ob_get_clean();
 
+    /**
+     * FIX: Pagination not working on live server
+     * AUTHOR: Shahnur alam
+     * ISSUE: #pagination-live-fix
+     * SOLVED: 2026-05-20
+     * CONTEXT: paginate_links() needs explicit base, format, and current params to work across all server configs
+     */
     if( isset( $atts['pagination'] ) && $atts['pagination'] == 'yes') {
+        $paged = get_query_var('paged') ? get_query_var('paged') : (get_query_var('page') ? get_query_var('page') : 1);
         $content .= '<div class="pagination rbfw_pagination" id="rbfw_rent_list_pagination">';
         $content .= paginate_links(array(
-            'total' => $query->max_num_pages,
-            'prev_text' => esc_html__('« ','booking-and-rental-manager-for-woocommerce'), // Optional: Add previous and next text
+            'base'    => str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) ),
+            'format'  => '?paged=%#%',
+            'current' => max( 1, $paged ),
+            'total'   => $query->max_num_pages,
+            'prev_text' => esc_html__('« ','booking-and-rental-manager-for-woocommerce'),
             'next_text' => esc_html__(' »','booking-and-rental-manager-for-woocommerce'),
         ));
         $content .= '</div>';
