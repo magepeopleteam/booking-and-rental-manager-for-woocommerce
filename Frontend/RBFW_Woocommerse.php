@@ -1126,6 +1126,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $dropoff_location    = $values['rbfw_dropoff_point'] ? $values['rbfw_dropoff_point'] : '';
                 $rbfw_start_datetime = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
                 $rbfw_start_time     = $values['rbfw_start_time'] ? $values['rbfw_start_time'] : '';
+                $rbfw_end_datetime   = $values['rbfw_end_datetime'] ? $values['rbfw_end_datetime'] : '';
+                $rbfw_end_time       = $values['rbfw_end_time'] ? $values['rbfw_end_time'] : '';
                 $rbfw_ticket_info    = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
                 $rbfw_type_info      = $values['rbfw_type_info'] ? $values['rbfw_type_info'] : [];
 
@@ -1171,6 +1173,33 @@ if (!class_exists('RBFW_Woocommerce')) {
                         esc_html( $start_date_label ),
                         rbfw_date_format( $rbfw_start_datetime )
                     );
+                }
+                if ( ! empty( $rbfw_end_datetime ) ) {
+                    if ( $rbfw_end_time != '00:00' ) {
+                        $end_date_time_label = (
+                            $rbfw->get_option_trans( 'rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings' )
+                            && want_loco_translate() == 'no'
+                        )
+                            ? $rbfw->get_option_trans( 'rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings' )
+                            : esc_html__( 'End Date and Time:', 'booking-and-rental-manager-for-woocommerce' );
+
+                        $item->add_meta_data(
+                            esc_html( $end_date_time_label ),
+                            rbfw_date_format( $rbfw_end_datetime ) . ' ' . gmdate( get_option( 'time_format' ), strtotime( $rbfw_end_time ) )
+                        );
+                    } else {
+                        $end_date_label = (
+                            $rbfw->get_option_trans( 'rbfw_text_end_date', 'rbfw_basic_translation_settings' )
+                            && want_loco_translate() == 'no'
+                        )
+                            ? $rbfw->get_option_trans( 'rbfw_text_end_date', 'rbfw_basic_translation_settings' )
+                            : esc_html__( 'End Date:', 'booking-and-rental-manager-for-woocommerce' );
+
+                        $item->add_meta_data(
+                            esc_html( $end_date_label ),
+                            rbfw_date_format( $rbfw_end_datetime )
+                        );
+                    }
                 }
                 if ( ! empty( $pickup_location ) ) {
                     $item->add_meta_data( rbfw_string_return( 'rbfw_text_pickup_location', esc_html__( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' ) ), $pickup_location );
@@ -1295,6 +1324,8 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $dropoff_location    = $values['rbfw_dropoff_point'] ? $values['rbfw_dropoff_point'] : '';
                 $rbfw_start_datetime = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
                 $rbfw_start_time     = $values['rbfw_start_time'] ? $values['rbfw_start_time'] : '';
+                $rbfw_end_datetime   = $values['rbfw_end_datetime'] ? $values['rbfw_end_datetime'] : '';
+                $rbfw_end_time       = $values['rbfw_end_time'] ? $values['rbfw_end_time'] : '';
                 $rbfw_ticket_info    = $values['rbfw_ticket_info'] ? $values['rbfw_ticket_info'] : [];
 
                 $rbfw_management_info = $values['rbfw_management_info'] ? $values['rbfw_management_info'] : [];
@@ -1335,6 +1366,33 @@ if (!class_exists('RBFW_Woocommerce')) {
                         esc_html( $start_date_label ),
                         rbfw_date_format( $rbfw_start_datetime )
                     );
+                }
+                if ( ! empty( $rbfw_end_datetime ) ) {
+                    if ( $rbfw_end_time != '00:00' ) {
+                        $end_date_time_label = (
+                            $rbfw->get_option_trans( 'rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings' )
+                            && want_loco_translate() == 'no'
+                        )
+                            ? $rbfw->get_option_trans( 'rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings' )
+                            : esc_html__( 'End Date and Time:', 'booking-and-rental-manager-for-woocommerce' );
+
+                        $item->add_meta_data(
+                            esc_html( $end_date_time_label ),
+                            rbfw_date_format( $rbfw_end_datetime ) . ' ' . gmdate( get_option( 'time_format' ), strtotime( $rbfw_end_time ) )
+                        );
+                    } else {
+                        $end_date_label = (
+                            $rbfw->get_option_trans( 'rbfw_text_end_date', 'rbfw_basic_translation_settings' )
+                            && want_loco_translate() == 'no'
+                        )
+                            ? $rbfw->get_option_trans( 'rbfw_text_end_date', 'rbfw_basic_translation_settings' )
+                            : esc_html__( 'End Date:', 'booking-and-rental-manager-for-woocommerce' );
+
+                        $item->add_meta_data(
+                            esc_html( $end_date_label ),
+                            rbfw_date_format( $rbfw_end_datetime )
+                        );
+                    }
                 }
                 if ( ! empty( $pickup_location ) ) {
                     $item->add_meta_data( rbfw_string_return( 'rbfw_text_pickup_location', esc_html__( 'Pickup Location', 'booking-and-rental-manager-for-woocommerce' ) ), $pickup_location );

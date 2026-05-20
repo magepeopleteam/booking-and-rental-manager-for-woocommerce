@@ -178,6 +178,27 @@
                         </div>
                     </div>
 
+                    <div class="item rbfw-duration rbfw-duration-sd">
+                        <div class="rbfw-single-right-heading">
+                            <?php esc_html_e('Duration','booking-and-rental-manager-for-woocommerce'); ?>
+                            <div class="item-content"></div>
+                        </div>
+
+                        <div class="rbfw-duration-date rbfw-duration-start-date">
+                            <div class="rbfw-single-right-heading">
+                                <?php esc_html_e('Start Date','booking-and-rental-manager-for-woocommerce'); ?>
+                                <div class="item-content"></div>
+                            </div>
+                        </div>
+
+                        <div class="rbfw-duration-date rbfw-duration-end-date">
+                            <div class="rbfw-single-right-heading">
+                                <?php esc_html_e('End Date','booking-and-rental-manager-for-woocommerce'); ?>
+                                <div class="item-content"></div>
+                            </div>
+                        </div>
+                    </div>
+
                     <input type="hidden" name="service_type" id="rbfw_service_type_for_st" value="">
 
                     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step rbfw_extra_service_sd" style="display: none">
