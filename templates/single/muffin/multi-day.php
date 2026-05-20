@@ -238,7 +238,7 @@
                                 </span>/5
                         </div>
                         <div class="rbfw_muff_review_rating_stars">
-							<?php echo esc_html( $post_review_rating_style2 ); ?>
+							<?php echo wp_kses( $post_review_rating_style2, rbfw_allowed_html() ); ?>
                         </div>
                     </div>
                 </div>
