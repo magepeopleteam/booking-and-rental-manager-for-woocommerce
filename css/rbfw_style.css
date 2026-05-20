@@ -7543,8 +7543,8 @@ i.fas.fa-minus {
 .rbfw_multi_items_right .rbfw-mi-location-card,
 .rbfw_multi_items_right .rbfw_resourse_md,
 .rbfw_multi_items_right .multi-service-category-section .servise-item {
-    background: #eef6ff;
-    border: 1px solid #e2e8f0;
+    background: #fbfcfe;
+    border: 1px solid #edf1f6;
     border-radius: 4px;
     margin: 0;
     padding: 18px;
@@ -7631,6 +7631,10 @@ i.fas.fa-minus {
     display: grid;
     gap: 14px;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.rbfw_multi_items_right .rbfw_select_rental_period .rbfw-pickup-datetime {
+    grid-template-columns: 1fr;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .rbfw-duration-type-field,
