@@ -7920,7 +7920,7 @@ i.fas.fa-minus {
     font-size: 18px !important;
     font-weight: 700 !important;
     justify-content: center;
-    min-height: 56px;
+    padding:20px !important;
     width: 100%;
 }
 
