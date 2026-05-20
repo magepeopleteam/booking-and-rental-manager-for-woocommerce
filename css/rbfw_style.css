@@ -7700,11 +7700,13 @@ i.fas.fa-minus {
     transition: border-color .18s ease, box-shadow .18s ease, color .18s ease;
 }
 
+
 .rbfw_multi_items_right .rbfw-mi-duration-tab.active,
 .rbfw_multi_items_right .rbfw-mi-duration-tab:hover {
     border-color: #0058b8;
     box-shadow: inset 0 0 0 1px #0058b8;
-    color: #0058b8;
+    color: #fff;
+    background: #0058b8;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .rbfw-datetime select,
