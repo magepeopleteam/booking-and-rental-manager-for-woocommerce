@@ -296,9 +296,6 @@ $fee_management_cost_enable = false;
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="item">
                             <div class="item-content rbfw-datetime rbfw-pickup-datetime" style="grid-template-columns: 1fr;">
                                 <div class="<?php echo ($rbfw_enable_time_picker=='yes')?'left':'' ?> date">
                                     <div class="rbfw-single-right-heading">
