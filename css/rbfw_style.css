@@ -607,6 +607,7 @@ button.rbfw-book-now-btn:focus {
     margin-top:10px;
     margin-bottom:16px;
     border-radius: 5px;
+    padding: 10px 20px;
 }
 
 .rbfw-duration .rbfw-single-right-heading{
