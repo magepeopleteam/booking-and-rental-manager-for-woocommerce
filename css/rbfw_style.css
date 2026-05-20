@@ -605,6 +605,7 @@ button.rbfw-book-now-btn:focus {
     background: #edf7ff;
     border: 1px solid #41a6ff;
     margin-top:10px;
+    margin-bottom:16px;
     border-radius: 5px;
 }
 
@@ -617,6 +618,13 @@ button.rbfw-book-now-btn:focus {
     font-weight: normal;
 }
 
+.rbfw-duration .rbfw-duration-date {
+    display: none;
+    border-top: 1px solid rgba(65, 166, 255, 0.35);
+    margin-top: 8px;
+    padding-top: 8px;
+}
+
 .rbfw-duration .item-price {
     border-radius: 5px;
     font-weight: bold;
@@ -624,7 +632,7 @@ button.rbfw-book-now-btn:focus {
 }
 
 .mp_rbfw_ticket_form .rbfw_resourse_md{
-    margin-top:10px;
+    margin-top:16px;
     border-radius: 5px;
     margin-bottom: 10px;
 }

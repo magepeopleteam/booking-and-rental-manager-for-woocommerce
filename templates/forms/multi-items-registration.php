@@ -345,6 +345,20 @@ $fee_management_cost_enable = false;
                             <?php esc_html_e('Duration','booking-and-rental-manager-for-woocommerce'); ?>
                             <div class="item-content"></div>
                         </div>
+
+                        <div class="rbfw-duration-date rbfw-duration-start-date">
+                            <div class="rbfw-single-right-heading">
+                                <?php esc_html_e('Start Date','booking-and-rental-manager-for-woocommerce'); ?>
+                                <div class="item-content"></div>
+                            </div>
+                        </div>
+
+                        <div class="rbfw-duration-date rbfw-duration-end-date">
+                            <div class="rbfw-single-right-heading">
+                                <?php esc_html_e('End Date','booking-and-rental-manager-for-woocommerce'); ?>
+                                <div class="item-content"></div>
+                            </div>
+                        </div>
                         
                         <input type="hidden" class="rbfw_duration_md" name="rbfw_duration_md">
                     </div>

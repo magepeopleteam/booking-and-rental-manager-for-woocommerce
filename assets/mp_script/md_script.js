@@ -469,6 +469,67 @@ jQuery(document).ready(function () {
 
 
 
+function rbfwFormatMultipleItemsSummaryDate(date) {
+    if (
+        typeof jQuery !== 'undefined' &&
+        jQuery.datepicker &&
+        typeof js_date_format !== 'undefined'
+    ) {
+        return jQuery.datepicker.formatDate(js_date_format, date);
+    }
+
+    const year = date.getFullYear();
+    const month = ('0' + (date.getMonth() + 1)).slice(-2);
+    const day = ('0' + date.getDate()).slice(-2);
+
+    return year + '-' + month + '-' + day;
+}
+
+function rbfwGetMultipleItemsSummaryEndDate(startDate, durationType, durationQty) {
+    const endDate = new Date(startDate.getTime());
+
+    if (durationType === 'hourly') {
+        endDate.setHours(endDate.getHours() + durationQty);
+    } else if (durationType === 'weekly') {
+        endDate.setDate(endDate.getDate() + (durationQty * 7));
+    } else if (durationType === 'monthly') {
+        endDate.setDate(endDate.getDate() + (durationQty * 30));
+    } else {
+        endDate.setDate(endDate.getDate() + durationQty);
+    }
+
+    return endDate;
+}
+
+function rbfwUpdateMultipleItemsDurationDates(startDateText, endDateText) {
+    if (!startDateText || !endDateText) {
+        const pickupDateValue = jQuery('#hidden_pickup_date').val();
+        const durationType = jQuery('#durationType').val();
+        const durationQty = parseInt(jQuery('#durationQty').val()) || 0;
+
+        if (!pickupDateValue || !durationType || !durationQty) {
+            jQuery('.rbfw-duration-date').hide();
+            return;
+        }
+
+        const dateParts = pickupDateValue.split('-');
+        const startDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+
+        if (isNaN(startDate.getTime())) {
+            jQuery('.rbfw-duration-date').hide();
+            return;
+        }
+
+        startDateText = jQuery('#pickup_date').val() || rbfwFormatMultipleItemsSummaryDate(startDate);
+        endDateText = rbfwFormatMultipleItemsSummaryDate(rbfwGetMultipleItemsSummaryEndDate(startDate, durationType, durationQty));
+    }
+
+    jQuery('.rbfw-duration-start-date').show();
+    jQuery('.rbfw-duration-start-date .item-content').html(startDateText);
+    jQuery('.rbfw-duration-end-date').show();
+    jQuery('.rbfw-duration-end-date .item-content').html(endDateText);
+}
+
 jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #durationQty', function (e) {
 
     let pickup_date = jQuery('#pickup_date').val();
@@ -487,6 +548,8 @@ jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #
     if (!pickup_date) {
         jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
     }
+
+    rbfwUpdateMultipleItemsDurationDates();
 
     if(pickup_date  && durationType && durationQty){
         if(rbfw_enable_time_slot=='no'){
@@ -809,6 +872,7 @@ function rbfw_multi_items_ajax_price_calculation(){
             jQuery('.rbfw-duration').show();
             jQuery('.rbfw-duration .item-content').html(response.total_duration);
             jQuery('.rbfw-duration .rbfw_duration_md').val(response.total_duration);
+            rbfwUpdateMultipleItemsDurationDates(response.start_date, response.end_date);
 
 
             jQuery('.rbfw_quantity_md').show();
