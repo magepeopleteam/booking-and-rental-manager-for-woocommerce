@@ -467,11 +467,12 @@ CSS for Single Page Template
     z-index: 0;
 }
 .rbfw-pricing-info-heading{
-    padding: 10px;
+    padding: 5px;
     border: 1px solid #ddd;
     background: #f8f8f8;
     border-radius: 5px;
     margin-bottom: 10px;  
+    text-align: center;
 }
 
 
