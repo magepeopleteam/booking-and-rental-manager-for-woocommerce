@@ -387,6 +387,40 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
             </tr>
         <?php endif; ?>
 
+        <?php if ( ! empty( $end_datetime )): ?>
+            <tr>
+                <th>
+                    <?php if(($end_time)){ ?>
+
+                        <?php
+                        if($rbfw->get_option_trans('rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                            echo esc_html($rbfw->get_option_trans('rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings'));
+                        }else{
+                            echo esc_html__('End Date and Time','booking-and-rental-manager-for-woocommerce');
+                        }
+                        ?>
+
+                    <?php } else{ ?>
+
+                        <?php
+                        if($rbfw->get_option_trans('rbfw_text_end_date', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                            echo esc_html($rbfw->get_option_trans('rbfw_text_end_date', 'rbfw_basic_translation_settings'));
+                        }else{
+                            echo esc_html__('End Date','booking-and-rental-manager-for-woocommerce');
+                        }
+                        ?>
+
+                    <?php } ?>
+                </th>
+                <td>
+                    <?php echo esc_html(rbfw_get_datetime($end_datetime,'date-text')) ; ?>
+                    <?php if(($end_time)){
+                        echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($end_time)));
+                    } ?>
+                </td>
+            </tr>
+        <?php endif; ?>
+
         <?php
 
 
@@ -901,6 +935,42 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
                     <?php echo esc_html(rbfw_date_format($start_datetime)) ; ?>
                     <?php if(($start_time)){
                         echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($start_time)));
+                    } ?>
+                </td>
+            </tr>
+        <?php endif; ?>
+
+        <?php if ( ! empty( $end_datetime )): ?>
+            <tr>
+                <th>
+                    <?php if(($end_time)){ ?>
+
+                        <?php
+                        if($rbfw->get_option_trans('rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                            echo esc_html($rbfw->get_option_trans('rbfw_text_end_date_and_time', 'rbfw_basic_translation_settings'));
+                        }else{
+                            echo esc_html__('End Date and Time','booking-and-rental-manager-for-woocommerce');
+                        }
+                        ?>
+
+                        :
+
+                    <?php } else{ ?>
+
+                        <?php
+                        if($rbfw->get_option_trans('rbfw_text_end_date', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                            echo esc_html($rbfw->get_option_trans('rbfw_text_end_date', 'rbfw_basic_translation_settings'));
+                        }else{
+                            echo esc_html__('End Date','booking-and-rental-manager-for-woocommerce');
+                        }
+                        ?>
+                        :
+                    <?php } ?>
+                </th>
+                <td>
+                    <?php echo esc_html(rbfw_date_format($end_datetime)) ; ?>
+                    <?php if(($end_time)){
+                        echo ' @'.esc_html(gmdate(get_option('time_format'), strtotime($end_time)));
                     } ?>
                 </td>
             </tr>

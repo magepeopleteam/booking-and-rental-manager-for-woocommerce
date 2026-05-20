@@ -439,7 +439,7 @@ jQuery(document).ready(function () {
     function autoSelectSingleDurationType() {
         const availableOptions = durationTypeSelect.find('option[value!=""]');
 
-        if (!durationTypeSelect.val() && availableOptions.length === 1) {
+        if (!durationTypeSelect.val() && availableOptions.length) {
             durationTypeSelect.val(availableOptions.first().val());
         }
     }
@@ -501,11 +501,42 @@ function rbfwGetMultipleItemsSummaryEndDate(startDate, durationType, durationQty
     return endDate;
 }
 
+function rbfwSetMultipleItemsSummaryTime(date, timeValue) {
+    if (!timeValue) {
+        return date;
+    }
+
+    const timeParts = timeValue.split(':').map(Number);
+    date.setHours(timeParts[0] || 0, timeParts[1] || 0, 0, 0);
+
+    return date;
+}
+
+function rbfwFormatMultipleItemsSummaryTime(date) {
+    return date.toLocaleTimeString([], {
+        hour: 'numeric',
+        minute: '2-digit'
+    });
+}
+
+function rbfwAppendMultipleItemsSummaryTime(dateText, timeText) {
+    if (!dateText || !timeText || /\d{1,2}:\d{2}/.test(dateText)) {
+        return dateText;
+    }
+
+    return dateText + ' ' + timeText;
+}
+
 function rbfwUpdateMultipleItemsDurationDates(startDateText, endDateText) {
+    const pickupTimeValue = jQuery('#pickup_time').find(':selected').val() || '';
+    const durationType = jQuery('#durationType').val();
+    const durationQty = parseInt(jQuery('#durationQty').val()) || 0;
+    const hasPickupTime = !!pickupTimeValue;
+    let startTimeText = '';
+    let endTimeText = '';
+
     if (!startDateText || !endDateText) {
         const pickupDateValue = jQuery('#hidden_pickup_date').val();
-        const durationType = jQuery('#durationType').val();
-        const durationQty = parseInt(jQuery('#durationQty').val()) || 0;
 
         if (!pickupDateValue || !durationType || !durationQty) {
             jQuery('.rbfw-duration-date').hide();
@@ -514,20 +545,37 @@ function rbfwUpdateMultipleItemsDurationDates(startDateText, endDateText) {
 
         const dateParts = pickupDateValue.split('-');
         const startDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+        rbfwSetMultipleItemsSummaryTime(startDate, pickupTimeValue);
 
         if (isNaN(startDate.getTime())) {
             jQuery('.rbfw-duration-date').hide();
             return;
         }
 
+        const endDate = rbfwGetMultipleItemsSummaryEndDate(startDate, durationType, durationQty);
+        startTimeText = hasPickupTime ? rbfwFormatMultipleItemsSummaryTime(startDate) : '';
+        endTimeText = hasPickupTime ? rbfwFormatMultipleItemsSummaryTime(endDate) : '';
         startDateText = jQuery('#pickup_date').val() || rbfwFormatMultipleItemsSummaryDate(startDate);
-        endDateText = rbfwFormatMultipleItemsSummaryDate(rbfwGetMultipleItemsSummaryEndDate(startDate, durationType, durationQty));
+        endDateText = rbfwFormatMultipleItemsSummaryDate(endDate);
+    } else if (pickupTimeValue && durationType && durationQty) {
+        const pickupDateValue = jQuery('#hidden_pickup_date').val();
+        const dateParts = pickupDateValue ? pickupDateValue.split('-') : [];
+        const startDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+        rbfwSetMultipleItemsSummaryTime(startDate, pickupTimeValue);
+
+        if (!isNaN(startDate.getTime())) {
+            const endDate = rbfwGetMultipleItemsSummaryEndDate(startDate, durationType, durationQty);
+            startTimeText = rbfwFormatMultipleItemsSummaryTime(startDate);
+            endTimeText = rbfwFormatMultipleItemsSummaryTime(endDate);
+        }
     }
 
+    jQuery('.rbfw-duration-start-label').text(hasPickupTime ? 'Start Date and Time' : 'Start Date');
+    jQuery('.rbfw-duration-end-label').text(hasPickupTime ? 'End Date and Time' : 'End Date');
     jQuery('.rbfw-duration-start-date').show();
-    jQuery('.rbfw-duration-start-date .item-content').html(startDateText);
+    jQuery('.rbfw-duration-start-date .item-content').html(rbfwAppendMultipleItemsSummaryTime(startDateText, startTimeText));
     jQuery('.rbfw-duration-end-date').show();
-    jQuery('.rbfw-duration-end-date .item-content').html(endDateText);
+    jQuery('.rbfw-duration-end-date .item-content').html(rbfwAppendMultipleItemsSummaryTime(endDateText, endTimeText));
 }
 
 jQuery('body').on('change', '#hidden_pickup_date, .pickup_time, #durationType, #durationQty', function (e) {

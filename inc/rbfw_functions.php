@@ -1305,7 +1305,7 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
         }
     }
 
-    return $total_stock - $total_booked;
+    return max( 0, $total_stock - $total_booked );
 }
 	/****************************************************
 	 * Resort/Multiple Rent:

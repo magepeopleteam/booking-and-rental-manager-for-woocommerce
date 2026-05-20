@@ -112,7 +112,7 @@ foreach ( [ 'hourly', 'daily', 'weekly', 'monthly' ] as $pricing_type ) {
         $enabled_pricing_types[] = $pricing_type;
     }
 }
-$auto_selected_pricing_type = count( $enabled_pricing_types ) === 1 ? current( $enabled_pricing_types ) : '';
+$auto_selected_pricing_type = ! empty( $enabled_pricing_types ) ? current( $enabled_pricing_types ) : '';
 
 $rbfw_enable_security_deposit = get_post_meta($rbfw_id, 'rbfw_enable_security_deposit', true) ? get_post_meta($rbfw_id, 'rbfw_enable_security_deposit', true) : 'no';
 $rbfw_security_deposit_type = get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_type', true) : 'percentage';
@@ -299,7 +299,7 @@ $fee_management_cost_enable = false;
                         </div>
 
                         <div class="item">
-                            <div class="item-content rbfw-datetime">
+                            <div class="item-content rbfw-datetime rbfw-pickup-datetime" style="grid-template-columns: 1fr;">
                                 <div class="<?php echo ($rbfw_enable_time_picker=='yes')?'left':'' ?> date">
                                     <div class="rbfw-single-right-heading">
                                         <?php esc_html_e('Pickup Date','booking-and-rental-manager-for-woocommerce'); ?>
@@ -348,14 +348,14 @@ $fee_management_cost_enable = false;
 
                         <div class="rbfw-duration-date rbfw-duration-start-date">
                             <div class="rbfw-single-right-heading">
-                                <?php esc_html_e('Start Date','booking-and-rental-manager-for-woocommerce'); ?>
+                                <span class="rbfw-duration-start-label"><?php esc_html_e('Start Date','booking-and-rental-manager-for-woocommerce'); ?></span>
                                 <div class="item-content"></div>
                             </div>
                         </div>
 
                         <div class="rbfw-duration-date rbfw-duration-end-date">
                             <div class="rbfw-single-right-heading">
-                                <?php esc_html_e('End Date','booking-and-rental-manager-for-woocommerce'); ?>
+                                <span class="rbfw-duration-end-label"><?php esc_html_e('End Date','booking-and-rental-manager-for-woocommerce'); ?></span>
                                 <div class="item-content"></div>
                             </div>
                         </div>
