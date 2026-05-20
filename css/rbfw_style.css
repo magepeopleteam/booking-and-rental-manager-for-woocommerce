@@ -1056,11 +1056,11 @@ a.rbfw-related-product-btn:hover {
     }
 
     div.mp_left_section {
-        width: calc(100% - 420px);
+        width: calc(100% - 460px);
     }
 
     div.mp_right_section {
-        width: 400px;
+        width: 440px;
     }
 
     .vertical.rbfw-tab-container {
