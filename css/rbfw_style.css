@@ -6316,7 +6316,7 @@ span:not(.week .day[disabled="disabled"] span):hover {
 
 .mp_default_theme .rbfw-datetime .date .calendar,
 .mp_default_theme .rbfw-datetime .time .clock {
-    color: var(--rbfw_color_primary) !important;
+    color: #8f8c8b !important;
 }
 
 
