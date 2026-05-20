@@ -1390,7 +1390,7 @@ table.rbfw_room_price_table tbody td img {
 
 .rbfw-bikecarsd-calendar-header {
     margin-bottom: 10px;
-    background-color: #ECFDF5;
+    background-color: #e7e7e7;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #dbede5;
@@ -2704,7 +2704,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     width: 15px;
     height: 15px;
     margin-right: 5px;
-    color: var(--rbfw_color_primary);
+    color: #c5bdb8;
 }
 
 .single-day-notice {
