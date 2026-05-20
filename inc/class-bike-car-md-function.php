@@ -230,6 +230,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             $start_date_time = new DateTime($start_date.' '.$start_time);
             $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 : ($durationType == 'weekly' ? $durationQty * 24 * 7 : $durationQty * 24 * 30)));
+            $formatted_start_date = $start_date_time->format('Y-m-d');
             $start_date_time->modify("+$total_hours hours");
             $end_date = $start_date_time->format('Y-m-d');
             $end_time = $start_date_time->format('H:i:s');
@@ -273,6 +274,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
                 'max_available_qty' => $max_available_qty,
                 'total_days' => $total_days,
                 'total_duration' => $durationQty.' '.$durationType_display,
+                'start_date' => rbfw_date_format($formatted_start_date),
+                'end_date' => rbfw_date_format($end_date),
                 'ticket_item_quantity' => '',
                 'pricing_applied' => '',
             ));

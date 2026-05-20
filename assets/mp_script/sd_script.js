@@ -161,7 +161,7 @@
 
                 console.log('start_date',start_date);
 
-                var duration = jQuery(this).data('duration');
+                var duration = parseInt(jQuery(this).data('duration'), 10) || 0;
                 var duration_type = jQuery(this).data('d_type');
                 var start_time ='';
 
@@ -177,7 +177,16 @@
 
                 jQuery('#rbfw_start_time').val(start_time);
 
-                let startDateTime = new Date(start_date + ' ' + start_time);
+                let dateParts = start_date.split('-').map(Number);
+                let timeParts = (start_time || '00:00').split(':').map(Number);
+                let startDateTime = new Date(
+                    dateParts[0],
+                    dateParts[1] - 1,
+                    dateParts[2],
+                    timeParts[0] || 0,
+                    timeParts[1] || 0,
+                    0
+                );
 
 
 // Add duration
@@ -187,6 +196,8 @@
                     startDateTime.setDate(startDateTime.getDate() + duration);
                 } else if(duration_type === 'Weeks'){
                     startDateTime.setDate(startDateTime.getDate() + (duration * 7));
+                } else if(duration_type === 'Months'){
+                    startDateTime.setDate(startDateTime.getDate() + (duration * 30));
                 }
 
 

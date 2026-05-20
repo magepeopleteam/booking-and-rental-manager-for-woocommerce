@@ -442,6 +442,33 @@ if (!class_exists('RBFW_Woocommerce')) {
                     }
                 }
 
+                if ( ! ( $end_date && $end_time ) && ! empty( $rbfw_type_info ) ) {
+                    $rbfw_bike_car_sd_data = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) ? get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true ) : array();
+                    $selected_rent_type    = '';
+                    foreach ( $rbfw_type_info as $type_name => $type_qty ) {
+                        $selected_rent_type = $type_name;
+                        break;
+                    }
+                    foreach ( $rbfw_bike_car_sd_data as $rent_row ) {
+                        if ( ! empty( $rent_row['rent_type'] ) && $rent_row['rent_type'] === $selected_rent_type ) {
+                            $duration   = ! empty( $rent_row['duration'] ) ? (int) $rent_row['duration'] : 0;
+                            $d_type     = ! empty( $rent_row['d_type'] ) ? $rent_row['d_type'] : 'Days';
+                            $start_time = $rbfw_bikecarsd_selected_time ? $rbfw_bikecarsd_selected_time : '00:00';
+                            if ( $duration > 0 ) {
+                                $start_date_time = new DateTime( $bikecarsd_selected_date . ' ' . $start_time );
+                                $total_hours     = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? $duration * 24 : ( $d_type == 'Weeks' ? $duration * 24 * 7 : $duration * 24 * 30 ) ) );
+                                $start_date_time->modify( "+$total_hours hours" );
+                                $end_date = $start_date_time->format( 'Y-m-d' );
+                                $end_time = $start_date_time->format( 'H:i:s' );
+                            }
+                            break;
+                        }
+                    }
+                }
+                if ( ! ( $end_date && $end_time ) ) {
+                    $end_date = $bikecarsd_selected_date;
+                }
+
                 $rbfw_bikecarsd_duration_price                   = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_duration_price' , $bikecarsd_selected_date);
                 $rbfw_bikecarsd_service_price                    = $rbfw_bikecarsd->rbfw_bikecarsd_price_calculation( $rbfw_id, $rbfw_type_info, $rbfw_service_info, 'rbfw_bikecarsd_service_price' );
 
