@@ -312,7 +312,7 @@ CSS for Single Page Template
     background: #ffeeee;
     padding: 10px;
     border: 1px solid #d5b1b1;
-    margin:10px 0px;
+    margin: 0px 0px;
 }
 .rbfw-single-right-container .rbfw-location{
     margin-bottom:10px;
@@ -604,9 +604,10 @@ button.rbfw-book-now-btn:focus {
     padding: 10px;
     background: #edf7ff;
     border: 1px solid #41a6ff;
-    margin-top:10px;
+    margin:10px;
     margin-bottom:16px;
     border-radius: 5px;
+    padding: 10px 20px;
 }
 
 .rbfw-duration .rbfw-single-right-heading{
@@ -621,8 +622,8 @@ button.rbfw-book-now-btn:focus {
 .rbfw-duration .rbfw-duration-date {
     display: none;
     border-top: 1px solid rgba(65, 166, 255, 0.35);
-    margin-top: 8px;
-    padding-top: 8px;
+    margin-top: 0px;
+    padding-top: 0px;
 }
 
 .rbfw-duration .item-price {
@@ -1055,11 +1056,11 @@ a.rbfw-related-product-btn:hover {
     }
 
     div.mp_left_section {
-        width: calc(100% - 420px);
+        width: calc(100% - 460px);
     }
 
     div.mp_right_section {
-        width: 400px;
+        width: 440px;
     }
 
     .vertical.rbfw-tab-container {
@@ -7528,7 +7529,7 @@ i.fas.fa-minus {
     display: grid;
     gap: 16px;
     margin-bottom: 16px;
-    padding: 0;
+    padding: 5px;
 }
 
 .rbfw_multi_items_right .rbfw-booking-form {
@@ -7536,7 +7537,7 @@ i.fas.fa-minus {
     border: 1px solid #e1e7f0;
     border-radius: 4px;
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    padding: 26px;
+    padding: 10px;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .item,
@@ -7546,7 +7547,7 @@ i.fas.fa-minus {
     background: #fbfcfe;
     border: 1px solid #edf1f6;
     border-radius: 4px;
-    margin: 0;
+    margin: 10px;
     padding: 18px;
 }
 
@@ -7688,7 +7689,7 @@ i.fas.fa-minus {
 .rbfw_multi_items_right .rbfw-mi-duration-tab {
     background: #fff;
     border: 1px solid #d8dee8;
-    border-radius: 2px;
+    border-radius: 5px;
     color: #111827;
     cursor: pointer;
     font-size: 13px;
@@ -7710,7 +7711,7 @@ i.fas.fa-minus {
 .rbfw_multi_items_right .rbfw_select_rental_period .rbfw-datetime input[type=text].rbfw-input {
     background: #fff;
     border: 1px solid #d8dee8;
-    border-radius: 2px;
+    border-radius: 5px;
     box-shadow: none;
     color: #111827;
     font-size: 14px;
@@ -7856,13 +7857,12 @@ i.fas.fa-minus {
     background: transparent;
     border: 0;
     margin: 0;
-    padding: 0;
+    padding: 20px;
 }
 
 .rbfw_multi_items_right .rbfw-costing {
     background: transparent;
     border: 0;
-    padding: 0;
 }
 
 .rbfw_multi_items_right .rbfw-costing .rbfw-single-right-heading {
