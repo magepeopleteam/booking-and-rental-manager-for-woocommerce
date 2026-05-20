@@ -7529,7 +7529,7 @@ i.fas.fa-minus {
     display: grid;
     gap: 16px;
     margin-bottom: 16px;
-    padding: 10px;
+    padding: 5px;
 }
 
 .rbfw_multi_items_right .rbfw-booking-form {
@@ -7537,7 +7537,7 @@ i.fas.fa-minus {
     border: 1px solid #e1e7f0;
     border-radius: 4px;
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
-    padding: 5px;
+    padding: 10px;
 }
 
 .rbfw_multi_items_right .rbfw_select_rental_period .item,
