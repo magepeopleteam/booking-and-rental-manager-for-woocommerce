@@ -678,9 +678,36 @@ ul.rbfw_show_all_cat_features li:last-child {
     margin-bottom: 5px;
 }
 .rbfw_filter_sidebar input[type="checkbox"] {
-    height: 15px;
-    margin-right: 5px;
-    
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    margin: 0 10px 0 0;
+    border: 2px solid #d0d0d0;
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    position: relative;
+}
+.rbfw_filter_sidebar input[type="checkbox"]:checked {
+    border-color: var(--rbfw_color_primary);
+    background-color: var(--rbfw_color_primary);
+}
+.rbfw_filter_sidebar input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 8px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: translate(-50%, -60%) rotate(45deg);
+}
+.rbfw_filter_sidebar input[type="checkbox"]:hover {
+    border-color: var(--rbfw_color_primary);
 }
 .rbfw_rent_item_feature_des_text{
     font-size: 14px;
@@ -688,15 +715,18 @@ ul.rbfw_show_all_cat_features li:last-child {
 
 .rbfw_filter_sidebar .rbfw_price-range {
     margin-bottom: 20px;
-    
+    padding: 0 2px;
 }
 
 .rbfw_filter_area div.rbfw_toggle-header {
     align-items: center;
-    padding: 10px 0;
+    padding: 10px 12px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 600;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    margin: 8px 0 4px 0;
 }
 
 
@@ -719,23 +749,25 @@ ul.rbfw_show_all_cat_features li:last-child {
 
 .rbfw_price_range_holder{
     display: flex;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
+    padding: 4px 0;
 }
 .rbfw_price_start_end {
-    width: 80px;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    flex: 1;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
     font-size: 14px;
     text-align: center;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    transition: border-color 0.2s ease;
+    outline: none;
+    box-sizing: border-box;
 }
 .rbfw_price_start_end:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    outline: none;
+    border-color: var(--rbfw_color_primary);
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
 }
 .rbfw_price_start_end:hover {
     border-color: #007bff;
@@ -764,10 +796,16 @@ ul.rbfw_show_all_cat_features li:last-child {
 }
 .rbfw_rent_item_left_feature_title{
     display: flex;
-    padding: 5px;
+    padding: 6px 8px;
     align-items: center;
-    font-weight: 600;
-    color: #333;
+    font-weight: 500;
+    color: #444;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+.rbfw_rent_item_left_feature_title:hover{
+    background: #f5f5f5;
 }
 
 .rbfw_toggle-icon {
@@ -881,29 +919,41 @@ ul.rbfw_show_all_cat_features li:last-child {
     width: 100%;
     margin-bottom: 20px;
     display: flex;
-    gap: 0px;
+    gap: 0;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.rbfw_left_filter_search_text_input {
+    flex: 1;
+    display: flex;
 }
 
 .rbfw_search_by_title{
-    width: calc(100% - 2px);
-    padding: 8px 6px;
-    border: 1px solid #ddd9d9;
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    box-sizing: border-box;
 }
 .rbfw_left_filter_search_btn{
     display: flex;
-    padding:8px 10px;
-    border: 1px solid var(--rbfw_color_primary);
+    align-items: center;
+    padding: 10px 16px;
     background-color: var(--rbfw_color_primary);
     color: #fff;
     cursor: pointer;
     font-size: 14px;
-    border-radius: 0 5px 5px 0;
-    lign-items: center;
+    font-weight: 500;
+    border: none;
+    white-space: nowrap;
 }
 
 .rbfw_left_filter_search_btn:hover{
     background-color: var(--rbfw_single_page_secondary_color);
-    border: 1px solid var(--rbfw_single_page_secondary_color);
 }
 
 
