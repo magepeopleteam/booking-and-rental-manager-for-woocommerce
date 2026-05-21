@@ -563,10 +563,6 @@
                                     <h2 class="rbfw_rent_list_grid_title">
                                         <a href="<?php echo esc_url( $post_link ); ?>"><?php echo esc_html( $post_title ); ?></a>
                                     </h2>
-                                    <div class="rbfw_rent_list_grid_row rbfw_pricing-box">
-                                        <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo wp_kses( wc_price( $price ) , rbfw_allowed_html()); ?></span></p>
-                                        <span class="rbfw_rent_list_row_price_level">/ <?php echo esc_html( $price_level ); ?></span>
-                                    </div>
                                 </div>
                                 <div class="rbfw_rent_item_description" id="rbfw_rent_item_description">
                                     <p class="rbfw_rent_item_description_text" style="display: <?php echo esc_attr( $is_display ) ?>">
@@ -586,18 +582,19 @@
 										$cat_features = $value['cat_features'] ? $value['cat_features'] : [];
 										if ( $n == 1 ) {
 											?>
-                                            <ul class="<?php echo esc_attr( $rent_item_list_info ) ?>">
+                                             <div class="<?php echo esc_attr( $rent_item_list_info ) ?>">
 												<?php
 													if ( ! empty( $cat_features ) ) {
 														$i = 1;
 														foreach ( $cat_features as $features ) {
 															if ( $i <= $display_cat_features ) {
-																$icon        = ! empty( $features['icon'] ) ? $features['icon'] : 'fas fa-check-circle';
 																$title       = $features['title'];
 																$rand_number = wp_rand();
 																if ( $title ) {
 																	?>
-                                                                    <li class="bfw_rent_list_items title <?php echo esc_attr( $rand_number ); ?>"><span class="bfw_rent_list_items_icon"><i class="<?php echo esc_html( $icon ); ?>"></i></span> <?php echo esc_html( $title ); ?></li>
+                                                                     <span class="bfw_rent_list_items title <?php echo esc_attr( $rand_number ); ?>">
+																		<?php echo esc_html( $title ); ?>
+																	</span>
 																	<?php
 																}
 															}
@@ -606,9 +603,9 @@
 													}
 												?>
 												<?php if ( count( $cat_features ) > $display_cat_features ) { ?>
-                                                    <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr( $post_id ); ?>"><?php echo esc_html__( 'See more','booking-and-rental-manager-for-woocommerce' ) ?></div>
+                                                     <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr( $post_id ); ?>"><?php echo esc_html__( 'See more','booking-and-rental-manager-for-woocommerce' ) ?></div>
 												<?php } ?>
-                                            </ul>
+                                             </div>
 											<?php
 										}
 										$n ++;
@@ -616,16 +613,15 @@
 								endif;
 								?>
                                 <div class="rbfw_rent_list_btn_holder">
+                                    <div class="rbfw_rent_list_grid_row rbfw_pricing-box">
+                                        <p class="rbfw_rent_list_row_price"><span class="prc currency_left"><?php echo wp_kses( wc_price( $price ) , rbfw_allowed_html()); ?></span></p>
+                                        <span class="rbfw_rent_list_row_price_level">/ <?php echo esc_html( $price_level ); ?></span>
+                                    </div>
                                     <a class="rbfw_rent_list_link rbfw_rent_list_btn btn" href="<?php echo esc_url( $post_link ); ?>">
 										<?php echo esc_html( $book_now_label ); ?>
                                         <span class="button-icon">
-                                <svg width="64px" height="64px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g
-                                        id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round"
-                                                                                       stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path
-                                            d="M6 17L11 12L6 7M13 17L18 12L13 7" stroke="#000000" stroke-width="2" stroke-linecap="round"
-                                            stroke-linejoin="round"></path> </g>
-                                </svg>
-                            </span>
+                                            <i class="fas fa-angle-double-right"></i>
+                                        </span>
                                     </a>
                                 </div>
                                 <!-- /.rbfw_content_wrapper -->
