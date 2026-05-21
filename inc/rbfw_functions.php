@@ -267,11 +267,29 @@ function rbfw_url_exclude_search_engine() {
 	}
 	// Deprecated function - use esc_html_e() instead
 	function rbfw_string( $option_name, $default_string ) {
-		echo esc_html( $default_string );
+        global $rbfw;
+
+        $option_string = ( is_object( $rbfw ) && method_exists( $rbfw, 'get_option_trans' ) )
+            ? $rbfw->get_option_trans( $option_name, 'rbfw_basic_translation_settings' )
+            : '';
+
+        echo esc_html(
+            ( $option_string && function_exists( 'want_loco_translate' ) && want_loco_translate() == 'no' )
+                ? $option_string
+                : $default_string
+        );
 	}
 	// Deprecated function - use __() instead
 	function rbfw_string_return( $option_name, $default_string ) {
-		return $default_string;
+        global $rbfw;
+
+        $option_string = ( is_object( $rbfw ) && method_exists( $rbfw, 'get_option_trans' ) )
+            ? $rbfw->get_option_trans( $option_name, 'rbfw_basic_translation_settings' )
+            : '';
+
+		return ( $option_string && function_exists( 'want_loco_translate' ) && want_loco_translate() == 'no' )
+            ? $option_string
+            : $default_string;
 	}
 	function rbfw_get_datetime( $date, $type = 'date-time-text' ) {
 		global $rbfw;

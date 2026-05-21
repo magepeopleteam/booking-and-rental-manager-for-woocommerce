@@ -33,6 +33,12 @@
     $particulars_data = get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_particulars_data', true ) ) : [];
     $rdfw_available_time = get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rdfw_available_time', true ) ) : [];
     $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_unserialize( get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ) : 0;
+    $click_date_to_browse_availability = (
+        $rbfw->get_option_trans('rbfw_text_click_date_to_browse_availability', 'rbfw_basic_translation_settings')
+        && want_loco_translate() == 'no'
+    )
+        ? $rbfw->get_option_trans('rbfw_text_click_date_to_browse_availability', 'rbfw_basic_translation_settings')
+        : esc_html__('Click a date to browse availability', 'booking-and-rental-manager-for-woocommerce');
 
 
 
@@ -81,7 +87,7 @@
                         </div>
                         <div class="rbfw-bikecarsd-calendar-footer">
                             <i class="fas fa-circle-info"></i>
-                            <?php rbfw_string('rbfw_text_click_date_to_browse_availability',__('Click a date to browse availability','booking-and-rental-manager-for-woocommerce')); ?>
+                            <?php echo esc_html($click_date_to_browse_availability); ?>
                         </div>
                     </div>
 

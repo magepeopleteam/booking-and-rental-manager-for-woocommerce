@@ -3,7 +3,7 @@ Contributors: magepeopleteam, aamahin, raselsha, rabiul042
 Plugin link: https://mage-people.com/
 Tags: woocommerce rental, rental booking, booking calendar, car rental, bike rental
 Requires at least: 5.3
-Stable tag: 2.7.1
+Stable tag: 2.7.2
 Tested up to: 6.7.1
 Requires PHP: 7.0
 License: GPLv2 or later
@@ -166,6 +166,9 @@ Learn more about how [Appsero collects and uses data](https://appsero.com/privac
 
 == Changelog ==
 
+2.7.2
+Translation fallback support updated for rental labels and order meta text.
+Single-day calendar availability text now uses the configured translation option when Loco translation is disabled.
 
 2.7.1
 Code updated and minor bug fixes.
