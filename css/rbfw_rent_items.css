@@ -447,7 +447,7 @@ ul.rbfw_popup_fearure_lists{
 ul.rbfw_popup_fearure_lists li{
     color: #333;
     margin: 5px 0;
-    padding: 5px 0;
+    padding: 5px;
     border-bottom: 1px solid #ebebeb;
 }
 /* Styles for the popup wrapper */
