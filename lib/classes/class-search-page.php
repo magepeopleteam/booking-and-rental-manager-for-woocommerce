@@ -227,11 +227,32 @@
 						if ( is_array( $rent_categories ) && count( $rent_categories ) > 0 ) {
 							$category_query = array( 'relation' => 'OR' );
 							foreach ( $rent_categories as $category_name ) {
-								$category_query[] = ! empty( $category_name ) ? array(
-									'key'     => 'rbfw_categories',
-									'value'   => serialize( sanitize_text_field( $category_name ) ),
-									'compare' => 'LIKE'
-								) : '';
+								$category_name = sanitize_text_field( $category_name );
+								if ( ! empty( $category_name ) ) {
+									$category_query[] = array(
+										'relation' => 'OR',
+										array(
+											'key'     => 'rbfw_categories',
+											'value'   => serialize( $category_name ),
+											'compare' => 'LIKE'
+										),
+										array(
+											'key'     => 'rbfw_categories',
+											'value'   => '"' . $category_name . ',',
+											'compare' => 'LIKE'
+										),
+										array(
+											'key'     => 'rbfw_categories',
+											'value'   => ',' . $category_name . ',',
+											'compare' => 'LIKE'
+										),
+										array(
+											'key'     => 'rbfw_categories',
+											'value'   => ',' . $category_name . '"',
+											'compare' => 'LIKE'
+										),
+									);
+								}
 							}
 						} else {
 							$category_query = '';
@@ -239,11 +260,32 @@
 						if ( is_array( $base_categories ) && count( $base_categories ) > 0 ) {
 							$base_category_query = array( 'relation' => 'OR' );
 							foreach ( $base_categories as $base_category_name ) {
-								$base_category_query[] = ! empty( $base_category_name ) ? array(
-									'key'     => 'rbfw_categories',
-									'value'   => serialize( sanitize_text_field( $base_category_name ) ),
-									'compare' => 'LIKE'
-								) : '';
+								$base_category_name = sanitize_text_field( $base_category_name );
+								if ( ! empty( $base_category_name ) ) {
+									$base_category_query[] = array(
+										'relation' => 'OR',
+										array(
+											'key'     => 'rbfw_categories',
+											'value'   => serialize( $base_category_name ),
+											'compare' => 'LIKE'
+										),
+										array(
+											'key'     => 'rbfw_categories',
+											'value'   => '"' . $base_category_name . ',',
+											'compare' => 'LIKE'
+										),
+										array(
+											'key'     => 'rbfw_categories',
+											'value'   => ',' . $base_category_name . ',',
+											'compare' => 'LIKE'
+										),
+										array(
+											'key'     => 'rbfw_categories',
+											'value'   => ',' . $base_category_name . '"',
+											'compare' => 'LIKE'
+										),
+									);
+								}
 							}
 						} else {
 							$base_category_query = '';

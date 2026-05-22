@@ -238,9 +238,27 @@ function rbfw_rent_list_shortcode_func($atts = null) {
                 $category_name = $term->name;
                 $base_filter_categories[] = $category_name;
                 $args['meta_query'][] = array(
-                    'key' => 'rbfw_categories',
-                    'value' => serialize($category_name),
-                    'compare' => 'LIKE'
+                    'relation' => 'OR',
+                    array(
+                        'key' => 'rbfw_categories',
+                        'value' => serialize($category_name),
+                        'compare' => 'LIKE'
+                    ),
+                    array(
+                        'key' => 'rbfw_categories',
+                        'value' => '"' . $category_name . ',',
+                        'compare' => 'LIKE'
+                    ),
+                    array(
+                        'key' => 'rbfw_categories',
+                        'value' => ',' . $category_name . ',',
+                        'compare' => 'LIKE'
+                    ),
+                    array(
+                        'key' => 'rbfw_categories',
+                        'value' => ',' . $category_name . '"',
+                        'compare' => 'LIKE'
+                    ),
                 );
             }
         }

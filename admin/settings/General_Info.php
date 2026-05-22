@@ -115,11 +115,11 @@
                                                                 </div>
                                                                 <div class="feature_category_inner_item_wrap sortable">
 																	<?php
-																		if ( ! empty( $value['cat_features'] ) ) {
+																		if ( ! empty( $value['cat_features'] ) && is_array( $value['cat_features'] ) ) {
 																			$c = 0;
 																			foreach ( $value['cat_features'] as $feature ) {
-																				$icon  = $feature['icon'];
-																				$title = $feature['title'];
+																				$icon  = $feature['icon'] ?? '';
+																				$title = $feature['title'] ?? '';
 																				?>
                                                                                 <div class="item">
                                                                                     <a href="#rbfw_features_icon_list_wrapper" class="rbfw_feature_icon_btn btn" data-key="<?php echo esc_attr( $c ); ?>"><i class="fas fa-circle-plus"></i> <?php _e('Icon','booking-and-rental-manager-for-woocommerce'); ?></a>
@@ -360,6 +360,10 @@
 				}
 				if ( get_post_type( $post_id ) == 'rbfw_item' ) {
 					$rbfw_categories = isset( $_POST['rbfw_categories'] ) ? RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_categories'] ) ) : [];
+					if ( is_array( $rbfw_categories ) ) {
+						$rbfw_categories = implode( ',', $rbfw_categories );
+					}
+					$rbfw_categories = array_values( array_unique( array_filter( array_map( 'trim', explode( ',', $rbfw_categories ) ) ) ) );
 					wp_set_object_terms( $post_id, $rbfw_categories, 'rbfw_item_caregory' );
 					$feature_category_input = isset( $_POST['rbfw_feature_category'] ) ? wp_unslash( $_POST['rbfw_feature_category'] ) : array();
 					$feature_category = rbfw_prepare_feature_category_meta_value( $feature_category_input );

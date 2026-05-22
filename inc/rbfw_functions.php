@@ -3256,11 +3256,11 @@ function get_rbfw_post_categories_from_meta() {
 		wp_reset_postdata();
 		$all_feature = [];
 		foreach ( $all_categories as $features ) {
-			if ( is_array( $features ) ) {
+			if ( is_array( $features ) && ! empty( $features['cat_features'] ) && is_array( $features['cat_features'] ) ) {
 				foreach ( $features['cat_features'] as $feature ) {
 					$all_feature[] = array(
-						'icon'  => $feature['icon'],
-						'title' => $feature['title'],
+						'icon'  => $feature['icon'] ?? '',
+						'title' => $feature['title'] ?? '',
 					);
 				}
 			}
