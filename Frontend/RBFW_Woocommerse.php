@@ -9,6 +9,7 @@ if (!class_exists('RBFW_Woocommerce')) {
         public function __construct()
         {
             add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_prevent_duplicate_cart_item'), 10, 2 );
+            add_filter( 'woocommerce_add_to_cart_validation', array($this , 'rbfw_validate_stock_availability'), 20, 2 );
             add_filter( 'woocommerce_add_cart_item_data',array($this ,  'rbfw_add_info_to_cart_item'), 90, 3 );
             add_action( 'woocommerce_before_calculate_totals', array($this ,  'rbfw_set_new_cart_price'), 90 );
             add_filter( 'woocommerce_get_item_data', array($this ,  'rbfw_show_cart_items') , 90, 2 );
@@ -91,6 +92,233 @@ if (!class_exists('RBFW_Woocommerce')) {
 
             }
             return $passed;
+        }
+
+        /**
+         * FIX: Server-side stock availability validation for date-based rentals
+         * AUTHOR: Shahnur alam
+         * ISSUE: #Double-booking bug - no server-side stock check at add-to-cart
+         * SOLVED: 2025-01-20
+         * CONTEXT: Prevents overbooking by validating remaining stock for selected dates
+         *          before allowing item to be added to cart. Also accounts for same-product
+         *          items already in the cart for overlapping dates.
+         */
+        public function rbfw_validate_stock_availability( $passed, $product_id ) {
+
+            if ( ! $passed ) {
+                return $passed;
+            }
+
+            global $rbfw;
+
+            $linked_rbfw_id = get_post_meta( $product_id, 'link_rbfw_id', true ) ? get_post_meta( $product_id, 'link_rbfw_id', true ) : $product_id;
+            $rbfw_id = rbfw_check_product_exists( $linked_rbfw_id ) ? $linked_rbfw_id : $product_id;
+
+            if ( get_post_type( $rbfw_id ) !== $rbfw->get_cpt_name() ) {
+                return $passed;
+            }
+
+            $rbfw_item_type = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
+
+            // Skip resort type — resort uses room-based inventory with different logic
+            if ( $rbfw_item_type === 'resort' ) {
+                return $passed;
+            }
+
+            // Extract dates and quantity from POST data based on item type
+            if ( $rbfw_item_type === 'bike_car_sd' || $rbfw_item_type === 'appointment' ) {
+                $start_date = isset( $_POST['rbfw_bikecarsd_selected_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_bikecarsd_selected_date'] ) ) : '';
+                $end_date   = isset( $_POST['rbfw_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_end_date'] ) ) : $start_date;
+                $start_time = isset( $_POST['rbfw_start_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_start_time'] ) ) : '';
+                $end_time   = isset( $_POST['rbfw_end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_end_time'] ) ) : '';
+                $rbfw_item_quantity = isset( $_POST['rbfw_item_quantity'] ) ? absint( $_POST['rbfw_item_quantity'] ) : 1;
+            } elseif ( $rbfw_item_type === 'multiple_items' ) {
+                $start_date = isset( $_POST['rbfw_pickup_start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_start_date'] ) ) : '';
+                $start_time = isset( $_POST['rbfw_pickup_start_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_start_time'] ) ) : '';
+                $durationType = isset( $_POST['durationType'] ) ? sanitize_text_field( wp_unslash( $_POST['durationType'] ) ) : 'daily';
+                $durationQty  = isset( $_POST['durationQty'] ) ? max( 1, absint( $_POST['durationQty'] ) ) : 1;
+
+                if ( ! in_array( $durationType, array( 'hourly', 'daily', 'weekly', 'monthly' ), true ) ) {
+                    $durationType = 'daily';
+                }
+
+                $start_date_time = new DateTime( $start_date . ' ' . $start_time );
+                $total_hours = ( $durationType == 'hourly' ? $durationQty : ( $durationType == 'daily' ? $durationQty * 24 : ( $durationType == 'weekly' ? $durationQty * 24 * 7 : $durationQty * 24 * 30 ) ) );
+                $start_date_time->modify( "+$total_hours hours" );
+                $end_date = $start_date_time->format( 'Y-m-d' );
+                $end_time = $start_date_time->format( 'H:i:s' );
+
+                // For multiple_items, validate per-item stock via rbfw_get_multi_items_available_qty
+                $rbfw_item_quantity = 0; // Not used for multiple_items — checked per item below
+            } else {
+                // Default: bike_car_md, dress, equipment, others
+                $start_date = isset( $_POST['rbfw_pickup_start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_start_date'] ) ) : '';
+                $end_date   = isset( $_POST['rbfw_pickup_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_end_date'] ) ) : '';
+                $start_time = isset( $_POST['rbfw_pickup_start_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_start_time'] ) ) : '';
+                $end_time   = isset( $_POST['rbfw_pickup_end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_pickup_end_time'] ) ) : '';
+                $rbfw_item_quantity = isset( $_POST['rbfw_item_quantity'] ) ? absint( $_POST['rbfw_item_quantity'] ) : 1;
+            }
+
+            // Bail if dates are missing
+            if ( empty( $start_date ) || empty( $end_date ) ) {
+                return $passed;
+            }
+
+            $pickup_datetime  = gmdate( 'Y-m-d H:i', strtotime( $start_date . ' ' . $start_time ) );
+            $dropoff_datetime = gmdate( 'Y-m-d H:i', strtotime( $end_date . ' ' . $end_time ) );
+
+            // --- Handle multiple_items type separately ---
+            if ( $rbfw_item_type === 'multiple_items' ) {
+                $submitted_items = ( isset( $_POST['multiple_items_info'] ) && is_array( $_POST['multiple_items_info'] ) ) ? $_POST['multiple_items_info'] : [];
+                $stored_items    = get_post_meta( $rbfw_id, 'multiple_items_info', true );
+                $stored_items    = is_array( $stored_items ) ? $stored_items : array();
+
+                if ( ! empty( $submitted_items ) && function_exists( 'rbfw_get_multi_items_available_qty' ) ) {
+                    $stock_info = rbfw_get_multi_items_available_qty( $rbfw_id, $start_date, $end_date, '', $pickup_datetime, $dropoff_datetime );
+                    $extra_service_instock = isset( $stock_info['extra_service_instock'] ) ? $stock_info['extra_service_instock'] : [];
+
+                    foreach ( $submitted_items as $key => $submitted_item ) {
+                        $item_key = absint( $key );
+                        $quantity = isset( $submitted_item['item_qty'] ) ? absint( $submitted_item['item_qty'] ) : 0;
+                        if ( $quantity <= 0 || ! isset( $stored_items[ $item_key ] ) ) {
+                            continue;
+                        }
+
+                        $item_name     = isset( $stored_items[ $item_key ]['item_name'] ) ? $stored_items[ $item_key ]['item_name'] : '';
+                        $remaining_qty = isset( $extra_service_instock[ $item_key ] ) ? (int) $extra_service_instock[ $item_key ] : 0;
+
+                        // Also subtract quantities already in cart for same product/dates
+                        $cart_qty = $this->rbfw_get_cart_quantity_for_multi_item( $rbfw_id, $start_date, $end_date, $item_name );
+                        $remaining_qty -= $cart_qty;
+
+                        if ( $quantity > $remaining_qty ) {
+                            $available = max( 0, $remaining_qty );
+                            wc_add_notice(
+                                sprintf(
+                                    __( 'Sorry, only %1$d unit(s) of "%2$s" are available for the selected dates. Please reduce the quantity.', 'booking-and-rental-manager-for-woocommerce' ),
+                                    $available,
+                                    esc_html( $item_name )
+                                ),
+                                'error'
+                            );
+                            return false;
+                        }
+                    }
+                }
+                return $passed;
+            }
+
+            // --- Standard types: bike_car_md, bike_car_sd, dress, equipment, others ---
+            if ( ! function_exists( 'rbfw_get_multiple_date_available_qty' ) ) {
+                return $passed;
+            }
+
+            $rbfw_enable_time_slot = isset( $_POST['rbfw_enable_time_slot'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_enable_time_slot'] ) ) : 'off';
+            $stock_info = rbfw_get_multiple_date_available_qty( $rbfw_id, $start_date, $end_date, '', $pickup_datetime, $dropoff_datetime, $rbfw_enable_time_slot );
+            $remaining_stock = isset( $stock_info['remaining_stock'] ) ? (int) $stock_info['remaining_stock'] : 0;
+
+            // Subtract quantity already in cart for the same product with overlapping dates
+            $cart_qty_for_product = $this->rbfw_get_cart_quantity_for_dates( $rbfw_id, $pickup_datetime, $dropoff_datetime );
+            $remaining_stock -= $cart_qty_for_product;
+
+            if ( $rbfw_item_quantity > $remaining_stock ) {
+                $available = max( 0, $remaining_stock );
+                if ( $available <= 0 ) {
+                    wc_add_notice(
+                        __( 'Sorry, this item is fully booked for the selected dates. Please choose different dates.', 'booking-and-rental-manager-for-woocommerce' ),
+                        'error'
+                    );
+                } else {
+                    wc_add_notice(
+                        sprintf(
+                            __( 'Sorry, only %d unit(s) are available for the selected dates. Please reduce the quantity.', 'booking-and-rental-manager-for-woocommerce' ),
+                            $available
+                        ),
+                        'error'
+                    );
+                }
+                return false;
+            }
+
+            return $passed;
+        }
+
+        /**
+         * Helper: Get total quantity already in cart for the same rbfw product with overlapping dates.
+         */
+        private function rbfw_get_cart_quantity_for_dates( $rbfw_id, $pickup_datetime, $dropoff_datetime ) {
+            $cart_qty = 0;
+
+            if ( ! WC()->cart ) {
+                return $cart_qty;
+            }
+
+            $request_start = new DateTime( $pickup_datetime );
+            $request_end   = new DateTime( $dropoff_datetime );
+
+            foreach ( WC()->cart->get_cart() as $cart_item ) {
+                $cart_rbfw_id = isset( $cart_item['rbfw_id'] ) ? $cart_item['rbfw_id'] : 0;
+                if ( (int) $cart_rbfw_id !== (int) $rbfw_id ) {
+                    continue;
+                }
+
+                $cart_start_date = isset( $cart_item['rbfw_start_date'] ) ? $cart_item['rbfw_start_date'] : '';
+                $cart_end_date   = isset( $cart_item['rbfw_end_date'] ) ? $cart_item['rbfw_end_date'] : '';
+                $cart_start_time = isset( $cart_item['rbfw_start_time'] ) ? $cart_item['rbfw_start_time'] : '';
+                $cart_end_time   = isset( $cart_item['rbfw_end_time'] ) ? $cart_item['rbfw_end_time'] : '';
+
+                if ( empty( $cart_start_date ) || empty( $cart_end_date ) ) {
+                    continue;
+                }
+
+                $cart_start = new DateTime( $cart_start_date . ' ' . $cart_start_time );
+                $cart_end   = new DateTime( $cart_end_date . ' ' . $cart_end_time );
+
+                // Check for date overlap
+                if ( $cart_start <= $request_end && $request_start <= $cart_end ) {
+                    $cart_item_qty = isset( $cart_item['rbfw_item_quantity'] ) ? (int) $cart_item['rbfw_item_quantity'] : 1;
+                    $cart_qty += $cart_item_qty;
+                }
+            }
+
+            return $cart_qty;
+        }
+
+        /**
+         * Helper: Get total quantity in cart for a specific multi-item by name with same product/dates.
+         */
+        private function rbfw_get_cart_quantity_for_multi_item( $rbfw_id, $start_date, $end_date, $item_name ) {
+            $cart_qty = 0;
+
+            if ( ! WC()->cart ) {
+                return $cart_qty;
+            }
+
+            foreach ( WC()->cart->get_cart() as $cart_item ) {
+                $cart_rbfw_id = isset( $cart_item['rbfw_id'] ) ? $cart_item['rbfw_id'] : 0;
+                if ( (int) $cart_rbfw_id !== (int) $rbfw_id ) {
+                    continue;
+                }
+
+                $cart_start_date = isset( $cart_item['rbfw_start_date'] ) ? $cart_item['rbfw_start_date'] : '';
+                $cart_end_date   = isset( $cart_item['rbfw_end_date'] ) ? $cart_item['rbfw_end_date'] : '';
+
+                if ( empty( $cart_start_date ) || empty( $cart_end_date ) ) {
+                    continue;
+                }
+
+                // Check date overlap
+                if ( strtotime( $cart_start_date ) <= strtotime( $end_date ) && strtotime( $start_date ) <= strtotime( $cart_end_date ) ) {
+                    $cart_multi_items = isset( $cart_item['multiple_items_info'] ) ? $cart_item['multiple_items_info'] : [];
+                    foreach ( $cart_multi_items as $mi ) {
+                        if ( isset( $mi['item_name'] ) && $mi['item_name'] === $item_name ) {
+                            $cart_qty += isset( $mi['item_qty'] ) ? (int) $mi['item_qty'] : 0;
+                        }
+                    }
+                }
+            }
+
+            return $cart_qty;
         }
 
         public function rbfw_add_info_to_cart_item( $cart_item_data, $product_id, $variation_id ) {
