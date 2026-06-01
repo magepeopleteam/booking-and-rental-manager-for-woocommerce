@@ -339,7 +339,7 @@ if (! class_exists('RBFW_Dependencies')) {
 				//font awesome
 
                 wp_enqueue_style('fontawesome.v6', RBFW_PLUGIN_URL . '/assets/font-awesome/all.min.css');
-				wp_enqueue_style('flatpickr-css', RBFW_PLUGIN_URL . '/css/flatpickr.min.css', array(), null);
+				wp_enqueue_style('flatpickr-css', RBFW_PLUGIN_URL . '/assets/flatpickr.min.css', array(), null);
 				wp_enqueue_script('flatpickr-js', RBFW_PLUGIN_URL . '/assets/flatpickr.js', array('jquery'), null, true);
 				wp_enqueue_script(
 					'jquery-ui-dialog', // WordPress default jQuery UI component (can change based on need, e.g., 'jquery-ui-dialog', 'jquery-ui-datepicker', etc.)

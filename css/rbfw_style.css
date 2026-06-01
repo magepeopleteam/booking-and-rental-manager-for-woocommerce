@@ -6825,7 +6825,7 @@ h2.rbfw_rent_list_grid_title {
     font-size: 24px;
     color: var(--rbfw_color_primary);
     line-height: .80;
-    margin: 0;
+    margin: 0 !important;
 }
 
 .rbfw_rent_list_info {
@@ -6838,6 +6838,7 @@ h2.rbfw_rent_list_grid_title {
     margin-bottom: 20px;
     margin-left: 0;
     padding-left: 0;
+    list-style: none;
 }
 
 .rbfw-w-25 .rbfw_rent_list_info {
