@@ -522,17 +522,37 @@ function getAvailableTimes(schedule, givenDate,rdfw_available_time,pickup_time_p
 
 
 function formatTime(date, format) {
-    // Map WP PHP formats to JS Intl options
-    let options = {};
-    if (format.includes('a') || format.includes('A')) {
-        options.hour12 = true;
-    } else {
-        options.hour12 = false;
-    }
-    options.hour = 'numeric';
-    options.minute = '2-digit';
+    // Build the time string directly from the WordPress "Time Format"
+    // setting (Settings > General > Time Format) so the frontend always
+    // shows English AM/PM instead of the browser locale (e.g. Hungarian de./du.).
+    format = format || 'g:i a';
 
-    return new Intl.DateTimeFormat([], options).format(date);
+    let hours   = date.getHours();
+    let minutes = date.getMinutes();
+    let mm      = minutes < 10 ? '0' + minutes : '' + minutes;
+
+    // 12-hour format when the WP format contains 'a' (am/pm) or 'A' (AM/PM)
+    if (format.includes('a') || format.includes('A')) {
+        let ampm = hours >= 12 ? 'PM' : 'AM';
+        if (format.includes('a')) {
+            ampm = ampm.toLowerCase(); // lowercase "am/pm" if WP uses lowercase 'a'
+        }
+
+        let h12 = hours % 12;
+        if (h12 === 0) {
+            h12 = 12;
+        }
+
+        // 'h' = leading zero (01-12), 'g' = no leading zero (1-12)
+        let hh = format.includes('h') ? (h12 < 10 ? '0' + h12 : '' + h12) : '' + h12;
+
+        return hh + ':' + mm + ' ' + ampm;
+    }
+
+    // 24-hour format: 'H' = leading zero (00-23), 'G' = no leading zero (0-23)
+    let hh = format.includes('H') ? (hours < 10 ? '0' + hours : '' + hours) : '' + hours;
+
+    return hh + ':' + mm;
 }
 
 
