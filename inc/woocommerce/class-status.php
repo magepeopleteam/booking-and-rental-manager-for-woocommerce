@@ -196,6 +196,9 @@ if (!class_exists('RBFW_Status')) {
         }
 
         public function rbfw_plugin_activate(){
+            if (!current_user_can('activate_plugins')) {
+                return;
+            }
             if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                 return;
             }
@@ -217,6 +220,9 @@ if (!class_exists('RBFW_Status')) {
 
         public function rbfw_plugin_install(){
 
+            if (!current_user_can('install_plugins')) {
+                return;
+            }
             if (!(isset($_POST['nonce']) && wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'rbfw_ajax_action'))) {
                 return;
             }
