@@ -1131,6 +1131,10 @@ function rbfw_get_stock_by_filter(){
 
     check_ajax_referer( 'rbfw_get_stock_by_filter_action', 'nonce' );
 
+    if ( ! current_user_can( 'edit_posts' ) ) {
+        wp_send_json_error( 'Unauthorized access', 403 );
+    }
+
         $selected_date = isset($_POST['selected_date'])?sanitize_text_field(wp_unslash($_POST['selected_date'])):'';
         $start_date = isset($_POST['start_date'])?sanitize_text_field(wp_unslash($_POST['start_date'])):'';
         $end_date = isset($_POST['end_date'])?sanitize_text_field(wp_unslash($_POST['end_date'])):'';
@@ -1154,6 +1158,10 @@ function rbfw_get_stock_details(){
     }*/
 
     check_ajax_referer( 'rbfw_get_stock_details_action', 'nonce' );
+
+    if ( ! current_user_can( 'edit_posts' ) ) {
+        wp_send_json_error( 'Unauthorized access', 403 );
+    }
 
             $data_request = isset($_POST['data_request'])?sanitize_text_field(wp_unslash($_POST['data_request'])):'';
             $data_date = isset($_POST['data_date'])?sanitize_text_field(wp_unslash($_POST['data_date'])):'';

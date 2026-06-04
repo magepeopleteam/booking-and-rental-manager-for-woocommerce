@@ -2591,7 +2591,10 @@ add_action( 'woocommerce_thankyou', 'rbfw_update_order_status' );add_action( 'wo
 	function rbfw_duplicate_post() {
 		if ( isset( $_GET['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['nonce'] ) ), 'duplicate_post_action' ) ) {
 			if ( isset( $_GET['rbfw_duplicate'] ) ) {
-				$post_id     = sanitize_text_field( wp_unslash( $_GET['rbfw_duplicate'] ) );
+				$post_id     = absint( wp_unslash( $_GET['rbfw_duplicate'] ) );
+				if ( ! $post_id || ! current_user_can( 'edit_post', $post_id ) ) {
+					return;
+				}
 				$title       = get_the_title( $post_id );
 				$oldpost     = get_post( $post_id );
 				$post        = array(
