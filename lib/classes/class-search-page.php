@@ -224,30 +224,8 @@
 							$location_query = '';
 						}
 						$rent_categories = isset( $filter_date['category'] ) ? $filter_date['category'] : [];
-						if ( is_array( $rent_categories ) && count( $rent_categories ) > 0 ) {
-							$category_query = array( 'relation' => 'OR' );
-							foreach ( $rent_categories as $category_name ) {
-								$category_query[] = ! empty( $category_name ) ? array(
-									'key'     => 'rbfw_categories',
-									'value'   => serialize( sanitize_text_field( $category_name ) ),
-									'compare' => 'LIKE'
-								) : '';
-							}
-						} else {
-							$category_query = '';
-						}
-						if ( is_array( $base_categories ) && count( $base_categories ) > 0 ) {
-							$base_category_query = array( 'relation' => 'OR' );
-							foreach ( $base_categories as $base_category_name ) {
-								$base_category_query[] = ! empty( $base_category_name ) ? array(
-									'key'     => 'rbfw_categories',
-									'value'   => serialize( sanitize_text_field( $base_category_name ) ),
-									'compare' => 'LIKE'
-								) : '';
-							}
-						} else {
-							$base_category_query = '';
-						}
+						$category_query  = $this->rbfw_build_categories_meta_query( $rent_categories );
+						$base_category_query = $this->rbfw_build_categories_meta_query( $base_categories );
 						$posts_per_page = 100;
 						$number_of_page = 1;
 						$meta_query     = array(
@@ -350,6 +328,36 @@
 					'show_text'    => $show_result,
 				);
 				wp_send_json_success( $result );
+			}
+
+			/**
+			 * Build a precise meta_query group for the selected categories.
+			 *
+			 * FIX: category search returned "Sorry, no data found!" because the
+			 * query only matched serialize()'d array storage of rbfw_categories
+			 * and ignored values stored as a single string or a comma separated
+			 * string. rbfw_build_category_meta_clause() matches every storage
+			 * format the meta has used, so the search matches exactly what the
+			 * sidebar lists, while staying precise enough not to over-match
+			 * similar names (selecting "Stroller" must not match "Light Strollers").
+			 *
+			 * @param array $categories Selected category names.
+			 * @return array|string Meta query group, or '' when nothing selected.
+			 */
+			private function rbfw_build_categories_meta_query( $categories ) {
+				if ( ! is_array( $categories ) || count( $categories ) === 0 ) {
+					return '';
+				}
+				$group = array( 'relation' => 'OR' );
+				foreach ( $categories as $category_name ) {
+					$clause = rbfw_build_category_meta_clause( $category_name );
+					if ( ! empty( $clause ) ) {
+						$group[] = $clause;
+					}
+				}
+
+				// Only return a usable group when at least one clause was added.
+				return ( count( $group ) > 1 ) ? $group : '';
 			}
 
 			public function display_filter_rent_items( $post_id, $post_title, $the_content, $style, $d ) {

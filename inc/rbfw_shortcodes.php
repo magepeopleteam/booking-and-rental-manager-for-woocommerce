@@ -237,11 +237,13 @@ function rbfw_rent_list_shortcode_func($atts = null) {
 
                 $category_name = $term->name;
                 $base_filter_categories[] = $category_name;
-                $args['meta_query'][] = array(
-                    'key' => 'rbfw_categories',
-                    'value' => serialize($category_name),
-                    'compare' => 'LIKE'
-                );
+                // Match every storage format of rbfw_categories (serialized
+                // array / single string / comma separated) so the initial list
+                // is not empty when the meta is not a serialized array.
+                $category_clause = rbfw_build_category_meta_clause( $category_name );
+                if ( ! empty( $category_clause ) ) {
+                    $args['meta_query'][] = $category_clause;
+                }
             }
         }
     }

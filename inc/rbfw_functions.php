@@ -2678,6 +2678,21 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
     $days = $remainingDays % 7;
     $hours = $interval->h;
 
+    /**
+     * Same-day booking fix: when pickup and return fall on the same day the
+     * month/week/day breakdown is all zero, so the monthly/weekly pricing
+     * branches below return a price of 0 (they return early and never reach
+     * the same-day handling in the daily path). Bill at least one day so a
+     * same-day rental is charged the daily rate. Skipped only when there is an
+     * hourly rate available to price the partial day instead.
+     */
+    if ( $total_days === 0 ) {
+        $rbfw_hourly_rate_meta = get_post_meta( $post_id, 'rbfw_hourly_rate', true );
+        if ( empty( $hours ) || empty( $rbfw_hourly_rate_meta ) ) {
+            $days = max( 1, (int) $days );
+        }
+    }
+
     $output = [];
 
     $duration_price = 0;
@@ -2994,9 +3009,14 @@ function rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $d
     }
     $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
     $custom_rate = get_post_meta($post_id, "rbfw_{$day}_hourly_rate", true);
-    return $enabled === 'yes'
-        ? ((float) $custom_rate * (float) $hours)
-        : ((float) $hourly_rate * (float) $hours);
+    // Use the day-wise rate only when it is enabled AND has a value. An empty
+    // per-day field must fall back to the global hourly rate, otherwise the
+    // price becomes 0 (e.g. same-day booking on a day-wise-enabled day whose
+    // hourly field was left blank). An explicit 0 is still honoured.
+    $rate = ( $enabled === 'yes' && $custom_rate !== '' && $custom_rate !== null )
+        ? (float) $custom_rate
+        : (float) $hourly_rate;
+    return $rate * (float) $hours;
 }
 
 function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
@@ -3006,7 +3026,10 @@ function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date,
     }
     $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
     $custom_rate = get_post_meta($post_id, "rbfw_{$day}_daily_rate", true);
-    return $enabled === 'yes' ? (float)$custom_rate : $daily_rate;
+    // Empty day-wise field falls back to the global daily rate; explicit 0 kept.
+    return ( $enabled === 'yes' && $custom_rate !== '' && $custom_rate !== null )
+        ? (float) $custom_rate
+        : $daily_rate;
 }
 
 function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
@@ -3016,7 +3039,10 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
         }
         $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
         $custom_rate = get_post_meta($post_id, "rbfw_{$day}_daily_rate", true);
-        return $enabled === 'yes' ? (float)$custom_rate : $rbfw_half_day_rate;
+        // Empty day-wise field falls back to the global half-day rate; explicit 0 kept.
+        return ( $enabled === 'yes' && $custom_rate !== '' && $custom_rate !== null )
+            ? (float) $custom_rate
+            : $rbfw_half_day_rate;
     }
 
 /*function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
@@ -3213,6 +3239,62 @@ function get_rbfw_post_categories_from_meta() {
     return $output;
 }
 
+/**
+ * Build a precise meta_query OR clause that matches a single rbfw_categories
+ * value across every storage format the meta has historically used: a
+ * serialized array (a:1:{i:0;s:8:"Stroller";}), a single plain string
+ * ("Stroller"), or a comma separated string ("Stroller,Car seats").
+ *
+ * This mirrors get_rbfw_post_categories_from_meta() so the search matches
+ * exactly what the sidebar lists, while staying precise enough not to
+ * over-match similar names (selecting "Stroller" must not match
+ * "Light Strollers", "Compact Strollers", etc.).
+ *
+ * @param string $category_name Category name to match.
+ * @return array Meta query OR clause, or empty array when the name is blank.
+ */
+function rbfw_build_category_meta_clause( $category_name ) {
+	$category_name = sanitize_text_field( $category_name );
+	if ( '' === $category_name ) {
+		return array();
+	}
+	$len = strlen( $category_name );
+
+	return array(
+		'relation' => 'OR',
+		// Serialized array storage, e.g. a:1:{i:0;s:8:"Stroller";}
+		array(
+			'key'     => 'rbfw_categories',
+			'value'   => 's:' . $len . ':"' . $category_name . '";',
+			'compare' => 'LIKE',
+		),
+		// Single plain string storage, e.g. "Stroller".
+		array(
+			'key'     => 'rbfw_categories',
+			'value'   => $category_name,
+			'compare' => '=',
+		),
+		// Comma separated, this item first: "Stroller,..." / "Stroller, ...".
+		array(
+			'key'     => 'rbfw_categories',
+			'value'   => $category_name . ',',
+			'compare' => 'LIKE',
+		),
+		// Comma separated, this item after another, no space: "...,Stroller".
+		array(
+			'key'     => 'rbfw_categories',
+			'value'   => ',' . $category_name,
+			'compare' => 'LIKE',
+		),
+		// Comma separated, this item after another, with space: "..., Stroller".
+		array(
+			'key'     => 'rbfw_categories',
+			'value'   => ', ' . $category_name,
+			'compare' => 'LIKE',
+		),
+	);
+}
+
 
 
 
@@ -3265,8 +3347,15 @@ function get_rbfw_post_categories_from_meta() {
 	 * @return array|false Array of location data or false on failure.
 	 */
 	function get_rbfw_item_type_wp_query() {
+		/**
+		 * Only surface rent types that belong to the site's own published rent
+		 * items. Querying 'any' post type pulled in rbfw_item_type meta left on
+		 * products / other post types (e.g. an unused "Bike car multiple day"),
+		 * showing filter options that match nothing in the rbfw_item results.
+		 */
 		$args  = array(
-			'post_type'      => 'any',
+			'post_type'      => 'rbfw_item',
+			'post_status'    => 'publish',
 			'meta_key'       => 'rbfw_item_type',
 			'meta_compare'   => 'EXISTS',
 			'orderby'        => 'meta_id',
