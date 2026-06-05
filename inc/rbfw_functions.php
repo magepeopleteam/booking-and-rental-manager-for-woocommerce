@@ -2666,6 +2666,21 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
 
     $start = new DateTime($pickup_datetime);
     $end = new DateTime($dropoff_datetime);
+
+    /**
+     * Count Extra Day: the daily-rate path bills the return day (total_days++)
+     * when the setting is on and the time picker is off. The monthly/weekly
+     * breakdown below derives from $interval and previously ignored this, so
+     * monthly/weekly-enabled items billed one day short (and could miss a
+     * weekly-rate threshold). Extend the interval end by one day here so the
+     * month/week/day split is consistent with the daily path. The daily path
+     * uses a separate $diff and is unaffected.
+     */
+    if ( $rbfw_enable_time_slot === 'no'
+        && $rbfw->get_option_trans( 'rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on' ) === 'on' ) {
+        $end->modify( '+1 day' );
+    }
+
     $interval = $start->diff($end);
     $totalMonths = ($interval->y * 12) + $interval->m;
     $remainingDays = $interval->d;
