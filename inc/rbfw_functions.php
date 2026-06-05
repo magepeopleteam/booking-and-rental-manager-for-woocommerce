@@ -3213,6 +3213,62 @@ function get_rbfw_post_categories_from_meta() {
     return $output;
 }
 
+/**
+ * Build a precise meta_query OR clause that matches a single rbfw_categories
+ * value across every storage format the meta has historically used: a
+ * serialized array (a:1:{i:0;s:8:"Stroller";}), a single plain string
+ * ("Stroller"), or a comma separated string ("Stroller,Car seats").
+ *
+ * This mirrors get_rbfw_post_categories_from_meta() so the search matches
+ * exactly what the sidebar lists, while staying precise enough not to
+ * over-match similar names (selecting "Stroller" must not match
+ * "Light Strollers", "Compact Strollers", etc.).
+ *
+ * @param string $category_name Category name to match.
+ * @return array Meta query OR clause, or empty array when the name is blank.
+ */
+function rbfw_build_category_meta_clause( $category_name ) {
+	$category_name = sanitize_text_field( $category_name );
+	if ( '' === $category_name ) {
+		return array();
+	}
+	$len = strlen( $category_name );
+
+	return array(
+		'relation' => 'OR',
+		// Serialized array storage, e.g. a:1:{i:0;s:8:"Stroller";}
+		array(
+			'key'     => 'rbfw_categories',
+			'value'   => 's:' . $len . ':"' . $category_name . '";',
+			'compare' => 'LIKE',
+		),
+		// Single plain string storage, e.g. "Stroller".
+		array(
+			'key'     => 'rbfw_categories',
+			'value'   => $category_name,
+			'compare' => '=',
+		),
+		// Comma separated, this item first: "Stroller,..." / "Stroller, ...".
+		array(
+			'key'     => 'rbfw_categories',
+			'value'   => $category_name . ',',
+			'compare' => 'LIKE',
+		),
+		// Comma separated, this item after another, no space: "...,Stroller".
+		array(
+			'key'     => 'rbfw_categories',
+			'value'   => ',' . $category_name,
+			'compare' => 'LIKE',
+		),
+		// Comma separated, this item after another, with space: "..., Stroller".
+		array(
+			'key'     => 'rbfw_categories',
+			'value'   => ', ' . $category_name,
+			'compare' => 'LIKE',
+		),
+	);
+}
+
 
 
 
@@ -3265,8 +3321,15 @@ function get_rbfw_post_categories_from_meta() {
 	 * @return array|false Array of location data or false on failure.
 	 */
 	function get_rbfw_item_type_wp_query() {
+		/**
+		 * Only surface rent types that belong to the site's own published rent
+		 * items. Querying 'any' post type pulled in rbfw_item_type meta left on
+		 * products / other post types (e.g. an unused "Bike car multiple day"),
+		 * showing filter options that match nothing in the rbfw_item results.
+		 */
 		$args  = array(
-			'post_type'      => 'any',
+			'post_type'      => 'rbfw_item',
+			'post_status'    => 'publish',
 			'meta_key'       => 'rbfw_item_type',
 			'meta_compare'   => 'EXISTS',
 			'orderby'        => 'meta_id',
