@@ -2994,9 +2994,14 @@ function rbfw_get_hourly_rate($post_id, $day, $hourly_rate, $seasonal_prices, $d
     }
     $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
     $custom_rate = get_post_meta($post_id, "rbfw_{$day}_hourly_rate", true);
-    return $enabled === 'yes'
-        ? ((float) $custom_rate * (float) $hours)
-        : ((float) $hourly_rate * (float) $hours);
+    // Use the day-wise rate only when it is enabled AND has a value. An empty
+    // per-day field must fall back to the global hourly rate, otherwise the
+    // price becomes 0 (e.g. same-day booking on a day-wise-enabled day whose
+    // hourly field was left blank). An explicit 0 is still honoured.
+    $rate = ( $enabled === 'yes' && $custom_rate !== '' && $custom_rate !== null )
+        ? (float) $custom_rate
+        : (float) $hourly_rate;
+    return $rate * (float) $hours;
 }
 
 function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
@@ -3006,7 +3011,10 @@ function rbfw_get_day_rate($post_id, $day, $daily_rate, $seasonal_prices, $date,
     }
     $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
     $custom_rate = get_post_meta($post_id, "rbfw_{$day}_daily_rate", true);
-    return $enabled === 'yes' ? (float)$custom_rate : $daily_rate;
+    // Empty day-wise field falls back to the global daily rate; explicit 0 kept.
+    return ( $enabled === 'yes' && $custom_rate !== '' && $custom_rate !== null )
+        ? (float) $custom_rate
+        : $daily_rate;
 }
 
 function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
@@ -3016,7 +3024,10 @@ function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_p
         }
         $enabled = get_post_meta($post_id, "rbfw_enable_{$day}_day", true);
         $custom_rate = get_post_meta($post_id, "rbfw_{$day}_daily_rate", true);
-        return $enabled === 'yes' ? (float)$custom_rate : $rbfw_half_day_rate;
+        // Empty day-wise field falls back to the global half-day rate; explicit 0 kept.
+        return ( $enabled === 'yes' && $custom_rate !== '' && $custom_rate !== null )
+            ? (float) $custom_rate
+            : $rbfw_half_day_rate;
     }
 
 /*function rbfw_get_half_day_rate($post_id, $day, $rbfw_half_day_rate, $seasonal_prices, $date, $hours = 0, $enable_daily = 'yes') {
