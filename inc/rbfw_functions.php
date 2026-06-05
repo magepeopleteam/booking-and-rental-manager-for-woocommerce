@@ -2678,6 +2678,21 @@ function rbfw_md_duration_price_calculation($post_id = 0, $pickup_datetime = 0, 
     $days = $remainingDays % 7;
     $hours = $interval->h;
 
+    /**
+     * Same-day booking fix: when pickup and return fall on the same day the
+     * month/week/day breakdown is all zero, so the monthly/weekly pricing
+     * branches below return a price of 0 (they return early and never reach
+     * the same-day handling in the daily path). Bill at least one day so a
+     * same-day rental is charged the daily rate. Skipped only when there is an
+     * hourly rate available to price the partial day instead.
+     */
+    if ( $total_days === 0 ) {
+        $rbfw_hourly_rate_meta = get_post_meta( $post_id, 'rbfw_hourly_rate', true );
+        if ( empty( $hours ) || empty( $rbfw_hourly_rate_meta ) ) {
+            $days = max( 1, (int) $days );
+        }
+    }
+
     $output = [];
 
     $duration_price = 0;
