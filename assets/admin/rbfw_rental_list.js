@@ -25,7 +25,7 @@
 		if (!grid) { return; }
 
 		var PER_PAGE = 12;
-		var STORE_KEY = 'rbfwRentalListView';
+		var STORE_KEY = 'rbfwRentalListView_v2';
 		var cards = Array.prototype.slice.call(grid.querySelectorAll('.rbfw-card'));
 		var rows  = table ? Array.prototype.slice.call(table.querySelectorAll('tr.rbfw-row')) : [];
 
