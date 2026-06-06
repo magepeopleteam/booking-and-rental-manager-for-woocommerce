@@ -137,6 +137,11 @@
 .rbfw-table td:first-child a:hover{color:var(--rb-red) !important;}
 .rbfw-t-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600;}
 .rbfw-t-badge.type{background:var(--rb-red-soft);color:var(--rb-red);}
+/* Compact rate breakdown chips */
+.rbfw-rates{display:flex;flex-wrap:wrap;gap:4px;}
+.rbfw-rate-chip{display:inline-flex;align-items:baseline;gap:3px;padding:2px 8px;border-radius:6px;background:var(--rb-bg);border:1px solid var(--rb-border);font-size:12px;font-weight:700;color:var(--rb-ink);line-height:1.6;white-space:nowrap;}
+.rbfw-rate-chip small{font-size:10px;font-weight:600;color:var(--rb-muted);text-transform:uppercase;letter-spacing:.03em;}
+.rbfw-card .rbfw-rates{margin-bottom:12px;}
 /* Action icon buttons (table/list view) */
 .rbfw-table-acts{display:flex;align-items:center;gap:6px;}
 .rbfw-table-act{width:30px;height:30px;border-radius:7px;border:1px solid var(--rb-border);background:var(--rb-white);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;color:var(--rb-ink2) !important;transition:all .15s;flex-shrink:0;}
@@ -156,6 +161,13 @@
 a.rbfw-cell-name:hover{color:var(--rb-red) !important;}
 .rbfw-cell-sub{display:block;margin-top:3px;font-size:11px;font-weight:500;color:var(--rb-muted);}
 .rbfw-cell-author{display:inline-flex;align-items:center;gap:7px;}
+/* Compact side-by-side meta under the item name */
+.rbfw-cell-meta{display:flex;flex-wrap:wrap;align-items:center;gap:5px 6px;margin-top:5px;}
+.rbfw-cm{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:5px;font-size:11px;font-weight:600;line-height:1.5;background:var(--rb-bg);color:var(--rb-ink2);white-space:nowrap;}
+.rbfw-cm svg{flex-shrink:0;opacity:.7;}
+.rbfw-cm.id{background:none;padding:2px 0;color:var(--rb-muted);font-weight:700;}
+.rbfw-cm.cat{background:var(--rb-blue-soft);color:var(--rb-blue);}
+.rbfw-cm.date{background:none;padding:2px 0;color:var(--rb-muted);font-weight:500;}
 
 /* PAGINATION */
 .rbfw-pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap;}

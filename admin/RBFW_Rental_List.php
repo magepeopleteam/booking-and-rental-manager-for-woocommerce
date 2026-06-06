@@ -183,9 +183,11 @@ if (!class_exists('RBFW_Rental_List')) {
                     'type_label' => $type_lbl,
                     'cats'       => $cats,
                     'price'      => $this->get_price_label($pid),
+                    'rates'      => $this->get_rates($pid),
                     'status'     => $post->post_status,
                     'thumb'      => get_the_post_thumbnail_url($pid, 'medium_large'),
                     'author'     => get_the_author_meta('display_name', $post->post_author),
+                    'date'       => get_the_date('M j, Y', $pid),
                     'edit_link'  => get_edit_post_link($pid, 'raw'),
                     'view_link'  => get_permalink($pid),
                     'trash_link' => get_delete_post_link($pid),
@@ -216,6 +218,31 @@ if (!class_exists('RBFW_Rental_List')) {
             $formatted = function_exists('wc_price') ? wp_strip_all_tags(wc_price($amount)) : number_format_i18n((float) $amount, 2);
 
             return $formatted . ' ' . $suffix;
+        }
+
+        /**
+         * Full rate breakdown (only the rates that are actually configured) for
+         * compact display as chips.
+         */
+        private function get_rates($pid): array
+        {
+            $defs = array(
+                'rbfw_hourly_rate'   => esc_html__('hr', 'booking-and-rental-manager-for-woocommerce'),
+                'rbfw_half_day_rate' => esc_html__('½ day', 'booking-and-rental-manager-for-woocommerce'),
+                'rbfw_daily_rate'    => esc_html__('day', 'booking-and-rental-manager-for-woocommerce'),
+                'rbfw_weekly_rate'   => esc_html__('wk', 'booking-and-rental-manager-for-woocommerce'),
+                'rbfw_monthly_rate'  => esc_html__('mo', 'booking-and-rental-manager-for-woocommerce'),
+            );
+            $rates = array();
+            foreach ($defs as $key => $unit) {
+                $val = RBFW_Function::get_post_info($pid, $key);
+                if ($val !== '' && (float) $val > 0) {
+                    $amount  = function_exists('wc_price') ? wp_strip_all_tags(wc_price($val)) : number_format_i18n((float) $val, 2);
+                    $rates[] = array('unit' => $unit, 'amount' => $amount);
+                }
+            }
+
+            return $rates;
         }
 
         private function initials($name): string
@@ -432,6 +459,9 @@ if (!class_exists('RBFW_Rental_List')) {
                                         <?php if ($it['type_label']) : ?><span class="rbfw-meta-pill type"><?php echo esc_html($it['type_label']); ?></span><?php endif; ?>
                                         <?php if ($first_cat) : ?><span class="rbfw-meta-pill cat"><?php echo esc_html($first_cat); ?></span><?php endif; ?>
                                     </div>
+                                    <?php if (!empty($it['rates'])) : ?>
+                                    <div class="rbfw-rates"><?php foreach ($it['rates'] as $r) : ?><span class="rbfw-rate-chip"><?php echo esc_html($r['amount']); ?><small><?php echo esc_html($r['unit']); ?></small></span><?php endforeach; ?></div>
+                                    <?php endif; ?>
                                     <div class="rbfw-footer">
                                         <div class="rbfw-author"><span class="rbfw-author-avatar"><?php echo esc_html($this->initials($it['author'])); ?></span> <?php echo esc_html($it['author']); ?></div>
                                         <span class="rbfw-status-dot status-<?php echo esc_attr($it['status']); ?>"><?php echo esc_html($this->status_label($it['status'])); ?></span>
@@ -467,10 +497,14 @@ if (!class_exists('RBFW_Rental_List')) {
                                     </td>
                                     <td class="rbfw-td-name" data-label="<?php esc_attr_e('Name', 'booking-and-rental-manager-for-woocommerce'); ?>">
                                         <?php if ($is_trash) : ?><span class="rbfw-cell-name"><?php echo esc_html($it['title']); ?></span><?php else : ?><a class="rbfw-cell-name" href="<?php echo esc_url($it['edit_link']); ?>"><?php echo esc_html($it['title']); ?></a><?php endif; ?>
-                                        <span class="rbfw-cell-sub">#<?php echo esc_html($it['id']); ?><?php echo $it['cats'] ? ' · ' . esc_html(implode(', ', $it['cats'])) : ''; ?></span>
+                                        <span class="rbfw-cell-meta">
+                                            <span class="rbfw-cm id">#<?php echo esc_html($it['id']); ?></span>
+                                            <?php if ($it['cats']) : ?><span class="rbfw-cm cat"><?php echo esc_html(implode(', ', $it['cats'])); ?></span><?php endif; ?>
+                                            <span class="rbfw-cm date"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><?php echo esc_html($it['date']); ?></span>
+                                        </span>
                                     </td>
                                     <td data-label="<?php esc_attr_e('Price Type', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo $it['type_label'] ? '<span class="rbfw-t-badge type">' . esc_html($it['type_label']) . '</span>' : '-'; ?></td>
-                                    <td data-label="<?php esc_attr_e('Price', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo esc_html($it['price'] ?: '-'); ?></td>
+                                    <td data-label="<?php esc_attr_e('Price', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php if (!empty($it['rates'])) : ?><span class="rbfw-rates"><?php foreach ($it['rates'] as $r) : ?><span class="rbfw-rate-chip"><?php echo esc_html($r['amount']); ?><small><?php echo esc_html($r['unit']); ?></small></span><?php endforeach; ?></span><?php else : ?>-<?php endif; ?></td>
                                     <td data-label="<?php esc_attr_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw-status-dot status-<?php echo esc_attr($it['status']); ?>"><?php echo esc_html($this->status_label($it['status'])); ?></span></td>
                                     <td data-label="<?php esc_attr_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?>">
                                         <div class="rbfw-table-acts">
