@@ -360,10 +360,10 @@ if (!class_exists('RBFW_Rental_List')) {
                             <?php endforeach; ?>
                         </select>
                         <div class="rbfw-view-toggle">
-                            <button class="rbfw-vtog active" id="rbfwGridBtn" title="<?php esc_attr_e('Grid view', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                            <button class="rbfw-vtog" id="rbfwGridBtn" title="<?php esc_attr_e('Grid view', 'booking-and-rental-manager-for-woocommerce'); ?>">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                             </button>
-                            <button class="rbfw-vtog" id="rbfwListBtn" title="<?php esc_attr_e('List view', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                            <button class="rbfw-vtog active" id="rbfwListBtn" title="<?php esc_attr_e('List view', 'booking-and-rental-manager-for-woocommerce'); ?>">
                                 <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                             </button>
                         </div>
@@ -408,6 +408,11 @@ if (!class_exists('RBFW_Rental_List')) {
                                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
                                             </a>
                                         <?php else : ?>
+                                            <?php if ($it['view_link']) : ?>
+                                            <a class="rbfw-act-btn view" href="<?php echo esc_url($it['view_link']); ?>" target="_blank" rel="noopener" title="<?php esc_attr_e('View on frontend', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            </a>
+                                            <?php endif; ?>
                                             <a class="rbfw-act-btn edit" href="<?php echo esc_url($it['edit_link']); ?>" title="<?php esc_attr_e('Edit', 'booking-and-rental-manager-for-woocommerce'); ?>">
                                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                                             </a>
@@ -439,10 +444,12 @@ if (!class_exists('RBFW_Rental_List')) {
                     <table class="rbfw-table" id="rbfwTable">
                         <thead>
                             <tr>
+                                <th class="rbfw-th-img"><?php esc_html_e('Image', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php printf(esc_html__('%s Name', 'booking-and-rental-manager-for-woocommerce'), esc_html($name)); ?></th>
                                 <th><?php esc_html_e('Price Type', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Rent Type', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Price', 'booking-and-rental-manager-for-woocommerce'); ?></th>
+                                <th><?php esc_html_e('Author', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                             </tr>
@@ -450,19 +457,46 @@ if (!class_exists('RBFW_Rental_List')) {
                         <tbody>
                             <?php foreach ($items as $it) : ?>
                                 <tr class="rbfw-row" data-name="<?php echo esc_attr(strtolower($it['title'] . ' ' . implode(' ', $it['cats']))); ?>" data-type="<?php echo esc_attr($it['type_key']); ?>" data-status="<?php echo esc_attr($it['status']); ?>">
-                                    <td data-label="<?php esc_attr_e('Name', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php if ($is_trash) : ?><?php echo esc_html($it['title']); ?><?php else : ?><a href="<?php echo esc_url($it['edit_link']); ?>"><?php echo esc_html($it['title']); ?></a><?php endif; ?></td>
+                                    <td class="rbfw-td-img" data-label="<?php esc_attr_e('Image', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                        <?php $img_href = $is_trash ? '' : ($it['view_link'] ?: $it['edit_link']); ?>
+                                        <?php if ($img_href) : ?><a class="rbfw-table-thumb" href="<?php echo esc_url($img_href); ?>"<?php echo $it['view_link'] && !$is_trash ? ' target="_blank" rel="noopener"' : ''; ?>><?php else : ?><span class="rbfw-table-thumb"><?php endif; ?>
+                                            <?php if ($it['thumb']) : ?>
+                                                <img src="<?php echo esc_url($it['thumb']); ?>" alt="<?php echo esc_attr($it['title']); ?>">
+                                            <?php else : ?>
+                                                <span class="rbfw-table-thumb-ph"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 7L12 3 4 7v10l8 4 8-4V7z"/><path d="M4 7l8 4 8-4"/><path d="M12 21V11"/></svg></span>
+                                            <?php endif; ?>
+                                        <?php echo $img_href ? '</a>' : '</span>'; ?>
+                                    </td>
+                                    <td data-label="<?php esc_attr_e('Name', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                        <?php if ($is_trash) : ?><span class="rbfw-cell-name"><?php echo esc_html($it['title']); ?></span><?php else : ?><a class="rbfw-cell-name" href="<?php echo esc_url($it['edit_link']); ?>"><?php echo esc_html($it['title']); ?></a><?php endif; ?>
+                                        <span class="rbfw-cell-sub">#<?php echo esc_html($it['id']); ?><?php echo $it['cats'] ? ' · ' . esc_html(implode(', ', $it['cats'])) : ''; ?></span>
+                                    </td>
                                     <td data-label="<?php esc_attr_e('Price Type', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo $it['type_label'] ? '<span class="rbfw-t-badge type">' . esc_html($it['type_label']) . '</span>' : '-'; ?></td>
                                     <td data-label="<?php esc_attr_e('Rent Type', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo $it['cats'] ? esc_html(implode(', ', $it['cats'])) : '-'; ?></td>
                                     <td data-label="<?php esc_attr_e('Price', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo esc_html($it['price'] ?: '-'); ?></td>
+                                    <td data-label="<?php esc_attr_e('Author', 'booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw-cell-author"><span class="rbfw-author-avatar"><?php echo esc_html($this->initials($it['author'])); ?></span><?php echo esc_html($it['author']); ?></span></td>
                                     <td data-label="<?php esc_attr_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw-status-dot status-<?php echo esc_attr($it['status']); ?>"><?php echo esc_html($this->status_label($it['status'])); ?></span></td>
                                     <td data-label="<?php esc_attr_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                        <div class="rbfw-table-acts">
                                         <?php if ($is_trash) : ?>
-                                            <a class="rbfw-table-edit" href="<?php echo esc_url($it['restore_link']); ?>"><?php esc_html_e('Restore', 'booking-and-rental-manager-for-woocommerce'); ?></a>
-                                            <a class="rbfw-table-del" href="<?php echo esc_url($it['delete_link']); ?>" onclick="return confirm('<?php echo esc_js(__('Permanently delete this item? This cannot be undone.', 'booking-and-rental-manager-for-woocommerce')); ?>');"><?php esc_html_e('Delete', 'booking-and-rental-manager-for-woocommerce'); ?></a>
+                                            <a class="rbfw-table-act restore" href="<?php echo esc_url($it['restore_link']); ?>" title="<?php esc_attr_e('Restore', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('Restore', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.3"/><polyline points="3 4 3 8 7 8"/></svg>
+                                            </a>
+                                            <a class="rbfw-table-act del" href="<?php echo esc_url($it['delete_link']); ?>" title="<?php esc_attr_e('Delete Permanently', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('Delete Permanently', 'booking-and-rental-manager-for-woocommerce'); ?>" onclick="return confirm('<?php echo esc_js(__('Permanently delete this item? This cannot be undone.', 'booking-and-rental-manager-for-woocommerce')); ?>');">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                                            </a>
                                         <?php else : ?>
-                                            <a class="rbfw-table-edit" href="<?php echo esc_url($it['edit_link']); ?>"><?php esc_html_e('Edit', 'booking-and-rental-manager-for-woocommerce'); ?></a>
-                                            <a class="rbfw-table-del" href="<?php echo esc_url($it['trash_link']); ?>" onclick="return confirm('<?php echo esc_js(__('Move this item to Trash?', 'booking-and-rental-manager-for-woocommerce')); ?>');"><?php esc_html_e('Trash', 'booking-and-rental-manager-for-woocommerce'); ?></a>
+                                            <?php if ($it['view_link']) : ?><a class="rbfw-table-act view" href="<?php echo esc_url($it['view_link']); ?>" target="_blank" rel="noopener" title="<?php esc_attr_e('View on frontend', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('View on frontend', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            </a><?php endif; ?>
+                                            <a class="rbfw-table-act edit" href="<?php echo esc_url($it['edit_link']); ?>" title="<?php esc_attr_e('Edit', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('Edit', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                            </a>
+                                            <a class="rbfw-table-act del" href="<?php echo esc_url($it['trash_link']); ?>" title="<?php esc_attr_e('Move to Trash', 'booking-and-rental-manager-for-woocommerce'); ?>" aria-label="<?php esc_attr_e('Move to Trash', 'booking-and-rental-manager-for-woocommerce'); ?>" onclick="return confirm('<?php echo esc_js(__('Move this item to Trash?', 'booking-and-rental-manager-for-woocommerce')); ?>');">
+                                                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                                            </a>
                                         <?php endif; ?>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
