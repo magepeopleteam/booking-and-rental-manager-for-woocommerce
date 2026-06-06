@@ -445,11 +445,9 @@ if (!class_exists('RBFW_Rental_List')) {
                         <thead>
                             <tr>
                                 <th class="rbfw-th-img"><?php esc_html_e('Image', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                                <th><?php printf(esc_html__('%s Name', 'booking-and-rental-manager-for-woocommerce'), esc_html($name)); ?></th>
+                                <th><?php esc_html_e('Name', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Price Type', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                                <th><?php esc_html_e('Rent Type', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Price', 'booking-and-rental-manager-for-woocommerce'); ?></th>
-                                <th><?php esc_html_e('Author', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                                 <th><?php esc_html_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?></th>
                             </tr>
@@ -467,14 +465,12 @@ if (!class_exists('RBFW_Rental_List')) {
                                             <?php endif; ?>
                                         <?php echo $img_href ? '</a>' : '</span>'; ?>
                                     </td>
-                                    <td data-label="<?php esc_attr_e('Name', 'booking-and-rental-manager-for-woocommerce'); ?>">
+                                    <td class="rbfw-td-name" data-label="<?php esc_attr_e('Name', 'booking-and-rental-manager-for-woocommerce'); ?>">
                                         <?php if ($is_trash) : ?><span class="rbfw-cell-name"><?php echo esc_html($it['title']); ?></span><?php else : ?><a class="rbfw-cell-name" href="<?php echo esc_url($it['edit_link']); ?>"><?php echo esc_html($it['title']); ?></a><?php endif; ?>
                                         <span class="rbfw-cell-sub">#<?php echo esc_html($it['id']); ?><?php echo $it['cats'] ? ' · ' . esc_html(implode(', ', $it['cats'])) : ''; ?></span>
                                     </td>
                                     <td data-label="<?php esc_attr_e('Price Type', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo $it['type_label'] ? '<span class="rbfw-t-badge type">' . esc_html($it['type_label']) . '</span>' : '-'; ?></td>
-                                    <td data-label="<?php esc_attr_e('Rent Type', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo $it['cats'] ? esc_html(implode(', ', $it['cats'])) : '-'; ?></td>
                                     <td data-label="<?php esc_attr_e('Price', 'booking-and-rental-manager-for-woocommerce'); ?>"><?php echo esc_html($it['price'] ?: '-'); ?></td>
-                                    <td data-label="<?php esc_attr_e('Author', 'booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw-cell-author"><span class="rbfw-author-avatar"><?php echo esc_html($this->initials($it['author'])); ?></span><?php echo esc_html($it['author']); ?></span></td>
                                     <td data-label="<?php esc_attr_e('Status', 'booking-and-rental-manager-for-woocommerce'); ?>"><span class="rbfw-status-dot status-<?php echo esc_attr($it['status']); ?>"><?php echo esc_html($this->status_label($it['status'])); ?></span></td>
                                     <td data-label="<?php esc_attr_e('Actions', 'booking-and-rental-manager-for-woocommerce'); ?>">
                                         <div class="rbfw-table-acts">

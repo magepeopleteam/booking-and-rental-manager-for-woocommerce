@@ -173,17 +173,41 @@ a.rbfw-cell-name:hover{color:var(--rb-red) !important;}
 @media (max-width:1200px){.rbfw-stats{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:782px){
   .rbfw-fleet{margin:10px 0 30px 0;padding:18px;border-radius:14px;}
-  .rbfw-page-header{align-items:flex-start;}
+  .rbfw-page-header{align-items:flex-start;flex-direction:column;}
+  .rbfw-page-title{font-size:21px;}
+  .rbfw-header-actions{width:100%;flex-wrap:wrap;}
+  .rbfw-filters{gap:8px;}
   .rbfw-view-toggle{margin-left:0;}
   .rbfw-search-box{max-width:none;flex:1 1 100%;order:5;}
+  .rbfw-dropdown,.rbfw-dropdown-toggle{width:100%;}
   .rbfw-grid{grid-template-columns:1fr;}
+
+  /* Table -> stacked cards */
+  .rbfw-table{border:none;background:none;}
   .rbfw-table thead{display:none;}
   .rbfw-table,.rbfw-table tbody,.rbfw-table tr.rbfw-row,.rbfw-table td{display:block;width:100%;}
-  .rbfw-table tr.rbfw-row{background:var(--rb-white);border:1px solid var(--rb-border);border-radius:12px;margin-bottom:12px;padding:6px 0;}
-  .rbfw-table td{border:none !important;border-radius:0 !important;padding:8px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:right;}
-  .rbfw-table td::before{content:attr(data-label);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--rb-muted);text-align:left;}
+  .rbfw-table tr.rbfw-row,.rbfw-table tr.rbfw-row.rbfw-row-alt{background:var(--rb-white);border:1px solid var(--rb-border);border-radius:12px;margin-bottom:12px;padding:12px;}
+  .rbfw-table td{border:none !important;border-bottom:1px solid var(--rb-border) !important;border-radius:0 !important;padding:10px 2px;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:right;}
+  .rbfw-table td:last-child{border-bottom:none !important;}
+  .rbfw-table td::before{content:attr(data-label);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--rb-muted);text-align:left;flex-shrink:0;}
+
+  /* Image: full-width banner, no label */
+  .rbfw-table td.rbfw-td-img{padding:0 0 12px;border-bottom:none !important;}
+  .rbfw-table td.rbfw-td-img::before{display:none;}
+  .rbfw-table-thumb{width:100%;height:170px;border-radius:10px;}
+
+  /* Name: prominent, no label, stacked */
+  .rbfw-table td.rbfw-td-name{flex-direction:column;align-items:flex-start;text-align:left;gap:3px;}
+  .rbfw-table td.rbfw-td-name::before{display:none;}
+  .rbfw-cell-name{font-size:16px;}
+
+  /* Actions: buttons aligned right */
+  .rbfw-table-acts{justify-content:flex-end;}
 }
 @media (max-width:480px){
+  .rbfw-fleet{padding:14px;}
   .rbfw-stats{grid-template-columns:1fr;}
-  .rbfw-tab-pills{width:100%;justify-content:space-between;}
+  .rbfw-tab-pills{width:100%;justify-content:space-between;flex-wrap:wrap;}
+  .rbfw-add-btn,.rbfw-classic-link{flex:1;justify-content:center;}
+  .rbfw-table-thumb{height:140px;}
 }
