@@ -25,11 +25,11 @@
 		if (!grid) { return; }
 
 		var PER_PAGE = 12;
-		var STORE_KEY = 'rbfwRentalListView';
+		var STORE_KEY = 'rbfwRentalListView_v2';
 		var cards = Array.prototype.slice.call(grid.querySelectorAll('.rbfw-card'));
 		var rows  = table ? Array.prototype.slice.call(table.querySelectorAll('tr.rbfw-row')) : [];
 
-		var state = { view: 'grid', search: '', type: '', status: '', page: 1 };
+		var state = { view: 'list', search: '', type: '', status: '', page: 1 };
 
 		/* ---- View toggle (persisted) ---------------------------------- */
 		function applyView() {
@@ -74,7 +74,15 @@
 			var end = start + PER_PAGE;
 
 			items.forEach(function (el) { el.style.display = 'none'; });
-			matched.forEach(function (el, i) { if (i >= start && i < end) { el.style.display = ''; } });
+			var vis = 0;
+			matched.forEach(function (el, i) {
+				if (i >= start && i < end) {
+					el.style.display = '';
+					/* Zebra striping based on visible order (list view only) */
+					if (state.view === 'list') { el.classList.toggle('rbfw-row-alt', vis % 2 === 1); }
+					vis++;
+				}
+			});
 
 			if (emptyMsg) { emptyMsg.style.display = total === 0 ? 'block' : 'none'; }
 			renderPageInfo(total, start, end);
