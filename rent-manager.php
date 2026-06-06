@@ -39,6 +39,8 @@
 					add_action( 'save_post', [ $this, 'flush_rules_on_save_posts' ], 20, 2 );
 					add_action( 'admin_init', [ $this, 'get_plugin_data' ] );
 					add_action( 'admin_init', [ $this, 'flush_rules_rbfw_post_list_page' ] );
+					// Rebuild permalinks automatically (once) – no manual Settings → Permalinks save needed.
+					add_action( 'init', [ $this, 'rbfw_auto_flush_rewrite_rules' ], 99 );
 				}
 				require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Hidden_Product.php';
 				require_once RBFW_PLUGIN_DIR . '/inc/RBFW_Woo_Installer.php';
@@ -124,6 +126,75 @@
 				if ( isset( $_GET['post_type'] ) && sanitize_text_field( wp_unslash( $_GET['post_type'] ) ) == 'rbfw_item' ) {
 					flush_rewrite_rules();
 				}
+			}
+
+			/**
+			 * Keep the rental permalinks healthy automatically – no manual
+			 * Settings → Permalinks save ever required. Runs on every request but
+			 * only actually flushes in two cases:
+			 *
+			 *   (a) First load after an install/update/deploy, or the rental slug
+			 *       changed in the settings (detected via a stored "signature").
+			 *
+			 *   (b) Self-heal: the /rent/... routes are missing from the stored
+			 *       rewrite rules for ANY reason – another plugin flushed them away,
+			 *       an old DB backup was restored, a buggy update, etc. This is
+			 *       throttled with a 1-hour transient so a persistently broken
+			 *       environment can never cause a flush on every single request.
+			 *
+			 * In the healthy steady state nothing is flushed – it is just two
+			 * autoloaded-option reads, so the per-request cost is negligible.
+			 */
+			public function rbfw_auto_flush_rewrite_rules() {
+				global $rbfw;
+
+				if ( is_object( $rbfw ) ) {
+					$slug = sanitize_title( $rbfw->get_slug() );
+				} else {
+					$gen_settings = get_option( 'rbfw_basic_gen_settings' );
+					$gen_settings = is_array( $gen_settings ) ? $gen_settings : array();
+					$slug         = sanitize_title( ! empty( $gen_settings['rbfw_rent_slug'] ) ? $gen_settings['rbfw_rent_slug'] : 'rent' );
+				}
+				if ( empty( $slug ) ) {
+					$slug = 'rent';
+				}
+
+				// (a) Deploy / update / slug change. Bump the 'rbfw1' token if a future
+				// change alters the rewrite structure so every site re-flushes once.
+				$signature = 'rbfw1|' . $slug;
+				if ( get_option( 'rbfw_rewrite_signature' ) !== $signature ) {
+					flush_rewrite_rules();
+					update_option( 'rbfw_rewrite_signature', $signature );
+					delete_transient( 'rbfw_rewrite_selfheal_lock' );
+
+					return;
+				}
+
+				// (b) Self-heal broken rules from any source (throttled to once / hour).
+				if ( ! $this->rbfw_rewrite_rules_have_item_route()
+					&& ! get_transient( 'rbfw_rewrite_selfheal_lock' ) ) {
+					set_transient( 'rbfw_rewrite_selfheal_lock', 1, HOUR_IN_SECONDS );
+					flush_rewrite_rules();
+				}
+			}
+
+			/**
+			 * Whether the stored rewrite rules still contain the rbfw_item routes.
+			 *
+			 * @return bool
+			 */
+			private function rbfw_rewrite_rules_have_item_route() {
+				$rules = get_option( 'rewrite_rules' );
+				if ( empty( $rules ) || ! is_array( $rules ) ) {
+					return false;
+				}
+				foreach ( $rules as $query ) {
+					if ( is_string( $query ) && false !== strpos( $query, 'rbfw_item' ) ) {
+						return true;
+					}
+				}
+
+				return false;
 			}
 
 			public function activation_redirect() {

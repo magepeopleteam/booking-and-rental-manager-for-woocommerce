@@ -52,22 +52,34 @@ if( ! class_exists('RBFW_Custom_Post')){
         }
 
         public function rbfw_cpt(){
-            // Skip during WP-CLI execution
-            if ( defined('WP_CLI') && WP_CLI ) {
-                return;
-            }
-
             global $rbfw;
 
-
-            $cpt_label = $rbfw->get_name();
-
-            $cpt_slug         = sanitize_title( $rbfw->get_slug() );
+            // The CPT MUST register in every execution context (browser, loopback
+            // wp-cron AND WP-CLI). If it is skipped in any context, a rewrite-rule
+            // rebuild that happens there - e.g. a nightly `wp cron event run`,
+            // `wp plugin update`, or Action Scheduler's CLI runner - regenerates and
+            // saves the rewrite_rules option WITHOUT these routes, so the front end
+            // 404s until permalinks are re-saved by hand.
+            //
+            // The global $rbfw is not always available under WP-CLI, so fall back to
+            // reading the settings option directly. Both paths resolve to the same
+            // stored values, so the rewrite slug is identical across every context.
+            if ( is_object( $rbfw ) ) {
+                $cpt_label        = $rbfw->get_name();
+                $cpt_slug         = sanitize_title( $rbfw->get_slug() );
+                $cpt_icon         = $rbfw->get_icon();
+                $gutenburg_switch = $rbfw->get_option_trans( 'rbfw_gutenburg_switch', 'rbfw_basic_gen_settings', 'on' );
+            } else {
+                $gen_settings     = get_option( 'rbfw_basic_gen_settings' );
+                $gen_settings     = is_array( $gen_settings ) ? $gen_settings : array();
+                $cpt_label        = ! empty( $gen_settings['rbfw_rent_label'] ) ? $gen_settings['rbfw_rent_label'] : 'Rent Item';
+                $cpt_slug         = sanitize_title( ! empty( $gen_settings['rbfw_rent_slug'] ) ? $gen_settings['rbfw_rent_slug'] : 'rent' );
+                $cpt_icon         = ! empty( $gen_settings['rbfw_rent_icon'] ) ? $gen_settings['rbfw_rent_icon'] : 'dashicons-clipboard';
+                $gutenburg_switch = isset( $gen_settings['rbfw_gutenburg_switch'] ) ? $gen_settings['rbfw_gutenburg_switch'] : 'on';
+            }
             if ( empty( $cpt_slug ) ) {
                 $cpt_slug = 'rent';
             }
-            $cpt_icon         = $rbfw->get_icon();
-            $gutenburg_switch  = $rbfw->get_option_trans('rbfw_gutenburg_switch', 'rbfw_basic_gen_settings', 'on');
             if(isset($gutenburg_switch) && $gutenburg_switch == 'on'){
                 $editor = true;
             } else {
