@@ -147,7 +147,7 @@ if (!class_exists('RBFW_Rental_List')) {
                 return $admin_title;
             }
             $is_trash = isset($_GET['rbfw_status']) && sanitize_text_field(wp_unslash($_GET['rbfw_status'])) === 'trash';
-            $label    = self::cpt_label() . ' ' . esc_html__('Items', 'booking-and-rental-manager-for-woocommerce');
+            $label    = self::cpt_label() . ' ' . esc_html__('List', 'booking-and-rental-manager-for-woocommerce');
             if ($is_trash) {
                 $label = esc_html__('Trash', 'booking-and-rental-manager-for-woocommerce') . ' - ' . $label;
             }
@@ -284,7 +284,7 @@ if (!class_exists('RBFW_Rental_List')) {
                 <div class="rbfw-fleet">
 
                     <div class="rbfw-page-header">
-                        <div class="rbfw-page-title"><?php echo esc_html($name); ?> <?php esc_html_e('Items', 'booking-and-rental-manager-for-woocommerce'); ?>
+                        <div class="rbfw-page-title"><?php echo esc_html($name); ?> <?php esc_html_e('Lists', 'booking-and-rental-manager-for-woocommerce'); ?>
                             <span><?php echo esc_html(sprintf(_n('%d item', '%d items', $total, 'booking-and-rental-manager-for-woocommerce'), $total)); ?></span>
                         </div>
                         <div class="rbfw-header-actions">
