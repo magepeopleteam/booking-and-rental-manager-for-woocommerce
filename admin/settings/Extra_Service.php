@@ -381,7 +381,7 @@
 				$rbfw_extra_service_data       = get_post_meta( $post_id, 'rbfw_extra_service_data', true ) ? get_post_meta( $post_id, 'rbfw_extra_service_data', true ) : [];
 
 				?>
-				<div class="rbfw_es_price_config_wrapper" <?php if ( $rbfw_item_type == 'appointment' || $rbfw_item_type == 'multiple_items') { echo 'style="display:none"'; } ?>">
+				<div class="rbfw_es_price_config_wrapper" data-has-legacy-data="<?php echo ! empty( $rbfw_extra_service_data ) ? '1' : '0'; ?>" <?php if ( in_array( $rbfw_item_type, [ 'multiple_items', 'bike_car_md', 'resort' ] ) ) { echo 'style="display:none"'; } ?>>
 					<?php $this->show_extra_service( $post_id ) ?>
 				</div>
 				<?php
