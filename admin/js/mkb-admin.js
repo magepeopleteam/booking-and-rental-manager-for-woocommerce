@@ -823,8 +823,8 @@
 
 
         let timePickerEnabled = rbfw_enable_time_picker.val() === 'yes';
-        let hourlyPriceEnabled = rbfw_enable_time_picker.val() === 'yes';
-        let halfDayPriceEnabled = rbfw_enable_time_picker.val() === 'yes';
+        let hourlyPriceEnabled = rbfw_enable_hourly_rate.val() === 'yes';
+        let halfDayPriceEnabled = rbfw_enable_half_day_rate.val() === 'yes';
 
 
 
@@ -852,6 +852,8 @@
             dailyPriceToggle.toggleClass('active', dailyPriceEnabled);
             dailyPriceInput.prop('disabled', !dailyPriceEnabled);
             rbfw_enable_daily_rate.val(dailyPriceEnabled ? 'yes' : 'no');
+            jQuery('.rbfw-daywise-dailyprice-col').css('display', dailyPriceEnabled ? '' : 'none');
+            updateDaywisePricingVisibility();
         }
 
         function toggleMonthThreshold() {
@@ -883,6 +885,9 @@
             hourThresholdItem.css('display', timePickerEnabled ? 'flex' : 'none');
             timeSlotsSection.css('display', timePickerEnabled ? 'block' : 'none');
             halfDayPriceItem.css('display', halfDayPriceEnabled ? 'flex' : 'none');
+            jQuery('.rbfw-daywise-hourly-col').css('display', (timePickerEnabled && hourlyPriceEnabled) ? '' : 'none');
+            jQuery('.rbfw-daywise-halfday-col').css('display', (timePickerEnabled && halfDayPriceEnabled) ? '' : 'none');
+            updateDaywisePricingVisibility();
 
             const $toggle = jQuery(this);
             const $input = jQuery('.rbfw_enable_time_picker');
@@ -897,11 +902,18 @@
 
 
 
+        function updateDaywisePricingVisibility() {
+            const atLeastOneEnabled = dailyPriceEnabled || (timePickerEnabled && (hourlyPriceEnabled || halfDayPriceEnabled));
+            jQuery('#rbfw-daywise-config-wrapper').css('display', atLeastOneEnabled ? '' : 'none');
+        }
+
         function toggleHourlyPrice() {
             hourlyPriceEnabled = !hourlyPriceEnabled;
             hourlyPriceToggle.toggleClass('active', hourlyPriceEnabled);
             hourlyPriceInput.prop('disabled', !hourlyPriceEnabled);
             rbfw_enable_hourly_rate.val(hourlyPriceEnabled ? 'yes' : 'no');
+            jQuery('.rbfw-daywise-hourly-col').css('display', (hourlyPriceEnabled && timePickerEnabled) ? '' : 'none');
+            updateDaywisePricingVisibility();
         }
 
         function toggleHalfDayPrice() {
@@ -910,6 +922,8 @@
             halfDayPriceInput.prop('disabled', !halfDayPriceEnabled);
             rbfw_enable_half_day_rate.val(halfDayPriceEnabled ? 'yes' : 'no');
             halfDayPriceItem.css('display', halfDayPriceEnabled ? 'flex' : 'none');
+            jQuery('.rbfw-daywise-halfday-col').css('display', (halfDayPriceEnabled && timePickerEnabled) ? '' : 'none');
+            updateDaywisePricingVisibility();
         }
 
         // Input change handlers

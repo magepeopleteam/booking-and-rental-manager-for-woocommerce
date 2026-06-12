@@ -50,12 +50,15 @@
             $weekly_rate_label = __('Weekly rate', 'booking-and-rental-manager-for-woocommerce');
             $monthly_rate_label = __('Monthly rate', 'booking-and-rental-manager-for-woocommerce');
             $rbfw_enable_hourly_rate = get_post_meta($post_id, 'rbfw_enable_hourly_rate', true) ? get_post_meta($post_id, 'rbfw_enable_hourly_rate', true) : 'no';
-            $rbfw_enable_daily_rate = get_post_meta(get_the_id(), 'rbfw_enable_daily_rate', true) ? get_post_meta(get_the_id(), 'rbfw_enable_daily_rate', true) : 'no';
+            $rbfw_enable_daily_rate = get_post_meta(get_the_id(), 'rbfw_enable_daily_rate', true) ?: 'yes';
             $rbfw_enable_weekly_rate = get_post_meta(get_the_id(), 'rbfw_enable_weekly_rate', true) ? get_post_meta(get_the_id(), 'rbfw_enable_weekly_rate', true) : 'no';
             $rbfw_enable_monthly_rate = get_post_meta(get_the_id(), 'rbfw_enable_monthly_rate', true) ? get_post_meta(get_the_id(), 'rbfw_enable_monthly_rate', true) : 'no';
 
-            $rbfw_enable_time_picker = get_post_meta(get_the_id(), 'rbfw_enable_time_picker', true) ? get_post_meta(get_the_id(), 'rbfw_enable_time_picker', true) : 'no';
+            $rbfw_enable_time_picker   = get_post_meta(get_the_id(), 'rbfw_enable_time_picker', true) ? get_post_meta(get_the_id(), 'rbfw_enable_time_picker', true) : 'no';
+            $rbfw_enable_daywise_price = get_post_meta($post_id, 'rbfw_enable_daywise_price', true) ?: 'no';
 
+            $price_sun = 0; $price_mon = 0; $price_tue = 0; $price_wed = 0;
+            $price_thu = 0; $price_fri = 0; $price_sat = 0;
 
             if ($rbfw_enable_monthly_rate == 'yes' && $pricing_display_for_listing=='monthly') {
                 $price_label = $monthly_rate_label;
@@ -95,22 +98,22 @@
                 $enabled_fri = get_post_meta($post_id, 'rbfw_enable_fri_day', true) ? get_post_meta($post_id, 'rbfw_enable_fri_day', true) : 'yes';
                 $enabled_sat = get_post_meta($post_id, 'rbfw_enable_sat_day', true) ? get_post_meta($post_id, 'rbfw_enable_sat_day', true) : 'yes';
                 $current_day = gmdate('D');
-                if ($current_day == 'Sun' && $enabled_sun == 'yes') {
-                    $price = (float)$price_sun;
-                } elseif ($current_day == 'Mon' && $enabled_mon == 'yes') {
-                    $price = (float)$price_mon;
-                } elseif ($current_day == 'Tue' && $enabled_tue == 'yes') {
-                    $price = (float)$price_tue;
-                } elseif ($current_day == 'Wed' && $enabled_wed == 'yes') {
-                    $price = (float)$price_wed;
-                } elseif ($current_day == 'Thu' && $enabled_thu == 'yes') {
-                    $price = (float)$price_thu;
-                } elseif ($current_day == 'Fri' && $enabled_fri == 'yes') {
-                    $price = (float)$price_fri;
-                } elseif ($current_day == 'Sat' && $enabled_sat == 'yes') {
-                    $price = (float)$price_sat;
-                } else {
-                    $price = (float)$price;
+                if ($rbfw_enable_daywise_price == 'yes') {
+                    if ($current_day == 'Sun' && $enabled_sun == 'yes' && (float)$price_sun > 0) {
+                        $price = (float)$price_sun;
+                    } elseif ($current_day == 'Mon' && $enabled_mon == 'yes' && (float)$price_mon > 0) {
+                        $price = (float)$price_mon;
+                    } elseif ($current_day == 'Tue' && $enabled_tue == 'yes' && (float)$price_tue > 0) {
+                        $price = (float)$price_tue;
+                    } elseif ($current_day == 'Wed' && $enabled_wed == 'yes' && (float)$price_wed > 0) {
+                        $price = (float)$price_wed;
+                    } elseif ($current_day == 'Thu' && $enabled_thu == 'yes' && (float)$price_thu > 0) {
+                        $price = (float)$price_thu;
+                    } elseif ($current_day == 'Fri' && $enabled_fri == 'yes' && (float)$price_fri > 0) {
+                        $price = (float)$price_fri;
+                    } elseif ($current_day == 'Sat' && $enabled_sat == 'yes' && (float)$price_sat > 0) {
+                        $price = (float)$price_sat;
+                    }
                 }
                 $current_date = gmdate('Y-m-d');
                 $rbfw_sp_prices = get_post_meta($post_id, 'rbfw_seasonal_prices', true);
@@ -170,22 +173,22 @@
                     $enabled_fri = get_post_meta( $post_id, 'rbfw_enable_fri_day', true ) ? get_post_meta( $post_id, 'rbfw_enable_fri_day', true ) : 'yes';
                     $enabled_sat = get_post_meta( $post_id, 'rbfw_enable_sat_day', true ) ? get_post_meta( $post_id, 'rbfw_enable_sat_day', true ) : 'yes';
                     $current_day = gmdate( 'D' );
-                    if ( $current_day == 'Sun' && $enabled_sun == 'yes' ) {
-                        $price = (float) $price_sun;
-                    } elseif ( $current_day == 'Mon' && $enabled_mon == 'yes' ) {
-                        $price = (float) $price_mon;
-                    } elseif ( $current_day == 'Tue' && $enabled_tue == 'yes' ) {
-                        $price = (float) $price_tue;
-                    } elseif ( $current_day == 'Wed' && $enabled_wed == 'yes' ) {
-                        $price = (float) $price_wed;
-                    } elseif ( $current_day == 'Thu' && $enabled_thu == 'yes' ) {
-                        $price = (float) $price_thu;
-                    } elseif ( $current_day == 'Fri' && $enabled_fri == 'yes' ) {
-                        $price = (float) $price_fri;
-                    } elseif ( $current_day == 'Sat' && $enabled_sat == 'yes' ) {
-                        $price = (float) $price_sat;
-                    } else {
-                        $price = (float) $price;
+                    if ($rbfw_enable_daywise_price == 'yes') {
+                        if ( $current_day == 'Sun' && $enabled_sun == 'yes' && (float)$price_sun > 0 ) {
+                            $price = (float) $price_sun;
+                        } elseif ( $current_day == 'Mon' && $enabled_mon == 'yes' && (float)$price_mon > 0 ) {
+                            $price = (float) $price_mon;
+                        } elseif ( $current_day == 'Tue' && $enabled_tue == 'yes' && (float)$price_tue > 0 ) {
+                            $price = (float) $price_tue;
+                        } elseif ( $current_day == 'Wed' && $enabled_wed == 'yes' && (float)$price_wed > 0 ) {
+                            $price = (float) $price_wed;
+                        } elseif ( $current_day == 'Thu' && $enabled_thu == 'yes' && (float)$price_thu > 0 ) {
+                            $price = (float) $price_thu;
+                        } elseif ( $current_day == 'Fri' && $enabled_fri == 'yes' && (float)$price_fri > 0 ) {
+                            $price = (float) $price_fri;
+                        } elseif ( $current_day == 'Sat' && $enabled_sat == 'yes' && (float)$price_sat > 0 ) {
+                            $price = (float) $price_sat;
+                        }
                     }
                     $current_date   = gmdate( 'Y-m-d' );
                     $rbfw_sp_prices = get_post_meta( $post_id, 'rbfw_seasonal_prices', true );

@@ -611,9 +611,11 @@ function rbfw_order_meta_box_callback() {
     $billing_email                       = get_post_meta( $order_id, 'rbfw_billing_email', true );
     $payment_method                      = get_post_meta( $order_id, 'rbfw_payment_method', true );
     $payment_id                          = get_post_meta( $order_id, 'rbfw_payment_id', true );
-    $order_no       = get_post_meta( $order_id, 'rbfw_order_id', true );
-    $grand_total    = ! empty( get_post_meta( $order_id, 'rbfw_ticket_total_price', true ) ) ? wc_price( get_post_meta( $order_id, 'rbfw_ticket_total_price', true ) ) : '';
-    $rbfw_order_tax = ! empty( get_post_meta( $order_id, 'rbfw_order_tax', true ) ) ? wc_price( get_post_meta( $order_id, 'rbfw_order_tax', true ) ) : '';
+    $order_no             = get_post_meta( $order_id, 'rbfw_order_id', true );
+    $ticket_total_price   = get_post_meta( $order_id, 'rbfw_ticket_total_price', true );
+    $grand_total          = ! empty( $ticket_total_price ) ? wc_price( $ticket_total_price ) : '';
+    $order_tax_raw        = get_post_meta( $order_id, 'rbfw_order_tax', true );
+    $rbfw_order_tax       = ! empty( $order_tax_raw ) ? wc_price( $order_tax_raw ) : '';
 
     wp_nonce_field( 'rbfw_nonce_action', 'nonce' );
 
@@ -1073,7 +1075,7 @@ function rbfw_order_meta_box_callback() {
             <?php
             $is_tax_inclusive = get_option( 'woocommerce_prices_include_tax', true );
             if ( $is_tax_inclusive == 'yes' ) {
-                $wps_order_tax = ! empty( get_post_meta( $order_id, 'rbfw_order_tax', true ) ) ? get_post_meta( $order_id, 'rbfw_order_tax', true ) : '';
+                $wps_order_tax = ! empty( $order_tax_raw ) ? $order_tax_raw : '';
                 $subtotal      = (float) $subtotal - (float) $wps_order_tax;
                 $subtotal      = wc_price( $subtotal ) . '(ex. tax)';
             } else {

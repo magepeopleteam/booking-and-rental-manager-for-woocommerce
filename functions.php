@@ -205,14 +205,13 @@ function rbfw_page_create() {
             ]);
 
             if (!is_wp_error($page_id)) {
+                wp_cache_delete( $slug, 'posts' );
                 error_log("Page '{$page['title']}' created successfully with ID: $page_id");
             } else {
                 error_log("Failed to create page '{$page['title']}': " . $page_id->get_error_message());
             }
         }
     }
-
-    wp_cache_flush(); // Clear cache to avoid stale queries
 }
 
 

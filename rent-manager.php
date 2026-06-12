@@ -56,8 +56,9 @@
 			}
 
 			public function add_body_class( $classes ) {
-				$post_id  = get_the_ID();
-				$template = ! empty( get_post_meta( $post_id, 'rbfw_single_template', true ) ) ? get_post_meta( $post_id, 'rbfw_single_template', true ) : 'Default';
+				$post_id        = get_the_ID();
+				$template_value = get_post_meta( $post_id, 'rbfw_single_template', true );
+				$template       = ! empty( $template_value ) ? $template_value : 'Default';
 
 				return array_merge( $classes, array( 'rbfw_single_' . strtolower( $template ) . '_template' ) );
 			}

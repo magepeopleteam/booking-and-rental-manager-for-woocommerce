@@ -858,29 +858,32 @@
 				<?php
 			}
 
-			public function rbfw_day_row( $day_name, $day_slug ) {
+			public function rbfw_day_row( $day_name, $day_slug, $show_hourly_col = true, $show_halfday_col = true, $show_daily_col = true ) {
 				$hourly_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_hourly_rate', true ) : '';
 				$half_day_rate = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_half_day_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_half_day_rate', true ) : '';
 				$daily_rate  = get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) ? get_post_meta( get_the_id(), 'rbfw_' . $day_slug . '_daily_rate', true ) : '';
 				$enable      = ! empty( get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) ) ? get_post_meta( get_the_id(), 'rbfw_enable_' . $day_slug . '_day', true ) : '';
+				$hourly_col_style  = $show_hourly_col  ? '' : ' style="display:none;"';
+				$halfday_col_style = $show_halfday_col ? '' : ' style="display:none;"';
+				$daily_col_style   = $show_daily_col   ? '' : ' style="display:none;"';
 				?>
                 <tr>
                     <th><?php echo esc_html( $day_name ); ?></th>
-                    <td>
+                    <td class="rbfw-daywise-hourly-col"<?php echo $hourly_col_style; ?>>
                         <input
                             type="number"
                             name="rbfw_<?php echo esc_attr( $day_slug ); ?>_hourly_rate"
                             value="<?php echo esc_attr( $hourly_rate ); ?>"
                             placeholder="<?php esc_attr_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                     </td>
-                    <td>
+                    <td class="rbfw-daywise-halfday-col"<?php echo $halfday_col_style; ?>>
                         <input
                                 type="number"
                                 name="rbfw_<?php echo esc_attr( $day_slug ); ?>_half_day_rate"
                                 value="<?php echo esc_attr( $half_day_rate ); ?>"
                                 placeholder="<?php esc_attr_e( 'Half Day Price', 'booking-and-rental-manager-for-woocommerce' ); ?>">
                     </td>
-                    <td>
+                    <td class="rbfw-daywise-dailyprice-col"<?php echo $daily_col_style; ?>>
                         <input
                             type="number"
                             name="rbfw_<?php echo esc_attr( $day_slug ); ?>_daily_rate"
@@ -1177,6 +1180,13 @@
 
                     <?php do_action( 'rbfw_before_general_price_table_row' ); ?>
 
+					<?php
+						$_daywise_visible = (
+							$rbfw_enable_daily_rate   === 'yes' ||
+							( $rbfw_enable_time_picker === 'yes' && ( $rbfw_enable_hourly_rate === 'yes' || $rbfw_enable_half_day_rate === 'yes' ) )
+						);
+					?>
+                    <div id="rbfw-daywise-config-wrapper" style="<?php echo $_daywise_visible ? '' : 'display:none;'; ?>">
 					<?php $this->panel_header( 'Day-wise Price Configuration ', 'Day-wise Price Configuration lets you set different prices for each day of the week' ); ?>
                     <section>
                         <div>
@@ -1198,27 +1208,31 @@
                             <thead>
                             <tr>
                                 <th scope="row"><?php esc_html_e( 'Day Name', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                <th scope="row"><?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                <th scope="row"><?php esc_html_e( 'Half Day Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
-                                <th scope="row"><?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th scope="row" class="rbfw-daywise-hourly-col" style="<?php echo ( $rbfw_enable_time_picker === 'yes' && $rbfw_enable_hourly_rate === 'yes' ) ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Hourly Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th scope="row" class="rbfw-daywise-halfday-col" style="<?php echo ( $rbfw_enable_time_picker === 'yes' && $rbfw_enable_half_day_rate === 'yes' ) ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Half Day Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
+                                <th scope="row" class="rbfw-daywise-dailyprice-col" style="<?php echo $rbfw_enable_daily_rate === 'yes' ? '' : 'display:none;'; ?>"><?php esc_html_e( 'Daily Price', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                                 <th scope="row"><?php esc_html_e( 'Enable/Disable', 'booking-and-rental-manager-for-woocommerce' ); ?></th>
                             </tr>
                             </thead>
                             <tbody>
 							<?php
-								$this->rbfw_day_row( esc_html__( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun' );
-								$this->rbfw_day_row( esc_html__( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon' );
-								$this->rbfw_day_row( esc_html__( 'Tuesday:', 'booking-and-rental-manager-for-woocommerce' ), 'tue' );
-								$this->rbfw_day_row( esc_html__( 'Wednesday:', 'booking-and-rental-manager-for-woocommerce' ), 'wed' );
-								$this->rbfw_day_row( esc_html__( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu' );
-								$this->rbfw_day_row( esc_html__( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri' );
-								$this->rbfw_day_row( esc_html__( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat' );
+								$_show_hourly_col  = ( $rbfw_enable_time_picker === 'yes' && $rbfw_enable_hourly_rate === 'yes' );
+								$_show_halfday_col = ( $rbfw_enable_time_picker === 'yes' && $rbfw_enable_half_day_rate === 'yes' );
+								$_show_daily_col   = ( $rbfw_enable_daily_rate === 'yes' );
+								$this->rbfw_day_row( esc_html__( 'Sunday:', 'booking-and-rental-manager-for-woocommerce' ), 'sun', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Monday:', 'booking-and-rental-manager-for-woocommerce' ), 'mon', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Tuesday:', 'booking-and-rental-manager-for-woocommerce' ), 'tue', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Wednesday:', 'booking-and-rental-manager-for-woocommerce' ), 'wed', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Thursday:', 'booking-and-rental-manager-for-woocommerce' ), 'thu', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Friday:', 'booking-and-rental-manager-for-woocommerce' ), 'fri', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
+								$this->rbfw_day_row( esc_html__( 'Saturday:', 'booking-and-rental-manager-for-woocommerce' ), 'sat', $_show_hourly_col, $_show_halfday_col, $_show_daily_col );
 								//do_action( 'rbfw_after_week_price_table_row' );
 							?>
                             </tbody>
                         </table>
                     </section>
                     <br>
+                    </div>
 
 					<?php do_action( 'rbfw_after_general_price_table_row' ); ?>
 

@@ -191,11 +191,12 @@ add_action( 'wp',  'rbfw_hide_hidden_wc_product_from_frontend' );
 function rbfw_hide_hidden_wc_product_from_frontend() {
 				global $post, $wp_query;
 				if ( is_product() ) {
-					$post_id    = $post->ID;
-					$visibility = get_the_terms( $post_id, 'product_visibility' ) ? get_the_terms( $post_id, 'product_visibility' ) : [ 0 ];
+					$post_id        = $post->ID;
+					$visibility_raw = get_the_terms( $post_id, 'product_visibility' );
+					$visibility     = $visibility_raw ? $visibility_raw : [ 0 ];
 					if ( is_object( $visibility[0] ) ) {
 						if ( $visibility[0]->name == 'exclude-from-catalog' ) {
-							$check_event_hidden = get_post_meta( $post_id, 'link_rbfw_id', true ) ? get_post_meta( $post_id, 'link_rbfw_id', true ) : 0;
+							$check_event_hidden = (int) get_post_meta( $post_id, 'link_rbfw_id', true );
 							if ( $check_event_hidden > 0 ) {
 								$wp_query->set_404();
 								status_header( 404 );
@@ -214,11 +215,12 @@ add_action( 'wp_head',  'rbfw_url_exclude_search_engine' );
 function rbfw_url_exclude_search_engine() {
 				global $post;
 				if ( is_single() && is_product() ) {
-					$post_id    = $post->ID;
-					$visibility = get_the_terms( $post_id, 'product_visibility' ) ? get_the_terms( $post_id, 'product_visibility' ) : [ 0 ];
+					$post_id        = $post->ID;
+					$visibility_raw = get_the_terms( $post_id, 'product_visibility' );
+					$visibility     = $visibility_raw ? $visibility_raw : [ 0 ];
 					if ( is_object( $visibility[0] ) ) {
 						if ( $visibility[0]->name == 'exclude-from-catalog' ) {
-							$check_event_hidden = get_post_meta( $post_id, 'link_rbfw_id', true ) ? get_post_meta( $post_id, 'link_rbfw_id', true ) : 0;
+							$check_event_hidden = (int) get_post_meta( $post_id, 'link_rbfw_id', true );
 							if ( $check_event_hidden > 0 ) {
 								echo '<meta name="robots" content="noindex, nofollow">';
 							}
@@ -344,7 +346,12 @@ function rbfw_url_exclude_search_engine() {
 	}
 	add_action( 'rbfw_availabe_label', 'rbfw_show_availabe_label', 10, 2 );
 	function rbfw_show_availabe_label( $availabe_type_seat, $rbfw_id ) {
-		$stock_status = get_post_meta( $rbfw_id, 'rbfw_inventory_manage', true ) ? get_post_meta( $rbfw_id, 'rbfw_inventory_manage', true ) : 'yes';
+		static $stock_status_cache = array();
+		if ( ! isset( $stock_status_cache[ $rbfw_id ] ) ) {
+			$val = get_post_meta( $rbfw_id, 'rbfw_inventory_manage', true );
+			$stock_status_cache[ $rbfw_id ] = $val ? $val : 'yes';
+		}
+		$stock_status = $stock_status_cache[ $rbfw_id ];
 		if ( $stock_status == 'yes' ) {
 			?>
             <p class='rbfw_availabe_seat_label'><?php echo esc_html( $availabe_type_seat ) . ' ';
@@ -497,7 +504,8 @@ function rbfw_url_exclude_search_engine() {
 			return;
 		}
 		global $rbfw;
-		$rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ) : array();
+		$rbfw_related_post_raw = get_post_meta( $post_id, 'rbfw_releted_rbfw', true );
+		$rbfw_related_post_arr = $rbfw_related_post_raw ? maybe_unserialize( $rbfw_related_post_raw ) : array();
 		$hourly_rate_label     = (
         ( $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings' ) )
@@ -507,6 +515,7 @@ function rbfw_url_exclude_search_engine() {
             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings' ) )
             : esc_html__( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' );
 		if ( isset( $rbfw_related_post_arr ) && ! empty( $rbfw_related_post_arr ) ) {
+			update_postmeta_cache( array_map( 'intval', $rbfw_related_post_arr ) );
 			?>
             <h3 class="rbfw-related-product-heading">
 				<?php rbfw_string( 'rbfw_text_related_items', esc_html__( 'Related Items', 'booking-and-rental-manager-for-woocommerce' ) ); ?>
@@ -525,13 +534,13 @@ function rbfw_url_exclude_search_engine() {
 					$daily_rate_label        = ($rbfw->get_option_trans( 'rbfw_text_daily_rate', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
                         ? esc_html( $rbfw->get_option_trans( 'rbfw_text_daily_rate', 'rbfw_basic_translation_settings' ) )
                         : esc_html__( 'Daily rate', 'booking-and-rental-manager-for-woocommerce' );
-					$rbfw_enable_hourly_rate = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_hourly_rate', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_enable_hourly_rate', true ) : 'no';
+					$rbfw_enable_hourly_rate_raw = get_post_meta( $rbfw_related_post_id, 'rbfw_enable_hourly_rate', true );
+					$rbfw_enable_hourly_rate = $rbfw_enable_hourly_rate_raw ? $rbfw_enable_hourly_rate_raw : 'no';
 					if ( $rbfw_enable_hourly_rate == 'no' ) {
 						$the_price_label = $daily_rate_label;
 					} else {
 						$the_price_label = $hourly_rate_label;
 					}
-					$rbfw_rent_type  = get_post_meta( $rbfw_related_post_id, 'rbfw_item_type', true );
 					if ( $rbfw_enable_hourly_rate == 'yes' ) {
 						$price     = get_post_meta( $rbfw_related_post_id, 'rbfw_hourly_rate', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_hourly_rate', true ) : 0;
 						$price_sun = get_post_meta( $rbfw_related_post_id, 'rbfw_sun_hourly_rate', true ) ? get_post_meta( $rbfw_related_post_id, 'rbfw_sun_hourly_rate', true ) : 0;
@@ -1151,6 +1160,7 @@ function rbfw_url_exclude_search_engine() {
 		$rbfw_bike_car_sd_data           = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
 		$rbfw_rent_type                  = get_post_meta( $post_id, 'rbfw_item_type', true );
 		$appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true );
+		$mepp_reduce_stock_sd            = get_option( 'mepp_reduce_stock', 'full' );
 		if ( ! empty( $rbfw_inventory ) ) {
 			foreach ( $rbfw_inventory as $key => $inventory ) {
 				$booked_dates    = ! empty( $inventory['booked_dates'] ) ? $inventory['booked_dates'] : [];
@@ -1158,7 +1168,7 @@ function rbfw_url_exclude_search_engine() {
 				$rbfw_start_time = ! empty( $inventory['rbfw_start_time'] ) ? $inventory['rbfw_start_time'] : '';
 
                 $partial_stock = true;
-                if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
+                if($inventory['rbfw_order_status'] == 'partially-paid' && $mepp_reduce_stock_sd=='deposit'){
                     $partial_stock = false;
                 }
 
@@ -1245,21 +1255,22 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
     $rbfw_inventory  = get_post_meta( $post_id, 'rbfw_inventory', true );
     $total_stock     = (int) get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true );
     $total_booked    = 0;
+    $inventory_based_on_return      = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
+    $mepp_reduce_stock_timely       = get_option( 'mepp_reduce_stock', 'full' );
+    $inventory_managed_order_status = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
+    $inventory_managed_order_status = is_array( $inventory_managed_order_status ) ? $inventory_managed_order_status : [
+        'processing' => 'processing',
+        'completed'  => 'completed',
+    ];
     if ( ! empty( $rbfw_inventory ) ) {
         foreach ( $rbfw_inventory as $key => $inventory ) {
-            $rbfw_item_quantity        = ! empty( $inventory['rbfw_item_quantity'] ) ? $inventory['rbfw_item_quantity'] : 0;
-            $inventory_based_on_return = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
+            $rbfw_item_quantity = ! empty( $inventory['rbfw_item_quantity'] ) ? $inventory['rbfw_item_quantity'] : 0;
 
             $partial_stock = true;
-            if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
+            if($inventory['rbfw_order_status'] == 'partially-paid' && $mepp_reduce_stock_timely=='deposit'){
                 $partial_stock = false;
             }
 
-            $inventory_managed_order_status = rbfw_get_option('inventory_managed_order_status', 'rbfw_basic_gen_settings');
-            $inventory_managed_order_status = is_array($inventory_managed_order_status )?$inventory_managed_order_status : [
-                'processing' => 'processing',
-                'completed'  => 'completed',
-            ];
             $checkValues = $inventory['rbfw_order_status'];
 
 
@@ -1342,13 +1353,14 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 		if ( ! empty( $rbfw_inventory ) ) {
 			$total_qty = 0;
 			$qty_array = [];
+			$mepp_reduce_stock_es = get_option( 'mepp_reduce_stock', 'full' );
 			foreach ( $date_range as $key => $range_date ) {
 				foreach ( $rbfw_inventory as $key => $inventory ) {
 					$booked_dates      = ! empty( $inventory['booked_dates'] ) ? $inventory['booked_dates'] : [];
 					$rbfw_service_info = ! empty( $inventory['rbfw_service_info'] ) ? $inventory['rbfw_service_info'] : [];
 
                     $partial_stock = true;
-                    if($inventory['rbfw_order_status'] == 'partially-paid' && get_option('mepp_reduce_stock', 'full')=='deposit'){
+                    if($inventory['rbfw_order_status'] == 'partially-paid' && $mepp_reduce_stock_es=='deposit'){
                         $partial_stock = false;
                     }
 
@@ -1598,7 +1610,8 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 			return;
 		}
 		global $rbfw;
-		$rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ) : array();
+		$rbfw_related_post_raw = get_post_meta( $post_id, 'rbfw_releted_rbfw', true );
+		$rbfw_related_post_arr = $rbfw_related_post_raw ? maybe_unserialize( $rbfw_related_post_raw ) : array();
 		$hourly_rate_label     = ($rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings' ) )
             : esc_html__( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' );
@@ -1606,6 +1619,7 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_prices_start_at', 'rbfw_basic_translation_settings' ) )
             : esc_html__( 'Prices start at', 'booking-and-rental-manager-for-woocommerce' );
 		if ( ! empty( $rbfw_related_post_arr ) ) {
+			update_postmeta_cache( array_map( 'intval', $rbfw_related_post_arr ) );
 			echo '<div class="owl-carousel owl-theme t_carousel">';
 			foreach ( $rbfw_related_post_arr as $rbfw_related_post_id ) {
 				$rbfw_rent_type = get_post_meta( $rbfw_related_post_id, 'rbfw_item_type', true );
@@ -1826,7 +1840,8 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
 			return;
 		}
 		global $rbfw;
-		$rbfw_related_post_arr = get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ? maybe_unserialize( get_post_meta( $post_id, 'rbfw_releted_rbfw', true ) ) : array();
+		$rbfw_related_post_raw = get_post_meta( $post_id, 'rbfw_releted_rbfw', true );
+		$rbfw_related_post_arr = $rbfw_related_post_raw ? maybe_unserialize( $rbfw_related_post_raw ) : array();
 		$hourly_rate_label     = ( $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings' ) && want_loco_translate() == 'no' )
             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_hourly_rate', 'rbfw_basic_translation_settings' ) )
             : esc_html__( 'Hourly rate', 'booking-and-rental-manager-for-woocommerce' );
@@ -1837,6 +1852,7 @@ function rbfw_timely_available_quantity_updated( $post_id, $start_date, $start_t
             ? esc_html( $rbfw->get_option_trans( 'rbfw_text_reviews', 'rbfw_basic_translation_settings' ) )
             : esc_html__( 'Reviews', 'booking-and-rental-manager-for-woocommerce' );
 		if ( ! empty( $rbfw_related_post_arr ) ) {
+			update_postmeta_cache( array_map( 'intval', $rbfw_related_post_arr ) );
 			echo '<div class="owl-carousel owl-theme t_carousel">';
 			foreach ( $rbfw_related_post_arr as $rbfw_related_post_id ) {
 				$gallery_images = get_post_meta( $rbfw_related_post_id, 'rbfw_gallery_images', true );

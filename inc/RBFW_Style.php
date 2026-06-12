@@ -14,23 +14,30 @@
 			}
 			
 			public function rbfw_style() {
-				$default_color   = RBFW_Function::get_style_settings( 'rbfw_default_text_color', '#000' );
-				$theme_color     = RBFW_Function::get_style_settings( 'rbfw_theme_color', '#F12971' );
-				$alternate_color = RBFW_Function::get_style_settings( 'rbfw_theme_alternate_color', '#fff' );
-				$warning_color   = RBFW_Function::get_style_settings( 'rbfw_warning_color', '#E67C30' );
-				
-				$default_fs   = RBFW_Function::get_style_settings( 'rbfw_default_font_size', '14' ) . 'px';
-				$fs_h1        = RBFW_Function::get_style_settings( 'rbfw_font_size_h1', '35' ) . 'px';
-				$fs_h2        = RBFW_Function::get_style_settings( 'rbfw_font_size_h2', '30' ) . 'px';
-				$fs_h3        = RBFW_Function::get_style_settings( 'rbfw_font_size_h3', '28' ) . 'px';
-				$fs_h4        = RBFW_Function::get_style_settings( 'rbfw_font_size_h4', '24' ) . 'px';
-				$fs_h5        = RBFW_Function::get_style_settings( 'rbfw_font_size_h5', '20' ) . 'px';
-				$fs_h6        = RBFW_Function::get_style_settings( 'rbfw_font_size_h6', '18' ) . 'px';
-				$fs_label     = RBFW_Function::get_style_settings( 'rbfw_font_size_label', '14' ) . 'px';
-				$button_fs    = RBFW_Function::get_style_settings( 'rbfw_font_size_button', '14' ) . 'px';
-				$button_color = RBFW_Function::get_style_settings( 'rbfw_button_color', $alternate_color );
-				$button_bg    = RBFW_Function::get_style_settings( 'rbfw_button_bg', '#ea8125' );
-				$section_bg    = RBFW_Function::get_style_settings( 'rbfw_section_bg', '#FAFCFE' );
+				$style_opts = get_option( 'rbfw_basic_style_settings', array() );
+				if ( ! is_array( $style_opts ) ) {
+					$style_opts = array();
+				}
+				$so = function( $key, $default ) use ( $style_opts ) {
+					return ( isset( $style_opts[ $key ] ) && $style_opts[ $key ] !== '' ) ? $style_opts[ $key ] : $default;
+				};
+
+				$default_color   = $so( 'rbfw_default_text_color', '#000' );
+				$theme_color     = $so( 'rbfw_theme_color', '#F12971' );
+				$alternate_color = $so( 'rbfw_theme_alternate_color', '#fff' );
+				$warning_color   = $so( 'rbfw_warning_color', '#E67C30' );
+				$default_fs      = $so( 'rbfw_default_font_size', '14' ) . 'px';
+				$fs_h1           = $so( 'rbfw_font_size_h1', '35' ) . 'px';
+				$fs_h2           = $so( 'rbfw_font_size_h2', '30' ) . 'px';
+				$fs_h3           = $so( 'rbfw_font_size_h3', '28' ) . 'px';
+				$fs_h4           = $so( 'rbfw_font_size_h4', '24' ) . 'px';
+				$fs_h5           = $so( 'rbfw_font_size_h5', '20' ) . 'px';
+				$fs_h6           = $so( 'rbfw_font_size_h6', '18' ) . 'px';
+				$fs_label        = $so( 'rbfw_font_size_label', '14' ) . 'px';
+				$button_fs       = $so( 'rbfw_font_size_button', '14' ) . 'px';
+				$button_color    = $so( 'rbfw_button_color', $alternate_color );
+				$button_bg       = $so( 'rbfw_button_bg', '#ea8125' );
+				$section_bg      = $so( 'rbfw_section_bg', '#FAFCFE' );
 
 				?>
 				<style>

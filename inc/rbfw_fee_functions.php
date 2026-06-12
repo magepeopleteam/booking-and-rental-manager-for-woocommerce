@@ -16,8 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 function rbfw_get_fee_data( $item_id ) {
-	$fee_data = get_post_meta( $item_id, 'rbfw_fee_data', true );
-	return is_array( $fee_data ) ? $fee_data : array();
+	static $cache = array();
+	if ( isset( $cache[ $item_id ] ) ) {
+		return $cache[ $item_id ];
+	}
+	$fee_data           = get_post_meta( $item_id, 'rbfw_fee_data', true );
+	$cache[ $item_id ]  = is_array( $fee_data ) ? $fee_data : array();
+	return $cache[ $item_id ];
 }
 
 /**
