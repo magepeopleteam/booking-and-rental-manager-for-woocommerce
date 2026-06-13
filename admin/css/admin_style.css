@@ -8000,3 +8000,322 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     padding: 0 20px 20px !important;
     text-align: center !important;
 }
+
+/* ── Additional Extra Service – Category Section Redesign ──────────────── */
+
+/* Enable Additional Service toggle row */
+#rbfw_add_meta_box .additional-service-item-price > section:not(.bg-light) {
+    align-items: center !important;
+    border: 1px solid #dde4ef !important;
+    border-top: none !important;
+    border-radius: 0 0 8px 8px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    padding: 16px 20px !important;
+}
+
+/* Category table: remove default table chrome, use row-gap */
+#rbfw_add_meta_box .additional-service-item-price table.rbfw_service_category_table {
+    background: transparent !important;
+    border-collapse: separate !important;
+    border-spacing: 0 12px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price table.rbfw_service_category_table tbody tr {
+    background: transparent !important;
+}
+
+/* Category main cell */
+#rbfw_add_meta_box .additional-service-item-price table.rbfw_service_category_table td:first-child {
+    border: none !important;
+    padding: 0 10px 0 0 !important;
+    vertical-align: top !important;
+}
+
+/* Category actions cell (sort + delete category) */
+#rbfw_add_meta_box .additional-service-item-price table.rbfw_service_category_table td:last-child {
+    border: none !important;
+    padding: 8px 0 0 !important;
+    vertical-align: top !important;
+    white-space: nowrap;
+    width: 72px;
+}
+
+/* Category card wrapper */
+#rbfw_add_meta_box .additional-service-item-price .services_category_wrapper {
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+
+/* Category header (title section) */
+#rbfw_add_meta_box .additional-service-item-price section.service_category_title {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: none !important;
+    border-bottom: 1px solid #dde4ef !important;
+    border-radius: 0 !important;
+    display: flex !important;
+    gap: 12px !important;
+    padding: 10px 16px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price section.service_category_title label {
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.6px !important;
+    margin: 0 !important;
+    text-transform: uppercase !important;
+    white-space: nowrap;
+}
+
+#rbfw_add_meta_box .additional-service-item-price section.service_category_title input[type="text"] {
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    flex: 1;
+    font-size: 13px !important;
+    height: 34px !important;
+    max-width: 280px !important;
+    padding: 0 10px !important;
+}
+
+/* Service item rows */
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_wrap .item {
+    align-items: center !important;
+    background: #fff !important;
+    border-bottom: 1px solid #f0f4fb !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+    justify-content: flex-start !important;
+    padding: 10px 16px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_wrap .item:last-child {
+    border-bottom: none !important;
+}
+
+/* Icon picker button */
+#rbfw_add_meta_box .additional-service-item-price .rbfw_service_icon_btn.btn {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #6b7790 !important;
+    display: inline-flex !important;
+    font-size: 12px !important;
+    gap: 4px;
+    height: 32px !important;
+    padding: 0 10px !important;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .rbfw_service_icon_btn.btn:hover {
+    background: #1a56db !important;
+    border-color: #1a56db !important;
+    color: #fff !important;
+}
+
+/* Icon preview */
+#rbfw_add_meta_box .additional-service-item-price .rbfw_service_icon_preview {
+    color: #6b7790;
+    font-size: 18px;
+    line-height: 1;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Name input (grows to fill space) */
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap input[type="text"]:not(.medium) {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    flex: 1 1 auto;
+    font-size: 13px !important;
+    height: 32px !important;
+    min-width: 80px;
+    padding: 0 10px !important;
+    width: auto !important;
+}
+
+/* Price / Stock inputs */
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap input.medium {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    flex: 0 0 80px;
+    font-size: 13px !important;
+    height: 32px !important;
+    padding: 0 8px !important;
+    width: 80px !important;
+}
+
+/* Hide native radio; show sw-button as pill chip */
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap input[type="radio"] {
+    display: none !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap label {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap .sw-button {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 20px !important;
+    color: #6b7790 !important;
+    cursor: pointer;
+    display: inline-flex !important;
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    height: 28px !important;
+    padding: 0 12px !important;
+    white-space: nowrap;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap input[type="radio"]:checked + .sw-button {
+    background: #dbeafe !important;
+    border-color: #1a56db !important;
+    color: #1a56db !important;
+}
+
+/* Item actions (sort + remove) */
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap .item > div:last-child {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap .button.sort {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #6b7790 !important;
+    cursor: grab !important;
+    display: inline-flex !important;
+    font-size: 12px !important;
+    height: 30px !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    width: 30px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap .button.remove {
+    align-items: center !important;
+    background: #fff4f4 !important;
+    border: 1px solid #fca5a5 !important;
+    border-radius: 6px !important;
+    color: #ef4444 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-size: 12px !important;
+    height: 30px !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    width: 30px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .service_category_inner_item_wrap .button.remove:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* "Add New Service / Feature" — dashed footer of each category card */
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-new-service,
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-new-feature {
+    align-items: center !important;
+    background: #f8fafd !important;
+    border: none !important;
+    border-top: 1px dashed #b3c2d6 !important;
+    border-radius: 0 !important;
+    color: #1a56db !important;
+    cursor: pointer !important;
+    display: flex !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 10px !important;
+    width: 100% !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-new-service:hover,
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-new-feature:hover {
+    background: #eef2fb !important;
+}
+
+/* Category-level sort + remove */
+#rbfw_add_meta_box .additional-service-item-price .button.tr_sort_handler {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #6b7790 !important;
+    cursor: grab !important;
+    display: inline-flex !important;
+    height: 32px !important;
+    justify-content: center !important;
+    margin-bottom: 6px !important;
+    padding: 0 !important;
+    width: 32px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .button.tr_remove {
+    align-items: center !important;
+    background: #fff4f4 !important;
+    border: 1px solid #fca5a5 !important;
+    border-radius: 6px !important;
+    color: #ef4444 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    height: 32px !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    width: 32px !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .button.tr_remove:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* "Add New Service Category" — primary blue button */
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-service-category {
+    align-items: center !important;
+    background: #1a56db !important;
+    border: none !important;
+    border-radius: 8px !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    height: 42px !important;
+    justify-content: center !important;
+    margin-top: 8px !important;
+    max-width: none !important;
+    padding: 0 24px !important;
+    width: auto !important;
+}
+
+#rbfw_add_meta_box .additional-service-item-price .ppof-button.add-service-category:hover {
+    background: #1648c0 !important;
+}
