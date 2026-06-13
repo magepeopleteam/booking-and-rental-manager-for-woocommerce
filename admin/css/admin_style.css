@@ -7602,3 +7602,201 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 #rbfw_add_meta_box .button {
     background-color: #eff4fd;
 }
+
+/* ── MD General Price Configuration – Card Redesign ───────────────────── */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-card {
+    background: #fff;
+    border: 1px solid #dde4ef;
+    border-radius: 8px;
+    margin-top: 16px;
+    overflow: hidden;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-card-header {
+    background: #f0f4fb;
+    border-bottom: 1px solid #dde4ef;
+    color: #6b7790;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    padding: 10px 20px;
+    text-transform: uppercase;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .item {
+    align-items: center !important;
+    border-bottom: 1px solid #f0f4fb !important;
+    display: flex;
+    flex-wrap: nowrap !important;
+    gap: 14px !important;
+    padding: 14px 20px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-card .item:last-child {
+    border-bottom: none !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .item .item-left {
+    flex: 1 !important;
+    min-width: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .item .item-left .label {
+    color: #111827 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .item .item-left .description {
+    color: #6b7790 !important;
+    font-size: 12px !important;
+    margin: 2px 0 0 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .item .item-right {
+    align-items: center !important;
+    display: flex !important;
+    flex-shrink: 0 !important;
+    gap: 0 !important;
+    width: auto !important;
+}
+
+/* Price input with $ prefix */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-input-wrap {
+    align-items: stretch;
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    display: flex;
+    overflow: hidden;
+    width: 160px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-input-wrap > span {
+    align-items: center;
+    background: #f5f7fa;
+    border-right: 1px solid #cbd3e1;
+    color: #6b7790;
+    display: flex;
+    flex-shrink: 0;
+    font-size: 13px;
+    padding: 0 10px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-input-wrap .price-input {
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    flex: 1;
+    font-size: 13px !important;
+    height: 38px !important;
+    margin: 0 !important;
+    min-width: 0;
+    outline: none !important;
+    padding: 0 10px !important;
+    width: 100% !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-input-wrap:has(.price-input:not(:disabled)) {
+    border-color: #1a56db;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-price-input-wrap:has(.price-input:not(:disabled)) > span {
+    border-right-color: #1a56db;
+    color: #1a56db;
+}
+
+/* Threshold input with suffix (days / hours) */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-threshold-input-wrap {
+    align-items: stretch;
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    display: flex;
+    overflow: hidden;
+    width: 150px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-threshold-input-wrap .price-input {
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    flex: 1;
+    font-size: 13px !important;
+    height: 38px !important;
+    margin: 0 !important;
+    min-width: 0;
+    outline: none !important;
+    padding: 0 10px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-threshold-input-wrap > span {
+    align-items: center;
+    background: #f5f7fa;
+    border-left: 1px solid #cbd3e1;
+    color: #6b7790;
+    display: flex;
+    flex-shrink: 0;
+    font-size: 12px;
+    padding: 0 10px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-threshold-input-wrap:has(.price-input:not(:disabled)) {
+    border-color: #1a56db;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-threshold-input-wrap:has(.price-input:not(:disabled)) > span {
+    border-left-color: #1a56db;
+    color: #1a56db;
+}
+
+/* Time configuration row – toggle on right, clock icon on left */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-time-toggle-row .item-left {
+    align-items: center;
+    display: flex;
+    gap: 12px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-time-toggle-row .dashicons-clock {
+    color: #1a56db;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .md-time-toggle-row .item-right {
+    margin-left: auto;
+}
+
+/* Toggle knob inside md cards */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .toggle {
+    background: #cfd8dc !important;
+    border-radius: 20px !important;
+    cursor: pointer;
+    flex-shrink: 0;
+    height: 22px !important;
+    min-width: 42px !important;
+    position: relative !important;
+    transition: background 0.2s;
+    width: 42px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .toggle.active {
+    background: #1a56db !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .toggle .toggle-knob {
+    background: #fff !important;
+    border-radius: 50% !important;
+    bottom: 3px !important;
+    height: 16px !important;
+    left: 3px !important;
+    position: absolute !important;
+    top: auto !important;
+    transition: left 0.2s !important;
+    width: 16px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf .toggle.active .toggle-knob {
+    left: calc(100% - 19px) !important;
+}
