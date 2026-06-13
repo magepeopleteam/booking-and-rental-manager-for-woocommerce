@@ -61,6 +61,23 @@
                         </section>
 					<?php } ?>
                 </div>
+				<?php if ( empty( $rbfw_offday_range ) ) : ?>
+                <div class="off_date_range_remove">
+                    <section class="off_date_range_child">
+                        <div class="d-flex justify-content-between w-40">
+                            <label for=""><?php esc_html_e( 'Start Date', 'booking-and-rental-manager-for-woocommerce' ); ?> </label>
+                            <input type="text" placeholder="YYYY-MM-DD" name="off_days_start[]" class="rbfw_off_days_range rbfw_off_days_range_start" value="" readonly>
+                        </div>
+                        <div class="d-flex ms-5 justify-content-between w-40">
+                            <label for=""><?php esc_html_e( 'End Date', 'booking-and-rental-manager-for-woocommerce' ); ?> </label>
+                            <input type="text" placeholder="YYYY-MM-DD" name="off_days_end[]" class="rbfw_off_days_range rbfw_off_days_range_end" value="" readonly>
+                        </div>
+                        <div class="component mp_event_remove_move">
+                            <button class="button remove-row-off-days"><i class="fas fa-trash-can"></i></button>
+                        </div>
+                    </section>
+                </div>
+				<?php endif; ?>
                 <div class="off_date_range_content hidden">
                     <section class="off_date_range_child">
                         <div class="d-flex justify-content-between w-40">
