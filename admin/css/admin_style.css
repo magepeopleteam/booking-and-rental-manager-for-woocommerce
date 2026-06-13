@@ -5746,11 +5746,13 @@ span.ppof-button.add-service-category.mt-1,
 
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_details {
     background: #eaeaef;
+    overflow: hidden;
+    padding: 20px !important;
+    width: 80%;
 }
 
 #rbfw_add_meta_box section {
     background: #fff;
-    margin-bottom: 20px;
 }
 
 .booking-container {
@@ -6272,7 +6274,6 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 #rbfw_add_meta_box .rbfw-mi-card {
     background: #fff;
     border: 1px solid #cbd3e1;
-    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -6379,6 +6380,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 }
 
 #rbfw_add_meta_box .rbfw-mi-items-card {
+    margin-bottom: 20px;
     overflow-x: auto;
 }
 
@@ -6574,7 +6576,12 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     background: #fff;
     border: 1px solid #cbd3e1;
     border-radius: 8px;
+    margin-top: 20px;
     overflow: hidden;
+}
+
+.rbfw-mi-time-settings-wrap.rbfw_multi_day_price_conf {
+    margin-top: 20px !important;
 }
 
 #rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-mi-time-picker-row.item {
