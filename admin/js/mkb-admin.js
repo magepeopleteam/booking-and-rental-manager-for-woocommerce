@@ -31,8 +31,14 @@
             var savedTab = rbfwPostId ? localStorage.getItem(rbfwTabStorageKey) : null;
             var $menu = jQuery(this);
             var $target = savedTab ? $menu.find('ul li[data-target-tabs="' + savedTab + '"]') : jQuery();
-            if ($target.length) {
+            // Strip active from all tabs so the !hasClass('active') guard never blocks restore
+            $menu.find('ul li').removeClass('active');
+            if ($target.length && $target.is(':visible')) {
                 $target.trigger('click');
+            } else if ($target.length) {
+                // target exists but is hidden (e.g. hidden by item-type logic) — fall back to first visible tab
+                var $firstVisible = $menu.find('ul li:visible').first();
+                ($firstVisible.length ? $firstVisible : $menu.find('ul li:first-child')).trigger('click');
             } else {
                 $menu.find('ul li:first-child').trigger('click');
             }
@@ -229,15 +235,20 @@
         var rbfwLegacyEsHasData = !!parseInt(jQuery('.rbfw_es_price_config_wrapper').data('has-legacy-data'), 10);
 
         function rbfwUpdateRentTypeDesc($card) {
+            if (!$card.length) return;
             var type_desc = $card.data('rent-type-desc');
             var name = $card.clone().find('.icon').remove().end().text().trim();
             var $desc = jQuery('.rbfw-rent-type-desc');
+            if (!$desc.length) return;
             $desc.html('<strong class="rbfw-rent-type-desc-name">' + name + '</strong>' + type_desc);
 
             // Position the ::before arrow relative to the desc box's own left edge
-            var descLeft = $desc.offset().left;
-            var cardCenter = $card.offset().left - descLeft + $card.outerWidth() / 2;
-            $desc[0].style.setProperty('--rbfw-arrow-left', cardCenter + 'px');
+            var descOffset = $desc.offset();
+            var cardOffset = $card.offset();
+            if (descOffset && cardOffset) {
+                var cardCenter = cardOffset.left - descOffset.left + $card.outerWidth() / 2;
+                $desc[0].style.setProperty('--rbfw-arrow-left', cardCenter + 'px');
+            }
         }
 
         rbfwUpdateRentTypeDesc(jQuery('.rbfw-rent-type.selected'));
