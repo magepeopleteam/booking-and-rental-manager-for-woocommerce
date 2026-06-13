@@ -116,16 +116,15 @@
                     ?>
 
                         <div class="rbfw-tent-types">
-                            <div class="rbfw-rent-type-desc"></div>
                             <input type="hidden" name="rbfw_item_type" id="rbfw_item_type" value="<?php echo esc_attr($rbfw_item_type); ?>">
                             <?php foreach ( $item_type as $key => $value ): ?>
-                                <div class="rbfw-rent-type <?php echo esc_attr( $key == $rbfw_item_type ? 'selected' : '' ); ?>" data-rent-type="<?php echo esc_attr( $key ); ?>" data-rent-type-desc="<?php echo esc_html( $value['desc'] ); ?>"> 
+                                <div class="rbfw-rent-type <?php echo esc_attr( $key == $rbfw_item_type ? 'selected' : '' ); ?>" data-rent-type="<?php echo esc_attr( $key ); ?>" data-rent-type-desc="<?php echo esc_html( $value['desc'] ); ?>">
                                     <div class="icon"><i class="<?php echo esc_html( $value['icon'] ); ?>"></i></div>
-                                    <?php echo esc_html( $value['name'] ); ?> 
+                                    <?php echo esc_html( $value['name'] ); ?>
                                 </div>
-                                
+
                             <?php endforeach; ?>
-                            
+                            <div class="rbfw-rent-type-desc"></div>
                         </div>
                     </div>
                 </section>
