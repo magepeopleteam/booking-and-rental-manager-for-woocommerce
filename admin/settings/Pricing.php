@@ -1142,7 +1142,7 @@
                                     <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">
                                         <div class="toggle-knob"></div>
                                     </div>
-                                    <input type="hidden" name="rbfw_enable_time_picker" class="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
+                                    <input type="hidden" name="rbfw_enable_time_picker" id="rbfw_enable_time_picker" class="rbfw_enable_time_picker" value="<?php echo esc_attr( $rbfw_enable_time_picker ); ?>">
                                 </div>
                             </div>
 
