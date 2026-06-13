@@ -331,11 +331,12 @@
 
                 $checked = (get_the_title($post_id)=='Auto Draft')?'checked':'';
                 $checked_item = (get_the_title($post_id)=='Auto Draft')?true:false;
+                $pricing_types_initialized = isset( $pricing_types['_initialized'] );
                 $enabled_price_types = [
-                    'hourly'  => ( isset( $pricing_types['hourly'] ) && $pricing_types['hourly'] == 'on' ) || $checked_item,
-                    'daily'   => ( isset( $pricing_types['daily'] ) && $pricing_types['daily'] == 'on' ) || $checked_item,
-                    'weekly'  => isset( $pricing_types['weekly'] ) && $pricing_types['weekly'] == 'on',
-                    'monthly' => isset( $pricing_types['monthly'] ) && $pricing_types['monthly'] == 'on',
+                    'hourly'  => !$pricing_types_initialized || ( isset( $pricing_types['hourly'] ) && $pricing_types['hourly'] == 'on' ),
+                    'daily'   => !$pricing_types_initialized || ( isset( $pricing_types['daily'] ) && $pricing_types['daily'] == 'on' ),
+                    'weekly'  => !$pricing_types_initialized || ( isset( $pricing_types['weekly'] ) && $pricing_types['weekly'] == 'on' ),
+                    'monthly' => !$pricing_types_initialized || ( isset( $pricing_types['monthly'] ) && $pricing_types['monthly'] == 'on' ),
                 ];
                 $multiple_items_rows = ! empty( $multiple_items_info ) ? $multiple_items_info : [
                     [
@@ -353,28 +354,41 @@
                 <section class="rbfw_multiple_items <?php echo esc_attr( $rbfw_item_type == 'multiple_items') ? 'show' : 'hide'; ?>">
                     <div class="rbfw-mi-pricing-shell">
                         <div class="rbfw-mi-card rbfw-mi-price-types-card">
-                            <div class="rbfw-mi-card-heading">
-                                <span><?php esc_html_e( 'Enable Price Types', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <div class="rbfw-mi-pt-header">
+                                <h3 class="rbfw-mi-pt-title"><?php esc_html_e( 'Enable Price Types', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
                             </div>
+                            <div class="rbfw-mi-pt-divider"></div>
                             <div class="pricing-toggles">
                                 <label class="price-toggle" for="enableHourly">
                                     <input type="checkbox" name="pricing_types[hourly]" id="enableHourly" <?php checked( $enabled_price_types['hourly'] ); ?> onchange="toggleGlobalPricing('hourly')">
-                                    <span><?php esc_html_e( 'Hourly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw-mi-pt-option-body">
+                                        <span class="rbfw-mi-pt-option-name"><?php esc_html_e( 'Hourly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                        <span class="rbfw-mi-pt-option-hint"><?php esc_html_e( 'Min. 1 Hour', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </span>
                                 </label>
 
                                 <label class="price-toggle" for="enableDaily">
                                     <input type="checkbox" name="pricing_types[daily]" id="enableDaily" <?php checked( $enabled_price_types['daily'] ); ?> onchange="toggleGlobalPricing('daily')">
-                                    <span><?php esc_html_e( 'Daily', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw-mi-pt-option-body">
+                                        <span class="rbfw-mi-pt-option-name"><?php esc_html_e( 'Daily', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                        <span class="rbfw-mi-pt-option-hint"><?php esc_html_e( '24 Hours', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </span>
                                 </label>
 
                                 <label class="price-toggle" for="enableWeekly">
                                     <input type="checkbox" name="pricing_types[weekly]" id="enableWeekly" <?php checked( $enabled_price_types['weekly'] ); ?> onchange="toggleGlobalPricing('weekly')">
-                                    <span><?php esc_html_e( 'Weekly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw-mi-pt-option-body">
+                                        <span class="rbfw-mi-pt-option-name"><?php esc_html_e( 'Weekly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                        <span class="rbfw-mi-pt-option-hint"><?php esc_html_e( '7+ Days', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </span>
                                 </label>
 
                                 <label class="price-toggle" for="enableMonthly">
                                     <input type="checkbox" name="pricing_types[monthly]" id="enableMonthly" <?php checked( $enabled_price_types['monthly'] ); ?> onchange="toggleGlobalPricing('monthly')">
-                                    <span><?php esc_html_e( 'Monthly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    <span class="rbfw-mi-pt-option-body">
+                                        <span class="rbfw-mi-pt-option-name"><?php esc_html_e( 'Monthly', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                        <span class="rbfw-mi-pt-option-hint"><?php esc_html_e( '30+ Days', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                    </span>
                                 </label>
                             </div>
                         </div>
@@ -447,7 +461,7 @@
                             </div>
 
                             <div class="rbfw-mi-threshold-grid">
-                                <div class="item">
+                                <div class="item" id="rbfw-pivot-hourly-daily" style="display: <?php echo esc_attr( ( $enabled_price_types['hourly'] && $enabled_price_types['daily'] ) ? 'flex' : 'none' ); ?>;">
                                     <div class="rbfw-mi-threshold-icon"><i class="far fa-clock"></i></div>
                                     <div class="item-left">
                                         <div class="label"><?php esc_html_e( 'Hourly to Day Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
@@ -459,7 +473,7 @@
                                     </div>
                                 </div>
 
-                                <div class="item">
+                                <div class="item" id="rbfw-pivot-daily-weekly" style="display: <?php echo esc_attr( ( $enabled_price_types['daily'] && $enabled_price_types['weekly'] ) ? 'flex' : 'none' ); ?>;">
                                     <div class="rbfw-mi-threshold-icon"><i class="far fa-calendar-alt"></i></div>
                                     <div class="item-left">
                                         <div class="label"><?php esc_html_e( 'Daily to Weekly Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
@@ -471,7 +485,7 @@
                                     </div>
                                 </div>
 
-                                <div class="item">
+                                <div class="item" id="rbfw-pivot-weekly-monthly" style="display: <?php echo esc_attr( ( $enabled_price_types['weekly'] && $enabled_price_types['monthly'] ) ? 'flex' : 'none' ); ?>;">
                                     <div class="rbfw-mi-threshold-icon"><i class="far fa-calendar-check"></i></div>
                                     <div class="item-left">
                                         <div class="label"><?php esc_html_e( 'Weekly to Monthly Pivot', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
@@ -534,6 +548,17 @@
                             });
 
                             updateRowGridLayout();
+                            updatePivotVisibility();
+                        }
+
+                        function updatePivotVisibility() {
+                            const pivotHourlyDaily  = document.getElementById('rbfw-pivot-hourly-daily');
+                            const pivotDailyWeekly  = document.getElementById('rbfw-pivot-daily-weekly');
+                            const pivotWeeklyMonthly = document.getElementById('rbfw-pivot-weekly-monthly');
+
+                            if (pivotHourlyDaily)   pivotHourlyDaily.style.display   = (enabledPriceTypes.hourly  && enabledPriceTypes.daily)   ? 'flex' : 'none';
+                            if (pivotDailyWeekly)   pivotDailyWeekly.style.display   = (enabledPriceTypes.daily   && enabledPriceTypes.weekly)  ? 'flex' : 'none';
+                            if (pivotWeeklyMonthly) pivotWeeklyMonthly.style.display = (enabledPriceTypes.weekly  && enabledPriceTypes.monthly) ? 'flex' : 'none';
                         }
 
                         function updateRowGridLayout() {
@@ -1120,7 +1145,7 @@
                         </div>
 
                         <!-- Hour Threshold (conditional) -->
-                        <div class="item half-day-price-item" style="display: <?php echo esc_attr( $rbfw_enable_half_day_rate == 'yes' ? 'flex' : 'none' ); ?>;">
+                        <div class="item half-day-price-item" style="display: <?php echo esc_attr( ( $rbfw_enable_time_picker === 'yes' && $rbfw_enable_half_day_rate === 'yes' ) ? 'flex' : 'none' ); ?>;">
                             <div class="item-left">
                                 <div class="label">Half-Day Hour Threshold</div>
                                 <div class="description">
@@ -1303,7 +1328,7 @@
                             foreach ($rdfw_available_time as $key => $item) { if(is_array($item)){
                                 ?>
                                 <div class="time-slot time-slot-indicator <?php echo $item['status'] ?>" data-id="<?php echo $i ?>">
-                                    
+
                                     <span class="time-slot-time"><?php echo $item['time'] ?></span>
                                     <?php if($type=='md'){ ?>
                                         <input type="hidden" name="rdfw_available_time[<?php echo $i ?>][id]" value="<?php echo $i ?>">
@@ -1318,7 +1343,7 @@
                                         <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][time]" value="<?php echo $item['time'] ?>">
                                         <input type="hidden" name="rdfw_available_time_sd[<?php echo $i ?>][status]" value="<?php echo $item['status'] ?>">
                                     <?php } ?>
-                                    
+
                                     <div class="time-slot-remove" title="Remove time slot">×</div>
                                 </div>
                                 <?php $i++; } } ?>
@@ -1604,6 +1629,7 @@
                     $rbfw_bike_car_sd_data              = isset( $input_data_sabitized['rbfw_bike_car_sd_data'] ) ? $input_data_sabitized['rbfw_bike_car_sd_data'] : [];
 
                     $pricing_types                    = isset( $input_data_sabitized['pricing_types'] ) ? $input_data_sabitized['pricing_types'] : [];
+                    $pricing_types['_initialized']    = '1';
                     $multiple_items_info              = isset( $input_data_sabitized['multiple_items_info'] ) ? $input_data_sabitized['multiple_items_info'] : [];
                     if ( is_array( $multiple_items_info ) ) {
                         $multiple_items_info = array_values( array_filter( $multiple_items_info, function ( $item ) {

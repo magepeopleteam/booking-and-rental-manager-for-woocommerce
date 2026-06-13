@@ -370,6 +370,16 @@
 
                 jQuery('.rbfw_multiple_items').show();
 
+                ['hourly', 'daily', 'weekly', 'monthly'].forEach(function(type) {
+                    var cb = document.getElementById('enable' + type.charAt(0).toUpperCase() + type.slice(1));
+                    if (cb && !cb.checked) {
+                        cb.checked = true;
+                        if (typeof toggleGlobalPricing === 'function') {
+                            toggleGlobalPricing(type);
+                        }
+                    }
+                });
+
                 jQuery('table.wprently_fee-table th:nth-child(3)').hide();
                 jQuery('table.wprently_fee-table td:nth-child(3)').hide();
 
@@ -877,7 +887,7 @@
             hourlyPriceItem.css('display', timePickerEnabled ? 'flex' : 'none');
             hourThresholdItem.css('display', timePickerEnabled ? 'flex' : 'none');
             timeSlotsSection.css('display', timePickerEnabled ? 'block' : 'none');
-            halfDayPriceItem.css('display', halfDayPriceEnabled ? 'flex' : 'none');
+            halfDayPriceItem.css('display', (timePickerEnabled && halfDayPriceEnabled) ? 'flex' : 'none');
             jQuery('.rbfw-daywise-hourly-col').css('display', (timePickerEnabled && hourlyPriceEnabled) ? '' : 'none');
             jQuery('.rbfw-daywise-halfday-col').css('display', (timePickerEnabled && halfDayPriceEnabled) ? '' : 'none');
             updateDaywisePricingVisibility();
@@ -914,7 +924,7 @@
             halfDayPriceToggle.toggleClass('active', halfDayPriceEnabled);
             halfDayPriceInput.prop('disabled', !halfDayPriceEnabled);
             rbfw_enable_half_day_rate.val(halfDayPriceEnabled ? 'yes' : 'no');
-            halfDayPriceItem.css('display', halfDayPriceEnabled ? 'flex' : 'none');
+            halfDayPriceItem.css('display', (timePickerEnabled && halfDayPriceEnabled) ? 'flex' : 'none');
             jQuery('.rbfw-daywise-halfday-col').css('display', (halfDayPriceEnabled && timePickerEnabled) ? '' : 'none');
             updateDaywisePricingVisibility();
         }
