@@ -506,12 +506,10 @@
                         </div>
 
                         <div class="rbfw-mi-time-settings-wrap rbfw_multi_day_price_conf">
-                            <div class="rbfw-mi-time-picker-row item">
-                                <div class="item-left">
-                                    <div class="label"><?php esc_html_e( 'Enable Time Picker', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                    <div class="description"><?php esc_html_e( 'Toggle to enable time selection for more precise rental periods.', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
-                                </div>
-                                <div class="item-right">
+                            <div class="rbfw-mi-ts-header">
+                                <span class="rbfw-mi-ts-title"><?php esc_html_e( 'Time Slots Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                                <div class="rbfw-mi-ts-toggle-group">
+                                    <span class="rbfw-mi-ts-toggle-label"><?php esc_html_e( 'Enable Time Picker', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                     <div class="toggle time-picker-toggle <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'active' : '' ); ?>">
                                         <div class="toggle-knob"></div>
                                     </div>
@@ -1305,10 +1303,15 @@
             {
                 ?>
                 <div class="time-slots-section" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'block' : 'none' ); ?>;">
+                    <?php if ( $mi !== 'mi' ) : ?>
                     <div class="section">
                         <div class="label"><?php echo esc_html__( 'Time Slots Configuration', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
                         <p><?php echo esc_html__( 'Configure available 30-minute time slots for booking', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
                     </div>
+                    <?php endif; ?>
+                    <?php if ( $mi === 'mi' ) : ?>
+                    <div class="rbfw-mi-ts-active-label"><?php echo esc_html__( 'Active Booking Slots (30-min increments)', 'booking-and-rental-manager-for-woocommerce' ); ?></div>
+                    <?php endif; ?>
 
                     <div class="time-slots-container">
                         <div class="time-slots" id="time-slots-container">
@@ -1357,7 +1360,7 @@
                                 <label for="new-slot-time"><?php echo esc_html__( 'Time (30 min slot)', 'booking-and-rental-manager-for-woocommerce' ); ?></label>
                                 <input type="time" class="new-slot-time">
                             </div>
-                            <button class="add-slot-btn" data-name_attr="rdfw_available_time" data-rent_type="<?php echo $type ?>" disabled><?php echo esc_html__( 'Add Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
+                            <button class="add-slot-btn" data-name_attr="rdfw_available_time" data-rent_type="<?php echo $type ?>" disabled><?php echo $mi === 'mi' ? esc_html__( '+ Add Slot', 'booking-and-rental-manager-for-woocommerce' ) : esc_html__( 'Add Slot', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
                         </div>
                     </div>
 
