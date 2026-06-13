@@ -1,8 +1,18 @@
 (function($) {
     "use strict";
-    jQuery(window).load(function() {
+    var rbfwPostId = (window.location.search.match(/[?&]post=(\d+)/) || [])[1] || '';
+    var rbfwTabStorageKey = 'rbfw_active_tab_' + rbfwPostId;
+
+    jQuery(window).on('load', function() {
         jQuery('.mp_tab_menu').each(function() {
-            jQuery(this).find('ul li:first-child').trigger('click');
+            var savedTab = rbfwPostId ? localStorage.getItem(rbfwTabStorageKey) : null;
+            var $menu = jQuery(this);
+            var $target = savedTab ? $menu.find('ul li[data-target-tabs="' + savedTab + '"]') : jQuery();
+            if ($target.length) {
+                $target.trigger('click');
+            } else {
+                $menu.find('ul li:first-child').trigger('click');
+            }
         });
         if (jQuery('[name="mep_org_address"]').val() > 0) {
             jQuery('.mp_event_address').slideUp(250);
@@ -16,6 +26,9 @@
             targetParent.children('.mp_tab_item[data-tab-item="' + tabsTarget + '"]').slideDown(250);
             jQuery(this).siblings('li.active').removeClass('active');
             jQuery(this).addClass('active');
+        }
+        if (rbfwPostId) {
+            localStorage.setItem(rbfwTabStorageKey, jQuery(this).attr('data-target-tabs'));
         }
         return false;
     });
