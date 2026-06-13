@@ -8001,6 +8001,402 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     text-align: center !important;
 }
 
+/* ══════════════════════════════════════════════════════════════════════════
+   PRICING TAB — Visual Redesign
+   (color, border, spacing only — zero functional changes)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Rent Type selector cards ────────────────────────────────────────── */
+
+#rbfw_add_meta_box .rbfw-tent-types {
+    gap: 10px !important;
+    margin: 18px 0 6px !important;
+}
+
+#rbfw_add_meta_box .rbfw-tent-types .rbfw-rent-type {
+    background: #fff !important;
+    border: 1.5px solid #dde4ef !important;
+    border-radius: 10px !important;
+    color: #374151 !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    gap: 10px !important;
+    height: auto !important;
+    min-height: 88px !important;
+    padding: 14px 12px !important;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s !important;
+    width: 144px !important;
+}
+
+#rbfw_add_meta_box .rbfw-tent-types .rbfw-rent-type:hover {
+    background: #f4f7fe !important;
+    border: 1.5px solid #1a56db !important;
+    box-shadow: 0 2px 8px rgba(26,86,219,.08) !important;
+}
+
+#rbfw_add_meta_box .rbfw-tent-types .rbfw-rent-type.selected {
+    background: #eef3ff !important;
+    border: 2px solid #1a56db !important;
+    box-shadow: 0 2px 10px rgba(26,86,219,.12) !important;
+    color: #1a56db !important;
+    font-size: 12px !important;
+}
+
+/* Kill the old triangle arrow */
+#rbfw_add_meta_box .rbfw-tent-types .rbfw-rent-type.selected::after {
+    display: none !important;
+}
+
+#rbfw_add_meta_box .rbfw-rent-type .icon {
+    color: #8a9bbf !important;
+    font-size: 22px !important;
+}
+
+#rbfw_add_meta_box .rbfw-rent-type.selected .icon {
+    color: #1a56db !important;
+}
+
+/* Description strip */
+#rbfw_add_meta_box .rbfw-rent-type-desc {
+    background: #f0f5ff !important;
+    border: 1px solid #c3d4f8 !important;
+    border-radius: 8px !important;
+    color: #374151 !important;
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+    margin-top: 8px !important;
+    padding: 14px 18px !important;
+    width: 100% !important;
+}
+
+/* ── 2. Rent-type + Price Settings outer section ─────────────────────────
+   The `section` that wraps the rent-type tiles already has a global border.
+   Refine it to match the card language. */
+
+#rbfw_add_meta_box #travel_pricing .rent_type > section,
+#rbfw_add_meta_box #travel_pricing section.mp_tab_item_section {
+    border-color: #dde4ef !important;
+    border-radius: 0 0 8px 8px !important;
+}
+
+/* ── 3. SD pricing table ─────────────────────────────────────────────────── */
+
+/* Table-section card */
+#rbfw_add_meta_box .rbfw_bike_car_sd_wrapper > section:last-child {
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+}
+
+#rbfw_add_meta_box table.form-table.rbfw_bike_car_sd_price_table {
+    border-collapse: collapse !important;
+    margin: 0 !important;
+    width: 100% !important;
+}
+
+/* Header */
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table thead tr {
+    background: #eef3ff !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table thead th {
+    border-bottom: 1px solid #dde4ef !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: .06em !important;
+    padding: 10px 14px !important;
+    text-transform: uppercase !important;
+    white-space: nowrap;
+}
+
+/* Remove zebra, add subtle row borders */
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(even),
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table_row:nth-child(odd) {
+    background: #fff !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table tbody tr {
+    border-bottom: 1px solid #f0f4fb !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table tbody td {
+    border: none !important;
+    padding: 9px 14px !important;
+    vertical-align: middle !important;
+}
+
+/* Inputs inside SD table */
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table input[type="text"],
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table input[type="number"] {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    font-size: 13px !important;
+    height: 34px !important;
+    padding: 0 10px !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table select {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #111827 !important;
+    font-size: 13px !important;
+    height: 34px !important;
+    padding: 0 8px !important;
+}
+
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table input:focus,
+#rbfw_add_meta_box .rbfw_bike_car_sd_price_table select:focus {
+    background: #fff !important;
+    border-color: #1a56db !important;
+    outline: none !important;
+}
+
+/* "Add New Type" button area */
+#rbfw_add_meta_box .sd-add-type-and-sessional {
+    border-top: 1px dashed #c3cfe0 !important;
+    padding: 14px 16px !important;
+    text-align: center !important;
+}
+
+#rbfw_add_meta_box .sd-add-type-and-sessional .ppof-button {
+    align-items: center !important;
+    background: #1a56db !important;
+    border-radius: 8px !important;
+    color: #fff !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    height: 38px !important;
+    padding: 0 18px !important;
+}
+
+#rbfw_add_meta_box .sd-add-type-and-sessional .ppof-button:hover {
+    background: #1648c0 !important;
+}
+
+/* ── 4. Multiple Items section ───────────────────────────────────────────── */
+
+/* Outer wrapper */
+#rbfw_add_meta_box .rbfw_multiple_items {
+    border: 1px solid #dde4ef !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+}
+
+/* All mi-cards share the palette */
+#rbfw_add_meta_box .rbfw-mi-card {
+    border: none !important;
+    border-bottom: 1px solid #dde4ef !important;
+    border-radius: 0 !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-card:last-child {
+    border-bottom: none !important;
+}
+
+/* Price Types card header */
+#rbfw_add_meta_box .rbfw-mi-price-types-card .rbfw-mi-pt-header {
+    background: #f0f4fb !important;
+    border-bottom: 1px solid #dde4ef !important;
+    padding: 14px 20px !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-price-types-card .rbfw-mi-pt-divider {
+    display: none !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-price-types-card .rbfw-mi-pt-title {
+    color: #374151 !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    letter-spacing: .04em !important;
+    text-transform: uppercase !important;
+}
+
+/* Price toggle tiles */
+#rbfw_add_meta_box .rbfw_multiple_items .price-toggle {
+    border: 1.5px solid #dde4ef !important;
+    border-radius: 8px !important;
+    padding: 12px 14px !important;
+    transition: border-color .15s, background .15s !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .price-toggle:has(input:checked) {
+    background: #eef3ff !important;
+    border-color: #1a56db !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .price-toggle input[type="checkbox"] {
+    accent-color: #1a56db !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .price-toggle:has(input:checked) .rbfw-mi-pt-option-name {
+    color: #1a56db !important;
+}
+
+/* Items table card */
+#rbfw_add_meta_box .rbfw-mi-items-head {
+    background: #f0f4fb !important;
+    border-bottom: 1px solid #dde4ef !important;
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    letter-spacing: .06em !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-item-rows .item-row {
+    border-bottom: 1px solid #f0f4fb !important;
+}
+
+/* Inputs */
+#rbfw_add_meta_box .rbfw_multiple_items input[type=text],
+#rbfw_add_meta_box .rbfw_multiple_items input[type=number],
+#rbfw_add_meta_box .rbfw_multiple_items input[type=time] {
+    background: #f8fafd !important;
+    border-color: #dde4ef !important;
+    border-radius: 6px !important;
+    min-height: 36px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items input:focus {
+    background: #fff !important;
+    border-color: #1a56db !important;
+    box-shadow: 0 0 0 2px rgba(26,86,219,.09) !important;
+}
+
+/* Card footer */
+#rbfw_add_meta_box .rbfw-mi-card-footer {
+    border-top: 1px dashed #c3cfe0 !important;
+    padding: 14px 18px !important;
+}
+
+/* Add More button */
+#rbfw_add_meta_box .rbfw_multiple_items .ppof-button.add-more-btn {
+    background: #1a56db !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    min-height: 38px !important;
+    padding: 0 18px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .ppof-button.add-more-btn:hover {
+    background: #1648c0 !important;
+}
+
+/* Delete row btn */
+#rbfw_add_meta_box .rbfw_multiple_items .btn {
+    border-radius: 6px !important;
+    color: #8a9bbf !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .btn:hover {
+    background: #fff1f1 !important;
+    color: #ef4444 !important;
+}
+
+/* ── 5. Pricing Automation & Thresholds ──────────────────────────────────── */
+
+#rbfw_add_meta_box .rbfw-mi-card-heading {
+    border-bottom: 1px solid #f0f4fb !important;
+    padding: 16px 20px 14px !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-card-heading span {
+    color: #374151 !important;
+    font-size: 12px !important;
+    letter-spacing: .06em !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-card-heading p {
+    font-size: 12px !important;
+    margin-top: 4px !important;
+}
+
+/* Threshold grid items */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw_multi_day_price_conf .item {
+    background: #f4f8ff !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    padding: 14px 16px !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-threshold-icon {
+    background: #dbeafe !important;
+    border-radius: 8px !important;
+    color: #1a56db !important;
+}
+
+/* Info note */
+#rbfw_add_meta_box .rbfw-mi-info-note {
+    background: #f0f5ff !important;
+    border: 1px solid #c3d4f8 !important;
+    border-radius: 8px !important;
+    font-size: 12px !important;
+    margin: 0 20px 20px !important;
+}
+
+#rbfw_add_meta_box .rbfw-mi-info-note i {
+    color: #1a56db !important;
+}
+
+/* ── 6. Time Slots Configuration ─────────────────────────────────────────── */
+
+#rbfw_add_meta_box .rbfw-mi-time-settings-wrap {
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+    margin-top: 16px !important;
+    overflow: hidden !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-header {
+    background: #f0f4fb !important;
+    border-bottom: 1px solid #dde4ef !important;
+    padding: 12px 20px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-title {
+    color: #374151 !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-toggle-label {
+    color: #6b7790 !important;
+    font-size: 12px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-header .toggle {
+    background-color: #c9d3e6 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-ts-header .toggle.active {
+    background-color: #1a56db !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-btn {
+    background: #1a56db !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .add-slot-btn:hover {
+    background: #1648c0 !important;
+}
+
 /* ── Tab Content Skeleton Loader ───────────────────────────────────────── */
 
 .mp_tab_details {
@@ -8393,5 +8789,209 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 }
 
 #rbfw_add_meta_box .additional-service-item-price .ppof-button.add-service-category:hover {
+    background: #1648c0 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   FEE MANAGEMENT — Visual Redesign
+   (color, border, spacing only — zero functional changes)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Panel header ────────────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper > section.bg-light {
+    border: 1px solid #dde4ef !important;
+    border-radius: 8px !important;
+}
+
+/* ── Content container ───────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-container {
+    margin-top: 12px !important;
+}
+
+/* ── Table wrap — upper card, no bottom border (joins add-wrap) ──────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table-wrap {
+    border: 1px solid #dde4ef !important;
+    border-bottom: none !important;
+    border-radius: 8px 8px 0 0 !important;
+    box-shadow: none !important;
+    overflow-x: auto !important;
+}
+
+/* ── Table header ────────────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table thead {
+    background: #f0f4fb !important;
+    border-bottom: 2px solid #dde4ef !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table th {
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: .06em !important;
+    padding: 10px 14px !important;
+    text-transform: uppercase !important;
+}
+
+/* ── Table body rows ─────────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table tbody tr {
+    background: #fff !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table tbody tr:hover {
+    background: #f8fafd !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table td {
+    border-bottom: 1px solid #f0f4fb !important;
+    padding: 10px 14px !important;
+    vertical-align: middle !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-table tr:last-child td {
+    border-bottom: none !important;
+}
+
+/* ── Inputs and selects ──────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-input {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #111827 !important;
+    font-size: 13px !important;
+    height: 32px !important;
+    padding: 0 8px !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-input:focus {
+    background: #fff !important;
+    border-color: #1a56db !important;
+    box-shadow: 0 0 0 2px rgba(26,86,219,.09) !important;
+    outline: none !important;
+}
+
+/* ── Priority badges ─────────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-priority-badge {
+    border-radius: 20px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: .04em !important;
+    padding: 3px 10px !important;
+    text-transform: uppercase !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-priority-badge.optional {
+    background: #dbeafe !important;
+    border: 1px solid #bfdbfe !important;
+    color: #1a56db !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-priority-badge.required {
+    background: #fef3c7 !important;
+    border: 1px solid #fde68a !important;
+    color: #92400e !important;
+}
+
+/* ── Refundable / non-refundable badges ──────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-badge {
+    border-radius: 20px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: .04em !important;
+    padding: 3px 10px !important;
+    text-transform: uppercase !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-badge.refundable {
+    background: #dcfce7 !important;
+    border: 1px solid #bbf7d0 !important;
+    color: #166534 !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-badge.non-refundable {
+    background: #fee2e2 !important;
+    border: 1px solid #fca5a5 !important;
+    color: #991b1b !important;
+}
+
+/* ── Toggle slider ───────────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-slider {
+    background: #c9d3e6 !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-toggle input:checked + .wprently_fee-slider {
+    background: #1a56db !important;
+}
+
+/* ── Action buttons ──────────────────────────────────────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move {
+    align-items: center !important;
+    display: flex !important;
+    gap: 6px !important;
+    justify-content: flex-end !important;
+}
+
+/* Duplicate button (always first-child) */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .button:first-child {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #6b7790 !important;
+    display: inline-flex !important;
+    font-size: 14px !important;
+    height: 32px !important;
+    justify-content: center !important;
+    padding: 0 10px !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .button:first-child:hover {
+    background: #1a56db !important;
+    border-color: #1a56db !important;
+    color: #fff !important;
+}
+
+/* Delete button (.remove-row from PHP rows; :last-child covers JS-added rows) */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .remove-row,
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .button:last-child {
+    align-items: center !important;
+    background: #fff4f4 !important;
+    border: 1px solid #fca5a5 !important;
+    border-radius: 6px !important;
+    color: #ef4444 !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    height: 32px !important;
+    justify-content: center !important;
+    padding: 0 10px !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .remove-row:hover,
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .mp_event_remove_move .button:last-child:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* ── Add Fee footer (dashed divider + blue button) ───────────────────────── */
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-add-wrap {
+    border: 1px solid #dde4ef !important;
+    border-top: 1px dashed #c3cfe0 !important;
+    border-radius: 0 0 8px 8px !important;
+    margin-top: 0 !important;
+    padding: 14px 16px !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-add-btn {
+    background: #1a56db !important;
+    border-radius: 8px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    height: 40px !important;
+    padding: 0 24px !important;
+    width: auto !important;
+}
+
+#rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-add-btn:hover {
     background: #1648c0 !important;
 }
