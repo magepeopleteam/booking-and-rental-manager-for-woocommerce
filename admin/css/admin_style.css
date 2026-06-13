@@ -3464,7 +3464,7 @@ div.rbfw_remove_area .rbfw_close_multi_image_item {
 .wp-core-ui #rbfw_add_meta_box .button,
 .rbfw_remove_room_type_image_btn,
 .rbfw_remove_service_image_btn {
-    color: #fff;
+    color: #9f9999;
     margin: .1em;
     padding: 0 .5em;
     cursor: pointer;
@@ -5688,7 +5688,7 @@ span.ppof-button.add-new-feature,
     margin: 0px auto;
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #0073aa;
+    background-color: #2170E4;
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -5735,7 +5735,7 @@ span.ppof-button.add-service-category.mt-1,
 }
 
 #rbfw_add_meta_box .feature_category_title {
-    border-radius: 10px;
+    background-color: #eff4fd;
     border: 1px solid #ddd !important;
     padding: 10px;
 }
@@ -5745,7 +5745,7 @@ span.ppof-button.add-service-category.mt-1,
 }
 
 #rbfw_add_meta_box .mp_event_tab_area .mp_tab_details {
-    background: #eaeaef;
+    background: #F8F9FF;
     overflow: hidden;
     padding: 20px !important;
     width: 80%;
@@ -7596,4 +7596,9 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     #rbfw_add_meta_box .rbfw_multiple_items .item-row {
         grid-template-columns: minmax(170px, 1fr) 64px repeat(var(--rbfw-mi-rate-count, 4), 112px) 36px;
     }
+}
+
+#rbfw_add_meta_box .btn,
+#rbfw_add_meta_box .button {
+    background-color: #eff4fd;
 }

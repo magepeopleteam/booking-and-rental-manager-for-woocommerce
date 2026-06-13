@@ -997,7 +997,7 @@
     .mpStyle .customCheckbox::before {
         content: ""; position: absolute; left: 0; top: 0; height: 20px; width: 20px;
         background-color: var(--color_theme_alter);
-        border: 2px solid var(--color_theme); border-radius: 2px; }
+        border: 2px solid #bfbfbf; border-radius: 2px; }
     .mpStyle .customCheckboxLabel { padding: 0 0 10px 0; cursor: pointer; font-weight: var(--fw-medium); width: 130px;}
     .mpStyle .customCheckboxLabel input:checked ~ .customCheckbox::before { background: var(--color_theme_cc); }
     /*******************/

@@ -837,10 +837,10 @@
 #rbfw_add_meta_box .btn, #rbfw_add_meta_box .button {
   border: 0px solid;
   box-shadow: none;
-  background-color: var(--mage-primary);
+  background-color: #EFF4FF;
   border-radius: 0.25rem;
   padding: 0.5em 0.5em;
-  color: var(--mage-white);
+  color: #9f9999;
   font-size: 1rem;
   transition: all 0.5s ease-in-out;
   max-width: 200px;
@@ -1174,18 +1174,20 @@ color: #fff;
   padding: 5px;
   border-bottom: 1px solid var(--mage-light);
   margin: auto;
-  background-color: var(--mage-light);
+  background-color: #EFF4FF;
 }
 #rbfw_add_meta_box .feature_category_inner_item_wrap {
   margin: auto;
+  border: 1px solid #eaebef;
+  margin-bottom: 10px;
 }
 #rbfw_add_meta_box .feature_category_inner_item_wrap .item:nth-child(even) {
   background-color: var(--mage-light);
 }
 #rbfw_add_meta_box .add-feature-category {
-  background-color: var(--mage-primary);
-  border: 1px solid var(--mage-primary);
-  margin-left: 15%;
+  background-color: #0058BE;
+  border: 1px #0058BE;
+  
 }
 #rbfw_add_meta_box .add-feature-category:hover {
   opacity: 0.8;
