@@ -8001,6 +8001,82 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     text-align: center !important;
 }
 
+/* ── Tab Content Skeleton Loader ───────────────────────────────────────── */
+
+.mp_tab_details {
+    position: relative;
+}
+
+.rbfw-tab-loader {
+    background: #fff;
+    bottom: 0;
+    left: 0;
+    padding: 28px 24px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 200;
+}
+
+/* Base shimmer block */
+.rbfw-sk {
+    background: linear-gradient(
+        90deg,
+        #eef1f7 25%,
+        #dde4ef 50%,
+        #eef1f7 75%
+    );
+    background-size: 400% 100%;
+    animation: rbfw-shimmer 1.6s ease-in-out infinite;
+    border-radius: 6px;
+}
+
+@keyframes rbfw-shimmer {
+    0%   { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+/* Title bar */
+.rbfw-sk-title {
+    height: 20px;
+    margin-bottom: 10px;
+    width: 38%;
+}
+
+/* Subtitle bar */
+.rbfw-sk-sub {
+    height: 12px;
+    margin-bottom: 30px;
+    width: 58%;
+}
+
+/* Skeleton row (mimics a config row: icon + label + input) */
+.rbfw-sk-row {
+    align-items: center;
+    border-bottom: 1px solid #f4f6fb;
+    display: flex;
+    gap: 14px;
+    padding: 13px 0;
+}
+
+.rbfw-sk-icon {
+    border-radius: 50%;
+    flex: 0 0 32px;
+    height: 32px;
+    width: 32px;
+}
+
+.rbfw-sk-label {
+    flex: 1 1 auto;
+    height: 13px;
+}
+
+.rbfw-sk-input {
+    border-radius: 6px;
+    flex: 0 0 90px;
+    height: 32px;
+}
+
 /* ── Additional Extra Service – Category Section Redesign ──────────────── */
 
 /* Enable Additional Service toggle row */

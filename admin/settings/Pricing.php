@@ -454,7 +454,7 @@
                             </div>
                         </div>
 
-                        <div class="rbfw-mi-card rbfw_multi_day_price_conf">
+                        <div class="rbfw-mi-card rbfw_multi_day_price_conf" id="rbfw-pricing-thresholds-card" style="display: <?php echo esc_attr( ( ( $enabled_price_types['hourly'] && $enabled_price_types['daily'] ) || ( $enabled_price_types['daily'] && $enabled_price_types['weekly'] ) || ( $enabled_price_types['weekly'] && $enabled_price_types['monthly'] ) ) ? 'block' : 'none' ); ?>;">
                             <div class="rbfw-mi-card-heading">
                                 <span><?php esc_html_e( 'Pricing Automation & Thresholds', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
                                 <p><?php esc_html_e( 'Define the triggers for when a rental duration automatically upgrades to the next price tier.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
@@ -550,13 +550,20 @@
                         }
 
                         function updatePivotVisibility() {
-                            const pivotHourlyDaily  = document.getElementById('rbfw-pivot-hourly-daily');
-                            const pivotDailyWeekly  = document.getElementById('rbfw-pivot-daily-weekly');
+                            const pivotHourlyDaily   = document.getElementById('rbfw-pivot-hourly-daily');
+                            const pivotDailyWeekly   = document.getElementById('rbfw-pivot-daily-weekly');
                             const pivotWeeklyMonthly = document.getElementById('rbfw-pivot-weekly-monthly');
+                            const thresholdsCard     = document.getElementById('rbfw-pricing-thresholds-card');
 
-                            if (pivotHourlyDaily)   pivotHourlyDaily.style.display   = (enabledPriceTypes.hourly  && enabledPriceTypes.daily)   ? 'flex' : 'none';
-                            if (pivotDailyWeekly)   pivotDailyWeekly.style.display   = (enabledPriceTypes.daily   && enabledPriceTypes.weekly)  ? 'flex' : 'none';
-                            if (pivotWeeklyMonthly) pivotWeeklyMonthly.style.display = (enabledPriceTypes.weekly  && enabledPriceTypes.monthly) ? 'flex' : 'none';
+                            const showHourlyDaily   = !!(enabledPriceTypes.hourly  && enabledPriceTypes.daily);
+                            const showDailyWeekly   = !!(enabledPriceTypes.daily   && enabledPriceTypes.weekly);
+                            const showWeeklyMonthly = !!(enabledPriceTypes.weekly  && enabledPriceTypes.monthly);
+                            const showCard          = showHourlyDaily || showDailyWeekly || showWeeklyMonthly;
+
+                            if (pivotHourlyDaily)   pivotHourlyDaily.style.display   = showHourlyDaily   ? 'flex' : 'none';
+                            if (pivotDailyWeekly)   pivotDailyWeekly.style.display   = showDailyWeekly   ? 'flex' : 'none';
+                            if (pivotWeeklyMonthly) pivotWeeklyMonthly.style.display = showWeeklyMonthly ? 'flex' : 'none';
+                            if (thresholdsCard)     thresholdsCard.style.display     = showCard          ? 'block' : 'none';
                         }
 
                         function updateRowGridLayout() {

@@ -3,6 +3,29 @@
     var rbfwPostId = (window.location.search.match(/[?&]post=(\d+)/) || [])[1] || '';
     var rbfwTabStorageKey = 'rbfw_active_tab_' + rbfwPostId;
 
+    // Inject skeleton loader as soon as the DOM is ready
+    jQuery(document).ready(function() {
+        var $tabDetails = jQuery('.mp_tab_details');
+        if ($tabDetails.length) {
+            var skeletonRows = '';
+            for (var s = 0; s < 7; s++) {
+                var widths = [55, 75, 40, 85, 60, 70, 50];
+                skeletonRows += '<div class="rbfw-sk-row">'
+                    + '<div class="rbfw-sk rbfw-sk-icon"></div>'
+                    + '<div class="rbfw-sk rbfw-sk-label" style="width:' + widths[s] + '%"></div>'
+                    + '<div class="rbfw-sk rbfw-sk-input"></div>'
+                    + '</div>';
+            }
+            $tabDetails.prepend(
+                '<div class="rbfw-tab-loader">'
+                +   '<div class="rbfw-sk rbfw-sk-title"></div>'
+                +   '<div class="rbfw-sk rbfw-sk-sub"></div>'
+                +   skeletonRows
+                + '</div>'
+            );
+        }
+    });
+
     jQuery(window).on('load', function() {
         jQuery('.mp_tab_menu').each(function() {
             var savedTab = rbfwPostId ? localStorage.getItem(rbfwTabStorageKey) : null;
@@ -14,6 +37,7 @@
                 $menu.find('ul li:first-child').trigger('click');
             }
         });
+        jQuery('.rbfw-tab-loader').fadeOut(280, function() { jQuery(this).remove(); });
         if (jQuery('[name="mep_org_address"]').val() > 0) {
             jQuery('.mp_event_address').slideUp(250);
         }
