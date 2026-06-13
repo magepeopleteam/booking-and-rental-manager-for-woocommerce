@@ -228,16 +228,26 @@
 
         var rbfwLegacyEsHasData = !!parseInt(jQuery('.rbfw_es_price_config_wrapper').data('has-legacy-data'), 10);
 
-        var type_desc = jQuery('.rbfw-rent-type.selected').data('rent-type-desc');
-        jQuery('.rbfw-rent-type-desc').html(type_desc);
-        
+        function rbfwUpdateRentTypeDesc($card) {
+            var type_desc = $card.data('rent-type-desc');
+            var name = $card.clone().find('.icon').remove().end().text().trim();
+            var $desc = jQuery('.rbfw-rent-type-desc');
+            $desc.html('<strong class="rbfw-rent-type-desc-name">' + name + '</strong>' + type_desc);
+
+            // Position the ::before arrow relative to the desc box's own left edge
+            var descLeft = $desc.offset().left;
+            var cardCenter = $card.offset().left - descLeft + $card.outerWidth() / 2;
+            $desc[0].style.setProperty('--rbfw-arrow-left', cardCenter + 'px');
+        }
+
+        rbfwUpdateRentTypeDesc(jQuery('.rbfw-rent-type.selected'));
+
         jQuery('.rbfw-rent-type').on('click', function() {
             var item_type = jQuery(this).data('rent-type');
-            var type_desc = jQuery(this).data('rent-type-desc');
             jQuery('#rbfw_item_type').val(item_type);
-            jQuery('.rbfw-rent-type-desc').html(type_desc);
-            jQuery('.rbfw-rent-type').removeClass('selected')
+            jQuery('.rbfw-rent-type').removeClass('selected');
             jQuery(this).addClass('selected');
+            rbfwUpdateRentTypeDesc(jQuery(this));
 
             if (item_type == 'bike_car_sd') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();

@@ -8056,7 +8056,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     color: #1a56db !important;
 }
 
-/* Description strip */
+/* Description strip — the arrow is a ::before pseudo-element that sticks out of the top */
 #rbfw_add_meta_box .rbfw-rent-type-desc {
     background: #f0f5ff !important;
     border: 1px solid #c3d4f8 !important;
@@ -8064,9 +8064,52 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     color: #374151 !important;
     font-size: 13px !important;
     line-height: 1.6 !important;
-    margin: 12px 0 !important;
+    margin: 12px 0 12px !important;
+    overflow: visible !important;
     padding: 14px 18px !important;
+    position: relative !important;
     width: 100% !important;
+}
+
+/* Outer triangle — border colour, points upward toward the selected card */
+#rbfw_add_meta_box .rbfw-rent-type-desc::before {
+    content: '' !important;
+    position: absolute !important;
+    top: -10px !important;
+    left: var(--rbfw-arrow-left, 72px) !important;
+    transform: translateX(-50%) !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-left: 9px solid transparent !important;
+    border-right: 9px solid transparent !important;
+    border-bottom: 10px solid #c3d4f8 !important;
+    transition: left 0.22s ease !important;
+}
+
+/* Inner triangle — background colour, creates hollow outline effect */
+#rbfw_add_meta_box .rbfw-rent-type-desc::after {
+    content: '' !important;
+    position: absolute !important;
+    top: -8px !important;
+    left: var(--rbfw-arrow-left, 72px) !important;
+    transform: translateX(-50%) !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-left: 7px solid transparent !important;
+    border-right: 7px solid transparent !important;
+    border-bottom: 8px solid #f0f5ff !important;
+    transition: left 0.22s ease !important;
+}
+
+/* Selected type name label inside the description */
+#rbfw_add_meta_box .rbfw-rent-type-desc-name {
+    display: block !important;
+    color: #1a56db !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.04em !important;
+    margin-bottom: 6px !important;
+    text-transform: uppercase !important;
 }
 
 /* Manage single-item hourly inventory section */
