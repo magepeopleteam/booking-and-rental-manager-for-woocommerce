@@ -5768,7 +5768,7 @@ table.form-table.rbfw_service_category_table {
 }
 
 #rbfw_add_meta_box section {
-    border: 1px solid var(--mage-light) !important;
+    border: 1px solid #c3c4cb !important;
 }
 
 .rbfw_feature_category_table table td {
@@ -6252,7 +6252,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 
 /* Multiple items pricing configuration */
 #rbfw_add_meta_box .rbfw_multiple_items {
-    background: #f5f7fc;
+    background: none;
     border: 1px solid #d9dee9;
     border-radius: 4px;
     padding: 0px;
@@ -6303,6 +6303,10 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 #rbfw_add_meta_box .rbfw-mi-price-types-card .rbfw-mi-pt-header {
     background: #f0f4fb;
     padding: 14px 20px;
+}
+
+.rbfw-mi-pricing-shell .rbfw-mi-pt-header {
+    background: none;
 }
 
 #rbfw_add_meta_box .rbfw-mi-price-types-card .rbfw-mi-pt-title {
@@ -6843,6 +6847,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 /* Toggle row (second section – not bg-light) */
 #rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle > section:not(.bg-light) {
     align-items: center;
+    background: #f0f4fb;
     border-bottom: 1px solid #e5eaf3;
     display: flex !important;
     gap: 16px;
@@ -7300,6 +7305,7 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 /* "Particular date time slots" toggle row */
 #rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section {
     align-items: center;
+    background: #f0f4fb;
     border-bottom: 1px solid #e5eaf3;
     display: flex !important;
     gap: 0;

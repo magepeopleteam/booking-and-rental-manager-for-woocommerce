@@ -1370,7 +1370,6 @@
 
                     ?>
                     <div class="mpStyle">
-                        <?php $this->panel_header( 'Particular Settings', 'Here you can set Particulars' ); ?>
                         <section>
                             <div>
                                 <label>
