@@ -7814,7 +7814,189 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 /* ── Day-wise Enable Toggle Section ─────────────────────────────────────── */
 #rbfw_add_meta_box #rbfw-daywise-config-wrapper > section:first-of-type {
     background: #f0f4fb !important;
-    border: 1px solid #c0c2c5 !important;
+    border: 1px solid #dde4ef !important;
     border-radius: 8px !important;
     margin-top: 10px !important;
+}
+
+/* ── Extra Service Table Redesign ──────────────────────────────────────── */
+
+/* Content section – card shell */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper section.bg-light + section {
+    background: #fff !important;
+    border: 1px solid #dde4ef !important;
+    border-top: none !important;
+    border-radius: 0 0 8px 8px !important;
+    overflow-x: auto;
+    padding: 0 !important;
+}
+
+/* Table reset */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table {
+    border-collapse: collapse !important;
+    margin: 0 !important;
+    min-width: 600px;
+    width: 100% !important;
+}
+
+/* Header */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table thead tr {
+    background: #f0f4fb !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table thead th {
+    border-bottom: 1px solid #dde4ef !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-top: none !important;
+    color: #6b7790 !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.6px !important;
+    padding: 10px 14px !important;
+    text-transform: uppercase !important;
+    white-space: nowrap;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table thead th .required,
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table thead th b {
+    color: #ef4444 !important;
+    font-weight: 700;
+}
+
+/* Body rows */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table tbody tr {
+    background: #fff !important;
+    border-bottom: 1px solid #f0f4fb !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table tbody td {
+    border: none !important;
+    padding: 10px 14px !important;
+    vertical-align: middle !important;
+}
+
+/* Text & number inputs */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table input[type="text"],
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table input[type="number"] {
+    background: #f8fafd !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #111827 !important;
+    font-size: 13px !important;
+    height: 36px !important;
+    padding: 0 10px !important;
+    width: 100% !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table input[type="text"]:focus,
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper table.rbfw_pricing_table input[type="number"]:focus {
+    background: #fff !important;
+    border-color: #1a56db !important;
+    outline: none !important;
+}
+
+/* Image +/- buttons */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .service_image_add_remove {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .rbfw_service_image_btn,
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .rbfw_remove_service_image_btn {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 50% !important;
+    color: #6b7790 !important;
+    display: inline-flex !important;
+    font-size: 16px !important;
+    height: 28px !important;
+    justify-content: center !important;
+    min-width: 28px !important;
+    padding: 0 !important;
+    width: 28px !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .rbfw_service_image_btn:hover {
+    background: #1a56db !important;
+    border-color: #1a56db !important;
+    color: #fff !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .rbfw_remove_service_image_btn:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+/* Remove & drag buttons */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .mp_event_remove_move {
+    align-items: center !important;
+    display: flex !important;
+    gap: 6px !important;
+    justify-content: flex-end !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .mp_event_remove_move .remove-row {
+    align-items: center !important;
+    background: #fff4f4 !important;
+    border: 1px solid #fca5a5 !important;
+    border-radius: 6px !important;
+    color: #ef4444 !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    gap: 4px;
+    height: 32px !important;
+    justify-content: center !important;
+    padding: 0 10px !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .mp_event_remove_move .remove-row:hover {
+    background: #ef4444 !important;
+    border-color: #ef4444 !important;
+    color: #fff !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .mp_event_remove_move .mp_event_type_sortable_button {
+    align-items: center !important;
+    background: #f0f4fb !important;
+    border: 1px solid #dde4ef !important;
+    border-radius: 6px !important;
+    color: #6b7790 !important;
+    cursor: grab !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    height: 32px !important;
+    justify-content: center !important;
+    padding: 0 10px !important;
+}
+
+/* Add New button */
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper #add-row {
+    align-items: center !important;
+    background: #1a56db !important;
+    border: none !important;
+    border-radius: 8px !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    gap: 6px !important;
+    height: 40px !important;
+    padding: 0 20px !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper #add-row:hover {
+    background: #1648c0 !important;
+}
+
+#rbfw_add_meta_box .rbfw_es_price_config_wrapper .mt-2 {
+    margin-top: 16px !important;
+    padding: 0 20px 20px !important;
+    text-align: center !important;
 }
