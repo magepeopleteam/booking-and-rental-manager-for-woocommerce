@@ -8869,14 +8869,19 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     outline: none !important;
 }
 
-/* ── Priority badges ─────────────────────────────────────────────────────── */
+/* ── Priority badges (compact pill, same line as select) ─────────────────── */
 #rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-priority-badge {
-    border-radius: 20px !important;
-    font-size: 10px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+    padding: 2px 5px !important;
+    border-radius: 8px !important;
+    font-size: 8px !important;
     font-weight: 700 !important;
-    letter-spacing: .04em !important;
-    padding: 3px 10px !important;
     text-transform: uppercase !important;
+    white-space: nowrap !important;
+    margin-top: 0 !important;
+    align-self: auto !important;
 }
 
 #rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-priority-badge.optional {
@@ -8886,9 +8891,9 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
 }
 
 #rbfw_add_meta_box .rbfw_fee_management_wrapper .wprently_fee-priority-badge.required {
-    background: #fef3c7 !important;
-    border: 1px solid #fde68a !important;
-    color: #92400e !important;
+    background: #fee2e2 !important;
+    border: 1px solid #fca5a5 !important;
+    color: #991b1b !important;
 }
 
 /* ── Refundable / non-refundable badges ──────────────────────────────────── */
