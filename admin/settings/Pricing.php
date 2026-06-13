@@ -1235,7 +1235,6 @@
 						);
 					?>
                     <div id="rbfw-daywise-config-wrapper" style="<?php echo $_daywise_visible ? '' : 'display:none;'; ?>">
-					<?php $this->panel_header( 'Day-wise Price Configuration ', 'Day-wise Price Configuration lets you set different prices for each day of the week' ); ?>
                     <section>
                         <div>
                             <label>
