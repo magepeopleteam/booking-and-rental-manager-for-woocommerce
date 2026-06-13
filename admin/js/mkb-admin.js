@@ -1619,7 +1619,7 @@
           <input type="hidden" name="${name_attr}[${index}][id]" value="${dataId}">
           <input type="hidden" name="${name_attr}[${index}][time]" value="${time}">
           <input type="hidden" name="${name_attr}[${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
       `;
@@ -1630,7 +1630,7 @@
           <input type="hidden" name="rdfw_available_time_mi[${index}][id]" value="${dataId}">
           <input type="hidden" name="rdfw_available_time_mi[${index}][time]" value="${time}">
           <input type="hidden" name="rdfw_available_time_mi[${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
       `;
@@ -1641,7 +1641,7 @@
           <input type="hidden" name="rdfw_available_time_sd[${index}][id]" value="${dataId}">
           <input type="hidden" name="rdfw_available_time_sd[${index}][time]" value="${time}">
           <input type="hidden" name="rdfw_available_time_sd[${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
       `;
@@ -1659,7 +1659,7 @@
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][id]" value="${dataId}">
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][time]" value="${time}">
           <input type="hidden" name="${name_attr}[${dataId}][available_time][${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
            `;
@@ -1670,7 +1670,7 @@
           <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][id]" value="${dataId}">
           <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][time]" value="${time}">
           <input type="hidden" name="rbfw_particulars_mi[${dataId}][available_time][${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
            `;
@@ -1681,7 +1681,7 @@
           <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][id]" value="${dataId}">
           <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][time]" value="${time}">
           <input type="hidden" name="rbfw_particulars_sd[${dataId}][available_time][${index}][status]" value="enabled">
-          <div class="time-slot-indicator active" title="Click to disable"></div>
+
           <div class="time-slot-remove" title="Remove time slot">×</div>
         </div>
            `;

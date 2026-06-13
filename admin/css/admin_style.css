@@ -6796,6 +6796,717 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     cursor: not-allowed;
 }
 
+/* ── Particular Settings (mi) ────────────────────────────────────────── */
+
+/* Panel header (section.bg-light) */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle {
+    border-top: 1px solid #e5eaf3;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle section.bg-light {
+    background: none !important;
+    margin: 0 !important;
+    padding: 20px 20px 4px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle section.bg-light > div > label {
+    color: #111827;
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle section.bg-light > div > p {
+    color: #6b7790;
+    font-size: 12px;
+    margin: 4px 0 0;
+}
+
+/* Toggle row (second section – not bg-light) */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle > section:not(.bg-light) {
+    align-items: center;
+    border-bottom: 1px solid #e5eaf3;
+    display: flex !important;
+    gap: 16px;
+    justify-content: space-between;
+    padding: 14px 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle > section:not(.bg-light) > div > label {
+    color: #111827;
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .mpStyle > section:not(.bg-light) > div > p {
+    color: #6b7790;
+    font-size: 12px;
+    margin: 3px 0 0;
+}
+
+/* Custom switch toggle */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .switch {
+    display: inline-block;
+    flex-shrink: 0;
+    height: 26px;
+    margin: 0;
+    position: relative;
+    width: 48px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .switch input {
+    height: 0;
+    opacity: 0;
+    width: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .slider {
+    background-color: #cbd3e1;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: background .3s;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .slider:before {
+    background-color: #fff;
+    bottom: 3px;
+    content: "";
+    height: 20px;
+    left: 3px;
+    position: absolute;
+    transition: transform .3s;
+    width: 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .switch input:checked + .slider {
+    background-color: #e91e63;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .switch input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .slider.round {
+    border-radius: 26px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .slider.round:before {
+    border-radius: 50%;
+}
+
+/* available-particular wrapper */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .available-particular {
+    background: #fff;
+    border: 0 !important;
+    border-radius: 0;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 20px 20px;
+}
+
+/* Column headers */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .available-particular .header {
+    border-bottom: 1px solid #e5eaf3;
+    color: #6b7790;
+    display: grid !important;
+    flex: none !important;
+    font-size: 11px;
+    font-weight: 600;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr 2fr 80px;
+    letter-spacing: .04em;
+    margin: 0 !important;
+    padding: 10px 0;
+    text-transform: uppercase;
+    width: 100% !important;
+}
+
+/* Each data row */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw_pdwt_row {
+    align-items: flex-start;
+    border-bottom: 1px solid #f0f3f8;
+    display: grid !important;
+    flex: none !important;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr 2fr 80px;
+    margin: 0 !important;
+    padding: 16px 0;
+    width: 100% !important;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-particular-date {
+    width: auto;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw_particulars_date {
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 13px;
+    height: 36px;
+    padding: 0 10px;
+    width: 100%;
+}
+
+/* Time slots inside particular rows */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slots-container {
+    background: none;
+    margin: 0;
+    padding: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slots {
+    display: grid !important;
+    gap: 6px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot.enabled,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot-indicator,
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot.enabled .time-slot-indicator {
+    align-items: center;
+    background: #f5f7fa;
+    border: 1px solid #dde4ef;
+    border-radius: 6px;
+    color: #374151;
+    cursor: default;
+    display: inline-flex !important;
+    font-size: 12px;
+    font-weight: 500;
+    gap: 4px;
+    justify-content: space-between;
+    margin: 0;
+    padding: 5px 8px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot-time {
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot-remove {
+    align-items: center;
+    background: none;
+    border-radius: 0;
+    color: #6b7790;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    font-weight: normal;
+    height: auto;
+    justify-content: center;
+    line-height: 1;
+    width: auto;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .time-slot-remove:hover {
+    color: #dc2626;
+}
+
+/* Add-slot row inside particulars */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-container {
+    background: none;
+    border-radius: 0;
+    margin: 8px 0 0;
+    padding: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-container > .label {
+    display: none;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-form {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-form > div {
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-form label {
+    display: none;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .new-slot-time {
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 12px;
+    height: 32px;
+    padding: 0 8px;
+    width: 116px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-btn {
+    background: #0058d7;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    height: 32px;
+    margin: 0;
+    padding: 0 14px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-btn:hover:not(:disabled) {
+    background: #0047b0;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-time-slots-wrapper .add-slot-btn:disabled {
+    background: #a0b4d6;
+    cursor: not-allowed;
+}
+
+/* Remove button */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .rbfw-particular-time-action {
+    align-items: flex-start;
+    display: flex;
+    justify-content: center;
+    padding-top: 2px;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .remove-row.button {
+    background: #e91e63 !important;
+    border: none !important;
+    border-radius: 6px;
+    color: #fff !important;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    height: auto;
+    padding: 7px 14px !important;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap .remove-row.button:hover {
+    background: #c2185b !important;
+}
+
+/* Add Another button */
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap #add-particular-row.ppof-button {
+    align-items: center;
+    background: #0d9488 !important;
+    border-color: #0d9488 !important;
+    border-radius: 6px;
+    color: #fff !important;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 600;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 8px 18px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multiple_items .rbfw-mi-time-settings-wrap #add-particular-row.ppof-button:hover {
+    background: #0f766e !important;
+    border-color: #0f766e !important;
+}
+
+/* ── Time Slots Configuration – md redesign ─────────────────────────── */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section {
+    background: #fff;
+    border: 1px solid #cbd3e1;
+    border-radius: 8px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .section {
+    background: #f0f4fb;
+    border-bottom: 1px solid #dde4ef;
+    padding: 14px 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .section .label {
+    color: #111827;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .section p {
+    color: #6b7790;
+    font-size: 12px;
+    margin: 4px 0 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slots-container {
+    background: none;
+    margin: 0;
+    padding: 16px 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slot,
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slot.enabled {
+    align-items: center;
+    background: #fff !important;
+    border: 1.5px solid #c7d3e8 !important;
+    border-radius: 20px;
+    color: #0058d7 !important;
+    cursor: default;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 6px;
+    margin: 0 !important;
+    padding: 5px 12px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slot-time {
+    color: inherit;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slot-remove {
+    align-items: center;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    color: #6b7790 !important;
+    cursor: pointer;
+    display: flex;
+    font-size: 15px;
+    height: auto !important;
+    justify-content: center;
+    line-height: 1;
+    padding: 0 !important;
+    width: auto !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .time-slot-remove:hover {
+    color: #dc2626 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-container {
+    background: none;
+    border-radius: 0;
+    border-top: 1px solid #e5eaf3;
+    margin: 0;
+    padding: 16px 20px 20px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-container > .label {
+    color: #111827;
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 10px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-form {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-form > div {
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-form label {
+    display: none;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .new-slot-time {
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 13px;
+    height: 40px;
+    padding: 0 12px;
+    width: 200px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .new-slot-time:focus {
+    border-color: #0058d7;
+    outline: none;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-btn {
+    background: #0058d7 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    color: #fff !important;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    height: 40px;
+    margin: 0;
+    padding: 0 24px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-btn:hover:not(:disabled) {
+    background: #0047b0 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .add-slot-btn:disabled {
+    background: #a0b4d6 !important;
+    cursor: not-allowed;
+}
+
+/* ── Particular Settings – sd/md/appointment redesign ─────────────────── */
+/* Panel header */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .mpStyle .panel-head {
+    background: none;
+    border-bottom: 1px solid #e5eaf3;
+    padding: 14px 20px;
+}
+
+/* "Particular date time slots" toggle row */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section {
+    align-items: center;
+    border-bottom: 1px solid #e5eaf3;
+    display: flex !important;
+    gap: 0;
+    justify-content: space-between;
+    margin: 0;
+    padding: 12px 20px;
+}
+
+/* Pink toggle */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch {
+    flex-shrink: 0;
+    height: 22px;
+    margin: 0;
+    position: relative;
+    width: 42px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch input {
+    height: 0;
+    opacity: 0;
+    width: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch .slider {
+    background: #cfd8dc;
+    border-radius: 22px;
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: background 0.2s;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch .slider:before {
+    background: #fff;
+    border-radius: 50%;
+    bottom: 3px;
+    content: '';
+    height: 16px;
+    left: 3px;
+    position: absolute;
+    transition: transform 0.2s;
+    width: 16px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch input:checked + .slider {
+    background: #e91e63;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section section label.switch input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* Particular rows – header row */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .d-flex.justify-content-between.row.header {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 2fr auto;
+    margin: 0 !important;
+    padding: 8px 20px;
+}
+
+/* Particular rows – data rows */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw_pdwt_row {
+    align-items: start !important;
+    border-bottom: 1px solid #e5eaf3;
+    display: grid !important;
+    gap: 12px;
+    grid-template-columns: 1fr 1fr 2fr auto;
+    justify-content: unset !important;
+    margin: 0 !important;
+    padding: 12px 20px;
+}
+
+/* Chips inside particular rows */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .time-slot,
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .time-slot.enabled {
+    align-items: center;
+    background: #fff !important;
+    border: 1.5px solid #c7d3e8 !important;
+    border-radius: 20px;
+    color: #0058d7 !important;
+    cursor: default;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 6px;
+    margin: 0 !important;
+    padding: 5px 12px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .time-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .time-slot-remove {
+    align-items: center;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    color: #6b7790 !important;
+    cursor: pointer;
+    display: flex;
+    font-size: 15px;
+    height: auto !important;
+    justify-content: center;
+    line-height: 1;
+    padding: 0 !important;
+    width: auto !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .time-slot-remove:hover {
+    color: #dc2626 !important;
+}
+
+/* Add slot inside particular row */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-container {
+    border-top: 1px solid #e5eaf3;
+    margin-top: 8px;
+    padding: 10px 0 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-container > .label {
+    color: #111827;
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0 0 6px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-form {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-form > div {
+    margin: 0;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-form label {
+    display: none;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .new-slot-time {
+    border: 1px solid #cbd3e1;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 12px;
+    height: 36px;
+    padding: 0 10px;
+    width: 160px;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .new-slot-time:focus {
+    border-color: #0058d7;
+    outline: none;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-btn {
+    background: #0058d7 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    color: #fff !important;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    height: 36px;
+    margin: 0;
+    padding: 0 16px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-btn:hover:not(:disabled) {
+    background: #0047b0 !important;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-time-slots-wrapper .add-slot-btn:disabled {
+    background: #a0b4d6 !important;
+    cursor: not-allowed;
+}
+
+/* Remove row button */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-particular-time-action .remove-row {
+    background: #fce4ec !important;
+    border: 1px solid #f48fb1 !important;
+    border-radius: 6px !important;
+    color: #c2185b !important;
+    font-size: 12px;
+    padding: 6px 14px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section .rbfw-particular-time-action .remove-row:hover {
+    background: #f48fb1 !important;
+    color: #c2185b !important;
+}
+
+/* Add Another button */
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section #add-particular-row.ppof-button {
+    align-items: center;
+    background: #0d9488 !important;
+    border-color: #0d9488 !important;
+    border-radius: 6px;
+    color: #fff !important;
+    display: inline-flex;
+    font-weight: 600;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 8px 18px;
+    transition: background 0.15s;
+}
+
+#rbfw_add_meta_box .rbfw_multi_day_price_conf:not(.rbfw-mi-time-settings-wrap) .time-slots-section #add-particular-row.ppof-button:hover {
+    background: #0f766e !important;
+    border-color: #0f766e !important;
+}
+
 @media (max-width: 960px) {
     #rbfw_add_meta_box .rbfw-mi-threshold-grid {
         grid-template-columns: 1fr;
