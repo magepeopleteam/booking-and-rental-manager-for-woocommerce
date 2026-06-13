@@ -927,22 +927,35 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
         </thead>
         <tbody>
         <?php
+        $tbl_inventory_based_on_return = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
+        $tbl_mepp_reduce_stock         = get_option( 'mepp_reduce_stock', 'full' );
+        $tbl_inv_managed_order_status  = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
+        $tbl_inv_managed_order_status  = is_array( $tbl_inv_managed_order_status ) ? $tbl_inv_managed_order_status : [
+            'processing' => 'processing',
+            'completed'  => 'completed',
+        ];
         if ( $query->have_posts() ) {
             while ( $query->have_posts() ) {
                 $query->the_post();
                 global $post;
                 $post_id = $post->ID;
 
-                $rent_type = !empty(get_post_meta($post_id, 'rbfw_item_type', true)) ? get_post_meta($post_id, 'rbfw_item_type', true) : '';
+                $_raw = get_post_meta( $post_id, 'rbfw_item_type', true );
+                $rent_type = ! empty( $_raw ) ? $_raw : '';
 
+                $_raw = get_post_meta( $post_id, 'rbfw_enable_variations', true );
+                $rbfw_enable_variations = ! empty( $_raw ) ? $_raw : 'no';
+                $_raw = get_post_meta( $post_id, 'rbfw_variations_data', true );
+                $rbfw_variations_data = ! empty( $_raw ) ? $_raw : [];
+                $_raw = get_post_meta( $post_id, 'rbfw_resort_room_data', true );
+                $rbfw_resort_room_data = ! empty( $_raw ) ? $_raw : [];
+                $_raw = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
+                $rbfw_bike_car_sd_data = ! empty( $_raw ) ? $_raw : [];
+                $_raw = get_post_meta( $post_id, 'manage_inventory_as_timely', true );
+                $manage_inventory_as_timely = ! empty( $_raw ) ? $_raw : [];
 
-                $rbfw_enable_variations = !empty(get_post_meta($post_id, 'rbfw_enable_variations', true)) ? get_post_meta($post_id, 'rbfw_enable_variations', true) : 'no';
-                $rbfw_variations_data = !empty(get_post_meta($post_id, 'rbfw_variations_data', true)) ? get_post_meta($post_id, 'rbfw_variations_data', true) : [];
-                $rbfw_resort_room_data = !empty(get_post_meta($post_id, 'rbfw_resort_room_data', true)) ? get_post_meta($post_id, 'rbfw_resort_room_data', true) : [];
-                $rbfw_bike_car_sd_data = !empty(get_post_meta($post_id, 'rbfw_bike_car_sd_data', true)) ? get_post_meta($post_id, 'rbfw_bike_car_sd_data', true) : [];
-                $manage_inventory_as_timely = !empty(get_post_meta($post_id, 'manage_inventory_as_timely', true)) ? get_post_meta($post_id, 'manage_inventory_as_timely', true) : [];
-
-                $rbfw_extra_service_data = !empty(get_post_meta($post_id, 'rbfw_extra_service_data', true)) ? get_post_meta($post_id, 'rbfw_extra_service_data', true) : [];
+                $_raw = get_post_meta( $post_id, 'rbfw_extra_service_data', true );
+                $rbfw_extra_service_data = ! empty( $_raw ) ? $_raw : [];
                 $total_es_qty = 0;
                 foreach ($rbfw_extra_service_data as $value) {
                     $total_es_qty += !empty($value['service_qty']) ? $value['service_qty'] : 0;
@@ -952,7 +965,8 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
 
                 if ($rent_type == 'bike_car_sd' || $rent_type == 'appointment'){
                     if($manage_inventory_as_timely=='on'){
-                        $rbfw_item_stock_quantity = !empty(get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true)) ? get_post_meta($post_id, 'rbfw_item_stock_quantity_timely', true) : 0;
+                        $_raw = get_post_meta( $post_id, 'rbfw_item_stock_quantity_timely', true );
+                        $rbfw_item_stock_quantity = ! empty( $_raw ) ? $_raw : 0;
                     }else{
                         foreach ($rbfw_bike_car_sd_data as $key => $bike_car_sd_data) {
                             $rbfw_item_stock_quantity += !empty($bike_car_sd_data['qty']) ? $bike_car_sd_data['qty'] : 0;
@@ -978,7 +992,8 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                             }
                         }
                     }else{
-                        $rbfw_item_stock_quantity = !empty(get_post_meta($post_id, 'rbfw_item_stock_quantity', true)) ? get_post_meta($post_id, 'rbfw_item_stock_quantity', true) : 0;
+                        $_raw = get_post_meta( $post_id, 'rbfw_item_stock_quantity', true );
+                        $rbfw_item_stock_quantity = ! empty( $_raw ) ? $_raw : 0;
                     }
                 }
 
@@ -991,13 +1006,9 @@ function rbfw_inventory_page_table($query, $date = null, $start_time = null, $en
                 $rbfw_inventory_raw = get_post_meta( $post_id, 'rbfw_inventory', true );
                 $rbfw_inventory     = ! empty( $rbfw_inventory_raw ) ? $rbfw_inventory_raw : [];
 
-                $inventory_based_on_return      = rbfw_get_option( 'inventory_based_on_return', 'rbfw_basic_gen_settings' );
-                $mepp_reduce_stock_table        = get_option( 'mepp_reduce_stock', 'full' );
-                $inv_managed_order_status_table = rbfw_get_option( 'inventory_managed_order_status', 'rbfw_basic_gen_settings' );
-                $inv_managed_order_status_table = is_array( $inv_managed_order_status_table ) ? $inv_managed_order_status_table : [
-                    'processing' => 'processing',
-                    'completed'  => 'completed',
-                ];
+                $inventory_based_on_return      = $tbl_inventory_based_on_return;
+                $mepp_reduce_stock_table        = $tbl_mepp_reduce_stock;
+                $inv_managed_order_status_table = $tbl_inv_managed_order_status;
 
                 $remaining_item_stock = $rbfw_item_stock_quantity;
                 $remaining_es_stock = $total_es_qty;
