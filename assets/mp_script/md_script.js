@@ -215,6 +215,22 @@ jQuery('body').on('change', '#hidden_pickup_date, #hidden_dropoff_date, .pickup_
         jQuery('button.rbfw_bikecarmd_book_now_btn').attr('disabled',true);
     }
 
+    // Show day difference immediately in .rbfw-duration before AJAX responds
+    var rbfw_start_dt = jQuery('#hidden_pickup_date').val();
+    var rbfw_end_dt   = jQuery('#hidden_dropoff_date').val();
+    if ( rbfw_start_dt && rbfw_end_dt ) {
+        var rbfw_diff_days = Math.round( ( new Date(rbfw_end_dt) - new Date(rbfw_start_dt) ) / 86400000 );
+        if ( rbfw_diff_days > 0 ) {
+            var rbfw_day_label = rbfw_diff_days === 1 ? 'Day' : 'Days';
+            jQuery('.rbfw-duration .item-content').text( rbfw_diff_days + ' ' + rbfw_day_label );
+            jQuery('.rbfw-duration .item-price').html('');
+            jQuery('.rbfw-duration').show();
+        } else {
+            jQuery('.rbfw-duration').hide();
+        }
+    } else {
+        jQuery('.rbfw-duration').hide();
+    }
 
     if(rbfw_available_time=='yes'){
         if(pickup_date && dropoff_date && pickup_time && dropoff_time){

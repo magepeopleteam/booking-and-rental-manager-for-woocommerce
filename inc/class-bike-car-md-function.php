@@ -104,7 +104,7 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
             $pickup_datetime = gmdate('Y-m-d H:i', strtotime($start_date . ' ' . $star_time));
             $dropoff_datetime = gmdate('Y-m-d H:i', strtotime($end_date . ' ' . $end_time));
 
-            $item_quantity = isset($_POST['item_quantity'])?absint($_POST['item_quantity']):'';
+            $item_quantity = isset($_POST['item_quantity']) ? absint($_POST['item_quantity']) : 0;
             $rbfw_service_price = isset($_POST['rbfw_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_service_price']))):'' * $item_quantity;
             $rbfw_management_price = isset($_POST['rbfw_management_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_management_price']))):'';
 
@@ -122,7 +122,12 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             //echo '<pre>';print_r($duration_price_info);echo '<pre>';exit;
 
-            $duration_price = $duration_price_info['duration_price'] * $item_quantity;
+            $duration_price_per_unit = $duration_price_info['duration_price'];
+            // Use at least 1 unit for display so the Duration row always shows
+            // a meaningful price after dates are picked (actual qty comes from the form).
+            $effective_quantity    = max( 1, $item_quantity );
+            $duration_price        = $duration_price_per_unit * $effective_quantity;
+            $duration_price_display = $duration_price;
 
             $total_days = $duration_price_info['total_days'];
             $service_cost = isset($_POST['rbfw_es_service_price'])?floatval(sanitize_text_field(wp_unslash($_POST['rbfw_es_service_price']))):'';
@@ -186,8 +191,8 @@ if ( ! class_exists( 'RBFW_BikeCarMd_Function' ) ) {
 
             echo wp_json_encode( array(
                 'duration_price' => $duration_price,
-                'duration_price_html' => wc_price($duration_price),
-                'duration_price_number' => $duration_price,
+                'duration_price_html' => wc_price($duration_price_display),
+                'duration_price_number' => $duration_price_display,
                 'rbfw_service_price' => $rbfw_service_price,
                 'rbfw_service_price_html' => wc_price($rbfw_service_price),
                 'rbfw_management_price' => $rbfw_management_price,

@@ -7791,6 +7791,38 @@ div.rbfw_day_wise_price table{
     margin-bottom: 10px;
 }
 
+.rbfw-rate-summary {
+    background: #edf7ff;
+    border: 1px solid #41a6ff;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-bottom: 16px;
+}
+.rbfw-rate-summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(65, 166, 255, 0.2);
+    font-size: 14px;
+}
+.rbfw-rate-summary-item:last-child {
+    border-bottom: none;
+}
+.rbfw-rate-label {
+    font-weight: 600;
+    color: #374151;
+}
+.rbfw-rate-price {
+    font-weight: 700;
+    color: #41a6ff;
+}
+.rbfw-rate-per {
+    font-weight: 400;
+    color: #6b7280;
+    font-size: 12px;
+}
+
 div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
     font-size: 12px;
 }

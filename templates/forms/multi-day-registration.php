@@ -366,6 +366,40 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                         </div>
                     </div>
 
+                    <?php
+                    $rbfw_has_rate = ( $enable_daily_rate == 'yes' && $daily_rate > 0 )
+                                  || ( $rbfw_enable_weekly_rate == 'yes' && $rbfw_weekly_rate > 0 )
+                                  || ( $rbfw_enable_monthly_rate == 'yes' && $rbfw_monthly_rate > 0 )
+                                  || ( $enable_hourly_rate == 'yes' && $hourly_rate > 0 );
+                    if ( $rbfw_has_rate ) : ?>
+                    <div class="rbfw-rate-summary">
+                        <?php if ( $enable_daily_rate == 'yes' && $daily_rate > 0 ) : ?>
+                        <div class="rbfw-rate-summary-item">
+                            <span class="rbfw-rate-label"><?php esc_html_e( 'Daily Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <span class="rbfw-rate-price"><?php echo wp_kses_post( wc_price( $daily_rate ) ); ?> <span class="rbfw-rate-per">/ <?php esc_html_e( 'Day', 'booking-and-rental-manager-for-woocommerce' ); ?></span></span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ( $rbfw_enable_weekly_rate == 'yes' && $rbfw_weekly_rate > 0 ) : ?>
+                        <div class="rbfw-rate-summary-item">
+                            <span class="rbfw-rate-label"><?php esc_html_e( 'Weekly Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <span class="rbfw-rate-price"><?php echo wp_kses_post( wc_price( $rbfw_weekly_rate ) ); ?> <span class="rbfw-rate-per">/ <?php esc_html_e( 'Week', 'booking-and-rental-manager-for-woocommerce' ); ?></span></span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ( $rbfw_enable_monthly_rate == 'yes' && $rbfw_monthly_rate > 0 ) : ?>
+                        <div class="rbfw-rate-summary-item">
+                            <span class="rbfw-rate-label"><?php esc_html_e( 'Monthly Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <span class="rbfw-rate-price"><?php echo wp_kses_post( wc_price( $rbfw_monthly_rate ) ); ?> <span class="rbfw-rate-per">/ <?php esc_html_e( 'Month', 'booking-and-rental-manager-for-woocommerce' ); ?></span></span>
+                        </div>
+                        <?php endif; ?>
+                        <?php if ( $enable_hourly_rate == 'yes' && $hourly_rate > 0 ) : ?>
+                        <div class="rbfw-rate-summary-item">
+                            <span class="rbfw-rate-label"><?php esc_html_e( 'Hourly Rate', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                            <span class="rbfw-rate-price"><?php echo wp_kses_post( wc_price( $hourly_rate ) ); ?> <span class="rbfw-rate-per">/ <?php esc_html_e( 'Hour', 'booking-and-rental-manager-for-woocommerce' ); ?></span></span>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endif; ?>
+
                     <div class="pickup_date "></div>
 
                     <?php if ($location_switch == 'yes' && !empty($pickup_location)) : ?>
