@@ -8679,7 +8679,31 @@ i.fas.fa-minus {
 .mp_right_section a.rbfw_back_step_btn[back-step="1"] {
     display: inline-flex !important;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: var(--rbfw_color_primary);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.1px;
+    transition: opacity 0.2s;
+}
+.mp_right_section a.rbfw_back_step_btn[back-step="1"] i {
+    color: var(--rbfw_color_primary);
+    font-size: 14px;
+    transition: transform 0.2s;
+}
+.mp_right_section a.rbfw_back_step_btn[back-step="1"]:hover {
+    opacity: 0.7;
+    color: var(--rbfw_color_primary);
+}
+.mp_right_section a.rbfw_back_step_btn[back-step="1"]:hover i {
+    transform: translateX(-3px);
 }
 
 /* ====================================================
@@ -8724,4 +8748,266 @@ i.fas.fa-minus {
     transform: translateY(-2px);
 }
 
+/* ======================================================
+   DEFAULT TEMPLATE — Full Responsive
+   Breakpoints: 1024 / 792 / 576 / 400
+   Scoped to .mp_default_theme or .mp_right_section
+   No functionality or JS-controlled classes changed.
+   ====================================================== */
+
+/* ---- 1024px: Tablet Landscape ---- */
+@media only screen and (max-width: 1024px) {
+    .mp_default_theme div.mp_details_page {
+        gap: 20px;
+        align-items: flex-start;
+    }
+    .mp_default_theme div.mp_right_section {
+        min-width: 280px;
+    }
+    /* Nav arrows closer on smaller canvas */
+    .mp_default_theme .rbfw-related-products-wrapper h3.rbfw-related-product-heading {
+        font-size: 20px;
+    }
+}
+
+/* ---- 792px: Tablet Portrait — stacked layout ---- */
+@media only screen and (max-width: 792px) {
+    /* Disable sticky when sidebar stacks below content */
+    .mp_default_theme div.mp_right_section {
+        position: relative !important;
+        top: auto !important;
+        min-width: 0;
+    }
+
+    /* Share bar: align left when stacked */
+    .mp_default_theme .rbfw-post-sharing {
+        justify-content: flex-start;
+        margin-top: 6px;
+    }
+
+    /* Calendar date cells: reduce oversized padding for narrower views */
+    .mp_right_section .ui-state-default,
+    .mp_right_section .ui-widget-content .ui-state-default {
+        padding: 14px;
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+        line-height: 26px;
+    }
+    .mp_right_section .ui-state-hover:hover,
+    .mp_right_section .ui-state-default.ui-state-active,
+    .mp_right_section .ui-state-highlight {
+        padding: 14px;
+    }
+
+    /* Booking header */
+    .mp_right_section .rbfw-booking-header h1 {
+        font-size: 18px;
+    }
+
+    /* Description heading */
+    .mp_default_theme .description h3.rbfw-sub-heading {
+        font-size: 20px;
+    }
+
+    /* Related items: full width carousel */
+    .mp_default_theme .rbfw-related-products-wrapper {
+        margin-top: 24px;
+    }
+}
+
+/* ---- 576px: Mobile ---- */
+@media only screen and (max-width: 576px) {
+    /* Left section: tight padding */
+    .mp_default_theme div.mp_left_section {
+        padding: 6px;
+        padding-top: 0;
+    }
+
+    /* Booking header */
+    .mp_right_section .rbfw-booking-header {
+        padding: 14px 14px;
+    }
+    .mp_right_section .rbfw-booking-header h1 {
+        font-size: 17px;
+    }
+
+    /* Booking form inner padding */
+    .mp_right_section .rbfw-booking-form {
+        padding: 8px;
+    }
+
+    /* Calendar: smaller cells on mobile */
+    .mp_right_section .ui-state-default,
+    .mp_right_section .ui-widget-content .ui-state-default {
+        padding: 10px;
+        width: 24px;
+        height: 24px;
+        font-size: 12px;
+        line-height: 22px;
+    }
+    .mp_right_section .ui-state-hover:hover,
+    .mp_right_section .ui-state-default.ui-state-active,
+    .mp_right_section .ui-state-highlight {
+        padding: 10px;
+    }
+    /* Calendar header text */
+    .mp_right_section .ui-datepicker .ui-datepicker-header {
+        font-size: 13px;
+        padding: 6px 0;
+    }
+
+    /* Time slots: 2 per row */
+    .mp_right_section .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time,
+    .mp_right_section .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time_disable {
+        width: 48%;
+    }
+
+    /* Pricing tables: horizontal scroll on overflow */
+    .mp_right_section table.rbfw_bikecarsd_price_table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+    }
+
+    /* "You selected" strip */
+    .mp_right_section .rbfw_step_selected_date {
+        font-size: 12px;
+        padding: 8px 10px;
+        gap: 6px;
+    }
+
+    /* Summary costing box */
+    .mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing {
+        padding: 12px;
+    }
+
+    /* Description */
+    .mp_default_theme .description h3.rbfw-sub-heading {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+    .mp_default_theme .description p {
+        font-size: 14px;
+        line-height: 1.65;
+    }
+
+    /* FAQ: tighter items */
+    .mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_item {
+        margin-bottom: 8px;
+    }
+
+    /* Related products: smaller nav arrows */
+    .mp_default_theme .rbfw-related-products-wrapper .owl-carousel .owl-nav {
+        top: -46px;
+    }
+    .mp_default_theme .rbfw-related-products-wrapper .owl-carousel .owl-nav button {
+        width: 32px;
+        height: 32px;
+        font-size: 12px;
+    }
+    /* Related card: auto height on mobile */
+    .mp_default_theme .rbfw-related-product-inner {
+        height: auto;
+        min-height: 340px;
+    }
+
+    /* Book now button: full width on mobile */
+    .mp_right_section button.rbfw-book-now-btn {
+        width: 100%;
+        padding: 14px;
+        font-size: 15px;
+    }
+}
+
+/* ---- 400px: Small Mobile ---- */
+@media only screen and (max-width: 400px) {
+    /* Calendar: minimal padding to fit 7 columns */
+    .mp_right_section .ui-state-default,
+    .mp_right_section .ui-widget-content .ui-state-default {
+        padding: 6px;
+        width: 20px;
+        height: 20px;
+        font-size: 11px;
+        line-height: 18px;
+    }
+    .mp_right_section .ui-state-hover:hover,
+    .mp_right_section .ui-state-default.ui-state-active,
+    .mp_right_section .ui-state-highlight {
+        padding: 6px;
+    }
+    /* Calendar header */
+    .mp_right_section .ui-datepicker .ui-datepicker-header {
+        font-size: 12px;
+    }
+
+    /* Time slots: full width on very small screens */
+    .mp_right_section .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time,
+    .mp_right_section .rbfw_bikecarsd_time_table_wrap a.rbfw_bikecarsd_time_disable {
+        width: 100%;
+    }
+
+    /* Booking header */
+    .mp_right_section .rbfw-booking-header {
+        padding: 12px;
+    }
+    .mp_right_section .rbfw-booking-header h1 {
+        font-size: 15px;
+    }
+
+    /* Booking form */
+    .mp_right_section .rbfw-booking-form {
+        padding: 6px;
+    }
+
+    /* Summary costing */
+    .mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing {
+        padding: 10px;
+    }
+
+    /* Share icons: slightly smaller on very small screens */
+    .mp_default_theme .rbfw-post-sharing a {
+        width: 26px;
+        height: 26px;
+        font-size: 11px;
+    }
+
+    /* Description */
+    .mp_default_theme .description h3.rbfw-sub-heading {
+        font-size: 16px;
+    }
+    .mp_default_theme .description p {
+        font-size: 13px;
+    }
+}
+
+/* ====================================================
+   DEFAULT TEMPLATE — Collapse blank space above
+   Back to Previous Step after calendar hides
+   ==================================================== */
+
+/* Collapse the empty loader div so it contributes no height */
+.mp_right_section .rbfw-bikecarsd-result-loader {
+    line-height: 0;
+    font-size: 0;
+}
+
+/* Remove any gap that result-wrap might inherit */
+.mp_right_section .rbfw-bikecarsd-result-wrap {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+/* The AJAX response container: ensure it starts flush */
+.mp_right_section .rbfw-bikecarsd-result {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+/* The pricing table step container: flush top */
+.mp_right_section .rbfw_bikecarsd_pricing_table_container {
+    margin-top: 0;
+    padding-top: 0;
+}
 

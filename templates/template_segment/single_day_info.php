@@ -51,7 +51,7 @@ if(isset($_POST['post_id'])){
 
 
     <div class="rbfw_bikecarsd_pricing_table_container rbfw-bikecarsd-step" data-step="3">
-        <a class="rbfw_back_step_btn" back-step="2" data-step="3"><i class="fas fa-circle-left"></i>
+        <a class="rbfw_back_step_btn" back-step="2" data-step="3"><i class="fas fa-arrow-left"></i>
            <?php echo esc_html__( 'Back to Previous Step','booking-and-rental-manager-for-woocommerce' );  ?>
         </a>
 
