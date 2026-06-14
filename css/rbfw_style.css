@@ -9846,24 +9846,79 @@ i.fas.fa-minus {
 /* Book Now pill button */
 .rbfw_rent_list_btn_holder a.rbfw_rent_list_btn {
     border-radius: 50px !important;
-    padding: 12px 20px !important;
+    padding: 7px 18px !important;
     font-size: 14px !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.04em;
-    background: var(--rbfw_color_primary) !important;
-    color: #fff !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em;
+    background: transparent !important;
+    color: var(--rbfw_color_primary) !important;
+    border: 1.5px solid var(--rbfw_color_primary) !important;
     white-space: nowrap;
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .rbfw_rent_list_btn_holder a.rbfw_rent_list_btn:hover {
-    opacity: 0.9;
     background: var(--rbfw_color_primary) !important;
     color: #fff !important;
 }
 
+.rbfw_rent_list_btn_holder a.rbfw_rent_list_btn .button-icon {
+    display: none !important;
+}
+
 /* ── End Rental Listing Card Redesign ── */
+
+/* ── Grid / List Toggle Redesign ── */
+.rbfw_rent_list_grid_icon_holder {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+    background: #f4f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 4px;
+}
+
+.rbfw_rent_items_list_grid {
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+}
+
+.rbfw_rent_items_list_grid:hover {
+    background: #e9eaec !important;
+}
+
+.rbfw_rent_items_list_grid svg {
+    width: 18px !important;
+    height: 18px !important;
+}
+
+.rbfw_rent_items_list_grid svg path {
+    fill: #6b7280;
+    transition: fill 0.2s ease;
+}
+
+.rbfw_rent_items_list_grid.selected_list_grid,
+.rbfw_rent_items_list_grid.selected_list_grid:hover {
+    background: var(--rbfw_color_primary) !important;
+    border: none !important;
+}
+
+.rbfw_rent_items_list_grid.selected_list_grid svg path {
+    fill: #fff !important;
+}
+/* ── End Grid / List Toggle Redesign ── */
 
