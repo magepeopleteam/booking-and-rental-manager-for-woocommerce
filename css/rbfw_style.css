@@ -567,7 +567,7 @@ div.mp_right_section::before {
 .mp_right_section .rbfw-booking-header h1 {
     color: #fff;
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 500;
     letter-spacing: 0.1px;
     margin: 0;
     line-height: 1.35;
@@ -8237,10 +8237,297 @@ i.fas.fa-minus {
 }
 .mp_right_section .rbfw-bikecarsd-calendar-footer i { color: var(--rbfw_color_primary); }
 
+/* ====================================================
+   DEFAULT TEMPLATE — FAQ Section
+   Scoped to .mp_default_theme — no impact on Muffin/Donut
+   ==================================================== */
+
+.mp_default_theme .faq h3.rbfw-sub-heading {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 16px;
+    border: none;
+    padding: 0;
+}
+
+.mp_default_theme .faq #rbfw_faq_accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_item {
+    border: 1px solid #E2E8F0;
+    border-radius: 10px;
+    background: #EEF2FF;
+    overflow: hidden;
+}
+
+.mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_header {
+    background: transparent;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1e293b;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_header.active {
+    background: transparent;
+    color: var(--rbfw_color_primary);
+}
+
+.mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_header i {
+    color: #94a3b8;
+    font-size: 13px;
+    flex-shrink: 0;
+    margin-left: 10px;
+}
+
+.mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_header.active i {
+    color: var(--rbfw_color_primary);
+}
+
+.mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_header:hover {
+    color: var(--rbfw_color_primary);
+}
+
+.mp_default_theme .faq #rbfw_faq_accordion .rbfw_faq_content_wrapper {
+    padding: 0 16px 14px;
+    border-top: 1px solid #E2E8F0;
+    border-radius: 0;
+}
+
+.mp_default_theme .faq #rbfw_faq_accordion p.rbfw_faq_desc {
+    font-size: 14px;
+    color: #4b5563;
+    margin: 0;
+    padding-top: 12px;
+    line-height: 1.6;
+}
+
+/* ====================================================
+   DEFAULT TEMPLATE — Features Section
+   Scoped to .mp_default_theme — no impact on Muffin/Donut
+   ==================================================== */
+
+.mp_default_theme .rbfw-features h3.rbfw-sub-heading {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 14px;
+    padding: 0;
+    border: none;
+}
+
+/* ====================================================
+   DEFAULT TEMPLATE — Description Section
+   ==================================================== */
+
+.mp_default_theme .description h3.rbfw-sub-heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f172a;
+    border: none;
+    padding: 0;
+    margin-bottom: 14px;
+}
+
+.mp_default_theme .description p {
+    font-size: 15px;
+    color: #374151;
+    line-height: 1.75;
+    padding-left: 0;
+    margin-bottom: 16px;
+}
+
+.mp_default_theme .description p:last-child {
+    margin-bottom: 0;
+}
+
+/* ====================================================
+   DEFAULT TEMPLATE — Related Items Section
+   ==================================================== */
+
+/* Section heading */
+.mp_default_theme .rbfw-related-products-wrapper h3.rbfw-related-product-heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0f172a;
+    border: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+/* Nav arrows: circular bordered buttons top-right */
+.mp_default_theme .rbfw-related-products-wrapper .owl-carousel .owl-nav {
+    top: -60px;
+}
+.mp_default_theme .rbfw-related-products-wrapper .owl-carousel .owl-nav button {
+    width: 38px;
+    height: 38px;
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 50%;
+    color: #374151;
+    transition: all 0.2s;
+}
+.mp_default_theme .rbfw-related-products-wrapper .owl-carousel .owl-nav button:hover {
+    background: var(--rbfw_color_primary);
+    border-color: var(--rbfw_color_primary);
+    color: #fff;
+}
+.mp_default_theme .rbfw-related-products-wrapper .owl-carousel .owl-nav .owl-prev:before,
+.mp_default_theme .rbfw-related-products-wrapper .owl-carousel .owl-nav .owl-next:before {
+    font-size: 14px;
+    color: inherit;
+}
+
+/* Card */
+.mp_default_theme .rbfw-related-product-inner {
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    height: 380px;
+    overflow: hidden;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+.mp_default_theme .rbfw-related-product-inner:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.10);
+    border-color: #c7d6ea;
+}
+
+/* Thumbnail: light blue background, contained image */
+.mp_default_theme .rbfw-related-product-thumb {
+    background-color: #DAEAF8;
+    background-size: contain;
+    background-position: center;
+    height: 190px;
+}
+.mp_default_theme .rbfw-related-product-thumb:hover {
+    transform: scale(1.05);
+}
+
+/* Content area */
+.mp_default_theme .rbfw-related-product-content-wrapper {
+    padding: 14px 16px;
+}
+
+/* Title */
+.mp_default_theme .rbfw-related-product .rbfw-related-product-title-wrap {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+.mp_default_theme .rbfw-related-product .rbfw-related-product-title-wrap a {
+    color: #0f172a;
+    text-decoration: none;
+}
+.mp_default_theme .rbfw-related-product .rbfw-related-product-title-wrap a:hover {
+    color: var(--rbfw_color_primary);
+}
+
+/* Price: label gray, amount primary color */
+.mp_default_theme .rbfw-related-product-price-wrap {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 12px;
+}
+.mp_default_theme .rbfw-related-product-price-wrap .woocommerce-Price-amount {
+    color: var(--rbfw_color_primary);
+    font-weight: 600;
+}
+
+/* Read More: outlined button, full width */
+.mp_default_theme a.rbfw-related-product-btn {
+    display: block;
+    text-align: center;
+    background: transparent;
+    color: var(--rbfw_color_primary);
+    border: 1px solid var(--rbfw_color_primary);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+.mp_default_theme a.rbfw-related-product-btn:hover {
+    background: var(--rbfw_color_primary);
+    color: #fff;
+    opacity: 1;
+}
+
+.mp_default_theme ul.rbfw-feature-lists {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding: 0;
+    flex-direction: unset;
+}
+
+.mp_default_theme ul.rbfw-feature-lists li {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background: #EEF2FF;
+    border: 1px solid #E8EEF8;
+    border-radius: 10px;
+    padding: 11px 14px;
+    margin-bottom: 0;
+    font-size: 14px;
+    color: #1e293b;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.mp_default_theme ul.rbfw-feature-lists li:hover {
+    border-color: var(--rbfw_color_primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.mp_default_theme ul.rbfw-feature-lists li span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.mp_default_theme ul.rbfw-feature-lists li i {
+    color: var(--rbfw_color_primary);
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-right: 0;
+}
+
+@media (max-width: 768px) {
+    .mp_default_theme ul.rbfw-feature-lists {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .mp_default_theme ul.rbfw-feature-lists {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* ---- Type / Price / Quantity tables ---- */
 .mp_right_section table.rbfw_bikecarsd_price_table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    overflow: hidden;
     margin-bottom: 14px;
 }
 
@@ -8252,7 +8539,8 @@ i.fas.fa-minus {
     font-weight: 600;
     padding: 10px 12px;
     text-align: left;
-    border: none;
+    border-bottom: 1px solid #E2E8F0;
+    border-right: none;
 }
 
 /* Body rows */
@@ -8392,6 +8680,48 @@ i.fas.fa-minus {
     display: inline-flex !important;
     align-items: center;
     gap: 6px;
+}
+
+/* ====================================================
+   DEFAULT TEMPLATE — Share Section
+   ==================================================== */
+
+.mp_default_theme .rbfw-post-sharing {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.mp_default_theme .rbfw-post-sharing span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-right: 4px;
+}
+
+.mp_default_theme .rbfw-post-sharing a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--rbfw_color_primary) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--rbfw_color_primary) 25%, transparent);
+    color: var(--rbfw_color_primary);
+    font-size: 12px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.mp_default_theme .rbfw-post-sharing a:hover {
+    background: var(--rbfw_color_primary);
+    border-color: var(--rbfw_color_primary);
+    color: #fff;
+    opacity: 1;
+    transform: translateY(-2px);
 }
 
 
