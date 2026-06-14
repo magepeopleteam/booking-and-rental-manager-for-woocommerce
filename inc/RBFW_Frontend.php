@@ -24,11 +24,9 @@
 			}
 
 			public function booking_form_header($post_id) {
-				$sub_title = get_post_meta($post_id , 'rbfw_item_sub_title', true);
 				?>
 					<div class="rbfw-booking-header">
 						<h1><?php the_title(); ?></h1>
-						<p class="sub-title"><?php echo esc_html($sub_title); ?></p>
 					</div>
 				<?php
 			}

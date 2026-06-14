@@ -536,32 +536,46 @@ CSS for Single Page Template
 }
 
 div.mp_right_section {
-    border: 1px solid #f5f5f5;
-    border-radius: 8px;
+    border: none;
+    border-radius: 12px;
     background: #fff;
     position: sticky;
+    position: -webkit-sticky;
     top: 25px;
     height: max-content;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-.mp_right_section .rbfw-booking-header{
-    background: linear-gradient(135deg, var(--rbfw_color_primary) 0%, var(--rbfw_color_primary) 100%);
-    padding: 10px;
-    color:#fff;
-    border-radius: 8px 8px 0 0;
+div.mp_right_section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid var(--rbfw_color_primary);
+    border-radius: 12px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.mp_right_section .rbfw-booking-header {
+    background: var(--rbfw_color_primary);
+    padding: 18px 20px;
+    color: #fff;
     text-align: center;
 }
-.rbfw-booking-header h1{
-    color:#fff;
-    font-size: 22px;
+.mp_right_section .rbfw-booking-header h1 {
+    color: #fff;
+    font-size: 20px;
     font-weight: 700;
-    letter-spacing: 0;
+    letter-spacing: 0.1px;
     margin: 0;
+    line-height: 1.35;
 }
-.rbfw-booking-header .sub-title{
-    
-    font-size: 14px;
-    margin: 0;
+.mp_right_section .rbfw-booking-header .sub-title {
+    font-size: 13px;
+    margin: 4px 0 0;
+    opacity: 0.88;
 }
 .mp_right_section .rbfw-booking-form{
     padding: 10px;
@@ -2479,11 +2493,11 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
     display: block;
     padding: 5px 10px;
     text-transform: none;
-    border: 1px solid #e1e1e1;
+    border: 1px solid #e3c0c0;
     color: #000;
-    font-size: 1rem;
+    font-size: 14px;
     background-color: #fff;
-    height:40px;
+    height: 35px;
     border-radius:5px;
 }
 
@@ -4496,9 +4510,10 @@ span {
 .single-rbfw_item .ui-datepicker .ui-datepicker-header{
     background: none;
     background-color:#fff;
-    color: #333;
+    color: #524f4f;
+    font-weight: 500;
     border: 0;
-    padding: .7em 0;
+    padding: 7px 0;
     position: relative;
     border-radius:0;
 }
@@ -4585,7 +4600,25 @@ span {
 
 .single-rbfw_item .ui-datepicker table td{
     border: 0;
-    padding: 10px;
+    padding: 4px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#rbfw-bikecarsd-calendar .ui-datepicker table td a.ui-state-default,
+#rbfw-bikecarsd-calendar .ui-datepicker table td span.ui-state-default {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+#rbfw-bikecarsd-calendar .ui-datepicker table td.av {
+    background: #FFF4F3;
+}
+
+#rbfw-bikecarsd-calendar .ui-datepicker table td.ui-datepicker-other-month {
+    background: transparent;
 }
 
 .single-rbfw_item  .ui-widget-content {
@@ -4596,8 +4629,8 @@ span {
 
 .single-rbfw_item .ui-state-default,
 .single-rbfw_item .ui-widget-content .ui-state-default{
-    background: #e8fbf9;
-    border:1px solid #87faef;
+    background: none;
+    border: 1px solid transparent;
     border-radius: 5px;
     color: #333;
     text-align: center;
@@ -4605,6 +4638,7 @@ span {
     width: 33px;
     height: 33px;
     line-height: 28px;
+    padding: 20px;
 }
 
 .single-rbfw_item .ui-state-disabled .ui-state-default, .single-rbfw_item .ui-widget-content .ui-state-disabled .ui-state-default{
@@ -4614,7 +4648,7 @@ color: #666;
 .single-rbfw_item .ui-datepicker-other-month .ui-state-default{
     color: #333;
 }
-.single-rbfw_item .ui-state-hover:hover, 
+.single-rbfw_item .ui-state-hover:hover,
 .single-rbfw_item .ui-state-default.ui-state-active,
 .single-rbfw_item .ui-state-highlight{
     background:var(--rbfw_color_primary);
@@ -4622,6 +4656,7 @@ color: #666;
     color: #fff;
     text-align: center;
     border-radius: 5px;
+    padding: 20px;
 }
 
 .single-rbfw_item .rbfw_bikecarsd_book_now_btn_wrap button.mp_rbfw_book_now_submit.rbfw_disabled_button{
@@ -7067,6 +7102,9 @@ div.rbfw_day_wise_price td, div.rbfw_seasonal_price_info td {
 #rbfw-bikecarsd-calendar .ui-datepicker {
     min-width: 100%;
     min-height: auto;
+    border: 1px solid #ededed;
+    border-radius: 10px;
+    padding: 5px;
 }
 
 /* Container to hold radio buttons inline */
@@ -8084,6 +8122,276 @@ i.fas.fa-minus {
 .rbfw-term-condition{
     display: inline-block;
     margin-bottom: 20px;
+}
+
+/* ====================================================
+   DEFAULT TEMPLATE — Calendar & Header Improvements
+   All rules scoped to .mp_right_section
+   Zero impact on Muffin / Donut templates
+   ==================================================== */
+
+/* Booking form inner padding */
+.mp_right_section .rbfw-booking-form { padding: 14px 16px; }
+
+/* ---- Calendar navigation bar ---- */
+.mp_right_section .calendar-box .buttons-container {
+    padding: 12px 16px;
+    margin-bottom: 0;
+    border-bottom: none;
+}
+.mp_right_section .calendar-box .buttons-container .label-container {
+    font-size: 14px;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+}
+.mp_right_section .calendar-box .prev-button,
+.mp_right_section .calendar-box .next-button {
+    font-size: 1.1rem;
+    color: #fff;
+    opacity: 0.9;
+}
+.mp_right_section .calendar-box .prev-button:hover,
+.mp_right_section .calendar-box .next-button:hover { opacity: 1; }
+
+/* ---- Calendar body: white, no gray ---- */
+.mp_right_section .calendar-box .weeks-container {
+    background: #fff;
+    border: none;
+    padding: 4px 10px 10px;
+}
+
+/* ---- Day-header row (M T W T F S S) ---- */
+.mp_right_section .calendar-box .weeks-wrapper.header {
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 6px 0 2px;
+}
+.mp_right_section .calendar-box .week .day.header {
+    font-size: 11px;
+    font-weight: 600;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+}
+
+/* ---- Week row spacing ---- */
+.mp_right_section .calendar-box .week { margin: 2px 0; }
+
+/* ---- Date circles ---- */
+.mp_right_section .calendar-box .day span {
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    font-size: 13px;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+/* All date spans: light tint base (available dates) */
+.mp_right_section .calendar-box .day span {
+    background: #FFF4F3;
+    color: var(--rbfw_color_primary);
+    border-radius: 50%;
+    font-weight: 500;
+}
+
+/* Hover on available dates: go solid */
+.mp_right_section .calendar-box .day:not(.disabled):not([disabled="disabled"]) span:hover {
+    background: var(--rbfw_color_primary) !important;
+    color: #fff !important;
+}
+
+/* Selected & today: solid primary fill, white text */
+.mp_right_section .calendar-box .week .day.selected span,
+.mp_right_section .calendar-box .day.today span {
+    background: var(--rbfw_color_primary) !important;
+    color: #fff !important;
+    border-radius: 50%;
+    font-weight: 700;
+}
+
+/* Disabled / past dates: no fill, muted grey — must come after the base rule */
+.mp_right_section .calendar-box .day.disabled span,
+.mp_right_section .calendar-box .day[disabled="disabled"] span {
+    background: transparent !important;
+    color: #d1d5db !important;
+    font-weight: 400;
+    cursor: not-allowed;
+}
+.mp_right_section .calendar-box .day.sunday[disabled="disabled"] span {
+    color: #fca5a5 !important;
+}
+
+/* Calendar footer hint strip */
+.mp_right_section .rbfw-bikecarsd-calendar-footer {
+    font-size: 12px;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+    color: #1e40af;
+    padding: 7px 12px;
+    border-radius: 6px;
+    margin: 4px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.mp_right_section .rbfw-bikecarsd-calendar-footer i { color: var(--rbfw_color_primary); }
+
+/* ---- Type / Price / Quantity tables ---- */
+.mp_right_section table.rbfw_bikecarsd_price_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+}
+
+/* Shared header style for both tables */
+.mp_right_section table.rbfw_bikecarsd_price_table thead th {
+    background: #E8EEF8;
+    color: #1e293b;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 10px 12px;
+    text-align: left;
+    border: none;
+}
+
+/* Body rows */
+.mp_right_section table.rbfw_bikecarsd_price_table tbody td {
+    padding: 11px 12px;
+    font-size: 13px;
+    color: #374151;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+.mp_right_section table.rbfw_bikecarsd_price_table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Type title & description */
+.mp_right_section .rbfw_bikecarsd_type_title {
+    display: block;
+    font-weight: 600;
+    color: #111827;
+    font-size: 13px;
+}
+.mp_right_section .rbfw_bikecarsd_type_desc {
+    display: block;
+    font-size: 11px;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+/* Optional Add-ons label */
+.mp_right_section .rbfw_bikecarsd_es_price_table .rbfw-single-right-heading {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin: 14px 0 8px;
+    display: block;
+}
+
+/* Quantity +/- controls */
+.mp_right_section .rbfw_qty_input {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.mp_right_section .rbfw_qty_input a {
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    color: #374151;
+    font-size: 10px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    text-decoration: none;
+}
+.mp_right_section .rbfw_qty_input a:hover {
+    background: var(--rbfw_color_primary);
+    border-color: var(--rbfw_color_primary);
+    color: #fff;
+}
+.mp_right_section .rbfw_qty_input input[type="number"] {
+    width: 32px;
+    height: 24px;
+    text-align: center;
+    font-size: 13px;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 0;
+}
+
+/* ---- Booking Summary / Costing box ---- */
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing {
+    background: #EEF2FF;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-top: 14px;
+}
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 13px;
+    border-bottom: none;
+    margin-bottom: 0;
+    color: #6b7280;
+}
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li.duration-costing,
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li.extra_service_cost,
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li.resource-costing {
+    color: var(--rbfw_color_primary);
+}
+.mp_right_section .rbfw_bikecarsd_price_summary .rbfw-costing .rbfw-ul li.total {
+    border-top: 1px solid #FFCBC5;
+    padding-top: 10px;
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+
+/* "You selected" date strip */
+.mp_right_section .rbfw_step_selected_date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFF4F3;
+    border: 1px solid #FFCBC5;
+    border-radius: 8px;
+    padding: 9px 13px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #374151;
+    line-height: 1.4;
+}
+.mp_right_section .rbfw_step_selected_date i {
+    color: var(--rbfw_color_primary);
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+/* Hide back button by default in Default Template */
+.mp_right_section a.rbfw_back_step_btn { display: none !important; }
+
+/* No time picker: JS sets back-step="1" after calendar hides — show it */
+.mp_right_section a.rbfw_back_step_btn[back-step="1"] {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
 }
 
 
