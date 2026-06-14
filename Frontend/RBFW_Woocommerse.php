@@ -186,16 +186,24 @@ if (!class_exists('RBFW_Woocommerce')) {
         }
 
         private function rbfw_prepare_multi_item_addons_from_post( $rbfw_id, $submitted_categories, $total_days ) {
-            $enable_service_price = get_post_meta( $rbfw_id, 'rbfw_enable_category_service_price', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_category_service_price', true ) : 'off';
+            static $addon_cache = array();
+            if ( ! isset( $addon_cache[ $rbfw_id ] ) ) {
+                $raw = get_post_meta( $rbfw_id, 'rbfw_enable_category_service_price', true );
+                $enable_service_price = $raw ?: 'off';
+                $cats_raw = get_post_meta( $rbfw_id, 'rbfw_service_category_price', true );
+                if ( ! is_array( $cats_raw ) ) {
+                    $cats_raw = json_decode( $cats_raw, true );
+                }
+                $addon_cache[ $rbfw_id ] = array(
+                    'enabled'    => $enable_service_price,
+                    'categories' => is_array( $cats_raw ) ? $cats_raw : array(),
+                );
+            }
+            $enable_service_price = $addon_cache[ $rbfw_id ]['enabled'];
             if ( 'on' !== $enable_service_price ) {
                 return array( 'items' => array(), 'total' => 0 );
             }
-
-            $stored_categories = get_post_meta( $rbfw_id, 'rbfw_service_category_price', true );
-            if ( ! is_array( $stored_categories ) ) {
-                $stored_categories = json_decode( $stored_categories, true );
-            }
-            $stored_categories = is_array( $stored_categories ) ? $stored_categories : array();
+            $stored_categories = $addon_cache[ $rbfw_id ]['categories'];
             $total_days        = max( 1, absint( $total_days ) );
             $prepared          = array();
             $total             = 0;
@@ -287,7 +295,8 @@ if (!class_exists('RBFW_Woocommerce')) {
             $sd_input_data_sabitized = RBFW_Function::data_sanitize( $_POST );
             $rbfw_rent_type     = get_post_meta( $rbfw_id, 'rbfw_item_type', true );
 
-            $rbfw_enable_extra_service_qty = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) ? get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true ) : 'no';
+            $_raw = get_post_meta( $rbfw_id, 'rbfw_enable_extra_service_qty', true );
+            $rbfw_enable_extra_service_qty = $_raw ?: 'no';
 
 
             $rbfw_item_quantity = isset( $sd_input_data_sabitized['rbfw_item_quantity'] ) ? intval( $sd_input_data_sabitized['rbfw_item_quantity'] ) : 1;

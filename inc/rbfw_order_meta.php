@@ -603,6 +603,7 @@ function rbfw_order_meta_box_callback() {
     global $rbfw;
     $post_id  = $post->ID;
     $order_id = $post_id;
+    get_post_meta( $order_id );
     $status                              = get_post_meta( $order_id, 'rbfw_order_status', true );
     $rbfw_pickup_note                    = get_post_meta( $order_id, 'rbfw_pickup_note', true );
     $rbfw_return_note                    = get_post_meta( $order_id, 'rbfw_return_note', true );

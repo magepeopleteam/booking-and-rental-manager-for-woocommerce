@@ -43,13 +43,14 @@
 			}
 
 			public static function get_template_name($post_id) {
-				$template_name = !empty(get_post_meta($post_id, 'rbfw_single_template', true)) ? get_post_meta($post_id, 'rbfw_single_template', true) : 'Default';
-				$template_name = strtolower($template_name);
+				$_raw = get_post_meta( $post_id, 'rbfw_single_template', true );
+				$template_name = strtolower( ! empty( $_raw ) ? $_raw : 'Default' );
 				return $template_name;
 			}
 
 			public static function get_rent_type($post_id) {
-				$rent_type = !empty(get_post_meta( $post_id, 'rbfw_item_type', true )) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
+				$_raw = get_post_meta( $post_id, 'rbfw_item_type', true );
+				$rent_type = ! empty( $_raw ) ? $_raw : 'bike_car_sd';
 				return $rent_type;
 			}
 

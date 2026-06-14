@@ -1189,12 +1189,18 @@ function rbfw_get_stock_details(){
             $data_date = isset($_POST['data_date'])?sanitize_text_field(wp_unslash($_POST['data_date'])):'';
             $data_id = isset($_POST['data_id'])?sanitize_text_field(wp_unslash($_POST['data_id'])):'';
             $inventory_based_on_return = rbfw_get_option('inventory_based_on_pickup_return','rbfw_basic_gen_settings');
-            $rent_type = !empty(get_post_meta($data_id, 'rbfw_item_type', true)) ? get_post_meta($data_id, 'rbfw_item_type', true) : '';
-            $rbfw_enable_variations = !empty(get_post_meta($data_id, 'rbfw_enable_variations', true)) ? get_post_meta($data_id, 'rbfw_enable_variations', true) : 'no';
-            $rbfw_variations_data = !empty(get_post_meta($data_id, 'rbfw_variations_data', true)) ? get_post_meta($data_id, 'rbfw_variations_data', true) : [];
-            $rbfw_resort_room_data = !empty(get_post_meta($data_id, 'rbfw_resort_room_data', true)) ? get_post_meta($data_id, 'rbfw_resort_room_data', true) : [];
-            $rbfw_bike_car_sd_data = !empty(get_post_meta($data_id, 'rbfw_bike_car_sd_data', true)) ? get_post_meta($data_id, 'rbfw_bike_car_sd_data', true) : [];
-            $rbfw_extra_service_data = !empty(get_post_meta($data_id, 'rbfw_extra_service_data', true)) ? get_post_meta($data_id, 'rbfw_extra_service_data', true) : [];
+            $_raw = get_post_meta( $data_id, 'rbfw_item_type', true );
+            $rent_type = ! empty( $_raw ) ? $_raw : '';
+            $_raw = get_post_meta( $data_id, 'rbfw_enable_variations', true );
+            $rbfw_enable_variations = ! empty( $_raw ) ? $_raw : 'no';
+            $_raw = get_post_meta( $data_id, 'rbfw_variations_data', true );
+            $rbfw_variations_data = ! empty( $_raw ) ? $_raw : [];
+            $_raw = get_post_meta( $data_id, 'rbfw_resort_room_data', true );
+            $rbfw_resort_room_data = ! empty( $_raw ) ? $_raw : [];
+            $_raw = get_post_meta( $data_id, 'rbfw_bike_car_sd_data', true );
+            $rbfw_bike_car_sd_data = ! empty( $_raw ) ? $_raw : [];
+            $_raw = get_post_meta( $data_id, 'rbfw_extra_service_data', true );
+            $rbfw_extra_service_data = ! empty( $_raw ) ? $_raw : [];
             $total_es_qty = 0;
 
 
