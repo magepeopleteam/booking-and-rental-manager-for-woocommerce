@@ -217,6 +217,20 @@
                     </div><!--end of tab three-->
 				<?php } ?>
             </div>
+			<?php if ( ! empty( $rbfw_related_post_arr ) ): ?>
+                <div class="rbfw_muff_row_related_item">
+                    <h3 class="rbfw_muff_heading">
+                        <?php
+                        if($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
+                            echo esc_html($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings'));
+                        }else{
+                            echo esc_html__('You May Also Like','booking-and-rental-manager-for-woocommerce');
+                        }
+                        ?>
+                    </h3>
+					<?php do_action( 'rbfw_related_products_style_three', $post_id ); ?>
+                </div>
+			<?php endif; ?>
         </div>
     </div>
 
@@ -340,19 +354,5 @@
 	<?php endif; ?>
 
 
-	<?php if ( ! empty( $rbfw_related_post_arr ) ): ?>
-        <div class="rbfw_muff_row_related_item">
-            <h3 class="rbfw_muff_heading">
-                <?php
-                if($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings') && want_loco_translate()=='no'){
-                    echo esc_html($rbfw->get_option_trans('rbfw_text_you_may_also_like', 'rbfw_basic_translation_settings'));
-                }else{
-                    echo esc_html__('You May Also Like','booking-and-rental-manager-for-woocommerce');
-                }
-                ?>
-            </h3>
-			<?php do_action( 'rbfw_related_products_style_three', $post_id ); ?>
-        </div>
-	<?php endif; ?>
 </div>
 

@@ -186,6 +186,14 @@
                     </div><!--end of tab three-->
 				<?php } ?>
             </div>
+			<?php if ( ! empty( $rbfw_related_post_arr ) ): ?>
+                <div class="rbfw_muff_row_related_item">
+                    <h3 class="rbfw_muff_heading">
+						<?php esc_html_e( 'You May Also Like', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    </h3>
+					<?php do_action( 'rbfw_related_products_style_three', $post_id ); ?>
+                </div>
+			<?php endif; ?>
         </div>
     </div>
 
@@ -303,13 +311,5 @@
 	<?php endif; ?>
 
 
-	<?php if ( ! empty( $rbfw_related_post_arr ) ): ?>
-        <div class="rbfw_muff_row_related_item">
-            <h3 class="rbfw_muff_heading">
-				<?php esc_html_e( 'You May Also Like', 'booking-and-rental-manager-for-woocommerce' ); ?>
-            </h3>
-			<?php do_action( 'rbfw_related_products_style_three', $post_id ); ?>
-        </div>
-	<?php endif; ?>
 </div>
 

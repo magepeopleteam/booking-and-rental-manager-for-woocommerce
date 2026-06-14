@@ -2548,7 +2548,7 @@ body.theme-twentytwentythree .rbfw_muff_hf_inner_wrap {
 .rbfw-bikecarmd-result-loader,
 .rbfw-resort-result-loader,
 .rbfw-dress-result-loader {
-    padding: 10px;
+    padding: 0;
 }
 
 a.rbfw_back_step_btn {
@@ -4080,6 +4080,359 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin-top: 20px;
 }
 
+/* ── Muffin Registration Wrapper Redesign ── */
+
+/* Feature badges – remove gray box, stack cleanly */
+.rbfw_muff_registration_wrapper .rbfw-bikecarsd-calendar-header {
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #f0f0f0;
+    border-radius: 0;
+    padding: 0 0 12px 0;
+    margin: 0 0 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-bikecarsd-calendar-header-feature {
+    font-size: 13px;
+    font-weight: 500;
+    color: #444;
+    line-height: 1.5;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-bikecarsd-calendar-header-feature i.fa-clock {
+    color: #e53e3e;
+    font-size: 13px;
+    width: 16px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-bikecarsd-calendar-header-feature i.fa-bolt {
+    color: #3182ce;
+    font-size: 13px;
+    width: 16px;
+}
+
+/* Section labels – uppercase caps */
+.rbfw_muff_registration_wrapper .rbfw-single-right-heading {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    padding: 0;
+    margin: 0 0 8px 0;
+    border: none;
+    background: none;
+}
+
+/* Date inputs */
+.rbfw_muff_registration_wrapper .rbfw-datetime {
+    gap: 8px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-datetime input[type="text"].rbfw-input {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 6px !important;
+    height: 42px !important;
+    font-size: 13px !important;
+    color: #333 !important;
+    background-color: #fff !important;
+    padding-left: 38px !important;
+}
+
+/* Check Availability button */
+.rbfw_muff_registration_wrapper .rbfw_chk_availability_btn {
+    border-radius: 6px !important;
+    font-size: 15px !important;
+    padding: 13px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em;
+    margin-top: 4px;
+}
+
+/* Duration result pill */
+.rbfw_muff_registration_wrapper .rbfw_room_price_category_tabs {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_room_price_category_details_loader,
+.rbfw_muff_registration_wrapper .rbfw_room_price_category_details {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_room_price_category_tabs .rbfw-single-right-heading {
+    background: #fff0f0 !important;
+    border: 1px solid #ffd6d6 !important;
+    border-radius: 20px !important;
+    padding: 8px 16px !important;
+    text-align: center !important;
+    color: var(--rbfw_color_primary) !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    margin: 0 0 14px !important;
+    display: block;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_room_price_category_tabs .rbfw-single-right-heading p {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--rbfw_color_primary);
+    line-height: 1.4;
+}
+
+/* Table section label */
+.rbfw_muff_registration_wrapper .rbfw_room_price_category_tabs_title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 8px;
+}
+
+/* Room/tier table */
+.rbfw_muff_registration_wrapper table.rbfw_room_price_table {
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.rbfw_muff_registration_wrapper table.rbfw_room_price_table thead {
+    background-color: #f8f9fb;
+}
+
+.rbfw_muff_registration_wrapper table.rbfw_room_price_table thead th {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: #888;
+    padding: 9px 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.rbfw_muff_registration_wrapper table.rbfw_room_price_table tbody td {
+    padding: 10px 8px;
+    font-size: 13px;
+    border-bottom: 1px solid #f5f5f5;
+    vertical-align: middle;
+}
+
+/* Additional services section label */
+.rbfw_muff_registration_wrapper .rbfw_bikecarmd_es_table_wrap > .rbfw-single-right-heading,
+.rbfw_muff_registration_wrapper .rbfw_additional_service_heading {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 8px;
+}
+
+/* Cost summary rows */
+.rbfw_muff_registration_wrapper .rbfw-costing {
+    border-top: 1px solid #f0f0f0;
+    padding-top: 10px;
+    margin-top: 4px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-costing li {
+    font-size: 13px;
+    padding: 5px 0;
+    color: #555;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-costing li.total {
+    border-top: 1px solid #eee;
+    margin-top: 6px;
+    padding-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-costing li.total .price-figure {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rbfw_color_primary);
+}
+
+/* Book Now button */
+.rbfw_muff_registration_wrapper .rbfw-book-now-btn,
+.rbfw_muff_registration_wrapper .mp_rbfw_book_now_submit {
+    border-radius: 6px !important;
+    font-size: 16px !important;
+    padding: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.02em;
+    margin-top: 10px;
+}
+
+/* Item spacing inside form */
+.rbfw_muff_registration_wrapper .rbfw-single-right-container .item {
+    margin-bottom: 0;
+}
+
+/* ── Availability Result Redesign ── */
+
+/* Show additional services table (globally hidden) */
+.rbfw_muff_registration_wrapper .rbfw_resort_es_price_table {
+    display: block;
+    margin-top: 16px;
+}
+
+/* Hide Image column in all booking tables */
+.rbfw_muff_registration_wrapper table.rbfw_room_price_table th:nth-child(2),
+.rbfw_muff_registration_wrapper table.rbfw_room_price_table td:nth-child(2) {
+    display: none;
+}
+
+/* "CHOOSE ROOM TYPE" section label */
+.rbfw_muff_registration_wrapper .rbfw_resort_rt_price_table_container::before {
+    content: "CHOOSE ROOM TYPE";
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #999;
+    margin-bottom: 8px;
+}
+
+/* "ADDITIONAL SERVICES" section label */
+.rbfw_muff_registration_wrapper .rbfw_resort_es_price_table .rbfw-single-right-heading {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #999;
+    padding: 0;
+    margin: 0 0 8px 0;
+    background: none;
+    border: none;
+}
+
+/* Hide thead in additional services table — no header row */
+.rbfw_muff_registration_wrapper .rbfw_resort_es_price_table table.rbfw_room_price_table thead {
+    display: none;
+}
+
+/* Additional services rows — clean card rows */
+.rbfw_muff_registration_wrapper .rbfw_resort_es_price_table table.rbfw_room_price_table tbody tr {
+    background: #fff !important;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_resort_es_price_table table.rbfw_room_price_table tbody td {
+    padding: 10px 8px;
+    font-size: 13px;
+    font-weight: 500;
+    vertical-align: middle;
+}
+
+/* Room type table — bold name, small desc */
+.rbfw_muff_registration_wrapper table.rbfw_room_price_table .room_type_title {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    color: #222;
+}
+
+.rbfw_muff_registration_wrapper table.rbfw_room_price_table small.rbfw_room_desc {
+    font-size: 11px;
+    color: #999;
+    display: block;
+    margin-top: 2px;
+}
+
+/* Qty controls — minus white border, plus red filled */
+.rbfw_muff_registration_wrapper .rbfw_qty_input {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_minus {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    color: #999;
+    border-radius: 4px 0 0 4px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_qty_input input[type="number"] {
+    width: 32px;
+    height: 28px;
+    border: 1px solid #ddd;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_plus {
+    background-color: var(--rbfw_color_primary);
+    color: #fff;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+}
+
+/* Summary cost rows */
+.rbfw_muff_registration_wrapper .rbfw-costing ul.rbfw-ul li {
+    border-bottom: 1px solid #f5f5f5;
+    padding: 7px 0;
+    font-size: 13px;
+    color: #555;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-costing ul.rbfw-ul li.subtotal {
+    color: #333;
+    font-weight: 500;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-costing ul.rbfw-ul li.total {
+    border-top: 1px solid #e0e0e0;
+    border-bottom: none;
+    padding-top: 12px;
+    margin-top: 4px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+}
+
+.rbfw_muff_registration_wrapper .rbfw-costing ul.rbfw-ul li.total .price-figure {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rbfw_color_primary);
+}
+
+/* ── End Muffin Registration Wrapper Redesign ── */
+
 .rbfw_muff_row_review_summary {
     margin-bottom: 20px;
 }
@@ -5250,11 +5603,11 @@ tr:nth-child(2n + 1) {
 
 
     .rbfw_muff_content_col1 {
-        width: 30%;
+        width: 35%;
     }
 
     .rbfw_muff_content_col2 {
-        width: 70%;
+        width: 65%;
     }
 
     .rbfw_muff_pricing {
@@ -5291,11 +5644,11 @@ tr:nth-child(2n + 1) {
     }
 
     .rbfw_muff_row_slider_content .rbfw_muff_content_col1 {
-        width: 30%;
+        width: 35%;
     }
 
     .rbfw_muff_row_slider_content .rbfw_muff_content_col2 {
-        width: 70%;
+        width: 65%;
     }
 
     .rbfw_muff_row_slider_content .rbfw_muff_highlighted_features {
