@@ -96,11 +96,13 @@
             </div>
         </div>
     </div>
-    <div class="rbfw_muff_row_slider rbfw_muff_row_slider_content">
+    <div class="rbfw_muff_row_slider">
+        <div class="rbfw_muff_slider mpStyle <?php echo esc_attr( $slide_style ); ?>">
+			<?php do_action( 'rbfw_slider', $post_id, 'rbfw_gallery_images' ); ?>
+        </div>
+    </div>
+    <div class="rbfw_muff_row_slider_content">
         <div class="rbfw_muff_content_col1">
-            <div class="rbfw_muff_slider mpStyle <?php echo esc_attr( $slide_style ); ?>">
-				<?php do_action( 'rbfw_slider', $post_id, 'rbfw_gallery_images' ); ?>
-            </div>
             <div class="rbfw_muff_registration_wrapper">
 				<?php include( RBFW_Function::get_template_path( 'forms/resort-registration.php' ) ); ?>
             </div>

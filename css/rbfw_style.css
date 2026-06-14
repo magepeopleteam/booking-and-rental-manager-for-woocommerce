@@ -3747,7 +3747,11 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 
 .rbfw_muff_row_slider {
-    margin-bottom: 50px;
+    margin-bottom: 30px;
+}
+
+.rbfw_muff_slider {
+    width: 100%;
 }
 
 .rbfw_muff_registration_wrapper .rbfw_muff_heading {
@@ -3759,7 +3763,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_content_wrapper {
-    padding: 0 0 0 25px;
+    padding: 0 25px 0 0;
 }
 
 .rbfw_muff_post_content {
@@ -3771,24 +3775,38 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin: 0;
     margin-bottom: 20px;
     padding-left: 0;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px 12px;
 }
 
 .rbfw_muff_highlighted_features ul li {
     list-style: none;
     margin: 0;
-    font-size: 16px;
-    margin-bottom: 15px;
-    width: 48%;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    width: auto;
+    margin-bottom: 0;
 }
 
 .rbfw_muff_highlighted_features ul li i {
-    width: 30px;
-    height: auto;
-    color: var(--rbfw_color_primary);
-    font-size: 20px;
+    min-width: 20px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--rbfw_color_primary);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+.rbfw_muff_highlighted_features ul li span {
+    line-height: 1.3;
 }
 
 .rbfw_muff_post_content_headline {
@@ -5231,9 +5249,12 @@ tr:nth-child(2n + 1) {
 
 
 
-    .rbfw_muff_content_col1,
+    .rbfw_muff_content_col1 {
+        width: 30%;
+    }
+
     .rbfw_muff_content_col2 {
-        width: 50%;
+        width: 70%;
     }
 
     .rbfw_muff_pricing {
@@ -5266,16 +5287,20 @@ tr:nth-child(2n + 1) {
         display: -webkit-flex;
         display: -ms-flexbox;
         display: flex;
+        flex-direction: row-reverse;
     }
 
-    .rbfw_muff_row_slider_content .rbfw_muff_content_col1,
+    .rbfw_muff_row_slider_content .rbfw_muff_content_col1 {
+        width: 30%;
+    }
+
     .rbfw_muff_row_slider_content .rbfw_muff_content_col2 {
-        width: 50%;
+        width: 70%;
     }
 
     .rbfw_muff_row_slider_content .rbfw_muff_highlighted_features {
         padding: 0;
-        padding-left:25px;
+        padding-right: 25px;
     }
 }
 
