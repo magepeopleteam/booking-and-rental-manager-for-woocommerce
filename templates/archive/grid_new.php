@@ -349,6 +349,34 @@
 								$n ++;
 							endforeach;
 						endif;
+						// Hidden popup data — all categories and features pre-built for instant popup display
+						if ( $rbfw_feature_category ) : ?>
+						<div id="rbfw_feature_popup_data-<?php echo esc_attr( $post_id ); ?>" style="display:none">
+							<div class="rbfw_show_all_cat_features rbfw_show_all_cat_title" id="rbfw_show_all_cat_features-<?php echo esc_attr( $post_id ); ?>">
+								<?php foreach ( $rbfw_feature_category as $fc_val ) :
+									$fc_title    = ! empty( $fc_val['cat_title'] ) ? $fc_val['cat_title'] : '';
+									$fc_features = ! empty( $fc_val['cat_features'] ) ? $fc_val['cat_features'] : [];
+									if ( ! empty( $fc_features ) ) :
+										if ( $fc_title ) : ?>
+											<h2 class="rbfw_popup_fearure_title rbfw_popup_fearure_title_color"><?php echo esc_html( $fc_title ); ?></h2>
+										<?php endif; ?>
+										<ul class="rbfw_popup_fearure_lists">
+											<?php foreach ( $fc_features as $fc_feat ) :
+												$fc_icon       = ! empty( $fc_feat['icon'] ) ? $fc_feat['icon'] : 'fas fa-check-circle';
+												$fc_feat_title = ! empty( $fc_feat['title'] ) ? $fc_feat['title'] : '';
+												if ( $fc_feat_title ) : ?>
+												<li class="bfw_rent_list_items">
+													<span class="bfw_rent_list_items_icon"><i class="<?php echo esc_attr( $fc_icon ); ?>"></i></span>
+													<?php echo esc_html( $fc_feat_title ); ?>
+												</li>
+												<?php endif;
+											endforeach; ?>
+										</ul>
+									<?php endif;
+								endforeach; ?>
+							</div>
+						</div>
+						<?php endif;
 						?>
                         <div class="rbfw_rent_list_btn_holder">
                             <?php if( !isset($rbfw_hide_price) || $rbfw_hide_price !== 'yes' ): ?>

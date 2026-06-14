@@ -9719,3 +9719,151 @@ i.fas.fa-minus {
     padding-top: 0;
 }
 
+/* ── Rental Listing Card Redesign ── */
+
+.rbfw_rent_list_col .rbfw_rent_list_inner_wrapper {
+    border: 1px solid #e8eaed;
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+    overflow: hidden;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.rbfw_rent_list_col .rbfw_rent_list_inner_wrapper:hover {
+    box-shadow: 0 6px 28px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+}
+
+/* Image */
+.rbfw_rent_list_col .rbfw_rent_list_grid_view_top_img {
+    display: block;
+    height: 220px;
+    min-height: unset;
+    overflow: hidden;
+}
+
+.rbfw_rent_list_col .rbfw_rent_list_grid_view_top_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+
+.rbfw_rent_list_col .rbfw_rent_list_inner_wrapper:hover .rbfw_rent_list_grid_view_top_img img {
+    transform: scale(1.04);
+}
+
+/* Content area */
+.rbfw_rent_list_col .rbfw_inner_details {
+    padding: 16px 18px 18px;
+}
+
+/* Title */
+.rbfw_rent_list_col h2.rbfw_rent_list_grid_title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 10px;
+    line-height: 1.4;
+    min-height: auto;
+}
+
+.rbfw_rent_list_col .rbfw_rent_list_grid_title a {
+    color: #111;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.rbfw_rent_list_col .rbfw_rent_list_grid_title a:hover {
+    color: var(--rbfw_color_primary);
+}
+
+/* Feature tag pills */
+.rbfw_rent_list_col .rbfw_rent_list_info {
+    margin-bottom: 8px;
+    gap: 6px;
+}
+
+.rbfw_rent_list_col .bfw_rent_list_items {
+    background: #eef2ff;
+    border: 1px solid #e0e7ff;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 400;
+    padding: 3px 10px;
+    border-radius: 50px;
+    line-height: 1.5;
+}
+
+/* See more link */
+.rbfw_rent_list_col .rbfw_see_more_category {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rbfw_color_primary);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    margin-top: 2px;
+    margin-bottom: 14px;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+/* Bottom row: price left, button right */
+.rbfw_rent_list_btn_holder {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-top: 1px solid #f3f4f6;
+    margin-top: auto;
+}
+
+/* Price block — reverse so label appears above price */
+.rbfw_rent_list_btn_holder .rbfw_pricing-box {
+    flex-direction: column-reverse;
+    gap: 1px;
+}
+
+.rbfw_rent_list_btn_holder .rbfw_rent_list_row_price_level {
+    font-size: 11px;
+    font-weight: 400;
+    color: #888;
+    line-height: 1.4;
+    letter-spacing: 0;
+    max-width: none;
+}
+
+.rbfw_rent_list_btn_holder .rbfw_rent_list_row_price {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--rbfw_color_primary);
+    line-height: 1;
+}
+
+/* Book Now pill button */
+.rbfw_rent_list_btn_holder a.rbfw_rent_list_btn {
+    border-radius: 50px !important;
+    padding: 12px 20px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em;
+    background: var(--rbfw_color_primary) !important;
+    color: #fff !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rbfw_rent_list_btn_holder a.rbfw_rent_list_btn:hover {
+    opacity: 0.9;
+    background: var(--rbfw_color_primary) !important;
+    color: #fff !important;
+}
+
+/* ── End Rental Listing Card Redesign ── */
+

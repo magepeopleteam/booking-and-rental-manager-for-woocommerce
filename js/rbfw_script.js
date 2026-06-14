@@ -197,7 +197,7 @@
         rbfw_pick_date_from_flatpicker();
 
         $('#rbfw_popup_close_btn').on('click', function() {
-            $('#rbfw_popup_wrapper').hide();
+            $('#rbfw_popup_wrapper').removeClass('rbfw_popup_active').hide();
             $('#rbfw_popup_content').empty(); // Clear the content when closed
         });
         $('#rbfw_left_filter_popup_close_btn').on('click', function() {
@@ -209,8 +209,16 @@
             e.preventDefault();
             let clickedId = $(this).attr('id');
             let item_number = clickedId.split('-').pop();
-            $("#rbfw_popup_wrapper").show();
-            $("#rbfw_popup_content").html('<div class="rbfw_loader">Loading....</div>')
+            let $localData = $('#rbfw_feature_popup_data-' + item_number);
+
+            $("#rbfw_popup_wrapper").addClass('rbfw_popup_active').show();
+
+            if ( $localData.length ) {
+                $("#rbfw_popup_content").html( $localData.html() );
+                return;
+            }
+
+            $("#rbfw_popup_content").html('<div class="rbfw_loader">Loading....</div>');
 
             jQuery.ajax({
                 type: 'POST',
@@ -237,7 +245,7 @@
             let room_type = $(this).data('room_type');
             let active_tab = $(this).data('active_tab');
 
-            $("#rbfw_popup_wrapper").show();
+            $("#rbfw_popup_wrapper").addClass('rbfw_popup_active').show();
             $("#rbfw_popup_content").html('<div class="rbfw_loader">Loading....</div>')
 
             jQuery.ajax({

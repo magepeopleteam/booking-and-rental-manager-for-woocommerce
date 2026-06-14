@@ -276,7 +276,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             $is_grid_selected = '';
             $is_list_selected = 'selected_list_grid';
 
-            $display_cat_features = 5;
+            $display_cat_features = 3;
         }
     }else{
         if( $rbfw_rent_item_list_grid == 'rbfw_rent_item_grid' ){
@@ -298,7 +298,7 @@ function rbfw_rent_list_shortcode_func($atts = null) {
             $is_grid_selected = '';
             $is_list_selected = 'selected_list_grid';
 
-            $display_cat_features = 5;
+            $display_cat_features = 3;
         }
     }
     ob_start();
