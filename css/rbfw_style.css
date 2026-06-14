@@ -4676,49 +4676,60 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     margin-top: 2px;
 }
 
-/* Qty controls — minus white border, plus red filled */
+/* Qty controls — pill design */
 .rbfw_muff_registration_wrapper .rbfw_qty_input {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: flex-end;
     gap: 0;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 50px;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
 }
 
-.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_minus {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    color: #999;
-    border-radius: 4px 0 0 4px;
-    width: 28px;
-    height: 28px;
-    display: flex;
+.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_minus,
+.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_plus {
+    width: 36px;
+    height: 36px;
+    display: flex !important;
     align-items: center;
     justify-content: center;
+    background: #fff !important;
+    border: none !important;
+    border-radius: 0 !important;
+    color: #555 !important;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_minus:hover,
+.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_plus:hover {
+    background: #f5f5f5 !important;
+    color: var(--rbfw_color_primary) !important;
+}
+
+.rbfw_muff_registration_wrapper .rbfw_qty_input a i {
     font-size: 11px;
+    color: inherit !important;
 }
 
 .rbfw_muff_registration_wrapper .rbfw_qty_input input[type="number"] {
-    width: 32px;
-    height: 28px;
-    border: 1px solid #ddd;
-    border-left: none;
-    border-right: none;
+    width: 40px !important;
+    height: 36px !important;
+    border: none !important;
+    border-left: 1.5px solid #e2e8f0 !important;
+    border-right: 1.5px solid #e2e8f0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
     text-align: center;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.rbfw_muff_registration_wrapper .rbfw_qty_input a.rbfw_qty_plus {
-    background-color: var(--rbfw_color_primary);
-    color: #fff;
-    border: none;
-    border-radius: 0 4px 4px 0;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--rbfw_color_primary);
+    outline: none;
+    padding: 0 !important;
+    -moz-appearance: textfield;
 }
 
 /* Summary cost rows */
