@@ -806,6 +806,276 @@ div.mp_left_section {
     background-color: rgb(255, 255, 255);
 }
 
+/* ── Muffin FAQ Redesign ── */
+
+.rbfw_muffin_template .faq .rbfw-sub-heading {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+    border: none;
+    background: none;
+    padding: 0;
+    margin-bottom: 16px;
+}
+
+.rbfw_muffin_template #rbfw_faq_accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_item {
+    box-shadow: none;
+    margin: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: none;
+}
+
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header {
+    background: #eef2ff;
+    color: var(--rbfw_color_primary);
+    font-size: 14px;
+    font-weight: 500;
+    padding: 14px 16px;
+    border-radius: 8px;
+    border: none;
+    align-items: center;
+}
+
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header.active {
+    background: #eef2ff;
+    color: var(--rbfw_color_primary);
+    border-radius: 8px 8px 0 0;
+}
+
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header i {
+    color: #888;
+    font-size: 13px;
+    transition: transform 0.25s ease;
+    flex-shrink: 0;
+}
+
+/* Replace fa-plus / fa-minus with chevron icons — JS toggle preserved */
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header i.fa-plus::before {
+    content: "\f078";
+}
+
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_header i.fa-minus::before {
+    content: "\f077";
+}
+
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_content_wrapper {
+    background: #fff;
+    border: none;
+    border-top: 1px solid #e0e7ff;
+    padding: 14px 16px 18px;
+    border-radius: 0 0 8px 8px;
+}
+
+.rbfw_muffin_template #rbfw_faq_accordion .rbfw_faq_content_wrapper p.rbfw_faq_desc {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* ── End Muffin FAQ Redesign ── */
+
+/* ── Muffin "You May Also Like" Redesign ── */
+
+.rbfw_muffin_template .rbfw_muff_row_related_item {
+    position: relative;
+    padding-top: 24px;
+}
+
+/* Heading */
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw_muff_heading {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 4px;
+    padding-right: 88px;
+}
+
+/* Nav arrows — show disabled buttons as circles, same line as heading */
+.rbfw_muffin_template .rbfw_muff_row_related_item .owl-nav,
+.rbfw_muffin_template .rbfw_muff_row_related_item .owl-nav.disabled {
+    position: absolute;
+    top: -60px;
+    right: 0;
+    display: flex !important;
+    gap: 8px;
+    margin: 0;
+}
+
+.rbfw_muffin_template .rbfw_muff_row_related_item .owl-nav button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50% !important;
+    border: 1px solid #e5e7eb !important;
+    background: #fff !important;
+    color: #374151 !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.10) !important;
+    position: relative;
+    font-size: 0 !important;
+    line-height: 0 !important;
+}
+
+.rbfw_muffin_template .rbfw_muff_row_related_item .owl-nav button:hover {
+    border-color: #bbb !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.14) !important;
+}
+
+/* Chevron icons via ::before */
+.rbfw_muffin_template .rbfw_muff_row_related_item .owl-nav .owl-prev:before {
+    content: "\f053";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 12px;
+    color: #374151;
+    line-height: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.rbfw_muffin_template .rbfw_muff_row_related_item .owl-nav .owl-next:before {
+    content: "\f054";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 12px;
+    color: #374151;
+    line-height: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.rbfw_muffin_template .rbfw_muff_row_related_item .owl-nav button span {
+    display: none !important;
+}
+
+/* Carousel spacing */
+.rbfw_muffin_template .rbfw_muff_row_related_item .owl-carousel {
+    margin-top: 22px;
+}
+
+/* Card */
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-inner-item-wrap {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.09);
+    border: 1px solid #ececec;
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-inner-item-wrap:hover {
+    box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+    transform: translateY(-2px);
+}
+
+/* Thumb image */
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-thumb-wrap {
+    border-radius: 14px 14px 0 0;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-thumb {
+    height: 195px;
+    background-size: cover !important;
+    background-position: center !important;
+    border-radius: 0;
+    transition: transform 0.35s ease;
+}
+
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-inner-item-wrap:hover .rbfw-related-product-thumb {
+    transform: scale(1.05);
+}
+
+/* Content area */
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-inner-content-wrap {
+    padding: 16px 18px 18px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+/* Title */
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-title-wrap {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111;
+    margin: 0 0 10px;
+    line-height: 1.4;
+}
+
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-title-wrap a {
+    color: #111;
+    text-decoration: none;
+}
+
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-title-wrap a:hover {
+    color: var(--rbfw_color_primary);
+}
+
+/* Price */
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-price-wrap {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 14px;
+}
+
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-price-badge {
+    color: var(--rbfw_color_primary);
+    font-weight: 700;
+}
+
+/* "Read More" pill button via ::after */
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-inner-content-wrap::after {
+    content: "Read More";
+    display: block;
+    text-align: center;
+    border: 1.5px solid var(--rbfw_color_primary);
+    color: var(--rbfw_color_primary);
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: auto;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.rbfw_muffin_template .rbfw_muff_row_related_item .rbfw-related-product-inner-item-wrap:hover .rbfw-related-product-inner-content-wrap::after {
+    background: var(--rbfw_color_primary);
+    color: #fff;
+}
+
+/* Dots hidden */
+.rbfw_muffin_template .rbfw_muff_row_related_item .owl-dots {
+    display: none !important;
+}
+
+.rbfw_muffin_template .rbfw_see_more_category {
+    display: none !important;
+}
+
+/* ── End Muffin Related Items Redesign ── */
+
 .rbfw-post-sharing {
     display: flex;
     flex-direction: row;
@@ -3777,36 +4047,85 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
     padding-left: 0;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px 12px;
+    gap: 8px;
 }
 
 .rbfw_muff_highlighted_features ul li {
     list-style: none;
     margin: 0;
     font-size: 13px;
+    font-weight: 500;
+    color: #333;
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     width: auto;
     margin-bottom: 0;
+    background: #eef2ff;
+    border: 1px solid #e0e7ff;
+    border-radius: 8px;
+    padding: 10px 12px;
 }
 
 .rbfw_muff_highlighted_features ul li i {
-    min-width: 20px;
-    width: 20px;
-    height: 20px;
-    background-color: var(--rbfw_color_primary);
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
+    min-width: 18px;
+    width: 18px;
+    height: 18px;
+    background: none;
+    color: var(--rbfw_color_primary);
+    border-radius: 0;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    font-size: 16px;
     flex-shrink: 0;
 }
 
 .rbfw_muff_highlighted_features ul li span {
     line-height: 1.3;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Feature items beyond 9 — hidden until Load more clicked */
+.rbfw_muffin_template .rbfw-muff-feature-extra {
+    display: none;
+}
+
+/* Load more button — right-aligned, flush below the 9th item */
+.rbfw_muffin_template .rbfw-muff-load-more {
+    display: block;
+    text-align: right;
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rbfw_color_primary);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: opacity 0.2s;
+}
+
+.rbfw_muffin_template .rbfw-muff-load-more::after {
+    content: " \f078";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    font-size: 11px;
+    text-decoration: none;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.rbfw_see_more_category {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--rbfw_color_primary);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .rbfw_muff_post_content_headline {

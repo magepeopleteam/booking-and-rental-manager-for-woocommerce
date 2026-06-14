@@ -115,30 +115,43 @@
 				<?php if ( $rbfw_feature_category ) : ?>
                     <ul class="muff_features_item">
 						<?php
-							$total_features    = 0;
+							$total_features = 0;
 							foreach ( $rbfw_feature_category as $value ) :
-								$cat_title = $value['cat_title'];
-								$cat_features  = ! empty( $value['cat_features'] ) ? $value['cat_features'] : [];
+								$cat_title    = $value['cat_title'];
+								$cat_features = ! empty( $value['cat_features'] ) ? $value['cat_features'] : [];
 								if ( ! empty( $cat_features ) ):
 									foreach ( $cat_features as $index => $features ):
-										$icon = ! empty( $features['icon'] ) ? $features['icon'] : 'fas fa-check-circle';
+										$icon  = ! empty( $features['icon'] ) ? $features['icon'] : 'fas fa-check-circle';
 										$title = $features['title'];
-										if ( $total_features < 10 ): ?>
-                                            <li title="<?php echo esc_attr( $title ); ?>">
+										?>
+                                            <li<?php if ( $total_features >= 9 ) echo ' class="rbfw-muff-feature-extra"'; ?> title="<?php echo esc_attr( $title ); ?>">
                                                 <i class="<?php echo esc_attr( $icon ); ?>"></i>
                                                 <span><?php echo esc_html( $title ); ?></span>
                                             </li>
-											<?php
-											$total_features ++;
-										endif;
+										<?php
+										$total_features++;
 									endforeach;
 								endif;
 							endforeach;
 						?>
                     </ul>
-					<?php if ( $total_features >= 10 ) : ?>
-                        <div class="rbfw_see_more_category" id="rbfw_see_more_category-<?php echo esc_attr( $post_id ); ?>"><?php echo esc_html__( 'See more','booking-and-rental-manager-for-woocommerce' ) ?></div>
+					<?php if ( $total_features > 9 ) : ?>
+                        <div class="rbfw-muff-load-more" id="rbfw-muff-load-more-<?php echo esc_attr( $post_id ); ?>">
+                            <?php esc_html_e( 'Load more', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </div>
 					<?php endif; ?>
+				<?php endif; ?>
+				<?php if ( ! defined( 'RBFW_MUFF_LOAD_MORE_SCRIPT' ) ) : define( 'RBFW_MUFF_LOAD_MORE_SCRIPT', true ); ?>
+                <script>
+                (function($){
+                    $(document).on('click', '.rbfw-muff-load-more', function(){
+                        $(this).closest('.rbfw_muff_highlighted_features')
+                               .find('.rbfw-muff-feature-extra')
+                               .fadeIn(300);
+                        $(this).fadeOut(200);
+                    });
+                })(jQuery);
+                </script>
 				<?php endif; ?>
             </div>
             <!-- popup content will show here -->
