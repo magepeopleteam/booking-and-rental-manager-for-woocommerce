@@ -917,7 +917,6 @@
             dailyPriceInput.prop('disabled', !dailyPriceEnabled);
             rbfw_enable_daily_rate.val(dailyPriceEnabled ? 'yes' : 'no');
             jQuery('.rbfw-daywise-dailyprice-col').css('display', dailyPriceEnabled ? '' : 'none');
-            hourThresholdItem.css('display', (timePickerEnabled && hourlyPriceEnabled && dailyPriceEnabled) ? 'flex' : 'none');
             updateDaywisePricingVisibility();
         }
 
@@ -947,9 +946,7 @@
             timePickerEnabled = !timePickerEnabled;
             timePickerToggle.toggleClass('active', timePickerEnabled);
             hourlyPriceItem.css('display', timePickerEnabled ? 'flex' : 'none');
-            hourThresholdItem.css('display', (timePickerEnabled && hourlyPriceEnabled && dailyPriceEnabled) ? 'flex' : 'none');
             timeSlotsSection.css('display', timePickerEnabled ? 'block' : 'none');
-            halfDayPriceItem.css('display', (timePickerEnabled && halfDayPriceEnabled) ? 'flex' : 'none');
             jQuery('.rbfw-daywise-hourly-col').css('display', (timePickerEnabled && hourlyPriceEnabled) ? '' : 'none');
             jQuery('.rbfw-daywise-halfday-col').css('display', (timePickerEnabled && halfDayPriceEnabled) ? '' : 'none');
             updateDaywisePricingVisibility();
@@ -967,14 +964,11 @@
         // Hide "Enable Time Picker" row and force it off when enable_specific_duration is on
         function syncTimePickerWithSpecificDuration() {
             var specificDurationOn = jQuery('.enable_specific_duration').is(':checked');
-            jQuery('.md-time-toggle-row').toggle( !specificDurationOn );
 
             if ( specificDurationOn && timePickerEnabled ) {
                 timePickerEnabled = false;
                 timePickerToggle.removeClass('active');
                 hourlyPriceItem.css('display', 'none');
-                halfDayPriceItem.css('display', 'none');
-                hourThresholdItem.css('display', 'none');
                 timeSlotsSection.css('display', 'none');
                 jQuery('.rbfw_enable_time_picker').val('no');
             }
@@ -995,7 +989,7 @@
             hourlyPriceInput.prop('disabled', !hourlyPriceEnabled);
             rbfw_enable_hourly_rate.val(hourlyPriceEnabled ? 'yes' : 'no');
             jQuery('.rbfw-daywise-hourly-col').css('display', (hourlyPriceEnabled && timePickerEnabled) ? '' : 'none');
-            hourThresholdItem.css('display', (timePickerEnabled && hourlyPriceEnabled && dailyPriceEnabled) ? 'flex' : 'none');
+            hourThresholdItem.css('display', hourlyPriceEnabled ? 'flex' : 'none');
             updateDaywisePricingVisibility();
         }
 
@@ -1004,7 +998,7 @@
             halfDayPriceToggle.toggleClass('active', halfDayPriceEnabled);
             halfDayPriceInput.prop('disabled', !halfDayPriceEnabled);
             rbfw_enable_half_day_rate.val(halfDayPriceEnabled ? 'yes' : 'no');
-            halfDayPriceItem.css('display', (timePickerEnabled && halfDayPriceEnabled) ? 'flex' : 'none');
+            halfDayPriceItem.css('display', halfDayPriceEnabled ? 'flex' : 'none');
             jQuery('.rbfw-daywise-halfday-col').css('display', (halfDayPriceEnabled && timePickerEnabled) ? '' : 'none');
             updateDaywisePricingVisibility();
         }

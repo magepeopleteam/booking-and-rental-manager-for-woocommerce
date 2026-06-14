@@ -1138,7 +1138,7 @@
                         <div class="md-price-card">
                             <div class="md-card-header">Time Configuration</div>
 
-                            <div class="item md-time-toggle-row"<?php echo ( isset( $enable_specific_duration ) && $enable_specific_duration === 'on' ) ? ' style="display:none"' : ''; ?>>
+                            <div class="item md-time-toggle-row">
                                 <div class="item-left">
                                     <span class="dashicons dashicons-clock"></span>
                                     <div>
@@ -1155,7 +1155,7 @@
                             </div>
 
                             <!-- Half-Day Price (conditional on time picker) -->
-                            <div class="item hourly-price-item" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'flex' : 'none' ); ?>;">
+                            <div class="item hourly-price-item" style="display: flex;">
                                 <div class="toggle half-day-price-toggle <?php echo esc_attr( $rbfw_enable_half_day_rate == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
@@ -1173,7 +1173,7 @@
                             </div>
 
                             <!-- Half-Day Hour Threshold (conditional) -->
-                            <div class="item half-day-price-item" style="display: <?php echo esc_attr( ( $rbfw_enable_time_picker === 'yes' && $rbfw_enable_half_day_rate === 'yes' ) ? 'flex' : 'none' ); ?>;">
+                            <div class="item half-day-price-item" style="display: <?php echo esc_attr( $rbfw_enable_half_day_rate === 'yes' ? 'flex' : 'none' ); ?>;">
                                 <div class="item-left">
                                     <div class="label">Half-Day Hour Threshold</div>
                                     <div class="description">Define the hour range for half-day pricing. Rentals within this range will be charged as half-day.</div>
@@ -1190,7 +1190,7 @@
                             </div>
 
                             <!-- Hourly Price (conditional) -->
-                            <div class="item hourly-price-item" style="display: <?php echo esc_attr( $rbfw_enable_time_picker == 'yes' ? 'flex' : 'none' ); ?>;">
+                            <div class="item hourly-price-item" style="display: flex;">
                                 <div class="toggle hourly-price-toggle <?php echo esc_attr( $rbfw_enable_hourly_rate == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>
@@ -1208,7 +1208,7 @@
                             </div>
 
                             <!-- Hour Threshold (conditional) -->
-                            <div class="item hour-threshold-item" style="display: <?php echo esc_attr( ( $rbfw_enable_time_picker === 'yes' && $rbfw_enable_hourly_rate === 'yes' && $rbfw_enable_daily_rate === 'yes' ) ? 'flex' : 'none' ); ?>;">
+                            <div class="item hour-threshold-item" style="display: <?php echo esc_attr( $rbfw_enable_hourly_rate === 'yes' ? 'flex' : 'none' ); ?>;">
                                 <div class="toggle hour-threshold-toggle <?php echo esc_attr( $rbfw_enable_hourly_threshold == 'yes' ? 'active' : '' ); ?>">
                                     <div class="toggle-knob"></div>
                                 </div>

@@ -548,9 +548,22 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                         $rbfw_service_category_price  = json_decode($rbfw_service_category_price, true);
                     }
                     $option_value  = is_serialized($rbfw_service_category_price) ? unserialize($rbfw_service_category_price) : $rbfw_service_category_price;
+                    $has_valid_services = false;
+                    if ( is_array( $option_value ) ) {
+                        foreach ( $option_value as $_cat_item ) {
+                            if ( ! empty( $_cat_item['cat_services'] ) && is_array( $_cat_item['cat_services'] ) ) {
+                                foreach ( $_cat_item['cat_services'] as $_svc ) {
+                                    if ( ! empty( $_svc['title'] ) ) {
+                                        $has_valid_services = true;
+                                        break 2;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     ?>
 
-                    <?php if (!empty($option_value) && $enable_service_price === 'on') { ?>
+                    <?php if ( $has_valid_services ) { ?>
                         <div class="multi-service-category-section">
                             <?php foreach ($option_value as $cat => $item) { ?>
                                 <div class="servise-item">
@@ -559,7 +572,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                                     <div class="item-content rbfw-resource">
                                         <table class="rbfw_bikecarmd_es_table">
                                             <tbody>
-                                            <?php foreach ($item['cat_services'] as $serkey => $service) { ?>
+                                            <?php foreach ( ( isset( $item['cat_services'] ) && is_array( $item['cat_services'] ) ) ? $item['cat_services'] : [] as $serkey => $service ) { ?>
 
                                                 <?php if (!empty($service['title'])) { ?>
                                                     <tr class="service-price-item">
