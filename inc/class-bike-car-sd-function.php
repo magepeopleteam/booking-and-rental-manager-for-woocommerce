@@ -518,7 +518,7 @@
                         $end_date = $start_date;
                     } else {
                         $start_date_time   = new DateTime( $start_date . ' ' . $start_time );
-                        $for_end_date_time = $start_date_time;
+                        $for_end_date_time = clone $start_date_time;
                         $d_type   = $value['d_type'];
                         $duration = $value['duration'];
                         $total_hours = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? (int) $duration * 24 : ( $d_type == 'Weeks' ? (int) $duration * 24 * 7 : (int) $duration * 24 * 30 ) ) );

@@ -262,6 +262,9 @@
 
             if (item_type == 'bike_car_sd') {
                 jQuery('.rbfw_bike_car_sd_wrapper').show();
+                if ( jQuery('[name="manage_inventory_as_timely"]').val() === 'on' && jQuery('[name="enable_specific_duration"]').val() === 'on' ) {
+                    jQuery('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide();
+                }
                 jQuery('.rbfw_general_price_config_wrapper').hide();
                 jQuery('.rbfw_switch_extra_service_qty').hide();
                 jQuery('li[data-target-tabs="#rbfw_variations"]').hide();
@@ -961,7 +964,24 @@
 
         })
 
+        // Hide "Enable Time Picker" row and force it off when enable_specific_duration is on
+        function syncTimePickerWithSpecificDuration() {
+            var specificDurationOn = jQuery('.enable_specific_duration').is(':checked');
+            jQuery('.md-time-toggle-row').toggle( !specificDurationOn );
 
+            if ( specificDurationOn && timePickerEnabled ) {
+                timePickerEnabled = false;
+                timePickerToggle.removeClass('active');
+                hourlyPriceItem.css('display', 'none');
+                halfDayPriceItem.css('display', 'none');
+                hourThresholdItem.css('display', 'none');
+                timeSlotsSection.css('display', 'none');
+                jQuery('.rbfw_enable_time_picker').val('no');
+            }
+        }
+
+        syncTimePickerWithSpecificDuration();
+        jQuery('.enable_specific_duration').on('change', syncTimePickerWithSpecificDuration);
 
 
         function updateDaywisePricingVisibility() {

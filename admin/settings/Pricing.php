@@ -1031,6 +1031,8 @@
 				$rbfw_item_type            = get_post_meta( $post_id, 'rbfw_item_type', true ) ? get_post_meta( $post_id, 'rbfw_item_type', true ) : 'bike_car_sd';
 				$mdedo                     = ( $rbfw_item_type == 'bike_car_md' || $rbfw_item_type == 'equipment' || $rbfw_item_type == 'dress' || $rbfw_item_type == 'others') ? 'block' : 'none';
 				$rbfw_enable_daywise_price = get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) ? get_post_meta( $post_id, 'rbfw_enable_daywise_price', true ) : 'no';
+				$manage_inventory_as_timely = get_post_meta( $post_id, 'manage_inventory_as_timely', true ) ?: 'off';
+				$enable_specific_duration   = get_post_meta( $post_id, 'enable_specific_duration', true ) ?: 'off';
 				?>
                 <div class="rbfw_general_price_config_wrapper " style="display: <?php echo esc_attr( $mdedo ) ?>;">
 
@@ -1136,7 +1138,7 @@
                         <div class="md-price-card">
                             <div class="md-card-header">Time Configuration</div>
 
-                            <div class="item md-time-toggle-row">
+                            <div class="item md-time-toggle-row"<?php echo ( isset( $enable_specific_duration ) && $enable_specific_duration === 'on' ) ? ' style="display:none"' : ''; ?>>
                                 <div class="item-left">
                                     <span class="dashicons dashicons-clock"></span>
                                     <div>
@@ -1301,7 +1303,7 @@
 				<?php do_action( 'rbfw_after_extra_service_table' ); ?>
 
 
-                <div class="rbfw_multi_day_price_conf rbfw_bike_car_sd_wrapper <?php echo esc_attr( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) ? 'show' : 'hide'; ?>">
+                <div class="rbfw_multi_day_price_conf rbfw_bike_car_sd_wrapper <?php echo esc_attr( $rbfw_item_type == 'bike_car_sd' || $rbfw_item_type == 'appointment' ) ? 'show' : 'hide'; ?>"<?php echo ( $rbfw_item_type === 'bike_car_sd' && $manage_inventory_as_timely === 'on' && $enable_specific_duration === 'on' ) ? ' style="display:none"' : ''; ?>>
                     <div class="item">
                         <div class="item-left">
                             <div class="label">Enable Time Picker</div>
