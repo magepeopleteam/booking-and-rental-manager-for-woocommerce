@@ -14,7 +14,11 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
     $available_quantity = isset($_POST['available_quantity']) ? intval(wp_unslash($_POST['available_quantity'])) : 0;
     $enable_specific_duration = isset($_POST['enable_specific_duration']) ? sanitize_text_field(wp_unslash($_POST['enable_specific_duration'])) : '';
 
-    $start_date_time = new DateTime($start_date.' '.$start_time);
+    try {
+        $start_date_time = new DateTime($start_date.' '.$start_time);
+    } catch ( Exception $e ) {
+        $start_date_time = new DateTime();
+    }
 
     if ($enable_specific_duration == 'on') {
         $end_date = $start_date;
@@ -28,8 +32,10 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
 
     $duration_cost = $service_price;
 
-    $rbfw_extra_service_data = get_post_meta($id, 'rbfw_extra_service_data', true) ? get_post_meta($id, 'rbfw_extra_service_data', true) : [];
-    $available_qty_info_switch = get_post_meta($id, 'rbfw_available_qty_info_switch', true) ? get_post_meta($id, 'rbfw_available_qty_info_switch', true) : 'no';
+    $_raw = get_post_meta($id, 'rbfw_extra_service_data', true);
+    $rbfw_extra_service_data = $_raw ?: [];
+    $_raw = get_post_meta($id, 'rbfw_available_qty_info_switch', true);
+    $available_qty_info_switch = $_raw ?: 'no';
 
 
     ?>
@@ -75,7 +81,7 @@ if ( ! ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( wp_un
 
                         $max_es_available_qty = rbfw_get_bike_car_sd_es_available_qty($id, $start_date, $value['service_name']);
 
-                        if($value['service_qty'] > 0){
+                        if( isset($value['service_qty']) && $value['service_qty'] > 0 ){
                             ?>
                             <div class="rbfw-optional-add-ons">
                                     <div>

@@ -120,10 +120,10 @@
                     $post_id = $product_id;
                     $start_date = $checkin_date;
                     $end_date = $checkout_date;
-                    $origin = date_create($checkin_date);
-                    $target = date_create($checkout_date);
-                    $interval = date_diff($origin, $target);
-                    $total_days = $interval->format('%a');
+                    $origin     = $checkin_date ? date_create( $checkin_date ) : false;
+                    $target     = $checkout_date ? date_create( $checkout_date ) : false;
+                    $interval   = ( $origin && $target ) ? date_diff( $origin, $target ) : false;
+                    $total_days = $interval ? $interval->format( '%a' ) : 0;
 
                     $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
                     if ($rbfw_count_extra_day_enable == 'on') {
@@ -350,11 +350,10 @@
 					$checkout_date = isset( $_POST['checkout_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkout_date'] ) ) : '';
 					$post_id       = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
 					$active_tab       = isset( $_POST['active_tab'] ) ?  sanitize_text_field( wp_unslash( $_POST['active_tab'] ) )  : '';
-					$origin        = date_create( $checkin_date );
-					$target        = date_create( $checkout_date );
-					$interval      = date_diff( $origin, $target );
-
-					$total_days    = $interval->format( '%a' );
+					$origin     = $checkin_date ? date_create( $checkin_date ) : false;
+					$target     = $checkout_date ? date_create( $checkout_date ) : false;
+					$interval   = ( $origin && $target ) ? date_diff( $origin, $target ) : false;
+					$total_days = $interval ? $interval->format( '%a' ) : 0;
 
 					$rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
                 

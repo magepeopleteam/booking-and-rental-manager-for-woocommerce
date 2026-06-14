@@ -344,13 +344,13 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_checkin_datetime    = isset( $sd_input_data_sabitized['rbfw_start_datetime'] ) ? wp_strip_all_tags( $sd_input_data_sabitized['rbfw_start_datetime'] ) : '';
                 $rbfw_checkout_datetime   = isset( $sd_input_data_sabitized['rbfw_end_datetime'] ) ? wp_strip_all_tags( $sd_input_data_sabitized['rbfw_end_datetime'] ) : '';
                 $rbfw_room_price_category = isset( $sd_input_data_sabitized['rbfw_room_price_category'] ) ? $sd_input_data_sabitized['rbfw_room_price_category'] : '';
-                $rbfw_room_info_all = $sd_input_data_sabitized['rbfw_room_info'];
+                $rbfw_room_info_all = isset( $sd_input_data_sabitized['rbfw_room_info'] ) ? $sd_input_data_sabitized['rbfw_room_info'] : [];
                 $rbfw_room_info = array();
                 $rbfw_room_price = array();
                 $i              = 0;
 
                 foreach ( $rbfw_room_info_all as $key => $value ) {
-                    if(isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_qty']) &&  isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_price'] )) {
+                    if( isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_qty']) && isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_price']) && isset($sd_input_data_sabitized['rbfw_room_info'][ $i ]['room_type']) ) {
                         $room_type = $sd_input_data_sabitized['rbfw_room_info'][$i]['room_type'];
                         $room_qty = $sd_input_data_sabitized['rbfw_room_info'][$i]['room_qty'];
                         $room_price = $sd_input_data_sabitized['rbfw_room_info'][$i]['room_price'];
@@ -370,10 +370,10 @@ if (!class_exists('RBFW_Woocommerce')) {
 
                 $sub_total_price = $rbfw_room_duration_price + $rbfw_room_service_price + $rbfw_management_price;
 
-                $origin                   = date_create( $rbfw_checkin_datetime );
-                $target                   = date_create( $rbfw_checkout_datetime );
-                $interval                 = date_diff( $origin, $target );
-                $total_days               = $interval->format( '%a' );
+                $origin     = $rbfw_checkin_datetime ? date_create( $rbfw_checkin_datetime ) : false;
+                $target     = $rbfw_checkout_datetime ? date_create( $rbfw_checkout_datetime ) : false;
+                $interval   = ( $origin && $target ) ? date_diff( $origin, $target ) : false;
+                $total_days = $interval ? $interval->format( '%a' ) : 0;
 
                 // Check if extra day should be counted
                 $count_extra_day = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
@@ -390,10 +390,12 @@ if (!class_exists('RBFW_Woocommerce')) {
                     $discount_arr = [];
                 }
                 $discounted_total = $sub_total_price;
+                $discount_type   = '';
+                $discount_amount = 0;
                 if ( ! empty( $discount_arr ) ) {
-                    $discounted_total      = $discount_arr['total_amount'];
-                    $discount_type         = $discount_arr['discount_type'];
-                    $discount_amount       = $discount_arr['discount_amount'];
+                    $discounted_total = $discount_arr['total_amount'];
+                    $discount_type    = $discount_arr['discount_type'];
+                    $discount_amount  = $discount_arr['discount_amount'];
                 }
                 $rbfw_resort_ticket_info = $rbfw_resort->rbfw_resort_ticket_info( $rbfw_id, $rbfw_checkin_datetime, $rbfw_checkout_datetime, $rbfw_room_price_category, $rbfw_room_info, $rbfw_service_info, $rbfw_regf_info, $rbfw_room_price , $rbfw_management_info  );
 
@@ -464,7 +466,11 @@ if (!class_exists('RBFW_Woocommerce')) {
                             $d_type     = ! empty( $rent_row['d_type'] ) ? $rent_row['d_type'] : 'Days';
                             $start_time = $rbfw_bikecarsd_selected_time ? $rbfw_bikecarsd_selected_time : '00:00';
                             if ( $duration > 0 ) {
-                                $start_date_time = new DateTime( $bikecarsd_selected_date . ' ' . $start_time );
+                                try {
+                                    $start_date_time = new DateTime( $bikecarsd_selected_date . ' ' . $start_time );
+                                } catch ( Exception $e ) {
+                                    $start_date_time = new DateTime();
+                                }
                                 $total_hours     = ( $d_type == 'Hours' ? $duration : ( $d_type == 'Days' ? $duration * 24 : ( $d_type == 'Weeks' ? $duration * 24 * 7 : $duration * 24 * 30 ) ) );
                                 $start_date_time->modify( "+$total_hours hours" );
                                 $end_date = $start_date_time->format( 'Y-m-d' );
@@ -562,7 +568,11 @@ if (!class_exists('RBFW_Woocommerce')) {
                 if ( ! in_array( $durationType, array( 'hourly', 'daily', 'weekly', 'monthly' ), true ) ) {
                     $durationType = 'daily';
                 }
-                $start_date_time = new DateTime($start_date.' '.$start_time);
+                try {
+                    $start_date_time = new DateTime($start_date.' '.$start_time);
+                } catch ( Exception $e ) {
+                    $start_date_time = new DateTime();
+                }
                 $total_hours = ($durationType == 'hourly' ? $durationQty : ($durationType == 'daily' ? $durationQty * 24 :($durationType == 'weekly'?$durationQty * 24 * 7: $durationQty * 24 * 30)));
 
                 $start_date_time->modify("+$total_hours hours");
@@ -574,8 +584,13 @@ if (!class_exists('RBFW_Woocommerce')) {
                 $rbfw_dropoff_point        = isset( $sd_input_data_sabitized['rbfw_dropoff_point'] ) ? $sd_input_data_sabitized['rbfw_dropoff_point'] : '';
                 $rbfw_duration_md       = isset( $sd_input_data_sabitized['rbfw_duration_md'] ) ? $sd_input_data_sabitized['rbfw_duration_md'] : '';
 
-                $pickup = new DateTime($pickup_datetime);
-                $dropoff = new DateTime($dropoff_datetime);
+                try {
+                    $pickup  = new DateTime($pickup_datetime);
+                    $dropoff = new DateTime($dropoff_datetime);
+                } catch ( Exception $e ) {
+                    $pickup  = new DateTime();
+                    $dropoff = new DateTime();
+                }
                 $interval = $pickup->diff($dropoff);
                 $total_days = $interval->days ? absint( $interval->days ) : 1;
 
@@ -873,10 +888,10 @@ if (!class_exists('RBFW_Woocommerce')) {
             if ( $rbfw_rent_type == 'resort' ) {
                 $rbfw_start_datetime = $values['rbfw_start_datetime'] ? $values['rbfw_start_datetime'] : '';
                 $rbfw_end_datetime = $values['rbfw_end_datetime'] ? $values['rbfw_end_datetime'] : '';
-                $origin = date_create( $rbfw_start_datetime );
-                $target = date_create( $rbfw_end_datetime );
-                $interval = date_diff( $origin, $target );
-                $total_days = $interval->format( '%a' );
+                $origin     = $rbfw_start_datetime ? date_create( $rbfw_start_datetime ) : false;
+                $target     = $rbfw_end_datetime ? date_create( $rbfw_end_datetime ) : false;
+                $interval   = ( $origin && $target ) ? date_diff( $origin, $target ) : false;
+                $total_days = $interval ? $interval->format( '%a' ) : 0;
                 $rbfw_count_extra_day_enable = $rbfw->get_option_trans( 'rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on' );
                 if ( $rbfw_count_extra_day_enable == 'on' ) {
                     $total_days++;

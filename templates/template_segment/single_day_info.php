@@ -106,7 +106,7 @@ if(isset($_POST['post_id'])){
                             $i = 1;
                             foreach ($rbfw_bike_car_sd_data as $value) {
                                 $max_available_qty = rbfw_get_bike_car_sd_available_qty($id, $selected_date, $value['rent_type'], $selected_time);
-                                if($value['qty'] > 0){
+                                if( isset($value['qty']) && $value['qty'] > 0 ){
 
                                     if ( is_plugin_active( 'booking-and-rental-manager-seasonal-pricing/rent-seasonal-pricing.php' ) ) {
                                         $rbfw_sp_prices = get_post_meta( $id, 'rbfw_bike_car_sd_data_sp', true );

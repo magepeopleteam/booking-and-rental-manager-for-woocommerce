@@ -6,10 +6,10 @@ check_ajax_referer( 'rbfw_check_resort_availibility_action', 'nonce' );
 $start_date = isset( $_POST['checkin_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkin_date'] ) ) : '';
 $end_date   = isset( $_POST['checkout_date'] ) ? sanitize_text_field( wp_unslash( $_POST['checkout_date'] ) ) : '';
 $post_id    = isset( $_POST['post_id'] ) ? intval( sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) ) : '';
-$origin     = date_create( $start_date );
-$target     = date_create( $end_date );
-$interval   = date_diff( $origin, $target );
-$total_days = $interval->format( '%a' );
+$origin     = $start_date ? date_create( $start_date ) : false;
+$target     = $end_date ? date_create( $end_date ) : false;
+$interval   = ( $origin && $target ) ? date_diff( $origin, $target ) : false;
+$total_days = $interval ? $interval->format( '%a' ) : 0;
 
 
 if ($total_days ) {

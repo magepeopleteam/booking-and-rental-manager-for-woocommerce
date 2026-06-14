@@ -25,10 +25,10 @@ $rbfw_management_info 	= $cart_item['rbfw_management_info'] ? $cart_item['rbfw_m
     $start_datetime    = $cart_item['rbfw_start_datetime'] ? $cart_item['rbfw_start_datetime'] : '';
     $end_datetime 		= $cart_item['rbfw_end_datetime'] ? $cart_item['rbfw_end_datetime'] : '';
 
-    $origin              = date_create( $start_datetime );
-    $target              = date_create( $end_datetime );
-    $interval            = date_diff( $origin, $target );
-    $total_days          = $interval->format( '%a' );
+    $origin     = $start_datetime ? date_create( $start_datetime ) : false;
+    $target     = $end_datetime ? date_create( $end_datetime ) : false;
+    $interval   = ( $origin && $target ) ? date_diff( $origin, $target ) : false;
+    $total_days = $interval ? $interval->format( '%a' ) : 0;
     $rbfw_count_extra_day_enable = $rbfw->get_option_trans('rbfw_count_extra_day_enable', 'rbfw_basic_gen_settings', 'on');
     if ($rbfw_count_extra_day_enable == 'on') {
         $total_days++;
