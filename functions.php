@@ -193,6 +193,8 @@ function rbfw_page_create() {
         ]
     ];
 
+    $created = false;
+
     foreach ($pages as $slug => $page) {
         if (get_page_by_path($slug) === null) {
             $page_id = wp_insert_post([
@@ -205,14 +207,19 @@ function rbfw_page_create() {
             ]);
 
             if (!is_wp_error($page_id)) {
-                error_log("Page '{$page['title']}' created successfully with ID: $page_id");
-            } else {
-                error_log("Failed to create page '{$page['title']}': " . $page_id->get_error_message());
+                $created = true;
+            } elseif (defined('WP_DEBUG') && WP_DEBUG) {
+                // Only surface failures while debugging; never spam the production log.
+                error_log("RBFW: failed to create page '{$page['title']}': " . $page_id->get_error_message());
             }
         }
     }
 
-    wp_cache_flush(); // Clear cache to avoid stale queries
+    // Only clear the cache when we actually created a page — this runs on
+    // every admin_init, so flushing every time would needlessly cold the cache.
+    if ($created) {
+        wp_cache_flush();
+    }
 }
 
 
