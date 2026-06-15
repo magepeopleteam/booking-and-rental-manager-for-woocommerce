@@ -10220,7 +10220,7 @@ i.fas.fa-minus {
 }
 /* === End Muffin Booking Form Redesign === */
 
-.rbfw_muff_registration_wrapper .rbfw-rate-summary { margin-bottom: 0 !important; }
+.rbfw_muff_registration_wrapper .rbfw-rate-summary { margin-bottom: 10px !important; }
 
 .rbfw-rate-load-more-wrap { padding: 0 !important; color: inherit !important; }
 .rbfw-rate-load-more { color: inherit !important; }
