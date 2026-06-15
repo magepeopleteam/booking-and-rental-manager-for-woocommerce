@@ -10242,3 +10242,146 @@ i.fas.fa-minus {
 .rbfw-rate-load-more { line-height: 1 !important; }
 
 .rbfw-rate-load-more-wrap { padding: 0 !important; margin-bottom: 6px; line-height: 1 !important; font-weight: normal; font-size: 12px; }
+
+/* === Duration & Variations Redesign === */
+
+/* Date-time container: side by side, no box */
+.rbfw_muff_registration_wrapper .rbfw-multiple-date-time {
+    display: flex !important;
+    gap: 12px !important;
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    margin-bottom: 12px !important;
+}
+.rbfw_muff_registration_wrapper .rbfw-multiple-date-time .item {
+    flex: 1;
+    margin-bottom: 0 !important;
+}
+.rbfw_muff_registration_wrapper .rbfw-multiple-date-time .item-content {
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+}
+
+/* Section label above each input */
+.rbfw_muff_registration_wrapper .rbfw-multiple-date-time .rbfw-single-right-heading {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: #6b7280 !important;
+    margin-bottom: 6px !important;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    text-align: left !important;
+    display: block !important;
+}
+
+/* Input wrapper for icon positioning */
+.rbfw_muff_registration_wrapper .rbfw-multiple-date-time .rbfw-p-relative {
+    position: relative !important;
+}
+
+/* Calendar icon - left, teal */
+.rbfw_muff_registration_wrapper .rbfw-multiple-date-time .calendar {
+    position: absolute !important;
+    left: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: var(--rbfw_color_primary) !important;
+    font-size: 15px !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Chevron icon - right, gray */
+.rbfw_muff_registration_wrapper .rbfw-multiple-date-time .input-picker-icon {
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #9ca3af !important;
+    font-size: 12px !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+    line-height: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* Date text input */
+.rbfw_muff_registration_wrapper .rbfw-multiple-date-time input.rbfw-input {
+    width: 100% !important;
+    height: 46px !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    padding: 0 36px 0 40px !important;
+    font-size: 14px !important;
+    color: #374151 !important;
+    box-sizing: border-box !important;
+    cursor: pointer !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+.rbfw_muff_registration_wrapper .rbfw-multiple-date-time input.rbfw-input:focus {
+    border-color: var(--rbfw_color_primary) !important;
+    box-shadow: 0 0 0 3px rgba(13,148,136,0.1) !important;
+}
+
+/* Variations (Color / Size) labels */
+.rbfw_muff_registration_wrapper .rbfw-variations-content-wrapper .rbfw-single-right-heading {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: #6b7280 !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+}
+
+/* Variation selects */
+.rbfw_muff_registration_wrapper .rbfw-variations-content-wrapper select {
+    width: 100% !important;
+    height: 46px !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    padding: 0 36px 0 14px !important;
+    font-size: 14px !important;
+    color: var(--rbfw_color_primary) !important;
+    box-sizing: border-box !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    cursor: pointer !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+}
+/* === End Duration & Variations Redesign === */
+
+.rbfw_muff_registration_wrapper .item.rbfw-duration { margin-left: 0 !important; margin-right: 0 !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+
+.rbfw_muff_registration_wrapper .item.rbfw-duration { margin-bottom: 12px !important; }
+
+.rbfw_muff_registration_wrapper .rbfw-multiple-date-time .calendar { left: unset !important; }
+
+.rbfw_muff_registration_wrapper .rbfw-multiple-date-time .calendar { color: #b1a8a7 !important; }
+
+.rbfw_muff_registration_wrapper .rbfw-variations-content-wrapper select { color: unset !important; }
+
+.rbfw_muff_registration_wrapper .rbfw-single-right-heading { padding-top: 8px !important; padding-bottom: 8px !important; }
+
+.rbfw_muff_registration_wrapper .rbfw-variations-content-wrapper .rbfw-single-right-heading { margin-top: 10px !important; }
+
+.rbfw_muff_registration_wrapper select.rbfw-select.rbfw_variation_field { background-color: #f7f7f7 !important; }
