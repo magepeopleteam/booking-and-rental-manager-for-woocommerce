@@ -66,44 +66,34 @@
 	$review_system = rbfw_get_option( 'rbfw_review_system', 'rbfw_basic_review_settings', 'on' );
 ?>
 <div class="rbfw_muffin_template">
-    <div class="rbfw_muff_row_header">
-        <div class="rbfw_muff_header_col1">
-            <div class="rbfw_muff_title">
-                <h1><?php echo esc_html( $post_title ); ?></h1>
-            </div>
-            <div class="rbfw_muff_rating">
-				<?php if ( ! empty( $post_review_rating ) ): ?>
-                    <div class="rbfw_rent_list_average_rating">
-                        <?php echo wp_kses( $post_review_rating , rbfw_allowed_html() ); ?>
-                    </div>
-				<?php endif; ?>
-            </div>
-        </div>
-        <div class="rbfw_muff_header_col2">
-            <div class="rbfw_muff_pricing">
-                <div class="rbfw_muff_pricing_card">
-                    <div class="rbfw_muff_pricing_card_col2">
-						<?php if ( ! empty( $price ) ) : ?>
-                            <div class="rbfw_muff_pricing_card_price">
-                                    <span class="rbfw_muff_pricing_card_price_badge">
-                                        <?php echo wp_kses( wc_price( $price ) , rbfw_allowed_html()); ?>
-                                    </span>
-                                <span> / <?php echo esc_html( $prices_start_at ); ?></span>
-                            </div>
-						<?php endif; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="rbfw_muff_row_slider">
         <div class="rbfw_muff_slider mpStyle <?php echo esc_attr( $slide_style ); ?>">
 			<?php do_action( 'rbfw_slider', $post_id, 'rbfw_gallery_images' ); ?>
         </div>
+        <div class="rbfw_muff_hero_overlay">
+            <div class="rbfw_muff_hero_content">
+                <h1 class="rbfw_muff_hero_title"><?php echo esc_html( $post_title ); ?></h1>
+				<?php if ( ! empty( $post_review_rating ) ): ?>
+                    <div class="rbfw_muff_hero_rating rbfw_rent_list_average_rating">
+                        <?php echo wp_kses( $post_review_rating, rbfw_allowed_html() ); ?>
+                    </div>
+				<?php endif; ?>
+				<?php if ( ! empty( $price ) ) : ?>
+                    <div class="rbfw_muff_hero_price">
+                        <span class="rbfw_muff_hero_price_amount"><?php echo wp_kses( wc_price( $price ), rbfw_allowed_html() ); ?></span>
+                        <span class="rbfw_muff_hero_price_label">/ <?php echo esc_html( $prices_start_at ); ?></span>
+                    </div>
+				<?php endif; ?>
+                <a href="#rbfw_muff_booking_form" class="rbfw_muff_hero_book_btn">
+                    <i class="fas fa-calendar-check"></i>
+                    <?php esc_html_e( 'Book Now', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                </a>
+            </div>
+        </div>
     </div>
     <div class="rbfw_muff_row_slider_content">
         <div class="rbfw_muff_content_col1">
-            <div class="rbfw_muff_registration_wrapper">
+            <div class="rbfw_muff_registration_wrapper" id="rbfw_muff_booking_form">
 				<?php include( RBFW_Function::get_template_path( 'forms/resort-registration.php' ) ); ?>
             </div>
         </div>
