@@ -487,7 +487,7 @@ $fee_management_cost_enable = false;
 
 
                 <div class="rbfw_rental_pricing_breakdown">
-                    <div class="rbfw_bikecarmd_price_result" style="display: none">
+                    <div class="rbfw_bikecarmd_price_result">
                         
                         <div class="item-content rbfw-costing">
                             <div class="rbfw-single-right-heading">

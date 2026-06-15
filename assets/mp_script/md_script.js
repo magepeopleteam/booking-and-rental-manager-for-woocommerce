@@ -54,6 +54,11 @@ document.addEventListener('DOMContentLoaded', function () {
             setTimeout(updateSummary, 50);
         });
     });
+
+    // Seed default $0.00 values so rbfw_bikecarmd_price_result is populated on load
+    if (qtyInputs.length > 0) {
+        calculateTotalMultipleItems(true);
+    }
 });
 
  // pricing table show/hide
