@@ -8,15 +8,21 @@ if (!defined('ABSPATH')) {
 	die;
 } // Cannot access pages directly.
 
-require_once ABSPATH . 'wp-admin/includes/media.php';
-require_once ABSPATH . 'wp-admin/includes/file.php';
-require_once ABSPATH . 'wp-admin/includes/image.php';
+// The WordPress media-sideload stack is heavy; it is loaded on demand in
+// load_media_stack() only while an import is actually running.
 
 if (!class_exists('RbfwImportDemo')) {
 	class RbfwImportDemo {
+
+		/** Option that stores the resumable import progress while it runs. */
+		const STATE_OPTION = 'rbfw_import_state';
+
 		public function __construct() {
 			add_action('admin_enqueue_scripts', array($this, 'enqueue_assets'));
 			add_action('admin_footer', array($this, 'render_popup'));
+			// New chunked endpoint — the browser calls this once per small unit of work.
+			add_action('wp_ajax_rbfw_import_dummy_step', array($this, 'ajax_import_step'));
+			// Back-compat endpoint (runs every remaining chunk in one request).
 			add_action('wp_ajax_rbfw_import_dummy_data', array($this, 'ajax_import_dummy_data'));
 			add_action('wp_ajax_rbfw_dismiss_dummy_import', array($this, 'ajax_dismiss_dummy_import'));
 		}
@@ -25,8 +31,7 @@ if (!class_exists('RbfwImportDemo')) {
 		 * Check if dummy import is eligible.
 		 */
 		public function is_eligible() {
-			$dummy_post_inserted = get_option('rbfw_sample_rent_items');
-			if ($dummy_post_inserted == 'yes') {
+			if (get_option('rbfw_sample_rent_items') === 'yes') {
 				return false;
 			}
 
@@ -35,14 +40,19 @@ if (!class_exists('RbfwImportDemo')) {
 				return false;
 			}
 
-			$count_posts = wp_count_posts('rbfw_item');
-			$count_existing = isset($count_posts->publish) ? $count_posts->publish : 0;
-			$plugin_active = self::check_plugin('booking-and-rental-manager-for-woocommerce', 'rent-manager.php');
+			if (self::check_plugin('booking-and-rental-manager-for-woocommerce', 'rent-manager.php') != 1) {
+				return false;
+			}
 
-			if (empty($count_existing) && $plugin_active == 1) {
+			// An import that started but did not finish (timeout, refresh, etc.)
+			// can always be resumed, even if items already partially exist.
+			if (is_array(get_option(self::STATE_OPTION))) {
 				return true;
 			}
-			return false;
+
+			$count_posts    = wp_count_posts('rbfw_item');
+			$count_existing = isset($count_posts->publish) ? (int) $count_posts->publish : 0;
+			return $count_existing === 0;
 		}
 
 		/**
@@ -81,10 +91,12 @@ if (!class_exists('RbfwImportDemo')) {
 			if (!$this->is_eligible()) {
 				return;
 			}
-			$display_style = $this->should_auto_show_popup() ? '' : 'display: none;';
+			// If a previous import was interrupted, resume it automatically.
+			$resume        = is_array(get_option(self::STATE_OPTION)) ? 1 : 0;
+			$display_style = ($resume || $this->should_auto_show_popup()) ? '' : 'display: none;';
 			?>
 			<!-- RBFW Dummy Import Popup Overlay -->
-			<div id="rbfw-woo-overlay" class="rbfw-woo-overlay rbfw-dummy-overlay" style="<?php echo esc_attr($display_style); ?>">
+			<div id="rbfw-woo-overlay" class="rbfw-woo-overlay rbfw-dummy-overlay" data-resume="<?php echo esc_attr($resume); ?>" style="<?php echo esc_attr($display_style); ?>">
 				<div class="rbfw-woo-popup">
 					<div class="rbfw-woo-header">
 						<div class="rbfw-woo-header-icon">
@@ -138,18 +150,29 @@ if (!class_exists('RbfwImportDemo')) {
 			(function($) {
 				$(document).ready(function() {
 					var $overlay = $('#rbfw-woo-overlay.rbfw-dummy-overlay');
-					var $popup = $overlay.find('.rbfw-woo-popup');
-					var $btn = $('#rbfw-dummy-install-btn');
-					var $dismissBtn = $('#rbfw-dummy-dismiss-btn');
-					var $progress = $('#rbfw-woo-progress');
-					var $fill = $('#rbfw-woo-progress-fill');
-					var $status = $('#rbfw-woo-status-text');
-					var $actions = $overlay.find('.rbfw-woo-actions');
-					var isWorking = false;
-
 					if (!$overlay.length) return;
 
-					// Manual Trigger from other pages
+					var $popup      = $overlay.find('.rbfw-woo-popup');
+					var $btn        = $('#rbfw-dummy-install-btn');
+					var $dismissBtn = $('#rbfw-dummy-dismiss-btn');
+					var $progress   = $('#rbfw-woo-progress');
+					var $fill       = $('#rbfw-woo-progress-fill');
+					var $status     = $('#rbfw-woo-status-text');
+					var $actions    = $overlay.find('.rbfw-woo-actions');
+					var isWorking   = false;
+
+					var importNonce  = '<?php echo esc_js(wp_create_nonce("rbfw_import_dummy")); ?>';
+					var dismissNonce = '<?php echo esc_js(wp_create_nonce("rbfw_dismiss_dummy")); ?>';
+					var redirectUrl  = '<?php echo esc_js(admin_url("edit.php?post_type=rbfw_item")); ?>';
+					var i18n = {
+						working: '<?php echo esc_js(__("Importing sample data. This may take a moment...", "booking-and-rental-manager-for-woocommerce")); ?>',
+						failed:  '<?php echo esc_js(__("Failed to import. Please try again.", "booking-and-rental-manager-for-woocommerce")); ?>',
+						success: '<?php echo esc_js(__("Success!", "booking-and-rental-manager-for-woocommerce")); ?>',
+						done:    '<?php echo esc_js(__("Sample data imported successfully. Redirecting to Rental List...", "booking-and-rental-manager-for-woocommerce")); ?>'
+					};
+
+					// Manual trigger from other pages — just open the popup; the
+					// user confirms with "Yes, Import Data".
 					$(document).on('click', '#rbfw-trigger-dummy-import-btn', function(e) {
 						e.preventDefault();
 						$overlay.css('display', 'flex').hide().fadeIn(300);
@@ -157,89 +180,95 @@ if (!class_exists('RbfwImportDemo')) {
 
 					$btn.on('click', function(e) {
 						e.preventDefault();
-						if (isWorking) return;
-						isWorking = true;
-						$btn.prop('disabled', true);
-						$dismissBtn.prop('disabled', true);
-
-						$actions.slideUp(250);
-						$progress.slideDown(300);
-
-						$fill.css('width', '50%');
-						$status.text('<?php echo esc_js(__("Importing sample data. This may take a moment...", "booking-and-rental-manager-for-woocommerce")); ?>').removeClass('rbfw-success rbfw-error');
-
-						$.ajax({
-							url: ajaxurl,
-							type: 'POST',
-							data: {
-								action: 'rbfw_import_dummy_data',
-								nonce: '<?php echo wp_create_nonce("rbfw_import_dummy"); ?>'
-							},
-							success: function(response) {
-								if (response.success) {
-									$fill.css('width', '100%');
-									$status.text('<?php echo esc_js(__("Import complete!", "booking-and-rental-manager-for-woocommerce")); ?>').addClass('rbfw-success');
-									$popup.addClass('rbfw-state-success');
-									$popup.find('.rbfw-woo-icon').html(
-										'<svg width="40" height="40" viewBox="0 0 24 24" fill="none">' +
-										'<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>' +
-										'<path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
-										'</svg>'
-									);
-									$popup.find('.rbfw-woo-title').text('<?php echo esc_js(__("Success!", "booking-and-rental-manager-for-woocommerce")); ?>');
-									$popup.find('.rbfw-woo-desc').text('<?php echo esc_js(__("Sample data imported successfully. Redirecting to Rental List...", "booking-and-rental-manager-for-woocommerce")); ?>');
-
-									setTimeout(function() {
-										window.location.href = '<?php echo esc_url(admin_url('edit.php?post_type=rbfw_item')); ?>';
-									}, 1500);
-								} else {
-									showError(response.data && response.data.message ? response.data.message : '<?php echo esc_js(__("Failed to import.", "booking-and-rental-manager-for-woocommerce")); ?>');
-								}
-							},
-							error: function() {
-								showError('<?php echo esc_js(__("Failed to import. Please try again.", "booking-and-rental-manager-for-woocommerce")); ?>');
-							}
-						});
+						startImport();
 					});
 
 					$dismissBtn.on('click', function(e) {
 						e.preventDefault();
 						if (isWorking) return;
 						isWorking = true;
-
 						$overlay.css('opacity', '0.5');
-
 						$.ajax({
 							url: ajaxurl,
 							type: 'POST',
-							data: {
-								action: 'rbfw_dismiss_dummy_import',
-								nonce: '<?php echo wp_create_nonce("rbfw_dismiss_dummy"); ?>'
-							},
-							success: function() {
-								$overlay.fadeOut(300, function() { $(this).remove(); });
-							},
-							error: function() {
+							data: { action: 'rbfw_dismiss_dummy_import', nonce: dismissNonce },
+							complete: function() {
 								$overlay.fadeOut(300, function() { $(this).remove(); });
 							}
 						});
 					});
 
+					function startImport() {
+						if (isWorking) return;
+						isWorking = true;
+						$btn.prop('disabled', true);
+						$dismissBtn.prop('disabled', true);
+						$actions.slideUp(250);
+						$progress.slideDown(300);
+						$status.text(i18n.working).removeClass('rbfw-success rbfw-error');
+						runStep();
+					}
+
+					// Each call processes ONE small chunk on the server. PHP frees all
+					// its memory when the request ends, so the next chunk starts fresh —
+					// this is what keeps the import safe on tiny memory limits.
+					function runStep() {
+						$.ajax({
+							url: ajaxurl,
+							type: 'POST',
+							dataType: 'json',
+							data: { action: 'rbfw_import_dummy_step', nonce: importNonce },
+							success: function(response) {
+								if (response && response.success && response.data) {
+									var d = response.data;
+									$fill.css('width', (d.progress || 0) + '%');
+									if (d.message) { $status.text(d.message); }
+									if (d.done) {
+										finishImport();
+									} else {
+										runStep();
+									}
+								} else {
+									showError(response && response.data && response.data.message ? response.data.message : i18n.failed);
+								}
+							},
+							error: function() {
+								showError(i18n.failed);
+							}
+						});
+					}
+
+					function finishImport() {
+						$fill.css('width', '100%');
+						$status.addClass('rbfw-success');
+						$popup.addClass('rbfw-state-success');
+						$popup.find('.rbfw-woo-icon').html(
+							'<svg width="40" height="40" viewBox="0 0 24 24" fill="none">' +
+							'<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5"/>' +
+							'<path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>' +
+							'</svg>'
+						);
+						$popup.find('.rbfw-woo-title').text(i18n.success);
+						$popup.find('.rbfw-woo-desc').text(i18n.done);
+						setTimeout(function() { window.location.href = redirectUrl; }, 1500);
+					}
+
 					function showError(message) {
 						isWorking = false;
 						$popup.addClass('rbfw-state-error');
 						$status.text(message).addClass('rbfw-error');
-						$fill.css('width', '100%');
-
 						$btn.prop('disabled', false);
 						$dismissBtn.prop('disabled', false);
 						$actions.slideDown(250);
-
+						// The import is resumable — clicking again continues where it stopped.
 						setTimeout(function() {
 							$popup.removeClass('rbfw-state-error');
-							$progress.slideUp(250);
-							$fill.css('width', '0%');
-						}, 3000);
+						}, 4000);
+					}
+
+					// Resume an import that was interrupted on a previous page load.
+					if ($overlay.data('resume') === 1) {
+						startImport();
 					}
 				});
 			})(jQuery);
@@ -248,15 +277,39 @@ if (!class_exists('RbfwImportDemo')) {
 		}
 
 		/**
-		 * AJAX: Import dummy data.
+		 * AJAX: process a single import chunk and report progress.
+		 * The browser calls this repeatedly until "done" is true, so every
+		 * request stays tiny and finishes well within any memory/time limit.
+		 */
+		public function ajax_import_step() {
+			check_ajax_referer('rbfw_import_dummy', 'nonce');
+			if (!current_user_can('manage_options')) {
+				wp_send_json_error(array('message' => __('Permission denied.', 'booking-and-rental-manager-for-woocommerce')));
+			}
+			if (get_option('rbfw_sample_rent_items') === 'yes') {
+				wp_send_json_success(array(
+					'done'     => true,
+					'progress' => 100,
+					'stage'    => 'done',
+					'message'  => __('Import complete!', 'booking-and-rental-manager-for-woocommerce'),
+				));
+			}
+			$state = $this->process_step();
+			wp_send_json_success($this->progress_payload($state));
+		}
+
+		/**
+		 * AJAX (back-compat): run every remaining chunk in one request.
+		 * Still hardened — images download once, limits are raised, and the
+		 * persisted state lets the popup resume if this request is cut short.
 		 */
 		public function ajax_import_dummy_data() {
 			check_ajax_referer('rbfw_import_dummy', 'nonce');
 			if (!current_user_can('manage_options')) {
-				wp_send_json_error(array('message' => 'Permission denied.'));
+				wp_send_json_error(array('message' => __('Permission denied.', 'booking-and-rental-manager-for-woocommerce')));
 			}
-			$this->dummy_import();
-			wp_send_json_success();
+			$this->run_full_import();
+			wp_send_json_success(array('done' => true, 'progress' => 100));
 		}
 
 		/**
@@ -272,10 +325,12 @@ if (!class_exists('RbfwImportDemo')) {
 		}
 
 		/**
-		 * Public function for Quick Setup to call.
+		 * Public entry point for Quick Setup. Runs the import to completion with
+		 * raised limits; if the request is cut short, the saved state lets the
+		 * dummy-import popup resume the remaining chunks on the next page load.
 		 */
 		public function rbfw_import_demo_function() {
-			$this->dummy_import();
+			$this->run_full_import();
 		}
 
 		public static function check_plugin($plugin_dir_name, $plugin_file): int {
@@ -291,97 +346,290 @@ if (!class_exists('RbfwImportDemo')) {
 		}
 
 		/**
-		 * Run the actual dummy import.
+		 * Remote sample images. Downloaded ONCE during the import and then
+		 * reused for both the thumbnail and the gallery of every item.
+		 *
+		 * @return string[]
 		 */
-		public function dummy_import() {
-			$dummy_post_inserted = get_option('rbfw_sample_rent_items');
-			if ($dummy_post_inserted) {
+		private static function image_urls() {
+			$base = 'https://raw.githubusercontent.com/magepeopleteam/dummy-images/main/rental/';
+			$urls = array();
+			for ($i = 1; $i <= 10; $i++) {
+				$urls[] = $base . 'image' . $i . '.jpeg';
+			}
+			return $urls;
+		}
+
+		/**
+		 * Raise memory & time limits as far as the host allows. These are safe
+		 * no-ops where disabled, so a locked-down host simply keeps its limit
+		 * and relies on each chunk staying small.
+		 */
+		private function raise_limits() {
+			if (function_exists('wp_raise_memory_limit')) {
+				wp_raise_memory_limit('admin');
+			}
+			if (function_exists('set_time_limit')) {
+				@set_time_limit(0);
+			}
+			@ignore_user_abort(true);
+		}
+
+		/**
+		 * Load the WordPress media-sideload stack only while importing.
+		 */
+		private function load_media_stack() {
+			if (!function_exists('media_sideload_image')) {
+				require_once ABSPATH . 'wp-admin/includes/media.php';
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+				require_once ABSPATH . 'wp-admin/includes/image.php';
+			}
+		}
+
+		/**
+		 * Read (or initialise) the persisted import state.
+		 *
+		 * @return array
+		 */
+		private function get_state() {
+			$state = get_option(self::STATE_OPTION);
+			if (!is_array($state)) {
+				$state = array(
+					'stage'       => 'images',
+					'image_index' => 0,
+					'image_ids'   => array(),
+					'post_index'  => 0,
+					'post_ids'    => array(),
+				);
+			}
+			return $state;
+		}
+
+		/**
+		 * Advance the import by exactly one small unit of work and persist it.
+		 * Stages: images (one download each) → posts (one item each) →
+		 * finalize (cross-link) → done.
+		 *
+		 * @return array The updated state.
+		 */
+		public function process_step() {
+			$this->raise_limits();
+			$state = $this->get_state();
+
+			switch ($state['stage']) {
+				case 'images':
+					$this->load_media_stack();
+					$urls = self::image_urls();
+					if (isset($urls[$state['image_index']])) {
+						$id = media_sideload_image($urls[$state['image_index']], 0, 'Sample Rental Image', 'id');
+						if (!is_wp_error($id) && $id) {
+							$state['image_ids'][] = (int) $id;
+						}
+						$state['image_index']++;
+					}
+					if ($state['image_index'] >= count($urls)) {
+						$state['stage'] = 'posts';
+					}
+					break;
+
+				case 'posts':
+					$data = $this->retnal_data();
+					if (isset($data[$state['post_index']])) {
+						$item    = $this->remap_image_refs($data[$state['post_index']], $state['image_ids']);
+						$post_id = $this->insert_single_post($item, 'rbfw_item');
+						if ($post_id) {
+							$state['post_ids'][] = $post_id;
+							$this->assign_images($post_id, $state['image_ids'], $state['post_index']);
+						}
+						$state['post_index']++;
+					}
+					if ($state['post_index'] >= count($data)) {
+						$state['stage'] = 'finalize';
+					}
+					break;
+
+				case 'finalize':
+					$this->set_related_products($state['post_ids']);
+					$state['stage'] = 'done';
+					break;
+			}
+
+			if ($state['stage'] === 'done') {
+				update_option('rbfw_sample_rent_items', 'yes');
+				delete_option(self::STATE_OPTION);
+			} else {
+				// Do not autoload — this option only matters during an import.
+				update_option(self::STATE_OPTION, $state, false);
+			}
+
+			// Release anything this request accumulated before it ends.
+			if (function_exists('gc_collect_cycles')) {
+				gc_collect_cycles();
+			}
+
+			return $state;
+		}
+
+		/**
+		 * Run every remaining chunk within the current request (Quick Setup path).
+		 * The guard is just a safety stop; the state machine always terminates.
+		 */
+		public function run_full_import() {
+			if (get_option('rbfw_sample_rent_items') === 'yes') {
 				return;
 			}
-			$count_existing_event = wp_count_posts('rbfw_item')->publish;
-			$plugin_active = self::check_plugin('booking-and-rental-manager-for-woocommerce', 'rent-manager.php');
-			if ($count_existing_event == 0 && $plugin_active == 1 && $dummy_post_inserted != 'yes') {
-				$retnal_data = $this->retnal_data();
-				$retnal_ids = $this->insert_posts($retnal_data, 'rbfw_item');
-				$this->insert_thumbnails($retnal_ids, '');
-				$this->insert_gallery_images($retnal_ids);
-				$this->rbfw_update_related_products();
-				update_option('rbfw_sample_rent_items', 'yes');
-			}
+			$guard = 0;
+			do {
+				$state = $this->process_step();
+				$guard++;
+			} while (isset($state['stage']) && $state['stage'] !== 'done' && $guard < 200);
 		}
 
-		public function rbfw_update_related_products() {
-			$args = array('fields' => 'ids', 'post_type' => 'rbfw_item', 'numberposts' => -1, 'post_status' => 'publish');
-			$ids  = get_posts($args);
-			foreach ($ids as $id) {
-				update_post_meta($id, 'rbfw_releted_rbfw', $ids);
+		/**
+		 * Build the JSON payload (progress %, status message) for one state.
+		 *
+		 * @param array $state
+		 * @return array
+		 */
+		private function progress_payload($state) {
+			$total_images = count(self::image_urls());
+			$total_posts  = count($this->retnal_data());
+			$total        = $total_images + $total_posts + 1; // +1 for the finalize step.
+			$done_units   = min($state['image_index'], $total_images)
+				+ min($state['post_index'], $total_posts)
+				+ ($state['stage'] === 'done' ? 1 : 0);
+			$progress = $total > 0 ? (int) round(($done_units / $total) * 100) : 100;
+
+			switch ($state['stage']) {
+				case 'images':
+					$message = sprintf(
+						/* translators: 1: current image number, 2: total images. */
+						__('Downloading images (%1$d of %2$d)...', 'booking-and-rental-manager-for-woocommerce'),
+						min($state['image_index'] + 1, $total_images),
+						$total_images
+					);
+					break;
+				case 'posts':
+					$message = sprintf(
+						/* translators: 1: current item number, 2: total items. */
+						__('Creating rental items (%1$d of %2$d)...', 'booking-and-rental-manager-for-woocommerce'),
+						min($state['post_index'] + 1, $total_posts),
+						$total_posts
+					);
+					break;
+				case 'done':
+					$message = __('Import complete!', 'booking-and-rental-manager-for-woocommerce');
+					break;
+				default:
+					$message = __('Finishing up...', 'booking-and-rental-manager-for-woocommerce');
 			}
+
+			return array(
+				'done'     => $state['stage'] === 'done',
+				'progress' => min(100, max(0, $progress)),
+				'stage'    => $state['stage'],
+				'message'  => $message,
+			);
 		}
 
-		public function insert_posts($posts, $post_type) {
-			$post_ids = [];
-			if (!is_array($posts)) {
-				return $post_ids;
+		/**
+		 * Insert one rental item with its meta.
+		 *
+		 * @return int Post ID on success, 0 on failure.
+		 */
+		private function insert_single_post($data, $post_type) {
+			$post_id = wp_insert_post(array(
+				'post_type'    => $post_type,
+				'post_title'   => isset($data['title']) ? $data['title'] : '',
+				'post_content' => isset($data['content']) ? $data['content'] : '',
+				'post_status'  => 'publish',
+			), true);
+
+			if (is_wp_error($post_id) || !$post_id) {
+				return 0;
 			}
-			foreach ($posts as $data) {
-				$post = [
-					'post_type'    => $post_type,
-					'post_title'   => isset($data['title']) ? $data['title'] : '',
-					'post_content' => isset($data['content']) ? $data['content'] : '',
-					'post_status'  => 'publish',
-				];
-				$post_id = wp_insert_post($post);
-				if (!is_wp_error($post_id)) {
-					$meta_data = $data['postmeta'] ?? [];
-					if (is_array($meta_data)) {
-						foreach ($meta_data as $meta_key => $meta_value) {
-							update_post_meta($post_id, $meta_key, $meta_value);
-						}
+
+			$meta_data = isset($data['postmeta']) ? $data['postmeta'] : array();
+			if (is_array($meta_data)) {
+				foreach ($meta_data as $meta_key => $meta_value) {
+					update_post_meta($post_id, $meta_key, $meta_value);
+				}
+			}
+			return (int) $post_id;
+		}
+
+		/**
+		 * Point the hardcoded image references in the sample data
+		 * (resort room images, extra-service images) at the freshly imported
+		 * attachments, cycling through them so each gets a distinct picture.
+		 *
+		 * @param array $data      One item from retnal_data().
+		 * @param int[] $image_ids Attachment IDs downloaded in the images stage.
+		 * @return array
+		 */
+		private function remap_image_refs($data, $image_ids) {
+			$image_ids = array_values(array_map('intval', (array) $image_ids));
+			$count     = count($image_ids);
+			if ($count === 0 || empty($data['postmeta']) || !is_array($data['postmeta'])) {
+				return $data;
+			}
+
+			$pick = 0;
+
+			if (!empty($data['postmeta']['rbfw_extra_service_data']) && is_array($data['postmeta']['rbfw_extra_service_data'])) {
+				foreach ($data['postmeta']['rbfw_extra_service_data'] as &$service) {
+					if (is_array($service) && isset($service['service_img']) && $service['service_img'] !== '') {
+						$service['service_img'] = $image_ids[$pick % $count];
+						$pick++;
 					}
 				}
-				$post_ids[] = $post_id;
+				unset($service);
 			}
-			return $post_ids;
-		}
 
-		public function insert_gallery_images($retnal_ids) {
-			$attachment_ids = self::dummy_images();
-			foreach ($retnal_ids as $post_id) {
-				$gallery_arr = array_map('intval', $attachment_ids);
-				update_post_meta($post_id, 'rbfw_gallery_images', $gallery_arr);
-				update_post_meta($post_id, 'rbfw_gallery_images_additional', $gallery_arr);
-			}
-		}
-
-		public function insert_thumbnails($postsids, $meta_key = '') {
-			$attachment_ids = self::dummy_images();
-			foreach ($postsids as $index => $post_id) {
-				$attachment_id = $attachment_ids[$index];
-				set_post_thumbnail($post_id, $attachment_id);
-				if ($meta_key != '') {
-					update_post_meta($post_id, $meta_key, $attachment_id);
+			if (!empty($data['postmeta']['rbfw_resort_room_data']) && is_array($data['postmeta']['rbfw_resort_room_data'])) {
+				foreach ($data['postmeta']['rbfw_resort_room_data'] as &$room) {
+					if (is_array($room) && isset($room['rbfw_room_image']) && $room['rbfw_room_image'] !== '') {
+						$room['rbfw_room_image'] = $image_ids[$pick % $count];
+						$pick++;
+					}
 				}
+				unset($room);
 			}
+
+			return $data;
 		}
 
-		private function dummy_images() {
-			$urls = array(
-				'https://raw.githubusercontent.com/magepeopleteam/dummy-images/main/rental/image1.jpeg',
-				'https://raw.githubusercontent.com/magepeopleteam/dummy-images/main/rental/image2.jpeg',
-				'https://raw.githubusercontent.com/magepeopleteam/dummy-images/main/rental/image3.jpeg',
-				'https://raw.githubusercontent.com/magepeopleteam/dummy-images/main/rental/image4.jpeg',
-				'https://raw.githubusercontent.com/magepeopleteam/dummy-images/main/rental/image5.jpeg',
-				'https://raw.githubusercontent.com/magepeopleteam/dummy-images/main/rental/image6.jpeg',
-				'https://raw.githubusercontent.com/magepeopleteam/dummy-images/main/rental/image7.jpeg',
-				'https://raw.githubusercontent.com/magepeopleteam/dummy-images/main/rental/image8.jpeg',
-				'https://raw.githubusercontent.com/magepeopleteam/dummy-images/main/rental/image9.jpeg',
-				'https://raw.githubusercontent.com/magepeopleteam/dummy-images/main/rental/image10.jpeg',
-			);
-			$image_ids = array();
-			foreach ($urls as $url) {
-				$image_ids[] = media_sideload_image($url, '0', 'Dummy Images', 'id');
+		/**
+		 * Attach the shared sample images to one item (thumbnail + gallery),
+		 * reusing the IDs downloaded during the images stage.
+		 */
+		private function assign_images($post_id, $image_ids, $index) {
+			$image_ids = array_values(array_map('intval', (array) $image_ids));
+			if (empty($image_ids)) {
+				return;
 			}
-			return $image_ids;
+			$thumb_id = $image_ids[$index % count($image_ids)];
+			set_post_thumbnail($post_id, $thumb_id);
+			update_post_meta($post_id, 'rbfw_gallery_images', $image_ids);
+			update_post_meta($post_id, 'rbfw_gallery_images_additional', $image_ids);
+		}
+
+		/**
+		 * Cross-link every imported item as a related product.
+		 */
+		private function set_related_products($post_ids) {
+			$post_ids = array_values(array_map('intval', (array) $post_ids));
+			if (empty($post_ids)) {
+				$post_ids = get_posts(array(
+					'fields'      => 'ids',
+					'post_type'   => 'rbfw_item',
+					'numberposts' => -1,
+					'post_status' => 'publish',
+				));
+			}
+			foreach ($post_ids as $id) {
+				update_post_meta($id, 'rbfw_releted_rbfw', $post_ids);
+			}
 		}
 
 		public function retnal_data() {

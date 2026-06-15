@@ -240,6 +240,18 @@ if ( ! class_exists( 'RBFW_Woo_Installer' ) ) {
 				wp_send_json_error( array( 'message' => __( 'You do not have permission to install plugins.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 			}
 
+			// Download + unzip is the heaviest part of the flow; give it room.
+			if ( function_exists( 'wp_raise_memory_limit' ) ) {
+				wp_raise_memory_limit( 'admin' );
+			}
+			@set_time_limit( 0 );
+			@ignore_user_abort( true );
+
+			// Already installed? Skip straight to activation on the client.
+			if ( $this->is_woo_installed() ) {
+				wp_send_json_success( array( 'message' => __( 'WooCommerce is already installed.', 'booking-and-rental-manager-for-woocommerce' ) ) );
+			}
+
 			include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 			include_once ABSPATH . 'wp-admin/includes/file.php';
 			include_once ABSPATH . 'wp-admin/includes/misc.php';
@@ -290,6 +302,12 @@ if ( ! class_exists( 'RBFW_Woo_Installer' ) ) {
 			if ( ! current_user_can( 'activate_plugins' ) ) {
 				wp_send_json_error( array( 'message' => __( 'You do not have permission to activate plugins.', 'booking-and-rental-manager-for-woocommerce' ) ) );
 			}
+
+			// WooCommerce runs installers on activation; give it room too.
+			if ( function_exists( 'wp_raise_memory_limit' ) ) {
+				wp_raise_memory_limit( 'admin' );
+			}
+			@set_time_limit( 0 );
 
 			$result = activate_plugin( 'woocommerce/woocommerce.php' );
 
