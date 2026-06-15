@@ -551,23 +551,21 @@ div.mp_right_section::before {
     content: '';
     position: absolute;
     inset: 0;
-    border: 1px solid var(--rbfw_color_primary);
+    border: 1px solid #ededed;
     border-radius: 12px;
-    opacity: 0.35;
     pointer-events: none;
     z-index: 10;
 }
 
 .mp_right_section .rbfw-booking-header {
-    background: var(--rbfw_color_primary);
-    padding: 18px 20px;
-    color: #fff;
-    text-align: center;
+    background: transparent;
+    padding: 14px 20px 12px;
+    border-bottom: 1px solid #f0f0f0;
 }
 .mp_right_section .rbfw-booking-header h1 {
-    color: #fff;
+    color: #1a1a1a;
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.1px;
     margin: 0;
     line-height: 1.35;
@@ -575,7 +573,7 @@ div.mp_right_section::before {
 .mp_right_section .rbfw-booking-header .sub-title {
     font-size: 13px;
     margin: 4px 0 0;
-    opacity: 0.88;
+    color: #666;
 }
 .mp_right_section .rbfw-booking-form{
     padding: 10px;
@@ -9726,11 +9724,6 @@ i.fas.fa-minus {
         padding: 14px;
     }
 
-    /* Booking header */
-    .mp_right_section .rbfw-booking-header h1 {
-        font-size: 18px;
-    }
-
     /* Description heading */
     .mp_default_theme .description h3.rbfw-sub-heading {
         font-size: 20px;
@@ -9752,10 +9745,7 @@ i.fas.fa-minus {
 
     /* Booking header */
     .mp_right_section .rbfw-booking-header {
-        padding: 14px 14px;
-    }
-    .mp_right_section .rbfw-booking-header h1 {
-        font-size: 17px;
+        padding: 12px 14px 10px;
     }
 
     /* Booking form inner padding */
@@ -9876,10 +9866,7 @@ i.fas.fa-minus {
 
     /* Booking header */
     .mp_right_section .rbfw-booking-header {
-        padding: 12px;
-    }
-    .mp_right_section .rbfw-booking-header h1 {
-        font-size: 15px;
+        padding: 10px 12px 8px;
     }
 
     /* Booking form */
@@ -10505,3 +10492,277 @@ i.fas.fa-minus {
     .rbfw_default_hero_features_bar { display: none; }
 }
 /* === End Default Template Hero Banner === */
+
+/* === Booking Form Header Badges === */
+.rbfw-booking-header-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.rbfw-booking-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    width: fit-content;
+}
+.rbfw-booking-badge i {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+.rbfw-badge-availability { color: #c0001a; }
+.rbfw-badge-availability i {
+    background: #fdecea;
+    color: #c0001a;
+}
+.rbfw-badge-confirmation { color: #1a73e8; }
+.rbfw-badge-confirmation i {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+/* === End Booking Form Header Badges === */
+
+/* ======================================================
+   mp_right_section — Calendar & Form Polish
+   Scoped to .mp_right_section — CSS only, no JS/PHP
+   ====================================================== */
+
+/* ---- Calendar widget outer wrapper ---- */
+.mp_right_section .ui-widget-content {
+    border: 1px solid #f0f0f0 !important;
+    border-radius: 10px !important;
+    overflow: hidden;
+    padding: 0 6px 10px !important;
+    background: #fff;
+}
+
+/* ---- Calendar month/year header ---- */
+.mp_right_section .ui-datepicker .ui-datepicker-header {
+    background: #fff !important;
+    border: none !important;
+    padding: 12px 0 8px !important;
+}
+.mp_right_section .ui-datepicker .ui-datepicker-title {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    text-align: center;
+}
+
+/* ---- Nav arrows: circular pill ---- */
+.mp_right_section .ui-datepicker .ui-datepicker-prev,
+.mp_right_section .ui-datepicker .ui-datepicker-next {
+    width: 28px !important;
+    height: 28px !important;
+    background: #f3f4f6 !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 50% !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: background 0.2s, border-color 0.2s;
+}
+.mp_right_section .ui-datepicker .ui-datepicker-prev { left: 8px !important; }
+.mp_right_section .ui-datepicker .ui-datepicker-next { right: 8px !important; }
+.mp_right_section .ui-datepicker .ui-datepicker-prev::before,
+.mp_right_section .ui-datepicker .ui-datepicker-next::before {
+    font-size: 11px !important;
+    color: #374151 !important;
+}
+.mp_right_section .ui-datepicker .ui-datepicker-prev:hover,
+.mp_right_section .ui-datepicker .ui-datepicker-next:hover {
+    background: var(--rbfw_color_primary) !important;
+    border-color: var(--rbfw_color_primary) !important;
+}
+.mp_right_section .ui-datepicker .ui-datepicker-prev:hover::before,
+.mp_right_section .ui-datepicker .ui-datepicker-next:hover::before {
+    color: #fff !important;
+}
+
+/* ---- Day-of-week headers (M T W T F S S): small gray ---- */
+.mp_right_section .ui-datepicker table th {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #9ca3af !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+    padding: 6px 0 4px !important;
+}
+
+/* ---- Table cell spacing ---- */
+.mp_right_section .ui-datepicker table td {
+    padding: 2px !important;
+}
+
+/* ---- Available date cells: pink row tint, bold dark number ---- */
+.mp_right_section #rbfw-bikecarsd-calendar .ui-datepicker table td.av {
+    background: #FFF4F3;
+}
+.mp_right_section #rbfw-bikecarsd-calendar .ui-datepicker table td.av a.ui-state-default {
+    font-weight: 700 !important;
+}
+
+/* ---- All date cells: circular, no box padding ---- */
+.mp_right_section .ui-state-default,
+.mp_right_section .ui-widget-content .ui-state-default {
+    background: none !important;
+    border: 1px solid transparent !important;
+    border-radius: 50% !important;
+    font-size: 13px !important;
+    width: 34px !important;
+    height: 34px !important;
+    line-height: 34px !important;
+    padding: 0 !important;
+    font-weight: 500 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: background 0.15s, color 0.15s;
+}
+
+/* ---- Hover / active / today highlight: solid primary circle ---- */
+.single-rbfw_item .mp_right_section .ui-state-hover:hover,
+.single-rbfw_item .mp_right_section .ui-state-default.ui-state-active,
+.single-rbfw_item .mp_right_section .ui-state-highlight,
+.single-rbfw_item .mp_right_section .ui-widget-content .ui-state-default.ui-state-active,
+.single-rbfw_item .mp_right_section .ui-widget-content .ui-state-default.ui-state-hover,
+.mp_default_theme .mp_right_section .ui-state-hover:hover,
+.mp_default_theme .mp_right_section .ui-state-default.ui-state-active,
+.mp_default_theme .mp_right_section .ui-state-highlight,
+.mp_default_theme .mp_right_section .ui-widget-content .ui-state-default.ui-state-active,
+.mp_default_theme .mp_right_section .ui-widget-content .ui-state-default.ui-state-hover {
+    background: var(--rbfw_color_primary) !important;
+    border: 1px solid var(--rbfw_color_primary) !important;
+    color: #fff !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+}
+.mp_right_section .ui-datepicker table td a.ui-state-default:hover,
+.mp_right_section .ui-datepicker table td a.ui-state-default.ui-state-active,
+.mp_right_section .ui-datepicker table td a.ui-state-default.ui-state-hover,
+.mp_right_section .ui-datepicker table td span.ui-state-default.ui-state-highlight {
+    color: #fff !important;
+}
+
+/* ---- Disabled / past dates: keep existing color, just ensure no bg ---- */
+.mp_right_section .ui-state-disabled .ui-state-default,
+.mp_right_section .ui-widget-content .ui-state-disabled .ui-state-default {
+    background: transparent !important;
+    cursor: default;
+}
+
+/* ======================================================
+   Book Now Button — muted dusty rose, pill shape
+   ====================================================== */
+.mp_right_section button.rbfw-book-now-btn {
+    background: #b87585 !important;
+    border-radius: 30px !important;
+    padding: 13px 20px !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    width: 100% !important;
+    color: #fff !important;
+    border: none !important;
+    margin-top: 16px !important;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.15s;
+    text-align: center;
+}
+.mp_right_section button.rbfw-book-now-btn:hover {
+    background: #a0657a !important;
+    transform: translateY(-1px);
+    color: #fff !important;
+}
+.mp_right_section button.rbfw-book-now-btn[disabled],
+.mp_right_section button.rbfw-book-now-btn.rbfw_disabled_button {
+    background: #b87585 !important;
+    opacity: 0.45 !important;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ======================================================
+   Green feature card — rbfw-bikecarsd-calendar-header
+   (single-day booking, inside mp_right_section)
+   ====================================================== */
+.mp_right_section .single-day-booking .rbfw-bikecarsd-calendar-header {
+    background: #f0fdf4 !important;
+    border: 1px solid #bbf7d0 !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    margin-top: 12px !important;
+    margin-bottom: 0 !important;
+}
+.mp_right_section .single-day-booking .rbfw-bikecarsd-calendar-header-title {
+    display: none !important;
+}
+.mp_right_section .single-day-booking .rbfw-bikecarsd-calendar-header-feature {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #374151 !important;
+    line-height: 1.6 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+.mp_right_section .single-day-booking .rbfw-bikecarsd-calendar-header-feature i {
+    color: #16a34a !important;
+    font-size: 12px !important;
+    width: 16px !important;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* ---- Green card: multi-day / resort / multi-items forms ---- */
+.mp_right_section .rbfw-bikecarsd-calendar-header {
+    background: #f0fdf4 !important;
+    border: 1px solid #bbf7d0 !important;
+    border-radius: 8px !important;
+    padding: 10px 14px !important;
+    margin-bottom: 10px !important;
+}
+.mp_right_section .rbfw-bikecarsd-calendar-header-title {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    color: #166534 !important;
+    margin-bottom: 6px !important;
+    padding-bottom: 0 !important;
+}
+.mp_right_section .rbfw-bikecarsd-calendar-header-feature {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #374151 !important;
+    line-height: 1.6 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+.mp_right_section .rbfw-bikecarsd-calendar-header-feature i {
+    color: #16a34a !important;
+    font-size: 12px !important;
+    width: 16px !important;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* ---- Force white text: hovered & active date cells ----
+   jQuery UI puts .ui-state-hover on the <td>, not the <a>,
+   so descendant selectors are required to reach the link text. ---- */
+.mp_right_section .ui-datepicker table td.ui-state-hover a.ui-state-default,
+.mp_right_section .ui-datepicker table td a.ui-state-default.ui-state-active,
+.mp_right_section .ui-datepicker table td a.ui-state-default:hover,
+.mp_right_section .ui-datepicker table td a.ui-state-default.ui-state-hover,
+.mp_right_section .ui-datepicker table td span.ui-state-default.ui-state-highlight {
+    color: #fff !important;
+}
+
+/* ======================================================
+   End mp_right_section — Calendar & Form Polish
+   ====================================================== */
