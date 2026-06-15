@@ -10768,9 +10768,11 @@ i.fas.fa-minus {
    ====================================================== */
 
 /* ======================================================
-   Single-day — Flexible Hourly Rate Box
+   Single-day — Flexible Start Rate Box
+   Default (.mp_right_section) + Muffin (.rbfw_muff_registration_wrapper)
    ====================================================== */
-.mp_right_section .rbfw-sd-rate-box {
+.mp_right_section .rbfw-sd-rate-box,
+.rbfw_muff_registration_wrapper .rbfw-sd-rate-box {
     background: #eef1f8;
     border: 1px solid #dde3f0;
     border-radius: 10px;
@@ -10778,7 +10780,8 @@ i.fas.fa-minus {
     margin-bottom: 14px;
     text-align: center;
 }
-.mp_right_section .rbfw-sd-rate-box-label {
+.mp_right_section .rbfw-sd-rate-box-label,
+.rbfw_muff_registration_wrapper .rbfw-sd-rate-box-label {
     display: block;
     font-size: 10px;
     font-weight: 700;
@@ -10787,7 +10790,8 @@ i.fas.fa-minus {
     color: var(--rbfw_color_primary);
     margin-bottom: 6px;
 }
-.mp_right_section .rbfw-sd-rate-box-price {
+.mp_right_section .rbfw-sd-rate-box-price,
+.rbfw_muff_registration_wrapper .rbfw-sd-rate-box-price {
     display: flex;
     align-items: baseline;
     justify-content: center;
@@ -10799,23 +10803,20 @@ i.fas.fa-minus {
     margin-bottom: 6px;
 }
 .mp_right_section .rbfw-sd-rate-box-price .woocommerce-Price-amount,
-.mp_right_section .rbfw-sd-rate-box-price .woocommerce-Price-currencySymbol {
+.mp_right_section .rbfw-sd-rate-box-price .woocommerce-Price-currencySymbol,
+.rbfw_muff_registration_wrapper .rbfw-sd-rate-box-price .woocommerce-Price-amount,
+.rbfw_muff_registration_wrapper .rbfw-sd-rate-box-price .woocommerce-Price-currencySymbol {
     color: inherit !important;
     font-size: inherit !important;
     font-weight: inherit !important;
 }
-.mp_right_section .rbfw-sd-rate-box-unit {
-    font-size: 16px;
-    font-weight: 400;
-    color: #374151;
-    line-height: 1;
-}
-.mp_right_section .rbfw-sd-rate-box-note {
+.mp_right_section .rbfw-sd-rate-box-note,
+.rbfw_muff_registration_wrapper .rbfw-sd-rate-box-note {
     font-size: 13px;
     color: #6b7280;
     margin: 0;
     line-height: 1.4;
 }
 /* ======================================================
-   End Single-day — Flexible Hourly Rate Box
+   End Single-day — Flexible Start Rate Box
    ====================================================== */
