@@ -10385,3 +10385,123 @@ i.fas.fa-minus {
 .rbfw_muff_registration_wrapper .rbfw-variations-content-wrapper .rbfw-single-right-heading { margin-top: 10px !important; }
 
 .rbfw_muff_registration_wrapper select.rbfw-select.rbfw_variation_field { background-color: #f7f7f7 !important; }
+
+/* === Default Template Hero Banner === */
+.mp_default_theme .rbfw_default_hero_wrap {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.rbfw_default_hero_overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 52%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.70) 55%, transparent 100%);
+    display: flex;
+    align-items: flex-start;
+    padding: 52px 42px 36px;
+    z-index: 5;
+    pointer-events: none;
+}
+.rbfw_default_hero_content {
+    pointer-events: all;
+    color: #fff;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+}
+.rbfw_default_hero_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #e03248;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    width: fit-content;
+}
+.rbfw_default_hero_badge i { font-size: 10px; }
+.rbfw_default_hero_title {
+    color: #fff;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 10px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+}
+.rbfw_default_hero_desc {
+    color: rgba(255,255,255,0.78);
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 0 0 18px;
+}
+.rbfw_default_hero_price_wrap {
+    margin-bottom: 12px;
+}
+.rbfw_default_hero_price_label {
+    color: rgba(255,255,255,0.70);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+.rbfw_default_hero_price_amount {
+    color: #e03248;
+    font-size: 30px;
+    font-weight: 800;
+    line-height: 1;
+}
+.rbfw_default_hero_price_amount .woocommerce-Price-amount,
+.rbfw_default_hero_price_amount .woocommerce-Price-currencySymbol {
+    color: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+}
+.rbfw_default_hero_book_btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: #e03248;
+    color: #fff !important;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 26px;
+    border-radius: 30px;
+    text-decoration: none !important;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    opacity: 1 !important;
+    width: fit-content;
+}
+.rbfw_default_hero_book_btn:hover {
+    background: #b82038;
+    transform: translateY(-1px);
+    opacity: 1 !important;
+}
+@media only screen and (max-width: 1100px) {
+    .rbfw_default_hero_overlay { width: 65%; padding: 36px 28px 28px; }
+    .rbfw_default_hero_title  { font-size: 24px; }
+    .rbfw_default_hero_price_amount { font-size: 24px; }
+}
+@media only screen and (max-width: 768px) {
+    .rbfw_default_hero_overlay {
+        width: 100%;
+        background: linear-gradient(to top, rgba(10,10,10,0.90) 0%, rgba(10,10,10,0.55) 65%, transparent 100%);
+        align-items: flex-end;
+        padding: 20px 18px;
+    }
+    .rbfw_default_hero_title  { font-size: 20px; }
+    .rbfw_default_hero_price_amount { font-size: 20px; }
+    .rbfw_default_hero_desc { display: none; }
+    .rbfw_default_hero_features_bar { display: none; }
+}
+/* === End Default Template Hero Banner === */
