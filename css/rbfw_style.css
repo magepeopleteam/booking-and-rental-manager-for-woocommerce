@@ -10766,3 +10766,56 @@ i.fas.fa-minus {
 /* ======================================================
    End mp_right_section — Calendar & Form Polish
    ====================================================== */
+
+/* ======================================================
+   Single-day — Flexible Hourly Rate Box
+   ====================================================== */
+.mp_right_section .rbfw-sd-rate-box {
+    background: #eef1f8;
+    border: 1px solid #dde3f0;
+    border-radius: 10px;
+    padding: 16px 20px 14px;
+    margin-bottom: 14px;
+    text-align: center;
+}
+.mp_right_section .rbfw-sd-rate-box-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.9px;
+    color: var(--rbfw_color_primary);
+    margin-bottom: 6px;
+}
+.mp_right_section .rbfw-sd-rate-box-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 6px;
+    font-size: 36px;
+    font-weight: 800;
+    color: #1a2e45;
+    line-height: 1.1;
+    margin-bottom: 6px;
+}
+.mp_right_section .rbfw-sd-rate-box-price .woocommerce-Price-amount,
+.mp_right_section .rbfw-sd-rate-box-price .woocommerce-Price-currencySymbol {
+    color: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+}
+.mp_right_section .rbfw-sd-rate-box-unit {
+    font-size: 16px;
+    font-weight: 400;
+    color: #374151;
+    line-height: 1;
+}
+.mp_right_section .rbfw-sd-rate-box-note {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.4;
+}
+/* ======================================================
+   End Single-day — Flexible Hourly Rate Box
+   ====================================================== */

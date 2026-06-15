@@ -75,6 +75,34 @@
                 <?php endif; ?>
 
 
+                <?php
+                // --- Flexible Rate box ---
+                $_rbfw_sd_raw   = get_post_meta( $rbfw_id, 'rbfw_bike_car_sd_data', true );
+                $_rbfw_min_h    = 0;
+                $_rbfw_start    = 0;
+                if ( ! empty( $_rbfw_sd_raw ) ) {
+                    $_h_list = array_filter( array_column( $_rbfw_sd_raw, 'hours' ) );
+                    if ( ! empty( $_h_list ) ) { $_rbfw_min_h = (int) min( $_h_list ); }
+                    $_p_list = array_filter( array_column( $_rbfw_sd_raw, 'price' ) );
+                    if ( ! empty( $_p_list ) ) { $_rbfw_start = (float) min( $_p_list ); }
+                }
+                if ( ! $_rbfw_start ) {
+                    $_rbfw_start = (float) rbfw_get_bike_car_md_hourly_daily_price( $rbfw_id, 'hourly' );
+                }
+                if ( $_rbfw_start > 0 ) : ?>
+                <div class="rbfw-sd-rate-box">
+                    <span class="rbfw-sd-rate-box-label"><?php esc_html_e( 'FLEXIBLE START RATE', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                    <div class="rbfw-sd-rate-box-price">
+                        <?php echo wp_kses( wc_price( $_rbfw_start ), rbfw_allowed_html() ); ?>
+                    </div>
+                    <?php if ( $_rbfw_min_h > 1 ) : ?>
+                    <p class="rbfw-sd-rate-box-note">
+                        <?php printf( esc_html__( 'Minimum %d-hour booking applies', 'booking-and-rental-manager-for-woocommerce' ), $_rbfw_min_h ); ?>
+                    </p>
+                    <?php endif; ?>
+                </div>
+                <?php endif; ?>
+
                 <?php  if($manage_inventory_as_timely !='on' || $rbfw_rent_type =='appointment'){ ?>
                     <div class="item rbfw-bikecarsd-step" data-step="1">
                         <div id="rbfw-bikecarsd-calendar" class="rbfw-bikecarsd-calendar">

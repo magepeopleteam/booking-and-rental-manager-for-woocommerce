@@ -24,20 +24,7 @@
 			}
 
 			public function booking_form_header($post_id) {
-				?>
-					<div class="rbfw-booking-header">
-						<div class="rbfw-booking-header-badges">
-							<span class="rbfw-booking-badge rbfw-badge-availability">
-								<i class="fas fa-clock-rotate-left"></i>
-								<?php esc_html_e( 'Real-time availability', 'booking-and-rental-manager-for-woocommerce' ); ?>
-							</span>
-							<span class="rbfw-booking-badge rbfw-badge-confirmation">
-								<i class="fas fa-bolt"></i>
-								<?php esc_html_e( 'Instant confirmation', 'booking-and-rental-manager-for-woocommerce' ); ?>
-							</span>
-						</div>
-					</div>
-				<?php
+				// Header intentionally left empty
 			}
 
 			public static function load_template($post_id) {
