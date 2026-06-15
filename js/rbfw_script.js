@@ -627,4 +627,14 @@ jQuery(document).ready(function($){
     });
 });
 
+jQuery(document).ready(function($) {
+    $('.rbfw_muff_slider .rbfw_muff_hero_overlay').each(function() {
+        var $overlay = $(this);
+        var $sliderAllItem = $overlay.closest('.rbfw_muff_slider').find('.sliderAllItem').first();
+        if ($sliderAllItem.length) {
+            $sliderAllItem.append($overlay);
+        }
+    });
+});
+
 
