@@ -10140,3 +10140,105 @@ i.fas.fa-minus {
 }
 /* ── End Grid / List Toggle Redesign ── */
 
+
+/* === Muffin Booking Form Redesign === */
+.rbfw_muff_registration_wrapper .rbfw-rate-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+    margin-bottom: 20px;
+    position: relative;
+}
+.rbfw_muff_registration_wrapper .rbfw-rate-summary-item {
+    display: flex !important;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px 20px;
+    border-bottom: none !important;
+    border-right: 1px solid #e2e8f0;
+    position: relative;
+}
+.rbfw_muff_registration_wrapper .rbfw-rate-summary-item:nth-child(even) {
+    border-right: none;
+    text-align: left;
+}
+.rbfw_muff_registration_wrapper .rbfw-rate-summary-item:nth-child(n+3) {
+    border-top: 1px solid #e2e8f0;
+}
+.rbfw_muff_registration_wrapper .rbfw-rate-summary-item.rbfw-rate-hidden {
+    display: none !important;
+}
+.rbfw_muff_registration_wrapper .rbfw-rate-label {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+    color: #374151 !important;
+    margin-bottom: 4px !important;
+    display: block !important;
+}
+.rbfw_muff_registration_wrapper .rbfw-rate-price {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #0d9488 !important;
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 4px !important;
+    flex-wrap: nowrap !important;
+    line-height: 1.2 !important;
+}
+.rbfw_muff_registration_wrapper .rbfw-rate-price .woocommerce-Price-amount {
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    color: inherit !important;
+}
+.rbfw_muff_registration_wrapper .rbfw-rate-per {
+    font-size: 13px !important;
+    color: #6b7280 !important;
+    font-weight: 400 !important;
+    display: inline !important;
+    margin: 0 !important;
+}
+.rbfw-rate-load-more-wrap {
+    text-align: right;
+    margin-top: 6px;
+}
+.rbfw-rate-load-more {
+    background: none;
+    border: none;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--rbfw_color_primary);
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    letter-spacing: 0.03em;
+}
+/* === End Muffin Booking Form Redesign === */
+
+.rbfw_muff_registration_wrapper .rbfw-rate-summary { margin-bottom: 0 !important; }
+
+.rbfw-rate-load-more-wrap { padding: 0 !important; color: inherit !important; }
+.rbfw-rate-load-more { color: inherit !important; }
+
+/* Rate load-more toggle */
+.rbfw-rate-load-more-wrap { padding: 0 !important; margin-top: 6px; }
+.rbfw-rate-load-more-wrap.rbfw-rate-load-more-open { margin-bottom: 2px; }
+.rbfw-rate-load-more {
+    font-size: 11px;
+    font-weight: 500;
+    color: #b0bac5 !important;
+    cursor: pointer;
+    text-decoration: none !important;
+    letter-spacing: 0.03em;
+    user-select: none;
+}
+.rbfw-rate-load-more:hover { color: #8a96a3 !important; }
+
+.rbfw-rate-load-more { line-height: 1 !important; }
+
+.rbfw-rate-load-more-wrap { padding: 0 !important; margin-bottom: 6px; line-height: 1 !important; font-weight: normal; font-size: 12px; }

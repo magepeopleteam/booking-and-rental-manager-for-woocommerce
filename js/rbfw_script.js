@@ -1,4 +1,4 @@
-(function($) {
+﻿(function($) {
     $(document).ready(function() {
 
 
@@ -620,7 +620,7 @@ jQuery(document).ready(function($){
 
         if(select.val() === ''){
             select.css('border', '1px solid red');
-            //e.preventDefault(); // submit বন্ধ করবে
+            //e.preventDefault(); // submit à¦¬à¦¨à§à¦§ à¦•à¦°à¦¬à§‡
         } else {
             select.css('border', '');
         }
@@ -638,3 +638,31 @@ jQuery(document).ready(function($) {
 });
 
 
+
+/* Rate Summary - collapse beyond 2 items, toggle more/less */
+jQuery(document).ready(function($) {
+    $('.rbfw_muff_registration_wrapper .rbfw-rate-summary').each(function() {
+        var $summary = $(this);
+        var $items = $summary.find('.rbfw-rate-summary-item');
+        if ($items.length <= 2) return;
+
+        $items.filter(':gt(1)').addClass('rbfw-rate-hidden');
+
+        var $wrap = $('<div class="rbfw-rate-load-more-wrap"><span class="rbfw-rate-load-more">Show more &#9660;</span></div>');
+        $summary.after($wrap);
+
+        var expanded = false;
+        $wrap.find('.rbfw-rate-load-more').on('click', function() {
+            expanded = !expanded;
+            if (expanded) {
+                $items.filter(':gt(1)').removeClass('rbfw-rate-hidden');
+                $(this).html('Show less &#9650;');
+                $wrap.addClass('rbfw-rate-load-more-open');
+            } else {
+                $items.filter(':gt(1)').addClass('rbfw-rate-hidden');
+                $(this).html('Show more &#9660;');
+                $wrap.removeClass('rbfw-rate-load-more-open');
+            }
+        });
+    });
+});
