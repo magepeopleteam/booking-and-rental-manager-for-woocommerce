@@ -4008,11 +4008,12 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 
 
 .rbfw_muff_registration_wrapper {
-    border:1px solid #e0e0e0;
-    border-radius:10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    padding:20px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 20px;
     background-color: #fff;
+    overflow: hidden;
 }
 
 
@@ -4033,7 +4034,7 @@ table.rbfw_bikecarsd_price_table tbody span.rbfw_bikecarsd_type_price {
 }
 
 .rbfw_muff_content_wrapper {
-    padding: 0 25px 0 0;
+    padding: 0;
 }
 
 .rbfw_muff_post_content {
@@ -5185,6 +5186,19 @@ span {
     background-color: none;
     padding: 0;
     margin-bottom: 20px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.rbfw_muffin_template #rbfw-bikecarsd-calendar .ui-datepicker {
+    width: 100% !important;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.rbfw_muffin_template #rbfw-bikecarsd-calendar .ui-datepicker table {
+    width: 100%;
+    table-layout: fixed;
 }
 
 .rbfw_muffin_template .rbfw-bikecarsd-calendar-header::after{
@@ -5971,19 +5985,28 @@ tr:nth-child(2n + 1) {
         display: -ms-flexbox;
         display: flex;
         flex-direction: row-reverse;
+        gap: 20px;
+        align-items: flex-start;
     }
 
     .rbfw_muff_row_slider_content .rbfw_muff_content_col1 {
-        width: 35%;
+        -webkit-flex: 0 0 35%;
+        -ms-flex: 0 0 35%;
+        flex: 0 0 35%;
+        max-width: 35%;
+        position: sticky;
+        top: 25px;
     }
 
     .rbfw_muff_row_slider_content .rbfw_muff_content_col2 {
-        width: 65%;
+        -webkit-flex: 1 1 0;
+        -ms-flex: 1 1 0;
+        flex: 1 1 0;
+        min-width: 0;
     }
 
     .rbfw_muff_row_slider_content .rbfw_muff_highlighted_features {
         padding: 0;
-        padding-right: 25px;
     }
 }
 
@@ -6024,7 +6047,10 @@ tr:nth-child(2n + 1) {
 
     .rbfw_muff_row_slider_content .rbfw_muff_content_col1,
     .rbfw_muff_row_slider_content .rbfw_muff_content_col2 {
+        flex: 0 0 100%;
+        max-width: 100%;
         width: 100%;
+        position: static;
     }
 
     .rbfw_muff_row_slider_content .rbfw_muff_highlighted_features {
@@ -7397,6 +7423,16 @@ body.single-rbfw_item div.ast-container {
 .mp_default_theme *,
 .mp_default_theme::before,
 .mp_default_theme::after {
+    box-sizing: border-box;
+}
+
+.rbfw_muffin_template {
+    box-sizing: border-box;
+}
+
+.rbfw_muffin_template *,
+.rbfw_muffin_template::before,
+.rbfw_muffin_template::after {
     box-sizing: border-box;
 }
 
