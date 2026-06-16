@@ -10955,14 +10955,14 @@ i.fas.fa-minus {
    Scoped to .mp_default_theme .rbfw-single-right-container
    ====================================================== */
 
-/* Section heading label — info-banner style (light blue pill with icon) */
+/* Section heading label — info-banner style (indigo pill with icon) */
 .mp_default_theme .rbfw-single-right-container .rbfw-single-right-heading {
     display: flex !important;
     align-items: center !important;
-    justify-content: flex-start !important;
+    justify-content: center !important;
     gap: 10px !important;
-    text-align: left !important;
-    background: #e0f2fe !important;
+    text-align: center !important;
+    background: #EEF2FF !important;
     border: none !important;
     border-radius: 30px !important;
     color: #334155 !important;
@@ -10974,53 +10974,66 @@ i.fas.fa-minus {
     margin-bottom: 12px !important;
     line-height: 1.45 !important;
 }
-/* Circular icon on the left via ::before */
+/* Disable CSS pseudo-element icon — icon is now an HTML <i> tag */
 .mp_default_theme .rbfw-single-right-container .rbfw-single-right-heading::before {
-    content: '\f017' !important;
-    font-family: 'Font Awesome 5 Free' !important;
-    font-weight: 900 !important;
+    content: none !important;
+    display: none !important;
+}
+
+/* Left icon  <i class="rbfw-srh-icon"> */
+.mp_default_theme .rbfw-single-right-container .rbfw-single-right-heading i.rbfw-srh-icon {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 30px !important;
-    height: 30px !important;
-    min-width: 30px !important;
-    background: #0ea5e9 !important;
-    color: #fff !important;
+    color: var(--rbfw_color_primary) !important;
     border-radius: 50% !important;
     font-size: 13px !important;
+    flex-shrink: 0 !important;
+    line-height: 1 !important;
 }
 
-/* Check Availability button */
+/* Check Availability button — enabled (both dates selected) */
 .mp_default_theme .rbfw-single-right-container a.rbfw_chk_availability_btn,
 .mp_default_theme .rbfw-single-right-container .rbfw_chk_availability_btn {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     width: 100% !important;
-    padding: 14px 24px !important;
-    border-radius: 12px !important;
-    background: var(--rbfw_color_primary) !important;
+    padding: 10px 18px !important;
+    border-radius: 8px !important;
+    background: #1e293b !important;
     color: #ffffff !important;
-    font-size: 15px !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.03em !important;
+    border: none !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0 !important;
     text-align: center !important;
     text-decoration: none !important;
     cursor: pointer !important;
-    border: none !important;
     box-sizing: border-box !important;
-    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+    box-shadow: none !important;
+    transition: background 0.18s ease;
     margin-top: 4px !important;
 }
 .mp_default_theme .rbfw-single-right-container a.rbfw_chk_availability_btn:hover,
 .mp_default_theme .rbfw-single-right-container .rbfw_chk_availability_btn:hover {
-    background: var(--rbfw_color_secondary, #0f766e) !important;
+    background: #0f172a !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+}
+
+/* Check Availability button — disabled state (dates not yet selected) */
+.mp_default_theme .rbfw-single-right-container a.rbfw_chk_availability_btn.rbfw-avail-btn-disabled,
+.mp_default_theme .rbfw-single-right-container .rbfw_chk_availability_btn.rbfw-avail-btn-disabled {
+    background: #94a3b8 !important;
     color: #ffffff !important;
     opacity: 1 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    transform: none !important;
 }
 
 /* ======================================================
@@ -11067,16 +11080,20 @@ i.fas.fa-minus {
     content: none !important;
     display: none !important;
 }
-/* Calendar icon pinned to the right via ::after */
+/* Disable ::after pseudo icon — calendar icon is now <i class="rbfw-srh-cal-icon"> in HTML */
 .mp_default_theme .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading::after {
-    content: '\f073' !important;
-    font-family: 'Font Awesome 5 Free' !important;
-    font-weight: 900 !important;
+    content: none !important;
+    display: none !important;
+}
+
+/* Right calendar icon  <i class="rbfw-srh-cal-icon"> */
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-single-right-heading i.rbfw-srh-cal-icon {
     color: #3b82f6 !important;
     font-size: 15px !important;
+    margin-left: auto !important;
+    flex-shrink: 0 !important;
     display: flex !important;
     align-items: center !important;
-    flex-shrink: 0 !important;
 }
 
 /* Date pair body */
@@ -11154,6 +11171,416 @@ i.fas.fa-minus {
     font-size: 13px !important;
 }
 
+/* Clear (×) button — hidden by default, shown via JS class when date is set */
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-date-clear-btn {
+    display: none !important;
+    position: absolute !important;
+    top: 8px !important;
+    right: 8px !important;
+    width: 18px !important;
+    height: 18px !important;
+    padding: 0 !important;
+    background: #e5e7eb !important;
+    border: none !important;
+    border-radius: 50% !important;
+    color: #6b7280 !important;
+    font-size: 9px !important;
+    line-height: 1 !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    z-index: 2 !important;
+    transition: background 0.15s, color 0.15s !important;
+}
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-date-clear-btn.rbfw-date-clear-visible {
+    display: flex !important;
+}
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-date-clear-btn:hover {
+    background: #d1d5db !important;
+    color: #111827 !important;
+}
+
 /* ======================================================
    End Resort — Check-in / Check-out Date Card
+   ====================================================== */
+
+/* ======================================================
+   Resort — Room Type Selection Table
+   (.rbfw_resort_rt_price_table_container / .rbfw_resort_rt_price_table)
+   ====================================================== */
+
+/* Card container */
+.mp_default_theme .rbfw_resort_rt_price_table_container {
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    margin-top: 16px;
+    margin-bottom: 14px;
+}
+
+/* "Select Room Type" card title */
+.mp_default_theme .rbfw-room-select-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+/* Table resets */
+.mp_default_theme .rbfw_resort_rt_price_table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 0 !important;
+}
+
+/* Hide the legacy Image column */
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-img-hidden-col {
+    display: none !important;
+}
+
+/* Table header row */
+.mp_default_theme .rbfw_resort_rt_price_table thead tr {
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+.mp_default_theme .rbfw_resort_rt_price_table thead th {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #94a3b8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    padding: 10px 14px !important;
+    text-align: left !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Body rows */
+.mp_default_theme .rbfw_resort_rt_price_table tbody tr {
+    border-bottom: 1px solid #f1f5f9 !important;
+    transition: background 0.12s;
+}
+.mp_default_theme .rbfw_resort_rt_price_table tbody tr:last-child {
+    border-bottom: none !important;
+}
+.mp_default_theme .rbfw_resort_rt_price_table tbody tr:hover {
+    background: #fafbfc !important;
+}
+
+/* All body cells */
+.mp_default_theme .rbfw_resort_rt_price_table tbody td {
+    padding: 12px 14px !important;
+    vertical-align: middle !important;
+    border: none !important;
+}
+
+/* Room-type cell — flex: thumbnail + name/desc */
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-type-name-cell {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+/* Thumbnail wrapper — fixed 40×40 */
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-thumb-wrap {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: #f1f5f9 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-thumb-wrap img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+}
+/* Placeholder icon (no image) */
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-no-img {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    color: #cbd5e1 !important;
+    font-size: 16px !important;
+}
+
+/* Room name + description column */
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw-room-name-desc {
+    display: flex !important;
+    flex-direction: column !important;
+}
+.mp_default_theme .rbfw_resort_rt_price_table .room_type_title {
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+    margin-bottom: 2px !important;
+    line-height: 1.3 !important;
+}
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_room_desc {
+    display: block !important;
+    font-size: 12px !important;
+    color: #94a3b8 !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+}
+
+/* Price cell */
+.mp_default_theme .rbfw_resort_rt_price_table tbody td:nth-child(3) .woocommerce-Price-amount {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+}
+
+/* Qty stepper */
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_input {
+    display: inline-flex !important;
+    align-items: center !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: #fff !important;
+}
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_minus,
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_plus {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 28px !important;
+    height: 32px !important;
+    background: #fff !important;
+    color: #374151 !important;
+    font-size: 10px !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    text-decoration: none !important;
+    transition: background 0.14s !important;
+}
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_minus:hover,
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_qty_plus:hover {
+    background: #f1f5f9 !important;
+    color: #111827 !important;
+}
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_room_qty {
+    width: 34px !important;
+    height: 32px !important;
+    text-align: center !important;
+    border: none !important;
+    border-left: 1px solid #e2e8f0 !important;
+    border-right: 1px solid #e2e8f0 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+    background: #fff !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    -moz-appearance: textfield !important;
+}
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_room_qty::-webkit-outer-spin-button,
+.mp_default_theme .rbfw_resort_rt_price_table .rbfw_room_qty::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+/* ======================================================
+   End Resort — Room Type Selection Table
+   ====================================================== */
+
+/* ======================================================
+   Resort — Additional Services Table
+   Same card design as Room Type table
+   (.rbfw_resort_es_price_table / .rbfw_resort_es_rt_price_table)
+   ====================================================== */
+
+/* Card container */
+.mp_default_theme .rbfw_resort_es_price_table {
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 14px !important;
+    overflow: hidden !important;
+    background: #fff !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06) !important;
+    margin-top: 16px !important;
+    margin-bottom: 14px !important;
+}
+
+/* Table resets */
+.mp_default_theme .rbfw_resort_es_rt_price_table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 0 !important;
+}
+
+/* Hide the Image column */
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-img-hidden-col {
+    display: none !important;
+}
+
+/* Table header row */
+.mp_default_theme .rbfw_resort_es_rt_price_table thead tr {
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+.mp_default_theme .rbfw_resort_es_rt_price_table thead th {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    color: #94a3b8 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    padding: 10px 14px !important;
+    text-align: left !important;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* Body rows */
+.mp_default_theme .rbfw_resort_es_rt_price_table tbody tr {
+    border-bottom: 1px solid #f1f5f9 !important;
+    transition: background 0.12s;
+}
+.mp_default_theme .rbfw_resort_es_rt_price_table tbody tr:last-child {
+    border-bottom: none !important;
+}
+.mp_default_theme .rbfw_resort_es_rt_price_table tbody tr:hover {
+    background: #fafbfc !important;
+}
+
+/* All body cells */
+.mp_default_theme .rbfw_resort_es_rt_price_table tbody td {
+    padding: 12px 14px !important;
+    vertical-align: middle !important;
+    border: none !important;
+}
+
+/* Service name cell — flex: thumbnail + name/desc */
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-type-name-cell {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+}
+
+/* Thumbnail wrapper */
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-thumb-wrap {
+    width: 40px !important;
+    height: 40px !important;
+    min-width: 40px !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: #f1f5f9 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-thumb-wrap img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+}
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-no-img {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    color: #cbd5e1 !important;
+    font-size: 16px !important;
+}
+
+/* Service name + description */
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw-room-name-desc {
+    display: flex !important;
+    flex-direction: column !important;
+}
+.mp_default_theme .rbfw_resort_es_rt_price_table .room_type_title {
+    display: block !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+    margin-bottom: 2px !important;
+    line-height: 1.3 !important;
+}
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_room_desc {
+    display: block !important;
+    font-size: 12px !important;
+    color: #94a3b8 !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    line-height: 1.35 !important;
+    margin: 0 !important;
+}
+
+/* Price cell */
+.mp_default_theme .rbfw_resort_es_rt_price_table tbody td:nth-child(3) .woocommerce-Price-amount {
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+}
+
+/* Qty stepper */
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_input {
+    display: inline-flex !important;
+    align-items: center !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    background: #fff !important;
+}
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_minus,
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_plus {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 28px !important;
+    height: 32px !important;
+    background: #fff !important;
+    color: #374151 !important;
+    font-size: 10px !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    text-decoration: none !important;
+    transition: background 0.14s !important;
+}
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_minus:hover,
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_qty_plus:hover {
+    background: #f1f5f9 !important;
+    color: #111827 !important;
+}
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_service_qty_resort {
+    width: 34px !important;
+    height: 32px !important;
+    text-align: center !important;
+    border: none !important;
+    border-left: 1px solid #e2e8f0 !important;
+    border-right: 1px solid #e2e8f0 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #111827 !important;
+    background: #fff !important;
+    outline: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    -moz-appearance: textfield !important;
+}
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_service_qty_resort::-webkit-outer-spin-button,
+.mp_default_theme .rbfw_resort_es_rt_price_table .rbfw_service_qty_resort::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
+}
+
+/* ======================================================
+   End Resort — Additional Services Table
    ====================================================== */
