@@ -11,8 +11,9 @@
 	} else {
 		$gallery_image = RBFW_PLUGIN_URL . '/assets/images/no_image.png';
 	}
-	$post_featured_img = ! empty( get_the_post_thumbnail_url( $post_id, 'full' ) ) ? get_the_post_thumbnail_url( $post_id,
-		'full' ) : $gallery_image;
+	$post_featured_img_url = get_the_post_thumbnail_url( $post_id, 'full' );
+	$rbfw_has_real_img     = ! empty( $post_featured_img_url ) || ! empty( $gallery_images );
+	$post_featured_img     = ! empty( $post_featured_img_url ) ? $post_featured_img_url : $gallery_image;
 	$post_link         = get_the_permalink();
 	$book_now_label    = __( 'Book Now', 'booking-and-rental-manager-for-woocommerce' );
 	$rbfw_offday_range = get_post_meta( get_the_id(), 'rbfw_offday_range', true ) ? get_post_meta( get_the_id(), 'rbfw_offday_range', true ) : 'no';
@@ -289,7 +290,13 @@
             <div class="rbfw_rent_list_inner_wrapper">
                 <div class="<?php echo esc_attr( $image_holder ) ?>">
                     <a class="rbfw_rent_list_grid_view_top_img" href="<?php echo esc_url( $post_link ); ?>">
-                        <img src="<?php echo esc_url( $post_featured_img ); ?>" alt="Catalog Image">
+                        <?php if ( $rbfw_has_real_img ) : ?>
+                            <img src="<?php echo esc_url( $post_featured_img ); ?>" alt="<?php echo esc_attr( $post_title ); ?>">
+                        <?php else : ?>
+                            <div class="rbfw_no_img_placeholder">
+                                <span class="rbfw_no_img_placeholder_icon"><i class="fas fa-image"></i></span>
+                            </div>
+                        <?php endif; ?>
                     </a>
                 </div>
                 <div class="<?php echo esc_attr( $rent_item_info ) ?>">

@@ -9307,6 +9307,40 @@ i.fas.fa-minus {
     border-color: var(--rbfw_color_primary);
     color: #fff;
 }
+
+/* -------------------------------------------------------
+   No Featured Image — styled placeholder
+------------------------------------------------------- */
+.rbfw_no_img_placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 200px;
+    background: #e8e8e8;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.rbfw_no_img_placeholder_icon {
+    display: block;
+    color: #b8b8b8;
+    font-size: 56px;
+    line-height: 1;
+}
+
+/* List-view: override background-image so gray shows */
+.rbfw_rent_list_featured_img.rbfw_no_img_placeholder {
+    background-image: none !important;
+}
+
+/* Detail page: sliderAllItem wraps the placeholder — give it taller min-height */
+.sliderAllItem .rbfw_no_img_placeholder {
+    min-height: 360px;
+    border-radius: 10px;
+}
 .mp_default_theme .rbfw-related-products-wrapper .owl-carousel .owl-nav .owl-prev:before,
 .mp_default_theme .rbfw-related-products-wrapper .owl-carousel .owl-nav .owl-next:before {
     font-size: 14px;
