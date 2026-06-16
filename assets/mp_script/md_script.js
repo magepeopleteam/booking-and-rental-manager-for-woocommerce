@@ -59,6 +59,31 @@ document.addEventListener('DOMContentLoaded', function () {
     if (qtyInputs.length > 0) {
         calculateTotalMultipleItems(true);
     }
+
+    // Auto-select next available pickup date for the multiple_items form
+    if (jQuery('#rbfw_rent_type').val() === 'multiple_items') {
+        var _now    = new Date();
+        var _postId = jQuery('#rbfw_post_id').val();
+        jQuery.ajax({
+            url      : rbfw_ajax_front.rbfw_ajaxurl,
+            type     : 'POST',
+            dataType : 'json',
+            data: {
+                'action'  : 'rbfw_day_wise_sold_out_check',
+                'post_id' : _postId,
+                'year'    : _now.getFullYear(),
+                'month'   : _now.getMonth() + 1,
+                'nonce'   : rbfw_ajax_front.nonce_bikecarmd_ajax_price_calculation
+            },
+            success: function(response) {
+                disabledDates = Array.isArray(response) ? response : [];
+                rbfwMIAutoSelectNextAvailableDate();
+            },
+            error: function() {
+                rbfwMIAutoSelectNextAvailableDate();
+            }
+        });
+    }
 });
 
  // pricing table show/hide
@@ -1745,6 +1770,63 @@ function loadDisabledDates(post_id, year, month) {
             console.error("Failed to load disabled dates");
         }
     });
+}
+
+/**
+ * Auto-select the next available pickup date for the multiple_items form.
+ * Checks off-days, off-date-ranges, and sold-out dates (disabledDates).
+ * Populates both the visible text input and the hidden Y-m-d input,
+ * then fires the change event so the duration / price calculation kicks in.
+ */
+function rbfwMIAutoSelectNextAvailableDate() {
+    if (jQuery('#rbfw_rent_type').val() !== 'multiple_items') return;
+    if (jQuery('#hidden_pickup_date').val()) return; // already has a value
+
+    var today_enable = (typeof rbfw_js_variables !== 'undefined') ? rbfw_js_variables.rbfw_today_booking_enable : 'no';
+    var buffer_time  = parseInt(jQuery('#rbfw_buffer_time').val()) || 0;
+    var weekdays     = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+    var off_days     = [];
+    var offday_range = [];
+
+    try { off_days     = JSON.parse(jQuery('#rbfw_off_days').val())    || []; } catch(e) {}
+    try { offday_range = JSON.parse(jQuery('#rbfw_offday_range').val()) || []; } catch(e) {}
+
+    // Determine the earliest bookable day
+    var candidate = new Date();
+    if (buffer_time) {
+        candidate.setHours(candidate.getHours() + buffer_time);
+    }
+    if (today_enable !== 'yes') {
+        candidate.setDate(candidate.getDate() + 1);
+    }
+    candidate.setHours(0, 0, 0, 0);
+
+    // Walk forward up to 90 days to find the first available date
+    for (var i = 0; i < 90; i++) {
+        var d   = ('0' + candidate.getDate()).slice(-2);
+        var m   = ('0' + (candidate.getMonth() + 1)).slice(-2);
+        var y   = candidate.getFullYear();
+        var ddmmyyyy = d + '-' + m + '-' + y;  // format used in offday_range
+        var iso      = y + '-' + m + '-' + d;  // yyyy-mm-dd
+
+        var day_name = weekdays[candidate.getDay()];
+
+        if (
+            jQuery.inArray(day_name, off_days)    < 0 &&
+            jQuery.inArray(ddmmyyyy, offday_range) < 0 &&
+            disabledDates.indexOf(iso) === -1
+        ) {
+            // Format for the visible text input using the site's datepicker format
+            var display = (typeof js_date_format !== 'undefined' && jQuery.datepicker)
+                ? jQuery.datepicker.formatDate(js_date_format, candidate)
+                : (m + '/' + d + '/' + y);
+
+            jQuery('#pickup_date').val(display);
+            jQuery('#hidden_pickup_date').val(iso).trigger('change');
+            break;
+        }
+        candidate.setDate(candidate.getDate() + 1);
+    }
 }
 
 
