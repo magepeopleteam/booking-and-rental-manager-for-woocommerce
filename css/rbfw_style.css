@@ -10909,6 +10909,12 @@ i.fas.fa-minus {
     font-size: inherit !important;
     font-weight: inherit !important;
 }
+.mp_right_section .rbfw-sd-rate-per,
+.rbfw_muff_registration_wrapper .rbfw-sd-rate-per {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+}
 .mp_right_section .rbfw-sd-rate-box-note,
 .rbfw_muff_registration_wrapper .rbfw-sd-rate-box-note {
     font-size: 12px;
