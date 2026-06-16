@@ -1161,7 +1161,7 @@ function rbfw_url_exclude_search_engine() {
 		$rbfw_inventory                  = get_post_meta( $post_id, 'rbfw_inventory', true );
 		$rbfw_bike_car_sd_data           = get_post_meta( $post_id, 'rbfw_bike_car_sd_data', true );
 		$rbfw_rent_type                  = get_post_meta( $post_id, 'rbfw_item_type', true );
-		$appointment_max_qty_per_session = get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true );
+		$appointment_max_qty_per_session = (int) get_post_meta( $post_id, 'rbfw_sd_appointment_max_qty_per_session', true );
 		$mepp_reduce_stock_sd            = get_option( 'mepp_reduce_stock', 'full' );
 		if ( ! empty( $rbfw_inventory ) ) {
 			foreach ( $rbfw_inventory as $key => $inventory ) {
@@ -1193,10 +1193,10 @@ function rbfw_url_exclude_search_engine() {
 		if ( ! empty( $rbfw_bike_car_sd_data ) ) {
 			foreach ( $rbfw_bike_car_sd_data as $key => $bike_car_sd_data ) {
 				if ( $bike_car_sd_data['rent_type'] == $type ) {
-					if ( $rbfw_rent_type == 'appointment' ) {
+					if ( $rbfw_rent_type == 'appointment' && $appointment_max_qty_per_session > 0 ) {
 						$type_stock = $appointment_max_qty_per_session;
 					} else {
-						$type_stock += ! empty( $bike_car_sd_data['qty'] ) ? $bike_car_sd_data['qty'] : 0;
+						$type_stock += ! empty( $bike_car_sd_data['qty'] ) ? (int) $bike_car_sd_data['qty'] : 0;
 					}
 				}
 			}
