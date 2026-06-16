@@ -620,7 +620,21 @@ $_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw
 
                 $option_value  = is_serialized($rbfw_service_category_price) ? unserialize($rbfw_service_category_price) : $rbfw_service_category_price;
 
-                if (!empty($option_value) && $enable_service_price === 'on') {
+                $rbfw_has_extra_services = false;
+                if ( ! empty( $option_value ) && $enable_service_price === 'on' ) {
+                    foreach ( $option_value as $_rbfw_cat => $_rbfw_cat_item ) {
+                        if ( ! empty( $_rbfw_cat_item['cat_services'] ) ) {
+                            foreach ( $_rbfw_cat_item['cat_services'] as $_rbfw_service ) {
+                                if ( ! empty( $_rbfw_service['title'] ) ) {
+                                    $rbfw_has_extra_services = true;
+                                    break 2;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ( $rbfw_has_extra_services ) {
                     ?>
                     <div class="multi-service-category-section" style="display: none">
                         <?php foreach ($option_value as $cat => $item) { ?>
