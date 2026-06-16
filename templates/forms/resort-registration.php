@@ -35,10 +35,67 @@
     $rbfw_security_deposit_amount = get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) ? get_post_meta($rbfw_id, 'rbfw_security_deposit_amount', true) : 0;
 
 ?>
+	<?php
+	// Minimum price across all room types (daylong + daynight)
+	$_rbfw_resort_prices = [];
+	if ( ! empty( $rbfw_resort_room_data ) ) {
+		foreach ( $rbfw_resort_room_data as $_room ) {
+			if ( ! empty( $_room['rbfw_room_daylong_rate'] ) && (float) $_room['rbfw_room_daylong_rate'] > 0 ) {
+				$_rbfw_resort_prices[] = (float) $_room['rbfw_room_daylong_rate'];
+			}
+			if ( ! empty( $_room['rbfw_room_daynight_rate'] ) && (float) $_room['rbfw_room_daynight_rate'] > 0 ) {
+				$_rbfw_resort_prices[] = (float) $_room['rbfw_room_daynight_rate'];
+			}
+		}
+	}
+	$_rbfw_resort_min_price = ! empty( $_rbfw_resort_prices ) ? min( $_rbfw_resort_prices ) : 0;
+	?>
+
 	<!--    Main Layout-->
 	<div class="rbfw-single-container" data-service-id="<?php echo esc_attr($rbfw_id); ?>">
 
 		<div class="rbfw-single-right-container">
+			<div class="rbfw-sd-rate-box">
+				<div class="rbfw-sd-rate-box-badges">
+					<span class="rbfw-sd-badge rbfw-sd-badge--available">
+						<span class="rbfw-sd-badge-dot"></span>
+						<?php esc_html_e( 'Available Today', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</span>
+					<span class="rbfw-sd-badge rbfw-sd-badge--seller">
+						<?php esc_html_e( 'Best Seller', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</span>
+				</div>
+				<h3 class="rbfw-sd-rate-box-title">
+					<?php esc_html_e( 'Instant Booking Summary', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</h3>
+				<p class="rbfw-sd-rate-box-desc">
+					<?php esc_html_e( 'Select dates to see final price and availability in real time.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+				</p>
+				<?php if ( $_rbfw_resort_min_price > 0 ) : ?>
+				<div class="rbfw-sd-rate-box-price-row">
+					<span class="rbfw-sd-rate-box-label"><?php esc_html_e( 'Starting from', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					<div class="rbfw-sd-rate-box-price">
+						<?php echo wp_kses( wc_price( $_rbfw_resort_min_price ), rbfw_allowed_html() ); ?>
+						<span class="rbfw-sd-rate-per">/ <?php esc_html_e( 'Night', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+				</div>
+				<?php endif; ?>
+				<div class="rbfw-sd-trust-grid">
+					<div class="rbfw-sd-trust-item">
+						<i class="far fa-check-circle"></i>
+						<span><?php esc_html_e( 'Instant confirmation', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<div class="rbfw-sd-trust-item">
+						<i class="fas fa-lock"></i>
+						<span><?php esc_html_e( 'Secure payment', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+					<div class="rbfw-sd-trust-item">
+						<i class="far fa-calendar-times"></i>
+						<span><?php esc_html_e( 'Free cancellation', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+				</div>
+			</div>
+
 			<form action="" method='post' class="mp_rbfw_ticket_form">
                 <?php do_action('rbfw_discount_ad', $rbfw_id); ?>
                 <div class="rbfw_resort_item_wrapper">
