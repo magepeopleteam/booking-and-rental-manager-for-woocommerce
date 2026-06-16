@@ -14,9 +14,30 @@ $rbfw_enable_faq_content  = get_post_meta( $post_id, 'rbfw_enable_faq_content', 
 $slide_style = $rbfw->get_option_trans('super_slider_style', 'super_slider_settings','');
 
 $post_title = get_the_title();
+
+// Get day-wise rates (may return 0 when day-specific rate not set)
 $_daily  = (float) rbfw_get_bike_car_md_hourly_daily_price( $post_id, 'daily' );
 $_hourly = (float) rbfw_get_bike_car_md_hourly_daily_price( $post_id, 'hourly' );
-$rbfw_default_hero_price = $_daily ?: $_hourly;
+
+// Fall back to base meta when day-wise rate is unset (returns 0)
+if ( ! $_daily )  { $_daily  = (float) get_post_meta( $post_id, 'rbfw_daily_rate',  true ); }
+if ( ! $_hourly ) { $_hourly = (float) get_post_meta( $post_id, 'rbfw_hourly_rate', true ); }
+
+$_weekly  = (float) get_post_meta( $post_id, 'rbfw_weekly_rate',  true );
+$_monthly = (float) get_post_meta( $post_id, 'rbfw_monthly_rate', true );
+
+$_enable_daily   = get_post_meta( $post_id, 'rbfw_enable_daily_rate',   true ) ?: 'yes';
+$_enable_hourly  = get_post_meta( $post_id, 'rbfw_enable_hourly_rate',  true ) ?: 'no';
+$_enable_weekly  = get_post_meta( $post_id, 'rbfw_enable_weekly_rate',  true ) ?: 'no';
+$_enable_monthly = get_post_meta( $post_id, 'rbfw_enable_monthly_rate', true ) ?: 'no';
+
+// Hero price: minimum of all enabled, non-zero rates
+$_all_rates = [];
+if ( $_enable_daily   === 'yes' && $_daily   > 0 ) { $_all_rates[] = $_daily;   }
+if ( $_enable_hourly  === 'yes' && $_hourly  > 0 ) { $_all_rates[] = $_hourly;  }
+if ( $_enable_weekly  === 'yes' && $_weekly  > 0 ) { $_all_rates[] = $_weekly;  }
+if ( $_enable_monthly === 'yes' && $_monthly > 0 ) { $_all_rates[] = $_monthly; }
+$rbfw_default_hero_price = ! empty( $_all_rates ) ? min( $_all_rates ) : 0;
 $rbfw_default_hero_features = [];
 if ( ! empty( $rbfw_feature_category ) ) {
     foreach ( $rbfw_feature_category as $_cat ) {
