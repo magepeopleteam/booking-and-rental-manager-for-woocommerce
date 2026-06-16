@@ -89,19 +89,51 @@
                 if ( ! $_rbfw_start ) {
                     $_rbfw_start = (float) rbfw_get_bike_car_md_hourly_daily_price( $rbfw_id, 'hourly' );
                 }
-                if ( $_rbfw_start > 0 ) : ?>
+                ?>
                 <div class="rbfw-sd-rate-box">
-                    <span class="rbfw-sd-rate-box-label"><?php esc_html_e( 'FLEXIBLE START RATE', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
-                    <div class="rbfw-sd-rate-box-price">
-                        <?php echo wp_kses( wc_price( $_rbfw_start ), rbfw_allowed_html() ); ?>
+                    <div class="rbfw-sd-rate-box-badges">
+                        <span class="rbfw-sd-badge rbfw-sd-badge--available">
+                            <span class="rbfw-sd-badge-dot"></span>
+                            <?php esc_html_e( 'Available Today', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </span>
+                        <span class="rbfw-sd-badge rbfw-sd-badge--seller">
+                            <?php esc_html_e( 'Best Seller', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                        </span>
                     </div>
-                    <?php if ( $_rbfw_min_h > 1 ) : ?>
-                    <p class="rbfw-sd-rate-box-note">
-                        <?php printf( esc_html__( 'Minimum %d-hour booking applies', 'booking-and-rental-manager-for-woocommerce' ), $_rbfw_min_h ); ?>
+                    <h3 class="rbfw-sd-rate-box-title">
+                        <?php esc_html_e( 'Instant Booking Summary', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                    </h3>
+                    <p class="rbfw-sd-rate-box-desc">
+                        <?php esc_html_e( 'Select dates to see final price and availability in real time.', 'booking-and-rental-manager-for-woocommerce' ); ?>
                     </p>
+                    <?php if ( $_rbfw_start > 0 ) : ?>
+                    <div class="rbfw-sd-rate-box-price-row">
+                        <span class="rbfw-sd-rate-box-label"><?php esc_html_e( 'Starting from', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        <div class="rbfw-sd-rate-box-price">
+                            <?php echo wp_kses( wc_price( $_rbfw_start ), rbfw_allowed_html() ); ?>
+                        </div>
+                        <?php if ( $_rbfw_min_h > 1 ) : ?>
+                        <p class="rbfw-sd-rate-box-note">
+                            <?php printf( esc_html__( 'Minimum %d-hour booking applies', 'booking-and-rental-manager-for-woocommerce' ), $_rbfw_min_h ); ?>
+                        </p>
+                        <?php endif; ?>
+                    </div>
                     <?php endif; ?>
+                    <div class="rbfw-sd-trust-grid">
+                        <div class="rbfw-sd-trust-item">
+                            <i class="far fa-check-circle"></i>
+                            <span><?php esc_html_e( 'Instant confirmation', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        </div>
+                        <div class="rbfw-sd-trust-item">
+                            <i class="fas fa-lock"></i>
+                            <span><?php esc_html_e( 'Secure payment', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        </div>
+                        <div class="rbfw-sd-trust-item">
+                            <i class="far fa-calendar-times"></i>
+                            <span><?php esc_html_e( 'Free cancellation', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                        </div>
+                    </div>
                 </div>
-                <?php endif; ?>
 
                 <?php  if($manage_inventory_as_timely !='on' || $rbfw_rent_type =='appointment'){ ?>
                     <div class="item rbfw-bikecarsd-step" data-step="1">

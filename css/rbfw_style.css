@@ -10802,39 +10802,104 @@ i.fas.fa-minus {
    ====================================================== */
 
 /* ======================================================
-   Single-day — Flexible Start Rate Box
+   Single-day — Instant Booking Summary Box
    Default (.mp_right_section) + Muffin (.rbfw_muff_registration_wrapper)
    ====================================================== */
 .mp_right_section .rbfw-sd-rate-box,
 .rbfw_muff_registration_wrapper .rbfw-sd-rate-box {
-    background: #eef1f8;
-    border: 1px solid #dde3f0;
-    border-radius: 10px;
-    padding: 16px 20px 14px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px 20px 16px;
+    margin-bottom: 16px;
+}
+
+/* --- Badges row --- */
+.mp_right_section .rbfw-sd-rate-box-badges,
+.rbfw_muff_registration_wrapper .rbfw-sd-rate-box-badges {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 14px;
-    text-align: center;
+}
+.mp_right_section .rbfw-sd-badge,
+.rbfw_muff_registration_wrapper .rbfw-sd-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    line-height: 1;
+}
+.mp_right_section .rbfw-sd-badge--available,
+.rbfw_muff_registration_wrapper .rbfw-sd-badge--available {
+    background: #dcfce7;
+    color: #15803d;
+}
+.mp_right_section .rbfw-sd-badge-dot,
+.rbfw_muff_registration_wrapper .rbfw-sd-badge-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+}
+.mp_right_section .rbfw-sd-badge--seller,
+.rbfw_muff_registration_wrapper .rbfw-sd-badge--seller {
+    background: #fff1f2;
+    color: #e11d48;
+    border: 1px solid #fecdd3;
+}
+
+/* --- Title & description --- */
+.mp_right_section .rbfw-sd-rate-box-title,
+.rbfw_muff_registration_wrapper .rbfw-sd-rate-box-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 6px;
+    line-height: 1.3;
+}
+.mp_right_section .rbfw-sd-rate-box-desc,
+.rbfw_muff_registration_wrapper .rbfw-sd-rate-box-desc {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 14px;
+    line-height: 1.55;
+}
+
+/* --- Optional price row --- */
+.mp_right_section .rbfw-sd-rate-box-price-row,
+.rbfw_muff_registration_wrapper .rbfw-sd-rate-box-price-row {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
 }
 .mp_right_section .rbfw-sd-rate-box-label,
 .rbfw_muff_registration_wrapper .rbfw-sd-rate-box-label {
     display: block;
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.9px;
-    color: var(--rbfw_color_primary);
-    margin-bottom: 6px;
+    letter-spacing: 0.6px;
+    color: #9ca3af;
+    margin-bottom: 2px;
 }
 .mp_right_section .rbfw-sd-rate-box-price,
 .rbfw_muff_registration_wrapper .rbfw-sd-rate-box-price {
     display: flex;
     align-items: baseline;
-    justify-content: center;
-    gap: 6px;
-    font-size: 36px;
+    gap: 4px;
+    font-size: 26px;
     font-weight: 800;
-    color: #1a2e45;
+    color: #111827;
     line-height: 1.1;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 .mp_right_section .rbfw-sd-rate-box-price .woocommerce-Price-amount,
 .mp_right_section .rbfw-sd-rate-box-price .woocommerce-Price-currencySymbol,
@@ -10846,11 +10911,34 @@ i.fas.fa-minus {
 }
 .mp_right_section .rbfw-sd-rate-box-note,
 .rbfw_muff_registration_wrapper .rbfw-sd-rate-box-note {
-    font-size: 13px;
-    color: #6b7280;
+    font-size: 12px;
+    color: #9ca3af;
     margin: 0;
     line-height: 1.4;
 }
+
+/* --- Trust badges grid --- */
+.mp_right_section .rbfw-sd-trust-grid,
+.rbfw_muff_registration_wrapper .rbfw-sd-trust-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+}
+.mp_right_section .rbfw-sd-trust-item,
+.rbfw_muff_registration_wrapper .rbfw-sd-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #374151;
+    font-weight: 500;
+}
+.mp_right_section .rbfw-sd-trust-item i,
+.rbfw_muff_registration_wrapper .rbfw-sd-trust-item i {
+    font-size: 14px;
+    color: #6b7280;
+    flex-shrink: 0;
+}
 /* ======================================================
-   End Single-day — Flexible Start Rate Box
+   End Single-day — Instant Booking Summary Box
    ====================================================== */
