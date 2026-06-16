@@ -135,8 +135,77 @@ $fee_management_cost_enable = false;
     <?php die;  ?>
 <?php } ?>
 
+<?php
+// Minimum starting price across all items and enabled pricing types for the rate box
+$_rbfw_mi_price_pool = [];
+if ( ! empty( $multiple_items_info ) && ! empty( $enabled_pricing_types ) ) {
+    foreach ( $multiple_items_info as $_mi_item ) {
+        foreach ( $enabled_pricing_types as $_mi_ptype ) {
+            $_mi_price_key = $_mi_ptype . '_price';
+            if ( ! empty( $_mi_item[ $_mi_price_key ] ) && (float) $_mi_item[ $_mi_price_key ] > 0 ) {
+                $_rbfw_mi_price_pool[] = (float) $_mi_item[ $_mi_price_key ];
+            }
+        }
+    }
+}
+$_rbfw_mi_min_price = ! empty( $_rbfw_mi_price_pool ) ? min( $_rbfw_mi_price_pool ) : 0;
+$_rbfw_mi_unit_map  = [
+    'hourly'  => __( 'Hour',  'booking-and-rental-manager-for-woocommerce' ),
+    'daily'   => __( 'Day',   'booking-and-rental-manager-for-woocommerce' ),
+    'weekly'  => __( 'Week',  'booking-and-rental-manager-for-woocommerce' ),
+    'monthly' => __( 'Month', 'booking-and-rental-manager-for-woocommerce' ),
+];
+$_rbfw_mi_price_unit = ( ! empty( $auto_selected_pricing_type ) && isset( $_rbfw_mi_unit_map[ $auto_selected_pricing_type ] ) )
+    ? $_rbfw_mi_unit_map[ $auto_selected_pricing_type ]
+    : '';
+?>
+
 <div class="rbfw-single-container" data-service-id="<?php echo esc_attr($rbfw_id); ?>">
     <div class="rbfw-single-right-container">
+
+        <div class="rbfw-sd-rate-box">
+            <div class="rbfw-sd-rate-box-badges">
+                <span class="rbfw-sd-badge rbfw-sd-badge--available">
+                    <span class="rbfw-sd-badge-dot"></span>
+                    <?php esc_html_e( 'Available Today', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                </span>
+                <span class="rbfw-sd-badge rbfw-sd-badge--seller">
+                    <?php esc_html_e( 'Best Seller', 'booking-and-rental-manager-for-woocommerce' ); ?>
+                </span>
+            </div>
+            <h3 class="rbfw-sd-rate-box-title">
+                <?php esc_html_e( 'Instant Booking Summary', 'booking-and-rental-manager-for-woocommerce' ); ?>
+            </h3>
+            <p class="rbfw-sd-rate-box-desc">
+                <?php esc_html_e( 'Select dates to see final price and availability in real time.', 'booking-and-rental-manager-for-woocommerce' ); ?>
+            </p>
+            <?php if ( $_rbfw_mi_min_price > 0 ) : ?>
+            <div class="rbfw-sd-rate-box-price-row">
+                <span class="rbfw-sd-rate-box-label"><?php esc_html_e( 'Starting from', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                <div class="rbfw-sd-rate-box-price">
+                    <?php echo wp_kses( wc_price( $_rbfw_mi_min_price ), rbfw_allowed_html() ); ?>
+                    <?php if ( $_rbfw_mi_price_unit ) : ?>
+                        <span class="rbfw-sd-rate-per">/ <?php echo esc_html( $_rbfw_mi_price_unit ); ?></span>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+            <div class="rbfw-sd-trust-grid">
+                <div class="rbfw-sd-trust-item">
+                    <i class="far fa-check-circle"></i>
+                    <span><?php esc_html_e( 'Instant confirmation', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                </div>
+                <div class="rbfw-sd-trust-item">
+                    <i class="fas fa-lock"></i>
+                    <span><?php esc_html_e( 'Secure payment', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                </div>
+                <div class="rbfw-sd-trust-item">
+                    <i class="far fa-calendar-times"></i>
+                    <span><?php esc_html_e( 'Free cancellation', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+                </div>
+            </div>
+        </div>
+
         <form action="" method='post' class="mp_rbfw_ticket_form">
             <div class="rbfw_bike_car_md_item_wrapper">
                 <div class="rbfw_multi_items_wrapper_inner">
