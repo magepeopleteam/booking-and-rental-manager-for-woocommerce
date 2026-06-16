@@ -10948,3 +10948,212 @@ i.fas.fa-minus {
 /* ======================================================
    End Single-day — Instant Booking Summary Box
    ====================================================== */
+
+/* ======================================================
+   Resort Default Template — Section Heading & Check
+   Availability Button
+   Scoped to .mp_default_theme .rbfw-single-right-container
+   ====================================================== */
+
+/* Section heading label — info-banner style (light blue pill with icon) */
+.mp_default_theme .rbfw-single-right-container .rbfw-single-right-heading {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    text-align: left !important;
+    background: #e0f2fe !important;
+    border: none !important;
+    border-radius: 30px !important;
+    color: #334155 !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    padding: 9px 18px 9px 10px !important;
+    margin-bottom: 12px !important;
+    line-height: 1.45 !important;
+}
+/* Circular icon on the left via ::before */
+.mp_default_theme .rbfw-single-right-container .rbfw-single-right-heading::before {
+    content: '\f017' !important;
+    font-family: 'Font Awesome 5 Free' !important;
+    font-weight: 900 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    background: #0ea5e9 !important;
+    color: #fff !important;
+    border-radius: 50% !important;
+    font-size: 13px !important;
+}
+
+/* Check Availability button */
+.mp_default_theme .rbfw-single-right-container a.rbfw_chk_availability_btn,
+.mp_default_theme .rbfw-single-right-container .rbfw_chk_availability_btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    padding: 14px 24px !important;
+    border-radius: 12px !important;
+    background: var(--rbfw_color_primary) !important;
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.03em !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    border: none !important;
+    box-sizing: border-box !important;
+    transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.10);
+    margin-top: 4px !important;
+}
+.mp_default_theme .rbfw-single-right-container a.rbfw_chk_availability_btn:hover,
+.mp_default_theme .rbfw-single-right-container .rbfw_chk_availability_btn:hover {
+    background: var(--rbfw_color_secondary, #0f766e) !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.14);
+}
+
+/* ======================================================
+   End Resort Default Template — Section Heading & Button
+   ====================================================== */
+
+/* ======================================================
+   Resort — Check-in / Check-out Date Card
+   (.rbfw-checkin-checkout-card added via PHP)
+   ====================================================== */
+
+/* Outer card shell */
+.mp_default_theme .rbfw-checkin-checkout-card {
+    border: 1.5px solid #bfdbfe;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 6px rgba(59,130,246,0.08);
+    margin-bottom: 14px;
+}
+
+/* Card header row — override the pill/banner style set above */
+.mp_default_theme .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 0 !important;
+    text-align: left !important;
+    background: #fff !important;
+    border: none !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    border-radius: 0 !important;
+    color: #374151 !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    padding: 12px 16px !important;
+    margin-bottom: 0 !important;
+    line-height: 1.2 !important;
+}
+/* Remove clock icon from ::before */
+.mp_default_theme .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading::before {
+    content: none !important;
+    display: none !important;
+}
+/* Calendar icon pinned to the right via ::after */
+.mp_default_theme .rbfw-single-right-container .rbfw-checkin-checkout-card .rbfw-single-right-heading::after {
+    content: '\f073' !important;
+    font-family: 'Font Awesome 5 Free' !important;
+    font-weight: 900 !important;
+    color: #3b82f6 !important;
+    font-size: 15px !important;
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+}
+
+/* Date pair body */
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime {
+    display: flex !important;
+    align-items: stretch !important;
+    padding: 0 !important;
+    border: none !important;
+    background: #fff !important;
+}
+
+/* Each half */
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .left.date,
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .right.date {
+    flex: 1 !important;
+    width: 50% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    padding: 12px 16px 14px !important;
+    position: relative !important;
+}
+
+/* Vertical divider */
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .right.date {
+    border-left: 1px solid #e5e7eb !important;
+}
+
+/* PICKUP / RETURN labels */
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .left.date::before {
+    content: 'PICKUP' !important;
+    font-family: inherit !important;
+    display: block !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.09em !important;
+    color: #6b7280 !important;
+    margin-bottom: 5px !important;
+}
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime .right.date::before {
+    content: 'RETURN' !important;
+    font-family: inherit !important;
+    display: block !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.09em !important;
+    color: #6b7280 !important;
+    margin-bottom: 5px !important;
+}
+
+/* Hide the per-field calendar icon spans */
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime span.calendar {
+    display: none !important;
+}
+
+/* Date text inputs */
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime input.rbfw-input {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    height: auto !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    width: 100% !important;
+    cursor: pointer !important;
+    box-shadow: none !important;
+    outline: none !important;
+    border-radius: 0 !important;
+    line-height: 1.3 !important;
+}
+.mp_default_theme .rbfw-checkin-checkout-card .rbfw-datetime input.rbfw-input::placeholder {
+    color: #9ca3af !important;
+    font-weight: 500 !important;
+    font-size: 13px !important;
+}
+
+/* ======================================================
+   End Resort — Check-in / Check-out Date Card
+   ====================================================== */

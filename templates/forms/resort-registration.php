@@ -275,7 +275,7 @@
 
 
                 <?php do_action('rbfw_ticket_feature_info'); ?>
-                <div class="item">
+                <div class="item rbfw-checkin-checkout-card">
                     <div class="rbfw-single-right-heading mb-08">
                         <?php esc_html_e('Check-In & Check-Out Date','booking-and-rental-manager-for-woocommerce'); ?>
                     </div>

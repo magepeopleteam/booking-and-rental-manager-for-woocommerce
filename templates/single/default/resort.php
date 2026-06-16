@@ -13,9 +13,21 @@
 	$slide_style             = $rbfw->get_option_trans( 'super_slider_style', 'super_slider_settings', '' );
 
 	$post_title = get_the_title();
-	$_daily  = (float) rbfw_get_bike_car_md_hourly_daily_price( $post_id, 'daily' );
-	$_hourly = (float) rbfw_get_bike_car_md_hourly_daily_price( $post_id, 'hourly' );
-	$rbfw_default_hero_price = $_daily ?: $_hourly;
+
+	// Resort hero price: minimum across all room daylong + daynight rates
+	$_resort_room_data   = get_post_meta( $post_id, 'rbfw_resort_room_data', true );
+	$_resort_price_pool  = [];
+	if ( ! empty( $_resort_room_data ) ) {
+		foreach ( $_resort_room_data as $_rm ) {
+			if ( ! empty( $_rm['rbfw_room_daylong_rate'] ) && (float) $_rm['rbfw_room_daylong_rate'] > 0 ) {
+				$_resort_price_pool[] = (float) $_rm['rbfw_room_daylong_rate'];
+			}
+			if ( ! empty( $_rm['rbfw_room_daynight_rate'] ) && (float) $_rm['rbfw_room_daynight_rate'] > 0 ) {
+				$_resort_price_pool[] = (float) $_rm['rbfw_room_daynight_rate'];
+			}
+		}
+	}
+	$rbfw_default_hero_price = ! empty( $_resort_price_pool ) ? min( $_resort_price_pool ) : 0;
 	$rbfw_default_hero_features = [];
 	if ( ! empty( $rbfw_feature_category ) ) {
 		foreach ( $rbfw_feature_category as $_cat ) {
