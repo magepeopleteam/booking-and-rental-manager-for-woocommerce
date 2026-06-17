@@ -23,6 +23,8 @@
         initCategories();
         initFeatures();
         initTitleSync();
+        initPricingTypeSwitch();
+        initMdPricing();
         initRelatedPicker();
         initFaq();
         initTerm();
@@ -801,6 +803,335 @@
             } else {
                 $(this).closest('.rbfw-me-offdate-row').find('input[type="date"]').val('');
             }
+        });
+    }
+
+    /* ── Pricing rent-type switching ────────────────────────── */
+    function initPricingTypeSwitch() {
+        var $pricing = $wrap.find('.rbfw-me-panel[data-panel="pricing"]');
+        if (!$pricing.length) return;
+
+        function applyType(type) {
+            // Reset — hide all switchable sections
+            $pricing.find('.rbfw_bike_car_sd_wrapper').hide();
+            $pricing.find('.rbfw_resort_price_config_wrapper').hide();
+            $pricing.find('.rbfw_general_price_config_wrapper').hide();
+            $pricing.find('.rbfw_multiple_items').hide();
+            $pricing.find('.manage_inventory_as_timely').hide();
+            $pricing.find('.rbfw_switch_sd_appointment_row').addClass('hide').removeClass('show').hide();
+            $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').addClass('hide').hide();
+            $pricing.find('.rbfw_es_price_config_wrapper').hide();
+            $pricing.find('.rbfw_discount_price_config_wrapper').hide();
+            $pricing.find('.rbfw_seasonal_price_config_wrapper').hide();
+            $pricing.find('.sessional_price_single_day,.sessional_price_multi_day,.sessional_price_resort,.mds_price_resort').hide();
+            $pricing.find('.additional-service-item-price').hide();
+
+            if (type === 'bike_car_sd') {
+                $pricing.find('.rbfw_bike_car_sd_wrapper').show();
+                $pricing.find('.manage_inventory_as_timely').show();
+                $pricing.find('.rbfw_es_price_config_wrapper').show();
+                $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
+                $pricing.find('.sessional_price_single_day').show();
+                $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
+                var isTimely = $pricing.find('[name="manage_inventory_as_timely"]').val() === 'on';
+                var isSpecific = $pricing.find('[name="enable_specific_duration"]').val() === 'on';
+                if (isTimely && isSpecific) {
+                    $pricing.find('.rbfw_multi_day_price_conf.rbfw_bike_car_sd_wrapper').hide();
+                }
+                if (isTimely) {
+                    $pricing.find('.rbfw_time_inventory').show();
+                    $pricing.find('.rbfw_without_time_inventory').hide();
+                } else {
+                    $pricing.find('.rbfw_time_inventory').hide();
+                    $pricing.find('.rbfw_without_time_inventory').show();
+                }
+
+            } else if (type === 'appointment') {
+                $pricing.find('.rbfw_bike_car_sd_wrapper').show();
+                $pricing.find('.rbfw_switch_sd_appointment_row').removeClass('hide').addClass('show').show();
+                $pricing.find('.rbfw_appointment_ondays_wrap').closest('section').removeClass('hide').show();
+                $pricing.find('.rbfw_es_price_config_wrapper').show();
+                $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').hide();
+                $pricing.find('.rbfw_time_inventory').hide();
+                $pricing.find('.rbfw_without_time_inventory').show();
+
+            } else if (type === 'resort') {
+                $pricing.find('.rbfw_resort_price_config_wrapper').show();
+                $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
+                $pricing.find('.sessional_price_resort,.mds_price_resort').show();
+                $pricing.find('.additional-service-item-price').show();
+                $pricing.find('.rbfw_discount_price_config_wrapper').show();
+
+            } else if (type === 'multiple_items') {
+                $pricing.find('.rbfw_bike_car_sd_wrapper').show();
+                $pricing.find('.manage_inventory_as_timely').show();
+                $pricing.find('.sessional_price_single_day').show();
+                $pricing.find('.rbfw_multiple_items').show();
+                $pricing.find('.rbfw_bike_car_sd_price_table_action_column,.rbfw_bike_car_sd_price_table_add_new_type_btn_wrap').show();
+                var isTimely2 = $pricing.find('[name="manage_inventory_as_timely"]').val() === 'on';
+                if (isTimely2) {
+                    $pricing.find('.rbfw_time_inventory').show();
+                    $pricing.find('.rbfw_without_time_inventory').hide();
+                } else {
+                    $pricing.find('.rbfw_time_inventory').hide();
+                    $pricing.find('.rbfw_without_time_inventory').show();
+                }
+
+            } else {
+                // bike_car_md and other multi-day types
+                $pricing.find('.rbfw_general_price_config_wrapper').show();
+                $pricing.find('.rbfw_seasonal_price_config_wrapper').show();
+                $pricing.find('.sessional_price_multi_day').show();
+                $pricing.find('.rbfw_discount_price_config_wrapper').show();
+            }
+
+            // Update description box
+            var $card = $pricing.find('.rbfw-rent-type[data-rent-type="' + type + '"]');
+            if ($card.length) {
+                var desc = $card.data('rent-type-desc') || '';
+                var name = $card.clone().find('.icon').remove().end().text().trim();
+                $pricing.find('.rbfw-rent-type-desc').html('<strong class="rbfw-rent-type-desc-name">' + name + '</strong>' + desc);
+            }
+        }
+
+        var savedType = $pricing.find('#rbfw_item_type').val() || 'bike_car_sd';
+        applyType(savedType);
+
+        $pricing.on('click', '.rbfw-rent-type', function () {
+            var type = $(this).data('rent-type');
+            $pricing.find('#rbfw_item_type').val(type);
+            $pricing.find('.rbfw-rent-type').removeClass('selected');
+            $(this).addClass('selected');
+            applyType(type);
+        });
+    }
+
+    /* ── Multiple Day Pricing Interactivity ─────────────────── */
+    function initMdPricing() {
+        var $pricing = $wrap.find('.rbfw-me-panel[data-panel="pricing"]');
+        if (!$pricing.length) return;
+
+        var $md = $pricing.find('.rbfw_general_price_config_wrapper');
+        if (!$md.length) return;
+
+        var monthlyPriceEnabled   = $md.find('#rbfw_enable_monthly_rate').val() === 'yes';
+        var weeklyPriceEnabled    = $md.find('#rbfw_enable_weekly_rate').val() === 'yes';
+        var dailyPriceEnabled     = $md.find('#rbfw_enable_daily_rate').val() === 'yes';
+        var monthThresholdEnabled = $md.find('#rbfw_enable_day_threshold_for_monthly').val() === 'yes';
+        var weekThresholdEnabled  = $md.find('#rbfw_enable_day_threshold_for_weekly').val() === 'yes';
+        var timePickerEnabled     = $md.find('#rbfw_enable_time_picker').val() === 'yes';
+        var hourlyPriceEnabled    = $md.find('#rbfw_enable_hourly_rate').val() === 'yes';
+        var halfDayPriceEnabled   = $md.find('#rbfw_enable_half_day_rate').val() === 'yes';
+        var hourThresholdEnabled  = $md.find('#rbfw_enable_hourly_threshold').val() === 'yes';
+
+        function updateDaywiseVisibility() {
+            var atLeastOne = dailyPriceEnabled || (timePickerEnabled && (hourlyPriceEnabled || halfDayPriceEnabled));
+            $md.find('#rbfw-daywise-config-wrapper').css('display', atLeastOne ? '' : 'none');
+        }
+
+        function applyInitialState() {
+            $md.find('.monthly-price-toggle').toggleClass('active', monthlyPriceEnabled);
+            $md.find('#monthly-price-input').prop('disabled', !monthlyPriceEnabled);
+            $md.find('.day-threshold-item-for-month').css('display', monthlyPriceEnabled ? 'flex' : 'none');
+
+            $md.find('.day-threshold-toggle-for-month').toggleClass('active', monthThresholdEnabled);
+            $md.find('#day-threshold-input-for-monthly').prop('disabled', !monthThresholdEnabled);
+
+            $md.find('.weekly-price-toggle').toggleClass('active', weeklyPriceEnabled);
+            $md.find('#weekly-price-input').prop('disabled', !weeklyPriceEnabled);
+            $md.find('.day-threshold-item-for-week').css('display', weeklyPriceEnabled ? 'flex' : 'none');
+
+            $md.find('.day-threshold-toggle-for-week').toggleClass('active', weekThresholdEnabled);
+            $md.find('#day-threshold-input-for-weekly').prop('disabled', !weekThresholdEnabled);
+
+            $md.find('.daily-price-toggle').toggleClass('active', dailyPriceEnabled);
+            $md.find('#daily-price-input').prop('disabled', !dailyPriceEnabled);
+            $md.find('.rbfw-daywise-dailyprice-col').css('display', dailyPriceEnabled ? '' : 'none');
+
+            $md.find('.time-picker-toggle').toggleClass('active', timePickerEnabled);
+            $md.find('.hourly-price-item').css('display', timePickerEnabled ? 'flex' : 'none');
+            $md.find('.time-slots-section').css('display', timePickerEnabled ? 'block' : 'none');
+
+            $md.find('.hourly-price-toggle').toggleClass('active', hourlyPriceEnabled);
+            $md.find('#hourly-price-input').prop('disabled', !hourlyPriceEnabled);
+            $md.find('.hour-threshold-item').css('display', hourlyPriceEnabled ? 'flex' : 'none');
+            $md.find('.rbfw-daywise-hourly-col').css('display', (timePickerEnabled && hourlyPriceEnabled) ? '' : 'none');
+
+            $md.find('.half-day-price-toggle').toggleClass('active', halfDayPriceEnabled);
+            $md.find('#half-day-price-input').prop('disabled', !halfDayPriceEnabled);
+            $md.find('.half-day-price-item').css('display', halfDayPriceEnabled ? 'flex' : 'none');
+            $md.find('.rbfw-daywise-halfday-col').css('display', (timePickerEnabled && halfDayPriceEnabled) ? '' : 'none');
+
+            $md.find('.hour-threshold-toggle').toggleClass('active', hourThresholdEnabled);
+            $md.find('#hour-threshold-input').prop('disabled', !hourThresholdEnabled);
+
+            updateDaywiseVisibility();
+        }
+
+        applyInitialState();
+
+        $md.on('click', '.monthly-price-toggle', function () {
+            monthlyPriceEnabled = !monthlyPriceEnabled;
+            $(this).toggleClass('active', monthlyPriceEnabled);
+            $md.find('#monthly-price-input').prop('disabled', !monthlyPriceEnabled);
+            $md.find('#rbfw_enable_monthly_rate').val(monthlyPriceEnabled ? 'yes' : 'no');
+            $md.find('.day-threshold-item-for-month').css('display', monthlyPriceEnabled ? 'flex' : 'none');
+        });
+
+        $md.on('click', '.weekly-price-toggle', function () {
+            weeklyPriceEnabled = !weeklyPriceEnabled;
+            $(this).toggleClass('active', weeklyPriceEnabled);
+            $md.find('#weekly-price-input').prop('disabled', !weeklyPriceEnabled);
+            $md.find('#rbfw_enable_weekly_rate').val(weeklyPriceEnabled ? 'yes' : 'no');
+            $md.find('.day-threshold-item-for-week').css('display', weeklyPriceEnabled ? 'flex' : 'none');
+        });
+
+        $md.on('click', '.daily-price-toggle', function () {
+            dailyPriceEnabled = !dailyPriceEnabled;
+            $(this).toggleClass('active', dailyPriceEnabled);
+            $md.find('#daily-price-input').prop('disabled', !dailyPriceEnabled);
+            $md.find('#rbfw_enable_daily_rate').val(dailyPriceEnabled ? 'yes' : 'no');
+            $md.find('.rbfw-daywise-dailyprice-col').css('display', dailyPriceEnabled ? '' : 'none');
+            updateDaywiseVisibility();
+        });
+
+        $md.on('click', '.day-threshold-toggle-for-month', function () {
+            monthThresholdEnabled = !monthThresholdEnabled;
+            $(this).toggleClass('active', monthThresholdEnabled);
+            $md.find('#day-threshold-input-for-monthly').prop('disabled', !monthThresholdEnabled);
+            $md.find('#rbfw_enable_day_threshold_for_monthly').val(monthThresholdEnabled ? 'yes' : 'no');
+        });
+
+        $md.on('click', '.day-threshold-toggle-for-week', function () {
+            weekThresholdEnabled = !weekThresholdEnabled;
+            $(this).toggleClass('active', weekThresholdEnabled);
+            $md.find('#day-threshold-input-for-weekly').prop('disabled', !weekThresholdEnabled);
+            $md.find('#rbfw_enable_day_threshold_for_weekly').val(weekThresholdEnabled ? 'yes' : 'no');
+        });
+
+        $md.on('click', '.time-picker-toggle', function () {
+            timePickerEnabled = !timePickerEnabled;
+            $(this).toggleClass('active', timePickerEnabled);
+            $md.find('.hourly-price-item').css('display', timePickerEnabled ? 'flex' : 'none');
+            $md.find('.time-slots-section').css('display', timePickerEnabled ? 'block' : 'none');
+            $md.find('.rbfw-daywise-hourly-col').css('display', (timePickerEnabled && hourlyPriceEnabled) ? '' : 'none');
+            $md.find('.rbfw-daywise-halfday-col').css('display', (timePickerEnabled && halfDayPriceEnabled) ? '' : 'none');
+            $md.find('#rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no');
+            $md.find('.rbfw_enable_time_picker').val(timePickerEnabled ? 'yes' : 'no');
+            updateDaywiseVisibility();
+        });
+
+        $md.on('click', '.hourly-price-toggle', function () {
+            hourlyPriceEnabled = !hourlyPriceEnabled;
+            $(this).toggleClass('active', hourlyPriceEnabled);
+            $md.find('#hourly-price-input').prop('disabled', !hourlyPriceEnabled);
+            $md.find('#rbfw_enable_hourly_rate').val(hourlyPriceEnabled ? 'yes' : 'no');
+            $md.find('.rbfw-daywise-hourly-col').css('display', (hourlyPriceEnabled && timePickerEnabled) ? '' : 'none');
+            $md.find('.hour-threshold-item').css('display', hourlyPriceEnabled ? 'flex' : 'none');
+            updateDaywiseVisibility();
+        });
+
+        $md.on('click', '.half-day-price-toggle', function () {
+            halfDayPriceEnabled = !halfDayPriceEnabled;
+            $(this).toggleClass('active', halfDayPriceEnabled);
+            $md.find('#half-day-price-input').prop('disabled', !halfDayPriceEnabled);
+            $md.find('#rbfw_enable_half_day_rate').val(halfDayPriceEnabled ? 'yes' : 'no');
+            $md.find('.half-day-price-item').css('display', halfDayPriceEnabled ? 'flex' : 'none');
+            $md.find('.rbfw-daywise-halfday-col').css('display', (halfDayPriceEnabled && timePickerEnabled) ? '' : 'none');
+            updateDaywiseVisibility();
+        });
+
+        $md.on('click', '.hour-threshold-toggle', function () {
+            hourThresholdEnabled = !hourThresholdEnabled;
+            $(this).toggleClass('active', hourThresholdEnabled);
+            $md.find('#hour-threshold-input').prop('disabled', !hourThresholdEnabled);
+            $md.find('#rbfw_enable_hourly_threshold').val(hourThresholdEnabled ? 'yes' : 'no');
+        });
+
+        $md.on('change', '#hour-threshold-input', function () {
+            $md.find('#hour-threshold-display').text($(this).val());
+        });
+
+        $md.on('click', 'input[name="rbfw_enable_daywise_price"]', function () {
+            var status = $(this).val();
+            if (status === 'yes') {
+                $(this).val('no');
+                $md.find('.day-wise-price-configuration').slideUp().removeClass('show').addClass('hide');
+            } else {
+                $(this).val('yes');
+                $md.find('.day-wise-price-configuration').slideDown().removeClass('hide').addClass('show');
+            }
+        });
+
+        $md.on('click', '.rbfw_particular_switch', function () {
+            var status = $(this).val();
+            if (status === 'on') {
+                $(this).val('off');
+                $md.find('.available-particular').slideUp().removeClass('show').addClass('hide');
+            } else {
+                $(this).val('on');
+                $md.find('.available-particular').slideDown().removeClass('hide').addClass('show');
+            }
+        });
+
+        $md.on('click', '.time-slot-remove', function (e) {
+            e.stopPropagation();
+            $(this).closest('.time-slot').remove();
+        });
+
+        $md.on('click', '.time-slot-indicator', function () {
+            var $indicator   = $(this);
+            var $timeSlot    = $indicator.closest('.time-slot');
+            var $statusInput = $timeSlot.find('input[name*="[status]"]');
+            $indicator.toggleClass('active');
+            if ($indicator.hasClass('active')) {
+                $statusInput.val('enabled');
+                $timeSlot.removeClass('disabled').addClass('enabled');
+            } else {
+                $statusInput.val('');
+                $timeSlot.removeClass('enabled').addClass('disabled');
+            }
+        });
+
+        $md.on('change', '.new-slot-time', function () {
+            $(this).closest('.add-slot-form').find('.add-slot-btn').prop('disabled', !$(this).val());
+        });
+
+        $md.on('click', '.add-slot-btn', function (e) {
+            e.preventDefault();
+            var $btn     = $(this);
+            var time     = $btn.closest('.add-slot-form').find('.new-slot-time').val();
+            if (!time) return;
+
+            var nameAttr = $btn.data('name_attr');
+            var rentType = $btn.data('rent_type');
+            var $slotsContainer = $btn.closest('.add-slot-container').prevAll('.time-slots-container').first().find('.time-slots');
+            var index = $slotsContainer.children('.time-slot').length;
+
+            var newSlot = '';
+            if (nameAttr === 'rdfw_available_time' && rentType === 'md') {
+                newSlot =
+                    '<div class="time-slot enabled" data-id="' + index + '">' +
+                    '<span class="time-slot-time">' + time + '</span>' +
+                    '<input type="hidden" name="rdfw_available_time[' + index + '][id]" value="' + index + '">' +
+                    '<input type="hidden" name="rdfw_available_time[' + index + '][time]" value="' + time + '">' +
+                    '<input type="hidden" name="rdfw_available_time[' + index + '][status]" value="enabled">' +
+                    '<div class="time-slot-remove" title="Remove time slot">×</div>' +
+                    '</div>';
+            }
+
+            if (!newSlot) return;
+
+            $slotsContainer.append(newSlot);
+
+            var $slots = $slotsContainer.children('.time-slot');
+            $slots.sort(function (a, b) {
+                return $(a).find('.time-slot-time').text().localeCompare($(b).find('.time-slot-time').text());
+            });
+            $slotsContainer.html($slots);
+
+            $btn.closest('.add-slot-form').find('.new-slot-time').val('');
+            $btn.prop('disabled', true);
         });
     }
 
