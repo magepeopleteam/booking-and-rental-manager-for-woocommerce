@@ -16,6 +16,10 @@
         initToggles();
         initTemplate();
         initThumbnail();
+        initServiceImages();
+        initResortImages();
+        initGallery();
+        initAdditionalGallery();
         initCategories();
         initFeatures();
         initTitleSync();
@@ -62,6 +66,160 @@
             if (target) {
                 $(target).toggleClass('rbfw-me-hidden', ! this.checked);
             }
+        });
+    }
+
+    /* ── Extra-service image upload ──────────────────────────── */
+    function initServiceImages() {
+        // Click on preview square → open media picker
+        $wrap.on('click', '.rbfw_pricing_table .rbfw_service_image_preview', function () {
+            var $preview = $(this);
+            var $row     = $preview.closest('tr');
+            var bkp      = wp.media.editor.send.attachment;
+            wp.media.editor.send.attachment = function (props, attachment) {
+                $row.find('.rbfw_service_image_preview img').remove();
+                $row.find('.rbfw_service_image_preview').append('<img src="' + attachment.url + '" />');
+                $row.find('.rbfw_service_image').val(attachment.id);
+                wp.media.editor.send.attachment = bkp;
+            };
+            wp.media.editor.open($preview[0]);
+            return false;
+        });
+
+        // Click on remove button (hidden but kept for JS hook) → clear image
+        $wrap.on('click', '.rbfw_pricing_table .rbfw_remove_service_image_btn', function () {
+            var $row = $(this).closest('tr');
+            $row.find('.rbfw_service_image_preview img').remove();
+            $row.find('.rbfw_service_image').val('');
+        });
+    }
+
+    /* ── Resort room type image upload ──────────────────────────── */
+    function initResortImages() {
+        // Move each row's remove button inside its preview so :has() + absolute positioning works
+        function setupResortRow($row) {
+            var $preview   = $row.find('.rbfw_room_type_image_preview');
+            var $removeBtn = $row.find('.rbfw_remove_room_type_image_btn');
+            if ($preview.length && $removeBtn.length && !$removeBtn.parent().is($preview)) {
+                $preview.append($removeBtn);
+            }
+        }
+        $wrap.find('.rbfw_resort_price_table_row').each(function () { setupResortRow($(this)); });
+
+        // When a new resort row is added, set it up
+        $wrap.on('click', '#add-resort-type-row', function () {
+            setTimeout(function () {
+                setupResortRow($wrap.find('.rbfw_resort_price_table_row:last'));
+            }, 50);
+        });
+
+        // Click preview → open media picker (ignore clicks on the remove button)
+        $wrap.on('click', '.rbfw_resort_price_table .rbfw_room_type_image_preview', function (e) {
+            if ($(e.target).closest('.rbfw_remove_room_type_image_btn').length) return;
+            var $preview = $(this);
+            var $row     = $preview.closest('tr');
+            var bkp      = wp.media.editor.send.attachment;
+            wp.media.editor.send.attachment = function (props, attachment) {
+                $preview.find('img').remove();
+                $preview.prepend('<img src="' + attachment.url + '" />');
+                $row.find('.rbfw_room_image').val(attachment.id);
+                wp.media.editor.send.attachment = bkp;
+            };
+            wp.media.editor.open($preview[0]);
+            return false;
+        });
+
+        // Click remove → clear image
+        $wrap.on('click', '.rbfw_resort_price_table .rbfw_remove_room_type_image_btn', function (e) {
+            e.stopPropagation();
+            var $row = $(this).closest('tr');
+            $row.find('.rbfw_room_type_image_preview img').remove();
+            $row.find('.rbfw_room_image').val('');
+        });
+    }
+
+    /* ── Gallery ─────────────────────────────────────────────── */
+    function initGallery() {
+        var galleryFrame;
+
+        $wrap.on('click', '.rbfw-me-gallery-upload', function () {
+            if (galleryFrame) { galleryFrame.open(); return; }
+            galleryFrame = wp.media({
+                title:    'Select Gallery Images',
+                button:   { text: 'Add to Gallery' },
+                multiple: true,
+                library:  { type: 'image' },
+            });
+            galleryFrame.on('select', function () {
+                var selection = galleryFrame.state().get('selection');
+                selection.each(function (attachment) {
+                    var a = attachment.toJSON();
+                    var html = '<div class="rbfw-me-gallery-image">'
+                        + '<button type="button" class="rbfw-me-gallery-remove" onclick="jQuery(this).closest(\'.rbfw-me-gallery-image\').remove()">'
+                        + '<i class="fas fa-trash-can"></i></button>'
+                        + '<img src="' + a.url + '" alt="" />'
+                        + '<input type="hidden" name="rbfw_gallery_images[]" value="' + parseInt( a.id, 10 ) + '" />'
+                        + '</div>';
+                    $wrap.find('.rbfw-me-gallery-list').append(html);
+                });
+            });
+            galleryFrame.open();
+        });
+
+        $wrap.on('click', '.rbfw-me-gallery-clear', function () {
+            $wrap.find('.rbfw-me-gallery-list .rbfw-me-gallery-image').remove();
+        });
+    }
+
+    /* ── Additional Gallery (Muffin template) ───────────────────── */
+    function initAdditionalGallery() {
+        var addGalleryFrame;
+
+        // Show/hide the card based on the currently selected template
+        function syncVisibility() {
+            var tpl  = $wrap.find('.rbfw-me-tpl-value').val();
+            var $card = $wrap.find('.rbfw-me-additional-gallery-card');
+            if ( tpl === 'Muffin' ) {
+                $card.removeClass('rbfw-me-hidden');
+            } else {
+                $card.addClass('rbfw-me-hidden');
+            }
+        }
+
+        // Run immediately on page load, then again whenever a template card is clicked
+        syncVisibility();
+        $wrap.on('click', '.rbfw-me-tpl-card', function () {
+            setTimeout( syncVisibility, 0 );
+        });
+
+        // Upload button
+        $wrap.on('click', '.rbfw-me-add-gallery-upload', function () {
+            if ( addGalleryFrame ) { addGalleryFrame.open(); return; }
+            addGalleryFrame = wp.media({
+                title:    'Select Additional Gallery Images',
+                button:   { text: 'Add to Gallery' },
+                multiple: true,
+                library:  { type: 'image' },
+            });
+            addGalleryFrame.on('select', function () {
+                var selection = addGalleryFrame.state().get('selection');
+                selection.each(function ( attachment ) {
+                    var a    = attachment.toJSON();
+                    var html = '<div class="rbfw-me-gallery-image">'
+                        + '<button type="button" class="rbfw-me-gallery-remove" onclick="jQuery(this).closest(\'.rbfw-me-gallery-image\').remove()">'
+                        + '<i class="fas fa-trash-can"></i></button>'
+                        + '<img src="' + a.url + '" alt="" />'
+                        + '<input type="hidden" name="rbfw_gallery_images_additional[]" value="' + parseInt( a.id, 10 ) + '" />'
+                        + '</div>';
+                    $wrap.find('.rbfw-me-add-gallery-list').append(html);
+                });
+            });
+            addGalleryFrame.open();
+        });
+
+        // Clear all
+        $wrap.on('click', '.rbfw-me-add-gallery-clear', function () {
+            $wrap.find('.rbfw-me-add-gallery-list .rbfw-me-gallery-image').remove();
         });
     }
 
@@ -258,6 +416,10 @@
             if (type === 'checkbox' && $(this).hasClass('rbfw-me-cat-checkbox')) return;
             if (type === 'checkbox') {
                 data[name] = this.checked ? $(this).val() : '';
+            } else if (name.slice(-2) === '[]') {
+                var baseName = name.slice(0, -2);
+                if (!Array.isArray(data[baseName])) data[baseName] = [];
+                data[baseName].push($(this).val());
             } else {
                 data[name] = $(this).val();
             }

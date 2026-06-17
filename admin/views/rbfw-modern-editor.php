@@ -241,10 +241,6 @@
 				</div>
 
 				<div class="rbfw-me-card">
-					<div class="rbfw-me-card__head">
-						<h2><?php esc_html_e( 'Additional Extra Services', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
-						<p><?php esc_html_e( 'Configure optional add-on services customers can select during booking.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-					</div>
 					<div class="rbfw-me-card__body rbfw-me-pricing-classic-wrap">
 						<?php RBFW_Extra_Service::render_for_modern_editor( $post_id ); ?>
 					</div>
@@ -327,19 +323,21 @@
 				</div>
 			</div>
 
-			<!-- Template ────────────────────────────────────────────────── -->
-			<div class="rbfw-me-panel" data-panel="template">
+			<!-- Advanced ─────────────────────────────────────────────────── -->
+			<div class="rbfw-me-panel" data-panel="advanced">
+
+				<!-- Template picker -->
+				<?php
+				$screenshot_url = RBFW_PLUGIN_URL . '/templates/screenshot/';
+				$templates      = RBFW_Function::get_all_template();
+				$current_tpl    = $m['rbfw_single_template'] ?? 'Default';
+				?>
 				<div class="rbfw-me-card">
 					<div class="rbfw-me-card__head">
-						<h2><?php esc_html_e( 'Display Template', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+						<h2><?php esc_html_e( 'Template', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
 						<p><?php esc_html_e( 'Choose how this rental item page looks to customers.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
 					</div>
 					<div class="rbfw-me-card__body">
-						<?php
-						$screenshot_url = RBFW_PLUGIN_URL . '/templates/screenshot/';
-						$templates      = RBFW_Function::get_all_template();
-						$current_tpl    = $m['rbfw_single_template'] ?? 'Default';
-						?>
 						<input type="hidden" name="rbfw_single_template" class="rbfw-me-tpl-value" value="<?php echo esc_attr( $current_tpl ); ?>" />
 						<div class="rbfw-me-template-grid">
 							<?php foreach ( $templates as $key => $label ) : ?>
@@ -358,10 +356,58 @@
 						</div>
 					</div>
 				</div>
-			</div>
 
-			<!-- Advanced ─────────────────────────────────────────────────── -->
-			<div class="rbfw-me-panel" data-panel="advanced">
+				<!-- Additional Gallery (visible only for Muffin template) -->
+				<?php
+				$current_tpl_adv    = $m['rbfw_single_template'] ?? 'Default';
+				$add_gallery_on     = ( $m['rbfw_enable_additional_gallary'] ?? 'off' ) === 'on';
+				$add_gallery_images = get_post_meta( $post_id, 'rbfw_gallery_images_additional', true );
+				$add_gallery_images = is_array( $add_gallery_images ) ? array_filter( $add_gallery_images ) : [];
+				?>
+				<div class="rbfw-me-card rbfw-me-additional-gallery-card <?php echo $current_tpl_adv === 'Muffin' ? '' : 'rbfw-me-hidden'; ?>">
+					<div class="rbfw-me-card__head">
+						<h2><?php esc_html_e( 'Additional Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
+						<p><?php esc_html_e( 'Upload gallery images in 4:3 ratio (e.g. 1200×900 px). Gallery and featured image should be the same size.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
+					</div>
+					<div class="rbfw-me-card__body">
+						<div class="rbfw-me-field rbfw-me-field--toggle-row">
+							<div class="rbfw-me-field__info">
+								<strong><?php esc_html_e( 'Enable Additional Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+								<span class="rbfw-me-field__desc"><?php esc_html_e( 'Enable / Disable the additional gallery section on the item page.', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+							</div>
+							<label class="rbfw-me-toggle">
+								<input type="checkbox" name="rbfw_enable_additional_gallary" value="on" <?php checked( $add_gallery_on ); ?> class="rbfw-me-toggle__input rbfw-me-toggle--reveal" data-reveals=".rbfw-me-add-gallery-images" />
+								<span class="rbfw-me-toggle__ui" aria-hidden="true"></span>
+							</label>
+						</div>
+						<div class="rbfw-me-add-gallery-images <?php echo $add_gallery_on ? '' : 'rbfw-me-hidden'; ?>">
+							<div class="rbfw-me-gallery-list rbfw-me-add-gallery-list">
+								<?php foreach ( $add_gallery_images as $image_id ) :
+									$img_url = wp_get_attachment_url( $image_id );
+									if ( ! $img_url ) continue;
+								?>
+									<div class="rbfw-me-gallery-image">
+										<button type="button" class="rbfw-me-gallery-remove" onclick="jQuery(this).closest('.rbfw-me-gallery-image').remove()">
+											<i class="fas fa-trash-can"></i>
+										</button>
+										<img src="<?php echo esc_url( $img_url ); ?>" alt="" loading="lazy" />
+										<input type="hidden" name="rbfw_gallery_images_additional[]" value="<?php echo esc_attr( $image_id ); ?>" />
+									</div>
+								<?php endforeach; ?>
+							</div>
+							<div class="rbfw-me-gallery-actions">
+								<button type="button" class="rbfw-me-btn rbfw-me-btn--secondary rbfw-me-add-gallery-upload">
+									<span class="dashicons dashicons-plus-alt2"></span>
+									<?php esc_html_e( 'Upload Images', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								</button>
+								<button type="button" class="rbfw-me-add-gallery-clear">
+									<?php esc_html_e( 'Clear All', 'booking-and-rental-manager-for-woocommerce' ); ?>
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
 				<div class="rbfw-me-card">
 					<div class="rbfw-me-card__head">
 						<h2><?php esc_html_e( 'Booking Date Options', 'booking-and-rental-manager-for-woocommerce' ); ?></h2>
@@ -450,6 +496,7 @@
 						</div>
 					</div>
 				</div>
+
 			</div>
 
 		</div><!-- /.rbfw-me-main -->
@@ -477,6 +524,41 @@
 						<?php if ( $thumb_id ) : ?>
 							<button type="button" class="rbfw-me-btn rbfw-me-btn--danger rbfw-me-thumb-remove"><?php esc_html_e( 'Remove', 'booking-and-rental-manager-for-woocommerce' ); ?></button>
 						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+
+			<!-- Gallery ─────────────────────────────────────────── -->
+			<div class="rbfw-me-card rbfw-me-card--sidebar">
+				<div class="rbfw-me-card__head">
+					<h3><?php esc_html_e( 'Gallery', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+				</div>
+				<div class="rbfw-me-card__body rbfw-me-gallery-wrap">
+					<div class="rbfw-me-gallery-list">
+						<?php
+						$gallery_images = get_post_meta( $post_id, 'rbfw_gallery_images', true );
+						$gallery_images = is_array( $gallery_images ) ? array_filter( $gallery_images ) : [];
+						foreach ( $gallery_images as $image_id ) :
+							$img_url = wp_get_attachment_url( $image_id );
+							if ( ! $img_url ) continue;
+						?>
+							<div class="rbfw-me-gallery-image">
+								<button type="button" class="rbfw-me-gallery-remove" onclick="jQuery(this).closest('.rbfw-me-gallery-image').remove()">
+									<i class="fas fa-trash-can"></i>
+								</button>
+								<img src="<?php echo esc_url( $img_url ); ?>" alt="" loading="lazy" />
+								<input type="hidden" name="rbfw_gallery_images[]" value="<?php echo esc_attr( $image_id ); ?>" />
+							</div>
+						<?php endforeach; ?>
+					</div>
+					<div class="rbfw-me-gallery-actions">
+						<button type="button" class="rbfw-me-btn rbfw-me-btn--secondary rbfw-me-gallery-upload">
+							<span class="dashicons dashicons-plus-alt2"></span>
+							<?php esc_html_e( 'Upload Images', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</button>
+						<button type="button" class="rbfw-me-gallery-clear">
+							<?php esc_html_e( 'Clear All', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</button>
 					</div>
 				</div>
 			</div>

@@ -285,6 +285,22 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				}
 			}
 
+			/* Gallery images */
+			$gallery_ids = [];
+			if ( isset( $_POST['rbfw_gallery_images'] ) && is_array( $_POST['rbfw_gallery_images'] ) ) {
+				$gallery_ids = array_values( array_filter( array_map( 'absint', $_POST['rbfw_gallery_images'] ) ) );
+			}
+			update_post_meta( $post_id, 'rbfw_gallery_images', $gallery_ids );
+
+			/* Additional gallery (Muffin template) */
+			$enable_add_gallery = ( isset( $_POST['rbfw_enable_additional_gallary'] ) && $_POST['rbfw_enable_additional_gallary'] === 'on' ) ? 'on' : 'off';
+			update_post_meta( $post_id, 'rbfw_enable_additional_gallary', $enable_add_gallery );
+			$add_gallery_ids = [];
+			if ( isset( $_POST['rbfw_gallery_images_additional'] ) && is_array( $_POST['rbfw_gallery_images_additional'] ) ) {
+				$add_gallery_ids = array_values( array_filter( array_map( 'absint', $_POST['rbfw_gallery_images_additional'] ) ) );
+			}
+			update_post_meta( $post_id, 'rbfw_gallery_images_additional', $add_gallery_ids );
+
 			/* ── Fee Management ── */
 			if ( isset( $_POST['rbfw_fee_data'] ) && is_array( $_POST['rbfw_fee_data'] ) ) {
 				$fee_data = [];
@@ -388,6 +404,22 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				}
 			}
 
+			/* ── Inventory ── */
+			$rbfw_item_stock_quantity = isset( $_POST['rbfw_item_stock_quantity'] ) ? absint( $_POST['rbfw_item_stock_quantity'] ) : 0;
+			update_post_meta( $post_id, 'rbfw_item_stock_quantity', $rbfw_item_stock_quantity ?: 1000 );
+
+			$stock_manage_on_return_date = ( isset( $_POST['stock_manage_on_return_date'] ) && $_POST['stock_manage_on_return_date'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'stock_manage_on_return_date', $stock_manage_on_return_date );
+
+			$rbfw_enable_variations = ( isset( $_POST['rbfw_enable_variations'] ) && $_POST['rbfw_enable_variations'] === 'yes' ) ? 'yes' : 'no';
+			update_post_meta( $post_id, 'rbfw_enable_variations', $rbfw_enable_variations );
+
+			$rbfw_variations_data = [];
+			if ( isset( $_POST['rbfw_variations_data'] ) && is_array( $_POST['rbfw_variations_data'] ) ) {
+				$rbfw_variations_data = RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_variations_data'] ) );
+			}
+			update_post_meta( $post_id, 'rbfw_variations_data', $rbfw_variations_data );
+
 			/* Day-wise rates (sun-sat) */
 			foreach ( [ 'sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat' ] as $day ) {
 				foreach ( [ "rbfw_{$day}_hourly_rate", "rbfw_{$day}_half_day_rate", "rbfw_{$day}_daily_rate", "rbfw_enable_{$day}_day" ] as $dk ) {
@@ -478,9 +510,9 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				[ 'key' => 'general',  'label' => __( 'General',  'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-admin-home' ],
 				[ 'key' => 'pricing',  'label' => __( 'Pricing',  'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-money-alt' ],
 				[ 'key' => 'services', 'label' => __( 'Services', 'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-plus-alt' ],
-				[ 'key' => 'location', 'label' => __( 'Location', 'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-location' ],
-				[ 'key' => 'template', 'label' => __( 'Template', 'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-admin-appearance' ],
-				[ 'key' => 'advanced', 'label' => __( 'Advanced', 'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-admin-settings' ],
+				[ 'key' => 'location',  'label' => __( 'Location',  'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-location' ],
+				[ 'key' => 'inventory', 'label' => __( 'Inventory', 'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-archive' ],
+				[ 'key' => 'advanced',  'label' => __( 'Advanced',  'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-admin-settings' ],
 			];
 
 			$rent_types = [
@@ -510,10 +542,12 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				'rbfw_enable_start_end_date', 'rbfw_enable_time_picker',
 				'rbfw_minimum_booking_day',   'rbfw_maximum_booking_day',
 				'rbfw_item_quantity', 'rbfw_enable_md_type_item_qty', 'rbfw_enable_extra_service_qty',
+				'rbfw_item_stock_quantity', 'stock_manage_on_return_date', 'rbfw_enable_variations',
 				'rbfw_enable_security_deposit', 'rbfw_security_deposit_type',
 				'rbfw_security_deposit_amount', 'rbfw_security_deposit_label',
 				'rbfw_enable_faq_content', 'rbfw_item_terms_conditions',
 				'rbfw_enable_pick_point',
+				'rbfw_enable_additional_gallary',
 			];
 			$out = [];
 			foreach ( $keys as $k ) {
