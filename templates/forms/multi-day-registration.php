@@ -783,8 +783,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
 
                             <li class="subtotal">
                                 <?php esc_html_e('Subtotal','booking-and-rental-manager-for-woocommerce'); ?>
-                                <span class="price-figure" data-price="">
-                                </span>
+                                <span class="price-figure" data-price=""><?php echo wp_kses( wc_price(0), rbfw_allowed_html() ); ?></span>
                             </li>
 
                             <li class="management-costing rbfw-cond" style="display:none;">
@@ -804,8 +803,7 @@ $rbfw_buffer_time = get_post_meta( $rbfw_id, 'rbfw_buffer_time', true ) ? maybe_
                             </li>
                             <li class="total">
                                 <?php esc_html_e('Price','booking-and-rental-manager-for-woocommerce'); ?>
-                                <span class="price-figure" data-price="">
-                                </span>
+                                <span class="price-figure" data-price=""><?php echo wp_kses( wc_price(0), rbfw_allowed_html() ); ?></span>
                             </li>
                         </ul>
                         <span class="rbfw-loader"><i class="fas fa-spinner fa-spin"></i></span>

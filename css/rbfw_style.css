@@ -618,7 +618,7 @@ button.rbfw-book-now-btn:focus {
 }
 
 .item.rbfw-duration {
-    background: #E9EFFD;
+    background: #F2F3FF;
     padding: 5px 10px;
     border-radius: 10px;
     border: 1px solid #e1dcdc;
@@ -651,7 +651,6 @@ button.rbfw-book-now-btn:focus {
 }
 
 .rbfw-duration-label {
-    color: #6983ab;
     font-weight: 500;
     font-size: 14px;
 }
@@ -12013,24 +12012,24 @@ i.fas.fa-minus {
 .multi-service-category-section .service-price-item {
     display: flex !important;
     align-items: center;
-    background: #FAF8FF;
+    background: #fff;
     border: 1px solid #e8eaf0;
     border-radius: 10px;
     margin-bottom: 8px;
-    padding: 10px 0px;
+    padding: 5px 0px;
 }
 
 .multi-service-category-section .service-price-item td {
     border: none !important;
     background: none !important;
     display: block;
+    padding: 0px 10px 0px 14px;
 }
 
 /* Info column */
 .multi-service-category-section .service-price-item td:first-child {
     flex: 1;
     min-width: 0;
-    padding: 10px 10px 10px 16px;
 }
 
 /* Qty column */
@@ -12045,7 +12044,8 @@ i.fas.fa-minus {
     font-size: 14px;
     font-weight: 600;
     color: #1e293b;
-    margin-bottom: 3px;
+    margin-bottom: 0;
+    line-height: 1.2;
 }
 
 /* Price (second div inside info td) */
@@ -12054,6 +12054,7 @@ i.fas.fa-minus {
     font-size: 13px;
     font-weight: 500;
     color: #374151;
+    line-height: 1.2;
 }
 
 /* "One Time" / "Day Wise" */
@@ -12112,5 +12113,9 @@ i.fas.fa-minus {
 /* ======================================================
    End Optional Add-ons Redesign
    ====================================================== */
+
+.rbfw-costing ul li {
+    font-size: 13px;
+}
 
 

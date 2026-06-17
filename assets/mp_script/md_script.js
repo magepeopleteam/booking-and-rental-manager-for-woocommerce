@@ -727,6 +727,14 @@ jQuery(document).on('input change', '.rbfw_service_qty', function() {
 // Plus button
 jQuery(document).on('click', '.rbfw_service_quantity_plus', function(e) {
     e.preventDefault();
+    if (jQuery(this).closest('.multi-service-category-section').length) {
+        let pickup_date = jQuery('#hidden_pickup_date').val();
+        let dropoff_date = jQuery('#hidden_dropoff_date').val();
+        if (!pickup_date || !dropoff_date) {
+            alert(rbfw_translation.pickup_dropoff_date);
+            return false;
+        }
+    }
     let input = jQuery(this).siblings('input');
     let val = parseInt(input.val()) || 0;
     let max = parseInt(input.attr('max')) || 9999;
@@ -738,6 +746,14 @@ jQuery(document).on('click', '.rbfw_service_quantity_plus', function(e) {
 // Minus button
 jQuery(document).on('click', '.rbfw_service_quantity_minus', function(e) {
     e.preventDefault();
+    if (jQuery(this).closest('.multi-service-category-section').length) {
+        let pickup_date = jQuery('#hidden_pickup_date').val();
+        let dropoff_date = jQuery('#hidden_dropoff_date').val();
+        if (!pickup_date || !dropoff_date) {
+            alert(rbfw_translation.pickup_dropoff_date);
+            return false;
+        }
+    }
     let input = jQuery(this).siblings('input');
     let val = parseInt(input.val()) || 0;
     let min = parseInt(input.attr('min')) || 0;
