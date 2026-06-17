@@ -1837,6 +1837,21 @@
 					update_post_meta( $post_id, 'enable_specific_duration', $enable_specific_duration );
 				}
 			}
+
+		/**
+		 * Render all pricing panels for the modern editor without
+		 * re-registering hooks (uses reflection to skip __construct).
+		 */
+		public static function render_for_modern_editor( int $post_id ): void {
+			$renderer = ( new \ReflectionClass( static::class ) )->newInstanceWithoutConstructor();
+			$renderer->rent_type( $post_id );
+			$renderer->bike_car_single_day( $post_id );
+			$renderer->appointment( $post_id );
+			$renderer->resort_price_config( $post_id );
+			$renderer->multiple_items( $post_id );
+			$renderer->md_price_config( $post_id );
+		}
+
 		}
 		new RBFW_Pricing();
 	}

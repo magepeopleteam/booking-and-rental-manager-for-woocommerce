@@ -746,6 +746,15 @@
 
 				wp_send_json_success( 'Fee row deleted successfully' );
 			}
+
+		/**
+		 * Render fee management for the modern editor without re-registering hooks.
+		 */
+		public static function render_for_modern_editor( int $post_id ): void {
+			$renderer = ( new \ReflectionClass( static::class ) )->newInstanceWithoutConstructor();
+			$renderer->fee_management_table( $post_id );
+		}
+
 		}
 		new RBFW_Fee_Management();
 	}

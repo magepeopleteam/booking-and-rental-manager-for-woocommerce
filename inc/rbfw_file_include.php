@@ -10,6 +10,7 @@ require_once RBFW_PLUGIN_DIR . '/lib/classes/class-form-fields-generator.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-form-fields-wrapper.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-meta-box.php';
 require_once RBFW_PLUGIN_DIR . '/admin/admin.php';
+require_once RBFW_PLUGIN_DIR . '/admin/RBFW_Modern_Editor.php';
 require_once RBFW_PLUGIN_DIR . '/lib/classes/class-icon-library.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_functions.php';
 require_once RBFW_PLUGIN_DIR . '/inc/rbfw_resort_functions.php';

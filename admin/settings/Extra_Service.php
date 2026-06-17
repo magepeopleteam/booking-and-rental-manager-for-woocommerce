@@ -573,6 +573,17 @@
 					update_post_meta( $post_id, 'rbfw_enable_category_service_price', $rbfw_enable_category_service_price );
 				}
 			}
+
+		/**
+		 * Render extra service panels for the modern editor without
+		 * re-registering hooks (uses reflection to skip __construct).
+		 */
+		public static function render_for_modern_editor( int $post_id ): void {
+			$renderer = ( new \ReflectionClass( static::class ) )->newInstanceWithoutConstructor();
+			$renderer->extra_service_table( $post_id );
+			$renderer->category_service_price( $post_id );
+		}
+
 		}
 		new RBFW_Extra_Service();
 	}
