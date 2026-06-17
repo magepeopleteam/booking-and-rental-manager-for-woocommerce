@@ -497,6 +497,28 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 				update_post_meta( $post_id, '_tax_class', sanitize_text_field( wp_unslash( $_POST['_tax_class'] ) ) );
 			}
 
+			/* Off Day Settings */
+			$off_days = isset( $_POST['rbfw_off_days'] ) ? sanitize_text_field( wp_unslash( $_POST['rbfw_off_days'] ) ) : '';
+			update_post_meta( $post_id, 'rbfw_off_days', $off_days );
+
+			$buffer_before = isset( $_POST['rbfw_buffer_time'] ) ? absint( $_POST['rbfw_buffer_time'] ) : 0;
+			update_post_meta( $post_id, 'rbfw_buffer_time', $buffer_before );
+
+			$buffer_after = isset( $_POST['rbfw_buffer_time_after'] ) ? absint( $_POST['rbfw_buffer_time_after'] ) : 0;
+			update_post_meta( $post_id, 'rbfw_buffer_time_after', $buffer_after );
+
+			$from_dates = ( isset( $_POST['off_days_start'] ) && is_array( $_POST['off_days_start'] ) )
+				? array_map( 'sanitize_text_field', wp_unslash( $_POST['off_days_start'] ) ) : [];
+			$to_dates   = ( isset( $_POST['off_days_end'] ) && is_array( $_POST['off_days_end'] ) )
+				? array_map( 'sanitize_text_field', wp_unslash( $_POST['off_days_end'] ) ) : [];
+			$off_schedules = [];
+			foreach ( $from_dates as $key => $from_date ) {
+				if ( $from_date && ! empty( $to_dates[ $key ] ) ) {
+					$off_schedules[] = [ 'from_date' => $from_date, 'to_date' => $to_dates[ $key ] ];
+				}
+			}
+			update_post_meta( $post_id, 'rbfw_offday_range', $off_schedules );
+
 			/* Categories (taxonomy) */
 			if ( isset( $_POST['rbfw_categories'] ) ) {
 				$cats = RBFW_Function::data_sanitize( wp_unslash( $_POST['rbfw_categories'] ) );
@@ -577,7 +599,8 @@ if ( ! class_exists( 'RBFW_Modern_Editor' ) ) {
 			$tabs = [
 				[ 'key' => 'general',  'label' => __( 'General',  'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-admin-home' ],
 				[ 'key' => 'pricing',  'label' => __( 'Pricing',  'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-money-alt' ],
-				[ 'key' => 'advanced',  'label' => __( 'Advanced',  'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-admin-settings' ],
+				[ 'key' => 'offday',   'label' => __( 'Off Days', 'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-calendar-alt' ],
+				[ 'key' => 'advanced', 'label' => __( 'Advanced', 'booking-and-rental-manager-for-woocommerce' ), 'icon' => 'dashicons-admin-settings' ],
 			];
 
 			$rent_types = [

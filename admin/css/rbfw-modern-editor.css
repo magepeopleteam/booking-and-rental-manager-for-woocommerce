@@ -37,61 +37,75 @@
     position: sticky;
     top: 32px;
     z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
     background: #fff;
     border-bottom: 1px solid var(--me-border);
-    padding: 0 20px;
     height: var(--me-header-h);
     box-shadow: var(--me-shadow);
 }
+.mep-top-nav-info {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 0 24px;
+    height: 100%;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
 
-.rbfw-me-header__left,
+.rbfw-me-header__left {
+    display: flex;
+    align-items: center;
+}
+.rbfw-me-header__center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .rbfw-me-header__right {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 10px;
 }
 
 .rbfw-me-back {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 6px;
+    gap: 6px;
     color: var(--me-muted);
     text-decoration: none;
-    transition: background .15s, color .15s;
-    flex-shrink: 0;
-}
-.rbfw-me-back:hover { background: var(--me-bg); color: var(--me-text); }
-.rbfw-me-back .dashicons { font-size: 18px; width: 18px; height: 18px; }
-
-.rbfw-me-title-input {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--me-text);
-    border: 1px solid transparent;
+    font-size: 13px;
+    font-weight: 500;
     border-radius: 6px;
-    padding: 5px 10px;
-    min-width: 240px;
-    background: transparent;
-    transition: border-color .15s, background .15s;
+    padding: 5px 8px;
+    transition: background .15s, color .15s;
+    white-space: nowrap;
 }
-.rbfw-me-title-input:focus,
-.rbfw-me-title-input:hover {
-    border-color: var(--me-border);
-    background: #fff;
-    outline: none;
+.rbfw-me-back:hover { background: var(--me-bg); color: var(--me-primary); }
+.rbfw-me-back .dashicons { font-size: 16px; width: 16px; height: 16px; flex-shrink: 0; }
+
+.rbfw-me-title-display {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--me-text);
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 550px;
+    margin: 0;
+    line-height: 1.4;
 }
 
 .rbfw-me-save-indicator {
     font-size: 12px;
     color: var(--me-muted);
-    min-width: 60px;
+    min-width: 50px;
     text-align: right;
 }
 .rbfw-me-save-indicator.is-saving { color: var(--me-primary); }
@@ -99,18 +113,79 @@
 .rbfw-me-save-indicator.is-error  { color: var(--me-danger); }
 
 .rbfw-me-classic-switch {
-    display: flex;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--me-muted) !important;
+    text-decoration: none !important;
+    border-radius: 6px;
+}
+.rbfw-me-classic-switch:hover { color: var(--me-text) !important; }
+.rbfw-me-classic-switch .dashicons { font-size: 16px; width: 16px; height: 16px; }
+
+/* Publish group with dropdown */
+.rbfw-me-publish-group {
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    border-radius: 6px;
+    overflow: visible;
+}
+.rbfw-me-publish-group .rbfw-me-publish {
+    border-radius: 6px 0 0 6px;
+    border-right: 1px solid rgba(255,255,255,.4);
+    padding: 7px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .1px;
+}
+.rbfw-me-publish-group .rbfw-me-publish:hover {
+    border-right-color: rgba(255,255,255,.4);
+}
+.rbfw-me-publish-chevron {
+    border-radius: 0 6px 6px 0;
+    padding: 7px 10px;
+    min-width: unset;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    color: var(--me-muted);
-    text-decoration: none;
-    border-radius: 6px;
-    transition: background .15s, color .15s;
 }
-.rbfw-me-classic-switch:hover { background: var(--me-bg); color: var(--me-text); }
-.rbfw-me-classic-switch .dashicons { font-size: 18px; width: 18px; height: 18px; }
+.rbfw-me-publish-chevron .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+}
+.rbfw-me-publish-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 160px;
+    background: #fff;
+    border: 1px solid var(--me-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    z-index: 200;
+    overflow: hidden;
+}
+.rbfw-me-publish-dropdown__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--me-text);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background .12s;
+    white-space: nowrap;
+}
+.rbfw-me-publish-dropdown__item:hover { background: var(--me-bg); color: var(--me-text); }
+.rbfw-me-publish-dropdown__item .dashicons { font-size: 15px; width: 15px; height: 15px; color: var(--me-muted); }
 
 /* ── Buttons ────────────────────────────────────────────────── */
 .rbfw-me-btn {
@@ -118,7 +193,6 @@
     align-items: center;
     gap: 6px;
     padding: 6px 14px;
-    border-radius: 6px;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
@@ -172,6 +246,14 @@
     cursor: pointer;
     position: relative;
     transition: none;
+}
+.rbfw-me-tab:focus,
+.rbfw-me-tab:active,
+.rbfw-me-tab.is-active {
+    border: none;
+    background: transparent;
+    outline: none;
+    box-shadow: none;
 }
 /* Connector line to next step */
 .rbfw-me-tab:not(:last-child)::after {
@@ -236,7 +318,8 @@
 .rbfw-me-step-nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 350px;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -251,6 +334,67 @@
     font-size: 13px;
     color: var(--me-muted);
     font-weight: 500;
+}
+
+/* ── Off Day Settings ───────────────────────────────────────── */
+.rbfw-me-offday-days {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 8px 0 20px;
+}
+.rbfw-me-offday-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--me-text);
+    cursor: pointer;
+    user-select: none;
+}
+.rbfw-me-offday-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--me-primary);
+    cursor: pointer;
+    margin: 0;
+}
+.rbfw-me-offday-buffer {
+    margin-top: 4px;
+}
+.rbfw-me-offdate-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px;
+    align-items: end;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--me-border);
+}
+.rbfw-me-offdate-row:last-child {
+    border-bottom: none;
+}
+.rbfw-me-offdate-remove {
+    background: none;
+    border: 1px solid #e74c3c;
+    border-radius: 4px;
+    color: #e74c3c;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    margin-bottom: 2px;
+    flex-shrink: 0;
+}
+.rbfw-me-offdate-remove:hover {
+    background: #e74c3c;
+    color: #fff;
+}
+.rbfw-me-offdate-actions {
+    padding-top: 16px;
 }
 
 /* ── Body layout ────────────────────────────────────────────── */
@@ -273,6 +417,7 @@
     flex-direction: column;
     gap: 16px;
     margin-bottom: 40px;
+    padding-bottom: 80px;
 }
 
 .rbfw-me-sidebar {
@@ -370,12 +515,25 @@
 }
 
 /* ── Inputs ─────────────────────────────────────────────────── */
+.rbfw-me-wrap input[type="text"],
+.rbfw-me-wrap input[type="number"],
+.rbfw-me-wrap input[type="email"],
+.rbfw-me-wrap input[type="url"],
+.rbfw-me-wrap input[type="password"],
+.rbfw-me-wrap input[type="search"],
+.rbfw-me-wrap input[type="date"],
+.rbfw-me-wrap input[type="time"],
+.rbfw-me-wrap textarea,
+.rbfw-me-wrap select {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 5px !important;
+}
 .rbfw-me-input,
 .rbfw-me-select {
     width: 100%;
     padding: 8px 12px;
-    border: 1px solid #c3c4c7;
-    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
     font-size: 13px;
     color: var(--me-text);
     background: #fff;
@@ -620,6 +778,102 @@
 .rbfw-me-notice a { color: var(--me-primary); }
 
 .rbfw-me-help-text { font-size: 12px; color: var(--me-muted); margin: 0 0 12px; line-height: 1.5; }
+
+/* ── Help / Resources card ──────────────────────────────────── */
+.rbfw-me-help-card { overflow: hidden; margin-bottom: 40px; }
+.rbfw-me-help-card__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px 12px;
+    background: linear-gradient(135deg, var(--me-primary) 0%, #1a6ab1 100%);
+    border-radius: var(--me-radius) var(--me-radius) 0 0;
+}
+.rbfw-me-help-card__header h3 {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+}
+.rbfw-me-help-card__icon {
+    color: rgba(255,255,255,.85);
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+.rbfw-me-help-card .rbfw-me-card__body {
+    padding: 8px 0;
+}
+.rbfw-me-help-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0px 14px;
+    text-decoration: none;
+    color: var(--me-text);
+    transition: background .12s;
+    border-left: 3px solid transparent;
+}
+.rbfw-me-help-link:hover {
+    background: #f0f6fc;
+    border-left-color: var(--me-primary);
+    color: var(--me-text);
+    text-decoration: none;
+}
+.rbfw-me-help-link--docs { border-bottom: 1px solid var(--me-border); margin-bottom: 0; }
+.rbfw-me-help-link--docs:hover { border-left-color: #00a32a; background: #f0fdf4; }
+.rbfw-me-help-link--pro .rbfw-me-help-link__icon { color: #f59e0b; }
+.rbfw-me-help-link--docs .rbfw-me-help-link__icon { color: #00a32a; }
+.rbfw-me-help-link__icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    color: var(--me-primary);
+    flex-shrink: 0;
+}
+.rbfw-me-help-link__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.rbfw-me-help-link__text strong {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--me-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.rbfw-me-help-link__text span {
+    font-size: 11px;
+    color: var(--me-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.rbfw-me-help-link__arrow {
+    font-size: 12px !important;
+    width: 12px !important;
+    height: 12px !important;
+    color: var(--me-muted);
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity .12s;
+}
+.rbfw-me-help-link:hover .rbfw-me-help-link__arrow { opacity: 1; }
+.rbfw-me-help-divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    color: var(--me-muted);
+}
 
 /* ── WP editor inside card ──────────────────────────────────── */
 .rbfw-me-editor-wrap .wp-editor-container,

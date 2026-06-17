@@ -26,6 +26,8 @@
         initRelatedPicker();
         initFaq();
         initTerm();
+        initOffDays();
+        initPublishDropdown();
         initSave();
         initHashNav();
     });
@@ -297,6 +299,22 @@
         });
     }
 
+    /* ── Publish dropdown chevron ────────────────────────────── */
+    function initPublishDropdown() {
+        $wrap.on('click', '.rbfw-me-publish-chevron', function (e) {
+            e.stopPropagation();
+            var $dd = $(this).siblings('.rbfw-me-publish-dropdown');
+            var isHidden = $dd.prop('hidden');
+            $dd.prop('hidden', !isHidden);
+        });
+        $(document).on('click', function () {
+            $wrap.find('.rbfw-me-publish-dropdown').prop('hidden', true);
+        });
+        $wrap.on('click', '.rbfw-me-publish-dropdown', function (e) {
+            e.stopPropagation();
+        });
+    }
+
     /* ── Save ────────────────────────────────────────────────── */
     function initSave() {
         $wrap.on('click', '.rbfw-me-save-draft', function () {
@@ -342,15 +360,10 @@
         });
     }
 
-    /* ── Sync card title ↔ header title ─────────────────────────── */
+    /* ── Sync card title → header h1 ────────────────────────────── */
     function initTitleSync() {
-        // Card title → header title
         $wrap.on('input', '.rbfw-me-card-title-input', function () {
-            $wrap.find('.rbfw-me-title-input').val($(this).val());
-        });
-        // Header title → card title
-        $wrap.on('input', '.rbfw-me-title-input', function () {
-            $wrap.find('.rbfw-me-card-title-input').val($(this).val());
+            $wrap.find('.rbfw-me-title-display').text($(this).val());
         });
     }
 
@@ -747,6 +760,50 @@
         }
     }
 
+    /* ── Off Day Settings ────────────────────────────────────── */
+    function initOffDays() {
+        // Sync day checkboxes → hidden field
+        $wrap.on('change', '.rbfw-me-offday-checkbox', function () {
+            var $group = $(this).closest('.rbfw-me-offday-days');
+            var selected = [];
+            $group.find('.rbfw-me-offday-checkbox:checked').each(function () {
+                selected.push($(this).data('day'));
+            });
+            $group.find('.rbfw-me-offday-hidden').val(selected.join(','));
+        });
+
+        // Add new date range row
+        $wrap.on('click', '.rbfw-me-offdate-add', function () {
+            var $list = $(this).closest('.rbfw-me-card__body').find('.rbfw-me-offdate-list');
+            var $row = $(
+                '<div class="rbfw-me-offdate-row">' +
+                    '<div class="rbfw-me-field">' +
+                        '<label class="rbfw-me-label">Start Date</label>' +
+                        '<input type="date" name="off_days_start[]" class="rbfw-me-input">' +
+                    '</div>' +
+                    '<div class="rbfw-me-field">' +
+                        '<label class="rbfw-me-label">End Date</label>' +
+                        '<input type="date" name="off_days_end[]" class="rbfw-me-input">' +
+                    '</div>' +
+                    '<button type="button" class="rbfw-me-offdate-remove" title="Remove">' +
+                        '<span class="dashicons dashicons-trash"></span>' +
+                    '</button>' +
+                '</div>'
+            );
+            $list.append($row);
+        });
+
+        // Remove date range row
+        $wrap.on('click', '.rbfw-me-offdate-remove', function () {
+            var $list = $(this).closest('.rbfw-me-offdate-list');
+            if ($list.find('.rbfw-me-offdate-row').length > 1) {
+                $(this).closest('.rbfw-me-offdate-row').remove();
+            } else {
+                $(this).closest('.rbfw-me-offdate-row').find('input[type="date"]').val('');
+            }
+        });
+    }
+
     /* ── Collect all form values ─────────────────────────────── */
     function collectFormData() {
         var data = {};
@@ -776,9 +833,6 @@
         } else {
             data['rbfw_categories'] = [];
         }
-
-        // Title from header input
-        data.post_title = $wrap.find('.rbfw-me-title-input').val();
 
         // TinyMCE content — get active editor instance if available
         if (typeof tinymce !== 'undefined') {

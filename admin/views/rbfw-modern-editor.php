@@ -4,42 +4,49 @@
 
 	<!-- ── Header ───────────────────────────────────────────────────────── -->
 	<div class="rbfw-me-header">
+		<div class="mep-top-nav-info">
 		<div class="rbfw-me-header__left">
 			<a class="rbfw-me-back" href="<?php echo esc_url( admin_url( 'edit.php?post_type=rbfw_item' ) ); ?>">
-				<span class="dashicons dashicons-arrow-left-alt"></span>
+				<span class="dashicons dashicons-arrow-left-alt2"></span>
+				<span class="rbfw-me-back__text"><?php esc_html_e( 'Back to Items', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
 			</a>
-			<input
-				class="rbfw-me-title-input"
-				type="text"
-				name="post_title"
-				value="<?php echo esc_attr( $screen_title ); ?>"
-				placeholder="<?php esc_attr_e( 'Rental item name…', 'booking-and-rental-manager-for-woocommerce' ); ?>"
-				autocomplete="off"
-			/>
+		</div>
+		<div class="rbfw-me-header__center">
+			<h1 class="rbfw-me-title-display"><?php echo esc_html( $screen_title ); ?></h1>
 		</div>
 		<div class="rbfw-me-header__right">
 			<span class="rbfw-me-save-indicator" aria-live="polite"></span>
-			<?php if ( $permalink ) : ?>
-				<a class="rbfw-me-btn rbfw-me-btn--ghost" href="<?php echo esc_url( $permalink ); ?>" target="_blank" rel="noopener">
-					<?php esc_html_e( 'Preview', 'booking-and-rental-manager-for-woocommerce' ); ?>
-					<span class="dashicons dashicons-external"></span>
-				</a>
-			<?php endif; ?>
-			<button type="button" class="rbfw-me-btn rbfw-me-btn--secondary rbfw-me-save-draft">
-				<?php esc_html_e( 'Save Draft', 'booking-and-rental-manager-for-woocommerce' ); ?>
-			</button>
-			<button type="button" class="rbfw-me-btn rbfw-me-btn--primary rbfw-me-publish" data-published="<?php echo esc_attr( $is_published ? '1' : '0' ); ?>">
-				<?php echo esc_html( $is_published
-					? __( 'Update', 'booking-and-rental-manager-for-woocommerce' )
-					: __( 'Publish', 'booking-and-rental-manager-for-woocommerce' )
-				); ?>
-			</button>
 			<?php if ( $classic_url ) : ?>
-				<a class="rbfw-me-classic-switch" href="<?php echo esc_url( $classic_url ); ?>" title="<?php esc_attr_e( 'Switch to Classic Editor', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+				<a class="rbfw-me-btn rbfw-me-btn--ghost rbfw-me-classic-switch" href="<?php echo esc_url( $classic_url ); ?>" title="<?php esc_attr_e( 'Switch to Classic Editor', 'booking-and-rental-manager-for-woocommerce' ); ?>">
 					<span class="dashicons dashicons-editor-code"></span>
+					<?php esc_html_e( 'Classic editor', 'booking-and-rental-manager-for-woocommerce' ); ?>
 				</a>
 			<?php endif; ?>
+			<div class="rbfw-me-publish-group">
+				<button type="button" class="rbfw-me-btn rbfw-me-btn--primary rbfw-me-publish" data-published="<?php echo esc_attr( $is_published ? '1' : '0' ); ?>">
+					<?php echo esc_html( $is_published
+						? __( 'Update', 'booking-and-rental-manager-for-woocommerce' )
+						: __( 'Publish', 'booking-and-rental-manager-for-woocommerce' )
+					); ?>
+				</button>
+				<button type="button" class="rbfw-me-btn rbfw-me-btn--primary rbfw-me-publish-chevron" aria-label="<?php esc_attr_e( 'More options', 'booking-and-rental-manager-for-woocommerce' ); ?>">
+					<span class="dashicons dashicons-arrow-down-alt2"></span>
+				</button>
+				<div class="rbfw-me-publish-dropdown" hidden>
+					<?php if ( $permalink ) : ?>
+						<a class="rbfw-me-publish-dropdown__item" href="<?php echo esc_url( $permalink ); ?>" target="_blank" rel="noopener">
+							<span class="dashicons dashicons-external"></span>
+							<?php esc_html_e( 'Preview', 'booking-and-rental-manager-for-woocommerce' ); ?>
+						</a>
+					<?php endif; ?>
+					<button type="button" class="rbfw-me-publish-dropdown__item rbfw-me-save-draft">
+						<span class="dashicons dashicons-saved"></span>
+						<?php esc_html_e( 'Save Draft', 'booking-and-rental-manager-for-woocommerce' ); ?>
+					</button>
+				</div>
+			</div>
 		</div>
+		</div><!-- /.mep-top-nav-info -->
 	</div>
 
 	<!-- ── Steps progress bar ───────────────────────────────────────────── -->
@@ -259,6 +266,11 @@
 						<?php RBFW_Fee_Management::render_for_modern_editor( $post_id ); ?>
 					</div>
 				</div>
+			</div>
+
+			<!-- Off Days ─────────────────────────────────────────────────── -->
+			<div class="rbfw-me-panel" data-panel="offday">
+				<?php RBFW_Off_Day::render_for_modern_editor( $post_id ); ?>
 			</div>
 
 			<!-- Advanced ─────────────────────────────────────────────────── -->
@@ -543,18 +555,87 @@
 				</div>
 			</div>
 
-			<div class="rbfw-me-card rbfw-me-card--sidebar">
-				<div class="rbfw-me-card__head">
-					<h3><?php esc_html_e( 'Quick Help', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
+			<div class="rbfw-me-card rbfw-me-card--sidebar rbfw-me-help-card">
+				<div class="rbfw-me-help-card__header">
+					<span class="dashicons dashicons-book-alt rbfw-me-help-card__icon"></span>
+					<h3><?php esc_html_e( 'Resources & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></h3>
 				</div>
 				<div class="rbfw-me-card__body">
-					<p class="rbfw-me-help-text"><?php esc_html_e( 'Advanced options (off-days, gallery, fee management, extra services, terms) are available in the Classic Editor.', 'booking-and-rental-manager-for-woocommerce' ); ?></p>
-					<?php if ( $classic_url ) : ?>
-						<a href="<?php echo esc_url( $classic_url ); ?>" class="rbfw-me-btn rbfw-me-btn--ghost rbfw-me-btn--full">
-							<span class="dashicons dashicons-editor-code"></span>
-							<?php esc_html_e( 'Open Classic Editor', 'booking-and-rental-manager-for-woocommerce' ); ?>
-						</a>
-					<?php endif; ?>
+
+					<!-- Documentation -->
+					<a href="https://booking-and-rental-manager.com/documentation/" target="_blank" rel="noopener" class="rbfw-me-help-link rbfw-me-help-link--docs">
+						<span class="rbfw-me-help-link__icon dashicons dashicons-media-document"></span>
+						<div class="rbfw-me-help-link__text">
+							<strong><?php esc_html_e( 'Documentation', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+							<span><?php esc_html_e( 'Guides, tutorials & how-tos', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
+					</a>
+
+					<div class="rbfw-me-help-divider">
+						<span><?php esc_html_e( 'Upgrade & Addons', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+					</div>
+
+					<!-- Pro Version -->
+					<a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-pro/" target="_blank" rel="noopener" class="rbfw-me-help-link rbfw-me-help-link--pro">
+						<span class="rbfw-me-help-link__icon dashicons dashicons-star-filled"></span>
+						<div class="rbfw-me-help-link__text">
+							<strong><?php esc_html_e( 'Buy Pro Version', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+							<span><?php esc_html_e( 'Unlock all premium features', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
+					</a>
+
+					<!-- Min and Max Booking Limit -->
+					<a href="https://mage-people.com/product/min-and-max-booking-day-for-booking-and-rental-plugin/" target="_blank" rel="noopener" class="rbfw-me-help-link">
+						<span class="rbfw-me-help-link__icon dashicons dashicons-controls-repeat"></span>
+						<div class="rbfw-me-help-link__text">
+							<strong><?php esc_html_e( 'Min & Max Booking Limit', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+							<span><?php esc_html_e( 'Control booking duration limits', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
+					</a>
+
+					<!-- Seasonal Pricing -->
+					<a href="https://mage-people.com/product/booking-and-rental-manager-for-woocommerce-addon-seasonal-pricing/" target="_blank" rel="noopener" class="rbfw-me-help-link">
+						<span class="rbfw-me-help-link__icon dashicons dashicons-calendar-alt"></span>
+						<div class="rbfw-me-help-link__text">
+							<strong><?php esc_html_e( 'Seasonal Pricing Management', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+							<span><?php esc_html_e( 'Set prices by season or date range', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
+					</a>
+
+					<!-- Multi-Day Discount -->
+					<a href="https://mage-people.com/product/multi-day-price-saver-addon-for-wprently/" target="_blank" rel="noopener" class="rbfw-me-help-link">
+						<span class="rbfw-me-help-link__icon dashicons dashicons-tag"></span>
+						<div class="rbfw-me-help-link__text">
+							<strong><?php esc_html_e( 'Multi-Day Discount Pricing', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+							<span><?php esc_html_e( 'Reward longer bookings with discounts', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
+					</a>
+
+					<!-- Backend Order -->
+					<a href="https://mage-people.com/product/backend-order-addon-wprently/" target="_blank" rel="noopener" class="rbfw-me-help-link">
+						<span class="rbfw-me-help-link__icon dashicons dashicons-clipboard"></span>
+						<div class="rbfw-me-help-link__text">
+							<strong><?php esc_html_e( 'Backend Order', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+							<span><?php esc_html_e( 'Create orders directly from admin', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
+					</a>
+
+					<!-- Pricing Discount Over x Days -->
+					<a href="https://mage-people.com/product/pricing-discount-over-x-day-addon-for-rental-and-booking-plugin/" target="_blank" rel="noopener" class="rbfw-me-help-link">
+						<span class="rbfw-me-help-link__icon dashicons dashicons-chart-line"></span>
+						<div class="rbfw-me-help-link__text">
+							<strong><?php esc_html_e( 'Pricing Discount Over x Days', 'booking-and-rental-manager-for-woocommerce' ); ?></strong>
+							<span><?php esc_html_e( 'Apply tiered discounts by duration', 'booking-and-rental-manager-for-woocommerce' ); ?></span>
+						</div>
+						<span class="dashicons dashicons-arrow-right-alt2 rbfw-me-help-link__arrow"></span>
+					</a>
+
 				</div>
 			</div>
 		</aside>
