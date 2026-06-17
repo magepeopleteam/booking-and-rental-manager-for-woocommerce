@@ -9093,3 +9093,12 @@ div.mpStyle.mep-quick-setup [class*="_adminLayout"] {
     pointer-events: none;
 }
 /* ── End Particular Date ── */
+
+/* Template picker — left-aligned thumbnail cards */
+#rbfw_add_meta_box section.rbfw-template-picker {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: flex-start;
+    gap: 12px;
+}

@@ -1804,15 +1804,7 @@
         $('.rbfw-single-template').removeClass('active')
         $(this).addClass('active');
 
-        $('.donut-template-sidebar-switch').slideUp();
-        $('.sidebar-testimonial-settigns').slideUp();
-        $('.donut-template-sidebar-content').slideUp();
         $('.additional-gallery').slideUp();
-        if(currentTemplate=='Donut'){
-            $('.donut-template-sidebar-switch').slideDown();
-            $('.sidebar-testimonial-settigns').slideDown();
-            $('.donut-template-sidebar-content').slideDown();
-        }
         if(currentTemplate=='Muffin'){
             $('.additional-gallery').slideDown();
         }

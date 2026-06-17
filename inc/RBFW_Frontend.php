@@ -39,6 +39,10 @@
 			public static function get_template_name($post_id) {
 				$_raw = get_post_meta( $post_id, 'rbfw_single_template', true );
 				$template_name = strtolower( ! empty( $_raw ) ? $_raw : 'Default' );
+				// Donut template is deprecated — fall back to Default automatically.
+				if ( $template_name === 'donut' ) {
+					$template_name = 'default';
+				}
 				return $template_name;
 			}
 
